@@ -26,6 +26,8 @@ abstract class ItopTestCase extends TestCase
 {
 	const TEST_LOG_DIR = 'test';
 
+	protected static $aBackupStaticProperties = [];
+
 	/** @noinspection UsingInclusionOnceReturnValueInspection avoid errors for approot includes */
 	protected function setUp(): void
 	{
@@ -255,6 +257,42 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
+	 * Backup every static property of the class (even protected ones)
+	 * @param string $sClass
+	 *
+	 * @return void
+	 *
+	 * @since 3.2.0
+	 */
+	public static function BackupStaticProperties($sClass)
+	{
+		$class = new \ReflectionClass($sClass);
+		foreach ($class->getProperties() as $property) {
+			if (!$property->isStatic()) continue;
+			$property->setAccessible(true);
+			static::$aBackupStaticProperties[$sClass][$property->getName()] = $property->getValue();
+		}
+	}
+
+	/**
+	 * Restore every static property of the class (even protected ones)
+	 * @param string $sClass
+	 *
+	 * @return void
+	 *
+	 * @since 3.2.0
+	 */
+	public static function RestoreStaticProperties($sClass)
+	{
+		$class = new \ReflectionClass($sClass);
+		foreach ($class->getProperties() as $property) {
+			if (!$property->isStatic()) continue;
+			$property->setAccessible(true);
+			$property->setValue(static::$aBackupStaticProperties[$sClass][$property->getName()]);
+		}
+	}
+
+	/**
 	 * @param string $sClass
 	 * @param string $sProperty
 	 *
@@ -300,4 +338,76 @@ abstract class ItopTestCase extends TestCase
 		$oProperty->setValue($value);
 	}
 
+	public static function RecurseRmdir($dir)
+	{
+		if (is_dir($dir)) {
+			$objects = scandir($dir);
+			foreach ($objects as $object) {
+				if ($object != "." && $object != "..") {
+					if (is_dir($dir.DIRECTORY_SEPARATOR.$object)) {
+						static::RecurseRmdir($dir.DIRECTORY_SEPARATOR.$object);
+					} else {
+						unlink($dir.DIRECTORY_SEPARATOR.$object);
+					}
+				}
+			}
+			rmdir($dir);
+		}
+	}
+
+	public static function CreateTmpdir() {
+		$sTmpDir=tempnam(sys_get_temp_dir(),'');
+		if (file_exists($sTmpDir))
+		{
+			unlink($sTmpDir);
+		}
+		mkdir($sTmpDir);
+		if (is_dir($sTmpDir))
+		{
+			return $sTmpDir;
+		}
+
+		return sys_get_temp_dir();
+	}
+
+	public function RecurseMkdir($sDir){
+		if (strpos($sDir, DIRECTORY_SEPARATOR) === 0){
+			$sPath = DIRECTORY_SEPARATOR;
+		} else {
+			$sPath = "";
+		}
+
+		foreach (explode(DIRECTORY_SEPARATOR, $sDir) as $sSubDir){
+			if (($sSubDir === '..')) {
+				break;
+			}
+
+			if (( trim($sSubDir) === '' ) || ( $sSubDir === '.' )) {
+				continue;
+			}
+
+			$sPath .= $sSubDir . DIRECTORY_SEPARATOR;
+			if (!is_dir($sPath)) {
+				var_dump($sPath);
+				@mkdir($sPath);
+			}
+		}
+
+	}
+
+	public static function RecurseCopy($src,$dst) {
+		$dir = opendir($src);
+		@mkdir($dst);
+		while(false !== ( $file = readdir($dir)) ) {
+			if (( $file != '.' ) && ( $file != '..' )) {
+				if ( is_dir($src . '/' . $file) ) {
+					static::RecurseCopy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
+				}
+				else {
+					copy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
+				}
+			}
+		}
+		closedir($dir);
+	}
 }
