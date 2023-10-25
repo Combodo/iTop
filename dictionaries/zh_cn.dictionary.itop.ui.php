@@ -1738,7 +1738,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:UserManagementMenu' => '用户管理',
 	'Menu:UserManagementMenu+' => 'Who can connect to '.ITOP_APPLICATION_SHORT.' and what can they do?~~',
 	'Menu:ProfilesMenu' => '角色',
-	'Menu:ProfilesMenu+' => '查看已有的角色~~',
+	'Menu:ProfilesMenu+' => '查看已有的角色',
 	'Menu:ProfilesMenu:Title' => '角色',
 	'Menu:UserAccountsMenu' => '用户账号',
 	'Menu:UserAccountsMenu+' => 'Handling '.ITOP_APPLICATION_SHORT.' users and their access rights~~',
