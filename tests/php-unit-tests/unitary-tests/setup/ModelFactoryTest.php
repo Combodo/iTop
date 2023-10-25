@@ -1373,7 +1373,7 @@ XML
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
-	<james_bond  id="Sean" _rename_from="Roger" _delta="merge"/>
+	<james_bond  id="Sean" _rename_from="Roger"/>
 </root_node>
 XML
 			],
@@ -1389,7 +1389,7 @@ XML
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
-	<james_bond  id="Sean" _rename_from="Roger" _delta="merge">
+	<james_bond  id="Sean" _rename_from="Roger">
     <subtree _delta="define">etc.</subtree>	
 </james_bond>
 </root_node>

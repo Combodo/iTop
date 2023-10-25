@@ -1466,7 +1466,7 @@ EOF
 		switch ($sAlteration) {
 			case '':
 				if ($oNodeClone->hasAttribute('id')) {
-					$oNodeClone->setAttribute('_delta', 'merge');
+					//$oNodeClone->setAttribute('_delta', 'merge');
 				}
 				break;
 			case 'added':
