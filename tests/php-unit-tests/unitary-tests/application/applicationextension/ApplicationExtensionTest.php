@@ -36,20 +36,18 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 	 * - Add the API to the provider
 	 * - Add a class extending / implementing the API in ./Delta/application-extension-usages-in-snippets.xml
 	 *
-	 * @param string $sAPIFQCN
-	 * @param string $sCallMethod
-	 *
 	 * @return void
-	 * @dataProvider ExtensionAPIRegisteredAndCalledProvider
 	 */
-	public function testExtensionAPIRegisteredAndCalled(string $sAPIFQCN, string $sCallMethod)
+	public function testExtensionAPIRegisteredAndCalled()
 	{
-		if ($sCallMethod === static::ENUM_API_CALL_METHOD_ENUMPLUGINS) {
-			$iExtendingClassesCount = count(MetaModel::EnumPlugins($sAPIFQCN));
-		} else {
-			$iExtendingClassesCount = count(utils::GetClassesForInterface($sAPIFQCN, '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]']));
+		foreach ($this->ExtensionAPIRegisteredAndCalledProvider() as list($sAPIFQCN, $sCallMethod)) {
+			if ($sCallMethod === static::ENUM_API_CALL_METHOD_ENUMPLUGINS) {
+				$iExtendingClassesCount = count(MetaModel::EnumPlugins($sAPIFQCN));
+			} else {
+				$iExtendingClassesCount = count(utils::GetClassesForInterface($sAPIFQCN, '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]']));
+			}
+			$this->assertGreaterThan(0, $iExtendingClassesCount, "Found no class extending the $sAPIFQCN API");
 		}
-		$this->assertGreaterThan(0, $iExtendingClassesCount, "Found no class extending the $sAPIFQCN API");
 	}
 
 	public function ExtensionAPIRegisteredAndCalledProvider(): array
