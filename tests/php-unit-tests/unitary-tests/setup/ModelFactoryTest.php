@@ -703,7 +703,7 @@ XML
 </nodeA>
 XML
 		];
-		$aDeltas['_delta="define_and_must_exits_fails"'] = [
+		$aDeltas['_delta="define_then_must_exist"'] = [
 			'sInitialXML' => <<<XML
 <nodeA>
 </nodeA>
@@ -725,7 +725,10 @@ XML
 			'sExpectedXML' => <<<XML
 <nodeA>
   <nodeB id="Banner">
-    <nodeC/>
+    <nodeE/>
+    <nodeC>
+      <nodeD id="Bruce" _delta="define"/>
+    </nodeC>
   </nodeB>
 </nodeA>
 XML
@@ -1370,7 +1373,7 @@ XML
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
-	<james_bond  id="Sean" _rename_from="Roger" _delta="must_exist"/>
+	<james_bond  id="Sean" _rename_from="Roger" _delta="merge"/>
 </root_node>
 XML
 			],
@@ -1386,7 +1389,7 @@ XML
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
-	<james_bond  id="Sean" _rename_from="Roger" _delta="must_exist">
+	<james_bond  id="Sean" _rename_from="Roger" _delta="merge">
     <subtree _delta="define">etc.</subtree>	
 </james_bond>
 </root_node>
