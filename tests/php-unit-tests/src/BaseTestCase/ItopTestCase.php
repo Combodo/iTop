@@ -15,6 +15,8 @@ use const DEBUG_BACKTRACE_IGNORE_ARGS;
 define('DEBUG_UNIT_TEST', true);
 
 /**
+ * Class ItopTestCase
+ *
  * Helper class to extend for tests that DO NOT need to access the DataModel or the Database
  *
  * @since 3.0.4 3.1.1 3.2.0 N°6658 move some setUp/tearDown code to the corresponding methods *BeforeClass to speed up tests process time.
@@ -23,6 +25,7 @@ abstract class ItopTestCase extends TestCase
 {
 	public const TEST_LOG_DIR = 'test';
 	public static $DEBUG_UNIT_TEST = false;
+	protected static $aBackupStaticProperties = [];
 
 	/**
 	 * @link https://docs.phpunit.de/en/9.6/annotations.html#preserveglobalstate PHPUnit `preserveGlobalState` annotation documentation
@@ -310,6 +313,42 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
+	 * Backup every static property of the class (even protected ones)
+	 * @param string $sClass
+	 *
+	 * @return void
+	 *
+	 * @since 3.2.0
+	 */
+	public static function BackupStaticProperties($sClass)
+	{
+		$class = new \ReflectionClass($sClass);
+		foreach ($class->getProperties() as $property) {
+			if (!$property->isStatic()) continue;
+			$property->setAccessible(true);
+			static::$aBackupStaticProperties[$sClass][$property->getName()] = $property->getValue();
+		}
+	}
+
+	/**
+	 * Restore every static property of the class (even protected ones)
+	 * @param string $sClass
+	 *
+	 * @return void
+	 *
+	 * @since 3.2.0
+	 */
+	public static function RestoreStaticProperties($sClass)
+	{
+		$class = new \ReflectionClass($sClass);
+		foreach ($class->getProperties() as $property) {
+			if (!$property->isStatic()) continue;
+			$property->setAccessible(true);
+			$property->setValue(static::$aBackupStaticProperties[$sClass][$property->getName()]);
+		}
+	}
+
+	/**
 	 * @param string $sClass
 	 * @param string $sProperty
 	 *
@@ -355,22 +394,24 @@ abstract class ItopTestCase extends TestCase
 		$oProperty->setValue($value);
 	}
 
-	public function RecurseRmdir($dir) {
+	public static function RecurseRmdir($dir)
+	{
 		if (is_dir($dir)) {
 			$objects = scandir($dir);
 			foreach ($objects as $object) {
 				if ($object != "." && $object != "..") {
-					if (is_dir($dir.DIRECTORY_SEPARATOR.$object))
-						$this->RecurseRmdir($dir.DIRECTORY_SEPARATOR.$object);
-					else
+					if (is_dir($dir.DIRECTORY_SEPARATOR.$object)) {
+						static::RecurseRmdir($dir.DIRECTORY_SEPARATOR.$object);
+					} else {
 						unlink($dir.DIRECTORY_SEPARATOR.$object);
+					}
 				}
 			}
 			rmdir($dir);
 		}
 	}
 
-	public function CreateTmpdir() {
+	public static function CreateTmpdir() {
 		$sTmpDir=tempnam(sys_get_temp_dir(),'');
 		if (file_exists($sTmpDir))
 		{
@@ -410,13 +451,13 @@ abstract class ItopTestCase extends TestCase
 
 	}
 
-	public function RecurseCopy($src,$dst) {
+	public static function RecurseCopy($src,$dst) {
 		$dir = opendir($src);
 		@mkdir($dst);
 		while(false !== ( $file = readdir($dir)) ) {
 			if (( $file != '.' ) && ( $file != '..' )) {
 				if ( is_dir($src . '/' . $file) ) {
-					$this->RecurseCopy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
+					static::RecurseCopy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
 				}
 				else {
 					copy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
