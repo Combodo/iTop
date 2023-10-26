@@ -216,8 +216,20 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 		{
 			$iFlags = $this->oDbObject->GetAttributeFlags($this->sAttCode);
 		}
+		
+		$bEditWhen = $this->IsEditableBasedOnEditWhen();
 
-		$this->bIsAttEditable = !($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE | OPT_ATT_HIDDEN));
+		$this->bIsAttEditable = !($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE | OPT_ATT_HIDDEN)) && $bEditWhen;
+	}
+
+	/**
+	 * Compares Linkset attribute edit_when values with its usage requirements
+	 * 
+	 * @return bool
+	 * @since 3.1.1 3.2.0 N°6385
+	 */
+	protected function IsEditableBasedOnEditWhen(): bool{
+		return true;
 	}
 	
 	/**
