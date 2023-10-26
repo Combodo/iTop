@@ -257,36 +257,27 @@ class TransactionsTest extends ItopTestCase
 
 	/**
 	 * @return void
-	 * @doesNotPerformAssertions
 	 */
-	public function testTransactionOpenedThenClosed()
+	public function testIsInsideTransaction()
 	{
-		CMDBSource::Query('START TRANSACTION;');
-		CMDBSource::Query('COMMIT;');
-	}
+		static::assertFalse(CMDBSource::IsInsideTransaction(), 'Should not be already inside a transaction');
 
-	/**
-	 * This will throw an exception in the tearDown method.
-	 * This cannot be detected nor by `@expectedException` nor `expectException` method, so we have a specific tearDown impl
-	 *
-	 * @return void
-	 * @doesNotPerformAssertions
-	 */
-	public function testTransactionOpenedNotClosed()
-	{
+		// First, with a transaction ended by a "COMMIT" statement
 		CMDBSource::Query('START TRANSACTION;');
+		static::assertTrue(CMDBSource::IsInsideTransaction(), 'Should be inside a translation');
+		CMDBSource::Query('COMMIT;');
+		static::assertFalse(CMDBSource::IsInsideTransaction(), 'Should not be inside a transaction anymore');
+
+		// Second, with a transaction ended by a "ROLLBACK" statement
+		CMDBSource::Query('START TRANSACTION;');
+		static::assertTrue(CMDBSource::IsInsideTransaction(), 'Should be inside a translation (again)');
+		CMDBSource::Query('ROLLBACK;');
+		static::assertFalse(CMDBSource::IsInsideTransaction(), 'Should not be inside a transaction anymore');
 	}
 
 	protected function tearDown(): void
 	{
-		try {
-			DbConnectionWrapper::SetDbConnectionMockForQuery();
-			parent::tearDown();
-		}
-		catch (MySQLTransactionNotClosedException $e) {
-			if ($this->getName() === 'testTransactionOpenedNotClosed') {
-				$this->debug('Executing the testTransactionOpenNoClose method throws a '.MySQLTransactionNotClosedException::class.' exception in tearDown');
-			}
-		}
+		DbConnectionWrapper::SetDbConnectionMockForQuery();
+		parent::tearDown();
 	}
 }

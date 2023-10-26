@@ -26,6 +26,13 @@ class CMDBSourceTest extends ItopTestCase
 		$this->RequireOnceItopFile('/core/cmdbsource.class.inc.php');
 	}
 
+	protected function tearDown(): void
+	{
+		DbConnectionWrapper::SetDbConnectionMockForQuery();
+
+		parent::tearDown();
+	}
+
 	/**
 	 * @covers       CMDBSource::IsSameFieldTypes
 	 * @dataProvider compareFieldTypesProvider
