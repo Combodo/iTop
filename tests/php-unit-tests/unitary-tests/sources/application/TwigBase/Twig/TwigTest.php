@@ -23,6 +23,7 @@ class TwigTest extends ItopDataTestCase
 	 */
 	public function testTemplate($sFileName, $sExpected)
 	{
+		$this->expectNotToPerformAssertions();
 		$sId = 'TestTwig';
 		$oAppExtension = new AppExtension();
 
@@ -42,7 +43,7 @@ class TwigTest extends ItopDataTestCase
 		}
 	}
 
-	public static function testTemplateProvider()
+	public static function TemplateProvider()
 	{
 		$aReturn = array();
 		$aReturn['filter_system'] = [
