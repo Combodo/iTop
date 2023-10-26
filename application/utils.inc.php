@@ -155,6 +155,8 @@ class utils
 
 	private static $iNextId = 0;
 
+	private static $m_sAppRootUrl = null;
+
 	protected static function LoadParamFile($sParamFile)
 	{
 		if (!file_exists($sParamFile)) {
@@ -992,7 +994,7 @@ class utils
      */
 	public static function GetAbsoluteUrlAppRoot($bForceTrustProxy = false)
 	{
-		static $sUrl = null;
+		$sUrl = static::$m_sAppRootUrl;
 		if ($sUrl === null || $bForceTrustProxy)
 		{
 			$sUrl = self::GetConfig()->Get('app_root_url');
@@ -1013,8 +1015,9 @@ class utils
 				}
 				$sUrl = str_replace(SERVER_NAME_PLACEHOLDER, $sServerName, $sUrl);
 			}
+			static::$m_sAppRootUrl = $sUrl;
 		}
-		return $sUrl;
+		return static::$m_sAppRootUrl;
 	}
 
 	/**
