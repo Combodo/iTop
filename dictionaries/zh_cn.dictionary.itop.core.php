@@ -26,16 +26,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectTip' => '对象已被删除于 %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => '对象找不到 (class: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.~~',
+	'Core:UnknownObjectTip' => '对象没有找到. 其可能已经被删除并且日志已经被清除.~~',
 
-	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
-	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s~~',
-	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
+	'Core:UniquenessDefaultError' => '唯一性规则 \'%1$s\' 出错~~',
+	'Core:CheckConsistencyError' => '一致性规则没有被遵守: %1$s~~',
+	'Core:CheckValueError' => '未知的值在属性 \'%1$s\' (%2$s) : %3$s~~',
 
 	'Core:AttributeLinkedSet' => '对象数组',
-	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass~~',
+	'Core:AttributeLinkedSet+' => '任何相同类或子类的对象~~',
 
-	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+	'Core:AttributeLinkedSetDuplicatesFound' => '重复内容在 \'%1$s\' 字段 : %2$s~~',
 
 	'Core:AttributeDashboard' => '仪表盘',
 	'Core:AttributeDashboard+' => '',
@@ -50,23 +50,23 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => '请点击这里添加',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s 来自 %3$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s 来自子类)~~',
 
 	'Core:AttributeCaseLog' => '日志',
 	'Core:AttributeCaseLog+' => '',
 
-	'Core:AttributeMetaEnum' => 'Computed enum~~',
+	'Core:AttributeMetaEnum' => '计算的枚举~~',
 	'Core:AttributeMetaEnum+' => '~~',
 
-	'Core:AttributeLinkedSetIndirect' => '对象数组(N-N)',
-	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class~~',
+	'Core:AttributeLinkedSetIndirect' => '对象数组 (N-N)',
+	'Core:AttributeLinkedSetIndirect+' => '任何相同类的对象或子类~~',
 
 	'Core:AttributeInteger' => '整数',
-	'Core:AttributeInteger+' => '整数值(可以为负)',
+	'Core:AttributeInteger+' => '整数值 (可以为负)',
 
 	'Core:AttributeDecimal' => '小数',
-	'Core:AttributeDecimal+' => '小数(可以为负)',
+	'Core:AttributeDecimal+' => '小数 (可以为负)',
 
 	'Core:AttributeBoolean' => '布尔',
 	'Core:AttributeBoolean+' => '',
@@ -85,12 +85,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Core:AttributeObsolescenceFlag' => '是否废弃',
 	'Core:AttributeObsolescenceFlag/Value:yes' => '是',
-	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
+	'Core:AttributeObsolescenceFlag/Value:yes+' => '该对象排除在影响分析中, 并且在搜索结果中隐藏~~',
 	'Core:AttributeObsolescenceFlag/Value:no' => '否',
 	'Core:AttributeObsolescenceFlag/Label' => '是否废弃',
-	'Core:AttributeObsolescenceFlag/Label+' => 'Computed dynamically on other attributes~~',
+	'Core:AttributeObsolescenceFlag/Label+' => '基于其他属性动态计算~~',
 	'Core:AttributeObsolescenceDate/Label' => '废弃时间',
-	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete~~',
+	'Core:AttributeObsolescenceDate/Label+' => '该对象被废弃的大概日期~~',
 
 	'Core:AttributeString' => '字符串',
 	'Core:AttributeString+' => '字符串',
@@ -99,16 +99,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeClass+' => '',
 
 	'Core:AttributeApplicationLanguage' => '用户语言',
-	'Core:AttributeApplicationLanguage+' => '语言和国家地区(EN US)',
+	'Core:AttributeApplicationLanguage+' => '语言和国家地区 (EN US)',
 
-	'Core:AttributeFinalClass' => '类 (auto)',
-	'Core:AttributeFinalClass+' => 'Real class of the object (automatically created by the core)',
+	'Core:AttributeFinalClass' => '类 (自动)',
+	'Core:AttributeFinalClass+' => '对象真实的类 (内核自动创建)',
 
 	'Core:AttributePassword' => '密码',
 	'Core:AttributePassword+' => '外部设备的密码',
 
 	'Core:AttributeEncryptedString' => '加密字符串',
-	'Core:AttributeEncryptedString+' => 'String encrypted with a local key~~',
+	'Core:AttributeEncryptedString+' => '使用本地密钥加密的字符串~~',
 	'Core:AttributeEncryptUnknownLibrary' => '未知的加密库 (%1$s)',
 	'Core:AttributeEncryptFailedToDecrypt' => '** 解密错误 **',
 
@@ -125,10 +125,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeIPAddress+' => 'IP地址',
 
 	'Core:AttributeOQL' => 'OQL',
-	'Core:AttributeOQL+' => 'Object Query Langage expression~~',
+	'Core:AttributeOQL+' => '对象查询语言表达式~~',
 
-	'Core:AttributeEnum' => 'Enum~~',
-	'Core:AttributeEnum+' => 'List of predefined alphanumeric strings~~',
+	'Core:AttributeEnum' => '枚举~~',
+	'Core:AttributeEnum+' => '预定义的字符串列表~~',
 
 	'Core:AttributeTemplateString' => '字符模板',
 	'Core:AttributeTemplateString+' => '包含占位符的字符串',
@@ -137,10 +137,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeTemplateText+' => '包含占位符的文本',
 
 	'Core:AttributeTemplateHTML' => 'HTML模板',
-	'Core:AttributeTemplateHTML+' => 'HTML containing placeholders~~',
+	'Core:AttributeTemplateHTML+' => '包含占位符的HTML~~',
 
 	'Core:AttributeDateTime' => '日期/时间',
-	'Core:AttributeDateTime+' => 'Date and time (年-月-日 时:分:秒)',
+	'Core:AttributeDateTime+' => '日期和时间 (年-月-日 时:分:秒)',
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	日期格式:<br/>
@@ -176,31 +176,31 @@ Operators:<br/>
 	'Core:AttributeDeadline+' => '日期, 显示与当前的相对时间',
 
 	'Core:AttributeExternalKey' => '外键',
-	'Core:AttributeExternalKey+' => 'External (or foreign) key~~',
+	'Core:AttributeExternalKey+' => '外部关联键~~',
 
-	'Core:AttributeHierarchicalKey' => 'Hierarchical Key~~',
-	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent~~',
+	'Core:AttributeHierarchicalKey' => '等级键~~',
+	'Core:AttributeHierarchicalKey+' => '关联到父级的外键~~',
 
 	'Core:AttributeExternalField' => '外部字段',
-	'Core:AttributeExternalField+' => 'Field mapped to an external key~~',
+	'Core:AttributeExternalField+' => '映射到外键的字段~~',
 
 	'Core:AttributeURL' => 'URL',
-	'Core:AttributeURL+' => 'Absolute or relative URL as a text string~~',
+	'Core:AttributeURL+' => '绝对或相对的URL字符串~~',
 
 	'Core:AttributeBlob' => 'Blob',
-	'Core:AttributeBlob+' => '任何二进制内容(文档)',
+	'Core:AttributeBlob+' => '任何二进制内容 (文档)',
 
 	'Core:AttributeOneWayPassword' => '单向密码',
-	'Core:AttributeOneWayPassword+' => '单向加密(或哈希) 的密码',
+	'Core:AttributeOneWayPassword+' => '单向加密 (或哈希) 的密码',
 
 	'Core:AttributeTable' => '表',
 	'Core:AttributeTable+' => '带索引的二维数组',
 
 	'Core:AttributePropertySet' => '属性',
-	'Core:AttributePropertySet+' => 'List of untyped properties (name and value)~~',
+	'Core:AttributePropertySet+' => '非类型化的属性列表 (名称和值)~~',
 
 	'Core:AttributeFriendlyName' => '通用名称',
-	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes~~',
+	'Core:AttributeFriendlyName+' => '自动创建的属性; 友好名称基于多个属性计算~~',
 
 	'Core:FriendlyName-Label' => '全称',
 	'Core:FriendlyName-Description' => '全称',
@@ -236,11 +236,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChange/Attribute:origin/Value:interactive' => '图形界面交互',
 	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => '使用脚本导入CSV',
 	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => '使用图形界面导入CSV',
-	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
-	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => '邮件处理~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => '同步数据源~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON服务~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP服务~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => '插件~~',
 ));
 
 //
@@ -257,7 +257,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOp/Attribute:userinfo' => '用户',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => '变更的实施者',
 	'Class:CMDBChangeOp/Attribute:objclass' => '对象的类别',
-	'Class:CMDBChangeOp/Attribute:objclass+' => 'object class',
+	'Class:CMDBChangeOp/Attribute:objclass+' => '对象的类',
 	'Class:CMDBChangeOp/Attribute:objkey' => '对象id',
 	'Class:CMDBChangeOp/Attribute:objkey+' => '对象id',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDB操作类型',
@@ -290,7 +290,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOpSetAttribute' => '对象变化',
 	'Class:CMDBChangeOpSetAttribute+' => '对象属性变化跟踪',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => '属性',
-	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'code of the modified property~~',
+	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => '更改的属性编码~~',
 ));
 
 //
@@ -355,11 +355,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Event' => '日志事件',
 	'Class:Event+' => '应用程序的内部事件',
 	'Class:Event/Attribute:message' => '消息',
-	'Class:Event/Attribute:message+' => 'short description of the event~~',
+	'Class:Event/Attribute:message+' => '消息的简短描述~~',
 	'Class:Event/Attribute:date' => '日期',
 	'Class:Event/Attribute:date+' => '记录的日期和时间',
 	'Class:Event/Attribute:userinfo' => '用户信息',
-	'Class:Event/Attribute:userinfo+' => 'identification of the user that was doing the action that triggered this event',
+	'Class:Event/Attribute:userinfo+' => '触发此事件的动作执行用户的身份',
 	'Class:Event/Attribute:finalclass' => '事件类型',
 	'Class:Event/Attribute:finalclass+' => '根本属性的名称',
 ));
@@ -370,13 +370,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventNotification' => '通知事件',
-	'Class:EventNotification+' => 'Trace of a notification that has been sent~~',
+	'Class:EventNotification+' => '已发送通知的追踪~~',
 	'Class:EventNotification/Attribute:trigger_id' => '触发器',
 	'Class:EventNotification/Attribute:trigger_id+' => '用户账号',
 	'Class:EventNotification/Attribute:action_id' => '用户',
 	'Class:EventNotification/Attribute:action_id+' => '用户账号',
 	'Class:EventNotification/Attribute:object_id' => '对象id',
-	'Class:EventNotification/Attribute:object_id+' => 'object id (class defined by the trigger ?)~~',
+	'Class:EventNotification/Attribute:object_id+' => '对象id (类别由触发器定义 ?)~~',
 ));
 
 //
@@ -407,20 +407,20 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:EventIssue' => 'Issue event~~',
-	'Class:EventIssue+' => 'Trace of an issue (warning, error, etc.)~~',
+	'Class:EventIssue' => '问题事件~~',
+	'Class:EventIssue+' => '跟踪问题 (告警, 错误, 等)~~',
 	'Class:EventIssue/Attribute:issue' => '事件',
 	'Class:EventIssue/Attribute:issue+' => '发生了什么',
 	'Class:EventIssue/Attribute:impact' => '影响',
 	'Class:EventIssue/Attribute:impact+' => '重要性如何',
-	'Class:EventIssue/Attribute:page' => 'Page',
-	'Class:EventIssue/Attribute:page+' => 'HTTP entry point~~',
+	'Class:EventIssue/Attribute:page' => '页面',
+	'Class:EventIssue/Attribute:page+' => 'HTTP入口~~',
 	'Class:EventIssue/Attribute:arguments_post' => 'POST参数',
 	'Class:EventIssue/Attribute:arguments_post+' => 'HTTP POST参数',
 	'Class:EventIssue/Attribute:arguments_get' => 'URL参数',
 	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET参数',
 	'Class:EventIssue/Attribute:callstack' => '调用栈',
-	'Class:EventIssue/Attribute:callstack+' => 'Call stack~~',
+	'Class:EventIssue/Attribute:callstack+' => '调用栈~~',
 	'Class:EventIssue/Attribute:data' => '数据',
 	'Class:EventIssue/Attribute:data+' => '更多信息',
 ));
