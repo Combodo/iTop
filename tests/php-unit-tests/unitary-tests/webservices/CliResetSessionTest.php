@@ -8,9 +8,6 @@ use Exception;
 use MetaModel;
 
 
-/**
- * @runTestsInSeparateProcesses
- */
 class CliResetSessionTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
