@@ -426,7 +426,7 @@ abstract class ItopTestCase extends TestCase
 		return sys_get_temp_dir();
 	}
 
-	public function RecurseMkdir($sDir){
+	public static function RecurseMkdir($sDir){
 		if (strpos($sDir, DIRECTORY_SEPARATOR) === 0){
 			$sPath = DIRECTORY_SEPARATOR;
 		} else {
