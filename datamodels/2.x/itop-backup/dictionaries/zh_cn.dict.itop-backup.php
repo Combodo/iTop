@@ -36,7 +36,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'bkp-name-sample' => '备份文件将以数据库名,日期和时间进行命名. 例如: %1$s',
 	'bkp-week-days' => '在每个 <b> %1$s 的 %2$s</b> 进行备份',
 	'bkp-retention' => '最多 <b>%1$d 份备份文件 </b> 在目标目录.',
-	'bkp-next-to-delete' => '当下一次备份时将被删除 (see the setting "retention_count")',
+	'bkp-next-to-delete' => '当下一次备份时将被删除 (参阅设置 "retention_count")',
 	'bkp-table-file' => '文件',
 	'bkp-table-file+' => '只有扩展名是.zip的文件才被认为是备份文件',
 	'bkp-table-size' => '大小',
