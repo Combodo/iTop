@@ -90,6 +90,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Dvořák, Lukáš
 - Goethals, Stefan
 - Gumble, David
+- Ji, Leeb (冀利斌) (a.k.a [@chileeb](https://github.com/chileeb))
 - Kaltefleiter, Lars (a.k.a [@larhip](https://www.github.com/larhip))
 - Khamit, Shamil
 - Kincel, Martin
