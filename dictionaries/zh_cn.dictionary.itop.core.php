@@ -430,35 +430,35 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:EventWebService' => 'Web service event~~',
-	'Class:EventWebService+' => 'Trace of an web service call~~',
-	'Class:EventWebService/Attribute:verb' => 'Verb~~',
-	'Class:EventWebService/Attribute:verb+' => 'Name of the operation~~',
+	'Class:EventWebService' => 'WebService调用~~',
+	'Class:EventWebService+' => '跟踪WebService调用~~',
+	'Class:EventWebService/Attribute:verb' => '命令~~',
+	'Class:EventWebService/Attribute:verb+' => '操作名称~~',
 	'Class:EventWebService/Attribute:result' => '结果',
-	'Class:EventWebService/Attribute:result+' => 'Overall success/failure~~',
-	'Class:EventWebService/Attribute:log_info' => 'Info log~~',
-	'Class:EventWebService/Attribute:log_info+' => 'Result info log~~',
-	'Class:EventWebService/Attribute:log_warning' => 'Warning log~~',
-	'Class:EventWebService/Attribute:log_warning+' => 'Result warning log~~',
-	'Class:EventWebService/Attribute:log_error' => 'Error log~~',
-	'Class:EventWebService/Attribute:log_error+' => 'Result error log~~',
+	'Class:EventWebService/Attribute:result+' => '总计成功/失败~~',
+	'Class:EventWebService/Attribute:log_info' => '信息记录~~',
+	'Class:EventWebService/Attribute:log_info+' => '结果信息记录~~',
+	'Class:EventWebService/Attribute:log_warning' => '告警记录~~',
+	'Class:EventWebService/Attribute:log_warning+' => '结果告警记录~~',
+	'Class:EventWebService/Attribute:log_error' => '错误记录~~',
+	'Class:EventWebService/Attribute:log_error+' => '结果错误记录~~',
 	'Class:EventWebService/Attribute:data' => '数据',
-	'Class:EventWebService/Attribute:data+' => 'Result data~~',
+	'Class:EventWebService/Attribute:data+' => '结果数据~~',
 ));
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:EventRestService' => 'REST/JSON 调用',
-	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
+	'Class:EventRestService' => 'REST/JSON调用',
+	'Class:EventRestService+' => '跟踪REST/JSON服务调用~~',
 	'Class:EventRestService/Attribute:operation' => '操作',
 	'Class:EventRestService/Attribute:operation+' => '参数 \'操作\'',
 	'Class:EventRestService/Attribute:version' => '版本',
 	'Class:EventRestService/Attribute:version+' => '参数 \'版本\'',
 	'Class:EventRestService/Attribute:json_input' => '输入',
-	'Class:EventRestService/Attribute:json_input+' => 'Argument \'json_data\'~~',
+	'Class:EventRestService/Attribute:json_input+' => '参数 \'json_data\'~~',
 	'Class:EventRestService/Attribute:code' => '编码',
 	'Class:EventRestService/Attribute:code+' => '返回编码',
 	'Class:EventRestService/Attribute:json_output' => '响应',
-	'Class:EventRestService/Attribute:json_output+' => 'HTTP 响应 (json)',
+	'Class:EventRestService/Attribute:json_output+' => 'HTTP响应 (json)',
 	'Class:EventRestService/Attribute:provider' => '提供者',
 	'Class:EventRestService/Attribute:provider+' => '实现此功能的PHP类',
 ));
@@ -469,7 +469,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventLoginUsage' => '登录频率',
-	'Class:EventLoginUsage+' => 'Connection to the application~~',
+	'Class:EventLoginUsage+' => '连接至应用~~',
 	'Class:EventLoginUsage/Attribute:user_id' => '登录',
 	'Class:EventLoginUsage/Attribute:user_id+' => '登录',
 	'Class:EventLoginUsage/Attribute:contact_name' => '用户名',
@@ -502,7 +502,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Action/Attribute:trigger_list+' => '此操作关联的触发器',
 	'Class:Action/Attribute:finalclass' => '操作类型',
 	'Class:Action/Attribute:finalclass+' => '根本属性的名称',
-	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
+	'Action:WarningNoTriggerLinked' => '警告, 此动作没有关联任何触发器. 至少关联1个触发器才会启用.~~',
 ));
 
 //
@@ -593,18 +593,18 @@ While editing, click on the magnifier to get pertinent examples~~',
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Trigger' => '触发器',
-	'Class:Trigger+' => 'Custom event handler~~',
+	'Class:Trigger+' => '定制事件处理~~',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
 	'Class:Trigger/Attribute:description' => '描述',
 	'Class:Trigger/Attribute:description+' => '简短描述',
 	'Class:Trigger/Attribute:action_list' => '触发的操作',
-	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated~~',
+	'Class:Trigger/Attribute:action_list+' => '此触发器激活后要执行的才做~~',
 	'Class:Trigger/Attribute:finalclass' => '触发器类型',
 	'Class:Trigger/Attribute:finalclass+' => '根本属性的名称',
 	'Class:Trigger/Attribute:context' => '上下文',
-	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
+	'Class:Trigger/Attribute:context+' => '允许此触发器开启的上下文~~',
 	'Class:Trigger/Attribute:complement' => '其它信息',
-	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
+	'Class:Trigger/Attribute:complement+' => '此触发器提供的更多信息, 使用英文~~',
 ));
 
 //
@@ -612,14 +612,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TriggerOnObject' => '触发器 (class dependent)',
-	'Class:TriggerOnObject+' => 'Trigger on a given class of objects~~',
+	'Class:TriggerOnObject' => '触发器 (类别依赖的)',
+	'Class:TriggerOnObject+' => '在指定类别对象上的触发器~~',
 	'Class:TriggerOnObject/Attribute:target_class' => '目标类',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => '筛选器',
-	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
-	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
-	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class "%1$s"~~',
+	'Class:TriggerOnObject/Attribute:filter+' => '限定将激活触发器的对象 (目标类别的)~~',
+	'TriggerOnObject:WrongFilterQuery' => '错误的筛选查询: %1$s~~',
+	'TriggerOnObject:WrongFilterClass' => '筛选查询返回的对象必须是类别 "%1$s"~~',
 ));
 
 //
@@ -675,7 +675,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnObjectDelete' => '触发器 (对象删除时)',
-	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
+	'Class:TriggerOnObjectDelete+' => '指定类别或子类别对象删除时的触发器~~',
 ));
 
 //
@@ -684,7 +684,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnObjectUpdate' => '触发器 (对象更新时)',
-	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
+	'Class:TriggerOnObjectUpdate+' => '指定类别或子类别对象更新时的触发器~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => '目标字段',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
@@ -694,10 +694,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
-	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
+	'Class:TriggerOnObjectMention' => '触发器 (对象提及时)~~',
+	'Class:TriggerOnObjectMention+' => '指定类别或子类别对象在属性日志中提及 (@xxx) 时的触发器~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => '提及筛选~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => '限丁将激活此触发器的提及对象. 如果为空则任何类的提及对象将激活此触发器.~~',
 ));
 
 //
@@ -705,8 +705,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
-	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
+	'Class:TriggerOnAttributeBlobDownload' => '触发器 (对象文档下载时) (on object\'s document download)~~',
+	'Class:TriggerOnAttributeBlobDownload+' => '指定类别或子类别对象的文档下载时的触发器~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => '目标字段',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
 ));
@@ -730,9 +730,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkTriggerAction' => '操作/触发器',
-	'Class:lnkTriggerAction+' => 'Link between a trigger and an action~~',
+	'Class:lnkTriggerAction+' => '关联触发器和操作~~',
 	'Class:lnkTriggerAction/Attribute:action_id' => '操作',
-	'Class:lnkTriggerAction/Attribute:action_id+' => 'The action to be executed~~',
+	'Class:lnkTriggerAction/Attribute:action_id+' => '要执行的操作~~',
 	'Class:lnkTriggerAction/Attribute:action_name' => '操作',
 	'Class:lnkTriggerAction/Attribute:action_name+' => '',
 	'Class:lnkTriggerAction/Attribute:trigger_id' => '触发器',
@@ -752,11 +752,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => '描述',
 	'Class:SynchroDataSource/Attribute:status' => '状态',
-	'Class:SynchroDataSource/Attribute:scope_class' => 'Target class~~',
-	'Class:SynchroDataSource/Attribute:scope_class+' => 'A Synchro Data Source can only populate a single '.ITOP_APPLICATION_SHORT.' class',
+	'Class:SynchroDataSource/Attribute:scope_class' => '目标类别~~',
+	'Class:SynchroDataSource/Attribute:scope_class+' => '一个同步数据源仅能填充一个 '.ITOP_APPLICATION_SHORT.' 类别',
 	'Class:SynchroDataSource/Attribute:user_id' => '用户',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => '联系人',
-	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contact to notify in case of error~~',
+	'Class:SynchroDataSource/Attribute:notify_contact_id+' => '发生错误是要通知的联系人~~',
 	'Class:SynchroDataSource/Attribute:url_icon' => '图标的超链接',
 	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink a (small) image representing the application with which '.ITOP_APPLICATION_SHORT.' is synchronized.
 This icon is shown in the tooltip of the “Lock” symbol on '.ITOP_APPLICATION_SHORT.' synchronized object~~',
@@ -824,17 +824,17 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'SynchroDataSource:Definition' => 'Definition',
 	'Core:SynchroAttributes' => '属性',
 	'Core:SynchroStatus' => '状态',
-	'Core:Synchro:ErrorsLabel' => 'Errors~~',
-	'Core:Synchro:CreatedLabel' => 'Created~~',
-	'Core:Synchro:ModifiedLabel' => 'Modified~~',
-	'Core:Synchro:UnchangedLabel' => 'Unchanged~~',
-	'Core:Synchro:ReconciledErrorsLabel' => 'Errors~~',
-	'Core:Synchro:ReconciledLabel' => 'Reconciled~~',
-	'Core:Synchro:ReconciledNewLabel' => 'Created~~',
-	'Core:SynchroReconcile:Yes' => 'Yes',
-	'Core:SynchroReconcile:No' => 'No',
-	'Core:SynchroUpdate:Yes' => 'Yes',
-	'Core:SynchroUpdate:No' => 'No',
+	'Core:Synchro:ErrorsLabel' => '错误~~',
+	'Core:Synchro:CreatedLabel' => '已创建~~',
+	'Core:Synchro:ModifiedLabel' => '已修改~~',
+	'Core:Synchro:UnchangedLabel' => '未更改~~',
+	'Core:Synchro:ReconciledErrorsLabel' => '错误~~',
+	'Core:Synchro:ReconciledLabel' => '已使一致~~',
+	'Core:Synchro:ReconciledNewLabel' => '已创建~~',
+	'Core:SynchroReconcile:Yes' => '是',
+	'Core:SynchroReconcile:No' => '否',
+	'Core:SynchroUpdate:Yes' => '是',
+	'Core:SynchroUpdate:No' => '否',
 	'Core:Synchro:LastestStatus' => '最新状态',
 	'Core:Synchro:History' => 'Synchronization History~~',
 	'Core:Synchro:NeverRun' => 'This synchro was never run. No log yet.~~',
@@ -896,73 +896,73 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Class:AsyncSendEmail/Attribute:to' => '收件人',
 	'Class:AsyncSendEmail/Attribute:subject' => '主题',
 	'Class:AsyncSendEmail/Attribute:body' => '正文',
-	'Class:AsyncSendEmail/Attribute:header' => 'Header~~',
-	'Class:CMDBChangeOpSetAttributeOneWayPassword' => 'Encrypted Password~~',
-	'Class:CMDBChangeOpSetAttributeOneWayPassword/Attribute:prev_pwd' => 'Previous Value~~',
+	'Class:AsyncSendEmail/Attribute:header' => '标头~~',
+	'Class:CMDBChangeOpSetAttributeOneWayPassword' => '加密密码~~',
+	'Class:CMDBChangeOpSetAttributeOneWayPassword/Attribute:prev_pwd' => '原值~~',
 	'Class:CMDBChangeOpSetAttributeEncrypted' => 'Encrypted Field~~',
-	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Previous Value~~',
-	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Case Log~~',
-	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Last Entry~~',
-	'Class:SynchroAttribute' => 'Synchro Attribute~~',
-	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Synchro Data Source~~',
-	'Class:SynchroAttribute/Attribute:attcode' => 'Attribute Code~~',
-	'Class:SynchroAttribute/Attribute:update' => 'Update',
-	'Class:SynchroAttribute/Attribute:reconcile' => 'Reconcile',
-	'Class:SynchroAttribute/Attribute:update_policy' => 'Update Policy',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => 'Locked',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => 'Unlocked',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => 'Initialize if empty',
-	'Class:SynchroAttribute/Attribute:finalclass' => 'Class',
-	'Class:SynchroAttExtKey' => 'Synchro Attribute (ExtKey)',
-	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => 'Reconciliation Attribute',
-	'Class:SynchroAttLinkSet' => 'Synchro Attribute (Linkset)',
-	'Class:SynchroAttLinkSet/Attribute:row_separator' => 'Rows separator',
-	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => 'Attributes separator',
-	'Class:SynchroLog' => 'Synchr Log',
-	'Class:SynchroLog/Attribute:sync_source_id' => 'Synchro Data Source',
+	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => '原值~~',
+	'Class:CMDBChangeOpSetAttributeCaseLog' => '事例日志~~',
+	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => '最新条目~~',
+	'Class:SynchroAttribute' => '同步属性~~',
+	'Class:SynchroAttribute/Attribute:sync_source_id' => '同步数据源~~',
+	'Class:SynchroAttribute/Attribute:attcode' => '属性编码~~',
+	'Class:SynchroAttribute/Attribute:update' => '更新',
+	'Class:SynchroAttribute/Attribute:reconcile' => '使一致',
+	'Class:SynchroAttribute/Attribute:update_policy' => '更新策略',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => '已锁',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => '未锁',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => '初始化空值',
+	'Class:SynchroAttribute/Attribute:finalclass' => '类别',
+	'Class:SynchroAttExtKey' => '同步属性 (外键)',
+	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => '复制属性',
+	'Class:SynchroAttLinkSet' => '同步属性 (链集)',
+	'Class:SynchroAttLinkSet/Attribute:row_separator' => '行分隔符',
+	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => '属性分隔符',
+	'Class:SynchroLog' => '同步日志',
+	'Class:SynchroLog/Attribute:sync_source_id' => '同步数据源',
 	'Class:SynchroLog/Attribute:start_date' => '开始日期',
 	'Class:SynchroLog/Attribute:end_date' => '结束日期',
 	'Class:SynchroLog/Attribute:status' => '状态',
 	'Class:SynchroLog/Attribute:status/Value:completed' => '已完成',
-	'Class:SynchroLog/Attribute:status/Value:error' => 'Error',
-	'Class:SynchroLog/Attribute:status/Value:running' => 'Still Running',
-	'Class:SynchroLog/Attribute:stats_nb_replica_seen' => 'Nb replica seen',
-	'Class:SynchroLog/Attribute:stats_nb_replica_total' => 'Nb replica total',
-	'Class:SynchroLog/Attribute:stats_nb_obj_deleted' => 'Nb objects deleted',
-	'Class:SynchroLog/Attribute:stats_nb_obj_deleted_errors' => 'Nb of errors while deleting',
-	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted' => 'Nb objects obsoleted',
-	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted_errors' => 'Nb of errors while obsoleting',
-	'Class:SynchroLog/Attribute:stats_nb_obj_created' => 'Nb objects created',
-	'Class:SynchroLog/Attribute:stats_nb_obj_created_errors' => 'Nb or errors while creating',
-	'Class:SynchroLog/Attribute:stats_nb_obj_updated' => 'Nb objects updated',
-	'Class:SynchroLog/Attribute:stats_nb_obj_updated_errors' => 'Nb errors while updating~~',
-	'Class:SynchroLog/Attribute:stats_nb_replica_reconciled_errors' => 'Nb of errors during reconciliation~~',
-	'Class:SynchroLog/Attribute:stats_nb_replica_disappeared_no_action' => 'Nb replica disappeared~~',
-	'Class:SynchroLog/Attribute:stats_nb_obj_new_updated' => 'Nb objects updated~~',
-	'Class:SynchroLog/Attribute:stats_nb_obj_new_unchanged' => 'Nb objects unchanged~~',
-	'Class:SynchroLog/Attribute:last_error' => 'Last error~~',
-	'Class:SynchroLog/Attribute:traces' => 'Traces~~',
-	'Class:SynchroReplica' => 'Synchro Replica~~',
-	'Class:SynchroReplica/Attribute:sync_source_id' => 'Synchro Data Source~~',
-	'Class:SynchroReplica/Attribute:dest_id' => 'Destination object (ID)',
-	'Class:SynchroReplica/Attribute:dest_class' => 'Destination type~~',
-	'Class:SynchroReplica/Attribute:status_last_seen' => 'Last seen~~',
+	'Class:SynchroLog/Attribute:status/Value:error' => '错误',
+	'Class:SynchroLog/Attribute:status/Value:running' => '运行中',
+	'Class:SynchroLog/Attribute:stats_nb_replica_seen' => '可见复制数量',
+	'Class:SynchroLog/Attribute:stats_nb_replica_total' => '复制总数',
+	'Class:SynchroLog/Attribute:stats_nb_obj_deleted' => '已删除对象数量',
+	'Class:SynchroLog/Attribute:stats_nb_obj_deleted_errors' => '删除时错误数量',
+	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted' => '已废弃对象数量',
+	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted_errors' => '废弃时错误数量',
+	'Class:SynchroLog/Attribute:stats_nb_obj_created' => '已创建对象数量',
+	'Class:SynchroLog/Attribute:stats_nb_obj_created_errors' => '创建时错误数量',
+	'Class:SynchroLog/Attribute:stats_nb_obj_updated' => '已更新对象数量',
+	'Class:SynchroLog/Attribute:stats_nb_obj_updated_errors' => '更新时错误数量~~',
+	'Class:SynchroLog/Attribute:stats_nb_replica_reconciled_errors' => '复制时错误数量~~',
+	'Class:SynchroLog/Attribute:stats_nb_replica_disappeared_no_action' => '已失去复制数量~~',
+	'Class:SynchroLog/Attribute:stats_nb_obj_new_updated' => '已更新对象数量~~',
+	'Class:SynchroLog/Attribute:stats_nb_obj_new_unchanged' => '未更改对象数量~~',
+	'Class:SynchroLog/Attribute:last_error' => '最新错误~~',
+	'Class:SynchroLog/Attribute:traces' => '跟踪~~',
+	'Class:SynchroReplica' => '同步复制~~',
+	'Class:SynchroReplica/Attribute:sync_source_id' => '同步数据源~~',
+	'Class:SynchroReplica/Attribute:dest_id' => '目标对象 (ID)',
+	'Class:SynchroReplica/Attribute:dest_class' => '目标类型~~',
+	'Class:SynchroReplica/Attribute:status_last_seen' => '最新可见~~',
 	'Class:SynchroReplica/Attribute:status' => '状态',
 	'Class:SynchroReplica/Attribute:status/Value:modified' => '已修改',
 	'Class:SynchroReplica/Attribute:status/Value:new' => '新建',
 	'Class:SynchroReplica/Attribute:status/Value:obsolete' => '废弃',
 	'Class:SynchroReplica/Attribute:status/Value:orphan' => 'Orphan',
 	'Class:SynchroReplica/Attribute:status/Value:synchronized' => '已同步',
-	'Class:SynchroReplica/Attribute:status_dest_creator' => 'Object Created ?',
-	'Class:SynchroReplica/Attribute:status_last_error' => 'Last Error',
-	'Class:SynchroReplica/Attribute:status_last_warning' => 'Warnings',
+	'Class:SynchroReplica/Attribute:status_dest_creator' => '对象已创建 ?',
+	'Class:SynchroReplica/Attribute:status_last_error' => '最新错误',
+	'Class:SynchroReplica/Attribute:status_last_warning' => '告警',
 	'Class:SynchroReplica/Attribute:info_creation_date' => '创建日期',
 	'Class:SynchroReplica/Attribute:info_last_modified' => '最后修改日期',
 	'Class:appUserPreferences' => '用户偏好',
 	'Class:appUserPreferences/Attribute:userid' => '用户',
 	'Class:appUserPreferences/Attribute:preferences' => '首选项',
-	'Core:ExecProcess:Code1' => 'Wrong command or command finished with errors (e.g. wrong script name)~~',
-	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)~~',
+	'Core:ExecProcess:Code1' => '命令错误或命令执行出错 (例如错误的脚本名称)~~',
+	'Core:ExecProcess:Code255' => 'PHP错误 (解析, 或运行时)~~',
 
 	// Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
@@ -971,13 +971,13 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 
 	// Explain working time computing
-	'Core:ExplainWTC:ElapsedTime' => '耗时 (stored as "%1$s")',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for "%1$s"~~',
+	'Core:ExplainWTC:ElapsedTime' => '耗时 (储存为 "%1$s")',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => '在 "%1$s" 上消耗的时间~~',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for "%1$s" at %2$d%%~~',
 
 	// Bulk export
 	'Core:BulkExport:MissingParameter_Param' => '缺少参数 "%1$s"',
-	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter "query". There is no Query Phrasebook corresponding to the id: "%1$s".',
+	'Core:BulkExport:InvalidParameter_Query' => '参数 "query" 的值无效. 在查询薄中没有找到对应id: "%1$s" 的记录.',
 	'Core:BulkExport:ExportFormatPrompt' => '导出格式:',
 	'Core:BulkExportOf_Class' => '%1$s 导出',
 	'Core:BulkExport:ClickHereToDownload_FileName' => '点击这里下载 %1$s',
@@ -1008,7 +1008,7 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Core:BulkExport:PageOrientation-P' => '纵向',
 	'Core:BulkExport:XMLFormat' => 'XML文件 (*.xml)',
 	'Core:BulkExport:XMLOptions' => 'XML选项',
-	'Core:BulkExport:SpreadsheetFormat' => 'HTML表单(*.html)',
+	'Core:BulkExport:SpreadsheetFormat' => 'HTML表单 (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => '表单选项',
 	'Core:BulkExport:OptionNoLocalize' => '不要本地化这些值 (举的例子)',
 	'Core:BulkExport:OptionLinkSets' => '包含外链的对象',
@@ -1021,10 +1021,10 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Core:BulkExportQueryPlaceholder' => '请在这里输入OQL查询...',
 	'Core:BulkExportCanRunNonInteractive' => '点击这里运行非交互式导出.',
 	'Core:BulkExportLegacyExport' => '点击这里进入旧版导出.',
-	'Core:BulkExport:XLSXOptions' => 'Excel 选项',
-	'Core:BulkExport:TextFormat' => '文本中包含一些HTML 标记',
+	'Core:BulkExport:XLSXOptions' => 'Excel选项',
+	'Core:BulkExport:TextFormat' => '文本中包含一些HTML标记',
 	'Core:BulkExport:DateTimeFormat' => '日期和时间格式',
-	'Core:BulkExport:DateTimeFormatDefault_Example' => '默认格式 (%1$s), e.g. %2$s',
+	'Core:BulkExport:DateTimeFormatDefault_Example' => '默认格式 (%1$s), 例如 %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => '自定义格式: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => '第 %1$s 页',
 	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
@@ -1051,7 +1051,7 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 // Class: TagSetFieldData
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
+	'Class:TagSetFieldData' => '%2$s 给类别 %1$s~~',
 	'Class:TagSetFieldData+' => '~~',
 
 	'Class:TagSetFieldData/Attribute:code' => '编码',
@@ -1060,20 +1060,20 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TagSetFieldData/Attribute:label+' => '显示的标签',
 	'Class:TagSetFieldData/Attribute:description' => '描述',
 	'Class:TagSetFieldData/Attribute:description+' => '描述',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => '标签类别~~~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => '对象类别~~~~',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => '字段编码~~~~',
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => '已使用的标签无法删除',
-	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters, starting with a letter.~~',
-	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
-	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
-	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',
-	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" cannot be changed~~',
-	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
-	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
-	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
+	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => '标签编码或名称必须是唯一的~~',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => '标签编码必须介于 3 到 %1$d 个字符, 以字母开头.~~',
+	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => '输入的标签编码为内部保留字~~',
+	'Core:TagSetFieldData:ErrorTagLabelSyntax' => '标签名称不能包含 \'%1$s\' 或为空~~',
+	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => '标签编码被使用时无法更改~~',
+	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => '标签 "对象类别" 不能更改~~',
+	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => '标签 "属性编码" 不能更改~~',
+	'Core:TagSetFieldData:WhereIsThisTagTab' => '标签使用率 (%1$d)~~',
+	'Core:TagSetFieldData:NoEntryFound' => '没有找到此标签的条目~~',
 ));
 
 //
@@ -1100,7 +1100,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:BackgroundTask' => '后台任务',
 	'Class:BackgroundTask+' => '',
-	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
+	'Class:BackgroundTask/Attribute:class_name' => '类别名称~~',
 	'Class:BackgroundTask/Attribute:class_name+' => '~~',
 	'Class:BackgroundTask/Attribute:first_run_date' => '首次运行时间',
 	'Class:BackgroundTask/Attribute:first_run_date+' => '',
@@ -1144,14 +1144,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AsyncTask/Attribute:status+' => '~~',
 	'Class:AsyncTask/Attribute:remaining_retries' => '剩余重试次数',
 	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
-	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
+	'Class:AsyncTask/Attribute:last_error_code' => '最新错误代码~~',
 	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
-	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
+	'Class:AsyncTask/Attribute:last_error' => '最新错误~~',
 	'Class:AsyncTask/Attribute:last_error+' => '~~',
-	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
+	'Class:AsyncTask/Attribute:last_attempt' => '最近尝试~~',
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
-	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => '配置 "async_task_retries[%1$s]" 的格式无效. 应该为数组包含以下值: %2$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => '配置 "async_task_retries[%1$s]" 的格式无效: 未知的值 "%2$s". 应该只包含以下值: %3$s~~',
 ));
 
 //
@@ -1177,7 +1177,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu' => '资源运行查询菜单~~',
 	'Class:ResourceRunQueriesMenu+' => '',
 ));
 
@@ -1186,7 +1186,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu' => '资源系统菜单~~',
 	'Class:ResourceSystemMenu+' => '',
 ));
 
