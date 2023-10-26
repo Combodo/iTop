@@ -50,7 +50,6 @@ class UserRightsTest extends ItopDataTestCase
 
 		try {
 			utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');
-			self::CreateUser('admin', 1);
 		}
 		catch (CoreCannotSaveObjectException $e) {
 		}
@@ -487,8 +486,7 @@ class UserRightsTest extends ItopDataTestCase
 		];
 	}
 	/**
-	 * @runInSeparateProcess
-	 *@dataProvider NonAdminCannotListAdminProfilesProvider
+	 * @dataProvider NonAdminCannotListAdminProfilesProvider
 	 */
 	public function testNonAdminCannotListAdminProfiles($bHideAdministrators, $iExpectedCount)
 	{
