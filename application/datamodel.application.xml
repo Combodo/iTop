@@ -43,7 +43,7 @@
     <class id="WelcomePopupAcknowledge" _delta="define">
       <parent>DBObject</parent>
       <properties>
-        <comment>/* Acknowledge welcome popup messages */</comment>
+        <comment>/** Acknowledge welcome popup messages */</comment>
         <abstract>false</abstract>
         <category></category>
         <key_type>autoincrement</key_type>

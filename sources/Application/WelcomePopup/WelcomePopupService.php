@@ -9,7 +9,7 @@ use LogChannels;
 use MetaModel;
 use UserRights;
 use WelcomePopupAcknowledge;
-use iWelcomePopup;
+use iWelcomePopupExtension;
 use utils;
 
 /**
@@ -24,7 +24,7 @@ class WelcomePopupService
 	 * Array of acknowledged messages for the current user
 	 * @var string[]
 	 */
-	static $aAcknowledgedMessage = null;
+	public static $aAcknowledgedMessage = null;
 
 	/**
 	 * Array of "providers" of welcome popup messages
@@ -36,7 +36,7 @@ class WelcomePopupService
 	 * Get the list of messages to display in the Welcome popup dialog
 	 * @return string[][]
 	 */
-	public function GetMessages()
+	public function GetMessages(): array
 	{
 		$this->LoadProviders();
 		return $this->ProcessMessages();
@@ -127,7 +127,7 @@ class WelcomePopupService
 		if ($this->aMessagesProviders !== null) return;
 
 		$aProviders = [];
-		$aProviderClasses = utils::GetClassesForInterface(iWelcomePopup::class, '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+		$aProviderClasses = utils::GetClassesForInterface(iWelcomePopupExtension::class, '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
 		foreach($aProviderClasses as $sProviderClass) {
 			$aProviders[] = new $sProviderClass();
 		}
@@ -164,7 +164,7 @@ class WelcomePopupService
 
 	/**
 	 * Set the cache of welcome popup message providers (useful for testing)
-	 * @param iWelcomePopup[] $aMessagesProviders
+	 * @param iWelcomePopupExtension[] $aMessagesProviders
 	 */
 	protected function SetMessagesProviders(array $aMessagesProviders): void
 	{
@@ -174,9 +174,9 @@ class WelcomePopupService
 	/**
 	 * Retrieve the provider associated with a message
 	 * @param string $sMessageUUID
-	 * @return iWelcomePopup|NULL
+	 * @return iWelcomePopupExtension|NULL
 	 */
-	protected function GetProviderByUUID(string $sMessageUUID): ?iWelcomePopup
+	protected function GetProviderByUUID(string $sMessageUUID): ?iWelcomePopupExtension
 	{
 		$this->LoadProviders();
 		$sProviderKey = substr($sMessageUUID, 0, strpos($sMessageUUID, '::'));

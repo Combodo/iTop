@@ -2,15 +2,18 @@
 namespace Combodo\iTop\Application\WelcomePopup;
 
 use Dict;
-use AbstractWelcomePopup;
+use AbstractWelcomePopupExtension;
 
 /**
  * Implementation of the "default" Welcome Popup message
  * @since 3.1.0
  */
-class DefaultWelcomePopup extends AbstractWelcomePopup
+class DefaultWelcomePopup extends AbstractWelcomePopupExtension
 {
-	public function GetMessages()
+	/**
+	 * @inheritDoc
+	 */
+	public function GetMessages(): array
 	{
 		return [
 			[
