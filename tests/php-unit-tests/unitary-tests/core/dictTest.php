@@ -70,9 +70,6 @@ PHP;
 
 		// Preserve the dictionary for test that will be executed later on
 		static::BackupStaticProperties('Dict');
-
-		// Reset the dictionary
-		static::SetNonPublicStaticProperty('Dict', 'm_aData', []);
 	}
 
 	protected function tearDown(): void
