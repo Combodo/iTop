@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -257,30 +257,28 @@ class TransactionsTest extends ItopTestCase
 
 	/**
 	 * @return void
-	 * @doesNotPerformAssertions
 	 */
-	public function testTransactionOpenedThenClosed()
+	public function testIsInsideTransaction()
 	{
-		CMDBSource::Query('START TRANSACTION;');
-		CMDBSource::Query('COMMIT;');
-	}
+		static::assertFalse(CMDBSource::IsInsideTransaction(), 'Should not be already inside a transaction');
 
-	/**
-	 * This will throw an exception in the tearDown method.
-	 * This cannot be detected nor by `@expectedException` nor `expectException` method, so we have a specific tearDown impl
-	 *
-	 * @return void
-	 * @doesNotPerformAssertions
-	 */
-	public function testTransactionOpenedNotClosed()
-	{
+		// First, with a transaction ended by a "COMMIT" statement
 		CMDBSource::Query('START TRANSACTION;');
+		static::assertTrue(CMDBSource::IsInsideTransaction(), 'Should be inside a translation');
+		CMDBSource::Query('COMMIT;');
+		static::assertFalse(CMDBSource::IsInsideTransaction(), 'Should not be inside a transaction anymore');
+
+		// Second, with a transaction ended by a "ROLLBACK" statement
+		CMDBSource::Query('START TRANSACTION;');
+		static::assertTrue(CMDBSource::IsInsideTransaction(), 'Should be inside a translation (again)');
+		CMDBSource::Query('ROLLBACK;');
+		static::assertFalse(CMDBSource::IsInsideTransaction(), 'Should not be inside a transaction anymore');
 	}
 
 	protected function tearDown(): void
 	{
 		try {
-			DbConnectionWrapper::SetDbConnectionMockForQuery(); // Else will throw error on PHP 8.1+ (see N°6848)
+			DbConnectionWrapper::SetDbConnectionMockForQuery();
 			parent::tearDown();
 		}
 		catch (MySQLTransactionNotClosedException $e) {

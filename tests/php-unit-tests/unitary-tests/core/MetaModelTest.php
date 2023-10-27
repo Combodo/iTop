@@ -27,7 +27,13 @@ class MetaModelTest extends ItopDataTestCase
 		$this->RequireOnceItopFile('/core/metamodel.class.php');
 	}
 
-    /**
+	protected function tearDown(): void
+	{
+		$this->InvokeNonPublicStaticMethod('PluginManager', 'ResetPlugins');
+		parent::tearDown();
+	}
+
+	/**
      * @group itopRequestMgmt
      * @covers       MetaModel::ApplyParams()
      * @dataProvider ApplyParamsProvider
@@ -216,8 +222,6 @@ class MetaModelTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @runInSeparateProcess
-	 *
 	 * @dataProvider enumPluginsProvider
 	 *
 	 * @param $expectedResults
@@ -265,8 +269,6 @@ class MetaModelTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @runInSeparateProcess
-	 *
 	 * @dataProvider getPluginsProvider
 	 *
 	 * @param $expectedInstanciationCalls

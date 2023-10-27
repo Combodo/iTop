@@ -30,9 +30,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Dict;
 
 
-/**
- * @runTestsInSeparateProcesses
- */
 class dictApcuTest extends ItopTestCase
 {
 	private $sEnvName;
@@ -45,9 +42,16 @@ class dictApcuTest extends ItopTestCase
 
 		$this->RequireOnceItopFile('core'.DIRECTORY_SEPARATOR.'apc-service.class.inc.php');
 
-		$this->sEnvName = time();
+		// This id will be used as path to the dictionary files
+		// It must be unique enough for the magic of Dict to operate (due to the use of require_once to load dictionaries)
+		$this->sEnvName = uniqid();
 		$_SESSION['itop_env'] = $this->sEnvName;
 
+		// Preserve the dictionary for test that will be executed later on
+		static::BackupStaticProperties('Dict');
+
+		// Reset and prepare the dictionary
+		static::SetNonPublicStaticProperty('Dict', 'm_aData', []);
 		$this->oApcService = $this->createMock(\ApcService::class);
 		Dict::SetApcService($this->oApcService);
 		Dict::EnableCache('toto');
@@ -57,7 +61,8 @@ class dictApcuTest extends ItopTestCase
 		$this->InitDictionnaries();
 	}
 
-	private function InitDictionnaries(){
+	private function InitDictionnaries()
+	{
 		clearstatcache();
 		$this->sDictionaryFolder = APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries";
 		@mkdir($this->sDictionaryFolder, 0777, true);
@@ -82,7 +87,8 @@ STR;
 		clearstatcache();
 	}
 
-	private function InitDictionnary($sDictionaryFolder, $sLanguageCode, $sLanguageCodeInFilename, $sLabels){
+	private function InitDictionnary($sDictionaryFolder, $sLanguageCode, $sLanguageCodeInFilename, $sLabels)
+	{
 		$sContent = <<<PHP
 <?php
 //
@@ -95,7 +101,8 @@ PHP;
 		file_put_contents($sDictionaryFolder . DIRECTORY_SEPARATOR . "$sLanguageCodeInFilename.dict.php", $sContent);
 	}
 
-	private function InitBrokenDictionnary($sDictionaryFolder, $sLanguageCode, $sLanguageCodeInFilename){
+	private function InitBrokenDictionnary($sDictionaryFolder, $sLanguageCode, $sLanguageCodeInFilename)
+	{
 		$sContent = <<<PHP
 <?php
 //
@@ -114,10 +121,13 @@ PHP;
 		rmdir(APPROOT."env-$this->sEnvName".DIRECTORY_SEPARATOR."dictionaries");
 		rmdir(APPROOT."env-$this->sEnvName");
 
+		static::RestoreStaticProperties('Dict');
+
 		parent::tearDown();
 	}
 
-	public function InitLangIfNeeded_NoApcProvider(){
+	public function InitLangIfNeeded_NoApcProvider()
+	{
 		return [
 			'apcu mocked' => [ 'bApcuMocked' => true ],
 			'integration test - apcu service like in production - install php-apcu before' => [ 'bApcuMocked' => false ],
@@ -127,7 +137,8 @@ PHP;
 	/**
 	 * @dataProvider InitLangIfNeeded_NoApcProvider
 	 */
-	public function testInitLangIfNeeded_NoApc($bApcuMocked){
+	public function testInitLangIfNeeded_NoApc($bApcuMocked)
+	{
 		if ($bApcuMocked) {
 			$this->oApcService->expects($this->any())
 				->method('function_exists')
@@ -163,7 +174,8 @@ PHP;
 		$this->assertEquals('not_defined_label', Dict::S('not_defined_label'));
 	}
 
-	public function testInitLangIfNeeded_Apc_LanguageMismatchDictionnary(){
+	public function testInitLangIfNeeded_Apc_LanguageMismatchDictionnary()
+	{
 		//language mismatch!!
 		$sLabels = <<<STR
         'label1' => 'de1',
@@ -185,7 +197,8 @@ STR;
 		$this->assertEquals('label1', Dict::S('label1'));
 	}
 
-	public function testInitLangIfNeeded_Apc_BrokenUserDictionnary(){
+	 public function testInitLangIfNeeded_Apc_BrokenUserDictionnary()
+	 {
 		$this->InitBrokenDictionnary($this->sDictionaryFolder, 'DE DE', 'de-de');
 
 		$this->oApcService->expects($this->any())
@@ -205,7 +218,8 @@ STR;
 		$this->assertEquals('ru1', Dict::S('label1'));
 	}
 
-	public function testInitLangIfNeeded_Apc_BrokenDictionnary_UserAndDefault(){
+	public function testInitLangIfNeeded_Apc_BrokenDictionnary_UserAndDefault()
+	{
 		$this->InitBrokenDictionnary($this->sDictionaryFolder, 'DE DE', 'de-de');
 		$this->InitBrokenDictionnary($this->sDictionaryFolder, 'RU RU', 'ru-ru');
 
@@ -224,7 +238,8 @@ STR;
 		$this->assertEquals('en1', Dict::S('label1'));
 	}
 
-	public function testInitLangIfNeeded_Apc_BrokenDictionnary_ALL(){
+	public function testInitLangIfNeeded_Apc_BrokenDictionnary_ALL()
+	{
 		$this->InitBrokenDictionnary($this->sDictionaryFolder, 'DE DE', 'de-de');
 		$this->InitBrokenDictionnary($this->sDictionaryFolder, 'RU RU', 'ru-ru');
 		$this->InitBrokenDictionnary($this->sDictionaryFolder, 'EN US', 'en-us');
@@ -244,7 +259,8 @@ STR;
 		$this->assertEquals('label1', Dict::S('label1'));
 	}
 
-	public function testInitLangIfNeeded_ApcFromCache_PropertyInUserDictionnary(){
+	public function testInitLangIfNeeded_ApcFromCache_PropertyInUserDictionnary()
+	{
 		$this->oApcService->expects($this->any())
 			->method('function_exists')
 			->willReturn(true);
@@ -262,7 +278,8 @@ STR;
 		$this->assertEquals('fr1', Dict::S('label1'));
 	}
 
-	public function testInitLangIfNeeded_ApcStore_PropertyInUserDictionnary(){
+	public function testInitLangIfNeeded_ApcStore_PropertyInUserDictionnary()
+	{
 		$this->oApcService->expects($this->any())
 			->method('function_exists')
 			->willReturn(true);
@@ -341,7 +358,8 @@ STR;
 		$this->assertEquals('en2', Dict::S('label2'));
 	}
 
-	public function testInitLangIfNeeded_Apc_PropertyInDictDefaultLanguageDictionnary(){
+	public function testInitLangIfNeeded_Apc_PropertyInDictDefaultLanguageDictionnary()
+	{
 		$this->oApcService->expects($this->any())
 			->method('function_exists')
 			->willReturn(true);
@@ -362,7 +380,8 @@ STR;
 		$this->assertEquals('en3', Dict::S('label3'));
 	}
 
-	public function testInitLangIfNeeded_ApcCorrupted_PropertyInDictDefaultLanguageDictionnary(){
+	public function testInitLangIfNeeded_ApcCorrupted_PropertyInDictDefaultLanguageDictionnary()
+	{
 		$this->oApcService->expects($this->any())
 			->method('function_exists')
 			->willReturn(true);
@@ -380,7 +399,8 @@ STR;
 		$this->assertEquals('label3', Dict::S('label3'));
 	}
 
-	public function testInitLangIfNeeded_Apc_PropertyNotFound(){
+	public function testInitLangIfNeeded_Apc_PropertyNotFound()
+	{
 		$this->oApcService->expects($this->any())
 			->method('function_exists')
 			->willReturn(true);

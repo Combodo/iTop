@@ -12,46 +12,65 @@ use ThemeHandler;
 class ThemeHandlerTest extends ItopTestCase
 {
 	const PATTERN = '|\\\/var[^"]+testimages|';
-	
+
 	private $oCompileCSSServiceMock;
 	private $sCompiledThemesDirAbsPath;
 	private $sCssAbsPath;
 	private $sDmCssAbsPath;
 	private $sJsonThemeParamFile;
-	private $sTmpDir;
-	private $aDirsToCleanup= [];
+	static private $sTmpDir = null;
+	static private $aDirsToCleanup = [];
+	static private $sAbsoluteImagePath;
+
+
+	static function setUpBeforeClass(): void
+	{
+		parent::setUpBeforeClass();
+
+		static::$sTmpDir = static::CreateTmpdir().'/';
+		static::$aDirsToCleanup[] = static::$sTmpDir;
+
+		static::$sAbsoluteImagePath = APPROOT.'tests/php-unit-tests/unitary-tests/application/theme-handler/copied/testimages/';
+		static::RecurseMkdir(static::$sAbsoluteImagePath);
+
+		// Required by testCompileThemesxxx - copy images in test dir
+		static::RecurseCopy(APPROOT.'tests/php-unit-tests/unitary-tests/application/theme-handler/expected/testimages/', static::$sAbsoluteImagePath);
+
+		static::$aDirsToCleanup[] = dirname(static::$sAbsoluteImagePath);
+	}
+
+	static function tearDownAfterClass(): void
+	{
+		foreach (static::$aDirsToCleanup as $sDir)
+		{
+			static::RecurseRmdir($sDir);
+		}
+
+		parent::tearDownAfterClass();
+	}
+
+	protected static function InitCSSDirectory()
+	{
+		static::RecurseCopy(APPROOT."/tests/php-unit-tests/unitary-tests/application/theme-handler/expected/css", static::$sTmpDir."/branding/css");
+	}
 
 	public function setUp(): void
 	{
 		parent::setUp();
-		$this->RequireOnceItopFile('application/themehandler.class.inc.php');
-		$this->RequireOnceItopFile('setup/modelfactory.class.inc.php');
-		$this->RequireOnceUnitTestFile('../setup/SubMFCompiler.php');
 
 		$this->oCompileCSSServiceMock = $this->createMock('CompileCSSService');
 		ThemeHandler::mockCompileCSSService($this->oCompileCSSServiceMock);
 
-		$this->sTmpDir = $this->CreateTmpdir().'/';
-		$this->aDirsToCleanup[] = $this->sTmpDir;
-
-
-		$this->sCompiledThemesDirAbsPath = $this->sTmpDir."branding/themes/";
-		$this->recurseMkdir($this->sCompiledThemesDirAbsPath."basque-red/");
+		$this->sCompiledThemesDirAbsPath = static::$sTmpDir."branding/themes/";
+		static::RecurseMkdir($this->sCompiledThemesDirAbsPath."basque-red/");
 		$this->sCssAbsPath = $this->sCompiledThemesDirAbsPath.'basque-red/main.css';
 		$this->sDmCssAbsPath = $this->sCompiledThemesDirAbsPath.'datamodel-compiled-scss-rules.scss';
 		$this->sJsonThemeParamFile = $this->sCompiledThemesDirAbsPath.'basque-red/theme-parameters.json';
-		$this->RecurseCopy(APPROOT."/tests/php-unit-tests/unitary-tests/application/theme-handler/expected/css", $this->sTmpDir."/branding/css");
 	}
 
 	public function tearDown(): void
 	{
 		parent::tearDown();
-
-		foreach ($this->aDirsToCleanup as $sDir)
-		{
-			echo $sDir;
-			$this->RecurseRmdir($sDir);
-		}
 	}
 
 	function KeepSignatureDiff($sSignature1, $sSignature2) : string {
@@ -83,14 +102,14 @@ class ThemeHandlerTest extends ItopTestCase
 					$aDiffOuput[$sKey] = $aCurrentDiffVal;
 				}
 			} else if ($oVal1 !== $aSignature2[$sKey]){
-					$aDiffOuput[$sKey] = "expected:$oVal1 | actual:$aSignature2[$sKey]";
+				$aDiffOuput[$sKey] = "expected:$oVal1 | actual:$aSignature2[$sKey]";
 			}
 		}
 
 		return json_encode($aDiffOuput, true);
 	}
 
-	function recurseMkdir($dir)
+	public static function RecurseMkdir($dir)
 	{
 		if (is_dir($dir))
 		{
@@ -98,7 +117,7 @@ class ThemeHandlerTest extends ItopTestCase
 		}
 
 		$sParentDir = dirname($dir);
-		if (!$this->recurseMkdir($sParentDir))
+		if (!static::RecurseMkdir($sParentDir))
 		{
 			return false;
 		}
@@ -141,6 +160,8 @@ JSON;
 	 */
 	public function testCompileThemeWithoutCssFile_FocusOnParamAttribute($readFromParamAttributeFromJson=false)
 	{
+		static::InitCSSDirectory();
+
 		$sExpectJsonFilePath = APPROOT.'tests/php-unit-tests/unitary-tests/application/theme-handler/expected/themes/basque-red/theme-parameters.json';
 		$sExpectedThemeParamJson = file_get_contents($sExpectJsonFilePath);
 		$aThemeParameters = json_decode($sExpectedThemeParamJson, true);
@@ -160,11 +181,11 @@ JSON;
 		if($readFromParamAttributeFromJson)
 		{
 			copy($sExpectJsonFilePath, $this->sJsonThemeParamFile);
-			$this->assertTrue(ThemeHandler::CompileTheme('basque-red', true, "COMPILATIONTIMESTAMP", null, [$this->sTmpDir.'/branding/themes/'], $this->sTmpDir));
+			$this->assertTrue(ThemeHandler::CompileTheme('basque-red', true, "COMPILATIONTIMESTAMP", null, [static::$sTmpDir.'/branding/themes/'], static::$sTmpDir));
 		}
 		else
 		{
-			$this->assertTrue(ThemeHandler::CompileTheme('basque-red', true, "COMPILATIONTIMESTAMP", $aThemeParameters, [$this->sTmpDir.'/branding/themes/'], $this->sTmpDir));
+			$this->assertTrue(ThemeHandler::CompileTheme('basque-red', true, "COMPILATIONTIMESTAMP", $aThemeParameters, [static::$sTmpDir.'/branding/themes/'], static::$sTmpDir));
 		}
 		$this->assertTrue(is_file($this->sCssAbsPath));
 		$this->assertEquals($sExpectedThemeParamJson, file_get_contents($this->sJsonThemeParamFile));
@@ -189,14 +210,14 @@ JSON;
 	 */
 	public function testCompileThemesEmptyArray($ThemeParametersJson, $CompileCount=0)
 	{
-		$sCssPath = $this->sTmpDir . '/branding/themes/basque-red/main.css';
+		$sCssPath = static::$sTmpDir . '/branding/themes/basque-red/main.css';
 		copy(APPROOT . 'tests/php-unit-tests/unitary-tests/application/theme-handler/expected/themes/basque-red/main.css', $sCssPath);
 
 		$this->oCompileCSSServiceMock->expects($this->exactly($CompileCount))
 			->method("CompileCSSFromSASS")
 			->willReturn("====CSSCOMPILEDCONTENT====");
 
-		$this->assertEquals($CompileCount!=0,ThemeHandler::CompileTheme('basque-red', true, "COMPILATIONTIMESTAMP", json_decode($ThemeParametersJson, true), [$this->sTmpDir.'/branding/themes/'], $this->sTmpDir));
+		$this->assertEquals($CompileCount!=0,ThemeHandler::CompileTheme('basque-red', true, "COMPILATIONTIMESTAMP", json_decode($ThemeParametersJson, true), [static::$sTmpDir.'/branding/themes/'], static::$sTmpDir));
 	}
 
 	public function CompileThemesProviderEmptyArray()
@@ -213,6 +234,14 @@ JSON;
 
 	/**
 	 * @return array
+	 * mixed $ThemeParametersJson
+	 * int $iCompileCSSFromSASSCount
+	 * boolean $bMissingFile
+	 * boolean $bFilesTouchedRecently
+	 * boolean $bFileMd5sumModified
+	 * null $sFileToTest
+	 * null $sExpectedMainCssPath
+	 * bool $bSetup
 	 */
 	public function CompileThemesProvider()
 	{
@@ -260,26 +289,24 @@ JSON;
 	 */
 	public function testCompileThemes($ThemeParametersJson, $iCompileCSSFromSASSCount, $bMissingFile=false, $bFilesTouchedRecently=false, $bFileMd5sumModified=false, $sFileToTest=null, $sExpectedMainCssPath=null, $bSetup=true)
 	{
+		static::InitCSSDirectory();
+
 		$sAfterReplacementCssVariableMd5sum='';
-		if (is_file($this->sTmpDir.'/'.$sFileToTest))
+		if (is_file(static::$sTmpDir.'/'.$sFileToTest))
 		{
-			$sFileToTest = $this->sTmpDir.'/'.$sFileToTest;
+			$sFileToTest = static::$sTmpDir.'/'.$sFileToTest;
 		} else {
 			$sFileToTest = APPROOT.'/'.$sFileToTest;
 		}
 
-		//copy images in test dir
-		$sAbsoluteImagePath = APPROOT.'tests/php-unit-tests/unitary-tests/application/theme-handler/copied/testimages/';
-		$this->recurseMkdir($sAbsoluteImagePath);
-		$this->aDirsToCleanup[] = dirname($sAbsoluteImagePath);
-		$this->RecurseCopy(APPROOT.'tests/php-unit-tests/unitary-tests/application/theme-handler/expected/testimages/', $sAbsoluteImagePath);
+		// Backup the file to test
+		copy($sFileToTest, static::$sTmpDir.'/file-to-test-backup');
 
 		//change approot-relative in css-variable to use absolute path
-		$sCssVarPath = $this->sTmpDir."/branding/css/DO_NOT_CHANGE.css-variables.scss";
+		$sCssVarPath = static::$sTmpDir."/branding/css/DO_NOT_CHANGE.css-variables.scss";
 		$sBeforeReplacementCssVariableMd5sum = md5_file($sCssVarPath);
-		echo 'BEFORE :'.$sBeforeReplacementCssVariableMd5sum.' '.$sCssVarPath.' ';
 		$sCssVariableContent = file_get_contents($sCssVarPath);
-		$sLine = '$approot-relative: "'.$sAbsoluteImagePath.'" !default;';
+		$sLine = '$approot-relative: "'.static::$sAbsoluteImagePath.'" !default;';
 		$sCssVariableContent = preg_replace("/\\\$approot-relative: \"(.*)\"/", $sLine, $sCssVariableContent);
 		file_put_contents($sCssVarPath, $sCssVariableContent);
 		if ($bMissingFile)
@@ -296,30 +323,23 @@ JSON;
 		//change cssvar md5sum + image absolute paths
 		$sMainCssContent = file_get_contents(APPROOT."tests/php-unit-tests/unitary-tests/application/theme-handler/expected/themes/basque-red/main_testcompilethemes.css");
 		$sMainCssContent = preg_replace('/MD5SUM/', $sAfterReplacementCssVariableMd5sum, $sMainCssContent);
-		$sReplacement = rtrim($sAbsoluteImagePath, '/');
+		$sReplacement = rtrim(static::$sAbsoluteImagePath, '/');
 		$sReplacement=preg_replace('|\/|', '\/', $sReplacement);
 		$sMainCssContent = preg_replace(static::PATTERN,  $sReplacement, $sMainCssContent);
-		$cssPath = $this->sTmpDir . '/branding/themes/basque-red/main.css';
-		echo 'PUT md5sum: '.$sAfterReplacementCssVariableMd5sum.' in '.$cssPath.' ';
+		$cssPath = static::$sTmpDir . '/branding/themes/basque-red/main.css';
 		file_put_contents($cssPath, $sMainCssContent);
 
 		//should be after main.css modification to make sure precompilation check will be performed
 		if ($bFilesTouchedRecently)
 		{
-			sleep(1);
-			touch($sFileToTest);
+			touch($sFileToTest, time() + 2, time() + 2);
 		}
 
 		//same: it should be after main.css modification
 		if ($bFileMd5sumModified)
 		{
-			$sMd5sum = md5_file($sFileToTest);
-			echo ' BEFORE touch: ' . $sMd5sum  .' ' . $sFileToTest;
-			sleep(1);
 			file_put_contents($sFileToTest, "###\n".file_get_contents($sFileToTest));
-
-			$sMd5sum = md5_file($sFileToTest);
-			echo ' AFTER touch: ' . $sMd5sum  .' ' . $sFileToTest;
+			touch($sFileToTest, time() + 2, time() + 2);
 		}
 
 		if (is_file($sCssVarPath))
@@ -332,7 +352,7 @@ JSON;
 			->willReturn("====CSSCOMPILEDCONTENT====");
 
 		$aThemeParameters = json_decode($ThemeParametersJson, true);
-		$this->assertEquals($iCompileCSSFromSASSCount!=0, ThemeHandler::CompileTheme('basque-red', $bSetup, "COMPILATIONTIMESTAMP", $aThemeParameters, [$this->sTmpDir.'/branding/themes/'], $this->sTmpDir));
+		$this->assertEquals($iCompileCSSFromSASSCount!=0, ThemeHandler::CompileTheme('basque-red', $bSetup, "COMPILATIONTIMESTAMP", $aThemeParameters, [static::$sTmpDir.'/branding/themes/'], static::$sTmpDir));
 
 		if ($iCompileCSSFromSASSCount==1)
 		{
@@ -347,9 +367,11 @@ JSON;
 			$aReplacements = [$sReplacement, $sAfterReplacementCssVariableMd5sum];
 			$aReplacements[] = md5(json_encode($aThemeParameters['variables']));
 			$aReplacements[] = $sAfterReplacementCssVariableMd5sum;
-			var_dump($aReplacements);
 			$this->DoInnerJsonValidation($sExpectedMainCssFile, $cssPath, $aPatterns, $aReplacements);
 		}
+
+		// Restore the file to test (possible improvement: do that in tearDown)
+		copy(static::$sTmpDir.'/file-to-test-backup', $sFileToTest);
 	}
 
 	public function DoInnerJsonValidation($sExpectedCssFile, $sActualCssFile, $aPatterns, $aReplacements)
@@ -396,8 +418,8 @@ JSON;
 			'\'abc/\'+ $approot-relative + "css/ui-lightness/images/toutou.png?v=" + $version',
 			"\$approot-relative + \"css/ui-lightness/images/toto.png?v=\" + \$version",
 			'$approot-relative + \'css/ui-lightness/images/titi.gif?v=\' + $version1',
-		'"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7?v=" + $version',
-		'$approot-relative + \'node_modules/raleway-webfont/fonts/Raleway-Thin.jpeg\'',
+			'"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7?v=" + $version',
+			'$approot-relative + \'node_modules/raleway-webfont/fonts/Raleway-Thin.jpeg\'',
 		];
 
 		$aIncludedUrls['aCompleteUrls'];
@@ -432,13 +454,13 @@ SCSS;
 		$aExpectedFoundVariables = [
 			'gabu' => 'zomeu',
 			'toto' => 'titi',
-		    'approot-relative' => '../../../../../',
-		    'approot-relative2' => '../../',
-		    'gray-base' => '#000',
-		    'a' => 'b',
-		    'content-color' => '#eeeeee',
-		    'default-font-family' => 'Trebuchet MS,Tahoma,Verdana,Arial,sans-serif',
-		    'icons-filter' => 'hue-rotate(0deg)',
+			'approot-relative' => '../../../../../',
+			'approot-relative2' => '../../',
+			'gray-base' => '#000',
+			'a' => 'b',
+			'content-color' => '#eeeeee',
+			'default-font-family' => 'Trebuchet MS,Tahoma,Verdana,Arial,sans-serif',
+			'icons-filter' => 'hue-rotate(0deg)',
 			'toto' => 'titi',
 		];
 		$this->assertEquals($aExpectedFoundVariables, $aFoundVariables);
@@ -460,10 +482,10 @@ $icons-filter: hue-rotate(0deg) !default;
 $toto : titi;
 SCSS;
 
-		file_put_contents($this->sTmpDir . DIRECTORY_SEPARATOR . 'css-variable.scss', $sContent);
+		file_put_contents(static::$sTmpDir . DIRECTORY_SEPARATOR . 'css-variable.scss', $sContent);
 		$aVariables = ThemeHandler::GetVariablesFromFile(
 			[ 'css-variable.scss' ],
-			[ $this->sTmpDir ]
+			[ static::$sTmpDir ]
 		);
 
 		$aExpectedVariables = [
@@ -512,8 +534,10 @@ SCSS;
 
 	public function testGetIncludedImages()
 	{
-		$aStylesheetFile=glob($this->sTmpDir."/branding/css/*.scss");
-		$aStylesheetFile[]=$this->sTmpDir."/branding/css/ui-lightness/DO_NOT_CHANGE.jqueryui.scss";
+		static::InitCSSDirectory();
+
+		$aStylesheetFile=glob(static::$sTmpDir."/branding/css/*.scss");
+		$aStylesheetFile[]=static::$sTmpDir."/branding/css/ui-lightness/DO_NOT_CHANGE.jqueryui.scss";
 		$expectJsonFilePath = APPROOT.'tests/php-unit-tests/unitary-tests/application/theme-handler/expected/themes/basque-red/theme-parameters.json';
 		$expectedThemeParamJson = file_get_contents($expectJsonFilePath);
 		$aThemeParametersVariables = json_decode($expectedThemeParamJson, true);
@@ -538,7 +562,7 @@ SCSS;
 	 * @throws \Exception
 	 */
 	public function testFindStylesheetFile(string $sFileToFind, array $aAllImports){
-		$sImportsPath = $this->sTmpDir.'branding/';
+		$sImportsPath = static::$sTmpDir.'branding/';
 
 		// Windows compat O:)
 		$sFileToFind = $this->UpdateDirSep($sFileToFind);
