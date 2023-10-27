@@ -502,6 +502,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	}
 
 	protected $m_aUserOrgs = array(); // userid -> array of orgid
+	protected $m_aAdministrators = null; // [user id]
 
 	// Built on demand, could be optimized if necessary (doing a query for each attribute that needs to be read)
 	protected $m_aObjectActionGrants = array();
@@ -558,6 +559,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 		// Cache
 		$this->m_aObjectActionGrants = array();
+		$this->m_aAdministrators = null;
 	}
 
 	public function LoadCache()
@@ -700,12 +702,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	 */
 	private function GetAdministrators()
 	{
-		static $aAdministrators = null;
-
-		if ($aAdministrators === null)
+		if ($this->m_aAdministrators === null)
 		{
 			// Find all administrators
-			$aAdministrators = array();
+			$this->m_aAdministrators = array();
 			$oAdministratorsFilter = new DBObjectSearch('User');
 			$oLnkFilter = new DBObjectSearch('URP_UserProfile');
 			$oExpression = new FieldExpression('profileid', 'URP_UserProfile');
@@ -718,10 +718,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$oSet->OptimizeColumnLoad(array('User' => array('login')));
 			while($oUser = $oSet->Fetch())
 			{
-				$aAdministrators[] = $oUser->GetKey();
+				$this->m_aAdministrators[] = $oUser->GetKey();
 			}
 		}
-		return $aAdministrators;
+		return $this->m_aAdministrators;
 	}
 
 	/**

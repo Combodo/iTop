@@ -17,6 +17,18 @@ namespace Combodo\iTop\Test\UnitTest\Integration;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
+
+
+/**
+ * Wrapper to load dictionnary files without altering the main dictionnary
+ * Eval will be called within the current namespace (this is done by adding a "namespace" statement)
+ */
+class Dict
+{
+	public static function Add($sLanguageCode, $sEnglishLanguageDesc, $sLocalizedLanguageDesc, $aEntries)
+	{
+	}
+}
 /**
  * For tests on compiled dict files, see {@see CompiledDictionariesConsistencyTest}
  * @group beforeSetup
@@ -141,17 +153,40 @@ class DictionariesConsistencyTest extends ItopTestCase
 	/**
 	 * @param string $sDictFile complete path for the file to check
 	 * @param bool $bIsSyntaxValid expected assert value
-	 *
-	 * @uses `php -l`
-	 * @uses \assertEquals()
 	 */
 	private function CheckDictionarySyntax(string $sDictFile, $bIsSyntaxValid = true): void
 	{
-		exec("php -l {$sDictFile}", $output, $return);
-
-		$bDictFileSyntaxOk = ($return === 0);
-
-		$sMessage = "File `{$sDictFile}` syntax didn't matched expectations\nparsing results=".var_export($output, true);
-		self::assertEquals($bIsSyntaxValid, $bDictFileSyntaxOk, $sMessage);
+		$sPHP = file_get_contents($sDictFile);
+		// Strip php tag to allow "eval"
+		$sPHP = substr(trim($sPHP), strlen('<?php'));
+		// Make sure the Dict class is the one declared in the current file
+		$sPHP = 'namespace '.__NAMESPACE__.";\n".$sPHP;
+		$iLineShift = 1; // Cope with the shift due to the namespace statement
+		$sPHP = str_replace(
+			['ITOP_APPLICATION_SHORT', 'ITOP_APPLICATION', 'ITOP_VERSION_NAME'],
+			['\'itop\'', '\'itop\'', '\'1.2.3\''],
+			$sPHP
+		);
+		try {
+			eval($sPHP);
+			// Reaching this point => No syntax error
+			if (!$bIsSyntaxValid) {
+				$this->fail("Failed to detect syntax error in dictionary `{$sDictFile}` (which is known as being INCORRECT)");
+			}
+		}
+		catch (\Error $e) {
+			if ($bIsSyntaxValid) {
+				$iLine = $e->getLine() - $iLineShift;
+				$this->fail("Invalid dictionary: {$e->getMessage()} in {$sDictFile}:{$iLine}");
+			}
+		}
+		catch (\Exception $e) {
+			if ($bIsSyntaxValid) {
+				$iLine = $e->getLine() - $iLineShift;
+				$sExceptionClass = get_class($e);
+				$this->fail("Exception thrown from dictionary: '$sExceptionClass: {$e->getMessage()}' in {$sDictFile}:{$iLine}");
+			}
+		}
+		$this->assertTrue(true);
 	}
 }

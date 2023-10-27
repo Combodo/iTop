@@ -12,8 +12,6 @@ use utils;
  * @group itopRequestMgmt
  * @group restApi
  * @group defaultProfiles
- *
- * @runClassInSeparateProcess
  */
 class RestTest extends ItopDataTestCase
 {

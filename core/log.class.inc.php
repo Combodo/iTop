@@ -1671,6 +1671,8 @@ class ExceptionLog extends LogAPI
 	 */
 	private static function GetLastEventIssue()
 	{
-		return self::$oLastEventIssue;
+		$oRet = self::$oLastEventIssue;
+		self::$oLastEventIssue = null;
+		return $oRet;
 	}
 }
