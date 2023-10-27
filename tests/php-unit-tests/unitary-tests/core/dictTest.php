@@ -97,6 +97,9 @@ PHP;
 
 	public function testInitLangIfNeeded_NoApc()
 	{
+		// Reset the dictionary
+		static::SetNonPublicStaticProperty('Dict', 'm_aData', []);
+
 		$oApcService = $this->createMock(\ApcService::class);
 		Dict::SetApcService($oApcService);
 		Dict::EnableCache('toto');
