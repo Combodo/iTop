@@ -12,9 +12,6 @@ use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectManager;
 use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectRepository;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
-/**
- * @runTestsInSeparateProcesses
- */
 class TemporaryObjectManagerTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = true;
