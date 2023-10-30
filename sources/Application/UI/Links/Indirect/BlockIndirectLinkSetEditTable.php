@@ -281,7 +281,7 @@ EOF
 
 			if ($bReadOnly) {
 				$aRow['form::checkbox'] = "";
-				foreach ($this->m_aEditableFields as $sFieldCode) {
+				foreach ($this->oUILinksWidget->GetEditableFields() as $sFieldCode) {
 					$sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
 					$aRow[$sFieldCode] = $sDisplayValue;
 				}
@@ -435,7 +435,7 @@ JS
 		$oAttDef = MetaModel::GetAttributeDef($this->oUILinksWidget->GetLinkedClass(), $sFieldCode);
 
 		if ($bReadOnlyField) {
-			$sFieldForHtml = $sDisplayValue;
+			$sFieldForHtml = $oAttDef->GetAsHTML($sValue);
 		} else {
 			$sFieldForHtml = cmdbAbstractObject::GetFormElementForField(
 					$oP,
