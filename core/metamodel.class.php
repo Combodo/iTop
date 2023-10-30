@@ -1241,7 +1241,7 @@ abstract class MetaModel
 			}
 			$sTable = self::DBGetTable($sClass);
 
-			// Could be completed later with all the classes that are using a given table 
+			// Could be completed later with all the classes that are using a given table
 			if (!array_key_exists($sTable, $aTables)) {
 				$aTables[$sTable] = array();
 			}
@@ -3522,7 +3522,7 @@ abstract class MetaModel
 		}
 
 		// Set the "host class" as soon as possible, since HierarchicalKeys use it for their 'target class' as well
-		// and this needs to be know early (for Init_IsKnowClass 19 lines below)		
+		// and this needs to be know early (for Init_IsKnowClass 19 lines below)
 		$oAtt->SetHostClass($sTargetClass);
 
 		// Some attributes could refer to a class
@@ -3564,7 +3564,7 @@ abstract class MetaModel
 
 		self::$m_aAttribDefs[$sTargetClass][$oAtt->GetCode()] = $oAtt;
 		self::$m_aAttribOrigins[$sTargetClass][$oAtt->GetCode()] = $sTargetClass;
-		// Note: it looks redundant to put targetclass there, but a mix occurs when inheritance is used		
+		// Note: it looks redundant to put targetclass there, but a mix occurs when inheritance is used
 	}
 
 	/**
@@ -3764,7 +3764,7 @@ abstract class MetaModel
 		self::$m_aStimuli[$sTargetClass][$oStimulus->GetCode()] = $oStimulus;
 
 		// I wanted to simplify the syntax of the declaration of objects in the biz model
-		// Therefore, the reference to the host class is set there 
+		// Therefore, the reference to the host class is set there
 		$oStimulus->SetHostClass($sTargetClass);
 	}
 
@@ -4219,8 +4219,8 @@ abstract class MetaModel
 		}
 		else
 		{
-			$aCurrentUser = array();
-			$aCurrentContact = array();
+			$aCurrentUser = [];
+			$aCurrentContact = [];
 			foreach ($aExpectedArgs as $expression)
 			{
 				$aName = explode('->', $expression->GetName());
@@ -4235,22 +4235,45 @@ abstract class MetaModel
 				}
 			}
 			if (count($aCurrentUser) > 0) {
-				$oUser = UserRights::GetUserObject();
-				$aPlaceholders['current_user->object()'] = $oUser;
-				foreach ($aCurrentUser as $sField) {
-					$aPlaceholders['current_user->'.$sField] = $oUser->Get($sField);
-				}
+				static::FillPlaceholders($aPlaceholders, 'current_user', UserRights::GetUserObject(), $aCurrentUser);
 			}
 			if (count($aCurrentContact) > 0) {
-				$oPerson = UserRights::GetContactObject();
-				$aPlaceholders['current_contact->object()'] = $oPerson;
-				foreach ($aCurrentContact as $sField) {
-					$aPlaceholders['current_contact->'.$sField] = $oPerson->Get($sField);
-				}
+				static::FillPlaceholders($aPlaceholders, 'current_contact', UserRights::GetContactObject(), $aCurrentContact);
 			}
 		}
 
 		return $aPlaceholders;
+	}
+
+	/**
+	 * @since 3.1 N°6824
+	 * @param array $aPlaceholders
+	 * @param string $sPlaceHolderPrefix
+	 * @param \DBObject|null $oObject
+	 * @param array $aCurrentUser
+	 *
+	 * @return void
+	 *
+	 */
+	private static function FillPlaceholders(array &$aPlaceholders, string $sPlaceHolderPrefix, $oObject, $aCurrentUser) {
+		$sPlaceHolderKey = $sPlaceHolderPrefix."->object()";
+		if (is_null($oObject)){
+			$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("CANNOT_BE_FOUND", $sPlaceHolderKey);
+			foreach ($aCurrentUser as $sField) {
+				$sPlaceHolderKey = $sPlaceHolderPrefix . "->$sField";
+				$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("CANNOT_BE_FOUND", $sPlaceHolderKey);
+			}
+		} else {
+			$aPlaceholders[$sPlaceHolderKey] = $oObject;
+			foreach ($aCurrentUser as $sField) {
+				$sPlaceHolderKey = $sPlaceHolderPrefix . "->$sField";
+				if (MetaModel::IsValidAttCode(get_class($oObject), $sField)){
+					$aPlaceholders[$sPlaceHolderKey] = $oObject->Get($sField);
+				} else {
+					$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("CANNOT_BE_FOUND", $sPlaceHolderKey);
+				}
+			}
+		}
 	}
 
 	/**
@@ -6479,7 +6502,7 @@ abstract class MetaModel
 				$aCache['m_aExtensionClassNames'] = self::$m_aExtensionClassNames;
 				$aCache['m_Category2Class'] = self::$m_Category2Class;
 				$aCache['m_aRootClasses'] = self::$m_aRootClasses; // array of "classname" => "rootclass"
-				$aCache['m_aParentClasses'] = self::$m_aParentClasses; // array of ("classname" => array of "parentclass") 
+				$aCache['m_aParentClasses'] = self::$m_aParentClasses; // array of ("classname" => array of "parentclass")
 				$aCache['m_aChildClasses'] = self::$m_aChildClasses; // array of ("classname" => array of "childclass")
 				$aCache['m_aClassParams'] = self::$m_aClassParams; // array of ("classname" => array of class information)
 				$aCache['m_aAttribDefs'] = self::$m_aAttribDefs; // array of ("classname" => array of attributes)
