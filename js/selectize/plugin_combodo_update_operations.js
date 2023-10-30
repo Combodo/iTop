@@ -43,6 +43,24 @@ Selectize.define("combodo_update_operations", function (aOptions) {
 		};
 	})();
 
+	// Override enable function
+	oSelf.enable = (function () {
+		let oOriginal = oSelf.enable;
+		return function () {
+			oOriginal.apply(oSelf, arguments);
+			oSelf.$operationsInput.prop('disabled', false);
+		}
+	})();
+
+	// Override disable function
+	oSelf.disable = (function () {
+		let oOriginal = oSelf.disable;
+		return function () {
+			oOriginal.apply(oSelf, arguments);
+			oSelf.$operationsInput.prop('disabled', true);
+		}
+	})();
+
 	// Override addItem function
 	oSelf.addItem = (function () {
 		let oOriginal = oSelf.addItem;
