@@ -170,6 +170,10 @@ JS;
 				// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
 				FormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
 
+				if(FormHelper::HasMandatoryAttributeBlobInputs($oObjToClone)){
+					$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal());
+				}
+				
 				$aFormExtraParams['js_handlers']['cancel_button_on_click'] =
 					<<<JS
 				function() {
@@ -293,6 +297,9 @@ JS;
 			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
 			FormHelper::DisableAttributeBlobInputs($sClass, $aFormExtraParams);
 
+			if(FormHelper::HasMandatoryAttributeBlobInputs($oObj)){
+				$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal());
+			}
 		} else {
 			$oPage = new iTopWebPage('', $bPrintable);
 			$oPage->DisableBreadCrumb();

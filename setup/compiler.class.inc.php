@@ -938,6 +938,30 @@ EOF
 		return $aXmlToPHP[$sEditMode];
 	}
 
+
+	/**
+	 * Helper to format the edit-when for direct linkset
+	 *
+	 * @param string $sEditWhen Value set from within the XML
+	 * @return string PHP flag
+	 *
+	 * @throws \DOMFormatException
+	 */
+	protected function EditWhenToPHP($sEditWhen): string
+	{
+		static $aXmlToPHP = array(
+			'never' => 'LINKSET_EDITWHEN_NEVER',
+			'on_host_edition' => 'LINKSET_EDITWHEN_ON_HOST_EDITION',
+			'on_host_display' => 'LINKSET_EDITWHEN_ON_HOST_DISPLAY',
+			'always' => 'LINKSET_EDITWHEN_ALWAYS',
+		);
+
+		if (!array_key_exists($sEditWhen, $aXmlToPHP))
+		{
+			throw new DOMFormatException("Edit mode: unknown value '$sEditWhen'");
+		}
+		return $aXmlToPHP[$sEditWhen];
+	}
 	
 	/**
 	 * Format a path (file or url) as an absolute path or relative to the module or the app
@@ -2053,6 +2077,7 @@ EOF
 			$this->CompileCommonProperty('duplicates', $oField, $aParameters, $sModuleRelativeDir, false);
 			$this->CompileCommonProperty('display_style', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('edit_mode', $oField, $aParameters, $sModuleRelativeDir);
+			$this->CompileCommonProperty('edit_when', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('filter', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('with_php_constraint', $oField, $aParameters, $sModuleRelativeDir, false);
 			$aParameters['depends_on'] = $sDependencies;
@@ -2063,6 +2088,7 @@ EOF
 			$this->CompileCommonProperty('count_max', $oField, $aParameters, $sModuleRelativeDir, 0);
 			$this->CompileCommonProperty('display_style', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('edit_mode', $oField, $aParameters, $sModuleRelativeDir);
+			$this->CompileCommonProperty('edit_when', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('filter', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('with_php_constraint', $oField, $aParameters, $sModuleRelativeDir, false);
 			$aParameters['depends_on'] = $sDependencies;
@@ -2286,6 +2312,12 @@ EOF
 					$sEditMode = $oField->GetChildText('edit_mode');
 					if (!is_null($sEditMode)) {
 						$aParameters['edit_mode'] = $this->EditModeToPHP($sEditMode);
+					}
+					break;
+				case 'edit_when':
+					$sEditWhen = $oField->GetChildText('edit_when');
+					if(!is_null($sEditWhen)){
+						$aParameters['edit_when'] = $this->EditWhenToPHP($sEditWhen);
 					}
 					break;
 				case 'mappings':

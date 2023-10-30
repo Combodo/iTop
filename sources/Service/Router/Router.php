@@ -40,6 +40,11 @@ class Router
 		return static::$oSingleton;
 	}
 
+	/**
+	 * @var bool $bUseCache
+	 */
+	protected $bUseCache = null;
+
 	/**********************/
 	/* Non-static methods */
 	/**********************/
@@ -52,6 +57,14 @@ class Router
 	protected function __construct()
 	{
 		// Don't do anything, we don't want to be initialized
+	}
+
+	/**
+	 * @param bool|null $bUseCache Force cache usage for testing purposes, or leave it null for the default behavior
+	 */
+	public function SetUseCache(?bool $bUseCache): void
+	{
+		$this->bUseCache = $bUseCache;
 	}
 
 	/**
@@ -137,7 +150,7 @@ class Router
 	public function GetRoutes(): array
 	{
 		$aRoutes = [];
-		$bUseCache = false === utils::IsDevelopmentEnvironment();
+		$bUseCache = is_null($this->bUseCache) ? (false === utils::IsDevelopmentEnvironment()) : $this->bUseCache;
 		$bMustWriteCache = false;
 		$sCacheFilePath = $this->GetCacheFileAbsPath();
 

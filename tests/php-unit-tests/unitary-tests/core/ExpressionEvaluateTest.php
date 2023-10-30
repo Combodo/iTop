@@ -557,7 +557,7 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 	public function EveryTimeFormatOnDateRangeProvider()
 	{
 		return array(
-			'10 years, day by day' => array('2000-01-01', 'P1D', 365 * 10),
+			'10 years, each 17 days' => array('2000-01-01', 'P17D', 365 * 10 / 17),
 			'1 day, hour by hour' => array('2000-01-01 00:01:02', 'PT1H', 24),
 			'1 hour, minute by minute' => array('2000-01-01 00:01:02', 'PT1M', 60),
 			'1 minute, second by second' => array('2000-01-01 00:01:02', 'PT1S', 60),

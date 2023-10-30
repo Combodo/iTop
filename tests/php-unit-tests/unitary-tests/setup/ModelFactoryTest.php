@@ -680,6 +680,59 @@ XML
 </nodeA>
 XML
 		];
+		$aDeltas['_delta="define_and_must_exits"'] = [
+			'sInitialXML' => <<<XML
+<nodeA>
+</nodeA>
+XML
+			,
+			'sDeltaXML' => <<<XML
+<nodeA>
+	<nodeB id="Banner" _delta="define"/>
+	<nodeB id="Banner" _delta="must_exist">
+		<nodeC _delta="define"/>
+	</nodeB>
+</nodeA>
+XML
+			,
+			'sExpectedXML' => <<<XML
+<nodeA>
+  <nodeB id="Banner">
+    <nodeC/>
+  </nodeB>
+</nodeA>
+XML
+		];
+		$aDeltas['_delta="define_then_must_exist"'] = [
+			'sInitialXML' => <<<XML
+<nodeA>
+</nodeA>
+XML
+			,
+			'sDeltaXML' => <<<XML
+<nodeA>
+	<nodeB id="Banner" _delta="define">
+		<nodeE/>
+	</nodeB>
+	<nodeB id="Banner" _delta="must_exist">
+		<nodeC _delta="define_if_not_exists">
+			<nodeD id="Bruce" _delta="define"/>
+		</nodeC>
+	</nodeB>
+</nodeA>
+XML
+			,
+			'sExpectedXML' => <<<XML
+<nodeA>
+  <nodeB id="Banner">
+    <nodeE/>
+    <nodeC>
+      <nodeD id="Bruce" _delta="define"/>
+    </nodeC>
+  </nodeB>
+</nodeA>
+XML
+		];
 
 		return $aDeltas;
 	}
@@ -1320,7 +1373,7 @@ XML
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
-	<james_bond  id="Sean" _rename_from="Roger" _delta="must_exist"/>
+	<james_bond  id="Sean" _rename_from="Roger"/>
 </root_node>
 XML
 			],
@@ -1336,7 +1389,7 @@ XML
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
-	<james_bond  id="Sean" _rename_from="Roger" _delta="must_exist">
+	<james_bond  id="Sean" _rename_from="Roger">
     <subtree _delta="define">etc.</subtree>	
 </james_bond>
 </root_node>

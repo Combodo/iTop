@@ -28,6 +28,10 @@ class RouterTest extends ItopDataTestCase
 		parent::setUp();
 
 		$this->RequireOnceItopFile('setup/setuputils.class.inc.php');
+
+		// Speedup test by forcing the use of the cache, even on a development environment
+		$oRouter = Router::GetInstance();
+		$oRouter->SetUseCache(true);
 	}
 
 	/**
@@ -203,12 +207,9 @@ class RouterTest extends ItopDataTestCase
 			$this->fail("Cache file was not generated ($sRoutesCacheFilePath)");
 		}
 
-		clearstatcache();
-		$iFirstModificationTimestamp = filemtime($sRoutesCacheFilePath);
-		$this->debug("Initial timestamp: $iFirstModificationTimestamp");
-
-		// Wait for just 1s to ensure timestamps would be different is the file is re-generated
-		sleep(1);
+		// Set its modification date in the past so that regenerating it will result in a new modification date without any doubt
+		$iFirstModificationTimestamp = time() - 2;
+		touch($sRoutesCacheFilePath, $iFirstModificationTimestamp);
 
 		// Call GetRoutes() again to see if cache gets re-generated or not
 		$this->InvokeNonPublicMethod(Router::class, 'GetRoutes', $oRouter, []);

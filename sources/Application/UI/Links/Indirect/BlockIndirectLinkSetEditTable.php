@@ -107,10 +107,13 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 	{
 		$this->oAttributeLinkedSetIndirect = MetaModel::GetAttributeDef($this->oUILinksWidget->GetClass(), $this->oUILinksWidget->GetAttCode());
 
+		$sEditWhen = $this->oAttributeLinkedSetIndirect->GetEditWhen();
+		$bIsEditableBasedOnEditWhen = ($sEditWhen === LINKSET_EDITWHEN_ALWAYS || $sEditWhen === LINKSET_EDITWHEN_ON_HOST_EDITION);
+
 		// User rights
-		$this->bIsAllowCreate = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES;
-		$this->bIsAllowModify = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES;
-		$this->bIsAllowDelete = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES;
+		$this->bIsAllowCreate = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES && $bIsEditableBasedOnEditWhen;
+		$this->bIsAllowModify = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES && $bIsEditableBasedOnEditWhen;
+		$this->bIsAllowDelete = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES && $bIsEditableBasedOnEditWhen;
 	}
 
 	/**
