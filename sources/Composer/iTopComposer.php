@@ -135,6 +135,8 @@ class iTopComposer
 			$APPROOT_WITH_SLASHES.'lib/symfony/web-profiler-bundle/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/yaml/Tests',
 
+			$APPROOT_WITH_SLASHES.'lib/thenetworg/oauth2-azure/tests',
+
 			$APPROOT_WITH_SLASHES.'lib/twig/twig/src/Test',
 			$APPROOT_WITH_SLASHES.'lib/twig/twig/lib/Twig/Test',
 			$APPROOT_WITH_SLASHES.'lib/twig/twig/doc/tests',
