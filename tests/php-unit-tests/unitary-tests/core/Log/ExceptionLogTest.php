@@ -30,8 +30,6 @@ class ExceptionLogTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @runInSeparateProcess
-	 *
 	 * @dataProvider logProvider
 	 */
 	public function testLogInFile($aLevels, $aExceptions, $sChannel, $aExpectedWriteNumber, $logLevelMin, $aExpectedDbWriteNumber, $logLevelMinWriteInDb)
@@ -91,14 +89,26 @@ class ExceptionLogTest extends ItopDataTestCase
 			$oExpectedLastEventIssue = $this->InvokeNonPublicStaticMethod('ExceptionLog', 'GetLastEventIssue', []);
 
 			if (0 == $iExpectedDbWriteNumber) {
-				$this->assertNull($oExpectedLastEventIssue);
+				if (!is_null($oExpectedLastEventIssue)) {
+					$this->fail("Level '$sLevel': unexpected EventIssue");
+				}
 			} else {
-				$this->assertInstanceOf(\EventIssue::class, $oExpectedLastEventIssue);
+				$this->assertInstanceOf(\EventIssue::class, $oExpectedLastEventIssue, "Level '$sLevel': missing EventIssue");
 				$this->assertEquals($aExpectedFileContext, $oExpectedLastEventIssue->Get('data'));
 			}
 		}
 	}
 
+	/**
+	 * @return array[]
+	 * aLevels: log levels to iterate on (AND name of the method that will be called on the underlying FileLog)
+	 * aExceptions: For each log level => Exception to generate
+	 * sChannel: Expected 2nd argument to the FileLog::{Level}
+	 * aExpectedWriteNumber: For each log level => Number of times the method FileLog::{Level} will be called
+	 * logLevelMin: Configuration / log_level_min
+	 * iExpectedDbWriteNumber: For each log level => 1 if at least ONE EventIssue has been recorded into the DB
+	 * logLevelMinWriteInDb: Configuration / log_level_min.write_in_db
+	 */
 	public function logProvider()
 	{
 		return [

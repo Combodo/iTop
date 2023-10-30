@@ -18,4 +18,5 @@
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Object:Modal:Title' => 'Create an object~~',
+	'UI:Object:Modal:MandatoryAttributeBlobInputs:Warning:Text' => 'This form contains a mandatory file attribute which is not supported in modal mode. The creation/modification of this object may be incomplete and may be completed in a full-page form.~~',
 ));

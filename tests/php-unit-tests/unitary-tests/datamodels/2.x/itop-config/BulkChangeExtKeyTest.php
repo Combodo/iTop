@@ -13,8 +13,6 @@ use MetaModel;
  * Class BulkChangeExtKeyTest
  *
  * @package Combodo\iTop\Test\UnitTest\Core
- *
- * @runTestsInSeparateProcesses
  */
 class BulkChangeExtKeyTest extends ItopDataTestCase {
 	const CREATE_TEST_ORG = true;
@@ -219,7 +217,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 
 	private function GetUid(){
 		if (is_null($this->sUid)){
-			$this->sUid = date('dmYHis');
+			$this->sUid = uniqid('test');
 		}
 
 		return $this->sUid;

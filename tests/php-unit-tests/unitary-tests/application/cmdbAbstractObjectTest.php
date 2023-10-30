@@ -77,9 +77,6 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 		self::assertSame($aExpectedLinkStack, $aLinkModificationsStack);
 	}
 
-	/**
-	 * @runInSeparateProcess
-	 */
 	public function testProcessClassIdDeferredUpdate()
 	{
 		// Create the team
@@ -157,7 +154,6 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 	}
 
 	/**
-	 * @runInSeparateProcess
 	 * Check that EVENT_DB_LINKS_CHANGED events are not sent to the current updated/created object (Team)
 	 * the events are sent to the other side (Person)
 	 *
@@ -201,8 +197,6 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 	}
 
 	/**
-	 * @runInSeparateProcess
-	 *
 	 * Check that EVENT_DB_LINKS_CHANGED events are sent to all the linked objects when creating a new lnk object
 	 *
 	 * @return void
@@ -238,7 +232,6 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 	}
 
 	/**
-	 * @runInSeparateProcess
 	 * Check that EVENT_DB_LINKS_CHANGED events are sent to all the linked objects when updating an existing lnk object
 	 *
 	 * @return void
@@ -281,7 +274,6 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 	}
 
 	/**
-	 * @runInSeparateProcess
 	 * Check that when a link changes from an object to another, then both objects are notified
 	 *
 	 * @return void
@@ -325,7 +317,6 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 	}
 
 	/**
-	 * @runInSeparateProcess
 	 * Check that EVENT_DB_LINKS_CHANGED events are sent to all the linked objects when deleting an existing lnk object
 	 *
 	 * @return void

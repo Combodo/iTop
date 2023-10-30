@@ -11,9 +11,6 @@ use ValueSetDefinition;
 use ValueSetEnum;
 
 
-/**
- * @runTestsInSeparateProcesses
- */
 class ValueSetDefinitionTest extends ItopTestCase
 {
 	/**

@@ -48,12 +48,7 @@ class UserRightsTest extends ItopDataTestCase
 	{
 		parent::setUp();
 
-		try {
-			utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');
-			self::CreateUser('admin', 1);
-		}
-		catch (CoreCannotSaveObjectException $e) {
-		}
+		utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');
 	}
 
 	public static $aClasses = [
@@ -103,6 +98,15 @@ class UserRightsTest extends ItopDataTestCase
 	public function testLogin($sLogin, $bResult)
 	{
 		$_SESSION = [];
+		if ($sLogin == 'admin') {
+			// Fixture data required in this case only
+			try {
+				self::CreateUser('admin', 1);
+			}
+			catch (CoreCannotSaveObjectException $e) {
+				// The admin account could exist, depending on where and when the test suite is executed
+			}
+		}
 		$this->assertEquals($bResult, UserRights::Login($sLogin));
 		$this->assertEquals($bResult, UserRights::IsLoggedIn());
 		UserRights::Logoff();
@@ -487,8 +491,7 @@ class UserRightsTest extends ItopDataTestCase
 		];
 	}
 	/**
-	 * @runInSeparateProcess
-	 *@dataProvider NonAdminCannotListAdminProfilesProvider
+	 * @dataProvider NonAdminCannotListAdminProfilesProvider
 	 */
 	public function testNonAdminCannotListAdminProfiles($bHideAdministrators, $iExpectedCount)
 	{

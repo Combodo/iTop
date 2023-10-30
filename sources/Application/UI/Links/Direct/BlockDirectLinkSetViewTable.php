@@ -179,4 +179,13 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 
 		return $aDefaults;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function IsEditableBasedOnEditWhen(): bool
+	{
+		$sEditWhen = $this->oAttDef->GetEditWhen();
+		return $sEditWhen === LINKSET_EDITWHEN_ALWAYS || $sEditWhen === LINKSET_EDITWHEN_ON_HOST_DISPLAY;
+	}
 }
