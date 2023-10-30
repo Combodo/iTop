@@ -82,15 +82,16 @@ class MetaModelMagicPlaceholderTest extends ItopDataTestCase
 		$_SESSION = [];
 		$oUser = null;
 		$oPerson = null;
-		$iContactId = 0;
+		$sContactId = '';
 		if ($bUser) {
+			$sContactId = '0';
 			$iNum = uniqid();
 			$sLogin = "AddMagicPlaceholders".$iNum;
 
 			if ($bContact) {
 				$this->CreateTestOrganization();
 				$oPerson = $this->CreatePerson($iNum);
-				$iContactId = $oPerson->GetKey();
+				$sContactId = $oPerson->GetKey();
 				$oUser = $this->CreateUser($sLogin, 1, "Abcdef@12345678", $oPerson->GetKey());
 				$aNewPlaceHolders['current_contact->object()'] = $oPerson;
 			} else {
@@ -98,7 +99,7 @@ class MetaModelMagicPlaceholderTest extends ItopDataTestCase
 			}
 
 			$aNewPlaceHolders['current_user->object()'] = $oUser;
-			$aNewPlaceHolders['current_contact_id'] = $iContactId;
+			$aNewPlaceHolders['current_contact_id'] = $sContactId;
 
 			UserRights::Login($sLogin);
 		}
@@ -108,20 +109,21 @@ class MetaModelMagicPlaceholderTest extends ItopDataTestCase
 				$oCurrentObj = null;
 				$aName = explode('->', $sExpression->GetName());
 				if ($aName[0] == 'current_contact_id') {
-					$aNewPlaceHolders['current_contact_id'] = $iContactId;
+					$aNewPlaceHolders['current_contact_id'] = $sContactId;
 					continue;
 				}
 				if ($aName[0] == 'current_user') {
 					$oCurrentObj = $oUser;
-				}
-				if ($aName[0] == 'current_contact') {
+				} else if ($aName[0] == 'current_contact') {
 					$oCurrentObj = $oPerson;
+				} else {
+					continue;
 				}
 				$sFieldName = $aName[1];
 				if (! is_null($oCurrentObj) && MetaModel::IsValidAttCode(get_class($oCurrentObj), $sFieldName)) {
 					$aNewPlaceHolders[$sExpression->GetName()] = $oCurrentObj->Get($sFieldName);
 				} else {
-					$aNewPlaceHolders[$sExpression->GetName()] = \Dict::Format("CANNOT_BE_FOUND", $sExpression->GetName());
+					$aNewPlaceHolders[$sExpression->GetName()] = \Dict::Format("PLACEHOLDER_CANNOT_BE_RESOLVED", $sExpression->GetName());
 				}
 			}
 		}

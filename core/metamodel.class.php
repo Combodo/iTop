@@ -4226,11 +4226,9 @@ abstract class MetaModel
 				$aName = explode('->', $expression->GetName());
 				if ($aName[0] == 'current_contact_id') {
 					$aPlaceholders['current_contact_id'] = UserRights::GetContactId();
-				}
-				if ($aName[0] == 'current_user') {
+				} else if ($aName[0] == 'current_user') {
 					array_push($aCurrentUser, $aName[1]);
-				}
-				if ($aName[0] == 'current_contact') {
+				} else if ($aName[0] == 'current_contact') {
 					array_push($aCurrentContact, $aName[1]);
 				}
 			}
@@ -4258,10 +4256,17 @@ abstract class MetaModel
 	private static function FillPlaceholders(array &$aPlaceholders, string $sPlaceHolderPrefix, $oObject, $aCurrentUser) {
 		$sPlaceHolderKey = $sPlaceHolderPrefix."->object()";
 		if (is_null($oObject)){
-			$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("CANNOT_BE_FOUND", $sPlaceHolderKey);
+			$aContext = [
+				"null object type" => $sPlaceHolderPrefix,
+				"fields" => $aCurrentUser,
+				"current_user_id" => UserRights::GetUserId()
+			];
+			IssueLog::Warning("Unresolved placeholders due to null object in current context", null,
+				$aContext);
+			$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("PLACEHOLDER_CANNOT_BE_RESOLVED", $sPlaceHolderKey);
 			foreach ($aCurrentUser as $sField) {
 				$sPlaceHolderKey = $sPlaceHolderPrefix . "->$sField";
-				$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("CANNOT_BE_FOUND", $sPlaceHolderKey);
+				$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("PLACEHOLDER_CANNOT_BE_RESOLVED", $sPlaceHolderKey);
 			}
 		} else {
 			$aPlaceholders[$sPlaceHolderKey] = $oObject;
@@ -4270,7 +4275,14 @@ abstract class MetaModel
 				if (MetaModel::IsValidAttCode(get_class($oObject), $sField)){
 					$aPlaceholders[$sPlaceHolderKey] = $oObject->Get($sField);
 				} else {
-					$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("CANNOT_BE_FOUND", $sPlaceHolderKey);
+					$aContext = [
+						"placeholder" => $sPlaceHolderKey,
+						"obj_class" => get_class($oObject),
+						"invalid_field" => $sField,
+					];
+					IssueLog::Warning("Unresolved placeholder due to invalid attribute", null,
+						$aContext);
+					$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("PLACEHOLDER_CANNOT_BE_RESOLVED", $sPlaceHolderKey);
 				}
 			}
 		}
