@@ -25,6 +25,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Controller\AjaxRenderController;
 use DBObjectSet;
 use Dict;
+use DisplayBlock;
 use MenuBlock;
 use MetaModel;
 use UserRights;
@@ -100,7 +101,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oDataTable->AddOption('printVersion', true);
 		}
 
-		return self::RenderDataTable($oDataTable, 'listInObject', $oPage, $sListId, $oSet, $aExtraParams);
+		return self::RenderDataTable($oDataTable, DisplayBlock::ENUM_STYLE_LIST_IN_OBJECT, $oPage, $sListId, $oSet, $aExtraParams);
 	}
 
 	/**
