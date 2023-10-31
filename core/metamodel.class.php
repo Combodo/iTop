@@ -4247,13 +4247,13 @@ abstract class MetaModel
 	 * @since 3.1.1 N°6824
 	 * @param array $aPlaceholders
 	 * @param string $sPlaceHolderPrefix
-	 * @param \DBObject|null $oObject
+	 * @param ?\DBObject $oObject
 	 * @param array $aCurrentUser
 	 *
 	 * @return void
 	 *
 	 */
-	private static function FillPlaceholders(array &$aPlaceholders, string $sPlaceHolderPrefix, $oObject, $aCurrentUser) {
+	private static function FillPlaceholders(array &$aPlaceholders, string $sPlaceHolderPrefix, ?\DBObject $oObject, array $aCurrentUser) {
 		$sPlaceHolderKey = $sPlaceHolderPrefix."->object()";
 		if (is_null($oObject)){
 			$aContext = [
