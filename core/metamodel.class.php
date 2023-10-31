@@ -4219,38 +4219,75 @@ abstract class MetaModel
 		}
 		else
 		{
-			$aCurrentUser = array();
-			$aCurrentContact = array();
+			$aCurrentUser = [];
+			$aCurrentContact = [];
 			foreach ($aExpectedArgs as $expression)
 			{
 				$aName = explode('->', $expression->GetName());
 				if ($aName[0] == 'current_contact_id') {
 					$aPlaceholders['current_contact_id'] = UserRights::GetContactId();
-				}
-				if ($aName[0] == 'current_user') {
+				} else if ($aName[0] == 'current_user') {
 					array_push($aCurrentUser, $aName[1]);
-				}
-				if ($aName[0] == 'current_contact') {
+				} else if ($aName[0] == 'current_contact') {
 					array_push($aCurrentContact, $aName[1]);
 				}
 			}
 			if (count($aCurrentUser) > 0) {
-				$oUser = UserRights::GetUserObject();
-				$aPlaceholders['current_user->object()'] = $oUser;
-				foreach ($aCurrentUser as $sField) {
-					$aPlaceholders['current_user->'.$sField] = $oUser->Get($sField);
-				}
+				static::FillObjectPlaceholders($aPlaceholders, 'current_user', UserRights::GetUserObject(), $aCurrentUser);
 			}
 			if (count($aCurrentContact) > 0) {
-				$oPerson = UserRights::GetContactObject();
-				$aPlaceholders['current_contact->object()'] = $oPerson;
-				foreach ($aCurrentContact as $sField) {
-					$aPlaceholders['current_contact->'.$sField] = $oPerson->Get($sField);
-				}
+				static::FillObjectPlaceholders($aPlaceholders, 'current_contact', UserRights::GetContactObject(), $aCurrentContact);
 			}
 		}
 
 		return $aPlaceholders;
+	}
+
+	/**
+	 * @since 3.1.1 N°6824
+	 * @param array $aPlaceholders
+	 * @param string $sPlaceHolderPrefix
+	 * @param ?\DBObject $oObject
+	 * @param array $aCurrentUser
+	 *
+	 * @return void
+	 *
+	 */
+	private static function FillObjectPlaceholders(array &$aPlaceholders, string $sPlaceHolderPrefix, ?\DBObject $oObject, array $aCurrentUser) : void {
+		$sPlaceHolderKey = $sPlaceHolderPrefix."->object()";
+		if (is_null($oObject)){
+			$aContext = [
+				"current_user_id" => UserRights::GetUserId(),
+				"null object type" => $sPlaceHolderPrefix,
+				"fields" => $aCurrentUser,
+			];
+			IssueLog::Warning("Unresolved placeholders due to null object in current context", null,
+				$aContext);
+			$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
+			foreach ($aCurrentUser as $sField) {
+				$sPlaceHolderKey = $sPlaceHolderPrefix . "->$sField";
+				$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
+			}
+		} else {
+			$aPlaceholders[$sPlaceHolderKey] = $oObject;
+			foreach ($aCurrentUser as $sField) {
+				$sPlaceHolderKey = $sPlaceHolderPrefix . "->$sField";
+				if (false === MetaModel::IsValidAttCode(get_class($oObject), $sField)){
+					$aContext = [
+						"current_user_id" => UserRights::GetUserId(),
+						"obj_class" => get_class($oObject),
+						"placeholder" => $sPlaceHolderKey,
+						"invalid_field" => $sField,
+					];
+					IssueLog::Warning("Unresolved placeholder due to invalid attribute", null,
+						$aContext);
+					$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
+					continue;
+				}
+
+				$aPlaceholders[$sPlaceHolderKey] = $oObject->Get($sField);
+			}
+		}
 	}
 
 	/**
