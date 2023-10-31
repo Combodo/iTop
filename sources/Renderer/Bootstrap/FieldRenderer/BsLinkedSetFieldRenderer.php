@@ -57,7 +57,13 @@ class BsLinkedSetFieldRenderer extends BsFieldRenderer
 		// Retrieve link and remote attributes
 		$aAttributesToDisplay = $this->oField->GetAttributesToDisplay();
 		$aLnkAttributesToDisplay = $this->oField->GetLnkAttributesToDisplay();
-		$iLinkAttributesToDisplayCount = count($this->oField->GetLnkAttributesToDisplay()) + 1;
+
+		// we sort the table on the first non link column
+		$iSortColumnIndex = count($this->oField->GetLnkAttributesToDisplay());
+		// if we are in edition mode, we skip the first column (selection checkbox column)
+		if(!$this->oField->GetReadOnly()){
+			$iSortColumnIndex++;
+		}
 
 		// Vars to build the table
 		$sAttributesToDisplayAsJson = json_encode($aAttributesToDisplay);
@@ -275,7 +281,7 @@ EOF
 				// We would just have to override / complete the necessary elements
 				var buildTable_{$this->oField->GetGlobalId()} = function()
 				{
-					var iDefaultOrderColumnIndex = {$iLinkAttributesToDisplayCount};
+					var iDefaultOrderColumnIndex = {$iSortColumnIndex};
 
 					// Instantiates datatables
 					oTable_{$this->oField->GetGlobalId()} = $('#{$sTableId}').DataTable({
