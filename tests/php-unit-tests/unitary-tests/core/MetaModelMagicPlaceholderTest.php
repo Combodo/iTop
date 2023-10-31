@@ -9,7 +9,7 @@ use VariableExpression;
 
 /**
  * Class MetaModelMagicPlaceholderTest
- * @@since 3.1 N°6824
+ * @since 3.1.1 N°6824
  * @covers MetaModel::AddMagicPlaceholders()
  * @package Combodo\iTop\Test\UnitTest\Core
  */

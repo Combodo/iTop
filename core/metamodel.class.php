@@ -4244,7 +4244,7 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @since 3.1 N°6824
+	 * @since 3.1.1 N°6824
 	 * @param array $aPlaceholders
 	 * @param string $sPlaceHolderPrefix
 	 * @param \DBObject|null $oObject
