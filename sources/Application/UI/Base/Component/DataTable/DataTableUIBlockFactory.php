@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -9,9 +9,11 @@ namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 use ApplicationContext;
 use ApplicationException;
 use appUserPreferences;
+use AttributeCaseLog;
 use AttributeLinkedSet;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
@@ -19,13 +21,18 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Template\TemplateUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Controller\AjaxRenderController;
 use DBObjectSet;
+use DeprecatedCallsLog;
 use Dict;
 use DisplayBlock;
+use IssueLog;
+use LogChannels;
 use MenuBlock;
 use MetaModel;
 use UserRights;
@@ -36,7 +43,7 @@ use WebPage;
  * Class DataTableUIBlockFactory
  *
  * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
- * @package UIBlockExtensibilityAPI
+ * @package UIBlockAPI
  * @api
  * @since 3.0.0
  */
@@ -71,7 +78,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeForResult(WebPage $oPage, string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oDataTable = DataTableUIBlockFactory::MakeForRendering($sListId, $oSet, $aExtraParams);
-		return self::RenderDataTable($oDataTable, 'list', $oPage, $sListId, $oSet, $aExtraParams);
+		if ($oPage->IsPrintableVersion()) {
+			$oDataTable->AddOption('printVersion', true);
+		}
+
+		return self::RenderDataTable($oDataTable, DisplayBlock::ENUM_STYLE_LIST, $oPage, $sListId, $oSet, $aExtraParams);
 	}
 
 	/**
@@ -96,7 +107,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForObject(WebPage $oPage, string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oDataTable = DataTableUIBlockFactory::MakeForRenderingObject($sListId, $oSet, $aExtraParams);
+		$oDataTable = DataTableUIBlockFactory::MakeForRendering($sListId, $oSet, $aExtraParams);
 		if ($oPage->IsPrintableVersion()) {
 			$oDataTable->AddOption('printVersion', true);
 		}
@@ -130,7 +141,13 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	protected static function RenderDataTable(DataTable $oDataTable, string $sStyle, WebPage $oPage, string $sListId, DBObjectSet $oSet, array $aExtraParams)
 	{
-		if (!isset($aExtraParams['menu']) || $aExtraParams['menu']) {
+		// Filter this list action
+		$sFilterListUrl = utils::GetDataTableSearchUrl($oSet->GetFilter(), $aExtraParams);
+		if (utils::IsNotNullOrEmptyString($sFilterListUrl)) {
+			$aExtraParams['filter_this_list_url'] = $sFilterListUrl;
+		}
+
+		if (!isset($aExtraParams['menu']) || $aExtraParams['menu'] === "1" || $aExtraParams['menu'] === true) {
 			$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
 			$aExtraParams['refresh_action'] = $oDataTable->GetJSRefresh();
 			$oBlockMenu = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
@@ -144,7 +161,6 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				$bToolkitMenu = false;
 			}
 			if ($bToolkitMenu) {
-				$aExtraParams['selection_mode'] = true;
 				$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
 				$oBlockMenu = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
 			} else {
@@ -152,32 +168,48 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			}
 		}
 
+		// Default behavor, surrond table with a panel for better display
 		if (!isset($aExtraParams['surround_with_panel']) || $aExtraParams['surround_with_panel']) {
+			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), '')
+				->AddCSSClass('ibo-datatable-panel');
+
+			// Panel title
+			if (isset($aExtraParams['panel_title'])) {
+				if (isset($aExtraParams['panel_title_is_html']) && $aExtraParams['panel_title_is_html'] === true) {
+					$oContainer->AddTitleBlock(HtmlFactory::MakeRaw($aExtraParams['panel_title']));
+				} else {
+					$oContainer->SetTitle($aExtraParams['panel_title']);
+				}
+			}
+			// - Description
+			if (isset($aExtraParams['panel_title_tooltip'])) {
+				$oContainerTitleBlock = $oContainer->GetTitleBlock()
+					->AddDataAttribute('tooltip-content', $aExtraParams['panel_title_tooltip'])
+					->AddDataAttribute('tooltip-max-width', 'min(600px, 90vw)') // Allow big description to be wide enough while shrinking on small screens
+					->AddCSSClass('ibo-has-description');
+			}
+
+			// Panel subtitle
 			if(!empty($oDataTable->GetInitDisplayData()) && isset($oDataTable->GetInitDisplayData()['recordsTotal'])){
 				$iCount = $oDataTable->GetInitDisplayData()['recordsTotal'];
 			} else {
 				$iCount = $oSet->Count();
 			}
-			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), '')->AddCSSClass('ibo-datatable-panel');
-			if(isset($aExtraParams['panel_title'])){
-				if(isset($aExtraParams['panel_title_is_html']) && $aExtraParams['panel_title_is_html'] === true) {
-					$oContainer->AddTitleBlock(HtmlFactory::MakeRaw($aExtraParams['panel_title']));
+			$sCountHtml = '<span class="ibo-datatable--result-count">'.$iCount.'</span>';
+			if ($oDataTable->GetOption('select_mode') === 'multiple') {
+				$sSubTitle = Dict::Format('UI:Pagination:HeaderSelection', $sCountHtml, '<span class="ibo-datatable--selected-count">0</span>');
+			} else {
+				$sSubTitle = Dict::Format('UI:Pagination:HeaderNoSelection', $sCountHtml);
 				}
-				else {
-					$oContainer->SetTitle($aExtraParams['panel_title']);
-				}
-			}
-			if ($oDataTable->GetOption("select_mode") == 'multiple')
-			{
-				$sSubTitle =Dict::Format('UI:Pagination:HeaderSelection',  '<span class="ibo-datatable--result-count">'.$iCount.'</span>', '<span class="ibo-datatable--selected-count">0</span>');
-			}
-			else
-			{
-				$sSubTitle = Dict::Format('UI:Pagination:HeaderNoSelection',  '<span class="ibo-datatable--result-count">'.$iCount.'</span>');
+
+			if (utils::IsNotNullOrEmptyString($sFilterListUrl)) {
+				$sSubTitle = '<a href="'.$sFilterListUrl.'" title="'.Dict::S('UI:Menu:FilterList').'">'.$sSubTitle.'</a>';
 			}
 			$oContainer->AddSubTitleBlock(new Html($sSubTitle));
-			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
-				$oContainer->SetIcon($aExtraParams["panel_icon"]);
+
+			// Panel icon
+			if (isset($aExtraParams['panel_icon']) && strlen($aExtraParams['panel_icon']) > 0) {
+				$oContainer->SetIcon($aExtraParams['panel_icon']);
 			}
 			$oContainer->AddToolbarBlock($oBlockMenu);
 			$oContainer->AddMainBlock($oDataTable);
@@ -190,6 +222,58 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		}
 
 		return $oContainer;
+	}
+
+	/**
+	 * Make a row actions toolbar template.
+	 *
+	 * @param iUIBlock $oTable datatable object that needs to use tTableRowActions trait
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Template\Template
+	 * @throws \Exception
+	 * @since 3.1.0
+	 */
+	public static function MakeActionRowToolbarTemplate(iUIBlock $oTable)
+	{
+		// test trait
+		$sTableClass = get_class($oTable);
+		if (!utils::IsTraitUsedByClass(tTableRowActions::class, $sTableClass)) {
+			throw new \Exception("DataTableUIBlockFactory::MakeActionRowToolbarTemplate: {$sTableClass} iUIBlock needs tTableRowActions trait");
+		}
+
+		// row actions template
+		$oTemplate = TemplateUIBlockFactory::MakeStandard($oTable->GetId().'_actions_buttons_template');
+
+		// row actions toolbar container
+		$oToolbar = ToolbarUIBlockFactory::MakeStandard();
+		$oToolbar->AddCSSClass('ibo-datatable--row-actions-toolbar');
+
+		// for each action...create an icon button
+		foreach ($oTable->GetRowActions() as $iKey => $aAction) {
+			$oButton = ButtonUIBlockFactory::MakeIconAction(
+				array_key_exists('icon_classes', $aAction) ? $aAction['icon_classes'] : 'fas fa-question',
+				array_key_exists('tooltip', $aAction) ? Dict::S($aAction['tooltip']) : '',
+				array_key_exists('name', $aAction) ? $aAction['name'] : 'undefined'
+			);
+			if (array_key_exists('color', $aAction)) {
+				$oButton->SetColor($aAction['color']);
+			}
+			$oButton->SetDataAttributes(['label' => Dict::S($aAction['label']), 'action-id' => $iKey, 'table-id' => $oTable->GetId()]);
+			if (array_key_exists('metadata', $aAction)) {
+				$aMetadata = $aAction['metadata'];
+				if (is_array($aMetadata)) {
+					foreach ($aMetadata as $key => $value) {
+						$oButton->AddDataAttribute($key, $value);
+					}
+				}
+			}
+
+			$oToolbar->AddSubBlock($oButton);
+		}
+
+		$oTemplate->AddSubBlock($oToolbar);
+
+		return $oTemplate;
 	}
 
 	/**
@@ -211,11 +295,14 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeForRendering(string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oDataTable = new DataTable('datatable_'.$sListId);
-
-		$oAppRoot = utils::GetAbsoluteUrlAppRoot();
+		$aLists = array();
 
 		// Initialize and check the parameters
 		$bViewLink = isset($aExtraParams['view_link']) ? $aExtraParams['view_link'] : true;
+		// Check if there is a list of aliases to limit the display to...
+		$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']) : array();
+		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
+
 		$sLinkageAttribute = isset($aExtraParams['link_attr']) ? $aExtraParams['link_attr'] : '';
 		$iLinkedObjectId = isset($aExtraParams['object_id']) ? $aExtraParams['object_id'] : 0;
 		$sTargetAttr = isset($aExtraParams['target_attr']) ? $aExtraParams['target_attr'] : '';
@@ -229,43 +316,68 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				throw new ApplicationException(Dict::S('UI:Error:MandatoryTemplateParameter_target_attr'));
 			}
 		}
-		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
-		$bSingleSelectMode = isset($aExtraParams['selection_type']) ? ($aExtraParams['selection_type'] == 'single') : false;
 
 		$aExtraFieldsRaw = isset($aExtraParams['extra_fields']) ? explode(',',
 			trim($aExtraParams['extra_fields'])) : array();
 		$aExtraFields = array();
+		$sAttCode = '';
 		foreach ($aExtraFieldsRaw as $sFieldName) {
 			// Ignore attributes not of the main queried class
 			if (preg_match('/^(.*)\.(.*)$/', $sFieldName, $aMatches)) {
 				$sClassAlias = $aMatches[1];
 				$sAttCode = $aMatches[2];
-				if ($sClassAlias == $oSet->GetFilter()->GetClassAlias()) {//$oSet->GetFilter()->GetSelectedClasses()
-					$aExtraFields[] = $sAttCode;
+				if (array_key_exists($sClassAlias, $oSet->GetSelectedClasses())) {
+					$aExtraFields[$sClassAlias][] = $sAttCode;
 				}
 			} else {
-				$aExtraFields[] = $sFieldName;
+				$aExtraFields['*'][] = $sFieldName;
+			}
+			}
+
+		$aClassAliases = $oSet->GetFilter()->GetSelectedClasses();
+		$aAuthorizedClasses = array();
+		foreach ($aClassAliases as $sAlias => $sClassName) {
+			if ((UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO) &&
+				((count($aDisplayAliases) == 0) || (in_array($sAlias, $aDisplayAliases)))) {
+				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}
-		$sClassName = $oSet->GetFilter()->GetClass();
-		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
+		foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
+			// In case there is only 1 "alias" for the extra fields and it is the fallback ("*"), then consider that all fields are for the current alias.
+			// This is for the particular use case when the zlist is set to false and extra fields are specified.
+			if ( (count($aExtraFields) === 1) && (array_keys($aExtraFields)[0] === '*') ) {
+				$aLists[$sAlias] = $aExtraFields['*'];
+			}
+			// Regular use case, dispatch fields to their corresponding aliases
+			else if (array_key_exists($sAlias, $aExtraFields)) {
+				$aLists[$sAlias] = $aExtraFields[$sAlias];
+		}
+			// Finally, if unknown alias, ignore fields
+			else {
+				$aLists[$sAlias] = array();
+			}
+
+			// If zlist specified, merge its fields with the currently present
 		if ($sZListName !== false) {
-			$aList = cmdbAbstractObject::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
-			$aList = array_merge($aList, $aExtraFields);
-		} else {
-			$aList = $aExtraFields;
+				$aDefaultList = MetaModel::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
+				$aLists[$sAlias] = array_merge($aDefaultList, $aLists[$sAlias]);
 		}
 
 		// Filter the list to removed linked set since we are not able to display them here
-		foreach ($aList as $index => $sAttCode) {
+			foreach ($aLists[$sAlias] as $index => $sAttCode) {
 			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 			if ($oAttDef instanceof AttributeLinkedSet) {
 				// Removed from the display list
-				unset($aList[$index]);
+					unset($aLists[$sAlias][$index]);
+				}
 			}
+
+			if (empty($aLists[$sAlias])) {
+				unset($aLists[$sAlias], $aAuthorizedClasses[$sAlias]);
 		}
 
-		if (!empty($sLinkageAttribute)) {
+			// Only for main class
+			if (!empty($sLinkageAttribute) && $sClassName === $oSet->GetFilter()->GetClass()) {
 			// The set to display is in fact a set of links between the object specified in the $sLinkageAttribute
 			// and other objects...
 			// The display will then group all the attributes related to the link itself:
@@ -276,14 +388,14 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oAttDef = $aAttDefs[$sLinkageAttribute];
 			assert($oAttDef->IsExternalKey());
 			// First display all the attributes specific to the link record
-			foreach ($aList as $sLinkAttCode) {
+				foreach ($aLists[$sAlias] as $sLinkAttCode) {
 				$oLinkAttDef = $aAttDefs[$sLinkAttCode];
 				if ((!$oLinkAttDef->IsExternalKey()) && (!$oLinkAttDef->IsExternalField())) {
 					$aDisplayList[] = $sLinkAttCode;
 				}
 			}
 			// Then display all the attributes neither specific to the link record nor to the 'linkage' object (because the latter are constant)
-			foreach ($aList as $sLinkAttCode) {
+				foreach ($aLists[$sAlias] as $sLinkAttCode) {
 				$oLinkAttDef = $aAttDefs[$sLinkAttCode];
 				if (($oLinkAttDef->IsExternalKey() && ($sLinkAttCode != $sLinkageAttribute))
 					|| ($oLinkAttDef->IsExternalField() && ($oLinkAttDef->GetKeyAttCode() != $sLinkageAttribute))) {
@@ -292,27 +404,33 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			}
 			// First display all the attributes specific to the link
 			// Then display all the attributes linked to the other end of the relationship
-			$aList = $aDisplayList;
+				$aLists[$sAlias] = $aDisplayList;
+			}
 		}
 
-		$sSelectMode = '';
-		if ($bSelectMode) {
-			$sSelectMode = $bSingleSelectMode ? 'single' : 'multiple';
+		// N°6356 Check if there is at least 1 class remaining to display
+		if (count($aLists) === 0) {
+			IssueLog::Debug('Could not find any class / attribute to display in the list. Did you ensure the selected classes have the requested zlist? As a fallback, we will just display the friendlyname for the first selected class.', LogChannels::DATATABLE, [
+				'selected_classes' => $aClassAliases,
+				'zlist' => $sZListName,
+			]);
+
+			$sFirstClassAlias = array_keys($aClassAliases)[0];
+			$aAuthorizedClasses[$sFirstClassAlias] = $aClassAliases[$sFirstClassAlias];
+			$aLists[$sFirstClassAlias] = [];
 		}
 
-		$sClassAlias = $oSet->GetClassAlias();
+		$oDefaultSettings = DataTableSettings::GetDataModelSettings($aAuthorizedClasses, $bViewLink, $aLists);
+
 		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
-
-		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : null;
-		$aClassAliases = array($sClassAlias => $sClassName);
-		$oDefaultSettings = DataTableSettings::GetDataModelSettings($aClassAliases, $bViewLink, array($sClassAlias => $aList));
-
 		if ($bDisplayLimit) {
 			$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
 			$oDefaultSettings->iDefaultPageSize = $iDefaultPageSize;
 		} else {
 			$oDefaultSettings->iDefaultPageSize = 0;
 		}
+
+		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : null;
 		$oDefaultSettings->aSortOrder = MetaModel::GetOrderByDefault($sClassName);
 
 		$bUseCustomSettings = false;
@@ -368,32 +486,38 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			}
 		}
 		$oSet->OptimizeColumnLoad($aColumnsToLoad);
-		$aSortOrder=[];
-		$aSortDatable=[];
+
 		$aColumnDefinition = [];
 		$iIndexColumn=0;
-		if($sSelectMode!="") {
+
+		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
+		$bSingleSelectMode = isset($aExtraParams['selection_type']) ? ($aExtraParams['selection_type'] == 'single') : false;
+		$sSelectMode = '';
+		if ($bSelectMode) {
+			$sSelectMode = $bSingleSelectMode ? 'single' : 'multiple';
 			$iIndexColumn++;
 		}
-		foreach ($aClassAliases as $sClassAlias => $sClassName) {
+
+		$aSortOrder = [];
+		$aSortDatable = [];
+		foreach ($aAuthorizedClasses as $sClassAlias => $sClassName) {
+			if (false === isset($oCustomSettings->aColumns[$sClassAlias])) {
+				continue;
+			}
+
 			foreach ($oCustomSettings->aColumns[$sClassAlias] as $sAttCode => $aData) {
 				$sCode = ($aData['code'] == '_key_') ? 'friendlyname' : $aData['code'];
 				if ($aData['sort'] != 'none') {
-					$aSortOrder[$sAlias.'.'.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
+					$aSortOrder[$sClassAlias.'.'.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
 					$aSortDatable=[$iIndexColumn,$aData['sort']];
 				}
 				elseif (isset($oCustomSettings->aSortOrder[$sAttCode])){
-					$aSortOrder[$sAlias.'.'.$sCode] = $oCustomSettings->aSortOrder[$sAttCode]; // true for ascending, false for descending
+					$aSortOrder[$sClassAlias.'.'.$sCode] = $oCustomSettings->aSortOrder[$sAttCode]; // true for ascending, false for descending
 				}
 				
 				if ($aData['checked']) {
 					if ($sAttCode == '_key_') {
 						if ($bViewLink) {
-							if (MetaModel::IsValidAttCode($sClassName, 'obsolescence_flag')) {
-								$sDisplayFunction = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';  if (row['".$sClassAlias."/obsolescence_flag'].indexOf('no') == -1){displayField = '<span class=\"object-ref obsolete\" title=\"obsolete\"><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'><span class=\"object-ref-icon text_decoration\"><span class=\"fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span></span>'+row['".$sClassAlias."/friendlyname']+'</a></span>';} return displayField;";
-							} else {
-								$sDisplayFunction = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>'; return displayField;";
-							}
 							$aColumnDefinition[] = [
 								'description' => $aData['label'],
 								'object_class' => $sClassName,
@@ -407,7 +531,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						}
 					} else {
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-						if ($oAttDef instanceof \AttributeCaseLog) {
+						if ($oAttDef instanceof AttributeCaseLog) {
 							// Add JS files for display caselog
 							// Dummy collapsible section created in order to get JS files
 							$oCollapsibleSection = new CollapsibleSection('');
@@ -435,7 +559,8 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		if ($oDefaultSettings != null) {
 			$aOptions['oDefaultSettings'] = json_encode(array('iDefaultPageSize' => $oDefaultSettings->iDefaultPageSize, 'oColumns' => $oDefaultSettings->aColumns));
 		}
-		$aOptions['sort'] = $aSortDatable;
+
+		// Selection mode
 		if ($sSelectMode == 'multiple') {
 			$aOptions['select_mode'] = "multiple";
 		} else {
@@ -445,13 +570,18 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		}
 		$aOptions['selectionMode'] = $aExtraParams['selectionMode']?? 'positive';
 
+		// Sort
+		$aOptions['sort'] = $aSortDatable;
+
+		// Items count selector
 		if (isset($aExtraParams['cssCount'])) {
 			$aOptions['sCountSelector'] = $aExtraParams['cssCount'];
 		}
 
+		// Pages length
 		$aOptions['iPageSize'] = 10;
 		if ($oCustomSettings->iDefaultPageSize > 0) {
-			$aOptions['iPageSize'] = $oCustomSettings->iDefaultPageSize;
+			$aOptions['iPageSize'] = (int)$oCustomSettings->iDefaultPageSize;
 		}
 
 		// Max height is only set if necessary, otherwise we want the list to occupy all the height it can depending on its pagination
@@ -461,9 +591,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 
 		$aOptions['processing'] = true;
 		$aOptions['sTableId'] = $sTableId;
+		$aOptions['sListId'] = $sListId;
 		$aOptions['bUseCustomSettings'] = $bUseCustomSettings;
 		$aOptions['bViewLink'] = $bViewLink;
-		$aOptions['sListId'] = $sListId;
 		$aOptions['oClassAliases'] = json_encode($aClassAliases);
 		if (isset($aExtraParams['selected_rows']) && !empty($aExtraParams['selected_rows'])) {
 			$aOptions['sSelectedRows'] = json_encode($aExtraParams['selected_rows']);
@@ -488,11 +618,20 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
 		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
 
+		// row actions
+		if (isset($aExtraParams['row_actions'])) {
+			$oDataTable->SetRowActions($aExtraParams['row_actions']);
+		}
+
+		if (isset($aExtraParams['creation_in_modal_js_handler'])){
+			$oDataTable->SetModalCreationHandler($aExtraParams['creation_in_modal_js_handler']);
+		}
+
 		return $oDataTable;
 	}
 
 	/**
-	 * @api
+	 * @deprecated 3.1.0 N°6261 Use \DataTableUIBlockFactory::MakeForRendering instead
 	 * @param string $sListId
 	 * @param DBObjectSet $oSet
 	 * @param array $aExtraParams
@@ -506,228 +645,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForRenderingObject(string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oDataTable = new DataTable('datatable_'.$sListId);
-		$aList = array();
-		$oAppRoot = utils::GetAbsoluteUrlAppRoot();
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use DataTableUIBlockFactory::MakeForRendering instead');
 
-		// Initialize and check the parameters
-		$bViewLink = isset($aExtraParams['view_link']) ? $aExtraParams['view_link'] : true;
-		// Check if there is a list of aliases to limit the display to...
-		$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',',
-			$aExtraParams['display_aliases']) : array();
-		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
-
-		$aExtraFieldsRaw = isset($aExtraParams['extra_fields']) ? explode(',',
-			trim($aExtraParams['extra_fields'])) : array();
-		$aExtraFields = array();
-		$sAttCode = '';
-		foreach ($aExtraFieldsRaw as $sFieldName) {
-			// Ignore attributes not of the main queried class
-			if (preg_match('/^(.*)\.(.*)$/', $sFieldName, $aMatches)) {
-				$sClassAlias = $aMatches[1];
-				$sAttCode = $aMatches[2];
-				if (array_key_exists($sClassAlias, $oSet->GetSelectedClasses())) {
-					$aExtraFields[$sClassAlias][] = $sAttCode;
-				}
-			} else {
-				$aExtraFields['*'] = $sAttCode;
-			}
-		}
-
-		$aClassAliases = $oSet->GetFilter()->GetSelectedClasses();
-		$aAuthorizedClasses = array();
-		foreach ($aClassAliases as $sAlias => $sClassName) {
-			if ((UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO) &&
-				((count($aDisplayAliases) == 0) || (in_array($sAlias, $aDisplayAliases)))) {
-				$aAuthorizedClasses[$sAlias] = $sClassName;
-			}
-		}
-		foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
-			if (array_key_exists($sAlias, $aExtraFields)) {
-				$aList[$sAlias] = $aExtraFields[$sAlias];
-			} else {
-				$aList[$sAlias] = array();
-			}
-			if ($sZListName !== false) {
-				$aDefaultList = MetaModel::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
-				$aList[$sAlias] = array_merge($aDefaultList, $aList[$sAlias]);
-			}
-
-			// Filter the list to removed linked set since we are not able to display them here
-			foreach ($aList[$sAlias] as $index => $sAttCode) {
-				$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-				if ($oAttDef instanceof AttributeLinkedSet) {
-					// Removed from the display list
-					unset($aList[$sAlias][$index]);
-				}
-			}
-
-			if (empty($aList[$sAlias])) {
-				unset($aList[$sAlias], $aAuthorizedClasses[$sAlias]);
-			}
-		}
-
-		$oDefaultSettings = DataTableSettings::GetDataModelSettings($aAuthorizedClasses, $bViewLink, $aList);
-
-		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
-		if ($bDisplayLimit) {
-			$iDefaultPageSize = appUserPreferences::GetPref('default_page_size',
-				MetaModel::GetConfig()->GetMinDisplayLimit());
-			$oDefaultSettings->iDefaultPageSize = $iDefaultPageSize;
-		}
-
-		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : null;
-		$oDefaultSettings->aSortOrder = MetaModel::GetOrderByDefault($sClassName);
-
-		$bUseCustomSettings = false;
-		// Identified tables can have their own specific settings
-		$oCustomSettings = DataTableSettings::GetTableSettings($aClassAliases, $sTableId);
-
-		if ($oCustomSettings != null) {
-			// Custom settings overload the default ones
-			$bUseCustomSettings = true;
-			if ($oDefaultSettings->iDefaultPageSize == 0) {
-				$oCustomSettings->iDefaultPageSize = 0;
-			}
-		} else {
-			$oCustomSettings = $oDefaultSettings;
-		}
-
-		if ($oCustomSettings->iDefaultPageSize > 0) {
-			$oSet->SetLimit($oCustomSettings->iDefaultPageSize);
-		}
-
-		$sIdName = isset($extraParams["id_for_select"]) ? $extraParams["id_for_select"] : "";
-		// Load only the requested columns
-		$aColumnsToLoad = array();
-		foreach ($oCustomSettings->aColumns as $sAlias => $aColumnsInfo) {
-			foreach ($aColumnsInfo as $sAttCode => $aData) {
-				if ($sAttCode != '_key_') {
-					if ($aData['checked']) {
-						$aColumnsToLoad[$sAlias][] = $sAttCode;
-					} else {
-						// See if this column is a must to load
-						$sClass = $aClassAliases[$sAlias];
-						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-						if ($oAttDef->AlwaysLoadInTables()) {
-							$aColumnsToLoad[$sAlias][] = $sAttCode;
-						}
-					}
-				} else {
-					if ($sIdName == "") {
-						$sIdName = $sAlias."/_key_";
-					}
-				}
-			}
-		}
-		$oSet->OptimizeColumnLoad($aColumnsToLoad);
-
-		$aColumnDefinition = [];
-		$iIndexColumn = 0;
-
-		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
-		$bSingleSelectMode = isset($aExtraParams['selection_type']) ? ($aExtraParams['selection_type'] == 'single') : false;
-		$sSelectMode = '';
-		if ($bSelectMode) {
-			$sSelectMode = $bSingleSelectMode ? 'single' : 'multiple';
-			$iIndexColumn++;
-		}
-
-		$aSortDatable = [];
-		foreach ($aAuthorizedClasses as $sClassAlias => $sClassName) {
-			if (isset($oCustomSettings->aColumns[$sClassAlias])) {
-				foreach ($oCustomSettings->aColumns[$sClassAlias] as $sAttCode => $aData) {
-					if ($aData['sort'] != 'none' && $aSortDatable == []) {
-						$aSortDatable = [$index, $aData['sort']];
-					}
-
-					if ($aData['checked']) {
-						if ($sAttCode == '_key_') {
-							if ($bViewLink) {
-								$sAttLabel = MetaModel::GetName($sClassName);
-								$aColumnDefinition[] = [
-									'description'     => $aData['label'],
-									'object_class'    => $sClassName,
-									'class_alias'     => $sClassAlias,
-									'attribute_code'  => $sAttCode,
-									'attribute_type'  => '_key_',
-									'attribute_label' => $sAttLabel,
-									"render"          => "return row['".$sClassAlias."/hyperlink'];",
-								];
-							}
-						} else {
-							$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-							if ($oAttDef instanceof \AttributeCaseLog) {
-								// Removed from the display list
-								// Dummy collapsible section created in order to get JS files
-								$sCollapsibleSection = new CollapsibleSection('');
-								$oDataTable->AddMultipleJsFilesRelPaths($sCollapsibleSection->GetJsFilesUrlRecursively());
-							}
-							$sAttDefClass = get_class($oAttDef);
-							$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
-							$aColumnDefinition[] = [
-								'description' => $oAttDef->GetOrderByHint(),
-								'object_class' => $sClassName,
-								'class_alias' => $sClassAlias,
-								'attribute_code' => $sAttCode,
-								'attribute_type' => $sAttDefClass,
-								'attribute_label' => $sAttLabel,
-								"render" => $oAttDef->GetRenderForDataTable($sClassAlias),
-							];
-						}
-						$iIndexColumn++;
-					}
-				}
-			}
-		}
-		$oSet->SetOrderBy($oCustomSettings->GetSortOrder());
-
-		$aOptions = [];
-		if ($oDefaultSettings != null) {
-			$aOptions['oDefaultSettings'] = json_encode(array('iDefaultPageSize' => $oDefaultSettings->iDefaultPageSize, 'oColumns' => $oDefaultSettings->aColumns));
-		}
-
-		if ($sSelectMode == 'multiple') {
-			$aOptions['select_mode'] = "multiple";
-		} else {
-			if ($sSelectMode == 'single') {
-				$aOptions['select_mode'] = "single";
-			}
-		}
-		$aOptions['selectionMode'] = $aExtraParams['selectionMode']?? 'positive';
-
-		$aOptions['sort'] = $aSortDatable;
-
-		$aOptions['iPageSize'] = 10;
-		if ($oCustomSettings->iDefaultPageSize > 0) {
-			$aOptions['iPageSize'] = $oCustomSettings->iDefaultPageSize;
-		}
-
-		// Max height is only set if necessary, otherwise we want the list to occupy all the height it can depending on its pagination
-		if (isset($aExtraParams['max_height'])) {
-			$aOptions['sMaxHeight'] = $aExtraParams['max_height'];
-		}
-
-		$aOptions['sTableId'] = $sTableId;
-		$aOptions['bUseCustomSettings'] = $bUseCustomSettings;
-		$aOptions['bViewLink'] = $bViewLink;
-		$aOptions['oClassAliases'] = json_encode($aClassAliases);
-
-		$oDataTable->SetOptions($aOptions);
-		$oDataTable->SetAjaxUrl("ajax.render.php");
-		$oDataTable->SetAjaxData([
-			"operation"     => 'search',
-			"filter"        => $oSet->GetFilter()->serialize(),
-			"columns"       => $oCustomSettings->aColumns,
-			"extra_params"  => $aExtraParams,
-			"class_aliases" => $aClassAliases,
-			"select_mode"   => $sSelectMode,
-		]);
-		$oDataTable->SetDisplayColumns($aColumnDefinition);
-		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
-		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
-
-		return $oDataTable;
+		return static::MakeForRendering($sListId, $oSet, $aExtraParams);
 	}
 
 	/**
@@ -815,7 +735,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 JS;
 					} else {
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-						if ($oAttDef instanceof \AttributeCaseLog) {
+						if ($oAttDef instanceof AttributeCaseLog) {
 							// Get JS files
 							// Dummy collapsible section created in order to get JS files
 							$oCollapsibleSection = new CollapsibleSection('');
@@ -925,6 +845,7 @@ JS;
 	 * @param array $aExtraParams
 	 * @param string $sFilter
 	 * @param array $aOptions
+	 * @param array $aRowActions @since 3.1.0
 	 * *
 	 * $aColumns =[
 	 *           'nameField1' => ['label' => labelFIeld1, 'description' => descriptionField1],
@@ -934,7 +855,7 @@ JS;
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 */
-	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [], string $sFilter = "", array $aOptions = [])
+	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [], string $sFilter = "", array $aOptions = [], array $aRowActions = null)
 	{
 		$oBlock = new UIContentBlock();
 		if ($sTitle != "") {
@@ -942,6 +863,13 @@ JS;
 			$oBlock->AddSubBlock($oTitle);
 		}
 		$oTable = new StaticTable($sId, [], $aExtraParams);
+		if ($aRowActions != null) {
+			$oTable->SetRowActions($aRowActions);
+			$aColumns['actions'] = [
+				'label'       => Dict::S('UI:Datatables:Column:RowActions:Label'),
+				'description' => Dict::S('UI:Datatables:Column:RowActions:Description'),
+			];
+		}
 		$oTable->SetColumns($aColumns);
 		$oTable->SetData($aData);
 		$oTable->SetFilter($sFilter);
@@ -958,6 +886,7 @@ JS;
 	 * @param array $aColumns
 	 * @param array $aData
 	 * @param string $sFilter
+	 * @param array $aRowActions @since 3.1.0
 	 *
 	 * $aColumns =[
 	 *           'nameField1' => ['label' => labelFIeld1, 'description' => descriptionField1],
@@ -967,10 +896,17 @@ JS;
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable
 	 */
-	public static function MakeForForm(string $sRef, array $aColumns, array $aData = [], string $sFilter = '')
+	public static function MakeForForm(string $sRef, array $aColumns, array $aData = [], string $sFilter = '', array $aRowActions = null)
 	{
 		$oTable = new FormTable("datatable_".$sRef);
 		$oTable->SetRef($sRef);
+		if ($aRowActions != null) {
+			$oTable->SetRowActions($aRowActions);
+			$aColumns['actions'] = [
+				'label'       => Dict::S('UI:Datatables:Column:RowActions:Label'),
+				'description' => Dict::S('UI:Datatables:Column:RowActions:Description'),
+			];
+		}
 		$oTable->SetColumns($aColumns);
 		$oTable->SetFilter($sFilter);
 
