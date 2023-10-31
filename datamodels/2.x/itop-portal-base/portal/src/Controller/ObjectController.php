@@ -1388,7 +1388,7 @@ class ObjectController extends BrickController
 		$aObjectIds = $oRequestManipulator->ReadParam('aObjectIds', array(), FILTER_UNSAFE_RAW);
 		$aObjectAttCodes = $oRequestManipulator->ReadParam('aObjectAttCodes', array(), FILTER_UNSAFE_RAW);
 		$aLinkAttCodes = $oRequestManipulator->ReadParam('aLinkAttCodes', array(), FILTER_UNSAFE_RAW);
-		$sDateTimePickerWidgetParent = $oRequestManipulator->ReadParam('sDateTimePickerWidgetParent', array(), FILTER_SANITIZE_STRING);
+		$sDateTimePickerWidgetParent = $oRequestManipulator->ReadParam('sDateTimePickerWidgetParent', array(), FILTER_UNSAFE_RAW);
 
 		if (empty($sObjectClass) || empty($aObjectIds) || empty($aObjectAttCodes)) {
 			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : sObjectClass, aObjectIds and aObjectAttCodes expected, "'.$sObjectClass.'", "'.implode('/',
