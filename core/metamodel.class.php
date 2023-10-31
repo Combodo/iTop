@@ -4272,9 +4272,7 @@ abstract class MetaModel
 			$aPlaceholders[$sPlaceHolderKey] = $oObject;
 			foreach ($aCurrentUser as $sField) {
 				$sPlaceHolderKey = $sPlaceHolderPrefix . "->$sField";
-				if (MetaModel::IsValidAttCode(get_class($oObject), $sField)){
-					$aPlaceholders[$sPlaceHolderKey] = $oObject->Get($sField);
-				} else {
+				if (false === MetaModel::IsValidAttCode(get_class($oObject), $sField)){
 					$aContext = [
 						"placeholder" => $sPlaceHolderKey,
 						"obj_class" => get_class($oObject),
@@ -4283,6 +4281,10 @@ abstract class MetaModel
 					IssueLog::Warning("Unresolved placeholder due to invalid attribute", null,
 						$aContext);
 					$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("PLACEHOLDER_CANNOT_BE_RESOLVED", $sPlaceHolderKey);
+					continue;
+				}
+				
+				$aPlaceholders[$sPlaceHolderKey] = $oObject->Get($sField);	
 				}
 			}
 		}
