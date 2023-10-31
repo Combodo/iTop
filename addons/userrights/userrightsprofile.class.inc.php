@@ -424,6 +424,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		UR_ACTION_BULK_MODIFY => 'bw',
 		UR_ACTION_BULK_DELETE => 'bd',
 	);
+	private $aListProfilesUser = [];
 
 	// Installation: create the very first user
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
@@ -654,8 +655,11 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
 		$bStatus = null;
+		if(! array_key_exists($iUser, $this->aListProfilesUser)){
+		     $this->aListProfilesUser[$iUser] = UserRights::ListProfiles($oUser);
+		}
 		// Call the API of UserRights because it caches the list for us
-		foreach(UserRights::ListProfiles($oUser) as $iProfile => $oProfile)
+		foreach($this->aListProfilesUser[$iUser] as $iProfile => $oProfile)
 		{
 			$bGrant = $this->GetProfileActionGrant($iProfile, $sClass, $sAction);
 			if (!is_null($bGrant))
@@ -780,12 +784,15 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$this->LoadCache();
 		// Note: this code is VERY close to the code of IsActionAllowed()
 		$iUser = $oUser->GetKey();
+		if(! array_key_exists($iUser, $this->aListProfilesUser)){
+			$this->aListProfilesUser[$iUser] = UserRights::ListProfiles($oUser);
+		}
 
 		// Note: The object set is ignored because it was interesting to optimize for huge data sets
 		//       and acceptable to consider only the root class of the object set
 		$bStatus = null;
 		// Call the API of UserRights because it caches the list for us
-		foreach(UserRights::ListProfiles($oUser) as $iProfile => $oProfile)
+		foreach($this->aListProfilesUser[$iUser] as $iProfile => $oProfile)
 		{
 			$bGrant = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
 			if (!is_null($bGrant))
