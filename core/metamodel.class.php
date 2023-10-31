@@ -4286,7 +4286,6 @@ abstract class MetaModel
 				}
 
 				$aPlaceholders[$sPlaceHolderKey] = $oObject->Get($sField);
-				}
 			}
 		}
 	}
