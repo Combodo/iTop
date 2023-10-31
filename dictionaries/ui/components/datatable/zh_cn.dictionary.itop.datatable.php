@@ -28,8 +28,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Datatables:Language:DisplayLength:All' => '全部',
 	'UI:Datatables:Language:Sort:Ascending' => '采用顺序排序',
 	'UI:Datatables:Language:Sort:Descending' => '采用倒序排序',
-	'UI:Datatables:Column:RowActions:Label' => '~~',
-	'UI:Datatables:Column:RowActions:Description' => '~~',
-	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation~~',
-	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action ?~~',
+	'UI:Datatables:Column:RowActions:Label' => '标签',
+	'UI:Datatables:Column:RowActions:Description' => '备注',
+	'UI:Datatables:RowActions:ConfirmationDialog' => '操作确认',
+	'UI:Datatables:RowActions:ConfirmationMessage' => '确认操作?',
 ));

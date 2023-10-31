@@ -1,9 +1,6 @@
 <?php
 /**
- * Localized data
- *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,8 +15,9 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s已关联至%3$s: %4$s, 此关联不允许重复.',
-]);
+
+// Navigation menu
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'core/Operation:Landing/Title' => 'OAuth令牌创建',
+));

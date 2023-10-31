@@ -22,5 +22,5 @@
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Core:ormValue:ormDocument:DownloadsCount' => '%1s~~',
-	'Core:ormValue:ormDocument:DownloadsCount+' => 'Downloaded %1$s time(s)~~',
+	'Core:ormValue:ormDocument:DownloadsCount+' => '已下载%1$s次~~',
 ]);
