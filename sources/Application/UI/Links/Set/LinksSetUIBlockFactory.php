@@ -81,7 +81,7 @@ class LinkSetUIBlockFactory extends SetUIBlockFactory
 			$oSetUIBlock->GetDataProvider()->SetOptions(array_values($aInitialOptions));
 			// Set value
 			$oSetUIBlock->SetValue(json_encode($aCurrentValues));
-			$oSetUIBlock->SetInitialValue(json_encode($aInitialValues));
+			$oSetUIBlock->SetInitialValue(json_encode(array_merge($aInitialValues, $aCurrentValues)));
 		} else {
 			$oSetUIBlock->SetHasError(true);
 		}
