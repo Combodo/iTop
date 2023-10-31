@@ -987,24 +987,54 @@ JS;
 	public static function GetAllowedParams(): array
 	{
 		return [
-			'surround_with_panel',  /** bool embed table into a Panel */
-			'menu',                 /** bool display table menu */
-			'view_link',            /** bool display the friendlyname column with links to the objects details */
-			'link_attr',            /** string link att code */
-			'object_id',            /** int Id of the object linked */
-			'target_attr',          /** string target att code of the link */
-			'selection_mode',       /** bool activate selection */
-			'selection_type',       /** string 'multiple' or 'single' */
-			'extra_fields',         /** string comma separated list of link att code to display ('alias.attcode')*/
-			'zlist',                /** string name of the zlist to display when 'extra_fields' is not set */
-			'display_limit',        /** bool if true pagination is used (default = true)  */
-			'table_id',             /** string datatable id */
-			'cssCount',             /** string external counter (input hidden) js selector */
-			'selected_rows',        /** array list of Ids already selected when displaying the datatable */
-			'display_aliases',      /** string comma separated list of class aliases to display */
-			'list_id',              /** string list outer id */
-			'selection_enabled',    	/** list of id in witch select is allowed, if not exists all lines are selectable */
-			'id_for_select', /**give definition of id for select checkbox*/
+			'surround_with_panel',
+			/** bool embed table into a Panel */
+			'menu',
+			/** bool display table menu */
+			'view_link',
+			/** bool display the friendlyname column with links to the objects details */
+			'link_attr',
+			/** string link att code */
+			'object_id',
+			/** int Id of the object linked */
+			'target_attr',
+			/** string target att code of the link */
+			'selection_mode',
+			/** bool activate selection */
+			'selection_type',
+			/** string 'multiple' or 'single' */
+			'extra_fields',
+			/** string comma separated list of link att code to display ('alias.attcode')*/
+			'zlist',
+			/** string name of the zlist to display when 'extra_fields' is not set */
+			'display_limit',
+			/** bool if true pagination is used (default = true)  */
+			'table_id',
+			/** string datatable id */
+			'cssCount',
+			/** string external counter (input hidden) js selector */
+			'selected_rows',
+			/** array list of Ids already selected when displaying the datatable */
+			'display_aliases',
+			/** string comma separated list of class aliases to display */
+			'list_id',
+			/** string list outer id */
+			'selection_enabled',
+			/** list of id in witch select is allowed, if not exists all lines are selectable */
+			'id_for_select',
+			/**give definition of id for select checkbox*/
+			'row_actions',
+			/** array of blocks displayed on every row */
+			'creation_in_modal',
+			/** bool to perform a creation of a new object of this type in a modal */
+			'creation_in_modal_tooltip',
+			/** creation in modal button tooltip */
+			'creation_in_modal_form_title',
+			/** creation in modal form title */
+			'creation_in_modal_js_handler',
+			/** Handler to call when trying to create a new object in modal */
+			'creation_disallowed',
+			/** Don't provide the standard object creation feature */
 		];
 	}
 }
