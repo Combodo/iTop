@@ -123,7 +123,7 @@ class MetaModelMagicPlaceholderTest extends ItopDataTestCase
 				if (! is_null($oCurrentObj) && MetaModel::IsValidAttCode(get_class($oCurrentObj), $sFieldName)) {
 					$aNewPlaceHolders[$sExpression->GetName()] = $oCurrentObj->Get($sFieldName);
 				} else {
-					$aNewPlaceHolders[$sExpression->GetName()] = \Dict::Format("PLACEHOLDER_CANNOT_BE_RESOLVED", $sExpression->GetName());
+					$aNewPlaceHolders[$sExpression->GetName()] = \Dict::Format("Core:Placeholder:CannotBeResolved", $sExpression->GetName());
 				}
 			}
 		}
