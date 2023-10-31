@@ -39,6 +39,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeTagSet' => 'Liste d\'étiquettes',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'cliquer pour ajouter',
+	'Core:Placeholder:CannotBeResolved' => '(%1$s : non remplacé)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s de la classe %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s d\'une sous-classe)',
