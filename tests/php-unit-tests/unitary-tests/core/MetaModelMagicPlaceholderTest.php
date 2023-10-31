@@ -4,6 +4,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
+use PHPUnit\Framework\ExpectationFailedException;
 use UserRights;
 use VariableExpression;
 
@@ -15,143 +16,191 @@ use VariableExpression;
  */
 class MetaModelMagicPlaceholderTest extends ItopDataTestCase
 {
-	protected function setUp(): void
-	{
-		parent::setUp();
-		$this->RequireOnceItopFile('/core/metamodel.class.php');
-	}
-
-	protected function tearDown(): void
-	{
-		parent::tearDown();
-	}
-
-	public function AddMagicPlaceholdersProvider(){
-		return [
-			'a user with contact' => [
-				'bUser' => true,
-				'bContact' => true,
-			],
-			'a user WITHOUT contact' => [
-				'bUser' => true,
-				'bContact' => false,
-			],
-			'no user no contact' => [
-				'bUser' => false,
-				'bContact' => false,
-			],
-		];
-	}
-
 	/**
-	 * @dataProvider AddMagicPlaceholdersProvider
+	 * Asserts that two array with DBObjects are equal (the important is to check the {class,id} couple
+	 *
+	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
 	 */
-	public function testAddMagicPlaceholders_NoExpectedArgs($bUser, $bContact) {
-		$this->testAddMagicPlaceholders($bUser, $bContact, null);
+	public static function assertEqualsShallow($expected, $actual, string $message = ''): void
+	{
+		if (is_array($expected)) {
+			foreach ($expected as $key => $value) {
+				if ($value instanceof \DBObject) {
+					$expected[$key] = get_class($value).'::'.$value->GetKey();
+				}
+			}
+			foreach ($actual as $key => $value) {
+				if ($value instanceof \DBObject) {
+					$actual[$key] = get_class($value).'::'.$value->GetKey();
+				}
+			}
+		}
+		parent::assertEquals($expected, $actual, $message);
 	}
 
-	/**
-	 * @dataProvider AddMagicPlaceholdersProvider
-	 */
-	public function testAddMagicPlaceholders_ValidExpectedArgs($bUser, $bContact) {
+	public function testAddMagicPlaceholdersWhenLoggedInUserHasAContact()
+	{
+		// Create data fixture => User + Person
+		$iNum = uniqid();
+		$sLogin = "AddMagicPlaceholders".$iNum;
+		$this->CreateTestOrganization();
+		$oPerson = $this->CreatePerson($iNum);
+		$sContactId = $oPerson->GetKey();
+		$oUser = $this->CreateUser($sLogin, 1, "Abcdef@12345678", $oPerson->GetKey());
+		UserRights::Login($sLogin);
+
+		// Test legacy behavior (no expected args)
+		$aPlaceholders = MetaModel::AddMagicPlaceholders(['gabu' => "zomeu"]);
+		$this->assertEqualsShallow(
+			[
+				'gabu' => 'zomeu',
+				'current_contact_id' => $sContactId,
+				'current_user->object()' => $oUser,
+				'current_contact->object()' => $oPerson,
+			],
+			$aPlaceholders,
+			'AddMagicPlaceholders without second parameter (legacy) should add "curent_contact_id/current_user->object()/current_contact->object()"'
+		);
+
+		// With expected arguments explicitly given as "none"
+		$aExpectedArgs = [];
+		$aPlaceholders = MetaModel::AddMagicPlaceholders(['gabu' => "zomeu"], $aExpectedArgs);
+		$this->assertEqualsShallow(
+			[
+				'gabu' => 'zomeu',
+			],
+			$aPlaceholders,
+			'AddMagicPlaceholders should add only expected arguments'
+		);
+
+		// Test new behavior (with expected args)
 		$aExpectedArgs = [
-			new VariableExpression('current_user->id'),
+			new VariableExpression('current_user->login'),
+			new VariableExpression('current_user->not_existing_attribute'),
 			new VariableExpression('current_contact_id'),
 			new VariableExpression('current_contact->org_id'),
-			new VariableExpression('current_user->login'),
+			new VariableExpression('current_contact->not_existing_attribute'),
 		];
-		$this->testAddMagicPlaceholders($bUser, $bContact, $aExpectedArgs);
+		$aPlaceholders = MetaModel::AddMagicPlaceholders(['gabu' => "zomeu"], $aExpectedArgs);
+		$this->assertEqualsShallow(
+			[
+				'gabu' => 'zomeu',
+				'current_contact_id' => $sContactId,
+				'current_user->object()' => $oUser,
+				'current_user->not_existing_attribute' => 'Core:Placeholder:CannotBeResolved - current_user->not_existing_attribute',
+				'current_user->login' => $sLogin,
+				'current_contact->object()' => $oPerson,
+				'current_contact->org_id' => $oPerson->Get('org_id'),
+				'current_contact->not_existing_attribute' => 'Core:Placeholder:CannotBeResolved - current_contact->not_existing_attribute',
+			],
+			$aPlaceholders,
+			'AddMagicPlaceholders should add expected arguments and render them with an explicit error when the information could not be known'
+		);
 	}
 
-	/**
-	 * @dataProvider AddMagicPlaceholdersProvider
-	 */
-	public function testAddMagicPlaceholders_InValidExpectedArgs($bUser, $bContact) {
+	public function testAddMagicPlaceholdersWhenLoggedInUserHasNoContact()
+	{
+		// Create data fixture => User without contact
+		$iNum = uniqid();
+		$sLogin = "AddMagicPlaceholders".$iNum;
+		$oUser = $this->CreateContactlessUser($sLogin, 1, "Abcdef@12345678");
+		UserRights::Login($sLogin);
+
+		// Test legacy behavior (no expected args)
+		$aPlaceholders = MetaModel::AddMagicPlaceholders(['gabu' => "zomeu"]);
+		$this->assertEqualsShallow(
+			[
+				'gabu' => 'zomeu',
+				'current_contact_id' => 0,
+				'current_user->object()' => $oUser,
+			],
+			$aPlaceholders,
+			'AddMagicPlaceholders without second parameter (legacy) should add "current_contact_id=0/current_user->object()"'
+		);
+
+		// Test with expected arguments explicitly given as "none"
+		$aExpectedArgs = [];
+		$aPlaceholders = MetaModel::AddMagicPlaceholders(['gabu' => "zomeu"], $aExpectedArgs);
+		$this->assertEqualsShallow(
+			[
+				'gabu' => 'zomeu',
+			],
+			$aPlaceholders,
+			'AddMagicPlaceholders should add only expected arguments'
+		);
+
+		// Test with a few expected arguments, some of which being invalid attributes
 		$aExpectedArgs = [
-			new VariableExpression('current_user->age'),
+			new VariableExpression('current_user->login'),
+			new VariableExpression('current_user->not_existing_attribute'),
 			new VariableExpression('current_contact_id'),
-			new VariableExpression('current_contact->family'),
+			new VariableExpression('current_contact->org_id'),
+			new VariableExpression('current_contact->not_existing_attribute'),
 		];
-		$this->testAddMagicPlaceholders($bUser, $bContact, $aExpectedArgs);
+		$aPlaceholders = MetaModel::AddMagicPlaceholders(['gabu' => "zomeu"], $aExpectedArgs);
+		$this->assertEqualsShallow(
+			[
+				'gabu' => 'zomeu',
+				'current_contact_id' => 0,
+				'current_user->object()' => $oUser,
+				'current_user->not_existing_attribute' => 'Core:Placeholder:CannotBeResolved - current_user->not_existing_attribute',
+				'current_user->login' => $sLogin,
+				'current_contact->object()' => 'Core:Placeholder:CannotBeResolved - current_contact->object()',
+				'current_contact->org_id' => 'Core:Placeholder:CannotBeResolved - current_contact->org_id',
+				'current_contact->not_existing_attribute' => 'Core:Placeholder:CannotBeResolved - current_contact->not_existing_attribute',
+			],
+			$aPlaceholders,
+			'AddMagicPlaceholders should add expected arguments and render them with an explicit error when the information could not be known'
+		);
 	}
 
-	private function testAddMagicPlaceholders($bUser, $bContact, $aExpectedArgs){
-		$aProvidedPlaceholders = [ 'gabu' => "zomeu" ];
-		$aNewPlaceHolders = [];
+	public function testAddMagicPlaceholdersWhenThereIsNoLoggedInUser()
+	{
+		// Test legacy behavior (no expected args)
+		$aPlaceholders = MetaModel::AddMagicPlaceholders(['gabu' => "zomeu"]);
+		$this->assertEqualsShallow(
+			[
+				'gabu' => 'zomeu',
+				'current_contact_id' => '',
+			],
+			$aPlaceholders,
+			'AddMagicPlaceholders without second parameter (legacy) should add "curent_contact_id"'
+		);
 
-		$_SESSION = [];
-		$oUser = null;
-		$oPerson = null;
-		$sContactId = '';
-		if ($bUser) {
-			$sContactId = '0';
-			$iNum = uniqid();
-			$sLogin = "AddMagicPlaceholders".$iNum;
+		// Test with expected arguments explicitly given as "none"
+		$aExpectedArgs = [];
+		$aPlaceholders = MetaModel::AddMagicPlaceholders(['gabu' => "zomeu"], $aExpectedArgs);
+		$this->assertEqualsShallow(
+			[
+				'gabu' => 'zomeu',
+			],
+			$aPlaceholders,
+			'AddMagicPlaceholders should add only expected arguments'
+		);
 
-			if ($bContact) {
-				$this->CreateTestOrganization();
-				$oPerson = $this->CreatePerson($iNum);
-				$sContactId = $oPerson->GetKey();
-				$oUser = $this->CreateUser($sLogin, 1, "Abcdef@12345678", $oPerson->GetKey());
-				$aNewPlaceHolders['current_contact->object()'] = $oPerson;
-			} else {
-				$oUser = $this->CreateContactlessUser($sLogin, 1, "Abcdef@12345678");
-			}
-
-			$aNewPlaceHolders['current_user->object()'] = $oUser;
-			$aNewPlaceHolders['current_contact_id'] = $sContactId;
-
-			UserRights::Login($sLogin);
-		}
-
-		if (! is_null($aExpectedArgs)) {
-			foreach ($aExpectedArgs as $sExpression) {
-				$oCurrentObj = null;
-				$aName = explode('->', $sExpression->GetName());
-				if ($aName[0] == 'current_contact_id') {
-					$aNewPlaceHolders['current_contact_id'] = $sContactId;
-					continue;
-				}
-				if ($aName[0] == 'current_user') {
-					$oCurrentObj = $oUser;
-				} else if ($aName[0] == 'current_contact') {
-					$oCurrentObj = $oPerson;
-				} else {
-					continue;
-				}
-				$sFieldName = $aName[1];
-				if (! is_null($oCurrentObj) && MetaModel::IsValidAttCode(get_class($oCurrentObj), $sFieldName)) {
-					$aNewPlaceHolders[$sExpression->GetName()] = $oCurrentObj->Get($sFieldName);
-				} else {
-					$aNewPlaceHolders[$sExpression->GetName()] = \Dict::Format("Core:Placeholder:CannotBeResolved", $sExpression->GetName());
-				}
-			}
-		}
-
-		$aExpectedReturnedPlaceholders = array_merge($aProvidedPlaceholders, $aNewPlaceHolders);
-
-		$aPlaceholders = MetaModel::AddMagicPlaceholders($aProvidedPlaceholders, $aExpectedArgs);
-
-		$aErrors = [];
-		foreach ($aExpectedReturnedPlaceholders as $sKey => $oExpectedObj){
-			if (! array_key_exists($sKey, $aPlaceholders)){
-				$aErrors[] = "missing $sKey";
-			} else {
-				$oActualObj = $aPlaceholders[$sKey];
-				if ($oExpectedObj instanceof \DBObject){
-					if (get_class($oExpectedObj) !== get_class($oActualObj)){
-						$aErrors[] = sprintf("wrong class for $sKey (actual: %s/ expected:%s )", get_class($oActualObj), get_class($oExpectedObj));
-					} else if ($oExpectedObj->GetKey() !== $oActualObj->GetKey()){
-						$aErrors[] = sprintf("wrong id for $sKey (actual:%s/ expected:%s )", get_class($oActualObj), get_class($oExpectedObj));
-					}
-				} else if ($oExpectedObj != $oActualObj) {
-					$aErrors[] = sprintf("wrong value for $sKey (actual:%s/ expected:%s)", $oActualObj, $oExpectedObj);
-				}
-			}
-		}
-		$this->assertEquals([], $aErrors, var_export($aErrors, true));
-
-		UserRights::Logoff();
+		// Test with a few expected arguments, some of which being invalid attributes
+		$aExpectedArgs = [
+			new VariableExpression('current_user->login'),
+			new VariableExpression('current_user->not_existing_attribute'),
+			new VariableExpression('current_contact_id'),
+			new VariableExpression('current_contact->org_id'),
+			new VariableExpression('current_contact->not_existing_attribute'),
+		];
+		$aPlaceholders = MetaModel::AddMagicPlaceholders(['gabu' => "zomeu"], $aExpectedArgs);
+		$this->assertEqualsShallow(
+			[
+				'gabu' => 'zomeu',
+			    'current_contact_id' => '',
+				'current_user->object()' => 'Core:Placeholder:CannotBeResolved - current_user->object()',
+			    'current_user->not_existing_attribute' => 'Core:Placeholder:CannotBeResolved - current_user->not_existing_attribute',
+				'current_user->login' => 'Core:Placeholder:CannotBeResolved - current_user->login',
+			    'current_contact->object()' => 'Core:Placeholder:CannotBeResolved - current_contact->object()',
+				'current_contact->org_id' => 'Core:Placeholder:CannotBeResolved - current_contact->org_id',
+			    'current_contact->not_existing_attribute' => 'Core:Placeholder:CannotBeResolved - current_contact->not_existing_attribute',
+			],
+			$aPlaceholders,
+			'AddMagicPlaceholders should add expected arguments and render them with an explicit error when the information could not be known'
+		);
 	}
-
 }
