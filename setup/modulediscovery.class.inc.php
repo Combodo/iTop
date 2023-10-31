@@ -220,8 +220,8 @@ class ModuleDiscovery
 	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		// Order the modules to take into account their inter-dependencies
-		$aDependencies = array();
-		$aSelectedModules = array();
+		$aDependencies = [];
+		$aSelectedModules = [];
 		foreach($aModules as $sId => $aModule)
 		{
 			list($sModuleName, ) = self::GetModuleName($sId);
@@ -232,7 +232,7 @@ class ModuleDiscovery
 			}
 		}
 		ksort($aDependencies);
-		$aOrderedModules = array();
+		$aOrderedModules = [];
 		$iLoopCount = 1;
 		while(($iLoopCount < count($aModules)) && (count($aDependencies) > 0) )
 		{
@@ -256,23 +256,24 @@ class ModuleDiscovery
 		}
 		if ($bAbortOnMissingDependency && count($aDependencies) > 0)
 		{
-			$aModulesInfo = array();
-			$aModuleDeps = array();
+			$aModulesInfo = [];
+			$aModuleDeps = [];
 			foreach($aDependencies as $sId => $aDeps)
 			{
 				$aModule = $aModules[$sId];
+				$aDepsWithIcons = [];
 				foreach($aDeps as $sIndex => $sDepId)
 				{
 					if (self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules))
 					{
-						$aDeps[$sIndex] = '✅ ' . $sDepId;
+						$aDepsWithIcons[$sIndex] = '✅ ' . $sDepId;
 					} else
 					{
-						$aDeps[$sIndex] = '❌ ' .  $sDepId;
+						$aDepsWithIcons[$sIndex] = '❌ ' .  $sDepId;
 					}
 				}
-				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on: ".implode(' + ', $aDeps);
-				$aModulesInfo[$sId] = array('module' => $aModule, 'dependencies' => $aDeps);
+				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on: ".implode(' + ', $aDepsWithIcons);
+				$aModulesInfo[$sId] = array('module' => $aModule, 'dependencies' => $aDepsWithIcons);
 			}
 			$sMessage = "The following modules have unmet dependencies:\n".implode(",\n", $aModuleDeps);
 			$oException = new MissingDependencyException($sMessage);
