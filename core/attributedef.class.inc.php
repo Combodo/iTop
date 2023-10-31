@@ -13211,8 +13211,10 @@ class AttributeCustomFields extends AttributeDefinition
 				// In that case we need additional keys : see \TemplateFieldsHandler::DoBuildForm
 				$aRequestTemplateValues = $proposedValue->GetValues();
 				if (false === array_key_exists('current_template_id', $aRequestTemplateValues)) {
-					$aRequestTemplateValues['current_template_id'] = $aRequestTemplateValues['template_id'];
-					$aRequestTemplateValues['current_template_data'] = $aRequestTemplateValues['template_data'];
+					$oCurrentValue = $oHostObject->Get($this->GetCode());
+					if(is_object($oCurrentValue)){
+						$aRequestTemplateValues = array_merge($oCurrentValue->GetValues(), $aRequestTemplateValues);
+					}
 					$proposedValue = new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aRequestTemplateValues);
 				}
 			}
