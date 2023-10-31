@@ -25,7 +25,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
 	'Core:DeletedObjectTip' => '对象已被删除于%1$s (%2$s)',
 
-	'Core:UnknownObjectLabel' => '找不到对象(类: %1$s, 编号: %2$d)',
+	'Core:UnknownObjectLabel' => '找不到对象 (类: %1$s, 编号: %2$d)',
 	'Core:UnknownObjectTip' => '对象没有找到. 其可能已经被删除并且日志已经被清除.',
 
 	'Core:UniquenessDefaultError' => '唯一性规则 \'%1$s\' 错误',
@@ -370,13 +370,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventNotification' => '通知事件',
-	'Class:EventNotification+' => '已发送通知的追踪~~',
+	'Class:EventNotification+' => '已发送通知的追踪',
 	'Class:EventNotification/Attribute:trigger_id' => '触发器',
 	'Class:EventNotification/Attribute:trigger_id+' => '用户账号',
 	'Class:EventNotification/Attribute:action_id' => '用户',
 	'Class:EventNotification/Attribute:action_id+' => '用户账号',
 	'Class:EventNotification/Attribute:object_id' => '对象编号',
-	'Class:EventNotification/Attribute:object_id+' => '对象编号 (类由触发器定义 ?)',
+	'Class:EventNotification/Attribute:object_id+' => '对象编号 (类由触发器定义?)',
 ));
 
 //
@@ -407,7 +407,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:EventIssue' => '问题事件~',
+	'Class:EventIssue' => '问题事件',
 	'Class:EventIssue+' => '跟踪问题 (告警, 错误, 等)',
 	'Class:EventIssue/Attribute:issue' => '事件',
 	'Class:EventIssue/Attribute:issue+' => '发生了什么',
@@ -448,7 +448,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventRestService' => 'REST/JSON调用',
-	'Class:EventRestService+' => '跟踪REST/JSON服务调用~~',
+	'Class:EventRestService+' => '跟踪REST/JSON服务调用',
 	'Class:EventRestService/Attribute:operation' => '操作',
 	'Class:EventRestService/Attribute:operation+' => '参数 \'操作\'',
 	'Class:EventRestService/Attribute:version' => '版本',
@@ -531,12 +531,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ActionEmail/Attribute:test_recipient' => '测试者',
 	'Class:ActionEmail/Attribute:test_recipient+' => '通知为测试中时将使用此邮件地址, 而不是收件人, 抄送和密送',
 	'Class:ActionEmail/Attribute:from' => '发件人 (邮箱)',
-	'Class:ActionEmail/Attribute:from+' => '固定的邮箱地址或者类似 $this->agent_id->email$ 的占位符.
+	'Class:ActionEmail/Attribute:from+' => '固定的邮箱地址或者类似$this->agent_id->email$的占位符.
 有些邮件服务器可能不接收占位符.',
 	'Class:ActionEmail/Attribute:from_label' => '发件人 (显示名)',
 	'Class:ActionEmail/Attribute:from_label+' => '固定的显示名或者类似 $this->agent_id->friendlyname$ 的占位符',
 	'Class:ActionEmail/Attribute:reply_to' => '回复至 (邮箱)',
-	'Class:ActionEmail/Attribute:reply_to+' => '固定的邮箱地址或者类似 $this->team_id->email$ 的占位符.
+	'Class:ActionEmail/Attribute:reply_to+' => '固定的邮箱地址或者类似$this->team_id->email$的占位符.
 如果忽略则使用发件人 (邮箱).',
 	'Class:ActionEmail/Attribute:reply_to_label' => '回复至 (显示名)',
 	'Class:ActionEmail/Attribute:reply_to_label+' => '固定的显示名或者类似$this->team_id->friendlyname$的占位符.
@@ -551,7 +551,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ActionEmail/Attribute:bcc+' => '密送: 返回含有邮箱字段对象的OQL查询.
 编辑时可点击放大镜图标获取参考示例',
 	'Class:ActionEmail/Attribute:subject' => '主题',
-	'Class:ActionEmail/Attribute:subject+' => '邮件主题. 可包含类似 $this->attribute_code$ 的占位符',
+	'Class:ActionEmail/Attribute:subject+' => '邮件主题. 可包含类似$this->attribute_code$的占位符',
 	'Class:ActionEmail/Attribute:body' => '正文',
 	'Class:ActionEmail/Attribute:body+' => '邮件正文. 可包含以下占位符:
 - $this->attribute_code$ 触发通知的对象的任何属性,
@@ -583,7 +583,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'ActionEmail:preview_tab' => '预览',
 	'ActionEmail:preview_tab+' => '预览邮件模板',
 	'ActionEmail:preview_warning' => '实际收到的邮件在客户端中可能与当前在浏览器中的预览有所不同.',
-	'ActionEmail:preview_more_info' => '若需更多不同邮件客户端支持的CSS特性信息, 请参阅 %1$s',
+	'ActionEmail:preview_more_info' => '若需更多不同邮件客户端支持的CSS特性信息, 请参阅%1$s',
 	'ActionEmail:content_placeholder_missing' => '标识符 "%1$s" 在HTML中不存在. 字段 "%2$s" 的内容将不会包含在生成的邮件中.',
 ));
 
@@ -695,7 +695,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnObjectMention' => '触发器 (对象提及时)',
-	'Class:TriggerOnObjectMention+' => '指定类或子类对象在属性日志中提及 (@xxx)时的触发器',
+	'Class:TriggerOnObjectMention+' => '指定类或子类对象在属性日志中提及 (@xxx) 时的触发器',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => '提及筛选',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => '限丁将激活此触发器的提及对象. 如果为空则任何类的提及对象将激活此触发器.',
 ));
@@ -759,14 +759,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => '发生错误是要通知的联系人',
 	'Class:SynchroDataSource/Attribute:url_icon' => '图标的超链接',
 	'Class:SynchroDataSource/Attribute:url_icon+' => '一个 (小) 图片的链接用以表示与 '.ITOP_APPLICATION_SHORT.' 同步的应用.
-该图标展示在 '.ITOP_APPLICATION_SHORT.' 同步对象的 “锁定” 符号的提示框中',
+该图标展示在 '.ITOP_APPLICATION_SHORT.' 同步对象的 "锁定" 符号的提示框中',
 	'Class:SynchroDataSource/Attribute:url_application' => '应用的超链接',
-	'Class:SynchroDataSource/Attribute:url_application+' => '外部程序中对象的超链接, 对应 '.ITOP_APPLICATION_SHORT.' 的同步对象. 
+	'Class:SynchroDataSource/Attribute:url_application+' => '外部程序中对象的超链接, 对应'.ITOP_APPLICATION_SHORT.'的同步对象. 
 可能的占位符: $this->attribute$ 和 $replica->primary_key$.
-该图标展示在 '.ITOP_APPLICATION_SHORT.' 同步对象的 “锁定” 符号的提示框中',
+该图标展示在'.ITOP_APPLICATION_SHORT.'同步对象的 "锁定" 符号的提示框中',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => '一致性原则',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"使用属性": 对标记为复制的 '.ITOP_APPLICATION_SHORT.' 对象匹配复制每一个同步的属性值.
-"使用主键": 复制的字段主键应包含 '.ITOP_APPLICATION_SHORT.' 对象的唯一标识',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"使用属性": 对标记为复制的'.ITOP_APPLICATION_SHORT.'对象匹配复制每一个同步的属性值.
+"使用主键": 复制的字段主键应包含'.ITOP_APPLICATION_SHORT.'对象的唯一标识',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => '全量载入间隔',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => '在此指定的时间间隔内必须进行一次全量的数据重加载',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => '无数据时执行操作',
@@ -866,12 +866,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:SynchroReplica:PrivateDetails' => '私人详情',
 	'Core:SynchroReplica:BackToDataSource' => '返回同步数据源: %1$s',
 	'Core:SynchroReplica:ListOfReplicas' => '复制列表',
-	'Core:SynchroAttExtKey:ReconciliationById' => '编号 (主键)~~',
+	'Core:SynchroAttExtKey:ReconciliationById' => '编号 (主键)',
 	'Core:SynchroAtt:attcode' => '属性',
 	'Core:SynchroAtt:attcode+' => '对象字段',
-	'Core:SynchroAtt:reconciliation' => '复制 ?',
+	'Core:SynchroAtt:reconciliation' => '复制?',
 	'Core:SynchroAtt:reconciliation+' => '用户查询',
-	'Core:SynchroAtt:update' => '更新 ?',
+	'Core:SynchroAtt:update' => '更新?',
 	'Core:SynchroAtt:update+' => '用于对象更新',
 	'Core:SynchroAtt:update_policy' => '更新策略',
 	'Core:SynchroAtt:update_policy+' => '更新字段的行为',
@@ -909,8 +909,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroAttribute/Attribute:update' => '更新',
 	'Class:SynchroAttribute/Attribute:reconcile' => '使一致',
 	'Class:SynchroAttribute/Attribute:update_policy' => '更新策略',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => '已锁',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => '未锁',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => '已锁定',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => '未锁定',
 	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => '初始化空值',
 	'Class:SynchroAttribute/Attribute:finalclass' => '',
 	'Class:SynchroAttExtKey' => '同步属性 (外键)',
@@ -935,7 +935,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroLog/Attribute:stats_nb_obj_created' => '已创建对象数量',
 	'Class:SynchroLog/Attribute:stats_nb_obj_created_errors' => '创建时错误数量',
 	'Class:SynchroLog/Attribute:stats_nb_obj_updated' => '已更新对象数量',
-	'Class:SynchroLog/Attribute:stats_nb_obj_updated_errors' => '更新时错误数量~~',
+	'Class:SynchroLog/Attribute:stats_nb_obj_updated_errors' => '更新时错误数量',
 	'Class:SynchroLog/Attribute:stats_nb_replica_reconciled_errors' => '复制时错误数量',
 	'Class:SynchroLog/Attribute:stats_nb_replica_disappeared_no_action' => '已小时复制数量',
 	'Class:SynchroLog/Attribute:stats_nb_obj_new_updated' => '已更新对象数量',
@@ -951,9 +951,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroReplica/Attribute:status/Value:modified' => '已修改',
 	'Class:SynchroReplica/Attribute:status/Value:new' => '新建',
 	'Class:SynchroReplica/Attribute:status/Value:obsolete' => '废弃',
-	'Class:SynchroReplica/Attribute:status/Value:orphan' => 'Orphan',
+	'Class:SynchroReplica/Attribute:status/Value:orphan' => '孤立',
 	'Class:SynchroReplica/Attribute:status/Value:synchronized' => '已同步',
-	'Class:SynchroReplica/Attribute:status_dest_creator' => '对象已创建 ?',
+	'Class:SynchroReplica/Attribute:status_dest_creator' => '对象已创建?',
 	'Class:SynchroReplica/Attribute:status_last_error' => '最新错误',
 	'Class:SynchroReplica/Attribute:status_last_warning' => '告警',
 	'Class:SynchroReplica/Attribute:info_creation_date' => '创建日期',
@@ -973,7 +973,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => '耗时 (储存为 "%1$s")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => '在 "%1$s" 上消耗的时间',
-	'Core:ExplainWTC:StopWatch-Deadline' => '"%1$s" 的期限截止于%2$d%%~~',
+	'Core:ExplainWTC:StopWatch-Deadline' => '"%1$s" 的期限截止于%2$d%%',
 
 	// Bulk export
 	'Core:BulkExport:MissingParameter_Param' => '缺少参数 "%1$s"',
@@ -987,14 +987,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:BulkExport:CSVFormat' => 'CSV (*.csv)',
 	'Core:BulkExport:XLSXFormat' => 'Excel 2007+ (*.xlsx)',
 	'Core:BulkExport:PDFFormat' => 'PDF文档 (*.pdf)',
-	'Core:BulkExport:DragAndDropHelp' => '可拖动或删除列头进行排序. 正在预览%1$s行. 一共需要导出: %2$s 行.',
+	'Core:BulkExport:DragAndDropHelp' => '可拖动或删除列头进行排序. 正在预览%1$s行. 一共需要导出: %2$s行.',
 	'Core:BulkExport:EmptyPreview' => '请选择要导出的列',
 	'Core:BulkExport:ColumnsOrder' => '列顺序',
 	'Core:BulkExport:AvailableColumnsFrom_Class' => '%1$s属性中可用的列',
 	'Core:BulkExport:NoFieldSelected' => '至少选择导出一列',
 	'Core:BulkExport:CheckAll' => '全选',
 	'Core:BulkExport:UncheckAll' => '反选',
-	'Core:BulkExport:ExportCancelledByUser' => '导出被用户取消',
+	'Core:BulkExport:ExportCancelledByUser' => '用户已取消导出',
 	'Core:BulkExport:CSVOptions' => 'CSV选项',
 	'Core:BulkExport:CSVLocalization' => '本地化',
 	'Core:BulkExport:PDFOptions' => 'PDF选项',

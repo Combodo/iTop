@@ -56,8 +56,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TagSetFieldData/Attribute:obj_attcode'       => '字段编码',
 	'Class:AuditRule/Attribute:query'                   => '要运行的查询',
 	'Class:AuditRule/Attribute:query+'                  => '要运行的OQL表达式',
-	'Class:AuditRule/Attribute:valid_flag'              => '是否有效 ?',
-	'Class:AuditRule/Attribute:valid_flag+'             => '若规则返回有效对象则True,否则False',
+	'Class:AuditRule/Attribute:valid_flag'              => '是否有效?',
+	'Class:AuditRule/Attribute:valid_flag+'             => '若规则返回有效对象则True, 否则False',
 	'Class:AuditRule/Attribute:valid_flag/Value:true'   => 'true',
 	'Class:AuditRule/Attribute:valid_flag/Value:true+'  => 'true',
 	'Class:AuditRule/Attribute:valid_flag/Value:false'  => 'false',
@@ -91,7 +91,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkAuditCategoryToAuditDomain' => '关联审计类别 / 审计域',
+	'Class:lnkAuditCategoryToAuditDomain' => '关联审计类别/审计域',
 	'Class:lnkAuditCategoryToAuditDomain+' => '',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => '类别',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id+' => '审计类别',
@@ -113,7 +113,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Query/Attribute:name'                      => '名称',
 	'Class:Query/Attribute:name+'                     => '查询的名称',
 	'Class:Query/Attribute:description'               => '描述',
-	'Class:Query/Attribute:description+'              => '请描述此查询 (目的,用法等等.)',
+	'Class:Query/Attribute:description+'              => '请描述此查询 (目的, 用法等等.)',
 	'Class:Query/Attribute:is_template'               => 'OQL模板',
 	'Class:Query/Attribute:is_template+'              => '可用于通知中的收件人OQL',
 	'Class:Query/Attribute:is_template/Value:yes'     => '是',
@@ -165,9 +165,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:User/Attribute:language'              => '语言',
 	'Class:User/Attribute:language+'             => '用户语言',
 	'Class:User/Attribute:language/Value:EN US'  => '英语',
-	'Class:User/Attribute:language/Value:EN US+' => '英语(U.S.)',
+	'Class:User/Attribute:language/Value:EN US+' => '英语 (U.S.)',
 	'Class:User/Attribute:language/Value:FR FR'  => '法语',
-	'Class:User/Attribute:language/Value:FR FR+' => '法语(France)',
+	'Class:User/Attribute:language/Value:FR FR+' => '法语 (France)',
 	'Class:User/Attribute:profile_list'          => '角色',
 	'Class:User/Attribute:profile_list+'         => '授予此用户的角色',
 	'Class:User/Attribute:allowed_org_list'      => '可访问的组织',
@@ -179,16 +179,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Class:User/Error:LoginMustBeUnique' => '登录名必须唯一 - "%1s" 已经被使用.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => '必须指定至少一个角色给此用户.',
-	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
-	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
-	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
-	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
+	'Class:User/Error:ProfileNotAllowed' => '无法添加角色 "%1$s" 因为这将导致禁止访问后台',
+	'Class:User/Error:StatusChangeIsNotAllowed' => '不允许更改您自己用户的状态',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => '允许访问组织必须包含用户组织',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => '当前指定的角色列表没有提供足够的访问权限 (用户将无法被修改)',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => '必须为此用户指定一个组织.',
 	'Class:User/Error:OrganizationNotAllowed' => '此组织不被允许.',
 	'Class:User/Error:UserOrganizationNotAllowed' => '此用户不属于那个组织.',
 	'Class:User/Error:PersonIsMandatory' => '联系人必填.',
 	'Class:UserInternal' => '内部用户',
-	'Class:UserInternal+' => ITOP_APPLICATION_SHORT.' 内部定义的用户',
+	'Class:UserInternal+' => ITOP_APPLICATION_SHORT.'内部定义的用户',
 ));
 
 //
@@ -390,9 +390,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:WelcomeMenu' => '欢迎',
-	'Menu:WelcomeMenu+' => '欢迎使用 '.ITOP_APPLICATION_SHORT,
+	'Menu:WelcomeMenu+' => '欢迎使用'.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenuPage' => '欢迎',
-	'Menu:WelcomeMenuPage+' => '欢迎使用 '.ITOP_APPLICATION_SHORT,
+	'Menu:WelcomeMenuPage+' => '欢迎使用'.ITOP_APPLICATION_SHORT,
 	'Menu:AdminTools' => '管理',
 	'Menu:AdminTools+' => '管理工具',
 	'Menu:AdminTools?' => '具有管理员角色的用户才能使用的工具',
@@ -445,7 +445,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 <li>管理IT中最重要的资产: 文档.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text' => '<div>恭喜, 您运行的是 '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+	'UI:WelcomeMenu:Text' => '<div>恭喜, 您运行的是'.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 
 <div>此版本全新设计了一个现代且易用的后台界面.</div>
 
@@ -550,7 +550,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Error:MaintenanceTitle'                         => '维护',
 	'UI:Error:InvalidToken'                             => '错误: 所请求的操作已执行 (没有CSRF token)',
 
-	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP提供者%1$s不存在 (email_transport_smtp.oauth.provider)',
 
 	'UI:GroupBy:Count'              => '个数',
 	'UI:GroupBy:Count+'             => '项目数',
@@ -561,8 +561,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:HistoryTab'                 => '历史',
 	'UI:NotificationsTab' => '通知',
 	'UI:History:BulkImports' => '历史',
-	'UI:History:BulkImports+' => 'List of CSV imports (latest import first)~~',
-	'UI:History:BulkImportDetails' => 'Changes resulting from the CSV import performed on %1$s (by %2$s)~~',
+	'UI:History:BulkImports+' => 'CSV导入列表 (最新导入在最)~~',
+	'UI:History:BulkImportDetails' => '在%1$s执行CSV导入时造成的变更 (由%2$s)',
 	'UI:History:Date' => '日期',
 	'UI:History:Date+' => '变更日期',
 	'UI:History:User' => '用户',
@@ -642,7 +642,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ResetPwd-Ready' => '密码已修改成功.',
 	'UI:ResetPwd-Login' => '点击这里登录...',
 
-	'UI:Login:About'                                => ITOP_APPLICATION.'Powered by Combodo',
+	'UI:Login:About'                                => ITOP_APPLICATION.'由Combodo创建',
 	'UI:Login:ChangeYourPassword'                   => '修改您的密码',
 	'UI:Login:OldPasswordPrompt'                    => '旧密码',
 	'UI:Login:NewPasswordPrompt'                    => '新密码',
@@ -699,8 +699,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:CSVImport:QualifierDoubleQuote+'        => '" (双引号)',
 	'UI:CSVImport:QualifierSimpleQuote+'        => '\' (单引号)',
 	'UI:CSVImport:QualifierOther'               => '其它:',
-	'UI:CSVImport:TreatFirstLineAsHeader'       => '将第一行视作标题头(列名)',
-	'UI:CSVImport:Skip_N_LinesAtTheBeginning'   => '跳过文件的前 %1$s 行',
+	'UI:CSVImport:TreatFirstLineAsHeader'       => '将第一行视作标题头 (列名)',
+	'UI:CSVImport:Skip_N_LinesAtTheBeginning'   => '跳过文件的前%1$s行',
 	'UI:CSVImport:CSVDataPreview'               => 'CSV 数据预览',
 	'UI:CSVImport:SelectFile'                   => '选择要导入的文件:',
 	'UI:CSVImport:Tab:LoadFromFile'             => '从文件导入',
@@ -723,28 +723,28 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:CSVImport:AlertMultipleMapping'         => '请确保目标区域仅被映射一次.',
 	'UI:CSVImport:AlertNoSearchCriteria'        => '请选择至少一个搜索条件',
 	'UI:CSVImport:Encoding'                     => '字符编码',
-	'UI:CSVImport:ViewAllPossibleValues'        => 'View all possible values~~',
-	'UI:CSVImport:ViewAllAmbiguousValues'       => 'View all ambiguous values~~',
+	'UI:CSVImport:ViewAllPossibleValues'        => '查看所有可能值',
+	'UI:CSVImport:ViewAllAmbiguousValues'       => '查看所有模糊值',
 	'UI:UniversalSearchTitle'                   => ITOP_APPLICATION_SHORT.' - 全局搜索',
 	'UI:UniversalSearch:Error'                  => '错误: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass'    => '选择要搜索的类别: ',
 
 	'UI:CSVReport-Value-Modified'                       => '已修改',
-	'UI:CSVReport-Value-SetIssue'                       => 'invalid value for attribute~~',
-	'UI:CSVReport-Value-ChangeIssue'                    => '\'%1$s\' is an invalid value~~',
-	'UI:CSVReport-Value-NoMatch'                        => 'No match for value \'%1$s\'~~',
-	'UI:CSVReport-Value-NoMatch-PossibleValues'         => 'Some possible \'%1$s\' value(s): %2$s~~',
-	'UI:CSVReport-Value-NoMatch-NoObject'               => 'There are no \'%1$s\' objects~~',
-	'UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser' => 'There are no \'%1$s\' objects found with your current profile~~',
-	'UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser' => 'There are some \'%1$s\' objects not visible with your current profile~~',
+	'UI:CSVReport-Value-SetIssue'                       => '属性值不合法',
+	'UI:CSVReport-Value-ChangeIssue'                    => '\'%1$s\' 值不合法',
+	'UI:CSVReport-Value-NoMatch'                        => '没有匹配到值 \'%1$s\'',
+	'UI:CSVReport-Value-NoMatch-PossibleValues'         => '一些可能的 \'%1$s\' 值: %2$s',
+	'UI:CSVReport-Value-NoMatch-NoObject'               => '对象 \'%1$s\' 不存在',
+	'UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser' => '对象 \'%1$s\' 在您当前角色下没有找到',
+	'UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser' => '一些对象 \'%1$s\' 在您当前角色下不可见',
 
 	'UI:CSVReport-Value-Missing'            => '缺少必填项',
 	'UI:CSVReport-Value-Ambiguous'          => '模糊匹配: 找到%1$s个对象',
 	'UI:CSVReport-Row-Unchanged'            => '保持不变',
 	'UI:CSVReport-Row-Created'              => '新建',
 	'UI:CSVReport-Row-Updated'              => '已更新%1$d列',
-	'UI:CSVReport-Row-Disappeared'          => '已消失, %1$d 列发生变化',
-	'UI:CSVReport-Row-Issue'                => 'Issue: %1$s',
+	'UI:CSVReport-Row-Disappeared'          => '已消失, %1$d列发生变化',
+	'UI:CSVReport-Row-Issue'                => '问题: %1$s',
 	'UI:CSVReport-Value-Issue-Null'         => '不允许留空',
 	'UI:CSVReport-Value-Issue-NotFound'     => '对象找不到',
 	'UI:CSVReport-Value-Issue-FoundMany'    => '找到%1$d个匹配项',
@@ -772,32 +772,32 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:CSVReport-Object-Created'           => '对象已创建',
 	'UI:CSVReport-Icon-Error'               => '错误',
 	'UI:CSVReport-Object-Error'             => '错误: %1$s',
-	'UI:CSVReport-Object-Ambiguous'         => 'AMBIGUOUS: %1$s',
-	'UI:CSVReport-Stats-Errors'             => '%1$.0f %% 已加载的对象包含错误,它们将会被忽略.',
+	'UI:CSVReport-Object-Ambiguous'         => '模糊: %1$s',
+	'UI:CSVReport-Stats-Errors'             => '%1$.0f %% 已加载的对象包含错误, 它们将会被忽略.',
 	'UI:CSVReport-Stats-Created'            => '%1$.0f %% 已加载的对象将会被创建.',
 	'UI:CSVReport-Stats-Modified'           => '%1$.0f %% 已加载的对象将会被修改.',
 
 	'UI:CSVExport:AdvancedMode'     => '高级模式',
-	'UI:CSVExport:AdvancedMode+'    => 'In advanced mode, several columns are added to the export: the id of the object, the id of external keys and their reconciliation attributes.~~',
+	'UI:CSVExport:AdvancedMode+'    => '高级模式下, 导出将包含额外的列: 对象id, 外键id以及要使一致的属性.',
 	'UI:CSVExport:LostChars'        => '编码问题',
-	'UI:CSVExport:LostChars+'       => 'The downloaded file will be encoded into %1$s. iTop has detected some characters that are not compatible with this format. Those characters will either be replaced by a substitute (e.g. accentuated chars losing the accent), or they will be discarded. You can copy/paste the data from your web browser. Alternatively, you can contact your administrator to change the encoding (See parameter \'csv_file_default_charset\').~~',
+	'UI:CSVExport:LostChars+'       => '已下载文件将使用编码%1$s. 系统检测到一些字符与该格式不兼容. 这些字符将被替换为子集 (例如重读字符将丢失音调), 或者被丢弃. 您可以从浏览器中复制粘贴数据. 或者联系管理员更改字符编码 (参阅参数 \'csv_file_default_charset\').',
 
-	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB 审计',
+	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB审计',
 
 	'UI:Audit:Interactive:All:Title'              => '审计结果',
 	'UI:Audit:Interactive:All:SubTitle'           => '全量审计: 包括所有规则, 所有类别, 所有域',
 	'UI:Audit:Interactive:All:BreadCrumb'         => '全量审计',
 	'UI:Audit:Interactive:All:BreadCrumb+'        => '所有规则的审计结果',
-	'UI:Audit:Interactive:Categories:Title'       => '所有类别的审计结果: %1$s~~',
+	'UI:Audit:Interactive:Categories:Title'       => '所有类别的审计结果: %1$s',
 	'UI:Audit:Interactive:Categories:SubTitle'    => '所有属于类别%1$s的规则的审计结果',
 	'UI:Audit:Interactive:Categories:BreadCrumb'  => '类别',
-	'UI:Audit:Interactive:Categories:BreadCrumb+' => '审计类别: %1$s~~',
-	'UI:Audit:Interactive:Domain:Title'           => '审计结果在域: %1$s~~',
+	'UI:Audit:Interactive:Categories:BreadCrumb+' => '审计类别: %1$s',
+	'UI:Audit:Interactive:Domain:Title'           => '审计结果在域: %1$s',
 	'UI:Audit:Interactive:Domain:SubTitle'        => '所有关联所述域的类别内的审计规则的结果: %1$s',
 	'UI:Audit:Interactive:Domain:BreadCrumb'      => '%1$s',
-	'UI:Audit:Interactive:Domain:BreadCrumb+'     => '审计在域: %1$s~~',
+	'UI:Audit:Interactive:Domain:BreadCrumb+'     => '审计在域: %1$s',
 	'UI:Audit:Interactive:Selection:Title'        => '审计的选择',
-	'UI:Audit:Interactive:Selection:SubTitle'     => 'Select a domain to get the results limited to this domain or select "All categories" to get a full audit (can take time or even fail if too much data to audit)~~',
+	'UI:Audit:Interactive:Selection:SubTitle'     => '选择一个域以将结果限定在该域内或者选择 "所有类别" 进行全量审计 (要审计的数据太大可能导致耗时较长甚至失败)',
 	'UI:Audit:Interactive:Selection:BreadCrumb'   => '选择',
 	'UI:Audit:Interactive:Selection:BreadCrumb+'  => '选择要运行的审计',
 	'UI:Audit:Interactive:Selection:BadgeAll'     => '所有类别',
@@ -839,8 +839,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:RunQuery:ResultSQLCount'        => '结果SQL计数',
 	'UI:RunQuery:ResultSQL'             => '结果SQL',
 	'UI:RunQuery:Error'                 => '运行此查询时发生了一个错误',
-	'UI:Query:UrlForExcel'              => 'URL to use for MS-Excel web queries',
-	'UI:Query:UrlV1'                    => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. <br/>Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.',
+	'UI:Query:UrlForExcel'              => '用于MS-Excel网络查询的URL',
+	'UI:Query:UrlV1'                    => '没有定义字段列表. 没有这个信息页面<em>export-V2.php</em>无法调用. 因此, 建议的以下URL指向传统页面: <em>export.php</em>. 该传统版本导出具有以下限制: 导出的字段列表很大程度依赖于导出格式和'.ITOP_APPLICATION_SHORT.'数据模型. <br/>如果您需要确保导出的列保持长期稳定, 则必须为属性 "Fields" 指定值并使用页面<em>export-V2.php</em>.',
 	'UI:Schema:Title'                   => ITOP_APPLICATION_SHORT.'对象模型',
 	'UI:Schema:TitleForClass'           => '%1$s模式',
 	'UI:Schema:CategoryMenuItem'        => '类别<b>%1$s</b>',
@@ -882,15 +882,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Schema:RelatedClasses' => '相关类',
 	'UI:Schema:LifeCycle' => '生命周期',
 	'UI:Schema:Triggers' => '触发器',
-	'UI:Schema:Relation_Code_Description' => '关联 <em>%1$s</em> (%2$s)',
+	'UI:Schema:Relation_Code_Description' => '关联<em>%1$s</em> (%2$s)',
 	'UI:Schema:RelationDown_Description' => '向下: %1$s',
 	'UI:Schema:RelationUp_Description' => '向上: %1$s',
 	'UI:Schema:RelationPropagates' => '%1$s: 延申到%2$d个层级, 查询: %3$s',
-	'UI:Schema:RelationDoesNotPropagate' => '%1$s: 没有延申 (%2$d 层级), 查询: %3$s',
+	'UI:Schema:RelationDoesNotPropagate' => '%1$s: 没有延申 (%2$d层级), 查询: %3$s',
 	'UI:Schema:Class_ReferencingClasses_From_By' => '%1$s被类%2$s引用, 通过字段%3$s',
 	'UI:Schema:Class_IsLinkedTo_Class_Via_ClassAndAttribute' => '%1$s被链接到%2$s通过 %3$s::<em>%4$s</em>',
-	'UI:Schema:Links:1-n' => '类指向%1$s (1:n 链接):',
-	'UI:Schema:Links:n-n' => '类关联到%1$s (n:n 链接):',
+	'UI:Schema:Links:1-n' => '类指向%1$s (1:n链接):',
+	'UI:Schema:Links:n-n' => '类关联到%1$s (n:n链接):',
 	'UI:Schema:Links:All' => '全部相关类的图',
 	'UI:Schema:NoLifeCyle' => '此类没有生命周期的定义.',
 	'UI:Schema:LifeCycleTransitions' => '状态转换',
@@ -908,7 +908,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Schema:DisplaySelector/Code' => '编码',
 	'UI:Schema:Attribute/Filter' => '筛选器',
 	'UI:Schema:DefaultNullValue' => '默认为空: "%1$s"',
-	'UI:Schema:Events' => 'Events~~',
+	'UI:Schema:Events' => '事件',
 	'UI:Schema:Events:Defined' => '已定义事件',
 	'UI:Schema:Events:NoEvent' => '无已定义事件',
 	'UI:Schema:Events:Listeners' => '事件监听器',
@@ -986,7 +986,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Search:NoSearch' => '没有可搜索的内容',
 	'UI:Search:NeedleTooShort' => '字符串 "%1$s" 太短. 请至少输入%2$d个字符.',
 	'UI:Search:Ongoing' => '正在搜索 "%1$s"',
-	'UI:Search:Enlarge' => 'Broaden the search',
+	'UI:Search:Enlarge' => '扩大搜索',
 	'UI:FullTextSearchTitle_Text' => '"%1$s" 的结果:',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '找到%1$d个%2$s.',
 	'UI:Search:NoObjectFound' => '未发现对象.',
@@ -1093,19 +1093,19 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:NotificationsMenu:Title' => '配置通知',
 	'UI:NotificationsMenu:Help' => '帮助',
 	'UI:NotificationsMenu:HelpContent' => '<p>在'.ITOP_APPLICATION_SHORT.'中, 通知可以被自定义. 它们是基于两个对象集: <i>触发器和操作</i>.</p>
-<p><i><b>触发器</b></i> 定义了什么时候发送通知. '.ITOP_APPLICATION_SHORT.'内核自带一些触发器, 另一些触发器可由扩展提供:
+<p><i><b>触发器</b></i>定义了什么时候发送通知. '.ITOP_APPLICATION_SHORT.'内核自带一些触发器, 另一些触发器可由扩展提供:
 <ol>
-	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
-	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
-	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
+	<li>一些触发器执行于指定类的对象被<b>创建后</b>, <b>更新后</b>或<b>删除后</b>.</li>
+	<li>一些触发器执行于指定类的对象<b>进入</b>或<b>离开ve</b>指定</b>状态</b>.</li>
+	<li>一些触发器执行于<b>TTO阈值或TTR阈值</b>预设值<b>达到时</b>.</li>
 </ol>
 </p>
 <p>
-<i><b>操作</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<i><b>操作</b></i>定义触发器执行时要运行的动作. 目前仅支持2类动作:
 <ol>
-	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
-	这里有一个专用的页面: <a href="../setup/email.test.php" target="_blank">email.test.php</a> 可用于测试和调试PHP 的邮件配置.</li>
-	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+	<li>发送电子邮件: 此动作同时需要指定发送的邮件所使用的模板, 以及一些其他参数, 例如收件人, 优先级, 等.<br />
+	这里有一个专用的页面: <a href="../setup/email.test.php" target="_blank">email.test.php</a>可用于测试和调试PHP的邮件配置.</li>
+	<li>外部webhook: 允许通过发送结构化数据到指定URL来与第三方应用集成.</li>
 </ol>
 </p>
 <p>若要执行, 操作必须和触发器相关联.
@@ -1175,10 +1175,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:PageOrientation_Portrait' => '纵向',
 	'UI:PageOrientation_Landscape' => '横向',
 	'UI:RelationTooltip:Redundancy' => '冗余',
-	'UI:RelationTooltip:ImpactedItems_N_of_M' => '#受影响的项目: %1$d / %2$d',
+	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# 受影响的项目: %1$d / %2$d',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => '阈值: %1$d / %2$d',
 	'Portal:Title' => ITOP_APPLICATION_SHORT.' 用户门户',
-	'Portal:NoRequestMgmt' => '亲爱的%1$s, 您被重定向到这个页面, 因为您的账号已被设置成角色 \'Portal user\'. 并且iTop没有安装 \'需求管理\' 功能. 请联系管理员.',
+	'Portal:NoRequestMgmt' => '亲爱的%1$s, 您被重定向到这个页面, 因为您的账号已被设置成角色 \'Portal user\'. 并且系统没有安装 \'需求管理\' 功能. 请联系管理员.',
 	'Portal:Refresh' => '刷新',
 	'Portal:Back' => '返回',
 	'Portal:WelcomeUserOrg' => '欢迎%1$s, 来自%2$s',
@@ -1228,7 +1228,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:BulkModifyStatus+' => '操作状态',
 	'UI:BulkModifyErrors' => '报错 (如果有)',
 	'UI:BulkModifyErrors+' => '阻止修改时报错',
-	'UI:BulkModifyStatusOk' => 'Ok',
+	'UI:BulkModifyStatusOk' => '正常',
 	'UI:BulkModifyStatusError' => '错误',
 	'UI:BulkModifyStatusModified' => '已修改',
 	'UI:BulkModifyStatusSkipped' => '跳过',
@@ -1321,7 +1321,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:DashboardEdit:Title' => '仪表盘编辑器',
 	'UI:DashboardEdit:DashboardTitle' => '标题',
 	'UI:DashboardEdit:AutoReload' => '自动刷新',
-	'UI:DashboardEdit:AutoReloadSec' => '自动刷新间隔(秒)',
+	'UI:DashboardEdit:AutoReloadSec' => '自动刷新间隔 (秒)',
 	'UI:DashboardEdit:AutoReloadSec+' => '最小值是%1$d秒',
 	'UI:DashboardEdit:Revert' => '撤回',
 	'UI:DashboardEdit:Apply' => '应用',
@@ -1343,11 +1343,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'UI:DashletProxy:Label' => '代理',
 	'UI:DashletProxy:Description' => '代理仪表盘',
-	'UI:DashletProxy:RenderNoDataText:Edit' => '第三方组件无法预览(类 "%1$s").',
+	'UI:DashletProxy:RenderNoDataText:Edit' => '第三方组件无法预览 (类 "%1$s").',
 	'UI:DashletProxy:Prop-XMLConfiguration' => '配置 (显示为纯XML)',
 
 	'UI:DashletPlainText:Label' => '文本',
-	'UI:DashletPlainText:Description' => '纯文本(无格式)',
+	'UI:DashletPlainText:Description' => '纯文本 (无格式)',
 	'UI:DashletPlainText:Prop-Text' => '内容',
 	'UI:DashletPlainText:Prop-Text:Default' => '请在这里输入内容...',
 
@@ -1400,7 +1400,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:GroupBy:max+' => '%1$s最大值',
 	// ---
 
-	'UI:DashletHeaderStatic:Label' => 'Header',
+	'UI:DashletHeaderStatic:Label' => '标头',
 	'UI:DashletHeaderStatic:Description' => '显示水平分隔符',
 	'UI:DashletHeaderStatic:Prop-Title' => '标题',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => '联系人',
@@ -1468,7 +1468,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Menu:FilterList'                => '显示条件查询列表',
 	'UI:ShortcutRenameDlg:Title'        => '重命名快捷方式',
 	'UI:ShortcutListDlg:Title'          => '为此列表创建快捷方式',
-	'UI:ShortcutDelete:Confirm'         => '请确认是否删除这个(些)快捷方式.',
+	'UI:ShortcutDelete:Confirm'         => '请确认是否删除该快捷方式.',
 	'Class:Shortcut'                    => '快捷方式',
 	'Class:Shortcut+'                   => '',
 	'Class:Shortcut/Attribute:name'     => '名称',
@@ -1546,12 +1546,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'portal:legacy_portal' => '终端用户门户',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.'后台用户界面',
 
-	'UI:CurrentObjectIsLockedBy_User' => '对象被锁住,因为正在修改 %1$s.',
-	'UI:CurrentObjectIsLockedBy_User_Explanation' => '此对象正在被 %1$s 修改. 您的修改无法提交因为它们会冲突.',
+	'UI:CurrentObjectIsLockedBy_User' => '对象被锁定, 因为正在修改%1$s.',
+	'UI:CurrentObjectIsLockedBy_User_Explanation' => '此对象正在被%1$s修改. 您的修改无法提交以避免冲突.',
 	'UI:CurrentObjectIsSoftLockedBy_User' => '此对象当前正在被%1$s修改. 在其修改结束后您将能提交您的修改.',
 	'UI:CurrentObjectLockExpired' => '并发修改的锁定期已过.',
 	'UI:CurrentObjectLockExpired_Explanation' => '防止对象被并发修改的锁定已失效. 其他用户已允许修改当前对象因此您不能再提交您的修改.',
-	'UI:ConcurrentLockKilled' => '阻止并发修改当前对象的锁已被删除.',
+	'UI:ConcurrentLockKilled' => '阻止并发修改当前对象的锁定已被删除.',
 	'UI:Menu:KillConcurrentLock' => '消除并发修改锁定!',
 
 	'UI:Menu:ExportPDF' => '导出PDF...',
@@ -1561,9 +1561,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:UploadInlineImageLegend' => '上传新图片',
 	'UI:SelectInlineImageToUpload' => '选择要上传的图片',
 	'UI:AvailableInlineImagesLegend' => '可用的图片',
-	'UI:NoInlineImage' => '服务器上没有图片. 使用上面的 "浏览" 按钮,从您的电脑上选择并上传到服务器.',
+	'UI:NoInlineImage' => '服务器上没有图片. 使用上面的 "浏览" 按钮, 从您的电脑上选择并上传到服务器.',
 
-	'UI:ToggleFullScreen' => '切换 最大化/最小化',
+	'UI:ToggleFullScreen' => '切换最大化/最小化',
 	'UI:Button:ResetImage' => '恢复之前的图片',
 	'UI:Button:RemoveImage' => '移除图片',
 	'UI:Button:UploadImage' => '从硬盘上传图像',
@@ -1575,7 +1575,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Search:Toggle' => '折叠/展开',
 	'UI:Search:AutoSubmit:DisabledHint' => '此类别已禁用自动提交',
 	'UI:Search:Obsolescence:DisabledHint' => '根据您的设置, 废弃的数据会被隐藏',
-	'UI:Search:NoAutoSubmit:ExplainText' => '在搜索框中添加规则,或者单击对象按钮查看对象.',
+	'UI:Search:NoAutoSubmit:ExplainText' => '在搜索框中添加规则, 或者单击对象按钮查看对象.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => '添加条件',
 	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => '最近使用',
@@ -1622,15 +1622,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
 	//   - External key widget
-	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s 已定义',
-	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s 未被定义',
+	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s已定义',
+	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s未定义',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s和%3$s其他',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: 任何',
 	//   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s已定义',
-	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s未被定义',
+	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s未定义',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s和%3$s其他',
