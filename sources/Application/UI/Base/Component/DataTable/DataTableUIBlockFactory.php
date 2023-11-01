@@ -200,7 +200,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				$sSubTitle = Dict::Format('UI:Pagination:HeaderSelection', $sCountHtml, '<span class="ibo-datatable--selected-count">0</span>');
 			} else {
 				$sSubTitle = Dict::Format('UI:Pagination:HeaderNoSelection', $sCountHtml);
-			}
+				}
 
 			if (utils::IsNotNullOrEmptyString($sFilterListUrl)) {
 				$sSubTitle = '<a href="'.$sFilterListUrl.'" title="'.Dict::S('UI:Menu:FilterList').'">'.$sSubTitle.'</a>';
@@ -211,7 +211,6 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			if (isset($aExtraParams['panel_icon']) && strlen($aExtraParams['panel_icon']) > 0) {
 				$oContainer->SetIcon($aExtraParams['panel_icon']);
 			}
-
 			$oContainer->AddToolbarBlock($oBlockMenu);
 			$oContainer->AddMainBlock($oDataTable);
 		} else {
@@ -333,7 +332,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			} else {
 				$aExtraFields['*'][] = $sFieldName;
 			}
-		}
+			}
 
 		$aClassAliases = $oSet->GetFilter()->GetSelectedClasses();
 		$aAuthorizedClasses = array();
@@ -352,59 +351,59 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			// Regular use case, dispatch fields to their corresponding aliases
 			else if (array_key_exists($sAlias, $aExtraFields)) {
 				$aLists[$sAlias] = $aExtraFields[$sAlias];
-			}
+		}
 			// Finally, if unknown alias, ignore fields
 			else {
 				$aLists[$sAlias] = array();
 			}
 
 			// If zlist specified, merge its fields with the currently present
-			if ($sZListName !== false) {
+		if ($sZListName !== false) {
 				$aDefaultList = MetaModel::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
 				$aLists[$sAlias] = array_merge($aDefaultList, $aLists[$sAlias]);
-			}
+		}
 
-			// Filter the list to removed linked set since we are not able to display them here
+		// Filter the list to removed linked set since we are not able to display them here
 			foreach ($aLists[$sAlias] as $index => $sAttCode) {
-				$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-				if ($oAttDef instanceof AttributeLinkedSet) {
-					// Removed from the display list
+			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+			if ($oAttDef instanceof AttributeLinkedSet) {
+				// Removed from the display list
 					unset($aLists[$sAlias][$index]);
 				}
 			}
 
 			if (empty($aLists[$sAlias])) {
 				unset($aLists[$sAlias], $aAuthorizedClasses[$sAlias]);
-			}
+		}
 
 			// Only for main class
 			if (!empty($sLinkageAttribute) && $sClassName === $oSet->GetFilter()->GetClass()) {
-				// The set to display is in fact a set of links between the object specified in the $sLinkageAttribute
-				// and other objects...
-				// The display will then group all the attributes related to the link itself:
-				// | Link_attr1 | link_attr2 | ... || Object_attr1 | Object_attr2 | Object_attr3 | .. | Object_attr_n |
-				$aDisplayList = array();
-				$aAttDefs = MetaModel::ListAttributeDefs($sClassName);
-				assert(isset($aAttDefs[$sLinkageAttribute]));
-				$oAttDef = $aAttDefs[$sLinkageAttribute];
-				assert($oAttDef->IsExternalKey());
-				// First display all the attributes specific to the link record
+			// The set to display is in fact a set of links between the object specified in the $sLinkageAttribute
+			// and other objects...
+			// The display will then group all the attributes related to the link itself:
+			// | Link_attr1 | link_attr2 | ... || Object_attr1 | Object_attr2 | Object_attr3 | .. | Object_attr_n |
+			$aDisplayList = array();
+			$aAttDefs = MetaModel::ListAttributeDefs($sClassName);
+			assert(isset($aAttDefs[$sLinkageAttribute]));
+			$oAttDef = $aAttDefs[$sLinkageAttribute];
+			assert($oAttDef->IsExternalKey());
+			// First display all the attributes specific to the link record
 				foreach ($aLists[$sAlias] as $sLinkAttCode) {
-					$oLinkAttDef = $aAttDefs[$sLinkAttCode];
-					if ((!$oLinkAttDef->IsExternalKey()) && (!$oLinkAttDef->IsExternalField())) {
-						$aDisplayList[] = $sLinkAttCode;
-					}
+				$oLinkAttDef = $aAttDefs[$sLinkAttCode];
+				if ((!$oLinkAttDef->IsExternalKey()) && (!$oLinkAttDef->IsExternalField())) {
+					$aDisplayList[] = $sLinkAttCode;
 				}
-				// Then display all the attributes neither specific to the link record nor to the 'linkage' object (because the latter are constant)
+			}
+			// Then display all the attributes neither specific to the link record nor to the 'linkage' object (because the latter are constant)
 				foreach ($aLists[$sAlias] as $sLinkAttCode) {
-					$oLinkAttDef = $aAttDefs[$sLinkAttCode];
-					if (($oLinkAttDef->IsExternalKey() && ($sLinkAttCode != $sLinkageAttribute))
-						|| ($oLinkAttDef->IsExternalField() && ($oLinkAttDef->GetKeyAttCode() != $sLinkageAttribute))) {
-						$aDisplayList[] = $sLinkAttCode;
-					}
+				$oLinkAttDef = $aAttDefs[$sLinkAttCode];
+				if (($oLinkAttDef->IsExternalKey() && ($sLinkAttCode != $sLinkageAttribute))
+					|| ($oLinkAttDef->IsExternalField() && ($oLinkAttDef->GetKeyAttCode() != $sLinkageAttribute))) {
+					$aDisplayList[] = $sLinkAttCode;
 				}
-				// First display all the attributes specific to the link
-				// Then display all the attributes linked to the other end of the relationship
+			}
+			// First display all the attributes specific to the link
+			// Then display all the attributes linked to the other end of the relationship
 				$aLists[$sAlias] = $aDisplayList;
 			}
 		}
@@ -489,7 +488,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oSet->OptimizeColumnLoad($aColumnsToLoad);
 
 		$aColumnDefinition = [];
-		$iIndexColumn = 0;
+		$iIndexColumn=0;
 
 		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
 		$bSingleSelectMode = isset($aExtraParams['selection_type']) ? ($aExtraParams['selection_type'] == 'single') : false;
@@ -510,7 +509,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				$sCode = ($aData['code'] == '_key_') ? 'friendlyname' : $aData['code'];
 				if ($aData['sort'] != 'none') {
 					$aSortOrder[$sClassAlias.'.'.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
-					$aSortDatable = [$iIndexColumn, $aData['sort']];
+					$aSortDatable=[$iIndexColumn,$aData['sort']];
 				}
 				elseif (isset($oCustomSettings->aSortOrder[$sAttCode])){
 					$aSortOrder[$sClassAlias.'.'.$sCode] = $oCustomSettings->aSortOrder[$sAttCode]; // true for ascending, false for descending
@@ -596,15 +595,14 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$aOptions['bUseCustomSettings'] = $bUseCustomSettings;
 		$aOptions['bViewLink'] = $bViewLink;
 		$aOptions['oClassAliases'] = json_encode($aClassAliases);
-
 		if (isset($aExtraParams['selected_rows']) && !empty($aExtraParams['selected_rows'])) {
 			$aOptions['sSelectedRows'] = json_encode($aExtraParams['selected_rows']);
 		} else {
 			$aOptions['sSelectedRows'] = '[]';
 		}
+		$aExtraParams['table_id']=$sTableId;
+		$aExtraParams['list_id']=$sListId;
 
-		$aExtraParams['table_id'] = $sTableId;
-		$aExtraParams['list_id'] = $sListId;
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php");
@@ -628,7 +626,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		if (isset($aExtraParams['creation_in_modal_js_handler'])){
 			$oDataTable->SetModalCreationHandler($aExtraParams['creation_in_modal_js_handler']);
 		}
-		
+
 		return $oDataTable;
 	}
 
@@ -714,14 +712,14 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 					$aColumnDefinition["type"] = "html";
 
 					if ($sAttCode == '_key_') {
-						$sAttrLabel = $aData['alias'];
+						$sAttLabel = $aData['alias'];
 						$aColumnDefinition["title"] = $aData['alias'];
 						$aColumnDefinition['metadata'] = [
 							'object_class'    => $sClassName,
 							'class_alias'     => $sClassAlias,
 							'attribute_code'  => $sAttCode,
 							'attribute_type'  => '_key_',
-							'attribute_label' => $sAttrLabel,
+							'attribute_label' => $sAttLabel,
 						];
 						$aColumnDefinition["data"] = $sClassAlias."/".$sAttCode;
 						$aColumnDefinition["render"] = [
@@ -729,8 +727,8 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 							"_"       => $sClassAlias."/".$sAttCode,
 						];
 						$aColumnDefinition["createdCell"] = <<<JS
-						$(td).attr('data-object-class', '$sClassName');
-						$(td).attr('data-attribute-label', '$sAttrLabel');
+						$(td).attr('data-object-class', `$sClassName`);
+						$(td).attr('data-attribute-label', `$sAttLabel`);
 						if (rowData["$sClassAlias/$sAttCode/raw"]) {
 							$(td).attr('data-value-raw', rowData["$sClassAlias/$sAttCode/raw"]);
 		                }
@@ -759,10 +757,10 @@ JS;
 							"_"       => $sClassAlias."/".$sAttCode,
 						];
 						$aColumnDefinition["createdCell"] = <<<JS
-						$(td).attr('data-object-class', '$sClassName');
-						$(td).attr('data-attribute-label', '$sAttLabel');
-						$(td).attr('data-attribute-code', '$sAttCode');
-						$(td).attr('data-attribute-type', '$sAttDefClass');
+						$(td).attr('data-object-class', `$sClassName`);
+						$(td).attr('data-attribute-label', `$sAttLabel`);
+						$(td).attr('data-attribute-code', `$sAttCode`);
+						$(td).attr('data-attribute-type', `$sAttDefClass`);
 						if (rowData["$sClassAlias/$sAttCode/raw"]) {
 							$(td).attr('data-value-raw', rowData["$sClassAlias/$sAttCode/raw"]);
 		                }

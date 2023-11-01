@@ -196,7 +196,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 		$oLinkSet = $oOrmLinkSet->ToDBObjectSet(utils::ShowObsoleteData());
 
 		// add list block
-		$oBlock = new DisplayBlock($oLinkSet->GetFilter(), 'listInObject', false);
+		$oBlock = new DisplayBlock($oLinkSet->GetFilter(), DisplayBlock::ENUM_STYLE_LIST_IN_OBJECT, false);
 		$this->AddSubBlock($oBlock->GetRenderContent($oPage, $this->GetExtraParam(), $this->sTableId));
 	}
 

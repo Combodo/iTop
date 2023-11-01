@@ -2042,7 +2042,7 @@ class MenuBlock extends DisplayBlock
 			}
 
 			//----------------------------------------------------
-			// Any style but NOT "listInObject" (linksets) actions
+			// Any style but NOT \DisplayBlock::ENUM_STYLE_LIST_IN_OBJECT (linksets) actions
 			//----------------------------------------------------
 			if ($this->m_sStyle !== static::ENUM_STYLE_LIST_IN_OBJECT) {
 				switch ($iSetCount) {
