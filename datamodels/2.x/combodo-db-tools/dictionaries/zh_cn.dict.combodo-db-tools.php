@@ -24,7 +24,7 @@
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// Dictionary entries go here
 	'Menu:DBToolsMenu' => '数据库工具',
-	'DBTools:Class' => '类',
+	'DBTools:Class' => '类型',
 	'DBTools:Title' => '数据库维护工具',
 	'DBTools:ErrorsFound' => '发现错误',
 	'DBTools:Indication' => '重要: 修复数据库错误后, 可能会出现新的不一致, 您必须重新运行一次分析.',
@@ -45,7 +45,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBTools:Details' => '显示详情',
 	'DBTools:ShowAll' => '显示所有错误',
 	'DBTools:Inconsistencies' => '数据库不一致',
-	'DBTools:DetailedErrorTitle' => '%2$s个错误在类%1$s: %3$s',
+	'DBTools:DetailedErrorTitle' => '%2$s个错误在类型%1$s: %3$s',
 	'DBTools:DetailedErrorLimit' => '列表限制为%1$s错误',
 	'DBAnalyzer-Integrity-OrphanRecord' => '孤立记录位于 `%1$s`, 其应该有副本位于表 `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => '无效的外键%1$s (列: `%2$s.%3$s`)',
@@ -55,7 +55,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBAnalyzer-Integrity-HKInvalid' => '损坏的层级链 `%1$s`',
 	'DBAnalyzer-Fetch-Count-Error' => '读取计数出错于 `%1$s`, %2$d个记录已读取 / %3$d已~~',
 	'DBAnalyzer-Integrity-FinalClass' => '字段 `%2$s`.`%1$s` 必须是相同的值, 而不是 `%3$s`.`%1$s`',
-	'DBAnalyzer-Integrity-RootFinalClass' => '字段 `%2$s`.`%1$s` 必须包含一个有效的类',
+	'DBAnalyzer-Integrity-RootFinalClass' => '字段 `%2$s`.`%1$s` 必须包含一个有效的类型',
 ));
 
 // Database Info

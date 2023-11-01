@@ -24,7 +24,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Preferences:General:Theme' => '主题',
 	'UI:Preferences:General:Theme:DefaultThemeLabel' => '%1$s (默认)',
 	'UI:Favorites:General:ShowSummaryCards' => '显示汇总卡片',
-	'UI:Favorites:General:ShowSummaryCards+' => '当鼠标移动到对象链接时, 显示此对象的简要汇总信息, 如果该类支持',
+	'UI:Favorites:General:ShowSummaryCards+' => '当鼠标移动到对象链接时, 显示此对象的简要汇总信息, 如果该类型支持',
 	'UI:Preferences:Lists:Title' => '列表',
 	'UI:Preferences:RichText:Title' => '富文本编辑器',
 	'UI:Preferences:RichText:ToolbarState' => '工具栏默认状态',

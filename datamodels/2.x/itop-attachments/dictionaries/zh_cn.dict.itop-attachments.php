@@ -48,7 +48,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Attachment/Attribute:expire+' => '~~',
 	'Class:Attachment/Attribute:temp_id' => '临时编号',
 	'Class:Attachment/Attribute:temp_id+' => '~~',
-	'Class:Attachment/Attribute:item_class' => '项目类',
+	'Class:Attachment/Attribute:item_class' => '项目类型',
 	'Class:Attachment/Attribute:item_class+' => '~~',
 	'Class:Attachment/Attribute:item_id' => '项目',
 	'Class:Attachment/Attribute:item_id+' => '~~',
@@ -87,5 +87,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnAttachmentDownload' => '触发器 (于对象附件下载时)',
-	'Class:TriggerOnAttachmentDownload+' => '触发器于指定类 [子类] 对象附件下载时',
+	'Class:TriggerOnAttachmentDownload+' => '触发器于指定类型 [子类型] 对象附件下载时',
 ));

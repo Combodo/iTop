@@ -25,7 +25,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
 	'Core:DeletedObjectTip' => '对象已被删除于%1$s (%2$s)',
 
-	'Core:UnknownObjectLabel' => '找不到对象 (类: %1$s, 编号: %2$d)',
+	'Core:UnknownObjectLabel' => '找不到对象 (类型: %1$s, 编号: %2$d)',
 	'Core:UnknownObjectTip' => '对象没有找到. 其可能已经被删除并且日志已经被清除.',
 
 	'Core:UniquenessDefaultError' => '唯一性规则 \'%1$s\' 错误',
@@ -33,7 +33,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:CheckValueError' => '属性 \'%1$s\' (%2$s)的未知值: %3$s',
 
 	'Core:AttributeLinkedSet' => '对象数组',
-	'Core:AttributeLinkedSet+' => '任何相同类或子类的对象',
+	'Core:AttributeLinkedSet+' => '任何相同类型或子类型的对象',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => '字段 \'%1$s\' 内容重复: %2$s',
 
@@ -51,7 +51,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeSet:placeholder' => '请点击这里添加',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s来自%3$s)',
-	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s来自子类',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s来自子类型',
 
 	'Core:AttributeCaseLog' => '日志',
 	'Core:AttributeCaseLog+' => '',
@@ -60,7 +60,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeMetaEnum+' => '~~',
 
 	'Core:AttributeLinkedSetIndirect' => '对象数组 (N-N)',
-	'Core:AttributeLinkedSetIndirect+' => '相同类的任何对象 [子类]',
+	'Core:AttributeLinkedSetIndirect+' => '相同类型的任何对象 [子类型]',
 
 	'Core:AttributeInteger' => '整数',
 	'Core:AttributeInteger+' => '整数值 (可以为负)',
@@ -95,14 +95,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeString' => '字符串',
 	'Core:AttributeString+' => '字符串',
 
-	'Core:AttributeClass' => '类',
+	'Core:AttributeClass' => '类型',
 	'Core:AttributeClass+' => '',
 
 	'Core:AttributeApplicationLanguage' => '用户语言',
 	'Core:AttributeApplicationLanguage+' => '语言和国家地区 (EN US)',
 
-	'Core:AttributeFinalClass' => '类 (自动)',
-	'Core:AttributeFinalClass+' => '对象真实的类 (内核自动创建)',
+	'Core:AttributeFinalClass' => '类型 (自动)',
+	'Core:AttributeFinalClass+' => '对象真实的类型 (内核自动创建)',
 
 	'Core:AttributePassword' => '密码',
 	'Core:AttributePassword+' => '外部设备的密码',
@@ -256,11 +256,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOp/Attribute:date+' => '变更的日期和时间',
 	'Class:CMDBChangeOp/Attribute:userinfo' => '用户',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => '变更的实施者',
-	'Class:CMDBChangeOp/Attribute:objclass' => '对象的类',
-	'Class:CMDBChangeOp/Attribute:objclass+' => '对象的类',
+	'Class:CMDBChangeOp/Attribute:objclass' => '对象的类型',
+	'Class:CMDBChangeOp/Attribute:objclass+' => '对象的类型',
 	'Class:CMDBChangeOp/Attribute:objkey' => '对象编号',
 	'Class:CMDBChangeOp/Attribute:objkey+' => '对象编号',
-	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDB操作类',
+	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDB操作类型',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '执行的变更操作的类型',
 ));
 
@@ -376,7 +376,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventNotification/Attribute:action_id' => '用户',
 	'Class:EventNotification/Attribute:action_id+' => '用户账号',
 	'Class:EventNotification/Attribute:object_id' => '对象编号',
-	'Class:EventNotification/Attribute:object_id+' => '对象编号 (类由触发器定义?)',
+	'Class:EventNotification/Attribute:object_id+' => '对象编号 (类型由触发器定义?)',
 ));
 
 //
@@ -612,14 +612,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TriggerOnObject' => '触发器 (类依赖的)',
-	'Class:TriggerOnObject+' => '在指定类对象上的触发器',
-	'Class:TriggerOnObject/Attribute:target_class' => '目标类',
+	'Class:TriggerOnObject' => '触发器 (类型依赖的)',
+	'Class:TriggerOnObject+' => '在指定类型对象上的触发器',
+	'Class:TriggerOnObject/Attribute:target_class' => '目标类型',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => '筛选器',
-	'Class:TriggerOnObject/Attribute:filter+' => '限定将激活触发器的对象 (目标类的)',
+	'Class:TriggerOnObject/Attribute:filter+' => '限定将激活触发器的对象 (目标类型的)',
 	'TriggerOnObject:WrongFilterQuery' => '错误的筛选查询: %1$s',
-	'TriggerOnObject:WrongFilterClass' => '筛选查询返回的对象必须是类 "%1$s"',
+	'TriggerOnObject:WrongFilterClass' => '筛选查询返回的对象必须是类型 "%1$s"',
 ));
 
 //
@@ -675,7 +675,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnObjectDelete' => '触发器 (对象删除时)',
-	'Class:TriggerOnObjectDelete+' => '指定类或子类对象删除时的触发器',
+	'Class:TriggerOnObjectDelete+' => '指定类型或子类型对象删除时的触发器',
 ));
 
 //
@@ -684,7 +684,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnObjectUpdate' => '触发器 (对象更新时)',
-	'Class:TriggerOnObjectUpdate+' => '指定类或子类对象更新时的触发器',
+	'Class:TriggerOnObjectUpdate+' => '指定类型或子类型对象更新时的触发器',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => '目标字段',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
@@ -695,7 +695,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnObjectMention' => '触发器 (对象提及时)',
-	'Class:TriggerOnObjectMention+' => '指定类或子类对象在属性日志中提及 (@xxx) 时的触发器',
+	'Class:TriggerOnObjectMention+' => '指定类型或子类型对象在属性日志中提及 (@xxx) 时的触发器',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => '提及筛选',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => '限丁将激活此触发器的提及对象. 如果为空则任何类的提及对象将激活此触发器.',
 ));
@@ -706,7 +706,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnAttributeBlobDownload' => '触发器 (对象文档下载时)',
-	'Class:TriggerOnAttributeBlobDownload+' => '指定类或子类对象的文档下载时的触发器',
+	'Class:TriggerOnAttributeBlobDownload+' => '指定类型或子类型对象的文档下载时的触发器',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => '目标字段',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
 ));
@@ -752,8 +752,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => '描述',
 	'Class:SynchroDataSource/Attribute:status' => '状态',
-	'Class:SynchroDataSource/Attribute:scope_class' => '目标类',
-	'Class:SynchroDataSource/Attribute:scope_class+' => '一个同步数据源仅能填充一个 '.ITOP_APPLICATION_SHORT.' 类',
+	'Class:SynchroDataSource/Attribute:scope_class' => '目标类型',
+	'Class:SynchroDataSource/Attribute:scope_class+' => '一个同步数据源仅能填充一个 '.ITOP_APPLICATION_SHORT.' 类型',
 	'Class:SynchroDataSource/Attribute:user_id' => '用户',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => '联系人',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => '发生错误是要通知的联系人',
@@ -782,7 +782,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => '所有授权用户',
 	'Class:SynchroDataSource/Attribute:delete_policy_update' => '更新规则',
 	'Class:SynchroDataSource/Attribute:delete_policy_update+' => '"field_name:value;"列表:
-"field_name" 必须是目标类的合法字段.
+"field_name" 必须是目标类型的合法字段.
 "value" 必须是该字段的授权值.',
 	'Class:SynchroDataSource/Attribute:delete_policy_retention' => '保留期限',
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => '废弃对象在删除前的保留时长',
@@ -813,7 +813,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => '先更新再删除',
 	'Class:SynchroDataSource/Attribute:attribute_list' => '属性列表',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => '仅管理员',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => '所有允许删除此类对象的用户',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => '所有允许删除此类型对象的用户',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => '没有人',
 
 	'SynchroDataSource:Description' => '描述',
@@ -1051,7 +1051,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class: TagSetFieldData
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TagSetFieldData' => '类%1$s的%2$s',
+	'Class:TagSetFieldData' => '类型%1$s的%2$s',
 	'Class:TagSetFieldData+' => '~~',
 
 	'Class:TagSetFieldData/Attribute:code' => '编码',
@@ -1060,8 +1060,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TagSetFieldData/Attribute:label+' => '显示的标签',
 	'Class:TagSetFieldData/Attribute:description' => '描述',
 	'Class:TagSetFieldData/Attribute:description+' => '描述',
-	'Class:TagSetFieldData/Attribute:finalclass' => '标签类',
-	'Class:TagSetFieldData/Attribute:obj_class' => '对象类',
+	'Class:TagSetFieldData/Attribute:finalclass' => '标签类型',
+	'Class:TagSetFieldData/Attribute:obj_class' => '对象类型',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => '字段编码',
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => '已使用的标签无法删除',
@@ -1070,7 +1070,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => '输入的标签编码为内部保留字',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => '标签名称不能包含 \'%1$s\' 或为空',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => '标签编码被使用时无法更改',
-	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => '标签 "对象类别" 不能更改',
+	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => '标签 "对象类型" 不能更改',
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => '标签 "属性编码" 不能更改',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => '标签使用率 (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => '此标签没有条目',
@@ -1100,7 +1100,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:BackgroundTask' => '后台任务',
 	'Class:BackgroundTask+' => '',
-	'Class:BackgroundTask/Attribute:class_name' => '类名',
+	'Class:BackgroundTask/Attribute:class_name' => '类型名称',
 	'Class:BackgroundTask/Attribute:class_name+' => '~~',
 	'Class:BackgroundTask/Attribute:first_run_date' => '首次运行时间',
 	'Class:BackgroundTask/Attribute:first_run_date+' => '',
@@ -1138,7 +1138,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AsyncTask/Attribute:planned+' => '',
 	'Class:AsyncTask/Attribute:event_id' => '事件',
 	'Class:AsyncTask/Attribute:event_id+' => '',
-	'Class:AsyncTask/Attribute:finalclass' => '类',
+	'Class:AsyncTask/Attribute:finalclass' => '类型',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 	'Class:AsyncTask/Attribute:status' => '状态',
 	'Class:AsyncTask/Attribute:status+' => '~~',
