@@ -130,7 +130,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FunctionalCI/Attribute:finalclass' => '类型',
 	'Class:FunctionalCI/Attribute:finalclass+' => '根本属性的名称',
 	'Class:FunctionalCI/Tab:OpenedTickets' => '活跃的工单',
-	'Class:FunctionalCI/Tab:OpenedTickets+' => '影响当前功能性配置项的活跃工单',
+	'Class:FunctionalCI/Tab:OpenedTickets+' => '影响当前功能配置项的活跃工单',
 ));
 
 //

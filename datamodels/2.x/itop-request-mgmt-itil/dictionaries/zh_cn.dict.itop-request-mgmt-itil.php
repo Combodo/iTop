@@ -34,7 +34,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => '打开的需求 (按类型)',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => '打开的需求 (按客户)',
 	'Class:UserRequest:KnownErrorList' => '已知错误',
-	'Class:UserRequest:KnownErrorList+' => '和当前工单关联的功能性配置项相关的已知错误',
+	'Class:UserRequest:KnownErrorList+' => '和当前工单关联的功能配置项相关的已知错误',
 ));
 
 // Dictionnay conventions
@@ -112,8 +112,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:origin+' => '',
 	'Class:UserRequest/Attribute:origin/Value:in_person' => '当面',
 	'Class:UserRequest/Attribute:origin/Value:in_person+' => '创建于当面讨论后的需求',
-	'Class:UserRequest/Attribute:origin/Value:chat' => '聊天',
-	'Class:UserRequest/Attribute:origin/Value:chat+' => '创建于聊天后的需求',
+	'Class:UserRequest/Attribute:origin/Value:chat' => '聊天工具',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => '创建于聊天工具沟通后的需求',
 	'Class:UserRequest/Attribute:origin/Value:mail' => '邮件',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => '邮件',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => '监控',
@@ -254,6 +254,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Organization:Overview:UserRequests' => '此组织的所有用户需求',
-	'Organization:Overview:MyUserRequests' => '我在此组织的用户需求',
+	'Organization:Overview:MyUserRequests' => '我在此组织发起的需求',
 	'Organization:Overview:Tickets' => '此组织内的所有工单',
 ));

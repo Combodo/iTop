@@ -38,7 +38,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:OAuthClient/Attribute:scope' => '范围',
 	'Class:OAuthClient/Attribute:scope+' => '~~',
 	'Class:OAuthClient/Attribute:status' => '状态',
-	'Class:OAuthClient/Attribute:status+' => '创建后, 适用 "生成访问令牌" 来适用此OAuth 客户端',
+	'Class:OAuthClient/Attribute:status+' => '创建后, 通过 "生成访问令牌" 来使用此OAuth 客户端',
 	'Class:OAuthClient/Attribute:status/Value:active' => '已生成访问令牌',
 	'Class:OAuthClient/Attribute:status/Value:inactive' => '没有访问令牌',
 	'Class:OAuthClient/Attribute:description' => '备注',

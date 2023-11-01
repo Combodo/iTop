@@ -146,7 +146,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:Person' => '个人',
+	'Class:Person' => '人员',
 	'Class:Person+' => '',
 	'Class:Person/Name' => '%2$s %1$s',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
@@ -167,11 +167,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Person/Attribute:manager_name' => '名称',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => '团队',
-	'Class:Person/Attribute:team_list+' => '这个人归属的所有团队',
+	'Class:Person/Attribute:team_list+' => '这人员归属的所有团队',
 	'Class:Person/Attribute:tickets_list' => '工单',
 	'Class:Person/Attribute:tickets_list+' => '此人发起的所有工单',
 	'Class:Person/Attribute:user_list' => '用户',
-	'Class:Person/Attribute:user_list+' => '所有关联到此个人的用户',
+	'Class:Person/Attribute:user_list+' => '所有关联到此人员的用户',
 	'Class:Person/Attribute:manager_id_friendlyname' => '直属上级姓名',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => '头像',
@@ -180,7 +180,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Person/UniquenessRule:employee_number' => '\'$this->org_name$\' 内已经有人占用了这个员工号',
 	'Class:Person/UniquenessRule:name+' => '同一组织内的员工姓名必须唯一',
 	'Class:Person/UniquenessRule:name' => '\'$this->org_name$\' 内已经有人叫这个名字',
-	'Class:Person/Error:ChangingOrgDenied' => '无法移动此个人到组织 \'%1$s\' 因为这将终端其用户门户的访问, 其关联的用户没有被授权访问此组织'
+	'Class:Person/Error:ChangingOrgDenied' => '无法移动此人员到组织 \'%1$s\' 因为这将终端其用户门户的访问, 其关联的用户没有被授权访问此组织'
 ));
 
 //
@@ -302,7 +302,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkPersonToTeam' => '关联个体/团队',
+	'Class:lnkPersonToTeam' => '关联人员/团队',
 	'Class:lnkPersonToTeam+' => '',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
 	'Class:lnkPersonToTeam/Name+' => '~~',
@@ -310,7 +310,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => '团队名称',
 	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
-	'Class:lnkPersonToTeam/Attribute:person_id' => '个体',
+	'Class:lnkPersonToTeam/Attribute:person_id' => '人员',
 	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:person_name' => '姓名',
 	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
@@ -344,8 +344,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Contact' => '联系人',
 	'Menu:Contact+' => '联系人',
 	'Menu:Contact:Count' => '%1$d个联系人',
-	'Menu:Person' => '个体',
-	'Menu:Person+' => '所有个体',
+	'Menu:Person' => '人员',
+	'Menu:Person+' => '所有人员',
 	'Menu:Team' => '团队',
 	'Menu:Team+' => '所有团队',
 	'Menu:Document' => '文档',
@@ -377,5 +377,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Themes
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'theme:fullmoon' => '满月',
-	'theme:test-red' => '测例 (红色)',
+	'theme:test-red' => '测试 (红色)',
 ));
