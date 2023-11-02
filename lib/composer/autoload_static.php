@@ -558,7 +558,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\Helper\\Session' => __DIR__ . '/../..' . '/sources/Application/Helper/Session.php',
         'Combodo\\iTop\\Application\\Helper\\iTopSessionHandler' => __DIR__ . '/../..' . '/sources/Application/Helper/iTopSessionHandler.php',
         'Combodo\\iTop\\Application\\Helper\\iTopSessionGarbageCollector' => __DIR__ . '/../..' . '/sources/Application/Helper/iTopSessionGarbageCollector.php',
-        
         'Combodo\\iTop\\Application\\Helper\\WebResourcesHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/WebResourcesHelper.php',
         'Combodo\\iTop\\Application\\Search\\AjaxSearchException' => __DIR__ . '/../..' . '/sources/Application/Search/ajaxsearchexception.class.inc.php',
         'Combodo\\iTop\\Application\\Search\\CriterionConversionAbstract' => __DIR__ . '/../..' . '/sources/Application/Search/criterionconversionabstract.class.inc.php',
