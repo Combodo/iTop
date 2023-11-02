@@ -2,7 +2,9 @@
 
 namespace Combodo\iTop\Application\Helper;
 
-class iTopSessionGarbageCollector implements \iBackgroundProcess
+use iBackgroundProcess;
+
+class iTopSessionGarbageCollector implements iBackgroundProcess
 {
 	public function GetPeriodicity()
 	{

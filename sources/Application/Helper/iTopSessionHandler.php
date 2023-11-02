@@ -17,7 +17,25 @@ class iTopSessionHandler extends \SessionHandler {
 			@mkdir(APPROOT."/data/session");
 		}
 		$sFilePath = $this->GetFilePath($session_id);
-		@touch($sFilePath);
+
+		$sSessionData = null;
+		try {
+			$sUserId = \UserRights::GetUserId();
+			if (! is_null($sUserId)){
+				$sSessionData = json_encode(
+					[
+						'login_mode' => Session::Get('login_mode'),
+						'user_id' => $sUserId,
+					]
+				);
+			}
+		}catch(\Exception $e){}
+
+		if (is_null($sSessionData)){
+			@touch($sFilePath);
+		} else {
+			file_put_contents($sFilePath, $sSessionData);
+		}
 	}
 
 	private function unlinkSessionFile($session_id){
@@ -51,7 +69,8 @@ class iTopSessionHandler extends \SessionHandler {
 		$now = time();
 
 		foreach ($aFiles as $sFile){
-			if ($now - filemtime($sFile) > $max_lifetime){
+			if ((0 === @filesize($sFile))
+				|| ($now - filemtime($sFile) > $max_lifetime)){
 				@unlink($sFile);
 				$iProcessed++;
 			}
@@ -91,7 +110,7 @@ class iTopSessionHandler extends \SessionHandler {
 
 		\IssueLog::Debug("write($session_id)");
 		if ($bRes){
-			$this->touchSessionFile($session_id);
+				$this->touchSessionFile($session_id);
 		}
 
 		return $bRes;
