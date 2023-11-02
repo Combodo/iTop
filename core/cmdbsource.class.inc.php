@@ -518,7 +518,12 @@ class CMDBSource
 		if ($bAlways || is_string($value))
 		{
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-			$value = $cQuoteStyle.DbConnectionWrapper::GetDbConnection()->real_escape_string($value).$cQuoteStyle;
+			$mysqli = DbConnectionWrapper::GetDbConnection();
+			if (is_null($mysqli)){
+				$value = $cQuoteStyle.$value.$cQuoteStyle;
+			} else {
+				$value = $cQuoteStyle.$mysqli->real_escape_string($value).$cQuoteStyle;
+			}
 		}
 		return $value;
 	}
