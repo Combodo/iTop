@@ -12,6 +12,10 @@ class iTopSessionHandler extends \SessionHandler {
 	}
 
 	private function touchSessionFile($session_id){
+		clearstatcache();
+		if (! is_dir(APPROOT."/data/session")){
+			@mkdir(APPROOT."/data/session");
+		}
 		$sFilePath = $this->GetFilePath($session_id);
 		@touch($sFilePath);
 	}
@@ -62,6 +66,10 @@ class iTopSessionHandler extends \SessionHandler {
 
 	public function ListSessionFiles() : array {
 		clearstatcache();
+		if (! is_dir(APPROOT."/data/session")){
+			@mkdir(APPROOT."/data/session");
+		}
+
 		return glob(APPROOT."/data/session/session_**");
 	}
 
