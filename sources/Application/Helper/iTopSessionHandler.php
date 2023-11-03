@@ -74,7 +74,7 @@ class iTopSessionHandler extends \SessionHandler {
 		$now = time();
 
 		foreach ($aFiles as $sFile){
-			if ($now - filemtime($sFile) > $max_lifetime){
+			if (0 === filesize($sFile) || $now - filemtime($sFile) > $max_lifetime){
 				@unlink($sFile);
 				$iProcessed++;
 			}
