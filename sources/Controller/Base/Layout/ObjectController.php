@@ -171,7 +171,7 @@ JS;
 				FormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
 
 				if(FormHelper::HasMandatoryAttributeBlobInputs($oObjToClone)){
-					$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal());
+					$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal(FormHelper::ENUM_MANDATORY_BLOB_MODE_CREATE));
 				}
 				
 				$aFormExtraParams['js_handlers']['cancel_button_on_click'] =
@@ -210,13 +210,14 @@ JS
 		}
 		return $oPage;
 	}
-	
+
 	/**
 	 * @return \iTopWebPage|\AjaxPage Object edit form in its webpage
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \SecurityException
+	 * @throws \Exception
 	 */
 	public function OperationModify()
 	{
@@ -298,7 +299,14 @@ JS;
 			FormHelper::DisableAttributeBlobInputs($sClass, $aFormExtraParams);
 
 			if(FormHelper::HasMandatoryAttributeBlobInputs($oObj)){
-				$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal());
+				$sMandatoryBlobAttCode = FormHelper::GetMandatoryAttributeBlobInputs($oObj);
+				$sAlertFormMandatoryAttMessageMode = FormHelper::ENUM_MANDATORY_BLOB_MODE_MODIFY_EMPTY;
+				$oMandatoryBlobAttCodeValue = $oObj->Get($sMandatoryBlobAttCode);
+				// If the current value of the mandatory attribute is not empty, display a different message
+				if($oMandatoryBlobAttCodeValue instanceof \ormDocument && !$oMandatoryBlobAttCodeValue->IsEmpty()){
+					$sAlertFormMandatoryAttMessageMode = FormHelper::ENUM_MANDATORY_BLOB_MODE_MODIFY_FILLED;
+				}
+				$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal($sAlertFormMandatoryAttMessageMode));
 			}
 		} else {
 			$oPage = new iTopWebPage('', $bPrintable);

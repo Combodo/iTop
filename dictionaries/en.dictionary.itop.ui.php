@@ -248,7 +248,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_UserOrg' => 'User organizations',
 	'Class:URP_UserOrg+' => 'Allowed organizations',
-	'Class:URP_UserOrg/Name' => 'LinkGG between %1$s and %2$s',
+	'Class:URP_UserOrg/Name' => 'Link between %1$s and %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'User',
 	'Class:URP_UserOrg/Attribute:userid+' => 'user account',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
