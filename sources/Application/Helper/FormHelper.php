@@ -25,8 +25,20 @@ use utils;
  */
 class FormHelper
 {
+	/**
+	 * @var string
+	 * @since 3.1.1 N°6861
+	 */
 	public const ENUM_MANDATORY_BLOB_MODE_CREATE = 'Create';
+	/**
+	 * @var string
+	 * @since 3.1.1 N°6861
+	 */
 	public const ENUM_MANDATORY_BLOB_MODE_MODIFY_EMPTY = 'Modify';
+	/**
+	 * @var string
+	 * @since 3.1.1 N°6861
+	 */
 	public const ENUM_MANDATORY_BLOB_MODE_MODIFY_FILLED = 'Modify:Filled';
 
 
@@ -73,7 +85,7 @@ class FormHelper
 	 * @return string|null
 	 * @throws \CoreException
 	 */
-	public static function GetMandatoryAttributeBlobInputs(DBObject $oObject)
+	public static function GetMandatoryAttributeBlobInputs(DBObject $oObject): ?string
 	{
 		foreach (MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef) {
 			if ($oAttDef instanceof AttributeBlob && (!$oAttDef->IsNullAllowed() || ($oObject->GetFormAttributeFlags($sAttCode) & OPT_ATT_MANDATORY))) {
