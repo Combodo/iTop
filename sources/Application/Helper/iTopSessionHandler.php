@@ -26,6 +26,7 @@ class iTopSessionHandler extends \SessionHandler {
 					[
 						'login_mode' => Session::Get('login_mode'),
 						'user_id' => $sUserId,
+						'context' => implode(":", \ContextTag::GetTags())
 					]
 				);
 			}
