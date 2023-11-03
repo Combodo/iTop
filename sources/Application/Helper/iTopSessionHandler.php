@@ -68,18 +68,29 @@ class iTopSessionHandler extends \SessionHandler {
 		return $iRes;
 	}
 
-	public function gcWithTimeLimit(int $max_lifetime, $iTimeLimit=5) : int {
+	/**
+	 * @param int $max_lifetime
+	 * @param int $iTimeLimit
+	 *
+	 * @return int
+	 */
+	public function gcWithTimeLimit(int $max_lifetime, int $iTimeLimit=-1) : int {
 		$aFiles = $this->ListSessionFiles();
 		$iProcessed = 0;
 		$now = time();
 
 		foreach ($aFiles as $sFile){
-			if (0 === filesize($sFile) || $now - filemtime($sFile) > $max_lifetime){
+			$iAgeInseconds = $now - filemtime($sFile);
+			if (0 === filesize($sFile)){
+				//unauthentified sessions: removal after 1 minute to see them in the monitoring
+				$max_lifetime = 60;
+			}
+			if ($iAgeInseconds > $max_lifetime){
 				@unlink($sFile);
 				$iProcessed++;
 			}
 
-			if (time() < $iTimeLimit){
+			if (-1 !== $iTimeLimit && time() < $iTimeLimit){
 				break;
 			}
 		}
