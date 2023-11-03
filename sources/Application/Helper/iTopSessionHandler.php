@@ -7,6 +7,22 @@ class iTopSessionHandler extends \SessionHandler {
 		session_set_save_handler(new iTopSessionHandler(), true);
 	}
 
+	private function GenerateSessionContent() : ?string {
+		try {
+			$sUserId = \UserRights::GetUserId();
+			if (! is_null($sUserId)){
+				return json_encode(
+					[
+						'login_mode' => Session::Get('login_mode'),
+						'user_id' => $sUserId,
+						'context' => implode(":", \ContextTag::GetTags())
+					]
+				);
+			}
+		}catch(\Exception $e){}
+
+		return null;
+	}
 	private function GetFilePath($session_id){
 		return APPROOT."/data/session/session_$session_id";
 	}
@@ -18,19 +34,7 @@ class iTopSessionHandler extends \SessionHandler {
 		}
 		$sFilePath = $this->GetFilePath($session_id);
 
-		$sSessionData = null;
-		try {
-			$sUserId = \UserRights::GetUserId();
-			if (! is_null($sUserId)){
-				$sSessionData = json_encode(
-					[
-						'login_mode' => Session::Get('login_mode'),
-						'user_id' => $sUserId,
-						'context' => implode(":", \ContextTag::GetTags())
-					]
-				);
-			}
-		}catch(\Exception $e){}
+		$sSessionData = $this->GenerateSessionContent();
 
 		if (is_null($sSessionData)){
 			@touch($sFilePath);
@@ -70,8 +74,7 @@ class iTopSessionHandler extends \SessionHandler {
 		$now = time();
 
 		foreach ($aFiles as $sFile){
-			if ((0 === @filesize($sFile))
-				|| ($now - filemtime($sFile) > $max_lifetime)){
+			if ($now - filemtime($sFile) > $max_lifetime){
 				@unlink($sFile);
 				$iProcessed++;
 			}

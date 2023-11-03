@@ -6,7 +6,7 @@ class iTopSessionGarbageCollector implements \iBackgroundProcess
 {
 	public function GetPeriodicity()
 	{
-		return 60 * 5; // seconds
+		return 60 * 1; // seconds
 	}
 
 	public function Process($iTimeLimit)
