@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -38,7 +38,7 @@ class LoginWebPage extends NiceWebPage
 	const EXIT_PROMPT = 0;
 	const EXIT_HTTP_401 = 1;
 	const EXIT_RETURN = 2;
-	
+
 	const EXIT_CODE_OK = 0;
 	const EXIT_CODE_MISSINGLOGIN = 1;
 	const EXIT_CODE_MISSINGPASSWORD = 2;
@@ -80,7 +80,7 @@ class LoginWebPage extends NiceWebPage
 	}
 
 	protected static $m_sLoginFailedMessage = '';
-	
+
 	public function __construct($sTitle = null)
 	{
 		if ($sTitle === null) {
@@ -92,7 +92,7 @@ class LoginWebPage extends NiceWebPage
 		$this->no_cache();
 		$this->add_xframe_options();
 	}
-	
+
 	public function SetStyleSheet()
 	{
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/login.css');
@@ -867,12 +867,12 @@ class LoginWebPage extends NiceWebPage
 	 * @api
 	 *
 	 * @param string $sAuthUser
-	 * @param Person $oPerson
+	 * @param Person|null $oPerson
 	 * @param array $aRequestedProfiles profiles to add to the new user
 	 *
 	 * @return \UserExternal|null
 	 */
-	public static function ProvisionUser($sAuthUser, $oPerson, $aRequestedProfiles)
+	public static function ProvisionUser(string$sAuthUser, ?Person $oPerson, array $aRequestedProfiles)
 	{
 		if (!MetaModel::IsValidClass('URP_Profiles'))
 		{
@@ -897,7 +897,9 @@ class LoginWebPage extends NiceWebPage
 			{
 				$oUser = MetaModel::NewObject('UserExternal');
 				$oUser->Set('login', $sAuthUser);
-				$oUser->Set('contactid', $oPerson->GetKey());
+				if (! is_null($oPerson)){
+					$oUser->Set('contactid', $oPerson->GetKey());
+				}
 				$oUser->Set('language', MetaModel::GetConfig()->GetDefaultLanguage());
 			}
 
@@ -949,7 +951,7 @@ class LoginWebPage extends NiceWebPage
 	 * Overridable: depending on the user, head toward a dedicated portal
 	 * @param string|null $sRequestedPortalId
 	 * @param int $iOnExit How to complete the call: redirect or return a code
-	 */	 
+	 */
 	protected static function ChangeLocation($sRequestedPortalId = null, $iOnExit = self::EXIT_PROMPT)
 	{
 		$ret = call_user_func(array(self::$sHandlerClass, 'Dispatch'), $sRequestedPortalId);
@@ -1010,9 +1012,9 @@ class LoginWebPage extends NiceWebPage
 	static function DoLoginEx($sRequestedPortalId = null, $bMustBeAdmin = false, $iOnExit = self::EXIT_PROMPT)
 	{
 		$operation = utils::ReadParam('loginop', '');
-	
+
 		$sMessage = self::HandleOperations($operation); // May exit directly
-	
+
 		$iRet = self::Login($iOnExit);
 		if ($iRet == self::EXIT_CODE_OK)
 		{
@@ -1042,7 +1044,7 @@ class LoginWebPage extends NiceWebPage
 		{
 			return $sMessage;
 		}
-	}	
+	}
 	protected static function HandleOperations($operation)
 	{
 		$sMessage = ''; // most of the operations never return, but some can return a message to be displayed
@@ -1156,11 +1158,11 @@ class LoginWebPage extends NiceWebPage
 		}
 		return $sMessage;
 	}
-	
+
 	protected static function Dispatch($sRequestedPortalId)
 	{
 		if ($sRequestedPortalId === null) return true; // allowed to any portal => return true
-		
+
 		$aPortalsConf = PortalDispatcherData::GetData();
 		$aDispatchers = array();
 		foreach($aPortalsConf as $sPortalId => $aConf)
@@ -1168,7 +1170,7 @@ class LoginWebPage extends NiceWebPage
 			$sHandlerClass = $aConf['handler'];
 			$aDispatchers[$sPortalId] = new $sHandlerClass($sPortalId);
 		}
-		
+
 		if (array_key_exists($sRequestedPortalId, $aDispatchers) && $aDispatchers[$sRequestedPortalId]->IsUserAllowed())
 		{
 			return true;
