@@ -872,7 +872,7 @@ class LoginWebPage extends NiceWebPage
 	 *
 	 * @return \UserExternal|null
 	 */
-	public static function ProvisionUser(string$sAuthUser, ?Person $oPerson, array $aRequestedProfiles)
+	public static function ProvisionUser(string $sAuthUser, ?Person $oPerson, array $aRequestedProfiles)
 	{
 		if (!MetaModel::IsValidClass('URP_Profiles'))
 		{
