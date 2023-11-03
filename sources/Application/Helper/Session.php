@@ -34,7 +34,7 @@ class Session
 		}
 
 		if (!self::$bIsInitialized) {
-			\iTopSessionHandler::session_set_save_handler();
+			iTopSessionHandler::session_set_save_handler();
 			session_name('itop-'.md5(APPROOT));
 		}
 
