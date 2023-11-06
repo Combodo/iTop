@@ -80,17 +80,13 @@ class iTopSessionHandler extends \SessionHandler {
 		$now = time();
 
 		foreach ($aFiles as $sFile){
-			$iAgeInseconds = $now - filemtime($sFile);
-			if (0 === filesize($sFile)){
-				//unauthentified sessions: removal after 1 minute to see them in the monitoring
-				$max_lifetime = 60;
-			}
-			if ($iAgeInseconds > $max_lifetime){
+			if (0 === filesize($sFile) //unauthentified sessions: immediate cleanup
+				|| $now - filemtime($sFile) > $max_lifetime){
 				@unlink($sFile);
 				$iProcessed++;
 			}
 
-			if (-1 !== $iTimeLimit && time() < $iTimeLimit){
+			if (-1 !== $iTimeLimit && time() > $iTimeLimit){
 				break;
 			}
 		}
