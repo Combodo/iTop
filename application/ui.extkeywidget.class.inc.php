@@ -976,7 +976,7 @@ HTML
 		FormHelper::DisableAttributeBlobInputs($this->sTargetClass, $aFormExtraParams);
 
 		if(FormHelper::HasMandatoryAttributeBlobInputs($oNewObj)){
-			$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal());
+			$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal(FormHelper::ENUM_MANDATORY_BLOB_MODE_CREATE));
 		}
 		
 		cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), $aFormExtraParams);

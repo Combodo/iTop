@@ -746,7 +746,9 @@ HTML
 			$aArgs = array('this' => $this);
 			
 			$sEditWhen = $oAttDef->GetEditWhen();
-			$bIsEditableBasedOnEditWhen = ($sEditWhen === LINKSET_EDITWHEN_ALWAYS || $sEditWhen === LINKSET_EDITWHEN_ON_HOST_EDITION);
+			// Calculate if edit_when allows to edit based on current $bEditMode
+			$bIsEditableBasedOnEditWhen =  ($sEditWhen === LINKSET_EDITWHEN_ALWAYS) || 
+				($bEditMode ? $sEditWhen === LINKSET_EDITWHEN_ON_HOST_EDITION : $sEditWhen === LINKSET_EDITWHEN_ON_HOST_DISPLAY);
 
 			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) || !$bIsEditableBasedOnEditWhen;
 			if ($bEditMode && (!$bReadOnly)) {
@@ -758,9 +760,9 @@ HTML
 				$oPage->add($sHTMLValue);
 			} else {
 				if ($oAttDef->IsIndirect()) {
-					$oBlockLinkSetViewTable = new BlockIndirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
+					$oBlockLinkSetViewTable = new BlockIndirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef, $bReadOnly);
 				} else {
-					$oBlockLinkSetViewTable = new BlockDirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
+					$oBlockLinkSetViewTable = new BlockDirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef, $bReadOnly);
 				}
 				$oPage->AddUiBlock($oBlockLinkSetViewTable);
 			}

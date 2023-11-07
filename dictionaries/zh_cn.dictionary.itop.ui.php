@@ -578,7 +578,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Loading' => '正在加载...',
 	'UI:Menu:Actions' => '操作',
 	'UI:Menu:OtherActions' => '其它操作',
-	'UI:Menu:Transitions' => '状态转换',
+	'UI:Menu:Transitions' => '转换状态',
 	'UI:Menu:OtherTransitions' => '其它变化',
 	'UI:Menu:View' => '查看对象',
 	'UI:Menu:New' => '新建...',

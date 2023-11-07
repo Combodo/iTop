@@ -26,6 +26,23 @@ use utils;
 class FormHelper
 {
 	/**
+	 * @var string
+	 * @since 3.1.1 N°6861
+	 */
+	public const ENUM_MANDATORY_BLOB_MODE_CREATE = 'Create';
+	/**
+	 * @var string
+	 * @since 3.1.1 N°6861
+	 */
+	public const ENUM_MANDATORY_BLOB_MODE_MODIFY_EMPTY = 'Modify';
+	/**
+	 * @var string
+	 * @since 3.1.1 N°6861
+	 */
+	public const ENUM_MANDATORY_BLOB_MODE_MODIFY_FILLED = 'Modify:Filled';
+
+
+	/**
 	 * DisableAttributeBlobInputs.
 	 *
 	 * @see N°5863 to allow blob edition in modal context.
@@ -59,6 +76,26 @@ class FormHelper
 	}
 
 	/**
+	 * Returns an attribute code if the object has a mandatory attribute blob, null otherwise
+	 *
+	 * @see N°6861 - Display warning when creating/editing a mandatory blob in modal
+	 *
+	 * @param \DBObject $oObject
+	 *
+	 * @return string|null
+	 * @throws \CoreException
+	 */
+	public static function GetMandatoryAttributeBlobInputs(DBObject $oObject): ?string
+	{
+		foreach (MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef) {
+			if ($oAttDef instanceof AttributeBlob && (!$oAttDef->IsNullAllowed() || ($oObject->GetFormAttributeFlags($sAttCode) & OPT_ATT_MANDATORY))) {
+				return $sAttCode;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Returns true if the object has a mandatory attribute blob
 	 * 
 	 * @see N°6861 - Display warning when creating/editing a mandatory blob in modal
@@ -70,25 +107,29 @@ class FormHelper
 	 */
 	public static function HasMandatoryAttributeBlobInputs(DBObject $oObject): bool
 	{
-		foreach (MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef) {
-			if ($oAttDef instanceof AttributeBlob && (!$oAttDef->IsNullAllowed() || ($oObject->GetFormAttributeFlags($sAttCode) & OPT_ATT_MANDATORY))) {
-				return true;
-			}
-		}
-		return false;
+		return self::GetMandatoryAttributeBlobInputs($oObject) !== null;
 	}
 
 	/**
 	 * Returns an Alert explaining what will happen when a mandatory attribute blob is displayed in a form
 	 * 
 	 * @see N°6861 - Display warning when creating/editing a mandatory blob in modal
+	 * @see self::ENUM_MANDATORY_BLOB_MODE_XXX
+	 *
+	 * @param string $sMode
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
-	public static function GetAlertForMandatoryAttributeBlobInputsInModal(): Alert
+	public static function GetAlertForMandatoryAttributeBlobInputsInModal(string $sMode = self::ENUM_MANDATORY_BLOB_MODE_MODIFY_EMPTY): Alert
 	{
-		$oAlert = AlertUIBlockFactory::MakeForWarning('',Dict::S('UI:Object:Modal:MandatoryAttributeBlobInputs:Warning:Text'));
-		return $oAlert;
+		$sMessage = Dict::S('UI:Object:Modal:'.$sMode.':MandatoryAttributeBlobInputs:Warning:Text');
+		
+		// If the mandatory attribute is already filled, there's no risk to make an object incomplete so we display an information level alert
+		if($sMode === self::ENUM_MANDATORY_BLOB_MODE_MODIFY_FILLED){
+			return AlertUIBlockFactory::MakeForInformation('', $sMessage);
+		}
+
+		return 	AlertUIBlockFactory::MakeForWarning('', $sMessage);
 	}
 	
 	/**
