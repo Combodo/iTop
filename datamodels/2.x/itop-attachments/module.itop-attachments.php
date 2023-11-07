@@ -207,7 +207,7 @@ SQL;
 				$sUserFieldContactId = MetaModel::GetAttributeDef('User', 'contactid')->Get('sql');
 				$sAttachmentFieldUserId = MetaModel::GetAttributeDef('Attachment', 'user_id')->Get('sql');
 				$sAttachmentFieldContactId = MetaModel::GetAttributeDef('Attachment', 'contact_id')->Get('sql');
-				$sAddContactId = "UPDATE `$sTableName` att, `$sUserTableName` us SET att.$sAttachmentFieldContactId = us.$sUserFieldContactId WHERE att.$sAttachmentFieldUserId = us.id AND att.$sAttachmentFieldContactId = 0";
+				$sAddContactId = "UPDATE `$sTableName` att, `$sUserTableName` us SET att.`$sAttachmentFieldContactId` = us.`$sUserFieldContactId` WHERE att.`$sAttachmentFieldUserId` = us.id AND att.`$sAttachmentFieldContactId` = 0";
 
 				CMDBSource::Query($sAddContactId);
 				$iNbProcessed = CMDBSource::AffectedRows();
