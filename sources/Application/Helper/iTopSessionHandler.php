@@ -7,40 +7,64 @@ class iTopSessionHandler extends \SessionHandler {
 		session_set_save_handler(new iTopSessionHandler(), true);
 	}
 
-	private function GenerateSessionContent() : ?string {
+	private function GenerateSessionContent(?string $sPreviousFileVersionContent) : ?string {
 		try {
 			$sUserId = \UserRights::GetUserId();
 			if (! is_null($sUserId)){
+				//default value in case of
+				// - first time file creation
+				// - data corruption
+				$iCreationTime = time();
+				if (! is_null($sPreviousFileVersionContent)){
+					$aJson = json_decode($sPreviousFileVersionContent, true);
+					if (is_array($aJson) && array_key_exists('creation_time', $aJson)){
+						//corrupted json
+						$iCreationTime = $aJson['creation_time'];
+					}
+				}
+
 				return json_encode(
 					[
 						'login_mode' => Session::Get('login_mode'),
 						'user_id' => $sUserId,
+						'creation_time' => $iCreationTime,
 						'context' => implode(":", \ContextTag::GetStack())
 					]
 				);
 			}
-		}catch(\Exception $e){}
+		} catch(\Exception $e){}
 
 		return null;
 	}
-	private function GetFilePath($session_id){
+
+	private function GetFilePath($session_id) : string {
 		return APPROOT."/data/session/session_$session_id";
 	}
 
-	private function touchSessionFile($session_id){
+	private function touchSessionFile($session_id) : ?string{
+		if (empty($session_id)){
+			return null;
+		}
+
 		clearstatcache();
 		if (! is_dir(APPROOT."/data/session")){
 			@mkdir(APPROOT."/data/session");
 		}
+
 		$sFilePath = $this->GetFilePath($session_id);
 
-		$sSessionData = $this->GenerateSessionContent();
-
-		if (is_null($sSessionData)){
+		$sPreviousFileVersionContent = null;
+		if (is_file($sFilePath)) {
+			$sPreviousFileVersionContent = file_get_contents($sFilePath);
+		}
+		$sNewContent = $this->GenerateSessionContent($sPreviousFileVersionContent);
+		if (is_null($sNewContent) || ($sPreviousFileVersionContent === $sNewContent)){
 			@touch($sFilePath);
 		} else {
-			file_put_contents($sFilePath, $sSessionData);
+			file_put_contents($sFilePath, $sNewContent);
 		}
+
+		return $sFilePath;
 	}
 
 	private function unlinkSessionFile($session_id){
