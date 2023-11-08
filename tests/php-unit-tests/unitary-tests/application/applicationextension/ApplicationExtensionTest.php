@@ -165,7 +165,7 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 			],
 			\iBackupExtraFilesExtension::class => [
 				\iBackupExtraFilesExtension::class,
-				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
+				static::ENUM_API_CALL_METHOD_GETCLASSESFORINTERFACE,
 			],
 		];
 	}
