@@ -272,9 +272,10 @@ class DBBackup
 			$aExtraFiles = MetaModel::GetModuleSetting('itop-backup', 'extra_files', []);
 		}
 
-		/** @var iBackupExtraFilesExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iBackupExtraFilesExtension') as $oExtensionInstance)
+		foreach (utils::GetClassesForInterface('iBackupExtraFilesExtension', '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]tests[\\\\/]']) as $sExtensionClass)
 		{
+			/** @var iBackupExtraFilesExtension $oExtensionInstance */
+			$oExtensionInstance = new $sExtensionClass();
 			$aExtraFiles = array_merge($aExtraFiles, $oExtensionInstance->GetExtraFiles());
 		}
 
