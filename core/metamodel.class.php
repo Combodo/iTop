@@ -7658,7 +7658,6 @@ abstract class MetaModel
 			'iKPILoggerExtension',
 			'ModuleHandlerApiInterface',
 			'iNewsroomProvider',
-			'iBackupExtraFilesExtension',
 		];
 		foreach ($aInterfaces as $sInterface) {
 			self::$m_aExtensionClassNames[$sInterface] = array();
