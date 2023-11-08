@@ -2286,5 +2286,5 @@ interface iBackupExtraFilesExtension
 	 *
 	 * @return string[]
 	 */
-	public function GetExtraFiles();
+	public function GetExtraFiles(): array;
 }
