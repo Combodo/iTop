@@ -335,7 +335,6 @@ abstract class AbstractPreferencesExtension implements iPreferencesExtension
  * A recommended pattern is to cache data by the mean of static members.
  *
  * @api
- * @deprecated  3.1.0 N°4756 use the new event service instead, see {@see DBObject::FireEvent()} method
  * @package     UIExtensibilityAPI
  */
 interface iApplicationUIExtension
@@ -487,7 +486,6 @@ interface iApplicationUIExtension
  * @api
  * @package     UIExtensibilityAPI
  * @since       2.7.0
- * @deprecated
  */
 abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
 {
@@ -560,6 +558,7 @@ abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
  * or through the GUI.
  *
  * @api
+ * @deprecated  3.1.0 N°4756 use the new event service instead, see {@see DBObject::FireEvent()} method. More details on each method PHPDoc.
  * @package     ORMExtensibilityAPI
  */
 interface iApplicationObjectExtension
@@ -574,6 +573,7 @@ interface iApplicationObjectExtension
 	 * Otherwise, the answer is definitively "yes, the object has changed".
 	 *
 	 * @api
+	 * @deprecated 3.1.0 N°4756 No alternative available, this API was unstable and is abandoned
 	 * @param \cmdbAbstractObject $oObject The target object
 	 *
 	 * @return boolean True if something has changed for the target object
@@ -587,6 +587,7 @@ interface iApplicationObjectExtension
 	 * Anyhow, this API can be called in other contexts such as the CSV import tool.
 	 *
 	 * @api
+	 * @deprecated 3.1.0 N°4756 Use EVENT_DB_CHECK_TO_WRITE event instead
 	 * @param \cmdbAbstractObject $oObject The target object
 	 *
 	 * @return string[] A list of errors message. An error message is made of one line and it can be displayed to the end-user.
@@ -601,6 +602,7 @@ interface iApplicationObjectExtension
 	 * Please not that it is not possible to cascade deletion by this mean: only stopper issues can be handled.
 	 *
 	 * @api
+	 * @deprecated 3.1.0 N°4756 Use EVENT_DB_CHECK_TO_DELETE event instead
 	 * @param \cmdbAbstractObject $oObject The target object
 	 *
 	 * @return string[] A list of errors message. An error message is made of one line and it can be displayed to the end-user.
@@ -617,6 +619,7 @@ interface iApplicationObjectExtension
 	 * * {@see DBObject::Get()} : for a given attribute the new value that was persisted
 	 *
 	 * @api
+	 * @deprecated 3.1.0 N°4756 Use EVENT_DB_AFTER_WRITE event instead
 	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information
 	 *     once for all the changes made within the current page
@@ -633,6 +636,7 @@ interface iApplicationObjectExtension
 	 * The method is called right <b>after</b> the object has been written to the database.
 	 *
 	 * @api
+	 * @deprecated 3.1.0 N°4756 Use EVENT_DB_AFTER_WRITE event instead
 	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information
 	 *     once for all the changes made within the current page
@@ -647,6 +651,7 @@ interface iApplicationObjectExtension
 	 * The method is called right <b>before</b> the object will be deleted from the database.
 	 *
 	 * @api
+	 * @deprecated 3.1.0 N°4756 Use EVENT_DB_AFTER_DELETE event instead
 	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information
 	 *     once for all the changes made within the current page
@@ -660,6 +665,7 @@ interface iApplicationObjectExtension
  * Extend this class instead of iApplicationObjectExtension if you don't need to overload all methods
  *
  * @api
+ * @deprecated  3.1.0 N°4756 use the new event service instead, see {@see DBObject::FireEvent()} method
  * @package     ORMExtensibilityAPI
  * @since       2.7.0
  */
