@@ -995,6 +995,21 @@ const CombodoJSConsole = {
 }
 
 /**
+ * Helper to reflect ongoing JS activity to other processes like BeHat
+ * @api
+ * @since 3.0.4 3.1.1 3.2.0 N°6765
+ */
+const CombodoJsActivity = {
+	SetScriptOngoing: function() {
+		$("body").attr("data-ready-scripts", "start");
+	},
+
+	SetScriptFinished: function() {
+		$("body").attr("data-ready-scripts", "done");
+	}
+}
+
+/**
  * Helper to Sanitize string
  *
  * Note: Same as in php (see \utils::Sanitize)
