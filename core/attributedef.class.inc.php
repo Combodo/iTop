@@ -8599,7 +8599,7 @@ class AttributeBlob extends AttributeDefinition
 	public function RecordAttChange(DBObject $oObject, $original, $value): void
 	{
 		// N°6502 Don't record history if only the download count has changed
-		if ($original->EqualsExceptDownloadsCount($value)) {
+		if ((null !== $original) && (null !== $value) && $original->EqualsExceptDownloadsCount($value)) {
 			return;
 		}
 
