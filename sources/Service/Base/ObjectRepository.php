@@ -38,7 +38,7 @@ class ObjectRepository
 	 *
 	 * @return array|null
 	 */
-	static public function Search(string $sObjectClass, array $aFieldsToLoad, string $sSearch): ?array
+	public static function Search(string $sObjectClass, array $aFieldsToLoad, string $sSearch): ?array
 	{
 		try {
 
@@ -82,7 +82,7 @@ class ObjectRepository
 	 *
 	 * @return array|null
 	 */
-	static public function SearchFromOql(string $sObjectClass, array $aFieldsToLoad, string $sOql, string $sSearch, DBObject $oThisObject = null): ?array
+	public static function SearchFromOql(string $sObjectClass, array $aFieldsToLoad, string $sOql, string $sSearch, DBObject $oThisObject = null): ?array
 	{
 		try {
 
@@ -117,7 +117,7 @@ class ObjectRepository
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	static private function DBSetToObjectArray(iDBObjectSetIterator $oDbObjectSet, string $sObjectClass, array $aFieldsToLoad): array
+	private static function DBSetToObjectArray(iDBObjectSetIterator $oDbObjectSet, string $sObjectClass, array $aFieldsToLoad): array
 	{
 		// Retrieve friendly name complementary specification
 		$aComplementAttributeSpec = MetaModel::GetNameSpec($sObjectClass, FriendlyNameType::COMPLEMENTARY);
@@ -158,7 +158,7 @@ class ObjectRepository
 	 *
 	 * @return mixed
 	 */
-	static public function GetDefaultFieldsToLoad(array $aComplementAttributeSpec, string $sObjectImageAttCode)
+	public static function GetDefaultFieldsToLoad(array $aComplementAttributeSpec, string $sObjectImageAttCode)
 	{
 		// Friendly name complementary fields
 		$aFieldsToLoad = $aComplementAttributeSpec[1];
@@ -185,7 +185,7 @@ class ObjectRepository
 	 *
 	 * @return array
 	 */
-	static public function ComputeOthersData(DBObject $oDbObject, string $sClass, array $aData, array $aComplementAttributeSpec, string $sObjectImageAttCode): array
+	public static function ComputeOthersData(DBObject $oDbObject, string $sClass, array $aData, array $aComplementAttributeSpec, string $sObjectImageAttCode): array
 	{
 		try {
 
@@ -196,6 +196,7 @@ class ObjectRepository
 			$aData['obsolescence_flag'] = $oDbObject->IsObsolete();
 
 			// Additional fields
+			$sFriendlynameForHtml = utils::EscapeHtml($aData['friendlyname']);
 			if (count($aComplementAttributeSpec[1]) > 0) {
 				$aData['has_additional_field'] = true;
 				$aArguments = [];
@@ -203,9 +204,10 @@ class ObjectRepository
 					$aArguments[] = $oDbObject->Get($sAdditionalField);
 				}
 				$aData['additional_field'] = vsprintf($aComplementAttributeSpec[0], $aArguments);
-				$aData['full_description'] = "{$aData['friendlyname']}<br><i><small>{$aData['additional_field']}</small></i>";
+				$sAdditionalFieldForHtml = utils::EscapeHtml($aData['additional_field']);
+				$aData['full_description'] = "{$sFriendlynameForHtml}<br><i><small>{$sAdditionalFieldForHtml}</small></i>";
 			} else {
-				$aData['full_description'] = $aData['friendlyname'];
+				$aData['full_description'] = $sFriendlynameForHtml;
 			}
 
 			// Image
@@ -308,7 +310,7 @@ class ObjectRepository
 	 *
 	 * @return bool
 	 */
-	static public function DeleteFromOql(string $sOql): bool
+	public static function DeleteFromOql(string $sOql): bool
 	{
 		try {
 
