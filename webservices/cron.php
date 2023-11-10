@@ -40,9 +40,6 @@ if (!file_exists($sConfigFile))
 
 require_once(APPROOT.'/application/startup.inc.php');
 
-//should be kept to have iTopSessionGarbageCollector listed in get_declared_classes
-require_once(APPROOT.'sources/Application/Helper/iTopSessionGarbageCollector.php');
-
 $oCtx = new ContextTag(ContextTag::TAG_CRON);
 
 function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
@@ -253,7 +250,7 @@ function CronExec($oP, $bVerbose, $bDebug=false)
 					$sStatus = $oTask->Get('status');
 					$sLastRunDate = $oTask->Get('latest_run_date');
 					$sNextRunDate = $oTask->Get('next_run_date');
-					$oP->p(sprintf('| %1$-25.25s | %2$-7s | %3$-19s | %4$-19s |', $sTaskName, $sStatus, $sLastRunDate, $sNextRunDate));
+					$oP->p(sprintf('| %1$-50.50s | %2$-7s | %3$-19s | %4$-19s |', $sTaskName, $sStatus, $sLastRunDate, $sNextRunDate));
 				}
 			}
 			if ($bVerbose)
