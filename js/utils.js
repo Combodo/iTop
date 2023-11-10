@@ -1000,24 +1000,24 @@ const CombodoJSConsole = {
  * @since 3.0.4 3.1.1 3.2.0 N°6765
  */
 const CombodoJsActivity = {
-	BODY_DATAATTR_NAME_READY: "data-ready-scripts",
+	BODY_DATA_ATTR_NAME_READY: "data-ready-scripts",
 
 	/**
 	 * Counter so that we set the flag as done only on the last call
 	 * @type number
 	 */
-	OngoingScriptsCount: 0,
+	iOngoingScriptsCount: 0,
 
 	AddOngoingScript: function() {
-		this.OngoingScriptsCount++;
-		$("body").attr(this.BODY_DATAATTR_NAME_READY, "start");
+		this.iOngoingScriptsCount++;
+		$("body").attr(this.BODY_DATA_ATTR_NAME_READY, "start");
 	},
 
 	RemoveOngoingScript: function() {
-		this.OngoingScriptsCount--;
+		this.iOngoingScriptsCount--;
 
-		if (this.OngoingScriptsCount < 1) {
-			$("body").attr(this.BODY_DATAATTR_NAME_READY, "done");
+		if (this.iOngoingScriptsCount < 1) {
+			$("body").attr(this.BODY_DATA_ATTR_NAME_READY, "done");
 		}
 	}
 }
