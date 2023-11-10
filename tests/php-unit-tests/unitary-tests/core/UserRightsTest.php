@@ -109,7 +109,6 @@ class UserRightsTest extends ItopDataTestCase
 		}
 		$this->assertEquals($bResult, UserRights::Login($sLogin));
 		$this->assertEquals($bResult, UserRights::IsLoggedIn());
-		UserRights::Logoff();
 	}
 
 	public function LoginProvider(): array
@@ -164,7 +163,6 @@ class UserRightsTest extends ItopDataTestCase
 		$this->CreateUniqueUserAndLogin('test1', $iProfileId);
 		$bRes = UserRights::IsActionAllowed($aClassActionResult['class'], $aClassActionResult['action']) == UR_ALLOWED_YES;
 		$this->assertEquals($aClassActionResult['res'], $bRes);
-		UserRights::Logoff();
 	}
 
 	/*
@@ -245,7 +243,6 @@ class UserRightsTest extends ItopDataTestCase
 		$sClass = $aClassActionResult['class'];
 		$bRes = UserRights::IsActionAllowedOnAttribute($sClass, self::$aClasses[$sClass]['attcode'], $aClassActionResult['action']) == UR_ALLOWED_YES;
 		$this->assertEquals($aClassActionResult['res'], $bRes);
-		UserRights::Logoff();
 	}
 
 	/*
@@ -299,10 +296,6 @@ class UserRightsTest extends ItopDataTestCase
 			$this->fail('Profile should not be added');
 		} catch (CoreCannotSaveObjectException $e) {
 		}
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	public function ProfileDenyingConsoleProvider(): array
@@ -329,10 +322,6 @@ class UserRightsTest extends ItopDataTestCase
 			$this->fail('User should not modify self');
 		} catch (CoreException $e) {
 		}
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	public function ProfileCannotModifySelfProvider(): array
@@ -359,10 +348,6 @@ class UserRightsTest extends ItopDataTestCase
 			$this->fail('Current User cannot be deleted');
 		} catch (DeleteException $e) {
 		}
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	public function DeletingSelfUserProvider(): array
@@ -394,8 +379,6 @@ class UserRightsTest extends ItopDataTestCase
 			$this->fail('Current User cannot remove his own contact');
 		} catch (CoreCannotSaveObjectException $e) {
 		}
-
-		UserRights::Logoff();
 	}
 
 	public function RemovingOwnContactProvider(): array
@@ -423,10 +406,6 @@ class UserRightsTest extends ItopDataTestCase
 		} catch (CoreCannotSaveObjectException $e) {
 		} catch (CoreException $e) {
 		}
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	/**
@@ -453,10 +432,6 @@ class UserRightsTest extends ItopDataTestCase
 			$this->fail('Should not be able to deny User modifications');
 		} catch (CoreCannotSaveObjectException $e) {
 		}
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	/**
@@ -477,10 +452,6 @@ class UserRightsTest extends ItopDataTestCase
 		$oSearch = DBObjectSearch::FromOQL('SELECT URP_Profiles JOIN URP_UserProfile ON URP_UserProfile.profileid = URP_Profiles.id WHERE URP_UserProfile.userid='.$oUser->GetKey());
 		$oSet = new DBObjectSet($oSearch);
 		$this->assertEquals(1, $oSet->Count());
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	public function NonAdminCanListOwnProfilesProvider(): array
@@ -508,10 +479,6 @@ class UserRightsTest extends ItopDataTestCase
 		$oSearch = DBObjectSearch::FromOQL('SELECT URP_Profiles JOIN URP_UserProfile ON URP_UserProfile.profileid = URP_Profiles.id WHERE URP_UserProfile.userid='.$oUserAdmin->GetKey());
 		$oSet = new DBObjectSet($oSearch);
 		$this->assertEquals($iExpectedCount, $oSet->Count());
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	public function NonAdminCannotListAdminProfilesProvider(): array
