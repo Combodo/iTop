@@ -48,7 +48,7 @@ $(function()
 		_create: function()
 		{
 			var me = this;
-
+			
 			this.element
 			.addClass('field_set');
 			
