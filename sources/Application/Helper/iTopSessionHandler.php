@@ -6,6 +6,7 @@ use ContextTag;
 use Exception;
 use IssueLog;
 use UserRights;
+use utils;
 
 /**
  * Class iTopSessionGarbageCollector
@@ -57,7 +58,7 @@ class iTopSessionHandler extends \SessionHandler
 
 	private function get_file_path($session_id) : string
 	{
-		return APPROOT."/data/session/session_$session_id";
+		return utils::GetDataPath() . "sessions/session_$session_id";
 	}
 
 	private function touch_session_file($session_id) : ?string
@@ -67,8 +68,8 @@ class iTopSessionHandler extends \SessionHandler
 		}
 
 		clearstatcache();
-		if (! is_dir(APPROOT."/data/session")) {
-			@mkdir(APPROOT."/data/session");
+		if (! is_dir(utils::GetDataPath() . "sessions")) {
+			@mkdir(utils::GetDataPath() . "sessions");
 		}
 
 		$sFilePath = $this->get_file_path($session_id);
@@ -145,11 +146,11 @@ class iTopSessionHandler extends \SessionHandler
 	public function list_session_files() : array
 	{
 		clearstatcache();
-		if (! is_dir(APPROOT."/data/session")) {
-			@mkdir(APPROOT."/data/session");
+		if (! is_dir(utils::GetDataPath() . "sessions")) {
+			@mkdir(utils::GetDataPath() . "sessions");
 		}
 
-		return glob(APPROOT."/data/session/session_**");
+		return glob(utils::GetDataPath() . "sessions/session_**");
 	}
 
 	public function open($save_path, $session_name)
