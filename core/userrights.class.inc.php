@@ -867,6 +867,8 @@ class UserRights
 	 */
 	public static function Login($sLogin, $sAuthentication = 'any')
 	{
+		self::ResetCurrentUserData();
+
 		$oUser = self::FindUser($sLogin, $sAuthentication);
 		if (is_null($oUser))
 		{
