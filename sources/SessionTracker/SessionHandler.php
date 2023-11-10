@@ -10,10 +10,10 @@ use UserRights;
 use utils;
 
 /**
- * Class iTopSessionGarbageCollector
+ * Class SessionHandler
  *
  * @author Olivier Dain <olivier.dain@combodo.com>
- * @package Combodo\iTop\Application\Helper
+ * @package Combodo\iTop\SessionTracker
  * @since 3.1.1 3.2.0 N°6901
  */
 class SessionHandler extends \SessionHandler
@@ -62,7 +62,7 @@ class SessionHandler extends \SessionHandler
 	{
 		$bRes = parent::write($session_id, $data);
 
-		IssueLog::Debug("gc", \LogChannels::SESSIONTRACKER, [
+		IssueLog::Debug("write", \LogChannels::SESSIONTRACKER, [
 			'session_id' => $session_id,
 			'data' => $data,
 		]);

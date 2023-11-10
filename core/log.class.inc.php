@@ -576,6 +576,10 @@ class LogChannels
 	public const DATATABLE = 'Datatable';
 
 	public const DEADLOCK = 'DeadLock';
+	/**
+	 * @var string Everything related to PHP sessions tracking
+	 * @since 3.1.1 3.2.0 N°6901
+	 */
 	public const SESSIONTRACKER = 'SessionTracker';
 
 	/**

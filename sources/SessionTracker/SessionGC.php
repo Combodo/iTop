@@ -6,7 +6,7 @@ namespace Combodo\iTop\SessionTracker;
  * Class SessionGC
  *
  * @author Olivier Dain <olivier.dain@combodo.com>
- * @package Combodo\iTop\Application\Helper
+ * @package Combodo\iTop\SessionTracker
  * @since 3.1.1 3.2.0 N°6901
  */
 class SessionGC implements \iBackgroundProcess
