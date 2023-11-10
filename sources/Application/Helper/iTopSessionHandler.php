@@ -25,28 +25,29 @@ class iTopSessionHandler extends \SessionHandler
 	{
 		try {
 			$sUserId = UserRights::GetUserId();
-			if (! is_null($sUserId)) {
-				//default value in case of
-				// - first time file creation
-				// - data corruption
-				$iCreationTime = time();
-				if (! is_null($sPreviousFileVersionContent)) {
-					$aJson = json_decode($sPreviousFileVersionContent, true);
-					if (is_array($aJson) && array_key_exists('creation_time', $aJson)) {
-						//corrupted json
-						$iCreationTime = $aJson['creation_time'];
-					}
-				}
-
-				return json_encode (
-					[
-						'login_mode' => Session::Get('login_mode'),
-						'user_id' => $sUserId,
-						'creation_time' => $iCreationTime,
-						'context' => implode(":", ContextTag::GetStack())
-					]
-				);
+			if (is_null($sUserId)) {
+				return null;
 			}
+
+			// Default value in case of
+			// - First time file creation
+			// - Data corruption
+			$iCreationTime = time();
+			if (! is_null($sPreviousFileVersionContent)) {
+				$aJson = json_decode($sPreviousFileVersionContent, true);
+				if (is_array($aJson) && array_key_exists('creation_time', $aJson)) {
+					$iCreationTime = $aJson['creation_time'];
+				}
+			}
+
+			return json_encode (
+				[
+					'login_mode' => Session::Get('login_mode'),
+					'user_id' => $sUserId,
+					'creation_time' => $iCreationTime,
+					'context' => implode(":", ContextTag::GetStack())
+				]
+			);
 		} catch(Exception $e) {
 
 		}
