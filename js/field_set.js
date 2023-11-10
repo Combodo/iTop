@@ -49,8 +49,6 @@ $(function()
 		{
 			var me = this;
 
-			CombodoJsActivity.SetScriptOngoing();
-			
 			this.element
 			.addClass('field_set');
 			
@@ -90,8 +88,6 @@ $(function()
 			{
 				this.buildForm();
 			}
-
-			CombodoJsActivity.SetScriptFinished();
 		},
    
 		// called when created, and later when changing options
