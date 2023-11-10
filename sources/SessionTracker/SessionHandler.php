@@ -104,7 +104,7 @@ class SessionHandler extends \SessionHandler
 					'login_mode' => Session::Get('login_mode'),
 					'user_id' => $sUserId,
 					'creation_time' => $iCreationTime,
-					'contexts' => implode("|", ContextTag::GetStack())
+					'context' => implode("|", ContextTag::GetStack())
 				]
 			);
 		} catch(Exception $e) {
