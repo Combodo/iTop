@@ -254,14 +254,14 @@ JS
 	protected function GetReadyScriptsStartedTrigger(): ?string
 	{
 		return <<<JS
-$("body").attr("data-ready-scripts", "start");
+CombodoJsActivity.AddOngoingScript();
 JS;
 	}
 
 	protected function GetReadyScriptsFinishedTrigger(): ?string
 	{
 		return <<<JS
-$("body").attr("data-ready-scripts", "done");
+CombodoJsActivity.RemoveOngoingScript();
 JS;
 	}
 }

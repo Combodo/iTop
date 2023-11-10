@@ -67,6 +67,8 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
+		CombodoJsActivity.AddOngoingScript();
+
 		// Form field set declaration
 		var oFieldSet_{{ sFormIdSanitized }} = $('#{{ sFormId }} > .form_fields').field_set({{ form.fieldset|json_encode()|raw }});
 		// Form handler declaration
@@ -149,5 +151,7 @@
 			$('#{{ sFormId }}').closest('.modal').scrollTop(0);
 			$('#{{ sFormId }}').closest('.modal').find('.modal-footer').hide();
 		{% endif %}
+
+		CombodoJsActivity.RemoveOngoingScript();
 	});
 </script>

@@ -1138,6 +1138,34 @@ const CombodoJSConsole = {
 }
 
 /**
+ * Helper to reflect ongoing JS activity to other processes like BeHat
+ * @api
+ * @since 3.0.4 3.1.1 3.2.0 N°6765
+ */
+const CombodoJsActivity = {
+	BODY_DATA_ATTR_NAME_READY: "data-ready-scripts",
+
+	/**
+	 * Counter so that we set the flag as done only on the last call
+	 * @type number
+	 */
+	iOngoingScriptsCount: 0,
+
+	AddOngoingScript: function() {
+		this.iOngoingScriptsCount++;
+		$("body").attr(this.BODY_DATA_ATTR_NAME_READY, "start");
+	},
+
+	RemoveOngoingScript: function() {
+		this.iOngoingScriptsCount--;
+
+		if (this.iOngoingScriptsCount < 1) {
+			$("body").attr(this.BODY_DATA_ATTR_NAME_READY, "done");
+		}
+	}
+}
+
+/**
  * Helper to Sanitize string
  *
  * Note: Same as in php (see \utils::Sanitize)
