@@ -1008,12 +1008,12 @@ const CombodoJsActivity = {
 	 */
 	OngoingScriptsCount: 0,
 
-	SetScriptOngoing: function() {
+	AddOngoingScript: function() {
 		this.OngoingScriptsCount++;
 		$("body").attr(this.BODY_DATAATTR_NAME_READY, "start");
 	},
 
-	SetScriptFinished: function() {
+	RemoveOngoingScript: function() {
 		this.OngoingScriptsCount--;
 
 		if (this.OngoingScriptsCount < 1) {

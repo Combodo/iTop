@@ -255,14 +255,14 @@ EOF
 	protected function GetReadyScriptsStartedTrigger(): ?string
 	{
 		return <<<JS
-CombodoJsActivity.SetScriptOngoing();
+CombodoJsActivity.AddOngoingScript();
 JS;
 	}
 
 	protected function GetReadyScriptsFinishedTrigger(): ?string
 	{
 		return <<<JS
-CombodoJsActivity.SetScriptFinished();
+CombodoJsActivity.RemoveOngoingScript();
 JS;
 	}
 }

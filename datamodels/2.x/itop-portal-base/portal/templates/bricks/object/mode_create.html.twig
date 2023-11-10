@@ -67,7 +67,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		CombodoJsActivity.SetScriptOngoing();
+		CombodoJsActivity.AddOngoingScript();
 
 		// Form field set declaration
 		var oFieldSet_{{ sFormIdSanitized }} = $('#{{ sFormId }} > .form_fields').field_set({{ form.fieldset|json_encode()|raw }});
@@ -152,6 +152,6 @@
 			$('#{{ sFormId }}').closest('.modal').find('.modal-footer').hide();
 		{% endif %}
 
-		CombodoJsActivity.SetScriptFinished();
+		CombodoJsActivity.RemoveOngoingScript();
 	});
 </script>
