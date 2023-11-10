@@ -1,7 +1,8 @@
 <?php
 
-namespace Combodo\iTop\Application\Helper;
+namespace Combodo\iTop\SessionTracker;
 
+use Combodo\iTop\Application\Helper\Session;
 use ContextTag;
 use Exception;
 use IssueLog;
@@ -13,13 +14,69 @@ use utils;
  *
  * @author Olivier Dain <olivier.dain@combodo.com>
  * @package Combodo\iTop\Application\Helper
- * @since 3.1.1 3.2.0
+ * @since 3.1.1 3.2.0 N°6901
  */
-class iTopSessionHandler extends \SessionHandler
+class SessionHandler extends \SessionHandler
 {
+	public function destroy($session_id)
+	{
+		IssueLog::Debug("destroy", \LogChannels::SESSIONTRACKER, [
+			'session_id' => $session_id,
+		]);
+		$bRes = parent::destroy($session_id);
+
+		if ($bRes) {
+			$this->unlink_session_file($session_id);
+		}
+
+		return $bRes;
+	}
+
+	public function gc($max_lifetime)
+	{
+		IssueLog::Debug("gc", \LogChannels::SESSIONTRACKER, [
+			'max_lifetime' => $max_lifetime,
+		]);
+		$iRes = parent::gc($max_lifetime);
+		$this->gc_with_time_limit($max_lifetime);
+		return $iRes;
+	}
+
+	public function open($save_path, $session_name)
+	{
+		$bRes = parent::open($save_path, $session_name);
+
+		$session_id = session_id();
+		IssueLog::Debug("open", \LogChannels::SESSIONTRACKER, [
+			'session_id' => $session_id,
+		]);
+
+		if ($bRes) {
+			$this->touch_session_file($session_id);
+		}
+
+		return $bRes;
+	}
+
+	public function write($session_id, $data)
+	{
+		$bRes = parent::write($session_id, $data);
+
+		IssueLog::Debug("gc", \LogChannels::SESSIONTRACKER, [
+			'session_id' => $session_id,
+			'data' => $data,
+		]);
+
+		if ($bRes) {
+			$this->touch_session_file($session_id);
+		}
+
+		return $bRes;
+	}
+
 	public static function session_set_save_handler() : void
 	{
-		session_set_save_handler(new iTopSessionHandler(), true);
+		session_set_save_handler(new SessionHandler(), true);
 	}
 
 	private function generate_session_content(?string $sPreviousFileVersionContent) : ?string
@@ -32,8 +89,9 @@ class iTopSessionHandler extends \SessionHandler
 
 			// Default value in case of
 			// - First time file creation
-			// - Data corruption
+			// - Data corruption (not a json / not an array / no previous creation_time key)
 			$iCreationTime = time();
+
 			if (! is_null($sPreviousFileVersionContent)) {
 				$aJson = json_decode($sPreviousFileVersionContent, true);
 				if (is_array($aJson) && array_key_exists('creation_time', $aJson)) {
@@ -46,7 +104,7 @@ class iTopSessionHandler extends \SessionHandler
 					'login_mode' => Session::Get('login_mode'),
 					'user_id' => $sUserId,
 					'creation_time' => $iCreationTime,
-					'context' => implode(":", ContextTag::GetStack())
+					'context' => implode("|", ContextTag::GetStack())
 				]
 			);
 		} catch(Exception $e) {
@@ -63,7 +121,7 @@ class iTopSessionHandler extends \SessionHandler
 
 	private function touch_session_file($session_id) : ?string
 	{
-		if (empty($session_id)) {
+		if (strlen($session_id) == 0) {
 			return null;
 		}
 
@@ -94,26 +152,6 @@ class iTopSessionHandler extends \SessionHandler
 		if (is_file($sFilePath)) {
 			@unlink($sFilePath);
 		}
-	}
-
-	public function destroy($session_id)
-	{
-		IssueLog::Debug("destroy($session_id)");
-		$bRes = parent::destroy($session_id);
-
-		if ($bRes) {
-			$this->unlink_session_file($session_id);
-		}
-
-		return $bRes;
-	}
-
-	public function gc($max_lifetime)
-	{
-		IssueLog::Debug("gc($max_lifetime)");
-		$iRes = parent::gc($max_lifetime);
-		$this->gc_with_time_limit($max_lifetime);
-		return $iRes;
 	}
 
 	/**
@@ -150,32 +188,6 @@ class iTopSessionHandler extends \SessionHandler
 			@mkdir(utils::GetDataPath() . "sessions");
 		}
 
-		return glob(utils::GetDataPath() . "sessions/session_**");
-	}
-
-	public function open($save_path, $session_name)
-	{
-		$bRes = parent::open($save_path, $session_name);
-
-		$session_id = session_id();
-		IssueLog::Debug("open($session_id)");
-
-		if ($bRes) {
-			$this->touch_session_file($session_id);
-		}
-
-		return $bRes;
-	}
-
-	public function write($session_id, $data)
-	{
-		$bRes = parent::write($session_id, $data);
-
-		IssueLog::Debug("write($session_id)");
-		if ($bRes) {
-				$this->touch_session_file($session_id);
-		}
-
-		return $bRes;
+		return glob(utils::GetDataPath() . "sessions/session_*");
 	}
 }

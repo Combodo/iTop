@@ -1,13 +1,13 @@
 <?php
 
-namespace Combodo\iTop\Test\UnitTest\Application;
+namespace Combodo\iTop\Test\UnitTest\SessionTracker;
 
-use Combodo\iTop\Application\Helper\iTopSessionHandler;
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\SessionTracker\SessionHandler;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ContextTag;
 
-class iTopSessionHandlerTest extends ItopDataTestCase
+class SessionHandlerTest extends ItopDataTestCase
 {
 	private $sFile ;
 	protected function setUp(): void
@@ -34,13 +34,13 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 		return $oUser->GetKey();
 	}
 
-	private function GenerateSessionContent(iTopSessionHandler $oiTopSessionHandler, ?string $sPreviousFileVersionContent) : ?string {
-		return $this->InvokeNonPublicMethod(iTopSessionHandler::class, "generate_session_content", $oiTopSessionHandler, $aArgs = [$sPreviousFileVersionContent]);
+	private function GenerateSessionContent(SessionHandler $oSessionHandler, ?string $sPreviousFileVersionContent) : ?string {
+		return $this->InvokeNonPublicMethod(SessionHandler::class, "generate_session_content", $oSessionHandler, $aArgs = [$sPreviousFileVersionContent]);
 	}
 
 	public function testGenerateSessionContentNoUserLoggedIn(){
-		$oiTopSessionHandler = new iTopSessionHandler();
-		$sContent = $this->GenerateSessionContent($oiTopSessionHandler, null);
+		$oSessionHandler = new SessionHandler();
+		$sContent = $this->GenerateSessionContent($oSessionHandler, null);
 		$this->assertNull($sContent);
 	}
 
@@ -58,10 +58,10 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 	public function testGenerateSessionContentCorruptedPreviousFileContent(?string $sPreviousFileVersionContent){
 		$sUserId = $this->CreateUserAndLogIn();
 
-		$oiTopSessionHandler = new iTopSessionHandler();
+		$oSessionHandler = new SessionHandler();
 		Session::Set('login_mode', 'toto');
 
-		$sContent = $this->GenerateSessionContent($oiTopSessionHandler, $sPreviousFileVersionContent);
+		$sContent = $this->GenerateSessionContent($oSessionHandler, $sPreviousFileVersionContent);
 
 		$this->assertNotNull($sContent);
 		$aJson = json_decode($sContent, true);
@@ -75,11 +75,11 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 	public function testGenerateSessionContentNoSessionContextChange(){
 		$sUserId = $this->CreateUserAndLogIn();
 
-		$oiTopSessionHandler = new iTopSessionHandler();
+		$oSessionHandler = new SessionHandler();
 		Session::Set('login_mode', 'toto');
 
 		//first time
-		$sFirstContent = $this->GenerateSessionContent($oiTopSessionHandler, null);
+		$sFirstContent = $this->GenerateSessionContent($oSessionHandler, null);
 
 		$this->assertNotNull($sFirstContent);
 		$aJson = json_decode($sFirstContent, true);
@@ -89,18 +89,18 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 		$this->assertNotEquals('', $aJson['creation_time'] ?? '', $sFirstContent);
 		$this->assertEquals('toto', $aJson['login_mode'] ?? '', $sFirstContent);
 
-		$sNewContent = $this->GenerateSessionContent($oiTopSessionHandler, $sFirstContent);
+		$sNewContent = $this->GenerateSessionContent($oSessionHandler, $sFirstContent);
 		$this->assertEquals($sFirstContent, $sNewContent, $sNewContent);
 	}
 
 	public function testGenerateSessionContentWithSessionContextChange(){
 		$sUserId = $this->CreateUserAndLogIn();
 
-		$oiTopSessionHandler = new iTopSessionHandler();
+		$oSessionHandler = new SessionHandler();
 		Session::Set('login_mode', 'toto');
 
 		//first time
-		$sFirstContent = $this->GenerateSessionContent($oiTopSessionHandler, null);
+		$sFirstContent = $this->GenerateSessionContent($oSessionHandler, null);
 
 		$this->assertNotNull($sFirstContent);
 		$aJson = json_decode($sFirstContent, true);
@@ -112,26 +112,28 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 		$this->assertEquals('toto', $aJson['login_mode'] ?? '', $sFirstContent);
 
 		ContextTag::AddContext(ContextTag::TAG_SYNCHRO);
-		$sNewContent = $this->GenerateSessionContent($oiTopSessionHandler, $sFirstContent);
+		$sNewContent = $this->GenerateSessionContent($oSessionHandler, $sFirstContent);
 		$this->assertNotNull($sNewContent);
 		$this->assertNotEquals($sNewContent, $sFirstContent, $sNewContent);
 
 		$aJson = json_decode($sNewContent, true);
 		$this->assertNotEquals(false, $aJson, $sFirstContent);
 		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', $sFirstContent);
-		$this->assertEquals(ContextTag::TAG_REST . ':' . ContextTag::TAG_SYNCHRO, $aJson['context'] ?? '', $sFirstContent);
+		$this->assertEquals(ContextTag::TAG_REST . '|' . ContextTag::TAG_SYNCHRO, $aJson['context'] ?? '', $sFirstContent);
 		$this->assertEquals($sCreationTime, $aJson['creation_time'] ?? '', $sFirstContent);
 		$this->assertEquals('toto', $aJson['login_mode'] ?? '', $sFirstContent);
 	}
 
-	private function touchSessionFile(iTopSessionHandler $oiTopSessionHandler, $session_id) : ?string {
-		return $this->InvokeNonPublicMethod(iTopSessionHandler::class, "touch_session_file", $oiTopSessionHandler, $aArgs = [$session_id]);
+	private function touchSessionFile(SessionHandler $oSessionHandler, $session_id) : ?string {
+		$sRes = $this->InvokeNonPublicMethod(SessionHandler::class, "touch_session_file", $oSessionHandler, $aArgs = [$session_id]);
+		clearstatcache();
+		return $sRes;
 	}
 
 	public function testTouchSessionFileNoUserLoggedIn(){
-		$oiTopSessionHandler = new iTopSessionHandler();
+		$oSessionHandler = new SessionHandler();
 		$session_id = uniqid();
-		$this->sFile = $this->touchSessionFile($oiTopSessionHandler, $session_id);
+		$this->sFile = $this->touchSessionFile($oSessionHandler, $session_id);
 		$this->assertEquals(true, is_file($this->sFile), $this->sFile);
 		$sContent = file_get_contents($this->sFile);
 		$this->assertEquals(null, $sContent);
@@ -141,9 +143,9 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 		$sUserId = $this->CreateUserAndLogIn();
 		Session::Set('login_mode', 'toto');
 
-		$oiTopSessionHandler = new iTopSessionHandler();
+		$oSessionHandler = new SessionHandler();
 		$session_id = uniqid();
-		$this->sFile = $this->touchSessionFile($oiTopSessionHandler, $session_id);
+		$this->sFile = $this->touchSessionFile($oSessionHandler, $session_id);
 		$this->assertEquals(true, is_file($this->sFile), $this->sFile);
 		$sContent = file_get_contents($this->sFile);
 
@@ -156,7 +158,7 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 		$this->assertNotEquals('', $sCreationTime, $sContent);
 		$this->assertEquals('toto', $aJson['login_mode'] ?? '', $sContent);
 
-		$this->touchSessionFile($oiTopSessionHandler, $session_id);
+		$this->touchSessionFile($oSessionHandler, $session_id);
 		$sNewContent = file_get_contents($this->sFile);
 		$this->assertEquals($sContent, $sNewContent, $sNewContent);
 	}
@@ -165,9 +167,9 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 		$sUserId = $this->CreateUserAndLogIn();
 		Session::Set('login_mode', 'toto');
 
-		$oiTopSessionHandler = new iTopSessionHandler();
+		$oSessionHandler = new SessionHandler();
 		$session_id = uniqid();
-		$this->sFile = $this->touchSessionFile($oiTopSessionHandler, $session_id);
+		$this->sFile = $this->touchSessionFile($oSessionHandler, $session_id);
 		$this->assertEquals(true, is_file($this->sFile), $this->sFile);
 		$sContent = file_get_contents($this->sFile);
 
@@ -183,7 +185,7 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 
 		$oOtherUser = $this->CreateContactlessUser("admin" . uniqid(), 1, "1234@Abcdefg");
 		\UserRights::Impersonate($oOtherUser->Get('login'));
-		$this->touchSessionFile($oiTopSessionHandler, $session_id);
+		$this->touchSessionFile($oSessionHandler, $session_id);
 		$sNewContent = file_get_contents($this->sFile);
 		$this->assertNotEquals($sContent, $sNewContent, $sNewContent);
 		$aJson = json_decode($sNewContent, true);
@@ -191,17 +193,27 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 		$this->assertEquals($oOtherUser->GetKey(), $aJson['user_id'] ?? '', $sNewContent);
 	}
 
-	public function testTouchSessionFile_session_regenerate_id() {
+	public function TouchSessionFile_empty_sessionidProvider(){
+		return [
+			'empty string' => [ "" ],
+			'false' => [ false ],
+		];
+	}
+
+	/**
+	 * @dataProvider TouchSessionFile_empty_sessionidProvider
+	 */
+	public function testTouchSessionFile_empty_sessionid($session_id) {
 		$this->CreateUserAndLogIn();
 		Session::Set('login_mode', 'toto');
 
-		$oiTopSessionHandler = new iTopSessionHandler();
-		$this->sFile = $this->touchSessionFile($oiTopSessionHandler, "");
+		$oSessionHandler = new SessionHandler();
+		$this->sFile = $this->touchSessionFile($oSessionHandler, $session_id);
 		$this->assertNull($this->sFile);
 	}
 
-	private function GetFilePath(iTopSessionHandler $oiTopSessionHandler, $session_id) : string {
-		return $this->InvokeNonPublicMethod(iTopSessionHandler::class, "get_file_path", $oiTopSessionHandler, $aArgs = [$session_id]);
+	private function GetFilePath(SessionHandler $oSessionHandler, $session_id) : string {
+		return $this->InvokeNonPublicMethod(SessionHandler::class, "get_file_path", $oSessionHandler, $aArgs = [$session_id]);
 	}
 
 	public function GgcWithTimeLimit_FileWithData(){
@@ -228,24 +240,24 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 	 * @dataProvider GgcWithTimeLimit_FileWithData
 	 */
 	public function testGgcWithTimeLimit_FileWithData($iTimeLimit, $max_lifetime, $iExpectedProcessed) {
-		$oiTopSessionHandler = new iTopSessionHandler();
+		$oSessionHandler = new SessionHandler();
 		//remove all
-		$oiTopSessionHandler->gc_with_time_limit(-1);
-		$this->assertEquals([], $oiTopSessionHandler->list_session_files());
+		$oSessionHandler->gc_with_time_limit(-1);
+		$this->assertEquals([], $oSessionHandler->list_session_files());
 
 		for($i=0; $i<=1; $i++) {
-			$this->sFile = $this->GetFilePath($oiTopSessionHandler, uniqid());
+			$this->sFile = $this->GetFilePath($oSessionHandler, uniqid());
 			file_put_contents($this->sFile, "fakedata");
 		}
 
-		$aFoundSessionFiles = $oiTopSessionHandler->list_session_files();
+		$aFoundSessionFiles = $oSessionHandler->list_session_files();
 		foreach ($aFoundSessionFiles as $sFile){
 			$this->assertTrue(is_file($sFile));
 		}
 
-		$iProcessed = $oiTopSessionHandler->gc_with_time_limit($max_lifetime, $iTimeLimit);
+		$iProcessed = $oSessionHandler->gc_with_time_limit($max_lifetime, $iTimeLimit);
 		$this->assertEquals($iExpectedProcessed, $iProcessed);
-		$this->assertEquals(2 - $iExpectedProcessed, sizeof($oiTopSessionHandler->list_session_files()));
+		$this->assertEquals(2 - $iExpectedProcessed, sizeof($oSessionHandler->list_session_files()));
 	}
 
 	public function GgcWithTimeLimit_EmptyFile(){
@@ -265,23 +277,23 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 	 * @dataProvider GgcWithTimeLimit_EmptyFile
 	 */
 	public function testGgcWithTimeLimit_EmptyFile($iTimeLimit, $iExpectedProcessed) {
-		$oiTopSessionHandler = new iTopSessionHandler();
+		$oSessionHandler = new SessionHandler();
 		//remove all
-		$oiTopSessionHandler->gc_with_time_limit(-1);
-		$this->assertEquals([], $oiTopSessionHandler->list_session_files());
+		$oSessionHandler->gc_with_time_limit(-1);
+		$this->assertEquals([], $oSessionHandler->list_session_files());
 
 		for($i=0; $i<=1; $i++) {
-			$this->sFile = $this->GetFilePath($oiTopSessionHandler, uniqid());
+			$this->sFile = $this->GetFilePath($oSessionHandler, uniqid());
 			touch($this->sFile);
 		}
 
-		$aFoundSessionFiles = $oiTopSessionHandler->list_session_files();
+		$aFoundSessionFiles = $oSessionHandler->list_session_files();
 		foreach ($aFoundSessionFiles as $sFile){
 			$this->assertTrue(is_file($sFile));
 		}
 
-		$iProcessed = $oiTopSessionHandler->gc_with_time_limit(1440, $iTimeLimit);
+		$iProcessed = $oSessionHandler->gc_with_time_limit(1440, $iTimeLimit);
 		$this->assertEquals($iExpectedProcessed, $iProcessed);
-		$this->assertEquals(2 - $iExpectedProcessed, sizeof($oiTopSessionHandler->list_session_files()));
+		$this->assertEquals(2 - $iExpectedProcessed, sizeof($oSessionHandler->list_session_files()));
 	}
 }

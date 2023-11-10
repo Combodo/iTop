@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -576,6 +576,7 @@ class LogChannels
 	public const DATATABLE = 'Datatable';
 
 	public const DEADLOCK = 'DeadLock';
+	public const SESSIONTRACKER = 'SessionTracker';
 
 	/**
 	 * @var string Everything related to the datamodel CRUD

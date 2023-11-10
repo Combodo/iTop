@@ -1,15 +1,15 @@
 <?php
 
-namespace Combodo\iTop\Application\Helper;
+namespace Combodo\iTop\SessionTracker;
 
 /**
- * Class iTopSessionGarbageCollector
+ * Class SessionGC
  *
  * @author Olivier Dain <olivier.dain@combodo.com>
  * @package Combodo\iTop\Application\Helper
- * @since 3.1.1 3.2.0
+ * @since 3.1.1 3.2.0 N°6901
  */
-class iTopSessionGarbageCollector implements \iBackgroundProcess
+class SessionGC implements \iBackgroundProcess
 {
 	/**
 	 * @inheritDoc
@@ -25,8 +25,8 @@ class iTopSessionGarbageCollector implements \iBackgroundProcess
 	public function Process($iTimeLimit)
 	{
 		$iMaxLifetime = ini_get('session.gc_maxlifetime') ?? 60;
-		$oiTopSessionHandler = new iTopSessionHandler();
-		$iProcessed = $oiTopSessionHandler->gc_with_time_limit($iMaxLifetime, $iTimeLimit);
+		$oSessionHandler = new SessionHandler();
+		$iProcessed = $oSessionHandler->gc_with_time_limit($iMaxLifetime, $iTimeLimit);
 		return "processed $iProcessed tasks";
 	}
 }

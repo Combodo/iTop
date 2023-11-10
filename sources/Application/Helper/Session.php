@@ -7,6 +7,7 @@
 
 namespace Combodo\iTop\Application\Helper;
 
+use Combodo\iTop\SessionTracker\SessionHandler;
 use utils;
 
 /**
@@ -34,7 +35,7 @@ class Session
 		}
 
 		if (!self::$bIsInitialized) {
-			iTopSessionHandler::session_set_save_handler();
+			SessionHandler::session_set_save_handler();
 			session_name('itop-'.md5(APPROOT));
 		}
 
