@@ -1911,6 +1911,7 @@ class MenuBlock extends DisplayBlock
 			// Check concurrent lock (can only be lock if we are handling a single object
 			$bLocked = false;
 			if ($iSetCount === 1) {
+				$oSet->OptimizeColumnLoad(array($this->GetFilter()->GetClassAlias() => array()));
 				$oObj = $oSet->Fetch();
 				if (false === is_null($oObj)) {
 					if (MetaModel::GetConfig()->Get('concurrent_lock_enabled')) {
