@@ -35,7 +35,7 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 	}
 
 	private function GenerateSessionContent(iTopSessionHandler $oiTopSessionHandler, ?string $sPreviousFileVersionContent) : ?string {
-		return $this->InvokeNonPublicMethod(iTopSessionHandler::class, "GenerateSessionContent", $oiTopSessionHandler, $aArgs = [$sPreviousFileVersionContent]);
+		return $this->InvokeNonPublicMethod(iTopSessionHandler::class, "generate_session_content", $oiTopSessionHandler, $aArgs = [$sPreviousFileVersionContent]);
 	}
 
 	public function testGenerateSessionContentNoUserLoggedIn(){
@@ -125,7 +125,7 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 	}
 
 	private function touchSessionFile(iTopSessionHandler $oiTopSessionHandler, $session_id) : ?string {
-		return $this->InvokeNonPublicMethod(iTopSessionHandler::class, "touchSessionFile", $oiTopSessionHandler, $aArgs = [$session_id]);
+		return $this->InvokeNonPublicMethod(iTopSessionHandler::class, "touch_session_file", $oiTopSessionHandler, $aArgs = [$session_id]);
 	}
 
 	public function testTouchSessionFileNoUserLoggedIn(){
@@ -201,7 +201,7 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 	}
 
 	private function GetFilePath(iTopSessionHandler $oiTopSessionHandler, $session_id) : string {
-		return $this->InvokeNonPublicMethod(iTopSessionHandler::class, "GetFilePath", $oiTopSessionHandler, $aArgs = [$session_id]);
+		return $this->InvokeNonPublicMethod(iTopSessionHandler::class, "get_file_path", $oiTopSessionHandler, $aArgs = [$session_id]);
 	}
 
 	public function GgcWithTimeLimit_FileWithData(){
@@ -230,22 +230,22 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 	public function testGgcWithTimeLimit_FileWithData($iTimeLimit, $max_lifetime, $iExpectedProcessed) {
 		$oiTopSessionHandler = new iTopSessionHandler();
 		//remove all
-		$oiTopSessionHandler->gcWithTimeLimit(-1);
-		$this->assertEquals([], $oiTopSessionHandler->ListSessionFiles());
+		$oiTopSessionHandler->gc_with_time_limit(-1);
+		$this->assertEquals([], $oiTopSessionHandler->list_session_files());
 
 		for($i=0; $i<=1; $i++) {
 			$this->sFile = $this->GetFilePath($oiTopSessionHandler, uniqid());
 			file_put_contents($this->sFile, "fakedata");
 		}
 
-		$aFoundSessionFiles = $oiTopSessionHandler->ListSessionFiles();
+		$aFoundSessionFiles = $oiTopSessionHandler->list_session_files();
 		foreach ($aFoundSessionFiles as $sFile){
 			$this->assertTrue(is_file($sFile));
 		}
 
-		$iProcessed = $oiTopSessionHandler->gcWithTimeLimit($max_lifetime, $iTimeLimit);
+		$iProcessed = $oiTopSessionHandler->gc_with_time_limit($max_lifetime, $iTimeLimit);
 		$this->assertEquals($iExpectedProcessed, $iProcessed);
-		$this->assertEquals(2 - $iExpectedProcessed, sizeof($oiTopSessionHandler->ListSessionFiles()));
+		$this->assertEquals(2 - $iExpectedProcessed, sizeof($oiTopSessionHandler->list_session_files()));
 	}
 
 	public function GgcWithTimeLimit_EmptyFile(){
@@ -267,21 +267,21 @@ class iTopSessionHandlerTest extends ItopDataTestCase
 	public function testGgcWithTimeLimit_EmptyFile($iTimeLimit, $iExpectedProcessed) {
 		$oiTopSessionHandler = new iTopSessionHandler();
 		//remove all
-		$oiTopSessionHandler->gcWithTimeLimit(-1);
-		$this->assertEquals([], $oiTopSessionHandler->ListSessionFiles());
+		$oiTopSessionHandler->gc_with_time_limit(-1);
+		$this->assertEquals([], $oiTopSessionHandler->list_session_files());
 
 		for($i=0; $i<=1; $i++) {
 			$this->sFile = $this->GetFilePath($oiTopSessionHandler, uniqid());
 			touch($this->sFile);
 		}
 
-		$aFoundSessionFiles = $oiTopSessionHandler->ListSessionFiles();
+		$aFoundSessionFiles = $oiTopSessionHandler->list_session_files();
 		foreach ($aFoundSessionFiles as $sFile){
 			$this->assertTrue(is_file($sFile));
 		}
 
-		$iProcessed = $oiTopSessionHandler->gcWithTimeLimit(1440, $iTimeLimit);
+		$iProcessed = $oiTopSessionHandler->gc_with_time_limit(1440, $iTimeLimit);
 		$this->assertEquals($iExpectedProcessed, $iProcessed);
-		$this->assertEquals(2 - $iExpectedProcessed, sizeof($oiTopSessionHandler->ListSessionFiles()));
+		$this->assertEquals(2 - $iExpectedProcessed, sizeof($oiTopSessionHandler->list_session_files()));
 	}
 }
