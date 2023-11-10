@@ -856,6 +856,8 @@ class UserRights
 	}
 
 	/**
+	 * Set the current user (as part of the login process)
+	 *
 	 * @param string $sLogin Login of the concerned user
 	 * @param string $sAuthentication
 	 *
@@ -865,8 +867,6 @@ class UserRights
 	 */
 	public static function Login($sLogin, $sAuthentication = 'any')
 	{
-		static::Logoff();
-
 		$oUser = self::FindUser($sLogin, $sAuthentication);
 		if (is_null($oUser))
 		{
@@ -885,6 +885,8 @@ class UserRights
 	}
 
 	/**
+	 * Reset current user and cleanup associated SESSION data
+	 *
 	 * @return void
 	 * @since 3.0.4 3.1.1 3.2.0
 	 */
