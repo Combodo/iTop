@@ -34,7 +34,7 @@ class SessionHandler extends \SessionHandler
 
 	public function gc($max_lifetime)
 	{
-		IssueLog::Debug("gc", \LogChannels::SESSIONTRACKER, [
+		IssueLog::Debug("Run PHP sessions garbage collector", \LogChannels::SESSIONTRACKER, [
 			'max_lifetime' => $max_lifetime,
 		]);
 		$iRes = parent::gc($max_lifetime);
