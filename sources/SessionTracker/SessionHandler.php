@@ -47,7 +47,7 @@ class SessionHandler extends \SessionHandler
 		$bRes = parent::open($save_path, $session_name);
 
 		$session_id = session_id();
-		IssueLog::Debug("open", \LogChannels::SESSIONTRACKER, [
+		IssueLog::Debug("Open PHP session", \LogChannels::SESSIONTRACKER, [
 			'session_id' => $session_id,
 		]);
 
