@@ -62,7 +62,7 @@ class SessionHandler extends \SessionHandler
 	{
 		$bRes = parent::write($session_id, $data);
 
-		IssueLog::Debug("write", \LogChannels::SESSIONTRACKER, [
+		IssueLog::Debug("Write PHP session", \LogChannels::SESSIONTRACKER, [
 			'session_id' => $session_id,
 			'data' => $data,
 		]);
