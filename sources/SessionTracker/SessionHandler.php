@@ -18,7 +18,10 @@ use utils;
  */
 class SessionHandler extends \SessionHandler
 {
-	public function destroy($session_id)
+	/**
+	 * @inheritDoc
+	 */
+	public function destroy(string $session_id) : bool
 	{
 		IssueLog::Debug("Destroy PHP session", \LogChannels::SESSIONTRACKER, [
 			'session_id' => $session_id,
@@ -32,7 +35,10 @@ class SessionHandler extends \SessionHandler
 		return $bRes;
 	}
 
-	public function gc($max_lifetime)
+	/**
+	 * @inheritDoc
+	 */
+	public function gc(int $max_lifetime) : int|false
 	{
 		IssueLog::Debug("Run PHP sessions garbage collector", \LogChannels::SESSIONTRACKER, [
 			'max_lifetime' => $max_lifetime,
@@ -42,7 +48,10 @@ class SessionHandler extends \SessionHandler
 		return $iRes;
 	}
 
-	public function open($save_path, $session_name)
+	/**
+	 * @inheritDoc
+	 */
+	public function open(string $save_path, string $session_name) : bool
 	{
 		$bRes = parent::open($save_path, $session_name);
 
@@ -58,7 +67,10 @@ class SessionHandler extends \SessionHandler
 		return $bRes;
 	}
 
-	public function write($session_id, $data)
+	/**
+	 * @inheritDoc
+	 */
+	public function write(string $session_id, string $data) : bool
 	{
 		$bRes = parent::write($session_id, $data);
 
