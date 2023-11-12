@@ -20,7 +20,7 @@ class SessionHandler extends \SessionHandler
 {
 	public function destroy($session_id)
 	{
-		IssueLog::Debug("destroy", \LogChannels::SESSIONTRACKER, [
+		IssueLog::Debug("Destroy PHP session", \LogChannels::SESSIONTRACKER, [
 			'session_id' => $session_id,
 		]);
 		$bRes = parent::destroy($session_id);
