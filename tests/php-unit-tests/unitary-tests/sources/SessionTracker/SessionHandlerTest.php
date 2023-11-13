@@ -13,7 +13,7 @@ class SessionHandlerTest extends ItopDataTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		ContextTag::AddContext(ContextTag::TAG_REST);
+		new ContextTag(ContextTag::TAG_REST);
 	}
 
 	protected function tearDown(): void
@@ -111,7 +111,8 @@ class SessionHandlerTest extends ItopDataTestCase
 		$this->assertNotEquals('', $sCreationTime, $sFirstContent);
 		$this->assertEquals('toto', $aJson['login_mode'] ?? '', $sFirstContent);
 
-		ContextTag::AddContext(ContextTag::TAG_SYNCHRO);
+
+		new ContextTag(ContextTag::TAG_SYNCHRO);
 		$sNewContent = $this->GenerateSessionContent($oSessionHandler, $sFirstContent);
 		$this->assertNotNull($sNewContent);
 		$this->assertNotEquals($sNewContent, $sFirstContent, $sNewContent);
