@@ -6285,7 +6285,9 @@ abstract class DBObject implements iDisplay
 				}
 			}
 			finally {
-				$oKPI->ComputeStats('FireEvent', $sEvent);
+				if (!$oKPI->ComputeStatsForExtension($this, $sCallback, "Event: $sEvent")) {
+					$oKPI->ComputeStats('FireEvent', $sEvent);
+				}
 			}
 		}
 		if (!is_null($oFirstException)) {

@@ -8,6 +8,7 @@ namespace Combodo\iTop\Service\Events;
 
 use Closure;
 use Combodo\iTop\Service\Events\Description\EventDescription;
+use Combodo\iTop\Service\Module\ModuleService;
 use ContextTag;
 use CoreException;
 use DBObject;
@@ -136,12 +137,9 @@ final class EventService
 			throw new CoreException($sError);
 		}
 		$eventSource = $oEventData->GetEventSource();
-		$oKPI = new ExecutionKPI();
 		$sLogEventName = "$sEvent - ".self::GetSourcesAsString($eventSource).' '.json_encode($oEventData->GetEventData());
 		EventServiceLog::Trace("Fire event '$sLogEventName'");
 		if (!isset(self::$aEventListeners[$sEvent])) {
-			$oKPI->ComputeStats('FireEvent', $sEvent);
-
 			return;
 		}
 
@@ -157,7 +155,14 @@ final class EventService
 			$bEventFired = true;
 			try {
 				$oEventData->SetCallbackData($aEventCallback['data']);
+				$oKPI = new ExecutionKPI();
+
 				call_user_func($aEventCallback['callback'], $oEventData);
+
+				if (isset($aEventCallback['callback'][1]) && !$oKPI->ComputeStatsForExtension($aEventCallback['callback'][0], $aEventCallback['callback'][1], "Event: $sEvent")) {
+					$sSignature = ModuleService::GetInstance()->GetModuleMethodSignature($aEventCallback['callback'][0], $aEventCallback['callback'][1]);
+					$oKPI->ComputeStats('FireEvent', "$sEvent callback: $sSignature");
+				}
 			}
 			catch (EventException $e) {
 				EventServiceLog::Error("Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with blocking error: ".$e->getMessage());
@@ -172,7 +177,6 @@ final class EventService
 		if ($bEventFired) {
 			EventServiceLog::Debug("End of event '$sLogEventName'");
 		}
-		$oKPI->ComputeStats('FireEvent', $sEvent);
 
 		if (!is_null($oLastException)) {
 			EventServiceLog::Error("Throwing the last exception caught: $sLastExceptionMessage");
