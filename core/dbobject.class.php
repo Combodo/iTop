@@ -2411,7 +2411,6 @@ abstract class DBObject implements iDisplay
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
-	 *
 	 */
 	public function DoCheckToWrite()
 	{
@@ -2463,7 +2462,6 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     *
      * @api
      * @api-advanced
      *
@@ -2479,9 +2477,8 @@ abstract class DBObject implements iDisplay
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
-	 *
 	 */
-	public final function CheckToWrite($bDoComputeValues = true)
+	final public function CheckToWrite($bDoComputeValues = true)
 	{
 		if (MetaModel::SkipCheckToWrite())
 		{
