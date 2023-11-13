@@ -2,7 +2,7 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
 $.post(
-    '{{ oUIBlock.sAjaxLink|raw }}',
+    '{{ oUIBlock.sAjaxLink|escape('js') }}',
     {{ oUIBlock.sJsonParams|raw }},
     function(data) {
         $('#csv_content').html(data);
