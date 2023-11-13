@@ -10,16 +10,18 @@ use ContextTag;
 class SessionHandlerTest extends ItopDataTestCase
 {
 	private $sFile ;
+	private $oTag ;
+
 	protected function setUp(): void
 	{
 		parent::setUp();
-		new ContextTag(ContextTag::TAG_REST);
+		$this->oTag = new ContextTag(ContextTag::TAG_REST);
 	}
 
 	protected function tearDown(): void
 	{
 		parent::tearDown();
-		static::SetNonPublicStaticProperty(ContextTag::class, 'aStack', []);
+		$this->oTag = null;
 
 		if (! is_null($this->sFile) && is_file($this->sFile)){
 			@unlink($this->sFile);
@@ -112,7 +114,8 @@ class SessionHandlerTest extends ItopDataTestCase
 		$this->assertEquals('toto', $aJson['login_mode'] ?? '', $sFirstContent);
 
 
-		new ContextTag(ContextTag::TAG_SYNCHRO);
+		$oTag2 = new ContextTag(ContextTag::TAG_SYNCHRO);
+		var_dump(ContextTag::GetStack());
 		$sNewContent = $this->GenerateSessionContent($oSessionHandler, $sFirstContent);
 		$this->assertNotNull($sNewContent);
 		$this->assertNotEquals($sNewContent, $sFirstContent, $sNewContent);
