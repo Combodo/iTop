@@ -19,9 +19,11 @@ use utils;
 class SessionHandler extends \SessionHandler
 {
 	/**
-	 * @inheritDoc
+	 * @param string $session_id
+	 *
+	 * @return bool
 	 */
-	public function destroy(string $session_id) : bool
+	public function destroy($session_id) : bool
 	{
 		IssueLog::Debug("Destroy PHP session", \LogChannels::SESSIONTRACKER, [
 			'session_id' => $session_id,
@@ -36,9 +38,11 @@ class SessionHandler extends \SessionHandler
 	}
 
 	/**
-	 * @inheritDoc
+	 * @param int $max_lifetime
+	 *
+	 * @return int|false
 	 */
-	public function gc(int $max_lifetime) : int|false
+	public function gc($max_lifetime)
 	{
 		IssueLog::Debug("Run PHP sessions garbage collector", \LogChannels::SESSIONTRACKER, [
 			'max_lifetime' => $max_lifetime,
@@ -49,9 +53,12 @@ class SessionHandler extends \SessionHandler
 	}
 
 	/**
-	 * @inheritDoc
+	 * @param string $save_path
+	 * @param string $session_name
+	 *
+	 * @return bool
 	 */
-	public function open(string $save_path, string $session_name) : bool
+	public function open($save_path, $session_name) : bool
 	{
 		$bRes = parent::open($save_path, $session_name);
 
@@ -68,9 +75,12 @@ class SessionHandler extends \SessionHandler
 	}
 
 	/**
-	 * @inheritDoc
+	 * @param string $session_id
+	 * @param string $data
+	 *
+	 * @return bool
 	 */
-	public function write(string $session_id, string $data) : bool
+	public function write($session_id, $data) : bool
 	{
 		$bRes = parent::write($session_id, $data);
 
@@ -116,7 +126,7 @@ class SessionHandler extends \SessionHandler
 					'login_mode' => Session::Get('login_mode'),
 					'user_id' => $sUserId,
 					'creation_time' => $iCreationTime,
-					'context' => implode("|", ContextTag::GetStack())
+					'context' => implode('|', ContextTag::GetStack())
 				]
 			);
 		} catch(Exception $e) {
