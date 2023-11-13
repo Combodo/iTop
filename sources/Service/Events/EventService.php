@@ -159,7 +159,7 @@ final class EventService
 
 				call_user_func($aEventCallback['callback'], $oEventData);
 
-				if (isset($aEventCallback['callback'][1]) && !$oKPI->ComputeStatsForExtension($aEventCallback['callback'][0], $aEventCallback['callback'][1], "Event: $sEvent")) {
+				if (is_array($aEventCallback['callback']) && !$oKPI->ComputeStatsForExtension($aEventCallback['callback'][0], $aEventCallback['callback'][1], "Event: $sEvent")) {
 					$sSignature = ModuleService::GetInstance()->GetModuleMethodSignature($aEventCallback['callback'][0], $aEventCallback['callback'][1]);
 					$oKPI->ComputeStats('FireEvent', "$sEvent callback: $sSignature");
 				}

@@ -9,6 +9,7 @@ use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventException;
 use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Service\Events\EventServiceLog;
+use Combodo\iTop\Service\Module\ModuleService;
 use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectManager;
 
 /**
@@ -6286,7 +6287,8 @@ abstract class DBObject implements iDisplay
 			}
 			finally {
 				if (!$oKPI->ComputeStatsForExtension($this, $sCallback, "Event: $sEvent")) {
-					$oKPI->ComputeStats('FireEvent', $sEvent);
+					$sSignature = ModuleService::GetInstance()->GetModuleMethodSignature($this, $sCallback);
+					$oKPI->ComputeStats('FireEvent', "$sEvent callback: $sSignature");
 				}
 			}
 		}
