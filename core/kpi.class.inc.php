@@ -3,6 +3,7 @@
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 use Combodo\iTop\Core\Kpi\KpiLogData;
 use Combodo\iTop\Service\Module\ModuleService;
 
@@ -404,16 +405,31 @@ class ExecutionKPI
 		$this->ResetCounters();
 	}
 
-    public function ComputeStatsForExtension($object, $sMethod)
+	/**
+	 * Compute statistics for a call to an extension
+	 * Note: not working in dev mode (with links to env-production)
+	 *
+	 * @param object|string $object object called
+	 * @param string $sMethod       method called on the object
+	 * @param string $sMessage      additional message
+	 *
+	 * @return bool true if an extension was found for this object::method
+	 * @throws \ReflectionException
+	 */
+	public function ComputeStatsForExtension($object, string $sMethod, string $sMessage = ''): bool
     {
         if (!self::IsEnabled()) {
-            return;
+            return true;
         }
 
         $sSignature = ModuleService::GetInstance()->GetModuleMethodSignature($object, $sMethod);
         if (utils::StartsWith($sSignature, '[')) {
-            $this->ComputeStats('Extension', $sSignature);
+            $this->ComputeStats('Extension', "$sSignature $sMessage");
+
+			return true;
         }
+
+		return false;
     }
 
 	public function ComputeStats($sOperation, $sArguments)
