@@ -2140,7 +2140,6 @@ abstract class DBObject implements iDisplay
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
-	 *
 	 */
 	public function DoCheckToWrite()
 	{
@@ -2195,7 +2194,6 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     *
      * @api
      * @api-advanced
      *
@@ -2211,7 +2209,6 @@ abstract class DBObject implements iDisplay
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
-	 *
 	 */
 	final public function CheckToWrite()
 	{
