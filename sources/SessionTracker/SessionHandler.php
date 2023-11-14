@@ -23,6 +23,7 @@ class SessionHandler extends \SessionHandler
 	 *
 	 * @return bool
 	 */
+	#[ReturnTypeWillChange]
 	public function destroy($session_id) : bool
 	{
 		IssueLog::Debug("Destroy PHP session", \LogChannels::SESSIONTRACKER, [
@@ -42,6 +43,7 @@ class SessionHandler extends \SessionHandler
 	 *
 	 * @return int|false
 	 */
+	#[ReturnTypeWillChange]
 	public function gc($max_lifetime)
 	{
 		IssueLog::Debug("Run PHP sessions garbage collector", \LogChannels::SESSIONTRACKER, [
@@ -58,6 +60,7 @@ class SessionHandler extends \SessionHandler
 	 *
 	 * @return bool
 	 */
+	#[ReturnTypeWillChange]
 	public function open($save_path, $session_name) : bool
 	{
 		$bRes = parent::open($save_path, $session_name);
@@ -80,6 +83,7 @@ class SessionHandler extends \SessionHandler
 	 *
 	 * @return bool
 	 */
+	#[ReturnTypeWillChange]
 	public function write($session_id, $data) : bool
 	{
 		$bRes = parent::write($session_id, $data);
