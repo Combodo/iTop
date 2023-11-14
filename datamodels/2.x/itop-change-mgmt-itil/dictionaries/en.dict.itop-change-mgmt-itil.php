@@ -65,7 +65,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Change' => 'Change',
 	'Class:Change+' => '',
-	'Class:Change/Attribute:status' => 'Etat',
+	'Class:Change/Attribute:status' => 'Status',
 	'Class:Change/Attribute:status+' => '',
 	'Class:Change/Attribute:status/Value:new' => 'New',
 	'Class:Change/Attribute:status/Value:new+' => '',
