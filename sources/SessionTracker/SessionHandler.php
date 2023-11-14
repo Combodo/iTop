@@ -40,11 +40,9 @@ class SessionHandler extends \SessionHandler
 
 	/**
 	 * @param int $max_lifetime
-	 *
-	 * @return int|false
 	 */
 	#[ReturnTypeWillChange]
-	public function gc($max_lifetime)
+	public function gc($max_lifetime) : bool
 	{
 		IssueLog::Debug("Run PHP sessions garbage collector", \LogChannels::SESSIONTRACKER, [
 			'max_lifetime' => $max_lifetime,
@@ -57,8 +55,6 @@ class SessionHandler extends \SessionHandler
 	/**
 	 * @param string $save_path
 	 * @param string $session_name
-	 *
-	 * @return bool
 	 */
 	#[ReturnTypeWillChange]
 	public function open($save_path, $session_name) : bool
