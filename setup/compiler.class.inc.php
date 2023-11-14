@@ -2081,6 +2081,7 @@ EOF
 			$this->CompileCommonProperty('edit_when', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('filter', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('with_php_constraint', $oField, $aParameters, $sModuleRelativeDir, false);
+			$this->CompileCommonProperty('with_php_computation', $oField, $aParameters, $sModuleRelativeDir, false);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeLinkedSet') {
 			$this->CompileCommonProperty('linked_class', $oField, $aParameters, $sModuleRelativeDir);
@@ -2092,6 +2093,7 @@ EOF
 			$this->CompileCommonProperty('edit_when', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('filter', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('with_php_constraint', $oField, $aParameters, $sModuleRelativeDir, false);
+			$this->CompileCommonProperty('with_php_computation', $oField, $aParameters, $sModuleRelativeDir, false);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeExternalKey') {
 			$this->CompileCommonProperty('target_class', $oField, $aParameters, $sModuleRelativeDir);

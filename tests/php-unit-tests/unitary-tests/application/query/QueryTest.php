@@ -82,6 +82,7 @@ class QueryTest extends ItopDataTestCase
 		}
 
 		$oQuery->DBInsert();
+		$this->assertFalse($oQuery->IsNew());
 
 		return $oQuery;
 	}

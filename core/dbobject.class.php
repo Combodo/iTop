@@ -187,12 +187,13 @@ abstract class DBObject implements iDisplay
 	protected $m_oLinkHostObject = null;
 
 	/**
-	 * @var array List all the CRUD stack in progress
-	 *
-	 * The array contains instances of
-	 * ['type' => 'type of CRUD operation (INSERT, UPDATE, DELETE)',
-	 *  'class' => 'class of the object in the CRUD process',
-	 *  'id' => 'id of the object in the CRUD process']
+	 * @var array{array{
+	 *      type: string,
+	 *      class: string,
+	 *      id: string,
+	 * }} List all the CRUD stack in progress, with :
+	 *      - type: CRUD operation (INSERT, UPDATE, DELETE)',
+	 *      - class: class of the object in the CRUD process, leaf (object finalclass) if we have a hierarchy
 	 *
 	 * @since 3.1.0 N°5906
 	 */
@@ -2462,6 +2463,110 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * @since 3.1.1 3.2.0 N°6228 method creation
+	 */
+	final protected function CheckPhpConstraint(bool $bIsCheckToDelete = false): void
+	{
+		$aChanges = $this->ListChanges();
+
+		$aClassExtKeyAttCodes = MetaModel::GetAttributesList(get_class($this), [AttributeExternalKey::class]);
+		foreach ($aClassExtKeyAttCodes as $sExtKeyWithMirrorLinkAttCode) {
+			/** @var AttributeExternalKey $oExtKeyWithMirrorLinkAttDef */
+			$oExtKeyWithMirrorLinkAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyWithMirrorLinkAttCode);
+
+			$oRemoteObject = $this->GetRemoteObjectWithPhpConstraint($oExtKeyWithMirrorLinkAttDef, $this->Get($sExtKeyWithMirrorLinkAttCode));
+			if (is_null($oRemoteObject)) {
+				continue;
+			}
+
+			/** @var AttributeLinkedSet $oAttDefMirrorLink */
+			$oAttDefMirrorLink = $oExtKeyWithMirrorLinkAttDef->GetMirrorLinkAttribute();
+			if (is_null($oAttDefMirrorLink)) {
+				continue;
+			}
+			$sAttCodeMirrorLink = $oAttDefMirrorLink->GetCode();
+
+			if ($this->IsNew()) {
+				$this->CheckRemotePhpConstraintOnObject('add', $oRemoteObject, $sAttCodeMirrorLink, false);
+			} else if ($bIsCheckToDelete) {
+				$this->CheckRemotePhpConstraintOnObject('remove', $oRemoteObject, $sAttCodeMirrorLink, true);
+			} else {
+				if (array_key_exists($sExtKeyWithMirrorLinkAttCode, $aChanges)) {
+					// need to update remote old + new
+					$aPreviousValues = $this->ListPreviousValuesForUpdatedAttributes();
+					$sPreviousRemoteObjectKey = $aPreviousValues[$sExtKeyWithMirrorLinkAttCode];
+					$oPreviousRemoteObject = $this->GetRemoteObjectWithPhpConstraint($oExtKeyWithMirrorLinkAttDef, $sPreviousRemoteObjectKey);
+					if (false === is_null($oPreviousRemoteObject)) {
+						$this->CheckRemotePhpConstraintOnObject('remove', $oPreviousRemoteObject, $sAttCodeMirrorLink, false);
+					}
+					$this->CheckRemotePhpConstraintOnObject('add', $oRemoteObject, $sAttCodeMirrorLink, false);
+				} else {
+					$this->CheckRemotePhpConstraintOnObject('modify', $oRemoteObject, $sAttCodeMirrorLink, false); // we need to update remote with current lnk instance
+				}
+			}
+		}
+	}
+
+	private function CheckRemotePhpConstraintOnObject(string $sAction, DBObject $oRemoteObject, string $sAttCodeMirrorLink, bool $bIsCheckToDelete): void
+	{
+		$this->LogCRUDDebug(__METHOD__, "action: $sAction ".get_class($oRemoteObject).'::'.$oRemoteObject->GetKey()." ($sAttCodeMirrorLink)");
+
+		/** @var \ormLinkSet $oRemoteValue */
+		$oRemoteValue = $oRemoteObject->Get($sAttCodeMirrorLink);
+		switch ($sAction) {
+			case 'add':
+				$oRemoteValue->AddItem($this);
+				break;
+			case 'remove':
+				$oRemoteValue->RemoveItem($this->GetKey());
+				break;
+			case 'modify':
+				$oRemoteValue->ModifyItem($this);
+				break;
+		}
+		$oRemoteObject->Set($sAttCodeMirrorLink, $oRemoteValue);
+		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oRemoteObject->CheckToWrite();
+		if (false === $bCheckStatus) {
+			if ($bIsCheckToDelete) {
+				$this->m_aDeleteIssues = array_merge($this->m_aDeleteIssues ?? [], $aCheckIssues);
+			} else {
+				$this->m_aCheckIssues = array_merge($this->m_aCheckIssues ?? [], $aCheckIssues);
+			}
+			$this->m_bSecurityIssue = $this->m_bSecurityIssue || $bSecurityIssue;
+		}
+		$aRemoteCheckWarnings = $oRemoteObject->GetCheckWarnings();
+		if (is_array($aRemoteCheckWarnings)) {
+			$this->m_aCheckWarnings = array_merge($this->m_aCheckWarnings ?? [], $aRemoteCheckWarnings);
+		}
+	}
+
+	private function GetRemoteObjectWithPhpConstraint(AttributeExternalKey $oAttDef, $sRemoteObjectKey)
+	{
+		$sRemoteObjectClass = $oAttDef->GetTargetClass();
+
+		/** @noinspection NotOptimalIfConditionsInspection */
+		/** @noinspection TypeUnsafeComparisonInspection */
+		if (utils::IsNullOrEmptyString($sRemoteObjectClass)
+			|| utils::IsNullOrEmptyString($sRemoteObjectKey)
+			|| ($sRemoteObjectKey == 0) // non-strict comparison as we might have bad surprises
+		) {
+			return null;
+		}
+
+		/** @var AttributeLinkedSet $oAttDefMirrorLink */
+		$oAttDefMirrorLink = $oAttDef->GetMirrorLinkAttribute();
+		if (is_null($oAttDefMirrorLink) || false === $oAttDefMirrorLink->GetHasConstraint()) {
+			return null;
+		}
+
+		if (DBObject::IsObjectCurrentlyInCrud($sRemoteObjectClass, $sRemoteObjectKey)) {
+			return null;
+		}
+
+		return MetaModel::GetObject($sRemoteObjectClass, $sRemoteObjectKey, false);
+	}
+
+	/**
      * @api
      * @api-advanced
      *
@@ -2484,6 +2589,7 @@ abstract class DBObject implements iDisplay
 		{
 			return array(true, array());
 		}
+
 		if (is_null($this->m_bCheckStatus))
 		{
 			$this->m_aCheckIssues = array();
@@ -2500,6 +2606,9 @@ abstract class DBObject implements iDisplay
 			$oKPI = new ExecutionKPI();
 			$this->DoCheckToWrite();
             $oKPI->ComputeStatsForExtension($this, 'DoCheckToWrite');
+
+			$this->CheckPhpConstraint();
+
 			if (count($this->m_aCheckIssues) == 0)
 			{
 				$this->m_bCheckStatus = true;
@@ -2509,6 +2618,7 @@ abstract class DBObject implements iDisplay
 				$this->m_bCheckStatus = false;
 			}
 		}
+
 		return array($this->m_bCheckStatus, $this->m_aCheckIssues, $this->m_bSecurityIssue);
 	}
 
@@ -2661,6 +2771,7 @@ abstract class DBObject implements iDisplay
   	{
 		$this->MakeDeletionPlan($oDeletionPlan);
 		$oDeletionPlan->ComputeResults();
+
 		return (!$oDeletionPlan->FoundStopper());
 	}
 
@@ -3214,7 +3325,7 @@ abstract class DBObject implements iDisplay
 				}
 			}
 
-			list($bRes, $aIssues) = $this->CheckToWrite(false);
+			[$bRes, $aIssues] = $this->CheckToWrite(false);
 			if (!$bRes) {
 				throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 			}
@@ -3454,7 +3565,7 @@ abstract class DBObject implements iDisplay
 					return $this->m_iKey;
 				}
 
-				list($bRes, $aIssues) = $this->CheckToWrite(false);
+				[$bRes, $aIssues] = $this->CheckToWrite(false);
 				if (!$bRes) {
 					throw new CoreCannotSaveObjectException(['issues' => $aIssues, 'class' => $sClass, 'id' => $this->GetKey()]);
 				}
@@ -3921,6 +4032,8 @@ abstract class DBObject implements iDisplay
      */
 	protected function DBDeleteSingleObject()
 	{
+		$this->LogCRUDEnter(__METHOD__);
+
 		if (MetaModel::DBIsReadOnly())
 		{
 			$this->LogCRUDExit(__METHOD__, 'DB is read-only');
@@ -4043,6 +4156,7 @@ abstract class DBObject implements iDisplay
 
 
 		$this->m_bIsInDB = false;
+		$this->LogCRUDExit(__METHOD__);
 		// Fix for N°926: do NOT reset m_iKey as it can be used to have it for reporting purposes (see the REST service to delete
 		// objects, reported as bug N°926)
 		// Thought the key is not reset, using DBInsert or DBWrite will create an object having the same characteristics and a new ID. DBUpdate is protected
@@ -4073,74 +4187,70 @@ abstract class DBObject implements iDisplay
 	public function DBDelete(&$oDeletionPlan = null)
 	{
 		$this->LogCRUDEnter(__METHOD__);
+		$this->AddCurrentObjectInCrudStack('DELETE');
+		try {
 
-		static $iLoopTimeLimit = null;
-		if ($iLoopTimeLimit == null)
-		{
-			$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		}
-		if (is_null($oDeletionPlan))
-		{
-			$oDeletionPlan = new DeletionPlan();
-		}
-		$this->MakeDeletionPlan($oDeletionPlan);
-		$oDeletionPlan->ComputeResults();
+			static $iLoopTimeLimit = null;
+			if ($iLoopTimeLimit == null) {
+				$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
+			}
+			if (is_null($oDeletionPlan)) {
+				$oDeletionPlan = new DeletionPlan();
+			}
+			$this->MakeDeletionPlan($oDeletionPlan);
+			$oDeletionPlan->ComputeResults();
 
-		if ($oDeletionPlan->FoundStopper())
-		{
-			$aIssues = $oDeletionPlan->GetIssues();
-			$this->LogCRUDError(__METHOD__, ' Errors: '.implode(', ', $aIssues));
-			throw new DeleteException('Found issue(s)', array('target_class' => get_class($this), 'target_id' => $this->GetKey(), 'issues' => implode(', ', $aIssues)));
-		}
+			if ($oDeletionPlan->FoundStopper()) {
+				$aIssues = $oDeletionPlan->GetIssues();
+				$this->LogCRUDError(__METHOD__, ' Errors: '.implode(', ', $aIssues));
+				throw new DeleteException('Found issue(s)', array('target_class' => get_class($this), 'target_id' => $this->GetKey(), 'issues' => implode(', ', $aIssues)));
+			}
 
 
-		// Getting and setting time limit are not symetric:
-		// www.php.net/manual/fr/function.set-time-limit.php#72305
-		$iPreviousTimeLimit = ini_get('max_execution_time');
+			// Getting and setting time limit are not symetric:
+			// www.php.net/manual/fr/function.set-time-limit.php#72305
+			$iPreviousTimeLimit = ini_get('max_execution_time');
 
-		foreach ($oDeletionPlan->ListDeletes() as $sClass => $aToDelete)
-		{
-			foreach ($aToDelete as $iId => $aData)
-			{
-				/** @var \DBObject $oToDelete */
-				$oToDelete = $aData['to_delete'];
-				// The deletion based on a deletion plan should not be done for each object if the deletion plan is common (Trac #457)
-				// because for each object we would try to update all the preceding ones... that are already deleted
-				// A better approach would be to change the API to apply the DBDelete on the deletion plan itself... just once
-				// As a temporary fix: delete only the objects that are still to be deleted...
-				if ($oToDelete->m_bIsInDB)
-				{
-					set_time_limit(intval($iLoopTimeLimit));
+			foreach ($oDeletionPlan->ListDeletes() as $sClass => $aToDelete) {
+				foreach ($aToDelete as $iId => $aData) {
+					/** @var \DBObject $oToDelete */
+					$oToDelete = $aData['to_delete'];
+					// The deletion based on a deletion plan should not be done for each object if the deletion plan is common (Trac #457)
+					// because for each object we would try to update all the preceding ones... that are already deleted
+					// A better approach would be to change the API to apply the DBDelete on the deletion plan itself... just once
+					// As a temporary fix: delete only the objects that are still to be deleted...
+					if ($oToDelete->m_bIsInDB) {
+						set_time_limit(intval($iLoopTimeLimit));
 
-					$oToDelete->AddCurrentObjectInCrudStack('DELETE');
-					try {
-						$oToDelete->DBDeleteSingleObject();
-					}
-					finally {
-						$oToDelete->RemoveCurrentObjectInCrudStack();
+						$oToDelete->AddCurrentObjectInCrudStack('DELETE');
+						try {
+							$oToDelete->DBDeleteSingleObject();
+						}
+						finally {
+							$oToDelete->RemoveCurrentObjectInCrudStack();
+						}
 					}
 				}
 			}
-		}
 
-		foreach ($oDeletionPlan->ListUpdates() as $sClass => $aToUpdate)
-		{
-			foreach ($aToUpdate as $aData)
-			{
-				$oToUpdate = $aData['to_reset'];
-				/** @var \DBObject $oToUpdate */
-				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
-				{
-					$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
-					set_time_limit(intval($iLoopTimeLimit));
-					$oToUpdate->DBUpdate();
+			foreach ($oDeletionPlan->ListUpdates() as $sClass => $aToUpdate) {
+				foreach ($aToUpdate as $aData) {
+					$oToUpdate = $aData['to_reset'];
+					/** @var \DBObject $oToUpdate */
+					foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef) {
+						$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
+						set_time_limit(intval($iLoopTimeLimit));
+						$oToUpdate->DBUpdate();
+					}
 				}
 			}
+
+			set_time_limit(intval($iPreviousTimeLimit));
+		} finally {
+			$this->LogCRUDExit(__METHOD__);
+			$this->RemoveCurrentObjectInCrudStack();
 		}
 
-		set_time_limit(intval($iPreviousTimeLimit));
-
-		$this->LogCRUDExit(__METHOD__);
 		return $oDeletionPlan;
 	}
 
@@ -5246,6 +5356,7 @@ abstract class DBObject implements iDisplay
 		$this->m_aDeleteIssues = array(); // Ok
 		$this->FireEventCheckToDelete($oDeletionPlan);
 		$this->DoCheckToDelete($oDeletionPlan);
+		$this->CheckPhpConstraint(true);
 		$oDeletionPlan->SetDeletionIssues($this, $this->m_aDeleteIssues, $this->m_bSecurityIssue);
 	
 		$aDependentObjects = $this->GetReferencingObjects(true /* allow all data */);
@@ -6237,6 +6348,18 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 *
+	 * @api
+	 *
+	 * @return string[]|null
+	 * @since 3.1.1 3.2.0
+	 */
+	public function GetCheckWarnings(): ?array
+	{
+		return $this->m_aCheckWarnings;
+	}
+
+	/**
 	 * @api
 	 *
 	 * @param string $sIssue
@@ -6484,6 +6607,11 @@ abstract class DBObject implements iDisplay
 		// so we need to handle null values (will give empty string after conversion)
 		$sConvertedId = (string)$sId;
 
+		if (((int)$sId) > 0) {
+			// When having a class hierarchy, we are saving the leaf class in the stack
+			$sClass = MetaModel::GetFinalClassName($sClass, $sId);
+		}
+
 		foreach (self::$m_aCrudStack as $aCrudStackEntry) {
 			if (($sClass === $aCrudStackEntry['class'])
 				&& ($sConvertedId === $aCrudStackEntry['id'])) {
@@ -6523,6 +6651,7 @@ abstract class DBObject implements iDisplay
 	 */
 	private function AddCurrentObjectInCrudStack(string $sCrudType): void
 	{
+		$this->LogCRUDDebug(__METHOD__);
 		self::$m_aCrudStack[] = [
 			'type'  => $sCrudType,
 			'class' => get_class($this),
@@ -6539,6 +6668,7 @@ abstract class DBObject implements iDisplay
 	 */
 	private function UpdateCurrentObjectInCrudStack(): void
 	{
+		$this->LogCRUDDebug(__METHOD__);
 		$aCurrentCrudStack = array_pop(self::$m_aCrudStack);
 		$aCurrentCrudStack['id'] = (string)$this->GetKey();
 		self::$m_aCrudStack[] = $aCurrentCrudStack;
@@ -6552,7 +6682,8 @@ abstract class DBObject implements iDisplay
 	 */
 	private function RemoveCurrentObjectInCrudStack(): void
 	{
-		array_pop(self::$m_aCrudStack);
+		$aRemoved = array_pop(self::$m_aCrudStack);
+		$this->LogCRUDDebug(__METHOD__, $aRemoved['class'].':'.$aRemoved['id']);
 	}
 
 	/**

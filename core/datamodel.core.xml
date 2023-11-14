@@ -502,6 +502,12 @@
           <type>boolean</type>
           <default>false</default>
         </property>
+        <property id="with_php_computation">
+          <php_param>with_php_computation</php_param>
+          <mandatory>false</mandatory>
+          <type>boolean</type>
+          <default>false</default>
+        </property>
         <property id="create_temporary_object">
           <php_param>create_temporary_object</php_param>
           <mandatory>false</mandatory>

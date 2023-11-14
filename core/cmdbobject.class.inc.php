@@ -474,7 +474,7 @@ abstract class CMDBObject extends DBObject
 	public function DBDelete(&$oDeletionPlan = null)
 	{
 		$this->LogCRUDEnter(__METHOD__);
-		$oDeletionPlan = $this->DBDeleteTracked_Internal($oDeletionPlan);
+		$oDeletionPlan = parent::DBDelete($oDeletionPlan);
 		$this->LogCRUDExit(__METHOD__);
 		return $oDeletionPlan;
 	}

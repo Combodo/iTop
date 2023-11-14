@@ -7,7 +7,6 @@
 namespace Combodo\iTop\Test\UnitTest\Core\CRUD;
 
 use Combodo\iTop\Service\Events\EventData;
-use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ContactType;
 use CoreException;
@@ -21,6 +20,7 @@ use ormLinkSet;
 use Person;
 use Team;
 use utils;
+use const EVENT_DB_LINKS_CHANGED;
 
 class CRUDEventTest extends ItopDataTestCase
 {
@@ -339,8 +339,8 @@ class CRUDEventTest extends ItopDataTestCase
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
-		$this->assertEquals(20, self::$iEventCalls);
+		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCalls, 'no relation with the with_php_compute attribute !');
+		$this->assertEquals(16, self::$iEventCalls);
 	}
 
 	/**
@@ -388,8 +388,8 @@ class CRUDEventTest extends ItopDataTestCase
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
-		$this->assertEquals(3, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
-		$this->assertEquals(19, self::$iEventCalls);
+		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCalls, 'no relation with the with_php_compute attribute !');
+		$this->assertEquals(16, self::$iEventCalls);
 
 		// Read the object explicitly from the DB to check that the role has been set
 		$oSet = new DBObjectSet(DBSearch::FromOQL('SELECT Team WHERE id=:id'), [], ['id' => $oTeam->GetKey()]);
@@ -495,7 +495,7 @@ class CRUDEventTest extends ItopDataTestCase
 		$oLnk = MetaModel::NewObject(lnkPersonToTeam::class, ['person_id' => $oPerson->GetKey(), 'team_id' => $oTeam->GetKey()]);
 		$oLnk->DBInsert();
 
-		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
+		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCalls, 'no relation with the with_php_compute attribute !');
 	}
 
 	public function testLinksDeleted()
@@ -517,7 +517,7 @@ class CRUDEventTest extends ItopDataTestCase
 
 		$oLnk->DBDelete();
 
-		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
+		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCalls, 'no relation with the with_php_compute attribute !');
 	}
 
 	// Tests with MockDBObject
