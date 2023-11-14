@@ -87,6 +87,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Castro, Randall Badilla
 - Colantoni, Maria Laura
 - Couronné, Guy
+- Dejin, Bie (a.k.a [@bdejin](https://github.com/bdejin))
 - Dvořák, Lukáš
 - Goethals, Stefan
 - Gumble, David
