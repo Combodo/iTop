@@ -7,6 +7,7 @@ use ContextTag;
 use Exception;
 use IssueLog;
 use MetaModel;
+use ReturnTypeWillChange;
 use UserRights;
 use utils;
 
