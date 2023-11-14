@@ -21,5 +21,5 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s is already linked to %3$s: %4$s, duplicates are not allowed on this relation.~~',
+	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s已关联至%3$s: %4$s, 此关联不允许重复.',
 ]);

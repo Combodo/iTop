@@ -35,5 +35,5 @@
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserExternal' => '外部用户',
-	'Class:UserExternal+' => '用户在 '.ITOP_APPLICATION_SHORT.' 外部验证身份',
+	'Class:UserExternal+' => '用户在'.ITOP_APPLICATION_SHORT.'外部验证身份',
 ));

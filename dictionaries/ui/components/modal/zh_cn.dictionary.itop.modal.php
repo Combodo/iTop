@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'UI:Modal:Confirmation:DefaultTitle' => 'Confirmation~~',
-	'UI:Modal:Informative:Title' => 'Informative Modal~~',
-	'UI:Modal:InformativeError:Title' => 'Error~~',
-	'UI:Modal:InformativeWarning:Title' => 'Warning~~',
-	'UI:Modal:InformativeInformation:Title' => 'Information~~',
-	'UI:Modal:InformativeSuccess:Title' => 'Success~~',
+	'UI:Modal:Confirmation:DefaultTitle' => '确认',
+	'UI:Modal:Informative:Title' => '信息提示模态窗口',
+	'UI:Modal:InformativeError:Title' => '错误',
+	'UI:Modal:InformativeWarning:Title' => '警告',
+	'UI:Modal:InformativeInformation:Title' => '提示',
+	'UI:Modal:InformativeSuccess:Title' => '成功',
 ));

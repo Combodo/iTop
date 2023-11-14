@@ -19,6 +19,6 @@
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	// Bulk modify
-	'UI:Bulk:modify:IncompatibleAttribute' => 'This attribute can\'t be edited in bulk context~~',
+	'UI:Bulk:modify:IncompatibleAttribute' => '此属性无法在批量操作中编辑',
 
 ));

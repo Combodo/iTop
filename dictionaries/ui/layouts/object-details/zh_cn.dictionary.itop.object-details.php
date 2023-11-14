@@ -8,5 +8,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => '删除当前对象',
 	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => '创建新对象 (与当前对象相同)',
 	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => '保存当前对象',
-	'UI:Layout:ObjectDetails:New:Modal:Title' => 'Creation of an object~~',
+	'UI:Layout:ObjectDetails:New:Modal:Title' => '创建对象',
 ]);
