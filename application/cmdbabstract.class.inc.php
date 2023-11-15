@@ -5281,6 +5281,11 @@ EOF
 				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrorsToDisplay)).'</p>',
 			);
 			if ($bResult && (!$bPreview)) {
+				// doing the check will load multiple times same objects :/
+				// but it shouldn't cost too much on execution time
+				// user can mitigate by selecting less extkeys/lnk to set and/or less objects to update 🤷‍♂️
+				$oObj->CheckChangedExtKeysValues();
+
 				$oObj->DBUpdate();
 			}
 		}

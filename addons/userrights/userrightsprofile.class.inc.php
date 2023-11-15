@@ -921,8 +921,9 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	}
 
 	/**
-	 * Find out which attribute is corresponding the the dimension 'owner org'
-	 * returns null if no such attribute has been found (no filtering should occur)
+	 * @param string $sClass
+	 * @return string|null Find out which attribute is corresponding the dimension 'owner org'
+	 *                   returns null if no such attribute has been found (no filtering should occur)
 	 */
 	public static function GetOwnerOrganizationAttCode($sClass)
 	{

@@ -2877,6 +2877,7 @@ HTML;
 	 *
 	 * @return bool if string null or empty
 	 * @since 3.0.2 N°5302
+	 * @since 2.7.10 N°6458 add method in the 2.7 branch
 	 */
 	public static function IsNullOrEmptyString(?string $sString): bool
 	{
@@ -2892,6 +2893,7 @@ HTML;
 	 *
 	 * @return bool if string is not null and not empty
 	 * @since 3.0.2 N°5302
+	 * @since 2.7.10 N°6458 add method in the 2.7 branch
 	 */
 	public static function IsNotNullOrEmptyString(?string $sString): bool
 	{

@@ -1430,8 +1430,10 @@ abstract class MetaModel
 	 *
 	 * @return AttributeDefinition[]
 	 * @throws \CoreException
+	 *
+	 * @see GetAttributesList for attcode list
 	 */
-	final static public function ListAttributeDefs($sClass)
+	final public static function ListAttributeDefs($sClass)
 	{
 		self::_check_subclass($sClass);
 		return self::$m_aAttribDefs[$sClass];
@@ -1444,8 +1446,10 @@ abstract class MetaModel
 	 * @param string[] $aDesiredAttTypes Array of AttributeDefinition classes to filter the list on
 	 * @param string|null $sListCode If provided, attributes will be limited to those in this zlist
 	 *
-	 * @return array
+	 * @return string[] list of attcodes
 	 * @throws \CoreException
+	 *
+	 * @see ListAttributeDefs to get AttributeDefinition array instead
 	 */
 	final public static function GetAttributesList(string $sClass, array $aDesiredAttTypes = [], ?string $sListCode = null)
 	{

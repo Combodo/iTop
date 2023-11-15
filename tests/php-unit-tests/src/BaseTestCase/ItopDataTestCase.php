@@ -709,7 +709,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 * @return array
 	 * @throws Exception
 	 */
-	protected function AddCIToTicket($oCI, $oTicket, $sImpactCode)
+	protected function AddCIToTicket($oCI, $oTicket, $sImpactCode = 'manual')
 	{
 		$oNewLink = new lnkFunctionalCIToTicket();
 		$oNewLink->Set('functionalci_id', $oCI->GetKey());
