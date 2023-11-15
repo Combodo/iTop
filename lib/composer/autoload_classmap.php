@@ -700,6 +700,7 @@ return array(
     'IntervalOqlExpression' => $baseDir . '/core/oql/oqlquery.class.inc.php',
     'Introspection' => $baseDir . '/core/introspection.class.inc.php',
     'InvalidConfigParamException' => $baseDir . '/application/exceptions/InvalidConfigParamException.php',
+    'InvalidExternalKeyValueException' => $baseDir . '/application/exceptions/InvalidExternalKeyValueException.php',
     'InvalidPasswordAttributeOneWayPassword' => $baseDir . '/application/exceptions/InvalidPasswordAttributeOneWayPassword.php',
     'IssueLog' => $baseDir . '/core/log.class.inc.php',
     'ItopCounter' => $baseDir . '/core/counter.class.inc.php',

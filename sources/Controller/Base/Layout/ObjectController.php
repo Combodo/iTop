@@ -18,8 +18,8 @@ use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectSummary;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Controller\AbstractController;
-use Combodo\iTop\Service\Router\Router;
 use Combodo\iTop\Service\Base\ObjectRepository;
+use Combodo\iTop\Service\Router\Router;
 use CoreCannotSaveObjectException;
 use DeleteException;
 use Dict;
@@ -428,6 +428,8 @@ JS;
 						'transaction_id' => $sTransactionId,
 					],
 				]);
+
+				$oObj->CheckChangedExtKeysValues();
 				$oObj->DBInsertNoReload();
 
 
@@ -631,6 +633,8 @@ JS;
 					if (!empty($aErrors)) {
 						throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 					}
+
+					$oObj->CheckChangedExtKeysValues();
 
 					// Transactions are now handled in DBUpdate
 					$oObj->SetContextSection('temporary_objects', [

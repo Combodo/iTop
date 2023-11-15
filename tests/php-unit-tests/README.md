@@ -59,6 +59,16 @@ Fix that in the XML configuration in the PHP section
 <ini name="memory_limit" value="512M"/>
 ```
 
+
+### Measure the time spent in a test
+
+Simply cut'n paste the following line at several places within the test function:
+
+```php
+if (isset($fStarted)) {echo 'L'.__LINE__.': '.round(microtime(true) - $fStarted, 3)."\n";} $fStarted = microtime(true);
+```
+
+
 ### Understand tests interactions
 
 With PHPStorm, select two tests, right click to get the context menu, then `run`.
@@ -119,4 +129,3 @@ This won't work because the comment MUST start with `/**` (two stars) to be cons
 
 Therefore, if the tests are isolated, then `setupBeforeClass` will be called as often as `setUp`.
 
-This has been proven with [`runClassInSeparateProcessTest.php`](experiments/runClassInSeparateProcessTest.php)
