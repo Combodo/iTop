@@ -2341,6 +2341,38 @@ class utils
 	}
 
 	/**
+	 * Helper around the native strlen() PHP method to test a string for null or empty value
+	 *
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return bool if string null or empty
+	 * @since 3.0.2 N°5302
+	 * @since 2.7.10 N°6458 add method in the 2.7 branch
+	 */
+	public static function IsNullOrEmptyString(?string $sString): bool
+	{
+		return $sString === null || strlen($sString) === 0;
+	}
+
+	/**
+	 * Helper around the native strlen() PHP method to test a string not null or empty value
+	 *
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return bool if string is not null and not empty
+	 * @since 3.0.2 N°5302
+	 * @since 2.7.10 N°6458 add method in the 2.7 branch
+	 */
+	public static function IsNotNullOrEmptyString(?string $sString): bool
+	{
+		return !static::IsNullOrEmptyString($sString);
+	}
+
+	/**
 	 * Check if iTop is in a development environment (VCS vs build number)
 	 *
 	 * @return bool

@@ -1213,8 +1213,10 @@ abstract class MetaModel
 	 *
 	 * @return AttributeDefinition[]
 	 * @throws \CoreException
+	 *
+	 * @see GetAttributesList for attcode list
 	 */
-	final static public function ListAttributeDefs($sClass)
+	final public static function ListAttributeDefs($sClass)
 	{
 		self::_check_subclass($sClass);
 		return self::$m_aAttribDefs[$sClass];
@@ -1223,8 +1225,10 @@ abstract class MetaModel
 	/**
 	 * @param string $sClass
 	 *
-	 * @return array
+	 * @return string[] list of attcodes
 	 * @throws \CoreException
+	 *
+	 * @see ListAttributeDefs to get AttributeDefinition array instead
 	 */
 	final public static function GetAttributesList($sClass)
 	{

@@ -817,6 +817,9 @@ class UserRights
 		}
 	}
 
+	/**
+	 * @return string connected {@see User} login field value, otherwise empty string
+	 */
 	public static function GetUser()
 	{
 		if (is_null(self::$m_oUser))
@@ -829,7 +832,9 @@ class UserRights
 		}
 	}
 
-	/** User */
+	/**
+	 * @return User|null
+	 */
 	public static function GetUserObject()
 	{
 		if (is_null(self::$m_oUser))
@@ -1029,7 +1034,7 @@ class UserRights
 
 	/**
 	 * @param string $sClass
-	 * @param int $iActionCode
+	 * @param int $iActionCode see UR_ACTION_* constants
 	 * @param DBObjectSet $oInstanceSet
 	 * @param User $oUser
 	 * @return int (UR_ALLOWED_YES|UR_ALLOWED_NO|UR_ALLOWED_DEPENDS)

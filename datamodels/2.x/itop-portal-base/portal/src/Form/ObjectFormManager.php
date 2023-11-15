@@ -31,6 +31,7 @@ use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\FormManager;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
+use Combodo\iTop\Portal\Helper\SecurityHelper;
 use CoreCannotSaveObjectException;
 use DBObject;
 use DBObjectSearch;
@@ -41,6 +42,7 @@ use DOMDocument;
 use DOMXPath;
 use Exception;
 use InlineImage;
+use InvalidExternalKeyValueException;
 use IssueLog;
 use MetaModel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -48,6 +50,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
 use utils;
+use const UR_ACTION_READ;
 
 /**
  * Description of ObjectFormManager
@@ -1135,8 +1138,11 @@ class ObjectFormManager extends FormManager
 			$bWasModified = $this->oObject->IsModified();
 			$bActivateTriggers = (!$bIsNew && $bWasModified);
 
+			/** @var SecurityHelper $oSecurityHelper */
+			$oSecurityHelper = $this->oContainer->get('security_helper');
+
 			// Forcing allowed writing on the object if necessary. This is used in some particular cases.
-			$bAllowWrite = $this->oContainer->get('security_helper')->IsActionAllowed($bIsNew ? UR_ACTION_CREATE : UR_ACTION_MODIFY, $sObjectClass, $this->oObject->GetKey());
+			$bAllowWrite = $oSecurityHelper->IsActionAllowed($bIsNew ? UR_ACTION_CREATE : UR_ACTION_MODIFY, $sObjectClass, $this->oObject->GetKey());
 			if ($bAllowWrite) {
 				$this->oObject->AllowWrite(true);
 			}
@@ -1144,12 +1150,15 @@ class ObjectFormManager extends FormManager
 			// Writing object to DB
 			try
 			{
+				$this->oObject->CheckChangedExtKeysValues(function ($sClass, $sId) use ($oSecurityHelper): bool {
+					return $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sClass, $sId);
+				});
 				$this->oObject->DBWrite();
-			}
-			catch (CoreCannotSaveObjectException $e) {
+			} catch (CoreCannotSaveObjectException $e) {
 				throw new Exception($e->getHtmlMessage());
-			}
-			catch (Exception $e) {
+			} catch (InvalidExternalKeyValueException $e) {
+				throw new Exception($e->getIssue());
+			} catch (Exception $e) {
 				if ($bIsNew) {
 					throw new Exception(Dict::S('Portal:Error:ObjectCannotBeCreated'));
 				}
