@@ -2513,6 +2513,83 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * Checks for extkey attributes values. This will throw exception on non-existing as well as non-accessible objects (silo, scopes).
+	 * That's why the test is done for all users including Administrators
+	 *
+	 * Note that due to perf issues, this isn't called directly by the ORM, but has to be called by consumers when possible.
+	 *
+	 * @param callable(string, string):bool|null $oIsObjectLoadableCallback Override to check if object is accessible.
+	 *                          Parameters are object class and key
+	 *                          Return value should be false if cannot access object, true otherwise
+	 * @return void
+	 *
+	 * @throws ArchivedObjectException
+	 * @throws CoreException if cannot get object attdef list
+	 * @throws CoreUnexpectedValue
+	 * @throws InvalidExternalKeyValueException
+	 * @throws MySQLException
+	 * @throws SecurityException if one extkey is pointing to an invalid value
+	 *
+	 * @link https://github.com/Combodo/iTop/security/advisories/GHSA-245j-66p9-pwmh
+	 * @since 2.7.10 3.0.4 3.1.1 3.2.0 N°6458
+	 *
+	 * @see \RestUtils::FindObjectFromKey for the same check in the REST endpoint
+	 */
+	final public function CheckChangedExtKeysValues(callable $oIsObjectLoadableCallback = null)
+	{
+		if (is_null($oIsObjectLoadableCallback)) {
+			$oIsObjectLoadableCallback = function ($sClass, $sId) {
+				$oRemoteObject = MetaModel::GetObject($sClass, $sId, false);
+				if (is_null($oRemoteObject)) {
+					return false;
+				}
+				return true;
+			};
+		}
+
+		$aChanges = $this->ListChanges();
+		$aAttCodesChanged = array_keys($aChanges);
+		foreach ($aAttCodesChanged as $sAttDefCode) {
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttDefCode);
+
+			if ($oAttDef instanceof AttributeLinkedSetIndirect) {
+				/** @var ormLinkSet $oOrmSet */
+				$oOrmSet = $this->Get($sAttDefCode);
+				while ($oLnk = $oOrmSet->Fetch()) {
+					$oLnk->CheckChangedExtKeysValues($oIsObjectLoadableCallback);
+				}
+				continue;
+			}
+
+			/** @noinspection PhpConditionCheckedByNextConditionInspection */
+			/** @noinspection NotOptimalIfConditionsInspection */
+			if (($oAttDef instanceof AttributeHierarchicalKey) || ($oAttDef instanceof AttributeExternalKey)) {
+				$sRemoteObjectClass = $oAttDef->GetTargetClass();
+				$sRemoteObjectKey = $this->Get($sAttDefCode);
+			} else if ($oAttDef instanceof AttributeObjectKey) {
+				$sRemoteObjectClassAttCode = $oAttDef->Get('class_attcode');
+				$sRemoteObjectClass = $this->Get($sRemoteObjectClassAttCode);
+				$sRemoteObjectKey = $this->Get($sAttDefCode);
+			} else {
+				continue;
+			}
+
+			/** @noinspection NotOptimalIfConditionsInspection */
+			/** @noinspection TypeUnsafeComparisonInspection */
+			if (utils::IsNullOrEmptyString($sRemoteObjectClass)
+				|| utils::IsNullOrEmptyString($sRemoteObjectKey)
+				|| ($sRemoteObjectKey == 0) // non-strict comparison as we might have bad surprises
+			) {
+				continue;
+			}
+
+			if (false === $oIsObjectLoadableCallback($sRemoteObjectClass, $sRemoteObjectKey)) {
+				throw new InvalidExternalKeyValueException($this, $sAttDefCode);
+			}
+		}
+	}
+
+	/**
 	 * Check if it is allowed to delete the existing object from the database
 	 *
 	 * an array of displayable error is added in {@see DBObject::$m_aDeleteIssues}
@@ -2655,11 +2732,11 @@ abstract class DBObject implements iDisplay
 	 * @api
 	 * @api-advanced
 	 *
-	 * @see  \DBObject::ListPreviousValuesForUpdatedAttributes() to get previous values anywhere in the CRUD stack
-	 * @see https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Asequence_crud iTop CRUD stack documentation
-	 * @return array attname => currentvalue List the attributes that have been changed using {@see DBObject::Set()}.
+	 * @return array attcode => currentvalue List the attributes that have been changed using {@see DBObject::Set()}.
 	 *         Reset during {@see DBObject::DBUpdate()}
 	 * @throws Exception
+	 * @see  \DBObject::ListPreviousValuesForUpdatedAttributes() to get previous values anywhere in the CRUD stack
+	 * @see https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Asequence_crud iTop CRUD stack documentation
 	 * @uses m_aCurrValues
 	 */
 	public function ListChanges()
@@ -3098,6 +3175,8 @@ abstract class DBObject implements iDisplay
 	 * @throws \CoreWarning
 	 * @throws \MySQLException
 	 * @throws \OQLException
+	 *
+	 * @see DBWrite
 	 */
 	public function DBInsertNoReload()
 	{
@@ -3326,13 +3405,13 @@ abstract class DBObject implements iDisplay
 	 * Update an object in DB
 	 *
 	 * @api
-	 * @see DBObject::DBWrite()
-	 *
 	 * @return int object key
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreCannotSaveObjectException if CheckToWrite() returns issues
 	 * @throws \Exception
+	 *
+	 * @see DBObject::DBWrite()
 	 */
 	public function DBUpdate()
 	{
@@ -3784,13 +3863,18 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Make the current changes persistent - clever wrapper for Insert or Update
-     *
-     * @api
+	 *
+	 * @api
 	 *
 	 * @return int
-     *
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
+	 *
+	 * @throws ArchivedObjectException
+	 * @throws CoreCannotSaveObjectException
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 * @throws CoreWarning
+	 * @throws MySQLException
+	 * @throws OQLException
 	 */
 	public function DBWrite()
 	{

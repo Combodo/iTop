@@ -32,6 +32,7 @@ use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\FormManager;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper;
+use Combodo\iTop\Portal\Helper\SecurityHelper;
 use CoreCannotSaveObjectException;
 use DBObject;
 use DBObjectSearch;
@@ -43,6 +44,7 @@ use DOMXPath;
 use Exception;
 use ExceptionLog;
 use InlineImage;
+use InvalidExternalKeyValueException;
 use IssueLog;
 use LogChannels;
 use MetaModel;
@@ -50,6 +52,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
 use utils;
+use const UR_ACTION_READ;
 
 /**
  * Description of ObjectFormManager
@@ -1133,6 +1136,9 @@ class ObjectFormManager extends FormManager
 			$bWasModified = $this->oObject->IsModified();
 			$bActivateTriggers = (!$bIsNew && $bWasModified);
 
+			/** @var SecurityHelper $oSecurityHelper */
+			$oSecurityHelper = $this->oContainer->get('security_helper');
+
 			// Forcing allowed writing on the object if necessary. This is used in some particular cases.
 			$bAllowWrite = $this->oFormHandlerHelper->getSecurityHelper()->IsActionAllowed($bIsNew ? UR_ACTION_CREATE : UR_ACTION_MODIFY, $sObjectClass, $this->oObject->GetKey());
 			if ($bAllowWrite) {
@@ -1142,12 +1148,15 @@ class ObjectFormManager extends FormManager
 			// Writing object to DB
 			try
 			{
+				$this->oObject->CheckChangedExtKeysValues(function ($sClass, $sId) use ($oSecurityHelper): bool {
+					return $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sClass, $sId);
+				});
 				$this->oObject->DBWrite();
-			}
-			catch (CoreCannotSaveObjectException $e) {
+			} catch (CoreCannotSaveObjectException $e) {
 				throw new Exception($e->getHtmlMessage());
-			}
-			catch (Exception $e) {
+			} catch (InvalidExternalKeyValueException $e) {
+				throw new Exception($e->getIssue());
+			} catch (Exception $e) {
 				$aContext = [
 					'origin'    => __CLASS__.'::'.__METHOD__,
 					'obj_class' => get_class($this->oObject),

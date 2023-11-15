@@ -1064,6 +1064,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'IntervalOqlExpression' => __DIR__ . '/../..' . '/core/oql/oqlquery.class.inc.php',
         'Introspection' => __DIR__ . '/../..' . '/core/introspection.class.inc.php',
         'InvalidConfigParamException' => __DIR__ . '/../..' . '/application/exceptions/InvalidConfigParamException.php',
+        'InvalidExternalKeyValueException' => __DIR__ . '/../..' . '/application/exceptions/InvalidExternalKeyValueException.php',
         'InvalidPasswordAttributeOneWayPassword' => __DIR__ . '/../..' . '/application/exceptions/InvalidPasswordAttributeOneWayPassword.php',
         'IssueLog' => __DIR__ . '/../..' . '/core/log.class.inc.php',
         'ItopCounter' => __DIR__ . '/../..' . '/core/counter.class.inc.php',
