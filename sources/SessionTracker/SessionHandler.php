@@ -12,7 +12,14 @@ use UserRights;
 use utils;
 
 /**
- * Class SessionHandler
+ * Class SessionHandler:
+ * defaut PHP SessionHandler already relies on files that are accessible by iTop.
+ * this new iTop SessionHandler creates additional session files that are located under iTop folders.
+ * these new session files are meant to monitor the application and contain additional data:
+ * - current user id
+ * - context
+ * - login_mode
+ * - session creation timestamp
  *
  * @author Olivier Dain <olivier.dain@combodo.com>
  * @package Combodo\iTop\SessionTracker
