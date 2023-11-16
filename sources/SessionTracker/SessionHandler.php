@@ -6,7 +6,6 @@ use Combodo\iTop\Application\Helper\Session;
 use ContextTag;
 use Exception;
 use IssueLog;
-use MetaModel;
 use ReturnTypeWillChange;
 use UserRights;
 use utils;
@@ -107,7 +106,7 @@ class SessionHandler extends \SessionHandler
 
 	public static function session_set_save_handler() : void
 	{
-		if (false === MetaModel::GetConfig()->Get('sessions_tracking_enabled')){
+		if (false === utils::GetConfig()->Get('sessions_tracking_enabled')){
 			//feature disabled
 			return;
 		}
@@ -115,7 +114,7 @@ class SessionHandler extends \SessionHandler
 		$sessionhandler = new SessionHandler();
 		session_set_save_handler($sessionhandler, true);
 
-		$iThreshold = MetaModel::GetConfig()->Get('sessions_tracking_gc_threshold');
+		$iThreshold = utils::GetConfig()->Get('sessions_tracking_gc_threshold');
 		$iThreshold = min(100, $iThreshold);
 		$iThreshold = max(1, $iThreshold);
 		if ((100 != $iThreshold) && (rand(1, 100) > $iThreshold)) {
@@ -123,7 +122,7 @@ class SessionHandler extends \SessionHandler
 		}
 
 		$iMaxLifetime = ini_get('session.gc_maxlifetime') ?? 60;
-		$iTimeLimit = MetaModel::GetConfig()->Get('sessions_tracking_timelimit');
+		$iTimeLimit = utils::GetConfig()->Get('sessions_tracking_timelimit');
 		$sessionhandler->gc_with_time_limit($iMaxLifetime, $iTimeLimit);
 	}
 
