@@ -191,6 +191,8 @@ class QueryTest extends ItopDataTestCase
 	protected function tearDown(): void
 	{
 		$this->oUser->DBDelete();
+
+		parent::tearDown();
 	}
 
 }
