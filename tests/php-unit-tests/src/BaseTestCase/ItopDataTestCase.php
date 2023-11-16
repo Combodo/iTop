@@ -37,6 +37,7 @@ use Ticket;
 use URP_UserProfile;
 use User;
 use UserRequest;
+use UserRights;
 use utils;
 use VirtualHost;
 use VirtualMachine;
@@ -141,6 +142,8 @@ abstract class ItopDataTestCase extends ItopTestCase
 
 		// Leave the place clean
 		\UserRights::Logoff();
+		$this->SetNonPublicStaticProperty(UserRights::class, 'm_aCacheUsers', []);
+		$this->ResetMetaModelQueyCacheGetObject();
 
 		foreach ($this->aEventListeners as $sListenerId) {
 			EventService::UnRegisterListener($sListenerId);
@@ -149,6 +152,13 @@ abstract class ItopDataTestCase extends ItopTestCase
 		CMDBObject::SetCurrentChange(null);
 
 		parent::tearDown();
+	}
+
+	/**
+	 * Helper to reset the metamodel cache : for a class and a key it will contain the SQL query, that could include silo filter
+	 */
+	protected function ResetMetaModelQueyCacheGetObject() {
+		$this->SetNonPublicStaticProperty(MetaModel::class, 'aQueryCacheGetObject', []);
 	}
 
 	/**
