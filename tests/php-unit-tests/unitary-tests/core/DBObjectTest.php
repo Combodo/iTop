@@ -520,14 +520,6 @@ class DBObjectTest extends ItopDataTestCase
 		}
 	}
 
-	/**
-	 * Helper to reset the metamodel cache
-	 * We might need to create something generic and add it to {@see UserRights::Logoff()} ?
-	 */
-	private function ResetMetaModelQueyCacheGetObject() {
-		$this->SetNonPublicStaticProperty(MetaModel::class, 'aQueryCacheGetObject', []);
-	}
-
 	private function CreateDemoOrgUser(Organization $oDemoOrg, string $sProfileId): User
 	{
 		utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');
