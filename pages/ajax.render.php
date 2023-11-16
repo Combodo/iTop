@@ -1864,36 +1864,6 @@ EOF
 						}
 					}
 				}
-				//The chart is complete. Now we need to control which objects are allowed to the current user.
-				if (!UserRights::IsAdministrator()) {
-					//First we get all the objects presents in chart in $aArrayTest
-					$oIterator = new RelationTypeIterator($oRelGraph, 'Node');
-					$aArrayTest = [];
-					foreach ($oIterator as $oNode) {
-						$oObj = $oNode->GetProperty('object');
-						if ($oObj) {
-							$aArrayTest[get_class($oObj)][$oObj->GetKey()] = $oObj->GetKey();
-						}
-					}
-					//Then for each class, we made a request to control access rights
-					// visible objects are removed from $aArrayTest
-					foreach ($aArrayTest as $sClass => $aKeys) {
-						$sOQL = "SELECT ".$sClass.' WHERE id IN ('.implode(',', $aKeys).')';
-						$oSearch = DBObjectSearch::FromOQL($sOQL);
-						$oSet = new CMDBObjectSet($oSearch);
-						$oSet->OptimizeColumnLoad([]);
-						while ($oObj = $oSet->Fetch()) {
-							unset($aArrayTest[$sClass][$oObj->GetKey()]);
-						}
-					}
-					//then removes from the graph all objects still present in $aArrayTest
-					foreach ($oIterator as $oNode) {
-						$oObj = $oNode->GetProperty('object');
-						if ($oObj && isset($aArrayTest[get_class($oObj)]) && in_array($oObj->GetKey(), $aArrayTest[get_class($oObj)])) {
-							$oRelGraph->FilterNode($oNode);
-						}
-					}
-				}
 
 				$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
 				$oGraph->InitFromGraphviz();
