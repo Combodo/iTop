@@ -65,7 +65,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 * @see tearDown
 	 * @see ResetMetaModelQueyCacheGetObject
 	 */
-	private $bIsUsingSilo = false;
+	protected $bIsUsingSilo = false;
 
 	/**
 	 * @var string Default environment to use for test cases
