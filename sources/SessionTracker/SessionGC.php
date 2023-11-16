@@ -24,7 +24,7 @@ class SessionGC implements \iBackgroundProcess
 	 */
 	public function Process($iTimeLimit)
 	{
-		$iMaxLifetime = ini_get('session.gc_maxlifetime') ?? 60;
+		$iMaxLifetime = ini_get('session.gc_maxlifetime') ?? 1440;
 		$oSessionHandler = new SessionHandler();
 		$iProcessed = $oSessionHandler->gc_with_time_limit($iMaxLifetime, $iTimeLimit);
 		return "processed $iProcessed tasks";

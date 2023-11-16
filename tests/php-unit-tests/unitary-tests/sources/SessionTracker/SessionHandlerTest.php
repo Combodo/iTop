@@ -9,12 +9,13 @@ use ContextTag;
 
 class SessionHandlerTest extends ItopDataTestCase
 {
-	private $sFile ;
+	private $sFiles ;
 	private $oTag ;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
+		$this->sFiles=[];
 		$this->oTag = new ContextTag(ContextTag::TAG_REST);
 	}
 
@@ -23,8 +24,10 @@ class SessionHandlerTest extends ItopDataTestCase
 		parent::tearDown();
 		$this->oTag = null;
 
-		if (! is_null($this->sFile) && is_file($this->sFile)){
-			@unlink($this->sFile);
+		foreach ($this->sFiles as $sFile){
+			if (is_file($sFile)){
+				@unlink($sFile);
+			}
 		}
 	}
 
@@ -43,7 +46,7 @@ class SessionHandlerTest extends ItopDataTestCase
 	public function testGenerateSessionContentNoUserLoggedIn(){
 		$oSessionHandler = new SessionHandler();
 		$sContent = $this->GenerateSessionContent($oSessionHandler, null);
-		$this->assertNull($sContent);
+		$this->assertNull($sContent, "session content should be null when no authentification");
 	}
 
 	public function GenerateSessionContentCorruptedPreviousFileContentProvider() {
@@ -57,24 +60,24 @@ class SessionHandlerTest extends ItopDataTestCase
 	/**
 	 * @dataProvider GenerateSessionContentCorruptedPreviousFileContentProvider
 	 */
-	public function testGenerateSessionContentCorruptedPreviousFileContent(?string $sPreviousFileVersionContent){
+	public function testGenerateSessionContent_SessionFileRepairment(?string $sFileContent){
 		$sUserId = $this->CreateUserAndLogIn();
 
 		$oSessionHandler = new SessionHandler();
 		Session::Set('login_mode', 'toto');
 
-		$sContent = $this->GenerateSessionContent($oSessionHandler, $sPreviousFileVersionContent);
+		$sContent = $this->GenerateSessionContent($oSessionHandler, $sFileContent);
 
-		$this->assertNotNull($sContent);
+		$this->assertNotNull($sContent, "authenticated session: not empty file");
 		$aJson = json_decode($sContent, true);
 		$this->assertNotEquals(false, $aJson, $sContent);
 		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', $sContent);
 		$this->assertEquals(ContextTag::TAG_REST, $aJson['context'] ?? '', $sContent);
-		$this->assertNotEquals('', $aJson['creation_time'] ?? '', $sContent);
-		$this->assertEquals('toto', $aJson['login_mode'] ?? '', $sContent);
+		$this->assertNotEquals('', $aJson['creation_time'] ?? '', "not empty timestamps: $sContent");
+		$this->assertEquals('toto', $aJson['login_mode'] ?? '', "proper login_mode tracked: $sContent");
 	}
 
-	public function testGenerateSessionContentNoSessionContextChange(){
+	public function testGenerateSessionContent(){
 		$sUserId = $this->CreateUserAndLogIn();
 
 		$oSessionHandler = new SessionHandler();
@@ -86,46 +89,27 @@ class SessionHandlerTest extends ItopDataTestCase
 		$this->assertNotNull($sFirstContent);
 		$aJson = json_decode($sFirstContent, true);
 		$this->assertNotEquals(false, $aJson, $sFirstContent);
-		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', $sFirstContent);
-		$this->assertEquals(ContextTag::TAG_REST, $aJson['context'] ?? '', $sFirstContent);
-		$this->assertNotEquals('', $aJson['creation_time'] ?? '', $sFirstContent);
-		$this->assertEquals('toto', $aJson['login_mode'] ?? '', $sFirstContent);
-
-		$sNewContent = $this->GenerateSessionContent($oSessionHandler, $sFirstContent);
-		$this->assertEquals($sFirstContent, $sNewContent, $sNewContent);
-	}
-
-	public function testGenerateSessionContentWithSessionContextChange(){
-		$sUserId = $this->CreateUserAndLogIn();
-
-		$oSessionHandler = new SessionHandler();
-		Session::Set('login_mode', 'toto');
-
-		//first time
-		$sFirstContent = $this->GenerateSessionContent($oSessionHandler, null);
-
-		$this->assertNotNull($sFirstContent);
-		$aJson = json_decode($sFirstContent, true);
-		$this->assertNotEquals(false, $aJson, $sFirstContent);
-		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', $sFirstContent);
+		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', "check user_id is tracked: $sFirstContent");
 		$this->assertEquals(ContextTag::TAG_REST, $aJson['context'] ?? '', $sFirstContent);
 		$sCreationTime = $aJson['creation_time'] ?? '';
-		$this->assertNotEquals('', $sCreationTime, $sFirstContent);
-		$this->assertEquals('toto', $aJson['login_mode'] ?? '', $sFirstContent);
+		$this->assertNotEquals('', $sCreationTime, "not empty timestamps: $sFirstContent");
+		$this->assertEquals('toto', $aJson['login_mode'] ?? '', "proper login_mode tracked: $sFirstContent");
 
+		//switch context + change user id via impersonation
+		//check it is still tracked in session files
+		//$oOtherUserId = $this->CreateUserAndLogIn();
 
+		$oOtherUser = $this->CreateContactlessUser("admin" . uniqid(), 1, "1234@Abcdefg");
+		$this->assertTrue(\UserRights::Impersonate($oOtherUser->Get('login')), "is impersonated");
 		$oTag2 = new ContextTag(ContextTag::TAG_SYNCHRO);
-		var_dump(ContextTag::GetStack());
 		$sNewContent = $this->GenerateSessionContent($oSessionHandler, $sFirstContent);
 		$this->assertNotNull($sNewContent);
-		$this->assertNotEquals($sNewContent, $sFirstContent, $sNewContent);
-
 		$aJson = json_decode($sNewContent, true);
 		$this->assertNotEquals(false, $aJson, $sFirstContent);
-		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', $sFirstContent);
-		$this->assertEquals(ContextTag::TAG_REST . '|' . ContextTag::TAG_SYNCHRO, $aJson['context'] ?? '', $sFirstContent);
-		$this->assertEquals($sCreationTime, $aJson['creation_time'] ?? '', $sFirstContent);
-		$this->assertEquals('toto', $aJson['login_mode'] ?? '', $sFirstContent);
+		$this->assertEquals(ContextTag::TAG_REST . '|' . ContextTag::TAG_SYNCHRO, $aJson['context'] ?? '', "check context changes are tracked: $sFirstContent");
+		$this->assertEquals($sCreationTime, $aJson['creation_time'] ?? '', "data have changed but creation_time should be preserved: $sFirstContent");
+		$this->assertEquals('toto', $aJson['login_mode'] ?? '', "login_mode preserved: $sFirstContent");
+		$this->assertEquals($oOtherUser->GetKey(), $aJson['user_id'] ?? '', "check impersonation is tracked in session: $sFirstContent");
 	}
 
 	private function touchSessionFile(SessionHandler $oSessionHandler, $session_id) : ?string {
@@ -137,9 +121,10 @@ class SessionHandlerTest extends ItopDataTestCase
 	public function testTouchSessionFileNoUserLoggedIn(){
 		$oSessionHandler = new SessionHandler();
 		$session_id = uniqid();
-		$this->sFile = $this->touchSessionFile($oSessionHandler, $session_id);
-		$this->assertEquals(true, is_file($this->sFile), $this->sFile);
-		$sContent = file_get_contents($this->sFile);
+		$sFile = $this->touchSessionFile($oSessionHandler, $session_id);
+		$this->sFiles[]=$sFile;
+		$this->assertEquals(true, is_file($sFile), $sFile);
+		$sContent = file_get_contents($sFile);
 		$this->assertEquals(null, $sContent);
 	}
 
@@ -149,52 +134,24 @@ class SessionHandlerTest extends ItopDataTestCase
 
 		$oSessionHandler = new SessionHandler();
 		$session_id = uniqid();
-		$this->sFile = $this->touchSessionFile($oSessionHandler, $session_id);
-		$this->assertEquals(true, is_file($this->sFile), $this->sFile);
-		$sContent = file_get_contents($this->sFile);
+		$sFile = $this->touchSessionFile($oSessionHandler, $session_id);
+		$this->sFiles[]=$sFile;
+		$this->assertEquals(true, is_file($sFile), $sFile);
+		$sFirstContent = file_get_contents($sFile);
 
-		$this->assertNotNull($sContent);
-		$aJson = json_decode($sContent, true);
-		$this->assertNotEquals(false, $aJson, $sContent);
-		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', $sContent);
-		$this->assertEquals(ContextTag::TAG_REST, $aJson['context'] ?? '', $sContent);
+
+		$this->assertNotNull($sFirstContent);
+		$aJson = json_decode($sFirstContent, true);
+		$this->assertNotEquals(false, $aJson, $sFirstContent);
+		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', "check user_id is tracked: $sFirstContent");
+		$this->assertEquals(ContextTag::TAG_REST, $aJson['context'] ?? '', $sFirstContent);
 		$sCreationTime = $aJson['creation_time'] ?? '';
-		$this->assertNotEquals('', $sCreationTime, $sContent);
-		$this->assertEquals('toto', $aJson['login_mode'] ?? '', $sContent);
+		$this->assertNotEquals('', $sCreationTime, "not empty timestamps: $sFirstContent");
+		$this->assertEquals('toto', $aJson['login_mode'] ?? '', "proper login_mode tracked: $sFirstContent");
 
 		$this->touchSessionFile($oSessionHandler, $session_id);
-		$sNewContent = file_get_contents($this->sFile);
-		$this->assertEquals($sContent, $sNewContent, $sNewContent);
-	}
-
-	public function testTouchSessionFile_UserLoggedInWithImpersonation(){
-		$sUserId = $this->CreateUserAndLogIn();
-		Session::Set('login_mode', 'toto');
-
-		$oSessionHandler = new SessionHandler();
-		$session_id = uniqid();
-		$this->sFile = $this->touchSessionFile($oSessionHandler, $session_id);
-		$this->assertEquals(true, is_file($this->sFile), $this->sFile);
-		$sContent = file_get_contents($this->sFile);
-
-		$this->assertNotNull($sContent);
-		$aJson = json_decode($sContent, true);
-		$this->assertNotEquals(false, $aJson, $sContent);
-		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', $sContent);
-		$this->assertEquals(ContextTag::TAG_REST, $aJson['context'] ?? '', $sContent);
-		$sCreationTime = $aJson['creation_time'] ?? '';
-		$this->assertNotEquals('', $sCreationTime, $sContent);
-		$this->assertEquals('toto', $aJson['login_mode'] ?? '', $sContent);
-
-
-		$oOtherUser = $this->CreateContactlessUser("admin" . uniqid(), 1, "1234@Abcdefg");
-		\UserRights::Impersonate($oOtherUser->Get('login'));
-		$this->touchSessionFile($oSessionHandler, $session_id);
-		$sNewContent = file_get_contents($this->sFile);
-		$this->assertNotEquals($sContent, $sNewContent, $sNewContent);
-		$aJson = json_decode($sNewContent, true);
-		$this->assertNotEquals(false, $aJson, $sNewContent);
-		$this->assertEquals($oOtherUser->GetKey(), $aJson['user_id'] ?? '', $sNewContent);
+		$sNewContent = file_get_contents($sFile);
+		$this->assertEquals($sFirstContent, $sNewContent, $sNewContent);
 	}
 
 	public function TouchSessionFile_empty_sessionidProvider(){
@@ -212,92 +169,60 @@ class SessionHandlerTest extends ItopDataTestCase
 		Session::Set('login_mode', 'toto');
 
 		$oSessionHandler = new SessionHandler();
-		$this->sFile = $this->touchSessionFile($oSessionHandler, $session_id);
-		$this->assertNull($this->sFile);
+		$sFile = $this->touchSessionFile($oSessionHandler, $session_id);
+		$this->sFiles[]=$sFile;
+		$this->assertNull($sFile);
 	}
 
 	private function GetFilePath(SessionHandler $oSessionHandler, $session_id) : string {
 		return $this->InvokeNonPublicMethod(SessionHandler::class, "get_file_path", $oSessionHandler, $aArgs = [$session_id]);
 	}
 
-	public function GgcWithTimeLimit_FileWithData(){
+	public function GgcWithTimeLimitProvider(){
 		return [
-			'no removal / without time limit' => [
+			'no cleanup time limit' => [
 				'iTimeLimit' => -1,
-				'max_lifetime' => 1440,
-				'iExpectedProcessed' => 0
-			],
-			'one removal / with time limit' => [
-				'iTimeLimit' => time() - 1,
-				'max_lifetime' => -1,
-				'iExpectedProcessed' => 1
-			],
-			'all removed / with time limit' => [
-				'iTimeLimit' => -1,
-				'max_lifetime' => -1,
 				'iExpectedProcessed' => 2
+			],
+			'cleanup time limit in the pass => first file removed only' => [
+				'iTimeLimit' => time() - 1,
+				'iExpectedProcessed' => 1
 			],
 		];
 	}
 
 	/**
-	 * @dataProvider GgcWithTimeLimit_FileWithData
+	 * @dataProvider GgcWithTimeLimitProvider
 	 */
-	public function testGgcWithTimeLimit_FileWithData($iTimeLimit, $max_lifetime, $iExpectedProcessed) {
+	public function testGgcWithTimeLimit($iTimeLimit, $iExpectedProcessed) {
 		$oSessionHandler = new SessionHandler();
-		//remove all
+		//remove all first
 		$oSessionHandler->gc_with_time_limit(-1);
 		$this->assertEquals([], $oSessionHandler->list_session_files());
 
-		for($i=0; $i<=1; $i++) {
-			$this->sFile = $this->GetFilePath($oSessionHandler, uniqid());
-			file_put_contents($this->sFile, "fakedata");
+		$max_lifetime = 1440;
+		$iNbExpiredFiles = 2;
+		$iNbFiles = 5;
+		$iExpiredTimeStamp = time() - $max_lifetime - 1;
+		for($i=0; $i<$iNbFiles; $i++) {
+			$sFile = $this->GetFilePath($oSessionHandler, uniqid());
+			$this->sFiles[]=$sFile;
+			file_put_contents($sFile, "fakedata");
+
+			if ($iNbExpiredFiles >0){
+				$iNbExpiredFiles--;
+				touch($sFile, $iExpiredTimeStamp);
+			}
 		}
 
 		$aFoundSessionFiles = $oSessionHandler->list_session_files();
+		$this->assertEquals(5, sizeof($aFoundSessionFiles));
 		foreach ($aFoundSessionFiles as $sFile){
 			$this->assertTrue(is_file($sFile));
 		}
 
 		$iProcessed = $oSessionHandler->gc_with_time_limit($max_lifetime, $iTimeLimit);
 		$this->assertEquals($iExpectedProcessed, $iProcessed);
-		$this->assertEquals(2 - $iExpectedProcessed, sizeof($oSessionHandler->list_session_files()));
-	}
-
-	public function GgcWithTimeLimit_EmptyFile(){
-		return [
-			'no removal / without time limit' => [
-				'iTimeLimit' => -1,
-				'iExpectedProcessed' => 2
-			],
-			'one removal / with time limit' => [
-				'iTimeLimit' => time() - 1,
-				'iExpectedProcessed' => 1
-			],
-		];
-	}
-
-	/**
-	 * @dataProvider GgcWithTimeLimit_EmptyFile
-	 */
-	public function testGgcWithTimeLimit_EmptyFile($iTimeLimit, $iExpectedProcessed) {
-		$oSessionHandler = new SessionHandler();
-		//remove all
-		$oSessionHandler->gc_with_time_limit(-1);
-		$this->assertEquals([], $oSessionHandler->list_session_files());
-
-		for($i=0; $i<=1; $i++) {
-			$this->sFile = $this->GetFilePath($oSessionHandler, uniqid());
-			touch($this->sFile);
-		}
-
-		$aFoundSessionFiles = $oSessionHandler->list_session_files();
-		foreach ($aFoundSessionFiles as $sFile){
-			$this->assertTrue(is_file($sFile));
-		}
-
-		$iProcessed = $oSessionHandler->gc_with_time_limit(1440, $iTimeLimit);
-		$this->assertEquals($iExpectedProcessed, $iProcessed);
-		$this->assertEquals(2 - $iExpectedProcessed, sizeof($oSessionHandler->list_session_files()));
+		$this->assertEquals($iNbFiles - $iExpectedProcessed, sizeof($oSessionHandler->list_session_files()));
 	}
 }

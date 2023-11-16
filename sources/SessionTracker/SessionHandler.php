@@ -130,7 +130,7 @@ class SessionHandler extends \SessionHandler
 	{
 		try {
 			$sUserId = UserRights::GetUserId();
-			if (is_null($sUserId)) {
+			if (null === $sUserId) {
 				return null;
 			}
 
@@ -214,13 +214,13 @@ class SessionHandler extends \SessionHandler
 		$now = time();
 
 		foreach ($aFiles as $sFile) {
-			if (0 === filesize($sFile) // Unauthentified sessions: immediate cleanup
-				|| $now - filemtime($sFile) > $max_lifetime) {
+			if ($now - filemtime($sFile) > $max_lifetime) {
 				@unlink($sFile);
 				$iProcessed++;
 			}
 
 			if (-1 !== $iTimeLimit && time() > $iTimeLimit) {
+				//cleanup processing has to stop after $iTimeLimit
 				break;
 			}
 		}
