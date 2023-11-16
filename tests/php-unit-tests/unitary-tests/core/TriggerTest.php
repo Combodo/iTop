@@ -92,7 +92,7 @@ class TriggerTest extends ItopDataTestCase
 		IssueLog::Enable($sTestLogPath);
 
 		try {
-			$oPerson1 = MetaModel::GetObject(Person::class, 1, true);
+			$oPerson1 = MetaModel::GetObjectByName(Person::class, 'Claude Monet');
 			$sExceptionMessage = 'My test exception message';
 			$oException = new Exception($sExceptionMessage);
 
