@@ -460,6 +460,8 @@ class RelationGraph extends SimpleGraph
 					try
 					{
 						$oFlt = static::MakeSearch($sQuery);
+						//no filter to find all impacts
+						$oFlt->AllowAllData(true);
 						$oObjSet = new DBObjectSet($oFlt, array(), $oObject->ToArgsForQuery());
 						$oRelatedObj = $oObjSet->Fetch();
 					}
@@ -474,27 +476,24 @@ class RelationGraph extends SimpleGraph
 						{
 							set_time_limit(intval($iLoopTimeLimit));
 
-							$sObjectRef = 	RelationObjectNode::MakeId($oRelatedObj);
-							$oRelatedNode = $this->GetNode($sObjectRef);
-							if (is_null($oRelatedNode))
-							{
-								$oRelatedNode = new RelationObjectNode($this, $oRelatedObj);
-							}
-							$oSourceNode = $bDown ? $oObjectNode : $oRelatedNode;
-							$oSinkNode = $bDown ? $oRelatedNode : $oObjectNode;
+								$sObjectRef = RelationObjectNode::MakeId($oRelatedObj);
+								$oRelatedNode = $this->GetNode($sObjectRef);
+								if (is_null($oRelatedNode)) {
+									$oRelatedNode = new RelationObjectNode($this, $oRelatedObj);
+								}
+								$oSourceNode = $bDown ? $oObjectNode : $oRelatedNode;
+								$oSinkNode = $bDown ? $oRelatedNode : $oObjectNode;
 							if ($bEnableRedundancy)
 							{
-								$oRedundancyNode = $this->ComputeRedundancy($sRelCode, $aQueryInfo, $oSourceNode, $oSinkNode);
-							}
-							else
-							{
-								$oRedundancyNode = null;
-							}
-							if (!$oRedundancyNode)
-							{
-								// Direct link (otherwise handled by ComputeRedundancy)
-								new RelationEdge($this, $oSourceNode, $oSinkNode);
-							}
+									$oRedundancyNode = $this->ComputeRedundancy($sRelCode, $aQueryInfo, $oSourceNode, $oSinkNode);
+								} else {
+									$oRedundancyNode = null;
+								}
+								if (!$oRedundancyNode) {
+									// Direct link (otherwise handled by ComputeRedundancy)
+									new RelationEdge($this, $oSourceNode, $oSinkNode);
+								}
+
 							// Recurse
 							$this->AddRelatedObjects($sRelCode, $bDown, $oRelatedNode, $iMaxDepth - 1, $bEnableRedundancy);
 						}
@@ -538,6 +537,7 @@ class RelationGraph extends SimpleGraph
 				try
 				{
 					$oFlt = static::MakeSearch($sQuery);
+					$oFlt->AllowAllData();
 					$oObjSet = new DBObjectSet($oFlt, array(), $oObject->ToArgsForQuery());
 					$iCount = $oObjSet->Count();
 				}
@@ -553,13 +553,12 @@ class RelationGraph extends SimpleGraph
 	
 				while ($oUpperObj = $oObjSet->Fetch())
 				{
-					$sObjectRef = 	RelationObjectNode::MakeId($oUpperObj);
-					$oUpperNode = $this->GetNode($sObjectRef);
-					if (is_null($oUpperNode))
-					{	
-						$oUpperNode = new RelationObjectNode($this, $oUpperObj);
-					}
-					new RelationEdge($this, $oUpperNode, $oRedundancyNode);
+						$sObjectRef = RelationObjectNode::MakeId($oUpperObj);
+						$oUpperNode = $this->GetNode($sObjectRef);
+						if (is_null($oUpperNode)) {
+							$oUpperNode = new RelationObjectNode($this, $oUpperObj);
+						}
+						new RelationEdge($this, $oUpperNode, $oRedundancyNode);
 				}
 			}
 		}
