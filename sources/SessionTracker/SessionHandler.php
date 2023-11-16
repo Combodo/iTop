@@ -106,7 +106,7 @@ class SessionHandler extends \SessionHandler
 
 	public static function session_set_save_handler() : void
 	{
-		if (false === utils::GetConfig()->Get('sessions_tracking_enabled')){
+		if (false === utils::GetConfig()->Get('sessions_tracking.enabled')){
 			//feature disabled
 			return;
 		}
@@ -114,7 +114,7 @@ class SessionHandler extends \SessionHandler
 		$sessionhandler = new SessionHandler();
 		session_set_save_handler($sessionhandler, true);
 
-		$iThreshold = utils::GetConfig()->Get('sessions_tracking_gc_threshold');
+		$iThreshold = utils::GetConfig()->Get('sessions_tracking.gc_threshold');
 		$iThreshold = min(100, $iThreshold);
 		$iThreshold = max(1, $iThreshold);
 		if ((100 != $iThreshold) && (rand(1, 100) > $iThreshold)) {
@@ -122,8 +122,8 @@ class SessionHandler extends \SessionHandler
 		}
 
 		$iMaxLifetime = ini_get('session.gc_maxlifetime') ?? 60;
-		$iTimeLimit = utils::GetConfig()->Get('sessions_tracking_timelimit');
-		$sessionhandler->gc_with_time_limit($iMaxLifetime, $iTimeLimit);
+		$iMaxDurationInSeconds = utils::GetConfig()->Get('sessions_tracking.gc_duration_in_seconds');
+		$sessionhandler->gc_with_time_limit($iMaxLifetime, time() + $iMaxDurationInSeconds);
 	}
 
 	private function generate_session_content(?string $sPreviousFileVersionContent) : ?string

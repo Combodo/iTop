@@ -1193,26 +1193,26 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'sessions_tracking_enabled' => [
+		'sessions_tracking.enabled' => [
 			'type' => 'bool',
-			'description' => 'Whether or not the whole mechanism to track active sessions is enabled.',
+			'description' => 'Whether or not the whole mechanism to track active sessions is enabled. See PHP session.gc_maxlifetime setting to configure session expiration.',
 			'default' => false,
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'sessions_tracking_gc_threshold' => [
+		'sessions_tracking.gc_threshold' => [
 			'type' => 'integer',
-			'description'         => 'probability in percent for the garbage collector to be triggered (100 mean always)',
-			'default'             => 10,
+			'description'         => 'fallback in case cron is not active: probability in percent that session files are cleanup during any itop request (100 means always)',
+			'default'             => 1,
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'sessions_tracking_timelimit' => [
+		'sessions_tracking.gc_duration_in_seconds' => [
 			'type' => 'integer',
-			'description' => 'When GC is triggered not in background, its durations is limited to this value in seconds.',
-			'default' => 5,
+			'description' => 'fallback in case cron is not active: when a cleanup is triggered cleanup duration will not exceed this duration (in seconds).',
+			'default' => 1,
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
