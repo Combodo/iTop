@@ -304,6 +304,7 @@ class DBObjectTest extends ItopDataTestCase
 	public function testCheckExtKeysSiloOnAttributeExternalKey()
 	{
 		//--- Preparing data...
+		$this->bIsUsingSilo = true;
 		$oAlwaysTrueCallback = $this->GetAlwaysTrueCallback();
 		$oAlwaysFalseCallback = $this->GetAlwaysFalseCallback();
 
@@ -381,6 +382,7 @@ class DBObjectTest extends ItopDataTestCase
 	public function testCheckExtKeysOnAttributeLinkedSetIndirect()
 	{
 		//--- Preparing data...
+		$this->bIsUsingSilo = true;
 		/** @var Organization $oDemoOrg */
 		$oDemoOrg = MetaModel::GetObjectByName(Organization::class, 'Demo');
 		/** @var Person $oPersonOnItDepartmentOrg */
@@ -482,6 +484,7 @@ class DBObjectTest extends ItopDataTestCase
 	public function testCheckExtKeysSiloOnAttributeObjectKey()
 	{
 		//--- Preparing data...
+		$this->bIsUsingSilo = true;
 		/** @var Organization $oDemoOrg */
 		$oDemoOrg = MetaModel::GetObjectByName(Organization::class, 'Demo');
 		/** @var Person $oPersonOnItDepartmentOrg */
