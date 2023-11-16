@@ -59,7 +59,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 	private $iTestOrgId;
 	// For cleanup
 	private $aCreatedObjects = [];
-	private $aEventListeners = [];
 
 	/**
 	 * @var string Default environment to use for test cases
@@ -136,10 +135,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 		// Leave the place clean
 		\UserRights::Logoff();
 		$this->SetNonPublicStaticProperty(UserRights::class, 'm_aCacheUsers', []);
-
-		foreach ($this->aEventListeners as $sListenerId) {
-			EventService::UnRegisterListener($sListenerId);
-		}
 
 		parent::tearDown();
 	}
