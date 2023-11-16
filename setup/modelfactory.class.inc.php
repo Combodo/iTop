@@ -2486,7 +2486,7 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 
 		if ($bSafe)
 		{
-			$sXPath .= "[not(@_alteration) or @_alteration!='removed']";
+			$sXPath = "($sXPath)[not(@_alteration) or @_alteration!='removed']";
 		}
 
 		if (is_null($oContextNode))
