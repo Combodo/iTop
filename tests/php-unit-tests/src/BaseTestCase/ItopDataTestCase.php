@@ -34,6 +34,7 @@ use TagSetFieldData;
 use Ticket;
 use URP_UserProfile;
 use User;
+use UserRights;
 use utils;
 use VirtualHost;
 use VirtualMachine;
@@ -134,6 +135,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 
 		// Leave the place clean
 		\UserRights::Logoff();
+		$this->SetNonPublicStaticProperty(UserRights::class, 'm_aCacheUsers', []);
 
 		foreach ($this->aEventListeners as $sListenerId) {
 			EventService::UnRegisterListener($sListenerId);

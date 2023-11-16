@@ -300,7 +300,6 @@ class DBObjectTest extends ItopDataTestCase
 
 	/**
 	 * @covers DBObject::CheckChangedExtKeysValues()
-	 * @runInSeparateProcess MetaModel::GetObject returning wrong values :(
 	 */
 	public function testCheckExtKeysSiloOnAttributeExternalKey()
 	{
@@ -378,7 +377,6 @@ class DBObjectTest extends ItopDataTestCase
 
 	/**
 	 * @covers DBObject::CheckChangedExtKeysValues()
-	 * @runInSeparateProcess MetaModel::GetObject returning wrong values :(
 	 */
 	public function testCheckExtKeysOnAttributeLinkedSetIndirect()
 	{
@@ -480,7 +478,6 @@ class DBObjectTest extends ItopDataTestCase
 
 	/**
 	 * @covers DBObject::CheckChangedExtKeysValues()
-	 * @runInSeparateProcess MetaModel::GetObject returning wrong values :(
 	 */
 	public function testCheckExtKeysSiloOnAttributeObjectKey()
 	{
@@ -534,7 +531,7 @@ class DBObjectTest extends ItopDataTestCase
 	private function CreateDemoOrgUser(Organization $oDemoOrg, string $sProfileId): User
 	{
 		utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');
-		$oUserWithAllowedOrgs = $this->CreateContactlessUser('demo_test_' . __CLASS__, $sProfileId);
+		$oUserWithAllowedOrgs = $this->CreateContactlessUser('demo_test_' . uniqid(__CLASS__, true), $sProfileId);
 		/** @var \URP_UserOrg $oUserOrg */
 		$oUserOrg = \MetaModel::NewObject('URP_UserOrg', ['allowed_org_id' => $oDemoOrg->GetKey(),]);
 		$oAllowedOrgList = $oUserWithAllowedOrgs->Get('allowed_org_list');
