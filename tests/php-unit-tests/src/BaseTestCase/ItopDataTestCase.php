@@ -66,6 +66,13 @@ abstract class ItopDataTestCase extends ItopTestCase
 	private $aEventListeners = [];
 
 	/**
+	 * @var bool When testing with silo, there are some cache we need to update on tearDown. Doing it all the time will cost too much, so it's opt-in !
+	 * @see tearDown
+	 * @see ResetMetaModelQueyCacheGetObject
+	 */
+	protected $bIsUsingSilo = false;
+
+	/**
 	 * @var string Default environment to use for test cases
 	 */
 	const DEFAULT_TEST_ENVIRONMENT = 'production';
@@ -141,9 +148,13 @@ abstract class ItopDataTestCase extends ItopTestCase
 		CMDBObject::SetCurrentChange(null);
 
 		// Leave the place clean
-		\UserRights::Logoff();
-		$this->SetNonPublicStaticProperty(UserRights::class, 'm_aCacheUsers', []);
-		$this->ResetMetaModelQueyCacheGetObject();
+		if (UserRights::IsLoggedIn()) {
+			UserRights::Logoff();
+		}
+		$this->SetNonPublicStaticProperty(UserRights::class, 'm_aCacheUsers', []); // we could have cached rollbacked instances
+		if ($this->bIsUsingSilo) {
+			$this->ResetMetaModelQueyCacheGetObject();
+		}
 
 		foreach ($this->aEventListeners as $sListenerId) {
 			EventService::UnRegisterListener($sListenerId);

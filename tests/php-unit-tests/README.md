@@ -7,8 +7,20 @@
 - Covers the consistency of some data through the app?
   - Most likely in "integration-tests".
 
-## How do I make sure that my tests are efficient?
 
+## Tests prerequisites
+
+Install iTop with default setup options : 
+- Configuration Management options : everything checked
+- Service Management for Enterprises
+- Simple Ticket Management + Customer portal
+- Simple Change Management
+
+Plus :
+-  Additional ITIL tickets : check Known Errors Management and FAQ
+
+
+## How do I make sure that my tests are efficient?
 
 ### Derive from the relevant test class
 
