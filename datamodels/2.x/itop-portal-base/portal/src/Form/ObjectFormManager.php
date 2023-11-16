@@ -32,7 +32,6 @@ use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\FormManager;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper;
-use Combodo\iTop\Portal\Helper\SecurityHelper;
 use CoreCannotSaveObjectException;
 use DBObject;
 use DBObjectSearch;
@@ -1136,11 +1135,10 @@ class ObjectFormManager extends FormManager
 			$bWasModified = $this->oObject->IsModified();
 			$bActivateTriggers = (!$bIsNew && $bWasModified);
 
-			/** @var SecurityHelper $oSecurityHelper */
-			$oSecurityHelper = $this->oContainer->get('security_helper');
+			$oSecurityHelper = $this->oFormHandlerHelper->getSecurityHelper();
 
 			// Forcing allowed writing on the object if necessary. This is used in some particular cases.
-			$bAllowWrite = $this->oFormHandlerHelper->getSecurityHelper()->IsActionAllowed($bIsNew ? UR_ACTION_CREATE : UR_ACTION_MODIFY, $sObjectClass, $this->oObject->GetKey());
+			$bAllowWrite = $oSecurityHelper->IsActionAllowed($bIsNew ? UR_ACTION_CREATE : UR_ACTION_MODIFY, $sObjectClass, $this->oObject->GetKey());
 			if ($bAllowWrite) {
 				$this->oObject->AllowWrite(true);
 			}
