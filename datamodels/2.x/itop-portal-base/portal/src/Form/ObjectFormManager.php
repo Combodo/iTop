@@ -806,7 +806,7 @@ class ObjectFormManager extends FormManager
 									if (in_array(get_class($oCustomField), array('Combodo\\iTop\\Form\\Field\\SelectObjectField')))
 									{
 										/** @var \Combodo\iTop\Form\Field\SelectObjectField $oCustomField */
-										if ($this->oFormHandlerHelper->getUrlGenerator() !== null) {
+										if ($this->oFormHandlerHelper->GetUrlGenerator() !== null) {
 
 											$sSearchEndpoint = $this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_search_generic',
 												array(
@@ -887,7 +887,7 @@ class ObjectFormManager extends FormManager
 								$iRemoteKey = $oLink->GetKey();
 							}
 
-							if (!$this->oFormHandlerHelper->getSecurityHelper()->IsActionAllowed(UR_ACTION_READ, $oField->GetTargetClass(), $iRemoteKey)) {
+							if (!$this->oFormHandlerHelper->GetSecurityHelper()->IsActionAllowed(UR_ACTION_READ, $oField->GetTargetClass(), $iRemoteKey)) {
 								$aLimitedAccessItemIDs[] = $iRemoteKey;
 							}
 						}
@@ -912,14 +912,14 @@ class ObjectFormManager extends FormManager
 					if ($this->oFormHandlerHelper !== null) {
 						// Override hardcoded URLs in ormDocument pointing to back office console
 						$oOrmDoc = $this->oObject->Get($sAttCode);
-						$sDisplayUrl = $this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_document_display', [
+						$sDisplayUrl = $this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_document_display', [
 							'sObjectClass' => get_class($this->oObject),
 							'sObjectId'    => $this->oObject->GetKey(),
 							'sObjectField' => $sAttCode,
 							'cache'        => 86400,
 							's'            => $oOrmDoc->GetSignature(),
 						]);
-						$sDownloadUrl = $this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_document_download', [
+						$sDownloadUrl = $this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_document_download', [
 							'sObjectClass' => get_class($this->oObject),
 							'sObjectId'    => $this->oObject->GetKey(),
 							'sObjectField' => $sAttCode,
@@ -1011,8 +1011,8 @@ class ObjectFormManager extends FormManager
 				// set id to a unique key - avoid collisions with another attribute that could exist with the name 'attachments'
 				$oField = new FileUploadField('attachments_plugin');
 				$oField->SetLabel(Dict::S('Portal:Attachments'))
-					->SetUploadEndpoint($this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_attachment_add'))
-					->SetDownloadEndpoint($this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_attachment_download',
+					->SetUploadEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_attachment_add'))
+					->SetDownloadEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_attachment_download',
 						array('sAttachmentId' => '-sAttachmentId-')))
 					->SetTransactionId($oForm->GetTransactionId())
 					->SetAllowDelete($this->oFormHandlerHelper->getCombodoPortalConf()['properties']['attachments']['allow_delete'])
@@ -1135,7 +1135,7 @@ class ObjectFormManager extends FormManager
 			$bWasModified = $this->oObject->IsModified();
 			$bActivateTriggers = (!$bIsNew && $bWasModified);
 
-			$oSecurityHelper = $this->oFormHandlerHelper->getSecurityHelper();
+			$oSecurityHelper = $this->oFormHandlerHelper->GetSecurityHelper();
 
 			// Forcing allowed writing on the object if necessary. This is used in some particular cases.
 			$bAllowWrite = $oSecurityHelper->IsActionAllowed($bIsNew ? UR_ACTION_CREATE : UR_ACTION_MODIFY, $sObjectClass, $this->oObject->GetKey());
