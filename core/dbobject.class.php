@@ -2463,6 +2463,82 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * Trigger onObjectUpdate on the remote object when an object pointed by a LinkSet is modified, added or removed
+	 *
+	 * @since 3.1.1 3.2.0 N°6531 method creation
+	 */
+	final protected function TriggerOnRemoteObjectUpdate(): void
+	{
+		$aPreviousValues = $this->ListPreviousValuesForUpdatedAttributes();
+
+		$aClassExtKeyAttCodes = MetaModel::GetAttributesList(get_class($this), [AttributeExternalKey::class]);
+		foreach ($aClassExtKeyAttCodes as $sExtKeyWithMirrorLinkAttCode) {
+			/** @var AttributeExternalKey $oExtKeyWithMirrorLinkAttDef */
+			$oExtKeyWithMirrorLinkAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyWithMirrorLinkAttCode);
+
+			$oRemoteObject = $this->GetRemoteObject($oExtKeyWithMirrorLinkAttDef, $this->Get($sExtKeyWithMirrorLinkAttCode));
+			if (is_null($oRemoteObject)) {
+				continue;
+			}
+
+			/** @var AttributeLinkedSet $oAttDefMirrorLink */
+			$oAttDefMirrorLink = $oExtKeyWithMirrorLinkAttDef->GetMirrorLinkAttribute();
+			if (is_null($oAttDefMirrorLink)) {
+				continue;
+			}
+			$sAttCodeMirrorLink = $oAttDefMirrorLink->GetCode();
+
+			if (array_key_exists($sExtKeyWithMirrorLinkAttCode, $aPreviousValues)) {
+				// need to update remote old + new
+				$sPreviousRemoteObjectKey = $aPreviousValues[$sExtKeyWithMirrorLinkAttCode];
+				$oPreviousRemoteObject = $this->GetRemoteObject($oExtKeyWithMirrorLinkAttDef, $sPreviousRemoteObjectKey);
+				if (false === is_null($oPreviousRemoteObject)) {
+					$this->TriggerRemoteObject($oPreviousRemoteObject, $sAttCodeMirrorLink);
+				}
+			}
+			// we need to update remote with current lnk instance
+			$this->TriggerRemoteObject($oRemoteObject, $sAttCodeMirrorLink);
+		}
+	}
+
+	private function TriggerRemoteObject(DBObject $oRemoteObject, string $sAttCodeMirrorLink): void
+	{
+		// indicates that $sAttCodeMirrorLink has been modified for the trigger
+		$oRemoteObject->m_aPreviousValuesForUpdatedAttributes[$sAttCodeMirrorLink] = $oRemoteObject->Get($sAttCodeMirrorLink);
+		$this->TriggerOnObjectUpdate($oRemoteObject);
+	}
+
+	private function GetRemoteObject(AttributeExternalKey $oAttDef, $sRemoteObjectKey, bool $bWithConstraintProperty = false)
+	{
+		$sRemoteObjectClass = $oAttDef->GetTargetClass();
+
+		/** @noinspection NotOptimalIfConditionsInspection */
+		/** @noinspection TypeUnsafeComparisonInspection */
+		if (utils::IsNullOrEmptyString($sRemoteObjectClass)
+			|| utils::IsNullOrEmptyString($sRemoteObjectKey)
+			|| ($sRemoteObjectKey == 0) // non-strict comparison as we might have bad surprises
+		) {
+			return null;
+		}
+
+		/** @var AttributeLinkedSet $oAttDefMirrorLink */
+		$oAttDefMirrorLink = $oAttDef->GetMirrorLinkAttribute();
+		if (is_null($oAttDefMirrorLink)) {
+			return null;
+		}
+
+		if ($bWithConstraintProperty && (false === $oAttDefMirrorLink->GetHasConstraint())) {
+			return null;
+		}
+
+		if (DBObject::IsObjectCurrentlyInCrud($sRemoteObjectClass, $sRemoteObjectKey)) {
+			return null;
+		}
+
+		return MetaModel::GetObject($sRemoteObjectClass, $sRemoteObjectKey, false);
+	}
+
+	/**
 	 * @since 3.1.1 3.2.0 N°6228 method creation
 	 */
 	final protected function CheckPhpConstraint(bool $bIsCheckToDelete = false): void
@@ -2474,7 +2550,7 @@ abstract class DBObject implements iDisplay
 			/** @var AttributeExternalKey $oExtKeyWithMirrorLinkAttDef */
 			$oExtKeyWithMirrorLinkAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyWithMirrorLinkAttCode);
 
-			$oRemoteObject = $this->GetRemoteObjectWithPhpConstraint($oExtKeyWithMirrorLinkAttDef, $this->Get($sExtKeyWithMirrorLinkAttCode));
+			$oRemoteObject = $this->GetRemoteObject($oExtKeyWithMirrorLinkAttDef, $this->Get($sExtKeyWithMirrorLinkAttCode), true);
 			if (is_null($oRemoteObject)) {
 				continue;
 			}
@@ -2495,7 +2571,7 @@ abstract class DBObject implements iDisplay
 					// need to update remote old + new
 					$aPreviousValues = $this->ListPreviousValuesForUpdatedAttributes();
 					$sPreviousRemoteObjectKey = $aPreviousValues[$sExtKeyWithMirrorLinkAttCode];
-					$oPreviousRemoteObject = $this->GetRemoteObjectWithPhpConstraint($oExtKeyWithMirrorLinkAttDef, $sPreviousRemoteObjectKey);
+					$oPreviousRemoteObject = $this->GetRemoteObject($oExtKeyWithMirrorLinkAttDef, $sPreviousRemoteObjectKey, true);
 					if (false === is_null($oPreviousRemoteObject)) {
 						$this->CheckRemotePhpConstraintOnObject('remove', $oPreviousRemoteObject, $sAttCodeMirrorLink, false);
 					}
@@ -2538,32 +2614,6 @@ abstract class DBObject implements iDisplay
 		if (is_array($aRemoteCheckWarnings)) {
 			$this->m_aCheckWarnings = array_merge($this->m_aCheckWarnings ?? [], $aRemoteCheckWarnings);
 		}
-	}
-
-	private function GetRemoteObjectWithPhpConstraint(AttributeExternalKey $oAttDef, $sRemoteObjectKey)
-	{
-		$sRemoteObjectClass = $oAttDef->GetTargetClass();
-
-		/** @noinspection NotOptimalIfConditionsInspection */
-		/** @noinspection TypeUnsafeComparisonInspection */
-		if (utils::IsNullOrEmptyString($sRemoteObjectClass)
-			|| utils::IsNullOrEmptyString($sRemoteObjectKey)
-			|| ($sRemoteObjectKey == 0) // non-strict comparison as we might have bad surprises
-		) {
-			return null;
-		}
-
-		/** @var AttributeLinkedSet $oAttDefMirrorLink */
-		$oAttDefMirrorLink = $oAttDef->GetMirrorLinkAttribute();
-		if (is_null($oAttDefMirrorLink) || false === $oAttDefMirrorLink->GetHasConstraint()) {
-			return null;
-		}
-
-		if (DBObject::IsObjectCurrentlyInCrud($sRemoteObjectClass, $sRemoteObjectKey)) {
-			return null;
-		}
-
-		return MetaModel::GetObject($sRemoteObjectClass, $sRemoteObjectKey, false);
 	}
 
 	/**
@@ -3470,6 +3520,9 @@ abstract class DBObject implements iDisplay
 
 		// - TriggerOnObjectMention
 		$this->ActivateOnMentionTriggers(true);
+
+		// - Trigger for object pointing to the current object
+		$this->TriggerOnRemoteObjectUpdate();
 	}
 
     /**
@@ -3770,20 +3823,10 @@ abstract class DBObject implements iDisplay
 		$oKPI->ComputeStatsForExtension($this, 'AfterUpdate');
 
 		// - TriggerOnObjectUpdate
-		$aClassList = MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL);
-		$aParams = array('class_list' => $aClassList);
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)'),
-			array(), $aParams);
-		while ($oTrigger = $oSet->Fetch()) {
-			/** @var \TriggerOnObjectUpdate $oTrigger */
-			try {
-				$oTrigger->DoActivate($this->ToArgs());
-			}
-			catch (Exception $e) {
-				$oTrigger->LogException($e, $this);
-				utils::EnrichRaisedException($oTrigger, $e);
-			}
-		}
+		$this->TriggerOnObjectUpdate($this);
+
+		// - Trigger for object pointing to the current object
+		$this->TriggerOnRemoteObjectUpdate();
 
 		$sClass = get_class($this);
 		if (MetaModel::HasLifecycle($sClass))
@@ -3829,6 +3872,33 @@ abstract class DBObject implements iDisplay
 		$this->ActivateOnMentionTriggers(false, $aChanges);
 	}
 
+	/**
+	 * @param \DBObject $oObject
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	private function TriggerOnObjectUpdate(DBObject $oObject): void
+	{
+		// - TriggerOnObjectUpdate
+		$aClassList = MetaModel::EnumParentClasses(get_class($oObject), ENUM_PARENT_CLASSES_ALL);
+		$aParams = array('class_list' => $aClassList);
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)'),
+			array(), $aParams);
+		while ($oTrigger = $oSet->Fetch()) {
+			/** @var \TriggerOnObjectUpdate $oTrigger */
+			try {
+				$oTrigger->DoActivate($oObject->ToArgs());
+			}
+			catch (Exception $e) {
+				$oTrigger->LogException($e, $oObject);
+				utils::EnrichRaisedException($oTrigger, $e);
+			}
+		}
+	}
 
 	/**
 	 * Increment attribute with specified value.
@@ -4154,6 +4224,8 @@ abstract class DBObject implements iDisplay
 		$this->AfterDelete();
 		$oKPI->ComputeStatsForExtension($this, 'AfterDelete');
 
+		// - Trigger for object pointing to the current object
+		$this->TriggerOnRemoteObjectUpdate();
 
 		$this->m_bIsInDB = false;
 		$this->LogCRUDExit(__METHOD__);
