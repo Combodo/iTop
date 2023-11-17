@@ -480,7 +480,7 @@ class ObjectFormHandlerHelper
 	 * @since 3.1
 	 *
 	 */
-	public function getUrlGenerator()
+	public function GetUrlGenerator()
 	{
 		return $this->oUrlGenerator;
 	}
@@ -490,7 +490,7 @@ class ObjectFormHandlerHelper
 	 * @since 3.1
 	 *
 	 */
-	public function getSecurityHelper(): SecurityHelper
+	public function GetSecurityHelper(): SecurityHelper
 	{
 		return $this->oSecurityHelper;
 	}
