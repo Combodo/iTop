@@ -19,6 +19,7 @@ use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 
@@ -1414,7 +1415,7 @@ class DisplayableGraph extends SimpleGraph
 	/**
 	 * Display the graph inside the given page, with the "filter" drawer above it
 	 *
-	 * @deprecated 3.1.1 3767 use the 2 functions DisplayFilterBox and displayGraph
+	 * @deprecated 3.1.1 3.2.0 N°3767 Use \DisplayableGraph::DisplayFilterBox() and \DisplayableGraph::DisplayGraph() instead
 	 *
 	 * @param WebPage $oP
 	 * @param array $aResults
@@ -1453,9 +1454,9 @@ class DisplayableGraph extends SimpleGraph
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 *
-	 * @since 3.1.1
+	 * @since 3.1.1 3.2.0 N°3767
 	 */
-	function DisplayGraph(WebPage $oP, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false)
+	function DisplayGraph(WebPage $oP, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false): void
 	{
 		list($aExcludedByClass, $aAdditionalContexts) = $this->GetFilteringData($sContextKey, $aContextParams, $aExcludedObjects);
 
@@ -1591,7 +1592,7 @@ EOF
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 *
-	 * @deprecated 3.1.1
+	 * @deprecated 3.1.1 3.2.0 N°3767 Use \DisplayableGraph::DisplayFilterBox() and \DisplayableGraph::GetFilteringData() instead
 	 */
 	public function DisplayFiltering(string $sContextKey, array $aContextParams, array $aExcludedObjects, WebPage $oP, array $aResults, bool $bLazyLoading = false): array
 	{
@@ -1599,11 +1600,8 @@ EOF
 
 		return $this->GetFilteringData($sContextKey, $aContextParams, $aExcludedObjects);
 	}
-	
+
 	/**
-	 * @param string $sContextKey
-	 * @param array $aContextParams
-	 * @param array $aExcludedObjects
 	 * @param \WebPage $oP
 	 * @param array $aResults
 	 * @param bool $bLazyLoading
@@ -1616,19 +1614,17 @@ EOF
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 *
-	 * @since 3.1.1
+	 * @since 3.1.1 3.2.0 N°3767
 	 */
-	public function DisplayFilterBox(WebPage $oP, array $aResults, bool $bLazyLoading = false)
+	public function DisplayFilterBox(WebPage $oP, array $aResults, bool $bLazyLoading = false): UIContentBlock
 	{
 		$sSftShort = Dict::S('UI:ElementsDisplayed');
 		$oBlock = UIContentBlockUIBlockFactory::MakeStandard(null, ['not-printable']);
+
 		$oUiSearchBlock = new Panel($sSftShort, [], Panel::ENUM_COLOR_SCHEME_CYAN, 'dh_flash');
-		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
-		$oUiSearchBlock->SetIsCollapsible(true);
-		$oUiSearchBlock->GetTitleBlock()->SetCSSClasses(['ibo-panel--subtitle']);
-		$oFilterImageBlock = UIContentBlockUIBlockFactory::MakeStandard('alert_filtered_list', ['fas', 'fa-filter', 'ibo-panel--header-left', 'ibo-is-hidden']);
-		$oFilterImageBlock->SetDataAttributes(['tooltip-content' => Dict::S("Relation:impacts/FilteredData")]);
-		$oUiSearchBlock->AddTitleBlock($oFilterImageBlock);
+		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"])
+			->SetIsCollapsible(true);
+
 		$oUiHtmlBlock = new Html(
 			<<<EOF
 		

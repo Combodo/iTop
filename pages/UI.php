@@ -1419,14 +1419,8 @@ try
 
 			$aResults = $oRelGraph->GetObjectsByClass();
 			$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
-			$sIconUIrl = MetaModel::GetClassIcon($sClass, false);
-			$oTitle = TitleUIBlockFactory::MakeForPage(MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName());
-
+			$sTitle = MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName();
 			$sClassIcon = MetaModel::GetClassIcon($sClass, false);
-			if (strlen($sClassIcon) > 0) {
-				$oTitle->SetIcon($sClassIcon);
-			}
-			$oP->AddUiBlock($oTitle);
 
 			$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
 			$bLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
@@ -1446,7 +1440,9 @@ try
 			}
 
 			$oP->AddSubBlock($oDisplayGraph->DisplayFilterBox($oP, $aResults, $bLazyLoading));
-			$oPanel = PanelUIBlockFactory::MakeForClass($sClass, '');
+			$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle);
+			$oPanel->SetIcon($sClassIcon);
+
 			$oP->AddSubBlock($oPanel);
 			$oP->AddTabContainer('Navigator', '', $oPanel);
 			$oP->SetCurrentTabContainer('Navigator');
