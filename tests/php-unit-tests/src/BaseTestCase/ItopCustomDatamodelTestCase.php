@@ -12,7 +12,6 @@ use Combodo\iTop\Test\UnitTest\Service\UnitTestRunTimeEnvironment;
 use Config;
 use Exception;
 use MetaModel;
-use MFCompiler;
 use SetupUtils;
 use utils;
 
@@ -181,7 +180,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 			// - Compile env. based on the existing 'production' env.
 			$oEnvironment = new UnitTestRunTimeEnvironment($sTestEnv);
 			$oEnvironment->WriteConfigFileSafe($oTestConfig);
-			$oEnvironment->CompileFrom($sSourceEnv, MFCompiler::IsUseSymbolicLinksFlagPresent());
+			$oEnvironment->CompileFrom($sSourceEnv);
 
 			// - Force re-creating a fresh DB
 			CMDBSource::InitFromConfig($oTestConfig);
