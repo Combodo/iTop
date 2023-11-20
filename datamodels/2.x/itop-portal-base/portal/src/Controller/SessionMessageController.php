@@ -20,6 +20,8 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use Combodo\iTop\Portal\Helper\RequestManipulatorHelper;
+use Combodo\iTop\Portal\Helper\SessionMessageHelper;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,6 +36,14 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class SessionMessageController extends AbstractController
 {
+
+	public function __construct(
+		protected RequestManipulatorHelper $oRequestManipulator,
+		protected SessionMessageHelper $oSessionManagerHelper
+	)
+	{
+	}
+
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
 	 *
@@ -43,14 +53,9 @@ class SessionMessageController extends AbstractController
 	{
 		$aData = array();
 
-		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
-		$oRequestManipulator = $this->get('request_manipulator');
-		/** @var \Combodo\iTop\Portal\Helper\SessionMessageHelper $oSessionMessageHelper */
-		$oSessionMessageHelper = $this->get('session_message_helper');
-
 		// Retrieve parameters
-		$sMessageSeverity = $oRequestManipulator->ReadParam('sSeverity');
-		$sMessageContent = $oRequestManipulator->ReadParam('sContent');
+		$sMessageSeverity = $this->oRequestManipulator->ReadParam('sSeverity');
+		$sMessageContent = $this->oRequestManipulator->ReadParam('sContent');
 
 		// Check parameters consistency
 		if (empty($sMessageSeverity) || empty($sMessageContent))
@@ -59,7 +64,7 @@ class SessionMessageController extends AbstractController
 		}
 
 		// Add message
-		$oSessionMessageHelper->AddMessage(uniqid(), $sMessageContent, $sMessageSeverity);
+		$this->oSessionMessageHelper->AddMessage(uniqid(), $sMessageContent, $sMessageSeverity);
 
 		return new JsonResponse($aData);
 	}
