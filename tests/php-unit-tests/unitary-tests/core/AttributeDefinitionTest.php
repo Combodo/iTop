@@ -223,9 +223,10 @@ PHP
 	public function testWithConstraintAndComputationParameters(string $sClass, string $sAttCode, bool $bConstraintExpected, bool $bComputationExpected)
 	{
 		$oAttDef = \MetaModel::GetAttributeDef($sClass, $sAttCode);
-		$this->assertTrue(method_exists($oAttDef, 'GetHasConstraint'));
-		$this->assertEquals($bConstraintExpected, $oAttDef->GetHasConstraint());
-		$this->assertEquals($bComputationExpected, $oAttDef->GetHasComputation());
+		$sConstraintExpected = $bConstraintExpected ? 'true' : 'false';
+		$sComputationExpected = $bComputationExpected ? 'true' : 'false';
+		$this->assertEquals($bConstraintExpected, $oAttDef->HasPHPConstraint(), "Standard DataModel should be configured with property 'has_php_constraint'=$sConstraintExpected for $sClass:$sAttCode");
+		$this->assertEquals($bComputationExpected, $oAttDef->HasPHPComputation(), "Standard DataModel should be configured with property 'has_php_computation'=$sComputationExpected for $sClass:$sAttCode");
 	}
 
 	public function WithConstraintParameterProvider()

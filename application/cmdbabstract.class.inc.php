@@ -4544,7 +4544,7 @@ HTML;
 		return $res;
 	}
 
-	public function PostInsertActions(): void
+	protected function PostInsertActions(): void
 	{
 		parent::PostInsertActions();
 
@@ -4610,7 +4610,7 @@ HTML;
 		return $res;
 	}
 
-	public function PostUpdateActions(array $aChanges): void
+	protected function PostUpdateActions(array $aChanges): void
 	{
 		parent::PostUpdateActions($aChanges);
 
@@ -5981,33 +5981,27 @@ JS
 			/** @var AttributeExternalKey $oAttDef */
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sExternalKeyAttCode);
 
-			if (false === $this->DoesRemoteObjectHavePhpComputation($oAttDef)) {
+			if (false === $this->DoesTargetObjectHavePhpComputation($oAttDef)) {
 				continue;
 			}
 
-			$sRemoteObjectId = $this->Get($sExternalKeyAttCode);
-			if ($sRemoteObjectId > 0) {
-				self::RegisterObjectAwaitingEventDbLinksChanged($oAttDef->GetTargetClass(), $sRemoteObjectId);
+			$sTargetObjectId = $this->Get($sExternalKeyAttCode);
+			if ($sTargetObjectId > 0) {
+				self::RegisterObjectAwaitingEventDbLinksChanged($oAttDef->GetTargetClass(), $sTargetObjectId);
 			}
 
-			$sPreviousRemoteObjectId = $aPreviousValues[$sExternalKeyAttCode] ?? 0;
-			if ($sPreviousRemoteObjectId > 0) {
-				self::RegisterObjectAwaitingEventDbLinksChanged($oAttDef->GetTargetClass(), $sPreviousRemoteObjectId);
+			$sPreviousTargetObjectId = $aPreviousValues[$sExternalKeyAttCode] ?? 0;
+			if ($sPreviousTargetObjectId > 0) {
+				self::RegisterObjectAwaitingEventDbLinksChanged($oAttDef->GetTargetClass(), $sPreviousTargetObjectId);
 			}
 		}
 	}
 
-	private function DoesRemoteObjectHavePhpComputation(AttributeExternalKey $oAttDef): bool
+	private function DoesTargetObjectHavePhpComputation(AttributeExternalKey $oAttDef): bool
 	{
-		$sRemoteObjectClass = $oAttDef->GetTargetClass();
-
-		if (utils::IsNullOrEmptyString($sRemoteObjectClass)) {
-			return false;
-		}
-
 		/** @var AttributeLinkedSet $oAttDefMirrorLink */
 		$oAttDefMirrorLink = $oAttDef->GetMirrorLinkAttribute();
-		if (is_null($oAttDefMirrorLink) || false === $oAttDefMirrorLink->GetHasComputation()){
+		if (is_null($oAttDefMirrorLink) || false === $oAttDefMirrorLink->HasPHPComputation()){
 			return false;
 		}
 

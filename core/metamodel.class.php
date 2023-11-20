@@ -6928,8 +6928,7 @@ abstract class MetaModel
 
 	public static function GetFinalClassName(string $sClass, int $iKey): string
 	{
-		$sFinalClassField = Metamodel::DBGetClassField($sClass);
-		if (utils::IsNullOrEmptyString($sFinalClassField)) {
+		if (MetaModel::IsStandaloneClass($sClass)) {
 			return $sClass;
 		}
 
@@ -6937,6 +6936,7 @@ abstract class MetaModel
 		$sTable = MetaModel::DBGetTable($sRootClass);
 		$sKeyCol = MetaModel::DBGetKey($sRootClass);
 		$sEscapedKey = CMDBSource::Quote($iKey);
+		$sFinalClassField = Metamodel::DBGetClassField($sRootClass);
 
 		$sQuery = "SELECT `{$sFinalClassField}` FROM `{$sTable}` WHERE `{$sKeyCol}` = {$sEscapedKey}";
 		return  CMDBSource::QueryToScalar($sQuery);

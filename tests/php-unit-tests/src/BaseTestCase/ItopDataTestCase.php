@@ -79,6 +79,22 @@ abstract class ItopDataTestCase extends ItopTestCase
 	const USE_TRANSACTION = true;
 	const CREATE_TEST_ORG = false;
 
+	protected static $aURP_Profiles = [
+		'Administrator'         => 1,
+		'Portal user'           => 2,
+		'Configuration Manager' => 3,
+		'Service Desk Agent'    => 4,
+		'Support Agent'         => 5,
+		'Problem Manager'       => 6,
+		'Change Implementor'    => 7,
+		'Change Supervisor'     => 8,
+		'Change Approver'       => 9,
+		'Service Manager'       => 10,
+		'Document author'       => 11,
+		'Portal power user'     => 12,
+		'REST Services User'    => 1024,
+	];
+
 	/**
 	 * This method is called before the first test of this test class is run (in the current process).
 	 */

@@ -1,8 +1,6 @@
 <?php
 
 use Combodo\iTop\Application\Helper\Session;
-use Combodo\iTop\Service\Events\EventData;
-use Combodo\iTop\Service\Events\EventService;
 
 define('UR_ALLOWED_NO', 0);
 define('UR_ALLOWED_YES', 1);
@@ -262,15 +260,6 @@ abstract class User extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('default_search', array('login', 'contactid', 'status', 'org_id')); // Default criteria of the search banner
 	}
 
-	/**
-	 * @see RegisterCRUDListener
-	 * @see EventService::RegisterListener()
-	 */
-	protected function RegisterEventListeners()
-	{
-		EventService::RegisterListener(EVENT_DB_CHECK_TO_WRITE, [$this, 'CheckPortalProfiles']);
-	}
-
 	abstract public function CheckCredentials($sPassword);
 	abstract public function TrustWebServerContext();
 	abstract public function CanChangePassword();
@@ -501,31 +490,6 @@ abstract class User extends cmdbAbstractObject
 					}
 				}
 			}
-		}
-	}
-
-	public function CheckPortalProfiles(EventData $oEventData): void
-	{
-		if (false === array_key_exists('profile_list', $this->ListChanges())) {
-			return;
-		}
-
-		$oProfileLinkSet = $this->Get('profile_list');
-		if ($oProfileLinkSet->Count() > 1) {
-			return;
-		}
-		$oProfileLinkSet->Rewind();
-		$iPowerPortalCount = 0;
-		$iTotalCount = 0;
-		while ($oUserProfile = $oProfileLinkSet->Fetch()) {
-			$sProfile = $oUserProfile->Get('profile');
-			if ($sProfile === 'Portal power user') {
-				$iPowerPortalCount = 1;
-			}
-			$iTotalCount++;
-		}
-		if ($iTotalCount === $iPowerPortalCount) {
-			$this->AddCheckIssue(Dict::S('Class:User/Error:PortalPowerUserHasInsufficientRights'));
 		}
 	}
 
