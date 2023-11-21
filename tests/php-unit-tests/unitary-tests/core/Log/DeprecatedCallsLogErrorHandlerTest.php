@@ -11,6 +11,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Config;
 use DeprecatedCallsLog;
 use FileLog;
+use IssueLog;
 use LogAPI;
 use utils;
 use const E_USER_DEPRECATED;
@@ -25,8 +26,15 @@ class DeprecatedCallsLogErrorHandlerTest extends ItopTestCase {
 	public function testPhpLibMethodNoticeCatched():void {
 		$sNoticeMessage = __METHOD__.uniqid(' @trigger_error unique message - ', true);
 
-		$oMockFileLog = $this->createMock(FileLog::class);
-		$oMockFileLog->expects($this->exactly(1))
+		// to check that error handler is really set
+		$oMockIssueLogFile = $this->createMock(FileLog::class);
+		$oMockIssueLogFile->expects($this->exactly(1))
+			->method(LogAPI::LEVEL_TRACE)
+			->with($this->stringContains(DeprecatedCallsLog::class), DeprecatedCallsLog::ENUM_CHANNEL_PHP_LIBMETHOD, []);
+
+		// to check the error handler is logging correctly
+		$oMockDeprecatedLogFile = $this->createMock(FileLog::class);
+		$oMockDeprecatedLogFile->expects($this->exactly(1))
 			->method(LogAPI::LEVEL_WARNING)
 			->with($this->stringContains($sNoticeMessage), DeprecatedCallsLog::ENUM_CHANNEL_PHP_LIBMETHOD, []);
 
@@ -35,15 +43,19 @@ class DeprecatedCallsLogErrorHandlerTest extends ItopTestCase {
 			->method("Get")
 			->willReturnCallback(function ($sConfigParameterName) {
 				if ($sConfigParameterName==='log_level_min'){
-					return [DeprecatedCallsLog::ENUM_CHANNEL_PHP_LIBMETHOD => LogAPI::LEVEL_WARNING];
+					return [
+						DeprecatedCallsLog::ENUM_CHANNEL_PHP_LIBMETHOD => LogAPI::LEVEL_TRACE
+					];
 				}
 				/** @noinspection NullPointerExceptionInspection */
 				return utils::GetConfig()->Get($sConfigParameterName);
 			});
 
 		$this->RequireOnceItopFile('core/log.class.inc.php');
+		IssueLog::Enable(APPROOT.'log/error.log'); // to get log when setting error handler
+		IssueLog::MockStaticObjects($oMockIssueLogFile, $oMockConfig);
 		DeprecatedCallsLog::Enable(); // will set error handler
-		DeprecatedCallsLog::MockStaticObjects($oMockFileLog, $oMockConfig);
+		DeprecatedCallsLog::MockStaticObjects($oMockDeprecatedLogFile, $oMockConfig);
 
 		@trigger_error($sNoticeMessage, E_USER_DEPRECATED);
 	}
