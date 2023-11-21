@@ -940,7 +940,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s~~',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
 	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
-	'Core:DateTime:Placeholder_d' => 'DD~~', // Day of the month: 2 digits (with leading zero)
+    'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'Opening a file with untrusted data in Microsoft Excel may lead to formula injection. Ensure that your Excel settings are configured to handle files safely. <a href="%1$s">Learn more in our documentation.</a>~~',
+    'Core:DateTime:Placeholder_d' => 'DD~~', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'D~~', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM~~', // Month on 2 digits i.e. 01-12
 	'Core:DateTime:Placeholder_n' => 'M~~', // Month on 1 or 2 digits 1-12

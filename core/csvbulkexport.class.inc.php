@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\ExportHelper;
 
 /**
  * Bulk export: CSV export
@@ -113,6 +114,7 @@ class CSVBulkExport extends TabularBulkExport
 
 			case 'csv_options':
 				$oP->add('<fieldset><legend>'.Dict::S('Core:BulkExport:CSVOptions').'</legend>');
+                $oP->add(ExportHelper::GetAlertForExcelMaliciousInjection());
 				$oP->add('<table class="export_parameters"><tr><td style="vertical-align:top">');
 				$oP->add('<h3>'.Dict::S('UI:CSVImport:SeparatorCharacter').'</h3>');
 				$sRawSeparator = utils::ReadParam('separator', ',', true, 'raw_data');

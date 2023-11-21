@@ -49,6 +49,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use UnaryExpression;
 use URLButtonItem;
+use utils;
 
 /**
  * Class ManageBrickController
@@ -259,6 +260,7 @@ class ManageBrickController extends BrickController
 			'oBrick' => $oBrick,
 			'sBrickId' => $sBrickId,
 			'sToken' => $oExporter->SaveState(),
+            'sWikiUrl' => 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Auser%3Alists#excel_export',
 		);
 
 		return $this->render(static::EXCEL_EXPORT_TEMPLATE_PATH, $aData);

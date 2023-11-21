@@ -933,7 +933,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Formato por omisión (%1$s), ej. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Formato personalizado: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Página %1$s',
-	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
+    'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'Opening a file with untrusted data in Microsoft Excel may lead to formula injection. Ensure that your Excel settings are configured to handle files safely. <a href="%1$s">Learn more in our documentation.</a>~~',
+    'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
 	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12

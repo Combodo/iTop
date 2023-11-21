@@ -23,6 +23,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\ExportHelper;
+
 require_once(APPROOT.'application/xlsxwriter.class.php');
 
 class ExcelBulkExport extends TabularBulkExport
@@ -89,6 +91,7 @@ class ExcelBulkExport extends TabularBulkExport
 					
 			case 'xlsx_options':
 				$oP->add('<fieldset><legend>'.Dict::S('Core:BulkExport:XLSXOptions').'</legend>');
+                $oP->add(ExportHelper::GetAlertForExcelMaliciousInjection());
 				$oP->add('<table class="export_parameters"><tr><td style="vertical-align:top">');
 				
 				$sChecked = (utils::ReadParam('formatted_text', 0) == 1) ? ' checked ' : '';
