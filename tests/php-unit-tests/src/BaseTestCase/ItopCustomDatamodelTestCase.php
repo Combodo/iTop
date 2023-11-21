@@ -11,7 +11,6 @@ use Combodo\iTop\Test\UnitTest\Hook\TestsRunStartHook;
 use Combodo\iTop\Test\UnitTest\Service\UnitTestRunTimeEnvironment;
 use Config;
 use Exception;
-use IssueLog;
 use MetaModel;
 use SetupUtils;
 use utils;
@@ -181,7 +180,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 			// - Compile env. based on the existing 'production' env.
 			$oEnvironment = new UnitTestRunTimeEnvironment($sTestEnv);
 			$oEnvironment->WriteConfigFileSafe($oTestConfig);
-			$oEnvironment->CompileFrom($sSourceEnv, false);
+			$oEnvironment->CompileFrom($sSourceEnv);
 
 			// - Force re-creating a fresh DB
 			CMDBSource::InitFromConfig($oTestConfig);
