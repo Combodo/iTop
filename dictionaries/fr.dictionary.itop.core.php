@@ -966,7 +966,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Format par défaut (%1$s), ex. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Format spécial: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s',
-    'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'L\'ouverture d\'un fichier contenant des données non fiables dans Microsoft Excel peut entraîner l\'injection de formules. Assurez-vous que vos paramètres Excel sont configurés pour traiter les fichiers en toute sécurité. <a href="%1$s">Pour en savoir plus, consultez notre documentation.</a>',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Avertissement sur la sécurité d\'Excel',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'L\'ouverture d\'un fichier contenant des données non fiables dans Microsoft Excel peut entraîner l\'injection de formules. Assurez-vous que vos paramètres Excel sont configurés pour traiter les fichiers en toute sécurité. <a href="%1$s">Pour en savoir plus, consultez notre documentation.</a>',
     'Core:DateTime:Placeholder_d' => 'JJ', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'J', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12

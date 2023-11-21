@@ -974,7 +974,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Standaardformaat (%1$s), bv. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Aangepast formaat: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Pagina %1$s',
-    'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'Opening a file with untrusted data in Microsoft Excel may lead to formula injection. Ensure that your Excel settings are configured to handle files safely. <a href="%1$s">Learn more in our documentation.</a>~~',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Excel security warning~~',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'Opening a file with untrusted data in Microsoft Excel may lead to formula injection. Ensure that your Excel settings are configured to handle files safely. <a href="%1$s">Learn more in our documentation.</a>~~',
     'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12

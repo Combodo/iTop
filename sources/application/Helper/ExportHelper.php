@@ -1,6 +1,7 @@
 <?php
 
 namespace Combodo\iTop\Application\Helper;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Dict;
 use utils;
 
@@ -17,7 +18,10 @@ class ExportHelper
 {
 	public static function GetAlertForExcelMaliciousInjection()
 	{
-        $sWikiUrl =  'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Auser%3Alists#excel_export';
-		return '<div class="message_warning">' . Dict::Format('UI:Bulk:Export:MaliciousInjection:Alert:Message', $sWikiUrl) . '</div>';
+		$sWikiUrl =  'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Auser%3Alists#excel_export';
+		$oAlert = AlertUIBlockFactory::MakeForWarning(Dict::S('UI:Bulk:Export:MaliciousInjection:Alert:Title'), Dict::Format('UI:Bulk:Export:MaliciousInjection:Alert:Message', $sWikiUrl), 'ibo-excel-malicious-injection-alert');
+		$oAlert->EnableSaveCollapsibleState(true)
+			->SetIsClosable(false);
+		return $oAlert;
 	}
 }
