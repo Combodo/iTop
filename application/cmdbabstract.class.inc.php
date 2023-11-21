@@ -4659,7 +4659,10 @@ HTML;
 		return $oDeletionPlan;
 	}
 
-		protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
+	/**
+	 * @deprecated 3.1.1 3.2.0 N°6967 We will have only one DBDelete method in the future
+	 */
+	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
 		/** @var \iApplicationObjectExtension $oExtensionInstance */

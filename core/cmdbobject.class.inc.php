@@ -480,17 +480,7 @@ abstract class CMDBObject extends DBObject
 	}
 
 	/**
-	 * @param null $oDeletionPlan
-	 *
-	 * @return \DeletionPlan|null
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DeleteException
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
+	 * @deprecated 3.1.1 3.2.0 N°6967 We will have only one DBDelete method in the future
 	 */
 	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
