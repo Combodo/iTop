@@ -25,7 +25,7 @@ use utils;
  *   - Override the {@see ItopCustomDatamodelTestCase::GetDatamodelDeltaAbsPath()} method to define where you XML delta is
  *   - Implement your test case methods as usual
  *
- * @since N°6097 2.7.9 3.0.4 3.1.0
+ * @since 2.7.9 3.0.4 3.1.0 N°6097
  */
 abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 {
