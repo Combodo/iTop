@@ -10,6 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
+use Combodo\iTop\Application\Helper\ExportHelper;
 
 require_once(APPROOT.'application/xlsxwriter.class.php');
 
@@ -82,6 +83,7 @@ class ExcelBulkExport extends TabularBulkExport
 
 			case 'xlsx_options':
 				$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:XLSXOptions'));
+				$oPanel->AddSubBlock(ExportHelper::GetAlertForExcelMaliciousInjection());
 
 				$oMulticolumn = MultiColumnUIBlockFactory::MakeStandard();
 				$oPanel->AddSubBlock($oMulticolumn);
