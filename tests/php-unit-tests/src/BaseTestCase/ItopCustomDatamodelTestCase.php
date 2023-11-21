@@ -11,7 +11,6 @@ use Combodo\iTop\Test\UnitTest\Hook\TestsRunStartHook;
 use Combodo\iTop\Test\UnitTest\Service\UnitTestRunTimeEnvironment;
 use Config;
 use Exception;
-use IssueLog;
 use MetaModel;
 use SetupUtils;
 use utils;
@@ -26,7 +25,7 @@ use utils;
  *   - Override the {@see ItopCustomDatamodelTestCase::GetDatamodelDeltaAbsPath()} method to define where you XML delta is
  *   - Implement your test case methods as usual
  *
- * @since N°6097 2.7.9 3.0.4 3.1.0
+ * @since 2.7.9 3.0.4 3.1.0 N°6097
  */
 abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 {
@@ -181,7 +180,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 			// - Compile env. based on the existing 'production' env.
 			$oEnvironment = new UnitTestRunTimeEnvironment($sTestEnv);
 			$oEnvironment->WriteConfigFileSafe($oTestConfig);
-			$oEnvironment->CompileFrom($sSourceEnv, false);
+			$oEnvironment->CompileFrom($sSourceEnv);
 
 			// - Force re-creating a fresh DB
 			CMDBSource::InitFromConfig($oTestConfig);
