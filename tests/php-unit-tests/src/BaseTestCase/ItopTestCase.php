@@ -46,9 +46,9 @@ abstract class ItopTestCase extends TestCase
 
 		require_once static::GetAppRoot() . 'approot.inc.php';
 
-		if (false === defined('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME')) {
+		if (false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME)) {
 			// setUp might be called multiple times, so protecting the define() call !
-			define('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME', true);
+			define(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
 		}
 	}
 
