@@ -4568,6 +4568,9 @@ HTML;
 		InlineImage::FinalizeInlineImages($this);
 	}
 
+	/**
+	 * @deprecated 3.1.1 3.2.0 N°6966 We will have only one DBClone method in the future
+	 */
 	protected function DBCloneTracked_Internal($newKey = null)
 	{
         /** @var cmdbAbstractObject $oNewObj */

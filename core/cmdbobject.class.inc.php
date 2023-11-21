@@ -438,7 +438,8 @@ abstract class CMDBObject extends DBObject
 	}
 
 	/**
-	 * @deprecated 3.1.0 N°5232 not used
+	 * @deprecated 3.1.0 N°5232 N°6966 simply use {@see DBObject::DBClone()} instead, that will automatically create and persist a CMDBChange object.
+	 *     If you need to persist your own, call {@see CMDBObject::SetCurrentChange()} before.
 	 */
 	public function DBCloneTracked(CMDBChange $oChange, $newKey = null)
 	{
@@ -446,6 +447,9 @@ abstract class CMDBObject extends DBObject
 		$this->DBCloneTracked_Internal($newKey);
 	}
 
+	/**
+	 * @deprecated 3.1.1 3.2.0 N°6966 We will have only one DBClone method in the future
+	 */
 	protected function DBCloneTracked_Internal($newKey = null)
 	{
 		$newKey = parent::DBClone($newKey);
