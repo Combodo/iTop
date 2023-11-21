@@ -1037,6 +1037,12 @@ class DeprecatedCallsLog extends LogAPI
 	public const ENUM_CHANNEL_FILE = 'deprecated-file';
 	public const CHANNEL_DEFAULT = self::ENUM_CHANNEL_PHP_METHOD;
 
+	/**
+	 * @var string
+	 * @since 3.0.4 3.1.1 3.2.0 N°6976
+	 */
+	public const LOG_DEPRECATED_CALLS_LOG_FILENAME = 'log/deprecated-calls.log';
+
 	/** @var string Warning this constant won't be used directly ! To see the real default level check {@see GetLevelDefault()} */
 	public const LEVEL_DEFAULT = self::LEVEL_ERROR;
 
@@ -1075,7 +1081,7 @@ class DeprecatedCallsLog extends LogAPI
 	 */
 	public static function Enable($sTargetFile = null): void {
 		if (empty($sTargetFile)) {
-			$sTargetFile = APPROOT.'log/deprecated-calls.log';
+			$sTargetFile = APPROOT. self::LOG_DEPRECATED_CALLS_LOG_FILENAME;
 		}
 		parent::Enable($sTargetFile);
 
