@@ -8,10 +8,11 @@ namespace Combodo\iTop\Test\UnitTest\Core\Log;
 
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Config;
 use DeprecatedCallsLog;
+use FileLog;
 use LogAPI;
 use utils;
-use const APPROOT;
 use const E_USER_DEPRECATED;
 
 class DeprecatedCallsLogErrorHandlerTest extends ItopTestCase {
@@ -22,17 +23,28 @@ class DeprecatedCallsLogErrorHandlerTest extends ItopTestCase {
 	 * @since 3.0.4 3.1.1 3.2.0 N°6976
 	 */
 	public function testPhpLibMethodNoticeCatched():void {
-		$oConfig = utils::GetConfig(true);
-		$oConfig->Set('log_level_min', [\DeprecatedCallsLog::ENUM_CHANNEL_PHP_LIBMETHOD => LogAPI::LEVEL_WARNING]);
+		$sNoticeMessage = __METHOD__.uniqid(' @trigger_error unique message - ', true);
+
+		$oMockFileLog = $this->createMock(FileLog::class);
+		$oMockFileLog->expects($this->exactly(1))
+			->method(LogAPI::LEVEL_WARNING)
+			->with($this->stringContains($sNoticeMessage), DeprecatedCallsLog::ENUM_CHANNEL_PHP_LIBMETHOD, []);
+
+		$oMockConfig = $this->createMock(Config::class);
+		$oMockConfig
+			->method("Get")
+			->willReturnCallback(function ($sConfigParameterName) {
+				if ($sConfigParameterName==='log_level_min'){
+					return [DeprecatedCallsLog::ENUM_CHANNEL_PHP_LIBMETHOD => LogAPI::LEVEL_WARNING];
+				}
+				/** @noinspection NullPointerExceptionInspection */
+				return utils::GetConfig()->Get($sConfigParameterName);
+			});
 
 		$this->RequireOnceItopFile('core/log.class.inc.php');
 		DeprecatedCallsLog::Enable(); // will set error handler
+		DeprecatedCallsLog::MockStaticObjects($oMockFileLog, $oMockConfig);
 
-		$sNoticeMessage = __METHOD__.uniqid(' @trigger_error unique message - ', true);
 		@trigger_error($sNoticeMessage, E_USER_DEPRECATED);
-
-		// no notice when running in PHPUnit
-		$sDeprecatedCallsLogFileContent = file_get_contents(APPROOT.DeprecatedCallsLog::LOG_DEPRECATED_CALLS_LOG_FILENAME);
-		$this->assertStringContainsString($sNoticeMessage, $sDeprecatedCallsLogFileContent);
 	}
 }
