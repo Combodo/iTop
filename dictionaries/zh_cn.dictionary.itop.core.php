@@ -1027,7 +1027,7 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Core:BulkExport:DateTimeFormatDefault_Example' => '默认格式 (%1$s), e.g. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => '自定义格式: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => '第 %1$s 页',
-	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
+    'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
 	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12

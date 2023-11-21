@@ -984,7 +984,7 @@ Plusieurs champs peuvent ainsi être modifiés lors d\'une "mise à jour" en app
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Format par défaut (%1$s), ex. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Format spécial: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s',
-	'Core:DateTime:Placeholder_d' => 'JJ', // Day of the month: 2 digits (with leading zero)
+    'Core:DateTime:Placeholder_d' => 'JJ', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'J', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
 	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12
