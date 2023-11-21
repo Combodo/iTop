@@ -15,6 +15,7 @@ use IssueLog;
 use LogAPI;
 use utils;
 use const E_USER_DEPRECATED;
+use const ITOP_PHPUNIT_RUNNING_CONSTANT_NAME;
 
 class DeprecatedCallsLogErrorHandlerTest extends ItopTestCase {
 	public const DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER = false;
@@ -22,8 +23,15 @@ class DeprecatedCallsLogErrorHandlerTest extends ItopTestCase {
 	/**
 	 * @covers DeprecatedCallsLog::DeprecatedNoticesErrorHandler
 	 * @since 3.0.4 3.1.1 3.2.0 N°6976
+	 *
+	 * @runInSeparateProcess so that other tests won't set the constant !
 	 */
 	public function testPhpLibMethodNoticeCatched():void {
+		if (defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME)) {
+			// Should not happen thanks to the process isolation !
+			$this->fail('Constant to disable error handler is set, so we cannot test :(');
+		}
+
 		$sNoticeMessage = __METHOD__.uniqid(' @trigger_error unique message - ', true);
 
 		// to check that error handler is really set
