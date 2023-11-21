@@ -539,7 +539,6 @@ return array(
     'ExceptionLog' => $baseDir . '/core/log.class.inc.php',
     'ExecAsyncTask' => $baseDir . '/core/asynctask.class.inc.php',
     'ExecutionKPI' => $baseDir . '/core/kpi.class.inc.php',
-    'ExportHelper' => $baseDir . '/sources/Application/Helper/ExportHelper.php',
     'Expression' => $baseDir . '/core/oql/expression.class.inc.php',
     'ExpressionCache' => $baseDir . '/core/expressioncache.class.inc.php',
     'ExpressionHelper' => $baseDir . '/core/oql/expression.class.inc.php',

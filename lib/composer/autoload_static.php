@@ -907,7 +907,6 @@ class ComposerStaticInit5e7efdfe4e8f9526eb41991410b96239
         'ExceptionLog' => __DIR__ . '/../..' . '/core/log.class.inc.php',
         'ExecAsyncTask' => __DIR__ . '/../..' . '/core/asynctask.class.inc.php',
         'ExecutionKPI' => __DIR__ . '/../..' . '/core/kpi.class.inc.php',
-        'ExportHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/ExportHelper.php',
         'Expression' => __DIR__ . '/../..' . '/core/oql/expression.class.inc.php',
         'ExpressionCache' => __DIR__ . '/../..' . '/core/expressioncache.class.inc.php',
         'ExpressionHelper' => __DIR__ . '/../..' . '/core/oql/expression.class.inc.php',
