@@ -840,6 +840,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectManager' => __DIR__ . '/../..' . '/sources/Service/TemporaryObjects/TemporaryObjectManager.php',
         'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectRepository' => __DIR__ . '/../..' . '/sources/Service/TemporaryObjects/TemporaryObjectRepository.php',
         'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectsEvents' => __DIR__ . '/../..' . '/sources/Service/TemporaryObjects/TemporaryObjectsEvents.php',
+        'Combodo\\iTop\\SessionTracker\\SessionGC' => __DIR__ . '/../..' . '/sources/SessionTracker/SessionGC.php',
+        'Combodo\\iTop\\SessionTracker\\SessionHandler' => __DIR__ . '/../..' . '/sources/SessionTracker/SessionHandler.php',
         'CompileCSSService' => __DIR__ . '/../..' . '/application/compilecssservice.class.inc.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Config' => __DIR__ . '/../..' . '/core/config.class.inc.php',

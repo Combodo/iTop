@@ -1123,7 +1123,7 @@ class OQLMenuNode extends MenuNode
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
-		ContextTag::AddContext(ContextTag::TAG_OBJECT_SEARCH);
+		$oTag = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
 		OQLMenuNode::RenderOQLSearch
 		(

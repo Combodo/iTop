@@ -69,7 +69,7 @@ try
 			break;
 
 		default:
-			ContextTag::AddContext(ContextTag::TAG_CONSOLE);
+			$oTag = new ContextTag(ContextTag::TAG_CONSOLE);
 	}
 
 	// First check if we can redirect the route to a dedicated controller
