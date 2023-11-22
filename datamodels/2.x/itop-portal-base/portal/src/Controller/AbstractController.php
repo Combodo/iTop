@@ -34,12 +34,12 @@ use Symfony\Contracts\Service\Attribute\Required;
 abstract class AbstractController extends SymfonyAbstractController
 {
 	/** @var \Symfony\Component\Routing\RouterInterface symfony router */
-	private RouterInterface $oRouterInterface;
+	private RouterInterface $oRouter;
 
 	#[Required]
-	public function setRouter(RouterInterface $oRouterInterface): void
+	public function setRouter(RouterInterface $oRouter): void
 	{
-		$this->oRouterInterface = $oRouterInterface;
+		$this->oRouter = $oRouter;
 	}
 
 	/**
@@ -58,7 +58,7 @@ abstract class AbstractController extends SymfonyAbstractController
 	 */
 	protected function ForwardToRoute($sRouteName, $aRouteParams, $aQueryParameters, $bPreserveDefaultRouteParams = true)
 	{
-		$oRouteCollection = $this->oRouterInterface->getRouteCollection();
+		$oRouteCollection = $this->oRouter->getRouteCollection();
 		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
 
 		if ($bPreserveDefaultRouteParams) {
@@ -95,7 +95,7 @@ abstract class AbstractController extends SymfonyAbstractController
 	 */
 	protected function GetControllerNameFromRoute($sRouteName)
 	{
-		$oRouteCollection = $this->oRouterInterface->getRouteCollection();
+		$oRouteCollection = $this->oRouter->getRouteCollection();
 		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
 
 		return $aRouteDefaults['_controller'];
