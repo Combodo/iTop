@@ -77,7 +77,7 @@ class SessionHandlerTest extends ItopDataTestCase
 		$this->assertNotEquals(false, $aJson, 'Should return a valid json string, found: '.$sContent);
 		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', "Should report the login of the logged in user in [user_id]: $sContent");
 		$this->assertEquals(ContextTag::TAG_REST, $aJson['context'] ?? '', "Should report the context tag(s) in [context]: $sContent");
-		$this->assertIsInt($aJson['creation_time'] ?? '', "Should report the sesssion start timestamp in [creation_time]: $sContent");
+		$this->assertIsInt($aJson['creation_time'] ?? '', "Should report the session start timestamp in [creation_time]: $sContent");
 		$this->assertEquals('foo_login_mode', $aJson['login_mode'] ?? '', "Should report the current login mode in [login_mode]: $sContent");
 	}
 
@@ -98,7 +98,7 @@ class SessionHandlerTest extends ItopDataTestCase
 		$this->assertNotEquals(false, $aJson, 'Should return a valid json string, found: '.$sFirstContent);
 		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', "Should report the login of the logged in user in [user_id]: $sFirstContent");
 		$this->assertEquals(ContextTag::TAG_REST, $aJson['context'] ?? '', "Should report the context tag(s) in [context]: $sFirstContent");
-		$this->assertIsInt($aJson['creation_time'] ?? '', "Should report the sesssion start timestamp in [creation_time]: $sFirstContent");
+		$this->assertIsInt($aJson['creation_time'] ?? '', "Should report the session start timestamp in [creation_time]: $sFirstContent");
 		$this->assertEquals('foo_login_mode', $aJson['login_mode'] ?? '', "Should report the current login mode in [login_mode]: $sFirstContent");
 
 		$iFirstSessionCreationTime = $aJson['creation_time'];
@@ -113,7 +113,7 @@ class SessionHandlerTest extends ItopDataTestCase
 		$aJson = json_decode($sNewContent, true);
 		$this->assertNotEquals(false, $aJson, 'Should return a valid json string, found: '.$sNewContent);
 		$this->assertEquals(ContextTag::TAG_REST . '|' . ContextTag::TAG_SYNCHRO, $aJson['context'] ?? '', "After impersonation, should report the new context tags in [context]: $sNewContent");
-		$this->assertEquals($iFirstSessionCreationTime, $aJson['creation_time'] ?? '', "After impersonation, should still report the the sesssion start timestamp in [creation_time]: $sNewContent");
+		$this->assertEquals($iFirstSessionCreationTime, $aJson['creation_time'] ?? '', "After impersonation, should still report the the session start timestamp in [creation_time]: $sNewContent");
 		$this->assertEquals('foo_login_mode', $aJson['login_mode'] ?? '', "After impersonation, should still report the login mode in [login_mode]: $sNewContent");
 		$this->assertEquals($oOtherUser->GetKey(), $aJson['user_id'] ?? '', "Should report the impersonate user in [user_id]: $sNewContent");
 	}
@@ -153,17 +153,22 @@ class SessionHandlerTest extends ItopDataTestCase
 		$this->assertEquals(true, is_file($sFile), "Should return a file name: '$sFile' is not a valid file name");
 		$sFirstContent = file_get_contents($sFile);
 
+		$iFirstCTime = filectime($sFile) - 1;
+		// Set it in the past to check that it will be further updated (without the need to sleep...)
+		touch($sFile, $iFirstCTime);
+
 		$this->assertNotNull($sFirstContent, 'Should not return null');
 		$aJson = json_decode($sFirstContent, true);
 		$this->assertNotEquals(false, $aJson, 'Should return a valid json string, found: '.$sFirstContent);
 		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', "Should report the login of the logged in user in [user_id]: $sFirstContent");
 		$this->assertEquals(ContextTag::TAG_REST, $aJson['context'] ?? '', "Should report the context tag(s) in [context]: $sFirstContent");
-		$this->assertIsInt($aJson['creation_time'] ?? '', "Should report the sesssion start timestamp in [creation_time]: $sFirstContent");
+		$this->assertIsInt($aJson['creation_time'] ?? '', "Should report the session start timestamp in [creation_time]: $sFirstContent");
 		$this->assertEquals('foo_login_mode', $aJson['login_mode'] ?? '', "Should report the current login mode in [login_mode]: $sFirstContent");
 
 		$this->touchSessionFile($oSessionHandler, $session_id);
 		$sNewContent = file_get_contents($sFile);
-		$this->assertEquals($sFirstContent, $sNewContent, 'Should not modify an existing session file');
+		$this->assertEquals($sFirstContent, $sNewContent, 'On successive calls, should not modify an existing session file');
+		$this->assertGreaterThan($iFirstCTime, filectime($sFile), 'On successive calls, should have changed the file ctime');
 	}
 
 	/**
