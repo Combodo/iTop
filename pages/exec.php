@@ -48,8 +48,9 @@ session_write_close();
 
 $sTargetPage = APPROOT.'env-'.$sEnvironment.'/'.$sModule.'/'.$sPage;
 
-if (!file_exists($sTargetPage))
-{
+if (!file_exists($sTargetPage)
+    || (strtolower(pathinfo($sTargetPage, PATHINFO_EXTENSION)) !== "php")
+) {
 	// Do not recall the parameters (security takes precedence)
 	echo "Wrong module, page name or environment...";
 	exit;
