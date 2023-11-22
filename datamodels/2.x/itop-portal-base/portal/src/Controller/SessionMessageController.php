@@ -39,7 +39,7 @@ class SessionMessageController extends AbstractController
 
 	public function __construct(
 		protected RequestManipulatorHelper $oRequestManipulator,
-		protected SessionMessageHelper $oSessionManagerHelper
+		protected SessionMessageHelper $oSessionMessageHelper
 	)
 	{
 	}
