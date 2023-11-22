@@ -1683,9 +1683,9 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'change_password_url' => [
+		'forgot_password.url' => [
 			'type'                => 'string',
-			'description'         => 'Set this value to your "change password" service URL if you have an LDAP authentication',
+			'description'         => 'Set this value to your "forgot password" service URL if it should be handled out of '.ITOP_APPLICATION_SHORT.'. Note that it will apply to all users (iTop users, LDAP users, ...)',
 			'default'             => '',
 			'value'               => '',
 			'source_of_value'     => '',
