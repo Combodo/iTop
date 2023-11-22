@@ -473,6 +473,8 @@ return array(
     'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectManager' => $baseDir . '/sources/Service/TemporaryObjects/TemporaryObjectManager.php',
     'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectRepository' => $baseDir . '/sources/Service/TemporaryObjects/TemporaryObjectRepository.php',
     'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectsEvents' => $baseDir . '/sources/Service/TemporaryObjects/TemporaryObjectsEvents.php',
+    'Combodo\\iTop\\SessionTracker\\SessionGC' => $baseDir . '/sources/SessionTracker/SessionGC.php',
+    'Combodo\\iTop\\SessionTracker\\SessionHandler' => $baseDir . '/sources/SessionTracker/SessionHandler.php',
     'CompileCSSService' => $baseDir . '/application/compilecssservice.class.inc.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Config' => $baseDir . '/core/config.class.inc.php',
