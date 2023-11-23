@@ -13,6 +13,7 @@ use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
@@ -273,7 +274,6 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 	$oP->SetCurrentTab('UI:RelationshipList');
 	$oImpactedObject = UIContentBlockUIBlockFactory::MakeStandard("impacted_objects", ['ibo-is-visible']);
 	$oP->AddSubBlock($oImpactedObject);
-	$oImpactedObject->AddSubBlock(AlertUIBlockFactory::MakeForWarning(Dict::S("Relation:impacts/FilteredData"), '', "alert_filtered_list")->SetIsHidden(true));
 	$oImpactedObjectList = UIContentBlockUIBlockFactory::MakeStandard("impacted_objects_lists", ['ibo-is-visible']);
 	$oImpactedObject->AddSubBlock($oImpactedObjectList);
 	$oImpactedObjectList->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard("impacted_objects_lists_placeholder", ['ibo-is-visible']));
@@ -1406,64 +1406,62 @@ try
 			$sDescription = MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName();
 			$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription);
 
-				if ($sRelation == 'depends on') {
-					$sRelation = 'impacts';
-					$sDirection = 'up';
-				}
-				if ($sDirection == 'up') {
-					$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
-				} else {
-					$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
-				}
+			if ($sRelation == 'depends on') {
+				$sRelation = 'impacts';
+				$sDirection = 'up';
+			}
+			if ($sDirection == 'up') {
+				$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+			} else {
+				$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+			}
 
 
-				$aResults = $oRelGraph->GetObjectsByClass();
-				$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
-				$oPanel = PanelUIBlockFactory::MakeForClass($sClass, MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName());
-				$sClassIcon = MetaModel::GetClassIcon($sClass, false);
-				if (strlen($sClassIcon) > 0){
-					$oPanel->SetIcon($sClassIcon);
-				}
+			$aResults = $oRelGraph->GetObjectsByClass();
+			$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
+			$sTitle = MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName();
+			$sClassIcon = MetaModel::GetClassIcon($sClass, false);
 
-				$oP->AddUiBlock($oPanel);
-				$oP->AddTabContainer('Navigator', '', $oPanel);
-				$oP->SetCurrentTabContainer('Navigator');
+			$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
+			$bLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
+			$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
 
-				$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
-				$bLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
-				$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
-
-				// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
-				$sClassForAttachment = null;
-				$iIdForAttachment = null;
-				if (class_exists('Attachment')) {
-					$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
-					foreach ($aAllowedClasses as $sAllowedClass) {
-						if ($oObj instanceof $sAllowedClass) {
-							$iIdForAttachment = $id;
-							$sClassForAttachment = $sClass;
-						}
+			// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
+			$sClassForAttachment = null;
+			$iIdForAttachment = null;
+			if (class_exists('Attachment')) {
+				$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
+				foreach ($aAllowedClasses as $sAllowedClass) {
+					if ($oObj instanceof $sAllowedClass) {
+						$iIdForAttachment = $id;
+						$sClassForAttachment = $sClass;
 					}
 				}
+			}
 
-				// Display the tabs
-				if ($sFirstTab == 'list')
-				{
-					DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
-					$oP->SetCurrentTab('UI:RelationshipGraph');
-					$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$bLazyLoading);
-					DisplayNavigatorGroupTab($oP);
-				}
-				else
-				{
-					$oP->SetCurrentTab('UI:RelationshipGraph');
-					$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$bLazyLoading);
-					DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
-					DisplayNavigatorGroupTab($oP);
-				}
+			$oP->AddSubBlock($oDisplayGraph->DisplayFilterBox($oP, $aResults, $bLazyLoading));
+			$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle);
+			$oPanel->SetIcon($sClassIcon);
 
-				$oP->SetCurrentTab('');
-				break;
+			$oP->AddSubBlock($oPanel);
+			$oP->AddTabContainer('Navigator', '', $oPanel);
+			$oP->SetCurrentTabContainer('Navigator');
+
+			// Display the tabs
+			if ($sFirstTab == 'list') {
+				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
+				$oP->SetCurrentTab('UI:RelationshipGraph');
+				$oDisplayGraph->DisplayGraph($oP, $sRelation, $oAppContext, [], $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj), $bLazyLoading);
+				DisplayNavigatorGroupTab($oP);
+			} else {
+				$oP->SetCurrentTab('UI:RelationshipGraph');
+				$oDisplayGraph->DisplayGraph($oP, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj), $bLazyLoading);
+				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
+				DisplayNavigatorGroupTab($oP);
+			}
+
+			$oP->SetCurrentTab('');
+			break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 

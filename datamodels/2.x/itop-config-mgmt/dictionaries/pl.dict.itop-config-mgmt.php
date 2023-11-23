@@ -25,17 +25,18 @@
 //////////////////////////////////////////////////////////////////////
 //
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'Relation:impacts/Description' => 'Elementy, na które ma wpływ',
-	'Relation:impacts/DownStream' => 'Wpływa na...',
-	'Relation:impacts/DownStream+' => 'Elementy, na które ma wpływ',
-	'Relation:impacts/UpStream' => 'Zależy od......',
-	'Relation:impacts/UpStream+' => 'Elementy wpływające',
+	'Relation:impacts/Description'    => 'Elementy, na które ma wpływ',
+	'Relation:impacts/DownStream'     => 'Wpływa na...',
+	'Relation:impacts/DownStream+'    => 'Elementy, na które ma wpływ',
+	'Relation:impacts/UpStream'       => 'Zależy od......',
+	'Relation:impacts/UpStream+'      => 'Elementy wpływające',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Elementy wpływające',
-	'Relation:depends on/DownStream' => 'Zależy od...',
-	'Relation:depends on/UpStream' => 'Wpływa na...',
-	'Relation:impacts/LoadData' => 'Załaduj dane',
-	'Relation:impacts/NoFilteredData' => 'proszę wybrać obiekty w widoku graficznym',
+	'Relation:depends on/DownStream'  => 'Zależy od...',
+	'Relation:depends on/UpStream'    => 'Wpływa na...',
+	'Relation:impacts/LoadData'       => 'Załaduj dane',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
+	'Relation:impacts/FilteredData'   => 'Filtered data~~',
 ));
 
 
