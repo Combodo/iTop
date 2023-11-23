@@ -1143,9 +1143,13 @@ class DeprecatedCallsLog extends LogAPI
 		parent::Enable($sTargetFile);
 
 		if (
-			(false === defined('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME'))
+			(
+				(false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME))
+				|| (defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME) && (constant(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME) !== true))
+			)
 			&& static::IsLogLevelEnabledSafe(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD)
 		) {
+			IssueLog::Trace('Setting '.static::class.' error handler to catch DEPRECATED', static::ENUM_CHANNEL_PHP_LIBMETHOD);
 			set_error_handler([static::class, 'DeprecatedNoticesErrorHandler'], E_DEPRECATED | E_USER_DEPRECATED);
 		}
 	}
