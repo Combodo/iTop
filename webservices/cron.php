@@ -108,7 +108,7 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 		// Time in seconds allowed to the task
 		$iCurrTimeLimit = $iTimeLimit;
 		// Compute allowed time
-		if ($oRefClass->implementsInterface('iScheduledProcess') === false) 
+		if ($oRefClass->implementsInterface('iScheduledProcess') === false)
 		{
 			// Periodic task, allow only X times ($iMaxTaskExecutionTime) its periodicity (GetPeriodicity())
 			$iMaxTaskExecutionTime = MetaModel::GetConfig()->Get('cron_task_max_execution_time');
@@ -148,7 +148,7 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 		$oTask->Set('first_run_date', $oDateStarted->format('Y-m-d H:i:s'));
 	}
 	$oTask->ComputeDurations($fDuration); // does increment the counter and compute statistics
-	
+
 	// Update the timestamp since we want to be able to re-order the tasks based on the time they finished
 	$oDateEnded = new DateTime();
 	$oTask->Set('latest_run_date', $oDateEnded->format('Y-m-d H:i:s'));

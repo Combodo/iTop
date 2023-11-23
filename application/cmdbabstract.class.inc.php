@@ -4544,7 +4544,7 @@ HTML;
 		return $res;
 	}
 
-	public function PostInsertActions(): void
+	protected function PostInsertActions(): void
 	{
 		parent::PostInsertActions();
 
@@ -4610,7 +4610,7 @@ HTML;
 		return $res;
 	}
 
-	public function PostUpdateActions(array $aChanges): void
+	protected function PostUpdateActions(array $aChanges): void
 	{
 		parent::PostUpdateActions($aChanges);
 
@@ -5354,7 +5354,7 @@ EOF
 			$aErrors = $oObj->UpdateObjectFromPostedForm('');
 			$bResult = (count($aErrors) == 0);
 			if ($bResult) {
-				list($bResult, $aErrors) = $oObj->CheckToWrite();
+				[$bResult, $aErrors] = $oObj->CheckToWrite();
 			}
 			if ($bPreview) {
 				$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusOk') : Dict::S('UI:BulkModifyStatusError');
@@ -5958,40 +5958,54 @@ JS
 	}
 
 	/**
-	 * If the passed object is an instance of a link class, then will register each remote object for modification using {@see static::RegisterObjectAwaitingEventDbLinksChanged()}
+	 * Possibility for linked classes to be notified of current class modification
+	 *
 	 * If an external key was modified, register also the previous object that was linked previously.
 	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \Exception
+	 * @uses static::RegisterObjectAwaitingEventDbLinksChanged()
 	 *
-	 * @since 3.1.0 N°5906
+	 * @throws ArchivedObjectException
+	 * @throws CoreException
+	 * @throws Exception
+	 *
+	 * @since 3.1.0 N°5906 method creation
+	 * @since 3.1.1 3.2.0 N°6228 now just notify attributes having `with_php_computation`
 	 */
 	final protected function NotifyAttachedObjectsOnLinkClassModification(): void
 	{
-		$sClass = get_class($this);
-		if (false === MetaModel::IsLinkClass($sClass)) {
-			return;
-		}
 		// previous values in case of link change
 		$aPreviousValues = $this->ListPreviousValuesForUpdatedAttributes();
+		$sClass = get_class($this);
+		$aClassExtKeyAttCodes = MetaModel::GetAttributesList($sClass, [AttributeExternalKey::class]);
+		foreach ($aClassExtKeyAttCodes as $sExternalKeyAttCode) {
+			/** @var AttributeExternalKey $oAttDef */
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sExternalKeyAttCode);
 
-		$aLnkClassExternalKeys = MetaModel::GetAttributesList($sClass, [AttributeExternalKey::class]);
-		foreach ($aLnkClassExternalKeys as $sExternalKeyAttCode) {
-			/** @var \AttributeExternalKey $oExternalKeyAttDef */
-			$oExternalKeyAttDef = MetaModel::GetAttributeDef($sClass, $sExternalKeyAttCode);
-			$sRemoteClassName = $oExternalKeyAttDef->GetTargetClass();
-
-			$sRemoteObjectId = $this->Get($sExternalKeyAttCode);
-			if ($sRemoteObjectId > 0) {
-				self::RegisterObjectAwaitingEventDbLinksChanged($sRemoteClassName, $sRemoteObjectId);
+			if (false === $this->DoesTargetObjectHavePhpComputation($oAttDef)) {
+				continue;
 			}
 
-			$sPreviousRemoteObjectId = $aPreviousValues[$sExternalKeyAttCode] ?? 0;
-			if ($sPreviousRemoteObjectId > 0) {
-				self::RegisterObjectAwaitingEventDbLinksChanged($sRemoteClassName, $sPreviousRemoteObjectId);
+			$sTargetObjectId = $this->Get($sExternalKeyAttCode);
+			if ($sTargetObjectId > 0) {
+				self::RegisterObjectAwaitingEventDbLinksChanged($oAttDef->GetTargetClass(), $sTargetObjectId);
+			}
+
+			$sPreviousTargetObjectId = $aPreviousValues[$sExternalKeyAttCode] ?? 0;
+			if ($sPreviousTargetObjectId > 0) {
+				self::RegisterObjectAwaitingEventDbLinksChanged($oAttDef->GetTargetClass(), $sPreviousTargetObjectId);
 			}
 		}
+	}
+
+	private function DoesTargetObjectHavePhpComputation(AttributeExternalKey $oAttDef): bool
+	{
+		/** @var AttributeLinkedSet $oAttDefMirrorLink */
+		$oAttDefMirrorLink = $oAttDef->GetMirrorLinkAttribute();
+		if (is_null($oAttDefMirrorLink) || false === $oAttDefMirrorLink->HasPHPComputation()){
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

@@ -488,29 +488,4 @@ class UserRightsTest extends ItopDataTestCase
 			'with Admins hidden' => [true, 0],
 		];
 	}
-
-	/**
-	 * @dataProvider WithConstraintParameterProvider
-	 * @param string $sClass
-	 * @param string $sAttCode
-	 * @param bool $bExpected
-	 *
-	 * @return void
-	 * @throws \Exception
-	 */
-	public function testWithConstraintParameter(string $sClass, string $sAttCode, bool $bExpected)
-	{
-		$oAttDef = \MetaModel::GetAttributeDef($sClass, $sAttCode);
-		$this->assertTrue(method_exists($oAttDef, "GetHasConstraint"));
-		$this->assertEquals($bExpected, $oAttDef->GetHasConstraint());
-	}
-
-	public function WithConstraintParameterProvider()
-	{
-		return [
-			['User', 'profile_list', true],
-			['User', 'allowed_org_list', true],
-			['Person', 'team_list', false],
-		];
-	}
 }

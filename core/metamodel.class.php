@@ -5155,7 +5155,7 @@ abstract class MetaModel
 	 */
 	protected static function DBCreateTables($aCallback = null)
 	{
-		list($aErrors, $aSugFix, $aCondensedQueries) = self::DBCheckFormat();
+		[$aErrors, $aSugFix, $aCondensedQueries] = self::DBCheckFormat();
 
 		//$sSQL = implode('; ', $aCondensedQueries); Does not work - multiple queries not allowed
 		foreach($aCondensedQueries as $sQuery)
@@ -5177,7 +5177,7 @@ abstract class MetaModel
 	 */
 	protected static function DBCreateViews()
 	{
-		list($aErrors, $aSugFix) = self::DBCheckViews();
+		[$aErrors, $aSugFix] = self::DBCheckViews();
 
 		foreach($aSugFix as $sClass => $aTarget)
 		{
@@ -6924,6 +6924,22 @@ abstract class MetaModel
 		$iCount = (int) CMDBSource::QueryToScalar($sQuery);
 
 		return $iCount === 1;
+	}
+
+	public static function GetFinalClassName(string $sClass, int $iKey): string
+	{
+		if (MetaModel::IsStandaloneClass($sClass)) {
+			return $sClass;
+		}
+
+		$sRootClass = MetaModel::GetRootClass($sClass);
+		$sTable = MetaModel::DBGetTable($sRootClass);
+		$sKeyCol = MetaModel::DBGetKey($sRootClass);
+		$sEscapedKey = CMDBSource::Quote($iKey);
+		$sFinalClassField = Metamodel::DBGetClassField($sRootClass);
+
+		$sQuery = "SELECT `{$sFinalClassField}` FROM `{$sTable}` WHERE `{$sKeyCol}` = {$sEscapedKey}";
+		return  CMDBSource::QueryToScalar($sQuery);
 	}
 
 	/**
