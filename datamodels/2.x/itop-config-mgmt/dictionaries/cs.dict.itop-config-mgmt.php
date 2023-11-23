@@ -28,17 +28,18 @@
 //////////////////////////////////////////////////////////////////////
 //
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Relation:impacts/Description' => 'Prvky ovlivněné objektem',
-	'Relation:impacts/DownStream' => 'Dopad na',
-	'Relation:impacts/DownStream+' => 'Elements impacted by~~',
-	'Relation:impacts/UpStream' => 'Závislost na',
-	'Relation:impacts/UpStream+' => 'Elements impacting~~',
+	'Relation:impacts/Description'    => 'Prvky ovlivněné objektem',
+	'Relation:impacts/DownStream'     => 'Dopad na',
+	'Relation:impacts/DownStream+'    => 'Elements impacted by~~',
+	'Relation:impacts/UpStream'       => 'Závislost na',
+	'Relation:impacts/UpStream+'      => 'Elements impacting~~',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Prvky ovlivňující objekt',
-	'Relation:depends on/DownStream' => 'Závislost na',
-	'Relation:depends on/UpStream' => 'Dopad na',
-	'Relation:impacts/LoadData' => 'Load data~~',
-	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
+	'Relation:depends on/DownStream'  => 'Závislost na',
+	'Relation:depends on/UpStream'    => 'Dopad na',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
+	'Relation:impacts/FilteredData'   => 'Filtered data~~',
 ));
 
 

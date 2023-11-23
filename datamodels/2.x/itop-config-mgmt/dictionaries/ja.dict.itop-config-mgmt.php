@@ -20,17 +20,18 @@
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Relation:impacts/Description' => 'インパクトを受ける要素',
-	'Relation:impacts/DownStream' => 'インパクト...',
-	'Relation:impacts/DownStream+' => 'インパクトを受ける要素',
-	'Relation:impacts/UpStream' => '依存...',
-	'Relation:impacts/UpStream+' => 'この要素が依存している要素',
+	'Relation:impacts/Description'    => 'インパクトを受ける要素',
+	'Relation:impacts/DownStream'     => 'インパクト...',
+	'Relation:impacts/DownStream+'    => 'インパクトを受ける要素',
+	'Relation:impacts/UpStream'       => '依存...',
+	'Relation:impacts/UpStream+'      => 'この要素が依存している要素',
 	// Legacy entries
 	'Relation:depends on/Description' => 'この要素が依存している要素',
-	'Relation:depends on/DownStream' => '依存...',
-	'Relation:depends on/UpStream' => 'インパクト...',
-	'Relation:impacts/LoadData' => 'Load data~~',
-	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
+	'Relation:depends on/DownStream'  => '依存...',
+	'Relation:depends on/UpStream'    => 'インパクト...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
+	'Relation:impacts/FilteredData'   => 'Filtered data~~',
 ));
 
 

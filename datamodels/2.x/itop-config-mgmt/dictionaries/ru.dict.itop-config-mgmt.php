@@ -13,17 +13,18 @@
 //////////////////////////////////////////////////////////////////////
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Relation:impacts/Description' => 'Элементы, на которые влияет',
-	'Relation:impacts/DownStream' => 'Влияет на...',
-	'Relation:impacts/DownStream+' => 'Элементы, на которые влияет',
-	'Relation:impacts/UpStream' => 'Зависит от...',
-	'Relation:impacts/UpStream+' => 'Элементы, от которых зависит',
+	'Relation:impacts/Description'    => 'Элементы, на которые влияет',
+	'Relation:impacts/DownStream'     => 'Влияет на...',
+	'Relation:impacts/DownStream+'    => 'Элементы, на которые влияет',
+	'Relation:impacts/UpStream'       => 'Зависит от...',
+	'Relation:impacts/UpStream+'      => 'Элементы, от которых зависит',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Элементы, от которых зависит',
-	'Relation:depends on/DownStream' => 'Зависит от...',
-	'Relation:depends on/UpStream' => 'Влияет на...',
-	'Relation:impacts/LoadData' => 'Load data~~',
-	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
+	'Relation:depends on/DownStream'  => 'Зависит от...',
+	'Relation:depends on/UpStream'    => 'Влияет на...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
+	'Relation:impacts/FilteredData'   => 'Filtered data~~',
 ));
 
 

@@ -20,17 +20,18 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Relation:impacts/Description' => 'Elementi impattati da...',
-	'Relation:impacts/DownStream' => 'Impatto...',
-	'Relation:impacts/DownStream+' => 'Elementi impattati da...',
-	'Relation:impacts/UpStream' => 'Dipende da...',
-	'Relation:impacts/UpStream+' => 'Elementi di questo elemento dipende da',
+	'Relation:impacts/Description'    => 'Elementi impattati da...',
+	'Relation:impacts/DownStream'     => 'Impatto...',
+	'Relation:impacts/DownStream+'    => 'Elementi impattati da...',
+	'Relation:impacts/UpStream'       => 'Dipende da...',
+	'Relation:impacts/UpStream+'      => 'Elementi di questo elemento dipende da',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Elementi di questo elemento dipende da',
-	'Relation:depends on/DownStream' => 'Dipende da...',
-	'Relation:depends on/UpStream' => 'Impatto...',
-	'Relation:impacts/LoadData' => 'Load data~~',
-	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
+	'Relation:depends on/DownStream'  => 'Dipende da...',
+	'Relation:depends on/UpStream'    => 'Impatto...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
+	'Relation:impacts/FilteredData'   => 'Filtered data~~',
 ));
 
 

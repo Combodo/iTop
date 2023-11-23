@@ -16,8 +16,11 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 /**
@@ -1412,6 +1415,8 @@ class DisplayableGraph extends SimpleGraph
 	/**
 	 * Display the graph inside the given page, with the "filter" drawer above it
 	 *
+	 * @deprecated 3.1.1 3.2.0 N°3767 Use \DisplayableGraph::DisplayFilterBox() and \DisplayableGraph::DisplayGraph() instead
+	 *
 	 * @param WebPage $oP
 	 * @param array $aResults
 	 * @param string $sRelation
@@ -1425,10 +1430,35 @@ class DisplayableGraph extends SimpleGraph
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 *
 	 */
 	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false)
 	{
-		list($aExcludedByClass, $aAdditionalContexts) = $this->DisplayFiltering($sContextKey, $aContextParams, $aExcludedObjects, $oP, $aResults, $bLazyLoading);
+		$oP->AddSubBlock($this->DisplayFilterBox($oP, $aResults, $bLazyLoading));
+		$this->DisplayGraph($oP, $sRelation, $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams, $bLazyLoading);
+	}
+
+	/**
+	 * Display only the graph inside the given page, with the parameters of filter box draw with DisplayFilterBox
+	 *
+	 * @param WebPage $oP
+	 * @param string $sRelation
+	 * @param ApplicationContext $oAppContext
+	 * @param array $aExcludedObjects
+	 * @param string $sObjClass
+	 * @param int $iObjKey
+	 * @param string $sContextKey
+	 * @param array $aContextParams
+	 * @param bool $bLazyLoading
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.1.1 3.2.0 N°3767
+	 */
+	function DisplayGraph(WebPage $oP, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false): void
+	{
+		list($aExcludedByClass, $aAdditionalContexts) = $this->GetFilteringData($sContextKey, $aContextParams, $aExcludedObjects);
 
 		$iGroupingThreshold = utils::ReadParam('g', 5);
 
@@ -1513,12 +1543,10 @@ class DisplayableGraph extends SimpleGraph
 				$oP->add_ready_script(" $('#$sId').simple_graph(".json_encode($aParams).");");
 			} else {
 				$oP->add_script("function Load(){var aExcluded = [];	$('input[name^=excluded]').each( function() {if (!$(this).prop('checked'))	{	aExcluded.push($(this).val());		}} ); var params= $.extend(".json_encode($aParams).",  {excluded_classes: aExcluded}); $('#$sId').simple_graph(params);}");
-				$oP->add_ready_script("$('#impacted_objects_lists').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_groups').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');");
-
+				$oP->add_ready_script("$('#graph').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_objects_lists').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_groups').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');");
 			}
 		}
-		catch(Exception $e)
-		{
+		catch (Exception $e) {
 			$oP->add('<div>'.$e->getMessage().'</div>');
 		}
 		$oP->add_script(
@@ -1563,23 +1591,41 @@ EOF
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
+	 *
+	 * @deprecated 3.1.1 3.2.0 N°3767 Use \DisplayableGraph::DisplayFilterBox() and \DisplayableGraph::GetFilteringData() instead
 	 */
 	public function DisplayFiltering(string $sContextKey, array $aContextParams, array $aExcludedObjects, WebPage $oP, array $aResults, bool $bLazyLoading = false): array
 	{
-		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
-		$aExcludedByClass = array();
-		foreach ($aExcludedObjects as $oObj) {
-			if (!array_key_exists(get_class($oObj), $aExcludedByClass)) {
-				$aExcludedByClass[get_class($oObj)] = array();
-			}
-			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
-		}
+		$oP->Add($this->DisplayFilterBox($oP, $aResults, $bLazyLoading));
+
+		return $this->GetFilteringData($sContextKey, $aContextParams, $aExcludedObjects);
+	}
+
+	/**
+	 * @param \WebPage $oP
+	 * @param array $aResults
+	 * @param bool $bLazyLoading
+	 *
+	 * @return UIContentBlock
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 *
+	 * @since 3.1.1 3.2.0 N°3767
+	 */
+	public function DisplayFilterBox(WebPage $oP, array $aResults, bool $bLazyLoading = false): UIContentBlock
+	{
 		$sSftShort = Dict::S('UI:ElementsDisplayed');
-		$oP->add("<div class=\"not-printable\">\n");
+		$oBlock = UIContentBlockUIBlockFactory::MakeStandard(null, ['not-printable']);
+
 		$oUiSearchBlock = new Panel($sSftShort, [], Panel::ENUM_COLOR_SCHEME_CYAN, 'dh_flash');
-		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
-		$oUiSearchBlock->SetIsCollapsible(true);
-		$oUiHtmlBlock = new Combodo\iTop\Application\UI\Base\Component\Html\Html(
+		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"])
+			->SetIsCollapsible(true);
+
+		$oUiHtmlBlock = new Html(
 			<<<EOF
 		
     <div id="ds_flash" class="search_box ibo-display-graph--search-box">
@@ -1626,11 +1672,23 @@ EOF
 			$oUiHtmlBlock->AddHtml("<button type=\"button\" id=\"ReloadMovieBtn\" class=\"ibo-button ibo-is-neutral ibo-is-regular\" onClick=\"$sOnCLick\">".Dict::S('UI:Button:Refresh')."</button></div></form>");
 		}
 		$oUiHtmlBlock->AddHtml("</div>\n");
-		$oUiHtmlBlock->AddHtml("</div>\n"); // class="not-printable"
 
 		$oUiSearchBlock->AddSubBlock($oUiHtmlBlock);
-		$oP->AddUiBlock($oUiSearchBlock);
+		$oBlock->AddSubBlock($oUiSearchBlock);
 
+		return $oBlock;
+	}
+
+	public function GetFilteringData(string $sContextKey, array $aContextParams, array $aExcludedObjects): array
+	{
+		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
+		$aExcludedByClass = array();
+		foreach ($aExcludedObjects as $oObj) {
+			if (!array_key_exists(get_class($oObj), $aExcludedByClass)) {
+				$aExcludedByClass[get_class($oObj)] = array();
+			}
+			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
+		}
 		$aAdditionalContexts = array();
 		foreach ($aContextDefs as $sKey => $aDefinition) {
 			$aAdditionalContexts[] = array('key' => $sKey, 'label' => Dict::S($aDefinition['dict']), 'oql' => $aDefinition['oql'], 'default' => (array_key_exists('default', $aDefinition) && ($aDefinition['default'] == 'yes')));
