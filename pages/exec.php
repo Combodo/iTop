@@ -38,15 +38,17 @@ utils::InitTimeZone();
  */
 function CheckPageExists(string $sPagePath, array $aPossibleBasePaths)
 {
-	$sTargetPage = false;
 	foreach ($aPossibleBasePaths as $sBasePath) {
 		$sTargetPage = utils::RealPath($sPagePath, $sBasePath);
-		if ($sTargetPage !== false) {
+		if (
+			($sTargetPage !== false)
+			&& (strtolower(pathinfo($sTargetPage, PATHINFO_EXTENSION)) === "php")
+		) {
 			return $sTargetPage;
 		}
 	}
 
-	return $sTargetPage;
+	return false;
 }
 
 
