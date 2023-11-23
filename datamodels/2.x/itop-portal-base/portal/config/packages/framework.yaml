@@ -1,7 +1,4 @@
 framework:
-  trusted_proxies: '%env(TRUSTED_PROXIES)%'
-  trusted_headers: [ 'forwarded', 'x-forwarded-for', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix' ]
-
   secret: '%env(APP_SECRET)%'
   #default_locale: en
   #csrf_protection: true
