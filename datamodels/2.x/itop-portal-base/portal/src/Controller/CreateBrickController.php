@@ -54,7 +54,7 @@ class CreateBrickController extends BrickController
 	 *
 	 * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
 	 */
-	public function DisplayAction(Request $oRequest, $sBrickId) : Response
+	public function DisplayAction(Request $oRequest, $sBrickId)
 	{
 		/** @var \Combodo\iTop\Portal\Brick\CreateBrick $oBrick */
 		$oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
