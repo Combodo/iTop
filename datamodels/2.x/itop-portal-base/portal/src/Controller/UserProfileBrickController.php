@@ -290,7 +290,7 @@ class UserProfileBrickController extends BrickController
 				$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
 				// Applying modification to object
 				$aFormData['validation'] = $oFormManager->OnSubmit(array(
-					'currentValues' => $this->oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
+					'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
 				));
 			}
 		}
