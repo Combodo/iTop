@@ -37,6 +37,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class SessionMessageController extends AbstractController
 {
 
+	/**
+	 * @since 3.2.0 N°6933
+	 */
 	public function __construct(
 		protected RequestManipulatorHelper $oRequestManipulator,
 		protected SessionMessageHelper $oSessionMessageHelper
