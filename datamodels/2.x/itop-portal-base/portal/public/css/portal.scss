@@ -1463,3 +1463,27 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 .wiki_broken_link {
 	text-decoration: line-through;
 }
+
+@media print {
+  /* Prevent URLs from being displayed */
+  a[href], img[src] {
+    &::after {
+      content: none !important;
+    }
+  }
+
+  /* Force modals to be displayed one after another instead of stacked */
+  .modal {
+    &.in {
+      position: relative;
+      top: unset;
+      z-index: unset;
+      overflow-y: unset;
+    }
+
+  }
+
+  #drag_overlay {
+    display: none;
+  }
+}
