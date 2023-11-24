@@ -62,7 +62,7 @@ class BrowseBrickController extends BrickController
 	 */
 	public function __construct(
 		protected BrowseBrickHelper $oBrowseBrickHelper,
-		protected RequestManipulatorHelper $oRequestManipulator,
+		protected RequestManipulatorHelper $oRequestManipulatorHelper,
 		protected BrickControllerHelper $oBrickControllerHelper,
 		protected BrickCollection $oBrickCollection
 	)
