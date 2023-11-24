@@ -56,7 +56,7 @@ class BrowseBrickController extends BrickController
 	 * Constructor.
 	 *
 	 * @param \Combodo\iTop\Portal\Helper\BrowseBrickHelper $oBrowseBrickHelper
-	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator
+	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulatorHelper
 	 * @param \Combodo\iTop\Portal\Helper\BrickControllerHelper $oBrickControllerHelper
 	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
 	 *
@@ -106,7 +106,7 @@ class BrowseBrickController extends BrickController
 		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : $this->oRequestManipulatorHelper->ReadParam('sDataLoading',
 			$oBrick->GetDataLoading());
 		// Getting search value
-		$sRawSearchValue = $this->oRequestManipulator->ReadParam('sSearchValue', '');
+		$sRawSearchValue = $this->oRequestManipulatorHelper->ReadParam('sSearchValue', '');
 		$sSearchValue = html_entity_decode($sRawSearchValue);
 		if (strlen($sSearchValue) > 0)
 		{
@@ -316,8 +316,8 @@ class BrowseBrickController extends BrickController
 			{
 				case BrowseBrick::ENUM_BROWSE_MODE_LIST:
 					// Retrieving parameters
-					$iPageNumber = (int)$this->oRequestManipulator->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
-					$iListLength = (int)$this->oRequestManipulator->ReadParam('iListLength', BrowseBrick::DEFAULT_LIST_LENGTH,
+					$iPageNumber = (int)$this->oRequestManipulatorHelper->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
+					$iListLength = (int)$this->oRequestManipulatorHelper->ReadParam('iListLength', BrowseBrick::DEFAULT_LIST_LENGTH,
 						FILTER_SANITIZE_NUMBER_INT);
 
 					// Getting total records number
@@ -333,8 +333,8 @@ class BrowseBrickController extends BrickController
 				case BrowseBrick::ENUM_BROWSE_MODE_TREE:
 				case BrowseBrick::ENUM_BROWSE_MODE_MOSAIC:
 					// Retrieving parameters
-					$sLevelAlias = $this->oRequestManipulator->ReadParam('sLevelAlias', '');
-					$sNodeId = $this->oRequestManipulator->ReadParam('sNodeId', '');
+					$sLevelAlias = $this->oRequestManipulatorHelper->ReadParam('sLevelAlias', '');
+					$sNodeId = $this->oRequestManipulatorHelper->ReadParam('sNodeId', '');
 
 					// If no values for those parameters, we might be loading page in lazy mode for the first time, therefore the URL doesn't have those information.
 					if (empty($sLevelAlias))

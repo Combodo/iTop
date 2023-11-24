@@ -31,6 +31,7 @@ use Combodo\iTop\Portal\Brick\BrickCollection;
 use Combodo\iTop\Portal\Brick\CreateBrick;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
+use Combodo\iTop\Portal\Helper\NavigationRuleHelper;
 use Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper;
 use Combodo\iTop\Portal\Helper\RequestManipulatorHelper;
 use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
@@ -74,15 +75,25 @@ class ObjectController extends BrickController
 	const DEFAULT_LIST_LENGTH = 10;
 
 	/**
+	 * @param \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper
+	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidatorHelper
+	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulatorHelper
+	 * @param \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator
+	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
+	 * @param \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oObjectFormHandlerHelper
+	 * @param \Combodo\iTop\Portal\Helper\NavigationRuleHelper $oNavigationRuleHelper
+	 *
 	 * @since 3.2.0 N°6933
 	 */
 	public function __construct(
 		protected SecurityHelper $oSecurityHelper,
-		protected ScopeValidatorHelper $oScopeValidator,
-		protected RequestManipulatorHelper $oRequestManipulator,
+		protected ScopeValidatorHelper $oScopeValidatorHelper,
+		protected RequestManipulatorHelper $oRequestManipulatorHelper,
 		protected UrlGenerator $oUrlGenerator,
 		protected BrickCollection $oBrickCollection,
-		protected ObjectFormHandlerHelper $oObjectFormHandler
+		protected ObjectFormHandlerHelper $oObjectFormHandlerHelper,
+		protected NavigationRuleHelper $oNavigationRuleHelper,
+		protected ContextManipulatorHelper $oContextManipulatorHelper
 
 	)
 	{
@@ -120,7 +131,7 @@ class ObjectController extends BrickController
 
 		// Retrieving object
 		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */,
-			$this->oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
+			$this->oScopeValidatorHelper->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 		if ($oObject === null) {
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
 			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : Could not load object '.$sObjectClass.'::'.$sObjectId.'.');
@@ -158,7 +169,7 @@ class ObjectController extends BrickController
 		}
 
 		$oObject = MetaModel::GetObjectByColumn($sObjectClass, $sObjectAttCode, $sObjectAttValue, false,
-			$this->oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
+			$this->oScopeValidatorHelper->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 		if ($oObject === null) {
 			// null if object not found or multiple matches
 			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : Could not load object '.$sObjectClass.'" and "'.$sObjectAttCode.' / '.$sObjectAttValue.'.');
@@ -194,14 +205,14 @@ class ObjectController extends BrickController
 	protected function PrepareViewObjectResponse(Request $oRequest, DBObject $oObject)
 	{
 
-		$sOperation = $this->oRequestManipulator->ReadParam('operation', '');
+		$sOperation = $this->oRequestManipulatorHelper->ReadParam('operation', '');
 		$sObjectClass = get_class($oObject);
 		$sObjectId = $oObject->GetKey();
 
 		$oObject->FireEvent(EVENT_DISPLAY_OBJECT_DETAILS);
 
 		$aData = array('sMode' => 'view');
-		$aData['form'] = $this->oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId);
+		$aData['form'] = $this->oObjectFormHandlerHelper->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId);
 		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:View:Title', MetaModel::GetName($sObjectClass),
 			$oObject->GetName());
 
@@ -227,7 +238,7 @@ class ObjectController extends BrickController
 			}
 		} else {
 			// Adding brick if it was passed
-			$sBrickId = $this->oRequestManipulator->ReadParam('sBrickId', '');
+			$sBrickId = $this->oRequestManipulatorHelper->ReadParam('sBrickId', '');
 			if (!empty($sBrickId)) {
 				$oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
 				if ($oBrick !== null) {
@@ -275,7 +286,7 @@ class ObjectController extends BrickController
 
 		// Retrieving object
 		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */,
-			$this->oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
+			$this->oScopeValidatorHelper->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 		if ($oObject === null)
 		{
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
@@ -283,10 +294,10 @@ class ObjectController extends BrickController
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
-		$sOperation = $this->oRequestManipulator->ReadParam('operation', '');
+		$sOperation = $this->oRequestManipulatorHelper->ReadParam('operation', '');
 
 		$aData = array('sMode' => 'edit');
-		$aData['form'] = $this->oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId);
+		$aData['form'] = $this->oObjectFormHandlerHelper->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId);
 		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:Edit:Title', MetaModel::GetName($sObjectClass),
 			$aData['form']['object_name']);
 
@@ -306,7 +317,7 @@ class ObjectController extends BrickController
 		else
 		{
 			// Adding brick if it was passed
-			$sBrickId = $this->oRequestManipulator->ReadParam('sBrickId', '');
+			$sBrickId = $this->oRequestManipulatorHelper->ReadParam('sBrickId', '');
 			if (!empty($sBrickId))
 			{
 				$oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
@@ -446,7 +457,7 @@ class ObjectController extends BrickController
 		}
 
 		// Retrieving object
-		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */, 	$this->oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */, 	$this->oScopeValidatorHelper->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 		if ($oObject === null)
 		{
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
@@ -455,7 +466,7 @@ class ObjectController extends BrickController
 		}
 
 		// Retrieving request parameters
-		$sOperation = $this->oRequestManipulator->ReadParam('operation', '');
+		$sOperation = $this->oRequestManipulatorHelper->ReadParam('operation', '');
 
 		// Retrieving form properties
 		$aStimuliForms = ApplicationHelper::GetLoadedFormFromClass($aCombodoPortalInstanceConf['forms'], $sObjectClass, 'apply_stimulus');
@@ -482,7 +493,7 @@ class ObjectController extends BrickController
 		$oRequest->request->set('apply_stimulus', array('code' => $sStimulusCode));
 
 		$aData = array('sMode' => 'apply_stimulus');
-		$aData['form'] = $this->oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId, $aFormProperties);
+		$aData['form'] = $this->oObjectFormHandlerHelper->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId, $aFormProperties);
 		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:Stimulus:Title');
 
 		// TODO : This is a ugly patch to avoid showing a modal with a readonly form to the user as it would prevent user from finishing the transition.
@@ -500,7 +511,7 @@ class ObjectController extends BrickController
 				$oSubRequest->request->set('formmanager_data', json_encode($aData['form']['formmanager_data']));
 
 				$aData = array('sMode' => 'apply_stimulus');
-				$aData['form'] = $this->oObjectFormHandler->HandleForm($oSubRequest, $aData['sMode'], $sObjectClass, $sObjectId,
+				$aData['form'] = $this->oObjectFormHandlerHelper->HandleForm($oSubRequest, $aData['sMode'], $sObjectClass, $sObjectId,
 					$aFormProperties);
 
 				// Reload the object to make sure we have it in a clean state
@@ -604,10 +615,10 @@ class ObjectController extends BrickController
 			//
 			// Note : The action rules must be a base64-encoded JSON object, this is just so users are tempted to changes values.
 			// But it would not be a security issue as it only presets values in the form.
-			$sActionRulesToken = $this->oRequestManipulator->ReadParam('ar_token', '');
-			$aActionRules = (!empty($sActionRulesToken)) ? $this->oContextManipulator->DecodeRulesToken($sActionRulesToken) : array();
+			$sActionRulesToken = $this->oRequestManipulatorHelper->ReadParam('ar_token', '');
+			$aActionRules = (!empty($sActionRulesToken)) ? $this->oContextManipulatorHelper->DecodeRulesToken($sActionRulesToken) : array();
 			// Preparing object
-			$this->oContextManipulator->PrepareObject($aActionRules, $oHostObject);
+			$this->oContextManipulatorHelper->PrepareObject($aActionRules, $oHostObject);
 		}
 
 		// Updating host object with form data / values
@@ -616,14 +627,14 @@ class ObjectController extends BrickController
 		if (!empty($sFormManagerClass) && !empty($sFormManagerData)) {
 			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
-			$oFormManager->SetObjectFormHandlerHelper($this->oFormHandlerHelper);
+			$oFormManager->SetObjectFormHandlerHelper($this->oObjectFormHandlerHelper);
 			$oFormManager->SetObject($oHostObject);
 
 			// Applying action rules if present
 			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== '')) {
 				$aActionRules = ContextManipulatorHelper::DecodeRulesToken($oFormManager->GetActionRulesToken());
 				$oObj = $oFormManager->GetObject();
-				$this->oContextManipulator->PrepareObject($aActionRules, $oObj);
+				$this->oContextManipulatorHelper->PrepareObject($aActionRules, $oObj);
 				$oFormManager->SetObject($oObj);
 			}
 
@@ -667,7 +678,7 @@ class ObjectController extends BrickController
 		// It is the responsibility of the template designer to write the right query so the user see only what he should.
 		if ($oTargetAttDef->GetEditClass() !== 'CustomFields')
 		{
-			$oScopeSearch = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ);
+			$oScopeSearch = $this->oScopeValidatorHelper->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ);
 			$oSearch = $oSearch->Intersect($oScopeSearch);
 			// - Allowing all data if necessary
 			if ($oScopeSearch->IsAllDataAllowed())
@@ -737,7 +748,7 @@ class ObjectController extends BrickController
 			'sTargetAttCode'    => $sTargetAttCode,
 			'sHostObjectClass'  => $sHostObjectClass,
 			'sHostObjectId'     => $sHostObjectId,
-			'sActionRulesToken' => $this->oRequestManipulator->ReadParam('ar_token', ''),
+			'sActionRulesToken' => $this->oRequestManipulatorHelper->ReadParam('ar_token', ''),
 		);
 
 		// Checking security layers
@@ -762,41 +773,41 @@ class ObjectController extends BrickController
 			// But it would not be a security issue as it only presets values in the form.
 			$aActionRules = !empty($aData['sActionRulesToken']) ? ContextManipulatorHelper::DecodeRulesToken($aData['sActionRulesToken']) : array();
 			// Preparing object
-			$this->oContextManipulator->PrepareObject($aActionRules, $oHostObject);
+			$this->oContextManipulatorHelper->PrepareObject($aActionRules, $oHostObject);
 		}
 
 		// Updating host object with form data / values
-		$sFormManagerClass = $this->oRequestManipulator->ReadParam('formmanager_class', '', FILTER_UNSAFE_RAW);
-		$sFormManagerData = $this->oRequestManipulator->ReadParam('formmanager_data', '', FILTER_UNSAFE_RAW);
+		$sFormManagerClass = $this->oRequestManipulatorHelper->ReadParam('formmanager_class', '', FILTER_UNSAFE_RAW);
+		$sFormManagerData = $this->oRequestManipulatorHelper->ReadParam('formmanager_data', '', FILTER_UNSAFE_RAW);
 		if (!empty($sFormManagerClass) && !empty($sFormManagerData)) {
 			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
-			$oFormManager->SetObjectFormHandlerHelper($this->oFormHandlerHelper);
+			$oFormManager->SetObjectFormHandlerHelper($this->oObjectFormHandlerHelper);
 			$oFormManager->SetObject($oHostObject);
 
 			// Applying action rules if present
 			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== '')) {
 				$aActionRules = ContextManipulatorHelper::DecodeRulesToken($oFormManager->GetActionRulesToken());
 				$oObj = $oFormManager->GetObject();
-				$this->oContextManipulator->PrepareObject($aActionRules, $oObj);
+				$this->oContextManipulatorHelper->PrepareObject($aActionRules, $oObj);
 				$oFormManager->SetObject($oObj);
 			}
 
 			// Updating host object
 			$oFormManager->OnUpdate(array(
-				'currentValues' => $this->oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
+				'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
 			));
 			$oHostObject = $oFormManager->GetObject();
 		}
 
 		// Retrieving request parameters
-		$iPageNumber = $this->oRequestManipulator->ReadParam('iPageNumber', static::DEFAULT_PAGE_NUMBER, FILTER_SANITIZE_NUMBER_INT);
-		$iListLength = $this->oRequestManipulator->ReadParam('iListLength', static::DEFAULT_LIST_LENGTH, FILTER_SANITIZE_NUMBER_INT);
-		$bInitialPass = $this->oRequestManipulator->HasParam('draw') ? false : true;
-		$sQuery = $this->oRequestManipulator->ReadParam('sSearchValue', '');
-		$sFormPath = $this->oRequestManipulator->ReadParam('sFormPath', '');
-		$sFieldId = $this->oRequestManipulator->ReadParam('sFieldId', '');
-		$aObjectIdsToIgnore = $this->oRequestManipulator->ReadParam('aObjectIdsToIgnore', null, FILTER_UNSAFE_RAW);
+		$iPageNumber = $this->oRequestManipulatorHelper->ReadParam('iPageNumber', static::DEFAULT_PAGE_NUMBER, FILTER_SANITIZE_NUMBER_INT);
+		$iListLength = $this->oRequestManipulatorHelper->ReadParam('iListLength', static::DEFAULT_LIST_LENGTH, FILTER_SANITIZE_NUMBER_INT);
+		$bInitialPass = $this->oRequestManipulatorHelper->HasParam('draw') ? false : true;
+		$sQuery = $this->oRequestManipulatorHelper->ReadParam('sSearchValue', '');
+		$sFormPath = $this->oRequestManipulatorHelper->ReadParam('sFormPath', '');
+		$sFieldId = $this->oRequestManipulatorHelper->ReadParam('sFieldId', '');
+		$aObjectIdsToIgnore = $this->oRequestManipulatorHelper->ReadParam('aObjectIdsToIgnore', null, FILTER_UNSAFE_RAW);
 
 		// Building search query
 		// - Retrieving target object class from attcode
@@ -845,7 +856,7 @@ class ObjectController extends BrickController
 		// - Retrieving scope search
 		// Note : This do NOT apply to custom fields as the portal administrator is not supposed to know which objects will be put in the templates.
 		// It is the responsibility of the template designer to write the right query so the user see only what he should.
-		$oScopeSearch = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ);
+		$oScopeSearch = $this->oScopeValidatorHelper->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ);
 		$aInternalParams = array();
 		if (($oScopeSearch === null) && ($oTargetAttDef->GetEditClass() !== 'CustomFields'))
 		{
@@ -1047,9 +1058,9 @@ class ObjectController extends BrickController
 		}
 
 		// Retrieving ormDocument's host object
-		$sObjectClass = $this->oRequestManipulator->ReadParam('sObjectClass', '');
-		$sObjectId = $this->oRequestManipulator->ReadParam('sObjectId', '');
-		$sObjectField = $this->oRequestManipulator->ReadParam('sObjectField', '');
+		$sObjectClass = $this->oRequestManipulatorHelper->ReadParam('sObjectClass', '');
+		$sObjectId = $this->oRequestManipulatorHelper->ReadParam('sObjectId', '');
+		$sObjectField = $this->oRequestManipulatorHelper->ReadParam('sObjectField', '');
 		$bCheckSecurity = true;
 
 		// When reaching to an Attachment, we have to check security on its host object instead of the Attachment itself
@@ -1089,7 +1100,7 @@ class ObjectController extends BrickController
 		}
 
 		// Retrieving object
-		$bAllowAllDataFlag = ($bCheckSecurity === false) ? true : $this->oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sHostClass);
+		$bAllowAllDataFlag = ($bCheckSecurity === false) ? true : $this->oScopeValidatorHelper->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sHostClass);
 		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* Must not be found */, $bAllowAllDataFlag);
 		if ($oObject === null)
 		{
@@ -1106,7 +1117,7 @@ class ObjectController extends BrickController
 		}
 		else
 		{
-			$iCacheSec = $this->oRequestManipulator->ReadParam('cache', 0, FILTER_SANITIZE_NUMBER_INT);
+			$iCacheSec = $this->oRequestManipulatorHelper->ReadParam('cache', 0, FILTER_SANITIZE_NUMBER_INT);
 		}
 
 		$aHeaders = array();
@@ -1163,14 +1174,14 @@ class ObjectController extends BrickController
 		// Retrieving sOperation from request only if it wasn't forced (determined by the route)
 		if ($sOperation === null)
 		{
-			$sOperation = $this->oRequestManipulator->ReadParam('operation', null);
+			$sOperation = $this->oRequestManipulatorHelper->ReadParam('operation', null);
 		}
 		switch ($sOperation)
 		{
 			case 'add':
-				$sFieldName = $this->oRequestManipulator->ReadParam('field_name', '');
-				$sObjectClass = $this->oRequestManipulator->ReadParam('object_class', '');
-				$sTempId = $this->oRequestManipulator->ReadParam('temp_id', '');
+				$sFieldName = $this->oRequestManipulatorHelper->ReadParam('field_name', '');
+				$sObjectClass = $this->oRequestManipulatorHelper->ReadParam('object_class', '');
+				$sTempId = $this->oRequestManipulatorHelper->ReadParam('temp_id', '');
 
 				if (empty($sObjectClass) || empty($sTempId))
 				{
@@ -1222,7 +1233,7 @@ class ObjectController extends BrickController
 				// - Route
 				$aRouteParams = array(
 					'sObjectClass' => 'Attachment',
-					'sObjectId' => $this->oRequestManipulator->ReadParam('sAttachmentId', null),
+					'sObjectId' => $this->oRequestManipulatorHelper->ReadParam('sAttachmentId', null),
 					'sObjectField' => 'contents',
 				);
 
@@ -1262,9 +1273,9 @@ class ObjectController extends BrickController
 		$aData = array();
 
 		// Retrieving parameters
-		$sObjectClass = $this->oRequestManipulator->ReadParam('sObjectClass', '');
-		$aObjectIds = $this->oRequestManipulator->ReadParam('aObjectIds', array(), FILTER_UNSAFE_RAW);
-		$aObjectAttCodes = $this->oRequestManipulator->ReadParam('aObjectAttCodes', array(), FILTER_UNSAFE_RAW);
+		$sObjectClass = $this->oRequestManipulatorHelper->ReadParam('sObjectClass', '');
+		$aObjectIds = $this->oRequestManipulatorHelper->ReadParam('aObjectIds', array(), FILTER_UNSAFE_RAW);
+		$aObjectAttCodes = $this->oRequestManipulatorHelper->ReadParam('aObjectAttCodes', array(), FILTER_UNSAFE_RAW);
 		if (empty($sObjectClass) || empty($aObjectIds) || empty($aObjectAttCodes)) {
 			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : sObjectClass, aObjectIds and aObjectAttCodes expected, "'.$sObjectClass.'", "'.implode('/',
 					$aObjectIds).'" given.');
@@ -1272,7 +1283,7 @@ class ObjectController extends BrickController
 		}
 
 		// Building the search
-		$bIgnoreSilos = $this->oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass);
+		$bIgnoreSilos = $this->oScopeValidatorHelper->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass);
 		$aParams = array('objects_id' => $aObjectIds);
 		$oSearch = DBObjectSearch::FromOQL("SELECT $sObjectClass WHERE id IN (:objects_id)");
 		if ($bIgnoreSilos === true) {
@@ -1319,12 +1330,12 @@ class ObjectController extends BrickController
 		);
 
 		// Retrieving parameters
-		$sObjectClass = $this->oRequestManipulator->ReadParam('sObjectClass', '');
-		$sLinkClass = $this->oRequestManipulator->ReadParam('sLinkClass', '');
-		$aObjectIds = $this->oRequestManipulator->ReadParam('aObjectIds', array(), FILTER_UNSAFE_RAW);
-		$aObjectAttCodes = $this->oRequestManipulator->ReadParam('aObjectAttCodes', array(), FILTER_UNSAFE_RAW);
-		$aLinkAttCodes = $this->oRequestManipulator->ReadParam('aLinkAttCodes', array(), FILTER_UNSAFE_RAW);
-		$sDateTimePickerWidgetParent = $this->oRequestManipulator->ReadParam('sDateTimePickerWidgetParent', array(), FILTER_UNSAFE_RAW);
+		$sObjectClass = $this->oRequestManipulatorHelper->ReadParam('sObjectClass', '');
+		$sLinkClass = $this->oRequestManipulatorHelper->ReadParam('sLinkClass', '');
+		$aObjectIds = $this->oRequestManipulatorHelper->ReadParam('aObjectIds', array(), FILTER_UNSAFE_RAW);
+		$aObjectAttCodes = $this->oRequestManipulatorHelper->ReadParam('aObjectAttCodes', array(), FILTER_UNSAFE_RAW);
+		$aLinkAttCodes = $this->oRequestManipulatorHelper->ReadParam('aLinkAttCodes', array(), FILTER_UNSAFE_RAW);
+		$sDateTimePickerWidgetParent = $this->oRequestManipulatorHelper->ReadParam('sDateTimePickerWidgetParent', array(), FILTER_UNSAFE_RAW);
 
 		if (empty($sObjectClass) || empty($aObjectIds) || empty($aObjectAttCodes)) {
 			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : sObjectClass, aObjectIds and aObjectAttCodes expected, "'.$sObjectClass.'", "'.implode('/',
@@ -1333,7 +1344,7 @@ class ObjectController extends BrickController
 		}
 
 		// Building the search
-		$bIgnoreSilos = $this->oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass);
+		$bIgnoreSilos = $this->oScopeValidatorHelper->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass);
 		$aParams = array('objects_id' => $aObjectIds);
 		$oSearch = DBObjectSearch::FromOQL("SELECT $sObjectClass WHERE id IN (:objects_id)");
 		if ($bIgnoreSilos === true)
@@ -1507,10 +1518,10 @@ class ObjectController extends BrickController
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
-		$sOperation = $this->oRequestManipulator->ReadParam('operation', '');
+		$sOperation = $this->oRequestManipulatorHelper->ReadParam('operation', '');
 
 		$aData = array('sMode' => 'create');
-		$aData['form'] = $this->oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass);
+		$aData['form'] = $this->oObjectFormHandlerHelper->HandleForm($oRequest, $aData['sMode'], $sObjectClass);
 		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:Create:Title', MetaModel::GetName($sObjectClass));
 
 		// Preparing response
@@ -1529,7 +1540,7 @@ class ObjectController extends BrickController
 		else
 		{
 			// Adding brick if it was passed
-			$sBrickId = $this->oRequestManipulator->ReadParam('sBrickId', '');
+			$sBrickId = $this->oRequestManipulatorHelper->ReadParam('sBrickId', '');
 			if (!empty($sBrickId))
 			{
 				$oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
@@ -1565,11 +1576,11 @@ class ObjectController extends BrickController
 			'aLeafClasses' => array(),
 			'sPageTitle' => Dict::Format('Brick:Portal:Object:Form:Create:Title', MetaModel::GetName($sObjectClass)),
 			'sLeafClassesListId' => 'leaf_classes_list_' . uniqid(),
-			'ar_token' => $this->oRequestManipulator->ReadParam('ar_token', ''),
+			'ar_token' => $this->oRequestManipulatorHelper->ReadParam('ar_token', ''),
 		);
 		$sTemplatePath = CreateBrick::DEFAULT_PAGE_TEMPLATE_PATH;
 
-		$sBrickId = $this->oRequestManipulator->ReadParam('sBrickId', '');
+		$sBrickId = $this->oRequestManipulatorHelper->ReadParam('sBrickId', '');
 		if (!empty($sBrickId))
 		{
 			$oBrick = $this->oBrickCollection->GetBrickById($sBrickId);

@@ -72,11 +72,21 @@ class ManageBrickController extends BrickController
 	/** @var string EXCEL_EXPORT_TEMPLATE_PATH */
 	const EXCEL_EXPORT_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/popup-export-excel.html.twig';
 
+	/**
+	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
+	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidatorHelper
+	 * @param \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator
+	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulatorHelper
+	 * @param \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper
+	 * @param \Combodo\iTop\Portal\Helper\BrickControllerHelper $oBrickControllerHelper
+	 *
+	 * @since 3.2.0 N°6933
+	 */
 	public function __construct(
 		protected BrickCollection $oBrickCollection,
-		protected ScopeValidatorHelper $oScopeValidator,
+		protected ScopeValidatorHelper $oScopeValidatorHelper,
 		protected UrlGenerator $oUrlGenerator,
-		protected RequestManipulatorHelper $oRequestManipulator,
+		protected RequestManipulatorHelper $oRequestManipulatorHelper,
 		protected SecurityHelper $oSecurityHelper,
 		protected BrickControllerHelper $oBrickControllerHelper
 	)
@@ -194,7 +204,7 @@ class ManageBrickController extends BrickController
 		}
 		else
 		{
-			$this->oScopeValidator->AddScopeToQuery($oQuery, $sClass);
+			$this->oScopeValidatorHelper->AddScopeToQuery($oQuery, $sClass);
 			$aData = array();
 			$this->ManageSearchValue($aData, $oQuery, $sClass);
 
@@ -304,10 +314,10 @@ class ManageBrickController extends BrickController
 		$bHasScope = true;
 
 		// Getting current data loading mode (First from router parameter, then query parameter, then default brick value)
-		$sDataLoading = $this->oRequestManipulator->ReadParam('sDataLoading', $oBrick->GetDataLoading());
+		$sDataLoading = $this->oRequestManipulatorHelper->ReadParam('sDataLoading', $oBrick->GetDataLoading());
 
 		// - Retrieving the grouping areas to display
-		$sGroupingArea = $this->oRequestManipulator->ReadParam('sGroupingArea', '');
+		$sGroupingArea = $this->oRequestManipulatorHelper->ReadParam('sGroupingArea', '');
 		if (!empty($sGroupingArea))
 		{
 			$bNeedDetails = true;
@@ -354,7 +364,7 @@ class ManageBrickController extends BrickController
 					$oConditionQuery = $oQuery->Intersect($oDBSearch);
 					// - Restricting query to scope
 					array_push($aConditionQueryGrouping,$oDBSearch);
-					$bHasScope = $this->oScopeValidator->AddScopeToQuery($oConditionQuery, $oConditionQuery->GetClass());
+					$bHasScope = $this->oScopeValidatorHelper->AddScopeToQuery($oConditionQuery, $oConditionQuery->GetClass());
 					if ($bHasScope)
 					{
 						// - Building ObjectSet
@@ -378,7 +388,7 @@ class ManageBrickController extends BrickController
 				try
 				{
 					$oConditionQuery = $oQuery->Intersect(new DBUnionSearch($aConditionQueryGrouping));
-					$bHasScope = $this->oScopeValidator->AddScopeToQuery($oConditionQuery, $oConditionQuery->GetClass());
+					$bHasScope = $this->oScopeValidatorHelper->AddScopeToQuery($oConditionQuery, $oConditionQuery->GetClass());
 					if ($bHasScope)
 					{
 						// - Building ObjectSet
@@ -498,7 +508,7 @@ class ManageBrickController extends BrickController
 				// Restricting query to allowed scope on each classes
 				// Note: Will need to moved the scope restriction on queries elsewhere when we consider grouping on something else than finalclass
 				// Note: We now get view scope instead of edit scope as we allowed users to view/edit objects in the brick regarding their rights
-				$bHasScope = $this->oScopeValidator->AddScopeToQuery($oAreaQuery, $aGroupingAreasValue['value']);
+				$bHasScope = $this->oScopeValidatorHelper->AddScopeToQuery($oAreaQuery, $aGroupingAreasValue['value']);
 				if (!$bHasScope)
 				{
 					// if no scope apply does not allow any data
@@ -539,8 +549,8 @@ class ManageBrickController extends BrickController
 					if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY)
 					{
 						// Retrieving parameters
-						$iPageNumber = (int)$this->oRequestManipulator->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
-						$iListLength = (int)$this->oRequestManipulator->ReadParam('iListLength', ManageBrick::DEFAULT_LIST_LENGTH,
+						$iPageNumber = (int)$this->oRequestManipulatorHelper->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
+						$iListLength = (int)$this->oRequestManipulatorHelper->ReadParam('iListLength', ManageBrick::DEFAULT_LIST_LENGTH,
 							FILTER_SANITIZE_NUMBER_INT);
 
 						// Getting total records number
@@ -888,7 +898,7 @@ class ManageBrickController extends BrickController
 	protected function ManageSearchValue(&$aData, DBSearch &$oQuery, $sClass, $aColumnsAttrs = array())
 	{
 		// Getting search value
-		$sRawSearchValue = trim($this->oRequestManipulator->ReadParam('sSearchValue', ''));
+		$sRawSearchValue = trim($this->oRequestManipulatorHelper->ReadParam('sSearchValue', ''));
 		$sSearchValue = html_entity_decode($sRawSearchValue);
 
 		// - Adding search clause if necessary
@@ -954,7 +964,7 @@ class ManageBrickController extends BrickController
 		$aGroupingTabsValues = array();
 		$aDistinctResults = array();
 		$oDistinctQuery = DBSearch::FromOQL($oBrick->GetOql());
-		$bHasScope = $this->oScopeValidator->AddScopeToQuery($oDistinctQuery, $oDistinctQuery->GetClass());
+		$bHasScope = $this->oScopeValidatorHelper->AddScopeToQuery($oDistinctQuery, $oDistinctQuery->GetClass());
 		if ($bHasScope)
 		{
 			// - Adding field condition
@@ -1062,7 +1072,7 @@ class ManageBrickController extends BrickController
 	protected function GetScopedQuery(ManageBrick $oBrick, $sClass)
 	{
 		$oQuery = DBSearch::FromOQL($oBrick->GetOql());
-		$this->oScopeValidator->AddScopeToQuery($oQuery, $sClass);
+		$this->oScopeValidatorHelper->AddScopeToQuery($oQuery, $sClass);
 
 		return $oQuery;
 	}

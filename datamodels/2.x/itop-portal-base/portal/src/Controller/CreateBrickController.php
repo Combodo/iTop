@@ -39,6 +39,8 @@ class CreateBrickController extends BrickController
 	 * Constructor.
 	 *
 	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
+	 *
+	 * @since 3.2.0 N°6933
 	 */
 	public function __construct(
 		protected BrickCollection $oBrickCollection

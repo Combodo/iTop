@@ -38,10 +38,13 @@ class SessionMessageController extends AbstractController
 {
 
 	/**
+	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulatorHelper
+	 * @param \Combodo\iTop\Portal\Helper\SessionMessageHelper $oSessionMessageHelper
+	 *
 	 * @since 3.2.0 N°6933
 	 */
 	public function __construct(
-		protected RequestManipulatorHelper $oRequestManipulator,
+		protected RequestManipulatorHelper $oRequestManipulatorHelper,
 		protected SessionMessageHelper $oSessionMessageHelper
 	)
 	{
@@ -57,8 +60,8 @@ class SessionMessageController extends AbstractController
 		$aData = array();
 
 		// Retrieve parameters
-		$sMessageSeverity = $this->oRequestManipulator->ReadParam('sSeverity');
-		$sMessageContent = $this->oRequestManipulator->ReadParam('sContent');
+		$sMessageSeverity = $this->oRequestManipulatorHelper->ReadParam('sSeverity');
+		$sMessageContent = $this->oRequestManipulatorHelper->ReadParam('sContent');
 
 		// Check parameters consistency
 		if (empty($sMessageSeverity) || empty($sMessageContent))

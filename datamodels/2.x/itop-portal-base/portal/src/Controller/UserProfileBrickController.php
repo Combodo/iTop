@@ -48,13 +48,17 @@ use utils;
  */
 class UserProfileBrickController extends BrickController
 {
-
 	/**
+	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulatorHelper
+	 * @param \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $ObjectFormHandlerHelper
+	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
+	 * @param \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator
+	 *
 	 * @since 3.2.0 N°6933
 	 */
 	public function __construct(
-		protected RequestManipulatorHelper $oRequestManipulator,
-		protected ObjectFormHandlerHelper $ObjectFormHandler,
+		protected RequestManipulatorHelper $oRequestManipulatorHelper,
+		protected ObjectFormHandlerHelper $ObjectFormHandlerHelper,
 		protected BrickCollection $oBrickCollection,
 		protected UrlGenerator $oUrlGenerator
 	)
@@ -111,7 +115,7 @@ class UserProfileBrickController extends BrickController
 		// If this is ajax call, we are just submitting preferences or password forms
 		if ($oRequest->isXmlHttpRequest())
 		{
-			$aCurrentValues = $this->oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW);
+			$aCurrentValues = $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW);
 			$sFormType = $aCurrentValues['form_type'];
 			if ($sFormType === PreferencesFormManager::FORM_TYPE)
 			{
@@ -141,7 +145,7 @@ class UserProfileBrickController extends BrickController
 			$sCurContactId = $oCurContact->GetKey();
 
 			// Preparing forms
-			$aData['forms']['contact'] = $this->ObjectFormHandler->HandleForm($oRequest, $sFormMode, $sCurContactClass, $sCurContactId,
+			$aData['forms']['contact'] = $this->ObjectFormHandlerHelper->HandleForm($oRequest, $sFormMode, $sCurContactClass, $sCurContactId,
 				$oBrick->GetForm());
 			$aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
 			// - If user can change password, we display the form
@@ -174,7 +178,7 @@ class UserProfileBrickController extends BrickController
 		$aFormData = array();
 
 		// Handling form
-		$sOperation = $this->oRequestManipulator->ReadParam('operation', null);
+		$sOperation = $this->oRequestManipulatorHelper->ReadParam('operation', null);
 		// - Create
 		if ($sOperation === null)
 		{
@@ -196,8 +200,8 @@ class UserProfileBrickController extends BrickController
 		{
 			if ($sOperation === 'submit')
 			{
-				$sFormManagerClass = $this->oRequestManipulator->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
-				$sFormManagerData = $this->oRequestManipulator->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
+				$sFormManagerClass = $this->oRequestManipulatorHelper->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
+				$sFormManagerData = $this->oRequestManipulatorHelper->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
 				if ($sFormManagerClass === null || $sFormManagerData === null)
 				{
 					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formmanager_data must be defined.');
@@ -210,7 +214,7 @@ class UserProfileBrickController extends BrickController
 				$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
 				// Applying modification to object
 				$aFormData['validation'] = $oFormManager->OnSubmit(array(
-					'currentValues' => $this->oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
+					'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
 				));
 				// Reloading page only if preferences were changed
 				if (($aFormData['validation']['valid'] === true) && !empty($aFormData['validation']['messages']['success']))
@@ -255,7 +259,7 @@ class UserProfileBrickController extends BrickController
 
 		// Handling form
 		$sOperation = /** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
-			$this->oRequestManipulator->ReadParam('operation', null);
+			$this->oRequestManipulatorHelper->ReadParam('operation', null);
 		// - Create
 		if ($sOperation === null)
 		{
@@ -277,8 +281,8 @@ class UserProfileBrickController extends BrickController
 		{
 			if ($sOperation === 'submit')
 			{
-				$sFormManagerClass = $this->oRequestManipulator->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
-				$sFormManagerData = $this->oRequestManipulator->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
+				$sFormManagerClass = $this->oRequestManipulatorHelper->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
+				$sFormManagerData = $this->oRequestManipulatorHelper->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
 				if ($sFormManagerClass === null || $sFormManagerData === null) {
 					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formmanager_data must be defined.');
 					throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,

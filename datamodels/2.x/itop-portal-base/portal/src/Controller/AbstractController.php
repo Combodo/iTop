@@ -35,6 +35,7 @@ abstract class AbstractController extends SymfonyAbstractController
 {
 	/**
 	 * @var \Symfony\Component\Routing\RouterInterface symfony router
+	 *
 	 * @since 3.2.0 N°6933
 	 */
 	private RouterInterface $oRouter;
