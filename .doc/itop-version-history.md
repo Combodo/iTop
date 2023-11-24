@@ -1,7 +1,14 @@
 # iTop version history
 
 ```mermaid
-%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'showBranches': true,'mainBranchName': 'develop','rotateCommitLabel': true}} }%%
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 'themeVariables': {
+              'git0': 'lawngreen',
+              'git3': 'dodgerblue',
+              'git4': 'grey',
+              'git5': 'grey',
+              'git6': 'grey',
+              'git7': 'grey'
+       }, 'gitGraph': {'showBranches': true,'mainBranchName': 'develop','rotateCommitLabel': true}} }%%
 gitGraph
     commit id: "2016-07-06" tag: "2.3.0" type: HIGHLIGHT
     branch support/2.3 order: 900
