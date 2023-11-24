@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Setup;
 
+use Combodo\iTop\DesignDocument;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DOMDocument;
 use MFDocument;
@@ -32,9 +33,11 @@ use ModelFactory;
  */
 class ModelFactoryTest extends ItopTestCase
 {
-	protected function setUp(): void
+		protected function setUp(): void
 	{
 		parent::setUp();
+
+		//static::$DEBUG_UNIT_TEST = true;
 
 		$this->RequireOnceItopFile('setup/modelfactory.class.inc.php');
 	}
@@ -79,23 +82,1065 @@ class ModelFactoryTest extends ItopTestCase
 	 * @param $sExpected
 	 * @param $sActual
 	 */
-	protected function AssertEqualiTopXML($sExpected, $sActual)
+	protected function AssertEqualiTopXML($sExpected, $sActual, $sMessage = '')
 	{
 		// Note: assertEquals reports the differences in a diff which is easier to interpret (in PHPStorm)
 		// as compared to the report given by assertEqualXMLStructure
-		static::assertEquals($this->CanonicalizeXML($sExpected), $this->CanonicalizeXML($sActual));
+		static::assertEquals($this->CanonicalizeXML($sExpected), $this->CanonicalizeXML($sActual), $sMessage);
 	}
 
 	/**
 	 * Assertion ignoring some of the unexpected decoration brought by DOM Elements.
 	 */
-	protected function AssertEqualModels(string $sExpectedXML, ModelFactory $oFactory)
+	protected function AssertEqualModels(string $sExpectedXML, ModelFactory $oFactory, $sMessage = '')
 	{
-		return $this->AssertEqualiTopXML($sExpectedXML, $oFactory->Dump(null, true));
+		return $this->AssertEqualiTopXML($sExpectedXML, $oFactory->Dump(null, true), $sMessage);
 	}
 
 	/**
-	 * @dataProvider providerDeltas
+	 * @dataProvider ProviderGetPreviousComment
+	 * @covers ModelFactory::GetPreviousComment
+	 *
+	 * @param $sDeltaXML
+	 * @param $sClassName
+	 * @param $sExpectedComment
+	 *
+	 * @return void
+	 * @throws \ReflectionException
+	 */
+	public function testGetPreviousComment($sDeltaXML, $sClassName, $sExpectedComment)
+	{
+		$oFactory = new ModelFactory([]);
+		$oDocument = new MFDocument();
+		$oDocument->loadXML($sDeltaXML);
+		$oXPath = new \DOMXPath($oDocument);
+		$sClassName = DesignDocument::XPathQuote($sClassName);
+		/** @var MFElement $oClassNode */
+		$oClassNode = $oXPath->query("/itop_design/classes/class[@id=$sClassName]")->item(0);
+		/** @var \DOMComment|null $oCommentNode */
+		$oCommentNode = ModelFactory::GetPreviousComment($oClassNode);
+
+		if (is_null($sExpectedComment)) {
+			$this->assertNull($oCommentNode);
+		} else {
+			$this->assertEquals($sExpectedComment, $oCommentNode->textContent);
+		}
+	}
+
+	public function ProviderGetPreviousComment()
+	{
+		$aData = [];
+
+		$aData['No Comment first Class'] = [
+			'sDeltaXML' => '<itop_design version="3.1">
+	<classes>
+		<class id="A" _delta="define"/>
+	</classes>
+</itop_design>',
+			'sClassName' => 'A',
+			'sExpectedComment' => null,
+		];
+
+		$aData['No Comment other Class'] = [
+			'sDeltaXML' => '<itop_design version="3.1">
+	<classes>
+		<!-- Test comment -->
+		<class id="B" _delta="define"/>
+		<class id="A" _delta="define"/>
+	</classes>
+</itop_design>',
+			'sClassName' => 'A',
+			'sExpectedComment' => null,
+		];
+
+		$aData['Comment first class'] = [
+			'sDeltaXML' => '<itop_design version="3.1">
+	<classes>
+		<!-- Test comment -->
+		<class id="A" _delta="define"/>
+	</classes>
+</itop_design>',
+			'sClassName' => 'A',
+			'sExpectedComment' => ' Test comment ',
+		];
+
+		$aData['Comment other Class'] = [
+			'sDeltaXML' => '<itop_design version="3.1">
+	<classes>
+		<class id="B" _delta="define"/>
+		<!-- Test comment -->
+		<class id="A" _delta="define"/>
+	</classes>
+</itop_design>',
+			'sClassName' => 'A',
+			'sExpectedComment' => ' Test comment ',
+		];
+
+		return $aData;
+	}
+
+	/**
+	 * @dataProvider ProviderFlattenDelta
+	 * @covers ModelFactory::FlattenClassesInDelta
+	 *
+	 * @param $sDeltaXML
+	 * @param $sExpectedXML
+	 *
+	 * @return void
+	 * @throws \ReflectionException
+	 */
+	public function testFlattenDelta($sDeltaXML, $sExpectedXML)
+	{
+		$oFactory = new ModelFactory([]);
+		$oDocument = new MFDocument();
+		$oDocument->loadXML($sDeltaXML);
+		/* @var MFElement $oDeltaRoot */
+		$oDeltaRoot = $oDocument->firstChild;
+		/** @var MFElement $oFlattenDeltaRoot */
+		$oFlattenDeltaRoot = $this->InvokeNonPublicMethod(ModelFactory::class, 'FlattenClassesInDelta', $oFactory, [$oDeltaRoot]);
+		$this->AssertEqualiTopXML($sExpectedXML, $oFlattenDeltaRoot->ownerDocument->saveXML());
+	}
+
+	public function ProviderFlattenDelta()
+	{
+		return [
+			'Empty delta' => [
+				'sDeltaXML' => '
+<itop_design version="3.1">
+</itop_design>',
+				'sExpectedXML' => '<itop_design version="3.1">
+</itop_design>'
+			],
+
+			'Flat delete' => [
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1_2" _delta="delete"/>
+		<class id="C_1_1" _delta="define"/>
+		<class id="C_1" _delta="delete"/>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design version="3.1">
+	<classes>
+		<class id="C_1_2" _delta="delete"/>
+		<class id="C_1_1" _delta="define"/>
+		<class id="C_1" _delta="delete"/>
+	</classes>
+</itop_design>'
+			],
+
+			'flat define root' => [
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+		</class>
+		<class id="C_2" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design version="3.1">
+  <classes>
+    <class id="C_1" _delta="define">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+    <class id="C_2" _delta="define">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+  </classes>
+</itop_design>'
+			],
+
+			'flat force root' => [
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="force">
+			<parent>cmdbAbstractObject</parent>
+		</class>
+		<class id="C_2" _delta="force">
+			<parent>cmdbAbstractObject</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design version="3.1">
+  <classes>
+	<!-- Automatically generated to remove class/C_1 hierarchy -->
+    <class id="C_1" _delta="delete_if_exists"/>
+    <class id="C_1" _delta="force">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+	<!-- Automatically generated to remove class/C_2 hierarchy -->
+    <class id="C_2" _delta="delete_if_exists"/>
+    <class id="C_2" _delta="force">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+  </classes>
+</itop_design>'
+			],
+
+			'flat redefine root' => [
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="redefine">
+			<parent>cmdbAbstractObject</parent>
+		</class>
+		<class id="C_2" _delta="redefine">
+			<parent>cmdbAbstractObject</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design version="3.1">
+  <classes>
+	<!-- Automatically generated to remove class/C_1 hierarchy -->
+    <class id="C_1" _delta="delete"/>
+    <class id="C_1" _delta="define">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+	<!-- Automatically generated to remove class/C_2 hierarchy -->
+    <class id="C_2" _delta="delete"/>
+    <class id="C_2" _delta="define">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+  </classes>
+</itop_design>'
+			],
+
+			'Simple hierarchy define root' => [
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<class id="C_1_1">
+				<parent>C_1</parent>
+			</class>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design version="3.1">
+  <classes>
+    <class id="C_1" _delta="define">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_1" _delta="define">
+      <parent>C_1</parent>
+    </class>
+  </classes>
+</itop_design>'
+			],
+
+			'Complex hierarchy delete' => [
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1">
+			<parent>cmdbAbstractObject</parent>
+			<class id="C_1_1">
+				<parent>C_1</parent>
+				<class id="C_1_1_1">
+					<parent>C_1_1</parent>
+					<class id="C_1_1_1_1" _delta="delete"/>
+				</class>
+			</class>
+			<class id="C_1_2">
+				<parent>C_1</parent>
+				<class id="C_1_2_1" _delta="delete"/>
+			</class>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design version="3.1">
+  <classes>
+    <class id="C_1">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_1">
+      <parent>C_1</parent>
+    </class>
+    <!-- Automatically moved from class/C_1_1 to classes -->
+    <class id="C_1_1_1">
+      <parent>C_1_1</parent>
+    </class>
+    <!-- Automatically moved from class/C_1_1_1 to classes -->
+    <class id="C_1_1_1_1" _delta="delete"/>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_2">
+      <parent>C_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_2 to classes -->
+    <class id="C_1_2_1" _delta="delete"/>
+  </classes>
+</itop_design>'
+			],
+
+			'Complex hierarchy define root' => [
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<class id="C_1_1">
+				<parent>C_1</parent>
+				<class id="C_1_1_1">
+					<parent>C_1_1</parent>
+					<class id="C_1_1_1_1">
+						<parent>C_1_1_1</parent>
+					</class>
+				</class>
+			</class>
+			<class id="C_1_2">
+				<parent>C_1</parent>
+				<class id="C_1_2_1">
+					<parent>C_1_2</parent>
+				</class>
+			</class>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design version="3.1">
+  <classes>
+    <class id="C_1" _delta="define">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_1" _delta="define">
+      <parent>C_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_1 to classes -->
+    <class id="C_1_1_1" _delta="define">
+      <parent>C_1_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_1_1 to classes -->
+    <class id="C_1_1_1_1" _delta="define">
+      <parent>C_1_1_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_2" _delta="define">
+      <parent>C_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_2 to classes -->
+    <class id="C_1_2_1" _delta="define">
+      <parent>C_1_2</parent>
+    </class>
+  </classes>
+</itop_design>'
+			],
+
+			'Complex hierarchy define' => [
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1">
+			<parent>cmdbAbstractObject</parent>
+			<class id="C_1_1" _delta="define">
+				<parent>C_1</parent>
+				<class id="C_1_1_1">
+					<parent>C_1_1</parent>
+					<class id="C_1_1_1_1">
+						<parent>C_1_1_1</parent>
+					</class>
+				</class>
+			</class>
+			<class id="C_1_2">
+				<parent>C_1</parent>
+				<class id="C_1_2_1" _delta="define">
+					<parent>C_1_2</parent>
+				</class>
+			</class>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design version="3.1">
+  <classes>
+    <class id="C_1">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_1" _delta="define">
+      <parent>C_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_1 to classes -->
+    <class id="C_1_1_1" _delta="define">
+      <parent>C_1_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_1_1 to classes -->
+    <class id="C_1_1_1_1" _delta="define">
+      <parent>C_1_1_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_2">
+      <parent>C_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_2 to classes -->
+    <class id="C_1_2_1" _delta="define">
+      <parent>C_1_2</parent>
+    </class>
+  </classes>
+</itop_design>'
+			],
+
+			'Complex hierarchy force' => [
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1">
+			<parent>cmdbAbstractObject</parent>
+			<class id="C_1_1" _delta="force">
+				<parent>C_1</parent>
+				<class id="C_1_1_1">
+					<parent>C_1_1</parent>
+					<class id="C_1_1_1_1">
+						<parent>C_1_1_1</parent>
+					</class>
+				</class>
+			</class>
+			<class id="C_1_2">
+				<parent>C_1</parent>
+				<class id="C_1_2_1" _delta="force">
+					<parent>C_1_2</parent>
+				</class>
+			</class>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design version="3.1">
+  <classes>
+    <class id="C_1">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+	<!-- Automatically generated to remove class/C_1_1 hierarchy -->
+    <class id="C_1_1" _delta="delete_if_exists"/>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_1" _delta="force">
+      <parent>C_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_1 to classes -->
+    <class id="C_1_1_1" _delta="force">
+      <parent>C_1_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_1_1 to classes -->
+    <class id="C_1_1_1_1" _delta="force">
+      <parent>C_1_1_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_2">
+      <parent>C_1</parent>
+    </class>
+	<!-- Automatically generated to remove class/C_1_2_1 hierarchy -->
+    <class id="C_1_2_1" _delta="delete_if_exists"/>
+	<!-- Automatically moved from class/C_1_2 to classes -->
+    <class id="C_1_2_1" _delta="force">
+      <parent>C_1_2</parent>
+    </class>
+  </classes>
+</itop_design>'
+			],
+
+			'Complex hierarchy force root' => [
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="force">
+			<parent>cmdbAbstractObject</parent>
+			<class id="C_1_1">
+				<parent>C_1</parent>
+				<class id="C_1_1_1">
+					<parent>C_1_1</parent>
+					<class id="C_1_1_1_1">
+						<parent>C_1_1_1</parent>
+					</class>
+				</class>
+			</class>
+			<class id="C_1_2">
+				<parent>C_1</parent>
+				<class id="C_1_2_1">
+					<parent>C_1_2</parent>
+				</class>
+			</class>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design version="3.1">
+  <classes>
+	<!-- Automatically generated to remove class/C_1 hierarchy -->
+    <class id="C_1" _delta="delete_if_exists"/>
+    <class id="C_1" _delta="force">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_1" _delta="force">
+      <parent>C_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_1 to classes -->
+    <class id="C_1_1_1" _delta="force">
+      <parent>C_1_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_1_1 to classes -->
+    <class id="C_1_1_1_1" _delta="force">
+      <parent>C_1_1_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_2" _delta="force">
+      <parent>C_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_2 to classes -->
+    <class id="C_1_2_1" _delta="force">
+      <parent>C_1_2</parent>
+    </class>
+  </classes>
+</itop_design>'
+			],
+
+			'Complex hierarchy redefine' => [
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1">
+			<parent>cmdbAbstractObject</parent>
+			<class id="C_1_1" _delta="redefine">
+				<parent>C_1</parent>
+				<class id="C_1_1_1">
+					<parent>C_1_1</parent>
+					<class id="C_1_1_1_1">
+						<parent>C_1_1_1</parent>
+					</class>
+				</class>
+			</class>
+			<class id="C_1_2">
+				<parent>C_1</parent>
+				<class id="C_1_2_1" _delta="redefine">
+					<parent>C_1_2</parent>
+				</class>
+			</class>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design version="3.1">
+  <classes>
+    <class id="C_1">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+	<!-- Automatically generated to remove class/C_1_1 hierarchy -->
+    <class id="C_1_1" _delta="delete"/>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_1" _delta="define">
+      <parent>C_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_1 to classes -->
+    <class id="C_1_1_1" _delta="define">
+      <parent>C_1_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_1_1 to classes -->
+    <class id="C_1_1_1_1" _delta="define">
+      <parent>C_1_1_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_2">
+      <parent>C_1</parent>
+    </class>
+	<!-- Automatically generated to remove class/C_1_2_1 hierarchy -->
+    <class id="C_1_2_1" _delta="delete"/>
+	<!-- Automatically moved from class/C_1_2 to classes -->
+    <class id="C_1_2_1" _delta="define">
+      <parent>C_1_2</parent>
+    </class>
+  </classes>
+</itop_design>'
+			],
+
+			'Complex hierarchy redefine root' => [
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="redefine">
+			<parent>cmdbAbstractObject</parent>
+			<class id="C_1_1">
+				<parent>C_1</parent>
+				<class id="C_1_1_1">
+					<parent>C_1_1</parent>
+					<class id="C_1_1_1_1">
+						<parent>C_1_1_1</parent>
+					</class>
+				</class>
+			</class>
+			<class id="C_1_2">
+				<parent>C_1</parent>
+				<class id="C_1_2_1">
+					<parent>C_1_2</parent>
+				</class>
+			</class>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design version="3.1">
+  <classes>
+	<!-- Automatically generated to remove class/C_1 hierarchy -->
+    <class id="C_1" _delta="delete"/>
+    <class id="C_1" _delta="define">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_1" _delta="define">
+      <parent>C_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_1 to classes -->
+    <class id="C_1_1_1" _delta="define">
+      <parent>C_1_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_1_1 to classes -->
+    <class id="C_1_1_1_1" _delta="define">
+      <parent>C_1_1_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_2" _delta="define">
+      <parent>C_1</parent>
+    </class>
+	<!-- Automatically moved from class/C_1_2 to classes -->
+    <class id="C_1_2_1" _delta="define">
+      <parent>C_1_2</parent>
+    </class>
+  </classes>
+</itop_design>'
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider ProviderLoadDelta
+	 * @covers ModelFactory::LoadDelta
+	 *
+	 * @param $sDeltaXML
+	 * @param $bHierarchicalClasses
+	 * @param $sExpectedXML
+	 *
+	 * @return void
+	 * @throws \DOMFormatException
+	 * @throws \MFException
+	 */
+	public function testLoadDelta($sInitialXML, $sDeltaXML, $sExpectedXML)
+	{
+		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
+		$oFactoryDocument = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
+
+		// Load the delta
+		$oDocument = new MFDocument();
+		$oDocument->loadXML($sDeltaXML);
+		/* @var MFElement $oDeltaRoot */
+		$oDeltaRoot = $oDocument->firstChild;
+		$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument);
+
+		$this->AssertEqualModels($sExpectedXML, $oFactory, 'LoadDelta() must result in a datamodel without hierarchical classes');
+	}
+
+	public function ProviderLoadDelta()
+	{
+		return [
+			'empty delta' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '<itop_design></itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+  </classes>
+</itop_design>'
+			],
+
+			'Add a class' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="added">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+</itop_design>'
+			],
+
+			'Add a class and subclass in hierarchy' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+            <class id="C_1_1">
+              <parent>C_1</parent>
+			</class>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="added">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_1" _alteration="added">
+	  <parent>C_1</parent>
+	</class>
+  </classes>
+</itop_design>'
+			],
+
+			'Delete a class' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="delete">
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="removed"/>
+  </classes>
+</itop_design>'
+			],
+
+			'Delete hierarchically a class' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="delete">
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="removed"/>
+  </classes>
+</itop_design>'
+			],
+
+			'Delete hierarchically a class and subclass' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+	<class id="C_1_1">
+	  <parent>C_1</parent>
+	</class>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="delete"/>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="removed"/>
+    <class id="C_1_1" _alteration="removed"/>
+  </classes>
+</itop_design>'
+			],
+
+			'Delete hierarchically a class and subclass already deleted' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+	<class id="C_1_1">
+	  <parent>C_1</parent>
+	</class>
+	<class id="C_1_2">
+	  <parent>C_1</parent>
+	</class>
+	<class id="C_1_2_1">
+	  <parent>C_1_2</parent>
+	</class>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1_2" _delta="delete"/>
+		<class id="C_1" _delta="delete"/>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="removed"/>
+    <class id="C_1_1" _alteration="removed"/>
+    <class id="C_1_2" _alteration="removed"/>
+    <class id="C_1_2_1" _alteration="removed"/>
+  </classes>
+</itop_design>'
+			],
+
+			'Delete if exist hierarchically an existing class' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="delete_if_exists">
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="removed"/>
+  </classes>
+</itop_design>'
+			],
+
+			'Delete if exist hierarchically an non existing class' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_2">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="delete_if_exists">
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_2">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+</itop_design>'
+			],
+
+			'Delete if exist hierarchically a removed class' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="delete"/>
+		<class id="C_1" _delta="delete_if_exists"/>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="removed"/>
+  </classes>
+</itop_design>'
+			],
+
+			'Delete if exist hierarchically an existing class and subclass' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+	<class id="C_1_1">
+	  <parent>C_1</parent>
+	</class>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="delete_if_exists"/>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="removed"/>
+    <class id="C_1_1" _alteration="removed"/>
+  </classes>
+</itop_design>'
+			],
+
+			'Delete if exist hierarchically a non existing subclass' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+	<class id="C_1_1">
+	  <parent>C_1</parent>
+	</class>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1_1" _delta="delete"/>
+		<class id="C_1" _delta="delete_if_exists"/>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="removed"/>
+    <class id="C_1_1" _alteration="removed"/>
+  </classes>
+</itop_design>'
+			],
+
+			'Class comment should be preserved' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<!-- Test Comment on class C_1 -->
+		<class id="C_1" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+		</class>
+		<!-- Test Comment on merged class -->
+		<class id="C_2">
+            <parent>cmdbAbstractObject</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <!-- Test Comment on class C_1 -->
+    <class id="C_1" _alteration="added">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+	<!-- Test Comment on merged class -->
+	<class id="C_2">
+        <parent></parent>
+	</class>
+  </classes>
+</itop_design>'
+			],
+
+
+			'Delete hierarchically a class and add it again' => [
+				'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+	<class id="C_1_1">
+	  <parent>C_1</parent>
+	</class>
+	<class id="C_1_1_1">
+	  <parent>C_1_1</parent>
+	</class>
+  </classes>
+</itop_design>',
+				'sDeltaXML' => '
+<itop_design>
+	<classes>
+		<class id="C_1" _delta="delete"/>
+		<class id="C_1" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="replaced">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="C_1_1" _alteration="removed"/>
+    <class id="C_1_1_1" _alteration="removed"/>
+  </classes>
+</itop_design>'
+			],
+
+		];
+	}
+
+	/**
+	 * @dataProvider ProviderAlterationByXMLDelta
 	 * @covers ModelFactory::LoadDelta
 	 * @covers ModelFactory::ApplyChanges
 	 */
@@ -121,7 +1166,7 @@ class ModelFactoryTest extends ItopTestCase
 	/**
 	 * @return array
 	 */
-	public function providerDeltas()
+	public function ProviderAlterationByXMLDelta()
 	{
 		// Basic (structure)
 		$aDeltas['No change at all'] = [
@@ -510,9 +1555,7 @@ XML
 </nodeA>
 XML
 			,
-			'sExpectedXML' => <<<XML
-<nodeA/>
-XML
+			'sExpectedXML' => '<nodeA/>'
 		];
 		$aDeltas['_delta="delete_if_exists" with id + existing node'] = [
 			'sInitialXML' => <<<XML
@@ -527,9 +1570,7 @@ XML
 </nodeA>
 XML
 			,
-			'sExpectedXML' => <<<XML
-<nodeA/>
-XML
+			'sExpectedXML' => '<nodeA/>'
 		];
 		$aDeltas['_delta="delete_if_exists" without id + missing node'] = [
 			'sInitialXML' => <<<XML
@@ -759,12 +1800,55 @@ XML
 </nodeA>
 XML
 		];
+		$aDeltas['Class comments are stripped when class is deleted'] =[
+		'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+	<!-- Test Comment on class C_1 -->
+    <class id="C_1"/>
+  </classes>
+</itop_design>',
+		'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+		<class id="C_1" _delta="delete"/>
+	</classes>
+</itop_design>',
+		'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+  </classes>
+</itop_design>'
+	];
+		$aDeltas['Class comments are preserved'] =[
+			'sInitialXML' => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+	<!-- Test Comment on class C_1 -->
+    <class id="C_1"/>
+  </classes>
+</itop_design>',
+			'sDeltaXML' => '
+<itop_design version="3.1">
+	<classes>
+	</classes>
+</itop_design>',
+			'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+	<!-- Test Comment on class C_1 -->
+    <class id="C_1"/>
+  </classes>
+</itop_design>'
+		];
 
 		return $aDeltas;
 	}
 
 	/**
-	 * @dataProvider providerAlterationAPIs
+	 * @dataProvider ProviderAlterationAPIs
 	 * @covers \ModelFactory::GetDelta
 	 * @covers \MFElement::AddChildNode
 	 * @covers \MFElement::RedefineChildNode
@@ -826,7 +1910,7 @@ XML
 	/**
 	 * @return array[]
 	 */
-	public function providerAlterationAPIs()
+	public function ProviderAlterationAPIs()
 	{
 		define('CASE_NO_FLAG', <<<XML
 <root_tag>
@@ -1159,7 +2243,7 @@ XML
 	 * @covers \ModelFactory::LoadDelta
 	 * @covers \ModelFactory::GetDelta
 	 * @covers \ModelFactory::GetDeltaDocument
-	 * @dataProvider providerGetDelta
+	 * @dataProvider ProviderGetDelta
 	 */
 	public function testGetDelta($sInitialXMLInternal, $sExpectedXMLDelta)
 	{
@@ -1177,7 +2261,7 @@ XML
 	/**
 	 * @return array[]
 	 */
-	public function providerGetDelta()
+	public function ProviderGetDelta()
 	{
 		return [
 			'no alteration' => [
@@ -1421,334 +2505,407 @@ XML
 </root_node>
 XML
 			],
+
+			'Class Comments are kept for created classes' => [
+				'sInitialXMLInternal' => <<<XML
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <!-- Test Comment on class C_1 -->
+    <class id="C_1" _alteration="added">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+</itop_design>
+XML
+			,
+			'sExpectedXMLDelta' => <<<XML
+<itop_design>
+	<classes>
+		<!-- Test Comment on class C_1 -->
+		<class id="C_1" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+		</class>
+	</classes>
+</itop_design>
+XML
+			,
+			],
+
+			'Class Comments should be preserved' => [
+				'sInitialXMLInternal' => <<<XML
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <!-- Test Comment on class C_1 -->
+    <class id="C_1" _alteration="added">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+	<!-- Test Comment on merged class -->
+	<class id="C_2">
+        <parent _alteration="added">cmdbAbstractObject</parent>
+	</class>
+  </classes>
+</itop_design>
+XML
+				,
+				'sExpectedXMLDelta' => <<<XML
+<itop_design>
+	<classes>
+		<!-- Test Comment on class C_1 -->
+		<class id="C_1" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+		</class>
+		<!-- Test Comment on merged class -->
+		<class id="C_2">
+            <parent _delta="define">cmdbAbstractObject</parent>
+		</class>
+	</classes>
+</itop_design>
+XML
+				,
+			],
 		];
 	}
 
 	/**
-	 * @test
-	 * @dataProvider LoadDeltaProvider
-	 * @covers       ModelFactory::LoadDelta
-	 *
-	 * @param $sInitialXML
-	 * @param $sDeltaXML
-	 * @param $sExpectedXML
+	 * @param $aClasses
+	 * @param \ModelFactory $oFactory
 	 *
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function LoadDeltaTest($sInitialXML, $sDeltaXML, $sExpectedXML)
+	private function CreateClasses($aClasses, ModelFactory $oFactory): void
 	{
-		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
-		$oFactoryDocument = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
+		foreach ($aClasses as $aClass) {
+			$sClassName = $aClass['name'];
+			$sModuleName = $aClass['module'];
+			$sParent = $aClass['parent'];
 
-		// Load the delta
-		$oDocument = new MFDocument();
-		$oDocument->loadXML($sDeltaXML);
-		/* @var MFElement $oDeltaRoot */
-		$oDeltaRoot = $oDocument->firstChild;
-		try {
-			$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument);
-		}
-		catch (\Exception $e) {
-			$this->assertNull($sExpectedXML, 'LoadDelta() should not have failed with exception: '.$e->getMessage());
+			$oNode = $oFactory->CreateElement('class');
+			$oNode->setAttribute('id', $sClassName);
+			$oNode->setAttribute('_created_in', $sModuleName);
+			$oDoc = $oNode->ownerDocument;
+			foreach (array('properties', 'fields', 'methods', 'presentation') as $sElementName) {
+				$oElement = $oDoc->createElement($sElementName);
+				$oNode->appendChild($oElement);
+			}
+			$oParent = $oDoc->createElement('parent', $sParent);
+			$oNode->appendChild($oParent);
 
-			return;
+			$oFactory->AddClass($oNode, $sModuleName);
 		}
-		$this->AssertEqualModels($sExpectedXML, $oFactory, 'LoadDelta() did not produce the expected result');
+	}
+	
+	/**
+	 * @dataProvider ProviderAddClass
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function testAddClass($aClasses, $sExpectedXML)
+	{
+		$oFactory = new ModelFactory([]);
+		$this->CreateClasses($aClasses, $oFactory);
+
+		$this->AssertEqualModels($sExpectedXML, $oFactory, 'The classes are added without hierarchy (not under an existing class)');
 	}
 
-	public function LoadDeltaProvider()
+	/**
+	 * @dataProvider ProviderAddClass
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function testListRootClasses($aClasses, $sExpectedXML, $aExpectedRootClasses)
 	{
-		return [
-			'Creating classes' => [
-				'sInitialXML'  => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject"/>
-  </classes>
-</itop_design>',
-				'sDeltaXML'    => '<itop_design>
-	<classes>
-		<class id="Contact" _delta="define">
-			<parent>cmdbAbstractObject</parent>
-		</class>
-		<class id="Person" _delta="define">
-            <parent>Contact</parent>
-		</class>
-	</classes>
-</itop_design>',
-				'sExpectedXML' => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject">
-      <class id="Contact" _alteration="added">
-        <parent>cmdbAbstractObject</parent>
-        <class id="Person">
-          <parent>Contact</parent>
-        </class>
-      </class>
-    </class>
-  </classes>
-</itop_design>',
-			],
-			'Error merging classes' => [
-				'sInitialXML'  => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject">
-        <class id="Contact" _alteration="added">
-			<parent>cmdbAbstractObject</parent>
-			<class id="Person">
-				<parent>Contact</parent>
-			</class>
-		</class>
-    </class>
-  </classes>
-</itop_design>',
-				'sDeltaXML'    => '<itop_design>
-	<classes>
-		<class id="Person" _delta="merge">
-            <properties _delta="define">titi</properties>
-		</class>
-	</classes>
-</itop_design>',
-				'sExpectedXML' => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject">
-      <class id="Contact" _alteration="added">
-        <parent>cmdbAbstractObject</parent>
-        <class id="Person">
-          <parent>Contact</parent>
-          <properties>titi</properties>
-        </class>
-      </class>
-    </class>
-  </classes>
-</itop_design>',
-			],
-			'Error loading module - could not be deleted' => [
-				'sInitialXML'  => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject">
-      <class id="Contact" _alteration="added">
-        <parent>cmdbAbstractObject</parent>
-        <class id="Person">
-          <parent>Contact</parent>
-        </class>
-      </class>
-    </class>
-  </classes>
-</itop_design>',
-				'sDeltaXML'    => '<itop_design>
-	<classes>
-		<class id="Contact" _delta="redefine">
-			<parent>cmdbAbstractObject</parent>
-			<methods/>
-		</class>
-	</classes>
-</itop_design>',
-				'sExpectedXML' => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject">
-      <class id="Contact" _alteration="added">
-        <parent>cmdbAbstractObject</parent>
-		<methods/>
-        <class id="Person">
-          <parent>Contact</parent>
-        </class>
-      </class>
-    </class>
-  </classes>
-</itop_design>',
-			],
-			'redefine class with sub-class' => [
-				'sInitialXML'  => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject">
-      <class id="Contact" _alteration="added">
-        <parent>cmdbAbstractObject</parent>
-        <class id="Person">
-          <parent>Contact</parent>
-        </class>
-      </class>
-    </class>
-  </classes>
-</itop_design>',
-				'sDeltaXML'    => '<itop_design>
-	<classes>
-		<class id="Contact" _delta="redefine">
-			<parent>cmdbAbstractObject</parent>
-			<methods/>
-			<class id="Team">
-				<parent>Contact</parent>
-			</class>
-	        <class id="Person">
-	          <parent>Contact</parent>
-	        </class>
-		</class>
-	</classes>
-</itop_design>',
-				'sExpectedXML' => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject">
-      <class id="Contact" _alteration="added">
-        <parent>cmdbAbstractObject</parent>
-		<methods/>
-		<class id="Team">
-			<parent>Contact</parent>
-		</class>
-        <class id="Person">
-          <parent>Contact</parent>
-        </class>
-        <class id="Person">
-          <parent>Contact</parent>
-        </class>
-      </class>
-    </class>
-  </classes>
-</itop_design>',
-			],
-			'force class with sub-class' => [
-				'sInitialXML'  => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject">
-      <class id="Contact" _alteration="added">
-        <parent>cmdbAbstractObject</parent>
-        <class id="Person">
-          <parent>Contact</parent>
-        </class>
-      </class>
-    </class>
-  </classes>
-</itop_design>',
-				'sDeltaXML'    => '<itop_design>
-	<classes>
-		<class id="Contact" _delta="force">
-			<parent>cmdbAbstractObject</parent>
-			<methods/>
-		</class>
-	</classes>
-</itop_design>',
-				'sExpectedXML' => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject">
-      <class id="Contact" _alteration="added">
-        <parent>cmdbAbstractObject</parent>
-		<methods/>
-        <class id="Person">
-          <parent>Contact</parent>
-        </class>
-      </class>
-    </class>
-  </classes>
-</itop_design>',
-			],
-			'Class added with hierarchy' => [
-				'sInitialXML'  => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject">
-        <class id="FunctionalCI" _alteration="added">
-            <parent>cmdbAbstractObject</parent>
-        </class>
-		<class id="Licence" _alteration="added">
-			<parent>cmdbAbstractObject</parent>
-			<class id="Certificat">
-				<parent>Licence</parent>
-			</class>
-		</class>
-    </class>
-  </classes>
-</itop_design>',
-				'sDeltaXML'    => '<itop_design>
-	<classes>
-		<class id="ConfigElement" _delta="define">
-			<parent>FunctionalCI</parent>
-			<class id="Key">
-				<parent>ConfigElement</parent>
-				<class id="Certificat" _created_in="itop-config-mgmt">
-					<parent>Key</parent>
-				</class>
-			</class>
-		</class>
-	</classes>
-</itop_design>',
-				'sExpectedXML' => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject">
-      <class id="FunctionalCI" _alteration="added">
-        <parent>cmdbAbstractObject</parent>
-        <class id="ConfigElement">
-          <parent>FunctionalCI</parent>
-          <class id="Key">
-            <parent>ConfigElement</parent>
-            <class id="Certificat" _created_in="itop-config-mgmt">
-              <parent>Key</parent>
-            </class>
-          </class>
-        </class>
-      </class>
-      <class id="Licence" _alteration="added">
-        <parent>cmdbAbstractObject</parent>
-        <class id="Certificat">
-          <parent>Licence</parent>
-        </class>
-      </class>
-    </class>
-  </classes>
-</itop_design>',
-			],
-			'Class added with hierarchy needs redefine' => [
-				'sInitialXML'  => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject">
-        <class id="FunctionalCI" _alteration="added">
-            <parent>cmdbAbstractObject</parent>
-        </class>
-		<class id="Licence" _alteration="added">
-			<parent>cmdbAbstractObject</parent>
-			<class id="Certificat">
-				<parent>Licence</parent>
-			</class>
-		</class>
-    </class>
-  </classes>
-</itop_design>',
-				'sDeltaXML'    => '<itop_design>
-	<classes>
-		<class id="ConfigElement" _delta="define">
-			<parent>FunctionalCI</parent>
-			<class id="Key">
-				<parent>ConfigElement</parent>
-				<class id="Certificat">
-					<parent>Key</parent>
-				</class>
-			</class>
-		</class>
-		<class id="Licence" _delta="redefine">
-			<parent>Key</parent>
-		</class>
-	</classes>
-</itop_design>',
-				'sExpectedXML' => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject">
-      <class id="FunctionalCI" _alteration="added">
-        <parent>cmdbAbstractObject</parent>
-        <class id="ConfigElement">
-          <parent>FunctionalCI</parent>
-          <class id="Key">
-            <parent>ConfigElement</parent>
-            <class id="Certificat">
-              <parent>Key</parent>
-            </class>
-            <class id="Licence">
-              <parent>Key</parent>
-            </class>
-          </class>
-        </class>
-      </class>
-    </class>
-  </classes>
-</itop_design>',
-			],
+		$oFactory = new ModelFactory([]);
+		$this->CreateClasses($aClasses, $oFactory);
 
+		$oRootClasses = $oFactory->ListRootClasses();
+		$aRootClasses = [];
+		/** @var MFElement $oRootClass */
+		foreach ($oRootClasses as $oRootClass) {
+			$aRootClasses[] = $oRootClass->getAttribute('id');
+		}
+
+		sort($aRootClasses);
+		$aDiff = array_diff($aExpectedRootClasses, $aRootClasses);
+		$this->assertCount(0, $aDiff);
+	}
+
+	/**
+	 * @dataProvider ProviderAddClass
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function testClassNameExists($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses, $aExpectedClassNotExist)
+	{
+		$oFactory = new ModelFactory([]);
+		$this->CreateClasses($aClasses, $oFactory);
+
+		foreach ($aExpectedClasses as $sExpectedClassExist) {
+			$this->assertTrue($this->InvokeNonPublicMethod(ModelFactory::class, 'ClassNameExists', $oFactory, [$sExpectedClassExist]));
+		}
+		foreach ($aExpectedClassNotExist as $sExpectedClassNotExist) {
+			$this->assertFalse($this->InvokeNonPublicMethod(ModelFactory::class, 'ClassNameExists', $oFactory, [$sExpectedClassNotExist]));
+		}
+	}
+
+	/**
+	 * @dataProvider ProviderAddClass
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function testListClasses($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses, $aExpectedClassNotExist, $aExpectedClassesByModule)
+	{
+		$oFactory = new ModelFactory([]);
+		$this->CreateClasses($aClasses, $oFactory);
+
+		foreach ($aExpectedClassesByModule as $sModule => $aExpectedClasses) {
+			$oClasses = $oFactory->ListClasses($sModule);
+			$aFoundClasses = [];
+			/** @var MFElement $oClass */
+			foreach ($oClasses as $oClass) {
+				$aFoundClasses[] = $oClass->getAttribute('id');
+			}
+
+			sort($aFoundClasses);
+			$aDiff = array_diff($aExpectedClasses, $aFoundClasses);
+			$this->assertCount(0, $aDiff);
+		}
+	}
+
+	/**
+	 * @dataProvider ProviderAddClass
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function testListAllClasses($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses)
+	{
+		$oFactory = new ModelFactory([]);
+		$this->CreateClasses($aClasses, $oFactory);
+		$oClasses = $oFactory->ListAllClasses();
+		$aFoundClasses = [];
+		/** @var MFElement $oClass */
+		foreach ($oClasses as $oClass) {
+			$aFoundClasses[] = $oClass->getAttribute('id');
+		}
+
+		sort($aFoundClasses);
+		$aDiff = array_diff($aExpectedClasses, $aFoundClasses);
+		$this->assertCount(0, $aDiff);
+	}
+
+
+	/**
+	 * @dataProvider ProviderAddClass
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function testGetClass($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses)
+	{
+		$oFactory = new ModelFactory([]);
+		$this->CreateClasses($aClasses, $oFactory);
+
+		foreach ($aExpectedClasses as $sClassName) {
+			$oClass = $oFactory->GetClass($sClassName);
+			$this->assertInstanceOf(\DOMNode::class, $oClass);
+		}
+	}
+
+	/**
+	 * @dataProvider ProviderAddClass
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function testGetChildClasses($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses, $aExpectedClassNotExist, $aExpectedClassesByModule, $aExpectedChildClasses)
+	{
+		$oFactory = new ModelFactory([]);
+		$this->CreateClasses($aClasses, $oFactory);
+
+		foreach ($aExpectedChildClasses as $sClassName => $aChildClasses) {
+			$oClassNode = $oFactory->GetClass($sClassName);
+			$oClasses = $oFactory->GetChildClasses($oClassNode);
+			$aFoundClasses = [];
+			/** @var MFElement $oClass */
+			foreach ($oClasses as $oClass) {
+				$aFoundClasses[] = $oClass->getAttribute('id');
+			}
+			$aDiff = array_diff($aChildClasses, $aFoundClasses);
+			$sMessage = "Children of $sClassName awaited [".implode(', ', $aChildClasses)."] got [".implode(', ', $aFoundClasses)."]";
+			$this->assertCount(0, $aDiff, $sMessage);
+		}
+
+		$this->assertTrue(true);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function ProviderAddClass()
+	{
+		$aClasses = [];
+
+		$aClasses["1 root class"] = [
+			'aClasses' => [
+				['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
+			],
+			'sExpectedXML' => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+  <loaded_modules/>
+  <classes>
+    <class id="DBObject"/>
+    <class id="CMDBObject"/>
+    <class id="cmdbAbstractObject"/>
+    <class id="A" _created_in="M" _alteration="added">
+      <properties/>
+      <fields/>
+      <methods/>
+      <presentation/>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+  <dictionaries/>
+  <menus/>
+  <meta/>
+  <events/>
+</itop_design>',
+			'aExpectedRootClasses' => [],
+			'aExpectedClasses' => ['A'],
+			'aExpectedClassNotExist' => ['B'],
+			'aExpectedClassesByModule' => ['M' => ['A']],
+			'aExpectedChildClasses' => ['A' => []],
 		];
+
+		$aClasses['2 root classes'] = [
+			'aClasses'     => [
+				['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
+				['name' => 'B', 'module' => 'M2', 'parent' => 'cmdbAbstractObject'],
+			],
+			'sExpectedXML' => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+  <loaded_modules/>
+  <classes>
+    <class id="DBObject"/>
+    <class id="CMDBObject"/>
+    <class id="cmdbAbstractObject"/>
+    <class id="A" _created_in="M" _alteration="added">
+      <properties/>
+      <fields/>
+      <methods/>
+      <presentation/>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="B" _created_in="M2" _alteration="added">
+      <properties/>
+      <fields/>
+      <methods/>
+      <presentation/>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+  <dictionaries/>
+  <menus/>
+  <meta/>
+  <events/>
+</itop_design>',
+			'aExpectedRootClasses' => [],
+			'aExpectedClasses' => ['A', 'B'],
+			'aExpectedClassNotExist' => ['C'],
+			'aExpectedClassesByModule' => ['M' => ['A'], 'M2' => ['B']],
+			'aExpectedChildClasses' => ['A' => [], 'B' => []],
+		];
+
+
+		$aClasses['2 hierarchical classes'] = [
+			'aClasses'     => [
+				['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
+				['name' => 'B', 'module' => 'M2', 'parent' => 'A'],
+			],
+			'sExpectedXML' => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+  <loaded_modules/>
+  <classes>
+    <class id="DBObject"/>
+    <class id="CMDBObject"/>
+    <class id="cmdbAbstractObject"/>
+    <class id="A" _created_in="M" _alteration="added">
+      <properties/>
+      <fields/>
+      <methods/>
+      <presentation/>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="B" _created_in="M2" _alteration="added">
+      <properties/>
+      <fields/>
+      <methods/>
+      <presentation/>
+      <parent>A</parent>
+    </class>
+  </classes>
+  <dictionaries/>
+  <menus/>
+  <meta/>
+  <events/>
+</itop_design>',
+			'aExpectedRootClasses' => ['A'],
+			'aExpectedClasses' => ['A', 'B'],
+			'aExpectedClassNotExist' => ['C'],
+			'aExpectedClassesByModule' => ['M' => ['A'], 'M2' => ['B']],
+			'aExpectedChildClasses' => ['A' => ['B'], 'B' => []],
+		];
+
+		$aClasses['4 mixed classes'] = [
+			'aClasses'     => [
+				['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
+				['name' => 'B', 'module' => 'M2', 'parent' => 'A'],
+				['name' => 'C', 'module' => 'M3', 'parent' => 'cmdbAbstractObject'],
+				['name' => 'D', 'module' => 'M3', 'parent' => 'B'],
+			],
+			'sExpectedXML' => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+  <loaded_modules/>
+  <classes>
+    <class id="DBObject"/>
+    <class id="CMDBObject"/>
+    <class id="cmdbAbstractObject"/>
+    <class id="A" _created_in="M" _alteration="added">
+      <properties/>
+      <fields/>
+      <methods/>
+      <presentation/>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="B" _created_in="M2" _alteration="added">
+      <properties/>
+      <fields/>
+      <methods/>
+      <presentation/>
+      <parent>A</parent>
+    </class>
+    <class id="C" _created_in="M3" _alteration="added">
+      <properties/>
+      <fields/>
+      <methods/>
+      <presentation/>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="D" _created_in="M3" _alteration="added">
+      <properties/>
+      <fields/>
+      <methods/>
+      <presentation/>
+      <parent>B</parent>
+    </class>
+  </classes>
+  <dictionaries/>
+  <menus/>
+  <meta/>
+  <events/>
+</itop_design>',
+			'aExpectedRootClasses' => ['A'],
+			'aExpectedClasses' => ['A', 'B', 'C', 'D'],
+			'aExpectedClassNotExist' => ['E'],
+			'aExpectedClassesByModule' => ['M' => ['A'], 'M2' => ['B'], 'M3' => ['C', 'D']],
+			'aExpectedChildClasses' => ['A' => ['B'], 'B' => ['D'], 'C' => [], 'D' => []],
+		];
+
+		return $aClasses;
 	}
 }
