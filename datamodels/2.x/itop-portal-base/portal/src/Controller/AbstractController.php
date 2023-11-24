@@ -21,6 +21,8 @@
 namespace Combodo\iTop\Portal\Controller;
 
 use \Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Service\Attribute\Required;
 
 /**
  * Class AbstractController
@@ -32,32 +34,16 @@ use \Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbst
 abstract class AbstractController extends SymfonyAbstractController
 {
 	/**
-	 * Return services needed inside controllers.
-	 * Allow access to service via $controller->get(`service_name`).
+	 * @var \Symfony\Component\Routing\RouterInterface symfony router
 	 *
-	 * Improvement: Use service dependency injection
-	 *
-	 * @return array array of service injected to controllers
-	 * @since 3.1.0
-	 *
+	 * @since 3.2.0 N°6933
 	 */
-	public static function getSubscribedServices(): array
+	private RouterInterface $oRouter;
+
+	#[Required]
+	public function setRouter(RouterInterface $oRouter): void
 	{
-		return array_merge(parent::getSubscribedServices(), [
-			'brick_collection'        => 'Combodo\iTop\Portal\Brick\BrickCollection',
-			'request_manipulator'     => 'Combodo\iTop\Portal\Helper\RequestManipulatorHelper',
-			'scope_validator'         => 'Combodo\iTop\Portal\Helper\ScopeValidatorHelper',
-			'security_helper'         => 'Combodo\iTop\Portal\Helper\SecurityHelper',
-			'context_manipulator'     => 'Combodo\iTop\Portal\Helper\ContextManipulatorHelper',
-			'navigation_rule_helper'  => 'Combodo\iTop\Portal\Helper\NavigationRuleHelper',
-			'ui_extensions_helper'    => 'Combodo\iTop\Portal\Helper\UIExtensionsHelper',
-			'lifecycle_validator'     => 'Combodo\iTop\Portal\Helper\LifecycleValidatorHelper',
-			'url_generator'           => 'router',
-			'object_form_handler'     => 'Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper',
-			'browse_brick'            => 'Combodo\iTop\Portal\Helper\BrowseBrickHelper',
-			'brick_controller_helper' => 'Combodo\iTop\Portal\Helper\BrickControllerHelper',
-			'session_message_helper'  => 'Combodo\iTop\Portal\Helper\SessionMessageHelper',
-		]);
+		$this->oRouter = $oRouter;
 	}
 
 	/**
@@ -76,7 +62,7 @@ abstract class AbstractController extends SymfonyAbstractController
 	 */
 	protected function ForwardToRoute($sRouteName, $aRouteParams, $aQueryParameters, $bPreserveDefaultRouteParams = true)
 	{
-		$oRouteCollection = $this->get('router')->getRouteCollection();
+		$oRouteCollection = $this->oRouter->getRouteCollection();
 		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
 
 		if ($bPreserveDefaultRouteParams) {
@@ -113,7 +99,7 @@ abstract class AbstractController extends SymfonyAbstractController
 	 */
 	protected function GetControllerNameFromRoute($sRouteName)
 	{
-		$oRouteCollection = $this->get('router')->getRouteCollection();
+		$oRouteCollection = $this->oRouter->getRouteCollection();
 		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
 
 		return $aRouteDefaults['_controller'];
