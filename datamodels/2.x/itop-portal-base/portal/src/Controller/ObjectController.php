@@ -73,7 +73,9 @@ class ObjectController extends BrickController
 	const DEFAULT_PAGE_NUMBER = 1;
 	const DEFAULT_LIST_LENGTH = 10;
 
-
+	/**
+	 * @since 3.2.0 N°6933
+	 */
 	public function __construct(
 		protected SecurityHelper $oSecurityHelper,
 		protected ScopeValidatorHelper $oScopeValidator,
