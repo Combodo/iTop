@@ -101,7 +101,7 @@ class BrowseBrickController extends BrickController
 		// Getting current browse mode (First from router parameter, then default brick value)
 		$sBrowseMode = (!empty($sBrowseMode)) ? $sBrowseMode : $oBrick->GetDefaultBrowseMode();
 		// Getting current dataloading mode (First from router parameter, then query parameter, then default brick value)
-		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : $this->oRequestManipulator->ReadParam('sDataLoading',
+		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : $this->oRequestManipulatorHelper->ReadParam('sDataLoading',
 			$oBrick->GetDataLoading());
 		// Getting search value
 		$sRawSearchValue = $this->oRequestManipulator->ReadParam('sSearchValue', '');
