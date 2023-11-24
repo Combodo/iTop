@@ -323,7 +323,7 @@ class UserProfileBrickController extends BrickController
 		$sPictureAttCode = 'picture';
 
 		// Handling form
-		$sOperation = $this->oRequestManipulator->ReadParam('operation', null);
+		$sOperation = $this->oRequestManipulatorHelper->ReadParam('operation', null);
 		// - No operation specified
 		if ($sOperation === null)
 		{
