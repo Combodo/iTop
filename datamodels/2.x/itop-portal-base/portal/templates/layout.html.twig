@@ -51,9 +51,9 @@
 		<link href="{{ app['combodo.absolute_url'] ~ 'css/c3.min.css'|add_itop_version }}" rel="stylesheet">
 		<link href="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css'|add_itop_version }}" rel="stylesheet">
 		{# - Bootstrap theme #}
-		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.bootstrap|add_itop_version }}" rel="stylesheet" id="css_bootstrap_theme">
+		<link href="{{ app['combodo.absolute_url'] ~ app['combodo.portal.instance.conf'].properties.themes.bootstrap|add_itop_version }}" rel="stylesheet" id="css_bootstrap_theme">
 		{# - Portal adjustments for BS theme #}
-		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.portal|add_itop_version }}" rel="stylesheet" id="css_portal">
+		<link href="{{ app['combodo.absolute_url'] ~ app['combodo.portal.instance.conf'].properties.themes.portal|add_itop_version }}" rel="stylesheet" id="css_portal">
 		{# UI Extensions CSS, in an undefined order #}
         {% if app['ui_extensions_helper'].css_files is defined %}
             {% for css_file in app['ui_extensions_helper'].css_files %}

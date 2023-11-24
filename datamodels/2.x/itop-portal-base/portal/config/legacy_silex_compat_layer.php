@@ -64,7 +64,7 @@ foreach ($aPortalConf['properties']['themes'] as $sKey => $value)
 {
 	if (!is_array($value))
 	{
-		$aPortalConf['properties']['themes'][$sKey] = $_ENV['COMBODO_ABSOLUTE_URL'].utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$value,
+		$aPortalConf['properties']['themes'][$sKey] = utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$value,
 				$aImportPaths);
 	}
 	else
@@ -72,7 +72,7 @@ foreach ($aPortalConf['properties']['themes'] as $sKey => $value)
 		$aValues = array();
 		foreach ($value as $sSubValue)
 		{
-			$aValues[] = $_ENV['COMBODO_ABSOLUTE_URL'].utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$sSubValue,
+			$aValues[] = utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$sSubValue,
 					$aImportPaths);
 		}
 		$aPortalConf['properties']['themes'][$sKey] = $aValues;
