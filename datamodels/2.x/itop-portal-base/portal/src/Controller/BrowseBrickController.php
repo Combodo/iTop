@@ -59,6 +59,8 @@ class BrowseBrickController extends BrickController
 	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator
 	 * @param \Combodo\iTop\Portal\Helper\BrickControllerHelper $oBrickControllerHelper
 	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
+	 *
+	 * @since 3.2.0 N°6933
 	 */
 	public function __construct(
 		protected BrowseBrickHelper $oBrowseBrickHelper,
