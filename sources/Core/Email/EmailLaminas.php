@@ -205,7 +205,8 @@ class EMailLaminas extends Email
 			case 'LogFile':
 				$oTransport = new File();
 				$aOptions = new FileOptions([
-					'path' => APPROOT.'log/mail.log',
+					'path' => APPROOT.'log/',
+					'callback' => function() { return 'mail.log'; }
 				]);
 				$oTransport->setOptions($aOptions);
 				break;
