@@ -257,6 +257,38 @@ abstract class TriggerOnObject extends Trigger
 	}
 
 	/**
+	 * Activate trigger based on attribute list given instead of changed attributes
+	 *
+	 * @param array $aContextArgs
+	 * @param array|null $aAttributes if null default to changed attributes
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @since 3.1.1 3.2.0 N°6228
+	 */
+	public function DoActivateForSpecificAttributes(array $aContextArgs, ?array $aAttributes)
+	{
+		if (isset($aContextArgs['this->object()']))
+		{
+			/** @var \DBObject $oObject */
+			$oObject = $aContextArgs['this->object()'];
+			if (is_null($aAttributes)) {
+				$aChanges = $oObject->ListPreviousValuesForUpdatedAttributes();
+			} else {
+				$aChanges = array_fill_keys($aAttributes, true);
+			}
+			if (false === $this->IsTargetObject($oObject->GetKey(), $aChanges)) {
+				return;
+			}
+		}
+		parent::DoActivate($aContextArgs);
+	}
+
+	/**
 	 * @param $iObjectId
 	 * @param array $aChanges
 	 *
@@ -544,38 +576,6 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
-	}
-
-	/**
-	 * Activate trigger based on attribute list given instead of changed attributes
-	 *
-	 * @param array $aContextArgs
-	 * @param array|null $aAttributes if null default to changed attributes
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 * @since 3.1.1 3.2.0 N°6228
-	 */
-	public function DoActivateForSpecificAttributes(array $aContextArgs, ?array $aAttributes)
-	{
-		if (isset($aContextArgs['this->object()']))
-		{
-			/** @var \DBObject $oObject */
-			$oObject = $aContextArgs['this->object()'];
-			if (is_null($aAttributes)) {
-				$aChanges = $oObject->ListPreviousValuesForUpdatedAttributes();
-			} else {
-				$aChanges = array_fill_keys($aAttributes, true);
-			}
-			if (false === $this->IsTargetObject($oObject->GetKey(), $aChanges)) {
-				return;
-			}
-		}
-		parent::DoActivate($aContextArgs);
 	}
 
 	public function IsTargetObject($iObjectId, $aChanges = array())

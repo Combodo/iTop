@@ -205,7 +205,8 @@ class EMailLaminas extends Email
 			case 'LogFile':
 				$oTransport = new File();
 				$aOptions = new FileOptions([
-					'path' => APPROOT.'log/mail.log',
+					'path' => APPROOT.'log/',
+					'callback' => function() { return 'mail.log'; }
 				]);
 				$oTransport->setOptions($aOptions);
 				break;
@@ -389,6 +390,7 @@ class EMailLaminas extends Email
 		$oNewPart = new Part($sBody);
 		$oNewPart->encoding = Mime::ENCODING_8BIT;
 		$oNewPart->type = $sMimeType;
+		$oNewPart->charset = 'UTF-8';
 		$oBody->addPart($oNewPart);
 
 		// Add additional images as new body parts
