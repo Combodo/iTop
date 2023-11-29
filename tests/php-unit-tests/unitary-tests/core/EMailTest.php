@@ -19,8 +19,11 @@ class EMailTest extends ItopTestCase {
 	{
 		$oConfig = utils::GetConfig();
 		$sCurrentEmailTransport = $oConfig->Get('email_transport');
-		// Set our email transport to file so we can read it after
+		$sCurrentEmailAsync = $oConfig->Get('email_asynchronous');
+		
+		// Set our email transport to file, so we can read it after
 		$oConfig->Set('email_transport', 'LogFile');
+		$oConfig->Set('email_asynchronous', false);
 
 		$oEmail = new Email();
 		$oEmail->SetRecipientTO('email@email.com');
@@ -40,5 +43,6 @@ class EMailTest extends ItopTestCase {
 		
 		// Set our previous email transport value back, so it doesn't affect other tests
 		$oConfig->Set('email_transport', $sCurrentEmailTransport);
+		$oConfig->Set('email_asynchronous', $sCurrentEmailAsync);
 	}
 }
