@@ -30,7 +30,6 @@ use utils;
  *
  * @package Combodo\iTop\Test\UnitTest\Synchro
  * @group dataSynchro
- * @group defaultProfiles
  */
 class DataSynchroTest extends ItopDataTestCase
 {
@@ -138,17 +137,19 @@ class DataSynchroTest extends ItopDataTestCase
 
 		// Create the data source
 		//
-		$oDataSource = new SynchroDataSource();
-		$oDataSource->Set('name', 'Test data sync '.time());
-		$oDataSource->Set('description', 'unit test - created automatically');
-		$oDataSource->Set('status', 'production');
-		$oDataSource->Set('user_id', 0);
-		$oDataSource->Set('scope_class', $sClass);
+		$aDsParams = [
+			'name' => 'Test data sync '.time(),
+			'description' => 'unit test - created automatically',
+			'status' => 'production',
+			'user_id' => 0,
+			'scope_class' => $sClass
+		];
 		foreach ($aSourceProperties as $sProperty => $value)
 		{
-			$oDataSource->Set($sProperty, $value);
+			$aDsParams[$sProperty] = $value;
 		}
-		$iDataSourceId = $oDataSource->DBInsert();
+		$oDataSource = $this->createObject('SynchroDataSource', $aDsParams);
+		$iDataSourceId = $oDataSource->GetKey();
 
 		$oAttributeSet = $oDataSource->Get('attribute_list');
 		while ($oAttribute = $oAttributeSet->Fetch())
@@ -382,7 +383,7 @@ class DataSynchroTest extends ItopDataTestCase
 			'source_data' => array(
 				array('primary_key', 'login', 'password', 'profile_list'),
 				array(
-					array('user_A', 'login_A', 'password_A', 'profileid:10;reason:he/she is managing services'),
+					array('user_A', 'login_A', 'password_A', 'profileid:3;reason:he/she is managing services'),
 				),
 			),
 			'target_data' => array(
