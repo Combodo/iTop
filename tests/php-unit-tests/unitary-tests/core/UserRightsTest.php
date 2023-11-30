@@ -40,7 +40,6 @@ use utils;
 /**
  * @group itopRequestMgmt
  * @group userRights
- * @group defaultProfiles
  */
 class UserRightsTest extends ItopDataTestCase
 {
@@ -50,7 +49,7 @@ class UserRightsTest extends ItopDataTestCase
 
 		try {
 			utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');
-			self::CreateUser('admin', 1);
+			self::CreateContactlessUser('admin', 1);
 		}
 		catch (CoreCannotSaveObjectException $e) {
 		}
@@ -78,7 +77,7 @@ class UserRightsTest extends ItopDataTestCase
 		$sLogin = $sLoginPrefix.$iCount;
 		$iCount++;
 
-		$oUser = self::CreateUser($sLogin, $iProfileId);
+		$oUser = self::CreateContactlessUser($sLogin, $iProfileId);
 		$_SESSION = array();
 		UserRights::Login($sLogin);
 		return $oUser;
@@ -494,7 +493,7 @@ class UserRightsTest extends ItopDataTestCase
 	{
 		utils::GetConfig()->Set('security.hide_administrators', $bHideAdministrators);
 
-		$oUserAdmin = $this->CreateUser('admin1', 1);
+		$oUserAdmin = $this->CreateContactlessUser('admin1', 1);
 		$this->CreateUniqueUserAndLogin('test1', 2); // portal user
 
 		$oSearch = new DBObjectSearch('URP_UserProfile');
