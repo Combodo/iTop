@@ -177,6 +177,14 @@ abstract class Action extends cmdbAbstractObject
 	{
 		parent::DisplayBareRelations($oPage, false);
 
+		$this->GenerateLastExecutionsTab($oPage, $bEditMode);
+	}
+
+	/**
+	 * @since 3.2.0 N°5472 method creation
+	 */
+	protected function GenerateLastExecutionsTab(WebPage $oPage, $bEditMode)
+	{
 		if ($bEditMode) {
 			return;
 		}
@@ -184,12 +192,22 @@ abstract class Action extends cmdbAbstractObject
 		$oPage->SetCurrentTab('action_errors', Dict::S('Action:last_executions_tab'), Dict::S('Action:last_executions_tab+'));
 
 		$oFilter = DBObjectSearch::FromOQL(
-			"SELECT EventNotification WHERE action_id = :action_id AND date > DATE_SUB(NOW(), INTERVAL 2 MONTH)",
+			$this->GetLasExecutionsTabQuery(),
 			['action_id' => $this->GetKey()]
 		);
 		$oSet = new DBObjectSet($oFilter, ['date' => false]);
 		$oExecutionsListBlock = DataTableUIBlockFactory::MakeForResult($oPage, 'action_executions_list', $oSet);
 		$oPage->AddUiBlock($oExecutionsListBlock);
+	}
+
+	/**
+	 * @since 3.2.0 N°5472 method creation
+	 */
+	protected function GetLasExecutionsTabQuery(): string
+	{
+		return <<<OQL
+SELECT EventNotification WHERE action_id = :action_id AND date > DATE_SUB(NOW(), INTERVAL 2 MONTH)
+OQL;
 	}
 }
 
