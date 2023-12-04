@@ -1157,7 +1157,10 @@ class ObjectFormManager extends FormManager
 			} catch (CoreCannotSaveObjectException $e) {
 				throw new Exception($e->getHtmlMessage());
 			} catch (InvalidExternalKeyValueException $e) {
-				throw new Exception($e->getIssue());
+				$sExceptionMessage = $e->getIssue();
+				$sExceptionMessage .= var_export($e->getContextData(), true);
+
+				throw new Exception($sExceptionMessage);
 			} catch (Exception $e) {
 				if ($bIsNew) {
 					throw new Exception(Dict::S('Portal:Error:ObjectCannotBeCreated'));
