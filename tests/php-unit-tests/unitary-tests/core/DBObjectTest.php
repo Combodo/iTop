@@ -407,6 +407,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oPersonLinks = \DBObjectSet::FromScratch(lnkPersonToTeam::class);
 		$oPersonLinks->AddObject(MetaModel::NewObject(lnkPersonToTeam::class, [
 			'person_id' => self::INVALID_OBJECT_KEY,
+			'team_id' => $oTeam->GetKey(),
 		]));
 		$oTeam->Set('persons_list', $oPersonLinks);
 
@@ -431,6 +432,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oPersonLinks = \DBObjectSet::FromScratch(lnkPersonToTeam::class);
 		$oPersonLinks->AddObject(MetaModel::NewObject(lnkPersonToTeam::class, [
 			'person_id' => $oPersonOnDemoOrg->GetKey(),
+			'team_id' => $oTeam->GetKey(),
 		]));
 		$oTeam->Set('persons_list', $oPersonLinks);
 
@@ -452,6 +454,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oPersonLinks = \DBObjectSet::FromScratch(lnkPersonToTeam::class);
 		$oPersonLinks->AddObject(MetaModel::NewObject(lnkPersonToTeam::class, [
 			'person_id' => $oPersonOnItDepartmentOrg->GetKey(),
+			'team_id' => $oTeam->GetKey(),
 		]));
 		$oTeam->Set('persons_list', $oPersonLinks);
 
