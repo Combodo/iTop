@@ -2704,12 +2704,16 @@ abstract class DBObject implements iDisplay
 				continue;
 			}
 
-			/** @noinspection NotOptimalIfConditionsInspection */
-			/** @noinspection TypeUnsafeComparisonInspection */
 			if (utils::IsNullOrEmptyString($sRemoteObjectClass)
 				|| utils::IsNullOrEmptyString($sRemoteObjectKey)
-				|| ($sRemoteObjectKey == 0) // non-strict comparison as we might have bad surprises
 			) {
+				continue;
+			}
+
+			// 0 : Undefined ext. key (EG. non-mandatory and no value provided)
+			// < 0 : Non yet persisted object
+            /** @noinspection TypeUnsafeComparisonInspection Non-strict comparison as object ID can be string */
+			if ($sRemoteObjectKey <= 0) {
 				continue;
 			}
 
