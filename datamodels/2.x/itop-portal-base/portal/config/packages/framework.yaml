@@ -1,3 +1,8 @@
+# config/packages/framework.yaml
+parameters:
+  # if the SECRET env var value is not defined anywhere, Symfony uses this value
+  env(APP_SECRET): '40ef8b29be00df19cec62edf08f73808'
+
 framework:
   secret: '%env(APP_SECRET)%'
   #default_locale: en
