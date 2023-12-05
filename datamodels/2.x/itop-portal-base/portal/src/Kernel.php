@@ -43,7 +43,7 @@ class Kernel extends BaseKernel
 	/**
 	 * @return string
 	 */
-	public function getCacheDir()
+	public function getCacheDir(): string
 	{
 		$cacheDir = $_ENV['PORTAL_ID'].'-'.$this->environment;
 
@@ -53,8 +53,8 @@ class Kernel extends BaseKernel
 	/**
 	 * @return string
 	 */
-	public function getLogDir()
-    {
+	public function getLogDir(): string
+	{
 	    $logDir = $_ENV['PORTAL_ID'] . '-' . $this->environment;
 
 	    return utils::GetLogPath() . "/portals/$logDir";
@@ -63,8 +63,8 @@ class Kernel extends BaseKernel
 	/**
 	 * @return \Generator|iterable|\Symfony\Component\HttpKernel\Bundle\BundleInterface[]
 	 */
-	public function registerBundles()
-    {
+	public function registerBundles(): iterable
+	{
         $contents = require $this->getProjectDir().'/config/bundles.php';
         foreach ($contents as $class => $envs) {
             if (isset($envs[$this->environment]) || isset($envs['all'])) {
@@ -83,6 +83,7 @@ class Kernel extends BaseKernel
 		$confDir = '../config';
 
 		$container->import(new FileResource($this->getProjectDir().'/config/bundles.php'));
+		$container->import($confDir.'/bridge.php');
 		$container->parameters()->set('container.dumper.inline_class_loader', true);
 
 		$container->import($confDir.'/{packages}/*'.self::CONFIG_EXTS);

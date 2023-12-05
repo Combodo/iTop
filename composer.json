@@ -23,18 +23,18 @@
     "pear/archive_tar": "~1.4.14",
     "pelago/emogrifier": "^6.0.0",
     "scssphp/scssphp": "^1.10.3",
-    "symfony/console": "5.4.*",
-    "symfony/dotenv": "5.4.*",
-    "symfony/framework-bundle": "5.4.*",
-    "symfony/http-foundation": "5.4.*",
-    "symfony/http-kernel": "5.4.*",
-    "symfony/twig-bundle": "5.4.*",
-    "symfony/yaml": "5.4.*",
+    "symfony/console": "~6.4.0",
+    "symfony/dotenv": "~6.4.0",
+    "symfony/framework-bundle": "~6.4.0",
+    "symfony/http-foundation": "~6.4.0",
+    "symfony/http-kernel": "~6.4.0",
+    "symfony/twig-bundle": "~6.4.0",
+    "symfony/yaml": "~6.4.0",
     "thenetworg/oauth2-azure": "^2.0"
   },
   "require-dev": {
-    "symfony/stopwatch": "5.4.*",
-    "symfony/web-profiler-bundle": "5.4.*"
+    "symfony/stopwatch": "~6.4.0",
+    "symfony/web-profiler-bundle": "~6.4.0"
   },
   "suggest": {
     "ext-libsodium": "Required to use the AttributeEncryptedString.",

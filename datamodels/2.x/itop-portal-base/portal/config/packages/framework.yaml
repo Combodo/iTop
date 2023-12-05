@@ -1,5 +1,5 @@
 framework:
-  secret: '%env(APP_SECRET)%'
+  #secret: (part of iTop general configuration, will be set dynamically via bridge.php)
   #default_locale: en
   #csrf_protection: true
   #http_method_override: true

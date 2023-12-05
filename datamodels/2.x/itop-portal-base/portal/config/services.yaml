@@ -52,6 +52,9 @@ services:
       $aCombodoPortalInstanceConf:        '%combodo.portal.instance.conf%'
       $sCombodoPortalInstanceAbsoluteUrl: '%env(string:COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL)%'
 
+  # Allow container service injection
+  Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'
+
   # Makes classes in src/ available to be used as services
   # This creates a service per class whose id is the fully-qualified class name
   Combodo\iTop\Portal\:
@@ -68,8 +71,6 @@ services:
   _instanceof:
     Combodo\iTop\Portal\EventListener\UserProvider:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 500 }]
-      calls:
-        - [setContainer, ['@service_container']]
     Combodo\iTop\Portal\EventListener\ApplicationContextSetUrlMakerClass:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 400 }]
     Combodo\iTop\Portal\EventListener\ApplicationContextSetPluginPropertyClass:
@@ -78,8 +79,7 @@ services:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 200 }]
     Combodo\iTop\Portal\EventListener\ExceptionListener:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.exception', priority: 500 }]
-      calls:
-        - [setContainer, ['@service_container']]
+
 
   # Add more service definitions when explicit configuration is needed
   # Please note that last definitions always *replace* previous ones
@@ -102,6 +102,10 @@ services:
   Combodo\iTop\Portal\Routing\UrlGenerator:
     decorates: 'router'
     arguments: ['@Combodo\iTop\Portal\Routing\UrlGenerator.inner']
+
+  # UI extension helper
+  Combodo\iTop\Portal\Helper\UIExtensionsHelper:
+    arguments: ['@service_container']
 
   # Standard services
   combodo.current_contact.photo_url:
