@@ -61,7 +61,7 @@ iTop provides PHPUnit TestCase children that provides some helpers and setUp/tea
 
 ### Naming convention
 * to test `MyClass` class then create a `MyClassTest` class
-* to test `MyMethod` method, the corresponding test method should be names `testMyMethod`
+* to test `MyMethod` method, the corresponding test method should be named `testMyMethod`
 
 Source [PHPUnit Manual – Chapter 2. Writing Tests for PHPUnit](https://docs.phpunit.de/en/9.6/writing-tests-for-phpunit.html#writing-tests-for-phpunit)
 
