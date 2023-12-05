@@ -115,7 +115,7 @@ class UserProfileBrickController extends BrickController
 		// If this is ajax call, we are just submitting preferences or password forms
 		if ($oRequest->isXmlHttpRequest())
 		{
-			$aCurrentValues = $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW);
+			$aCurrentValues = $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 			$sFormType = $aCurrentValues['form_type'];
 			if ($sFormType === PreferencesFormManager::FORM_TYPE)
 			{
@@ -214,7 +214,7 @@ class UserProfileBrickController extends BrickController
 				$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
 				// Applying modification to object
 				$aFormData['validation'] = $oFormManager->OnSubmit(array(
-					'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
+					'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', array(),  FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
 				));
 				// Reloading page only if preferences were changed
 				if (($aFormData['validation']['valid'] === true) && !empty($aFormData['validation']['messages']['success']))
@@ -294,7 +294,7 @@ class UserProfileBrickController extends BrickController
 				$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
 				// Applying modification to object
 				$aFormData['validation'] = $oFormManager->OnSubmit(array(
-					'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
+					'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
 				));
 			}
 		}
