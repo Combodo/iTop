@@ -1707,6 +1707,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'application.secret' => [
+			'type'                => 'string',
+			'description'         => 'Application secret, uses this value for encrypting the cookies used in the remember me functionality and for creating signed URIs when using ESI (Edge Side Includes).',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 	];
 
 	public function IsProperty($sPropCode)
@@ -1887,6 +1895,15 @@ class Config
 	protected $m_iPasswordHashAlgo;
 
 	/**
+	 * Symfony uses this value for encrypting the cookies used in the remember me functionality and for creating signed URIs when using ESI (Edge Side Includes).
+	 *
+	 * @see https://symfony.com/doc/current/reference/configuration/framework.html#secret
+	 * @since 3.2.0 - N°6934 - Symfony 6.4 - upgrade Symfony bundles to 6.4
+	 * @var string
+	 */
+	protected $m_sAppSecret;
+
+	/**
 	 * Config constructor.
 	 *
 	 * @param string|null $sConfigFile
@@ -1930,6 +1947,7 @@ class Config
 		$this->m_aCharsets = array();
 		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
 		$this->m_iPasswordHashAlgo = DEFAULT_HASH_ALGO;
+		$this->m_sAppSecret = bin2hex(random_bytes(16));
 
 		//define default encryption params according to php install
 		$aEncryptParams = SimpleCrypt::GetNewDefaultParams();
@@ -2090,6 +2108,7 @@ class Config
 		$this->m_sEncryptionLibrary = isset($MySettings['encryption_library']) ? trim($MySettings['encryption_library']) : $this->m_sEncryptionLibrary;
 		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : array();
 		$this->m_iPasswordHashAlgo = isset($MySettings['password_hash_algo']) ? $MySettings['password_hash_algo'] : $this->m_iPasswordHashAlgo;
+		$this->m_sAppSecret = isset($MySettings['application.secret']) ? trim($MySettings['application.secret']) : $this->m_sAppSecret;
 	}
 
 	protected function Verify()
@@ -2225,6 +2244,11 @@ class Config
 		return $this->m_sEncryptionKey;
 	}
 
+	public function GetAppSecret()
+	{
+		return $this->m_sAppSecret;
+	}
+
 	public function GetEncryptionLibrary()
 	{
 		return $this->m_sEncryptionLibrary;
@@ -2323,6 +2347,12 @@ class Config
 		$this->m_sEncryptionKey = $sKey;
 	}
 
+	public function SetAppSecret($sKey)
+	{
+		$this->m_sAppSecret = $sKey;
+	}
+
+
 	public function SetCSVImportCharsets($aCharsets)
 	{
 		$this->m_aCharsets = $aCharsets;
@@ -2374,6 +2404,7 @@ class Config
 		$aSettings['encryption_library'] = $this->m_sEncryptionLibrary;
 		$aSettings['csv_import_charsets'] = $this->m_aCharsets;
 		$aSettings['password_hash_algo'] = $this->m_iPasswordHashAlgo;
+		$aSettings['application.secret'] = $this->m_sAppSecret;
 
 		foreach ($this->m_aModuleSettings as $sModule => $aProperties)
 		{
@@ -2486,7 +2517,8 @@ class Config
 				'encryption_key' => $this->m_sEncryptionKey,
 				'encryption_library' => $this->m_sEncryptionLibrary,
 				'csv_import_charsets' => $this->m_aCharsets,
-				'password_hash_algo' => $this->m_iPasswordHashAlgo
+				'password_hash_algo' => $this->m_iPasswordHashAlgo,
+				'application.secret' => $this->m_sAppSecret,
 			);
 			foreach ($aOtherValues as $sKey => $value)
 			{

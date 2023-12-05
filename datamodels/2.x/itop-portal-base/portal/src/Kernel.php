@@ -83,6 +83,7 @@ class Kernel extends BaseKernel
 		$confDir = '../config';
 
 		$container->import(new FileResource($this->getProjectDir().'/config/bundles.php'));
+		$container->import($confDir.'/bridge.php');
 		$container->parameters()->set('container.dumper.inline_class_loader', true);
 
 		$container->import($confDir.'/{packages}/*'.self::CONFIG_EXTS);
