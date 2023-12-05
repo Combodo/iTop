@@ -3,6 +3,16 @@
 Documentation on creating and maintaining tests in iTop.
 
 
+Table of content:
+<!-- TOC -->
+* [Prerequisites](#prerequisites)
+* [Create an iTop PHPUnit test](#create-an-itop-phpunit-test)
+* [Tips: generic PHPUnit](#tips-generic-phpunit)
+* [Tips: iTop tests](#tips-itop-tests)
+* [Test performances](#test-performances)
+* [PHPUnit process isolation](#phpunit-process-isolation)
+<!-- TOC -->
+
 
 
 ## Prerequisites
@@ -46,6 +56,8 @@ Plus :
 iTop provides PHPUnit TestCase children that provides some helpers and setUp/tearDown overrides : 
 - `\Combodo\iTop\Test\UnitTest\ItopTestCase` : for the most simple iTop tests
 - `\Combodo\iTop\Test\UnitTest\ItopDataTestCase` : to get a started metamodel and have cleanup of CRUD operations on iTop objects (transactions by default)
+- `\Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase` : to test a non standard datamodel (available since iTop 2.7.9, 3.0.4, 3.1.0 N°6097)
+
 
 ### Naming convention
 * to test `MyClass` class then create a `MyClassTest` class
