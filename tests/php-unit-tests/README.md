@@ -27,7 +27,7 @@ If you need to customize it, copy it to `phpunit.xml` (not versioned).
   - `memory_limit`: as the tests are for the most part ran in the same process, memory usage may become an issue! A default value is set in default PHPUnit configuration XML file, don't hesitate to update it if needed
 * PHP CLI php.ini
   - enable OpCache
-  - disable Xdebug (xdebug.mode=off)
+  - disable Xdebug (xdebug.mode=off) : huge performance improvements (between X2 and X3), and we can still debug using PHPStorm !
 
 ### Dependencies
 Whereas iTop dependencies are bundled inside its repository, the tests dependencies are not, and must be added manually. To do so, run `composer install` in the `/tests/php-unit-tests` directory. 
