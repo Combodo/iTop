@@ -1165,9 +1165,6 @@ class ObjectFormManager extends FormManager
 			// Writing object to DB
 			try
 			{
-				$this->oObject->CheckChangedExtKeysValues(function ($sClass, $sId) use ($oSecurityHelper): bool {
-					return $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sClass, $sId);
-				});
 				$this->oObject->DBWrite();
 			} catch (CoreCannotSaveObjectException $e) {
 				throw new Exception($e->getHtmlMessage());
@@ -1395,6 +1392,12 @@ class ObjectFormManager extends FormManager
 						}
 					}
 				}
+                /** @var SecurityHelper $oSecurityHelper */
+                $oSecurityHelper = $this->oContainer->get('security_helper');
+                // N°7023 - Note that we check for ext. key now as we want the check to be done on user inputs and NOT on ext. keys set programatically, so it must be done before the DoComputeValues
+                $this->oObject->CheckChangedExtKeysValues(function ($sClass, $sId) use ($oSecurityHelper): bool {
+                    return $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sClass, $sId);
+                });
 				$this->oObject->DoComputeValues();
 			}
 
