@@ -26,19 +26,19 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @covers \Combodo\iTop\Portal\Helper\RequestManipulatorHelper
+ */
 class RequestManipulatorTest extends ItopTestCase
 {
-	protected function setUp(): void
+
+	protected function LoadRequiredItopFiles(): void
 	{
-		parent::setUp();
+		parent::LoadRequiredItopFiles();
 		$this->RequireOnceItopFile('datamodels/2.x/itop-portal-base/portal/src/Helper/RequestManipulatorHelper.php');
 	}
 
-	/**
-	 *
-	 *
-	 */
-	public function test()
+	public function testReadParam()
 	{
 		// Create a simple request with only necessary information
 		$oRequest = new Request();
@@ -53,19 +53,19 @@ class RequestManipulatorTest extends ItopTestCase
 		$oRequestManipulatorHelper = new RequestManipulatorHelper($oRequestStack);
 
 		// I - default null value
-		$oNullArrayValue = $oRequestManipulatorHelper->ReadParam('null_array_value',  null, FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
+		$oNullArrayValue = $oRequestManipulatorHelper->ReadParam('null_array_value',  null, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 		$this->assertNull($oNullArrayValue);
 
 		// II - default empty array value
-		$oEmptyArrayValue = $oRequestManipulatorHelper->ReadParam('empty_array_value', [], FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
+		$oEmptyArrayValue = $oRequestManipulatorHelper->ReadParam('empty_array_value', [], FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 		$this->assertEmpty($oNullArrayValue);
 
 		// III - since symfony 6.4, this code raised a bad request exception
 		$this->expectException("Symfony\\Component\\HttpFoundation\\Exception\\BadRequestException");
-		$oRequestManipulatorHelper->ReadParam('array_value', null, FILTER_SANITIZE_SPECIAL_CHARS);
+		$oRequestManipulatorHelper->ReadParam('array_value', null, FILTER_UNSAFE_RAW);
 
 		// IV - control value
-		$aReadValue = $oRequestManipulatorHelper->ReadParam('array_value', null, FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
+		$aReadValue = $oRequestManipulatorHelper->ReadParam('array_value', null, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 		$this->assertEquals($aValue, $aReadValue);
 	}
 
