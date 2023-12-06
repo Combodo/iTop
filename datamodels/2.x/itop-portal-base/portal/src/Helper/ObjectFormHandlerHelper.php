@@ -222,7 +222,7 @@ class ObjectFormHandlerHelper
 				$aPrefillFormParam = array(
 					'user' => UserRights::GetUser(),
 					'origin' => 'portal',
-					'stimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null)['code'],
+					'stimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY)['code'],
 				);
 				$oObject->PrefillForm('state_change', $aPrefillFormParam);
 			}
@@ -315,10 +315,10 @@ class ObjectFormHandlerHelper
 					// Applying modification to object
 					$aFormData['validation'] = $oFormManager->OnSubmit(
 						array(
-							'currentValues' => $this->oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
-							'attachmentIds' => $this->oRequestManipulator->ReadParam('attachment_ids', array(), FILTER_UNSAFE_RAW),
+							'currentValues' => $this->oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
+							'attachmentIds' => $this->oRequestManipulator->ReadParam('attachment_ids', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
 							'formProperties' => $aFormProperties,
-							'applyStimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null),
+							'applyStimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
 						)
 					);
 					if ($aFormData['validation']['valid'] === true)
@@ -337,7 +337,7 @@ class ObjectFormHandlerHelper
 					break;
 
 				case 'update':
-					$oFormManager->OnUpdate(array('currentValues' => $this->oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW), 'formProperties' => $aFormProperties));
+					$oFormManager->OnUpdate(array('currentValues' => $this->oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY), 'formProperties' => $aFormProperties));
 					break;
 
 				case 'cancel':
@@ -399,7 +399,7 @@ class ObjectFormHandlerHelper
 				ApplicationContext::MakeObjectUrl($sObjectClass, $sObjectId)
 			);
 		}
-		
+
 		return $aFormData;
 	}
 

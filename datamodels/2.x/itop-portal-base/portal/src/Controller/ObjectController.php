@@ -795,7 +795,7 @@ class ObjectController extends BrickController
 
 			// Updating host object
 			$oFormManager->OnUpdate(array(
-				'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
+				'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
 			));
 			$oHostObject = $oFormManager->GetObject();
 		}
@@ -807,7 +807,7 @@ class ObjectController extends BrickController
 		$sQuery = $this->oRequestManipulatorHelper->ReadParam('sSearchValue', '');
 		$sFormPath = $this->oRequestManipulatorHelper->ReadParam('sFormPath', '');
 		$sFieldId = $this->oRequestManipulatorHelper->ReadParam('sFieldId', '');
-		$aObjectIdsToIgnore = $this->oRequestManipulatorHelper->ReadParam('aObjectIdsToIgnore', null, FILTER_UNSAFE_RAW);
+		$aObjectIdsToIgnore = $this->oRequestManipulatorHelper->ReadParam('aObjectIdsToIgnore', null, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 
 		// Building search query
 		// - Retrieving target object class from attcode
@@ -1274,8 +1274,8 @@ class ObjectController extends BrickController
 
 		// Retrieving parameters
 		$sObjectClass = $this->oRequestManipulatorHelper->ReadParam('sObjectClass', '');
-		$aObjectIds = $this->oRequestManipulatorHelper->ReadParam('aObjectIds', array(), FILTER_UNSAFE_RAW);
-		$aObjectAttCodes = $this->oRequestManipulatorHelper->ReadParam('aObjectAttCodes', array(), FILTER_UNSAFE_RAW);
+		$aObjectIds = $this->oRequestManipulatorHelper->ReadParam('aObjectIds', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
+		$aObjectAttCodes = $this->oRequestManipulatorHelper->ReadParam('aObjectAttCodes', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 		if (empty($sObjectClass) || empty($aObjectIds) || empty($aObjectAttCodes)) {
 			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : sObjectClass, aObjectIds and aObjectAttCodes expected, "'.$sObjectClass.'", "'.implode('/',
 					$aObjectIds).'" given.');
@@ -1332,10 +1332,10 @@ class ObjectController extends BrickController
 		// Retrieving parameters
 		$sObjectClass = $this->oRequestManipulatorHelper->ReadParam('sObjectClass', '');
 		$sLinkClass = $this->oRequestManipulatorHelper->ReadParam('sLinkClass', '');
-		$aObjectIds = $this->oRequestManipulatorHelper->ReadParam('aObjectIds', array(), FILTER_UNSAFE_RAW);
-		$aObjectAttCodes = $this->oRequestManipulatorHelper->ReadParam('aObjectAttCodes', array(), FILTER_UNSAFE_RAW);
-		$aLinkAttCodes = $this->oRequestManipulatorHelper->ReadParam('aLinkAttCodes', array(), FILTER_UNSAFE_RAW);
-		$sDateTimePickerWidgetParent = $this->oRequestManipulatorHelper->ReadParam('sDateTimePickerWidgetParent', array(), FILTER_UNSAFE_RAW);
+		$aObjectIds = $this->oRequestManipulatorHelper->ReadParam('aObjectIds', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
+		$aObjectAttCodes = $this->oRequestManipulatorHelper->ReadParam('aObjectAttCodes', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
+		$aLinkAttCodes = $this->oRequestManipulatorHelper->ReadParam('aLinkAttCodes', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
+		$sDateTimePickerWidgetParent = $this->oRequestManipulatorHelper->ReadParam('sDateTimePickerWidgetParent', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 
 		if (empty($sObjectClass) || empty($aObjectIds) || empty($aObjectAttCodes)) {
 			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : sObjectClass, aObjectIds and aObjectAttCodes expected, "'.$sObjectClass.'", "'.implode('/',
