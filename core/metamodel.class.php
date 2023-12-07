@@ -21,6 +21,7 @@ use Combodo\iTop\Application\EventRegister\ApplicationEvents;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
+use Dict;
 
 require_once APPROOT.'core/modulehandler.class.inc.php';
 require_once APPROOT.'core/querymodifier.class.inc.php';
@@ -4267,16 +4268,17 @@ abstract class MetaModel
 			];
 			IssueLog::Warning("Unresolved placeholders due to null object in current context", null,
 				$aContext);
-			$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
+			$aPlaceholders[$sPlaceHolderKey] = Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
 			foreach ($aCurrentUser as $sField) {
 				$sPlaceHolderKey = $sPlaceHolderPrefix . "->$sField";
-				$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
+				$aPlaceholders[$sPlaceHolderKey] = Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
 			}
 		} else {
 			$aPlaceholders[$sPlaceHolderKey] = $oObject;
 			foreach ($aCurrentUser as $sField) {
 				$sPlaceHolderKey = $sPlaceHolderPrefix . "->$sField";
-				if (false === MetaModel::IsValidAttCode(get_class($oObject), $sField)){
+				// Mind that the "id" is not viewed as a valid att. code by \MetaModel::IsValidAttCode() so we have to test it manually
+				if ($sField !== "id" && false === MetaModel::IsValidAttCode(get_class($oObject), $sField)){
 					$aContext = [
 						"current_user_id" => UserRights::GetUserId(),
 						"obj_class" => get_class($oObject),
@@ -4285,7 +4287,7 @@ abstract class MetaModel
 					];
 					IssueLog::Warning("Unresolved placeholder due to invalid attribute", null,
 						$aContext);
-					$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
+					$aPlaceholders[$sPlaceHolderKey] = Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
 					continue;
 				}
 
