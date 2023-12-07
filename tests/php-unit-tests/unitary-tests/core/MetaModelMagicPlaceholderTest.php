@@ -79,7 +79,10 @@ class MetaModelMagicPlaceholderTest extends ItopDataTestCase
 			new VariableExpression('current_user->login'),
 			new VariableExpression('current_user->not_existing_attribute'),
 			new VariableExpression('current_contact_id'),
+			new VariableExpression('current_contact->id'),
+			new VariableExpression('current_contact->friendlyname'),
 			new VariableExpression('current_contact->org_id'),
+			new VariableExpression('current_contact->org_id_friendlyname'),
 			new VariableExpression('current_contact->not_existing_attribute'),
 		];
 		$aPlaceholders = MetaModel::AddMagicPlaceholders(['gabu' => "zomeu"], $aExpectedArgs);
@@ -91,7 +94,10 @@ class MetaModelMagicPlaceholderTest extends ItopDataTestCase
 				'current_user->not_existing_attribute' => '(current_user->not_existing_attribute : cannot be resolved)',
 				'current_user->login' => $sLogin,
 				'current_contact->object()' => $oPerson,
+				'current_contact->id' => $oPerson->GetKey(),
+				'current_contact->friendlyname' => $oPerson->GetName(),
 				'current_contact->org_id' => $oPerson->Get('org_id'),
+				'current_contact->org_id_friendlyname' => $oPerson->Get('org_id_friendlyname'),
 				'current_contact->not_existing_attribute' => '(current_contact->not_existing_attribute : cannot be resolved)',
 			],
 			$aPlaceholders,
