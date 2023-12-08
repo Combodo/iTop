@@ -35,6 +35,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         ),
         'S' => 
         array (
+            'Symfony\\Runtime\\Symfony\\Component\\' => 34,
             'Symfony\\Polyfill\\Php83\\' => 23,
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Php72\\' => 23,
@@ -52,6 +53,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
             'Symfony\\Component\\VarDumper\\' => 28,
             'Symfony\\Component\\String\\' => 25,
             'Symfony\\Component\\Stopwatch\\' => 28,
+            'Symfony\\Component\\Runtime\\' => 26,
             'Symfony\\Component\\Routing\\' => 26,
             'Symfony\\Component\\HttpKernel\\' => 29,
             'Symfony\\Component\\HttpFoundation\\' => 33,
@@ -68,6 +70,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
             'Symfony\\Bundle\\WebProfilerBundle\\' => 33,
             'Symfony\\Bundle\\TwigBundle\\' => 26,
             'Symfony\\Bundle\\FrameworkBundle\\' => 31,
+            'Symfony\\Bundle\\DebugBundle\\' => 27,
             'Symfony\\Bridge\\Twig\\' => 20,
             'ScssPhp\\ScssPhp\\' => 16,
             'Sabberworm\\CSS\\' => 15,
@@ -117,6 +120,10 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'TheNetworg\\OAuth2\\Client\\' => 
         array (
             0 => __DIR__ . '/..' . '/thenetworg/oauth2-azure/src',
+        ),
+        'Symfony\\Runtime\\Symfony\\Component\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/runtime/Internal',
         ),
         'Symfony\\Polyfill\\Php83\\' => 
         array (
@@ -186,6 +193,10 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         array (
             0 => __DIR__ . '/..' . '/symfony/stopwatch',
         ),
+        'Symfony\\Component\\Runtime\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/runtime',
+        ),
         'Symfony\\Component\\Routing\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/routing',
@@ -249,6 +260,10 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Symfony\\Bundle\\FrameworkBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/framework-bundle',
+        ),
+        'Symfony\\Bundle\\DebugBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/debug-bundle',
         ),
         'Symfony\\Bridge\\Twig\\' => 
         array (
@@ -378,6 +393,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'ActionNotification' => __DIR__ . '/../..' . '/core/action.class.inc.php',
         'AjaxPage' => __DIR__ . '/../..' . '/sources/Application/WebPage/AjaxPage.php',
         'ApcService' => __DIR__ . '/../..' . '/core/apc-service.class.inc.php',
+        'App\\Kernel' => __DIR__ . '/../..' . '/sources/Kernel.php',
         'ApplicationContext' => __DIR__ . '/../..' . '/application/applicationcontext.class.inc.php',
         'ApplicationException' => __DIR__ . '/../..' . '/application/exceptions/ApplicationException.php',
         'ApplicationMenu' => __DIR__ . '/../..' . '/application/menunode.class.inc.php',
@@ -584,6 +600,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletHeaderStatic' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Dashlet/DashletHeaderStatic.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletPlainText' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Dashlet/DashletPlainText.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTable' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/DataTable/DataTable.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableConfig\\DataTableConfig' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/DataTable/DataTableConfig/DataTableConfig.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableSettings' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/DataTable/DataTableSettings.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableUIBlockFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/DataTable/DataTableUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\StaticTable\\FormTableRow\\FormTableRow' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/DataTable/StaticTable/FormTableRow/FormTableRow.php',
@@ -723,6 +740,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\UI\\Preferences\\BlockShortcuts\\BlockShortcuts' => __DIR__ . '/../..' . '/sources/Application/UI/Preferences/BlockShortcuts/BlockShortcuts.php',
         'Combodo\\iTop\\Application\\UI\\Printable\\BlockPrintHeader\\BlockPrintHeader' => __DIR__ . '/../..' . '/sources/Application/UI/Printable/BlockPrintHeader/BlockPrintHeader.php',
         'Combodo\\iTop\\Composer\\iTopComposer' => __DIR__ . '/../..' . '/sources/Composer/iTopComposer.php',
+        'Combodo\\iTop\\Controller\\AbstractAppController' => __DIR__ . '/../..' . '/sources/Controller/AbstractAppController.php',
         'Combodo\\iTop\\Controller\\AbstractController' => __DIR__ . '/../..' . '/sources/Controller/AbstractController.php',
         'Combodo\\iTop\\Controller\\AjaxRenderController' => __DIR__ . '/../..' . '/sources/Controller/AjaxRenderController.php',
         'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => __DIR__ . '/../..' . '/sources/Controller/Base/Layout/ActivityPanelController.php',
@@ -731,6 +749,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Controller\\OAuth\\OAuthLandingController' => __DIR__ . '/../..' . '/sources/Controller/OAuth/OAuthLandingController.php',
         'Combodo\\iTop\\Controller\\PreferencesController' => __DIR__ . '/../..' . '/sources/Controller/PreferencesController.php',
         'Combodo\\iTop\\Controller\\TemporaryObjects\\TemporaryObjectController' => __DIR__ . '/../..' . '/sources/Controller/TemporaryObjects/TemporaryObjectController.php',
+        'Combodo\\iTop\\Controller\\TestController' => __DIR__ . '/../..' . '/sources/Controller/TestController.php',
         'Combodo\\iTop\\Controller\\iController' => __DIR__ . '/../..' . '/sources/Controller/iController.php',
         'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\IOAuthClientProvider' => __DIR__ . '/../..' . '/sources/Core/Authentication/Client/OAuth/IOAuthClientProvider.php',
         'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\OAuthClientProviderAbstract' => __DIR__ . '/../..' . '/sources/Core/Authentication/Client/OAuth/OAuthClientProviderAbstract.php',
@@ -825,6 +844,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Service\\Router\\Exception\\RouteNotFoundException' => __DIR__ . '/../..' . '/sources/Service/Router/Exception/RouteNotFoundException.php',
         'Combodo\\iTop\\Service\\Router\\Exception\\RouterException' => __DIR__ . '/../..' . '/sources/Service/Router/Exception/RouterException.php',
         'Combodo\\iTop\\Service\\Router\\Router' => __DIR__ . '/../..' . '/sources/Service/Router/Router.php',
+        'Combodo\\iTop\\Service\\SummaryCard\\SummaryCardService' => __DIR__ . '/../..' . '/sources/Service/SummaryCard/SummaryCardService.php',
         'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectConfig' => __DIR__ . '/../..' . '/sources/Service/TemporaryObjects/TemporaryObjectConfig.php',
         'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectGC' => __DIR__ . '/../..' . '/sources/Service/TemporaryObjects/TemporaryObjectGC.php',
         'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectHelper' => __DIR__ . '/../..' . '/sources/Service/TemporaryObjects/TemporaryObjectHelper.php',
@@ -882,7 +902,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'DashletProxy' => __DIR__ . '/../..' . '/application/dashlet.class.inc.php',
         'DashletUnknown' => __DIR__ . '/../..' . '/application/dashlet.class.inc.php',
         'DataTable' => __DIR__ . '/../..' . '/application/datatable.class.inc.php',
-        'DataTableConfig' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/DataTable/DataTableConfig/DataTableConfig.php',
         'Datamatrix' => __DIR__ . '/..' . '/combodo/tcpdf/include/barcodes/datamatrix.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
         'DateException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
@@ -1946,7 +1965,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'StimulusUserAction' => __DIR__ . '/../..' . '/core/stimulus.class.inc.php',
         'Str' => __DIR__ . '/../..' . '/core/MyHelpers.class.inc.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
-        'SummaryCardService' => __DIR__ . '/../..' . '/sources/Service/SummaryCard/SummaryCardService.php',
         'Symfony\\Bridge\\Twig\\AppVariable' => __DIR__ . '/..' . '/symfony/twig-bridge/AppVariable.php',
         'Symfony\\Bridge\\Twig\\Attribute\\Template' => __DIR__ . '/..' . '/symfony/twig-bridge/Attribute/Template.php',
         'Symfony\\Bridge\\Twig\\Command\\DebugCommand' => __DIR__ . '/..' . '/symfony/twig-bridge/Command/DebugCommand.php',
@@ -1993,8 +2011,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Symfony\\Bridge\\Twig\\Node\\StopwatchNode' => __DIR__ . '/..' . '/symfony/twig-bridge/Node/StopwatchNode.php',
         'Symfony\\Bridge\\Twig\\Node\\TransDefaultDomainNode' => __DIR__ . '/..' . '/symfony/twig-bridge/Node/TransDefaultDomainNode.php',
         'Symfony\\Bridge\\Twig\\Node\\TransNode' => __DIR__ . '/..' . '/symfony/twig-bridge/Node/TransNode.php',
-        'Symfony\\Bridge\\Twig\\Test\\FormLayoutTestCase' => __DIR__ . '/..' . '/symfony/twig-bridge/Test/FormLayoutTestCase.php',
-        'Symfony\\Bridge\\Twig\\Test\\Traits\\RuntimeLoaderProvider' => __DIR__ . '/..' . '/symfony/twig-bridge/Test/Traits/RuntimeLoaderProvider.php',
         'Symfony\\Bridge\\Twig\\TokenParser\\DumpTokenParser' => __DIR__ . '/..' . '/symfony/twig-bridge/TokenParser/DumpTokenParser.php',
         'Symfony\\Bridge\\Twig\\TokenParser\\FormThemeTokenParser' => __DIR__ . '/..' . '/symfony/twig-bridge/TokenParser/FormThemeTokenParser.php',
         'Symfony\\Bridge\\Twig\\TokenParser\\StopwatchTokenParser' => __DIR__ . '/..' . '/symfony/twig-bridge/TokenParser/StopwatchTokenParser.php',
@@ -2002,6 +2018,11 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Symfony\\Bridge\\Twig\\TokenParser\\TransTokenParser' => __DIR__ . '/..' . '/symfony/twig-bridge/TokenParser/TransTokenParser.php',
         'Symfony\\Bridge\\Twig\\Translation\\TwigExtractor' => __DIR__ . '/..' . '/symfony/twig-bridge/Translation/TwigExtractor.php',
         'Symfony\\Bridge\\Twig\\UndefinedCallableHandler' => __DIR__ . '/..' . '/symfony/twig-bridge/UndefinedCallableHandler.php',
+        'Symfony\\Bundle\\DebugBundle\\Command\\ServerDumpPlaceholderCommand' => __DIR__ . '/..' . '/symfony/debug-bundle/Command/ServerDumpPlaceholderCommand.php',
+        'Symfony\\Bundle\\DebugBundle\\DebugBundle' => __DIR__ . '/..' . '/symfony/debug-bundle/DebugBundle.php',
+        'Symfony\\Bundle\\DebugBundle\\DependencyInjection\\Compiler\\DumpDataCollectorPass' => __DIR__ . '/..' . '/symfony/debug-bundle/DependencyInjection/Compiler/DumpDataCollectorPass.php',
+        'Symfony\\Bundle\\DebugBundle\\DependencyInjection\\Configuration' => __DIR__ . '/..' . '/symfony/debug-bundle/DependencyInjection/Configuration.php',
+        'Symfony\\Bundle\\DebugBundle\\DependencyInjection\\DebugExtension' => __DIR__ . '/..' . '/symfony/debug-bundle/DependencyInjection/DebugExtension.php',
         'Symfony\\Bundle\\FrameworkBundle\\CacheWarmer\\AbstractPhpFileCacheWarmer' => __DIR__ . '/..' . '/symfony/framework-bundle/CacheWarmer/AbstractPhpFileCacheWarmer.php',
         'Symfony\\Bundle\\FrameworkBundle\\CacheWarmer\\AnnotationsCacheWarmer' => __DIR__ . '/..' . '/symfony/framework-bundle/CacheWarmer/AnnotationsCacheWarmer.php',
         'Symfony\\Bundle\\FrameworkBundle\\CacheWarmer\\CachePoolClearerCacheWarmer' => __DIR__ . '/..' . '/symfony/framework-bundle/CacheWarmer/CachePoolClearerCacheWarmer.php',
@@ -3011,6 +3032,21 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Symfony\\Component\\Routing\\RouteCompilerInterface' => __DIR__ . '/..' . '/symfony/routing/RouteCompilerInterface.php',
         'Symfony\\Component\\Routing\\Router' => __DIR__ . '/..' . '/symfony/routing/Router.php',
         'Symfony\\Component\\Routing\\RouterInterface' => __DIR__ . '/..' . '/symfony/routing/RouterInterface.php',
+        'Symfony\\Component\\Runtime\\GenericRuntime' => __DIR__ . '/..' . '/symfony/runtime/GenericRuntime.php',
+        'Symfony\\Component\\Runtime\\Internal\\BasicErrorHandler' => __DIR__ . '/..' . '/symfony/runtime/Internal/BasicErrorHandler.php',
+        'Symfony\\Component\\Runtime\\Internal\\ComposerPlugin' => __DIR__ . '/..' . '/symfony/runtime/Internal/ComposerPlugin.php',
+        'Symfony\\Component\\Runtime\\Internal\\MissingDotenv' => __DIR__ . '/..' . '/symfony/runtime/Internal/MissingDotenv.php',
+        'Symfony\\Component\\Runtime\\Internal\\SymfonyErrorHandler' => __DIR__ . '/..' . '/symfony/runtime/Internal/SymfonyErrorHandler.php',
+        'Symfony\\Component\\Runtime\\ResolverInterface' => __DIR__ . '/..' . '/symfony/runtime/ResolverInterface.php',
+        'Symfony\\Component\\Runtime\\Resolver\\ClosureResolver' => __DIR__ . '/..' . '/symfony/runtime/Resolver/ClosureResolver.php',
+        'Symfony\\Component\\Runtime\\Resolver\\DebugClosureResolver' => __DIR__ . '/..' . '/symfony/runtime/Resolver/DebugClosureResolver.php',
+        'Symfony\\Component\\Runtime\\RunnerInterface' => __DIR__ . '/..' . '/symfony/runtime/RunnerInterface.php',
+        'Symfony\\Component\\Runtime\\Runner\\ClosureRunner' => __DIR__ . '/..' . '/symfony/runtime/Runner/ClosureRunner.php',
+        'Symfony\\Component\\Runtime\\Runner\\Symfony\\ConsoleApplicationRunner' => __DIR__ . '/..' . '/symfony/runtime/Runner/Symfony/ConsoleApplicationRunner.php',
+        'Symfony\\Component\\Runtime\\Runner\\Symfony\\HttpKernelRunner' => __DIR__ . '/..' . '/symfony/runtime/Runner/Symfony/HttpKernelRunner.php',
+        'Symfony\\Component\\Runtime\\Runner\\Symfony\\ResponseRunner' => __DIR__ . '/..' . '/symfony/runtime/Runner/Symfony/ResponseRunner.php',
+        'Symfony\\Component\\Runtime\\RuntimeInterface' => __DIR__ . '/..' . '/symfony/runtime/RuntimeInterface.php',
+        'Symfony\\Component\\Runtime\\SymfonyRuntime' => __DIR__ . '/..' . '/symfony/runtime/SymfonyRuntime.php',
         'Symfony\\Component\\Stopwatch\\Section' => __DIR__ . '/..' . '/symfony/stopwatch/Section.php',
         'Symfony\\Component\\Stopwatch\\Stopwatch' => __DIR__ . '/..' . '/symfony/stopwatch/Stopwatch.php',
         'Symfony\\Component\\Stopwatch\\StopwatchEvent' => __DIR__ . '/..' . '/symfony/stopwatch/StopwatchEvent.php',
@@ -3155,6 +3191,13 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Symfony\\Polyfill\\Php80\\Php80' => __DIR__ . '/..' . '/symfony/polyfill-php80/Php80.php',
         'Symfony\\Polyfill\\Php80\\PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/PhpToken.php',
         'Symfony\\Polyfill\\Php83\\Php83' => __DIR__ . '/..' . '/symfony/polyfill-php83/Php83.php',
+        'Symfony\\Runtime\\Symfony\\Component\\Console\\ApplicationRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/Console/ApplicationRuntime.php',
+        'Symfony\\Runtime\\Symfony\\Component\\Console\\Command\\CommandRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/Console/Command/CommandRuntime.php',
+        'Symfony\\Runtime\\Symfony\\Component\\Console\\Input\\InputInterfaceRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/Console/Input/InputInterfaceRuntime.php',
+        'Symfony\\Runtime\\Symfony\\Component\\Console\\Output\\OutputInterfaceRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/Console/Output/OutputInterfaceRuntime.php',
+        'Symfony\\Runtime\\Symfony\\Component\\HttpFoundation\\RequestRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/HttpFoundation/RequestRuntime.php',
+        'Symfony\\Runtime\\Symfony\\Component\\HttpFoundation\\ResponseRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/HttpFoundation/ResponseRuntime.php',
+        'Symfony\\Runtime\\Symfony\\Component\\HttpKernel\\HttpKernelInterfaceRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/HttpKernel/HttpKernelInterfaceRuntime.php',
         'SynchroExceptionNotStarted' => __DIR__ . '/../..' . '/application/exceptions/SynchroExceptionNotStarted.php',
         'System' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/System.php',
         'TCPDF' => __DIR__ . '/..' . '/combodo/tcpdf/tcpdf.php',
