@@ -139,7 +139,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s guardado',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Selección %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selección %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Copiar liga al objeto',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copiado'
 ));

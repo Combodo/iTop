@@ -135,7 +135,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s saved~~',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s (%2$s)~~',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s (%2$s)~~',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
 ));

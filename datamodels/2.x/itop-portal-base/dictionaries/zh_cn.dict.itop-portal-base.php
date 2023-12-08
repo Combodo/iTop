@@ -135,7 +135,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '已保存%1$s~~',
 	'Brick:Portal:Object:Search:Regular:Title' => '选择%1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => '选择%1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => '复制对象链接',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => '已复制'
 ));
