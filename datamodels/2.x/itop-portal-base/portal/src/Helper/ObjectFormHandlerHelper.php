@@ -356,7 +356,7 @@ class ObjectFormHandlerHelper
 		// Preparing fields list regarding the operation
 		if ($sOperation === 'update')
 		{
-			$aRequestedFields = $this->oRequestManipulator->ReadParam('requested_fields', array(), FILTER_UNSAFE_RAW);
+			$aRequestedFields = $this->oRequestManipulator->ReadParam('requested_fields', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 			$sFormPath = $this->oRequestManipulator->ReadParam('form_path', '');
 
 			// Checking if the update was on a subform, if so we need to make the rendering for that part only
