@@ -1259,8 +1259,14 @@ class DBObjectTest extends ItopDataTestCase
 		$fTotalDuration = microtime(true) - $fStart;
 		echo 'Total duration: '.sprintf('%.3f s', $fTotalDuration)."\n\n";
 	}
-
-	public function CheckLongValueInAttributeProvider() {
+	/**
+	 * Data provider for test deletion
+	 *  N°5547 - Object deletion fails if friendlyname too long
+	 *
+	 * @return array data
+	 */
+	public function DeletionLongValueProvider()
+	{
 		return [
 			// UserRequest.title is an AttributeString (maxsize = 255)
 			'title 250 chars' => ['title', 250],
@@ -1286,7 +1292,7 @@ class DBObjectTest extends ItopDataTestCase
 	 * @covers       DBObject::CheckToWrite
 	 * @covers       DBObject::SetTrim
 	 *
-	 * @dataProvider CheckLongValueInAttributeProvider
+	 * @dataProvider DeletionLongValueProvider
 	 *
 	 * @since 3.1.2 N°3448 - Framework field size check not correctly implemented for multi-bytes languages/strings
 	 */
