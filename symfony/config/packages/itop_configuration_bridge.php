@@ -17,13 +17,16 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use App\Kernel;
-
-require_once __DIR__.'/lib/autoload_runtime.php';
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 require_once('approot.inc.php');
 require_once('application/startup.inc.php');
 
-return function (array $context) {
-    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+return static function (ContainerConfigurator $container) {
+
+	$oConfig = utils::GetConfig();
+
+	// kernel.secret
+	$container->parameters()->set('kernel.secret', $oConfig->Get('application.secret'));
+
 };

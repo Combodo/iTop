@@ -26,6 +26,7 @@
     "symfony/console": "~6.4.0",
     "symfony/dotenv": "~6.4.0",
     "symfony/framework-bundle": "~6.4.0",
+    "symfony/var-dumper": "~6.4.0",
     "symfony/runtime": "~6.4.0",
     "symfony/http-foundation": "~6.4.0",
     "symfony/http-kernel": "~6.4.0",
@@ -86,6 +87,9 @@
     "symfony": {
       "allow-contrib": false,
       "require": "3.4.*"
+    },
+    "runtime": {
+      "dotenv_path": "symfony/.env"
     }
   },
   "scripts": {

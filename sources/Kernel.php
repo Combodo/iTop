@@ -19,6 +19,7 @@
 
 namespace App;
 
+use Combodo\iTop\Application\Helper\Session;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
@@ -34,16 +35,17 @@ class Kernel extends BaseKernel
 
 	private function getConfigDir(): string
 	{
-		return $this->getProjectDir().'/conf/production/app';
+		return $this->getProjectDir() . '/symfony/config';
 	}
 
 	public function getCacheDir(): string
 	{
-		return $this->getProjectDir().'/data/app/cache';
+		$sEnv =  Session::Get('itop_env', 'production');
+		return $this->getProjectDir() . "/data/cache-$sEnv/symfony";
 	}
 
 	public function getLogDir(): string
 	{
-		return $this->getProjectDir().'/log/app';
+		return $this->getProjectDir() . 'log/symfony';
 	}
 }
