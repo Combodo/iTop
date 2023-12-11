@@ -92,7 +92,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
     // Errors
     'iTopUpdate:Error:MissingFunction' => 'Lehetetlen elindítani a frissítést, hiányzó funkció',
-    'iTopUpdate:Error:MissingFile' => 'Hiányzó fájl: %1$',
+    'iTopUpdate:Error:MissingFile' => 'Hiányzó fájl: %1$s',
     'iTopUpdate:Error:CorruptedFile' => 'A %1$s fájl sérült',
     'iTopUpdate:Error:BadFileFormat' => 'A frissítési fájl nem zip fájl',
     'iTopUpdate:Error:BadFileContent' => 'A frissítési fájl nem alkalmazás archívum',
