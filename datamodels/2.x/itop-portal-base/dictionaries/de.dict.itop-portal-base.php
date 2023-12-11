@@ -135,7 +135,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s gespeichert',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Objektverknüpfung kopieren',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Kopiert'
 ));
