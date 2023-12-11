@@ -19,5 +19,5 @@
 
 // Global search
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Previous pages~~',
+    'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Előző oldalak',
 ));

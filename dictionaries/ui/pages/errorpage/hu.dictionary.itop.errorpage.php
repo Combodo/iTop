@@ -18,8 +18,8 @@
  */
 // Navigation menu
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'UI:ErrorPage:UnstableVersion' => 'You are using an unstable version that may include bugs. If you think this error occurred because of this please send us your feedback!~~',
-	'UI:ErrorPage:KittyDisclaimer' => 'No kitty were injured during the making of this GIF and release.
+    'UI:ErrorPage:UnstableVersion' => 'Ön egy instabil verziót használ, amely hibákat tartalmazhat. Ha úgy gondolja, hogy ez a hiba emiatt lépett fel, kérjük, küldje el visszajelzését!',
+    'UI:ErrorPage:KittyDisclaimer' => 'Egyetlen cica sem sérült meg ennek a GIF-nek a készítése és kiadása során.
 
 - The R&amp;D Team~~',
 ));
