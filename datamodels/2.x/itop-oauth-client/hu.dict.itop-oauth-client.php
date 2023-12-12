@@ -61,7 +61,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
     'Class:OAuthClientAzure' => 'OAuth ügyfél Microsoft Azure-hoz',
     'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
-
 ]);
 
 //
