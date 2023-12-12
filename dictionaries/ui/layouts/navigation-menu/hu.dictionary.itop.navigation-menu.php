@@ -30,5 +30,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s névjegyképe',
     'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Felhasználói menü megnyitása',
     'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Menüpontok szűrése',
-
 ));
