@@ -281,4 +281,3 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Organization:Overview:MyUserRequests' => 'Hozzám rendelt kérelmek ebből a szervezeti egységből',
     'Organization:Overview:Tickets' => 'Hibajegyek ebből a szervezeti egységből',
 ));
-
