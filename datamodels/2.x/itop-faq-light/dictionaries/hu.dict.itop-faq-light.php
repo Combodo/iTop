@@ -66,4 +66,3 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Brick:Portal:FAQ:Title' => 'Tudástárak',
     'Brick:Portal:FAQ:Title+' => '<p>Siet?</p><p>Nézze át a leggyakoribb kérdések listáját, és (talán) azonnal megtalálja a keresett választ.</p>',
 ));
-
