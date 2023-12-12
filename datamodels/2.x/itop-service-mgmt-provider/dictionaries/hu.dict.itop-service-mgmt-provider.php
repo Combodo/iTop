@@ -534,4 +534,3 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Szerepkör név',
     'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '~~',
 ));
-
