@@ -70,4 +70,3 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
     'Class:OAuthClientGoogle' => 'OAuth ügyfél a Google-höz',
     'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 ]);
-
