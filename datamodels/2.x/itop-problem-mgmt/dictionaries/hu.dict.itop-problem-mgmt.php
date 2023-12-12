@@ -41,8 +41,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'UI-ProblemManagementOverview-ProblemUnassigned+' => '~~',
     'UI:ProblemMgmtMenuOverview:Title' => 'Problémakezelés műszerfal',
     'UI:ProblemMgmtMenuOverview:Title+' => '~~',
-
 ));
+
 //
 // Class: Problem
 //
