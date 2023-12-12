@@ -4,7 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Controller\AbstractController;
+namespace Combodo\iTop\Service\SummaryCard;
+
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use Combodo\iTop\Service\Router\Router;
 
