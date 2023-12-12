@@ -357,4 +357,3 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'theme:fullmoon' => 'Full moon',
     'theme:test-red' => 'Tesztpéldány (Red)',
 ));
-
