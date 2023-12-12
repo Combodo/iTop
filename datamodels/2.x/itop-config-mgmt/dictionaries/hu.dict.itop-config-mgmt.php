@@ -1572,4 +1572,3 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Menu:Software' => 'Szoftverkatalógus',
     'Menu:Software+' => 'Szoftverek',
 ));
-?>
