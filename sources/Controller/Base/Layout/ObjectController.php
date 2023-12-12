@@ -30,7 +30,7 @@ use iTopWebPage;
 use JsonPage;
 use MetaModel;
 use SecurityException;
-use SummaryCardService;
+use Combodo\iTop\Service\SummaryCard\SummaryCardService;
 use UserRights;
 use utils;
 

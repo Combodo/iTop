@@ -6,8 +6,11 @@
 
 namespace Combodo\iTop\Service\SummaryCard;
 
+use appUserPreferences;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use Combodo\iTop\Service\Router\Router;
+use MetaModel;
+use UserRights;
 
 /**
  * Class SummaryCardService

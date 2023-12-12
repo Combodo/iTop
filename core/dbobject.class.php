@@ -10,6 +10,7 @@ use Combodo\iTop\Service\Events\EventException;
 use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Service\Events\EventServiceLog;
 use Combodo\iTop\Service\Module\ModuleService;
+use Combodo\iTop\Service\SummaryCard\SummaryCardService;
 use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectManager;
 
 /**
