@@ -236,4 +236,3 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:Incident/Method:ResolveChildTickets+' => 'A megoldás kaszkádozása a kapcsolódó jegyhez (ev_autoresolve), és a következő jellemzők összehangolása: szolgáltatás, csapat, ügyintéző, megoldási információ.',
     'Tickets:Related:OpenIncidents' => 'Nyitott incidensek',
 ));
-
