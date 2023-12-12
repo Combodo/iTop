@@ -1493,10 +1493,9 @@
           <code><![CDATA[	protected function OnInsert()
 
 	{
-        parent::OnInsert();
-		$this->ComputeImpactedItems();
-		$this->SetIfNull('last_update', time());
-		$this->SetIfNull('start_date', time());
+      parent::OnInsert();
+      $this->SetIfNull('last_update', time());
+      $this->SetIfNull('start_date', time());
 	}]]></code>
         </method>
         <method id="OnUpdate">

@@ -83,6 +83,7 @@ class TransactionsTest extends ItopTestCase
 		$oLinkSet = $oTicket->Get('contacts_list');
 		$oLinkSet->AddItem(MetaModel::NewObject('lnkContactToTicket', ['contact_id' => 6]));
 		$oLinkSet->AddItem(MetaModel::NewObject('lnkContactToTicket', ['contact_id' => 7]));
+		$oTicket->Set('contacts_list', $oLinkSet);
 
 		$this->oMySQLiMock->SetFailAt($iFailAt);
 		$this->debug("---> DBInsert()");
@@ -188,7 +189,7 @@ class TransactionsTest extends ItopTestCase
 		$oLinkSet = $oTicket->Get('contacts_list');
 		$oLinkSet->AddItem(MetaModel::NewObject('lnkContactToTicket', ['contact_id' => 6]));
 		$oLinkSet->AddItem(MetaModel::NewObject('lnkContactToTicket', ['contact_id' => 7]));
-		//$oTicket->Set('contacts_list', $oLinkSet);
+		$oTicket->Set('contacts_list', $oLinkSet);
 
 		$this->oMySQLiMock->SetShowRequest(false);
 		$oTicket->DBWrite();

@@ -224,11 +224,22 @@
       <event_listeners>
         <event_listener id="UpdateImpactAnalysis">
           <event>EVENT_DB_LINKS_CHANGED</event>
-          <callback>UpdateImpactedItems</callback>
+          <callback>OnLinksChangedTicket</callback>
           <rank>0</rank>
         </event_listener>
       </event_listeners>
       <methods>
+        <method id="OnLinksChangedTicket">
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[
+    public function OnLinksChangedTicket(Combodo\iTop\Service\Events\EventData $oEventData)
+    {
+        $this->UpdateImpactedItems();
+    }
+        ]]></code>
+        </method>
         <method id="DBInsertNoReload">
           <static>false</static>
           <access>public</access>
