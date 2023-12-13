@@ -3,7 +3,7 @@
         'name' => 'combodo/itop',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '4a164f9c01f432b8d3f055411f7b09dd0357be75',
+        'reference' => 'e24ca08fc8e30020d60a75282ccc059fffaf9786',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'combodo/itop' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '4a164f9c01f432b8d3f055411f7b09dd0357be75',
+            'reference' => 'e24ca08fc8e30020d60a75282ccc059fffaf9786',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

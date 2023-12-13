@@ -380,7 +380,6 @@ return array(
     'Combodo\\iTop\\Controller\\OAuth\\OAuthLandingController' => $baseDir . '/sources/Controller/OAuth/OAuthLandingController.php',
     'Combodo\\iTop\\Controller\\PreferencesController' => $baseDir . '/sources/Controller/PreferencesController.php',
     'Combodo\\iTop\\Controller\\TemporaryObjects\\TemporaryObjectController' => $baseDir . '/sources/Controller/TemporaryObjects/TemporaryObjectController.php',
-    'Combodo\\iTop\\Controller\\TestController' => $baseDir . '/sources/Controller/TestController.php',
     'Combodo\\iTop\\Controller\\iController' => $baseDir . '/sources/Controller/iController.php',
     'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\IOAuthClientProvider' => $baseDir . '/sources/Core/Authentication/Client/OAuth/IOAuthClientProvider.php',
     'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\OAuthClientProviderAbstract' => $baseDir . '/sources/Core/Authentication/Client/OAuth/OAuthClientProviderAbstract.php',

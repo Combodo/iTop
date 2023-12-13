@@ -753,7 +753,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Controller\\OAuth\\OAuthLandingController' => __DIR__ . '/../..' . '/sources/Controller/OAuth/OAuthLandingController.php',
         'Combodo\\iTop\\Controller\\PreferencesController' => __DIR__ . '/../..' . '/sources/Controller/PreferencesController.php',
         'Combodo\\iTop\\Controller\\TemporaryObjects\\TemporaryObjectController' => __DIR__ . '/../..' . '/sources/Controller/TemporaryObjects/TemporaryObjectController.php',
-        'Combodo\\iTop\\Controller\\TestController' => __DIR__ . '/../..' . '/sources/Controller/TestController.php',
         'Combodo\\iTop\\Controller\\iController' => __DIR__ . '/../..' . '/sources/Controller/iController.php',
         'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\IOAuthClientProvider' => __DIR__ . '/../..' . '/sources/Core/Authentication/Client/OAuth/IOAuthClientProvider.php',
         'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\OAuthClientProviderAbstract' => __DIR__ . '/../..' . '/sources/Core/Authentication/Client/OAuth/OAuthClientProviderAbstract.php',
