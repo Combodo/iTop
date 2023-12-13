@@ -381,7 +381,7 @@ class EMailLaminas extends Email
 	 */
 	public function SetBody($sBody, $sMimeType = Mime::TYPE_HTML, $sCustomStyles = null)
 	{
-		$oBody = new Laminas\Mime\Message();
+		$oBody = new \Laminas\Mime\Message();
 		$aAdditionalParts = [];
 
 		if (($sMimeType === Mime::TYPE_HTML) && ($sCustomStyles !== null)) {
