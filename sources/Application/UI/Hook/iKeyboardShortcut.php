@@ -1,5 +1,7 @@
 <?php
 
+namespace Combodo\iTop\Application\UI\Hook;
+
 /**
  * @since 3.0.0
  */

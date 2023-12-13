@@ -21,7 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\QuickCreate;
 
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
-use iKeyboardShortcut;
+use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use MetaModel;
 use UserRights;
 use utils;

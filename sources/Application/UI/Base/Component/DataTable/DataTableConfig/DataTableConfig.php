@@ -1,5 +1,7 @@
 <?php
 
+namespace Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableConfig;
+
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTable;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 

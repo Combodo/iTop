@@ -1,10 +1,11 @@
 <?php
 
-namespace Laminas\Mail\Protocol\Smtp\Auth;
+namespace Combodo\iTop\Core\Authentication\Client\Smtp;
 
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderAbstract;
 use IssueLog;
 use Laminas\Mail\Protocol\Exception\RuntimeException;
+use Laminas\Mail\Protocol\Smtp\Auth\Login;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 
 class Oauth extends Login

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use App\Kernel;
+use Combodo\iTop\Kernel;
 
 require_once __DIR__.'/lib/autoload_runtime.php';
 
