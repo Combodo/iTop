@@ -12,7 +12,7 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Helper\UIHelper;
 use DBObject;
 use Dict;
-use iKeyboardShortcut;
+use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use MetaModel;
 
 /**

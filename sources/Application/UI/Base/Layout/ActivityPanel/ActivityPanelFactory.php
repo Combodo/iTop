@@ -22,7 +22,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel;
 
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
-use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryFormFactory\CaseLogEntryFormFactory;
+use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryFormFactory;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;

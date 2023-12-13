@@ -21,7 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\GlobalSearch;
 
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
-use iKeyboardShortcut;
+use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use MetaModel;
 use utils;
 

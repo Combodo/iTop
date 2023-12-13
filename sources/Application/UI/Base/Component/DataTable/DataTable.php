@@ -10,7 +10,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 use ApplicationContext;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
-use DataTableConfig;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableConfig\DataTableConfig;
 
 /**
  * Class DataTable

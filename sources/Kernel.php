@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace App;
+namespace Combodo\iTop;
 
 use Combodo\iTop\Application\Helper\Session;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
