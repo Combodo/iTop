@@ -307,7 +307,7 @@ class DBBackup
 
 		$sPortOption = self::GetMysqliCliSingleOption('port', $this->iDBPort);
 		$sTlsOptions = self::GetMysqlCliTlsOptions($this->oConfig);
-		$sProtocolOption = self::GetMysqlCliTransportOption($this->sDBHost);
+		$sProtocolOption = self::GetMysqlCliTransportOption($this->sDBHost, $this->iDBPort);
 
 		$sMysqlVersion = CMDBSource::GetDBVersion();
 		$bIsMysqlSupportUtf8mb4 = (version_compare($sMysqlVersion, self::MYSQL_VERSION_WITH_UTF8MB4_IN_PROGRAMS) === -1);
@@ -531,13 +531,13 @@ EOF;
 
 	 * @since 2.7.9 3.0.4 3.1.1 N°6123
 	 */
-	public static function GetMysqlCliTransportOption(string $sHost)
+	public static function GetMysqlCliTransportOption(string $sHost, $iPort)
 	{
 		$sTransportOptions = '';
 		
 		/** N°6123 As we're using a --port option, if we use localhost as host,
 		 * MariaDB > 10.6 will implicitly change its protocol from socket to tcp and throw a warning **/
-		if($sHost === 'localhost'){
+		if($sHost === 'localhost' && !empty($iPort)){
 			$sTransportOptions = '--protocol=tcp';
 		}
 

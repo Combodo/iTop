@@ -319,7 +319,7 @@ class CMDBSource
 	/**
 	 * @param string $sDbHost initial value ("p:domain:port" syntax)
 	 * @param string $sServer server variable to update
-	 * @param int $iPort port variable to update
+	 * @param int|null $iPort port variable to update
 	 */
 	public static function InitServerAndPort($sDbHost, &$sServer, &$iPort)
 	{
@@ -345,10 +345,6 @@ class CMDBSource
 		else if (!$bUsePersistentConnection && ($iConnectInfoCount == 2))
 		{
 			$iPort = (int)($aConnectInfo[1]);
-		}
-		else
-		{
-			$iPort = 3306;
 		}
 	}
 
