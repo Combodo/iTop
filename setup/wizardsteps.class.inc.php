@@ -460,11 +460,11 @@ class WizStepDetectedInfo extends WizardStep
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
-	public function Display(\WebPage $oPage)
+	public function Display(WebPage $oPage)
 	{
 		$oPage->add_style(
 <<<EOF

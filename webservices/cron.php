@@ -340,7 +340,7 @@ function CronExec($oP, $bVerbose, $bDebug=false)
 }
 
 /**
- * @param \WebPage $oP
+ * @param WebPage $oP
  */
 function CheckMaintenanceMode(Page $oP) {
 // Verify files instead of reloading the full config each time

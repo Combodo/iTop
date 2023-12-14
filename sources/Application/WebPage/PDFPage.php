@@ -17,7 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+namespace Combodo\iTop\Application\WebPage;
+
 use Combodo\iTop\Renderer\BlockRenderer;
+use ExecutionKPI;
 
 
 /**
@@ -25,7 +28,7 @@ use Combodo\iTop\Renderer\BlockRenderer;
  */
 class PDFPage extends WebPage
 {
-	/** @var \iTopPDF Instance of the TCPDF object for creating the PDF */
+	/** @var iTopPDF Instance of the TCPDF object for creating the PDF */
 	protected $oPdf;
 
 	public function __construct($s_title, $sPageFormat = 'A4', $sPageOrientation = 'L')
@@ -101,7 +104,7 @@ EOF
 	/**
 	 * Get access to the underlying TCPDF object
 	 *
-	 * @return \iTopPDF
+	 * @return iTopPDF
 	 */
 	public function get_tcpdf()
 	{

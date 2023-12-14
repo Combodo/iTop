@@ -84,7 +84,7 @@ function Usage($oP)
 }
 
 /**
- * @param \Page $oP
+ * @param Page $oP
  *
  * @throws \DictExceptionUnknownLanguage
  * @throws \OQLException

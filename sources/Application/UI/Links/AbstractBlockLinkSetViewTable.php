@@ -21,7 +21,7 @@ use MetaModel;
 use MySQLException;
 use UserRights;
 use Utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Class AbstractBlockLinkSetViewTable

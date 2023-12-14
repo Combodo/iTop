@@ -1,5 +1,7 @@
 <?php
 
+namespace Combodo\iTop\Application\WebPage;
+
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 
 /**

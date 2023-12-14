@@ -65,7 +65,7 @@ class UIExtKeyWidget
 	//public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sAttCode
 	 * @param string $sClass
 	 * @param string $sTitle
@@ -132,7 +132,7 @@ class UIExtKeyWidget
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param int $iMaxComboLength
 	 * @param bool $bAllowTargetCreation
 	 * @param string $sTitle
@@ -444,7 +444,7 @@ JS
 	/**
 	 * Get the HTML fragment corresponding to the ext key editing widget
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param int $iMaxComboLength
 	 * @param boolean $bAllowTargetCreation
 	 * @param string $sTitle

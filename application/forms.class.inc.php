@@ -828,7 +828,7 @@ class DesignerFormField
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param string $sFormId
 	 * @param string $sRenderMode
 	 *

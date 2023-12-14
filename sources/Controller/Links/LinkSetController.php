@@ -6,7 +6,7 @@
 
 namespace Combodo\iTop\Controller\Links;
 
-use AjaxPage;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
@@ -16,7 +16,7 @@ use Combodo\iTop\Service\Router\Router;
 use Combodo\iTop\Service\Base\ObjectRepository;
 use Dict;
 use Exception;
-use JsonPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
 use CoreException;
 use DBObject;
 use MetaModel;
@@ -123,7 +123,7 @@ class LinkSetController extends AbstractController
 	}
 
 	/**
-	 * @return \AjaxPage Create edit form in its webpage
+	 * @return AjaxPage Create edit form in its webpage
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException

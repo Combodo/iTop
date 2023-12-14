@@ -12996,7 +12996,7 @@ class AttributeRedundancySettings extends AttributeDBField
 	 * Display an option (form, or current value)
 	 *
 	 * @param string $sCurrentValue
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sFormPrefix
 	 * @param bool $bEditMode
 	 * @param string $sUserOption

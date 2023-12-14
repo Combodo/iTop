@@ -1,5 +1,6 @@
 <?php
 
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 /**
@@ -61,8 +62,8 @@ class DataTable
 	}
 
 	/**
-	 * @param \WebPage $oPage
-	 * @param \DataTableSettings $oSettings
+	 * @param WebPage $oPage
+	 * @param DataTableSettings $oSettings
 	 * @param $bActionsMenu
 	 * @param $sSelectMode
 	 * @param $bViewLink
@@ -141,7 +142,7 @@ class DataTable
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $iPageSize
 	 * @param $iDefaultPageSize
 	 * @param $iPageIndex
@@ -236,7 +237,7 @@ class DataTable
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $sSelectMode
 	 *
 	 * @return string
@@ -255,7 +256,7 @@ class DataTable
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $iPageSize
 	 * @param $iDefaultPageSize
 	 * @param $iPageIndex
@@ -348,7 +349,7 @@ EOF;
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $aExtraParams
 	 *
 	 * @return string
@@ -375,7 +376,7 @@ EOF;
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $aExtraParams
 	 *
 	 * @return string
@@ -405,7 +406,7 @@ EOF;
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $aColumns
 	 * @param $bViewLink
 	 * @param $iDefaultPageSize
@@ -658,7 +659,7 @@ EOF;
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $aColumns
 	 * @param $sSelectMode
 	 * @param $iPageSize
@@ -790,7 +791,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $iDefaultPageSize
 	 * @param $iStart
 	 */
@@ -818,7 +819,7 @@ JS
 class PrintableDataTable extends DataTable
 {
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $iPageSize
 	 * @param $iDefaultPageSize
 	 * @param $iPageIndex
@@ -844,7 +845,7 @@ class PrintableDataTable extends DataTable
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $aColumns
 	 * @param $sSelectMode
 	 * @param $iPageSize

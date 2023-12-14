@@ -30,7 +30,7 @@ use MySQLException;
 use UILinksWidgetDirect;
 use UserRights;
 use utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Class BlockDirectLinkSetEditTable
@@ -143,7 +143,7 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \DBObjectSet $oValue
 	 * @param string $sFormPrefix
 	 * @param \DBObject $oCurrentObj

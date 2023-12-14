@@ -367,7 +367,7 @@ JS;
 	/**
 	 * Add necessary JS snippets (to the page) to be executed for fields update
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @return void
 	 * @since 3.0.3-2 3.0.4 3.1.1 3.2.0 N°6766
 	 */

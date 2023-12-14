@@ -10,6 +10,7 @@ use Combodo\iTop\Application\TwigBase\UI\UIBlockExtension;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 use CoreTemplateException;
 use ExecutionKPI;
@@ -18,7 +19,6 @@ use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Loader\FilesystemLoader;
 use utils;
-use WebPage;
 
 
 /**
@@ -99,7 +99,7 @@ class TwigHelper
 	 * Display the twig page based on the name or the operation onto the page specified with SetPage().
 	 * Use this method if you have to insert HTML into an existing page.
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sViewPath Absolute path of the templates folder
 	 * @param string $sTemplateName Name of the twig template, ie MyTemplate for MyTemplate.html.twig
 	 * @param array $aParams Params used by the twig template
@@ -121,7 +121,7 @@ class TwigHelper
 	/**
 	 * Render the TWIG template directly in $oBlock
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \Combodo\iTop\Application\UI\Base\UIBlock $oBlock
 	 * @param string $sViewPath
 	 * @param string $sTemplateName

@@ -345,7 +345,7 @@ class ApplicationMenu
 
 	/**
 	 * Entry point to display the whole menu into the web page, used by iTopWebPage
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 * @throws DictExceptionMissingString
 	 *
@@ -419,7 +419,7 @@ EOF
 	/**
 	 * Handles the display of the sub-menus (called recursively if necessary)
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aMenus
 	 * @param array $aExtraParams
 	 * @param int $iActiveMenu

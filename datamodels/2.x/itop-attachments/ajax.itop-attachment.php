@@ -21,7 +21,7 @@ require_once('../../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
 /**
- * @param \AjaxPage $oPage
+ * @param \Combodo\iTop\Application\WebPage\AjaxPage $oPage
  * @param int $iTransactionId
  *
  * @throws \ArchivedObjectException

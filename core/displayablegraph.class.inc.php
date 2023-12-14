@@ -1580,7 +1580,7 @@ EOF
 	 * @param string $sContextKey
 	 * @param array $aContextParams
 	 * @param array $aExcludedObjects
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param array $aResults
 	 * @param bool $bLazyLoading
 	 *
@@ -1602,7 +1602,7 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param array $aResults
 	 * @param bool $bLazyLoading
 	 *

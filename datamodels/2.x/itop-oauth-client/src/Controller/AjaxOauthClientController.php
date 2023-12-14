@@ -14,7 +14,7 @@ use IssueLog;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use MetaModel;
 use utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 class AjaxOauthClientController extends Controller
 {

@@ -16,7 +16,7 @@ services:
     Combodo\iTop\:
         resource: '../../sources'
         exclude:
-          - '../../sources/Application/WebPage'
+          - '../../sources/alias.php'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

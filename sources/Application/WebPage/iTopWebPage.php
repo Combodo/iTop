@@ -4,7 +4,12 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Application\WebPage;
 
+use ApplicationContext;
+use appUserPreferences;
+use AttributeDate;
+use AttributeDateTime;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
@@ -25,6 +30,16 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Application\UI\Printable\BlockPrintHeader\BlockPrintHeader;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
+use ContextTag;
+use DateTimeFormat;
+use DBSearch;
+use DeprecatedCallsLog;
+use Dict;
+use ExecutionKPI;
+use InlineImage;
+use MetaModel;
+use UserRights;
+use utils;
 
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
@@ -71,7 +86,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 	private $m_aMessages;
 
-	/** @var \TabManager */
+	/** @var TabManager */
 	protected $m_oTabs;
 	/**
 	 * Navigation menu layout (menu groups, user menu, ...)
@@ -619,7 +634,7 @@ JS
 	{
 		$sBannerHtml = '';
 
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
 		/** @var \iPageUIExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
 		{
@@ -642,7 +657,7 @@ JS
 	{
 		$oBanner = new UIContentBlock();
 
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
 		/** @var \iPageUIBlockExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance)
 		{
@@ -668,7 +683,7 @@ JS
 	{
 		$sHeaderHtml = '';
 
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
 		/** @var \iPageUIExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
 		{
@@ -740,7 +755,7 @@ HTML;
 			$oHeader->AddSubBlock($oAppMessageAlert);
 		}
 
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
 		/** @var \iPageUIBlockExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance)
 		{
@@ -766,7 +781,7 @@ HTML;
 	{
 		$sFooterHtml = '';
 
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
 		/** @var \iPageUIExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance) {
 			$sFooterHtml .= $oExtensionInstance->GetSouthPaneHtml($this);
@@ -788,7 +803,7 @@ HTML;
 	{
 		$oFooter = new UIContentBlock();
 
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
 		/** @var \iPageUIBlockExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance) {
 			$oBlock = $oExtensionInstance->GetFooterBlock();
@@ -1269,7 +1284,7 @@ EOF
 	 * @param string $sKey
 	 * @param $value
 	 *
-	 * @return \iTopWebPage
+	 * @return iTopWebPage
 	 * @since 3.0.0
 	 */
 	public function SetBlockParam(string $sKey, $value)

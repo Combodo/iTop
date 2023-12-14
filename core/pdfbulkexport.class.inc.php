@@ -49,7 +49,7 @@ class PDFBulkExport extends HTMLBulkExport
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sPartId
 	 *
 	 * @return UIContentBlock

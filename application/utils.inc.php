@@ -1454,7 +1454,7 @@ class utils
 	/**
 	 * Merge standard menu items with plugin provided menus items
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param int $iMenuId
 	 * @param \DBObjectSet $param
 	 * @param array $aActions

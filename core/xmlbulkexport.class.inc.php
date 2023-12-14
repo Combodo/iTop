@@ -30,7 +30,7 @@ class XMLBulkExport extends BulkExport
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sPartId
 	 *
 	 * @return UIContentBlock

@@ -35,12 +35,12 @@ use MissingQueryArgument;
 use TrueExpression;
 use UserRights;
 use utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 class SearchForm
 {
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
 	 * @param array $aExtraParams
 	 *

@@ -6,7 +6,7 @@
 
 namespace Combodo\iTop\Controller;
 
-use AjaxPage;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 use ApplicationContext;
 use ApplicationMenu;
 use AttributeLinkedSet;
@@ -33,7 +33,7 @@ use FunctionExpression;
 use IssueLog;
 use iTopExtension;
 use iTopExtensionsMap;
-use JsonPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
 use LogChannels;
 use MetaModel;
 use ormSet;
@@ -770,7 +770,7 @@ class AjaxRenderController
 	}
 
 	/**
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -792,7 +792,7 @@ class AjaxRenderController
 
 	/**
 	 * Display list of licenses in "About iTop" popup
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \Exception
 	 * @since 3.0.1
@@ -826,7 +826,7 @@ JS
 
 	/**
 	 * Display about iTop for all user non admin
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \Exception
 	 */
@@ -854,7 +854,7 @@ EOF
 
 	/**
 	 * Display about iTop for admin user
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \Exception
 	 */

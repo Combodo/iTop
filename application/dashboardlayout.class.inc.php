@@ -106,7 +106,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $aCells
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams

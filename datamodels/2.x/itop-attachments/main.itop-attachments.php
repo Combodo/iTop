@@ -221,7 +221,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 
 	/**
 	 * @param \DBObject $oObject
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode
 	 *
 	 * @throws \CoreException

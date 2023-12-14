@@ -37,7 +37,7 @@ class HTMLBulkExport extends TabularBulkExport
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sPartId
 	 *
 	 * @return UIContentBlock

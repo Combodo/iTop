@@ -201,7 +201,7 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
  * Displays a form (checkboxes) to select the objects for which to apply a given action
  * Only the objects for which the action is valid can be checked. By default all valid objects are checked
  *
- * @param \WebPage $oP WebPage The page for output
+ * @param WebPage $oP WebPage The page for output
  * @param \DBSearch $oFilter DBSearch The filter that defines the list of objects
  * @param string $sNextOperation string The next operation (code) to be executed when the form is submitted
  * @param ActionChecker $oChecker ActionChecker The helper class/instance used to check for which object the action is valid
@@ -321,13 +321,13 @@ try
 	if ($oRouter->CanDispatchRoute($sRoute)) {
 		$mResponse = $oRouter->DispatchRoute($sRoute);
 
-		// If response isn't a \WebPage, it is most likely that the output already occured, stop the script.
+		// If response isn't a WebPage, it is most likely that the output already occured, stop the script.
 		// Note that this is done here and not directly in the Router::DispatchRoute() so custom endpoint can handle null responses their own way.
 		if (false === ($mResponse instanceof WebPage)) {
 			die();
 		}
 
-		// Response is a \WebPage, let's handle it like legacy operations
+		// Response is a WebPage, let's handle it like legacy operations
 		$oP = $mResponse;
 	}
 	// Otherwise, use legacy operation
