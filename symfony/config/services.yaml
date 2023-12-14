@@ -16,6 +16,8 @@ services:
     Combodo\iTop\:
         resource: '../../sources'
         exclude:
+          - '../../sources/alias.php'
+          - '../../sources/FormSDK/Symfony/Type'
           - '../../sources/Application/WebPage'
 
     # add more service definitions when explicit configuration is needed

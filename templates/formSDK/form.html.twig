@@ -1,0 +1,21 @@
+
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+<div style="padding: 20px;">
+
+    {% if theme is not defined %}
+        {% set theme = 'bootstrap_5_layout.html.twig' %}
+    {% endif %}
+
+    {% form_theme form theme %}
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <input type="submit">
+    {{ form_end(form) }}
+</div>
+
+{% endblock body %}
