@@ -6,6 +6,9 @@
 
 namespace Combodo\iTop\Controller;
 
+use DeprecatedCallsLog;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseAbstractControllerAlias;
+
 /**
  * Class AbstractController
  *
@@ -15,14 +18,17 @@ namespace Combodo\iTop\Controller;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Controller
  * @since 3.1.0
+ * @since 3.2.0 N°6935 Controller is now based on Symfony controller
  */
-abstract class AbstractController implements iController
+abstract class AbstractController extends BaseAbstractControllerAlias implements iController
 {
 	/**
 	 * @inheritDoc
+	 * @deprecated 3.2.0 N°6935 Use \Symfony\Component\HttpFoundation\Request::isXmlHttpRequest() instead
 	 */
 	public function IsHandlingXmlHttpRequest(): bool
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod("Use \Symfony\Component\HttpFoundation\Request::isXmlHttpRequest() instead");
 		return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest');
 	}
 }

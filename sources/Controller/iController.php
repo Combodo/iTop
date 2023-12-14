@@ -6,10 +6,13 @@
 
 namespace Combodo\iTop\Controller;
 
+
 /**
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since 3.1.0
  * @package Combodo\iTop\Controller
+ *
+ * @deprecated 3.2.0 N°6935 As we now use Symfony controller and routing components, extend \Combodo\iTop\Controller\AbstractController instead
  */
 interface iController
 {

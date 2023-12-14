@@ -764,7 +764,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\WebPage\\iTopWebPage' => __DIR__ . '/../..' . '/sources/Application/WebPage/iTopWebPage.php',
         'Combodo\\iTop\\Application\\WebPage\\iTopWizardWebPage' => __DIR__ . '/../..' . '/sources/Application/WebPage/iTopWizardWebPage.php',
         'Combodo\\iTop\\Composer\\iTopComposer' => __DIR__ . '/../..' . '/sources/Composer/iTopComposer.php',
-        'Combodo\\iTop\\Controller\\AbstractAppController' => __DIR__ . '/../..' . '/sources/Controller/AbstractAppController.php',
         'Combodo\\iTop\\Controller\\AbstractController' => __DIR__ . '/../..' . '/sources/Controller/AbstractController.php',
         'Combodo\\iTop\\Controller\\AjaxRenderController' => __DIR__ . '/../..' . '/sources/Controller/AjaxRenderController.php',
         'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => __DIR__ . '/../..' . '/sources/Controller/Base/Layout/ActivityPanelController.php',

@@ -7,20 +7,29 @@
 namespace Combodo\iTop\Service\Router;
 
 use Combodo\iTop\Service\Router\Exception\RouteNotFoundException;
+use DeprecatedCallsLog;
 use ReflectionClass;
 use ReflectionMethod;
 use utils;
 use SetupUtils;
+
 
 /**
  * Class Router
  *
  * Service to find the corresponding controller / method for a given "route" parameter.
  *
+ * @deprecated 3.2.0 N°6935 As we now use Symfony routing component, use the corresponding service instead
+ *
+ *                          Note that we can't call \DeprecatedCallsLog::NotifyDeprecatedFile() at the beginning at the file instead.
+ *                          Because
+ *                               - As the class is part of the autoloader it will be read when something calls \utils::GetClassesForInterface() which will pop the deprecation message (and break redirection)
+ *                               - Not all controllers using Combodo\iTop\Service\Router\Router service can be migrated yet for backward compatibility with extensions reasons
+ *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Service\Router
  * @since 3.1.0
- * @api
+ *
+ * @package Combodo\iTop\Service\Router
  */
 class Router
 {
@@ -123,6 +132,9 @@ class Router
 	 */
 	public function DispatchRoute(string $sRoute)
 	{
+		/** @deprecated 3.2.0 N°6935 */
+		DeprecatedCallsLog::NotifyDeprecatedFile("As we now use Symfony routing component, use the corresponding service instead");
+
 		$aMethodSpecs = $this->GetDispatchSpecsForRoute($sRoute);
 		$mResponse = call_user_func_array([new $aMethodSpecs[0](), $aMethodSpecs[1]], []);
 
@@ -175,8 +187,15 @@ class Router
 		// If no cache, force to re-scan for routes
 		if (count($aRoutes) === 0) {
 			foreach (utils::GetClassesForInterface('Combodo\iTop\Controller\iController', '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']) as $sControllerFQCN) {
-				$sRouteNamespace = $sControllerFQCN::ROUTE_NAMESPACE;
 				// Ignore controller with no namespace
+				// - No ROUTE_NAMESPACE constant
+				//   This case could be for controller extending Combodo\iTop\Controller\AbstractController which is still implementing Combodo\iTop\Controller\iController for compatibility reasons
+				//   but have already been migrated to Symfony router (when migrated, constant must be removed from the controller so it doesn't use the compatibility router)
+				if (false === defined("$sControllerFQCN::ROUTE_NAMESPACE")) {
+					continue;
+				}
+				$sRouteNamespace = $sControllerFQCN::ROUTE_NAMESPACE;
+				// - Namespace is empty
 				if (is_null($sRouteNamespace)) {
 					continue;
 				}

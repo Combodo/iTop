@@ -389,7 +389,6 @@ return array(
     'Combodo\\iTop\\Application\\WebPage\\iTopWebPage' => $baseDir . '/sources/Application/WebPage/iTopWebPage.php',
     'Combodo\\iTop\\Application\\WebPage\\iTopWizardWebPage' => $baseDir . '/sources/Application/WebPage/iTopWizardWebPage.php',
     'Combodo\\iTop\\Composer\\iTopComposer' => $baseDir . '/sources/Composer/iTopComposer.php',
-    'Combodo\\iTop\\Controller\\AbstractAppController' => $baseDir . '/sources/Controller/AbstractAppController.php',
     'Combodo\\iTop\\Controller\\AbstractController' => $baseDir . '/sources/Controller/AbstractController.php',
     'Combodo\\iTop\\Controller\\AjaxRenderController' => $baseDir . '/sources/Controller/AjaxRenderController.php',
     'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => $baseDir . '/sources/Controller/Base/Layout/ActivityPanelController.php',
