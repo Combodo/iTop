@@ -109,10 +109,14 @@ function apc_exists($keys)
 	if (is_array($keys)) {
 		$aExistingKeys = [];
 		foreach ($keys as $sKey) {
-			if (apcFile::ExistsOneFile($sKey)) $aExistingKeys[] = $sKey;
+			if (apcFile::ExistsOneFile($sKey)) {
+				$aExistingKeys[] = $sKey;
+			}
 		}
 		return $aExistingKeys;
-	} else return apcFile::ExistsOneFile($keys);
+	} else {
+		return apcFile::ExistsOneFile($keys);
+	}
 }
 
 class apcFile
