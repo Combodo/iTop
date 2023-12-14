@@ -211,8 +211,7 @@ class apcFile
 	 * @return bool
 	 */
 	static public function ExistsOneFile($sKey) {
-		if (is_file(self::GetCacheFileName('-'.$sKey))) return true;
-		else return is_file(self::GetCacheFileName($sKey));
+		return is_file(self::GetCacheFileName('-' . $sKey)) || is_file(self::GetCacheFileName($sKey));
 	}
 
 	/** Get one cache entry content.
