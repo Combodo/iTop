@@ -47,19 +47,19 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:Attachment' => 'Mellékletek',
-    'Class:Attachment+' => '',
+    'Class:Attachment+' => '~~',
     'Class:Attachment/Attribute:expire' => 'Lejárat',
-    'Class:Attachment/Attribute:expire+' => '',
+    'Class:Attachment/Attribute:expire+' => '~~',
     'Class:Attachment/Attribute:temp_id' => 'Átmeneti azonosító',
-    'Class:Attachment/Attribute:temp_id+' => '',
+    'Class:Attachment/Attribute:temp_id+' => '~~',
     'Class:Attachment/Attribute:item_class' => 'Elem típus',
-    'Class:Attachment/Attribute:item_class+' => '',
+    'Class:Attachment/Attribute:item_class+' => '~~',
     'Class:Attachment/Attribute:item_id' => 'Elem',
-    'Class:Attachment/Attribute:item_id+' => '',
+    'Class:Attachment/Attribute:item_id+' => '~~',
     'Class:Attachment/Attribute:item_org_id' => 'Elem szervezeti egység',
-    'Class:Attachment/Attribute:item_org_id+' => '',
+    'Class:Attachment/Attribute:item_org_id+' => '~~',
     'Class:Attachment/Attribute:contents' => 'Tartalom',
-    'Class:Attachment/Attribute:contents+' => '',
+    'Class:Attachment/Attribute:contents+' => '~~',
 ));
 
 
@@ -77,9 +77,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:Attachment/Attribute:creation_date' => 'Létrehozás dátuma',
-    'Class:Attachment/Attribute:creation_date+' => '',
+    'Class:Attachment/Attribute:creation_date+' => '~~',
     'Class:Attachment/Attribute:user_id' => 'Felhasználó',
-    'Class:Attachment/Attribute:user_id+' => '',
+    'Class:Attachment/Attribute:user_id+' => '~~',
     'Class:Attachment/Attribute:contact_id' => 'Kapcsolattartó',
-    'Class:Attachment/Attribute:contact_id+' => '',
+    'Class:Attachment/Attribute:contact_id+' => '~~',
 ));

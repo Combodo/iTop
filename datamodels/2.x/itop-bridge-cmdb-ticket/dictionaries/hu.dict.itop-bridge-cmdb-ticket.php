@@ -32,19 +32,19 @@
 //
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:lnkFunctionalCIToTicket' => 'Funkcionális CI / Hibajegy',
-    'Class:lnkFunctionalCIToTicket+' => '',
+    'Class:lnkFunctionalCIToTicket+' => '~~',
     'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Hibajegy',
-    'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
+    'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '~~',
     'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Referenciaszám',
-    'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
+    'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '~~',
     'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Hibajegy tárgya',
-    'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
+    'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
     'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'CI',
-    'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
+    'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '~~',
     'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'CI név',
-    'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '',
+    'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '~~',
     'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Hatása (szöveg)',
-    'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '',
+    'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '~~',
     'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Hatás kód',
     'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Kézzel hozzáadva',
     'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Számított',
@@ -57,15 +57,15 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:lnkFunctionalCIToProviderContract' => 'Funkcionális CI / Szolgáltatói szerződés',
-    'Class:lnkFunctionalCIToProviderContract+' => '',
+    'Class:lnkFunctionalCIToProviderContract+' => '~~',
     'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Szolgáltatói szerződés',
-    'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
+    'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '~~',
     'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Szolgáltatói szerződés név',
-    'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
+    'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '~~',
     'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CI',
-    'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
+    'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '~~',
     'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI név',
-    'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
+    'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '~~',
 ));
 
 //
@@ -74,15 +74,15 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:lnkFunctionalCIToService' => 'Funkcionális CI / Szolgáltatás',
-    'Class:lnkFunctionalCIToService+' => '',
+    'Class:lnkFunctionalCIToService+' => '~~',
     'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Szolgáltatás',
-    'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
+    'Class:lnkFunctionalCIToService/Attribute:service_id+' => '~~',
     'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Szolgáltatás név',
-    'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
+    'Class:lnkFunctionalCIToService/Attribute:service_name+' => '~~',
     'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'CI',
-    'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
+    'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '~~',
     'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'CI név',
-    'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
+    'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '~~',
 ));
 
 //
