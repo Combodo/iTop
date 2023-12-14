@@ -576,7 +576,7 @@ abstract class Controller
 		{
 			case 'html':
 				$this->m_oPage = new iTopWebPage($this->GetOperationTitle());
-				$this->m_oPage->add_xframe_options();
+				$this->m_oPage->add_http_headers();
 
 				if ($this->m_bIsBreadCrumbEnabled) {
 					if (count($this->m_aBreadCrumbEntry) > 0) {

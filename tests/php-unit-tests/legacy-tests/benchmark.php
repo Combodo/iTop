@@ -782,7 +782,7 @@ try
 
 		case 'create_structure':
 			$oP->no_cache();
-			$oP->add_xframe_options('DENY');
+			$oP->add_http_headers('DENY');
 			$iPlannedContacts = Utils::ReadParam('plannedcontacts');
 			$iPlannedContracts = Utils::ReadParam('plannedcontracts');
 

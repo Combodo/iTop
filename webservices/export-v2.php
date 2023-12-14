@@ -44,7 +44,7 @@ function ReportErrorAndExit($sErrorMessage)
 	else
 	{
 		$oP = new WebPage("iTop - Export");
-		$oP->add_xframe_options();
+		$oP->add_http_headers();
 		$oP->p('ERROR: '.$sErrorMessage);
 		$oP->output();
 		exit(-1);
@@ -63,7 +63,7 @@ function ReportErrorAndUsage($sErrorMessage)
 	}
 	else {
 		$oP = new WebPage("iTop - Export");
-		$oP->add_xframe_options();
+		$oP->add_http_headers();
 		$oP->p('ERROR: '.$sErrorMessage);
 		Usage($oP);
 		$oP->output();
@@ -729,14 +729,14 @@ try
 			// Note: Using NiceWebPage only for HTML export as it includes JS scripts & files, which makes no sense in other export formats. More over, it breaks Excel spreadsheet import.
 			if($oExporter instanceof HTMLBulkExport) {
 				$oP = new NiceWebPage('iTop export');
-				$oP->add_xframe_options();
+				$oP->add_http_headers();
 				$oP->add_ready_script("$('table.listResults').tablesorter({widgets: ['MyZebra']});");
 				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
 				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
 			}
 			else {
 				$oP = new WebPage('iTop export');
-				$oP->add_xframe_options();
+				$oP->add_http_headers();
 				$oP->add_style("table br { mso-data-placement:same-cell; }"); // Trick for Excel: keep line breaks inside the same cell !
 			}
 			$oP->add_style("body { overflow: auto; }");
@@ -759,7 +759,7 @@ catch (BulkExportMissingParameterException $e)
 }
 catch (Exception $e) {
 	$oP = new WebPage('iTop Export');
-	$oP->add_xframe_options();
+	$oP->add_http_headers();
 	$oP->add('Error: '.utils::HtmlEntities($e->getMessage()));
 	IssueLog::Error(utils::HtmlEntities($e->getMessage())."\n".$e->getTraceAsString());
 	$oP->output();

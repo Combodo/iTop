@@ -85,7 +85,7 @@ class LoginWebPage extends NiceWebPage
 		parent::__construct($sTitle);
 		$this->SetStyleSheet();
 		$this->no_cache();
-		$this->add_xframe_options();
+		$this->add_http_headers();
 	}
 	
 	public function SetStyleSheet()

@@ -1036,7 +1036,7 @@ try
 
 				// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 				// so we're resetting its value ! (see N°3416)
-				$oPage->add_xframe_options('');
+				$oPage->add_http_headers('');
 
 				// N°4129 - Prevent XSS attacks & other script executions
 				if (utils::GetConfig()->Get('security.disable_inline_documents_sandbox') === false) {

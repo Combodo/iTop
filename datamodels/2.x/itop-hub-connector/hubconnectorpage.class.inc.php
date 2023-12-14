@@ -7,7 +7,7 @@ class HubConnectorPage extends NiceWebPage
 	    parent::__construct($sTitle);
 
 	    $this->no_cache();
-	    $this->add_xframe_options();
+	    $this->add_http_headers();
 
 	    $sImagesDir = utils::GetAbsoluteUrlAppRoot().'images';
 	    $sModuleImagesDir = utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/images';

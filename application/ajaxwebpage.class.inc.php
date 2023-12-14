@@ -42,7 +42,7 @@ class ajax_page extends WebPage implements iTabbedPage
 		$this->m_sReadyScript = "";
 		//$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->no_cache();
-		$this->add_xframe_options();
+		$this->add_http_headers();
 		$this->m_oTabs = new TabManager();
 		$this->sContentType = 'text/html';
 		$this->sContentDisposition = 'inline';

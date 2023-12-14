@@ -38,7 +38,7 @@ $oP = new SetupPage('iTop email test utility');
 
 // Although this page doesn't expose sensitive info, with it we can send multiple emails
 // So we're adding this http header to reduce CSRF exposure...
-$oP->add_xframe_options('DENY');
+$oP->add_http_headers('DENY');
 
 
 /**

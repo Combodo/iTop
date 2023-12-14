@@ -483,11 +483,24 @@ class WebPage implements Page
 	}
 
 	/**
+	 * @param string|null $sXFrameOptionsHeaderValue passed to {@see add_xframe_options}
+	 *
+	 * @return void
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°4368 method creation, replace {@see add_xframe_options} consumers call
+	 */
+	public function add_http_headers($sXFrameOptionsHeaderValue = null)
+	{
+		$this->add_xframe_options($sXFrameOptionsHeaderValue);
+		$this->add_xcontent_type_options();
+	}
+
+	/**
 	 * @param string|null $sHeaderValue for example `SAMESITE`. If null will set the header using the config parameter value.
 	 *
 	 * @since 2.7.3 3.0.0 N°3416
 	 * @uses security_header_xframe config parameter
 	 * @uses \utils::GetConfig()
+	 *
 	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
 	 */
 	public function add_xframe_options($sHeaderValue = null)
@@ -497,6 +510,17 @@ class WebPage implements Page
 		}
 
 		$this->add_header('X-Frame-Options: '.$sHeaderValue);
+	}
+
+	/**
+	 * @return void
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°4368 method creation
+	 *
+	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
+	 */
+	public function add_xcontent_type_options()
+	{
+		$this->add_header('X-Content-Type-Options: nosniff');
 	}
 
 	/**
