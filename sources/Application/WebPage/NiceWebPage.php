@@ -242,13 +242,6 @@ JS
 		// TODO 3.0.0: Reuse theming mechanism for Full Moon
 		$sCssThemeUrl = ThemeHandler::GetCurrentThemeUrl();
 		$this->add_linked_stylesheet($sCssThemeUrl);
-
-		$sCssRelPath = utils::GetCSSFromSASS(
-			'css/backoffice/main.scss',
-			array(
-				APPROOT.'css/backoffice/',
-			)
-		);
 	}
 
 	protected function GetReadyScriptsStartedTrigger(): ?string

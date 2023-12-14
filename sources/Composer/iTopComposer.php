@@ -132,7 +132,7 @@ class iTopComposer
 			$APPROOT_WITH_SLASHES.'lib/symfony/routing/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/stopwatch/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/translation-contracts/Test',
-			$APPROOT_WITH_SLASHES.'lib/symfony/twig-bridge/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/twig-bridge/Test',
 			$APPROOT_WITH_SLASHES.'lib/symfony/twig-bundle/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Test',
 			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Tests/Test',

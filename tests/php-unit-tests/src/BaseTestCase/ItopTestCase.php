@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Test\UnitTest;
 
 use CMDBSource;
+use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
 use PHPUnit\Framework\TestCase;
 use SetupUtils;
@@ -22,6 +23,12 @@ use const DEBUG_BACKTRACE_IGNORE_ARGS;
 abstract class ItopTestCase extends TestCase
 {
 	public const TEST_LOG_DIR = 'test';
+
+	/**
+	 * @var bool
+	 * @since 3.0.4 3.1.1 3.2.0 N°6976 Allow to enable/disable {@see DeprecatedCallsLog} error handler
+	 */
+	public const DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER = true;
 	public static $DEBUG_UNIT_TEST = false;
 	protected static $aBackupStaticProperties = [];
 
@@ -44,9 +51,10 @@ abstract class ItopTestCase extends TestCase
 
 		require_once static::GetAppRoot() . 'approot.inc.php';
 
-		if (false === defined('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME')) {
+		if ((static::DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER)
+			&& (false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME))) {
 			// setUp might be called multiple times, so protecting the define() call !
-			define('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME', true);
+			define(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
 		}
 	}
 

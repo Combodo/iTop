@@ -34,6 +34,29 @@ class MetaModelTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @covers MetaModel::GetObjectByName
+	 * @return void
+	 * @throws \CoreException
+	 */
+	public function testGetFinalClassName()
+	{
+		// Standalone classes
+		$this->assertEquals('Organization', MetaModel::GetFinalClassName('Organization', 1), 'Should work with standalone classes');
+		$this->assertEquals('SynchroDataSource', MetaModel::GetFinalClassName('SynchroDataSource', 1), 'Should work with standalone classes');
+
+		// 2 levels hierarchy
+		$this->assertEquals('Person', MetaModel::GetFinalClassName('Contact', 1));
+		$this->assertEquals('Person', MetaModel::GetFinalClassName('Person', 1));
+
+		// multi-level hierarchy
+		$oServer1 = MetaModel::GetObjectByName('Server', 'Server1');
+		$sServer1Id = $oServer1->GetKey();
+		foreach (MetaModel::EnumParentClasses('Server',ENUM_PARENT_CLASSES_ALL) as $sClass) {
+			$this->assertEquals('Server', MetaModel::GetFinalClassName($sClass, $sServer1Id), 'Should return Server for all the classes in the hierarchy');
+		}
+	}
+
+	/**
      * @group itopRequestMgmt
      * @covers       MetaModel::ApplyParams()
      * @dataProvider ApplyParamsProvider

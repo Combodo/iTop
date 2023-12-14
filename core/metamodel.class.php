@@ -4267,16 +4267,17 @@ abstract class MetaModel
 			];
 			IssueLog::Warning("Unresolved placeholders due to null object in current context", null,
 				$aContext);
-			$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
+			$aPlaceholders[$sPlaceHolderKey] = Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
 			foreach ($aCurrentUser as $sField) {
 				$sPlaceHolderKey = $sPlaceHolderPrefix . "->$sField";
-				$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
+				$aPlaceholders[$sPlaceHolderKey] = Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
 			}
 		} else {
 			$aPlaceholders[$sPlaceHolderKey] = $oObject;
 			foreach ($aCurrentUser as $sField) {
 				$sPlaceHolderKey = $sPlaceHolderPrefix . "->$sField";
-				if (false === MetaModel::IsValidAttCode(get_class($oObject), $sField)){
+				// Mind that the "id" is not viewed as a valid att. code by \MetaModel::IsValidAttCode() so we have to test it manually
+				if ($sField !== "id" && false === MetaModel::IsValidAttCode(get_class($oObject), $sField)){
 					$aContext = [
 						"current_user_id" => UserRights::GetUserId(),
 						"obj_class" => get_class($oObject),
@@ -4285,7 +4286,7 @@ abstract class MetaModel
 					];
 					IssueLog::Warning("Unresolved placeholder due to invalid attribute", null,
 						$aContext);
-					$aPlaceholders[$sPlaceHolderKey] = \Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
+					$aPlaceholders[$sPlaceHolderKey] = Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
 					continue;
 				}
 
@@ -5155,7 +5156,7 @@ abstract class MetaModel
 	 */
 	protected static function DBCreateTables($aCallback = null)
 	{
-		list($aErrors, $aSugFix, $aCondensedQueries) = self::DBCheckFormat();
+		[$aErrors, $aSugFix, $aCondensedQueries] = self::DBCheckFormat();
 
 		//$sSQL = implode('; ', $aCondensedQueries); Does not work - multiple queries not allowed
 		foreach($aCondensedQueries as $sQuery)
@@ -5177,7 +5178,7 @@ abstract class MetaModel
 	 */
 	protected static function DBCreateViews()
 	{
-		list($aErrors, $aSugFix) = self::DBCheckViews();
+		[$aErrors, $aSugFix] = self::DBCheckViews();
 
 		foreach($aSugFix as $sClass => $aTarget)
 		{
@@ -6924,6 +6925,22 @@ abstract class MetaModel
 		$iCount = (int) CMDBSource::QueryToScalar($sQuery);
 
 		return $iCount === 1;
+	}
+
+	public static function GetFinalClassName(string $sClass, int $iKey): string
+	{
+		if (MetaModel::IsStandaloneClass($sClass)) {
+			return $sClass;
+		}
+
+		$sRootClass = MetaModel::GetRootClass($sClass);
+		$sTable = MetaModel::DBGetTable($sRootClass);
+		$sKeyCol = MetaModel::DBGetKey($sRootClass);
+		$sEscapedKey = CMDBSource::Quote($iKey);
+		$sFinalClassField = Metamodel::DBGetClassField($sRootClass);
+
+		$sQuery = "SELECT `{$sFinalClassField}` FROM `{$sTable}` WHERE `{$sKeyCol}` = {$sEscapedKey}";
+		return  CMDBSource::QueryToScalar($sQuery);
 	}
 
 	/**

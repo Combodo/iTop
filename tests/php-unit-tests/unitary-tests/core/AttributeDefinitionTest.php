@@ -208,4 +208,34 @@ PHP
 		$oFormFieldNoTouchedAtt = $oAttDef->MakeFormField($oPerson);
 		$this->assertTrue($oFormFieldNoTouchedAtt->IsValidationDisabled(), 'email wasn\'t modified, we must not validate the corresponding field');
 	}
+
+	/**
+	 * @dataProvider WithConstraintParameterProvider
+	 *
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @param bool $bConstraintExpected
+	 * @param bool $bComputationExpected
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function testWithConstraintAndComputationParameters(string $sClass, string $sAttCode, bool $bConstraintExpected, bool $bComputationExpected)
+	{
+		$oAttDef = \MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sConstraintExpected = $bConstraintExpected ? 'true' : 'false';
+		$sComputationExpected = $bComputationExpected ? 'true' : 'false';
+		$this->assertEquals($bConstraintExpected, $oAttDef->HasPHPConstraint(), "Standard DataModel should be configured with property 'has_php_constraint'=$sConstraintExpected for $sClass:$sAttCode");
+		$this->assertEquals($bComputationExpected, $oAttDef->HasPHPComputation(), "Standard DataModel should be configured with property 'has_php_computation'=$sComputationExpected for $sClass:$sAttCode");
+	}
+
+	public function WithConstraintParameterProvider()
+	{
+		return [
+			['User', 'profile_list', true, false],
+			['User', 'allowed_org_list', true, false],
+			['Person', 'team_list', false, false],
+			['Ticket', 'functionalcis_list', false, true],
+		];
+	}
 }

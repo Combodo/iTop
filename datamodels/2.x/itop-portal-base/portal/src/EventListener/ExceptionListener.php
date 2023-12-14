@@ -24,13 +24,12 @@ namespace Combodo\iTop\Portal\EventListener;
 
 use Dict;
 use ExceptionLog;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Twig\Environment;
 
 /**
  * Class ExceptionListener
@@ -39,19 +38,28 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
  * @package Combodo\iTop\Portal\EventListener
  * @since 2.7.0
  */
-class ExceptionListener implements ContainerAwareInterface
+class ExceptionListener
 {
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $container */
-	private $oContainer;
 
 	/**
-	 * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $oEvent
+	 * Constructor.
+	 *
+	 * @param \Twig\Environment $oTwig
+	 */
+	public function __construct(
+		protected Environment $oTwig
+	)
+	{
+	}
+
+	/**
+	 * @param ExceptionEvent $oEvent
 	 *
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public function onKernelException(ExceptionEvent $oEvent)
+	public function onKernelException(ExceptionEvent $oEvent) : void
 	{
 		// Get the exception object from the received event
 		$oException = $oEvent->getThrowable();
@@ -112,7 +120,7 @@ class ExceptionListener implements ContainerAwareInterface
 		else
 		{
 			$oResponse = new Response();
-			$oResponse->setContent($this->oContainer->get('twig')->render('itop-portal-base/portal/templates/errors/layout.html.twig', $aData));
+			$oResponse->setContent($this->oTwig->render('itop-portal-base/portal/templates/errors/layout.html.twig', $aData));
 		}
 		$oResponse->setStatusCode($iStatusCode);
 
@@ -156,11 +164,5 @@ class ExceptionListener implements ContainerAwareInterface
 		return str_replace($sNormalizedAppRoot, '', $sNormalizedInputPath);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function setContainer(ContainerInterface $oContainer = null)
-	{
-		$this->oContainer = $oContainer;
-	}
+
 }

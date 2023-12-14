@@ -26,17 +26,18 @@
 //////////////////////////////////////////////////////////////////////
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Relation:impacts/Description' => 'Elementos impactados por',
-	'Relation:impacts/DownStream' => 'Impacto...',
-	'Relation:impacts/DownStream+' => 'Elementos impactados por',
-	'Relation:impacts/UpStream' => 'Depende de...',
-	'Relation:impacts/UpStream+' => 'Elementos estes, que dependem deste elemento',
+	'Relation:impacts/Description'    => 'Elementos impactados por',
+	'Relation:impacts/DownStream'     => 'Impacto...',
+	'Relation:impacts/DownStream+'    => 'Elementos impactados por',
+	'Relation:impacts/UpStream'       => 'Depende de...',
+	'Relation:impacts/UpStream+'      => 'Elementos estes, que dependem deste elemento',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Elementos estes, que dependem deste elemento',
-	'Relation:depends on/DownStream' => 'Depende de...',
-	'Relation:depends on/UpStream' => 'Impactos...',
-	'Relation:impacts/LoadData' => 'Load data~~',
-	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
+	'Relation:depends on/DownStream'  => 'Depende de...',
+	'Relation:depends on/UpStream'    => 'Impactos...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
+	'Relation:impacts/FilteredData'   => 'Filtered data~~',
 ));
 
 

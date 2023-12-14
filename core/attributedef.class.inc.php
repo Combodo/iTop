@@ -1739,11 +1739,20 @@ class AttributeLinkedSet extends AttributeDefinition
 	 * @return bool true if Attribute has constraints
 	 * @since 3.1.0 N°6228
 	 */
-	public function GetHasConstraint()
+	public function HasPHPConstraint(): bool
 	{
 		return $this->GetOptional('with_php_constraint', false);
 	}
 
+	/**
+	 * @return bool true if Attribute has computation (DB_LINKS_CHANGED event propagation, `with_php_computation` attribute xml property), false otherwise
+	 * @since 3.1.1 3.2.0 N°6228
+	 */
+	public function HasPHPComputation(): bool
+	{
+		return $this->GetOptional('with_php_computation', false);
+	}
+	
 	public function GetLinkedClass()
 	{
 		return $this->Get('linked_class');

@@ -20,6 +20,7 @@
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use Combodo\iTop\Service\Module\ModuleService;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
@@ -2499,14 +2500,16 @@ SQL;
 						$aHeaders = static::ParseHeaders($http_response_header);
 						$sMimeType = array_key_exists('Content-Type', $aHeaders) ? strtolower($aHeaders['Content-Type']) : 'application/x-octet-stream';
 						// Compute the file extension from the MIME Type
-						foreach($aKnownExtensions as $sExtValue => $sMime)
-						{
-							if ($sMime === $sMimeType)
-							{
+						foreach ($aKnownExtensions as $sExtValue => $sMime) {
+							if ($sMime === $sMimeType) {
 								$sExtension = '.'.$sExtValue;
 								break;
 							}
 						}
+					}
+					$sPathName = pathinfo($sPath, PATHINFO_FILENAME);
+					if (utils::IsNotNullOrEmptyString($sPathName)) {
+						$sFileName = $sPathName;
 					}
 					$sFileName .= $sExtension;
 				}
@@ -2954,7 +2957,7 @@ HTML;
 		$aResultPref = [];
 		$aShortcutPrefs = appUserPreferences::GetPref('keyboard_shortcuts', []);
 		// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
-		$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+		$aShortcutClasses = utils::GetClassesForInterface(iKeyboardShortcut::class, '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
 
 		foreach ($aShortcutClasses as $cShortcutPlugin) {
 			$sTriggeredElement = $cShortcutPlugin::GetShortcutTriggeredElementSelector();

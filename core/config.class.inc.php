@@ -889,6 +889,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+    'forgot_password.url' => [
+			'type'                => 'string',
+			'description'         => 'Set this value to your "forgot password" service URL if it should be handled out of '.ITOP_APPLICATION_SHORT.'. Note that it will apply to all users (iTop users, LDAP users, ...)',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'deadline_format' => [
 			'type' => 'string',
 			'description' => 'The format used for displaying "deadline" attributes: any string with the following placeholders: $date$, $difference$',
@@ -1189,6 +1197,30 @@ class Config
 			'type' => 'integer',
 			'description' => 'Maximum number of successive levels (depth) to explore when displaying the impact/depends on relations.',
 			'default' => 20, // In iTop 2.0.3, this was the hardcoded value
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'sessions_tracking.enabled' => [
+			'type' => 'bool',
+			'description' => 'Whether or not the whole mechanism to track active sessions is enabled. See PHP session.gc_maxlifetime setting to configure session expiration.',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'sessions_tracking.gc_threshold' => [
+			'type' => 'integer',
+			'description'         => 'fallback in case cron is not active: probability in percent that session files are cleanup during any itop request (100 means always)',
+			'default'             => 1,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'sessions_tracking.gc_duration_in_seconds' => [
+			'type' => 'integer',
+			'description' => 'fallback in case cron is not active: when a cleanup is triggered cleanup duration will not exceed this duration (in seconds).',
+			'default' => 1,
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
@@ -1683,11 +1715,11 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'forgot_password.url' => [
+		'application.secret' => [
 			'type'                => 'string',
-			'description'         => 'Set this value to your "forgot password" service URL if it should be handled out of '.ITOP_APPLICATION_SHORT.'. Note that it will apply to all users (iTop users, LDAP users, ...)',
-			'default'             => '',
-			'value'               => '',
+			'description'         => 'Application secret, uses this value for encrypting the cookies used in the remember me functionality and for creating signed URIs when using ESI (Edge Side Includes).',
+			'default'             => true,
+			'value'               => true,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
@@ -1871,6 +1903,15 @@ class Config
 	protected $m_iPasswordHashAlgo;
 
 	/**
+	 * Symfony uses this value for encrypting the cookies used in the remember me functionality and for creating signed URIs when using ESI (Edge Side Includes).
+	 *
+	 * @see https://symfony.com/doc/current/reference/configuration/framework.html#secret
+	 * @since 3.2.0 - N°6934 - Symfony 6.4 - upgrade Symfony bundles to 6.4
+	 * @var string
+	 */
+	protected $m_sAppSecret;
+
+	/**
 	 * Config constructor.
 	 *
 	 * @param string|null $sConfigFile
@@ -1914,6 +1955,7 @@ class Config
 		$this->m_aCharsets = array();
 		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
 		$this->m_iPasswordHashAlgo = DEFAULT_HASH_ALGO;
+		$this->m_sAppSecret = bin2hex(random_bytes(16));
 
 		//define default encryption params according to php install
 		$aEncryptParams = SimpleCrypt::GetNewDefaultParams();
@@ -2074,6 +2116,7 @@ class Config
 		$this->m_sEncryptionLibrary = isset($MySettings['encryption_library']) ? trim($MySettings['encryption_library']) : $this->m_sEncryptionLibrary;
 		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : array();
 		$this->m_iPasswordHashAlgo = isset($MySettings['password_hash_algo']) ? $MySettings['password_hash_algo'] : $this->m_iPasswordHashAlgo;
+		$this->m_sAppSecret = isset($MySettings['application.secret']) ? trim($MySettings['application.secret']) : $this->m_sAppSecret;
 	}
 
 	protected function Verify()
@@ -2209,6 +2252,11 @@ class Config
 		return $this->m_sEncryptionKey;
 	}
 
+	public function GetAppSecret()
+	{
+		return $this->m_sAppSecret;
+	}
+
 	public function GetEncryptionLibrary()
 	{
 		return $this->m_sEncryptionLibrary;
@@ -2307,6 +2355,12 @@ class Config
 		$this->m_sEncryptionKey = $sKey;
 	}
 
+	public function SetAppSecret($sKey)
+	{
+		$this->m_sAppSecret = $sKey;
+	}
+
+
 	public function SetCSVImportCharsets($aCharsets)
 	{
 		$this->m_aCharsets = $aCharsets;
@@ -2358,6 +2412,7 @@ class Config
 		$aSettings['encryption_library'] = $this->m_sEncryptionLibrary;
 		$aSettings['csv_import_charsets'] = $this->m_aCharsets;
 		$aSettings['password_hash_algo'] = $this->m_iPasswordHashAlgo;
+		$aSettings['application.secret'] = $this->m_sAppSecret;
 
 		foreach ($this->m_aModuleSettings as $sModule => $aProperties)
 		{
@@ -2470,7 +2525,8 @@ class Config
 				'encryption_key' => $this->m_sEncryptionKey,
 				'encryption_library' => $this->m_sEncryptionLibrary,
 				'csv_import_charsets' => $this->m_aCharsets,
-				'password_hash_algo' => $this->m_iPasswordHashAlgo
+				'password_hash_algo' => $this->m_iPasswordHashAlgo,
+				'application.secret' => $this->m_sAppSecret,
 			);
 			foreach ($aOtherValues as $sKey => $value)
 			{

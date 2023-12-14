@@ -10,7 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;

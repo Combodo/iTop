@@ -29,7 +29,7 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use DBObjectSearch;
 use Dict;
-use iKeyboardShortcut;
+use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use MetaModel;
 use UIExtKeyWidget;
 use UserRights;

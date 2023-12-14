@@ -50,9 +50,9 @@
 		<link href="{{ app['combodo.absolute_url'] ~ 'css/c3.min.css'|add_itop_version }}" rel="stylesheet">
 		<link href="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css'|add_itop_version }}" rel="stylesheet">
 		{# - Bootstrap theme #}
-		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.bootstrap|add_itop_version }}" rel="stylesheet" id="css_bootstrap_theme">
+		<link href="{{ app['combodo.absolute_url'] ~ app['combodo.portal.instance.conf'].properties.themes.bootstrap|add_itop_version }}" rel="stylesheet" id="css_bootstrap_theme">
 		{# - Portal adjustments for BS theme #}
-		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.portal|add_itop_version }}" rel="stylesheet" id="css_portal">
+		<link href="{{ app['combodo.absolute_url'] ~ app['combodo.portal.instance.conf'].properties.themes.portal|add_itop_version }}" rel="stylesheet" id="css_portal">
 		{# Tippy for tooltips and Popper for their placement #}
 		<link href="{{ app['combodo.absolute_url'] ~ 'node_modules/tippy.js/dist/tippy.css'|add_itop_version }}" rel="stylesheet">
 		<link href="{{ app['combodo.absolute_url'] ~ 'node_modules/tippy.js/animations/shift-away-subtle.css'|add_itop_version }}" rel="stylesheet">
@@ -64,12 +64,12 @@
         {% endif %}
 		{# Custom CSS that is supposed to do adjustments to the portal #}
 		{% if app['combodo.portal.instance.conf'].properties.themes.custom is defined %}
-			<link href="{{ app['combodo.portal.instance.conf'].properties.themes.custom|add_itop_version }}" rel="stylesheet">
+			<link href="{{ app['combodo.absolute_url'] ~ app['combodo.portal.instance.conf'].properties.themes.custom|add_itop_version }}" rel="stylesheet">
 		{% endif %}
 		{# Others CSS that will come after the theme/portal/custom, in an undefined order #}
 		{% if app['combodo.portal.instance.conf'].properties.themes.others is defined %}
 			{% for theme in app['combodo.portal.instance.conf'].properties.themes.others %}
-				<link href="{{ theme|add_itop_version }}" rel="stylesheet">
+				<link href="{{ app['combodo.absolute_url'] ~ theme|add_itop_version }}" rel="stylesheet">
 			{% endfor %}
 		{% endif %}
 	{% endblock %}

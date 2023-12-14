@@ -10,6 +10,7 @@ use Combodo\iTop\Service\Events\EventException;
 use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Service\Events\EventServiceLog;
 use Combodo\iTop\Service\Module\ModuleService;
+use Combodo\iTop\Service\SummaryCard\SummaryCardService;
 use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectManager;
 
 /**
@@ -187,12 +188,13 @@ abstract class DBObject implements iDisplay
 	protected $m_oLinkHostObject = null;
 
 	/**
-	 * @var array List all the CRUD stack in progress
-	 *
-	 * The array contains instances of
-	 * ['type' => 'type of CRUD operation (INSERT, UPDATE, DELETE)',
-	 *  'class' => 'class of the object in the CRUD process',
-	 *  'id' => 'id of the object in the CRUD process']
+	 * @var array{array{
+	 *      type: string,
+	 *      class: string,
+	 *      id: string,
+	 * }} List all the CRUD stack in progress, with :
+	 *      - type: CRUD operation (INSERT, UPDATE, DELETE)',
+	 *      - class: class of the object in the CRUD process, leaf (object finalclass) if we have a hierarchy
 	 *
 	 * @since 3.1.0 N°5906
 	 */
@@ -2462,6 +2464,130 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * Trigger onObjectUpdate on the target object when an object pointed by a LinkSet is modified, added or removed
+	 *
+	 * @since 3.1.1 3.2.0 N°6531 method creation
+	 */
+	final protected function ActivateOnObjectUpdateTriggersForTargetObjects(): void
+	{
+		$aPreviousValues = $this->ListPreviousValuesForUpdatedAttributes();
+
+		$aClassExtKeyAttCodes = MetaModel::GetAttributesList(get_class($this), [AttributeExternalKey::class]);
+		foreach ($aClassExtKeyAttCodes as $sExtKeyWithMirrorLinkAttCode) {
+			/** @var AttributeExternalKey $oExtKeyWithMirrorLinkAttDef */
+			$oExtKeyWithMirrorLinkAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyWithMirrorLinkAttCode);
+
+			/** @var AttributeLinkedSet $oAttDefMirrorLink */
+			$oAttDefMirrorLink = $oExtKeyWithMirrorLinkAttDef->GetMirrorLinkAttribute();
+			if (is_null($oAttDefMirrorLink)) {
+				// No LinkSet pointing to me
+				continue;
+			}
+			$sAttCodeMirrorLink = $oAttDefMirrorLink->GetCode();
+			$sTargetObjectClass = $oExtKeyWithMirrorLinkAttDef->GetTargetClass();
+
+			if (array_key_exists($sExtKeyWithMirrorLinkAttCode, $aPreviousValues)) {
+				// need to update old target also
+				$sPreviousTargetObjectKey = $aPreviousValues[$sExtKeyWithMirrorLinkAttCode];
+				$oPreviousTargetObject = static::GetObjectIfNotInCRUDStack($sTargetObjectClass, $sPreviousTargetObjectKey);
+				$this->ActivateOnObjectUpdateTriggers($oPreviousTargetObject, [$sAttCodeMirrorLink]);
+			}
+
+			// we need to update remote with current lnk instance
+			$oTargetObject = static::GetObjectIfNotInCRUDStack($sTargetObjectClass, $this->Get($sExtKeyWithMirrorLinkAttCode));
+			$this->ActivateOnObjectUpdateTriggers($oTargetObject, [$sAttCodeMirrorLink]);
+		}
+	}
+
+	final static protected function GetObjectIfNotInCRUDStack($sClass, $sKey)
+	{
+		if (DBObject::IsObjectCurrentlyInCrud($sClass, $sKey)) {
+			return null;
+		}
+
+		return MetaModel::GetObject($sClass, $sKey, false);
+	}
+
+	/**
+	 * Cascade CheckToWrite to Target Objects With LinkSet Pointing To Me
+	 * @since 3.1.1 3.2.0 N°6228 method creation
+	 */
+	final protected function CheckToWriteForTargetObjects(bool $bIsCheckToDelete = false): void
+	{
+		$aChanges = $this->ListChanges();
+
+		$aClassExtKeyAttCodes = MetaModel::GetAttributesList(get_class($this), [AttributeExternalKey::class]);
+		foreach ($aClassExtKeyAttCodes as $sExtKeyWithMirrorLinkAttCode) {
+			/** @var AttributeExternalKey $oExtKeyWithMirrorLinkAttDef */
+			$oExtKeyWithMirrorLinkAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyWithMirrorLinkAttCode);
+
+			/** @var AttributeLinkedSet $oAttDefMirrorLink */
+			$oAttDefMirrorLink = $oExtKeyWithMirrorLinkAttDef->GetMirrorLinkAttribute();
+			if (is_null($oAttDefMirrorLink) || (false === $oAttDefMirrorLink->HasPHPConstraint())) {
+				continue;
+			}
+			$sAttCodeMirrorLink = $oAttDefMirrorLink->GetCode();
+			$sTargetObjectClass = $oExtKeyWithMirrorLinkAttDef->GetTargetClass();
+
+			$oTargetObject = static::GetObjectIfNotInCRUDStack($sTargetObjectClass, $this->Get($sExtKeyWithMirrorLinkAttCode));
+
+			if ($this->IsNew()) {
+				$this->CheckToWriteForSingleTargetObject_Internal('add', $oTargetObject, $sAttCodeMirrorLink, false);
+			} else if ($bIsCheckToDelete) {
+				$this->CheckToWriteForSingleTargetObject_Internal('remove', $oTargetObject, $sAttCodeMirrorLink, true);
+			} else {
+				if (array_key_exists($sExtKeyWithMirrorLinkAttCode, $aChanges)) {
+					// need to update remote old + new
+					$aPreviousValues = $this->ListPreviousValuesForUpdatedAttributes();
+					$sPreviousTargetObjectKey = $aPreviousValues[$sExtKeyWithMirrorLinkAttCode];
+					$oPreviousTargetObject = static::GetObjectIfNotInCRUDStack($sTargetObjectClass, $sPreviousTargetObjectKey);
+					$this->CheckToWriteForSingleTargetObject_Internal('remove', $oPreviousTargetObject, $sAttCodeMirrorLink, false);
+					$this->CheckToWriteForSingleTargetObject_Internal('add', $oTargetObject, $sAttCodeMirrorLink, false);
+				} else {
+					$this->CheckToWriteForSingleTargetObject_Internal('modify', $oTargetObject, $sAttCodeMirrorLink, false); // we need to update remote with current lnk instance
+				}
+			}
+		}
+	}
+
+	private function CheckToWriteForSingleTargetObject_Internal(string $sAction, ?DBObject $oTargetObject, string $sAttCodeMirrorLink, bool $bIsCheckToDelete): void
+	{
+		if (is_null($oTargetObject)) {
+			return;
+		}
+
+		$this->LogCRUDDebug(__METHOD__, "action: $sAction ".get_class($oTargetObject).'::'.$oTargetObject->GetKey()." ($sAttCodeMirrorLink)");
+
+		/** @var \ormLinkSet $oTargetValue */
+		$oTargetValue = $oTargetObject->Get($sAttCodeMirrorLink);
+		switch ($sAction) {
+			case 'add':
+				$oTargetValue->AddItem($this);
+				break;
+			case 'remove':
+				$oTargetValue->RemoveItem($this->GetKey());
+				break;
+			case 'modify':
+				$oTargetValue->ModifyItem($this);
+				break;
+		}
+		$oTargetObject->Set($sAttCodeMirrorLink, $oTargetValue);
+		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTargetObject->CheckToWrite();
+		if (false === $bCheckStatus) {
+			if ($bIsCheckToDelete) {
+				$this->m_aDeleteIssues = array_merge($this->m_aDeleteIssues ?? [], $aCheckIssues);
+			} else {
+				$this->m_aCheckIssues = array_merge($this->m_aCheckIssues ?? [], $aCheckIssues);
+			}
+			$this->m_bSecurityIssue = $this->m_bSecurityIssue || $bSecurityIssue;
+		}
+		$aTargetCheckWarnings = $oTargetObject->GetCheckWarnings();
+		if (is_array($aTargetCheckWarnings)) {
+			$this->m_aCheckWarnings = array_merge($this->m_aCheckWarnings ?? [], $aTargetCheckWarnings);
+		}
+	}
+
+	/**
      * @api
      * @api-advanced
      *
@@ -2484,6 +2610,7 @@ abstract class DBObject implements iDisplay
 		{
 			return array(true, array());
 		}
+
 		if (is_null($this->m_bCheckStatus))
 		{
 			$this->m_aCheckIssues = array();
@@ -2500,6 +2627,9 @@ abstract class DBObject implements iDisplay
 			$oKPI = new ExecutionKPI();
 			$this->DoCheckToWrite();
             $oKPI->ComputeStatsForExtension($this, 'DoCheckToWrite');
+
+			$this->CheckToWriteForTargetObjects();
+
 			if (count($this->m_aCheckIssues) == 0)
 			{
 				$this->m_bCheckStatus = true;
@@ -2509,6 +2639,7 @@ abstract class DBObject implements iDisplay
 				$this->m_bCheckStatus = false;
 			}
 		}
+
 		return array($this->m_bCheckStatus, $this->m_aCheckIssues, $this->m_bSecurityIssue);
 	}
 
@@ -2574,12 +2705,16 @@ abstract class DBObject implements iDisplay
 				continue;
 			}
 
-			/** @noinspection NotOptimalIfConditionsInspection */
-			/** @noinspection TypeUnsafeComparisonInspection */
 			if (utils::IsNullOrEmptyString($sRemoteObjectClass)
 				|| utils::IsNullOrEmptyString($sRemoteObjectKey)
-				|| ($sRemoteObjectKey == 0) // non-strict comparison as we might have bad surprises
 			) {
+				continue;
+			}
+
+			// 0 : Undefined ext. key (EG. non-mandatory and no value provided)
+			// < 0 : Non yet persisted object
+            /** @noinspection TypeUnsafeComparisonInspection Non-strict comparison as object ID can be string */
+			if ($sRemoteObjectKey <= 0) {
 				continue;
 			}
 
@@ -2594,7 +2729,7 @@ abstract class DBObject implements iDisplay
 	 *
 	 * an array of displayable error is added in {@see DBObject::$m_aDeleteIssues}
 	 *
-     * @internal 
+     * @internal
      *
 	 * @param \DeletionPlan $oDeletionPlan
 	 *
@@ -2659,8 +2794,15 @@ abstract class DBObject implements iDisplay
      */
 	public function CheckToDelete(&$oDeletionPlan)
   	{
-		$this->MakeDeletionPlan($oDeletionPlan);
-		$oDeletionPlan->ComputeResults();
+		$this->AddCurrentObjectInCrudStack('DELETE');
+		try {
+			$this->MakeDeletionPlan($oDeletionPlan);
+			$oDeletionPlan->ComputeResults();
+		}
+		finally {
+			$this->RemoveCurrentObjectInCrudStack();
+		}
+
 		return (!$oDeletionPlan->FoundStopper());
 	}
 
@@ -2711,7 +2853,7 @@ abstract class DBObject implements iDisplay
 			{
 				// The value is a scalar, the comparison must be 100% strict
 				if($this->m_aOrigValues[$sAtt] !== $proposedValue)
-				{	
+				{
 					//echo "$sAtt:<pre>\n";
 					//var_dump($this->m_aOrigValues[$sAtt]);
 					//var_dump($proposedValue);
@@ -2833,7 +2975,7 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Used only by insert, Meant to be overloaded
-     * 
+     *
      * @overwritable-hook You can extend this method in order to provide your own logic.
 	 */
 	protected function OnObjectKeyReady()
@@ -2941,7 +3083,7 @@ abstract class DBObject implements iDisplay
 		// fields in first array, values in the second
 		$aFieldsToWrite = array();
 		$aValuesToWrite = array();
-		
+
 		if (!empty($this->m_iKey) && ($this->m_iKey >= 0))
 		{
 			// Add it to the list of fields to write
@@ -2950,7 +3092,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$aHierarchicalKeys = array();
-		
+
 		foreach(MetaModel::ListAttributeDefs($sTableClass) as $sAttCode=>$oAttDef) {
 			// Skip this attribute if not defined in this table
 			if ((!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode) && !$oAttDef->CopyOnAllTables())
@@ -2960,7 +3102,7 @@ abstract class DBObject implements iDisplay
 			$aAttColumns = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
 			foreach($aAttColumns as $sColumn => $sValue)
 			{
-				$aFieldsToWrite[] = "`$sColumn`"; 
+				$aFieldsToWrite[] = "`$sColumn`";
 				$aValuesToWrite[] = CMDBSource::Quote($sValue);
 			}
 			if ($oAttDef->IsHierarchicalKey())
@@ -2984,7 +3126,7 @@ abstract class DBObject implements iDisplay
 					self::$m_aBulkInsertCols[$sClass][$sTable] = implode(', ', $aFieldsToWrite);
 				}
 				self::$m_aBulkInsertItems[$sClass][$sTable][] = '('.implode (', ', $aValuesToWrite).')';
-				
+
 				$iNewKey = 999999; // TODO - compute next id....
 			}
 			else
@@ -3069,7 +3211,7 @@ abstract class DBObject implements iDisplay
 		// fields in first array, values in the second
 		$aFieldsToWrite = array();
 		$aValuesToWrite = array();
-		
+
 		if (!empty($this->m_iKey) && ($this->m_iKey >= 0))
 		{
 			// Add it to the list of fields to write
@@ -3104,7 +3246,7 @@ abstract class DBObject implements iDisplay
 			$aAttColumns = $oAttDef->GetSQLValues($value);
 			foreach($aAttColumns as $sColumn => $sValue)
 			{
-				$aFieldsToWrite[] = "`$sColumn`"; 
+				$aFieldsToWrite[] = "`$sColumn`";
 				$aValuesToWrite[] = CMDBSource::Quote($sValue);
 			}
 			if ($oAttDef->IsHierarchicalKey())
@@ -3214,7 +3356,7 @@ abstract class DBObject implements iDisplay
 				}
 			}
 
-			list($bRes, $aIssues) = $this->CheckToWrite(false);
+			[$bRes, $aIssues] = $this->CheckToWrite(false);
 			if (!$bRes) {
 				throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 			}
@@ -3335,7 +3477,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function PostInsertActions(): void
+	protected function PostInsertActions(): void
 	{
 		$this->FireEventAfterWrite([], true);
 		$oKPI = new ExecutionKPI();
@@ -3359,6 +3501,9 @@ abstract class DBObject implements iDisplay
 
 		// - TriggerOnObjectMention
 		$this->ActivateOnMentionTriggers(true);
+
+		// - Trigger for object pointing to the current object
+		$this->ActivateOnObjectUpdateTriggersForTargetObjects();
 	}
 
     /**
@@ -3386,7 +3531,7 @@ abstract class DBObject implements iDisplay
 		$this->RecordObjCreation();
 		return $ret;
 	}
-	
+
 	/**
 	 * This function is automatically called after cloning an object with the "clone" PHP language construct
 	 * The purpose of this method is to reset the appropriate attributes of the object in
@@ -3454,7 +3599,7 @@ abstract class DBObject implements iDisplay
 					return $this->m_iKey;
 				}
 
-				list($bRes, $aIssues) = $this->CheckToWrite(false);
+				[$bRes, $aIssues] = $this->CheckToWrite(false);
 				if (!$bRes) {
 					throw new CoreCannotSaveObjectException(['issues' => $aIssues, 'class' => $sClass, 'id' => $this->GetKey()]);
 				}
@@ -3651,7 +3796,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function PostUpdateActions(array $aChanges): void
+	protected function PostUpdateActions(array $aChanges): void
 	{
 		$this->FireEventAfterWrite($aChanges, false);
 		$oKPI = new ExecutionKPI();
@@ -3659,20 +3804,10 @@ abstract class DBObject implements iDisplay
 		$oKPI->ComputeStatsForExtension($this, 'AfterUpdate');
 
 		// - TriggerOnObjectUpdate
-		$aClassList = MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL);
-		$aParams = array('class_list' => $aClassList);
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)'),
-			array(), $aParams);
-		while ($oTrigger = $oSet->Fetch()) {
-			/** @var \TriggerOnObjectUpdate $oTrigger */
-			try {
-				$oTrigger->DoActivate($this->ToArgs());
-			}
-			catch (Exception $e) {
-				$oTrigger->LogException($e, $this);
-				utils::EnrichRaisedException($oTrigger, $e);
-			}
-		}
+		$this->ActivateOnObjectUpdateTriggers($this);
+
+		// - Trigger for object pointing to the current object
+		$this->ActivateOnObjectUpdateTriggersForTargetObjects();
 
 		$sClass = get_class($this);
 		if (MetaModel::HasLifecycle($sClass))
@@ -3718,6 +3853,37 @@ abstract class DBObject implements iDisplay
 		$this->ActivateOnMentionTriggers(false, $aChanges);
 	}
 
+	/**
+	 * @param \DBObject $oObject
+	 * @param array|null $aAttributes
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	private function ActivateOnObjectUpdateTriggers(?DBObject $oObject, array $aAttributes = null): void
+	{
+		if (is_null($oObject)) {
+			return;
+		}
+
+		// - TriggerOnObjectUpdate
+		$aClassList = MetaModel::EnumParentClasses(get_class($oObject), ENUM_PARENT_CLASSES_ALL);
+		$aParams = array('class_list' => $aClassList);
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)'),
+			array(), $aParams);
+		while ($oTrigger = $oSet->Fetch()) {
+			/** @var \TriggerOnObjectUpdate $oTrigger */
+			try {
+				$oTrigger->DoActivateForSpecificAttributes($oObject->ToArgs(), $aAttributes);
+			}
+			catch (Exception $e) {
+				$oTrigger->LogException($e, $oObject);
+				utils::EnrichRaisedException($oTrigger, $e);
+			}
+		}
+	}
 
 	/**
 	 * Increment attribute with specified value.
@@ -3921,6 +4087,8 @@ abstract class DBObject implements iDisplay
      */
 	protected function DBDeleteSingleObject()
 	{
+		$this->LogCRUDEnter(__METHOD__);
+
 		if (MetaModel::DBIsReadOnly())
 		{
 			$this->LogCRUDExit(__METHOD__, 'DB is read-only');
@@ -4041,8 +4209,11 @@ abstract class DBObject implements iDisplay
 		$this->AfterDelete();
 		$oKPI->ComputeStatsForExtension($this, 'AfterDelete');
 
+		// - Trigger for object pointing to the current object
+		$this->ActivateOnObjectUpdateTriggersForTargetObjects();
 
 		$this->m_bIsInDB = false;
+		$this->LogCRUDExit(__METHOD__);
 		// Fix for N°926: do NOT reset m_iKey as it can be used to have it for reporting purposes (see the REST service to delete
 		// objects, reported as bug N°926)
 		// Thought the key is not reset, using DBInsert or DBWrite will create an object having the same characteristics and a new ID. DBUpdate is protected
@@ -4054,7 +4225,7 @@ abstract class DBObject implements iDisplay
      * First, checks if the object can be deleted regarding database integrity.
      * If the answer is yes, it performs any required cleanup (delete other objects or reset external keys) in addition to the object
      * deletion.
-     * 
+     *
      * @api
      *
      * @param \DeletionPlan $oDeletionPlan Do not use: aims at dealing with recursion
@@ -4073,74 +4244,65 @@ abstract class DBObject implements iDisplay
 	public function DBDelete(&$oDeletionPlan = null)
 	{
 		$this->LogCRUDEnter(__METHOD__);
+		try {
+			static $iLoopTimeLimit = null;
+			if ($iLoopTimeLimit == null) {
+				$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
+			}
+			if (is_null($oDeletionPlan)) {
+				$oDeletionPlan = new DeletionPlan();
+			}
 
-		static $iLoopTimeLimit = null;
-		if ($iLoopTimeLimit == null)
-		{
-			$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		}
-		if (is_null($oDeletionPlan))
-		{
-			$oDeletionPlan = new DeletionPlan();
-		}
-		$this->MakeDeletionPlan($oDeletionPlan);
-		$oDeletionPlan->ComputeResults();
-
-		if ($oDeletionPlan->FoundStopper())
-		{
-			$aIssues = $oDeletionPlan->GetIssues();
-			$this->LogCRUDError(__METHOD__, ' Errors: '.implode(', ', $aIssues));
-			throw new DeleteException('Found issue(s)', array('target_class' => get_class($this), 'target_id' => $this->GetKey(), 'issues' => implode(', ', $aIssues)));
-		}
+			if (false === $this->CheckToDelete($oDeletionPlan)) {
+				$aIssues = $oDeletionPlan->GetIssues();
+				$this->LogCRUDError(__METHOD__, ' Errors: '.implode(', ', $aIssues));
+				throw new DeleteException('Found issue(s)', array('target_class' => get_class($this), 'target_id' => $this->GetKey(), 'issues' => implode(', ', $aIssues)));
+			}
 
 
-		// Getting and setting time limit are not symetric:
-		// www.php.net/manual/fr/function.set-time-limit.php#72305
-		$iPreviousTimeLimit = ini_get('max_execution_time');
+			// Getting and setting time limit are not symmetric:
+			// www.php.net/manual/fr/function.set-time-limit.php#72305
+			$iPreviousTimeLimit = ini_get('max_execution_time');
 
-		foreach ($oDeletionPlan->ListDeletes() as $sClass => $aToDelete)
-		{
-			foreach ($aToDelete as $iId => $aData)
-			{
-				/** @var \DBObject $oToDelete */
-				$oToDelete = $aData['to_delete'];
-				// The deletion based on a deletion plan should not be done for each object if the deletion plan is common (Trac #457)
-				// because for each object we would try to update all the preceding ones... that are already deleted
-				// A better approach would be to change the API to apply the DBDelete on the deletion plan itself... just once
-				// As a temporary fix: delete only the objects that are still to be deleted...
-				if ($oToDelete->m_bIsInDB)
-				{
-					set_time_limit(intval($iLoopTimeLimit));
+			foreach ($oDeletionPlan->ListDeletes() as $sClass => $aToDelete) {
+				foreach ($aToDelete as $iId => $aData) {
+					/** @var \DBObject $oToDelete */
+					$oToDelete = $aData['to_delete'];
+					// The deletion based on a deletion plan should not be done for each object if the deletion plan is common (Trac #457)
+					// because for each object we would try to update all the preceding ones... that are already deleted
+					// A better approach would be to change the API to apply the DBDelete on the deletion plan itself... just once
+					// As a temporary fix: delete only the objects that are still to be deleted...
+					if ($oToDelete->m_bIsInDB) {
+						set_time_limit(intval($iLoopTimeLimit));
 
-					$oToDelete->AddCurrentObjectInCrudStack('DELETE');
-					try {
-						$oToDelete->DBDeleteSingleObject();
-					}
-					finally {
-						$oToDelete->RemoveCurrentObjectInCrudStack();
+						$oToDelete->AddCurrentObjectInCrudStack('DELETE');
+						try {
+							$oToDelete->DBDeleteSingleObject();
+						}
+						finally {
+							$oToDelete->RemoveCurrentObjectInCrudStack();
+						}
 					}
 				}
 			}
-		}
 
-		foreach ($oDeletionPlan->ListUpdates() as $sClass => $aToUpdate)
-		{
-			foreach ($aToUpdate as $aData)
-			{
-				$oToUpdate = $aData['to_reset'];
-				/** @var \DBObject $oToUpdate */
-				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
-				{
-					$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
-					set_time_limit(intval($iLoopTimeLimit));
-					$oToUpdate->DBUpdate();
+			foreach ($oDeletionPlan->ListUpdates() as $sClass => $aToUpdate) {
+				foreach ($aToUpdate as $aData) {
+					$oToUpdate = $aData['to_reset'];
+					/** @var \DBObject $oToUpdate */
+					foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef) {
+						$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
+						set_time_limit(intval($iLoopTimeLimit));
+						$oToUpdate->DBUpdate();
+					}
 				}
 			}
+
+			set_time_limit(intval($iPreviousTimeLimit));
+		} finally {
+			$this->LogCRUDExit(__METHOD__);
 		}
 
-		set_time_limit(intval($iPreviousTimeLimit));
-
-		$this->LogCRUDExit(__METHOD__);
 		return $oDeletionPlan;
 	}
 
@@ -4447,7 +4609,7 @@ abstract class DBObject implements iDisplay
      *
      * @api
      *
-	 */	 	
+	 */
 	public function Reset($sAttCode)
 	{
 		$this->Set($sAttCode, $this->GetDefaultValue($sAttCode));
@@ -4459,7 +4621,7 @@ abstract class DBObject implements iDisplay
      * Suitable for use as a lifecycle action
      *
      * @api
-	 */	 	
+	 */
 	public function Copy($sDestAttCode, $sSourceAttCode)
 	{
 		$oTypeValueToCopy = MetaModel::GetAttributeDef(get_class($this), $sSourceAttCode);
@@ -4789,7 +4951,7 @@ abstract class DBObject implements iDisplay
 			{
 				throw new CoreException("Unknown attribute '$sExtKeyAttCode' for the class ".get_class($this));
 			}
-			
+
 			$oKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
 			if (!$oKeyAttDef instanceof AttributeExternalKey)
 			{
@@ -4807,14 +4969,14 @@ abstract class DBObject implements iDisplay
 				$ret  = $oRemoteObj->GetForTemplate($sRemoteAttCode);
 			}
 		}
-		else 
+		else
 		{
 			switch($sPlaceholderAttCode)
 			{
 				case 'id':
 				$ret = $this->GetKey();
 				break;
-				
+
 				case 'name()':
 				$ret = $this->GetName();
 				break;
@@ -5001,7 +5163,7 @@ abstract class DBObject implements iDisplay
 		if ($oOwner)
 		{
 			$sLinkSetOwnerClass = get_class($oOwner);
-			
+
 			$oMyChangeOp = MetaModel::NewObject($sChangeOpClass);
 			$oMyChangeOp->Set("objclass", $sLinkSetOwnerClass);
 			$oMyChangeOp->Set("objkey", $iLinkSetOwnerId);
@@ -5028,7 +5190,7 @@ abstract class DBObject implements iDisplay
 		{
 			/** @var \AttributeLinkedSet $oLinkSet */
 			if (($oLinkSet->GetTrackingLevel() & LINKSET_TRACKING_LIST) == 0) continue;
-			
+
 			$iLinkSetOwnerId  = $this->Get($sExtKeyAttCode);
 			$oMyChangeOp = $this->PrepareChangeOpLinkSet($iLinkSetOwnerId, $oLinkSet, 'CMDBChangeOpSetAttributeLinksAddRemove');
 			if ($oMyChangeOp)
@@ -5246,8 +5408,9 @@ abstract class DBObject implements iDisplay
 		$this->m_aDeleteIssues = array(); // Ok
 		$this->FireEventCheckToDelete($oDeletionPlan);
 		$this->DoCheckToDelete($oDeletionPlan);
+		$this->CheckToWriteForTargetObjects(true);
 		$oDeletionPlan->SetDeletionIssues($this, $this->m_aDeleteIssues, $this->m_bSecurityIssue);
-	
+
 		$aDependentObjects = $this->GetReferencingObjects(true /* allow all data */);
 
 		// Getting and setting time limit are not symmetric:
@@ -5429,7 +5592,7 @@ abstract class DBObject implements iDisplay
 				$aSynchroClasses[] = $sTarget;
 			}
 		}
-		
+
 		foreach($aSynchroClasses as $sClass)
 		{
 			if ($this instanceof $sClass)
@@ -6237,6 +6400,18 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 *
+	 * @api
+	 *
+	 * @return string[]|null
+	 * @since 3.1.1 3.2.0
+	 */
+	public function GetCheckWarnings(): ?array
+	{
+		return $this->m_aCheckWarnings;
+	}
+
+	/**
 	 * @api
 	 *
 	 * @param string $sIssue
@@ -6483,9 +6658,10 @@ abstract class DBObject implements iDisplay
 		// during insert key is reset from -1 to null
 		// so we need to handle null values (will give empty string after conversion)
 		$sConvertedId = (string)$sId;
+		$oRootClass = MetaModel::GetRootClass($sClass);
 
 		foreach (self::$m_aCrudStack as $aCrudStackEntry) {
-			if (($sClass === $aCrudStackEntry['class'])
+			if (($oRootClass === $aCrudStackEntry['class'])
 				&& ($sConvertedId === $aCrudStackEntry['id'])) {
 				return true;
 			}
@@ -6500,12 +6676,14 @@ abstract class DBObject implements iDisplay
 	 * @param string $sClass
 	 *
 	 * @return bool
+	 * @throws \CoreException
 	 * @since 3.1.0 N°5609
 	 */
 	final public static function IsClassCurrentlyInCrud(string $sClass): bool
 	{
+		$sRootClass = MetaModel::GetRootClass($sClass);
 		foreach (self::$m_aCrudStack as $aCrudStackEntry) {
-			if ($sClass === $aCrudStackEntry['class']) {
+			if ($sRootClass === $aCrudStackEntry['class']) {
 				return true;
 			}
 		}
@@ -6523,9 +6701,11 @@ abstract class DBObject implements iDisplay
 	 */
 	private function AddCurrentObjectInCrudStack(string $sCrudType): void
 	{
+		$this->LogCRUDDebug(__METHOD__);
+		$sRootClass = MetaModel::GetRootClass(get_class($this));
 		self::$m_aCrudStack[] = [
 			'type'  => $sCrudType,
-			'class' => get_class($this),
+			'class' => $sRootClass,
 			'id'    => (string)$this->GetKey(), // GetKey() doesn't have type hinting, so forcing type to avoid getting an int
 		];
 	}
@@ -6539,6 +6719,7 @@ abstract class DBObject implements iDisplay
 	 */
 	private function UpdateCurrentObjectInCrudStack(): void
 	{
+		$this->LogCRUDDebug(__METHOD__);
 		$aCurrentCrudStack = array_pop(self::$m_aCrudStack);
 		$aCurrentCrudStack['id'] = (string)$this->GetKey();
 		self::$m_aCrudStack[] = $aCurrentCrudStack;
@@ -6552,7 +6733,8 @@ abstract class DBObject implements iDisplay
 	 */
 	private function RemoveCurrentObjectInCrudStack(): void
 	{
-		array_pop(self::$m_aCrudStack);
+		$aRemoved = array_pop(self::$m_aCrudStack);
+		$this->LogCRUDDebug(__METHOD__, $aRemoved['class'].':'.$aRemoved['id']);
 	}
 
 	/**

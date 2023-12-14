@@ -22,7 +22,9 @@
  * A class to serialize the execution of some code sections
  * Emulates the API of PECL Mutex class
  * Relies on MySQL locks because the API sem_get is not always present in the
- * installed PHP.    
+ * installed PHP.
+ *
+ * @link https://dev.mysql.com/doc/refman/5.7/en/locking-functions.html MySQL locking functions documentation
  *
  * @copyright   Copyright (C) 2013-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0

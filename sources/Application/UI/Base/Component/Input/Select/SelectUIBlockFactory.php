@@ -5,7 +5,7 @@
  */
 
 
-namespace Combodo\iTop\Application\UI\Base\Component\Input;
+namespace Combodo\iTop\Application\UI\Base\Component\Input\Select;
 
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;

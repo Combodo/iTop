@@ -20,6 +20,7 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use Combodo\iTop\Portal\Brick\BrickCollection;
 use Combodo\iTop\Portal\Brick\BrickNotFoundException;
 use IssueLog;
 use LogChannels;
@@ -40,6 +41,21 @@ use UserRights;
  */
 class AggregatePageBrickController extends BrickController
 {
+
+	/**
+	 * Constructor.
+	 *
+	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
+	 *
+	 * @since 3.2.0 N°6933
+	 */
+	public function __construct(
+		protected BrickCollection $oBrickCollection
+	)
+	{
+
+	}
+
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
 	 * @param string $sBrickId
@@ -51,11 +67,8 @@ class AggregatePageBrickController extends BrickController
 	 */
 	public function DisplayAction(Request $oRequest, $sBrickId)
 	{
-		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
-		$oBrickCollection = $this->get('brick_collection');
-
 		/** @var \Combodo\iTop\Portal\Brick\AggregatePageBrick $oBrick */
-		$oBrick = $oBrickCollection->GetBrickById($sBrickId);
+		$oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
 
 		$aAggregatePageBricksConf = $oBrick->GetAggregatePageBricks();
 		$aAggregatePageBricks = $this->GetOrderedAggregatePageBricksObjectsById($aAggregatePageBricksConf);
@@ -81,15 +94,12 @@ class AggregatePageBrickController extends BrickController
 	 */
 	private function GetOrderedAggregatePageBricksObjectsById($aAggregatePageBricksConf)
 	{
-		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
-		$oBrickCollection = $this->get('brick_collection');
-
 		$aAggregatePageBricks = array();
 		foreach ($aAggregatePageBricksConf as $sBrickId => $iBrickRank)
 		{
 			try
 			{
-				$oPortalBrick = $oBrickCollection->GetBrickById($sBrickId);
+				$oPortalBrick = $this->oBrickCollection->GetBrickById($sBrickId);
 			}
 			catch (BrickNotFoundException $oException)
 			{

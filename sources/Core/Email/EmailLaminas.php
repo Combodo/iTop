@@ -6,10 +6,20 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Core\Email;
+
+use AsyncSendEmail;
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
+use DOMDocument;
+use DOMXPath;
+use EMail;
+use Exception;
+use ExecutionKPI;
+use InlineImage;
+use IssueLog;
 use Laminas\Mail\Header\ContentType;
 use Laminas\Mail\Message;
-use Laminas\Mail\Protocol\Smtp\Auth\Oauth;
+use Combodo\iTop\Core\Authentication\Client\Smtp\Oauth;
 use Laminas\Mail\Transport\File;
 use Laminas\Mail\Transport\FileOptions;
 use Laminas\Mail\Transport\Sendmail;
@@ -205,7 +215,8 @@ class EMailLaminas extends Email
 			case 'LogFile':
 				$oTransport = new File();
 				$aOptions = new FileOptions([
-					'path' => APPROOT.'log/mail.log',
+					'path' => APPROOT.'log/',
+					'callback' => function() { return 'mail.log'; }
 				]);
 				$oTransport->setOptions($aOptions);
 				break;
@@ -370,7 +381,7 @@ class EMailLaminas extends Email
 	 */
 	public function SetBody($sBody, $sMimeType = Mime::TYPE_HTML, $sCustomStyles = null)
 	{
-		$oBody = new Laminas\Mime\Message();
+		$oBody = new \Laminas\Mime\Message();
 		$aAdditionalParts = [];
 
 		if (($sMimeType === Mime::TYPE_HTML) && ($sCustomStyles !== null)) {
@@ -389,6 +400,7 @@ class EMailLaminas extends Email
 		$oNewPart = new Part($sBody);
 		$oNewPart->encoding = Mime::ENCODING_8BIT;
 		$oNewPart->type = $sMimeType;
+		$oNewPart->charset = 'UTF-8';
 		$oBody->addPart($oNewPart);
 
 		// Add additional images as new body parts

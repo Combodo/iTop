@@ -20,17 +20,18 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Relation:impacts/Description' => 'Konfigurációs elem működését befolyásolják',
-	'Relation:impacts/DownStream' => 'Hatás',
-	'Relation:impacts/DownStream+' => 'Konfigurációs elem működését befolyásolják',
-	'Relation:impacts/UpStream' => 'Függőségek',
-	'Relation:impacts/UpStream+' => 'Konfigurációs elemtől függnek',
+	'Relation:impacts/Description'    => 'Konfigurációs elem működését befolyásolják',
+	'Relation:impacts/DownStream'     => 'Hatás',
+	'Relation:impacts/DownStream+'    => 'Konfigurációs elem működését befolyásolják',
+	'Relation:impacts/UpStream'       => 'Függőségek',
+	'Relation:impacts/UpStream+'      => 'Konfigurációs elemtől függnek',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Konfigurációs elemtől függnek',
-	'Relation:depends on/DownStream' => 'Függőségek',
-	'Relation:depends on/UpStream' => 'Hatások',
-	'Relation:impacts/LoadData' => 'Adat betöltés',
-	'Relation:impacts/NoFilteredData' => 'kérjük, válassza ki az objektumokat a grafikus nézetben',
+	'Relation:depends on/DownStream'  => 'Függőségek',
+	'Relation:depends on/UpStream'    => 'Hatások',
+	'Relation:impacts/LoadData'       => 'Adat betöltés',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
+	'Relation:impacts/FilteredData'   => 'Filtered data~~',
 ));
 
 

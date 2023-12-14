@@ -1,26 +1,152 @@
 # PHP unitary tests
 
-## Where should I add my test?
-
-- Covers an iTop PHP class or method?
-  - Most likely in "unitary-tests".
-- Covers the consistency of some data through the app?
-  - Most likely in "integration-tests".
+Documentation on creating and maintaining tests in iTop.
 
 
-## Tests prerequisites
+Table of content:
+<!-- TOC -->
+* [Prerequisites](#prerequisites)
+* [Create an iTop PHPUnit test](#create-an-itop-phpunit-test)
+* [Tips: generic PHPUnit](#tips-generic-phpunit)
+* [Tips: iTop tests](#tips-itop-tests)
+* [Test performances](#test-performances)
+* [PHPUnit process isolation](#phpunit-process-isolation)
+<!-- TOC -->
 
-Install iTop with default setup options : 
+
+
+## Prerequisites
+
+### PHPUnit configuration file 
+A default file is located in `/tests/php-unit-tests/phpunit.xml.dist`
+
+If you need to customize it, copy it to `phpunit.xml` (not versioned). 
+
+### PHP configuration
+* PHPUnit configuration file
+  - `memory_limit`: as the tests are for the most part ran in the same process, memory usage may become an issue! A default value is set in default PHPUnit configuration XML file, don't hesitate to update it if needed
+* PHP CLI php.ini
+  - enable OpCache
+  - disable Xdebug (xdebug.mode=off) : huge performance improvements (between X2 and X3), and we can still debug using PHPStorm !
+
+### Dependencies
+Whereas iTop dependencies are bundled inside its repository, the tests dependencies are not, and must be added manually. To do so, run `composer install` in the `/tests/php-unit-tests` directory. 
+
+### iTop instance prerequisites to run its test suite
+Install iTop with default setup options :
 - Configuration Management options : everything checked
 - Service Management for Enterprises
 - Simple Ticket Management + Customer portal
 - Simple Change Management
 
 Plus :
--  Additional ITIL tickets : check Known Errors Management and FAQ
+-  Additional ITIL tickets : check "Known Errors Management and FAQ"
 
 
-## How do I make sure that my tests are efficient?
+
+
+
+## Create an iTop PHPUnit test
+
+### Where should I add my test?
+- Covers an iTop PHP class or method? => Most likely in the `unitary-tests` directory
+- Covers the consistency of some data through the app? => Most likely in `integration-tests` directory
+
+### iTop test parent classes
+iTop provides PHPUnit TestCase children that provides some helpers and setUp/tearDown overrides : 
+- `\Combodo\iTop\Test\UnitTest\ItopTestCase` : for the most simple iTop tests
+- `\Combodo\iTop\Test\UnitTest\ItopDataTestCase` : to get a started metamodel and have cleanup of CRUD operations on iTop objects (transactions by default)
+- `\Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase` : to test a non standard datamodel (available since iTop 2.7.9, 3.0.4, 3.1.0 N°6097)
+
+
+### Naming convention
+* to test `MyClass` class then create a `MyClassTest` class
+* to test `MyMethod` method, the corresponding test method should be named `testMyMethod`
+
+Source [PHPUnit Manual – Chapter 2. Writing Tests for PHPUnit](https://docs.phpunit.de/en/9.6/writing-tests-for-phpunit.html#writing-tests-for-phpunit)
+
+
+
+
+
+
+## Tips: generic PHPUnit
+
+### Disable a test
+```php
+$this->markTestSkipped('explanation');
+```
+
+### Test an exception
+Just before calling the code throwing the exception, call `\PHPUnit\Framework\TestCase::expectException`. You might also use `expectExceptionMessage` and/or `expectExceptionMessageMatches`.
+
+Example : 
+
+```php
+		// Try to delete the tag, must complain !
+		$this->expectException(DeleteException::class);
+		$this->expectExceptionMatches('/'.$this->GetKey().'/');
+		$oTagData->DBDelete();
+```
+
+Warning : when the condition is met the test is finished and following code will be ignored !
+
+Another way to do is using try/catch blocks, for example : 
+```php
+        $validator = new FormValidator();
+ 
+        try {
+            $validator->validate(
+                new DateTimeImmutable('2020-01-01'),
+                new DateTimeImmutable('1999-01-01'),
+                -3,
+                ''
+            );
+            $this->fail('FormValidationException was not thrown');
+	} catch (AssertionFailedError $e) {
+		throw $e; // handles the fail() call just above
+        } catch (FormValidationException $e) {
+            $this->assertSame(
+                [
+                    'End must be after start',
+                    'The new id must be greater than 0',
+                    'Description can not be empty',
+                ],
+                $e->getErrors()
+            );
+        }
+```
+
+
+
+
+
+## Tips: iTop tests
+
+### Load an iTop class which is outside the autoloader
+When running a test extending ItopDataTestCase you'll get all of the iTop classes loaded (Composer autoloader + iTop autoloader including installed modules)
+
+For ItopTestCase files, you may need to load specific iTop classes that aren't part of the Composer autoloader. If so, since N°5608 (introduced in iTop 2.7.9, 3.0.3, 3.1.0-1) you can use :
+- ItopTestCase::RequireOnceItopFile
+- ItopTestCase::RequireOnceUnitTestFile
+
+### Add a User context
+Use `UserRights::Login()`
+
+
+
+
+
+
+## Test performances
+
+### Measure the time spent in a test
+
+Simply cut'n paste the following line at several places within the test function:
+
+```php
+if (isset($fStarted)) {echo 'L'.__LINE__.': '.round(microtime(true) - $fStarted, 3)."\n";} $fStarted = microtime(true);
+```
 
 ### Derive from the relevant test class
 
@@ -60,26 +186,12 @@ See also `@beforeClass` and `@afterClass` to handle cleanup.
 
 If you can't, then ok you will have to isolate it!
 
-## Tips
-### Memory limit
-
-As the tests are run in the same process, memory usage
-may become an issue as soon as tests are all executed at once.
-
-Fix that in the XML configuration in the PHP section
-```xml
-<ini name="memory_limit" value="512M"/>
-```
 
 
-### Measure the time spent in a test
 
-Simply cut'n paste the following line at several places within the test function:
 
-```php
-if (isset($fStarted)) {echo 'L'.__LINE__.': '.round(microtime(true) - $fStarted, 3)."\n";} $fStarted = microtime(true);
-```
 
+## PHPUnit process isolation
 
 ### Understand tests interactions
 
@@ -128,14 +240,15 @@ the exact same effect as `@runTestsInSeparateProcesses`.
 Note : this option is documented only in the [attributes part of the documentation](https://docs.phpunit.de/en/10.0/attributes.html).
 
 ### Traps
-#### When it is a matter of stars
+
+#### Doc block comment format : when it is a matter of stars
 ```php
 /*
  * @runTestsInSeparateProcesses
 ```
 This won't work because the comment MUST start with `/**` (two stars) to be considerer by PHPUnit.
 
-#### SetupBeforeClass called more often than expected
+#### SetupBeforeClass called more often than expected when running in separate processes
 
 `setupBeforeClass` is called once for the class **in a given process**.
 

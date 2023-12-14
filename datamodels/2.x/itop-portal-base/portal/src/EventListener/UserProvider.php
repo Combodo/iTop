@@ -36,14 +36,12 @@ use UserRights;
  * @package Combodo\iTop\Portal\EventListener
  * @since 2.7.0
  */
-class UserProvider implements ContainerAwareInterface
+class UserProvider
 {
 	/** @var \ModuleDesign $oModuleDesign */
 	private $oModuleDesign;
 	/** @var string $sPortalId */
 	private $sPortalId;
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $container */
-	private $oContainer;
 	/** @var \User $oUser */
 	private $oUser;
 	/** @var array $aAllowedPortals */
@@ -133,11 +131,5 @@ class UserProvider implements ContainerAwareInterface
 		return $this->aAllowedPortals;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function setContainer(ContainerInterface $oContainer = null)
-	{
-		$this->oContainer = $oContainer;
-	}
+
 }

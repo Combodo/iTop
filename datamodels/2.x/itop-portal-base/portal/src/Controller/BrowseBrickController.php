@@ -24,8 +24,11 @@ use AttributeExternalKey;
 use AttributeLinkedSetIndirect;
 use BinaryExpression;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
+use Combodo\iTop\Portal\Brick\BrickCollection;
 use Combodo\iTop\Portal\Brick\BrowseBrick;
+use Combodo\iTop\Portal\Helper\BrickControllerHelper;
 use Combodo\iTop\Portal\Helper\BrowseBrickHelper;
+use Combodo\iTop\Portal\Helper\RequestManipulatorHelper;
 use DBObjectSearch;
 use DBObjectSet;
 use DBSearch;
@@ -48,6 +51,28 @@ use VariableExpression;
  */
 class BrowseBrickController extends BrickController
 {
+
+	/**
+	 * Constructor.
+	 *
+	 * @param \Combodo\iTop\Portal\Helper\BrowseBrickHelper $oBrowseBrickHelper
+	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulatorHelper
+	 * @param \Combodo\iTop\Portal\Helper\BrickControllerHelper $oBrickControllerHelper
+	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
+	 *
+	 * @since 3.2.0 N°6933
+	 */
+	public function __construct(
+		protected BrowseBrickHelper $oBrowseBrickHelper,
+		protected RequestManipulatorHelper $oRequestManipulatorHelper,
+		protected BrickControllerHelper $oBrickControllerHelper,
+		protected BrickCollection $oBrickCollection
+	)
+	{
+
+	}
+
+
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
 	 * @param string                                    $sBrickId
@@ -69,15 +94,8 @@ class BrowseBrickController extends BrickController
 	{
 		$sPortalId = $this->getParameter('combodo.portal.instance.id');
 
-		/** @var \Combodo\iTop\Portal\Helper\BrowseBrickHelper $oBrowseBrickHelper */
-		$oBrowseBrickHelper = $this->get('browse_brick');
-		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
-		$oRequestManipulator = $this->get('request_manipulator');
-		/** @var \Combodo\iTop\Portal\Helper\BrickControllerHelper */
-		$oBrickControllerHelper = $this->get('brick_controller_helper');
-
 		/** @var \Combodo\iTop\Portal\Brick\BrowseBrick $oBrick */
-		$oBrick = $this->get('brick_collection')->getBrickById($sBrickId);
+		$oBrick = $this->oBrickCollection->getBrickById($sBrickId);
 
 		// Getting available browse modes
 		$aBrowseModes = $oBrick->GetAvailablesBrowseModes();
@@ -85,10 +103,10 @@ class BrowseBrickController extends BrickController
 		// Getting current browse mode (First from router parameter, then default brick value)
 		$sBrowseMode = (!empty($sBrowseMode)) ? $sBrowseMode : $oBrick->GetDefaultBrowseMode();
 		// Getting current dataloading mode (First from router parameter, then query parameter, then default brick value)
-		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : $oRequestManipulator->ReadParam('sDataLoading',
+		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : $this->oRequestManipulatorHelper->ReadParam('sDataLoading',
 			$oBrick->GetDataLoading());
 		// Getting search value
-		$sRawSearchValue = $oRequestManipulator->ReadParam('sSearchValue', '');
+		$sRawSearchValue = $this->oRequestManipulatorHelper->ReadParam('sSearchValue', '');
 		$sSearchValue = html_entity_decode($sRawSearchValue);
 		if (strlen($sSearchValue) > 0)
 		{
@@ -98,7 +116,7 @@ class BrowseBrickController extends BrickController
 		$aData = array();
 		$aLevelsProperties = array();
 		$aLevelsClasses = array();
-		$oBrowseBrickHelper->TreeToFlatLevelsProperties($oBrick->GetLevels(), $aLevelsProperties);
+		$this->oBrowseBrickHelper->TreeToFlatLevelsProperties($oBrick->GetLevels(), $aLevelsProperties);
 
 		// Consistency checks
 		if (!in_array($sBrowseMode, array_keys($aBrowseModes)))
@@ -298,8 +316,8 @@ class BrowseBrickController extends BrickController
 			{
 				case BrowseBrick::ENUM_BROWSE_MODE_LIST:
 					// Retrieving parameters
-					$iPageNumber = (int)$oRequestManipulator->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
-					$iListLength = (int)$oRequestManipulator->ReadParam('iListLength', BrowseBrick::DEFAULT_LIST_LENGTH,
+					$iPageNumber = (int)$this->oRequestManipulatorHelper->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
+					$iListLength = (int)$this->oRequestManipulatorHelper->ReadParam('iListLength', BrowseBrick::DEFAULT_LIST_LENGTH,
 						FILTER_SANITIZE_NUMBER_INT);
 
 					// Getting total records number
@@ -315,8 +333,8 @@ class BrowseBrickController extends BrickController
 				case BrowseBrick::ENUM_BROWSE_MODE_TREE:
 				case BrowseBrick::ENUM_BROWSE_MODE_MOSAIC:
 					// Retrieving parameters
-					$sLevelAlias = $oRequestManipulator->ReadParam('sLevelAlias', '');
-					$sNodeId = $oRequestManipulator->ReadParam('sNodeId', '');
+					$sLevelAlias = $this->oRequestManipulatorHelper->ReadParam('sLevelAlias', '');
+					$sNodeId = $this->oRequestManipulatorHelper->ReadParam('sNodeId', '');
 
 					// If no values for those parameters, we might be loading page in lazy mode for the first time, therefore the URL doesn't have those information.
 					if (empty($sLevelAlias))
@@ -415,7 +433,7 @@ class BrowseBrickController extends BrickController
 		$oSet->OptimizeColumnLoad($aColumnAttrs);
 
 		// Setting specified column sort, setting default datamodel one otherwise
-		$aSortedParams = $oBrickControllerHelper->ExtractSortParams();
+		$aSortedParams = $this->oBrickControllerHelper->ExtractSortParams();
 		if (!empty($aSortedParams))
 		{
 			$oSet->SetOrderBy($aSortedParams);
@@ -432,12 +450,12 @@ class BrowseBrickController extends BrickController
 			{
 				case BrowseBrick::ENUM_BROWSE_MODE_TREE:
 				case BrowseBrick::ENUM_BROWSE_MODE_MOSAIC:
-					$oBrowseBrickHelper->AddToTreeItems($aItems, $aCurrentRow, $aLevelsProperties, null);
+					$this->oBrowseBrickHelper->AddToTreeItems($aItems, $aCurrentRow, $aLevelsProperties, null);
 					break;
 
 				case BrowseBrick::ENUM_BROWSE_MODE_LIST:
 				default:
-					$aItems[] = $oBrowseBrickHelper->AddToFlatItems($aCurrentRow, $aLevelsProperties);
+					$aItems[] = $this->oBrowseBrickHelper->AddToFlatItems($aCurrentRow, $aLevelsProperties);
 					break;
 			}
 		}

@@ -135,7 +135,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s mentve',
 	'Brick:Portal:Object:Search:Regular:Title' => '%1$s kiválasztása (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => '%1$s kiválasztása (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Objektum hivatkozás másolása',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Másolva'
 ));
