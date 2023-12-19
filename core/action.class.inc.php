@@ -201,11 +201,28 @@ abstract class ActionNotification extends Action
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'trigger_list'));
 		// - Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'description', 'status'));
+		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+
 		// Search criteria
 		// - Criteria of the std search form
 //		MetaModel::Init_SetZListItems('standard_search', array('name'));
 		// - Default criteria of the search form
 //		MetaModel::Init_SetZListItems('default_search', array('name'));
+	}
+	
+	public function SetNotificationLanguage($sLanguage = null, $sLanguageCode = null){
+		$sPreviousLanguage = Dict::GetUserLanguage();
+		$aPreviousPluginProperties = ApplicationContext::GetPluginProperties('QueryLocalizerPlugin');
+		$sLanguage = $sLanguage ?? $this->Get('language');
+		$sLanguageCode = $sLanguageCode ?? $sLanguage;
+		if (!utils::IsNullOrEmptyString($sLanguage)) {
+			// If a language is specified for this action, force this language
+			// when rendering all placeholders inside this message
+			Dict::SetUserLanguage($sLanguage);
+			AttributeDateTime::LoadFormatFromConfig();
+			ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', $sLanguageCode);
+		}
+		return [$sPreviousLanguage, $aPreviousPluginProperties];
 	}
 }
 
@@ -273,7 +290,6 @@ class ActionEmail extends ActionNotification
 		MetaModel::Init_AddAttribute(new AttributeTemplateString("subject", array("allowed_values" => null, "sql" => "subject", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeTemplateHTML("body", array("allowed_values" => null, "sql" => "body", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("importance", array("allowed_values" => new ValueSetEnum('low,normal,high'), "sql" => "importance", "default_value" => 'normal', "is_null_allowed" => false, "depends_on" => array())));
-		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeBlob("html_template", array("is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
 		MetaModel::Init_AddAttribute(new AttributeEnum("ignore_notify", array("allowed_values" => new ValueSetEnum('yes,no'), "sql" => "ignore_notify", "default_value" => 'yes', "is_null_allowed" => false, "depends_on" => array())));
 		
@@ -561,15 +577,7 @@ class ActionEmail extends ActionNotification
 			'attachments' => [],
 		];
 		$sPreviousUrlMaker = ApplicationContext::SetUrlMakerClass();
-		$sPreviousLanguage = Dict::GetUserLanguage();
-		$aPreviousPluginProperties = ApplicationContext::GetPluginProperties('QueryLocalizerPlugin');
-		if ($this->Get('language') !== '') {
-			// If a language is specified for this action, force this language
-			// when rendering all placeholders inside this message
-			Dict::SetUserLanguage($this->Get('language'));
-			AttributeDateTime::LoadFormatFromConfig();
-			ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', $this->Get('language'));
-		}
+		[$sPreviousLanguage, $aPreviousPluginProperties] = $this->SetNotificationLanguage();
 
 		try
 		{
@@ -601,9 +609,7 @@ class ActionEmail extends ActionNotification
 		}
 		finally {
 			ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
-			Dict::SetUserLanguage($sPreviousLanguage);
-			AttributeDateTime::LoadFormatFromConfig();
-			ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', $aPreviousPluginProperties['language_code'] ?? null);
+			$this->SetNotificationLanguage($sPreviousLanguage, $aPreviousPluginProperties['language_code'] ?? null);
 		}
 		
 		if (!is_null($oLog)) {
