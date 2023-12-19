@@ -23,6 +23,7 @@ use Combodo\iTop\FormSDK\Symfony\Type\Compound\FormObjectType;
 use Combodo\iTop\FormSDK\Field\Description\FormFieldDescription;
 use Combodo\iTop\FormSDK\Field\Description\FormFieldTypeEnumeration;
 use LogAPI;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -61,6 +62,13 @@ class SymfonyBridge
 				return [
 					'path' => $oFormDescription->GetPath(),
 					'type' => TextType::class,
+					'options' => $oFormDescription->GetOptions()
+				];
+
+			case FormFieldTypeEnumeration::SELECT:
+				return [
+					'path' => $oFormDescription->GetPath(),
+					'type' => ChoiceType::class,
 					'options' => $oFormDescription->GetOptions()
 				];
 

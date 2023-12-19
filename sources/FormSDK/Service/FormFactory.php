@@ -75,6 +75,23 @@ class FormFactory
 	}
 
 	/**
+	 * Add select.
+	 *
+	 * @param string $sKey
+	 * @param array $aOptions
+	 * @param mixed $oData
+	 *
+	 * @return $this
+	 */
+	public function AddSelect(string $sKey, array $aOptions, mixed $oData) : FormFactory
+	{
+		$this->aDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::SELECT, $aOptions);
+		$this->aData[$sKey] = $oData;
+
+		return $this;
+	}
+
+	/**
 	 * @return array{descriptions:array, data:array}
 	 */
 	public function GetFormDescriptionsAndData() : array

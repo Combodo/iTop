@@ -3,7 +3,9 @@
 namespace Combodo\iTop\FormSDK\Controller;
 
 use Combodo\iTop\Controller\AbstractAppController;
+use Combodo\iTop\FormSDK\Helper\SelectHelper;
 use Combodo\iTop\FormSDK\Service\FormManager;
+use Dict;
 use Exception;
 use MetaModel;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,6 +52,7 @@ class TestController extends AbstractAppController
 		// others data
 		$oFormFactory->AddText('data1', ['label' => 'Ma ville'], 'Autun');
 		$oFormFactory->AddText('data2', ['label' => 'Pays'], 'FRANCE');
+		$oFormFactory->AddSelect('data3', ['label' => 'Language', 'choices' => SelectHelper::GetApplicationLanguages()], 'FR FR');
 
 		// get the form
 		$oForm = $oFormFactory->GetForm();
@@ -70,7 +73,7 @@ class TestController extends AbstractAppController
 
 		return $this->render('formSDK/form.html.twig', [
 			'form' => $oFormFactory->GetForm(),
-			'theme' => 'formSDK/theme/portal.html.twig'
+			'theme' => 'formSDK/themes/portal.html.twig'
 		]);
 
 	}

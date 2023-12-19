@@ -402,6 +402,7 @@ return array(
     'Combodo\\iTop\\FormSDK\\Controller\\TestController' => $baseDir . '/sources/FormSDK/Controller/TestController.php',
     'Combodo\\iTop\\FormSDK\\Field\\Description\\FormFieldDescription' => $baseDir . '/sources/FormSDK/Field/Description/FormFieldDescription.php',
     'Combodo\\iTop\\FormSDK\\Field\\Description\\FormFieldTypeEnumeration' => $baseDir . '/sources/FormSDK/Field/Description/FormFieldTypeEnumeration.php',
+    'Combodo\\iTop\\FormSDK\\Helper\\SelectHelper' => $baseDir . '/sources/FormSDK/Helper/SelectHelper.php',
     'Combodo\\iTop\\FormSDK\\Service\\FactoryPlugin\\FormFactoryObjectPlugin' => $baseDir . '/sources/FormSDK/Service/FactoryPlugin/FormFactoryObjectPlugin.php',
     'Combodo\\iTop\\FormSDK\\Service\\FactoryPlugin\\FormFactoryPluginInterface' => $baseDir . '/sources/FormSDK/Service/FactoryPlugin/FormFactoryPluginInterface.php',
     'Combodo\\iTop\\FormSDK\\Service\\FormFactory' => $baseDir . '/sources/FormSDK/Service/FormFactory.php',

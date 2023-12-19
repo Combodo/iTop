@@ -801,6 +801,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\FormSDK\\Controller\\TestController' => __DIR__ . '/../..' . '/sources/FormSDK/Controller/TestController.php',
         'Combodo\\iTop\\FormSDK\\Field\\Description\\FormFieldDescription' => __DIR__ . '/../..' . '/sources/FormSDK/Field/Description/FormFieldDescription.php',
         'Combodo\\iTop\\FormSDK\\Field\\Description\\FormFieldTypeEnumeration' => __DIR__ . '/../..' . '/sources/FormSDK/Field/Description/FormFieldTypeEnumeration.php',
+        'Combodo\\iTop\\FormSDK\\Helper\\SelectHelper' => __DIR__ . '/../..' . '/sources/FormSDK/Helper/SelectHelper.php',
         'Combodo\\iTop\\FormSDK\\Service\\FactoryPlugin\\FormFactoryObjectPlugin' => __DIR__ . '/../..' . '/sources/FormSDK/Service/FactoryPlugin/FormFactoryObjectPlugin.php',
         'Combodo\\iTop\\FormSDK\\Service\\FactoryPlugin\\FormFactoryPluginInterface' => __DIR__ . '/../..' . '/sources/FormSDK/Service/FactoryPlugin/FormFactoryPluginInterface.php',
         'Combodo\\iTop\\FormSDK\\Service\\FormFactory' => __DIR__ . '/../..' . '/sources/FormSDK/Service/FormFactory.php',
