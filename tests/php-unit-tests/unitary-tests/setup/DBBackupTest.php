@@ -99,17 +99,20 @@ class DBBackupTest extends ItopTestCase
 
 	public function GetMysqlCliPortAndTransportOptionsProvider()
 	{
+		$sPortToTest = 333306;
+		$sEscapedPortValue = \DBBackup::EscapeShellArg($sPortToTest);
+
 		return [
 			'Localhost no port' => ['localhost', null, ''],
-			'Localhost with port' => ['localhost', 3306, ' --port="3306" --protocol=tcp'],
+			'Localhost with port' => ['localhost', $sPortToTest, ' --port=' . $sEscapedPortValue . ' --protocol=tcp'],
 			'127.0.0.1 no port' => ['127.0.0.1', null, ''],
-			'127.0.0.1 with port' => ['127.0.0.1', 3306, ' --port="3306"'],
+			'127.0.0.1 with port' => ['127.0.0.1', $sPortToTest, ' --port=' . $sEscapedPortValue],
 			'IP no port' => ['192.168.1.15', null, ''],
-			'IP with port' => ['192.168.1.15', 3306, ' --port="3306"'],
+			'IP with port' => ['192.168.1.15', $sPortToTest, ' --port=' . $sEscapedPortValue],
 			'DNS no port' => ['dbserver.mycompany.com', null, ''],
-			'DNS with port' => ['dbserver.mycompany.com', 3306, ' --port="3306"'],
+			'DNS with port' => ['dbserver.mycompany.com', $sPortToTest, ' --port=' . $sEscapedPortValue],
 			'Windows name no port' => ['dbserver', null, ''],
-			'Windows name with port' => ['dbserver', 3306, ' --port="3306"'],
+			'Windows name with port' => ['dbserver', $sPortToTest, ' --port=' . $sEscapedPortValue],
 		];
 	}
 }
