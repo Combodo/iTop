@@ -522,11 +522,7 @@ EOF;
 	}
 
 	/**
-	 * Define if we should force a transport option
-	 *
-	 * @param string $sHost
-	 * @param $iPort
-	 * @return string .
+	 * @return string CLI options for port and protocol
 	 *
 	 * @since 2.7.9 3.0.4 3.1.1 N°6123 method creation
 	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889 rename method to return both port and transport options. Keep default socket connexion if we are on localhost with no port
@@ -534,7 +530,7 @@ EOF;
 	 * @link https://bugs.mysql.com/bug.php?id=55796 Since 10.6.1 the MariaDB CLI tools will use the `--port` option on host=localhost
 	 * @link https://jira.mariadb.org/browse/MDEV-14974 MySQL CLI tools will ignore `--port` option on localhost
 	 */
-	private static function GetMysqlCliPortAndTransportOptions(string $sHost, $iPort)
+	private static function GetMysqlCliPortAndTransportOptions(string $sHost, ?int $iPort): string
 	{
 		if (strtolower($sHost) === 'localhost') {
 			/**
