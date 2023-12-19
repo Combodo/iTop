@@ -536,16 +536,30 @@ EOF;
 	 */
 	private static function GetMysqlCliPortAndTransportOptions(string $sHost, $iPort)
 	{
+		$sTransportOptions = '';
 		$sPortOption = self::GetMysqliCliSingleOption('port', $iPort);
 
-		$sTransportOptions = '';
-		/** N°6123 As we're using a --port option, if we use localhost as host,
-		 * MariaDB > 10.6 will implicitly change its protocol from socket to tcp and throws a warning **/
-		if($sHost === 'localhost' && !empty($iPort)){
+		if (strtolower($sHost) === 'localhost') {
+			/**
+			 * Since MariaDB 10.6.1 if we have host=localhost, and only the --port option we will get a warning
+			 * To avoid this warning if we want to set --port option we must set --protocol=tcp
+			 **/
+			if (is_null($iPort)) {
+				// no port specified => no option to return, this will mean using socket protocol (unix socket)
+				return '';
+			}
+
+			$sPortOption = self::GetMysqliCliSingleOption('port', $iPort);
 			$sTransportOptions = ' --protocol=tcp';
+			return $sPortOption . $sTransportOptions;
 		}
 
-		return $sPortOption . $sTransportOptions;
+		if (is_null($iPort)) {
+			$iPort = CMDBSource::MYSQL_DEFAULT_PORT;
+		}
+		$sPortOption = self::GetMysqliCliSingleOption('port', $iPort);
+
+		return $sPortOption;
 	}
 
 	/**

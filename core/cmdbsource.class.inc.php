@@ -135,6 +135,11 @@ class CMDBSource
 	const ENUM_DB_VENDOR_PERCONA = 'Percona';
 
 	/**
+	 * @since 2.7.10 3.0.4 3.1.2 3.0.2 N°6889 constant creation
+	 */
+	const MYSQL_DEFAULT_PORT = 3306;
+
+	/**
 	 * Error: 1205 SQLSTATE: HY000 (ER_LOCK_WAIT_TIMEOUT)
 	 *   Message: Lock wait timeout exceeded; try restarting transaction
 	 */

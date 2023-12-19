@@ -87,32 +87,38 @@ class DBBackupTest extends ItopTestCase
 
 	/**
 	 * @dataProvider GetMysqlCliPortAndTransportOptionsProvider
-	 *
 	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 test for N°6123 and N°6889
 	 */
-	public function testGetMysqlCliPortAndTransportOptions(string $sHost, ?int $iPort, string $sExpectedCliOptions)
+	public function testGetMysqlCliPortAndTransportOptions(string $sDbHost, ?int $iPort, ?int $iExpectedPortValue, string $sExpectedProtocolCliOption)
 	{
-		$sActualCliOptions = $this->InvokeNonPublicStaticMethod(DBBackup::class, 'GetMysqlCliPortAndTransportOptions', [$sHost, $iPort]);
+		if (is_null($iExpectedPortValue)) {
+			$sExpectedPortCliOption = '';
+		} else {
+			$sEscapedPortValue = \DBBackup::EscapeShellArg($iExpectedPortValue);
+			$sExpectedPortCliOption = ' --port=' . $sEscapedPortValue;
+		}
 
-		$this->assertEquals($sExpectedCliOptions, $sActualCliOptions);
+		$sActualCliOptions = $this->InvokeNonPublicStaticMethod(DBBackup::class, 'GetMysqlCliPortAndTransportOptions', [$sDbHost, $iPort]);
+		$this->assertEquals($sExpectedPortCliOption . $sExpectedProtocolCliOption, $sActualCliOptions);
 	}
 
 	public function GetMysqlCliPortAndTransportOptionsProvider()
 	{
-		$sPortToTest = 333306;
-		$sEscapedPortValue = \DBBackup::EscapeShellArg($sPortToTest);
+		$iTestPort = 333306;
+		$iDefaultPort = 3306; // cannot access \CMDBSource::MYSQL_DEFAULT_PORT in dataprovider :(
 
 		return [
-			'Localhost no port' => ['localhost', null, ''],
-			'Localhost with port' => ['localhost', $sPortToTest, ' --port=' . $sEscapedPortValue . ' --protocol=tcp'],
-			'127.0.0.1 no port' => ['127.0.0.1', null, ''],
-			'127.0.0.1 with port' => ['127.0.0.1', $sPortToTest, ' --port=' . $sEscapedPortValue],
-			'IP no port' => ['192.168.1.15', null, ''],
-			'IP with port' => ['192.168.1.15', $sPortToTest, ' --port=' . $sEscapedPortValue],
-			'DNS no port' => ['dbserver.mycompany.com', null, ''],
-			'DNS with port' => ['dbserver.mycompany.com', $sPortToTest, ' --port=' . $sEscapedPortValue],
-			'Windows name no port' => ['dbserver', null, ''],
-			'Windows name with port' => ['dbserver', $sPortToTest, ' --port=' . $sEscapedPortValue],
+			'Localhost no port' => ['localhost', null, null, ''],
+			'Localhost with port' => ['localhost', $iTestPort, $iTestPort, ' --protocol=tcp'],
+			'127.0.0.1 no port' => ['127.0.0.1', null, $iDefaultPort, ''],
+			'127.0.0.1 with port' => ['127.0.0.1', $iTestPort, $iTestPort, ''],
+			'IP no port' => ['192.168.1.15', null, $iDefaultPort, ''],
+			'IP with port' => ['192.168.1.15', $iTestPort, $iTestPort, ''],
+			'DNS no port' => ['dbserver.mycompany.com', null, $iDefaultPort, ''],
+			'DNS with port' => ['dbserver.mycompany.com', $iTestPort, $iTestPort, ''],
+			'Windows name no port' => ['dbserver', null, $iDefaultPort, ''],
+			'Windows name with port' => ['dbserver', $iTestPort, $iTestPort, ''],
 		];
 	}
+
 }
