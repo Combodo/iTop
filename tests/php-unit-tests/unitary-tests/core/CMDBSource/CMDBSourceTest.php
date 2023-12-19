@@ -138,7 +138,7 @@ class CMDBSourceTest extends ItopTestCase
 
 	/**
 	 * @dataProvider InitServerAndPortProvider
-	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889 method creation to kep track of the behavior change (port will return null)
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889 method creation to keep track of the behavior change (port will return null)
 	 */
 	public function testInitServerAndPort(string $sDbHost, string $sExpectedServer, ?int $iExpectedPort)
 	{

@@ -326,7 +326,7 @@ class CMDBSource
 	 * @param string $sServer server variable to update
 	 * @param int|null $iPort port variable to update, will return null if nothing is specified in $sDbHost
 	 *
-	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889 will return null in $iPort if port isn't present in $sDbHost. Use {@see MYSQL_DEFAULT_PORT} if needed
 	 *
 	 * @link http://php.net/manual/en/mysqli.persistconns.php documentation for the "p:" prefix (persistent connexion)
 	 */
