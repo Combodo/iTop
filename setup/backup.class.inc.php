@@ -536,9 +536,6 @@ EOF;
 	 */
 	private static function GetMysqlCliPortAndTransportOptions(string $sHost, $iPort)
 	{
-		$sTransportOptions = '';
-		$sPortOption = self::GetMysqliCliSingleOption('port', $iPort);
-
 		if (strtolower($sHost) === 'localhost') {
 			/**
 			 * Since MariaDB 10.6.1 if we have host=localhost, and only the --port option we will get a warning
