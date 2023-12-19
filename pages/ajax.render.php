@@ -783,9 +783,11 @@ try
 			if (!empty($sClass) && ($sClass != 'InlineImage') && !empty($id) && !empty($sField))
 			{
 				$oPage = new DownloadPage('');
+
 				// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 				// so we're resetting its value ! (see N°3416)
-				$oPage->add_xframe_options('');
+				$oPage->add_http_headers('');
+
 				$iCacheSec = (int)utils::ReadParam('cache', 0);
 				$oPage->set_cache($iCacheSec);
 
