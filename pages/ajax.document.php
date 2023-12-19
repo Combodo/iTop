@@ -62,7 +62,7 @@ try
 					$oPage->set_cache($iCacheSec);
 					// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 					// so we're resetting its value ! (see N°3416)
-					$oPage->add_xframe_options('');
+					$oPage->add_http_headers('');
 				}
 			}
 			break;
@@ -81,7 +81,7 @@ try
 
 				// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 				// so we're resetting its value ! (see N°3416)
-				$oPage->add_xframe_options('');
+				$oPage->add_http_headers('');
 
 				$oPage->add_header("Last-Modified: Wed, 15 Jun 2016 13:21:15 GMT"); // An arbitrary date in the past is ok
 			}
@@ -94,7 +94,7 @@ try
 
 			// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 			// so we're resetting its value ! (see N°3416)
-			$oPage->add_xframe_options('');
+			$oPage->add_http_headers('');
 
 			$oPage->add(file_get_contents(Utils::GetCachePath().$sSignature.'.js'));
 			break;

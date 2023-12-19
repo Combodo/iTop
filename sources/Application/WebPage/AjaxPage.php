@@ -46,7 +46,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 		parent::__construct($s_title, $bPrintable);
 		//$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->no_cache();
-		$this->add_xframe_options();
+		$this->add_http_headers();
 		$this->m_oTabs = new TabManager();
 		$this->sContentType = 'text/html';
 		$this->sContentDisposition = 'inline';
