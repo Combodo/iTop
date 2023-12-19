@@ -524,12 +524,13 @@ EOF;
 
 	/**
 	 * Define if we should force a transport option
-	 * 
-	 * @param string $sHost
 	 *
+	 * @param string $sHost
+	 * @param $iPort
 	 * @return string .
-
-	 * @since 2.7.9 3.0.4 3.1.1 N°6123
+	 *
+	 * @since 2.7.9 3.0.4 3.1.1 N°6123 method creation
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889 keep default socket connexion if we are on localhost with no port
 	 */
 	public static function GetMysqlCliTransportOption(string $sHost, $iPort)
 	{

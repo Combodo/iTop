@@ -319,7 +319,9 @@ class CMDBSource
 	/**
 	 * @param string $sDbHost initial value ("p:domain:port" syntax)
 	 * @param string $sServer server variable to update
-	 * @param int|null $iPort port variable to update
+	 * @param int|null $iPort port variable to update, will return null if nothing is specified in $sDbHost
+	 *
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889
 	 */
 	public static function InitServerAndPort($sDbHost, &$sServer, &$iPort)
 	{
