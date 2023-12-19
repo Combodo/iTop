@@ -135,4 +135,37 @@ class CMDBSourceTest extends ItopTestCase
 		$bIsTlsCnx = $this->InvokeNonPublicStaticMethod(CMDBSource::class, 'IsOpenedDbConnectionUsingTls',[$oMysqli]);
 		$this->assertFalse($bIsTlsCnx);
 	}
+
+	/**
+	 * @dataProvider InitServerAndPortProvider
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889 method creation to kep track of the behavior change (port will return null)
+	 */
+	public function testInitServerAndPort(string $sDbHost, string $sExpectedServer, ?int $iExpectedPort)
+	{
+		$sActualServer = null;
+		$iActualPort = null;
+		CMDBSource::InitServerAndPort($sDbHost, $sActualServer, $iActualPort);
+
+		$this->assertNotNull($sActualServer);
+		$this->assertEquals($sExpectedServer, $sActualServer);
+		$this->assertEquals($iExpectedPort, $iActualPort);
+	}
+
+	public function InitServerAndPortProvider()
+	{
+		return [
+			'localhost no port' => ['localhost', 'localhost', null],
+			'localhost with port' => ['localhost:333306', 'localhost', 333306],
+			'persistent localhost no port' => ['p:localhost', 'p:localhost', null],
+			'persistent localhost with port' => ['p:localhost:333306', 'p:localhost', 333306],
+			'ip no port' => ['192.168.1.10', '192.168.1.10', null],
+			'ip with port' => ['192.168.1.10:333306', '192.168.1.10', 333306],
+			'persistent ip no port' => ['p:192.168.1.10', 'p:192.168.1.10', null],
+			'persistent ip with port' => ['p:192.168.1.10:333306', 'p:192.168.1.10', 333306],
+			'domain no port' => ['dbserver.mycompany.com', 'dbserver.mycompany.com', null],
+			'domain with port' => ['dbserver.mycompany.com:333306', 'dbserver.mycompany.com', 333306],
+			'persistent domain no port' => ['p:dbserver.mycompany.com', 'p:dbserver.mycompany.com', null],
+			'persistent domain with port' => ['p:dbserver.mycompany.com:333306', 'p:dbserver.mycompany.com', 333306],
+		];
+	}
 }

@@ -327,15 +327,16 @@ class CMDBSource
 	 * @param int|null $iPort port variable to update, will return null if nothing is specified in $sDbHost
 	 *
 	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889
+	 *
+	 * @link http://php.net/manual/en/mysqli.persistconns.php documentation for the "p:" prefix (persistent connexion)
 	 */
 	public static function InitServerAndPort($sDbHost, &$sServer, &$iPort)
 	{
 		$aConnectInfo = explode(':', $sDbHost);
 
 		$bUsePersistentConnection = false;
-		if (strcasecmp($aConnectInfo[0], 'p') == 0)
+		if (strcasecmp($aConnectInfo[0], 'p') === 0)
 		{
-			// we might have "p:" prefix to use persistent connections (see http://php.net/manual/en/mysqli.persistconns.php)
 			$bUsePersistentConnection = true;
 			$sServer = $aConnectInfo[0].':'.$aConnectInfo[1];
 		}
