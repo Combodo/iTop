@@ -86,29 +86,30 @@ class DBBackupTest extends ItopTestCase
 	}
 
 	/**
-	 *  Host is localhost, we should be forced into tcp
+	 * @dataProvider GetMysqlCliPortAndTransportOptionsProvider
 	 *
-	 * @return void
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 test for N°6123 and N°6889
 	 */
-	public function testGetMysqlCliTransportOptionWithLocalhost()
+	public function testGetMysqlCliPortAndTransportOptions(string $sHost, ?int $iPort, string $sExpectedCliOptions)
 	{
-		$sHost= 'localhost';
-		$sTransport = DBBackup::GetMysqlCliTransportOption($sHost);
+		$sActualCliOptions = $this->InvokeNonPublicStaticMethod(DBBackup::class, 'GetMysqlCliPortAndTransportOptions', [$sHost, $iPort]);
 
-		$this->assertStringStartsWith('--protocol=tcp', $sTransport);
-		$this->assertStringEndsWith('--protocol=tcp', $sTransport);
+		$this->assertEquals($sExpectedCliOptions, $sActualCliOptions);
 	}
 
-	/**
-	 * Host is not localhost, we shouldn't be forced into tcp
-	 *
-	 * @return void
-	 */
-	public function testGetMysqlCliTransportOptionWithoutLocalhost()
+	public function GetMysqlCliPortAndTransportOptionsProvider()
 	{
-		$sHost= '127.0.0.1';
-		$sTransport = DBBackup::GetMysqlCliTransportOption($sHost);
-
-		$this->assertEmpty($sTransport);
+		return [
+			'Localhost no port' => ['localhost', null, ''],
+			'Localhost with port' => ['localhost', 3306, ' --port="3306" --protocol=tcp'],
+			'127.0.0.1 no port' => ['127.0.0.1', null, ''],
+			'127.0.0.1 with port' => ['127.0.0.1', 3306, ' --port="3306"'],
+			'IP no port' => ['192.168.1.15', null, ''],
+			'IP with port' => ['192.168.1.15', 3306, ' --port="3306"'],
+			'DNS no port' => ['dbserver.mycompany.com', null, ''],
+			'DNS with port' => ['dbserver.mycompany.com', 3306, ' --port="3306"'],
+			'Windows name no port' => ['dbserver', null, ''],
+			'Windows name with port' => ['dbserver', 3306, ' --port="3306"'],
+		];
 	}
 }

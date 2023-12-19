@@ -305,9 +305,8 @@ class DBBackup
 		// Store the results in a temporary file
 		$sTmpFileName = self::EscapeShellArg($sBackupFileName);
 
-		$sPortOption = self::GetMysqliCliSingleOption('port', $this->iDBPort);
+		$sPortAndTransportOptions = self::GetMysqlCliPortAndTransportOptions($this->sDBHost, $this->iDBPort);
 		$sTlsOptions = self::GetMysqlCliTlsOptions($this->oConfig);
-		$sProtocolOption = self::GetMysqlCliTransportOption($this->sDBHost, $this->iDBPort);
 
 		$sMysqlVersion = CMDBSource::GetDBVersion();
 		$bIsMysqlSupportUtf8mb4 = (version_compare($sMysqlVersion, self::MYSQL_VERSION_WITH_UTF8MB4_IN_PROGRAMS) === -1);
@@ -326,10 +325,10 @@ EOF;
 		chmod($sMySQLDumpCnfFile, 0600);
 		file_put_contents($sMySQLDumpCnfFile, $sMySQLDumpCnf, LOCK_EX);
 
-			// Note: opt implicitely sets lock-tables... which cancels the benefit of single-transaction!
+		// Note: opt implicitly sets lock-tables... which cancels the benefit of single-transaction!
 			//       skip-lock-tables compensates and allows for writes during a backup
-			$sCommand = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption $sProtocolOption --user=$sUser $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables 2>&1";
-			$sCommandDisplay = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption $sProtocolOption --user=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
+		$sCommand = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=" . $sMysqldumpCharset . " --add-drop-database --single-transaction --host=$sHost $sPortAndTransportOptions --user=$sUser $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables 2>&1";
+		$sCommandDisplay = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=" . $sMysqldumpCharset . " --add-drop-database --single-transaction --host=$sHost $sPortAndTransportOptions --user=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
 
 		// Now run the command for real
 		$this->LogInfo("backup: generate data file with command: $sCommandDisplay");
@@ -530,19 +529,20 @@ EOF;
 	 * @return string .
 	 *
 	 * @since 2.7.9 3.0.4 3.1.1 N°6123 method creation
-	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889 keep default socket connexion if we are on localhost with no port
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889 rename method to return both port and transport options. Keep default socket connexion if we are on localhost with no port
 	 */
-	public static function GetMysqlCliTransportOption(string $sHost, $iPort)
+	private static function GetMysqlCliPortAndTransportOptions(string $sHost, $iPort)
 	{
+		$sPortOption = self::GetMysqliCliSingleOption('port', $iPort);
+
 		$sTransportOptions = '';
-		
 		/** N°6123 As we're using a --port option, if we use localhost as host,
-		 * MariaDB > 10.6 will implicitly change its protocol from socket to tcp and throw a warning **/
+		 * MariaDB > 10.6 will implicitly change its protocol from socket to tcp and throws a warning **/
 		if($sHost === 'localhost' && !empty($iPort)){
-			$sTransportOptions = '--protocol=tcp';
+			$sTransportOptions = ' --protocol=tcp';
 		}
 
-		return $sTransportOptions;
+		return $sPortOption . $sTransportOptions;
 	}
 
 	/**
