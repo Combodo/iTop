@@ -136,6 +136,7 @@ class CMDBSource
 
 	/**
 	 * @since 2.7.10 3.0.4 3.1.2 3.0.2 N°6889 constant creation
+	 * @internal will be removed in a future version
 	 */
 	const MYSQL_DEFAULT_PORT = 3306;
 
