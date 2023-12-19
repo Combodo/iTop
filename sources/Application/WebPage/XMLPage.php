@@ -44,7 +44,7 @@ class XMLPage extends WebPage
 		$this->m_bHeaderSent = false;
 		$this->add_header("Content-type: text/xml; charset=".self::PAGES_CHARSET);
 		$this->no_cache();
-		$this->add_xframe_options();
+		$this->add_http_headers();
 		$this->add_header("Content-location: export.xml");
 		$oKpi->ComputeStats(get_class($this).' creation', 'XMLPage');
 	}	
