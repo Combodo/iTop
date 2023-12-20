@@ -2,6 +2,13 @@
 
 use Combodo\iTop\Service\Router\Router;
 
+/**
+ *  Class iTopNewsroomProvider
+ *
+ * @author Stephen Abello <stephen.abello@combodo.com>
+ * @package Combodo\iTop\Application\Newsroom
+ * @since 3.2.0
+ */
 class iTopNewsroomProvider extends NewsroomProviderBase {
 
 	public function IsApplicable(User $oUser = null){

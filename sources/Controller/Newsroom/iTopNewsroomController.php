@@ -4,6 +4,14 @@ use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\Service\Router\Router;
 
+
+/**
+ *  Class iTopNewsroomController
+ *
+ * @author Stephen Abello <stephen.abello@combodo.com>
+ * @package Combodo\iTop\Controller\Newsroom
+ * @since 3.2.0
+ */
 class iTopNewsroomController extends Controller
 {
 	public const ROUTE_NAMESPACE = 'itopnewsroom';
@@ -117,17 +125,23 @@ HTML;
 	 * @throws \CoreWarning
 	 * @throws \MySQLException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function OperationViewEvent(){
 		$sEventId = utils::ReadParam('event_id', 0);
 		if($sEventId > 0) {
-			$oEvent = MetaModel::GetObject('EventiTopNotification', $sEventId);
-			if($oEvent !== null && $oEvent->Get('contact_id') === UserRights::GetContactId()){
-				$oEvent->Set('read', 'yes');
-				$oEvent->Set('read_date', time());
-				$oEvent->DBWrite();
-				$sUrl = $oEvent->Get('url');
-				header("Location: $sUrl");
+			try {
+				$oEvent = MetaModel::GetObject('EventiTopNotification', $sEventId);
+				if($oEvent !== null && $oEvent->Get('contact_id') === UserRights::GetContactId()){
+					$oEvent->Set('read', 'yes');
+					$oEvent->Set('read_date', time());
+					$oEvent->DBWrite();
+					$sUrl = $oEvent->Get('url');
+					header("Location: $sUrl");
+				}
+			}
+			catch (ArchivedObjectException|CoreException $e) {
+				$this->DisplayPageNotFound();
 			}
 		}
 	}
