@@ -101,7 +101,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 	 * @return void
 	 * @throws \Exception
 	 */
-	private function Init()
+	private function Init(): void
 	{
 		$this->sPortalBaseFolderRelPath = 'env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/';
 		$this->sPortalSourcesFolderRelPath = $this->sPortalBaseFolderRelPath . 'src/';
