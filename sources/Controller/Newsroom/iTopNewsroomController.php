@@ -92,7 +92,7 @@ HTML;
 		$iContactId = UserRights::GetContactId();
 		
 
-		if($iContactId !== '') {
+		if (\utils::IsNotNullOrEmptyString($iContactId)) {
 			$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification WHERE contact_id = :contact_id AND read = "no"');
 			$oSet = new DBObjectSet($oSearch, array(), array('contact_id' => $iContactId));
 
