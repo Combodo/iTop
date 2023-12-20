@@ -4,6 +4,12 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+
 class SynchroDataSource extends cmdbAbstractObject
 {
 	public static function Init()
@@ -2106,6 +2112,12 @@ class SynchroReplica extends DBObject implements iDisplay
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
+	public function InitExtendedData($oSource)
+	{
+		$sSQLTable = $oSource->GetDataTable();
+		$this->m_aExtendedData = $this->LoadExtendedDataFromTable($sSQLTable);
+	}
+
 	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
 		parent::__construct($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
@@ -2760,11 +2772,100 @@ class SynchroReplica extends DBObject implements iDisplay
 	function DisplayDetails(WebPage $oPage, $bEditMode = false)
 	{
 		// Object's details
-		//$this->DisplayBareHeader($oPage, $bEditMode);
+		$this->DisplayBareHeader($oPage, $bEditMode);
+
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$this->DisplayBareProperties($oPage, $bEditMode);
+	}
+
+	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
+	{
+		$oBlock = UIContentBlockUIBlockFactory::MakeStandard('title-for-replica', ['ibo-page-header--replica-title']);
+		$oPage->AddSubBlock($oBlock);
+		$oPage->add_style('.ibo-page-header--replica-title{ display: table;  width: 100%;}');
+		$oPage->add_style('.ibo-page-header--replica-title>.ibo-toolbar--button{ display: table-cell;  vertical-align:middle;}');
+
+		$sId = $this->GetKey();
+		$oTitle = TitleUIBlockFactory::MakeNeutral(Dict::S('Class:SynchroReplica'));
+		$oBlock->AddSubBlock($oTitle);
+		$oActionsToolbar = ToolbarUIBlockFactory::MakeForButton(MenuBlock::ACTIONS_TOOLBAR_ID_PREFIX.$sId);
+		$oActionsToolbar->AddCSSClass('ibo-panel--toolbar');
+		$oBlock->AddSubBlock($oActionsToolbar);
+
+		$sClass = get_class($this);
+		$sRootUrl = utils::GetAbsoluteUrlAppRoot();
+		$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($sClass);
+		$oAppContext = new ApplicationContext();
+		$sContext = $oAppContext->GetForLink();
+		if (utils::IsNotNullOrEmptyString($sContext)) {
+			$sContext = '&'.$sContext;
+		}
+
+		$aActions = [];
+		//Delete
+		if (UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE)) {
+			$aActions['UI:Menu:Delete'] = array(
+				'label' => Dict::S('UI:Menu:Delete'),
+				'url'   => "{$sRootUrl}pages/$sUIPage?operation=delete&class=$sClass&id=$sId{$sContext}",
+			);
+		}
+
+		if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY)) {
+			if (count($aActions) > 0) {
+				$sSeparator = '<hr class="menu-separator"/>';
+				$aActions['sep_0'] = array('label' => $sSeparator, 'url' => '');
+			}
+			$sUrl = "{$sRootUrl}synchro/replica.php?operation=unlink&class=$sClass&id=$sId{$sContext}";
+			$aActions['Class:SynchroReplica/Action:unlink'] = [
+				'label'   => Dict::S('Class:SynchroReplica/Action:unlink'),
+				'url'     => $sUrl,
+				'tooltip' => Dict::S('Class:SynchroReplica/Action:unlink+'),
+			];
+
+			$sUrl = "{$sRootUrl}synchro/replica.php?operation=unlinksynchro&class=$sClass&id=$sId{$sContext}";
+			$aActions['Class:SynchroReplica/Action:unlinksynchro'] = [
+				'label'   => Dict::S('Class:SynchroReplica/Action:unlinksynchro'),
+				'url'     => $sUrl,
+				'tooltip' => Dict::S('Class:SynchroReplica/Action:unlinksynchro+'),
+			];
+
+			$sUrl = "{$sRootUrl}synchro/replica.php?operation=synchro&class=$sClass&id=$sId{$sContext}";
+			$aActions['Class:SynchroReplica/Action:synchro'] = [
+				'label'   => Dict::S('Class:SynchroReplica/Action:synchro'),
+				'url'     => $sUrl,
+				'tooltip' => Dict::S('Class:SynchroReplica/Action:synchro+'),
+			];
+		}
+		if (count($aActions) > 0) {
+			$sRegularActionsMenuTogglerId = "ibo-regular-actions-menu-toggler-{$sId}";
+			$sRegularActionsPopoverMenuId = "ibo-regular-actions-popover-{$sId}";
+
+			$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S('UI:Menu:Actions'), 'UI:Menu:Actions', '', false, $sRegularActionsMenuTogglerId)
+				->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
+
+			$oRegularActionsMenu = $oPage->GetPopoverMenu($sRegularActionsPopoverMenuId, $aActions)
+				->SetTogglerJSSelector("#$sRegularActionsMenuTogglerId")
+				->SetContainer(PopoverMenu::ENUM_CONTAINER_BODY);
+
+			$oActionsToolbar->AddSubBlock($oActionButton)
+				->AddSubBlock($oRegularActionsMenu);
+
+			$oActionButton = ButtonUIBlockFactory::MakeIconLink('fas fa-search', Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)), "{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'UI:SearchFor_Class');
+			$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
+			$oActionsToolbar->AddSubBlock($oActionButton);
+		}
+
+		$sUrl = "{$sRootUrl}pages/$sUIPage?operation=display&class=$sClass&id=$sId{$sContext}";
+		$oActionButton = ButtonUIBlockFactory::MakeAlternativeNeutral('', 'UI:Button:Refresh');
+		$oActionButton->SetIconClass('fas fa-sync-alt')
+			->SetOnClickJsCode('window.location.href=\''.$sUrl.'\'')
+			->SetTooltip(Dict::S('UI:Button:Refresh'))
+			->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
+		$oActionsToolbar->AddSubBlock($oActionButton);
+
+		return $oBlock;
 	}
 
 	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())

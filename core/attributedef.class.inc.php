@@ -3071,13 +3071,17 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 		{
 			return 0;
 		}
-		if (MetaModel::IsValidObject($proposedValue))
-		{
+		if (MetaModel::IsValidObject($proposedValue)) {
 			/** @var \DBObject $proposedValue */
 			return $proposedValue->GetKey();
 		}
 
 		return (int)$proposedValue;
+	}
+
+	public function GetTargetClass($iType = EXTKEY_RELATIVE)
+	{
+		return '';
 	}
 }
 
