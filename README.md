@@ -102,8 +102,8 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Rosenke, Stephan
 - Seki, Shoji
 - Shilov, Vladimir
-- Stukalov, Ilya (a.k.a [@ilya](https://www.github.com/ilya)-stukalov)
-- Tarjányi, Csaba (a.k.a [tacsaby](https://github.com/tacsaby))
+- Stukalov, Ilya (a.k.a [@ilya](https://www.github.com/ilya-stukalov))
+- Tarjányi, Csaba (a.k.a [@tacsaby](https://github.com/tacsaby))
 - Tulio, Marco
 - Turrubiates, Miguel
 
