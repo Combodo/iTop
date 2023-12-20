@@ -22,5 +22,5 @@
  */
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'theme:darkmoon' => 'Dark moon~~',
+	'theme:darkmoon' => 'Dark moon',
 ));
