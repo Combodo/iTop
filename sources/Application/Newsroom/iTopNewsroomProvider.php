@@ -9,7 +9,7 @@ class iTopNewsroomProvider extends NewsroomProviderBase {
 	}
 	public function GetLabel()
 	{
-		return ITOP_APPLICATION_SHORT;
+		return Dict::S('UI:Newsroom:iTopNotification:Label');
 	}
 
 	public function GetFetchURL()

@@ -16,7 +16,7 @@ class iTopNewsroomController extends Controller
 	 */
 	public function OperationViewAll()
 	{
-		$oPage = new iTopWebPage('cc');
+		$oPage = new iTopWebPage(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Title'));
 		$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification WHERE read = "no"');
 		$oSearch->AddCondition('contact_id', UserRights::GetContactId(), '=');
 		$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, []);
