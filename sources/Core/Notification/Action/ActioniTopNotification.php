@@ -42,7 +42,7 @@ class ActioniTopNotification extends ActionNotification
 		MetaModel::Init_AddAttribute(new AttributeImage("icon", array("sql" => 'icon', "is_null_allowed" => true, "display_max_width" => 96, "display_max_height" => 96, "storage_max_width" => 256, "storage_max_height" => 256, "default_image" => null, "depends_on" => array(), "always_load_in_tables" => false)));
 		MetaModel::Init_AddAttribute(new AttributeEnum("priority", array("allowed_values" => new ValueSetEnum('1,2,3,4'), "sql" => "priority", "default_value" => '1', "is_null_allowed" => false, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeOQL("recipients", array("allowed_values" => null, "sql" => "recipients", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
-		MetaModel::Init_AddAttribute(new AttributeString("url", array("allowed_values" => null, "sql" => "url", "default_value" => null, "is_null_allowed" => true, "depends_on" => array(), "target" => "_blank")));
+		MetaModel::Init_AddAttribute(new AttributeString("url", array("allowed_values" => null, "sql" => "url", "default_value" => '$this->url()$', "is_null_allowed" => false, "depends_on" => array(), "target" => "_blank")));
 
 		// Display lists
 		// - Attributes to be displayed for the complete details
@@ -105,13 +105,9 @@ class ActioniTopNotification extends ActionNotification
 			$oEvent->Set('contact_id', $oRecipient->GetKey());
 			$oEvent->Set('trigger_id', $oTrigger->GetKey());
 			$oEvent->Set('action_id', $this->GetKey());
-			$oEvent->Set('object_id', $aContextArgs['this->object()']->GetKey());
-			// cache url
-			$sUrl = $this->Get('url');
-			if (utils::IsNullOrEmptyString($sUrl)) {
-				$sUrl = '$this->url()$';
-			}
-			$oEvent->Set('url', MetaModel::ApplyParams($sUrl, $aContextArgs));
+			$iObjectId = array_key_exists('this->object()', $aContextArgs) ? $aContextArgs['this->object()']->GetKey() : 0;
+			$oEvent->Set('object_id', $iObjectId);
+			$oEvent->Set('url', MetaModel::ApplyParams($this->Get('url'), $aContextArgs));
 			$oEvent->DBInsertNoReload();
 		}
 		$this->SetNotificationLanguage($sPreviousLanguage, $aPreviousPluginProperties['language_code'] ?? null);
