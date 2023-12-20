@@ -237,9 +237,10 @@ JS
 	//////////////////////////////////////////////////////////////////////////
 	$iCountProviders = 0;
 	$oUser = UserRights::GetUserObject();
-	$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-	foreach($aProviders as $oProvider)
+	$aProviders = utils::GetClassesForInterface('iNewsroomProvider', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+	foreach($aProviders as $cProvider) 
 	{
+		$oProvider = new $cProvider();
 		if ($oProvider->IsApplicable($oUser))
 		{
 			$iCountProviders++;
@@ -265,8 +266,9 @@ JS
 		 * @var iNewsroomProvider[] $aProviders
 		 */
 		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
-		foreach($aProviders as $oProvider)
+		foreach($aProviders as $cProvider) 
 		{
+			$oProvider = new $cProvider();
 			if ($oProvider->IsApplicable($oUser))
 			{
 				$sUrl = $oProvider->GetPreferencesUrl();
@@ -827,8 +829,9 @@ try {
 			case 'apply_newsroom_preferences':
 				$iCountProviders = 0;
 				$oUser = UserRights::GetUserObject();
-				$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-				foreach ($aProviders as $oProvider) {
+				$aProviders = utils::GetClassesForInterface('iNewsroomProvider', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+				foreach ($aProviders as $cProvider) {
+					$oProvider = new $cProvider();
 					if ($oProvider->IsApplicable($oUser)) {
 						$iCountProviders++;
 					}
