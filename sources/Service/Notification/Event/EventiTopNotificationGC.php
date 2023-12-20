@@ -15,8 +15,8 @@ class EventiTopNotificationGC implements iBackgroundProcess
 	public function Process($iUnixTimeLimit)
 	{
 		try {
-			$sDeletionTime = MetaModel::GetConfig()->Get('notifications.itop.read_notification_retention');
-			$oDBObjectSearch = DBObjectSearch::FromOQL("SELECT EventiTopNotification WHERE read='yes' AND read_date < DATE_SUB(NOW(), INTERVAL :deletion_time DAY)", ['deletion_time' => $sDeletionTime]);
+			$iDeletionTime = (int) MetaModel::GetConfig()->Get('notifications.itop.read_notification_retention');
+			$oDBObjectSearch = DBObjectSearch::FromOQL("SELECT EventiTopNotification WHERE read='yes' AND read_date < DATE_SUB(NOW(), INTERVAL :deletion_time DAY)", ['deletion_time' => $iDeletionTime]);
 			$oEventiTopNotificationSet = new DBObjectSet($oDBObjectSearch);
 			while($oEventiTopNotification = $oEventiTopNotificationSet->Fetch()){
 				$oEventiTopNotification->DBDelete();
