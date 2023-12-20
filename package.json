@@ -10,6 +10,7 @@
     "datatables.net-select": "^1.2.0",
     "scrollmagic": "^2.0.8",
     "selectize-plugin-a11y": "^1.1.0",
-    "tippy.js": "^6.2.5"
+    "tippy.js": "^6.2.5",
+    "tom-select": "^2.3.1"
   }
 }

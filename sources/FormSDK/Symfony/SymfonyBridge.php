@@ -24,10 +24,12 @@ use Combodo\iTop\FormSDK\Field\Description\FormFieldDescription;
 use Combodo\iTop\FormSDK\Field\Description\FormFieldTypeEnumeration;
 use LogAPI;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * Symfony implementation bridge.
@@ -86,8 +88,8 @@ class SymfonyBridge
 					'type' => FormObjectType::class,
 					'options' => $aOptions
 				];
+
 			default:
-				LogAPI::Warning('Unknown form description type ' . $oFormDescription->GetType()->name);
 				return null;
 		}
 	}
@@ -109,6 +111,7 @@ class SymfonyBridge
 		foreach ($aDescriptions as $oFormDescription){
 
 			$aSymfony = $this->ToSymfonyFormType($oFormDescription);
+
 			$oFormBuilder->add(
 				$aSymfony['path'],
 				$aSymfony['type'],

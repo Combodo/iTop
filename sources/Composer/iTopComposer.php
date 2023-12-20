@@ -140,6 +140,7 @@ class iTopComposer
 			$APPROOT_WITH_SLASHES.'lib/symfony/web-profiler-bundle/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/yaml/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/form/Test',
+			$APPROOT_WITH_SLASHES.'lib/symfony/validator/Test',
 
 			$APPROOT_WITH_SLASHES.'lib/thenetworg/oauth2-azure/tests',
 

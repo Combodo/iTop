@@ -1,3 +1,16 @@
 {% use "bootstrap_5_layout.html.twig" %}
 
+{%- block form_label -%}
+    {{- parent() -}}
+    <div class="form-type-pictograms">
 
+        {% if form.vars.required %}
+            <i class="fas fa-asterisk" title="required"></i>
+        {% endif %}
+
+        {% if form.vars.attr['data-widget'] is defined %}
+            <i class="fas fa-plug" title="{{ form.vars.attr['data-widget'] }}"></i>
+        {% endif %}
+
+    </div>
+{%- endblock form_label -%}

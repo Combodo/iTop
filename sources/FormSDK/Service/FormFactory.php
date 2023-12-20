@@ -161,5 +161,4 @@ class FormFactory
 		return $this->oSymfonyBridge->GetForm($aDescriptions, $aData);
 	}
 
-
 }

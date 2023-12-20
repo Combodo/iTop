@@ -29,6 +29,7 @@ enum FormFieldTypeEnumeration : string
 {
 	case TEXT = 'TEXT';
 	case SELECT = 'SELECT';
+//	case SELECT_AJAX = 'SELECT_AJAX';
 	case DB_OBJECT = 'DB_OBJECT';
 
 	/**
