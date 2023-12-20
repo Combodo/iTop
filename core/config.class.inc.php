@@ -1574,7 +1574,7 @@ class Config
 		'notifications.itop.read_notification_retention' => [
 			'type' => 'integer',
 			'description' => 'Duration in days after which iTop read notifications will be deleted',
-			'default' => true,
+			'default' => 182,
 			'value' => 182,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
@@ -1582,7 +1582,7 @@ class Config
 		'notifications.itop.newsroom_cache_time' => [
 			'type' => 'integer',
 			'description' => 'Duration in min between each fetch for notifications in newsroom',
-			'default' => true,
+			'default' => 5,
 			'value' => 5,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
