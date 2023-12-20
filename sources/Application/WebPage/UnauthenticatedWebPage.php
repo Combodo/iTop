@@ -45,13 +45,20 @@ class UnauthenticatedWebPage extends NiceWebPage
 	// TODO 3.0 Find a clever way to allow theme customization for unauthenticated webpages
 	private $sCustomThemeUrl;
 
-	protected $sPortalBaseFolderRelPath;
-	protected $sPortalSourcesFolderRelPath;
-	protected $sPortalPublicFolderRelPath;
-	protected $sPortalBaseFolderAbsPath;
-	protected $sPortalSourcesFolderAbsPath;
-	protected $sPortalPublicFolderAbsPath;
-	protected $sPortalPublicFolderAbsUrl;
+	/** @since 3.2.0 */
+	protected string $sPortalBaseFolderRelPath;
+	/** @since 3.2.0 */
+	protected string $sPortalSourcesFolderRelPath;
+	/** @since 3.2.0 */
+	protected string $sPortalPublicFolderRelPath;
+	/** @since 3.2.0 */
+	protected string $sPortalBaseFolderAbsPath;
+	/** @since 3.2.0 */
+	protected string $sPortalSourcesFolderAbsPath;
+	/** @since 3.2.0 */
+	protected string $sPortalPublicFolderAbsPath;
+	/** @since 3.2.0 */
+	protected string $sPortalPublicFolderAbsUrl;
 
 	/**
 	 * @inheritDoc
