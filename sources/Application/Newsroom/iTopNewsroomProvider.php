@@ -1,5 +1,7 @@
 <?php
 
+use Combodo\iTop\Service\Router\Router;
+
 class iTopNewsroomProvider extends NewsroomProviderBase {
 
 	public function IsApplicable(User $oUser = null){
@@ -17,7 +19,7 @@ class iTopNewsroomProvider extends NewsroomProviderBase {
 
 	public function GetMarkAllAsReadURL()
 	{
-		return self::MakeURL('mark_all_as_read');
+		return self::MakeURL('mark_all_as_read_messages');
 	}
 
 	public function GetViewAllURL()
@@ -27,7 +29,7 @@ class iTopNewsroomProvider extends NewsroomProviderBase {
 
 	private static function MakeURL($sRouteCode)
 	{
-		return utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?route=itopnewsroom.' . $sRouteCode;
+		return Router::GetInstance()->GenerateUrl(iTopNewsroomController::ROUTE_NAMESPACE . '.' . $sRouteCode);
 	}
 
 	public function GetTTL()

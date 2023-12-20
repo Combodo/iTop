@@ -2,6 +2,7 @@
 
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
+use Combodo\iTop\Service\Router\Router;
 
 class iTopNewsroomController extends Controller
 {
@@ -61,7 +62,7 @@ HTML;
 				$aMessages[] = array(
 					'id' => $oMessage->GetKey(),
 					'text' => $sText,
-					'url' => utils::GetAbsoluteUrlAppRoot() . '/pages/UI.php?route=itopnewsroom.view_event&event_id='.$oMessage->GetKey(),
+					'url' => Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE . '.view_event', ['event_id' => $oMessage->GetKey()]),
 					'start_date' => $oMessage->Get('date'),
 					'priority' => $oMessage->Get('priority'),
 					'image' => $sIcon,
