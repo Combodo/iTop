@@ -209,7 +209,17 @@ abstract class ActionNotification extends Action
 		// - Default criteria of the search form
 //		MetaModel::Init_SetZListItems('default_search', array('name'));
 	}
-	
+
+	/**
+	 * @param $sLanguage
+	 * @param $sLanguageCode
+	 *
+	 * @return array [$sPreviousLanguage, $aPreviousPluginProperties]
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @since 3.2.0
+	 */
 	public function SetNotificationLanguage($sLanguage = null, $sLanguageCode = null){
 		$sPreviousLanguage = Dict::GetUserLanguage();
 		$aPreviousPluginProperties = ApplicationContext::GetPluginProperties('QueryLocalizerPlugin');
