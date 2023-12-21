@@ -6,6 +6,7 @@ use MetaModel;
 
 class LoginTest extends ItopDataTestCase {
 	protected $sConfigTmpBackupFile;
+	protected $sConfigPath;
 	protected $sLoginMode;
 
 	protected function setUp(): void {
@@ -14,30 +15,28 @@ class LoginTest extends ItopDataTestCase {
 		clearstatcache();
 
 		//backup config file
-		$sConfigPath = MetaModel::GetConfig()->GetLoadedFile();
+		$this->sConfigPath = MetaModel::GetConfig()->GetLoadedFile();
 		$this->sConfigTmpBackupFile = tempnam(sys_get_temp_dir(), "config_");
-		MetaModel::GetConfig()->WriteToFile($this->sConfigTmpBackupFile);
+		file_put_contents($this->sConfigTmpBackupFile, file_get_contents($this->sConfigPath));
 
-		$oConfig = new \Config($sConfigPath);
+		$oConfig = new \Config($this->sConfigPath);
 		$this->sLoginMode = "unimplemented_loginmode";
 		$oConfig->AddAllowedLoginTypes($this->sLoginMode);
 
-		@chmod($sConfigPath, 0770);
+		@chmod($this->sConfigPath, 0770);
 		$oConfig->WriteToFile();
-		@chmod($sConfigPath, 0440);
+		@chmod($this->sConfigPath, 0440);
 	}
 
 	protected function tearDown(): void {
-		parent::tearDown();
-
 		if (! is_null($this->sConfigTmpBackupFile) && is_file($this->sConfigTmpBackupFile)){
 			//put config back
-			$sConfigPath = MetaModel::GetConfig()->GetLoadedFile();
-			$oConfig = new \Config($this->sConfigTmpBackupFile);
-			@chmod($sConfigPath, 0770);
-			$oConfig->WriteToFile($sConfigPath);
-			@chmod($sConfigPath, 0440);
+			@chmod($this->sConfigPath, 0770);
+			file_put_contents($this->sConfigPath, file_get_contents($this->sConfigTmpBackupFile));
+			@chmod($this->sConfigPath, 0440);
+			@unlink($this->sConfigTmpBackupFile);
 		}
+		parent::tearDown();
 	}
 
 	public function testLoginInfiniteLoopFix() {
