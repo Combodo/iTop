@@ -22,9 +22,9 @@ class LoginTest extends ItopDataTestCase {
 		$this->sLoginMode = "unimplemented_loginmode";
 		$oConfig->AddAllowedLoginTypes($this->sLoginMode);
 
-		@chmod($oConfig->GetLoadedFile(), 0770);
+		@chmod($sConfigPath, 0770);
 		$oConfig->WriteToFile();
-		@chmod($oConfig->GetLoadedFile(), 0440);
+		@chmod($sConfigPath, 0440);
 	}
 
 	protected function tearDown(): void {
@@ -34,7 +34,7 @@ class LoginTest extends ItopDataTestCase {
 			//put config back
 			$sConfigPath = MetaModel::GetConfig()->GetLoadedFile();
 			$oConfig = new \Config($this->sConfigTmpBackupFile);
-			@chmod($oConfig->GetLoadedFile(), 0770);
+			@chmod($sConfigPath, 0770);
 			$oConfig->WriteToFile($sConfigPath);
 			@chmod($sConfigPath, 0440);
 		}
