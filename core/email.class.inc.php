@@ -46,6 +46,15 @@ class EMail implements iEMail
 	const ORIGINAL_FORMAT = 1; // Original format, consisting in serializing the whole object, inculding the Swift Mailer's object.
 	// Did not work with attachements since their binary representation cannot be stored as a valid UTF-8 string
 	const FORMAT_V2 = 2; // New format, only the raw data are serialized (base64 encoded if needed)
+	
+	/** @var int ENUM_SEND_DEFAULT This option can be used when sending an e-mail to respect the default configuration parameter. */
+	const ENUM_SEND_DEFAULT = 0;
+	
+	/** @var int ENUM_SEND_FORCE_SYNCHRONOUS This option can be used when sending an e-mail to ignore the default and force synchronous sending instead. Example of a use case: instant e-mail test. */
+	const ENUM_SEND_FORCE_SYNCHRONOUS = 1;
+	
+	/** @var int ENUM_SEND_FORCE_ASYNCHRONOUS This option can be used when sending an e-mail to ignore the default and force synchronous sending instead. Example of a use case: Bulk mails. */
+	const ENUM_SEND_FORCE_ASYNCHRONOUS = 2;
 
 	public function __construct()
 	{
