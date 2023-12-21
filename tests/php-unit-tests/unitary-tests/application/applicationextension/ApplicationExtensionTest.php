@@ -55,7 +55,6 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 		// APIs not concerned by this test:
 		// * \iRestServiceProvider as it is discovered by iterating over declared classes directly
 		// * \iLoginUIExtension as it is not iterated directly, only its derived interfaces
-		// * \iNewsroomProvider as it is discovered by utils::GetClassesForInterface
 
 		return [
 			\iLoginFSMExtension::class => [
@@ -157,6 +156,10 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 			\ModuleHandlerApiInterface::class => [
 				\ModuleHandlerApiInterface::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
+			],
+			\iNewsroomProvider::class => [
+				\iNewsroomProvider::class,
+				static::ENUM_API_CALL_METHOD_GETCLASSESFORINTERFACE,
 			],
 		];
 	}

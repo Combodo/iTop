@@ -364,5 +364,34 @@ class ExampleFor_ModuleHandlerApiInterface extends \ModuleHandlerAPI
 }
       ]]></content>
     </snippet>
+    <!-- These snippets just implements application/newsroomprovider.class.inc.php APIs for the ApplicationExtensionTest unit test -->
+    <snippet id="ExampleFor_iNewsroomProvider" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iNewsroomProvider extends \NewsroomProviderBase
+{
+	public function GetLabel()
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+  }
+
+	public function GetFetchURL()
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+  }
+
+	public function GetMarkAllAsReadURL()
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+  }
+
+	public function GetViewAllURL()
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+  }
+}
+      ]]></content>
+    </snippet>
   </snippets>
 </itop_design>
