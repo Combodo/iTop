@@ -29,6 +29,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 define('ATTACHMENT_DISPLAY_URL', 'pages/ajax.render.php?operation=display_document&class=Attachment&field=contents&id=');
@@ -109,7 +110,7 @@ abstract class AbstractAttachmentsRenderer
 	 *
 	 * @throws \OQLException
 	 */
-	public function __construct(\WebPage $oPage, $sObjClass, $iObjKey, $sTransactionId)
+	public function __construct(WebPage $oPage, $sObjClass, $iObjKey, $sTransactionId)
 	{
 		$this->oPage = $oPage;
 		$this->sObjClass = $sObjClass;

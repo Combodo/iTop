@@ -18,6 +18,7 @@
  */
 
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');

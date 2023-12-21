@@ -325,7 +325,7 @@ JS;
 	}
 	
 	/**
-	 * @return \iTopWebPage|\JsonPage Object edit form in its webpage
+	 * @return iTopWebPage|JsonPage Object edit form in its webpage
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -502,7 +502,7 @@ JS;
 	}
 
 	/**
-	 * @return \iTopWebPage|\JsonPage
+	 * @return iTopWebPage|JsonPage
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \ConfigException
@@ -764,7 +764,7 @@ JS;
 	/**
 	 * Add some JS files that are required during the modification of an object
 	 *
-	 * @param \iTopWebPage $oPage
+	 * @param iTopWebPage $oPage
 	 *
 	 * @return void
 	 */

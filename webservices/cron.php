@@ -17,6 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 require_once(__DIR__.'/../approot.inc.php');
 
 const EXIT_CODE_ERROR = -1;

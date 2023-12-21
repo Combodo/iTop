@@ -8,6 +8,8 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Bulk export: XML export

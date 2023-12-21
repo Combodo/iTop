@@ -16,6 +16,8 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * The standardized result of any pass/fail check performed by the setup

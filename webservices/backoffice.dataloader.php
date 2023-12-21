@@ -21,7 +21,10 @@
  * This page is called to load an XML file into the database
  * parameters
  * 'file' string Name of the file to load
- */ 
+ */
+
+use Combodo\iTop\Application\WebPage\WebPage;
+
 define('SAFE_MINIMUM_MEMORY', 256*1024*1024);
 
 require_once('../approot.inc.php');

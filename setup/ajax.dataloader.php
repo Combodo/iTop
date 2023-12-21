@@ -33,6 +33,9 @@
  * 'session_status': string 'start', 'continue' or 'end'
  * 'percent': integer 0..100 the percentage of completion once the file has been loaded 
  */
+
+use Combodo\iTop\Application\WebPage\AjaxPage;
+
 $bBypassMaintenance = true; // Reset maintenance mode in case of problem
 define('SAFE_MINIMUM_MEMORY', 64*1024*1024);
 require_once('../approot.inc.php');

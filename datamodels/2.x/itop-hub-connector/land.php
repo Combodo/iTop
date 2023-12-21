@@ -1,4 +1,8 @@
 <?php
+
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 function DisplayStatus(WebPage $oPage)
 {
 	$oPage->set_title(Dict::S('iTopHub:Landing:Status'));

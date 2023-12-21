@@ -5,6 +5,9 @@
  */
 
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/template.class.inc.php');

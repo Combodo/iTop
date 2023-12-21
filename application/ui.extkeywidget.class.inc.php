@@ -7,6 +7,7 @@
 use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 
 require_once(APPROOT.'/application/displayblock.class.inc.php');

@@ -17,6 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Persistent classes (internal): user defined actions

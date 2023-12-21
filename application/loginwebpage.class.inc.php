@@ -26,6 +26,8 @@
 
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
 

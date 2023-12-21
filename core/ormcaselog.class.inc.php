@@ -20,6 +20,7 @@ use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSec
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 define('CASELOG_VISIBLE_ITEMS', 2);

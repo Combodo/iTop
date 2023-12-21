@@ -23,6 +23,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'application/forms.class.inc.php');
 

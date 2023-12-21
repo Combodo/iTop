@@ -19,6 +19,9 @@ use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
 use Combodo\iTop\Service\Router\Router;
 
@@ -1545,7 +1548,7 @@ class UI
 	/**
 	 * Operation select_for_modify_all
 	 *
-	 * @param \iTopWebPage $oP
+	 * @param iTopWebPage $oP
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -1577,7 +1580,7 @@ class UI
 	/**
 	 * Operation form_for_modify_all
 	 *
-	 * @param \iTopWebPage $oP
+	 * @param iTopWebPage $oP
 	 * @param \ApplicationContext $oAppContext
 	 *
 	 * @throws \ArchivedObjectException
@@ -1603,7 +1606,7 @@ class UI
 	/**
 	 * Operation preview_or_modify_all
 	 *
-	 * @param \iTopWebPage $oP
+	 * @param iTopWebPage $oP
 	 * @param \ApplicationContext $oAppContext
 	 *
 	 * @throws \ApplicationException

@@ -139,7 +139,7 @@ class AjaxRenderController
 	}
 
 	/**
-	 * @param \JsonPage $oPage
+	 * @param JsonPage $oPage
 	 * @param bool $bTokenOnly
 	 *
 	 * @throws \Exception
@@ -240,7 +240,7 @@ class AjaxRenderController
 	 * The resulting JSON is added to the page with the format:
 	 * {"code": "done or error", "counts": {"menu_id_1": count1, "menu_id_2": count2...}}
 	 *
-	 * @param \JsonPage $oPage
+	 * @param JsonPage $oPage
 	 */
 	public function GetMenusCount(JsonPage $oPage)
 	{

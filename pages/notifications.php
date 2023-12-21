@@ -21,6 +21,7 @@
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -32,7 +33,7 @@ LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled("NotificationsMenu");
 
 /**
- * @param \iTopWebPage $oP
+ * @param iTopWebPage $oP
  * @param string $sClassToDisplay
  * @param array $aClassesToExclude
  *

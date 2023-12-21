@@ -21,6 +21,7 @@ use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Module\ModuleService;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;

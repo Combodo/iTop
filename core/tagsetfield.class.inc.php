@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\WebPage;
+
 
 /**
  * <p>Stores data for {@link AttributeTagSet} fields

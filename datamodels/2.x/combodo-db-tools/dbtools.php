@@ -30,6 +30,7 @@ use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator\ToolbarSeparatorUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\DBTools\Service\DBAnalyzerUtils;
 
 @include_once('../../approot.inc.php');
@@ -43,7 +44,7 @@ const MAX_RESULTS = 10;
  * @param iTopWebPage $oP
  * @param ApplicationContext $oAppContext
  *
- * @return \iTopWebPage
+ * @return iTopWebPage
  * @throws \CoreException
  * @throws \DictExceptionMissingString
  * @throws \MySQLException
@@ -294,7 +295,7 @@ function DisplayErrorDetails($aResults, $bVerbose)
  * @param iTopWebPage $oP
  * @param ApplicationContext $oAppContext
  *
- * @return \iTopWebPage
+ * @return iTopWebPage
  * @throws CoreException
  * @throws MySQLException
  * @throws \Exception

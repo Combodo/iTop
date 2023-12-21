@@ -81,7 +81,7 @@ class LinkSetController extends AbstractController
 	/**
 	 * OperationDetachLinkedObject.
 	 *
-	 * @return \JsonPage
+	 * @return JsonPage
 	 * @throws \CoreException
 	 */
 	public function OperationDetachLinkedObject(): JsonPage

@@ -42,6 +42,9 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinkSetViewTable;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinkSetViewTable;
 use Combodo\iTop\Application\UI\Links\Set\LinkSetUIBlockFactory;
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
@@ -1112,7 +1115,7 @@ HTML
 		}
 
 		// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
-		/** @var \iTopWebPage $oPage */
+		/** @var iTopWebPage $oPage */
 		$aHeadersBlocks = $this->DisplayBareHeader($oPage, $bEditMode);
 		if (false === empty($aHeadersBlocks['subtitle'])) {
 			$oObjectDetails->AddSubTitleBlocks($aHeadersBlocks['subtitle']);
@@ -5054,7 +5057,7 @@ HTML
 	 * Display a form for modifying several objects at once
 	 * The form will be submitted to the current page, with the specified additional values
 	 *
-	 * @param \iTopWebPage $oP
+	 * @param iTopWebPage $oP
 	 * @param string $sClass
 	 * @param array $aSelectedObj
 	 * @param string $sCustomOperation

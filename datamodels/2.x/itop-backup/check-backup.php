@@ -27,6 +27,8 @@
 // /usr/bin/php -q /var/www/combodo/modules/itop-backup/check-backup.php --backup_file=/home/backups/combodo-crm-%Y-%m-%d
 // Do not forget to set the 'itop_backup_incident' configuration file parameter !
 
+use Combodo\iTop\Application\WebPage\CLIPage;
+
 if (file_exists(__DIR__.'/../../approot.inc.php'))
 {
 	require_once __DIR__.'/../../approot.inc.php';   // When in env-xxxx folder

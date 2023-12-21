@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventException;

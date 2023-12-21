@@ -1,4 +1,7 @@
 <?php
+
+use Combodo\iTop\Application\WebPage\WebPage;
+
 /**
  * Copyright (C) 2013-2023 Combodo SARL
  *

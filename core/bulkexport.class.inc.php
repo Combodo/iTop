@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 define('EXPORTER_DEFAULT_CHUNK_SIZE', 1000);
 
 class BulkExportException extends Exception

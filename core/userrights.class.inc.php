@@ -1,6 +1,7 @@
 <?php
 
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 define('UR_ALLOWED_NO', 0);
 define('UR_ALLOWED_YES', 1);

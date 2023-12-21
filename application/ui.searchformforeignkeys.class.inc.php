@@ -21,6 +21,8 @@
  */
 
 
+use Combodo\iTop\Application\WebPage\WebPage;
+
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 
 class UISearchFormForeignKeys

@@ -270,7 +270,7 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 	 * @throws MySQLException
 	 * @throws Exception
 	 */
-	private function GetTableRows(\WebPage $oPage, iDBObjectSetIterator $oValue): array
+	private function GetTableRows(WebPage $oPage, iDBObjectSetIterator $oValue): array
 	{
 		// result data
 		$aRows = array();

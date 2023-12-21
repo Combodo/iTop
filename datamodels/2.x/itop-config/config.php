@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
 use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
 

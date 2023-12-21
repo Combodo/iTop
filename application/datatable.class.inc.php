@@ -1,6 +1,7 @@
 <?php
 
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 /**
