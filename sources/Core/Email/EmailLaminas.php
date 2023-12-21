@@ -453,7 +453,7 @@ class EMailLaminas extends Email
 			$multipart_content->setType($oBody->getParts()[0]->getType());
 			$multipart_content->setBoundary($oBody->getMime()->boundary());
 
-			$oBody = new Laminas\Mime\Message();
+			$oBody = new \Laminas\Mime\Message();
 			$oBody->addPart($multipart_content);
 		}
 

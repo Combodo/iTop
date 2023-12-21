@@ -641,7 +641,7 @@ function Format() {
 
 /**
  * Enable to access translation keys client side.
- * The called keys needs to be exported using \WebPage::add_dict_entry
+ * The called keys needs to be exported using WebPage::add_dict_entry
  */
 var Dict = {};
 if (typeof aDictEntries == 'undefined') {

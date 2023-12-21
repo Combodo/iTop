@@ -6,7 +6,8 @@
 
 namespace Combodo\iTop\Application\Helper;
 
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+use Exception;
 use utils;
 
 /**
@@ -52,9 +53,9 @@ class WebResourcesHelper
 	/**
 	 * Add necessary files (JS) to be able to use CKEditor in the page
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function EnableCKEditorToWebPage(WebPage &$oPage): void
 	{
@@ -85,9 +86,9 @@ class WebResourcesHelper
 	/**
 	 * Add necessary files (JS/CSS) to be able to use d3/c3.js in the page
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function EnableC3JSToWebPage(WebPage &$oPage): void
 	{
@@ -128,9 +129,9 @@ class WebResourcesHelper
 	/**
 	 * Add necessary files (JS/CSS) to be able to use simple_graph in the page
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function EnableSimpleGraphInWebPage(WebPage &$oPage): void
 	{

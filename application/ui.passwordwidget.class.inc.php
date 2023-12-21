@@ -24,6 +24,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\WebPage\WebPage;
+
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 
 class UIPasswordWidget 

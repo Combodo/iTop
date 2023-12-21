@@ -16,6 +16,8 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * The standardized result of any pass/fail check performed by the setup
@@ -410,12 +412,12 @@ class SetupUtils
 	/**
 	 * Call the platform checks. If those checks return CheckResult::ERROR, then output and log them, then exit. Otherwise just return.
 	 *
-	 * @param \CLIPage $oCliPage
+	 * @param CLIPage $oCliPage
 	 * @param int $iExitCode
 	 *
 	 * @uses CheckPhpAndExtensions
 	 * @uses \CheckResult::FilterCheckResultArray()
-	 * @uses \CLIPage::output()
+	 * @uses CLIPage::output()
 	 * @uses \IssueLog::Error()
 	 * @uses \exit()
 	 *
@@ -1006,7 +1008,7 @@ class SetupUtils
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param boolean $bIsItopInstall true if we are installing, false if we're upgrading
 	 * @param string $sDBServer
 	 * @param string $sDBUser

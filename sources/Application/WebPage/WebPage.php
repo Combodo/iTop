@@ -4,6 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Application\WebPage;
+
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
@@ -17,6 +19,14 @@ use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
+use DBSearch;
+use DeprecatedCallsLog;
+use Dict;
+use ExecutionKPI;
+use IssueLog;
+use MetaModel;
+use UserRights;
+use utils;
 
 
 /**
@@ -503,7 +513,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base JS in the page's header
 	 *
-	 * @uses \WebPage::$a_a_early_scripts
+	 * @uses WebPage::$a_a_early_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -515,7 +525,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base JS in the page's header
 	 *
-	 * @uses \WebPage::$a_scripts
+	 * @uses WebPage::$a_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -528,7 +538,7 @@ class WebPage implements Page
 	 * Add some Javascript to the header of the page, therefore executed first, BEFORE the DOM interpretation.
 	 * /!\ Keep in mind that no external JS files (eg. jQuery) will be loaded yet.
 	 *
-	 * @uses \WebPage::$a_a_early_scripts
+	 * @uses WebPage::$a_a_early_scripts
 	 * @param string $s_script
 	 * @since 3.0.0
 	 */
@@ -542,7 +552,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base JS
 	 *
-	 * @uses \WebPage::$a_scripts
+	 * @uses WebPage::$a_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -554,7 +564,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base JS
 	 *
-	 * @uses \WebPage::$a_scripts
+	 * @uses WebPage::$a_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -566,7 +576,7 @@ class WebPage implements Page
 	/**
 	 * Add some Javascript to be executed immediately without waiting for the DOM to be ready
 	 *
-	 * @uses \WebPage::$a_scripts
+	 * @uses WebPage::$a_scripts
 	 * @param string $s_script
 	 * @since 3.0.0 These scripts are put at the end of the <body> tag instead of the end of the <head> tag, {@see static::add_early_script} to add script there
 	 */
@@ -580,7 +590,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base init. scripts for the page
 	 *
-	 * @uses \WebPage::$a_init_scripts
+	 * @uses WebPage::$a_init_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -592,7 +602,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base init. scripts for the page
 	 *
-	 * @uses \WebPage::$a_init_scripts
+	 * @uses WebPage::$a_init_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -604,7 +614,7 @@ class WebPage implements Page
 	/**
 	 * Adds a script to be executed when the DOM is ready (typical JQuery use), right before add_ready_script
 	 *
-	 * @uses \WebPage::$a_init_scripts
+	 * @uses WebPage::$a_init_scripts
 	 * @param string $sScript
 	 *
 	 * @return void
@@ -619,7 +629,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base ready scripts for the page
 	 *
-	 * @uses \WebPage::$a_ready_scripts
+	 * @uses WebPage::$a_ready_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -631,7 +641,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base ready scripts for the page
 	 *
-	 * @uses \WebPage::$a_reset_init_scripts
+	 * @uses WebPage::$a_reset_init_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -643,7 +653,7 @@ class WebPage implements Page
 	/**
 	 * Add some Javascript to be executed once the DOM is ready, slightly after the "init scripts"
 	 *
-	 * @uses \WebPage::$a_ready_scripts
+	 * @uses WebPage::$a_ready_scripts
 	 * @param $sScript
 	 */
 	public function add_ready_script($sScript)
@@ -699,7 +709,7 @@ class WebPage implements Page
 	 * Empty all base linked scripts for the page
 	 *
 	 * @return void
-	 * @uses \WebPage::$a_linked_scripts
+	 * @uses WebPage::$a_linked_scripts
 	 * @since 3.0.0
 	 */
 	protected function EmptyLinkedScripts(): void
@@ -710,7 +720,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base linked scripts for the page
 	 *
-	 * @uses \WebPage::$a_linked_scripts
+	 * @uses WebPage::$a_linked_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -723,7 +733,7 @@ class WebPage implements Page
 	 * Add a script (as an include, i.e. link) to the header of the page.<br>
 	 * Handles duplicates : calling twice with the same script will add the script only once
 	 *
-	 * @uses \WebPage::$a_linked_scripts
+	 * @uses WebPage::$a_linked_scripts
 	 * @param string $s_linked_script
 	 * @return void
 	 */
@@ -758,8 +768,8 @@ class WebPage implements Page
 	/**
 	 * Empty both dict. entries and dict. entries prefixes for the page
 	 *
-	 * @uses \WebPage::$a_dict_entries
-	 * @uses \WebPage::$dict_a_dict_entries_prefixes
+	 * @uses WebPage::$a_dict_entries
+	 * @uses WebPage::$dict_a_dict_entries_prefixes
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -772,8 +782,8 @@ class WebPage implements Page
 	/**
 	 * Initialize both dict. entries and dict. entries prefixes for the page
 	 *
-	 * @uses \WebPage::$a_dict_entries
-	 * @uses \WebPage::$dict_a_dict_entries_prefixes
+	 * @uses WebPage::$a_dict_entries
+	 * @uses WebPage::$dict_a_dict_entries_prefixes
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -787,8 +797,8 @@ class WebPage implements Page
 	 *
 	 * @param string $s_entryId a translation label key
 	 *
-	 * @uses \WebPage::$a_dict_entries
-	 * @see \WebPage::add_dict_entries()
+	 * @uses WebPage::$a_dict_entries
+	 * @see WebPage::add_dict_entries()
 	 * @see utils.js
 	 */
 	public function add_dict_entry($s_entryId)
@@ -801,8 +811,8 @@ class WebPage implements Page
 	 *
 	 * @param string $s_entriesPrefix translation label prefix (eg 'UI:Button:' to add all keys beginning with this)
 	 *
-	 * @see \WebPage::::$dict_a_dict_entries_prefixes
-	 * @see \WebPage::add_dict_entry()
+	 * @see WebPage::::$dict_a_dict_entries_prefixes
+	 * @see WebPage::add_dict_entry()
 	 * @see utils.js
 	 */
 	public function add_dict_entries($s_entriesPrefix)
@@ -852,7 +862,7 @@ JS;
 	/**
 	 * Empty all inline styles for the page
 	 *
-	 * @uses \WebPage::$a_styles
+	 * @uses WebPage::$a_styles
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -864,7 +874,7 @@ JS;
 	/**
 	 * Initialize inline styles for the page
 	 *
-	 * @uses \WebPage::$a_styles
+	 * @uses WebPage::$a_styles
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -888,7 +898,7 @@ JS;
 	/**
 	 * Empty all linked stylesheets for the page
 	 *
-	 * @uses \WebPage::$a_linked_stylesheets
+	 * @uses WebPage::$a_linked_stylesheets
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -900,7 +910,7 @@ JS;
 	/**
 	 * Initialize linked stylesheets for the page
 	 *
-	 * @uses \WebPage::$a_linked_stylesheets
+	 * @uses WebPage::$a_linked_stylesheets
 	 * @return void
 	 * @since 3.0.0
 	 */

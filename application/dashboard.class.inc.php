@@ -9,6 +9,8 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');
@@ -422,7 +424,7 @@ abstract class Dashboard
 	}
 
 	/**
-	 * @param \WebPage $oPage *
+	 * @param WebPage $oPage *
 	 * @param array $aExtraParams
 	 *
 	 * @throws \ReflectionException
@@ -513,7 +515,7 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
 	 * @param bool $bCanEdit
@@ -569,7 +571,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 * @throws \ReflectionException
 	 * @throws \Exception
@@ -592,7 +594,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 */
 	public function RenderDashletsProperties(WebPage $oPage, $aExtraParams = array())
@@ -1109,7 +1111,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 *
 	 * @throws \Exception
@@ -1228,7 +1230,7 @@ EOF
 
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 * @param array $aExtraParams
 	 *
@@ -1488,7 +1490,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $sOQL
 	 *
 	 * @throws \DictExceptionMissingString

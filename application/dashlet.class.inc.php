@@ -23,6 +23,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'application/forms.class.inc.php');
 
@@ -222,7 +223,7 @@ abstract class Dashlet
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param bool $bEnclosingDiv
 	 * @param array $aExtraParams
@@ -298,7 +299,7 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
 	 *
@@ -309,7 +310,7 @@ EOF
 	/**
 	 * Rendering without the real data
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
 	 *

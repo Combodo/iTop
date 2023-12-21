@@ -14,6 +14,9 @@ use Combodo\iTop\Application\UI\Base\Component\Text\Text;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardRow;
+use Combodo\iTop\Application\WebPage\CSVPage;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 
 /**
  * Adds the context parameters to the audit rule query

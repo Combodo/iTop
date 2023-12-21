@@ -24,6 +24,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\WebPage\WebPage;
+
 require_once(APPROOT.'/application/uiwizard.class.inc.php');
 
 class WizardHelper
@@ -367,7 +369,7 @@ JS;
 	/**
 	 * Add necessary JS snippets (to the page) to be executed for fields update
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @return void
 	 * @since 3.0.3-2 3.0.4 3.1.1 3.2.0 N°6766
 	 */

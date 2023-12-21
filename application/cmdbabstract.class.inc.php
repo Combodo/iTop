@@ -42,6 +42,9 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinkSetViewTable;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinkSetViewTable;
 use Combodo\iTop\Application\UI\Links\Set\LinkSetUIBlockFactory;
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
@@ -285,7 +288,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \cmdbAbstractObject $oObj
 	 * @param array $aParams
 	 *
@@ -354,7 +357,7 @@ JS
 	 * @param int $iKey The identifier of the object
 	 * @param string $sMessageId Your id or one of the well-known ids: 'create', 'update' and 'apply_stimulus'
 	 * @param string $sMessage The HTML message (must be correctly escaped)
-	 * @param string $sSeverity Any of the \WebPage::ENUM_SESSION_MESSAGE_SEVERITY_XXX constants
+	 * @param string $sSeverity Any of the WebPage::ENUM_SESSION_MESSAGE_SEVERITY_XXX constants
 	 * @param float $fRank Ordering of the message: smallest displayed first (can be negative)
 	 * @param bool $bMustNotExist Do not alter any existing message (considering the id)
 	 *
@@ -376,7 +379,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage Warning, since 3.0.0 this parameter was kept for compatibility reason. You shouldn't write directly on the page!
+	 * @param WebPage $oPage Warning, since 3.0.0 this parameter was kept for compatibility reason. You shouldn't write directly on the page!
 	 *   When writing to the page, markup will be put above the real header of the panel.
 	 *   To insert something IN the panel, we now need to add UIBlocks in either the "subtitle" or "toolbar" sections of the array that will be returned.
 	 * @param bool $bEditMode Deprecated parameter in iTop 3.0.0, use {@see GetDisplayMode()} and ENUM_DISPLAY_MODE_* constants instead
@@ -554,7 +557,7 @@ HTML
 	/**
 	 * Display properties tab of an object
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 * @param string $sPrefix
 	 * @param array $aExtraParams
@@ -593,7 +596,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $sAttCode
 	 *
 	 * @throws \Exception
@@ -634,7 +637,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 *
 	 * @throws \CoreException
@@ -861,7 +864,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 * @param string $sPrefix
 	 * @param array $aExtraParams
@@ -1065,7 +1068,7 @@ HTML
 
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode Note that this parameter is no longer used in this method, {@see static::$sDisplayMode} is used instead, but we cannot remove it as it part of the base interface (iDisplay)...
 	 *
 	 * @throws \ApplicationException
@@ -1112,7 +1115,7 @@ HTML
 		}
 
 		// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
-		/** @var \iTopWebPage $oPage */
+		/** @var iTopWebPage $oPage */
 		$aHeadersBlocks = $this->DisplayBareHeader($oPage, $bEditMode);
 		if (false === empty($aHeadersBlocks['subtitle'])) {
 			$oObjectDetails->AddSubTitleBlocks($aHeadersBlocks['subtitle']);
@@ -1147,7 +1150,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -1170,7 +1173,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
 	 * @param array $aExtraParams See possible values in {@see DataTableUIBlockFactory::RenderDataTable()}
 	 *
@@ -1232,7 +1235,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \DBObjectSet $oSet
 	 * @param array $aExtraParams
 	 *
@@ -1404,7 +1407,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
 	 * @param array $aExtraParams key used :
 	 *      <ul>
@@ -1527,7 +1530,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
 	 * @param array $aParams
 	 * @param string $sCharset
@@ -1686,7 +1689,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
 	 * @param array $aParams
 	 *
@@ -1899,7 +1902,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
 	 * @param array $aParams
 	 *
@@ -1977,7 +1980,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
 	 * @param array $aExtraParams
 	 *
@@ -2008,7 +2011,7 @@ HTML
 
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sClass
 	 * @param string $sAttCode
 	 * @param \AttributeDefinition $oAttDef
@@ -2746,7 +2749,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 *
 	 * @throws \ArchivedObjectException
@@ -3151,7 +3154,7 @@ EOF
 	/**
 	 *  Select the derived class to create
 	 * @param string $sClass
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param \ApplicationContext $oAppContext
 	 * @param array $aPossibleClasses
 	 * @param array $aHiddenFields
@@ -3246,7 +3249,7 @@ EOF
 		return $oBlock;
 	}
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sClass
 	 * @param \DBObject|null $oSourceObject Object to use for the creation form, can be either the class to instantiate, an object to clone or an object to use (eg. already prefilled / modeled object)
 	 * @param array $aArgs
@@ -3331,7 +3334,7 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage      $oPage
+	 * @param WebPage      $oPage
 	 * @param string        $sStimulus
 	 * @param array|null    $aPrefillFormParam
 	 * @param bool          $bDisplayBareProperties Whether to display the object details or not
@@ -3744,7 +3747,7 @@ HTML;
 	/**
 	 * Displays a blob document *inline* (if possible, depending on the type of the document)
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $sAttCode
 	 *
 	 * @return string
@@ -4825,7 +4828,7 @@ HTML;
 	/**
 	 * Special display where the case log uses the whole "screen" at the bottom of the "Properties" tab
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sAttCode
 	 * @param string $sComment
 	 * @param string $sPrefix
@@ -4929,7 +4932,7 @@ HTML
 	/**
 	 * Special display where the case log uses the whole "screen" at the bottom of the "Properties" tab
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sAttCode
 	 * @param string $sComment
 	 * @param string $sPrefix
@@ -5054,7 +5057,7 @@ HTML
 	 * Display a form for modifying several objects at once
 	 * The form will be submitted to the current page, with the specified additional values
 	 *
-	 * @param \iTopWebPage $oP
+	 * @param iTopWebPage $oP
 	 * @param string $sClass
 	 * @param array $aSelectedObj
 	 * @param string $sCustomOperation
@@ -5298,7 +5301,7 @@ EOF
 	/**
 	 * Process the reply made from a form built with DisplayBulkModifyForm
 	 *
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param string $sClass
 	 * @param array $aSelectedObj
 	 * @param string $sCustomOperation
@@ -5438,7 +5441,7 @@ EOF
 	/**
 	 * Perform all the needed checks to delete one (or more) objects
 	 *
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sClass
 	 * @param \DBObject[] $aObjects
 	 * @param $bPreview

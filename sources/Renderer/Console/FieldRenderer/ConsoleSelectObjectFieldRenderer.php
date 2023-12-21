@@ -19,7 +19,7 @@
 
 namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 
-use CaptureWebPage;
+use Combodo\iTop\Application\WebPage\CaptureWebPage;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;

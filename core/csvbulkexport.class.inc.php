@@ -13,6 +13,8 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
 use Combodo\iTop\Application\Helper\ExportHelper;
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Bulk export: CSV export
@@ -101,7 +103,7 @@ class CSVBulkExport extends TabularBulkExport
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sPartId
 	 *
 	 * @return UIContentBlock

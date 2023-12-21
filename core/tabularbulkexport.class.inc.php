@@ -6,6 +6,7 @@
 
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Bulk export: Tabular export: abstract base class for all "tabular" exports.
@@ -22,7 +23,7 @@ abstract class TabularBulkExport extends BulkExport
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sPartId
 	 *
 	 * @return UIContentBlock

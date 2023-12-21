@@ -15,6 +15,13 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\DownloadPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');

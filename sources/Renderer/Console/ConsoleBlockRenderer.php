@@ -7,17 +7,16 @@
 
 namespace Combodo\iTop\Renderer\Console;
 
-
 use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
-use WebPage;
 
 class ConsoleBlockRenderer extends BlockRenderer
 {
 
 	/**
 	 * Add blocks to the page using twig template
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock UIBlock containing template using UIBlock tags
 	 * @param array $aContextParams
 	 *
@@ -40,7 +39,7 @@ class ConsoleBlockRenderer extends BlockRenderer
 	/**
 	 * Helper to use directly in TWIG to render a block and its sub blocks
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
 	 * @param array $aContextParams
 	 *
@@ -71,7 +70,7 @@ class ConsoleBlockRenderer extends BlockRenderer
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
 	 * @param array $aContextParams
 	 *

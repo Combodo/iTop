@@ -6,6 +6,7 @@
 
 use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinkSetEditTable;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 /**

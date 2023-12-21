@@ -21,6 +21,9 @@ use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\iTopPDF;
+use Combodo\iTop\Application\WebPage\PDFPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 /**
@@ -1580,7 +1583,7 @@ EOF
 	 * @param string $sContextKey
 	 * @param array $aContextParams
 	 * @param array $aExcludedObjects
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param array $aResults
 	 * @param bool $bLazyLoading
 	 *
@@ -1602,7 +1605,7 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param array $aResults
 	 * @param bool $bLazyLoading
 	 *

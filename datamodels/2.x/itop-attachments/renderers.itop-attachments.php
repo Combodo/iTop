@@ -29,6 +29,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 define('ATTACHMENT_DISPLAY_URL', 'pages/ajax.render.php?operation=display_document&class=Attachment&field=contents&id=');
@@ -42,7 +43,7 @@ define('ATTACHMENTS_RENDERER', 'TableDetailsAttachmentsRenderer');
 class AttachmentsRendererFactory
 {
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sObjClass class name of the objects holding the attachments
 	 * @param int $iObjKey key of the objects holding the attachments
 	 * @param string $sTransactionId CSRF token
@@ -85,7 +86,7 @@ abstract class AbstractAttachmentsRenderer
 	 */
 	const ATTACHMENTS_LIST_CONTAINER_ID = 'AttachmentsListContainer';
 
-	/** @var \WebPage */
+	/** @var WebPage */
 	protected $oPage;
 	/**
 	 * @var string CSRF token, must be provided cause when getting content from AJAX we need the one from the original page, not the
@@ -102,14 +103,14 @@ abstract class AbstractAttachmentsRenderer
 	protected $oAttachmentsSet;
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sObjClass class name of the objects holding the attachments
 	 * @param int $iObjKey key of the objects holding the attachments
 	 * @param string $sTransactionId CSRF token
 	 *
 	 * @throws \OQLException
 	 */
-	public function __construct(\WebPage $oPage, $sObjClass, $iObjKey, $sTransactionId)
+	public function __construct(WebPage $oPage, $sObjClass, $iObjKey, $sTransactionId)
 	{
 		$this->oPage = $oPage;
 		$this->sObjClass = $sObjClass;

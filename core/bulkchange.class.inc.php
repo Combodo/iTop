@@ -6,6 +6,9 @@
 
 // The BOM is added at the head of exported UTF-8 CSV data, and removed (if present) from input UTF-8 data.
 // This helps MS-Excel (Version > 2007, Windows only) in changing its interpretation of a CSV file (by default Excel reads data as ISO-8859-1 -not 100% sure!)
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 define('UTF8_BOM', chr(239).chr(187).chr(191)); // 0xEF, 0xBB, 0xBF
 
 

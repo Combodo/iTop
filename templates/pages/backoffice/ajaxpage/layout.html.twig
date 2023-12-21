@@ -55,7 +55,7 @@
                 
                 window['{{ sPromiseId }}'] = new Promise(function (fAllJsFilesResolve, fAllJsFilesReject) {
                     /**
-                     * @type {Array} aJsFilesToLoad Files required by the current \AjaxPage
+                     * @type {Array} aJsFilesToLoad Files required by the current AjaxPage
                      *
                      * For each file:
                      * - "id": Used as an identifier to check if file is already being handled
@@ -91,7 +91,7 @@
                     
                     let aJsFilesToLoad = [];
                     /**
-                     * @type {Array} aJsFilesToLoadByOtherRequests Files required by the current \AjaxPage but that are already being handled by another request (done or ongoing)
+                     * @type {Array} aJsFilesToLoadByOtherRequests Files required by the current AjaxPage but that are already being handled by another request (done or ongoing)
                      */
                     let aJsFilesToLoadByOtherRequests = [];
 
@@ -101,7 +101,7 @@
                             "url": "{{ sJsFile|add_itop_version|raw }}"
                         });
 
-                        // If file is already present in the register (see it declaration in \WebPage TWIG template), let its original requester load it
+                        // If file is already present in the register (see it declaration in WebPage TWIG template), let its original requester load it
                         if (aLoadedJsFilesRegister.has("{{ sJsFile|raw }}") === true) {
                             aJsFilesToLoadByOtherRequests.push("{{ sJsFile|raw }}");
                         }

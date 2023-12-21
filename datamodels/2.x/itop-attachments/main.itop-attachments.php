@@ -4,6 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\WebPage\WebPage;
+
 class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExtension
 {
 	const ENUM_GUI_ALL = 'all';
@@ -221,7 +223,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 
 	/**
 	 * @param \DBObject $oObject
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode
 	 *
 	 * @throws \CoreException

@@ -19,6 +19,8 @@
 
 
 use Combodo\iTop\Application\Branding;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\Page;
 use Combodo\iTop\DesignElement;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
@@ -578,7 +580,7 @@ EOF;
 					}
 					try
 					{
-						/** @var \iTopWebPage $oP */
+						/** @var iTopWebPage $oP */
 						$aMenuLines = $this->CompileMenu($oMenuNode, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
 					}
 					catch (DOMFormatException $e)
@@ -2744,7 +2746,7 @@ CSS;
 	 * @param string $sTempTargetDir
 	 * @param string $sFinalTargetDir
 	 * @param string $sModuleRelativeDir
-	 * @param \iTopWebPage $oP
+	 * @param iTopWebPage $oP
 	 *
 	 * @return array
 	 * @throws \DOMException

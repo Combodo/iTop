@@ -17,6 +17,15 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+namespace Combodo\iTop\Application\WebPage;
+
+use ApplicationContext;
+use ExecutionKPI;
+use MetaModel;
+use ThemeHandler;
+use UserRights;
+use utils;
+
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
  */

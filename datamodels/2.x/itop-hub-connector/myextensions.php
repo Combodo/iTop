@@ -10,6 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');

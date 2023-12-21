@@ -7,6 +7,7 @@
 
 // cannot notify depreciation for now as this is still load in autoloader
 //DeprecatedCallsLog::NotifyDeprecatedFile('moved to sources/Application/WebPage/AjaxPage.php, now loadable using autoloader');
+use Combodo\iTop\Application\WebPage\AjaxPage;
 
 /**
  * Class ajax_page

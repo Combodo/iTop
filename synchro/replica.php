@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 

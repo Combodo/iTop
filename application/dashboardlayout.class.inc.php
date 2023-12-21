@@ -19,6 +19,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardRow;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Dashboard presentation
@@ -106,7 +107,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $aCells
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams

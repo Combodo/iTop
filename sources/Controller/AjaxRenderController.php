@@ -6,7 +6,7 @@
 
 namespace Combodo\iTop\Controller;
 
-use AjaxPage;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 use ApplicationContext;
 use ApplicationMenu;
 use AttributeLinkedSet;
@@ -33,7 +33,7 @@ use FunctionExpression;
 use IssueLog;
 use iTopExtension;
 use iTopExtensionsMap;
-use JsonPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
 use LogChannels;
 use MetaModel;
 use ormSet;
@@ -139,7 +139,7 @@ class AjaxRenderController
 	}
 
 	/**
-	 * @param \JsonPage $oPage
+	 * @param JsonPage $oPage
 	 * @param bool $bTokenOnly
 	 *
 	 * @throws \Exception
@@ -240,7 +240,7 @@ class AjaxRenderController
 	 * The resulting JSON is added to the page with the format:
 	 * {"code": "done or error", "counts": {"menu_id_1": count1, "menu_id_2": count2...}}
 	 *
-	 * @param \JsonPage $oPage
+	 * @param JsonPage $oPage
 	 */
 	public function GetMenusCount(JsonPage $oPage)
 	{
@@ -770,7 +770,7 @@ class AjaxRenderController
 	}
 
 	/**
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -792,7 +792,7 @@ class AjaxRenderController
 
 	/**
 	 * Display list of licenses in "About iTop" popup
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \Exception
 	 * @since 3.0.1
@@ -826,7 +826,7 @@ JS
 
 	/**
 	 * Display about iTop for all user non admin
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \Exception
 	 */
@@ -854,7 +854,7 @@ EOF
 
 	/**
 	 * Display about iTop for admin user
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \Exception
 	 */

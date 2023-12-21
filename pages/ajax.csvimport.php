@@ -11,6 +11,9 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\CSVPage;
+use Combodo\iTop\Application\WebPage\DownloadPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once('../approot.inc.php');

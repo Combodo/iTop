@@ -16,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Engine for displaying the various pages of a "wizard"

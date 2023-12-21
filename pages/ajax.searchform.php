@@ -8,6 +8,7 @@ use Combodo\iTop\Application\Search\AjaxSearchException;
 use Combodo\iTop\Application\Search\CriterionParser;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSectionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');

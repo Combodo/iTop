@@ -1,4 +1,7 @@
 <?php
+
+use Combodo\iTop\Application\WebPage\NiceWebPage;
+
 require_once(APPROOT."/application/user.preferences.class.inc.php");
 
 class HubConnectorPage extends NiceWebPage
