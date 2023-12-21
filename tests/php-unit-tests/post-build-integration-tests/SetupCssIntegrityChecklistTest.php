@@ -23,21 +23,31 @@ namespace Combodo\iTop\Test\UnitTest\ReleaseChecklist;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use iTopDesignFormat;
+use utils;
 
 
 /**
- * Class iTopDesignFormatChecklistTest
- *
- * @covers iTopDesignFormat
+ * Class SetupCssIntegrityChecklistTest
  */
 class SetupCssIntegrityChecklistTest extends ItopTestCase
 {
 	public function testSetupCssIntegrity()
 	{
-		$sSetupCssPath = APPROOT.'css/setup.css';
-		$sSetupCssContent = file_get_contents($sSetupCssPath);
-		$this->assertContains('/* integrityCheck: begin (do not remove/edit) */', $sSetupCssContent);
-		$this->assertContains('/* integrityCheck: end (do not remove/edit) */', $sSetupCssContent);
-		$this->assertGreaterThan(4000, strlen($sSetupCssContent), "Test if the resulting file $sSetupCssPath is long enough, the value is totally arbitrary (at the time of the writing the file is 5660o  long");
+		$sCssFileAbsPath = APPROOT."css/setup.css";
+
+        // First check if the compiled file exists
+        $this->assertTrue(file_exists($sCssFileAbsPath));
+
+        // Then check that it is not empty
+        $sVersionedCssFileContent = file_get_contents($sCssFileAbsPath);
+        $this->assertGreaterThan(0, strlen($sVersionedCssFileContent), "Compiled setup.css file seems empty");
+
+        // Then check that the compiled file is up-to-date
+		$sScssFileRelPath = "css/setup.scss";
+		$sScssFileAbsPath = APPROOT . $sScssFileRelPath;
+        touch($sScssFileAbsPath);
+        utils::GetCSSFromSASS($sScssFileRelPath);
+        $sCompiledCssFileContent = file_get_contents($sCssFileAbsPath);
+        $this->assertSame($sCompiledCssFileContent, $sVersionedCssFileContent, "Compiled setup.css file does not seem up to date as the one compiled just now is different");
 	}
 }
