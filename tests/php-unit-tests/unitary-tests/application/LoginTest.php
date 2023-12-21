@@ -34,6 +34,7 @@ class LoginTest extends ItopDataTestCase {
 			//put config back
 			$sConfigPath = MetaModel::GetConfig()->GetLoadedFile();
 			$oConfig = new \Config($this->sConfigTmpBackupFile);
+			@chmod($oConfig->GetLoadedFile(), 0770);
 			$oConfig->WriteToFile($sConfigPath);
 			@chmod($sConfigPath, 0440);
 		}
