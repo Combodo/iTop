@@ -435,7 +435,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: EventiTopNotification
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EventiTopNotification' => 'Notification '.ITOP_APPLICATION_SHORT,
 	'Class:EventiTopNotification+' => '',
 	'Class:EventiTopNotification/Attribute:title' => 'Titre',
@@ -583,7 +583,7 @@ En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
 // Class: ActioniTopNotification
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ActioniTopNotification' => 'ActioniTopNotification',
 	'Class:ActioniTopNotification+' => '',
 	'Class:ActioniTopNotification/Attribute:title' => 'Titre',
