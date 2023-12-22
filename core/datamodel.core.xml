@@ -56,7 +56,7 @@
               <code>4</code>
             </value>
           </values>
-          <default_value>1</default_value>
+          <default_value>4</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="recipients" xsi:type="AttributeOQL">
@@ -155,7 +155,7 @@
               public function DoExecute($oTrigger, $aContextArgs)
 	{
 		$oRecipientsSearch = DBObjectSearch::FromOQL($this->Get('recipients'));
-    $oRecipientsSearch->AllowAllDate();
+		$oRecipientsSearch->AllowAllDate();
 		$oRecipientsSet = new DBObjectSet($oRecipientsSearch);
 		[$sPreviousLanguage, $aPreviousPluginProperties] = $this->SetNotificationLanguage();
 		while ($oRecipient = $oRecipientsSet->Fetch()) {
