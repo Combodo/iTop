@@ -432,6 +432,41 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
+// Class: EventiTopNotification
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:EventiTopNotification' => 'Notification '.ITOP_APPLICATION_SHORT,
+	'Class:EventiTopNotification+' => '',
+	'Class:EventiTopNotification/Attribute:title' => 'Titre',
+	'Class:EventiTopNotification/Attribute:title+' => '',
+	'Class:EventiTopNotification/Attribute:icon' => 'Icône',
+	'Class:EventiTopNotification/Attribute:icon+' => '',
+	'Class:EventiTopNotification/Attribute:priority' => 'Priorité',
+	'Class:EventiTopNotification/Attribute:priority+' => '',
+	'Class:EventiTopNotification/Attribute:priority/Value:1' => 'Critique',
+	'Class:EventiTopNotification/Attribute:priority/Value:1+' => 'Critique',
+	'Class:EventiTopNotification/Attribute:priority/Value:2' => 'Urgent',
+	'Class:EventiTopNotification/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:EventiTopNotification/Attribute:priority/Value:3' => 'Important',
+	'Class:EventiTopNotification/Attribute:priority/Value:3+' => 'Important',
+	'Class:EventiTopNotification/Attribute:priority/Value:4' => 'Standard',
+	'Class:EventiTopNotification/Attribute:priority/Value:4+' => 'Standard',
+	'Class:EventiTopNotification/Attribute:url' => 'URL',
+	'Class:EventiTopNotification/Attribute:url+' => '',
+	'Class:EventiTopNotification/Attribute:read' => 'Lu',
+	'Class:EventiTopNotification/Attribute:read+' => '',
+	'Class:EventiTopNotification/Attribute:read/Value:no' => 'Non',
+	'Class:EventiTopNotification/Attribute:read/Value:no+' => 'Non',
+	'Class:EventiTopNotification/Attribute:read/Value:yes' => 'Oui',
+	'Class:EventiTopNotification/Attribute:read/Value:yes+' => 'Oui',
+	'Class:EventiTopNotification/Attribute:read_date' => 'Date de lecture',
+	'Class:EventiTopNotification/Attribute:read_date+' => '',
+	'Class:EventiTopNotification/Attribute:contact_id' => 'Contact',
+	'Class:EventiTopNotification/Attribute:contact_id+' => '',
+));
+
+//
 // Class: Action
 //
 
@@ -541,6 +576,36 @@ En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
 	'ActionEmail:preview_warning' => 'Le mèl peut s\'afficher différement dans les clients mèl par rapport à cet aperçu dans votre navigateur.',
 	'ActionEmail:preview_more_info' => 'Pour plus d\'informations sur les fonctionnalités CSS supportées par les différents client mèl, consultez %1$s.',
 	'ActionEmail:content_placeholder_missing' => 'The mot-clé "%1$s" ne figure pas dans le modèle HTML. Le contenu du champ "%2$s" ne sera pas intégré dans les mèls générés.',
+));
+
+
+//
+// Class: ActioniTopNotification
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:ActioniTopNotification' => 'ActioniTopNotification',
+	'Class:ActioniTopNotification+' => '',
+	'Class:ActioniTopNotification/Attribute:title' => 'Titre',
+	'Class:ActioniTopNotification/Attribute:title+' => '',
+	'Class:ActioniTopNotification/Attribute:message' => 'Message',
+	'Class:ActioniTopNotification/Attribute:message+' => '',
+	'Class:ActioniTopNotification/Attribute:icon' => 'Icône',
+	'Class:ActioniTopNotification/Attribute:icon+' => '',
+	'Class:ActioniTopNotification/Attribute:priority' => 'Priorité',
+	'Class:ActioniTopNotification/Attribute:priority+' => '',
+	'Class:ActioniTopNotification/Attribute:priority/Value:1' => 'Critique',
+	'Class:ActioniTopNotification/Attribute:priority/Value:1+' => 'Critique',
+	'Class:ActioniTopNotification/Attribute:priority/Value:2' => 'Urgent',
+	'Class:ActioniTopNotification/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:ActioniTopNotification/Attribute:priority/Value:3' => 'Important',
+	'Class:ActioniTopNotification/Attribute:priority/Value:3+' => 'Important',
+	'Class:ActioniTopNotification/Attribute:priority/Value:4' => 'Standard',
+	'Class:ActioniTopNotification/Attribute:priority/Value:4+' => 'Standard',
+	'Class:ActioniTopNotification/Attribute:recipients' => 'Destinataires',
+	'Class:ActioniTopNotification/Attribute:recipients+' => '',
+	'Class:ActioniTopNotification/Attribute:url' => 'URL',
+	'Class:ActioniTopNotification/Attribute:url+' => '',
 ));
 
 //

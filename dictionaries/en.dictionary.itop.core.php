@@ -480,6 +480,41 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: EventiTopNotification
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:EventiTopNotification' => ITOP_APPLICATION_SHORT.' Notification',
+	'Class:EventiTopNotification+' => '',
+	'Class:EventiTopNotification/Attribute:title' => 'Title',
+	'Class:EventiTopNotification/Attribute:title+' => '',
+	'Class:EventiTopNotification/Attribute:icon' => 'Icon',
+	'Class:EventiTopNotification/Attribute:icon+' => '',
+	'Class:EventiTopNotification/Attribute:priority' => 'Priority',
+	'Class:EventiTopNotification/Attribute:priority+' => '',
+	'Class:EventiTopNotification/Attribute:priority/Value:1' => 'Critical',
+	'Class:EventiTopNotification/Attribute:priority/Value:1+' => 'Critical',
+	'Class:EventiTopNotification/Attribute:priority/Value:2' => 'Urgent',
+	'Class:EventiTopNotification/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:EventiTopNotification/Attribute:priority/Value:3' => 'Important',
+	'Class:EventiTopNotification/Attribute:priority/Value:3+' => 'Important',
+	'Class:EventiTopNotification/Attribute:priority/Value:4' => 'Standard',
+	'Class:EventiTopNotification/Attribute:priority/Value:4+' => 'Standard',
+	'Class:EventiTopNotification/Attribute:url' => 'URL',
+	'Class:EventiTopNotification/Attribute:url+' => '',
+	'Class:EventiTopNotification/Attribute:read' => 'Read',
+	'Class:EventiTopNotification/Attribute:read+' => '',
+	'Class:EventiTopNotification/Attribute:read/Value:no' => 'No',
+	'Class:EventiTopNotification/Attribute:read/Value:no+' => 'No',
+	'Class:EventiTopNotification/Attribute:read/Value:yes' => 'Yes',
+	'Class:EventiTopNotification/Attribute:read/Value:yes+' => 'Yes',
+	'Class:EventiTopNotification/Attribute:read_date' => 'Read date',
+	'Class:EventiTopNotification/Attribute:read_date+' => '',
+	'Class:EventiTopNotification/Attribute:contact_id' => 'Contact',
+	'Class:EventiTopNotification/Attribute:contact_id+' => '',
+));
+
+//
 // Class: Action
 //
 
@@ -586,6 +621,36 @@ While editing, click on the magnifier to get pertinent examples',
 	'ActionEmail:preview_warning'                          => 'The actual eMail may look different in the eMail client than this preview in your browser.',
 	'ActionEmail:preview_more_info'                        => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s',
 	'ActionEmail:content_placeholder_missing'              => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.',
+));
+
+
+//
+// Class: ActioniTopNotification
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:ActioniTopNotification' => 'ActioniTopNotification',
+	'Class:ActioniTopNotification+' => '',
+	'Class:ActioniTopNotification/Attribute:title' => 'Title',
+	'Class:ActioniTopNotification/Attribute:title+' => '',
+	'Class:ActioniTopNotification/Attribute:message' => 'Message',
+	'Class:ActioniTopNotification/Attribute:message+' => '',
+	'Class:ActioniTopNotification/Attribute:icon' => 'Icon',
+	'Class:ActioniTopNotification/Attribute:icon+' => '',
+	'Class:ActioniTopNotification/Attribute:priority' => 'Priority',
+	'Class:ActioniTopNotification/Attribute:priority+' => '',
+	'Class:ActioniTopNotification/Attribute:priority/Value:1' => 'Critical',
+	'Class:ActioniTopNotification/Attribute:priority/Value:1+' => 'Critical',
+	'Class:ActioniTopNotification/Attribute:priority/Value:2' => 'Urgent',
+	'Class:ActioniTopNotification/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:ActioniTopNotification/Attribute:priority/Value:3' => 'Important',
+	'Class:ActioniTopNotification/Attribute:priority/Value:3+' => 'Important',
+	'Class:ActioniTopNotification/Attribute:priority/Value:4' => 'Standard',
+	'Class:ActioniTopNotification/Attribute:priority/Value:4+' => 'Standard',
+	'Class:ActioniTopNotification/Attribute:recipients' => 'Recipients',
+	'Class:ActioniTopNotification/Attribute:recipients+' => '',
+	'Class:ActioniTopNotification/Attribute:url' => 'URL',
+	'Class:ActioniTopNotification/Attribute:url+' => '',
 ));
 
 //
