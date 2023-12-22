@@ -60,6 +60,7 @@ class SymfonyBridge
 	public function ToSymfonyFormType(FormFieldDescription $oFormDescription) : ?array
 	{
 		switch($oFormDescription->GetType()){
+
 			case FormFieldTypeEnumeration::TEXT:
 				return [
 					'path' => $oFormDescription->GetPath(),
@@ -117,6 +118,18 @@ class SymfonyBridge
 				$aSymfony['type'],
 				$aSymfony['options']
 			);
+
+			/**
+			 * Allow choices to be loaded client side via ajax.
+			*  without this, field value needs to be part of initial choices that may be empty.
+			 * Need reflexion because, value can be hacked with invalid value without extra validation.
+			 * @see https://symfony.com/doc/current/reference/forms/types/choice.html#choice-loader
+			 * @see https://itecnote.com/tecnote/php-disable-backend-validation-for-choice-field-in-symfony-2-type/
+			*/
+			if($aSymfony['type'] === ChoiceType::class){
+				$oFormBuilder->get($aSymfony['path'])->resetViewTransformers();
+			}
+
 		}
 
 		return $oFormBuilder->getForm();

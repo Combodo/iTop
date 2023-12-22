@@ -2,6 +2,7 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
+
     <link rel="stylesheet" href="{{ asset_node('tom-select/dist/css/tom-select.bootstrap5.css') }}">
 
     <style>
@@ -25,11 +26,10 @@
 
 <div style="padding: 20px;">
 
-    {% if theme is not defined %}
-        {% set theme = 'bootstrap_5_layout.html.twig' %}
+    {# specific form theme #}
+    {% if theme is defined %}
+        {% form_theme form theme %}
     {% endif %}
-
-    {% form_theme form theme %}
 
     {{ form_start(form) }}
         {{ form_widget(form) }}
@@ -42,7 +42,7 @@
        $(document).ready(function(e){
 
            // SELECT widget implementation
-           $('[data-widget="Select"]').each(function(e){
+           $('[data-widget="SelectWidget"]').each(function(e){
 
                const sId = $(this).attr('id');
                const aOptions = $(this).data('widget-options');

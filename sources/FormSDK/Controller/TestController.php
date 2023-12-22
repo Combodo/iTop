@@ -3,8 +3,12 @@
 namespace Combodo\iTop\FormSDK\Controller;
 
 use Combodo\iTop\Controller\AbstractAppController;
+use Combodo\iTop\FormSDK\Dto\ObjectSearchDto;
+use Combodo\iTop\FormSDK\Helper\SelectHelper;
 use Combodo\iTop\FormSDK\Service\FormManager;
+use Combodo\iTop\Service\Base\ObjectRepository;
 use Exception;
+use JsonPage;
 use MetaModel;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -12,6 +16,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints\Length;
 use utils;
@@ -37,38 +43,24 @@ class TestController extends AbstractAppController
 		$oObjectPlugin->AddAttribute('name');
 		$oObjectPlugin->AddAttribute('mobile_phone');
 		// others data
-		$oFormFactory->AddText('data1', ['label' => 'Ma ville',  'constraints' => new Length(['min' => 3])], 'Autun');
-		$oFormFactory->AddText('data2', ['label' => 'Pays'], 'FRANCE');
-
-		$aSelectOptions = [
-			'ajax_url' => $this->generateUrl('formSDK_ajax_select'),
-			'valueField' => 'breed',
-            'labelField' => 'breed',
-            'searchField' => 'breed',
-			'preload' => true,
-		];
-		$oFormFactory->AddSelect('data3', [
+		$oFormFactory->AddTextField('data1', [
+			'label' => 'Ma ville',
+			'constraints' => new Length(['min' => 3])
+		], 'Autun');
+		$oFormFactory->AddTextField('data2', [
+			'label' => 'Pays'
+		], 'FRANCE');
+		$oFormFactory->AddSelectField('data3', [
+			'label' => 'Ma langue',
+			'choices' => SelectHelper::GetApplicationLanguages()
+		], 'FR FR');
+		$oFormFactory->AddSelectAjaxField('data4', [
 			'label' => 'Mon Chien',
-			'placeholder' => 'Sélectionnez un chien',
-			'attr' => [
-				'data-widget' => 'Select',
-				'data-widget-options' => json_encode($aSelectOptions)
-			],
-//			'choice_loader' => new CallbackChoiceLoader(function(): array {
-//
-//				$curl_data = utils::DoPostRequest('http://localhost/' . $this->generateUrl('formSDK_ajax_select'), []);
-//				$response_data = json_decode($curl_data);
-//
-//				if(count($response_data->items) > 2) return [];
-//
-//				$result = [];
-//				foreach ($response_data->items as $e) {
-//					$result[$e->breed] = $e->breed;
-//				}
-//
-//				return $result;
-//			}),
-		], null);
+			'placeholder' => 'Sélectionnez un chien'
+		], 'http://localhost' . $this->generateUrl('formSDK_ajax_select'), [], 'breed', 'breed', 'breed', 20);
+		$oFormFactory->AddSelectOqlField('data5', [
+			'label' => 'Ma personne',
+		], 'Person', 'SELECT Person', [], '', 20);
 
 		// get the form
 		$oForm = $oFormFactory->GetForm();
@@ -94,17 +86,28 @@ class TestController extends AbstractAppController
 
 	}
 
-
 	#[Route('/formSDK/ajax_select', name: 'formSDK_ajax_select')]
 	public function ajax(Request $oRequest): Response
 	{
 		$oJson = file_get_contents('sources/FormSDK/Resources/dogs.json');
 		$aDogs = json_decode($oJson, true);
-
 		$sQuery = $oRequest->request->get('query');
 
 		return new JsonResponse([
 			"items" => $aDogs['dogBreeds']
+		]);
+	}
+
+	#[Route('/formSDK/object_search', name: 'formSDK_object_search')]
+	public function OperationSearch(
+		#[MapQueryString] ObjectSearchDto $objectSearch,
+	): JsonResponse
+	{
+		// Search objects
+		$aResult = ObjectRepository::SearchFromOql($objectSearch->class, json_decode($objectSearch->fields, true), $objectSearch->oql, $objectSearch->search);
+
+		return new JsonResponse([
+			'items' => $aResult,
 		]);
 	}
 

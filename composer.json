@@ -30,6 +30,7 @@
     "symfony/http-foundation": "~6.4.0",
     "symfony/http-kernel": "~6.4.0",
     "symfony/runtime": "~6.4.0",
+    "symfony/serializer": "^6.4",
     "symfony/twig-bundle": "~6.4.0",
     "symfony/validator": "~6.4.0",
     "symfony/var-dumper": "~6.4.0",

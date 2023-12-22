@@ -19,13 +19,17 @@
 
 namespace Combodo\iTop\FormSDK\Service;
 
+use Combodo\iTop\FormSDK\Helper\SelectHelper;
 use Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryObjectPlugin;
 use Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryPluginInterface;
 use Combodo\iTop\FormSDK\Symfony\SymfonyBridge;
 use Combodo\iTop\FormSDK\Field\Description\FormFieldDescription;
 use Combodo\iTop\FormSDK\Field\Description\FormFieldTypeEnumeration;
 use DBObject;
+use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use utils;
 
 /**
  * Form factory service.
@@ -35,7 +39,6 @@ use Symfony\Component\Form\FormInterface;
  */
 class FormFactory
 {
-
 	/** @var \Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryPluginInterface[] $aPlugins  */
 	private array $aPlugins = [];
 
@@ -49,46 +52,14 @@ class FormFactory
 	 * Constructor.
 	 *
 	 * @param \Combodo\iTop\FormSDK\Symfony\SymfonyBridge $oSymfonyBridge
+	 * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $oRouter
 	 */
 	public function __construct(
-		protected SymfonyBridge $oSymfonyBridge
+		private SymfonyBridge $oSymfonyBridge,
+		private UrlGeneratorInterface $oRouter
 	)
 	{
 
-	}
-
-	/**
-	 * Add text.
-	 *
-	 * @param string $sKey
-	 * @param array $aOptions
-	 * @param mixed $oData
-	 *
-	 * @return $this
-	 */
-	public function AddText(string $sKey, array $aOptions, mixed $oData) : FormFactory
-	{
-		$this->aDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::TEXT, $aOptions);
-		$this->aData[$sKey] = $oData;
-
-		return $this;
-	}
-
-	/**
-	 * Add select.
-	 *
-	 * @param string $sKey
-	 * @param array $aOptions
-	 * @param mixed $oData
-	 *
-	 * @return $this
-	 */
-	public function AddSelect(string $sKey, array $aOptions, mixed $oData) : FormFactory
-	{
-		$this->aDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::SELECT, $aOptions);
-		$this->aData[$sKey] = $oData;
-
-		return $this;
 	}
 
 	/**
@@ -161,4 +132,114 @@ class FormFactory
 		return $this->oSymfonyBridge->GetForm($aDescriptions, $aData);
 	}
 
+
+	/**
+	 * Add text field.
+	 *
+	 * @param string $sKey
+	 * @param array $aOptions
+	 * @param mixed $oData
+	 *
+	 * @return $this
+	 */
+	public function AddTextField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
+	{
+		$this->aDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::TEXT, $aOptions);
+		$this->aData[$sKey] = $oData;
+
+		return $this;
+	}
+
+	/**
+	 * Add select field.
+	 *
+	 * @param string $sKey
+	 * @param array $aOptions
+	 * @param mixed $oData
+	 *
+	 * @return $this
+	 */
+	public function AddSelectField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
+	{
+		$this->aDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::SELECT, $aOptions);
+		$this->aData[$sKey] = $oData;
+
+		return $this;
+	}
+
+	/**
+	 * Add dynamic ajax select field.
+	 *
+	 * @param string $sKey
+	 * @param array $aOptions
+	 * @param string $sAjaxUrl
+	 * @param array $aAjaxData
+	 * @param string $sValueField
+	 * @param string $sLabelField
+	 * @param string $sSearchField
+	 * @param int $iAjaxThershold
+	 * @param mixed $oData
+	 *
+	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
+	 */
+	public function AddSelectAjaxField(string $sKey, array $aOptions, string $sAjaxUrl, array $aAjaxData, string $sValueField, string $sLabelField, string $sSearchField, int $iAjaxThershold, mixed $oData = null) : FormFactory
+	{
+		// ajax loader options
+		$aAjaxLoaderOptions = [
+			'ajax_url' => $sAjaxUrl,
+			'valueField' => $sValueField ? $sValueField : 'value',
+			'labelField' => $sLabelField ? $sLabelField : 'label',
+			'searchField' => $sSearchField ? $sSearchField : 'search',
+			'preload' => false,
+		];
+
+		// merge options
+		$aOptions = array_merge([
+			'placeholder' => 'Select a value...',
+			'attr' => [
+				'data-widget' => 'SelectWidget',
+				'data-widget-options' => json_encode($aAjaxLoaderOptions)
+			],
+			'choice_loader' => new CallbackChoiceLoader(function() use ($sAjaxUrl, $aAjaxData, $iAjaxThershold): array {
+				$curl_data = utils::DoPostRequest($sAjaxUrl, []);
+				$response_data = json_decode($curl_data);
+				if(count($response_data->items) > $iAjaxThershold) return [];
+				$result = [];
+				foreach ($response_data->items as $e) {
+					$result[$e->breed] = $e->breed;
+				}
+				return $result;
+			}),
+		], $aOptions);
+
+		return $this->AddSelectField($sKey, $aOptions, $oData);
+	}
+
+
+	/**
+	 * Add dynamic OQL select field.
+	 *
+	 * @param string $sKey
+	 * @param array $aOptions
+	 * @param string $sObjectClass
+	 * @param string $sOql
+	 * @param array $aFieldsToLoad
+	 * @param string $sSearch
+	 * @param int $iAjaxThershold
+	 * @param mixed $oData
+	 *
+	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
+	 */
+	public function AddSelectOqlField(string $sKey, array $aOptions, string $sObjectClass, string $sOql, array $aFieldsToLoad, string $sSearch, int $iAjaxThershold, mixed $oData = null) : FormFactory
+	{
+//		$sFieldsToLoad = implode($aFieldsToLoad);
+		$aData = [
+			'class' => $sObjectClass,
+			'oql' => $sOql,
+			'fields' => json_encode($aFieldsToLoad),
+			'search' => $sSearch
+		];
+		$sUrl = 'http://localhost' . $this->oRouter->generate('formSDK_object_search') . '?' . http_build_query($aData);
+		return $this->AddSelectAjaxField($sKey, $aOptions, $sUrl, $aData, 'id', 'friendlyname', 'friendlyname', $iAjaxThershold, $oData);
+	}
 }

@@ -20,6 +20,7 @@
 namespace Combodo\iTop\FormSDK\Service;
 
 use Combodo\iTop\FormSDK\Symfony\SymfonyBridge;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Form manager service.
@@ -36,7 +37,8 @@ class FormManager
 	 * @param \Combodo\iTop\FormSDK\Symfony\SymfonyBridge $oSymfonyBridge
 	 */
 	public function __construct(
-		private readonly SymfonyBridge $oSymfonyBridge
+		private readonly SymfonyBridge $oSymfonyBridge,
+		private UrlGeneratorInterface $oRouter
 	)
 	{
 	}
@@ -48,7 +50,7 @@ class FormManager
 	 */
 	public function CreateFactory() : FormFactory
 	{
-		return new FormFactory($this->oSymfonyBridge);
+		return new FormFactory($this->oSymfonyBridge, $this->oRouter);
 	}
 
 }

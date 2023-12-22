@@ -809,7 +809,10 @@ JS;
 
 		// Retrieve this reference object (for OQL)
 		$sThisObjectData = utils::ReadPostedParam('this_object_data', null, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
-		$oThisObj = ObjectRepository::GetObjectFromWizardHelperData($sThisObjectData);
+		$oThisObj = null;
+		if($sThisObjectData !== null){
+			$oThisObj = ObjectRepository::GetObjectFromWizardHelperData($sThisObjectData);
+		}
 
 		// Retrieve data post processor
 		$aDataProcessor = utils::ReadParam('data_post_processor', null, false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);

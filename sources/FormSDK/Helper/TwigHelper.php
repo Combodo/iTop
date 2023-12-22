@@ -1,6 +1,6 @@
 <?php
 
-namespace Combodo\iTop\FormSDK\External;
+namespace Combodo\iTop\FormSDK\Helper;
 
 use MetaModel;
 use Twig\Extension\AbstractExtension;
