@@ -35,7 +35,9 @@ class PDFPage extends WebPage
 	{
 		$oKpi = new ExecutionKPI();
 		parent::__construct($s_title);
-		define('K_PATH_FONTS', APPROOT.'lib/combodo/tcpdf/fonts/');
+		if (!defined('K_PATH_FONTS')){
+			define('K_PATH_FONTS', APPROOT.'lib/combodo/tcpdf/fonts/');
+		}
 		$this->oPdf = new iTopPDF($sPageOrientation, 'mm', $sPageFormat, true, self::PAGES_CHARSET, false);
 
 		// set document information
