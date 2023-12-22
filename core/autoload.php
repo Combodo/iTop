@@ -28,9 +28,7 @@ MetaModel::IncludeModule('sources/Application/Newsroom/iTopNewsroomProvider.php'
 
 
 MetaModel::IncludeModule('core/event.class.inc.php');
-MetaModel::IncludeModule('sources/Core/Notification/Event/EventiTopNotification.php');
 MetaModel::IncludeModule('core/action.class.inc.php');
-MetaModel::IncludeModule('sources/Core/Notification/Action/ActioniTopNotification.php');
 MetaModel::IncludeModule('core/trigger.class.inc.php');
 MetaModel::IncludeModule('core/bulkexport.class.inc.php');
 MetaModel::IncludeModule('core/ownershiplock.class.inc.php');
