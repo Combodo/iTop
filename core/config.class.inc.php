@@ -1911,10 +1911,12 @@ class Config
 	public function AddAllowedLoginTypes($sLoginMode)
 	{
 		$aAllowedLoginTypes = $this->GetAllowedLoginTypes();
-		if (! in_array($sLoginMode, $aAllowedLoginTypes)){
-			$aAllowedLoginTypes[] = $sLoginMode;
-			$this->SetAllowedLoginTypes($aAllowedLoginTypes);
+		if (in_array($sLoginMode, $aAllowedLoginTypes)){
+			return;
 		}
+
+		$aAllowedLoginTypes[] = $sLoginMode;
+		$this->SetAllowedLoginTypes($aAllowedLoginTypes);
 	}
 
 	public function SetExternalAuthenticationVariable($sExtAuthVariable)
