@@ -225,7 +225,7 @@
               <code>4</code>
             </value>
           </values>
-          <default_value>1</default_value>
+          <default_value>4</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="url" xsi:type="AttributeURL">
