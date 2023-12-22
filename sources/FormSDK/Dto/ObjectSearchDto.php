@@ -12,7 +12,7 @@ class ObjectSearchDto
 		#[Assert\NotBlank]
 		public readonly string $oql,
 		public readonly string $fields,
-		public readonly string $search,
+		public readonly string $search = '',
 	) {
 	}
 }

@@ -7,6 +7,7 @@ use Combodo\iTop\FormSDK\Dto\ObjectSearchDto;
 use Combodo\iTop\FormSDK\Helper\SelectHelper;
 use Combodo\iTop\FormSDK\Service\FormManager;
 use Combodo\iTop\Service\Base\ObjectRepository;
+use DateTime;
 use Exception;
 use JsonPage;
 use MetaModel;
@@ -39,26 +40,37 @@ class TestController extends AbstractAppController
 		// build the form
 		$oFormFactory = $oFormManager->CreateFactory();
 		// object plugin
-		$oObjectPlugin = $oFormFactory->CreateObjectPlugin($oPerson, false);
+		$oObjectPlugin = $oFormFactory->CreateObjectAddon($oPerson, true);
 		$oObjectPlugin->AddAttribute('name');
 		$oObjectPlugin->AddAttribute('mobile_phone');
 		// others data
-		$oFormFactory->AddTextField('data1', [
+		$oFormFactory->AddTextField('city', [
 			'label' => 'Ma ville',
 			'constraints' => new Length(['min' => 3])
 		], 'Autun');
-		$oFormFactory->AddTextField('data2', [
+		$oFormFactory->AddTextField('country', [
 			'label' => 'Pays'
 		], 'FRANCE');
-		$oFormFactory->AddSelectField('data3', [
+		$oFormFactory->AddDateField('birthday', [
+			'label' => 'Anniversaire',
+			'widget' => 'single_text',
+		], new DateTime('1979/06/27'));
+		$oFormFactory->AddSelectField('language', [
 			'label' => 'Ma langue',
 			'choices' => SelectHelper::GetApplicationLanguages()
 		], 'FR FR');
-		$oFormFactory->AddSelectAjaxField('data4', [
+		$oFormFactory->AddSelectAjaxField('dog', [
 			'label' => 'Mon Chien',
 			'placeholder' => 'Sélectionnez un chien'
-		], 'http://localhost' . $this->generateUrl('formSDK_ajax_select'), [], 'breed', 'breed', 'breed', 20);
-		$oFormFactory->AddSelectOqlField('data5', [
+		], [
+			'url' => 'http://localhost' . $this->generateUrl('formSDK_ajax_select'),
+			'ajax_query_parameter' => 'query',
+			'value_field' => 'breed',
+			'label_field' => 'breed',
+			'search_field' => 'breed',
+			'threshold' => 20
+		]);
+		$oFormFactory->AddSelectOqlField('friends', [
 			'label' => 'Ma personne',
 		], 'Person', 'SELECT Person', [], '', 20);
 

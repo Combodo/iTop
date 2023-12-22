@@ -34,7 +34,7 @@ use MetaModel;
  * @package FormSDK
  * @since 3.2.0
  */
-final class FormFactoryObjectPlugin implements FormFactoryPluginInterface
+final class FormFactoryObjectAddon implements FormFactoryAddonInterface
 {
 	/** @var array list of object attributes */
 	private array $aAttributes = [];
@@ -61,7 +61,7 @@ final class FormFactoryObjectPlugin implements FormFactoryPluginInterface
 	 *
 	 * @return $this
 	 */
-	public function AddAttribute(string $sAttributeCode, array $aOptions = []) : FormFactoryObjectPlugin
+	public function AddAttribute(string $sAttributeCode, array $aOptions = []) : FormFactoryObjectAddon
 	{
 		$this->aAttributes[$sAttributeCode] = $aOptions;
 		return $this;

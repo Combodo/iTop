@@ -28,6 +28,7 @@ namespace Combodo\iTop\FormSDK\Field\Description;
 enum FormFieldTypeEnumeration : string
 {
 	case TEXT = 'TEXT';
+	case DATE = 'DATE';
 	case SELECT = 'SELECT';
 	case DB_OBJECT = 'DB_OBJECT';
 

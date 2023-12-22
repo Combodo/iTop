@@ -68,6 +68,13 @@ class SymfonyBridge
 					'options' => $oFormDescription->GetOptions()
 				];
 
+			case FormFieldTypeEnumeration::DATE:
+				return [
+					'path' => $oFormDescription->GetPath(),
+					'type' => DateType::class,
+					'options' => $oFormDescription->GetOptions()
+				];
+
 			case FormFieldTypeEnumeration::SELECT:
 				return [
 					'path' => $oFormDescription->GetPath(),

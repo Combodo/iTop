@@ -25,7 +25,7 @@ namespace Combodo\iTop\FormSDK\Service\FactoryPlugin;
  * @package FormSDK
  * @since 3.2.0
  */
-interface FormFactoryPluginInterface
+interface FormFactoryAddonInterface
 {
 	/**
 	 * Return data attached to the form.

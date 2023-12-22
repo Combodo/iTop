@@ -20,8 +20,8 @@
 namespace Combodo\iTop\FormSDK\Service;
 
 use Combodo\iTop\FormSDK\Helper\SelectHelper;
-use Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryObjectPlugin;
-use Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryPluginInterface;
+use Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryObjectAddon;
+use Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryAddonInterface;
 use Combodo\iTop\FormSDK\Symfony\SymfonyBridge;
 use Combodo\iTop\FormSDK\Field\Description\FormFieldDescription;
 use Combodo\iTop\FormSDK\Field\Description\FormFieldTypeEnumeration;
@@ -39,8 +39,8 @@ use utils;
  */
 class FormFactory
 {
-	/** @var \Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryPluginInterface[] $aPlugins  */
-	private array $aPlugins = [];
+	/** @var \Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryAddonInterface[] $aAddons  */
+	private array $aAddons = [];
 
 	/** @var array $aDescriptions form types descriptions */
 	private array $aDescriptions = [];
@@ -74,7 +74,7 @@ class FormFactory
 		];
 
 		// append plugin data
-		foreach ($this->GetAllPlugins() as $oPlugin){
+		foreach ($this->GetAllAddons() as $oPlugin){
 			$aResult['descriptions'] = array_merge($aResult['descriptions'], $oPlugin->GetFormDescriptions());
 			$aResult['data'] = array_merge($aResult['data'], $oPlugin->GetFormData());
 		}
@@ -83,42 +83,42 @@ class FormFactory
 	}
 
 	/**
-	 * Create an object plugin.
+	 * Create an object addon.
 	 *
 	 * @param \DBObject $oDBObject
 	 * @param bool $bGroup
 	 *
-	 * @return \Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryObjectPlugin
+	 * @return \Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryObjectAddon
 	 */
-	public function CreateObjectPlugin(DBObject $oDBObject, bool $bGroup = true) : FormFactoryObjectPlugin
+	public function CreateObjectAddon(DBObject $oDBObject, bool $bGroup = true) : FormFactoryObjectAddon
 	{
-		$oObjectBuilder = new FormFactoryObjectPlugin($oDBObject, $bGroup);
-		$this->AddPlugin(get_class($oDBObject) . '_' . $oDBObject->GetKey(), $oObjectBuilder);
+		$oObjectBuilder = new FormFactoryObjectAddon($oDBObject, $bGroup);
+		$this->AddAddon(get_class($oDBObject) . '_' . $oDBObject->GetKey(), $oObjectBuilder);
 		return $oObjectBuilder;
 	}
 
 	/**
-	 * Add a plugin.
+	 * Add an addon.
 	 *
 	 * @param string $sKey
-	 * @param \Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryPluginInterface $oPlugin
+	 * @param \Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryAddonInterface $oPlugin
 	 *
 	 * @return $this
 	 */
-	public function AddPlugin(string $sKey, FormFactoryPluginInterface $oPlugin) : FormFactory
+	public function AddAddon(string $sKey, FormFactoryAddonInterface $oPlugin) : FormFactory
 	{
-		$this->aPlugins[$sKey] = $oPlugin;
+		$this->aAddons[$sKey] = $oPlugin;
 		return $this;
 	}
 
 	/**
-	 * Get all plugins.
+	 * Get all addons.
 	 *
-	 * @return \Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryPluginInterface[]
+	 * @return \Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryAddonInterface[]
 	 */
-	public function GetAllPlugins() : array
+	public function GetAllAddons() : array
 	{
-		return $this->aPlugins;
+		return $this->aAddons;
 	}
 
 	/**
@@ -131,7 +131,6 @@ class FormFactory
 		['descriptions' => $aDescriptions, 'data' => $aData] = $this->GetFormDescriptionsAndData();
 		return $this->oSymfonyBridge->GetForm($aDescriptions, $aData);
 	}
-
 
 	/**
 	 * Add text field.
@@ -149,6 +148,24 @@ class FormFactory
 
 		return $this;
 	}
+
+	/**
+	 * Add date field.
+	 *
+	 * @param string $sKey
+	 * @param array $aOptions
+	 * @param mixed $oData
+	 *
+	 * @return $this
+	 */
+	public function AddDateField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
+	{
+		$this->aDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::DATE, $aOptions);
+		$this->aData[$sKey] = $oData;
+
+		return $this;
+	}
+
 
 	/**
 	 * Add select field.
@@ -172,38 +189,36 @@ class FormFactory
 	 *
 	 * @param string $sKey
 	 * @param array $aOptions
-	 * @param string $sAjaxUrl
+	 * @param array $aAjaxOptions
 	 * @param array $aAjaxData
-	 * @param string $sValueField
-	 * @param string $sLabelField
-	 * @param string $sSearchField
-	 * @param int $iAjaxThershold
 	 * @param mixed $oData
 	 *
 	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
 	 */
-	public function AddSelectAjaxField(string $sKey, array $aOptions, string $sAjaxUrl, array $aAjaxData, string $sValueField, string $sLabelField, string $sSearchField, int $iAjaxThershold, mixed $oData = null) : FormFactory
+	public function AddSelectAjaxField(string $sKey, array $aOptions, array $aAjaxOptions, array $aAjaxData = [], mixed $oData = null) : FormFactory
 	{
-		// ajax loader options
-		$aAjaxLoaderOptions = [
-			'ajax_url' => $sAjaxUrl,
-			'valueField' => $sValueField ? $sValueField : 'value',
-			'labelField' => $sLabelField ? $sLabelField : 'label',
-			'searchField' => $sSearchField ? $sSearchField : 'search',
+		// ajax options
+		array_merge([
+			'url' => '',
+			'query_parameter' => 'query',
+			'value_field' => 'value',
+			'label_field' => 'label',
+			'search_field' => 'search',
 			'preload' => false,
-		];
+			'threshold' => -1
+		], $aAjaxOptions);
 
 		// merge options
 		$aOptions = array_merge([
-			'placeholder' => 'Select a value...',
+			'placeholder' => 'Select...',
 			'attr' => [
 				'data-widget' => 'SelectWidget',
-				'data-widget-options' => json_encode($aAjaxLoaderOptions)
+				'data-widget-options' => json_encode($aAjaxOptions)
 			],
-			'choice_loader' => new CallbackChoiceLoader(function() use ($sAjaxUrl, $aAjaxData, $iAjaxThershold): array {
-				$curl_data = utils::DoPostRequest($sAjaxUrl, []);
+			'choice_loader' => new CallbackChoiceLoader(function() use ($aAjaxOptions, $aAjaxData): array {
+				$curl_data = utils::DoPostRequest($aAjaxOptions['url'], []);
 				$response_data = json_decode($curl_data);
-				if(count($response_data->items) > $iAjaxThershold) return [];
+				if(count($response_data->items) > $aAjaxOptions['threshold']) return [];
 				$result = [];
 				foreach ($response_data->items as $e) {
 					$result[$e->breed] = $e->breed;
@@ -232,14 +247,20 @@ class FormFactory
 	 */
 	public function AddSelectOqlField(string $sKey, array $aOptions, string $sObjectClass, string $sOql, array $aFieldsToLoad, string $sSearch, int $iAjaxThershold, mixed $oData = null) : FormFactory
 	{
-//		$sFieldsToLoad = implode($aFieldsToLoad);
-		$aData = [
+		$aAjaxData = [
 			'class' => $sObjectClass,
 			'oql' => $sOql,
-			'fields' => json_encode($aFieldsToLoad),
-			'search' => $sSearch
+			'fields' => '{'.implode($aFieldsToLoad).'}',
 		];
-		$sUrl = 'http://localhost' . $this->oRouter->generate('formSDK_object_search') . '?' . http_build_query($aData);
-		return $this->AddSelectAjaxField($sKey, $aOptions, $sUrl, $aData, 'id', 'friendlyname', 'friendlyname', $iAjaxThershold, $oData);
+		$sUrl = 'http://localhost' . $this->oRouter->generate('formSDK_object_search') . '?' . http_build_query($aAjaxData);
+		$aAjaxOptions = [
+			'url' => $sUrl,
+			'query_parameter' => 'search',
+			'value_field' => 'key',
+			'label_field' => 'friendlyname',
+			'search_field' => 'friendlyname',
+			'threshold' => $iAjaxThershold
+		];
+		return $this->AddSelectAjaxField($sKey, $aOptions, $aAjaxOptions, $aAjaxData, $oData);
 	}
 }

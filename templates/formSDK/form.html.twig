@@ -48,13 +48,22 @@
                const aOptions = $(this).data('widget-options');
 
                new TomSelect(`#${sId}`, {
-                   valueField: aOptions['valueField'],
-                   labelField: aOptions['labelField'],
-                   searchField: aOptions['searchField'],
-                   // fetch remote data
+                   valueField: aOptions['value_field'],
+                   labelField: aOptions['label_field'],
+                   searchField: aOptions['search_field'],
+                   maxItems: aOptions['maxItems'],
+                   plugins: {
+                       remove_button:{
+                           title:'Remove this item',
+                       }
+                   },
                    load: function(query, callback) {
-                       const url = aOptions['ajax_url'] + '?query=' + encodeURIComponent(query);
-                       fetch(url)
+                       let sUrl = aOptions['url'];
+                       if(!sUrl.includes('?')){
+                           sUrl += '?';
+                       }
+                       sUrl += '&'  + aOptions['query_parameter'] + '=' + encodeURIComponent(query);
+                       fetch(sUrl)
                                .then(response => response.json())
                                .then(json => {
                                    callback(json.items);
