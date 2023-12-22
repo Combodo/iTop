@@ -1603,6 +1603,22 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'notifications.itop.read_notification_retention' => [
+			'type' => 'integer',
+			'description' => 'Duration in days after which iTop read notifications will be deleted',
+			'default' => 182,
+			'value' => 182,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'notifications.itop.newsroom_cache_time' => [
+			'type' => 'integer',
+			'description' => 'Duration in min between each fetch for notifications in newsroom',
+			'default' => 5,
+			'value' => 5,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'regenerate_session_id_enabled' => [
 			'type' => 'bool',
 			'description' => 'If true then session id will be regenerated on each login, to prevent session fixation.',

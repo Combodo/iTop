@@ -1,5 +1,268 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+  <classes>
+    <class id="ActioniTopNotification"  _delta="define">
+      <php_parent>
+        <name>ActionNotification</name>
+      </php_parent>
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>grant_by_profile,core/cmdb,application</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>priv_action_itop_notif</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="title"/>
+          </attributes>
+        </naming>
+      </properties>
+      <fields>
+        <field id="title" xsi:type="AttributeString">
+          <sql>title</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="message" xsi:type="AttributeText">
+          <sql>message</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="icon" xsi:type="AttributeImage">
+          <sql>icon</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>256</storage_max_width>
+          <storage_max_height>256</storage_max_height>
+          <default_image>null</default_image>
+        </field>
+        <field id="priority" xsi:type="AttributeEnum">
+          <sql>priority</sql>
+          <values>
+            <value id="1">
+              <code>1</code>
+            </value>
+            <value id="2">
+              <code>2</code>
+            </value>
+            <value id="3">
+              <code>3</code>
+            </value>
+            <value id="4">
+              <code>4</code>
+            </value>
+          </values>
+          <default_value>4</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="recipients" xsi:type="AttributeOQL">
+          <sql>recipients</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="url" xsi:type="AttributeString">
+          <sql>url</sql>
+          <default_value>$this->url()$</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ActioniTopNotification:content">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="status">
+                      <rank>20</rank>
+                    </item>
+                    <item id="language">
+                      <rank>30</rank>
+                    </item>
+                    <item id="title">
+                      <rank>40</rank>
+                    </item>
+                    <item id="message">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ActioniTopNotification:settings">
+                  <items>
+                    <item id="priority">
+                      <rank>10</rank>
+                    </item>
+                    <item id="icon">
+                      <rank>20</rank>
+                    </item>
+                    <item id="recipients">
+                      <rank>30</rank>
+                    </item>
+                    <item id="url">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <list>
+          <items>
+            <item id="title">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="language">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+      <methods>
+        <method id="ComputePriority">
+          <comment>	/**
+            *
+            *  Create EventiTopNotification for each recipient
+            * @param $oTrigger
+            * @param $aContextArgs
+            *
+            * @return void
+            * @throws \ArchivedObjectException
+            * @throws \CoreCannotSaveObjectException
+            * @throws \CoreException
+            * @throws \CoreUnexpectedValue
+            * @throws \CoreWarning
+            * @throws \MySQLException
+            * @throws \OQLException
+            */</comment>
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[
+              public function DoExecute($oTrigger, $aContextArgs)
+	{
+		$oRecipientsSearch = DBObjectSearch::FromOQL($this->Get('recipients'));
+		$oRecipientsSearch->AllowAllDate();
+		$oRecipientsSet = new DBObjectSet($oRecipientsSearch);
+		[$sPreviousLanguage, $aPreviousPluginProperties] = $this->SetNotificationLanguage();
+		while ($oRecipient = $oRecipientsSet->Fetch()) {
+			$oEvent = new EventiTopNotification();
+			$oEvent->Set('title', MetaModel::ApplyParams($this->Get('title'), $aContextArgs));
+			$oEvent->Set('message', MetaModel::ApplyParams($this->Get('message'), $aContextArgs));
+			$oIcon = !$this->Get('icon')->IsEmpty() ? $this->Get('icon') : MetaModel::GetAttributeDef('EventiTopNotification', 'icon')->MakeRealValue(Combodo\iTop\Application\Branding::GetCompactMainLogoAbsoluteUrl(), $oEvent);
+			$oEvent->Set('icon', $oIcon);
+			$oEvent->Set('priority', $this->Get('priority'));
+			$oEvent->Set('contact_id', $oRecipient->GetKey());
+			$oEvent->Set('trigger_id', $oTrigger->GetKey());
+			$oEvent->Set('action_id', $this->GetKey());
+			$iObjectId = array_key_exists('this->object()', $aContextArgs) ? $aContextArgs['this->object()']->GetKey() : 0;
+			$oEvent->Set('object_id', $iObjectId);
+			$oEvent->Set('url', MetaModel::ApplyParams($this->Get('url'), $aContextArgs));
+			$oEvent->DBInsertNoReload();
+		}
+		$this->SetNotificationLanguage($sPreviousLanguage, $aPreviousPluginProperties['language_code'] ?? null);
+	}
+]]></code>
+        </method>
+      </methods>
+    </class>
+    <class id="EventiTopNotification"  _delta="define">
+      <php_parent>
+        <name>EventNotification</name>
+      </php_parent>
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>core/cmdb,view_in_gui</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>priv_event_itop_notif</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="title"/>
+          </attributes>
+        </naming>
+      </properties>
+      <fields>
+        <field id="title" xsi:type="AttributeString">
+          <sql>title</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="icon" xsi:type="AttributeImage">
+          <sql>icon</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <default_image>null</default_image>
+        </field>
+        <field id="priority" xsi:type="AttributeEnum">
+          <sql>priority</sql>
+          <values>
+            <value id="1">
+              <code>1</code>
+            </value>
+            <value id="2">
+              <code>2</code>
+            </value>
+            <value id="3">
+              <code>3</code>
+            </value>
+            <value id="4">
+              <code>4</code>
+            </value>
+          </values>
+          <default_value>4</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="url" xsi:type="AttributeURL">
+          <sql>url</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <target>_blank</target>
+        </field>
+        <field id="read" xsi:type="AttributeEnum">
+          <sql>read</sql>
+          <values>
+            <value id="yes">
+              <code>yes</code>
+            </value>
+            <value id="no">
+              <code>no</code>
+            </value>
+          </values>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="read_date" xsi:type="AttributeDateTime">
+          <sql>read_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <presentation/>
+      <methods/>
+    </class>
+  </classes>
   <user_rights>
     <profiles>
       <profile id="1024" _delta="define">
@@ -286,6 +549,43 @@
         <interfaces>
           <interface id="iWorkingTimeComputer"/>
         </interfaces>
+      </class>
+      <class id="ActionNotification" _delta="define">
+        <!-- Generated by toolkit/export-class-to-meta.php -->
+        <parent>Action</parent>
+        <properties>
+          <category>grant_by_profile,core/cmdb</category>
+        </properties>
+        <fields>
+          <field id="name" xsi:type="AttributeString"/>
+          <field id="description" xsi:type="AttributeString"/>
+          <field id="status" xsi:type="AttributeEnum"/>
+          <field id="trigger_list" xsi:type="AttributeLinkedSetIndirect"/>
+          <field id="language" xsi:type="AttributeApplicationLanguage"/>
+        </fields>
+      </class>
+      <class id="EventNotification" _delta="define">
+        <!-- Generated by toolkit/export-class-to-meta.php -->
+        <parent>Event</parent>
+        <properties>
+          <category>core/cmdb,view_in_gui</category>
+        </properties>
+        <fields>
+          <field id="message" xsi:type="AttributeText"/>
+          <field id="date" xsi:type="AttributeDateTime"/>
+          <field id="userinfo" xsi:type="AttributeString"/>
+          <field id="trigger_id" xsi:type="AttributeExternalKey">
+            <target_class>Trigger</target_class>
+          </field>
+          <field id="action_id" xsi:type="AttributeExternalKey">
+            <target_class>Action</target_class>
+          </field>
+          <field id="object_id" xsi:type="AttributeInteger"/>
+          <field id="trigger_id_friendlyname" xsi:type="AttributeExternalField"/>
+          <field id="trigger_id_finalclass_recall" xsi:type="AttributeExternalField"/>
+          <field id="action_id_friendlyname" xsi:type="AttributeExternalField"/>
+          <field id="action_id_finalclass_recall" xsi:type="AttributeExternalField"/>
+        </fields>
       </class>
     </classes>
     <attribute_properties_definition _delta="define">

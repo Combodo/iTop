@@ -65,8 +65,9 @@ class NewsroomMenuFactory
 		/**
 		 * @var \iNewsroomProvider[] $aProviders
 		 */
-		$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-		foreach($aProviders as $oProvider) {
+		$aProviders = utils::GetClassesForInterface('iNewsroomProvider', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+		foreach($aProviders as $cProvider) {
+			$oProvider = new $cProvider();
 			$oConfig = MetaModel::GetConfig();
 			$oProvider->SetConfig($oConfig);
 			$bProviderEnabled = appUserPreferences::GetPref('newsroom_provider_'.get_class($oProvider), true);

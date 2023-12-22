@@ -25,6 +25,7 @@ MetaModel::IncludeModule('application/audit.domain.class.inc.php');
 MetaModel::IncludeModule('application/query.class.inc.php');
 MetaModel::IncludeModule('setup/moduleinstallation.class.inc.php');
 
+
 MetaModel::IncludeModule('core/event.class.inc.php');
 MetaModel::IncludeModule('core/action.class.inc.php');
 MetaModel::IncludeModule('core/trigger.class.inc.php');

@@ -1815,4 +1815,27 @@ EOD
 	{
 		$this->aPreloadedFonts = array_merge($this->aPreloadedFonts, $aFonts);
 	}
+
+	/**
+	 * @return bool
+	 * 
+	 * @since 3.2.0
+	 */
+	public function GetAddJSDict(): bool
+	{
+		return $this->bAddJSDict;
+	}
+
+	/**
+	 * @param bool $bAddJSDict
+	 *
+	 * @return $this
+	 * 
+	 * @since 3.2.0
+	 */
+	public function SetAddJSDict(bool $bAddJSDict)
+	{
+		$this->bAddJSDict = $bAddJSDict;
+		return $this;
+	}
 }
