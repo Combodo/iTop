@@ -4,14 +4,14 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Menu:RequestManagement' => 'Helpdesk',
-	'Menu:RequestManagement+' => 'Helpdesk',
-	'Menu:RequestManagementProvider' => 'Helpdesk Fornitore',
-	'Menu:RequestManagementProvider+' => 'Helpdesk Fornitore',
+	'Menu:RequestManagement' => 'Service Request',
+	'Menu:RequestManagement+' => 'Service Request',
+	'Menu:RequestManagementProvider' => 'Service Request Fornitore',
+	'Menu:RequestManagementProvider+' => 'Service Request Fornitore',
 	'Menu:UserRequest:Provider' => 'Richiesta trasferita al fornitore',
 	'Menu:UserRequest:Provider+' => 'Richiesta trasferita al fornitore',
-	'Menu:UserRequest:Overview' => 'Overview',
-	'Menu:UserRequest:Overview+' => 'Overview',
+	'Menu:UserRequest:Overview' => 'Panoramica',
+	'Menu:UserRequest:Overview+' => 'Panoramica',
 	'Menu:NewUserRequest' => 'Nuova richeista utente',
 	'Menu:NewUserRequest+' => 'Creare un nuova richeista utente ticket',
 	'Menu:SearchUserRequests' => 'Ricerca per richiesta utente',
@@ -34,7 +34,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Richieste aperte per tipo',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Richieste aperte dal cliente',
 	'Class:UserRequest:KnownErrorList' => 'Errori Conosiuti',
-	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
+	'Class:UserRequest:KnownErrorList+' => 'Errori noti relativi al CI Funzionale collegato al ticket corrente~~',
 ));
 
 // Dictionnay conventions
