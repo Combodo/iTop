@@ -21,11 +21,11 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	// Errors
-	'FilesInformation:Error:MissingFile' => 'Missing file: %1$s~~',
-	'FilesInformation:Error:CorruptedFile' => 'File %1$s is corrupted~~',
-	'FilesInformation:Error:ListCorruptedFile' => 'File(s) corrupted: %1$s ~~',
-	'FilesInformation:Error:CantWriteToFile' => 'Can not write to file %1$s~~',
+		// Errors
+	'FilesInformation:Error:MissingFile' => 'File mancante: %1$s~~',
+	'FilesInformation:Error:CorruptedFile' => 'File %1$s corrotto~~',
+	'FilesInformation:Error:ListCorruptedFile' => 'File(s) corrotto(i): %1$s~~',
+	'FilesInformation:Error:CantWriteToFile' => 'Impossibile scrivere nel file %1$s~~',
 ));
 
 
