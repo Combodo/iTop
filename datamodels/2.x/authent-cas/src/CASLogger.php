@@ -9,6 +9,7 @@ namespace Combodo\iTop\Cas;
 use IssueLog;
 use LogAPI;
 use Psr\Log\LoggerInterface;
+use Stringable;
 use Psr\Log\LogLevel;
 
 class CASLogger implements LoggerInterface
@@ -28,52 +29,52 @@ class CASLogger implements LoggerInterface
 		LogLevel::INFO => LogAPI::LEVEL_INFO,
 		LogLevel::DEBUG => LogAPI::LEVEL_DEBUG,
 	];
+	public function emergency(Stringable|string $message, array $context = []): void
 
-	public function emergency($message, array $context = array())
 	{
 		CASLog::Error('EMERGENCY: '.$message, CASLog::CHANNEL_DEFAULT, $context);
 		IssueLog::Error('EMERGENCY: '.$message, CASLog::CHANNEL_DEFAULT, $context);
 	}
+	public function alert(Stringable|string $message, array $context = []): void
 
-	public function alert($message, array $context = array())
 	{
 		CASLog::Error('ALERT: '.$message, CASLog::CHANNEL_DEFAULT, $context);
 		IssueLog::Error('ALERT: '.$message, CASLog::CHANNEL_DEFAULT, $context);
 	}
 
-	public function critical($message, array $context = array())
+	public function critical(Stringable|string $message, array $context = []): void
 	{
 		CASLog::Error('CRITICAL: '.$message, CASLog::CHANNEL_DEFAULT, $context);
 		IssueLog::Error('CRITICAL: '.$message, CASLog::CHANNEL_DEFAULT, $context);
 	}
 
-	public function error($message, array $context = array())
+	public function error(Stringable|string $message, array $context = []): void
 	{
 		CASLog::Error('ERROR: '.$message, CASLog::CHANNEL_DEFAULT, $context);
 		IssueLog::Error('ERROR: '.$message, CASLog::CHANNEL_DEFAULT, $context);
 	}
 
-	public function warning($message, array $context = array())
+	public function warning(Stringable|string $message, array $context = []): void
 	{
 		CASLog::Warning('WARNING: '.$message, CASLog::CHANNEL_DEFAULT, $context);
 	}
 
-	public function notice($message, array $context = array())
+	public function notice(Stringable|string $message, array $context = []): void
 	{
 		CASLog::Info('NOTICE: '.$message, CASLog::CHANNEL_DEFAULT, $context);
 	}
 
-	public function info($message, array $context = array())
+	public function info(Stringable|string $message, array $context = []): void
 	{
 		CASLog::Info('INFO: '.$message, CASLog::CHANNEL_DEFAULT, $context);
 	}
 
-	public function debug($message, array $context = array())
+	public function debug(Stringable|string $message, array $context = []): void
 	{
 		CASLog::Debug('DEBUG: '.$message, CASLog::CHANNEL_DEFAULT, $context);
 	}
 
-	public function log($level, $message, array $context = array())
+	public function log($level, Stringable|string $message, array $context = []): void
 	{
 		$sLevel = self::LEVEL_COMPAT[$level] ?? LogAPI::LEVEL_ERROR;
 		CASLog::Log($sLevel, strtoupper($level).": $message", CASLog::CHANNEL_DEFAULT, $context);
