@@ -28,8 +28,8 @@
 //////////////////////////////////////////////////////////////////////
 //
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'portal:itop-portal' => 'Standard portal~~', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
-	'Page:DefaultTitle' => '%1$s - User portal~~',
+	'portal:itop-portal' => 'Portale Standard~~', // Questo è il nome del portale che sarà visualizzato nel dispatcher del portale (ad es. URL nei menu)
+	'Page:DefaultTitle' => '%1$s - Portale Utente~~',
 	'Brick:Portal:UserProfile:Title' => 'Il Mio Profilo',
 	'Brick:Portal:NewRequest:Title' => 'Nuova Richiesta',
 	'Brick:Portal:NewRequest:Title+' => '<p>Hai bisogno di aiuto?</p><p>Cerca nel catalogo dei servizi e inviaci una richiesta al nostro supporto.</p>',
