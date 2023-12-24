@@ -17,10 +17,11 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'UI:Modal:Confirmation:DefaultTitle' => 'Confirmation~~',
-	'UI:Modal:Informative:Title' => 'Informative Modal~~',
-	'UI:Modal:InformativeError:Title' => 'Error~~',
-	'UI:Modal:InformativeWarning:Title' => 'Warning~~',
-	'UI:Modal:InformativeInformation:Title' => 'Information~~',
-	'UI:Modal:InformativeSuccess:Title' => 'Success~~',
+	'UI:Modal:Confirmation:DefaultTitle' => 'Conferma~~',
+	'UI:Modal:Informative:Title' => 'Modale Informativa~~',
+	'UI:Modal:InformativeError:Title' => 'Errore~~',
+	'UI:Modal:InformativeWarning:Title' => 'Avviso~~',
+	'UI:Modal:InformativeInformation:Title' => 'Informazione~~',
+	'UI:Modal:InformativeSuccess:Title' => 'Successo~~',
+
 ));
