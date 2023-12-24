@@ -18,17 +18,17 @@
  */
 // Navigation menu
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Company logo~~',
-	'UI:Layout:NavigationMenu:Silo:Label' => 'Select organization to filter on~~',
-	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Expand / Collapse~~',
-	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Expand / Collapse (Filtered on %1$s)~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Type your keywords to filter menus~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Matches from all menu groups will be displayed~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'No result for this menu filter~~',
-	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Hi %1$s!~~',
-	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s contact picture~~',
-	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Open user menu~~',
-	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu entries~~',
+	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Logo dell\'azienda~~',
+	'UI:Layout:NavigationMenu:Silo:Label' => 'Seleziona l\'organizzazione per filtrare~~',
+	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Espandi / Comprimi~~',
+	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Espandi / Comprimi (Filtrato su %1$s)~~',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filtra...~~',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Digita le tue parole chiave per filtrare i menu~~',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Verranno visualizzati i risultati da tutti i gruppi di menu~~',
+	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Nessun risultato per questo filtro del menu~~',
+	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Ciao %1$s!~~',
+	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => 'Foto del contatto di %1$s~~',
+	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Apri menu utente~~',
+	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filtra le voci del menu~~',
 
 ));
