@@ -19,7 +19,8 @@
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 
 	// Bulk modify
-	'UI:Bulk:modify:IncompatibleAttribute' => 'This attribute can\'t be edited in bulk context~~',
-	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Excel security warning~~',
-	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'Opening a file with untrusted data in Microsoft Excel may lead to formula injection. Ensure that your Excel settings are configured to handle files safely. <a href="%1$s">Learn more in our documentation.</a>~~',
+	'UI:Bulk:modify:IncompatibleAttribute' => 'Questo attributo non può essere modificato nel contesto di modifica bulk~~',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Avviso di sicurezza di Excel~~',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'L\'apertura di un file con dati non fidati in Microsoft Excel potrebbe comportare l\'iniezione di formule. Assicurati che le impostazioni di Excel siano configurate per gestire i file in modo sicuro. <a href="%1$s">Ulteriori informazioni nella nostra documentazione.</a>~~',
+
 ));
