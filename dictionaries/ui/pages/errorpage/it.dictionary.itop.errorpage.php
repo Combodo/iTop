@@ -18,8 +18,9 @@
  */
 // Navigation menu
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'UI:ErrorPage:UnstableVersion' => 'You are using an unstable version that may include bugs. If you think this error occurred because of this please send us your feedback!~~',
-	'UI:ErrorPage:KittyDisclaimer' => 'No kitty were injured during the making of this GIF and release.
+	'UI:ErrorPage:UnstableVersion' => 'Stai utilizzando una versione instabile che potrebbe contenere errori. Se pensi che questo errore sia dovuto a questo, ti preghiamo di inviarci il tuo feedback!~~',
+	'UI:ErrorPage:KittyDisclaimer' => 'Nessun gattino è stato ferito durante la creazione di questo GIF e rilascio.
+	
+	- Il Team R&D~~',
 
-- The R&amp;D Team~~',
 ));
