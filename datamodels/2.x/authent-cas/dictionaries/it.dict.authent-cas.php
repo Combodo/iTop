@@ -6,7 +6,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'CAS:Error:UserNotAllowed' => 'User not allowed~~',
-	'CAS:Login:SignIn' => 'Sign in with CAS~~',
-	'CAS:Login:SignInTooltip' => 'Click here to authenticate yourself with the CAS server~~',
+	'CAS:Error:UserNotAllowed' => 'Utente non autorizzato~~',
+	'CAS:Login:SignIn' => 'Accedi con CAS~~',
+	'CAS:Login:SignInTooltip' => 'Clicca qui per autenticarti con il server CAS~~',
 ));
