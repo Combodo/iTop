@@ -133,7 +133,7 @@
         </list>
       </presentation>
       <methods>
-        <method id="ComputePriority">
+        <method id="DoExecute">
           <comment>	/**
             *
             *  Create EventiTopNotification for each recipient

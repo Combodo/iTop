@@ -56,12 +56,12 @@ class iTopNewsroomController extends Controller
 			while($oMessage = $oSet->Fetch())
 			{
 				$sTitle = $oMessage->Get('title');
-				$Message = $oMessage->Get('message');
+				$sMessage = $oMessage->Get('message');
 				$sText = <<<HTML
 **$sTitle**
 
 
-$Message
+$sMessage
 HTML;
 
 				$sIcon = $oMessage->Get('icon') !== null ? 
@@ -105,11 +105,11 @@ HTML;
 			$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification WHERE contact_id = :contact_id AND read = "no"');
 			$oSet = new DBObjectSet($oSearch, array(), array('contact_id' => $iContactId));
 
-			while($oMessage = $oSet->Fetch())
+			while($oEvent = $oSet->Fetch())
 			{
-				$oMessage->Set('read', 'yes');
-				$oMessage->Set('read_date', time());
-				$oMessage->DBWrite();
+				$oEvent->Set('read', 'yes');
+				$oEvent->SetCurrentDate('read_date');
+				$oEvent->DBWrite();
 				$iCount++;
 			}
 		}
@@ -134,7 +134,7 @@ HTML;
 				$oEvent = MetaModel::GetObject('EventiTopNotification', $sEventId);
 				if($oEvent !== null && $oEvent->Get('contact_id') === UserRights::GetContactId()){
 					$oEvent->Set('read', 'yes');
-					$oEvent->Set('read_date', time());
+					$oEvent->SetCurrentDate('read_date');
 					$oEvent->DBWrite();
 					$sUrl = $oEvent->Get('url');
 					header("Location: $sUrl");
