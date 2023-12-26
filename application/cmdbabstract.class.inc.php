@@ -3218,13 +3218,13 @@ EOF
 				if ($oAttDef->GetEditClass() == 'Document')
 				{
 					$oDocument = $this->Get($sAttCode);
-					if (!$oDocument->IsEmpty())
+					if (isset($oDocument) && !$oDocument->IsEmpty())
 					{
 						$sDisplayValue = $this->GetAsHTML($sAttCode);
 						$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',
-								$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+						$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
 						$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_',
-								$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+						$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
 					}
 					else
 					{
