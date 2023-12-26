@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\FormSDK\Service\FactoryPlugin;
+namespace Combodo\iTop\FormSDK\Service\FactoryAdapter;
 
 /**
- * Form factory plugin interface.
+ * Form factory adapter interface.
  *
  * @package FormSDK
  * @since 3.2.0
  */
-interface FormFactoryAddonInterface
+interface FormFactoryAdapterInterface
 {
 	/**
 	 * Return data attached to the form.

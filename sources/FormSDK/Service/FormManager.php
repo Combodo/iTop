@@ -25,6 +25,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Form manager service.
  *
+ * This service allow you to manage forms.
+ *
  * @package FormSDK
  * @since 3.2.0
  */
@@ -35,10 +37,11 @@ class FormManager
 	 * Constructor.
 	 *
 	 * @param \Combodo\iTop\FormSDK\Symfony\SymfonyBridge $oSymfonyBridge
+	 * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $oRouter
 	 */
 	public function __construct(
 		private readonly SymfonyBridge $oSymfonyBridge,
-		private UrlGeneratorInterface $oRouter
+		private readonly UrlGeneratorInterface $oRouter
 	)
 	{
 	}

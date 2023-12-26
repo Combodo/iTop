@@ -1,80 +1,28 @@
 
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-
-    <link rel="stylesheet" href="{{ asset_node('tom-select/dist/css/tom-select.bootstrap5.css') }}">
-
-    <style>
-
-        .form-type-pictograms{
-            display: inline-block;
-            margin-left: 5px;
-            color: lightgrey;
-        }
-
-    </style>
-
-{% endblock %}
-
-{% block javascripts %}
-    <script type="text/javascript" src="{{ asset_node('jquery/dist/jquery.js') }}"></script>
-    <script type="text/javascript" src="{{ asset_node('tom-select/dist/js/tom-select.complete.js') }}"></script>
-{% endblock %}
-
 {% block body %}
 
-<div style="padding: 20px;">
+    <div class="container">
 
-    {# specific form theme #}
-    {% if theme is defined %}
-        {% form_theme form theme %}
-    {% endif %}
+        {# specific form theme #}
+        {% if theme is defined %}
+            {% form_theme form theme %}
+        {% endif %}
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" class="btn btn-primary">
-    {{ form_end(form) }}
-</div>
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <input type="submit" class="btn btn-primary">
+        {{ form_end(form) }}
+
+    </div>
 
     <script>
 
-       $(document).ready(function(e){
-
-           // SELECT widget implementation
-           $('[data-widget="SelectWidget"]').each(function(e){
-
-               const sId = $(this).attr('id');
-               const aOptions = $(this).data('widget-options');
-
-               new TomSelect(`#${sId}`, {
-                   valueField: aOptions['value_field'],
-                   labelField: aOptions['label_field'],
-                   searchField: aOptions['search_field'],
-                   maxItems: aOptions['maxItems'],
-                   plugins: {
-                       remove_button:{
-                           title:'Remove this item',
-                       }
-                   },
-                   load: function(query, callback) {
-                       let sUrl = aOptions['url'];
-                       if(!sUrl.includes('?')){
-                           sUrl += '?';
-                       }
-                       sUrl += '&'  + aOptions['query_parameter'] + '=' + encodeURIComponent(query);
-                       fetch(sUrl)
-                               .then(response => response.json())
-                               .then(json => {
-                                   callback(json.items);
-                               }).catch(()=>{
-                           callback();
-                       });
-                   }
-               });
-           });
-
-       });
+        // auto install widget based on dom data
+        $(document).ready(function(e){
+            iTopFormWidgetFactory.AutoInstall();
+        });
 
     </script>
 

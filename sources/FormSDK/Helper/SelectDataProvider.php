@@ -26,8 +26,13 @@ use Dict;
  * @package FormSDK
  * @since 3.2.0
  */
-class SelectHelper
+class SelectDataProvider
 {
+	/**
+	 * Return array of application languages.
+	 *
+	 * @return array
+	 */
 	static public function GetApplicationLanguages() : array
 	{
 		$aAvailableLanguages = Dict::GetLanguages();
@@ -40,5 +45,34 @@ class SelectHelper
 		return $aLanguageCodes;
 	}
 
+	/**
+	 * Return array of modes.
+	 *
+	 * @return array
+	 */
+	static public function GetModes() : array
+	{
+		return [
+			'Minimal' => 0,
+			'Optimal' => 1,
+			"Maximal" => 2
+		];
+	}
 
+	/**
+	 * Return array of options.
+	 *
+	 * @return array
+	 */
+	static public function GetOptions() : array
+	{
+		return [
+			'Option A' => 0,
+			'Option B' => 1,
+			"Option C" => 2,
+			"Option D" => 3,
+			"Option E" => 4,
+			"Option F" => 5
+		];
+	}
 }

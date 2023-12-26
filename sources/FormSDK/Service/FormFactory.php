@@ -19,9 +19,9 @@
 
 namespace Combodo\iTop\FormSDK\Service;
 
-use Combodo\iTop\FormSDK\Helper\SelectHelper;
-use Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryObjectAddon;
-use Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryAddonInterface;
+use Combodo\iTop\FormSDK\Helper\SelectDataProvider;
+use Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryObjectAdapter;
+use Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface;
 use Combodo\iTop\FormSDK\Symfony\SymfonyBridge;
 use Combodo\iTop\FormSDK\Field\Description\FormFieldDescription;
 use Combodo\iTop\FormSDK\Field\Description\FormFieldTypeEnumeration;
@@ -29,18 +29,22 @@ use DBObject;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
 use utils;
 
 /**
- * Form factory service.
+ * Form factory.
+ *
+ * Build and manipulate forms.
  *
  * @package FormSDK
  * @since 3.2.0
  */
 class FormFactory
 {
-	/** @var \Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryAddonInterface[] $aAddons  */
-	private array $aAddons = [];
+	/** @var \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface[] $aAdapters  */
+	private array $aAdapters = [];
 
 	/** @var array $aDescriptions form types descriptions */
 	private array $aDescriptions = [];
@@ -73,8 +77,8 @@ class FormFactory
 			'data' => $this->aData,
 		];
 
-		// append plugin data
-		foreach ($this->GetAllAddons() as $oPlugin){
+		// merge each adapter data...
+		foreach ($this->GetAllAdapters() as $oPlugin){
 			$aResult['descriptions'] = array_merge($aResult['descriptions'], $oPlugin->GetFormDescriptions());
 			$aResult['data'] = array_merge($aResult['data'], $oPlugin->GetFormData());
 		}
@@ -83,53 +87,55 @@ class FormFactory
 	}
 
 	/**
-	 * Create an object addon.
+	 * Create an object adapter.
 	 *
 	 * @param \DBObject $oDBObject
 	 * @param bool $bGroup
 	 *
-	 * @return \Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryObjectAddon
+	 * @return \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryObjectAdapter
 	 */
-	public function CreateObjectAddon(DBObject $oDBObject, bool $bGroup = true) : FormFactoryObjectAddon
+	public function CreateObjectAdapter(DBObject $oDBObject, bool $bGroup = true) : FormFactoryObjectAdapter
 	{
-		$oObjectBuilder = new FormFactoryObjectAddon($oDBObject, $bGroup);
-		$this->AddAddon(get_class($oDBObject) . '_' . $oDBObject->GetKey(), $oObjectBuilder);
+		$oObjectBuilder = new FormFactoryObjectAdapter($oDBObject, $bGroup);
+		$this->AddAdapter(get_class($oDBObject) . '_' . $oDBObject->GetKey(), $oObjectBuilder);
 		return $oObjectBuilder;
 	}
 
 	/**
-	 * Add an addon.
+	 * Add an adapter.
 	 *
 	 * @param string $sKey
-	 * @param \Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryAddonInterface $oPlugin
+	 * @param \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface $oAdapter
 	 *
 	 * @return $this
 	 */
-	public function AddAddon(string $sKey, FormFactoryAddonInterface $oPlugin) : FormFactory
+	public function AddAdapter(string $sKey, FormFactoryAdapterInterface $oAdapter) : FormFactory
 	{
-		$this->aAddons[$sKey] = $oPlugin;
+		$this->aAdapters[$sKey] = $oAdapter;
 		return $this;
 	}
 
 	/**
-	 * Get all addons.
+	 * Get all adapters.
 	 *
-	 * @return \Combodo\iTop\FormSDK\Service\FactoryPlugin\FormFactoryAddonInterface[]
+	 * @return \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface[]
 	 */
-	public function GetAllAddons() : array
+	public function GetAllAdapters() : array
 	{
-		return $this->aAddons;
+		return $this->aAdapters;
 	}
 
 	/**
 	 * Get form.
 	 *
+	 * @param string|null $sName
+	 *
 	 * @return \Symfony\Component\Form\FormInterface
 	 */
-	public function GetForm(): FormInterface
+	public function GetForm(?string $sName): FormInterface
 	{
 		['descriptions' => $aDescriptions, 'data' => $aData] = $this->GetFormDescriptionsAndData();
-		return $this->oSymfonyBridge->GetForm($aDescriptions, $aData);
+		return $this->oSymfonyBridge->GetForm($aDescriptions, $aData, $sName);
 	}
 
 	/**
@@ -143,6 +149,23 @@ class FormFactory
 	 */
 	public function AddTextField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
 	{
+		// test widget for regex constraint
+		if(array_key_exists('constraints', $aOptions)){
+			$oConstraint = $aOptions['constraints'];
+			if($oConstraint instanceof Regex){
+				$aWidgetOptions = [
+					'pattern' => $oConstraint->pattern,
+				];
+				$aOptions = array_merge([
+					'attr' => [
+						'data-widget' => 'TextWidget',
+						'data-pattern' => $oConstraint->pattern,
+						'data-widget-options' => json_encode($aWidgetOptions)
+					]
+				], $aOptions);
+			}
+		}
+
 		$this->aDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::TEXT, $aOptions);
 		$this->aData[$sKey] = $oData;
 
@@ -197,15 +220,16 @@ class FormFactory
 	 */
 	public function AddSelectAjaxField(string $sKey, array $aOptions, array $aAjaxOptions, array $aAjaxData = [], mixed $oData = null) : FormFactory
 	{
-		// ajax options
-		array_merge([
+		// merge ajax options
+		$aAjaxOptions = array_merge([
 			'url' => '',
 			'query_parameter' => 'query',
 			'value_field' => 'value',
 			'label_field' => 'label',
 			'search_field' => 'search',
-			'preload' => false,
-			'threshold' => -1
+			'preload' => true,
+			'threshold' => -1,
+			'configuration' => 'AJAX'
 		], $aAjaxOptions);
 
 		// merge options
@@ -213,18 +237,19 @@ class FormFactory
 			'placeholder' => 'Select...',
 			'attr' => [
 				'data-widget' => 'SelectWidget',
+				'data-ajax-query-type' => $aAjaxOptions['configuration'],
 				'data-widget-options' => json_encode($aAjaxOptions)
 			],
-			'choice_loader' => new CallbackChoiceLoader(function() use ($aAjaxOptions, $aAjaxData): array {
-				$curl_data = utils::DoPostRequest($aAjaxOptions['url'], []);
-				$response_data = json_decode($curl_data);
-				if(count($response_data->items) > $aAjaxOptions['threshold']) return [];
-				$result = [];
-				foreach ($response_data->items as $e) {
-					$result[$e->breed] = $e->breed;
-				}
-				return $result;
-			}),
+//			'choice_loader' => new CallbackChoiceLoader(function() use ($aAjaxOptions, $aAjaxData): array {
+//				$curl_data = utils::DoPostRequest($aAjaxOptions['url'], []);
+//				$response_data = json_decode($curl_data);
+//				if(count($response_data->items) > $aAjaxOptions['threshold']) return [];
+//				$result = [];
+//				foreach ($response_data->items as $e) {
+//					$result[$e->breed] = $e->breed;
+//				}
+//				return $result;
+//			}),
 		], $aOptions);
 
 		return $this->AddSelectField($sKey, $aOptions, $oData);
@@ -259,7 +284,8 @@ class FormFactory
 			'value_field' => 'key',
 			'label_field' => 'friendlyname',
 			'search_field' => 'friendlyname',
-			'threshold' => $iAjaxThershold
+			'threshold' => $iAjaxThershold,
+			'configuration' => 'OQL'
 		];
 		return $this->AddSelectAjaxField($sKey, $aOptions, $aAjaxOptions, $aAjaxData, $oData);
 	}

@@ -107,13 +107,19 @@ class SymfonyBridge
 	 *
 	 * @param array $aDescriptions
 	 * @param array $aData
+	 * @param string|null $sName
 	 *
 	 * @return \Symfony\Component\Form\FormInterface
 	 */
-	public function GetForm(array $aDescriptions, array $aData): FormInterface
+	public function GetForm(array $aDescriptions, array $aData, ?string $sName = null): FormInterface
 	{
 		// create Symfony form builder
-		$oFormBuilder = $this->oFormFactory->createBuilder(FormType::class, $aData);
+		if($sName !== null){
+			$oFormBuilder = $this->oFormFactory->createNamedBuilder($sName, FormType::class, $aData);
+		}
+		else{
+			$oFormBuilder = $this->oFormFactory->createBuilder(FormType::class, $aData);
+		}
 
 		// iterate throw descriptions...
 		foreach ($aDescriptions as $oFormDescription){

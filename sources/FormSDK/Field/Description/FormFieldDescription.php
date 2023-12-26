@@ -20,6 +20,7 @@
 namespace Combodo\iTop\FormSDK\Field\Description;
 
 /**
+ * Description of a form field.
  *
  * @package FormSDK
  * @since 3.2.0

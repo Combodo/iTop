@@ -1,0 +1,66 @@
+html{
+	font-family: "Montserrat";
+}
+
+.form-type-pictograms{
+	display: inline-block;
+	margin-left: 5px;
+	color: grey;
+	cursor: pointer;
+	background-color: #f8f8f8;
+	padding: 0px 5px;
+	border-radius: 8px;
+}
+
+.form-type-pictograms i{
+	width: 15px;
+}
+
+.form-object legend{
+	font-weight: bold;
+	color: grey;
+}
+
+.form-object{
+	border: 1px lightgrey dashed;
+	padding: 8px 12px;
+	border-radius: 8px;
+}
+
+.complete .pattern:after{
+	content: '\f00c';
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	background-color: #20b220;
+	border-radius: 50%;
+	font-size: 9px;
+	color: white;
+	position: relative;
+	top: -10px;
+	padding: 2px;
+}
+
+.ajax-query-type{
+	font-size: .8rem;
+}
+
+
+.theme_viewer{
+	display: flex;
+}
+
+.theme{
+	width: 100%;
+	padding: 20px;
+}
+
+.theme1 h4{
+	color: #cc8d17;
+	border-bottom: 1px #cc8d17 solid;
+	margin-bottom: 20px;
+}
+.theme2 h4{
+	color: #c7306e;
+	border-bottom: 1px #c7306e solid;
+	margin-bottom: 20px;
+}

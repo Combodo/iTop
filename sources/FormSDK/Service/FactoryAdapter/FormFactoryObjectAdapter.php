@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\FormSDK\Service\FactoryPlugin;
+namespace Combodo\iTop\FormSDK\Service\FactoryAdapter;
 
 use AttributeDefinition;
 use AttributeString;
@@ -34,7 +34,7 @@ use MetaModel;
  * @package FormSDK
  * @since 3.2.0
  */
-final class FormFactoryObjectAddon implements FormFactoryAddonInterface
+final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 {
 	/** @var array list of object attributes */
 	private array $aAttributes = [];
@@ -61,7 +61,7 @@ final class FormFactoryObjectAddon implements FormFactoryAddonInterface
 	 *
 	 * @return $this
 	 */
-	public function AddAttribute(string $sAttributeCode, array $aOptions = []) : FormFactoryObjectAddon
+	public function AddAttribute(string $sAttributeCode, array $aOptions = []) : FormFactoryObjectAdapter
 	{
 		$this->aAttributes[$sAttributeCode] = $aOptions;
 		return $this;
@@ -130,7 +130,7 @@ final class FormFactoryObjectAddon implements FormFactoryAddonInterface
 	 */
 	private function GetAttributePath(string $sAttributeCode) : string
 	{
-		return $this->bGroup ? $sAttributeCode : $this->GetIdentifier() . '-' . $sAttributeCode;
+		return $this->GetIdentifier() . '-' . $sAttributeCode;
 	}
 
 	/** @inheritdoc */

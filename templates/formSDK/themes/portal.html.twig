@@ -1,16 +1,38 @@
 {% use "bootstrap_5_layout.html.twig" %}
 
-{#{%- block form_label -%}#}
-{#    {{- parent() -}}#}
-{#    <div class="form-type-pictograms">#}
+{%- block form_label -%}
+    {{- parent() -}}
 
-{#        {% if form.vars.required %}#}
-{#            <i class="fas fa-asterisk" title="required"></i>#}
-{#        {% endif %}#}
+    {% if not compound %}
+    <div class="form-type-pictograms">
 
-{#        {% if form.vars.attr['data-widget'] is defined %}#}
-{#            <i class="fas fa-plug" title="{{ form.vars.attr['data-widget'] }}"></i>#}
-{#        {% endif %}#}
+        {% if form.vars.required %}
+            <i class="fas fa-asterisk" title="required"></i>
+        {% endif %}
 
-{#    </div>#}
-{#{%- endblock form_label -%}#}
+        {% if form.vars.attr['data-widget'] is defined %}
+            <i class="fas fa-plug widget" title="{{ form.vars.attr['data-widget'] }}"></i>
+        {% endif %}
+
+        {% if form.vars.attr['data-pattern'] is defined %}
+            <i class="fa-solid fa-i-cursor pattern" title="{{ form.vars.attr['data-pattern'] }}"></i>
+        {% endif %}
+
+        {% if form.vars.attr['data-ajax-query-type'] is defined and form.vars.attr['data-ajax-query-type'] == 'AJAX' %}
+            <span class="ajax-query-type">AJAX</span>
+        {% endif %}
+
+        {% if form.vars.attr['data-ajax-query-type'] is defined and form.vars.attr['data-ajax-query-type'] == 'OQL' %}
+            <span class="ajax-query-type">OQL</span>
+        {% endif %}
+
+    </div>
+    {% endif %}
+
+{%- endblock form_label -%}
+
+{%- block form_object_row -%}
+    {%- set row_attr = row_attr|merge({class: 'mb-3 form-object'}) -%}
+    {{ form_row(form, {'row_attr': row_attr}) }}
+{%- endblock form_object_row -%}
+

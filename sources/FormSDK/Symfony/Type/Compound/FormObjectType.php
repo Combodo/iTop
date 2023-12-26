@@ -19,7 +19,7 @@
 
 namespace Combodo\iTop\FormSDK\Symfony\Type\Compound;
 
-use Combodo\iTop\FormSDK\Type\Description\FormFieldDescription;
+use Combodo\iTop\FormSDK\Field\Description\FormFieldDescription;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,6 +48,9 @@ class FormObjectType extends AbstractType
 	{
 		$resolver->setDefaults([
 			'descriptions' => [],
+			'attr' => [
+				'class' => ''
+			]
 		]);
 	}
 

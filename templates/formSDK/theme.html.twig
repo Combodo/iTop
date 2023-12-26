@@ -1,0 +1,58 @@
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container-fluid">
+
+        {# specific form theme #}
+        {% if theme1 is defined %}
+            {% form_theme form1 theme1 %}
+        {% endif %}
+        {% if theme2 is defined %}
+            {% form_theme form2 theme2 %}
+        {% endif %}
+
+        <h3>Form SDK : Thème Comparator</h3>
+
+        <div class="theme_viewer">
+
+            <div class="theme theme1">
+
+                <h4>Thème 1: {{ name1 }}</h4>
+
+                {{ form_start(form1) }}
+                {{ form_widget(form1) }}
+                <input type="submit" class="btn btn-primary">
+                {{ form_end(form1) }}
+
+            </div>
+
+
+            <div class="theme theme2">
+
+                <h4>Thème 2: {{ name2 }}</h4>
+
+                {{ form_start(form2) }}
+                {{ form_widget(form2) }}
+                <input type="submit" class="btn btn-primary">
+                {{ form_end(form2) }}
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+    <script>
+
+        // auto install widget based on dom data
+        $(document).ready(function(e){
+            iTopFormWidgetFactory.AutoInstall();
+        });
+
+    </script>
+
+{% endblock %}

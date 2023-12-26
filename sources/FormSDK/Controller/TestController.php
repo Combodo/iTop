@@ -4,7 +4,8 @@ namespace Combodo\iTop\FormSDK\Controller;
 
 use Combodo\iTop\Controller\AbstractAppController;
 use Combodo\iTop\FormSDK\Dto\ObjectSearchDto;
-use Combodo\iTop\FormSDK\Helper\SelectHelper;
+use Combodo\iTop\FormSDK\Helper\FormHelper;
+use Combodo\iTop\FormSDK\Helper\SelectDataProvider;
 use Combodo\iTop\FormSDK\Service\FormManager;
 use Combodo\iTop\Service\Base\ObjectRepository;
 use DateTime;
@@ -20,62 +21,27 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
 use utils;
 
 class TestController extends AbstractAppController
 {
 
 	#[Route('/formSDK/test_Form', name: 'formSDK_test_form')]
-	public function form(Request $oRequest, FormManager $oFormManager): Response
+	public function form(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter): Response
 	{
-		// retrieve DB Object
-		try {
-			$oPerson = MetaModel::GetObject('Person', 1);
+		// create factory
+		try{
+			$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter);
 		}
 		catch (Exception $e) {
 			throw $this->createNotFoundException('unable to load object Person 1');
 		}
 
-		// build the form
-		$oFormFactory = $oFormManager->CreateFactory();
-		// object plugin
-		$oObjectPlugin = $oFormFactory->CreateObjectAddon($oPerson, true);
-		$oObjectPlugin->AddAttribute('name');
-		$oObjectPlugin->AddAttribute('mobile_phone');
-		// others data
-		$oFormFactory->AddTextField('city', [
-			'label' => 'Ma ville',
-			'constraints' => new Length(['min' => 3])
-		], 'Autun');
-		$oFormFactory->AddTextField('country', [
-			'label' => 'Pays'
-		], 'FRANCE');
-		$oFormFactory->AddDateField('birthday', [
-			'label' => 'Anniversaire',
-			'widget' => 'single_text',
-		], new DateTime('1979/06/27'));
-		$oFormFactory->AddSelectField('language', [
-			'label' => 'Ma langue',
-			'choices' => SelectHelper::GetApplicationLanguages()
-		], 'FR FR');
-		$oFormFactory->AddSelectAjaxField('dog', [
-			'label' => 'Mon Chien',
-			'placeholder' => 'Sélectionnez un chien'
-		], [
-			'url' => 'http://localhost' . $this->generateUrl('formSDK_ajax_select'),
-			'ajax_query_parameter' => 'query',
-			'value_field' => 'breed',
-			'label_field' => 'breed',
-			'search_field' => 'breed',
-			'threshold' => 20
-		]);
-		$oFormFactory->AddSelectOqlField('friends', [
-			'label' => 'Ma personne',
-		], 'Person', 'SELECT Person', [], '', 20);
-
 		// get the form
-		$oForm = $oFormFactory->GetForm();
+		$oForm = $oFactory->GetForm();
 
 		// handle request
 		$oForm->handleRequest($oRequest);
@@ -86,14 +52,42 @@ class TestController extends AbstractAppController
 			// retrieve form data
 			$data = $oForm->getData();
 
-			// ... perform some action, such as saving the data to the database
-
 			return $this->redirectToRoute('app_success');
 		}
 
 		return $this->render('formSDK/form.html.twig', [
 			'form' => $oForm->createView(),
 			'theme' => 'formSDK/themes/portal.html.twig'
+		]);
+
+	}
+
+	#[Route('/formSDK/test_theme', name: 'formSDK_test_theme')]
+	public function theme(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter): Response
+	{
+		// create factory
+		try{
+			$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter);
+		}
+		catch (Exception $e) {
+			throw $this->createNotFoundException('unable to load object Person 1');
+		}
+
+		// get the forms (named instances)
+		$oForm1 = $oFactory->GetForm('form1');
+		$oForm2 = $oFactory->GetForm('form2');
+
+		// handle request
+		$oForm1->handleRequest($oRequest);
+		$oForm2->handleRequest($oRequest);
+
+		return $this->render('formSDK/theme.html.twig', [
+			'name1' => 'Portal',
+			'name2' => 'Console',
+			'form1' => $oForm1->createView(),
+			'form2' => $oForm2->createView(),
+			'theme1' => 'formSDK/themes/portal.html.twig',
+			'theme2' => 'formSDK/themes/console.html.twig'
 		]);
 
 	}
