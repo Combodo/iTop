@@ -1,5 +1,5 @@
 controllers:
     resource:
-        path: ../../sources/FormSDK/Controller/
-        namespace: Combodo\iTop\FormSDK\Controller
+        path: ../../sources/FormImplementation/Controller/
+        namespace: Combodo\iTop\FormImplementation\Controller
     type: attribute

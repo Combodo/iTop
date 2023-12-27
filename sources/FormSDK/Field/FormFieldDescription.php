@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\FormSDK\Field\Description;
+namespace Combodo\iTop\FormSDK\Field;
 
 /**
  * Description of a form field.
@@ -31,12 +31,12 @@ class FormFieldDescription
 	/**
 	 * Constructor.
 	 *
-	 * @param string $sPath
+	 * @param string $sName
 	 * @param FormFieldTypeEnumeration $oType
 	 * @param array $aOptions
 	 */
 	public function __construct(
-		private readonly string $sPath,
+		private readonly string $sName,
 		private readonly FormFieldTypeEnumeration $oType,
 		private readonly array $aOptions
 	)
@@ -45,7 +45,7 @@ class FormFieldDescription
 	}
 
 	/**
-	 * Get type.
+	 * Get field type.
 	 *
 	 * @return FormFieldTypeEnumeration
 	 */
@@ -55,7 +55,7 @@ class FormFieldDescription
 	}
 
 	/**
-	 * Get options.
+	 * Get field options.
 	 *
 	 * @return array
 	 */
@@ -65,10 +65,12 @@ class FormFieldDescription
 	}
 
 	/**
+	 * Get field name.
+	 *
 	 * @return string
 	 */
-	public function GetPath() : string
+	public function GetName() : string
 	{
-		return $this->sPath;
+		return $this->sName;
 	}
 }

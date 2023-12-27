@@ -20,9 +20,10 @@
 namespace Combodo\iTop\FormSDK\Symfony;
 
 use Combodo\iTop\FormSDK\Symfony\Type\Compound\FormObjectType;
-use Combodo\iTop\FormSDK\Field\Description\FormFieldDescription;
-use Combodo\iTop\FormSDK\Field\Description\FormFieldTypeEnumeration;
+use Combodo\iTop\FormSDK\Field\FormFieldDescription;
+use Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration;
 use LogAPI;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -54,7 +55,7 @@ class SymfonyBridge
 	/**
 	 * Transform description to Symfony description.
 	 *
-	 * @param \Combodo\iTop\FormSDK\Field\Description\FormFieldDescription $oFormDescription
+	 * @param \Combodo\iTop\FormSDK\Field\FormFieldDescription $oFormDescription
 	 *
 	 * @return array|null
 	 */
@@ -64,29 +65,36 @@ class SymfonyBridge
 
 			case FormFieldTypeEnumeration::TEXT:
 				return [
-					'path' => $oFormDescription->GetPath(),
+					'name' => $oFormDescription->GetName(),
 					'type' => TextType::class,
 					'options' => $oFormDescription->GetOptions()
 				];
 
 			case FormFieldTypeEnumeration::AREA:
 				return [
-					'path' => $oFormDescription->GetPath(),
+					'name' => $oFormDescription->GetName(),
 					'type' => TextareaType::class,
 					'options' => $oFormDescription->GetOptions()
 				];
 
 			case FormFieldTypeEnumeration::DATE:
 				return [
-					'path' => $oFormDescription->GetPath(),
+					'name' => $oFormDescription->GetName(),
 					'type' => DateType::class,
 					'options' => $oFormDescription->GetOptions()
 				];
 
 			case FormFieldTypeEnumeration::SELECT:
 				return [
-					'path' => $oFormDescription->GetPath(),
+					'name' => $oFormDescription->GetName(),
 					'type' => ChoiceType::class,
+					'options' => $oFormDescription->GetOptions()
+				];
+
+			case FormFieldTypeEnumeration::SWITCH:
+				return [
+					'name' => $oFormDescription->GetName(),
+					'type' => CheckboxType::class,
 					'options' => $oFormDescription->GetOptions()
 				];
 
@@ -99,7 +107,7 @@ class SymfonyBridge
 				}
 				$aOptions['descriptions'] = $aItems;
 				return [
-					'path' => $oFormDescription->GetPath(),
+					'name' => $oFormDescription->GetName(),
 					'type' => FormObjectType::class,
 					'options' => $aOptions
 				];
@@ -131,10 +139,12 @@ class SymfonyBridge
 		// iterate throw descriptions...
 		foreach ($aDescriptions as $oFormDescription){
 
+			// symfony form type description
 			$aSymfony = $this->ToSymfonyFormType($oFormDescription);
 
+			// add type to form
 			$oFormBuilder->add(
-				$aSymfony['path'],
+				$aSymfony['name'],
 				$aSymfony['type'],
 				$aSymfony['options']
 			);
@@ -147,7 +157,7 @@ class SymfonyBridge
 			 * @see https://itecnote.com/tecnote/php-disable-backend-validation-for-choice-field-in-symfony-2-type/
 			*/
 			if($aSymfony['type'] === ChoiceType::class){
-				$oFormBuilder->get($aSymfony['path'])->resetViewTransformers();
+				$oFormBuilder->get($aSymfony['name'])->resetViewTransformers();
 			}
 
 		}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Combodo\iTop\FormSDK\Helper;
+namespace Combodo\iTop\FormImplementation\Helper;
 
 use Combodo\iTop\Controller\AbstractAppController;
 use Combodo\iTop\FormSDK\Service\FormManager;
@@ -24,10 +24,10 @@ class FormHelper
 	 */
 	static public function CreateSampleFormFactory(FormManager $oFormManager, RouterInterface $oRouter)
 	{
-		// build the form
+		// create a factory
 		$oFormFactory = $oFormManager->CreateFactory();
 
-		// add 2 person forms...
+		// add X person forms...
 		for($i = 0 ; $i < 2 ; $i++){
 
 			// retrieve person
@@ -61,6 +61,11 @@ class FormHelper
 			'required' => false
 		], new DateTime('1979/06/27'));
 
+		// ready
+		$oFormFactory->AddSwitchField('notify', [
+			'label' => 'Veuillez m\'avertir en cas de changement',
+		], true);
+
 		// blog - date
 		$oFormFactory->AddAreaField('blog', [
 			'label' => 'Blog',
@@ -81,7 +86,7 @@ class FormHelper
 
 		], [
 			'url' => 'http://localhost' . $oRouter->generate('formSDK_ajax_select'),
-			'ajax_query_parameter' => 'query',
+			'query_parameter' => 'query',
 			'value_field' => 'breed',
 			'label_field' => 'breed',
 			'search_field' => 'breed',
@@ -95,21 +100,33 @@ class FormHelper
 			'required' => false
 		], 'Person', 'SELECT Person', [], '', 20);
 
+		// requests - select with  OQL
+		$oFormFactory->AddSelectOqlField('requests', [
+			'label' => 'Tickets',
+			'required' => false
+		], 'UserRequest', 'SELECT UserRequest', [], '', 20);
+
 		// mode - select with static data
 		$oFormFactory->AddSelectField('mode', [
 			'label' => 'Mon mode',
 			'choices' => SelectDataProvider::GetModes(),
 			'expanded' => true,
-			'multiple' => false
-		], '');
+			'multiple' => false,
+			'label_attr' => [
+				'class' => 'radio-inline'
+			]
+		], '1');
 
 		// options - select with static data
 		$oFormFactory->AddSelectField('option', [
 			'label' => 'Mes options',
 			'choices' => SelectDataProvider::GetOptions(),
 			'expanded' => true,
-			'multiple' => true
-		], null);
+			'multiple' => true,
+			'label_attr' => [
+				'class' => 'checkbox-inline'
+			]
+		], ['0', '2','4']);
 
 		return $oFormFactory;
 	}

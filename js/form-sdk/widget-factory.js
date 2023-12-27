@@ -1,4 +1,9 @@
-
+/**
+ * Widgets Factory.
+ *
+ * @package FormSDK
+ * @since 3.2.0
+ */
 const iTopFormWidgetFactory = new function(){
 
 	/**
@@ -6,41 +11,62 @@ const iTopFormWidgetFactory = new function(){
 	 *
 	 * @constructor
 	 */
-	const AutoInstall = function()
-	{
+	const AutoInstall = function() {
 		console.log('AutoInstall');
 
-		// SELECT widget implementation
-		$('[data-widget="SelectWidget"]').each(function(e){
-			const oElement = $(this);
-			if(!oElement.data('widget-state-initialized')){
-				const sId = oElement.attr('id');
-				const aOptions = oElement.data('widget-options');
-				iTopFormWidgetFactory.CreateSelectWidget(sId, aOptions);
-				oElement.data('widget-state-initialized', true);
-			}
-		});
+		// widgets catalog
+		const WIDGETS = {
+			SELECT: {name: 'SelectWidget', builder: CreateSelectWidget},
+			TEXT: {name: 'TextWidget', builder: CreateTextWidget},
+			AREA: {name: 'AreaWidget', builder: CreateAreaWidget}
+		}
 
-		$('[data-widget="TextWidget"]').each(function(e){
-			const oElement = $(this);
-			if(!oElement.data('widget-state-initialized')){
-				const sId = oElement.attr('id');
-				const aOptions = oElement.data('widget-options');
-				iTopFormWidgetFactory.CreateTextWidget(sId, aOptions);
-				oElement.data('widget-state-initialized', true);
-			}
-		});
+		// instanciate widgets...
+		for (const widgetsKey in WIDGETS) {
 
-		$('[data-widget="AreaWidget"]').each(function(e){
-			const oElement = $(this);
-			if(!oElement.data('widget-state-initialized')){
-				const sId = oElement.attr('id');
-				const aOptions = oElement.data('widget-options');
-				iTopFormWidgetFactory.CreateAreaWidget(sId, aOptions);
-				oElement.data('widget-state-initialized', true);
-			}
-		});
+			// widget configuration
+			const aWidgetConfiguration = WIDGETS[widgetsKey];
+
+			// instanciate widget
+			$(`[data-widget="${aWidgetConfiguration.name}"]`).each(function (e) {
+				const oElement = $(this);
+				if (!oElement.data('widget-state-initialized')) {
+					const sId = oElement.attr('id');
+					const aOptions = oElement.data('widget-options');
+					aWidgetConfiguration.builder(sId, aOptions);
+					console.log(aWidgetConfiguration.name, sId, aOptions);
+					oElement.data('widget-state-initialized', true);
+				}
+			});
+		}
+
 	}
+
+	/**
+	 * CreateTextWidget.
+	 *
+	 * @param {string} sId
+	 * @param {array} aOptions
+	 * @constructor
+	 */
+	const CreateTextWidget = function(sId, aOptions){
+
+		if(aOptions['pattern'] !== undefined){
+
+			const oElement = $(`#${sId}`);
+			const oMask = IMask(oElement[0],
+				{
+					mask: aOptions['pattern'],
+					lazy: false,
+				}
+			);
+			oMask.on('accept', () => {
+				masked = oMask.masked;
+				oElement.closest('div').toggleClass('complete', masked.isComplete)
+			});
+		}
+
+	};
 
 	/**
 	 * CreateAreaWidget.
@@ -50,9 +76,6 @@ const iTopFormWidgetFactory = new function(){
 	 * @constructor
 	 */
 	const CreateAreaWidget = function(sId, aOptions){
-
-		console.log('CreateAreaWidget', sId, aOptions);
-
 
 		editor = CKEDITOR.replace(sId, {
 			language: 'fr',
@@ -73,44 +96,14 @@ const iTopFormWidgetFactory = new function(){
 	};
 
 	/**
-	 * CreateTextWidget.
-	 *
-	 * @param {string} sId
-	 * @param {array} aOptions
-	 * @constructor
-	 */
-	const CreateTextWidget = function(sId, aOptions){
-
-		console.log('CreateTextWidget', sId, aOptions);
-
-		if(aOptions['pattern'] !== undefined){
-
-			const oElement = $(`#${sId}`);
-			const oMask = IMask(oElement[0],
-				{
-					mask: aOptions['pattern'],
-					lazy: false,
-				}
-			);
-			oMask.on('accept', () => {
-				masked = oMask.masked;
-				oElement.closest('div').toggleClass('complete', masked.isComplete)
-			});
-		}
-
-	};
-
-	/**
 	 * CreateSelectAjaxWidget.
 	 *
 	 * @param {string} sId
 	 * @param {array} aOptions
 	 * @constructor
 	 */
-	const CreateSelectWidget = function(sId, aOptions){
-
-		console.log('CreateSelectAjaxWidget', sId, aOptions);
-
+	const CreateSelectWidget = function(sId, aOptions)
+	{
 		const aPlugins = {};
 
 		if(aOptions['max_items'] != '1'){
@@ -144,10 +137,7 @@ const iTopFormWidgetFactory = new function(){
 	};
 
 	return {
-		AutoInstall,
-		CreateTextWidget,
-		CreateAreaWidget,
-		CreateSelectWidget,
+		AutoInstall
 	}
 };
 

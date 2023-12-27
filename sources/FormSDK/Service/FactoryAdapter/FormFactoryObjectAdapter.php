@@ -21,8 +21,8 @@ namespace Combodo\iTop\FormSDK\Service\FactoryAdapter;
 
 use AttributeDefinition;
 use AttributeString;
-use Combodo\iTop\FormSDK\Field\Description\FormFieldDescription;
-use Combodo\iTop\FormSDK\Field\Description\FormFieldTypeEnumeration;
+use Combodo\iTop\FormSDK\Field\FormFieldDescription;
+use Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration;
 use DBObject;
 use Exception;
 use ExceptionLog;
@@ -89,8 +89,14 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 	{
 		$aOptions = [];
 
+		$sLabel = $oAttributeDefinition->GetLabel();
+		if(!$this->bGroup){
+			$sLabel = $this->GetLabel() . ' ••• ' . $sLabel;
+		}
+
 		if($oAttributeDefinition instanceof AttributeString) {
 			$aOptions['required'] = !$oAttributeDefinition->IsNullAllowed();
+			$aOptions['label'] = $sLabel;
 		}
 
 		return $aOptions;
@@ -101,7 +107,7 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 	 *
 	 * @param string $sAttributeCode
 	 *
-	 * @return \Combodo\iTop\FormSDK\Field\Description\FormFieldDescription|null
+	 * @return \Combodo\iTop\FormSDK\Field\FormFieldDescription|null
 	 * @throws \Exception
 	 */
 	private function GetAttributeDescription(string $sAttributeCode) : ?FormFieldDescription
@@ -110,7 +116,7 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 
 		if($oAttributeDefinition instanceof AttributeString) {
 			return new FormFieldDescription(
-				$this->GetAttributePath($sAttributeCode),
+				$this->GetAttributeName($sAttributeCode),
 				FormFieldTypeEnumeration::TEXT,
 				array_merge(
 					$this->GetAttributeOptions($oAttributeDefinition),
@@ -122,16 +128,15 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 	}
 
 	/**
-	 * Return attribute path.
+	 * Return attribute name.
 	 *
 	 * @param string $sAttributeCode
 	 *
 	 * @return string
 	 */
-	private function GetAttributePath(string $sAttributeCode) : string
+	private function GetAttributeName(string $sAttributeCode) : string
 	{
 		return $this->bGroup ? $sAttributeCode : $this->GetIdentifier() . '-' . $sAttributeCode;
-//		return $this->GetIdentifier() . '-' . $sAttributeCode;
 	}
 
 	/** @inheritdoc */
@@ -140,10 +145,10 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 		$aData = [];
 		foreach ($this->aAttributes as $sAttributeCode => $oValue){
 			try {
-				$aData[$this->GetAttributePath($sAttributeCode)] = $this->GetAttributeData($sAttributeCode);
+				$aData[$this->GetAttributeName($sAttributeCode)] = $this->GetAttributeData($sAttributeCode);
 			}
 			catch (Exception $e) {
-				$aData[$this->GetAttributePath($sAttributeCode)] = null;
+				$aData[$this->GetAttributeName($sAttributeCode)] = null;
 				ExceptionLog::LogException($e);
 			}
 		}
@@ -163,9 +168,9 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 	{
 		$aDescriptions = [];
 
-		foreach ($this->aAttributes as $sKey => $oValue){
+		foreach ($this->aAttributes as $sAttCode => $oValue){
 			try {
-				$aDescriptions[$this->GetIdentifier() .'_' .$sKey] = $this->GetAttributeDescription($sKey);
+				$aDescriptions[$this->GetAttributeName($sAttCode)] = $this->GetAttributeDescription($sAttCode);
 			}
 			catch (Exception $e) {
 				ExceptionLog::LogException($e);
@@ -174,13 +179,19 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 
 		if($this->bGroup){
 			$oGroupDescriptions = new FormFieldDescription($this->GetIdentifier(), FormFieldTypeEnumeration::DB_OBJECT, [
-				'descriptions' => $aDescriptions
+				'descriptions' => $aDescriptions,
+				'label' => $this->GetLabel()
 			]);
-			return [$oGroupDescriptions];
+			return [$this->GetIdentifier() => $oGroupDescriptions];
 		}
 		else{
 			return $aDescriptions;
 		}
+	}
+
+	public function GetLabel(): string
+	{
+		return get_class($this->oDBObject) . ' ' . $this->oDBObject->GetKey();
 	}
 
 	/** @inheritdoc */

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\FormSDK\Helper;
+namespace Combodo\iTop\FormImplementation\Helper;
 
 use Dict;
 

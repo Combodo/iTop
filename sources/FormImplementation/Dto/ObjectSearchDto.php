@@ -1,6 +1,6 @@
 <?php
 
-namespace Combodo\iTop\FormSDK\Dto;
+namespace Combodo\iTop\FormImplementation\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 

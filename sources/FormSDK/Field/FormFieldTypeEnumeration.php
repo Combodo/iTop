@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\FormSDK\Field\Description;
+namespace Combodo\iTop\FormSDK\Field;
 
 /**
- * Form types.
+ * Types of fields.
  *
  * @package FormSDK
  * @since 3.2.0
@@ -31,6 +31,7 @@ enum FormFieldTypeEnumeration : string
 	case AREA = 'AREA';
 	case DATE = 'DATE';
 	case SELECT = 'SELECT';
+	case SWITCH = 'SWITCH';
 	case DB_OBJECT = 'DB_OBJECT';
 
 	/**
@@ -40,10 +41,10 @@ enum FormFieldTypeEnumeration : string
 	 */
 	public function GetAvailableOptions() : array
 	{
-		$aOptions = ['label', 'required', 'disabled'];
+		$aOptions = ['required', 'disabled', 'attr', 'label', 'label_attr'];
 
 		return match ($this->value) {
-			FormFieldTypeEnumeration::SELECT => array_merge($aOptions, ['']),
+			FormFieldTypeEnumeration::SELECT => array_merge($aOptions, ['placeholder']),
 			default => $aOptions,
 		};
 	}

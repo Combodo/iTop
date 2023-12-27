@@ -1,9 +1,35 @@
 
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+
+    <style>
+        .theme_viewer{
+        display: flex;
+        }
+
+        .theme{
+        width: 100%;
+        padding: 20px;
+        }
+
+        .theme1 h4{
+        color: #cc8d17;
+        border-bottom: 1px #cc8d17 solid;
+        margin-bottom: 20px;
+        }
+        .theme2 h4{
+        color: #c7306e;
+        border-bottom: 1px #c7306e solid;
+        margin-bottom: 20px;
+        }
+    </style>
+
+{% endblock %}
+
 {% block body %}
 
-    <div class="container-fluid">
+    <div class="container-fluid p-5">
 
         {# specific form theme #}
         {% if theme1 is defined %}

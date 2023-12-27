@@ -19,7 +19,7 @@
 
 namespace Combodo\iTop\FormSDK\Symfony\Type\Compound;
 
-use Combodo\iTop\FormSDK\Field\Description\FormFieldDescription;
+use Combodo\iTop\FormSDK\Field\FormFieldDescription;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,7 +39,7 @@ class FormObjectType extends AbstractType
 	{
 		/** @var FormFieldDescription $oDescription */
 		foreach ($options['descriptions'] as $oDescription){
-			$builder->add($oDescription['path'], $oDescription['type'], $oDescription['options']);
+			$builder->add($oDescription['name'], $oDescription['type'], $oDescription['options']);
 		}
 	}
 

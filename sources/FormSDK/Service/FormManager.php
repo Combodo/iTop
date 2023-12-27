@@ -30,7 +30,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @package FormSDK
  * @since 3.2.0
  */
-class FormManager
+final class FormManager
 {
 
 	/**

@@ -1,11 +1,11 @@
 <?php
 
-namespace Combodo\iTop\FormSDK\Controller;
+namespace Combodo\iTop\FormImplementation\Controller;
 
 use Combodo\iTop\Controller\AbstractAppController;
-use Combodo\iTop\FormSDK\Dto\ObjectSearchDto;
-use Combodo\iTop\FormSDK\Helper\FormHelper;
-use Combodo\iTop\FormSDK\Helper\SelectDataProvider;
+use Combodo\iTop\FormImplementation\Dto\ObjectSearchDto;
+use Combodo\iTop\FormImplementation\Helper\FormHelper;
+use Combodo\iTop\FormImplementation\Helper\SelectDataProvider;
 use Combodo\iTop\FormSDK\Service\FormManager;
 use Combodo\iTop\Service\Base\ObjectRepository;
 use DateTime;
@@ -29,7 +29,7 @@ use utils;
 class TestController extends AbstractAppController
 {
 
-	#[Route('/formSDK/test_Form', name: 'formSDK_test_form')]
+	#[Route('/formSDK/test_form', name: 'formSDK_test_form')]
 	public function form(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter): Response
 	{
 		// create factory
@@ -82,7 +82,7 @@ class TestController extends AbstractAppController
 		$oForm2->handleRequest($oRequest);
 
 		return $this->render('formSDK/theme.html.twig', [
-			'name1' => 'Portal',
+			'name1' => 'Portail',
 			'name2' => 'Console',
 			'form1' => $oForm1->createView(),
 			'form2' => $oForm2->createView(),

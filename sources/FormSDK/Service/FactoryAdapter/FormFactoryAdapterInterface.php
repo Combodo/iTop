@@ -37,7 +37,7 @@ interface FormFactoryAdapterInterface
 	/**
 	 * Return description the form.
 	 *
-	 * @return \Combodo\iTop\FormSDK\Field\Description\FormFieldDescription[]
+	 * @return \Combodo\iTop\FormSDK\Field\FormFieldDescription[]
 	 */
 	public function GetFormDescriptions() : array;
 
