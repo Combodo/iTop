@@ -78,9 +78,9 @@ class FormFactory
 		];
 
 		// merge each adapter data...
-		foreach ($this->GetAllAdapters() as $oPlugin){
-			$aResult['descriptions'] = array_merge($aResult['descriptions'], $oPlugin->GetFormDescriptions());
-			$aResult['data'] = array_merge($aResult['data'], $oPlugin->GetFormData());
+		foreach ($this->GetAllAdapters() as $oAdapter){
+			$aResult['descriptions'] = array_merge($aResult['descriptions'], $oAdapter->GetFormDescriptions());
+			$aResult['data'] = array_merge($aResult['data'], $oAdapter->GetFormData());
 		}
 
 		return $aResult;
@@ -173,6 +173,30 @@ class FormFactory
 	}
 
 	/**
+	 * Add area field.
+	 *
+	 * @param string $sKey
+	 * @param array $aOptions
+	 * @param mixed $oData
+	 *
+	 * @return $this
+	 */
+	public function AddAreaField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
+	{
+		$aOptions = array_merge([
+			'attr' => [
+				'data-widget' => 'AreaWidget',
+				'data-widget-options' => json_encode([])
+			]
+		], $aOptions);
+
+		$this->aDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::AREA, $aOptions);
+		$this->aData[$sKey] = $oData;
+
+		return $this;
+	}
+
+	/**
 	 * Add date field.
 	 *
 	 * @param string $sKey
@@ -227,7 +251,7 @@ class FormFactory
 			'value_field' => 'value',
 			'label_field' => 'label',
 			'search_field' => 'search',
-			'preload' => true,
+			'preload' => false,
 			'threshold' => -1,
 			'configuration' => 'AJAX'
 		], $aAjaxOptions);

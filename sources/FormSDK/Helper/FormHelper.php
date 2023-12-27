@@ -42,6 +42,7 @@ class FormHelper
 		// city - text
 		$oFormFactory->AddTextField('city', [
 			'label' => 'Ma ville',
+			'help' => 'This is where you live',
 			'constraints' => new Length(['min' => 3])
 		], 'Autun');
 
@@ -60,6 +61,12 @@ class FormHelper
 			'required' => false
 		], new DateTime('1979/06/27'));
 
+		// blog - date
+		$oFormFactory->AddAreaField('blog', [
+			'label' => 'Blog',
+			'required' => false
+		], 'Your story');
+
 		// language - select with static data
 		$oFormFactory->AddSelectField('language', [
 			'label' => 'Ma langue',
@@ -70,15 +77,23 @@ class FormHelper
 		$oFormFactory->AddSelectAjaxField('dog', [
 			'label' => 'Mon Chien',
 			'placeholder' => 'Sélectionnez un chien',
-			'required' => false
+			'required' => false,
+
 		], [
 			'url' => 'http://localhost' . $oRouter->generate('formSDK_ajax_select'),
 			'ajax_query_parameter' => 'query',
 			'value_field' => 'breed',
 			'label_field' => 'breed',
 			'search_field' => 'breed',
-			'threshold' => 20
+			'threshold' => 20,
+			'max_items' => 1
 		]);
+
+		// friends - select with  OQL
+		$oFormFactory->AddSelectOqlField('friends', [
+			'label' => 'Ma personne',
+			'required' => false
+		], 'Person', 'SELECT Person', [], '', 20);
 
 		// mode - select with static data
 		$oFormFactory->AddSelectField('mode', [
@@ -95,12 +110,6 @@ class FormHelper
 			'expanded' => true,
 			'multiple' => true
 		], null);
-
-		// friends - select with  OQL
-		$oFormFactory->AddSelectOqlField('friends', [
-			'label' => 'Ma personne',
-			'required' => false
-		], 'Person', 'SELECT Person', [], '', 20);
 
 		return $oFormFactory;
 	}

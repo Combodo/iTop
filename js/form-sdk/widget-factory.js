@@ -31,8 +31,46 @@ const iTopFormWidgetFactory = new function(){
 			}
 		});
 
-
+		$('[data-widget="AreaWidget"]').each(function(e){
+			const oElement = $(this);
+			if(!oElement.data('widget-state-initialized')){
+				const sId = oElement.attr('id');
+				const aOptions = oElement.data('widget-options');
+				iTopFormWidgetFactory.CreateAreaWidget(sId, aOptions);
+				oElement.data('widget-state-initialized', true);
+			}
+		});
 	}
+
+	/**
+	 * CreateAreaWidget.
+	 *
+	 * @param {string} sId
+	 * @param {array} aOptions
+	 * @constructor
+	 */
+	const CreateAreaWidget = function(sId, aOptions){
+
+		console.log('CreateAreaWidget', sId, aOptions);
+
+
+		editor = CKEDITOR.replace(sId, {
+			language: 'fr',
+			stylesSet: 'my_styles',
+			toolbarCanCollapse: false,
+			toolbarGroups: [
+				{ name: 'tools'},
+				{ name: 'styles'},
+				{ name: 'basicstyles'},
+				{ name: 'links'},
+				{ name: 'paragraph', groups: ['list', 'blocks']},
+				{ name: 'insert'},
+			],
+			// Remove the redundant buttons from toolbar groups defined above. Format
+			removeButtons: 'Subscript,Superscript,Anchor,Specialchar,PasteFromWord,Styles,Font,FontSize'
+		});
+
+	};
 
 	/**
 	 * CreateTextWidget.
@@ -73,17 +111,21 @@ const iTopFormWidgetFactory = new function(){
 
 		console.log('CreateSelectAjaxWidget', sId, aOptions);
 
+		const aPlugins = {};
+
+		if(aOptions['max_items'] != '1'){
+			aPlugins['remove_button'] = {
+				title:'Remove this item',
+			};
+		}
+
 		new TomSelect(`#${sId}`, {
 			valueField: aOptions['value_field'],
 			labelField: aOptions['label_field'],
 			searchField: aOptions['search_field'],
-			maxItems: aOptions['maxItems'],
+			maxItems: aOptions['max_items'],
 			preload: aOptions['preload'],
-			plugins: {
-				remove_button:{
-					title:'Remove this item',
-				}
-			},
+			plugins: aPlugins,
 			load: function(query, callback) {
 				let sUrl = aOptions['url'];
 				if(!sUrl.includes('?')){
@@ -101,10 +143,11 @@ const iTopFormWidgetFactory = new function(){
 		});
 	};
 
-
 	return {
 		AutoInstall,
 		CreateTextWidget,
+		CreateAreaWidget,
 		CreateSelectWidget,
 	}
 };
+

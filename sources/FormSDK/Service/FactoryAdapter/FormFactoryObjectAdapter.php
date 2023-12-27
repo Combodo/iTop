@@ -130,7 +130,8 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 	 */
 	private function GetAttributePath(string $sAttributeCode) : string
 	{
-		return $this->GetIdentifier() . '-' . $sAttributeCode;
+		return $this->bGroup ? $sAttributeCode : $this->GetIdentifier() . '-' . $sAttributeCode;
+//		return $this->GetIdentifier() . '-' . $sAttributeCode;
 	}
 
 	/** @inheritdoc */
@@ -146,7 +147,15 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 				ExceptionLog::LogException($e);
 			}
 		}
-		return $aData;
+
+		if($this->bGroup){
+			return [
+				$this->GetIdentifier() => $aData
+			];
+		}
+		else{
+			return $aData;
+		}
 	}
 
 	/** @inheritdoc */
@@ -156,7 +165,7 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 
 		foreach ($this->aAttributes as $sKey => $oValue){
 			try {
-				$aDescriptions[$sKey] = $this->GetAttributeDescription($sKey);
+				$aDescriptions[$this->GetIdentifier() .'_' .$sKey] = $this->GetAttributeDescription($sKey);
 			}
 			catch (Exception $e) {
 				ExceptionLog::LogException($e);

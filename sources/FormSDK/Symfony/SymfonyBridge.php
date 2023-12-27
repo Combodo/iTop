@@ -26,6 +26,7 @@ use LogAPI;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -68,6 +69,13 @@ class SymfonyBridge
 					'options' => $oFormDescription->GetOptions()
 				];
 
+			case FormFieldTypeEnumeration::AREA:
+				return [
+					'path' => $oFormDescription->GetPath(),
+					'type' => TextareaType::class,
+					'options' => $oFormDescription->GetOptions()
+				];
+
 			case FormFieldTypeEnumeration::DATE:
 				return [
 					'path' => $oFormDescription->GetPath(),
@@ -90,7 +98,6 @@ class SymfonyBridge
 					$aItems[] = $aSymfony;
 				}
 				$aOptions['descriptions'] = $aItems;
-				$aOptions['inherit_data'] = true;
 				return [
 					'path' => $oFormDescription->GetPath(),
 					'type' => FormObjectType::class,
