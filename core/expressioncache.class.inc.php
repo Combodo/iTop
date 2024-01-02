@@ -101,7 +101,7 @@ EOF;
 EOF;
 
 				SetupUtils::builddir(dirname($sFilePath));
-				file_put_contents($sFilePath, $content);
+				file_put_contents($sFilePath, $content, LOCK_EX);
 			}
 		}
 		Dict::SetUserLanguage($sUserLang);
