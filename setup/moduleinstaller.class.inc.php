@@ -242,11 +242,13 @@ abstract class ModuleInstallerAPI
 	 * @param $sOrigColumn
 	 * @param $sDstTable
 	 * @param $sDstColumn
+	 * @param bool $bIgnoreExistingDstColumn
 	 *
-	 * @throws \MySQLException
 	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
 	 */
-	public static function MoveColumnInDB($sOrigTable, $sOrigColumn, $sDstTable, $sDstColumn)
+	public static function MoveColumnInDB($sOrigTable, $sOrigColumn, $sDstTable, $sDstColumn, $bIgnoreExistingDstColumn = false)
 	{
 		if (!MetaModel::DBExists(false))
 		{
@@ -259,17 +261,20 @@ abstract class ModuleInstallerAPI
 			// Original field is not present
 			return;
 		}
-
-		if (!CMDBSource::IsTable($sDstTable) || CMDBSource::IsField($sDstTable, $sDstColumn))
+		
+		$bDstTableFieldExists = CMDBSource::IsTable($sDstTable);
+		if (!CMDBSource::IsTable($sDstTable) || ($bDstTableFieldExists && !$bIgnoreExistingDstColumn))
 		{
-			// Destination field is already created
+			// Destination field is already created and we are not ignoring it
 			return;
 		}
 
-		// Create the destination field
-		$sSpec = CMDBSource::GetFieldSpec($sOrigTable, $sOrigColumn);
-		$sQueryAdd = "ALTER TABLE `{$sDstTable}` ADD `{$sDstColumn}` {$sSpec}";
-		CMDBSource::Query($sQueryAdd);
+		// Create the destination field if necessary
+		if($bDstTableFieldExists === false){
+			$sSpec = CMDBSource::GetFieldSpec($sOrigTable, $sOrigColumn);
+			$sQueryAdd = "ALTER TABLE `{$sDstTable}` ADD `{$sDstColumn}` {$sSpec}";
+			CMDBSource::Query($sQueryAdd);	
+		}
 
 		// Copy the data
 		$sQueryUpdate = "UPDATE `{$sDstTable}` AS d LEFT JOIN `{$sOrigTable}` AS o ON d.id = o.id SET d.`{$sDstColumn}` = o.`{$sOrigColumn}` WHERE 1";
