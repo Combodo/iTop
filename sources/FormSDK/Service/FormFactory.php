@@ -19,7 +19,6 @@
 
 namespace Combodo\iTop\FormSDK\Service;
 
-use Combodo\iTop\FormSDK\Helper\SelectDataProvider;
 use Combodo\iTop\FormSDK\Service\FormFactoryBuilderTrait;
 use Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryObjectAdapter;
 use Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface;
@@ -47,11 +46,11 @@ class FormFactory
 	/** @var \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface[] $aAdapters  */
 	private array $aAdapters = [];
 
-	/** @var array $aDescriptions form types descriptions */
-	private array $aDescriptions = [];
+	/** @var array $aFieldsDescriptions form types descriptions */
+	private array $aFieldsDescriptions = [];
 
-	/** @var array $aData form data */
-	private array $aData = [];
+	/** @var array $aFieldsData form data */
+	private array $aFieldsData = [];
 
 	/** builder */
 	use FormFactoryBuilderTrait;
@@ -71,22 +70,22 @@ class FormFactory
 	}
 
 	/**
-	 * Return descriptions and data arrays.
+	 * Return fields descriptions and data arrays.
 	 *
 	 * @return array{descriptions:array, data:array}
 	 */
-	public function GetFormDescriptionsAndData() : array
+	public function GetFieldsDescriptionsAndData() : array
 	{
 		// prepare data
 		$aResult = [
-			'descriptions' => $this->aDescriptions,
-			'data' => $this->aData,
+			'descriptions' => $this->aFieldsDescriptions,
+			'data' => $this->aFieldsData,
 		];
 
 		// merge each adapter data...
 		foreach ($this->GetAllAdapters() as $oAdapter){
-			$aResult['descriptions'] = array_merge($aResult['descriptions'], $oAdapter->GetFormDescriptions());
-			$aResult['data'] = array_merge($aResult['data'], $oAdapter->GetFormData());
+			$aResult['descriptions'] = array_merge($aResult['descriptions'], $oAdapter->GetFieldsDescriptions());
+			$aResult['data'] = array_merge($aResult['data'], $oAdapter->GetFieldsData());
 		}
 
 		return $aResult;
@@ -132,15 +131,15 @@ class FormFactory
 	}
 
 	/**
-	 * Get form.
+	 * Create form.
 	 *
 	 * @param string|null $sName
 	 * @return mixed
 	 */
-	public function GetForm(?string $sName = null) : mixed
+	public function CreateForm(?string $sName = null) : mixed
 	{
-		['descriptions' => $aDescriptions, 'data' => $aData] = $this->GetFormDescriptionsAndData();
-		return $this->oSymfonyBridge->GetForm($aDescriptions, $aData, $sName);
+		['descriptions' => $aDescriptions, 'data' => $aData] = $this->GetFieldsDescriptionsAndData();
+		return $this->oSymfonyBridge->CreateForm($aDescriptions, $aData, $sName);
 	}
 
 }

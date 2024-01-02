@@ -140,7 +140,7 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 	}
 
 	/** @inheritdoc */
-	public function GetFormData() : array
+	public function GetFieldsData() : array
 	{
 		$aData = [];
 		foreach ($this->aAttributes as $sAttributeCode => $oValue){
@@ -164,13 +164,13 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 	}
 
 	/** @inheritdoc */
-	public function GetFormDescriptions() : array
+	public function GetFieldsDescriptions() : array
 	{
-		$aDescriptions = [];
+		$aFieldsDescriptions = [];
 
 		foreach ($this->aAttributes as $sAttCode => $oValue){
 			try {
-				$aDescriptions[$this->GetAttributeName($sAttCode)] = $this->GetAttributeDescription($sAttCode);
+				$aFieldsDescriptions[$this->GetAttributeName($sAttCode)] = $this->GetAttributeDescription($sAttCode);
 			}
 			catch (Exception $e) {
 				ExceptionLog::LogException($e);
@@ -179,13 +179,13 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 
 		if($this->bGroup){
 			$oGroupDescriptions = new FormFieldDescription($this->GetIdentifier(), FormFieldTypeEnumeration::DB_OBJECT, [
-				'descriptions' => $aDescriptions,
+				'fields' => $aFieldsDescriptions,
 				'label' => $this->GetLabel()
 			]);
 			return [$this->GetIdentifier() => $oGroupDescriptions];
 		}
 		else{
-			return $aDescriptions;
+			return $aFieldsDescriptions;
 		}
 	}
 
@@ -198,5 +198,21 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 	public function GetIdentifier(): string
 	{
 		return get_class($this->oDBObject) . '_' . $this->oDBObject->GetKey();
+	}
+
+	/** @inheritdoc */
+	public function UpdateFieldsData(array $aFormData) : bool
+	{
+		if($this->bGroup){
+			$aFormData = $aFormData[$this->GetIdentifier()];
+		}
+
+		foreach ($this->aAttributes as $sAttCode => $aValue){
+			$this->oDBObject->Set($sAttCode, $aFormData[$this->GetAttributeName($sAttCode)]);
+		}
+
+		$this->oDBObject->DBUpdate();
+
+		return true;
 	}
 }

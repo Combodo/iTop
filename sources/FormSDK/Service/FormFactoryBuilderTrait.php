@@ -27,7 +27,7 @@ trait FormFactoryBuilderTrait
 			$oConstraint = $aOptions['constraints'];
 			if($oConstraint instanceof Regex){
 				$aWidgetOptions = [
-					'pattern' => $oConstraint->pattern,
+					'pattern' => $oConstraint->getHtmlPattern(),
 				];
 				$aOptions = array_merge([
 					'attr' => [
@@ -39,8 +39,26 @@ trait FormFactoryBuilderTrait
 			}
 		}
 
-		$this->aDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::TEXT, $aOptions);
-		$this->aData[$sKey] = $oData;
+		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::TEXT, $aOptions);
+		$this->aFieldsData[$sKey] = $oData;
+
+		return $this;
+	}
+
+	/**
+	 * Add number field.
+	 *
+	 * @param string $sKey
+	 * @param array $aOptions
+	 * @param mixed $oData
+	 *
+	 * @return $this
+	 */
+	public function AddNumberField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
+	{
+
+		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::NUMBER, $aOptions);
+		$this->aFieldsData[$sKey] = $oData;
 
 		return $this;
 	}
@@ -63,8 +81,8 @@ trait FormFactoryBuilderTrait
 			]
 		], $aOptions);
 
-		$this->aDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::AREA, $aOptions);
-		$this->aData[$sKey] = $oData;
+		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::AREA, $aOptions);
+		$this->aFieldsData[$sKey] = $oData;
 
 		return $this;
 	}
@@ -80,12 +98,29 @@ trait FormFactoryBuilderTrait
 	 */
 	public function AddDateField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
 	{
-		$this->aDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::DATE, $aOptions);
-		$this->aData[$sKey] = $oData;
+		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::DATE, $aOptions);
+		$this->aFieldsData[$sKey] = $oData;
 
 		return $this;
 	}
 
+
+	/**
+	 * Add duration field.
+	 *
+	 * @param string $sKey
+	 * @param array $aOptions
+	 * @param mixed $oData
+	 *
+	 * @return $this
+	 */
+	public function AddDurationField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
+	{
+		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::DURATION, $aOptions);
+		$this->aFieldsData[$sKey] = $oData;
+
+		return $this;
+	}
 
 	/**
 	 * Add select field.
@@ -98,8 +133,8 @@ trait FormFactoryBuilderTrait
 	 */
 	public function AddSelectField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
 	{
-		$this->aDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::SELECT, $aOptions);
-		$this->aData[$sKey] = $oData;
+		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::SELECT, $aOptions);
+		$this->aFieldsData[$sKey] = $oData;
 
 		return $this;
 	}
@@ -202,8 +237,8 @@ trait FormFactoryBuilderTrait
 			'label_attr' => ['class' => 'checkbox-switch'],
 		], $aOptions);
 
-		$this->aDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::SWITCH, $aOptions);
-		$this->aData[$sKey] = $oData;
+		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::SWITCH, $aOptions);
+		$this->aFieldsData[$sKey] = $oData;
 
 		return $this;
 	}

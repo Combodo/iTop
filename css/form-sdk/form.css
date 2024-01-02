@@ -42,4 +42,16 @@
 	color: grey;
 }
 
+.cke_focus .cke_contents{
+	border: 1px #86b7fe solid;
+	outline: 0;
+	border-radius: 6px;
+	box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+}
 
+.form_interval_horizontal{
+	display: flex;
+}
+.form_interval_horizontal > div{
+	margin-right: 8px;
+}

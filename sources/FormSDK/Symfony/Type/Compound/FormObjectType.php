@@ -34,20 +34,61 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class FormObjectType extends AbstractType
 {
 
+	/*
+	 * View Definition.
+	 *
+	 * [
+	 *      'row' => [
+	 *          'col' => [
+	 *              'description' => [
+	 *                  'label' => '',
+	 *                  'css_classes' => ''
+	 *               ],
+	 *              'items' => ['name', 'birthday']
+	 *              'fieldset' => ['address', 'city', 'country']
+	 *          ]
+	 *      ]
+	 * ]
+	 *
+	 *
+	 */
+
 	/** @inheritdoc  */
 	public function buildForm(FormBuilderInterface $builder, array $options) : void
 	{
-		/** @var FormFieldDescription $oDescription */
-		foreach ($options['descriptions'] as $oDescription){
-			$builder->add($oDescription['name'], $oDescription['type'], $oDescription['options']);
+		foreach ($options['view'] as $oItem) {
+
+			if($oItem === 'row'){
+				$this->handleRow();
+			}
+			else if($oItem === 'col'){
+				$this->handleColumn();
+			}
+			else{
+
+			}
+
 		}
+
+		foreach ($options['fields'] as $oField){
+			$builder->add($oField['name'], $oField['type'], $oField['options']);
+		}
+	}
+
+	private function handleRow(FormBuilderInterface $builder, array $aData){
+
+	}
+
+	private function handleColumn(FormBuilderInterface $builder, array $aData){
+
 	}
 
 	/** @inheritdoc  */
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'descriptions' => [],
+			'fields' => [],
+			'view' => [],
 			'attr' => [
 				'class' => ''
 			]

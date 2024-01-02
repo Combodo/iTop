@@ -28,23 +28,34 @@ namespace Combodo\iTop\FormSDK\Service\FactoryAdapter;
 interface FormFactoryAdapterInterface
 {
 	/**
-	 * Return data attached to the form.
-	 *
-	 * @return mixed
-	 */
-	public function GetFormData() : mixed;
-
-	/**
-	 * Return description the form.
-	 *
-	 * @return \Combodo\iTop\FormSDK\Field\FormFieldDescription[]
-	 */
-	public function GetFormDescriptions() : array;
-
-	/**
-	 * Return form identifier.
+	 * Return adapter identifier.
 	 *
 	 * @return string
 	 */
 	public function GetIdentifier() : string;
+
+	/**
+	 * Return fields descriptions.
+	 *
+	 * @return \Combodo\iTop\FormSDK\Field\FormFieldDescription[]
+	 */
+	public function GetFieldsDescriptions() : array;
+
+	/**
+	 * Return fields data.
+	 *
+	 * @return mixed
+	 */
+	public function GetFieldsData() : mixed;
+
+	/**
+	 * Update fields data.
+	 *
+	 * @param array $aFormData
+	 *
+	 * @return bool
+	 */
+	public function UpdateFieldsData(array $aFormData) : bool;
+
+
 }

@@ -19,6 +19,8 @@
 
 namespace Combodo\iTop\FormSDK\Field;
 
+use Exception;
+
 /**
  * Description of a form field.
  *
@@ -41,7 +43,12 @@ class FormFieldDescription
 		private readonly array $aOptions
 	)
 	{
+		$oCheckStatus = $this->oType->CheckOptions($this->aOptions);
 
+		if(!$oCheckStatus['valid']){
+			$sInvalidOptions = implode(', ', $oCheckStatus['invalid_options']);
+			throw new Exception("Invalid option(s) $sInvalidOptions provided for field $sName");
+		}
 	}
 
 	/**

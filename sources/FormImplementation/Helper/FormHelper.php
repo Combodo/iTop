@@ -4,6 +4,7 @@ namespace Combodo\iTop\FormImplementation\Helper;
 
 use Combodo\iTop\Controller\AbstractAppController;
 use Combodo\iTop\FormSDK\Service\FormManager;
+use DateInterval;
 use DateTime;
 use MetaModel;
 use Symfony\Component\Routing\RouterInterface;
@@ -28,7 +29,7 @@ class FormHelper
 		$oFormFactory = $oFormManager->CreateFactory();
 
 		// add X person forms...
-		for($i = 0 ; $i < 2 ; $i++){
+		for($i = 0 ; $i < 5 ; $i++){
 
 			// retrieve person
 			$oPerson = MetaModel::GetObject('Person', $i+1);
@@ -49,8 +50,7 @@ class FormHelper
 		// tel - text with pattern
 		$oFormFactory->AddTextField('tel', [
 			'label' => 'Tel',
-			'constraints' => new Regex(['pattern' => '+{33}(0) 00 00 00 00']),
-//				'constraints' => new Regex(['pattern' => '/^[1-6]\d{0,5}$/']),
+			'constraints' => new Regex(['pattern' => '/\+33\(\d\) \d\d \d\d \d\d \d\d/'], null, '+{33}(0) 00 00 00 00'),
 			'required' => false
 		], null);
 
@@ -60,6 +60,25 @@ class FormHelper
 			'widget' => 'single_text',
 			'required' => false
 		], new DateTime('1979/06/27'));
+
+		// count - number
+		$oFormFactory->AddNumberField('count', [
+			'label' => 'Compteur',
+			'required' => false
+		], 10);
+
+		// interval - duration
+		$oFormFactory->AddDurationField('interval', [
+			'label' => 'Fréquence',
+			'input' => 'array',
+			'with_minutes' => true,
+			'with_seconds' => true,
+			'with_weeks' => true,
+			'with_days' => false,
+			'attr' => [
+				'class' => 'form_interval_horizontal'
+			]
+		], ['days' => '12', 'hours' => '13', 'years' => '10', 'months' => '6', 'minutes' => '0', 'seconds' => '0', 'weeks' => '3']);
 
 		// ready
 		$oFormFactory->AddSwitchField('notify', [

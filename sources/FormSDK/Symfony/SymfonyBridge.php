@@ -25,8 +25,10 @@ use Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration;
 use LogAPI;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -100,16 +102,30 @@ class SymfonyBridge
 
 			case FormFieldTypeEnumeration::DB_OBJECT:
 				$aOptions = $oFormDescription->GetOptions();
-				$aItems = [];
-				foreach ($aOptions['descriptions'] as $oChildFormDescription){
+				$aFields = [];
+				foreach ($aOptions['fields'] as $oChildFormDescription){
 					$aSymfony = $this->ToSymfonyFormType($oChildFormDescription);
-					$aItems[] = $aSymfony;
+					$aFields[] = $aSymfony;
 				}
-				$aOptions['descriptions'] = $aItems;
+				$aOptions['fields'] = $aFields;
 				return [
 					'name' => $oFormDescription->GetName(),
 					'type' => FormObjectType::class,
 					'options' => $aOptions
+				];
+
+			case FormFieldTypeEnumeration::NUMBER:
+				return [
+					'name' => $oFormDescription->GetName(),
+					'type' => NumberType::class,
+					'options' => $oFormDescription->GetOptions()
+				];
+
+			case FormFieldTypeEnumeration::DURATION:
+				return [
+					'name' => $oFormDescription->GetName(),
+					'type' => DateIntervalType::class,
+					'options' => $oFormDescription->GetOptions()
 				];
 
 			default:
@@ -118,7 +134,7 @@ class SymfonyBridge
 	}
 
 	/**
-	 * Return Symfony form.
+	 * Create Symfony form.
 	 *
 	 * @param array $aDescriptions
 	 * @param array $aData
@@ -126,7 +142,7 @@ class SymfonyBridge
 	 *
 	 * @return \Symfony\Component\Form\FormInterface
 	 */
-	public function GetForm(array $aDescriptions, array $aData, ?string $sName = null): FormInterface
+	public function CreateForm(array $aDescriptions, array $aData, ?string $sName = null): FormInterface
 	{
 		// create Symfony form builder
 		if($sName !== null){

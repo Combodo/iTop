@@ -15,7 +15,7 @@
         {% endif %}
 
         {% if form.vars.attr['data-pattern'] is defined %}
-            <i class="fa-solid fa-i-cursor pattern" title="{{ form.vars.attr['data-pattern'] }}"></i>
+            <i class="fa-solid fa-i-cursor pattern" title="pattern: {{ form.vars.attr['data-pattern'] }}"></i>
         {% endif %}
 
         {% if form.vars.attr['data-ajax-query-type'] is defined and form.vars.attr['data-ajax-query-type'] == 'AJAX' %}

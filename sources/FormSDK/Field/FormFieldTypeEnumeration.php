@@ -28,11 +28,13 @@ namespace Combodo\iTop\FormSDK\Field;
 enum FormFieldTypeEnumeration : string
 {
 	case TEXT = 'TEXT';
+	case NUMBER = 'NUMBER';
 	case AREA = 'AREA';
 	case DATE = 'DATE';
 	case SELECT = 'SELECT';
 	case SWITCH = 'SWITCH';
 	case DB_OBJECT = 'DB_OBJECT';
+	case DURATION = 'DURATION';
 
 	/**
 	 * Return available options.
@@ -41,11 +43,58 @@ enum FormFieldTypeEnumeration : string
 	 */
 	public function GetAvailableOptions() : array
 	{
-		$aOptions = ['required', 'disabled', 'attr', 'label', 'label_attr'];
+		// global options
+		$aOptions = ['required', 'disabled', 'attr', 'label', 'label_attr', 'help'];
 
-		return match ($this->value) {
-			FormFieldTypeEnumeration::SELECT => array_merge($aOptions, ['placeholder']),
+		// specific options
+		$test =  match ($this) {
+			FormFieldTypeEnumeration::TEXT =>  array_merge($aOptions,
+				['constraints']
+			),
+			FormFieldTypeEnumeration::SELECT => array_merge($aOptions,
+				['placeholder', 'choices', 'expanded', 'multiple']
+			),
+			FormFieldTypeEnumeration::DATE => array_merge($aOptions,
+				['widget']
+			),
+			FormFieldTypeEnumeration::DURATION => array_merge($aOptions,
+				['input', 'with_minutes', 'with_seconds', 'with_weeks', 'with_days']
+			),
+			FormFieldTypeEnumeration::DB_OBJECT => array_merge($aOptions,
+				['fields']
+			),
 			default => $aOptions,
 		};
+
+		return $test;
 	}
+
+	/**
+	 * Check array of options.
+	 *
+	 * @param array $aOptions
+	 *
+	 * @return array{valid: bool, invalid_options: array}
+	 */
+	public function CheckOptions(array $aOptions) : array
+	{
+		// invalid options array
+		$aInvalidOptions = [];
+
+		// retrieve available options
+		$aAvailableOptions = $this->GetAvailableOptions();
+
+		// check each option...
+		foreach($aOptions as $sKey => $oOption){
+			if(!in_array($sKey, $aAvailableOptions)){
+				$aInvalidOptions[] = $sKey;
+			}
+		}
+
+		return [
+			'valid' => empty($aInvalidOptions),
+			'invalid_options' => $aInvalidOptions,
+		];
+	}
+
 }

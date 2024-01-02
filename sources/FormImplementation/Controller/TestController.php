@@ -37,11 +37,11 @@ class TestController extends AbstractAppController
 			$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter);
 		}
 		catch (Exception $e) {
-			throw $this->createNotFoundException('unable to load object Person 1');
+			throw $this->createNotFoundException('unable to create sample form factory', $e);
 		}
 
 		// get the form
-		$oForm = $oFactory->GetForm();
+		$oForm = $oFactory->CreateForm();
 
 		// handle request
 		$oForm->handleRequest($oRequest);
@@ -52,9 +52,17 @@ class TestController extends AbstractAppController
 			// retrieve form data
 			$data = $oForm->getData();
 
-			return $this->redirectToRoute('app_success');
+			// let's adaptaters save theirs data
+			foreach($oFactory->GetAllAdapters() as $oAdapter){
+				$oAdapter->UpdateFieldsData($data);
+			}
+
+			dump($data);
+
+//			return $this->redirectToRoute('app_success');
 		}
 
+		// render view
 		return $this->render('formSDK/form.html.twig', [
 			'form' => $oForm->createView(),
 			'theme' => 'formSDK/themes/portal.html.twig'
@@ -70,17 +78,18 @@ class TestController extends AbstractAppController
 			$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter);
 		}
 		catch (Exception $e) {
-			throw $this->createNotFoundException('unable to load object Person 1');
+			throw $this->createNotFoundException('unable to create sample form factory');
 		}
 
 		// get the forms (named instances)
-		$oForm1 = $oFactory->GetForm('form1');
-		$oForm2 = $oFactory->GetForm('form2');
+		$oForm1 = $oFactory->CreateForm('form1');
+		$oForm2 = $oFactory->CreateForm('form2');
 
 		// handle request
 		$oForm1->handleRequest($oRequest);
 		$oForm2->handleRequest($oRequest);
 
+		// render view
 		return $this->render('formSDK/theme.html.twig', [
 			'name1' => 'Portail',
 			'name2' => 'Console',
@@ -95,7 +104,7 @@ class TestController extends AbstractAppController
 	#[Route('/formSDK/ajax_select', name: 'formSDK_ajax_select')]
 	public function ajax(Request $oRequest): Response
 	{
-		$oJson = file_get_contents('sources/FormSDK/Resources/dogs.json');
+		$oJson = file_get_contents('sources/FormImplementation/Resources/dogs.json');
 		$aDogs = json_decode($oJson, true);
 		$sQuery = $oRequest->request->get('query');
 
