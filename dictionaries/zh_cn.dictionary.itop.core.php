@@ -629,7 +629,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'ActioniTopNotification:content' => '内容',
 	'ActioniTopNotification:settings' => '设置',
-	'Class:ActioniTopNotification' => 'iTop通知',
+	'Class:ActioniTopNotification' => ITOP_APPLICATION_SHORT.'通知',
 	'Class:ActioniTopNotification+' => '',
 	'Class:ActioniTopNotification/Attribute:language' => '语言',
 	'Class:ActioniTopNotification/Attribute:language+' => '',
