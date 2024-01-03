@@ -107,6 +107,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Roháč, Richard (a.k.a [@RohacRichard](https://github.com/RohacRichard))
 - Rosenke, Stephan
 - Rudner, Björn (a.k.a [@rudnerbjoern](https://github.com/rudnerbjoern))
+- Šafránek, Jaroslav (a.k.a [jkcinik](https://sourceforge.net/u/jkcinik/profile/) on SourceForge)
 - Seki, Shoji
 - Shilov, Vladimir
 - Stetina, Pavel (a.k.a [@Stetinac](https://github.com/Stetinac))
