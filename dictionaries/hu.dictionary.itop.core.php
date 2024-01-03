@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:DeletedObjectLabel' => '%1$s (törölve)',
 	'Core:DeletedObjectTip' => 'A %1$s objektum törölve (%2$s)',
@@ -48,7 +49,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:AttributeMetaEnum' => 'Generált enum',
 	'Core:AttributeMetaEnum+' => '',
 	'Core:AttributeLinkedSetIndirect' => 'Objektumok tömbjei (N-N)',
-	'Core:AttributeLinkedSetIndirect+' => 'Bármilyen objektum [alosztály] ugyanabból az osztályból',
+    'Core:AttributeLinkedSetIndirect+' => 'Bármilyen objektum [al-osztály] ugyanabból az osztályból',
 	'Core:AttributeInteger' => 'Egész szám',
 	'Core:AttributeInteger+' => 'Numerikus érték (lehet negatív is)',
 	'Core:AttributeDecimal' => 'Decimális',
@@ -213,7 +214,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:CMDBChangeOp/Attribute:objclass+' => 'Annak az objektumnak az osztályneve, amelyen a változtatás történt',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'Objektum azonosító',
 	'Class:CMDBChangeOp/Attribute:objkey+' => 'Azon objektum azonosítója amelyen a változtatás történt',
-	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDBChangeOp al-osztály',
+    'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDBChangeOp típus',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => 'A végrehajtott változtatás típusa',
 ));
 
@@ -313,7 +314,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Event/Attribute:date+' => 'A változások rögzítésének dátuma és időpontja',
 	'Class:Event/Attribute:userinfo' => 'Felhasználó infó',
 	'Class:Event/Attribute:userinfo+' => 'Annak a felhasználónak az azonosítása, aki az eseményt kiváltó műveletet végrehajtotta.',
-	'Class:Event/Attribute:finalclass' => 'Esemény al-osztály',
+    'Class:Event/Attribute:finalclass' => 'Esemény típus',
 	'Class:Event/Attribute:finalclass+' => 'A végleges osztály neve: a bekövetkezett esemény fajtáját határozza meg.',
 ));
 
@@ -453,7 +454,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Kapcsolódó eseményindítók',
 	'Class:Action/Attribute:trigger_list+' => 'Eseményindítók amik ehhez a művelethez vannak rendelve',
-	'Class:Action/Attribute:finalclass' => 'Művelet al-osztály',
+    'Class:Action/Attribute:finalclass' => 'Művelet típus',
 	'Class:Action/Attribute:finalclass+' => 'A végleges osztály neve',
 	'Action:WarningNoTriggerLinked' => 'Figyelmeztetés, nincs a művelethez kapcsolódó eseményindító. Addig nem lesz aktív, amíg legalább 1 nem lesz.',
 ));
@@ -536,7 +537,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Trigger/Attribute:description+' => 'Egysoros leírás',
 	'Class:Trigger/Attribute:action_list' => 'Elindított műveletek',
 	'Class:Trigger/Attribute:action_list+' => 'Az eseményindító aktiválásakor végrehajtott műveletek',
-	'Class:Trigger/Attribute:finalclass' => 'Eseményindító al-osztály',
+    'Class:Trigger/Attribute:finalclass' => 'Eseményindító típus',
 	'Class:Trigger/Attribute:finalclass+' => 'A végleges osztály neve',
 	'Class:Trigger/Attribute:context' => 'Kontextus',
 	'Class:Trigger/Attribute:context+' => 'Kontextus, amely lehetővé teszi az eseményindító elindítását',
@@ -899,10 +900,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:ExecProcess:Code1' => 'Helytelen parancs vagy hibásan befejezett parancs (pl. helytelen szkriptnév)',
 	'Core:ExecProcess:Code255' => 'PHP hiba (parsing, vagy runtime)',
     // Attribute Duration
-	'Core:Duration_Seconds' => '%1$ds',
-	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
-	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
-	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
+    'Core:Duration_Seconds' => '%1$d mp',
+    'Core:Duration_Minutes_Seconds' => '%1$d perc %2$d mp',
+    'Core:Duration_Hours_Minutes_Seconds' => '%1$d óra %2$d perc %3$d mp',
+    'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$s nap %2$d óra %3$d perc %4$d mp',
     // Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Eltelt idő (tárolva mint %1$s)',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => '%1$s ráfordított ideje',
@@ -959,34 +960,20 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Alapértelmezett formátum (%1$s), Pl. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Egyéni formátum: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => '%1$s oldal',
-	'Core:DateTime:Placeholder_d' => 'DD',
-    // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'D',
-    // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'MM',
-    // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'M',
-    // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'YYYY',
-    // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'YY',
-    // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'hh',
-    // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'h',
-    // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'hh',
-    // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'h',
-    // Hour 1..12
-	'Core:DateTime:Placeholder_a' => 'am/pm',
-    // am/pm (lowercase)
-	'Core:DateTime:Placeholder_A' => 'AM/PM',
-    // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'mm',
-    // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss',
-    // seconds, 2 digits 00..59
+    'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
+    'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
+    'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
+    'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12
+    'Core:DateTime:Placeholder_Y' => 'YYYY', // Year on 4 digits
+    'Core:DateTime:Placeholder_y' => 'YY', // Year on 2 digits
+    'Core:DateTime:Placeholder_H' => 'hh', // Hour 00..23
+    'Core:DateTime:Placeholder_h' => 'h', // Hour 01..12
+    'Core:DateTime:Placeholder_G' => 'hh', // Hour 0..23
+    'Core:DateTime:Placeholder_g' => 'h', // Hour 1..12
+    'Core:DateTime:Placeholder_a' => 'am/pm', // am/pm (lowercase)
+    'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
+    'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
+    'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Helytelen formátum',
 	'Core:Validator:Mandatory' => 'Töltse ki ezt a mezőt',
 	'Core:Validator:MustBeInteger' => 'Egész számnak kell lennie',
@@ -1006,7 +993,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:TagSetFieldData/Attribute:description' => 'Leírás',
 	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Címke típus',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Objektum osztály',
+    'Class:TagSetFieldData/Attribute:obj_class' => 'Objektum típus',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Mezőkód',
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'A felhasznált címkék nem törölhetők',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'A címkekódoknak egyedinek kell lennie',
