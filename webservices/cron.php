@@ -44,10 +44,11 @@ if (!file_exists($sConfigFile))
 
 require_once(APPROOT.'/application/startup.inc.php');
 
-//temporary fix until below bug is resolvedd properly:
-//N°7008 - Fix missing background tasks in CRON when NOT in "developer_mode"
+// Temporary fix until below bug is resolved properly:
+// N°7008 - Fix missing background tasks in CRON when NOT in "developer_mode"
 require_once(APPROOT.'/sources/SessionTracker/SessionGC.php');
 require_once(APPROOT.'/sources/Service/TemporaryObjects/TemporaryObjectGC.php');
+require_once(APPROOT.'/sources/Service/Notification/Event/EventiTopNotificationGC.php');
 
 $oCtx = new ContextTag(ContextTag::TAG_CRON);
 

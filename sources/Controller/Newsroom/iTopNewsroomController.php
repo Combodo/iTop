@@ -34,7 +34,7 @@ class iTopNewsroomController extends Controller
 	}
 
 	/**
-	 * @return \AjaxPage
+	 * @return \JsonPPage
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -44,7 +44,7 @@ class iTopNewsroomController extends Controller
 	public function OperationFetchUnreadMessages()
 	{
 		$sCallback = utils::ReadParam('callback', '');
-		$oPage = new AjaxPage('');
+		$oPage = new JsonPPage($sCallback);
 
 		$aMessages = [];
 		$iContactId = UserRights::GetContactId();
@@ -78,10 +78,8 @@ HTML;
 			}
 
 		}
-		$sOutput = $sCallback . '(' . json_encode($aMessages) . ')';
-		echo $sOutput;
-		$oPage->SetContentType('application/jsonp');
-		$oPage->SetAddJSDict(false);
+		$oPage->SetData($aMessages);
+		$oPage->SetOutputDataOnly(true);
 		return $oPage;
 	}
 
