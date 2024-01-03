@@ -43,6 +43,12 @@ class CMDBSource
 	const ENUM_DB_VENDOR_PERCONA = 'Percona';
 
 	/**
+	 * @since 2.7.10 3.0.4 3.1.2 3.0.2 N°6889 constant creation
+	 * @internal will be removed in a future version
+	 */
+	const MYSQL_DEFAULT_PORT = 3306;
+
+	/**
 	 * Error: 1205 SQLSTATE: HY000 (ER_LOCK_WAIT_TIMEOUT)
 	 *   Message: Lock wait timeout exceeded; try restarting transaction
 	 */
@@ -213,16 +219,19 @@ class CMDBSource
 	/**
 	 * @param string $sDbHost initial value ("p:domain:port" syntax)
 	 * @param string $sServer server variable to update
-	 * @param int $iPort port variable to update
+	 * @param int|null $iPort port variable to update, will return null if nothing is specified in $sDbHost
+	 *
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889 will return null in $iPort if port isn't present in $sDbHost. Use {@see MYSQL_DEFAULT_PORT} if needed
+	 *
+	 * @link http://php.net/manual/en/mysqli.persistconns.php documentation for the "p:" prefix (persistent connexion)
 	 */
 	public static function InitServerAndPort($sDbHost, &$sServer, &$iPort)
 	{
 		$aConnectInfo = explode(':', $sDbHost);
 
 		$bUsePersistentConnection = false;
-		if (strcasecmp($aConnectInfo[0], 'p') == 0)
+		if (strcasecmp($aConnectInfo[0], 'p') === 0)
 		{
-			// we might have "p:" prefix to use persistent connections (see http://php.net/manual/en/mysqli.persistconns.php)
 			$bUsePersistentConnection = true;
 			$sServer = $aConnectInfo[0].':'.$aConnectInfo[1];
 		}
@@ -239,10 +248,6 @@ class CMDBSource
 		else if (!$bUsePersistentConnection && ($iConnectInfoCount == 2))
 		{
 			$iPort = (int)($aConnectInfo[1]);
-		}
-		else
-		{
-			$iPort = 3306;
 		}
 	}
 
