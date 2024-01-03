@@ -1,8 +1,20 @@
 <?php
 
+namespace Combodo\iTop\Controller\Newsroom;
+
+use ArchivedObjectException;
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\JsonPPage;
 use Combodo\iTop\Service\Router\Router;
+use CoreException;
+use DBObjectSearch;
+use DBObjectSet;
+use DisplayBlock;
+use MetaModel;
+use UserRights;
+use utils;
 
 
 /**
@@ -17,7 +29,7 @@ class iTopNewsroomController extends Controller
 	public const ROUTE_NAMESPACE = 'itopnewsroom';
 
 	/**
-	 * @return \iTopWebPage
+	 * @return iTopWebPage
 	 * @throws \ApplicationException
 	 * @throws \CoreException
 	 * @throws \OQLException
@@ -30,11 +42,12 @@ class iTopNewsroomController extends Controller
 		$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, []);
 		$oBlock->Display($oPage, 0);
 		$oPage->add("<div class='sf_results_area ibo-add-margin-top-250' data-target='search_results'>");
+
 		return $oPage;
 	}
 
 	/**
-	 * @return \JsonPPage
+	 * @return JsonPPage
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -48,13 +61,12 @@ class iTopNewsroomController extends Controller
 
 		$aMessages = [];
 		$iContactId = UserRights::GetContactId();
-		
-		if (\utils::IsNotNullOrEmptyString($iContactId)) {
+
+		if (utils::IsNotNullOrEmptyString($iContactId)) {
 			$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification WHERE contact_id = :contact_id AND read = "no"');
 			$oSet = new DBObjectSet($oSearch, array(), array('contact_id' => $iContactId));
 
-			while($oMessage = $oSet->Fetch())
-			{
+			while ($oMessage = $oSet->Fetch()) {
 				$sTitle = $oMessage->Get('title');
 				$sMessage = $oMessage->Get('message');
 				$sText = <<<HTML
@@ -64,22 +76,23 @@ class iTopNewsroomController extends Controller
 $sMessage
 HTML;
 
-				$sIcon = $oMessage->Get('icon') !== null ? 
-					$oMessage->Get('icon')->GetDisplayURL('EventiTopNotification', $oMessage->GetKey(), 'icon') : 
+				$sIcon = $oMessage->Get('icon') !== null ?
+					$oMessage->Get('icon')->GetDisplayURL('EventiTopNotification', $oMessage->GetKey(), 'icon') :
 					Branding::GetCompactMainLogoAbsoluteUrl();
 				$aMessages[] = array(
-					'id' => $oMessage->GetKey(),
-					'text' => $sText,
-					'url' => Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE . '.view_event', ['event_id' => $oMessage->GetKey()]),
+					'id'         => $oMessage->GetKey(),
+					'text'       => $sText,
+					'url'        => Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.view_event', ['event_id' => $oMessage->GetKey()]),
 					'start_date' => $oMessage->Get('date'),
-					'priority' => $oMessage->Get('priority'),
-					'image' => $sIcon,
+					'priority'   => $oMessage->Get('priority'),
+					'image'      => $sIcon,
 				);
 			}
 
 		}
 		$oPage->SetData($aMessages);
 		$oPage->SetOutputDataOnly(true);
+
 		return $oPage;
 	}
 
@@ -97,20 +110,20 @@ HTML;
 	{
 		$iCount = 0;
 		$iContactId = UserRights::GetContactId();
-		
 
-		if (\utils::IsNotNullOrEmptyString($iContactId)) {
+
+		if (utils::IsNotNullOrEmptyString($iContactId)) {
 			$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification WHERE contact_id = :contact_id AND read = "no"');
 			$oSet = new DBObjectSet($oSearch, array(), array('contact_id' => $iContactId));
 
-			while($oEvent = $oSet->Fetch())
-			{
+			while ($oEvent = $oSet->Fetch()) {
 				$oEvent->Set('read', 'yes');
 				$oEvent->SetCurrentDate('read_date');
 				$oEvent->DBWrite();
 				$iCount++;
 			}
 		}
+
 		return $iCount;
 	}
 
@@ -125,12 +138,13 @@ HTML;
 	 * @throws \OQLException
 	 * @throws \Exception
 	 */
-	public function OperationViewEvent(){
+	public function OperationViewEvent()
+	{
 		$sEventId = utils::ReadParam('event_id', 0);
-		if($sEventId > 0) {
+		if ($sEventId > 0) {
 			try {
 				$oEvent = MetaModel::GetObject('EventiTopNotification', $sEventId);
-				if($oEvent !== null && $oEvent->Get('contact_id') === UserRights::GetContactId()){
+				if ($oEvent !== null && $oEvent->Get('contact_id') === UserRights::GetContactId()) {
 					$oEvent->Set('read', 'yes');
 					$oEvent->SetCurrentDate('read_date');
 					$oEvent->DBWrite();

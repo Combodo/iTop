@@ -1,6 +1,13 @@
 <?php
 
+namespace Combodo\iTop\Application\Newsroom;
+
+use Combodo\iTop\Controller\Newsroom\iTopNewsroomController;
 use Combodo\iTop\Service\Router\Router;
+use Dict;
+use MetaModel;
+use NewsroomProviderBase;
+use User;
 
 /**
  *  Class iTopNewsroomProvider
