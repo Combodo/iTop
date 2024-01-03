@@ -133,7 +133,7 @@
         </list>
       </presentation>
       <methods>
-        <method id="ComputePriority">
+        <method id="DoExecute">
           <comment>	/**
             *
             *  Create EventiTopNotification for each recipient
@@ -155,7 +155,7 @@
               public function DoExecute($oTrigger, $aContextArgs)
 	{
 		$oRecipientsSearch = DBObjectSearch::FromOQL($this->Get('recipients'));
-		$oRecipientsSearch->AllowAllDate();
+		$oRecipientsSearch->AllowAllData();
 		$oRecipientsSet = new DBObjectSet($oRecipientsSearch);
 		[$sPreviousLanguage, $aPreviousPluginProperties] = $this->SetNotificationLanguage();
 		while ($oRecipient = $oRecipientsSet->Fetch()) {
