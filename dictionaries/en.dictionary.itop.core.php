@@ -629,8 +629,8 @@ While editing, click on the magnifier to get pertinent examples',
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'ActioniTopNotification:content' => 'ActioniTopNotification:content',
-	'ActioniTopNotification:settings' => 'ActioniTopNotification:settings',
+	'ActioniTopNotification:content' => 'Content',
+	'ActioniTopNotification:settings' => 'Settings',
 	'Class:ActioniTopNotification' => 'ActioniTopNotification',
 	'Class:ActioniTopNotification+' => '',
 	'Class:ActioniTopNotification/Attribute:language' => 'Language',
