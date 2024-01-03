@@ -633,7 +633,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Select\\SelectUIBlockFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/Select/SelectUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\DataProvider\\AbstractDataProvider' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/Set/DataProvider/AbstractDataProvider.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\DataProvider\\AjaxDataProvider' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/Set/DataProvider/AjaxDataProvider.php',
-        'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\DataProvider\\AjaxDataProviderForOQL' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/Set/DataProvider/AjaxDataProviderForOql.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\DataProvider\\AjaxDataProviderForOQL' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/Set/DataProvider/AjaxDataProviderForOQL.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\DataProvider\\SimpleDataProvider' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/Set/DataProvider/SimpleDataProvider.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\DataProvider\\iDataProvider' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/Set/DataProvider/iDataProvider.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\Set' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/Set/Set.php',

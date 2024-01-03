@@ -259,7 +259,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Select\\SelectUIBlockFactory' => $baseDir . '/sources/Application/UI/Base/Component/Input/Select/SelectUIBlockFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\DataProvider\\AbstractDataProvider' => $baseDir . '/sources/Application/UI/Base/Component/Input/Set/DataProvider/AbstractDataProvider.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\DataProvider\\AjaxDataProvider' => $baseDir . '/sources/Application/UI/Base/Component/Input/Set/DataProvider/AjaxDataProvider.php',
-    'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\DataProvider\\AjaxDataProviderForOQL' => $baseDir . '/sources/Application/UI/Base/Component/Input/Set/DataProvider/AjaxDataProviderForOql.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\DataProvider\\AjaxDataProviderForOQL' => $baseDir . '/sources/Application/UI/Base/Component/Input/Set/DataProvider/AjaxDataProviderForOQL.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\DataProvider\\SimpleDataProvider' => $baseDir . '/sources/Application/UI/Base/Component/Input/Set/DataProvider/SimpleDataProvider.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\DataProvider\\iDataProvider' => $baseDir . '/sources/Application/UI/Base/Component/Input/Set/DataProvider/iDataProvider.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\Set' => $baseDir . '/sources/Application/UI/Base/Component/Input/Set/Set.php',
