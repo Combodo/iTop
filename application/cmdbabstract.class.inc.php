@@ -6101,7 +6101,10 @@ JS
 			MetaModel::StartReentranceProtection($oObject);
 			$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
 			MetaModel::StopReentranceProtection($oObject);
-			if (count($oObject->ListChanges()) !== 0) {
+
+			// Use IsNew() === true when object is deleted
+			// new objects are already saved at this point (so IsNeww() will return false in this case)
+			if (!$oObject->IsNew() && count($oObject->ListChanges()) !== 0) {
 				$oObject->DBUpdate();
 			}
 		}
