@@ -4591,6 +4591,7 @@ HTML;
 	public function DBUpdate()
 	{
 		$this->LogCRUDEnter(__METHOD__);
+		$res = 0;
 
 		try {
 			if (count($this->ListChanges()) === 0) {
@@ -4651,12 +4652,18 @@ HTML;
 			if (static::IsCrudStackEmpty()) {
 				// Avoid signaling the current object that links were modified
 				static::RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
+				$this->LogCRUDDebug(__METHOD__, var_export(self::$aObjectsAwaitingEventDbLinksChanged, true));
 				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
 		$this->LogCRUDExit(__METHOD__);
 
 		return $oDeletionPlan;
+	}
+
+	protected function PostDeleteActions(): void
+	{
+		parent::PostDeleteActions();
 	}
 
 	/**
@@ -5986,13 +5993,16 @@ JS
 			}
 
 			$sTargetObjectId = $this->Get($sExternalKeyAttCode);
+			$sTargetClass = $oAttDef->GetTargetClass();
 			if ($sTargetObjectId > 0) {
-				self::RegisterObjectAwaitingEventDbLinksChanged($oAttDef->GetTargetClass(), $sTargetObjectId);
+				$this->LogCRUDDebug(__METHOD__, "Add $sTargetClass:$sTargetObjectId for DBLINKS_CHANGED");
+				self::RegisterObjectAwaitingEventDbLinksChanged($sTargetClass, $sTargetObjectId);
 			}
 
 			$sPreviousTargetObjectId = $aPreviousValues[$sExternalKeyAttCode] ?? 0;
 			if ($sPreviousTargetObjectId > 0) {
-				self::RegisterObjectAwaitingEventDbLinksChanged($oAttDef->GetTargetClass(), $sPreviousTargetObjectId);
+				$this->LogCRUDDebug(__METHOD__, "Add $sTargetClass:$sPreviousTargetObjectId for DBLINKS_CHANGED");
+				self::RegisterObjectAwaitingEventDbLinksChanged($sTargetClass, $sPreviousTargetObjectId);
 			}
 		}
 	}
@@ -6042,7 +6052,12 @@ JS
 
 		$sClass = get_class($this);
 		$sId = $this->GetKey();
-		self::FireEventDbLinksChangedForClassId($sClass, $sId);
+		$bIsObjectAwaitingEventDbLinksChanged = self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
+		if (false === $bIsObjectAwaitingEventDbLinksChanged) {
+			return;
+		}
+		self::FireEventDbLinksChangedForObject($this);
+		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
 	}
 
 	/**
@@ -6074,9 +6089,15 @@ JS
 		// We want to avoid launching the listener twice, first here, and secondly after saving the Ticket in the listener
 		// By disabling the event to be fired, we can remove the current object from the attribute !
 		$oObject = MetaModel::GetObject($sClass, $sId, false);
+		self::FireEventDbLinksChangedForObject($oObject);
+		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
+	}
+
+	private static function FireEventDbLinksChangedForObject(DBObject $oObject)
+	{
+		self::SetEventDBLinksChangedBlocked(true);
 		// N°6408 The object can have been deleted
 		if (!is_null($oObject)) {
-			self::SetEventDBLinksChangedBlocked(true);
 			MetaModel::StartReentranceProtection($oObject);
 			$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
 			MetaModel::StopReentranceProtection($oObject);
@@ -6084,7 +6105,6 @@ JS
 				$oObject->DBUpdate();
 			}
 		}
-		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
 		cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
 	}
 

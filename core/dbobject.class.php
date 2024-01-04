@@ -764,6 +764,18 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * @return void
+	 * @throws \ReflectionException
+	 */
+	protected function PostDeleteActions(): void
+	{
+		$this->FireEventAfterDelete();
+		$oKPI = new ExecutionKPI();
+		$this->AfterDelete();
+		$oKPI->ComputeStatsForExtension($this, 'AfterDelete');
+	}
+
+	/**
 	 * Compute (and optionally start) the StopWatches deadlines
 	 *
 	 * @param string $sClass
@@ -4203,10 +4215,7 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
-		$this->FireEventAfterDelete();
-		$oKPI = new ExecutionKPI();
-		$this->AfterDelete();
-		$oKPI->ComputeStatsForExtension($this, 'AfterDelete');
+		$this->PostDeleteActions();
 
 		// - Trigger for object pointing to the current object
 		$this->ActivateOnObjectUpdateTriggersForTargetObjects();
@@ -5386,71 +5395,64 @@ abstract class DBObject implements iDisplay
 		}
 		$sClass = get_class($this);
 		$iThisId = $this->GetKey();
+		$iRootDeleteOption = $iDeleteOption;
 
-		$oDeletionPlan->AddToDelete($this, $iDeleteOption);
+		try {
+			if (array_key_exists($sClass, $aVisited)) {
+				if (in_array($iThisId, $aVisited[$sClass])) {
+					return;
+				}
+			}
+			$aVisited[$sClass] = $iThisId;
 
-		if (array_key_exists($sClass, $aVisited))
-		{
-			if (in_array($iThisId, $aVisited[$sClass]))
-			{
+			if ($iDeleteOption == DEL_MANUAL) {
+				// Stop the recursion here
 				return;
 			}
-		}
-		$aVisited[$sClass] = $iThisId;
+			// Check the node itself
+			$this->m_aDeleteIssues = array(); // Ok
+			$this->FireEventCheckToDelete($oDeletionPlan);
+			$this->DoCheckToDelete($oDeletionPlan);
+			$this->CheckToWriteForTargetObjects(true);
+			$oDeletionPlan->SetDeletionIssues($this, $this->m_aDeleteIssues, $this->m_bSecurityIssue);
 
-		if ($iDeleteOption == DEL_MANUAL)
-		{
-			// Stop the recursion here
-			return;
-		}
-		// Check the node itself
-		$this->m_aDeleteIssues = array(); // Ok
-		$this->FireEventCheckToDelete($oDeletionPlan);
-		$this->DoCheckToDelete($oDeletionPlan);
-		$this->CheckToWriteForTargetObjects(true);
-		$oDeletionPlan->SetDeletionIssues($this, $this->m_aDeleteIssues, $this->m_bSecurityIssue);
+			$aDependentObjects = $this->GetReferencingObjects(true /* allow all data */);
 
-		$aDependentObjects = $this->GetReferencingObjects(true /* allow all data */);
+			// Getting and setting time limit are not symmetric:
+			// www.php.net/manual/fr/function.set-time-limit.php#72305
+			$iPreviousTimeLimit = ini_get('max_execution_time');
 
-		// Getting and setting time limit are not symmetric:
-		// www.php.net/manual/fr/function.set-time-limit.php#72305
-		$iPreviousTimeLimit = ini_get('max_execution_time');
+			foreach ($aDependentObjects as $aPotentialDeletes) {
+				foreach ($aPotentialDeletes as $aData) {
+					set_time_limit(intval($iLoopTimeLimit));
 
-		foreach ($aDependentObjects as $aPotentialDeletes)
-		{
-			foreach ($aPotentialDeletes as $aData)
-			{
-				set_time_limit(intval($iLoopTimeLimit));
-
-				/** @var \AttributeExternalKey $oAttDef */
-				$oAttDef = $aData['attribute'];
-				$iDeletePropagationOption = $oAttDef->GetDeletionPropagationOption();
-				/** @var \DBObjectSet $oDepSet */
-				$oDepSet = $aData['objects'];
-				$oDepSet->Rewind();
-				while ($oDependentObj = $oDepSet->fetch())
-				{
-					if ($oAttDef->IsNullAllowed())
-					{
-						// Optional external key, list to reset
-						if (($iDeletePropagationOption == DEL_MOVEUP) && ($oAttDef->IsHierarchicalKey()))
-						{
-							// Move the child up one level i.e. set the same parent as the current object
-							$iParentId = $this->Get($oAttDef->GetCode());
-							$oDeletionPlan->AddToUpdate($oDependentObj, $oAttDef, $iParentId);
+					/** @var \AttributeExternalKey $oAttDef */
+					$oAttDef = $aData['attribute'];
+					$iDeletePropagationOption = $oAttDef->GetDeletionPropagationOption();
+					/** @var \DBObjectSet $oDepSet */
+					$oDepSet = $aData['objects'];
+					$oDepSet->Rewind();
+					while ($oDependentObj = $oDepSet->fetch()) {
+						if ($oAttDef->IsNullAllowed()) {
+							// Optional external key, list to reset
+							if (($iDeletePropagationOption == DEL_MOVEUP) && ($oAttDef->IsHierarchicalKey())) {
+								// Move the child up one level i.e. set the same parent as the current object
+								$iParentId = $this->Get($oAttDef->GetCode());
+								$oDeletionPlan->AddToUpdate($oDependentObj, $oAttDef, $iParentId);
+							} else {
+								$oDeletionPlan->AddToUpdate($oDependentObj, $oAttDef);
+							}
+						} else {
+							// Mandatory external key, list to delete
+							$oDependentObj->MakeDeletionPlan($oDeletionPlan, $aVisited, $iDeletePropagationOption);
 						}
-						else
-						{
-							$oDeletionPlan->AddToUpdate($oDependentObj, $oAttDef);
-						}
-					}
-					else
-					{
-						// Mandatory external key, list to delete
-						$oDependentObj->MakeDeletionPlan($oDeletionPlan, $aVisited, $iDeletePropagationOption);
 					}
 				}
 			}
+		}
+		finally {
+			// Bug N°7080 Root object is deleted last for EVENT_DB_LINKS_CHANGED
+			$oDeletionPlan->AddToDelete($this, $iRootDeleteOption);
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
 	}
