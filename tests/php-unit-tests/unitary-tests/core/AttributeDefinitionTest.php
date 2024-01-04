@@ -232,7 +232,7 @@ PHP
 	public function WithConstraintParameterProvider()
 	{
 		return [
-			['User', 'profile_list', true, false],
+			['User', 'profile_list', true, true],
 			['User', 'allowed_org_list', true, false],
 			['Person', 'team_list', false, false],
 			['Ticket', 'functionalcis_list', false, true],
