@@ -48,6 +48,15 @@ class XMLPage extends WebPage
 		$this->add_header("Content-location: export.xml");
 	}
 
+	/**
+	 * Disabling sending the header so that resource won't be blocked by CORB. See parent method documentation.
+	 * @return void
+	 */
+	public function add_xcontent_type_options()
+	{
+		// Nothing to do !
+	}
+
 	public function output()
 	{
 		if (!$this->m_bPassThrough)

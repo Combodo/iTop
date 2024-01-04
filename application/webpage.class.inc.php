@@ -512,12 +512,16 @@ class WebPage implements Page
 	}
 
 	/**
+	 * Warning : this header will trigger the Cross-Origin Read Blocking (CORB) protection for some mime types (HTML, XML except SVG, JSON, text/plain)
+	 * In consequence some children pages will override this method.
+	 *
 	 * Sending header can be disabled globally using the `security_header_xcontent_type_options` optional config parameter.
 	 *
 	 * @return void
 	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°4368 method creation
 	 *
 	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options HTTP header MDN documentation
+	 * @link https://chromium.googlesource.com/chromium/src/+/master/services/network/cross_origin_read_blocking_explainer.md#determining-whether-a-response-is-corb_protected "Determining whether a response is CORB-protected"
 	 */
 	public function add_xcontent_type_options()
 	{

@@ -52,6 +52,15 @@ class ajax_page extends WebPage implements iTabbedPage
 	}
 
 	/**
+	 * Disabling sending the header so that resource won't be blocked by CORB. See parent method documentation.
+	 * @return void
+	 */
+	public function add_xcontent_type_options()
+	{
+		// Nothing to do !
+	}
+
+	/**
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
