@@ -49,7 +49,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'iTopUpdate:UI:UploadArchive' => 'Válasszon egy csomagot a feltöltéshez',
 	'iTopUpdate:UI:ServerFile' => 'A kiszolgálón már meglévő csomag elérési útvonala',
 	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'A frissítés során az alkalmazás csak olvasható lesz.',
-	'iTopUpdate:UI:Status' => 'Státusz',
+    'iTopUpdate:UI:Status' => 'Állapotjelentés',
 	'iTopUpdate:UI:Action' => 'Frissítés',
 	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup~~',
 	'iTopUpdate:UI:History' => 'Verziótörténet',
@@ -69,7 +69,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Az alkalmazás frissíthető',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Az alkalmazás nem frissíthető: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning'          => 'Figyelem: alkalmazás frissítés sikertelen lehet: %1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup'           => '<b>SNéhány módosított fájlt észleltünk</b>, a részleges frissítés nem hajtható végre.</br>Kövesse a <a target="_blank" href="%2$s"> eljárást</a> az iTop manuális frissítéséhez. Az alkalmazás frissítéséhez a <a href="%1$s">setup</a> parancsot kell használnia.',
+    'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Néhány manuálisan módosított fájlt észleltünk</b>, a részleges frissítés nem hajtható végre.</br>Kövesse ezt az <a target="_blank" href="%2$s"> eljárást</a> az iTop manuális frissítéséhez. Az alkalmazás frissítéséhez a <a href="%1$s">setup</a> parancsot kell használnia.',
 	'iTopUpdate:UI:CheckInProgress'                => 'Kérjük, várjon az integritás ellenőrzés alatt',
 	'iTopUpdate:UI:SetupLaunch'                    => 'Launch '.ITOP_APPLICATION_SHORT.' Setup~~',
 	'iTopUpdate:UI:SetupLaunchConfirm'             => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?~~',
@@ -111,5 +111,3 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ModuleInstallation/Attribute:version'   => 'Verzió',
 	'Class:ModuleInstallation/Attribute:comment' => 'Megjegyzés',
 ));
-
-

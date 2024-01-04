@@ -21,6 +21,6 @@
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:UserLDAP' => 'LDAP felhasználó',
-	'Class:UserLDAP+' => '',
+	'Class:UserLDAP+' => 'LDAP vagy AD felhasználó',
 	'UserLDAP:server' => 'LDAP specifics~~',
 ));

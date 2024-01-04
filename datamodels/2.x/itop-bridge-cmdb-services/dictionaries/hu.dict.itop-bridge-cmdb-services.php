@@ -79,7 +79,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Document/Attribute:contracts_list' => 'Szerződések',
-	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
+	'Class:Document/Attribute:contracts_list+' => 'Ehhez a dokumentumhoz kapcsolódó szerződések',
 	'Class:Document/Attribute:services_list' => 'Szolgáltatások',
-	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
+	'Class:Document/Attribute:services_list+' => 'Ehhez a dokumentumhoz kapcsolódó szolgáltatások',
 ));

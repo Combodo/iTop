@@ -34,7 +34,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Brick:Portal:NewRequest:Title' => 'Új kérelem',
 	'Brick:Portal:NewRequest:Title+' => '<p>Segíthetünk?</p><p>Válasszon a szolgáltatáskatalógusból, és küldje el kérését a támogató csapatunknak.</p>~~',
 	'Brick:Portal:OngoingRequests:Title' => 'Folyamatban lévő kérelmek',
-	'Brick:Portal:OngoingRequests:Title+' => '<p>Kövesse nyomon a folyamatban lévő kéréseit.</p><p>Ellenőrizze az előrehaladást, tegyen megjegyzéseket, csatoljon dokumentumokat, nyugtázza a megoldást.</p>~~',
+    'Brick:Portal:OngoingRequests:Title+' => '<p>Kövesse nyomon a folyamatban lévő kérelmeit.</p><p>Kövesse a folyamatot, tegyen megjegyzéseket, csatoljon dokumentumokat, nyugtázza a megoldást.</p>',
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Nyitott',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Megoldott',
 	'Brick:Portal:ClosedRequests:Title' => 'Lezárt kérelmek',

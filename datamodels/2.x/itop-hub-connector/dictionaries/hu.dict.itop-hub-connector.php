@@ -77,5 +77,3 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'iTopHub:InstallationStatus:Installed' => 'Telepítve',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'A %1$s verzió <b>NINCS</b> telepítve.',
 ));
-
-
