@@ -764,6 +764,18 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * @return void
+	 * @throws \ReflectionException
+	 */
+	protected function PostDeleteActions(): void
+	{
+		$this->FireEventAfterDelete();
+		$oKPI = new ExecutionKPI();
+		$this->AfterDelete();
+		$oKPI->ComputeStatsForExtension($this, 'AfterDelete');
+	}
+
+	/**
 	 * Compute (and optionally start) the StopWatches deadlines
 	 *
 	 * @param string $sClass
@@ -4203,15 +4215,13 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
-		$this->FireEventAfterDelete();
-		$oKPI = new ExecutionKPI();
-		$this->AfterDelete();
-		$oKPI->ComputeStatsForExtension($this, 'AfterDelete');
+		$this->m_bIsInDB = false;
+
+		$this->PostDeleteActions();
 
 		// - Trigger for object pointing to the current object
 		$this->ActivateOnObjectUpdateTriggersForTargetObjects();
 
-		$this->m_bIsInDB = false;
 		$this->LogCRUDExit(__METHOD__);
 		// Fix for N°926: do NOT reset m_iKey as it can be used to have it for reporting purposes (see the REST service to delete
 		// objects, reported as bug N°926)
@@ -4267,6 +4277,7 @@ abstract class DBObject implements iDisplay
 				foreach ($aToDelete as $iId => $aData) {
 					/** @var \DBObject $oToDelete */
 					$oToDelete = $aData['to_delete'];
+
 					// The deletion based on a deletion plan should not be done for each object if the deletion plan is common (Trac #457)
 					// because for each object we would try to update all the preceding ones... that are already deleted
 					// A better approach would be to change the API to apply the DBDelete on the deletion plan itself... just once
