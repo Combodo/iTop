@@ -4278,11 +4278,6 @@ abstract class DBObject implements iDisplay
 					/** @var \DBObject $oToDelete */
 					$oToDelete = $aData['to_delete'];
 
-					if ($oToDelete === $this) {
-						// Skip current object to delete it at the end
-						continue;
-					}
-
 					// The deletion based on a deletion plan should not be done for each object if the deletion plan is common (Trac #457)
 					// because for each object we would try to update all the preceding ones... that are already deleted
 					// A better approach would be to change the API to apply the DBDelete on the deletion plan itself... just once
@@ -4299,14 +4294,6 @@ abstract class DBObject implements iDisplay
 						}
 					}
 				}
-			}
-
-			$this->AddCurrentObjectInCrudStack('DELETE');
-			try {
-				$this->DBDeleteSingleObject();
-			}
-			finally {
-				$this->RemoveCurrentObjectInCrudStack();
 			}
 
 			foreach ($oDeletionPlan->ListUpdates() as $sClass => $aToUpdate) {

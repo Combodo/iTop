@@ -5960,7 +5960,6 @@ JS
 	final protected function FireEventAfterDelete(): void
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
-		$this->FireEventDbLinksChangedForCurrentObject();
 		$this->FireEvent(EVENT_DB_AFTER_DELETE);
 	}
 
@@ -6101,10 +6100,7 @@ JS
 			MetaModel::StartReentranceProtection($oObject);
 			$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
 			MetaModel::StopReentranceProtection($oObject);
-
-			// Use IsNew() === true when object is deleted
-			// new objects are already saved at this point (so IsNeww() will return false in this case)
-			if (!$oObject->IsNew() && count($oObject->ListChanges()) !== 0) {
+			if (count($oObject->ListChanges()) !== 0) {
 				$oObject->DBUpdate();
 			}
 		}

@@ -423,8 +423,8 @@ class CRUDEventTest extends ItopDataTestCase
 		// 1 delete for UserRequest, 3 delete for lnkFunctionalCIToTicket
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_CHECK_TO_DELETE]);
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_DELETE]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_LINKS_CHANGED] ?? 0);
-		$this->assertEquals(9, self::$iEventCalls);
+		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCalls, 'no relation with the with_php_compute attribute !');
+		$this->assertEquals(8, self::$iEventCalls);
 
 	}
 

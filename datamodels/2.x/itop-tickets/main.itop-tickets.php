@@ -134,11 +134,6 @@ class _Ticket extends cmdbAbstractObject
 
 	public function UpdateImpactedItems()
 	{
-		if ($this->IsNew() && ($this->GetKey() > 0)) {
-			// deleted ticket
-			return;
-		}
-
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
 		/** @var ormLinkSet $oContactsSet */
 		$oContactsSet = $this->Get('contacts_list');
