@@ -23,7 +23,7 @@ define('ITOP_DESIGN_LATEST_VERSION', '3.0');
  * @used-by utils::GetItopVersionWikiSyntax()
  * @used-by iTopModulesPhpVersionIntegrationTest
  */
-define('ITOP_CORE_VERSION', '3.0.3');
+define('ITOP_CORE_VERSION', '3.0.4');
 
 /**
  * @var string
