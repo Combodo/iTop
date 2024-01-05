@@ -515,7 +515,7 @@ class WebPage implements Page
 	 * Warning : this header will trigger the Cross-Origin Read Blocking (CORB) protection for some mime types (HTML, XML except SVG, JSON, text/plain)
 	 * In consequence some children pages will override this method.
 	 *
-	 * Sending header can be disabled globally using the `security.header_xcontent_type_options` optional config parameter.
+	 * Sending header can be disabled globally using the `security.enable_header_xcontent_type_options` optional config parameter.
 	 *
 	 * @return void
 	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°4368 method creation
@@ -533,7 +533,7 @@ class WebPage implements Page
 		if (is_null($oConfig)) {
 			$bSendXContentTypeOptionsHttpHeader = true;
 		} else {
-			$bSendXContentTypeOptionsHttpHeader = $oConfig->Get('security.header_xcontent_type_options');
+			$bSendXContentTypeOptionsHttpHeader = $oConfig->Get('security.enable_header_xcontent_type_options');
 		}
 
 		if ($bSendXContentTypeOptionsHttpHeader === false) {
