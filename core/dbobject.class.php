@@ -4106,6 +4106,8 @@ abstract class DBObject implements iDisplay
 			return;
 		}
 
+		$this->SetReadOnly("No modification allowed before delete");
+		$this->FireEventAboutToDelete();
 		$oKPI = new ExecutionKPI();
 		$this->OnDelete();
 		$oKPI->ComputeStatsForExtension($this, 'OnDelete');
@@ -6622,6 +6624,14 @@ abstract class DBObject implements iDisplay
 	 * @since 3.1.0
 	 */
 	protected function FireEventAfterDelete(): void
+	{
+	}
+
+	/**
+	 * @return void
+	 * @since 3.1.2
+	 */
+	protected function FireEventAboutToDelete(): void
 	{
 	}
 

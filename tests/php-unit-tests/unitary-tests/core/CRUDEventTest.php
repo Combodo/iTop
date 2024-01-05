@@ -24,6 +24,7 @@ use Server;
 use Team;
 use UserRequest;
 use utils;
+use const EVENT_DB_ABOUT_TO_DELETE;
 use const EVENT_DB_AFTER_DELETE;
 use const EVENT_DB_AFTER_WRITE;
 use const EVENT_DB_BEFORE_WRITE;
@@ -422,9 +423,10 @@ class CRUDEventTest extends ItopDataTestCase
 
 		// 1 delete for UserRequest, 3 delete for lnkFunctionalCIToTicket
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_CHECK_TO_DELETE]);
+		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_ABOUT_TO_DELETE]);
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_DELETE]);
-		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCalls, 'no relation with the with_php_compute attribute !');
-		$this->assertEquals(8, self::$iEventCalls);
+		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCalls, 'Event not to be sent on delete');
+		$this->assertEquals(12, self::$iEventCalls);
 
 	}
 
@@ -725,6 +727,7 @@ class CRUDEventReceiver extends ClassesWithDebug
 			$this->oTestCase->EventService_RegisterListener(EVENT_DB_CHECK_TO_DELETE, [$this, 'OnEvent']);
 			$this->oTestCase->EventService_RegisterListener(EVENT_DB_BEFORE_WRITE, [$this, 'OnEvent']);
 			$this->oTestCase->EventService_RegisterListener(EVENT_DB_AFTER_WRITE, [$this, 'OnEvent']);
+			$this->oTestCase->EventService_RegisterListener(EVENT_DB_ABOUT_TO_DELETE, [$this, 'OnEvent']);
 			$this->oTestCase->EventService_RegisterListener(EVENT_DB_AFTER_DELETE, [$this, 'OnEvent']);
 			$this->oTestCase->EventService_RegisterListener(EVENT_DB_LINKS_CHANGED, [$this, 'OnEvent']);
 
