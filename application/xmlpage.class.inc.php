@@ -51,6 +51,7 @@ class XMLPage extends WebPage
 	/**
 	 * Disabling sending the header so that resource won't be blocked by CORB. See parent method documentation.
 	 * @return void
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°4368 method creation
 	 */
 	public function add_xcontent_type_options()
 	{

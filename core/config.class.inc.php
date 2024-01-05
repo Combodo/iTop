@@ -1322,8 +1322,8 @@ class Config
 		],
 		'security_header_xcontent_type_options' => [
 			'type' => 'bool',
-			'description' => 'If set to false, iTop will stop sending the X-Content-Type-Options HTTP header.',
-			'default' => 'true',
+			'description' => 'If set to false, iTop will stop sending the X-Content-Type-Options HTTP header. This header could trigger CORB protection on certain resources (JSON, XML, HTML, text) therefore blocking them.',
+			'default' => true,
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
