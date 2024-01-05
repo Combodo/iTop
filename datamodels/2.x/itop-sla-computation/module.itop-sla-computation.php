@@ -18,7 +18,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-sla-computation/2.7.9',
+	'itop-sla-computation/2.7.10',
 	array(
 		// Identification
 		//
