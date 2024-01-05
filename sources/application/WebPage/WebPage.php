@@ -1015,13 +1015,12 @@ JS;
 	}
 
 	/**
-	 * @param string|null $sHeaderValue for example `SAMESITE`. If null will set the header using the config parameter value.
+	 * @param string|null $sHeaderValue for example `SAMESITE`. If null will set the header using the `security_header_xframe` config parameter value.
 	 *
 	 * @since 2.7.3 3.0.0 N°3416
-	 * @uses security_header_xframe config parameter
 	 * @uses \utils::GetConfig()
 	 *
-	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
+	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options HTTP header MDN documentation
 	 */
 	public function add_xframe_options($sHeaderValue = null)
 	{
@@ -1033,13 +1032,34 @@ JS;
 	}
 
 	/**
+	 * Warning : this header will trigger the Cross-Origin Read Blocking (CORB) protection for some mime types (HTML, XML except SVG, JSON, text/plain)
+	 * In consequence some children pages will override this method.
+	 *
+	 * Sending header can be disabled globally using the `security.enable_header_xcontent_type_options` optional config parameter.
+	 *
 	 * @return void
 	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°4368 method creation
 	 *
-	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
+	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options HTTP header MDN documentation
+	 * @link https://chromium.googlesource.com/chromium/src/+/master/services/network/cross_origin_read_blocking_explainer.md#determining-whether-a-response-is-corb_protected "Determining whether a response is CORB-protected"
 	 */
 	public function add_xcontent_type_options()
 	{
+		try {
+			$oConfig = utils::GetConfig();
+		} catch (ConfigException|CoreException $e) {
+			$oConfig = null;
+		}
+		if (is_null($oConfig)) {
+			$bSendXContentTypeOptionsHttpHeader = true;
+		} else {
+			$bSendXContentTypeOptionsHttpHeader = $oConfig->Get('security.enable_header_xcontent_type_options');
+		}
+
+		if ($bSendXContentTypeOptionsHttpHeader === false) {
+			return;
+		}
+
 		$this->add_header('X-Content-Type-Options: nosniff');
 	}
 

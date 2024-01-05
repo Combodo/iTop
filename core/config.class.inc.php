@@ -1531,6 +1531,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'security.enable_header_xcontent_type_options' => [
+			'type' => 'bool',
+			'description' => 'If set to false, iTop will stop sending the X-Content-Type-Options HTTP header. This header could trigger CORB protection on certain resources (JSON, XML, HTML, text) therefore blocking them.',
+			'default' => true,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'security.disable_inline_documents_sandbox' => [
 			'type' => 'bool',
 			'description' => 'If true then the sandbox for documents displayed in a browser tab will be disabled; enabling scripts and other interactive content. Note that setting this to true will open the application to potential XSS attacks!',
