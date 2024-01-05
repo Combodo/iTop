@@ -5957,6 +5957,16 @@ JS
 	/**
 	 * @return void
 	 * @throws \CoreException
+	 * @since 3.1.2
+	 */
+	final protected function FireEventAboutToDelete(): void
+	{
+		$this->FireEvent(EVENT_DB_ABOUT_TO_DELETE);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
 	 *
 	 * @since 3.1.0
 	 */
