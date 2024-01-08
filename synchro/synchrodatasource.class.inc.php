@@ -64,12 +64,13 @@ class SynchroDataSource extends cmdbAbstractObject
 			'depends_on' => array(),
 		)));
 		MetaModel::Init_AddAttribute(new AttributeClass('scope_class', array(
-			'class_category' => 'bizmodel,addon/authentication,application',
-			'more_values' => '',
-			'sql' => 'scope_class',
-			'default_value' => null,
-			'is_null_allowed' => false,
-			'depends_on' => array(),
+			'class_category'       => 'bizmodel,addon/authentication,application',
+			'more_values'          => '',
+			'sql'                  => 'scope_class',
+			'default_value'        => null,
+			'is_null_allowed'      => false,
+			'depends_on'           => array(),
+			"class_exclusion_list" => null,
 		)));
 		MetaModel::Init_AddAttribute(new AttributeString('database_table_name', array(
 			'allowed_values' => null,
@@ -2007,12 +2008,13 @@ class SynchroReplica extends DBObject implements iDisplay
 			'depends_on' => array(),
 		)));
 		MetaModel::Init_AddAttribute(new AttributeClass('dest_class', array(
-			'class_category' => '',
-			'more_values' => '',
-			'sql' => 'dest_class',
-			'default_value' => 'Organization',
-			'is_null_allowed' => true,
-			'depends_on' => array(),
+			'class_category'       => '',
+			'more_values'          => '',
+			'sql'                  => 'dest_class',
+			'default_value'        => 'Organization',
+			'is_null_allowed'      => true,
+			'depends_on'           => array(),
+			"class_exclusion_list" => null,
 		)));
 
 		MetaModel::Init_AddAttribute(new AttributeDateTime('status_last_seen', array(

@@ -88,6 +88,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:TriggerOnAttachmentDownload' => 'Déclencheur sur le téléchargement d\'une pièce jointe d\'un objet',
-	'Class:TriggerOnAttachmentDownload+' => '',
+	'Class:TriggerOnAttachmentDownload'                       => 'Déclencheur sur le téléchargement d\'une pièce jointe d\'un objet',
+	'Class:TriggerOnAttachmentDownload+'                      => '',
+	'Class:TriggerOnAttachmentCreate'                         => 'Déclencheur sur la création d\'une pièce jointe',
+	'Class:TriggerOnAttachmentCreate+'                        => '',
+	'Class:TriggerOnAttachmentDelete'                         => 'Déclencheur sur la suppression d\'une pièce jointe',
+	'Class:TriggerOnAttachmentDelete+'                        => '',
 ));

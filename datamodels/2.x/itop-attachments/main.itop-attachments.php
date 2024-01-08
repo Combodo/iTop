@@ -295,6 +295,18 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 					$oAttachment->FireEvent(EVENT_REMOVE_ATTACHMENT_FROM_OBJECT, $aData);
 					$oAttachment->DBDelete();
 					$aActions[] = self::GetActionChangeOp($oAttachment, false /* false => deletion */);
+					//Execute Trigger
+					$aParams = ['class_list' => MetaModel::EnumParentClasses(get_class($oObject), ENUM_PARENT_CLASSES_ALL)];
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnAttachmentDelete AS t WHERE t.target_class IN (:class_list)'), [], $aParams);
+					while ($oTrigger = $oSet->Fetch()) {
+						try {
+							$oTrigger->DoActivate($oAttachment->ToArgs('this'));
+						}
+						catch (Exception $e) {
+							$oTrigger->LogException($e, $oAttachment->ToArgs('this'));
+							utils::EnrichRaisedException($oTrigger, $e);
+						}
+					}
 				}
 			}
 
@@ -312,9 +324,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 				{
 					$oAttachment->DBDelete();
 					// temporary attachment removed, don't even mention it in the history
-				}
-				else
-				{
+				} else {
 					$oAttachment->SetItem($oObject);
 					$oAttachment->Set('temp_id', '');
 					$oAttachment->DBUpdate();
@@ -322,6 +332,18 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 					$aActions[] = self::GetActionChangeOp($oAttachment, true /* true => creation */);
 					$aData = ['target_object' => $oObject];
 					$oAttachment->FireEvent(EVENT_ADD_ATTACHMENT_TO_OBJECT, $aData);
+					//Execute Trigger
+					$aParams = ['class_list' => MetaModel::EnumParentClasses(get_class($oObject), ENUM_PARENT_CLASSES_ALL)];
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnAttachmentCreate AS t WHERE t.target_class IN (:class_list)'), [], $aParams);
+					while ($oTrigger = $oSet->Fetch()) {
+						try {
+							$oTrigger->DoActivate($oAttachment->ToArgs('this'));
+						}
+						catch (Exception $e) {
+							$oTrigger->LogException($e, $oAttachment->ToArgs('this'));
+							utils::EnrichRaisedException($oTrigger, $e);
+						}
+					}
 				}
 			}
 			if (count($aActions) > 0)
@@ -731,37 +753,6 @@ class CMDBChangeOpAttachmentRemoved extends CMDBChangeOp
 			'<span class="attachment-history-deleted">'.utils::EscapeHtml($this->Get('filename')).'</span>');
 
 		return $sResult;
-	}
-}
-
-/**
- * Class TriggerOnAttachmentDownload
- *
- * @since 3.1.0
- */
-class TriggerOnAttachmentDownload extends TriggerOnAttributeBlobDownload
-{
-	/**
-	 * @inheritDoc
-	 * @throws \CoreException
-	 * @throws \Exception
-	 */
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "grant_by_profile,core/cmdb,application",
-			"key_type" => "autoincrement",
-			"name_attcode" => "description",
-			"state_attcode" => "",
-			"reconc_keys" => array('description'),
-			"db_table" => "priv_trigger_onattdownload",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		MetaModel::Init_InheritAttributes();
 	}
 }
 
