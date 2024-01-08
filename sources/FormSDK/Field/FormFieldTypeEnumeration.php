@@ -33,8 +33,8 @@ enum FormFieldTypeEnumeration : string
 	case DATE = 'DATE';
 	case SELECT = 'SELECT';
 	case SWITCH = 'SWITCH';
-	case DB_OBJECT = 'DB_OBJECT';
 	case DURATION = 'DURATION';
+	case FIELDSET = 'FIELDSET';
 
 	/**
 	 * Return available options.
@@ -44,7 +44,7 @@ enum FormFieldTypeEnumeration : string
 	public function GetAvailableOptions() : array
 	{
 		// global options
-		$aOptions = ['required', 'disabled', 'attr', 'label', 'label_attr', 'help'];
+		$aOptions = ['required', 'disabled', 'attr', 'label', 'label_attr', 'help', 'inherit_data'];
 
 		// specific options
 		$test =  match ($this) {
@@ -60,7 +60,7 @@ enum FormFieldTypeEnumeration : string
 			FormFieldTypeEnumeration::DURATION => array_merge($aOptions,
 				['input', 'with_minutes', 'with_seconds', 'with_weeks', 'with_days']
 			),
-			FormFieldTypeEnumeration::DB_OBJECT => array_merge($aOptions,
+			FormFieldTypeEnumeration::FIELDSET => array_merge($aOptions,
 				['fields']
 			),
 			default => $aOptions,

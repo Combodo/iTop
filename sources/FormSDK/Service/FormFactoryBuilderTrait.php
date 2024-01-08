@@ -16,11 +16,10 @@ trait FormFactoryBuilderTrait
 	 *
 	 * @param string $sKey
 	 * @param array $aOptions
-	 * @param mixed $oData
 	 *
 	 * @return $this
 	 */
-	public function AddTextField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
+	public function AddTextField(string $sKey, array $aOptions) : FormFactory
 	{
 		// test widget for regex constraint
 		if(array_key_exists('constraints', $aOptions)){
@@ -40,7 +39,6 @@ trait FormFactoryBuilderTrait
 		}
 
 		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::TEXT, $aOptions);
-		$this->aFieldsData[$sKey] = $oData;
 
 		return $this;
 	}
@@ -50,16 +48,12 @@ trait FormFactoryBuilderTrait
 	 *
 	 * @param string $sKey
 	 * @param array $aOptions
-	 * @param mixed $oData
 	 *
 	 * @return $this
 	 */
-	public function AddNumberField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
+	public function AddNumberField(string $sKey, array $aOptions) : FormFactory
 	{
-//		$aOptions['property_path'] = $sKey;
-
 		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::NUMBER, $aOptions);
-		$this->aFieldsData[$sKey] = $oData;
 
 		return $this;
 	}
@@ -69,11 +63,10 @@ trait FormFactoryBuilderTrait
 	 *
 	 * @param string $sKey
 	 * @param array $aOptions
-	 * @param mixed $oData
 	 *
 	 * @return $this
 	 */
-	public function AddAreaField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
+	public function AddAreaField(string $sKey, array $aOptions) : FormFactory
 	{
 		$aOptions = array_merge([
 			'attr' => [
@@ -83,7 +76,6 @@ trait FormFactoryBuilderTrait
 		], $aOptions);
 
 		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::AREA, $aOptions);
-		$this->aFieldsData[$sKey] = $oData;
 
 		return $this;
 	}
@@ -93,14 +85,12 @@ trait FormFactoryBuilderTrait
 	 *
 	 * @param string $sKey
 	 * @param array $aOptions
-	 * @param mixed $oData
 	 *
 	 * @return $this
 	 */
-	public function AddDateField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
+	public function AddDateField(string $sKey, array $aOptions) : FormFactory
 	{
 		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::DATE, $aOptions);
-		$this->aFieldsData[$sKey] = $oData;
 
 		return $this;
 	}
@@ -110,14 +100,12 @@ trait FormFactoryBuilderTrait
 	 *
 	 * @param string $sKey
 	 * @param array $aOptions
-	 * @param mixed $oData
 	 *
 	 * @return $this
 	 */
-	public function AddDurationField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
+	public function AddDurationField(string $sKey, array $aOptions) : FormFactory
 	{
 		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::DURATION, $aOptions);
-		$this->aFieldsData[$sKey] = $oData;
 
 		return $this;
 	}
@@ -127,14 +115,12 @@ trait FormFactoryBuilderTrait
 	 *
 	 * @param string $sKey
 	 * @param array $aOptions
-	 * @param mixed $oData
 	 *
 	 * @return $this
 	 */
-	public function AddSelectField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
+	public function AddSelectField(string $sKey, array $aOptions) : FormFactory
 	{
 		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::SELECT, $aOptions);
-		$this->aFieldsData[$sKey] = $oData;
 
 		return $this;
 	}
@@ -146,11 +132,10 @@ trait FormFactoryBuilderTrait
 	 * @param array $aOptions
 	 * @param array $aAjaxOptions
 	 * @param array $aAjaxData
-	 * @param mixed $oData
 	 *
 	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
 	 */
-	public function AddSelectAjaxField(string $sKey, array $aOptions, array $aAjaxOptions, array $aAjaxData = [], mixed $oData = null) : FormFactory
+	public function AddSelectAjaxField(string $sKey, array $aOptions, array $aAjaxOptions, array $aAjaxData = []) : FormFactory
 	{
 		// merge ajax options
 		$aAjaxOptions = array_merge([
@@ -184,7 +169,7 @@ trait FormFactoryBuilderTrait
 			//			}),
 		], $aOptions);
 
-		return $this->AddSelectField($sKey, $aOptions, $oData);
+		return $this->AddSelectField($sKey, $aOptions);
 	}
 
 
@@ -198,11 +183,10 @@ trait FormFactoryBuilderTrait
 	 * @param array $aFieldsToLoad
 	 * @param string $sSearch
 	 * @param int $iAjaxThershold
-	 * @param mixed $oData
 	 *
 	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
 	 */
-	public function AddSelectOqlField(string $sKey, array $aOptions, string $sObjectClass, string $sOql, array $aFieldsToLoad, string $sSearch, int $iAjaxThershold, mixed $oData = null) : FormFactory
+	public function AddSelectOqlField(string $sKey, array $aOptions, string $sObjectClass, string $sOql, array $aFieldsToLoad, string $sSearch, int $iAjaxThershold) : FormFactory
 	{
 		$aAjaxData = [
 			'class' => $sObjectClass,
@@ -219,7 +203,7 @@ trait FormFactoryBuilderTrait
 			'threshold' => $iAjaxThershold,
 			'configuration' => 'OQL'
 		];
-		return $this->AddSelectAjaxField($sKey, $aOptions, $aAjaxOptions, $aAjaxData, $oData);
+		return $this->AddSelectAjaxField($sKey, $aOptions, $aAjaxOptions, $aAjaxData);
 	}
 
 	/**
@@ -227,18 +211,32 @@ trait FormFactoryBuilderTrait
 	 *
 	 * @param string $sKey
 	 * @param array $aOptions
-	 * @param mixed $oData
 	 *
 	 * @return $this
 	 */
-	public function AddSwitchField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
+	public function AddSwitchField(string $sKey, array $aOptions) : FormFactory
 	{
 		$aOptions = array_merge([
 			'label_attr' => ['class' => 'checkbox-switch'],
 		], $aOptions);
 
 		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::SWITCH, $aOptions);
-		$this->aFieldsData[$sKey] = $oData;
+
+		return $this;
+	}
+
+
+	/**
+	 * Add fieldset.
+	 *
+	 * @param string $sKey
+	 * @param array $aOptions
+	 *
+	 * @return $this
+	 */
+	public function AddFieldSet(string $sKey, array $aOptions) : FormFactory
+	{
+		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::FIELDSET, $aOptions);
 
 		return $this;
 	}

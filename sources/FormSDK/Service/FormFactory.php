@@ -49,8 +49,11 @@ class FormFactory
 	/** @var array $aFieldsDescriptions form types descriptions */
 	private array $aFieldsDescriptions = [];
 
-	/** @var array $aFieldsData form data */
-	private array $aFieldsData = [];
+	/** @var mixed $oFieldsData form data */
+	private mixed $oFieldsData = [];
+
+	/** @var array $aLayoutDecription description of the layout */
+	private array $aLayoutDecription;
 
 	/** builder */
 	use FormFactoryBuilderTrait;
@@ -70,25 +73,32 @@ class FormFactory
 	}
 
 	/**
-	 * Return fields descriptions and data arrays.
+	 * Return fields descriptions.
 	 *
-	 * @return array{descriptions:array, data:array}
+	 * @return array{fields_descriptions:array, layout_description:array}
 	 */
-	public function GetFieldsDescriptionsAndData() : array
+	public function GetFieldsDescriptions() : array
 	{
 		// prepare data
-		$aResult = [
-			'descriptions' => $this->aFieldsDescriptions,
-			'data' => $this->aFieldsData,
-		];
+		$aResult = $this->aFieldsDescriptions;
+
 
 		// merge each adapter data...
 		foreach ($this->GetAllAdapters() as $oAdapter){
-			$aResult['descriptions'] = array_merge($aResult['descriptions'], $oAdapter->GetFieldsDescriptions());
-			$aResult['data'] = array_merge($aResult['data'], $oAdapter->GetFieldsData());
+			$aResult = array_merge($aResult, $oAdapter->GetFieldsDescriptions());
 		}
 
 		return $aResult;
+	}
+
+	/**
+	 * Return layout description.
+	 *
+	 * @return array
+	 */
+	public function GetLayoutDescription() : array
+	{
+		return $this->aLayoutDecription;
 	}
 
 	/**
@@ -131,6 +141,43 @@ class FormFactory
 	}
 
 	/**
+	 * Set layout description.
+	 *
+	 * @param array $aLayoutDescription
+	 *
+	 * @return $this
+	 */
+	public function SetLayoutDescription(array $aLayoutDescription)
+	{
+		$this->aLayoutDecription = $aLayoutDescription;
+		return $this;
+	}
+
+	/**
+	 * @param mixed $oData
+	 *
+	 * @return void
+	 */
+	public function SetData(mixed $oData) : void
+	{
+		$this->oFieldsData = $oData;
+	}
+
+	/***
+	 * @return array
+	 */
+	public function GetData() : mixed
+	{
+		$aData = $this->oFieldsData;
+
+		foreach ($this->GetAllAdapters() as $adapter){
+			$aData = array_merge($aData, $adapter->GetFieldsData());
+		}
+
+		return $aData;
+	}
+
+	/**
 	 * Create form.
 	 *
 	 * @param string|null $sName
@@ -138,8 +185,8 @@ class FormFactory
 	 */
 	public function CreateForm(?string $sName = null) : mixed
 	{
-		['descriptions' => $aDescriptions, 'data' => $aData] = $this->GetFieldsDescriptionsAndData();
-		return $this->oSymfonyBridge->CreateForm($aDescriptions, $aData, $sName);
+		$aFieldsDescriptions = $this->GetFieldsDescriptions();
+		return $this->oSymfonyBridge->CreateForm($aFieldsDescriptions, $this->GetData(), $sName, $this->GetLayoutDescription());
 	}
 
 }

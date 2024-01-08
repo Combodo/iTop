@@ -26,12 +26,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Type representing an iTop object;
+ * Type representing a fieldset;
  *
  * @package FormSDK
  * @since 3.2.0
  */
-class FormObjectType extends AbstractType
+class FieldsetType extends AbstractType
 {
 
 
@@ -39,7 +39,7 @@ class FormObjectType extends AbstractType
 	/** @inheritdoc  */
 	public function buildForm(FormBuilderInterface $builder, array $options) : void
 	{
-
+		
 
 		foreach ($options['fields'] as $oField){
 			$builder->add($oField['name'], $oField['type'], $oField['options']);
@@ -60,9 +60,6 @@ class FormObjectType extends AbstractType
 		$resolver->setDefaults([
 			'fields' => [],
 			'view' => [],
-			'attr' => [
-				'class' => 'form-object-row'
-			]
 		]);
 	}
 

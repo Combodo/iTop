@@ -55,3 +55,25 @@
 .form_interval_horizontal > div{
 	margin-right: 8px;
 }
+
+.form-compound-fieldset{
+	padding: 8px;
+	border-radius: 10px;
+	border: 1px dashed lightgrey;
+}
+
+
+.form-layout-row{
+	display: flex;
+	flex-direction: row;
+}
+.form-layout-column{
+	margin: 10px;
+}
+.form-layout-column:first-child{
+	margin-left: 0px;
+}
+.form-layout-column:last-child{
+	margin-right: 0px;
+}
+

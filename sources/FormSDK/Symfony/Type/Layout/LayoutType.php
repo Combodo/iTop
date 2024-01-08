@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\FormSDK\Symfony\Type\Compound;
+namespace Combodo\iTop\FormSDK\Symfony\Type\Layout;
 
 use Combodo\iTop\FormSDK\Field\FormFieldDescription;
 use Symfony\Component\Form\AbstractType;
@@ -26,32 +26,21 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Type representing an iTop object;
+ * Type representing an abstract layout type;
  *
  * @package FormSDK
  * @since 3.2.0
  */
-class FormObjectType extends AbstractType
+class LayoutType extends AbstractType
 {
-
-
 
 	/** @inheritdoc  */
 	public function buildForm(FormBuilderInterface $builder, array $options) : void
 	{
 
-
 		foreach ($options['fields'] as $oField){
 			$builder->add($oField['name'], $oField['type'], $oField['options']);
 		}
-	}
-
-	private function handleRow(FormBuilderInterface $builder, array $aData){
-
-	}
-
-	private function handleColumn(FormBuilderInterface $builder, array $aData){
-
 	}
 
 	/** @inheritdoc  */
@@ -60,9 +49,7 @@ class FormObjectType extends AbstractType
 		$resolver->setDefaults([
 			'fields' => [],
 			'view' => [],
-			'attr' => [
-				'class' => 'form-object-row'
-			]
+			'inherit_data' => true // this type is abstract and used for grouping
 		]);
 	}
 

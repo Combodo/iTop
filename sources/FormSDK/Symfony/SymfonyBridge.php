@@ -19,9 +19,12 @@
 
 namespace Combodo\iTop\FormSDK\Symfony;
 
-use Combodo\iTop\FormSDK\Symfony\Type\Compound\FormObjectType;
 use Combodo\iTop\FormSDK\Field\FormFieldDescription;
 use Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration;
+use Combodo\iTop\FormSDK\Symfony\Type\Compound\FieldsetType;
+use Combodo\iTop\FormSDK\Symfony\Type\Compound\FormObjectType;
+use Combodo\iTop\FormSDK\Symfony\Type\Layout\ColumnType;
+use Combodo\iTop\FormSDK\Symfony\Type\Layout\RowType;
 use LogAPI;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -100,7 +103,7 @@ class SymfonyBridge
 					'options' => $oFormDescription->GetOptions()
 				];
 
-			case FormFieldTypeEnumeration::DB_OBJECT:
+			case FormFieldTypeEnumeration::FIELDSET:
 				$aOptions = $oFormDescription->GetOptions();
 				$aFields = [];
 				foreach ($aOptions['fields'] as $oChildFormDescription){
@@ -110,7 +113,7 @@ class SymfonyBridge
 				$aOptions['fields'] = $aFields;
 				return [
 					'name' => $oFormDescription->GetName(),
-					'type' => FormObjectType::class,
+					'type' => FieldsetType::class,
 					'options' => $aOptions
 				];
 
@@ -137,48 +140,114 @@ class SymfonyBridge
 	 * Create Symfony form.
 	 *
 	 * @param array $aDescriptions
-	 * @param array $aData
+	 * @param mixed $oData
 	 * @param string|null $sName
+	 * @param array|null $aLayout
 	 *
 	 * @return \Symfony\Component\Form\FormInterface
 	 */
-	public function CreateForm(array $aDescriptions, array $aData, ?string $sName = null): FormInterface
+	public function CreateForm(array $aDescriptions, mixed $oData, ?string $sName = null, array $aLayout = []): FormInterface
 	{
 		// create Symfony form builder
 		if($sName !== null){
-			$oFormBuilder = $this->oFormFactory->createNamedBuilder($sName, FormType::class, $aData);
+			$oFormBuilder = $this->oFormFactory->createNamedBuilder($sName, FormType::class, $oData);
 		}
 		else{
-			$oFormBuilder = $this->oFormFactory->createBuilder(FormType::class, $aData);
+			$oFormBuilder = $this->oFormFactory->createBuilder(FormType::class, $oData);
 		}
 
-		// iterate throw descriptions...
-		foreach ($aDescriptions as $oFormDescription){
+		// transform fields descriptions...
+		$aSymfonyTypesDeclaration = [];
+		foreach ($aDescriptions as $sKey => $oFormDescription){
+			$aSymfonyTypesDeclaration[$sKey] = $this->ToSymfonyFormType($oFormDescription);
+		}
 
-			// symfony form type description
-			$aSymfony = $this->ToSymfonyFormType($oFormDescription);
+		// create layout types
+		['types' => $aItems]  = $this->CreateLayoutTypes($aLayout, $oFormBuilder, $aSymfonyTypesDeclaration);
+		$oTest = array_merge($aItems, $aSymfonyTypesDeclaration);
+
+		// add symfony types to builder...
+		foreach ($oTest as $oSymfonyTypeDeclaration){
 
 			// add type to form
 			$oFormBuilder->add(
-				$aSymfony['name'],
-				$aSymfony['type'],
-				$aSymfony['options']
+				$oSymfonyTypeDeclaration['name'],
+				$oSymfonyTypeDeclaration['type'],
+				$oSymfonyTypeDeclaration['options']
 			);
 
 			/**
 			 * Allow choices to be loaded client side via ajax.
-			*  without this, field value needs to be part of initial choices that may be empty.
-			 * Need reflexion because, value can be hacked with invalid value without extra validation.
+			 *  without this, field value needs to be part of initial choices that may be empty.
+			 * Need reflexion because, value can be hacked with invalid value without validation.
 			 * @see https://symfony.com/doc/current/reference/forms/types/choice.html#choice-loader
 			 * @see https://itecnote.com/tecnote/php-disable-backend-validation-for-choice-field-in-symfony-2-type/
-			*/
-			if($aSymfony['type'] === ChoiceType::class){
-				$oFormBuilder->get($aSymfony['name'])->resetViewTransformers();
+			 */
+			if($oSymfonyTypeDeclaration['type'] === ChoiceType::class){
+				$oFormBuilder->get($oSymfonyTypeDeclaration['name'])->resetViewTransformers();
 			}
 
 		}
 
 		return $oFormBuilder->getForm();
 	}
+
+	/**
+	 * @param $aLayout
+	 * @param $oFormBuilder
+	 * @param array $aDescriptions
+	 *
+	 * @return array
+	 */
+	private function CreateLayoutTypes($aLayout, $oFormBuilder, array &$aDescriptions){
+
+		$aResult = [];
+		$sClasses = '';
+
+		foreach ($aLayout as $sKey => $oLayoutElement)
+		{
+			if($sKey === 'css_classes'){
+				$sClasses = $oLayoutElement;
+			}
+			else if(str_starts_with($sKey, 'row__')){
+				$aResult[$sKey] = $this->CreateLayoutContainerType($oLayoutElement, $oFormBuilder, $sKey, RowType::class, $aDescriptions);
+			}
+			else if(str_starts_with($sKey, 'column__')){
+				$aResult[$sKey] = $this->CreateLayoutContainerType($oLayoutElement, $oFormBuilder, $sKey, ColumnType::class, $aDescriptions);
+			}
+			else if(str_starts_with($sKey, 'fieldset__')){
+				$aResult[$sKey] = $this->CreateLayoutContainerType($oLayoutElement, $oFormBuilder, $sKey, FieldsetType::class, $aDescriptions);
+			}
+			else {
+				if (array_key_exists($oLayoutElement, $aDescriptions)) {
+					$aResult[$oLayoutElement] = $aDescriptions[$oLayoutElement];
+					unset($aDescriptions[$oLayoutElement]);
+				}
+			}
+		}
+
+		return [
+			'types' => $aResult,
+			'css_classes' => $sClasses
+		];
+	}
+
+	private function CreateLayoutContainerType($oLayoutElement, $oFormBuilder, $sKey, $oType, &$aDescriptions)
+	{
+		['types' => $aItems, 'css_classes' => $sCssClasses] = $this->CreateLayoutTypes($oLayoutElement, $oFormBuilder, $aDescriptions);
+
+		return [
+			'name' => $sKey,
+			'type' => $oType,
+			'options' => [
+				'fields' => $aItems,
+				'attr' => [
+					'class' => $sCssClasses
+				],
+				'inherit_data' => true
+			],
+		];
+	}
+
 
 }

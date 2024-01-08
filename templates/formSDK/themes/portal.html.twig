@@ -31,8 +31,14 @@
 
 {%- endblock form_label -%}
 
-{%- block form_object_row -%}
-    {%- set row_attr = row_attr|merge({class: 'mb-3 form-object-row'}) -%}
-    {{ form_row(form, {'row_attr': row_attr}) }}
-{%- endblock form_object_row -%}
+{%- block row_row -%}
+    {{ form_widget(form, {'attr' : {'class' : attr.class|default('') ~ ' form-layout-row'}}) }}
+{%- endblock row_row -%}
 
+{%- block column_row -%}
+    {{ form_widget(form, {'attr' : {'class' : attr.class|default('') ~ ' form-layout-column'}}) }}
+{%- endblock column_row -%}
+
+{%- block fieldset_row -%}
+    {{ form_row(form, {'attr' : {'class' : attr.class|default('') ~ ' form-compound-fieldset'}}) }}
+{%- endblock fieldset_row -%}

@@ -3,6 +3,9 @@
 namespace Combodo\iTop\FormImplementation\Helper;
 
 use Combodo\iTop\Controller\AbstractAppController;
+use Combodo\iTop\FormImplementation\Dto\CountDto;
+use Combodo\iTop\FormSDK\Field\FormFieldDescription;
+use Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration;
 use Combodo\iTop\FormSDK\Service\FormManager;
 use DateInterval;
 use DateTime;
@@ -30,6 +33,23 @@ class FormHelper
 		// create a factory
 		$oFormFactory = $oFormManager->CreateFactory();
 
+		// form data
+		$aData = [
+			'city' => 'Autun',
+			'tel' => '+33(6) 35 57 48 77',
+			'birthday' => new DateTime('1979/06/27'),
+			'count' => 10,
+			'counts' =>  ['count1' => 10, 'count2' => 20, 'count3' => 30],
+			'counts2' => new CountDto(),
+			'interval' => ['days' => '12', 'hours' => '13', 'years' => '10', 'months' => '6', 'minutes' => '0', 'seconds' => '0', 'weeks' => '3'],
+			'blog' => 'Your <b>story</b>',
+			'notify' => true,
+			'language' => 'FR FR',
+			'mode' => '1',
+			'options' => ['0', '2','4']
+		];
+		$oFormFactory->SetData($aData);
+
 		// add X person forms...
 		for($i = 0 ; $i < self::$PERSON_COUNT ; $i++){
 
@@ -37,7 +57,7 @@ class FormHelper
 			$oPerson = MetaModel::GetObject('Person', $i+1);
 
 			// create object adapter
-			$oObjectPlugin = $oFormFactory->CreateObjectAdapter($oPerson, true);
+			$oObjectPlugin = $oFormFactory->CreateObjectAdapter($oPerson, false);
 			$oObjectPlugin->AddAttribute('name');
 			$oObjectPlugin->AddAttribute('mobile_phone');
 		}
@@ -47,27 +67,51 @@ class FormHelper
 			'label' => 'Ma ville',
 			'help' => 'This is where you live',
 			'constraints' => new Length(['min' => 3])
-		], 'Autun');
+		]);
 
 		// tel - text with pattern
 		$oFormFactory->AddTextField('tel', [
 			'label' => 'Tel',
 			'constraints' => new Regex(['pattern' => '/\+33\(\d\) \d\d \d\d \d\d \d\d/'], null, '+{33}(0) 00 00 00 00'),
 			'required' => false
-		], '+33(6) 35 57 48 77');
+		]);
 
 		// birthday - date
 		$oFormFactory->AddDateField('birthday', [
 			'label' => 'Anniversaire',
 			'widget' => 'single_text',
 			'required' => false
-		], new DateTime('1979/06/27'));
+		]);
 
 		// count - number
 		$oFormFactory->AddNumberField('count', [
 			'label' => 'Compteur',
 			'required' => false
-		], 10);
+		]);
+
+		// counts - fieldset
+		$oCount1 = new FormFieldDescription('count1', FormFieldTypeEnumeration::NUMBER, []);
+		$oCount2 = new FormFieldDescription('count2', FormFieldTypeEnumeration::NUMBER, []);
+		$oCount3 = new FormFieldDescription('count3', FormFieldTypeEnumeration::NUMBER, []);
+		$oFormFactory->AddFieldSet('counts', [
+			'label' => 'Compteurs',
+			'required' => false,
+			'fields' => [
+				$oCount1, $oCount2, $oCount3
+			]
+		]);
+
+		// counts - fieldset alternative
+		$oCount1 = new FormFieldDescription('count1', FormFieldTypeEnumeration::NUMBER, []);
+		$oCount2 = new FormFieldDescription('count2', FormFieldTypeEnumeration::NUMBER, []);
+		$oCount3 = new FormFieldDescription('count3', FormFieldTypeEnumeration::NUMBER, []);
+		$oFormFactory->AddFieldSet('counts2', [
+			'label' => 'Compteurs',
+			'required' => false,
+			'fields' => [
+				$oCount1, $oCount2, $oCount3 // OR $oData
+			]
+		]);
 
 		// interval - duration
 		$oFormFactory->AddDurationField('interval', [
@@ -80,24 +124,24 @@ class FormHelper
 			'attr' => [
 				'class' => 'form_interval_horizontal'
 			]
-		], ['days' => '12', 'hours' => '13', 'years' => '10', 'months' => '6', 'minutes' => '0', 'seconds' => '0', 'weeks' => '3']);
+		]);
 
 		// ready
 		$oFormFactory->AddSwitchField('notify', [
 			'label' => 'Veuillez m\'avertir en cas de changement',
-		], true);
+		]);
 
 		// blog - date
 		$oFormFactory->AddAreaField('blog', [
 			'label' => 'Blog',
 			'required' => false
-		], 'Your story');
+		]);
 
 		// language - select with static data
 		$oFormFactory->AddSelectField('language', [
 			'label' => 'Ma langue',
 			'choices' => SelectDataProvider::GetApplicationLanguages()
-		], 'FR FR');
+		]);
 
 		// dog - select with ajax API
 		$oFormFactory->AddSelectAjaxField('dog', [
@@ -136,10 +180,10 @@ class FormHelper
 			'label_attr' => [
 				'class' => 'radio-inline'
 			]
-		], '1');
+		]);
 
 		// options - select with static data
-		$oFormFactory->AddSelectField('option', [
+		$oFormFactory->AddSelectField('options', [
 			'label' => 'Mes options',
 			'choices' => SelectDataProvider::GetOptions(),
 			'expanded' => true,
@@ -147,7 +191,7 @@ class FormHelper
 			'label_attr' => [
 				'class' => 'checkbox-inline'
 			]
-		], ['0', '2','4']);
+		]);
 
 		// layout description
 		$oFormFactory->SetLayoutDescription([
