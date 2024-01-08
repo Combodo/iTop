@@ -3221,10 +3221,11 @@ EOF;
 
 			$aEntriesPHP = array();
 			$oEntries = $oDictionaryNode->GetUniqueElement('entries');
+			/** @var MFElement $oEntry */
 			foreach ($oEntries->getElementsByTagName('entry') as $oEntry)
 			{
 				$sStringCode = $oEntry->getAttribute('id');
-				$sValue = $oEntry->GetText();
+				$sValue = $oEntry->GetText('');
 				$aEntriesPHP[] = "\t'$sStringCode' => ".self::QuoteForPHP(self::FilterDictString($sValue), true).",";
 			}
 			$sEntriesPHP = implode("\n", $aEntriesPHP);
