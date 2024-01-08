@@ -136,7 +136,21 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 	 */
 	private function GetAttributeName(string $sAttributeCode) : string
 	{
-		return $this->bGroup ? $sAttributeCode : $this->GetIdentifier() . '-' . $sAttributeCode;
+		return $this->bGroup ? $sAttributeCode : $this->GetIdentifier() . '_' . $sAttributeCode;
+	}
+
+	public function GetLayoutDescription()
+	{
+		return [
+			'row__1' => [
+				'column__1' => [
+					'fieldset__1' => [ 'name'],
+				],
+				'column__2' => [
+					'fieldset__2' => ['mobile_phone'],
+				],
+			],
+		];
 	}
 
 	/** @inheritdoc */

@@ -1,0 +1,79 @@
+.layout-grow{
+	flex-grow: 1;
+}
+
+.custom-container{
+	position: relative;
+	border-radius: 10px;
+	padding: 20px;
+	/*margin-top: 25px;*/
+}
+
+.custom-container:before{
+	content: 'Custom Layout CSS';
+	font-weight: 500;
+	position: absolute;
+	left: 50%;
+	top: -10px;
+	transform: translateX(-50%);
+	/*border: 1px solid #9c21af;*/
+	background-color: white;
+	padding: 5px 15px;
+	border-radius: 10px;
+}
+
+.container-flower{
+	background-color: #f3deff;
+	background-size: 500px;
+	background-repeat: no-repeat;
+	background-position-x: right;
+	background-position-y: bottom;
+	background: linear-gradient( to right bottom, rgb(248 242 251) 50%, rgb(241 187 255) );
+}
+.container-flower fieldset{
+	position: relative;
+	z-index: 1;
+}
+.container-flower:after{
+	content: '';
+	width: 300px;
+	height: 200px;
+	background-image: url('../../sources/FormImplementation/Resources/6662396.png');
+	background-size: 300px;
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	border-radius: 10px;
+}
+
+.container-flower .col-form-label{
+	color: #8d63b7;
+}
+.container-flower .form-layout-fieldset{
+	border: 1px solid #8d63b7;
+}
+
+.container-color{
+	position: relative;
+	border-radius: 10px;
+	padding: 20px;
+	background-color: #faf7ff;
+}
+
+.container-color .form-object-row{
+	background-color: #ebe4f6;
+	border: none;
+}
+
+
+.container-color2{
+	position: relative;
+	border-radius: 10px;
+	padding: 20px;
+	background-color: #f7f9ff;
+}
+
+.container-color2 .form-object-row{
+	background-color: #a7b4d9;
+	border: none;
+}

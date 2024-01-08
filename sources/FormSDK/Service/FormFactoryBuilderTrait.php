@@ -56,6 +56,7 @@ trait FormFactoryBuilderTrait
 	 */
 	public function AddNumberField(string $sKey, array $aOptions, mixed $oData = null) : FormFactory
 	{
+//		$aOptions['property_path'] = $sKey;
 
 		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::NUMBER, $aOptions);
 		$this->aFieldsData[$sKey] = $oData;
@@ -103,7 +104,6 @@ trait FormFactoryBuilderTrait
 
 		return $this;
 	}
-
 
 	/**
 	 * Add duration field.

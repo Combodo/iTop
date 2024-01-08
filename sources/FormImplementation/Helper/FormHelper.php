@@ -13,6 +13,8 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class FormHelper
 {
+	static private int $PERSON_COUNT = 5;
+
 	/**
 	 * Create a sample form factory for demo purpose.
 	 *
@@ -29,7 +31,7 @@ class FormHelper
 		$oFormFactory = $oFormManager->CreateFactory();
 
 		// add X person forms...
-		for($i = 0 ; $i < 5 ; $i++){
+		for($i = 0 ; $i < self::$PERSON_COUNT ; $i++){
 
 			// retrieve person
 			$oPerson = MetaModel::GetObject('Person', $i+1);
@@ -52,7 +54,7 @@ class FormHelper
 			'label' => 'Tel',
 			'constraints' => new Regex(['pattern' => '/\+33\(\d\) \d\d \d\d \d\d \d\d/'], null, '+{33}(0) 00 00 00 00'),
 			'required' => false
-		], null);
+		], '+33(6) 35 57 48 77');
 
 		// birthday - date
 		$oFormFactory->AddDateField('birthday', [
@@ -146,6 +148,27 @@ class FormHelper
 				'class' => 'checkbox-inline'
 			]
 		], ['0', '2','4']);
+
+		// layout description
+		$oFormFactory->SetLayoutDescription([
+
+			'row__1' => [
+				'column__1' => [
+					'css_classes' => 'custom-container container-flower layout-grow',
+					'fieldset__1' => [ 'birthday', 'city', 'tel'],
+				],
+				'column__2' => [
+					'css_classes' => 'custom-container container-color',
+					'fieldset__2' => ['mode', 'interval', 'Person_2'],
+				],
+
+			],
+			'row__2' => [
+				'css_classes' => 'custom-container container-color2',
+				'fieldset__1' => [ 'Person_1', 'Person_3'],
+				'fieldset__2' => [ 'Person_1_name'],
+			]
+		]);
 
 		return $oFormFactory;
 	}
