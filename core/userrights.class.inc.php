@@ -162,7 +162,7 @@ abstract class UserRightsAddOnAPI
 				$oSearchSharers->AllowAllData();
 				$oSearchSharers->AddCondition_ReferencedBy($oShareSearch, 'sharing_org_id');
 				$aSharers = array();
-				foreach($oSearchSharers->SelectColumnToArray('id') as $aRow)
+				foreach($oSearchSharers->SelectAttributeToArray('id') as $aRow)
 				{
 					$aSharers[] = $aRow['id'];
 				}
@@ -187,7 +187,7 @@ abstract class UserRightsAddOnAPI
 				$oOrgField = new FieldExpression('org_id', $sShareClass);
 				$oSearchShares->AddConditionExpression(new BinaryExpression($oOrgField, 'IN', $oListExpr));
 				$aShared = array();
-				foreach($oSearchShares->SelectColumnToArray($sShareAttCode) as $aRow)
+				foreach($oSearchShares->SelectAttributeToArray($sShareAttCode) as $aRow)
 				{
 					$aShared[] = $aRow[$sShareAttCode];
 				}

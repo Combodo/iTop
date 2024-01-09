@@ -895,7 +895,7 @@ abstract class DBSearch
      * @throws MySQLException
      * @throws MySQLHasGoneAwayException
      */
-    public function SelectColumnToArray(String $sAttCode)
+    public function SelectAttributeToArray(string $sAttCode)
     {
        $sClassAlias = $this->GetClassAlias();
        $sClass = $this->GetClass();
@@ -909,22 +909,20 @@ abstract class DBSearch
         $resQuery = CMDBSource::Query($sSQL);
         if (!$resQuery)
         {
-            return;
+            return [];
         }
-
-        $aQueryCols = CMDBSource::GetColumns($resQuery, $sSQL);
 
         $sColName = $sClassAlias.$sAttCode;
-
-        if (!in_array($sColName, $aQueryCols)) {
-            return new CoreException( 'Unable to load attribute '.$sAttCode .' from class'. $sClass.'. The attribute contains more than 1 sql column.');
-        }
 
         $aRes = array();
         while ($aRow = CMDBSource::FetchArray($resQuery))
         {
             $aMappedRow = array();
-            $aMappedRow[$sAttCode] = $aRow[$sColName];
+            if($sAttCode === 'id') {
+                $aMappedRow[$sAttCode] = $aRow[$sColName];
+            } else {
+                $aMappedRow[$sAttCode] = $aAttToLoad[$sClassAlias][$sAttCode]->FromSQLToValue($aRow, $sColName);
+            }
             $aRes[] = $aMappedRow;
         }
         CMDBSource::FreeResult($resQuery);

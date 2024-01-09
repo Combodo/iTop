@@ -798,11 +798,11 @@ class DBSearchTest extends ItopDataTestCase
      * @throws \MySQLHasGoneAwayException
      * @throws \OQLException
      */
-    public function testFunctionToArray($sQuery, $sField){
+    public function testAttributeToArray($sQuery, $sField){
 		$oSearch = \DBObjectSearch::FromOQL($sQuery);
         $aResToDataArray = $oSearch->ToDataArray(array($sField));
         asort($aResToDataArray);
-        $aResSelectColumnToArray = $oSearch->SelectColumnToArray($sField);
+        $aResSelectColumnToArray = $oSearch->SelectAttributeToArray($sField);
         asort($aResSelectColumnToArray);
         self::assertEquals($aResToDataArray, $aResSelectColumnToArray, 'ToDataArray and SelectColumnToArray must return the same results');
     }

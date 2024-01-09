@@ -431,7 +431,7 @@ try
 						} else {
 							try {
 								$oFilter = GetRuleResultFilter($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext);
-							$aErrors = $oFilter->SelectColumnToArray('id');
+							$aErrors = $oFilter->SelectAttributeToArray('id');
 								$iErrorsCount = count($aErrors);
 								foreach ($aErrors as $aErrorRow) {
 									$aObjectsWithErrors[$aErrorRow['id']] = true;
