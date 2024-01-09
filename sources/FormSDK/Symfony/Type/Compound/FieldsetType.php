@@ -60,6 +60,7 @@ class FieldsetType extends AbstractType
 		$resolver->setDefaults([
 			'fields' => [],
 			'view' => [],
+			'layout' => []
 		]);
 	}
 

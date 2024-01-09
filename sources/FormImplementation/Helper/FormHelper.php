@@ -2,12 +2,11 @@
 
 namespace Combodo\iTop\FormImplementation\Helper;
 
-use Combodo\iTop\Controller\AbstractAppController;
 use Combodo\iTop\FormImplementation\Dto\CountDto;
 use Combodo\iTop\FormSDK\Field\FormFieldDescription;
 use Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration;
+use Combodo\iTop\FormSDK\Service\FormFactory;
 use Combodo\iTop\FormSDK\Service\FormManager;
-use DateInterval;
 use DateTime;
 use MetaModel;
 use Symfony\Component\Routing\RouterInterface;
@@ -16,19 +15,35 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class FormHelper
 {
-	static private int $PERSON_COUNT = 5;
+	static private int $PERSON_COUNT = 1;
+
+	static private array $MODES_DEFINITIONS = [
+		0 => [
+			'group' => false,
+			'layout' => false
+		],
+		1 => [
+			'group' => true,
+			'layout' => false
+		],
+		2 => [
+			'group' => true,
+			'layout' => true
+		],
+	];
 
 	/**
 	 * Create a sample form factory for demo purpose.
 	 *
 	 * @param \Combodo\iTop\FormSDK\Service\FormManager $oFormManager
 	 * @param \Symfony\Component\Routing\RouterInterface $oRouter
+	 * @param int $iMode
 	 *
 	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	static public function CreateSampleFormFactory(FormManager $oFormManager, RouterInterface $oRouter)
+	static public function CreateSampleFormFactory(FormManager $oFormManager, RouterInterface $oRouter, int $iMode) : FormFactory
 	{
 		// create a factory
 		$oFormFactory = $oFormManager->CreateFactory();
@@ -42,7 +57,7 @@ class FormHelper
 			'counts' =>  ['count1' => 10, 'count2' => 20, 'count3' => 30],
 			'counts2' => new CountDto(),
 			'interval' => ['days' => '12', 'hours' => '13', 'years' => '10', 'months' => '6', 'minutes' => '0', 'seconds' => '0', 'weeks' => '3'],
-			'blog' => 'Your <b>story</b>',
+			'blog' => '<h2>Your <b>story</b></h2><br>bla bla bla bla bla bla<br>bla bla bla bla bla bla<br>bla bla bla bla bla bla<br>bla bla bla bla bla bla',
 			'notify' => true,
 			'language' => 'FR FR',
 			'mode' => '1',
@@ -57,7 +72,7 @@ class FormHelper
 			$oPerson = MetaModel::GetObject('Person', $i+1);
 
 			// create object adapter
-			$oObjectPlugin = $oFormFactory->CreateObjectAdapter($oPerson, false);
+			$oObjectPlugin = $oFormFactory->CreateObjectAdapter($oPerson, self::$MODES_DEFINITIONS[$iMode]['group']);
 			$oObjectPlugin->AddAttribute('name');
 			$oObjectPlugin->AddAttribute('mobile_phone');
 		}
@@ -193,26 +208,37 @@ class FormHelper
 			]
 		]);
 
-		// layout description
-		$oFormFactory->SetLayoutDescription([
+		if(self::$MODES_DEFINITIONS[$iMode]['layout']){
 
-			'row__1' => [
-				'column__1' => [
-					'css_classes' => 'custom-container container-flower layout-grow',
-					'fieldset__1' => [ 'birthday', 'city', 'tel'],
-				],
-				'column__2' => [
-					'css_classes' => 'custom-container container-color',
-					'fieldset__2' => ['mode', 'interval', 'Person_2'],
-				],
+			$aDescription = [
 
-			],
-			'row__2' => [
-				'css_classes' => 'custom-container container-color2',
-				'fieldset__1' => [ 'Person_1', 'Person_3'],
-				'fieldset__2' => [ 'Person_1_name'],
-			]
-		]);
+				'row__1' => [
+					'column__1' => [
+						'css_classes' => 'custom-container container-flower layout-grow',
+						'fieldset__1' => [ 'birthday', 'city', 'tel'],
+					],
+					'column__2' => [
+						'css_classes' => 'custom-container container-color mb-3',
+						'fieldset__2' => ['mode', 'interval'],
+					],
+
+				],
+				'row__2' => [
+					'css_classes' => 'custom-container container-color2 mb-3',
+				]
+			];
+
+			if(self::$MODES_DEFINITIONS[$iMode]['group']){
+				$aDescription['row__1']['column__2']['fieldset__2'][] = 'Person_2';
+				$aDescription['row__2']['fieldset__1'] = [ 'Person_1', 'Person_3'];
+			}
+			else{
+				$aDescription['row__2']['fieldset__1'] = [ 'Person_1_name'];
+			}
+
+			// layout description
+			$oFormFactory->SetLayoutDescription($aDescription);
+		}
 
 		return $oFormFactory;
 	}

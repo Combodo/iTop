@@ -22,7 +22,6 @@ namespace Combodo\iTop\FormSDK\Symfony;
 use Combodo\iTop\FormSDK\Field\FormFieldDescription;
 use Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration;
 use Combodo\iTop\FormSDK\Symfony\Type\Compound\FieldsetType;
-use Combodo\iTop\FormSDK\Symfony\Type\Compound\FormObjectType;
 use Combodo\iTop\FormSDK\Symfony\Type\Layout\ColumnType;
 use Combodo\iTop\FormSDK\Symfony\Type\Layout\RowType;
 use LogAPI;
@@ -36,7 +35,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * Symfony implementation bridge.
@@ -108,7 +106,7 @@ class SymfonyBridge
 				$aFields = [];
 				foreach ($aOptions['fields'] as $oChildFormDescription){
 					$aSymfony = $this->ToSymfonyFormType($oChildFormDescription);
-					$aFields[] = $aSymfony;
+					$aFields[$oChildFormDescription->GetName()] = $aSymfony;
 				}
 				$aOptions['fields'] = $aFields;
 				return [
@@ -162,12 +160,21 @@ class SymfonyBridge
 			$aSymfonyTypesDeclaration[$sKey] = $this->ToSymfonyFormType($oFormDescription);
 		}
 
-		// create layout types
+		// prepare fieldset types layout...
+		foreach ($aSymfonyTypesDeclaration as &$aSymfonyTypeDeclaration){
+			if($aSymfonyTypeDeclaration['type'] === FieldsetType::class && isset($aSymfonyTypeDeclaration['options']['layout'])){
+				['types' => $aItems]  = $this->CreateLayoutTypes($aSymfonyTypeDeclaration['options']['layout'], $oFormBuilder, $aSymfonyTypeDeclaration['options']['fields']);
+				$aSymfonyTypeDeclaration['options']['fields'] = array_merge($aItems, $aSymfonyTypeDeclaration['options']['fields']);
+				$aTest = 'test';
+			}
+		}
+
+		// prepare general layout types
 		['types' => $aItems]  = $this->CreateLayoutTypes($aLayout, $oFormBuilder, $aSymfonyTypesDeclaration);
-		$oTest = array_merge($aItems, $aSymfonyTypesDeclaration);
+		$aSymfonyTypesDeclaration = array_merge($aItems, $aSymfonyTypesDeclaration);
 
 		// add symfony types to builder...
-		foreach ($oTest as $oSymfonyTypeDeclaration){
+		foreach ($aSymfonyTypesDeclaration as $oSymfonyTypeDeclaration){
 
 			// add type to form
 			$oFormBuilder->add(

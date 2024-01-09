@@ -8,10 +8,10 @@
 /* debug purpose */
 .form-type-pictograms{
 	display: inline-block;
+	float: right;
 	margin-left: 5px;
 	color: grey;
 	cursor: pointer;
-	background-color: #f8f8f8;
 	padding: 0px 5px;
 	border-radius: 8px;
 }

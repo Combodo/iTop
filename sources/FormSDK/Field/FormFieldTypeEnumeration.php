@@ -47,7 +47,7 @@ enum FormFieldTypeEnumeration : string
 		$aOptions = ['required', 'disabled', 'attr', 'label', 'label_attr', 'help', 'inherit_data'];
 
 		// specific options
-		$test =  match ($this) {
+		return  match ($this) {
 			FormFieldTypeEnumeration::TEXT =>  array_merge($aOptions,
 				['constraints']
 			),
@@ -61,12 +61,10 @@ enum FormFieldTypeEnumeration : string
 				['input', 'with_minutes', 'with_seconds', 'with_weeks', 'with_days']
 			),
 			FormFieldTypeEnumeration::FIELDSET => array_merge($aOptions,
-				['fields']
+				['fields', 'layout']
 			),
 			default => $aOptions,
 		};
-
-		return $test;
 	}
 
 	/**

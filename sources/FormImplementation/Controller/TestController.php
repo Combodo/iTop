@@ -5,36 +5,25 @@ namespace Combodo\iTop\FormImplementation\Controller;
 use Combodo\iTop\Controller\AbstractAppController;
 use Combodo\iTop\FormImplementation\Dto\ObjectSearchDto;
 use Combodo\iTop\FormImplementation\Helper\FormHelper;
-use Combodo\iTop\FormImplementation\Helper\SelectDataProvider;
 use Combodo\iTop\FormSDK\Service\FormManager;
 use Combodo\iTop\Service\Base\ObjectRepository;
-use DateTime;
 use Exception;
-use JsonPage;
-use MetaModel;
-use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\Regex;
-use utils;
 
 class TestController extends AbstractAppController
 {
 
-	#[Route('/formSDK/test_form', name: 'formSDK_test_form')]
-	public function form(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter): Response
+	#[Route('/formSDK/test_form/{mode}', name: 'formSDK_test_form')]
+	public function form(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter, int $mode): Response
 	{
 		// create factory
 		try{
-			$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter);
+			$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter, $mode);
 		}
 		catch (Exception $e) {
 			throw $this->createNotFoundException('unable to create sample form factory', $e);
@@ -52,12 +41,12 @@ class TestController extends AbstractAppController
 			// retrieve form data
 			$data = $oForm->getData();
 
-			// let's adaptaters save theirs data
+			// let's adapters save theirs data
 			foreach($oFactory->GetAllAdapters() as $oAdapter){
 				$oAdapter->UpdateFieldsData($data);
 			}
 
-			dump($data);
+//			dump($data);
 
 //			return $this->redirectToRoute('app_success');
 		}

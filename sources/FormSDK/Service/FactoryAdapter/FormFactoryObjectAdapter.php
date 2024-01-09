@@ -139,20 +139,6 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 		return $this->bGroup ? $sAttributeCode : $this->GetIdentifier() . '_' . $sAttributeCode;
 	}
 
-	public function GetLayoutDescription()
-	{
-		return [
-			'row__1' => [
-				'column__1' => [
-					'fieldset__1' => [ 'name'],
-				],
-				'column__2' => [
-					'fieldset__2' => ['mobile_phone'],
-				],
-			],
-		];
-	}
-
 	/** @inheritdoc */
 	public function GetFieldsData() : array
 	{
@@ -177,7 +163,9 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 		}
 	}
 
-	/** @inheritdoc */
+	/** @inheritdoc
+	 * @throws \Exception
+	 */
 	public function GetFieldsDescriptions() : array
 	{
 		$aFieldsDescriptions = [];
@@ -195,6 +183,16 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 			$oGroupDescriptions = new FormFieldDescription($this->GetIdentifier(), FormFieldTypeEnumeration::FIELDSET, [
 				'fields' => $aFieldsDescriptions,
 				'label' => $this->GetLabel(),
+				'layout' => [
+					'row__1' => [
+						'column__1' => [
+							'fieldset__1' => [ 'name'],
+						],
+						'column__2' => [
+							'fieldset__2' => ['mobile_phone'],
+						],
+					],
+				]
 			]);
 			return [$this->GetIdentifier() => $oGroupDescriptions];
 		}

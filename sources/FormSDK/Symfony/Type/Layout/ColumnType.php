@@ -19,11 +19,7 @@
 
 namespace Combodo\iTop\FormSDK\Symfony\Type\Layout;
 
-use Combodo\iTop\FormSDK\Field\FormFieldDescription;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Type representing a layout column;

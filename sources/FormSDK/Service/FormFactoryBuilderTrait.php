@@ -4,8 +4,6 @@ namespace Combodo\iTop\FormSDK\Service;
 
 use Combodo\iTop\FormSDK\Field\FormFieldDescription;
 use Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration;
-use Combodo\iTop\FormSDK\Service\FormFactory;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Regex;
 
 trait FormFactoryBuilderTrait
@@ -17,7 +15,8 @@ trait FormFactoryBuilderTrait
 	 * @param string $sKey
 	 * @param array $aOptions
 	 *
-	 * @return $this
+	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
+	 * @throws \Exception
 	 */
 	public function AddTextField(string $sKey, array $aOptions) : FormFactory
 	{
@@ -49,7 +48,8 @@ trait FormFactoryBuilderTrait
 	 * @param string $sKey
 	 * @param array $aOptions
 	 *
-	 * @return $this
+	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
+	 * @throws \Exception
 	 */
 	public function AddNumberField(string $sKey, array $aOptions) : FormFactory
 	{
@@ -64,7 +64,8 @@ trait FormFactoryBuilderTrait
 	 * @param string $sKey
 	 * @param array $aOptions
 	 *
-	 * @return $this
+	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
+	 * @throws \Exception
 	 */
 	public function AddAreaField(string $sKey, array $aOptions) : FormFactory
 	{
@@ -86,7 +87,8 @@ trait FormFactoryBuilderTrait
 	 * @param string $sKey
 	 * @param array $aOptions
 	 *
-	 * @return $this
+	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
+	 * @throws \Exception
 	 */
 	public function AddDateField(string $sKey, array $aOptions) : FormFactory
 	{
@@ -101,7 +103,8 @@ trait FormFactoryBuilderTrait
 	 * @param string $sKey
 	 * @param array $aOptions
 	 *
-	 * @return $this
+	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
+	 * @throws \Exception
 	 */
 	public function AddDurationField(string $sKey, array $aOptions) : FormFactory
 	{
@@ -116,7 +119,8 @@ trait FormFactoryBuilderTrait
 	 * @param string $sKey
 	 * @param array $aOptions
 	 *
-	 * @return $this
+	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
+	 * @throws \Exception
 	 */
 	public function AddSelectField(string $sKey, array $aOptions) : FormFactory
 	{
@@ -212,7 +216,8 @@ trait FormFactoryBuilderTrait
 	 * @param string $sKey
 	 * @param array $aOptions
 	 *
-	 * @return $this
+	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
+	 * @throws \Exception
 	 */
 	public function AddSwitchField(string $sKey, array $aOptions) : FormFactory
 	{
@@ -232,7 +237,8 @@ trait FormFactoryBuilderTrait
 	 * @param string $sKey
 	 * @param array $aOptions
 	 *
-	 * @return $this
+	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
+	 * @throws \Exception
 	 */
 	public function AddFieldSet(string $sKey, array $aOptions) : FormFactory
 	{

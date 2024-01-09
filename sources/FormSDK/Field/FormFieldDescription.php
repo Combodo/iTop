@@ -36,6 +36,8 @@ class FormFieldDescription
 	 * @param string $sName
 	 * @param FormFieldTypeEnumeration $oType
 	 * @param array $aOptions
+	 *
+	 * @throws \Exception
 	 */
 	public function __construct(
 		private readonly string $sName,

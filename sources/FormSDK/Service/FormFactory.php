@@ -19,19 +19,11 @@
 
 namespace Combodo\iTop\FormSDK\Service;
 
-use Combodo\iTop\FormSDK\Service\FormFactoryBuilderTrait;
 use Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryObjectAdapter;
 use Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface;
 use Combodo\iTop\FormSDK\Symfony\SymfonyBridge;
-use Combodo\iTop\FormSDK\Field\FormFieldDescription;
-use Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration;
 use DBObject;
-use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\Regex;
-use utils;
 
 /**
  * Form factory.
@@ -52,8 +44,8 @@ class FormFactory
 	/** @var mixed $oFieldsData form data */
 	private mixed $oFieldsData = [];
 
-	/** @var array $aLayoutDecription description of the layout */
-	private array $aLayoutDecription;
+	/** @var array $aLayoutDescription description of the layout */
+	private array $aLayoutDescription = [];
 
 	/** builder */
 	use FormFactoryBuilderTrait;
@@ -65,8 +57,8 @@ class FormFactory
 	 * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $oRouter
 	 */
 	public function __construct(
-		private SymfonyBridge $oSymfonyBridge,
-		private UrlGeneratorInterface $oRouter
+		private readonly SymfonyBridge $oSymfonyBridge,
+		private readonly UrlGeneratorInterface $oRouter
 	)
 	{
 
@@ -82,10 +74,14 @@ class FormFactory
 		// prepare data
 		$aResult = $this->aFieldsDescriptions;
 
-
 		// merge each adapter data...
 		foreach ($this->GetAllAdapters() as $oAdapter){
-			$aResult = array_merge($aResult, $oAdapter->GetFieldsDescriptions());
+			try{
+				$aResult = array_merge($aResult, $oAdapter->GetFieldsDescriptions());
+			}
+			catch(Exception $e){
+				ExceptionLog::LogException($e);
+			}
 		}
 
 		return $aResult;
@@ -98,7 +94,7 @@ class FormFactory
 	 */
 	public function GetLayoutDescription() : array
 	{
-		return $this->aLayoutDecription;
+		return $this->aLayoutDescription;
 	}
 
 	/**
@@ -147,13 +143,15 @@ class FormFactory
 	 *
 	 * @return $this
 	 */
-	public function SetLayoutDescription(array $aLayoutDescription)
+	public function SetLayoutDescription(array $aLayoutDescription) : FormFactory
 	{
-		$this->aLayoutDecription = $aLayoutDescription;
+		$this->aLayoutDescription = $aLayoutDescription;
 		return $this;
 	}
 
 	/**
+	 * Set form data.
+	 *
 	 * @param mixed $oData
 	 *
 	 * @return void
@@ -164,6 +162,8 @@ class FormFactory
 	}
 
 	/***
+	 * Get form data.
+	 *
 	 * @return array
 	 */
 	public function GetData() : mixed
