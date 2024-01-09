@@ -29,6 +29,7 @@
 	background-position-x: right;
 	background-position-y: bottom;
 	background: linear-gradient( to right bottom, rgb(248 242 251) 50%, rgb(241 187 255) );
+	padding-bottom: 200px;
 }
 .container-flower fieldset{
 	position: relative;

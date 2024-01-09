@@ -15,21 +15,32 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class FormHelper
 {
-	static private int $PERSON_COUNT = 1;
 
 	static private array $MODES_DEFINITIONS = [
 		0 => [
 			'group' => false,
-			'layout' => false
+			'layout' => false,
+			'object_only' => false,
+			'object_count' => 5
 		],
 		1 => [
 			'group' => true,
-			'layout' => false
+			'layout' => false,
+			'object_only' => false,
+			'object_count' => 5
 		],
 		2 => [
 			'group' => true,
-			'layout' => true
+			'layout' => true,
+			'object_only' => false,
+			'object_count' => 5
 		],
+		3 => [
+			'group' => true,
+			'layout' => false,
+			'object_only' => true,
+			'object_count' => 1
+		]
 	];
 
 	/**
@@ -66,7 +77,7 @@ class FormHelper
 		$oFormFactory->SetData($aData);
 
 		// add X person forms...
-		for($i = 0 ; $i < self::$PERSON_COUNT ; $i++){
+		for($i = 0 ; $i < self::$MODES_DEFINITIONS[$iMode]['object_count'] ; $i++){
 
 			// retrieve person
 			$oPerson = MetaModel::GetObject('Person', $i+1);
@@ -77,136 +88,144 @@ class FormHelper
 			$oObjectPlugin->AddAttribute('mobile_phone');
 		}
 
-		// city - text
-		$oFormFactory->AddTextField('city', [
-			'label' => 'Ma ville',
-			'help' => 'This is where you live',
-			'constraints' => new Length(['min' => 3])
-		]);
+		if(!self::$MODES_DEFINITIONS[$iMode]['object_only']) {
 
-		// tel - text with pattern
-		$oFormFactory->AddTextField('tel', [
-			'label' => 'Tel',
-			'constraints' => new Regex(['pattern' => '/\+33\(\d\) \d\d \d\d \d\d \d\d/'], null, '+{33}(0) 00 00 00 00'),
-			'required' => false
-		]);
+			// city - text
+			$oFormFactory->AddTextField('city', [
+				'label'       => 'Ma ville',
+				'help'        => 'This is where you live',
+				'constraints' => new Length(['min' => 3])
+			]);
 
-		// birthday - date
-		$oFormFactory->AddDateField('birthday', [
-			'label' => 'Anniversaire',
-			'widget' => 'single_text',
-			'required' => false
-		]);
+			// tel - text with pattern
+			$oFormFactory->AddTextField('tel', [
+				'label'       => 'Tel',
+				'constraints' => new Regex(['pattern' => '/\+33\(\d\) \d\d \d\d \d\d \d\d/'], null, '+{33}(0) 00 00 00 00'),
+				'required'    => false
+			]);
 
-		// count - number
-		$oFormFactory->AddNumberField('count', [
-			'label' => 'Compteur',
-			'required' => false
-		]);
+			// birthday - date
+			$oFormFactory->AddDateField('birthday', [
+				'label'    => 'Anniversaire',
+				'widget'   => 'single_text',
+				'required' => false
+			]);
 
-		// counts - fieldset
-		$oCount1 = new FormFieldDescription('count1', FormFieldTypeEnumeration::NUMBER, []);
-		$oCount2 = new FormFieldDescription('count2', FormFieldTypeEnumeration::NUMBER, []);
-		$oCount3 = new FormFieldDescription('count3', FormFieldTypeEnumeration::NUMBER, []);
-		$oFormFactory->AddFieldSet('counts', [
-			'label' => 'Compteurs',
-			'required' => false,
-			'fields' => [
-				$oCount1, $oCount2, $oCount3
-			]
-		]);
+			// count - number
+			$oFormFactory->AddNumberField('count', [
+				'label'    => 'Compteur',
+				'required' => false
+			]);
 
-		// counts - fieldset alternative
-		$oCount1 = new FormFieldDescription('count1', FormFieldTypeEnumeration::NUMBER, []);
-		$oCount2 = new FormFieldDescription('count2', FormFieldTypeEnumeration::NUMBER, []);
-		$oCount3 = new FormFieldDescription('count3', FormFieldTypeEnumeration::NUMBER, []);
-		$oFormFactory->AddFieldSet('counts2', [
-			'label' => 'Compteurs',
-			'required' => false,
-			'fields' => [
-				$oCount1, $oCount2, $oCount3 // OR $oData
-			]
-		]);
+			// counts - fieldset
+			$oCount1 = new FormFieldDescription('count1', FormFieldTypeEnumeration::NUMBER, []);
+			$oCount2 = new FormFieldDescription('count2', FormFieldTypeEnumeration::NUMBER, []);
+			$oCount3 = new FormFieldDescription('count3', FormFieldTypeEnumeration::NUMBER, []);
+			$oFormFactory->AddFieldSet('counts', [
+				'label'    => 'Compteurs',
+				'required' => false,
+				'fields'   => [
+					$oCount1,
+					$oCount2,
+					$oCount3
+				]
+			]);
 
-		// interval - duration
-		$oFormFactory->AddDurationField('interval', [
-			'label' => 'Fréquence',
-			'input' => 'array',
-			'with_minutes' => true,
-			'with_seconds' => true,
-			'with_weeks' => true,
-			'with_days' => false,
-			'attr' => [
-				'class' => 'form_interval_horizontal'
-			]
-		]);
+			// counts - fieldset alternative
+			$oCount1 = new FormFieldDescription('count1', FormFieldTypeEnumeration::NUMBER, []);
+			$oCount2 = new FormFieldDescription('count2', FormFieldTypeEnumeration::NUMBER, []);
+			$oCount3 = new FormFieldDescription('count3', FormFieldTypeEnumeration::NUMBER, []);
+			$oFormFactory->AddFieldSet('counts2', [
+				'label'    => 'Compteurs',
+				'required' => false,
+				'fields'   => [
+					$oCount1,
+					$oCount2,
+					$oCount3 // OR $oData
+				]
+			]);
 
-		// ready
-		$oFormFactory->AddSwitchField('notify', [
-			'label' => 'Veuillez m\'avertir en cas de changement',
-		]);
+			// interval - duration
+			$oFormFactory->AddDurationField('interval', [
+				'label'        => 'Fréquence',
+				'input'        => 'array',
+				'with_minutes' => true,
+				'with_seconds' => true,
+				'with_weeks'   => true,
+				'with_days'    => false,
+				'attr'         => [
+					'class' => 'form_interval_horizontal'
+				]
+			]);
 
-		// blog - date
-		$oFormFactory->AddAreaField('blog', [
-			'label' => 'Blog',
-			'required' => false
-		]);
+			// ready
+			$oFormFactory->AddSwitchField('notify', [
+				'label' => 'Veuillez m\'avertir en cas de changement',
+			]);
 
-		// language - select with static data
-		$oFormFactory->AddSelectField('language', [
-			'label' => 'Ma langue',
-			'choices' => SelectDataProvider::GetApplicationLanguages()
-		]);
+			// blog - date
+			$oFormFactory->AddAreaField('blog', [
+				'label'    => 'Blog',
+				'required' => false
+			]);
 
-		// dog - select with ajax API
-		$oFormFactory->AddSelectAjaxField('dog', [
-			'label' => 'Mon Chien',
-			'placeholder' => 'Sélectionnez un chien',
-			'required' => false,
+			// language - select with static data
+			$oFormFactory->AddSelectField('language', [
+				'label'   => 'Ma langue',
+				'choices' => SelectDataProvider::GetApplicationLanguages()
+			]);
 
-		], [
-			'url' => 'http://localhost' . $oRouter->generate('formSDK_ajax_select'),
-			'query_parameter' => 'query',
-			'value_field' => 'breed',
-			'label_field' => 'breed',
-			'search_field' => 'breed',
-			'threshold' => 20,
-			'max_items' => 1
-		]);
+			// dog - select with ajax API
+			$oFormFactory->AddSelectAjaxField('dog', [
+				'label'       => 'Mon Chien',
+				'placeholder' => 'Sélectionnez un chien',
+				'required'    => false,
 
-		// friends - select with  OQL
-		$oFormFactory->AddSelectOqlField('friends', [
-			'label' => 'Ma personne',
-			'required' => false
-		], 'Person', 'SELECT Person', [], '', 20);
+			], [
+				'url'             => 'http://localhost'.$oRouter->generate('formSDK_ajax_select'),
+				'query_parameter' => 'query',
+				'value_field'     => 'breed',
+				'label_field'     => 'breed',
+				'search_field'    => 'breed',
+				'threshold'       => 20,
+				'max_items'       => 1
+			]);
 
-		// requests - select with  OQL
-		$oFormFactory->AddSelectOqlField('requests', [
-			'label' => 'Tickets',
-			'required' => false
-		], 'UserRequest', 'SELECT UserRequest', [], '', 20);
+			// friends - select with  OQL
+			$oFormFactory->AddSelectOqlField('friends', [
+				'label'    => 'Ma personne',
+				'required' => false
+			], 'Person', 'SELECT Person', [], '', 20);
 
-		// mode - select with static data
-		$oFormFactory->AddSelectField('mode', [
-			'label' => 'Mon mode',
-			'choices' => SelectDataProvider::GetModes(),
-			'expanded' => true,
-			'multiple' => false,
-			'label_attr' => [
-				'class' => 'radio-inline'
-			]
-		]);
+			// requests - select with  OQL
+			$oFormFactory->AddSelectOqlField('requests', [
+				'label'    => 'Tickets',
+				'required' => false
+			], 'UserRequest', 'SELECT UserRequest', [], '', 20);
 
-		// options - select with static data
-		$oFormFactory->AddSelectField('options', [
-			'label' => 'Mes options',
-			'choices' => SelectDataProvider::GetOptions(),
-			'expanded' => true,
-			'multiple' => true,
-			'label_attr' => [
-				'class' => 'checkbox-inline'
-			]
-		]);
+			// mode - select with static data
+			$oFormFactory->AddSelectField('mode', [
+				'label'      => 'Mon mode',
+				'choices'    => SelectDataProvider::GetModes(),
+				'expanded'   => true,
+				'multiple'   => false,
+				'label_attr' => [
+					'class' => 'radio-inline'
+				]
+			]);
+
+			// options - select with static data
+			$oFormFactory->AddSelectField('options', [
+				'label'      => 'Mes options',
+				'choices'    => SelectDataProvider::GetOptions(),
+				'expanded'   => true,
+				'multiple'   => true,
+				'label_attr' => [
+					'class' => 'checkbox-inline'
+				]
+			]);
+
+		}
 
 		if(self::$MODES_DEFINITIONS[$iMode]['layout']){
 

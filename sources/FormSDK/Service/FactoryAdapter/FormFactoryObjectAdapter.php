@@ -182,7 +182,6 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 		if($this->bGroup){
 			$oGroupDescriptions = new FormFieldDescription($this->GetIdentifier(), FormFieldTypeEnumeration::FIELDSET, [
 				'fields' => $aFieldsDescriptions,
-				'label' => $this->GetLabel(),
 				'layout' => [
 					'row__1' => [
 						'column__1' => [
