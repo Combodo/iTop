@@ -248,7 +248,7 @@ abstract class ModuleInstallerAPI
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 *
-	 * @since 3.2.0 Add parameter $bIgnoreExistingDstColumn
+	 * @since 3.2.0 N°7130 Add parameter $bIgnoreExistingDstColumn
 	 */
 	public static function MoveColumnInDB($sOrigTable, $sOrigColumn, $sDstTable, $sDstColumn, $bIgnoreExistingDstColumn = false)
 	{
