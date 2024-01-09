@@ -14,6 +14,7 @@
 	cursor: pointer;
 	padding: 0px 5px;
 	border-radius: 8px;
+	font-size: 0.9rem;
 }
 .form-type-pictograms i{
 	width: 15px;
@@ -29,6 +30,13 @@
 	position: relative;
 	top: -10px;
 	padding: 2px;
+}
+
+/* form label */
+.form-label.required:after{
+	content: '*';
+	color: #e63535;
+	margin-left: 3px;
 }
 
 /* form object row */

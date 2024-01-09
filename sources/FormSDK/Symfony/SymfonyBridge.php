@@ -34,6 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
@@ -41,7 +42,7 @@ use Symfony\Component\Form\FormInterface;
  * Symfony implementation bridge.
  *
  * @package FormSDK
- * @since 3.2.0
+ * @since 3.X.0
  */
 class SymfonyBridge
 {
@@ -139,6 +140,13 @@ class SymfonyBridge
 		}
 	}
 
+	/**
+	 * Transform fieldset options.
+	 *
+	 * @param array $aOptions
+	 *
+	 * @return void
+	 */
 	private function TransformFieldsetOptions(array &$aOptions){
 
 		$aFields = [];
@@ -149,6 +157,13 @@ class SymfonyBridge
 		$aOptions['fields'] = $aFields;
 	}
 
+	/**
+	 * Transform collection options.
+	 *
+	 * @param array $aOptions
+	 *
+	 * @return void
+	 */
 	private function TransformCollectionOptions(array &$aOptions){
 
 		$aOptions['entry_type'] = FieldsetType::class;
@@ -166,7 +181,7 @@ class SymfonyBridge
 	 * @param array $aDescriptions
 	 * @param mixed $oData
 	 * @param string|null $sName
-	 * @param array|null $aLayout
+	 * @param array $aLayout
 	 *
 	 * @return \Symfony\Component\Form\FormInterface
 	 */
@@ -226,17 +241,22 @@ class SymfonyBridge
 	}
 
 	/**
-	 * @param $aLayout
-	 * @param $oFormBuilder
-	 * @param array $aDescriptions
+	 * Parse layout description and create layout container types to group fields.
+	 * Note: fields grouped in layout types are removed from descriptions array.
 	 *
-	 * @return array
+	 * @param array $aLayout layout description
+	 * @param \Symfony\Component\Form\FormBuilderInterface $oFormBuilder Symfony form builder
+	 * @param array $aDescriptions array of descriptions
+	 *
+	 * @return array created layout types
 	 */
-	private function CreateLayoutTypes($aLayout, $oFormBuilder, array &$aDescriptions){
-
+	private function CreateLayoutTypes(array $aLayout, FormBuilderInterface $oFormBuilder, array &$aDescriptions) : array
+	{
+		// variables
 		$aResult = [];
 		$sClasses = '';
 
+		// scan layout...
 		foreach ($aLayout as $sKey => $oLayoutElement)
 		{
 			if($sKey === 'css_classes'){
@@ -265,13 +285,24 @@ class SymfonyBridge
 		];
 	}
 
-	private function CreateLayoutContainerType($oLayoutElement, $oFormBuilder, $sKey, $oType, &$aDescriptions)
+	/**
+	 * Create a layout container type.
+	 *
+	 * @param array $aLayout layout description
+	 * @param \Symfony\Component\Form\FormBuilderInterface $oFormBuilder Symfony form builder
+	 * @param string $sKey type declaration key
+	 * @param string $sTypeClassName type class name
+	 * @param array $aDescriptions child fields
+	 *
+	 * @return array created layout type
+	 */
+	private function CreateLayoutContainerType(array $aLayout, FormBuilderInterface $oFormBuilder, string $sKey, string $sTypeClassName, array &$aDescriptions) : array
 	{
-		['types' => $aItems, 'css_classes' => $sCssClasses] = $this->CreateLayoutTypes($oLayoutElement, $oFormBuilder, $aDescriptions);
+		['types' => $aItems, 'css_classes' => $sCssClasses] = $this->CreateLayoutTypes($aLayout, $oFormBuilder, $aDescriptions);
 
 		return [
 			'name' => $sKey,
-			'type' => $oType,
+			'type' => $sTypeClassName,
 			'options' => [
 				'fields' => $aItems,
 				'attr' => [
@@ -281,6 +312,5 @@ class SymfonyBridge
 			],
 		];
 	}
-
 
 }

@@ -31,13 +31,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * Build and manipulate forms.
  *
  * @package FormSDK
- * @since 3.2.0
+ * @since 3.X.0
  */
-class FormFactory
+final class FormFactory
 {
-	/** @var \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface[] $aAdapters  */
-	private array $aAdapters = [];
-
 	/** @var array $aFieldsDescriptions form types descriptions */
 	private array $aFieldsDescriptions = [];
 
@@ -47,7 +44,10 @@ class FormFactory
 	/** @var array $aLayoutDescription description of the layout */
 	private array $aLayoutDescription = [];
 
-	/** builder */
+	/** @var \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface[] $aAdapters list of adapters */
+	private array $aAdapters = [];
+
+	/** description builder */
 	use FormFactoryBuilderTrait;
 
 	/**
@@ -76,77 +76,10 @@ class FormFactory
 
 		// merge each adapter data...
 		foreach ($this->GetAllAdapters() as $oAdapter){
-			try{
-				$aResult = array_merge($aResult, $oAdapter->GetFieldsDescriptions());
-			}
-			catch(Exception $e){
-				ExceptionLog::LogException($e);
-			}
+			$aResult = array_merge($aResult, $oAdapter->GetFieldsDescriptions());
 		}
 
 		return $aResult;
-	}
-
-	/**
-	 * Return layout description.
-	 *
-	 * @return array
-	 */
-	public function GetLayoutDescription() : array
-	{
-		return $this->aLayoutDescription;
-	}
-
-	/**
-	 * Create an object adapter.
-	 *
-	 * @param \DBObject $oDBObject
-	 * @param bool $bGroup
-	 *
-	 * @return \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryObjectAdapter
-	 */
-	public function CreateObjectAdapter(DBObject $oDBObject, bool $bGroup = true) : FormFactoryObjectAdapter
-	{
-		$oObjectBuilder = new FormFactoryObjectAdapter($oDBObject, $bGroup);
-		$this->AddAdapter(get_class($oDBObject) . '_' . $oDBObject->GetKey(), $oObjectBuilder);
-		return $oObjectBuilder;
-	}
-
-	/**
-	 * Add an adapter.
-	 *
-	 * @param string $sKey
-	 * @param \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface $oAdapter
-	 *
-	 * @return $this
-	 */
-	public function AddAdapter(string $sKey, FormFactoryAdapterInterface $oAdapter) : FormFactory
-	{
-		$this->aAdapters[$sKey] = $oAdapter;
-		return $this;
-	}
-
-	/**
-	 * Get all adapters.
-	 *
-	 * @return \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface[]
-	 */
-	public function GetAllAdapters() : array
-	{
-		return $this->aAdapters;
-	}
-
-	/**
-	 * Set layout description.
-	 *
-	 * @param array $aLayoutDescription
-	 *
-	 * @return $this
-	 */
-	public function SetLayoutDescription(array $aLayoutDescription) : FormFactory
-	{
-		$this->aLayoutDescription = $aLayoutDescription;
-		return $this;
 	}
 
 	/**
@@ -175,6 +108,68 @@ class FormFactory
 		}
 
 		return $aData;
+	}
+
+	/**
+	 * Set layout description.
+	 *
+	 * @param array $aLayoutDescription
+	 *
+	 * @return $this
+	 */
+	public function SetLayoutDescription(array $aLayoutDescription) : FormFactory
+	{
+		$this->aLayoutDescription = $aLayoutDescription;
+		return $this;
+	}
+
+	/**
+	 * Return layout description.
+	 *
+	 * @return array
+	 */
+	public function GetLayoutDescription() : array
+	{
+		return $this->aLayoutDescription;
+	}
+
+	/**
+	 * Add an adapter.
+	 *
+	 * @param string $sKey
+	 * @param \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface $oAdapter
+	 *
+	 * @return $this
+	 */
+	public function AddAdapter(string $sKey, FormFactoryAdapterInterface $oAdapter) : FormFactory
+	{
+		$this->aAdapters[$sKey] = $oAdapter;
+		return $this;
+	}
+
+	/**
+	 * Get all adapters.
+	 *
+	 * @return \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface[]
+	 */
+	public function GetAllAdapters() : array
+	{
+		return $this->aAdapters;
+	}
+
+	/**
+	 * Create an object adapter.
+	 *
+	 * @param \DBObject $oDBObject
+	 * @param bool $bGroup
+	 *
+	 * @return \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryObjectAdapter
+	 */
+	public function CreateObjectAdapter(DBObject $oDBObject, bool $bGroup = true) : FormFactoryObjectAdapter
+	{
+		$oObjectBuilder = new FormFactoryObjectAdapter($oDBObject, $bGroup);
+		$this->AddAdapter(get_class($oDBObject) . '_' . $oDBObject->GetKey(), $oObjectBuilder);
+		return $oObjectBuilder;
 	}
 
 	/**

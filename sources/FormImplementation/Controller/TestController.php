@@ -18,16 +18,15 @@ use Symfony\Component\Routing\RouterInterface;
 class TestController extends AbstractAppController
 {
 
+	/**
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
 	#[Route('/formSDK/test_form/{mode}', name: 'formSDK_test_form')]
 	public function form(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter, int $mode): Response
 	{
 		// create factory
-		try{
-			$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter, $mode);
-		}
-		catch (Exception $e) {
-			throw $this->createNotFoundException('unable to create sample form factory', $e);
-		}
+		$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter, $mode);
 
 		// get the form
 		$oForm = $oFactory->CreateForm();
@@ -46,9 +45,7 @@ class TestController extends AbstractAppController
 				$oAdapter->UpdateFieldsData($data);
 			}
 
-//			dump($data);
-
-//			return $this->redirectToRoute('app_success');
+			return $this->redirectToRoute('app_success');
 		}
 
 		// render view
@@ -59,16 +56,15 @@ class TestController extends AbstractAppController
 
 	}
 
-	#[Route('/formSDK/test_theme', name: 'formSDK_test_theme')]
-	public function theme(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter): Response
+	/**
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	#[Route('/formSDK/test_theme/{mode}', name: 'formSDK_test_theme')]
+	public function theme(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter, int $mode): Response
 	{
 		// create factory
-		try{
-			$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter);
-		}
-		catch (Exception $e) {
-			throw $this->createNotFoundException('unable to create sample form factory');
-		}
+		$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter, $mode);
 
 		// get the forms (named instances)
 		$oForm1 = $oFactory->CreateForm('form1');

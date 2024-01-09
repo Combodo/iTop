@@ -28,7 +28,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * This service allow you to manage forms.
  *
  * @package FormSDK
- * @since 3.2.0
+ * @since 3.X.0
  */
 final class FormManager
 {

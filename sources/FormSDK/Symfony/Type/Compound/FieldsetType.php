@@ -29,7 +29,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Type representing a fieldset;
  *
  * @package FormSDK
- * @since 3.2.0
+ * @since 3.X.0
  */
 class FieldsetType extends AbstractType
 {

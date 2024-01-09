@@ -23,10 +23,11 @@ namespace Combodo\iTop\FormSDK\Service\FactoryAdapter;
  * Form factory adapter interface.
  *
  * @package FormSDK
- * @since 3.2.0
+ * @since 3.X.0
  */
 interface FormFactoryAdapterInterface
 {
+
 	/**
 	 * Return adapter identifier.
 	 *
@@ -56,6 +57,5 @@ interface FormFactoryAdapterInterface
 	 * @return bool
 	 */
 	public function UpdateFieldsData(array $aFormData) : bool;
-
 
 }

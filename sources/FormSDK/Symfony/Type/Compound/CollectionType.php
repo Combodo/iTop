@@ -32,7 +32,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Type representing a collection;
  *
  * @package FormSDK
- * @since 3.2.0
+ * @since 3.X.0
  */
 class CollectionType extends AbstractType
 {

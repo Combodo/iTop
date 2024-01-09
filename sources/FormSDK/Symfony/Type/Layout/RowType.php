@@ -25,7 +25,7 @@ use Symfony\Component\Form\AbstractType;
  * Type representing a layout row;
  *
  * @package FormSDK
- * @since 3.2.0
+ * @since 3.X.0
  */
 class RowType extends AbstractType
 {

@@ -23,16 +23,16 @@ namespace Combodo\iTop\FormSDK\Field;
  * Types of fields.
  *
  * @package FormSDK
- * @since 3.2.0
+ * @since 3.X.0
  */
 enum FormFieldTypeEnumeration
 {
 	case TEXT;
-	case NUMBER;
 	case AREA;
+	case SWITCH;
+	case NUMBER;
 	case DATE;
 	case SELECT;
-	case SWITCH;
 	case DURATION;
 	case FIELDSET;
 	case COLLECTION;
@@ -45,7 +45,7 @@ enum FormFieldTypeEnumeration
 	public function GetAvailableOptions() : array
 	{
 		// global options
-		$aOptions = ['required', 'disabled', 'attr', 'label', 'label_attr', 'help', 'inherit_data'];
+		$aOptions = ['required', 'disabled', 'attr', 'label', 'label_attr', 'help'];
 
 		// specific options
 		return  match ($this) {

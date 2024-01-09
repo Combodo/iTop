@@ -29,7 +29,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Type representing an abstract layout type;
  *
  * @package FormSDK
- * @since 3.2.0
+ * @since 3.X.0
  */
 class LayoutType extends AbstractType
 {

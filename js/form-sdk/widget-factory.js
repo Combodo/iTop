@@ -21,13 +21,13 @@ const iTopFormWidgetFactory = new function(){
 			AREA: {name: 'AreaWidget', builder: CreateAreaWidget}
 		}
 
-		// instanciate widgets...
+		// instantiate widgets...
 		for (const widgetsKey in WIDGETS) {
 
 			// widget configuration
 			const aWidgetConfiguration = WIDGETS[widgetsKey];
 
-			// instanciate widget
+			// instantiate widget
 			$(`[data-widget="${aWidgetConfiguration.name}"]`).each(function (e) {
 				const oElement = $(this);
 				if (!oElement.data('widget-state-initialized')) {
@@ -119,6 +119,7 @@ const iTopFormWidgetFactory = new function(){
 			maxItems: aOptions['max_items'],
 			preload: aOptions['preload'],
 			plugins: aPlugins,
+			loadThrottle: 200,
 			load: function(query, callback) {
 				let sUrl = aOptions['url'];
 				if(!sUrl.includes('?')){

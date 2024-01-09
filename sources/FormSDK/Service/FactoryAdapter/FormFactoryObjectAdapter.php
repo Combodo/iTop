@@ -32,7 +32,7 @@ use MetaModel;
  * Form manipulation for DBObject.
  *
  * @package FormSDK
- * @since 3.2.0
+ * @since 3.X.0
  */
 final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 {

@@ -1,4 +1,21 @@
 <?php
+/*
+ * Copyright (C) 2013-2023 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 namespace Combodo\iTop\FormSDK\Service;
 
@@ -6,6 +23,13 @@ use Combodo\iTop\FormSDK\Field\FormFieldDescription;
 use Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration;
 use Symfony\Component\Validator\Constraints\Regex;
 
+/**
+ * Form factory builder.
+ *
+ *
+ * @package FormSDK
+ * @since 3.X.0
+ */
 trait FormFactoryBuilderTrait
 {
 
@@ -138,6 +162,7 @@ trait FormFactoryBuilderTrait
 	 * @param array $aAjaxData
 	 *
 	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
+	 * @throws \Exception
 	 */
 	public function AddSelectAjaxField(string $sKey, array $aOptions, array $aAjaxOptions, array $aAjaxData = []) : FormFactory
 	{
@@ -180,22 +205,22 @@ trait FormFactoryBuilderTrait
 	/**
 	 * Add dynamic OQL select field.
 	 *
-	 * @param string $sKey
-	 * @param array $aOptions
-	 * @param string $sObjectClass
-	 * @param string $sOql
-	 * @param array $aFieldsToLoad
-	 * @param string $sSearch
-	 * @param int $iAjaxThershold
+	 * @param string $sKey field key
+	 * @param array $aOptions array of field options
+	 * @param string $sObjectClass class the query should return
+	 * @param string $sOql OQL query
+	 * @param array $aAttributesToLoad class attributes to load
+	 * @param string $sSearch search string
+	 * @param int $iAjaxThreshold threshold for select ajax activation
 	 *
 	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
 	 */
-	public function AddSelectOqlField(string $sKey, array $aOptions, string $sObjectClass, string $sOql, array $aFieldsToLoad, string $sSearch, int $iAjaxThershold) : FormFactory
+	public function AddSelectOqlField(string $sKey, array $aOptions, string $sObjectClass, string $sOql, array $aAttributesToLoad, string $sSearch, int $iAjaxThreshold) : FormFactory
 	{
 		$aAjaxData = [
 			'class' => $sObjectClass,
 			'oql' => $sOql,
-			'fields' => '{'.implode($aFieldsToLoad).'}',
+			'fields' => '{'.implode($aAttributesToLoad).'}',
 		];
 		$sUrl = 'http://localhost' . $this->oRouter->generate('formSDK_object_search') . '?' . http_build_query($aAjaxData);
 		$aAjaxOptions = [
@@ -204,7 +229,7 @@ trait FormFactoryBuilderTrait
 			'value_field' => 'key',
 			'label_field' => 'friendlyname',
 			'search_field' => 'friendlyname',
-			'threshold' => $iAjaxThershold,
+			'threshold' => $iAjaxThreshold,
 			'configuration' => 'OQL'
 		];
 		return $this->AddSelectAjaxField($sKey, $aOptions, $aAjaxOptions, $aAjaxData);

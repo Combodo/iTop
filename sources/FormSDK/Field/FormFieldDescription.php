@@ -25,7 +25,7 @@ use Exception;
  * Description of a form field.
  *
  * @package FormSDK
- * @since 3.2.0
+ * @since 3.X.0
  */
 class FormFieldDescription
 {
@@ -37,7 +37,7 @@ class FormFieldDescription
 	 * @param FormFieldTypeEnumeration $oType
 	 * @param array $aOptions
 	 *
-	 * @throws \Exception
+	 * @throws \Exception throw an exception when invalid options are provided
 	 */
 	public function __construct(
 		private readonly string $sName,
@@ -45,8 +45,8 @@ class FormFieldDescription
 		private readonly array $aOptions
 	)
 	{
+		// check options
 		$oCheckStatus = $this->oType->CheckOptions($this->aOptions);
-
 		if(!$oCheckStatus['valid']){
 			$sInvalidOptions = implode(', ', $oCheckStatus['invalid_options']);
 			throw new Exception("Invalid option(s) $sInvalidOptions provided for field $sName");
