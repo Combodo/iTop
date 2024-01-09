@@ -479,6 +479,41 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 ));
 
 //
+// Class: EventiTopNotification
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:EventiTopNotification' => ITOP_APPLICATION_SHORT.' 通知',
+	'Class:EventiTopNotification+' => '',
+	'Class:EventiTopNotification/Attribute:title' => '标题',
+	'Class:EventiTopNotification/Attribute:title+' => '',
+	'Class:EventiTopNotification/Attribute:icon' => 'Icon',
+	'Class:EventiTopNotification/Attribute:icon+' => '',
+	'Class:EventiTopNotification/Attribute:priority' => '优先级',
+	'Class:EventiTopNotification/Attribute:priority+' => '优先级',
+	'Class:EventiTopNotification/Attribute:priority/Value:1' => '关键',
+	'Class:EventiTopNotification/Attribute:priority/Value:1+' => '关键',
+	'Class:EventiTopNotification/Attribute:priority/Value:2' => '紧急',
+	'Class:EventiTopNotification/Attribute:priority/Value:2+' => '紧急',
+	'Class:EventiTopNotification/Attribute:priority/Value:3' => '重要',
+	'Class:EventiTopNotification/Attribute:priority/Value:3+' => '重要',
+	'Class:EventiTopNotification/Attribute:priority/Value:4' => '标准',
+	'Class:EventiTopNotification/Attribute:priority/Value:4+' => '标准',
+	'Class:EventiTopNotification/Attribute:url' => 'URL',
+	'Class:EventiTopNotification/Attribute:url+' => '',
+	'Class:EventiTopNotification/Attribute:read' => '读取',
+	'Class:EventiTopNotification/Attribute:read+' => '',
+	'Class:EventiTopNotification/Attribute:read/Value:no' => '否',
+	'Class:EventiTopNotification/Attribute:read/Value:no+' => '否',
+	'Class:EventiTopNotification/Attribute:read/Value:yes' => '是',
+	'Class:EventiTopNotification/Attribute:read/Value:yes+' => '是',
+	'Class:EventiTopNotification/Attribute:read_date' => '读取日期',
+	'Class:EventiTopNotification/Attribute:read_date+' => '',
+	'Class:EventiTopNotification/Attribute:contact_id' => '联系人',
+	'Class:EventiTopNotification/Attribute:contact_id+' => '',
+));
+
+//
 // Class: Action
 //
 
@@ -585,6 +620,39 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'ActionEmail:preview_warning' => '实际收到的邮件在客户端中可能与当前在浏览器中的预览有所不同.',
 	'ActionEmail:preview_more_info' => '若需更多不同邮件客户端支持的CSS特性信息, 请参阅%1$s',
 	'ActionEmail:content_placeholder_missing' => '标识符 "%1$s" 在HTML中不存在. 字段 "%2$s" 的内容将不会包含在生成的邮件中.',
+));
+
+//
+// Class: ActioniTopNotification
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'ActioniTopNotification:content' => '内容',
+	'ActioniTopNotification:settings' => '设置',
+	'Class:ActioniTopNotification' => ITOP_APPLICATION_SHORT.'通知',
+	'Class:ActioniTopNotification+' => '',
+	'Class:ActioniTopNotification/Attribute:language' => '语言',
+	'Class:ActioniTopNotification/Attribute:language+' => '',
+	'Class:ActioniTopNotification/Attribute:title' => '标题',
+	'Class:ActioniTopNotification/Attribute:title+' => '',
+	'Class:ActioniTopNotification/Attribute:message' => '信息',
+	'Class:ActioniTopNotification/Attribute:message+' => '',
+	'Class:ActioniTopNotification/Attribute:icon' => '图标',
+	'Class:ActioniTopNotification/Attribute:icon+' => '',
+	'Class:ActioniTopNotification/Attribute:priority' => '优先级',
+	'Class:ActioniTopNotification/Attribute:priority+' => '',
+	'Class:ActioniTopNotification/Attribute:priority/Value:1' => '关键',
+	'Class:ActioniTopNotification/Attribute:priority/Value:1+' => '关键',
+	'Class:ActioniTopNotification/Attribute:priority/Value:2' => '紧急',
+	'Class:ActioniTopNotification/Attribute:priority/Value:2+' => '紧急',
+	'Class:ActioniTopNotification/Attribute:priority/Value:3' => '重要',
+	'Class:ActioniTopNotification/Attribute:priority/Value:3+' => '重要',
+	'Class:ActioniTopNotification/Attribute:priority/Value:4' => '标准',
+	'Class:ActioniTopNotification/Attribute:priority/Value:4+' => '标准',
+	'Class:ActioniTopNotification/Attribute:recipients' => '收件人',
+	'Class:ActioniTopNotification/Attribute:recipients+' => '',
+	'Class:ActioniTopNotification/Attribute:url' => 'URL',
+	'Class:ActioniTopNotification/Attribute:url+' => '',
 ));
 
 //
