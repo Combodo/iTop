@@ -34,6 +34,7 @@ use Team;
 use User;
 use UserRights;
 use utils;
+use UserRequest;
 
 
 /**
@@ -1304,9 +1305,9 @@ class DBObjectTest extends ItopDataTestCase
 
 	/**
 	 * Data provider for test EventIssue Creation
-	 * N°3448 - Framework field size check not correctly implemented for multibytes languages/strings
 	 *
 	 * @return array data
+	 * @since 3.1.2 N°3448 - Framework field size check not correctly implemented for multi-bytes languages/strings
 	 */
 	public function getEventIssueCreation()
 	{
@@ -1339,12 +1340,13 @@ class DBObjectTest extends ItopDataTestCase
 	}
 
 	/**
-	 * Test check long field with non ascii characters
+	 * EventIssue has a OnInsert override that uses mb_strlen, so we need to test this specific case
 	 *
 	 * @covers       DBObject::DBIncrement
 	 *
 	 * @dataProvider getEventIssueCreation
 	 *
+	 * @since 3.1.2 N°3448 - Framework field size check not correctly implemented for multi-bytes languages/strings
 	 */
 	public function testEventIssueCreation(string $sIssue, string $sImpact, string $sPage, string $sMessage)
 	{
@@ -1365,44 +1367,24 @@ class DBObjectTest extends ItopDataTestCase
 		$this->assertEquals('', $bCreated);
 	}
 
+	public function CheckLongValueInAttributeProvider() {
+		// the 😎 emoji is 4 bytes long !
+		// UserRequest.title is an AttributeString
+		// UserRequest.solution is an AttributeText with format=text
 
-	/**
-	 * Data provider for test CheckValue
-	 * N°3448 - Framework field size check not correctly implemented for multibytes languages/strings
-	 *
-	 * @return array data
-	 */
-	public function getCheckLongValueAttributeStringProvider()
-	{
 		return [
-			'Description with ééé'                               => [
-				'description',
-				__DIR__.'/data-test/description_with_é_input.txt',
-				__DIR__.'/data-test/description_with_é_expected.txt',
-				__DIR__.'/data-test/description_with_é_expected2.txt',
-				true,
-			],
-			'Description with ééé - 64Ko with additional string' => [
-				'description',
-				__DIR__.'/data-test/description_with_64Ko_of_é_input.txt',
-				__DIR__.'/data-test/description_with_64Ko_of_é_expected.txt',
-				__DIR__.'/data-test/description_with_64Ko_of_é_expected2.txt',
-				true,
-			],
-			'Description with 64Ko characters,  us-ascii only'   => [
-				'description',
-				__DIR__.'/data-test/description_with_64Ko_of_ascii_characters_input.txt',
-				__DIR__.'/data-test/description_with_64Ko_of_ascii_characters_expected.txt',
-				__DIR__.'/data-test/description_with_64Ko_of_ascii_characters_expected2.txt',
-				false,
-			],
-			'Description with 64Ko of smiley'                    => [
-				'description',
-				__DIR__.'/data-test/description_with_64Ko_of_smiley_input.txt',
-				__DIR__.'/data-test/description_with_64Ko_of_smiley_expected.txt',
-				__DIR__.'/data-test/description_with_64Ko_of_smiley_expected2.txt',
-				true,
-			],
+			'title 250 chars' => ['title', '😎', 250],
+			'title 254 chars' => ['title', '😎', 254],
+			'title 255 chars' => ['title', '😎', 255],
+			'title 256 chars' => ['title', '😎', 256],
+			'title 300 chars' => ['title', '😎', 300],
+
+			'solution 250 chars' => ['solution', '😎', 250],
+			'solution 60000 chars' => ['solution', '😎', 60000],
+			'solution 65534 chars' => ['solution', '😎', 65534],
+			'solution 65535 chars' => ['solution', '😎', 65535],
+			'solution 65536 chars' => ['solution', '😎', 65536],
+			'solution 70000 chars' => ['solution', '😎', 70000],
 		];
 	}
 
@@ -1411,12 +1393,14 @@ class DBObjectTest extends ItopDataTestCase
 	 *
 	 * @covers       DBObject::DBIncrement
 	 *
-	 * @dataProvider getCheckLongValueAttributeStringProvider
+	 * @dataProvider CheckLongValueInAttributeProvider
 	 *
+	 * @since 3.1.2 N°3448 - Framework field size check not correctly implemented for multi-bytes languages/strings
 	 */
-	public function testCheckLongValueAttributeString(string $sAttrCode, string $sFileInputValue, string $sFileExpectedValue, string $sFileExpectedValue2, bool $bExpectedStatus)
+	public function testCheckLongValueInAttribute(string $sAttrCode, string $sEmojiToRepeat, int $iNumberOfEmojiRepeats)
 	{
-		// Create a UserRequest
+		$sValueToSet = str_repeat($sEmojiToRepeat, $iNumberOfEmojiRepeats);
+
 		$oTicket = MetaModel::NewObject('UserRequest', [
 			'ref'         => 'Test Ticket',
 			'title'       => 'Create OK',
@@ -1424,22 +1408,28 @@ class DBObjectTest extends ItopDataTestCase
 			'caller_id'   => 15,
 			'org_id'      => 3,
 		]);
-		$sValue = file_get_contents($sFileInputValue);
-		$oTicket->Set($sAttrCode, $sValue);
+
+		$oTicket->Set($sAttrCode, $sValueToSet);
+		$sValueInObject = $oTicket->Get($sAttrCode);
+		$this->assertSame($sValueToSet, $sValueInObject);
+
+		$oAttDef = MetaModel::GetAttributeDef(UserRequest::class, $sAttrCode);
+		$iAttrMaxSize = $oAttDef->GetMaxSize();
+		$bIsNumberOfResultsBelowAttrMaxSize = ($iNumberOfEmojiRepeats <= $iAttrMaxSize);
+		/** @noinspection PhpUnusedLocalVariableInspection */
 		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTicket->CheckToWrite();
-		$this->assertEquals($bExpectedStatus, $bCheckStatus, 'Check AttributeString value is ok');
+		$this->assertEquals($bIsNumberOfResultsBelowAttrMaxSize, $bCheckStatus, "CheckResult result:".var_export($aCheckIssues,true));
 
-		//text_to_add contains non ascii characters
-		$sTextToAdd = file_get_contents(__DIR__.'/data-test/text_to_add.txt');
-		$oTicket->SetTrim($sAttrCode, $sValue.$sTextToAdd);
-		$sExpectedAfterTrim = file_get_contents($sFileExpectedValue);
-		$this->assertEquals($sExpectedAfterTrim, $oTicket->Get($sAttrCode), 'Check AttributeString SetTrim must limit field to 255 characters');
-
-		$oTicket->SetTrim($sAttrCode, $sTextToAdd.$sValue);
-		$sExpectedAfterTrim = file_get_contents($sFileExpectedValue2);
-		$this->assertEquals($sExpectedAfterTrim, $oTicket->Get($sAttrCode), 'Check AttributeString SetTrim must limit field to 255 characters test 2');
+		$oTicket->SetTrim($sAttrCode, $sValueToSet);
+		$sValueInObject = $oTicket->Get($sAttrCode);
+		if ($bIsNumberOfResultsBelowAttrMaxSize) {
+			$this->assertEquals($sValueToSet, $sValueInObject);
+		} else {
+			$this->assertEquals($iAttrMaxSize, mb_strlen($sValueInObject));
+			$sLastCharsOfValueInObject = mb_substr($sValueInObject, -30);
+			$this->assertStringContainsString(' -truncated', $sLastCharsOfValueInObject);
+		}
 	}
-
 
 	public function SetTrimProvider()
 	{
