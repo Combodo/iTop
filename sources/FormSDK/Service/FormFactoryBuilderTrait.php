@@ -246,4 +246,20 @@ trait FormFactoryBuilderTrait
 
 		return $this;
 	}
+
+	/**
+	 * Add collection field.
+	 *
+	 * @param string $sKey
+	 * @param array $aOptions
+	 *
+	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
+	 * @throws \Exception
+	 */
+	public function AddCollectionField(string $sKey, array $aOptions) : FormFactory
+	{
+		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::COLLECTION, $aOptions);
+
+		return $this;
+	}
 }

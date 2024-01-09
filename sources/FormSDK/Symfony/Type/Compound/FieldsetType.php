@@ -34,8 +34,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class FieldsetType extends AbstractType
 {
 
-
-
 	/** @inheritdoc  */
 	public function buildForm(FormBuilderInterface $builder, array $options) : void
 	{
@@ -46,20 +44,11 @@ class FieldsetType extends AbstractType
 		}
 	}
 
-	private function handleRow(FormBuilderInterface $builder, array $aData){
-
-	}
-
-	private function handleColumn(FormBuilderInterface $builder, array $aData){
-
-	}
-
 	/** @inheritdoc  */
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
 			'fields' => [],
-			'view' => [],
 			'layout' => []
 		]);
 	}

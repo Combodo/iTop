@@ -72,7 +72,24 @@ class FormHelper
 			'notify' => true,
 			'language' => 'FR FR',
 			'mode' => '1',
-			'options' => ['0', '2','4']
+			'options' => ['0', '2', '4'],
+			'collection' => [
+				[
+					'text1' => 'Benjamin',
+					'text2' => 'DALSASS',
+					'date1' => new DateTime('1979/06/27')
+				],
+				[
+					'text1' => 'Nelly',
+					'text2' => 'DALSASS',
+					'date1' => new DateTime('1977/04/6')
+				],
+				[
+					'text1' => 'Léonard',
+					'text2' => 'BASTID',
+					'date1' => new DateTime('1975/03/16')
+				]
+			]
 		];
 		$oFormFactory->SetData($aData);
 
@@ -222,6 +239,24 @@ class FormHelper
 				'multiple'   => true,
 				'label_attr' => [
 					'class' => 'checkbox-inline'
+				]
+			]);
+
+			// options - select with static data
+			$oText1 = new FormFieldDescription('text1', FormFieldTypeEnumeration::TEXT, []);
+			$oText2 = new FormFieldDescription('text2', FormFieldTypeEnumeration::TEXT, []);
+			$oDate = new FormFieldDescription('date1', FormFieldTypeEnumeration::DATE, [
+				'widget'   => 'single_text'
+			]);
+			$oFormFactory->AddCollectionField('collection', [
+				'label'      => 'Une Collection',
+				'element_type'    => FormFieldTypeEnumeration::FIELDSET,
+				'fields_labels' => ['Prénom', 'Nom', 'Naissance'],
+				'element_options' => [
+					'fields' => [
+						'text1' => $oText1,
+						'text2' => $oText2,
+						'date1' => $oDate]
 				]
 			]);
 

@@ -17,44 +17,50 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\FormSDK\Symfony\Type\Layout;
+namespace Combodo\iTop\FormSDK\Symfony\Type\Compound;
 
 use Combodo\iTop\FormSDK\Field\FormFieldDescription;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\Util\StringUtil;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Type representing an abstract layout type;
+ * Type representing a collection;
  *
  * @package FormSDK
  * @since 3.2.0
  */
-class LayoutType extends AbstractType
+class CollectionType extends AbstractType
 {
-
-	/** @inheritdoc  */
-	public function buildForm(FormBuilderInterface $builder, array $options) : void
-	{
-		foreach ($options['fields'] as $oField){
-			$builder->add($oField['name'], $oField['type'], $oField['options']);
-		}
-	}
 
 	/** @inheritdoc  */
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'fields' => [],
-			'inherit_data' => true // this type is abstract and used for grouping
+			'fields_labels' => [],
 		]);
 	}
 
 	/** @inheritdoc  */
 	public function getParent(): string
 	{
-		return FormType::class;
+		return \Symfony\Component\Form\Extension\Core\Type\CollectionType::class;
 	}
 
+	/** @inheritdoc  */
+	public function buildView(FormView $view, FormInterface $form, array $options): void
+	{
+		// pass the form type option directly to the template
+		$view->vars['fields_labels'] = $options['fields_labels'];
+	}
+
+	/** @inheritdoc  */
+	public function getBlockPrefix()
+	{
+		return 'itop_collection';
+	}
 }

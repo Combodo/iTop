@@ -184,12 +184,8 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 				'fields' => $aFieldsDescriptions,
 				'layout' => [
 					'row__1' => [
-						'column__1' => [
-							'fieldset__1' => [ 'name'],
-						],
-						'column__2' => [
-							'fieldset__2' => ['mobile_phone'],
-						],
+						'column__1' => [ 'name'],
+						'column__2' => ['mobile_phone'],
 					],
 				]
 			]);

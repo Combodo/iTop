@@ -21,6 +21,7 @@ namespace Combodo\iTop\FormSDK\Symfony;
 
 use Combodo\iTop\FormSDK\Field\FormFieldDescription;
 use Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration;
+use Combodo\iTop\FormSDK\Symfony\Type\Compound\CollectionType;
 use Combodo\iTop\FormSDK\Symfony\Type\Compound\FieldsetType;
 use Combodo\iTop\FormSDK\Symfony\Type\Layout\ColumnType;
 use Combodo\iTop\FormSDK\Symfony\Type\Layout\RowType;
@@ -103,12 +104,7 @@ class SymfonyBridge
 
 			case FormFieldTypeEnumeration::FIELDSET:
 				$aOptions = $oFormDescription->GetOptions();
-				$aFields = [];
-				foreach ($aOptions['fields'] as $oChildFormDescription){
-					$aSymfony = $this->ToSymfonyFormType($oChildFormDescription);
-					$aFields[$oChildFormDescription->GetName()] = $aSymfony;
-				}
-				$aOptions['fields'] = $aFields;
+				$this->TransformFieldsetOptions($aOptions);
 				return [
 					'name' => $oFormDescription->GetName(),
 					'type' => FieldsetType::class,
@@ -129,9 +125,39 @@ class SymfonyBridge
 					'options' => $oFormDescription->GetOptions()
 				];
 
+			case FormFieldTypeEnumeration::COLLECTION:
+				$aOptions = $oFormDescription->GetOptions();
+				$this->TransformCollectionOptions($aOptions);
+				return [
+					'name' => $oFormDescription->GetName(),
+					'type' => CollectionType::class,
+					'options' => $aOptions
+				];
+
 			default:
 				return null;
 		}
+	}
+
+	private function TransformFieldsetOptions(array &$aOptions){
+
+		$aFields = [];
+		foreach ($aOptions['fields'] as $oChildFormDescription){
+			$aSymfony = $this->ToSymfonyFormType($oChildFormDescription);
+			$aFields[$oChildFormDescription->GetName()] = $aSymfony;
+		}
+		$aOptions['fields'] = $aFields;
+	}
+
+	private function TransformCollectionOptions(array &$aOptions){
+
+		$aOptions['entry_type'] = FieldsetType::class;
+
+		$this->TransformFieldsetOptions($aOptions['element_options']);
+		$aOptions['entry_options'] = $aOptions['element_options'];
+
+		unset($aOptions['element_options']);
+		unset($aOptions['element_type']);
 	}
 
 	/**

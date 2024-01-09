@@ -25,16 +25,17 @@ namespace Combodo\iTop\FormSDK\Field;
  * @package FormSDK
  * @since 3.2.0
  */
-enum FormFieldTypeEnumeration : string
+enum FormFieldTypeEnumeration
 {
-	case TEXT = 'TEXT';
-	case NUMBER = 'NUMBER';
-	case AREA = 'AREA';
-	case DATE = 'DATE';
-	case SELECT = 'SELECT';
-	case SWITCH = 'SWITCH';
-	case DURATION = 'DURATION';
-	case FIELDSET = 'FIELDSET';
+	case TEXT;
+	case NUMBER;
+	case AREA;
+	case DATE;
+	case SELECT;
+	case SWITCH;
+	case DURATION;
+	case FIELDSET;
+	case COLLECTION;
 
 	/**
 	 * Return available options.
@@ -62,6 +63,9 @@ enum FormFieldTypeEnumeration : string
 			),
 			FormFieldTypeEnumeration::FIELDSET => array_merge($aOptions,
 				['fields', 'layout']
+			),
+			FormFieldTypeEnumeration::COLLECTION => array_merge($aOptions,
+				['element_type', 'element_options', 'fields_labels']
 			),
 			default => $aOptions,
 		};
