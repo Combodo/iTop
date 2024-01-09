@@ -264,10 +264,10 @@ abstract class ModuleInstallerAPI
 			return;
 		}
 		
-		$bDstTableFieldExists = CMDBSource::IsTable($sDstTable);
+		$bDstTableFieldExists = CMDBSource::IsField($sDstTable, $sDstColumn);
 		if (!CMDBSource::IsTable($sDstTable) || ($bDstTableFieldExists && !$bIgnoreExistingDstColumn))
 		{
-			// Destination field is already created and we are not ignoring it
+			// Destination field is already created, and we are not ignoring it
 			return;
 		}
 
