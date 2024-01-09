@@ -93,7 +93,7 @@ class UserProvider implements ContainerAwareInterface
 		$this->oContainer->set('combodo.current_user', $oUser);
 
         // User allowed to log off or not
-        $this->oContainer->set('combodo.current_user.can_logff', utils::CanLogOff());
+        $this->oContainer->set('combodo.current_user.can_logoff', utils::CanLogOff());
 
 		// Allowed portals
 		$aAllowedPortals = UserRights::GetAllowedPortals();
