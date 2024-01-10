@@ -3218,7 +3218,7 @@ EOF
 				if ($oAttDef->GetEditClass() == 'Document')
 				{
 					$oDocument = $this->Get($sAttCode);
-					if (isset($oDocument) && !$oDocument->IsEmpty())
+					if (is_object($oDocument) && !$oDocument->IsEmpty())
 					{
 						$sDisplayValue = $this->GetAsHTML($sAttCode);
 						$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',
