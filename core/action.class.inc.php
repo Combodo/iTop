@@ -177,37 +177,51 @@ abstract class Action extends cmdbAbstractObject
 	{
 		parent::DisplayBareRelations($oPage, false);
 
-		$this->GenerateLastExecutionsTab($oPage, $bEditMode);
+		if ($oPage instanceof iTopWebPage) {
+			$this->GenerateLastExecutionsTab($oPage, $bEditMode);
+		}
 	}
 
 	/**
 	 * @since 3.2.0 N°5472 method creation
 	 */
-	protected function GenerateLastExecutionsTab(WebPage $oPage, $bEditMode)
+	protected function GenerateLastExecutionsTab(iTopWebPage $oPage, $bEditMode)
 	{
 		if ($bEditMode) {
 			return;
 		}
 
-		$oPage->SetCurrentTab('action_errors', Dict::S('Action:last_executions_tab'), Dict::S('Action:last_executions_tab+'));
-
-		$oFilter = DBObjectSearch::FromOQL(
-			$this->GetLasExecutionsTabQuery(),
-			['action_id' => $this->GetKey()]
-		);
-		$oSet = new DBObjectSet($oFilter, ['date' => false]);
-		$oExecutionsListBlock = DataTableUIBlockFactory::MakeForResult($oPage, 'action_executions_list', $oSet);
-		$oPage->AddUiBlock($oExecutionsListBlock);
+		$sActionLastExecutionsPageUrl = utils::GetAbsoluteUrlAppRoot()
+			. 'pages/ajax.render.php'
+			. '?operation=notification.action.last_execution_content'
+			. '&actionid=' . $this->GetKey();
+		$oPage->AddAjaxTab('action_errors', $sActionLastExecutionsPageUrl, false, Dict::S('Action:last_executions_tab'));
 	}
 
 	/**
+	 * @throws InvalidConfigParamException
 	 * @since 3.2.0 N°5472 method creation
 	 */
-	protected function GetLasExecutionsTabQuery(): string
+	public function GetLastExecutionsTabContent(WebPage $oPage): void
 	{
-		return <<<OQL
-SELECT EventNotification WHERE action_id = :action_id AND date > DATE_SUB(NOW(), INTERVAL 2 MONTH)
-OQL;
+		$oConfig = utils::GetConfig();
+		$sLastExecutionDaysConfigParamName = 'notifications.last_executions_days';
+		$iLastExecutionDays = $oConfig->Get($sLastExecutionDaysConfigParamName);
+
+		if (false === is_int($iLastExecutionDays)) {
+			throw new InvalidConfigParamException("Invalid value in the {$sLastExecutionDaysConfigParamName} config parameter");
+		}
+
+		$oFilter = DBObjectSearch::FromOQL(
+			'SELECT EventNotification WHERE action_id = :action_id AND date > DATE_SUB(NOW(), INTERVAL :days DAY)',
+			[
+				'action_id' => $this->GetKey(),
+				'days' => $iLastExecutionDays,
+			]
+		);
+		$oSet = new DBObjectSet($oFilter, ['date' => false]);
+		$oExecutionsListBlock = DataTableUIBlockFactory::MakeForResult($oPage, 'action_executions_list', $oSet, ['panel_title' => Dict::Format('Action:last_executions_tab_panel_title', $iLastExecutionDays)]);
+		$oPage->AddUiBlock($oExecutionsListBlock);
 	}
 }
 

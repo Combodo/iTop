@@ -2569,6 +2569,23 @@ EOF
 				$oPage = $oController->OperationModify();
 				break;
 
+
+			case 'notification.action.last_execution_content':
+				$sActionId = utils::ReadParam('actionid', null, false);
+				$sCannotLoadActionErrorMessage = 'ajax.render route ' . $operation . ' invalid actionid parameter';
+				if (is_null($sActionId)) {
+					throw new CoreUnexpectedValue($sCannotLoadActionErrorMessage);
+				}
+
+				$oAction = MetaModel::GetObject(Action::class, $sActionId, false);
+				if (is_null($oAction)) {
+					throw new CoreException($sCannotLoadActionErrorMessage);
+				}
+
+				$oPage = new NiceWebPage(Dict::S('UI:BrowseInlineImages'));
+				$oAction->GetLastExecutionsTabContent($oPage);
+				break;
+
 			default:
 				$oPage->p("Invalid query.");
 		}
