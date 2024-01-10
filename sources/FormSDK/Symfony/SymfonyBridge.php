@@ -189,16 +189,16 @@ class SymfonyBridge
 	/**
 	 * Create Symfony form.
 	 *
-	 * @param array $aDescriptions
+	 * @param array $aFieldsDescriptions
 	 * @param mixed $oData
 	 * @param string|null $sName
 	 * @param array $aLayout
 	 *
 	 * @return \Symfony\Component\Form\FormInterface
 	 */
-	public function CreateForm(array $aDescriptions, mixed $oData, ?string $sName = null, array $aLayout = []): FormInterface
+	public function CreateForm(array $aFieldsDescriptions, mixed $oData, ?string $sName = null, array $aLayout = []): FormInterface
 	{
-		// create Symfony form builder
+		// create Symfony form builder (with or without name, name is by default `form`)
 		if($sName !== null){
 			$oFormBuilder = $this->oFormFactory->createNamedBuilder($sName, FormType::class, $oData);
 		}
@@ -206,28 +206,29 @@ class SymfonyBridge
 			$oFormBuilder = $this->oFormFactory->createBuilder(FormType::class, $oData);
 		}
 
-		// transform fields descriptions...
+		// transform fields descriptions to Symfony types...
 		$aSymfonyTypesDeclaration = [];
-		foreach ($aDescriptions as $sKey => $oFormDescription){
-			$aSymfonyTypesDeclaration[$sKey] = $this->ToSymfonyFormType($oFormDescription);
+		foreach ($aFieldsDescriptions as $sKey => $oFormFieldDescription){
+			$aSymfonyTypesDeclaration[$sKey] = $this->ToSymfonyFormType($oFormFieldDescription);
 		}
 
-		// prepare fieldset types layout...
+		// prepare fieldset types layouts...
 		foreach ($aSymfonyTypesDeclaration as &$aSymfonyTypeDeclaration){
-			if($aSymfonyTypeDeclaration['type'] === FieldsetType::class && isset($aSymfonyTypeDeclaration['options']['layout'])){
+			if($aSymfonyTypeDeclaration['type'] === FieldsetType::class
+			&& isset($aSymfonyTypeDeclaration['options']['layout'])){
 				['types' => $aItems]  = $this->CreateLayoutTypes($aSymfonyTypeDeclaration['options']['layout'], $oFormBuilder, $aSymfonyTypeDeclaration['options']['fields']);
 				$aSymfonyTypeDeclaration['options']['fields'] = array_merge($aItems, $aSymfonyTypeDeclaration['options']['fields']);
 			}
 		}
 
-		// prepare general layout types
+		// prepare global layout types
 		['types' => $aItems]  = $this->CreateLayoutTypes($aLayout, $oFormBuilder, $aSymfonyTypesDeclaration);
 		$aSymfonyTypesDeclaration = array_merge($aItems, $aSymfonyTypesDeclaration);
 
-		// add symfony types to builder...
+		// add Symfony types to builder...
 		foreach ($aSymfonyTypesDeclaration as $oSymfonyTypeDeclaration){
 
-			// add type to form
+			// add Symfony type to form
 			$oFormBuilder->add(
 				$oSymfonyTypeDeclaration['name'],
 				$oSymfonyTypeDeclaration['type'],

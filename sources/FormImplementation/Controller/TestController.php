@@ -11,6 +11,7 @@ use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
@@ -22,8 +23,8 @@ class TestController extends AbstractAppController
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	#[Route('/formSDK/test_form/{mode}', name: 'formSDK_test_form')]
-	public function form(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter, int $mode): Response
+	#[Route('/formSDK/test_form/', name: 'formSDK_test_form')]
+	public function form(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter, #[MapQueryParameter] int $mode=0): Response
 	{
 		// create factory
 		$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter, $mode);
@@ -60,8 +61,8 @@ class TestController extends AbstractAppController
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	#[Route('/formSDK/test_theme/{mode}', name: 'formSDK_test_theme')]
-	public function theme(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter, int $mode): Response
+	#[Route('/formSDK/test_theme', name: 'formSDK_test_theme')]
+	public function theme(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter, #[MapQueryParameter] int $mode = 0): Response
 	{
 		// create factory
 		$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter, $mode);
@@ -76,7 +77,7 @@ class TestController extends AbstractAppController
 
 		// render view
 		return $this->render('formSDK/theme.html.twig', [
-			'name1' => 'Portail',
+			'name1' => 'Portal',
 			'name2' => 'Console',
 			'form1' => $oForm1->createView(),
 			'form2' => $oForm2->createView(),

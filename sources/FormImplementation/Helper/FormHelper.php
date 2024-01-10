@@ -69,7 +69,7 @@ class FormHelper
 			'counts' =>  ['count1' => 10, 'count2' => 20, 'count3' => 30],
 			'counts2' => new CountDto(),
 			'interval' => ['days' => '12', 'hours' => '13', 'years' => '10', 'months' => '6', 'minutes' => '0', 'seconds' => '0', 'weeks' => '3'],
-			'blog' => '<h2>Your <b>story</b></h2><br>bla bla bla bla bla bla<br>bla bla bla bla bla bla<br>bla bla bla bla bla bla<br>bla bla bla bla bla bla',
+			'blog' => '<h2>Your <b>story</b></h2><br><b>start here</b>, bla bla bla bla bla bla<br>bla bla bla bla bla bla<br>bla bla bla bla bla bla<br>bla bla bla bla bla bla',
 			'notify' => true,
 			'language' => 'FR FR',
 			'mode' => '1',
