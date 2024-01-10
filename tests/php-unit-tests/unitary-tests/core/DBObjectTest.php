@@ -1368,23 +1368,21 @@ class DBObjectTest extends ItopDataTestCase
 	}
 
 	public function CheckLongValueInAttributeProvider() {
-		// the 😎 emoji is 4 bytes long !
-		// UserRequest.title is an AttributeString
-		// UserRequest.solution is an AttributeText with format=text
-
 		return [
-			'title 250 chars' => ['title', '😎', 250],
-			'title 254 chars' => ['title', '😎', 254],
-			'title 255 chars' => ['title', '😎', 255],
-			'title 256 chars' => ['title', '😎', 256],
-			'title 300 chars' => ['title', '😎', 300],
+			// UserRequest.title is an AttributeString (maxsize = 255)
+			'title 250 chars' => ['title', 250],
+			'title 254 chars' => ['title', 254],
+			'title 255 chars' => ['title', 255],
+			'title 256 chars' => ['title', 256],
+			'title 300 chars' => ['title', 300],
 
-			'solution 250 chars' => ['solution', '😎', 250],
-			'solution 60000 chars' => ['solution', '😎', 60000],
-			'solution 65534 chars' => ['solution', '😎', 65534],
-			'solution 65535 chars' => ['solution', '😎', 65535],
-			'solution 65536 chars' => ['solution', '😎', 65536],
-			'solution 70000 chars' => ['solution', '😎', 70000],
+			// UserRequest.solution is an AttributeText (maxsize=65535) with format=text
+			'solution 250 chars' => ['solution', 250],
+			'solution 60000 chars' => ['solution', 60000],
+			'solution 65534 chars' => ['solution', 65534],
+			'solution 65535 chars' => ['solution', 65535],
+			'solution 65536 chars' => ['solution', 65536],
+			'solution 70000 chars' => ['solution', 70000],
 		];
 	}
 
@@ -1397,9 +1395,12 @@ class DBObjectTest extends ItopDataTestCase
 	 *
 	 * @since 3.1.2 N°3448 - Framework field size check not correctly implemented for multi-bytes languages/strings
 	 */
-	public function testCheckLongValueInAttribute(string $sAttrCode, string $sEmojiToRepeat, int $iNumberOfEmojiRepeats)
+	public function testCheckLongValueInAttribute(string $sAttrCode, int $iValueLength)
 	{
-		$sValueToSet = str_repeat($sEmojiToRepeat, $iNumberOfEmojiRepeats);
+		$sPrefix = 'a'; // just a small prefix so that the emoji bytes won't have a power of 2 (we want a non even value)
+		$sEmojiToRepeat = '😎'; // this emoji is 4 bytes long
+		$sEmojiRepeats = str_repeat($sEmojiToRepeat, $iValueLength - mb_strlen($sPrefix));
+		$sValueToSet = 	$sPrefix . $sEmojiRepeats;
 
 		$oTicket = MetaModel::NewObject('UserRequest', [
 			'ref'         => 'Test Ticket',
@@ -1415,7 +1416,7 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oAttDef = MetaModel::GetAttributeDef(UserRequest::class, $sAttrCode);
 		$iAttrMaxSize = $oAttDef->GetMaxSize();
-		$bIsNumberOfEmojiRepeatsBelowAttrMaxSize = ($iNumberOfEmojiRepeats <= $iAttrMaxSize);
+		$bIsNumberOfEmojiRepeatsBelowAttrMaxSize = ($iValueLength <= $iAttrMaxSize);
 		/** @noinspection PhpUnusedLocalVariableInspection */
 		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTicket->CheckToWrite();
 		$this->assertEquals($bIsNumberOfEmojiRepeatsBelowAttrMaxSize, $bCheckStatus, "CheckResult result:".var_export($aCheckIssues,true));
