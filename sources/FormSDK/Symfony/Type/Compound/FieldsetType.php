@@ -37,8 +37,6 @@ class FieldsetType extends AbstractType
 	/** @inheritdoc  */
 	public function buildForm(FormBuilderInterface $builder, array $options) : void
 	{
-		
-
 		foreach ($options['fields'] as $oField){
 			$builder->add($oField['name'], $oField['type'], $oField['options']);
 		}

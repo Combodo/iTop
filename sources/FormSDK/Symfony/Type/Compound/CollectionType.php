@@ -61,6 +61,6 @@ class CollectionType extends AbstractType
 	/** @inheritdoc  */
 	public function getBlockPrefix()
 	{
-		return 'itop_collection';
+		return 'itop_collection'; // need a specific block prefix as we create a CollectionType that's already exist in Symfony namespace
 	}
 }

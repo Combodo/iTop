@@ -287,4 +287,20 @@ trait FormFactoryBuilderTrait
 
 		return $this;
 	}
+
+	/**
+	 * Add file field.
+	 *
+	 * @param string $sKey
+	 * @param array $aOptions
+	 *
+	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
+	 * @throws \Exception
+	 */
+	public function AddFileField(string $sKey, array $aOptions) : FormFactory
+	{
+		$this->aFieldsDescriptions[$sKey] = new FormFieldDescription($sKey, FormFieldTypeEnumeration::FILE, $aOptions);
+
+		return $this;
+	}
 }

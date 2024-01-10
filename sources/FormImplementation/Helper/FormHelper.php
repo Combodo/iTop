@@ -53,6 +53,7 @@ class FormHelper
 	 * @return \Combodo\iTop\FormSDK\Service\FormFactory
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	static public function CreateSampleFormFactory(FormManager $oFormManager, RouterInterface $oRouter, int $iMode) : FormFactory
 	{
@@ -260,6 +261,12 @@ class FormHelper
 				]
 			]);
 
+			// file - file download
+			$oFormFactory->AddFileField('file', [
+				'label' => 'Download a file',
+				'required' => false
+			]);
+
 		}
 
 		if(self::$MODES_DEFINITIONS[$iMode]['layout']){
@@ -273,12 +280,13 @@ class FormHelper
 					],
 					'column__2' => [
 						'css_classes' => 'custom-container container-color mb-3',
-						'fieldset__2' => ['mode', 'interval'],
+						'fieldset__1' => ['mode', 'interval'],
 					],
 
 				],
 				'row__2' => [
 					'css_classes' => 'custom-container container-color2 mb-3',
+					'fieldset__2' => ['file'],
 				]
 			];
 
@@ -295,6 +303,97 @@ class FormHelper
 		}
 
 		return $oFormFactory;
+	}
+
+
+
+	private function Definitions()
+	{
+		// condensé //  + lisible - organisé // generic id
+		$aDescription = [
+
+			'row__1' => [
+				'column__1' => [
+					'css_classes' => 'custom-container container-flower layout-grow',
+					'fieldset__1' => [ 'birthday', 'city', 'tel'],
+				],
+				'column__2' => [
+					'css_classes' => 'custom-container container-color mb-3',
+					'fieldset__1' => ['mode', 'interval'],
+				],
+
+			],
+			'row__2' => [
+				'css_classes' => 'custom-container container-color2 mb-3',
+				'fieldset__2' => ['file'],
+			]
+		];
+
+		// etendu // - lisible + organisé // free id
+		$aDescription2 = [
+
+			'1' => [
+
+				'properties' => [
+					'type' => 'row',
+					'css_classes' => 'custom-container container-flower layout-grow',
+					'rank' => 1
+				],
+
+				'content' => [
+
+					'11' => [
+
+						'properties' => [
+							'type' => 'column',
+							'rank' => 1
+						],
+
+						'content' => [
+
+							'111' => [
+
+								'properties' => [
+									'type' => 'fieldset',
+									'rank' => 1
+								],
+
+
+							],
+
+							'112' => [
+
+								'properties' => [
+									'type' => 'fieldset',
+									'rank' => 1
+								],
+
+							]
+
+						]
+					]
+
+				],
+
+
+
+				'column__1' => [
+					'css_classes' => 'custom-container container-flower layout-grow',
+					'fieldset__1' => [ 'birthday', 'city', 'tel'],
+				],
+				'column__2' => [
+					'css_classes' => 'custom-container container-color mb-3',
+					'fieldset__1' => ['mode', 'interval'],
+				],
+
+			],
+			'row__2' => [
+				'css_classes' => 'custom-container container-color2 mb-3',
+				'fieldset__2' => ['file'],
+			]
+		];
+
+		return [$aDescription, $aDescription2];
 	}
 
 }

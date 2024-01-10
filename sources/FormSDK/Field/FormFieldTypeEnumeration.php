@@ -36,6 +36,7 @@ enum FormFieldTypeEnumeration
 	case DURATION;
 	case FIELDSET;
 	case COLLECTION;
+	case FILE;
 
 	/**
 	 * Return available options.
@@ -47,7 +48,7 @@ enum FormFieldTypeEnumeration
 		// global options
 		$aOptions = ['required', 'disabled', 'attr', 'label', 'label_attr', 'help'];
 
-		// specific options
+		// : specific options
 		return  match ($this) {
 			FormFieldTypeEnumeration::TEXT =>  array_merge($aOptions,
 				['constraints']
@@ -86,7 +87,7 @@ enum FormFieldTypeEnumeration
 		// retrieve available options
 		$aAvailableOptions = $this->GetAvailableOptions();
 
-		// check each option...
+		// check each options...
 		foreach($aOptions as $sKey => $oOption){
 			if(!in_array($sKey, $aAvailableOptions)){
 				$aInvalidOptions[] = $sKey;

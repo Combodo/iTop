@@ -35,13 +35,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 final class FormFactory
 {
-	/** @var array $aFieldsDescriptions form types descriptions */
+	/** @var array $aFieldsDescriptions form fields descriptions */
 	private array $aFieldsDescriptions = [];
 
-	/** @var mixed $oFieldsData form data */
+	/** @var mixed $oFieldsData form fields data */
 	private mixed $oFieldsData = [];
 
-	/** @var array $aLayoutDescription description of the layout */
+	/** @var array $aLayoutDescription layout description */
 	private array $aLayoutDescription = [];
 
 	/** @var \Combodo\iTop\FormSDK\Service\FactoryAdapter\FormFactoryAdapterInterface[] $aAdapters list of adapters */
@@ -180,8 +180,7 @@ final class FormFactory
 	 */
 	public function CreateForm(?string $sName = null) : mixed
 	{
-		$aFieldsDescriptions = $this->GetFieldsDescriptions();
-		return $this->oSymfonyBridge->CreateForm($aFieldsDescriptions, $this->GetData(), $sName, $this->GetLayoutDescription());
+		return $this->oSymfonyBridge->CreateForm($this->GetFieldsDescriptions(), $this->GetData(), $sName, $this->GetLayoutDescription());
 	}
 
 }

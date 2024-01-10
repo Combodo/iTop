@@ -30,6 +30,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -135,6 +136,14 @@ class SymfonyBridge
 					'options' => $aOptions
 				];
 
+			case FormFieldTypeEnumeration::FILE:
+				$aOptions = $oFormDescription->GetOptions();
+				return [
+					'name' => $oFormDescription->GetName(),
+					'type' => FileType::class,
+					'options' => $aOptions
+				];
+
 			default:
 				return null;
 		}
@@ -147,7 +156,8 @@ class SymfonyBridge
 	 *
 	 * @return void
 	 */
-	private function TransformFieldsetOptions(array &$aOptions){
+	private function TransformFieldsetOptions(array &$aOptions) : void
+	{
 
 		$aFields = [];
 		foreach ($aOptions['fields'] as $oChildFormDescription){
@@ -164,7 +174,8 @@ class SymfonyBridge
 	 *
 	 * @return void
 	 */
-	private function TransformCollectionOptions(array &$aOptions){
+	private function TransformCollectionOptions(array &$aOptions) : void
+	{
 
 		$aOptions['entry_type'] = FieldsetType::class;
 

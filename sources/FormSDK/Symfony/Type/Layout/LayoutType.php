@@ -47,7 +47,7 @@ class LayoutType extends AbstractType
 	{
 		$resolver->setDefaults([
 			'fields' => [],
-			'inherit_data' => true // this type is abstract and used for grouping
+			'inherit_data' => true // this type is abstract and used for logical grouping
 		]);
 	}
 
