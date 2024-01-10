@@ -70,7 +70,6 @@ class ModuleInstallerAPITest extends ItopDataTestCase
 CREATE TABLE `{$sDstTable}` AS
 SELECT id
 FROM {$sOrigTable}
-LIMIT 3
 SQL
 		);
 		CMDBSource::Query(
