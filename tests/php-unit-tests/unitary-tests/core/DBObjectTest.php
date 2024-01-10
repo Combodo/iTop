@@ -1416,14 +1416,14 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oAttDef = MetaModel::GetAttributeDef(UserRequest::class, $sAttrCode);
 		$iAttrMaxSize = $oAttDef->GetMaxSize();
-		$bIsNumberOfEmojiRepeatsBelowAttrMaxSize = ($iValueLength <= $iAttrMaxSize);
+		$bIsValueToSetBelowAttrMaxSize = ($iValueLength <= $iAttrMaxSize);
 		/** @noinspection PhpUnusedLocalVariableInspection */
 		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTicket->CheckToWrite();
-		$this->assertEquals($bIsNumberOfEmojiRepeatsBelowAttrMaxSize, $bCheckStatus, "CheckResult result:".var_export($aCheckIssues,true));
+		$this->assertEquals($bIsValueToSetBelowAttrMaxSize, $bCheckStatus, "CheckResult result:".var_export($aCheckIssues,true));
 
 		$oTicket->SetTrim($sAttrCode, $sValueToSet);
 		$sValueInObject = $oTicket->Get($sAttrCode);
-		if ($bIsNumberOfEmojiRepeatsBelowAttrMaxSize) {
+		if ($bIsValueToSetBelowAttrMaxSize) {
 			$this->assertEquals($sValueToSet, $sValueInObject);
 		} else {
 			$this->assertEquals($iAttrMaxSize, mb_strlen($sValueInObject));
