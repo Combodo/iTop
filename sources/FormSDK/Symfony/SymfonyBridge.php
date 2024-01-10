@@ -217,7 +217,6 @@ class SymfonyBridge
 			if($aSymfonyTypeDeclaration['type'] === FieldsetType::class && isset($aSymfonyTypeDeclaration['options']['layout'])){
 				['types' => $aItems]  = $this->CreateLayoutTypes($aSymfonyTypeDeclaration['options']['layout'], $oFormBuilder, $aSymfonyTypeDeclaration['options']['fields']);
 				$aSymfonyTypeDeclaration['options']['fields'] = array_merge($aItems, $aSymfonyTypeDeclaration['options']['fields']);
-				$aTest = 'test';
 			}
 		}
 
@@ -266,12 +265,16 @@ class SymfonyBridge
 		// variables
 		$aResult = [];
 		$sClasses = '';
+		$sLabel = null;
 
 		// scan layout...
 		foreach ($aLayout as $sKey => $oLayoutElement)
 		{
-			if($sKey === 'css_classes'){
+			if($sKey === '__css_classes'){
 				$sClasses = $oLayoutElement;
+			}
+			else if($sKey === '__label'){
+				$sLabel = $oLayoutElement;
 			}
 			else if(str_starts_with($sKey, 'row__')){
 				$aResult[$sKey] = $this->CreateLayoutContainerType($oLayoutElement, $oFormBuilder, $sKey, RowType::class, $aDescriptions);
@@ -292,6 +295,7 @@ class SymfonyBridge
 
 		return [
 			'types' => $aResult,
+			'label' => $sLabel,
 			'css_classes' => $sClasses
 		];
 	}
@@ -309,12 +313,13 @@ class SymfonyBridge
 	 */
 	private function CreateLayoutContainerType(array $aLayout, FormBuilderInterface $oFormBuilder, string $sKey, string $sTypeClassName, array &$aDescriptions) : array
 	{
-		['types' => $aItems, 'css_classes' => $sCssClasses] = $this->CreateLayoutTypes($aLayout, $oFormBuilder, $aDescriptions);
+		['types' => $aItems, 'label' => $sLabel, 'css_classes' => $sCssClasses] = $this->CreateLayoutTypes($aLayout, $oFormBuilder, $aDescriptions);
 
 		return [
 			'name' => $sKey,
 			'type' => $sTypeClassName,
 			'options' => [
+				'label' => $sLabel !== null ? $sLabel : false,
 				'fields' => $aItems,
 				'attr' => [
 					'class' => $sCssClasses

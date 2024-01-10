@@ -5,8 +5,7 @@
 .custom-container{
 	position: relative;
 	border-radius: 10px;
-	padding: 20px;
-	/*margin-top: 25px;*/
+	padding: 40px 20px 0px;
 }
 
 .custom-container:before{
@@ -50,31 +49,28 @@
 .container-flower .col-form-label{
 	color: #8d63b7;
 }
-.container-flower .form-layout-fieldset{
+.container-flower .form-compound-fieldset{
 	border: 1px solid #8d63b7;
 }
 
 .container-color{
 	position: relative;
 	border-radius: 10px;
-	padding: 20px;
 	background-color: #faf7ff;
 }
 
-.container-color .form-object-row{
+.container-color .form-compound-fieldset{
 	background-color: #ebe4f6;
 	border: none;
 }
 
-
 .container-color2{
 	position: relative;
 	border-radius: 10px;
-	padding: 20px;
 	background-color: #f7f9ff;
 }
 
-.container-color2 .form-object-row{
-	background-color: #a7b4d9;
+.container-color2 .form-compound-fieldset{
+	background-color: #e8edf9;
 	border: none;
 }

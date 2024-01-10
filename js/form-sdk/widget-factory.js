@@ -12,7 +12,7 @@ const iTopFormWidgetFactory = new function(){
 	 * @constructor
 	 */
 	const AutoInstall = function() {
-		console.log('AutoInstall');
+		console.log('iTopFormWidgetFactory AutoInstall');
 
 		// widgets catalog
 		const WIDGETS = {

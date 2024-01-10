@@ -263,7 +263,7 @@ class FormHelper
 
 			// file - file download
 			$oFormFactory->AddFileField('file', [
-				'label' => 'Download a file',
+				'label' => 'Download a file...',
 				'required' => false
 			]);
 
@@ -275,27 +275,29 @@ class FormHelper
 
 				'row__1' => [
 					'column__1' => [
-						'css_classes' => 'custom-container container-flower layout-grow',
-						'fieldset__1' => [ 'birthday', 'city', 'tel'],
+						'__css_classes' => 'custom-container container-flower layout-grow',
+						'fieldset__1' => ['__label' => 'Informations Utilisateur' , 'birthday', 'city', 'tel'],
 					],
 					'column__2' => [
-						'css_classes' => 'custom-container container-color mb-3',
+						'__css_classes' => 'custom-container container-color mb-3',
 						'fieldset__1' => ['mode', 'interval'],
 					],
 
 				],
 				'row__2' => [
-					'css_classes' => 'custom-container container-color2 mb-3',
-					'fieldset__2' => ['file'],
+					'__css_classes' => 'custom-container container-color2 mb-3',
+					'column__2' => [
+						'fieldset__1' => ['file'],
+					],
 				]
 			];
 
 			if(self::$MODES_DEFINITIONS[$iMode]['group']){
 				$aDescription['row__1']['column__2']['fieldset__2'][] = 'Person_2';
-				$aDescription['row__2']['fieldset__1'] = [ 'Person_1', 'Person_3'];
+				$aDescription['row__2']['column__1']['fieldset__1'] = [ 'Person_1', 'Person_3'];
 			}
 			else{
-				$aDescription['row__2']['fieldset__1'] = [ 'Person_1_name'];
+				$aDescription['row__2']['column__1']['fieldset__1'] = [ 'Person_1_name'];
 			}
 
 			// layout description
@@ -314,7 +316,8 @@ class FormHelper
 
 			'row__1' => [
 				'column__1' => [
-					'css_classes' => 'custom-container container-flower layout-grow',
+					'__css_classes' => 'custom-container container-flower layout-grow',
+					'__label' => 'custom-container container-flower layout-grow',
 					'fieldset__1' => [ 'birthday', 'city', 'tel'],
 				],
 				'column__2' => [
@@ -374,8 +377,6 @@ class FormHelper
 					]
 
 				],
-
-
 
 				'column__1' => [
 					'css_classes' => 'custom-container container-flower layout-grow',
