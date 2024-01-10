@@ -3,6 +3,7 @@
 namespace Combodo\iTop\FormImplementation\Controller;
 
 use Combodo\iTop\Controller\AbstractAppController;
+use Combodo\iTop\FormImplementation\Dto\CountDto;
 use Combodo\iTop\FormImplementation\Dto\ObjectSearchDto;
 use Combodo\iTop\FormImplementation\Helper\FormHelper;
 use Combodo\iTop\FormSDK\Service\FormManager;
@@ -24,7 +25,7 @@ class TestController extends AbstractAppController
 	 * @throws \CoreException
 	 */
 	#[Route('/formSDK/test_form/', name: 'formSDK_test_form')]
-	public function form(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter, #[MapQueryParameter] int $mode=0): Response
+	public function Form(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter, #[MapQueryParameter] int $mode=0): Response
 	{
 		// create factory
 		$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter, $mode);
@@ -57,12 +58,41 @@ class TestController extends AbstractAppController
 
 	}
 
+	#[Route('/formSDK/test/', name: 'formSDK_test')]
+	public function Test(Request $oRequest, FormManager $oFormManager)
+	{
+
+		// get the form
+		$oFactory = $oFormManager->CreateFactory();
+		$oFactory->AddNumberField('count1', []);
+		$oFactory->SetData(new CountDto());
+		$oForm = $oFactory->CreateForm();
+
+		// handle request
+		$oForm->handleRequest($oRequest);
+
+		// submitted and valid
+		if ($oForm->isSubmitted() && $oForm->isValid()) {
+
+			// retrieve form data
+			$data = $oForm->getData();
+
+			return $this->redirectToRoute('app_success');
+		}
+
+		// render view
+		return $this->render('formSDK/form.html.twig', [
+			'form' => $oForm->createView(),
+			'theme' => 'formSDK/themes/portal.html.twig'
+		]);
+	}
+
 	/**
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
 	#[Route('/formSDK/test_theme', name: 'formSDK_test_theme')]
-	public function theme(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter, #[MapQueryParameter] int $mode = 0): Response
+	public function Theme(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter, #[MapQueryParameter] int $mode = 0): Response
 	{
 		// create factory
 		$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter, $mode);
@@ -88,7 +118,7 @@ class TestController extends AbstractAppController
 	}
 
 	#[Route('/formSDK/ajax_select', name: 'formSDK_ajax_select')]
-	public function ajax(Request $oRequest): Response
+	public function Ajax(Request $oRequest): Response
 	{
 		$oJson = file_get_contents('sources/FormImplementation/Resources/dogs.json');
 		$aDogs = json_decode($oJson, true);
@@ -113,7 +143,7 @@ class TestController extends AbstractAppController
 	}
 
 	#[Route('/success', name: 'app_success')]
-	public function success(): Response
+	public function Success(): Response
 	{
 		return $this->render('formSDK/success.html.twig');
 	}

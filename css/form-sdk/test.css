@@ -74,3 +74,7 @@
 	background-color: #e8edf9;
 	border: none;
 }
+
+.error-label{
+	color: #d32f2f;
+}

@@ -9,6 +9,7 @@ use Combodo\iTop\FormSDK\Service\FormFactory;
 use Combodo\iTop\FormSDK\Service\FormManager;
 use DateTime;
 use MetaModel;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -140,7 +141,7 @@ class FormHelper
 			$oCount2 = new FormFieldDescription('count2', FormFieldTypeEnumeration::NUMBER, []);
 			$oCount3 = new FormFieldDescription('count3', FormFieldTypeEnumeration::NUMBER, []);
 			$oFormFactory->AddFieldSet('counts', [
-				'label'    => 'Compteurs',
+				'label'    => 'Compteurs (from array)',
 				'required' => false,
 				'fields'   => [
 					$oCount1,
@@ -154,7 +155,10 @@ class FormHelper
 			$oCount2 = new FormFieldDescription('count2', FormFieldTypeEnumeration::NUMBER, []);
 			$oCount3 = new FormFieldDescription('count3', FormFieldTypeEnumeration::NUMBER, []);
 			$oFormFactory->AddFieldSet('counts2', [
-				'label'    => 'Compteurs',
+				'label'    => 'Compteurs (from object) need array access implementation !!!',
+				'label_attr' => [
+					'class' => 'error-label'
+				],
 				'required' => false,
 				'fields'   => [
 					$oCount1,
