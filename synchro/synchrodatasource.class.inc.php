@@ -2077,7 +2077,6 @@ class SynchroReplica extends DBObject implements iDisplay
 			'class_category' => '',
 			'more_values' => '',
 			'sql' => 'dest_class',
-			'default_value' => 'Organization',
 			'is_null_allowed' => true,
 			'depends_on' => array(),
 		)));
