@@ -19,6 +19,7 @@
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\Router\Router;
 
 /**
  * Persistent classes (internal): user defined actions
@@ -187,10 +188,8 @@ abstract class Action extends cmdbAbstractObject
 	 */
 	protected function GenerateLastExecutionsTab(iTopWebPage $oPage, $bEditMode)
 	{
-		$sActionLastExecutionsPageUrl = utils::GetAbsoluteUrlAppRoot()
-			. 'pages/ajax.render.php'
-			. '?operation=notification.action.last_execution_content'
-			. '&actionid=' . $this->GetKey();
+		$oRouter = Router::GetInstance();
+		$sActionLastExecutionsPageUrl = $oRouter->GenerateUrl('notifications.action.last_executions_tab', ['actionid' => $this->GetKey()]);
 		$oPage->AddAjaxTab('action_errors', $sActionLastExecutionsPageUrl, false, Dict::S('Action:last_executions_tab'));
 	}
 

@@ -394,6 +394,7 @@ return array(
     'Combodo\\iTop\\Controller\\Base\\Layout\\ObjectController' => $baseDir . '/sources/Controller/Base/Layout/ObjectController.php',
     'Combodo\\iTop\\Controller\\Links\\LinkSetController' => $baseDir . '/sources/Controller/Links/LinkSetController.php',
     'Combodo\\iTop\\Controller\\Newsroom\\iTopNewsroomController' => $baseDir . '/sources/Controller/Newsroom/iTopNewsroomController.php',
+    'Combodo\\iTop\\Controller\\Notifications\\ActionController' => $baseDir . '/sources/Controller/Notifications/ActionController.php',
     'Combodo\\iTop\\Controller\\OAuth\\OAuthLandingController' => $baseDir . '/sources/Controller/OAuth/OAuthLandingController.php',
     'Combodo\\iTop\\Controller\\PreferencesController' => $baseDir . '/sources/Controller/PreferencesController.php',
     'Combodo\\iTop\\Controller\\TemporaryObjects\\TemporaryObjectController' => $baseDir . '/sources/Controller/TemporaryObjects/TemporaryObjectController.php',
