@@ -204,7 +204,7 @@ abstract class Action extends cmdbAbstractObject
 		$iLastExecutionDays = $oConfig->Get($sLastExecutionDaysConfigParamName);
 
 		if ($iLastExecutionDays <= 0) {
-			throw new InvalidConfigParamException("Invalid value in the {$sLastExecutionDaysConfigParamName} config parameter");
+			throw new InvalidConfigParamException("Invalid value for {$sLastExecutionDaysConfigParamName} config parameter. Param desc: " . $oConfig->GetDescription($sLastExecutionDaysConfigParamName));
 		}
 
 		$oFilter = DBObjectSearch::FromOQL(
