@@ -29,9 +29,9 @@ class ActionController extends AbstractController {
 	 */
 	public function OperationLastExecutionsTab()
 	{
-		$sActionId = utils::ReadParam('actionid', null, false);
-		$sCannotLoadActionErrorMessage = __METHOD__ . ': invalid actionid parameter';
-		if (is_null($sActionId)) {
+		$sActionId = utils::ReadParam('action_id', null, false);
+		$sCannotLoadActionErrorMessage = __METHOD__ . ': invalid action_id parameter';
+		if (utils::IsNullOrEmptyString($sActionId)) {
 			throw new CoreUnexpectedValue($sCannotLoadActionErrorMessage);
 		}
 

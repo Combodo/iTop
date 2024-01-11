@@ -189,7 +189,7 @@ abstract class Action extends cmdbAbstractObject
 	protected function GenerateLastExecutionsTab(iTopWebPage $oPage, $bEditMode)
 	{
 		$oRouter = Router::GetInstance();
-		$sActionLastExecutionsPageUrl = $oRouter->GenerateUrl('notifications.action.last_executions_tab', ['actionid' => $this->GetKey()]);
+		$sActionLastExecutionsPageUrl = $oRouter->GenerateUrl('notifications.action.last_executions_tab', ['action_id' => $this->GetKey()]);
 		$oPage->AddAjaxTab('action_errors', $sActionLastExecutionsPageUrl, false, Dict::S('Action:last_executions_tab'));
 	}
 
