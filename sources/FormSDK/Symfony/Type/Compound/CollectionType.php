@@ -41,7 +41,7 @@ class CollectionType extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'fields_labels' => [],
+			'types_labels' => [],
 		]);
 	}
 
@@ -55,7 +55,7 @@ class CollectionType extends AbstractType
 	public function buildView(FormView $view, FormInterface $form, array $options): void
 	{
 		// pass the form type option directly to the template
-		$view->vars['fields_labels'] = $options['fields_labels'];
+		$view->vars['types_labels'] = $options['types_labels'];
 	}
 
 	/** @inheritdoc  */

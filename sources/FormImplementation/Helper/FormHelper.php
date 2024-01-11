@@ -170,7 +170,6 @@ class FormHelper
 			// interval - duration
 			$oFormFactory->AddDurationField('interval', [
 				'label'        => 'Fréquence',
-				'input'        => 'array',
 				'with_minutes' => true,
 				'with_seconds' => true,
 				'with_weeks'   => true,

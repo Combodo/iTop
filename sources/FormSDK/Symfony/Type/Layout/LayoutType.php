@@ -37,8 +37,9 @@ class LayoutType extends AbstractType
 	/** @inheritdoc  */
 	public function buildForm(FormBuilderInterface $builder, array $options) : void
 	{
-		foreach ($options['fields'] as $oField){
-			$builder->add($oField['name'], $oField['type'], $oField['options']);
+		// add each types
+		foreach ($options['types_declarations'] as $oTypeDeclaration){
+			$builder->add($oTypeDeclaration['name'], $oTypeDeclaration['type'], $oTypeDeclaration['options']);
 		}
 	}
 
@@ -46,7 +47,7 @@ class LayoutType extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'fields' => [],
+			'types_declarations' => [],
 			'inherit_data' => true // this type is abstract and used for logical grouping
 		]);
 	}

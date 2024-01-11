@@ -25,7 +25,6 @@ use Combodo\iTop\FormSDK\Symfony\Type\Compound\CollectionType;
 use Combodo\iTop\FormSDK\Symfony\Type\Compound\FieldsetType;
 use Combodo\iTop\FormSDK\Symfony\Type\Layout\ColumnType;
 use Combodo\iTop\FormSDK\Symfony\Type\Layout\RowType;
-use LogAPI;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
@@ -38,8 +37,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * Symfony implementation bridge.
@@ -69,123 +66,108 @@ class SymfonyBridge
 	 */
 	public function ToSymfonyFormType(FormFieldDescription $oFormDescription) : ?array
 	{
-		switch($oFormDescription->GetType()){
-
-			case FormFieldTypeEnumeration::TEXT:
-				return [
-					'name' => $oFormDescription->GetName(),
-					'type' => TextType::class,
-					'options' => $oFormDescription->GetOptions()
-				];
-
-			case FormFieldTypeEnumeration::AREA:
-				return [
-					'name' => $oFormDescription->GetName(),
-					'type' => TextareaType::class,
-					'options' => $oFormDescription->GetOptions()
-				];
-
-			case FormFieldTypeEnumeration::DATE:
-				return [
-					'name' => $oFormDescription->GetName(),
-					'type' => DateType::class,
-					'options' => $oFormDescription->GetOptions()
-				];
-
-			case FormFieldTypeEnumeration::SELECT:
-				return [
-					'name' => $oFormDescription->GetName(),
-					'type' => ChoiceType::class,
-					'options' => $oFormDescription->GetOptions()
-				];
-
-			case FormFieldTypeEnumeration::SWITCH:
-				return [
-					'name' => $oFormDescription->GetName(),
-					'type' => CheckboxType::class,
-					'options' => $oFormDescription->GetOptions()
-				];
-
-			case FormFieldTypeEnumeration::FIELDSET:
-				$aOptions = $oFormDescription->GetOptions();
-				$this->TransformFieldsetOptions($aOptions);
-				return [
-					'name' => $oFormDescription->GetName(),
-					'type' => FieldsetType::class,
-					'options' => $aOptions
-				];
-
-			case FormFieldTypeEnumeration::NUMBER:
-				return [
-					'name' => $oFormDescription->GetName(),
-					'type' => NumberType::class,
-					'options' => $oFormDescription->GetOptions()
-				];
-
-			case FormFieldTypeEnumeration::DURATION:
-				return [
-					'name' => $oFormDescription->GetName(),
-					'type' => DateIntervalType::class,
-					'options' => $oFormDescription->GetOptions()
-				];
-
-			case FormFieldTypeEnumeration::COLLECTION:
-				$aOptions = $oFormDescription->GetOptions();
-				$this->TransformCollectionOptions($aOptions);
-				return [
-					'name' => $oFormDescription->GetName(),
-					'type' => CollectionType::class,
-					'options' => $aOptions
-				];
-
-			case FormFieldTypeEnumeration::FILE:
-				$aOptions = $oFormDescription->GetOptions();
-				return [
-					'name' => $oFormDescription->GetName(),
-					'type' => FileType::class,
-					'options' => $aOptions
-				];
-
-			default:
-				return null;
-		}
+		return [
+			'name' => $oFormDescription->GetName(),
+			'type' => $this->ToSymfonyFormTypeClass($oFormDescription->GetType()),
+			'options' => $this->ToSymfonyFormTypeOptions($oFormDescription->GetType(), $oFormDescription->GetOptions())
+		];
 	}
 
 	/**
-	 * Transform fieldset options.
+	 * Transform type to Symfony form type class.
+	 *
+	 * @param \Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration $oType
+	 *
+	 * @return string|null
+	 */
+	public function ToSymfonyFormTypeClass(FormFieldTypeEnumeration $oType) : ?string
+	{
+		return match ($oType) {
+			FormFieldTypeEnumeration::TEXT => TextType::class,
+			FormFieldTypeEnumeration::AREA => TextareaType::class,
+			FormFieldTypeEnumeration::DATE => DateType::class,
+			FormFieldTypeEnumeration::SELECT => ChoiceType::class,
+			FormFieldTypeEnumeration::SWITCH => CheckboxType::class,
+			FormFieldTypeEnumeration::FIELDSET => FieldsetType::class,
+			FormFieldTypeEnumeration::NUMBER => NumberType::class,
+			FormFieldTypeEnumeration::DURATION => DateIntervalType::class,
+			FormFieldTypeEnumeration::COLLECTION => CollectionType::class,
+			FormFieldTypeEnumeration::FILE => FileType::class,
+			default => null,
+		};
+	}
+
+	/**
+	 *
+	 * @param \Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration $oType
+	 * @param array $aOptions
+	 *
+	 * @return array
+	 */
+	public function ToSymfonyFormTypeOptions(FormFieldTypeEnumeration $oType, array $aOptions) : array
+	{
+		return match ($oType) {
+			FormFieldTypeEnumeration::DURATION => $this->TransformDurationOptions($aOptions),
+			FormFieldTypeEnumeration::FIELDSET => $this->TransformFieldsetOptions($aOptions),
+			FormFieldTypeEnumeration::COLLECTION => $this->TransformCollectionOptions($aOptions),
+			default => $aOptions,
+		};
+	}
+
+	/**
+	 * Transform duration field options.
 	 *
 	 * @param array $aOptions
 	 *
-	 * @return void
+	 * @return array
 	 */
-	private function TransformFieldsetOptions(array &$aOptions) : void
+	private function TransformDurationOptions(array $aOptions) : array
 	{
+		$aOptions['input'] = 'array';
 
-		$aFields = [];
+		return $aOptions;
+	}
+
+	/**
+	 * Transform fieldset field options.
+	 *
+	 * @param array $aOptions
+	 *
+	 * @return array
+	 */
+	private function TransformFieldsetOptions(array $aOptions) : array
+	{
+		$aOptions['types_declarations'] = [];
 		foreach ($aOptions['fields'] as $oChildFormDescription){
 			$aSymfony = $this->ToSymfonyFormType($oChildFormDescription);
-			$aFields[$oChildFormDescription->GetName()] = $aSymfony;
+			$aOptions['types_declarations'][$oChildFormDescription->GetName()] = $aSymfony;
 		}
-		$aOptions['fields'] = $aFields;
+
+		unset($aOptions['fields']);
+
+		return $aOptions;
 	}
 
 	/**
-	 * Transform collection options.
+	 * Transform collection field options.
 	 *
 	 * @param array $aOptions
 	 *
-	 * @return void
+	 * @return array
 	 */
-	private function TransformCollectionOptions(array &$aOptions) : void
+	private function TransformCollectionOptions(array &$aOptions) : array
 	{
+		$aOptions['entry_type'] = $this->ToSymfonyFormTypeClass($aOptions['element_type']);
 
-		$aOptions['entry_type'] = FieldsetType::class;
+		$aOptions['entry_options'] = $this->ToSymfonyFormTypeOptions($aOptions['element_type'], $aOptions['element_options']);
 
-		$this->TransformFieldsetOptions($aOptions['element_options']);
-		$aOptions['entry_options'] = $aOptions['element_options'];
+		$aOptions['types_labels'] = $aOptions['fields_labels'];
 
-		unset($aOptions['element_options']);
 		unset($aOptions['element_type']);
+		unset($aOptions['element_options']);
+		unset($aOptions['fields_labels']);
+
+		return $aOptions;
 	}
 
 	/**
@@ -214,18 +196,18 @@ class SymfonyBridge
 			$aSymfonyTypesDeclaration[$sKey] = $this->ToSymfonyFormType($oFormFieldDescription);
 		}
 
-		// prepare fieldset types layouts...
+		// handle fieldset types layouts...
 		foreach ($aSymfonyTypesDeclaration as &$aSymfonyTypeDeclaration){
 			if($aSymfonyTypeDeclaration['type'] === FieldsetType::class
 			&& isset($aSymfonyTypeDeclaration['options']['layout'])){
-				['types' => $aItems]  = $this->CreateLayoutTypes($aSymfonyTypeDeclaration['options']['layout'], $oFormBuilder, $aSymfonyTypeDeclaration['options']['fields']);
-				$aSymfonyTypeDeclaration['options']['fields'] = array_merge($aItems, $aSymfonyTypeDeclaration['options']['fields']);
+				['types_declarations' => $aLayoutSymfonyTypesDeclarations]  = $this->CreateLayoutTypes($aSymfonyTypeDeclaration['options']['layout'], $oFormBuilder, $aSymfonyTypeDeclaration['options']['types_declarations']);
+				$aSymfonyTypeDeclaration['options']['types_declarations'] = array_merge($aLayoutSymfonyTypesDeclarations, $aSymfonyTypeDeclaration['options']['types_declarations']);
 			}
 		}
 
-		// prepare global layout types
-		['types' => $aItems]  = $this->CreateLayoutTypes($aLayout, $oFormBuilder, $aSymfonyTypesDeclaration);
-		$aSymfonyTypesDeclaration = array_merge($aItems, $aSymfonyTypesDeclaration);
+		// handle global layout types
+		['types_declarations' => $aLayoutSymfonyTypesDeclaration]  = $this->CreateLayoutTypes($aLayout, $oFormBuilder, $aSymfonyTypesDeclaration);
+		$aSymfonyTypesDeclaration = array_merge($aLayoutSymfonyTypesDeclaration, $aSymfonyTypesDeclaration);
 
 		// add Symfony types to builder...
 		foreach ($aSymfonyTypesDeclaration as $oSymfonyTypeDeclaration){
@@ -297,7 +279,7 @@ class SymfonyBridge
 		}
 
 		return [
-			'types' => $aResult,
+			'types_declarations' => $aResult,
 			'label' => $sLabel,
 			'css_classes' => $sClasses
 		];
@@ -316,14 +298,14 @@ class SymfonyBridge
 	 */
 	private function CreateLayoutContainerType(array $aLayout, FormBuilderInterface $oFormBuilder, string $sKey, string $sTypeClassName, array &$aDescriptions) : array
 	{
-		['types' => $aItems, 'label' => $sLabel, 'css_classes' => $sCssClasses] = $this->CreateLayoutTypes($aLayout, $oFormBuilder, $aDescriptions);
+		['types_declarations' => $aTypesDeclarations, 'label' => $sLabel, 'css_classes' => $sCssClasses] = $this->CreateLayoutTypes($aLayout, $oFormBuilder, $aDescriptions);
 
 		return [
 			'name' => $sKey,
 			'type' => $sTypeClassName,
 			'options' => [
 				'label' => $sLabel !== null ? $sLabel : false,
-				'fields' => $aItems,
+				'types_declarations' => $aTypesDeclarations,
 				'attr' => [
 					'class' => $sCssClasses
 				],

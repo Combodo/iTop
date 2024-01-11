@@ -71,10 +71,10 @@ final class FormFactory
 	 */
 	public function GetFieldsDescriptions() : array
 	{
-		// prepare data
+		// prepare fields descriptions
 		$aResult = $this->aFieldsDescriptions;
 
-		// merge each adapter data...
+		// merge each adapter fields descriptions...
 		foreach ($this->GetAllAdapters() as $oAdapter){
 			$aResult = array_merge($aResult, $oAdapter->GetFieldsDescriptions());
 		}
@@ -101,8 +101,10 @@ final class FormFactory
 	 */
 	public function GetData() : mixed
 	{
+		// prepare fields data
 		$aData = $this->oFieldsData;
 
+		// merge each adapter fields data...
 		foreach ($this->GetAllAdapters() as $adapter){
 			$aData = array_merge($aData, $adapter->GetFieldsData());
 		}

@@ -60,7 +60,7 @@ enum FormFieldTypeEnumeration
 				['widget']
 			),
 			FormFieldTypeEnumeration::DURATION => array_merge($aOptions,
-				['input', 'with_minutes', 'with_seconds', 'with_weeks', 'with_days']
+				['with_minutes', 'with_seconds', 'with_weeks', 'with_days']
 			),
 			FormFieldTypeEnumeration::FIELDSET => array_merge($aOptions,
 				['fields', 'layout']
