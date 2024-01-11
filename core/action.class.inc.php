@@ -204,7 +204,7 @@ abstract class Action extends cmdbAbstractObject
 		$sLastExecutionDaysConfigParamName = 'notifications.last_executions_days';
 		$iLastExecutionDays = $oConfig->Get($sLastExecutionDaysConfigParamName);
 
-		if (false === is_int($iLastExecutionDays)) {
+		if ($iLastExecutionDays <= 0) {
 			throw new InvalidConfigParamException("Invalid value in the {$sLastExecutionDaysConfigParamName} config parameter");
 		}
 
