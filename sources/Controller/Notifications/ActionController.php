@@ -7,7 +7,7 @@
 namespace Combodo\iTop\Controller\Notifications;
 
 use Action;
-use Combodo\iTop\Application\WebPage\NiceWebPage;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Controller\AbstractController;
 use CoreException;
 use CoreUnexpectedValue;
@@ -40,7 +40,7 @@ class ActionController extends AbstractController {
 			throw new CoreException($sCannotLoadActionErrorMessage);
 		}
 
-		$oPage = new NiceWebPage(Dict::S('UI:BrowseInlineImages'));
+		$oPage = new AjaxPage(Dict::S('Action:last_executions_tab'));
 		$oAction->GetLastExecutionsTabContent($oPage);
 
 		return $oPage;
