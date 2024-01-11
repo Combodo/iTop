@@ -187,10 +187,6 @@ abstract class Action extends cmdbAbstractObject
 	 */
 	protected function GenerateLastExecutionsTab(iTopWebPage $oPage, $bEditMode)
 	{
-		if ($bEditMode) {
-			return;
-		}
-
 		$sActionLastExecutionsPageUrl = utils::GetAbsoluteUrlAppRoot()
 			. 'pages/ajax.render.php'
 			. '?operation=notification.action.last_execution_content'
