@@ -1622,7 +1622,7 @@ class Config
 		'notifications.last_executions_days' => [
 			'type' => 'integer',
 			'description' => 'Number of days to display in the Action\'s last executions tab',
-			'default' => 61,
+			'default' => 30 + 31, // 2 months
 			'value' => 61,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
