@@ -203,19 +203,26 @@ abstract class Action extends cmdbAbstractObject
 		$sLastExecutionDaysConfigParamName = 'notifications.last_executions_days';
 		$iLastExecutionDays = $oConfig->Get($sLastExecutionDaysConfigParamName);
 
-		if ($iLastExecutionDays <= 0) {
+		if ($iLastExecutionDays < 0) {
 			throw new InvalidConfigParamException("Invalid value for {$sLastExecutionDaysConfigParamName} config parameter. Param desc: " . $oConfig->GetDescription($sLastExecutionDaysConfigParamName));
 		}
 
-		$oFilter = DBObjectSearch::FromOQL(
-			'SELECT EventNotification WHERE action_id = :action_id AND date > DATE_SUB(NOW(), INTERVAL :days DAY)',
-			[
-				'action_id' => $this->GetKey(),
-				'days' => $iLastExecutionDays,
-			]
-		);
-		$oSet = new DBObjectSet($oFilter, ['date' => false]);
-		$oExecutionsListBlock = DataTableUIBlockFactory::MakeForResult($oPage, 'action_executions_list', $oSet, ['panel_title' => Dict::Format('Action:last_executions_tab_panel_title', $iLastExecutionDays)]);
+		$sActionQueryOql = 'SELECT EventNotification WHERE action_id = :action_id';
+		$aActionQueryParams = ['action_id' => $this->GetKey()];
+		if ($iLastExecutionDays > 0) {
+			$sActionQueryOql .= ' AND date > DATE_SUB(NOW(), INTERVAL :days DAY)';
+			$aActionQueryParams['days'] = $iLastExecutionDays;
+			$sActionQueryLimit = Dict::Format('Action:last_executions_tab_limit_days', $iLastExecutionDays);
+		} else {
+			$sActionQueryLimit = Dict::S('Action:last_executions_tab_limit_none');
+		}
+
+		$oActionFilter = DBObjectSearch::FromOQL($sActionQueryOql, $aActionQueryParams);
+		$oSet = new DBObjectSet($oActionFilter, ['date' => false]);
+
+		$sPanelTitle = Dict::Format('Action:last_executions_tab_panel_title', $sActionQueryLimit);
+		$oExecutionsListBlock = DataTableUIBlockFactory::MakeForResult($oPage, 'action_executions_list', $oSet, ['panel_title' => $sPanelTitle]);
+
 		$oPage->AddUiBlock($oExecutionsListBlock);
 	}
 }
