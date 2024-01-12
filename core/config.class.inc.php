@@ -1904,7 +1904,7 @@ class Config
 		}
 		if (strlen($sNoise) > 0)
 		{
-			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack) 
+			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack)
 			throw new ConfigException('Syntax error in configuration file',
 				array('file' => $sConfigFile, 'error' => '<tt>'.htmlentities($sNoise, ENT_QUOTES, 'UTF-8').'</tt>'));
 		}
@@ -2191,6 +2191,24 @@ class Config
 	public function SetAllowedLoginTypes($aAllowedLoginTypes)
 	{
 		$this->m_sAllowedLoginTypes = implode('|', $aAllowedLoginTypes);
+	}
+
+	/**
+	 * @since 2.7.11 N°7085
+	 * Add login mode if not configured already
+	 * @param string $sLoginMode
+	 *
+	 * @return void
+	 */
+	public function AddAllowedLoginTypes($sLoginMode)
+	{
+		$aAllowedLoginTypes = $this->GetAllowedLoginTypes();
+		if (in_array($sLoginMode, $aAllowedLoginTypes)){
+			return;
+		}
+
+		$aAllowedLoginTypes[] = $sLoginMode;
+		$this->SetAllowedLoginTypes($aAllowedLoginTypes);
 	}
 
 	public function SetExternalAuthenticationVariable($sExtAuthVariable)
@@ -2714,7 +2732,7 @@ class ConfigPlaceholdersResolver
 		}
 
 		$sPattern = '/\%(env|server)\((\w+)\)(?:\?:(\w*))?\%/'; //3 capturing groups, ie `%env(HTTP_PORT)?:8080%` produce: `env` `HTTP_PORT` and `8080`.
-		
+
 		if (! preg_match_all($sPattern, $rawValue, $aMatchesCollection, PREG_SET_ORDER))
 		{
 			return $rawValue;
