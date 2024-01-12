@@ -4,6 +4,9 @@ namespace Combodo\iTop\Test\UnitTest\Application;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class LoginTest extends ItopDataTestCase {
 	protected $sConfigTmpBackupFile;
 	protected $sConfigPath;
