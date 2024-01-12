@@ -183,9 +183,9 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 			$oGroupDescriptions = new FormFieldDescription($this->GetIdentifier(), FormFieldTypeEnumeration::FIELDSET, [
 				'fields' => $aFieldsDescriptions,
 				'layout' => [
-					'row__1' => [
-						'column__1' => [ 'name'],
-						'column__2' => ['mobile_phone'],
+					':row_1' => [
+						':column_1' => ['name'],
+						':column_2' => ['mobile_phone'],
 					],
 				]
 			]);

@@ -276,31 +276,54 @@ class FormHelper
 
 			$aDescription = [
 
-				'row__1' => [
-					'column__1' => [
-						'__css_classes' => 'custom-container container-flower layout-grow',
-						'fieldset__1' => ['__label' => 'Informations Utilisateur' , 'birthday', 'city', 'tel'],
+				':row_1' => [
+					'@rank' => 2,
+					':column_1' => [
+						'@css_classes' => ['custom-container', 'container-flower', 'layout-grow'],
+						'@rank' => 2,
+						':fieldset_1' => [
+							'@label' => 'Informations Utilisateur',
+							'@rank' => 2,
+							'birthday' => [
+								'@rank' => 3,
+							],
+							'city' => [
+								'@rank' => 0,
+							],
+							'tel' => [
+								'@rank' => 1,
+							],
+						],
 					],
-					'column__2' => [
-						'__css_classes' => 'custom-container container-color mb-3',
-						'fieldset__1' => ['mode', 'interval'],
+					':column_2' => [
+						'@css_classes' => ['custom-container', 'container-color', 'mb-3'],
+						'@rank' => 1,
+						':fieldset_1' => [
+							'@label' => 'Options',
+							'@rank' => 1,
+							'mode',
+							'interval'
+						],
 					],
 
 				],
-				'row__2' => [
-					'__css_classes' => 'custom-container container-color2 mb-3',
-					'column__2' => [
-						'fieldset__1' => ['file'],
+				':row_2' => [
+					'@rank' => 1,
+					'@css_classes' => ['custom-container', 'container-color2', 'mb-3'],
+					':column_2' => [
+						':fieldset_1' => [
+							'file'
+						],
 					],
 				]
 			];
 
 			if(self::$MODES_DEFINITIONS[$iMode]['group']){
-				$aDescription['row__1']['column__2']['fieldset__2'][] = 'Person_2';
-				$aDescription['row__2']['column__1']['fieldset__1'] = [ 'Person_1', 'Person_3'];
+				$aDescription[':row_1'][':column_2'][':fieldset_2'][] = 'Person_2';
+				$aDescription[':row_2'][':column_1'][':fieldset_1'] = [ 'Person_1', 'Person_3'];
 			}
 			else{
-				$aDescription['row__2']['column__1']['fieldset__1'] = [ 'Person_1_name'];
+				$aDescription[':row_2'][':column_1'][':fieldset_1'] = [ 'Person_1_name'];
 			}
 
 			// layout description
@@ -312,92 +335,136 @@ class FormHelper
 
 
 
-	private function Definitions()
-	{
-		// condensé //  + lisible - organisé // generic id
-		$aDescription = [
-
-			'row__1' => [
-				'column__1' => [
-					'__css_classes' => 'custom-container container-flower layout-grow',
-					'__label' => 'custom-container container-flower layout-grow',
-					'fieldset__1' => [ 'birthday', 'city', 'tel'],
-				],
-				'column__2' => [
-					'css_classes' => 'custom-container container-color mb-3',
-					'fieldset__1' => ['mode', 'interval'],
-				],
-
-			],
-			'row__2' => [
-				'css_classes' => 'custom-container container-color2 mb-3',
-				'fieldset__2' => ['file'],
-			]
-		];
-
-		// etendu // - lisible + organisé // free id
-		$aDescription2 = [
-
-			'1' => [
-
-				'properties' => [
-					'type' => 'row',
-					'css_classes' => 'custom-container container-flower layout-grow',
-					'rank' => 1
-				],
-
-				'content' => [
-
-					'11' => [
-
-						'properties' => [
-							'type' => 'column',
-							'rank' => 1
-						],
-
-						'content' => [
-
-							'111' => [
-
-								'properties' => [
-									'type' => 'fieldset',
-									'rank' => 1
-								],
-
-
-							],
-
-							'112' => [
-
-								'properties' => [
-									'type' => 'fieldset',
-									'rank' => 1
-								],
-
-							]
-
-						]
-					]
-
-				],
-
-				'column__1' => [
-					'css_classes' => 'custom-container container-flower layout-grow',
-					'fieldset__1' => [ 'birthday', 'city', 'tel'],
-				],
-				'column__2' => [
-					'css_classes' => 'custom-container container-color mb-3',
-					'fieldset__1' => ['mode', 'interval'],
-				],
-
-			],
-			'row__2' => [
-				'css_classes' => 'custom-container container-color2 mb-3',
-				'fieldset__2' => ['file'],
-			]
-		];
-
-		return [$aDescription, $aDescription2];
-	}
+//	private function Definitions()
+//	{
+//		// condensé //  + lisible - organisé // generic id
+//		$aDescription = [
+//
+//			'row__1' => [
+//				'column__1' => [
+//					'@label' => 'Informations',
+//					'@css_classes' => 'custom-container container-flower layout-grow',
+//					'fieldset__1' => [ 'birthday', 'city', 'tel'],
+//				],
+//				'column__2' => [
+//					'@label' => 'Options',
+//					'@css_classes' => 'custom-container container-color mb-3',
+//					'fieldset__1' => ['mode', 'interval'],
+//				],
+//
+//			],
+//			'row__2' => [
+//				'@label' => 'Telechargement',
+//				'@css_classes' => 'custom-container container-color2 mb-3',
+//				'fieldset__2' => ['file'],
+//			]
+//		];
+//
+//		// condensé //  + lisible - organisé // generic id
+//		$aDescription2 = [
+//
+//			'+row__#1' => [
+//				'+column__#1' => [
+//					'@label' => 'Informations',
+//					'@css_classes' => ['custom-container', 'container-flower', 'layout-grow'],
+//					'+fieldset__#1' => [ 'birthday', 'city', 'tel'],
+//				],
+//				'+column__#2' => [
+//					'@label' => 'Options',
+//					'@css_classes' => ['custom-container', 'container-color', 'mb-3'],
+//					'+fieldset__#1' => ['mode', 'interval'],
+//				],
+//
+//			],
+//			'+row__2' => [
+//				'@label' => 'Telechargement',
+//				'@css_classes' => ['custom-container', 'container-color2', 'mb-3'],
+//				'+fieldset__#2' => ['file'],
+//			]
+//		];
+//
+//		// etendu // - lisible + organisé // free id
+//		$aDescription3 = [
+//
+//			'1' => [
+//
+//				'properties' => [
+//					'type' => 'row',
+//					'css_classes' => 'custom-container container-flower layout-grow',
+//					'rank' => 1
+//				],
+//
+//				'content' => [
+//
+//					'11' => [
+//
+//						'properties' => [
+//							'label' => 'Informations',
+//							'type' => 'column',
+//							'rank' => 1
+//						],
+//
+//						'content' => [
+//
+//							'111' => [
+//
+//								'properties' => [
+//									'type' => 'fieldset',
+//									'rank' => 1
+//								],
+//
+//								'content' => [ 'birthday', 'city', 'tel']
+//							],
+//						],
+//
+//					'22' => [
+//
+//						'properties' => [
+//							'label' => 'Informations',
+//							'type' => 'column',
+//							'rank' => 1
+//						],
+//
+//						'content' => [
+//
+//							'222' => [
+//
+//								'properties' => [
+//									'type' => 'fieldset',
+//									'rank' => 2
+//								],
+//
+//							]
+//
+//						]
+//					]
+//
+//				],
+//
+//			],
+//			'2' => [
+//
+//				'properties' => [
+//					'type' => 'row',
+//					'css_classes' => 'custom-container container-color2 mb-3',
+//					'rank' => 2
+//				],
+//
+//				'content' => [
+//
+//					'properties' => [
+//						'type' => 'column',
+//						'rank' => 1
+//					],
+//
+//					'111' => [
+//
+//				'css_classes' => 'custom-container container-color2 mb-3',
+//				'fieldset__2' => ['file'],
+//			]
+//		];
+//
+//		return [$aDescription, $aDescription2];
+//	}
 
 }

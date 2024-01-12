@@ -39,17 +39,6 @@
 	margin-left: 3px;
 }
 
-/* form object row */
-.form-object-row{
-	border: 1px lightgrey dashed;
-	padding: 8px 12px;
-	border-radius: 8px;
-}
-.form-object-row legend{
-	font-weight: bold;
-	color: grey;
-}
-
 .cke_focus .cke_contents{
 	border: 1px #86b7fe solid;
 	outline: 0;
@@ -69,7 +58,6 @@
 	border-radius: 10px;
 	border: 1px dashed lightgrey;
 }
-
 
 .form-layout-row{
 	display: flex;

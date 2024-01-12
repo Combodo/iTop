@@ -8,7 +8,6 @@ use Combodo\iTop\FormImplementation\Dto\ObjectSearchDto;
 use Combodo\iTop\FormImplementation\Helper\FormHelper;
 use Combodo\iTop\FormSDK\Service\FormManager;
 use Combodo\iTop\Service\Base\ObjectRepository;
-use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
