@@ -4,13 +4,6 @@ namespace Combodo\iTop\Test\UnitTest\Application;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
-/**
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
- */
 class LoginTest extends ItopDataTestCase {
 	protected $sConfigTmpBackupFile;
 	protected $sConfigPath;
@@ -21,7 +14,8 @@ class LoginTest extends ItopDataTestCase {
 
 		clearstatcache();
 
-		//backup config file
+		// The test consists in requesting UI.php from outside iTop with a specific configuration
+		// Hence the configuration file must be tweaked on disk (and restored)
 		$this->sConfigPath = MetaModel::GetConfig()->GetLoadedFile();
 		$this->sConfigTmpBackupFile = tempnam(sys_get_temp_dir(), "config_");
 		file_put_contents($this->sConfigTmpBackupFile, file_get_contents($this->sConfigPath));
