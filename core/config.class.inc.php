@@ -2321,6 +2321,24 @@ class Config
 		$this->m_sAllowedLoginTypes = implode('|', $aAllowedLoginTypes);
 	}
 
+	/**
+	 * @since 2.7.11 N°7085
+	 * Add login mode if not configured already
+	 * @param string $sLoginMode
+	 *
+	 * @return void
+	 */
+	public function AddAllowedLoginTypes($sLoginMode)
+	{
+		$aAllowedLoginTypes = $this->GetAllowedLoginTypes();
+		if (in_array($sLoginMode, $aAllowedLoginTypes)){
+			return;
+		}
+
+		$aAllowedLoginTypes[] = $sLoginMode;
+		$this->SetAllowedLoginTypes($aAllowedLoginTypes);
+	}
+
 	public function SetExternalAuthenticationVariable($sExtAuthVariable)
 	{
 		$this->m_sExtAuthVariable = $sExtAuthVariable;
