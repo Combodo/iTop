@@ -117,6 +117,11 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	protected function OnConnected(&$iErrorCode)
 	{
 		unset($_SESSION['login_temp_auth_user']);
+		if (is_null(UserRights::GetUserObject())){
+			//N°7085 avoid infinite loop
+			IssueLog::Error("No user logged in. exit");
+			exit(-1);
+		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
