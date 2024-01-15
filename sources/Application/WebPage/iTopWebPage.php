@@ -1015,45 +1015,6 @@ HTML;
 
 		DBSearch::RecordQueryTrace();
 		ExecutionKPI::ReportStats();
-
-		return;
-
-		/////////////////////////////////////////////////////////
-		////////////////// ☢ DANGER ZONE ☢ /////////////////////
-		/////////////////////////////////////////////////////////
-		
-		// Render the tabs in the page (if any)
-//		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
-
-		// Put here the 'ready scripts' that must be executed after all others
-		$aMultiselectOptions = array(
-			'header' => true,
-			'checkAllText' => Dict::S('UI:SearchValue:CheckAll'),
-			'uncheckAllText' => Dict::S('UI:SearchValue:UncheckAll'),
-			'noneSelectedText' => Dict::S('UI:SearchValue:Any'),
-			'selectedText' => Dict::S('UI:SearchValue:NbSelected'),
-			'selectedList' => 1,
-		);
-		$sJSMultiselectOptions = json_encode($aMultiselectOptions);
-		$this->add_ready_script(
-			<<<EOF
-		// Since the event is only triggered when the hash changes, we need to trigger
-		// the event now, to handle the hash the page may have loaded with.
-		$(window).trigger( 'hashchange' );
-		
-		// Some table are sort-able, some are not, let's fix this
-		$('table.listResults').each( function() { FixTableSorter($(this)); } );
-		
-		$('.multiselect').multiselect($sJSMultiselectOptions);
-EOF
-		);
-
-		$this->outputCollapsibleSectionInit();
-
-		// TODO 3.0.0: Is this for the "Debug" popup? We should do a helper to display a popup in various cases (welcome message for example)
-		$s_captured_output = $this->ob_get_clean_safe();
-
-
 	}
 
 
