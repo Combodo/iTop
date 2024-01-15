@@ -45,7 +45,7 @@ class FormFieldDescription
 		private readonly array $aOptions
 	)
 	{
-		// check options
+		// check field options
 		$oCheckStatus = $this->oType->CheckOptions($this->aOptions);
 		if(!$oCheckStatus['valid']){
 			$sInvalidOptions = implode(', ', $oCheckStatus['invalid_options']);

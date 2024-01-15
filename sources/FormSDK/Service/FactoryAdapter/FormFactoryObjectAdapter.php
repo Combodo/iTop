@@ -89,11 +89,13 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 	{
 		$aOptions = [];
 
+		// compute label
 		$sLabel = $oAttributeDefinition->GetLabel();
 		if(!$this->bGroup){
 			$sLabel = $this->GetLabel() . ' ••• ' . $sLabel;
 		}
 
+		// attribute options
 		if($oAttributeDefinition instanceof AttributeString) {
 			$aOptions['required'] = !$oAttributeDefinition->IsNullAllowed();
 			$aOptions['label'] = $sLabel;
@@ -112,8 +114,10 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 	 */
 	private function GetAttributeDescription(string $sAttributeCode) : ?FormFieldDescription
 	{
+		// retrieve attribute definition
 		$oAttributeDefinition = MetaModel::GetAttributeDef(get_class($this->oDBObject), $sAttributeCode);
 
+		// create field description
 		if($oAttributeDefinition instanceof AttributeString) {
 			return new FormFieldDescription(
 				$this->GetAttributeName($sAttributeCode),

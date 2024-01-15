@@ -78,3 +78,11 @@
 .error-label{
 	color: #d32f2f;
 }
+
+.container-color2 .form-compound-fieldset fieldset{
+	border-bottom: 1px dashed #c0d1fa;
+}
+
+.container-color2 .form-compound-fieldset fieldset:last-child{
+	border-bottom: none;
+}

@@ -178,7 +178,9 @@ final class FormFactory
 	 * Create form.
 	 *
 	 * @param string|null $sName
+	 *
 	 * @return mixed
+	 * @throws \Exception
 	 */
 	public function CreateForm(?string $sName = null) : mixed
 	{

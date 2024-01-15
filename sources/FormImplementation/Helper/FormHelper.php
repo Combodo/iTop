@@ -310,8 +310,10 @@ class FormHelper
 				':row_2' => [
 					'@rank' => 1,
 					'@css_classes' => ['custom-container', 'container-color2', 'mb-3'],
-					':column_2' => [
+					':column_1' => [
+						'@css_classes' => ['flex-grow-1'],
 						':fieldset_1' => [
+							'@rank' => 2,
 							'file'
 						],
 					],
@@ -320,10 +322,11 @@ class FormHelper
 
 			if(self::$MODES_DEFINITIONS[$iMode]['group']){
 				$aDescription[':row_1'][':column_2'][':fieldset_2'][] = 'Person_2';
-				$aDescription[':row_2'][':column_1'][':fieldset_1'] = [ 'Person_1', 'Person_3'];
+				$aDescription[':row_2'][':column_1'][':fieldset_2'] = [
+					'@rank' => 1, 'Person_1', 'Person_3'];
 			}
 			else{
-				$aDescription[':row_2'][':column_1'][':fieldset_1'] = [ 'Person_1_name'];
+				$aDescription[':row_2'][':column_1'][':fieldset_2'] = [ '@rank' => 1, 'Person_1_name'];
 			}
 
 			// layout description
