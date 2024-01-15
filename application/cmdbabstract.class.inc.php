@@ -3712,7 +3712,7 @@ HTML;
 			if ($oAttDef->GetEditClass() == 'Document') {
 				/** @var \ormDocument $oDocument */
 				$oDocument = $this->Get($sAttCode);
-				if (!$oDocument->IsEmpty()) {
+				if (is_object($oDocument) && !$oDocument->IsEmpty()) {
 					$sFieldAsHtml = $this->GetAsHTML($sAttCode);
 
 					$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
