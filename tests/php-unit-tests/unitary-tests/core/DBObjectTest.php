@@ -1328,6 +1328,6 @@ class DBObjectTest extends ItopDataTestCase
 	public function testSetTrim($sName, $sResult){
 		$oOrganisation = MetaModel::NewObject(Organization::class);
 		$oOrganisation->SetTrim('name', $sName);
-		$this->assertEquals($sResult,$oOrganisation->Get('name'), 'SetTrim must limit string to 255 characters');
+		$this->assertEquals($sResult, $oOrganisation->Get('name'), 'SetTrim must limit string to 255 characters');
 	}
 }
