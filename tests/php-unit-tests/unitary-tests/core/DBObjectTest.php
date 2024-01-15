@@ -1277,7 +1277,7 @@ class DBObjectTest extends ItopDataTestCase
 	/**
 	 * EventIssue has a OnInsert override that uses mb_strlen, so we need to test this specific case
 	 *
-	 * @covers       DBObject::DBIncrement
+	 * @covers       EventIssue::OnInsert
 	 *
 	 * @dataProvider getEventIssueCreation
 	 *
@@ -1324,7 +1324,9 @@ class DBObjectTest extends ItopDataTestCase
 	/**
 	 * Test check long field with non ascii characters
 	 *
-	 * @covers       DBObject::DBIncrement
+	 * @covers       DBObject::Set
+	 * @covers       DBObject::CheckToWrite
+	 * @covers       DBObject::SetTrim
 	 *
 	 * @dataProvider CheckLongValueInAttributeProvider
 	 *
@@ -1347,23 +1349,23 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oTicket->Set($sAttrCode, $sValueToSet);
 		$sValueInObject = $oTicket->Get($sAttrCode);
-		$this->assertSame($sValueToSet, $sValueInObject);
+		$this->assertSame($sValueToSet, $sValueInObject, 'Set should not alter the value even if the value is too long');
 
 		$oAttDef = MetaModel::GetAttributeDef(UserRequest::class, $sAttrCode);
 		$iAttrMaxSize = $oAttDef->GetMaxSize();
 		$bIsValueToSetBelowAttrMaxSize = ($iValueLength <= $iAttrMaxSize);
 		/** @noinspection PhpUnusedLocalVariableInspection */
 		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTicket->CheckToWrite();
-		$this->assertEquals($bIsValueToSetBelowAttrMaxSize, $bCheckStatus, "CheckResult result:".var_export($aCheckIssues,true));
+		$this->assertEquals($bIsValueToSetBelowAttrMaxSize, $bCheckStatus, "CheckResult result:".var_export($aCheckIssues, true));
 
 		$oTicket->SetTrim($sAttrCode, $sValueToSet);
 		$sValueInObject = $oTicket->Get($sAttrCode);
 		if ($bIsValueToSetBelowAttrMaxSize) {
-			$this->assertEquals($sValueToSet, $sValueInObject);
+			$this->assertEquals($sValueToSet, $sValueInObject,'Should not alter string that is already shorter than attribute max length');
 		} else {
-			$this->assertEquals($iAttrMaxSize, mb_strlen($sValueInObject));
+			$this->assertEquals($iAttrMaxSize, mb_strlen($sValueInObject),'Should truncate at the same length than attribute max length');
 			$sLastCharsOfValueInObject = mb_substr($sValueInObject, -30);
-			$this->assertStringContainsString(' -truncated', $sLastCharsOfValueInObject);
+			$this->assertStringContainsString(' -truncated', $sLastCharsOfValueInObject, 'Should end with "truncated" comment');
 		}
 	}
 
