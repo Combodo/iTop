@@ -1292,7 +1292,7 @@ class DBObjectTest extends ItopDataTestCase
 		$bIsValueToSetBelowAttrMaxSize = ($iValueLength <= $iAttrMaxSize);
 		/** @noinspection PhpUnusedLocalVariableInspection */
 		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTicket->CheckToWrite();
-		$this->assertEquals($bIsValueToSetBelowAttrMaxSize, $bCheckStatus, "CheckResult result:".var_export($aCheckIssues, true));
+		$this->assertEquals($bIsValueToSetBelowAttrMaxSize, $bCheckStatus, "CheckResult result:" . var_export($aCheckIssues, true));
 
 		$oTicket->SetTrim($sAttrCode, $sValueToSet);
 		$sValueInObject = $oTicket->Get($sAttrCode);
@@ -1308,14 +1308,14 @@ class DBObjectTest extends ItopDataTestCase
 	public function SetTrimProvider()
 	{
 		return [
-				'short string should not be truncated'=>               ['name','name'],
-		        'simple ascii string longer than 255 characters truncated'=> [
+				'short string should not be truncated' => ['name','name'],
+		        'simple ascii string longer than 255 characters truncated' => [
 							str_repeat('e',300),
-							str_repeat('e',232).' -truncated (300 chars)'
+							str_repeat('e',232) . ' -truncated (300 chars)'
 		        ],
-				'smiley string longer than 255 characters truncated'=> [
+				'smiley string longer than 255 characters truncated' => [
 					str_repeat('😃',300),
-					str_repeat('😃',232).' -truncated (300 chars)'
+					str_repeat('😃',232) . ' -truncated (300 chars)'
 				],
 
 			];
@@ -1327,7 +1327,7 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function testSetTrim($sName, $sResult){
 		$oOrganisation = MetaModel::NewObject(Organization::class);
-		$oOrganisation->SetTrim('name',$sName);
+		$oOrganisation->SetTrim('name', $sName);
 		$this->assertEquals($sResult,$oOrganisation->Get('name'),'SetTrim must limit string to 255 characters');
 	}
 }
