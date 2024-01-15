@@ -756,9 +756,10 @@ abstract class DBObject implements iDisplay
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 		$iMaxSize = $oAttDef->GetMaxSize();
-		if ($iMaxSize && (strlen($sValue) > $iMaxSize))
-		{
-			$sValue = substr($sValue, 0, $iMaxSize);
+		$sLength = mb_strlen($sValue);
+		if ($iMaxSize && ($sLength > $iMaxSize)) {
+			$sMessage = " -truncated ($sLength chars)";
+			$sValue = mb_substr($sValue, 0, $iMaxSize - mb_strlen($sMessage)).$sMessage;
 		}
 		$this->Set($sAttCode, $sValue);
 	}
@@ -2110,33 +2111,26 @@ abstract class DBObject implements iDisplay
 				return true;
 			}
 
-			if ($toCheck instanceof ormSet)
-			{
+			if ($toCheck instanceof ormSet) {
 				return true;
 			}
 
 			return "Bad type";
-		}
-		elseif ($oAtt->IsScalar())
-		{
+		} elseif ($oAtt->IsScalar()) {
+
 			$aValues = $oAtt->GetAllowedValues($this->ToArgsForQuery());
-			if (is_array($aValues) && (count($aValues) > 0))
-			{
-				if (!array_key_exists($toCheck, $aValues))
-				{
+			if (is_array($aValues) && (count($aValues) > 0)) {
+				if (!array_key_exists($toCheck, $aValues)) {
 					return "Value not allowed [$toCheck]";
 				}
 			}
-			if (!is_null($iMaxSize = $oAtt->GetMaxSize()))
-			{
-				$iLen = strlen($toCheck);
-				if ($iLen > $iMaxSize)
-				{
+			if (!is_null($iMaxSize = $oAtt->GetMaxSize())) {
+				$iLen = mb_strlen($toCheck);
+				if ($iLen > $iMaxSize) {
 					return "String too long (found $iLen, limited to $iMaxSize)";
 				}
 			}
-			if (!$oAtt->CheckFormat($toCheck))
-			{
+			if (!$oAtt->CheckFormat($toCheck)) {
 				return "Wrong format [$toCheck]";
 			}
 		}
