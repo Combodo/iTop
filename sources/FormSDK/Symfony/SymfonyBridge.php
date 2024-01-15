@@ -21,7 +21,7 @@ namespace Combodo\iTop\FormSDK\Symfony;
 
 use Combodo\iTop\FormSDK\Field\FormFieldDescription;
 use Combodo\iTop\FormSDK\Field\FormFieldTypeEnumeration;
-use Combodo\iTop\FormSDK\Symfony\Type\Compound\CollectionType;
+use Combodo\iTop\FormSDK\Symfony\Type\Compound\TableCollectionType;
 use Combodo\iTop\FormSDK\Symfony\Type\Compound\FieldsetType;
 use Combodo\iTop\FormSDK\Symfony\Type\Layout\ColumnType;
 use Combodo\iTop\FormSDK\Symfony\Type\Layout\RowType;
@@ -92,7 +92,7 @@ class SymfonyBridge
 			FormFieldTypeEnumeration::FIELDSET => FieldsetType::class,
 			FormFieldTypeEnumeration::NUMBER => IntegerType::class,
 			FormFieldTypeEnumeration::DURATION => DateIntervalType::class,
-			FormFieldTypeEnumeration::COLLECTION => CollectionType::class,
+			FormFieldTypeEnumeration::COLLECTION => TableCollectionType::class,
 			FormFieldTypeEnumeration::FILE => FileType::class,
 			default => null,
 		};

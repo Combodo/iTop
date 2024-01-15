@@ -29,7 +29,7 @@ use ExceptionLog;
 use MetaModel;
 
 /**
- * Form manipulation for DBObject.
+ * Form factory adapter for DBObject.
  *
  * @package FormSDK
  * @since 3.X.0
@@ -73,7 +73,7 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 	 * @throws \CoreException
 	 * @throws \ArchivedObjectException
 	 */
-	protected function GetAttributeData(string $sAttributeCode) : mixed
+	private function GetAttributeData(string $sAttributeCode) : mixed
 	{
 		return $this->oDBObject->Get($sAttributeCode);
 	}
@@ -140,12 +140,33 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 	 */
 	private function GetAttributeName(string $sAttributeCode) : string
 	{
-		return $this->bGroup ? $sAttributeCode : $this->GetIdentifier() . '_' . $sAttributeCode;
+		return $this->bGroup ? $sAttributeCode : $this->GetAdapterIdentifier() . '_' . $sAttributeCode;
+	}
+
+	/**
+	 * Get adapter label.
+	 *
+	 * @return string
+	 */
+	public function GetAdapterLabel(): string
+	{
+		return get_class($this->oDBObject) . ' ' . $this->oDBObject->GetKey();
+	}
+
+	/**
+	 * Get adapter identifier.
+	 *
+	 * @return string
+	 */
+	public function GetAdapterIdentifier(): string
+	{
+		return get_class($this->oDBObject) . '_' . $this->oDBObject->GetKey();
 	}
 
 	/** @inheritdoc */
 	public function GetFieldsData() : array
 	{
+		// prepare data...
 		$aData = [];
 		foreach ($this->aAttributes as $sAttributeCode => $oValue){
 			try {
@@ -157,9 +178,10 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 			}
 		}
 
+		// group
 		if($this->bGroup){
 			return [
-				$this->GetIdentifier() => $aData
+				$this->GetAdapterIdentifier() => $aData
 			];
 		}
 		else{
@@ -184,7 +206,7 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 		}
 
 		if($this->bGroup){
-			$oGroupDescriptions = new FormFieldDescription($this->GetIdentifier(), FormFieldTypeEnumeration::FIELDSET, [
+			$oGroupDescriptions = new FormFieldDescription($this->GetAdapterIdentifier(), FormFieldTypeEnumeration::FIELDSET, [
 				'fields' => $aFieldsDescriptions,
 				'layout' => [
 					':row_1' => [
@@ -193,29 +215,18 @@ final class FormFactoryObjectAdapter implements FormFactoryAdapterInterface
 					],
 				]
 			]);
-			return [$this->GetIdentifier() => $oGroupDescriptions];
+			return [$this->GetAdapterIdentifier() => $oGroupDescriptions];
 		}
 		else{
 			return $aFieldsDescriptions;
 		}
 	}
 
-	public function GetLabel(): string
-	{
-		return get_class($this->oDBObject) . ' ' . $this->oDBObject->GetKey();
-	}
-
-	/** @inheritdoc */
-	public function GetIdentifier(): string
-	{
-		return get_class($this->oDBObject) . '_' . $this->oDBObject->GetKey();
-	}
-
 	/** @inheritdoc */
 	public function UpdateFieldsData(array $aFormData) : bool
 	{
 		if($this->bGroup){
-			$aFormData = $aFormData[$this->GetIdentifier()];
+			$aFormData = $aFormData[$this->GetAdapterIdentifier()];
 		}
 
 		foreach ($this->aAttributes as $sAttCode => $aValue){

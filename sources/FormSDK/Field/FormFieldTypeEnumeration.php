@@ -46,7 +46,7 @@ enum FormFieldTypeEnumeration
 	public function GetAvailableOptions() : array
 	{
 		// global options
-		$aOptions = ['required', 'disabled', 'attr', 'label', 'label_attr', 'help'];
+		$aOptions = ['required', 'disabled', 'attr', 'label', 'label_attr', 'help', 'row_attr'];
 
 		// : specific options
 		return  match ($this) {

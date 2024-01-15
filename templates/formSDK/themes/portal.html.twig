@@ -45,7 +45,7 @@
     {{ form_row(form, {'attr' : {'class' : attr.class|default('') ~ ' form-compound-fieldset'}}) }}
 {%- endblock fieldset_row -%}
 
-{%- block itop_collection_widget -%}
+{%- block table_collection_widget -%}
    <table class="table table-striped">
        <thead>
             <tr>
@@ -64,4 +64,4 @@
            {% endfor %}
        </tbody>
    </table>
-{%- endblock itop_collection_widget -%}
+{%- endblock table_collection_widget -%}

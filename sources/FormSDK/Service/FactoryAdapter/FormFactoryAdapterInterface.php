@@ -27,14 +27,6 @@ namespace Combodo\iTop\FormSDK\Service\FactoryAdapter;
  */
 interface FormFactoryAdapterInterface
 {
-
-	/**
-	 * Return adapter identifier.
-	 *
-	 * @return string
-	 */
-	public function GetIdentifier() : string;
-
 	/**
 	 * Return fields descriptions.
 	 *

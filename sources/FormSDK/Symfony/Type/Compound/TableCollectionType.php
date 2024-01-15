@@ -29,12 +29,12 @@ use Symfony\Component\Form\Util\StringUtil;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Type representing a collection;
+ * Type representing a collection as a table;
  *
  * @package FormSDK
  * @since 3.X.0
  */
-class CollectionType extends AbstractType
+class TableCollectionType extends AbstractType
 {
 
 	/** @inheritdoc  */
@@ -58,9 +58,4 @@ class CollectionType extends AbstractType
 		$view->vars['types_labels'] = $options['types_labels'];
 	}
 
-	/** @inheritdoc  */
-	public function getBlockPrefix()
-	{
-		return 'itop_collection'; // need a specific block prefix as we create a CollectionType that's already exist in Symfony namespace
-	}
 }
