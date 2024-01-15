@@ -1288,9 +1288,7 @@ class DBObjectTest extends ItopDataTestCase
 	/**
 	 * Test check long field with non ascii characters
 	 *
-	 * @covers       DBObject::Set
-	 * @covers       DBObject::CheckToWrite
-	 * @covers       DBObject::SetTrim
+	 * @covers       DBObject::DBDelete
 	 *
 	 * @dataProvider DeletionLongValueProvider
 	 *
