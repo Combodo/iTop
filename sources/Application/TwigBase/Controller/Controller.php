@@ -256,6 +256,7 @@ abstract class Controller extends AbstractController
 	}
 
 	/**
+	 * @since 3.0.0 N°3606 - Adapt TwigBase Controller for combodo-monitoring extension
 	 * @throws \Exception
 	 */
 	protected function CheckAccess()
@@ -271,12 +272,24 @@ abstract class Controller extends AbstractController
 
 		if (empty($sExecModule) || empty($sConfiguredAccessTokenValue)){
 			LoginWebPage::DoLogin($this->m_bMustBeAdmin);
-		}else {
+		} else {
 			//token mode without login required
-			$sPassedToken = utils::ReadParam($this->m_sAccessTokenConfigParamId, null);
-			if ($sPassedToken !== $sConfiguredAccessTokenValue){
+			//N°7147 - Error HTTP 500 due to access_token not URL decoded
+			$sPassedToken = utils::ReadPostedParam($this->m_sAccessTokenConfigParamId, null, false, 'raw_data');
+			if (is_null($sPassedToken)){
+				$sPassedToken = utils::ReadParam($this->m_sAccessTokenConfigParamId, null, false, 'raw_data');
+			}
+
+			$sDecodedPassedToken = urldecode($sPassedToken);
+			var_dump([$sPassedToken, $sDecodedPassedToken]);
+			if ($sDecodedPassedToken !== $sConfiguredAccessTokenValue){
 				$sMsg = "Invalid token passed under '$this->m_sAccessTokenConfigParamId' http param to reach '$sExecModule' page.";
-				IssueLog::Error($sMsg);
+				IssueLog::Error($sMsg, null,
+					[
+						'sHtmlDecodedToken' => $sDecodedPassedToken,
+						'conf param ID' => $this->m_sAccessTokenConfigParamId
+					]
+				);
 				throw new Exception("Invalid token");
 			}
 		}
