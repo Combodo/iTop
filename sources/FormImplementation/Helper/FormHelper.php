@@ -323,7 +323,7 @@ class FormHelper
 			if(self::$MODES_DEFINITIONS[$iMode]['group']){
 				$aDescription[':row_1'][':column_2'][':fieldset_2'][] = 'Person_2';
 				$aDescription[':row_2'][':column_1'][':fieldset_2'] = [
-					'@rank' => 1, 'Person_1', 'Person_3'];
+					'@rank' => 1, 'Person_1', 'Person_3', 'notify'];
 			}
 			else{
 				$aDescription[':row_2'][':column_1'][':fieldset_2'] = [ '@rank' => 1, 'Person_1_name'];

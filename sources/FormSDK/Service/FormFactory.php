@@ -29,6 +29,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * Form factory.
  *
  * Build and manipulate forms.
+ * Factory collect information about the form (descriptions, data and adapters)
+ * Bridge provided in constructor is aimed to transform description into a form object.
  *
  * @package FormSDK
  * @since 3.X.0

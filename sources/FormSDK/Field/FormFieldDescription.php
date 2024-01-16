@@ -49,6 +49,7 @@ class FormFieldDescription
 		$oCheckStatus = $this->oType->CheckOptions($this->aOptions);
 		if(!$oCheckStatus['valid']){
 			$sInvalidOptions = implode(', ', $oCheckStatus['invalid_options']);
+			// @todo BDA dictionary
 			throw new Exception("Invalid option(s) $sInvalidOptions provided for field $sName");
 		}
 	}
