@@ -189,12 +189,82 @@ class DictionariesConsistencyTest extends ItopTestCase
 		$this->assertTrue(true);
 	}
 
+	/**
+	 * Since 3.0.0 and N°2969 it is possible to have a dictionaries directory in modules. We want to ensure that core modules use this functionality !
+	 *
+	 * @since 2.7.11 3.0.5 3.1.2 3.2.0 N°7143
+	 */
 	public function testNoDictFileInDatamodelsModuleRootDirectory():void {
 		$sAppRoot = static::GetAppRoot();
 		$aDictFilesInDatamodelsModuleRootDir = glob($sAppRoot.'datamodels/2.x/*/*.dict*.php');
-
 		$this->assertNotFalse($aDictFilesInDatamodelsModuleRootDir, 'Searching for files returned an error');
+
+		$aExcludedModulesList = $this->GetLtsCompatibleModulesList();
+		$aDictFilesInDatamodelsModuleRootDir = array_filter(
+			$aDictFilesInDatamodelsModuleRootDir,
+			function($sDictFileFullPath) use ($aExcludedModulesList) {
+				$sModuleFullPath = dirname($sDictFileFullPath);
+				$sModuleDirectory = basename($sModuleFullPath);
+				return !in_array($sModuleDirectory, $aExcludedModulesList);
+			}
+		);
+
+		$sDictFilesInDatamodelsModuleRootDirList = var_export($aDictFilesInDatamodelsModuleRootDir, true);
 		$this->assertCount(0, $aDictFilesInDatamodelsModuleRootDir,
-			"There are some files in datamodels module root dirs ! You must move them to the `dictionaries` module subfolder. \n List of files: ".var_export($aDictFilesInDatamodelsModuleRootDir, true));
+			<<<EOF
+There are some files in datamodels module root dirs ! You must either: 
+- add the module in the GetLtsCompatibleModulesList method (if the module needs to keep compatibility with iTop 2.7)
+- or move the dict files to the `dictionaries` module subfolder (if it can be set to iTop min 3.0.0)
+
+List of directories: 
+$sDictFilesInDatamodelsModuleRootDirList
+EOF
+		);
+	}
+
+	/**
+	 * @return string[] List of modules that we want to ignore in {@link testNoDictFileInDatamodelsModuleRootDirectory}
+	 *            Indeed multiple targets will add modules that must remain compatible with iTop 2.7 LTS, though with dict files in their root dir
+	 *            The dictionaries directory in modules was added in 3.0.0 with N°2969
+	 */
+	private function GetLtsCompatibleModulesList(): array {
+		return [
+			'approval-base',
+			'authent-token',
+			'combodo-approval-extended',
+			'combodo-approval-light',
+			'combodo-autoclose-ticket',
+			'combodo-autodispatch-ticket',
+			'combodo-calendar-view',
+			'combodo-coverage-windows-computation',
+			'combodo-custom-hyperlinks',
+			'combodo-dispatch-incident',
+			'combodo-dispatch-userrequest',
+			'combodo-email-synchro',
+			'combodo-hybridauth',
+			'combodo-impersonate',
+			'combodo-notify-on-expiration',
+			'combodo-oauth-email-synchro',
+			'combodo-password-expiration',
+			'combodo-portal-dynamic-branding-logo',
+			'combodo-saml',
+			'combodo-sla-computation',
+			'combodo-webhook-integration',
+			'combodo-workflow-graphical-view',
+			'customer-survey',
+			'email-reply',
+			'itop-approval-portal',
+			'itop-communications',
+			'itop-fence',
+			'itop-log-mgmt',
+			'itop-object-copier',
+			'itop-request-template',
+			'itop-standard-email-synchro',
+			'itop-system-information',
+			'itsm-designer-connector',
+			'precanned-replies-pro',
+			'precanned-replies',
+			'templates-base',
+		];
 	}
 }
