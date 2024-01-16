@@ -205,7 +205,6 @@ class DictionariesConsistencyTest extends ItopTestCase
 			function($sDictFileFullPath) use ($aExcludedModulesList) {
 				$sModuleFullPath = dirname($sDictFileFullPath);
 				$sModuleDirectory = basename($sModuleFullPath);
-				echo $sModuleDirectory;
 				return !in_array($sModuleDirectory, $aExcludedModulesList);
 			}
 		);
