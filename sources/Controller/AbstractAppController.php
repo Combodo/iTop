@@ -19,6 +19,9 @@
 
 namespace Combodo\iTop\Controller;
 
+use Combodo\iTop\Core\Configuration\ConfigurationService;
+use Config;
+
 /**
  * Class AbstractAppController
  *
@@ -27,6 +30,21 @@ namespace Combodo\iTop\Controller;
  */
 class AbstractAppController extends \Symfony\Bundle\FrameworkBundle\Controller\AbstractController
 {
+	/** @var \Combodo\iTop\Core\Configuration\ConfigurationService configuration service */
+	private ConfigurationService $oConfigurationService;
 
+
+	public function __construct(ConfigurationService $oConfigurationService)
+	{
+		$this->oConfigurationService = $oConfigurationService;
+	}
+
+
+	protected function getParameter(string $name): array|bool|string|int|float|\UnitEnum|null
+	{
+		return $this->oConfigurationService->Exist($name) ?
+			$this->oConfigurationService->Get($name) :
+			parent::getParameter($name);
+	}
 
 }
