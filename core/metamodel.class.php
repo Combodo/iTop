@@ -6846,18 +6846,6 @@ abstract class MetaModel
 			$sClass = $aRow[$sClassAlias."finalclass"];
 		}
 
-		// if an object is already being updated, then this method will return this object instead of recreating a new one.
-		// At this point the method DBUpdate of a new object with the same class and id won't do anything due to reentrance protection,
-		// so to ensure that the potential modifications are correctly saved, the object currently being updated is returned.
-		// DBUpdate() method then will take care that all the modifications will be saved.
-		if (array_key_exists($sClassAlias.'id', $aRow)) {
-			$iKey = $aRow[$sClassAlias."id"];
-			$oObject = self::GetReentranceObject($sClass, $iKey);
-			if ($oObject !== false) {
-				return $oObject;
-			}
-		}
-
 		return new $sClass($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 	}
 
