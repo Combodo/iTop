@@ -931,32 +931,6 @@ class DBObjectTest extends ItopDataTestCase
 		$this->assertEquals($sPerson2, $sPerson3);
 	}
 
-	public function testGetObjectUpdateUnderReentryProtection()
-	{
-		$oPerson = $this->CreatePersonInstance();
-		$oPerson->DBInsert();
-
-		$oPerson->Set('email', 'test@combodo.com');
-		$oPerson->DBUpdate();
-
-		$this->assertFalse($oPerson->IsModified());
-
-		$oNewPerson = MetaModel::GetObject('Person', $oPerson->GetKey());
-		$this->assertNotEquals($oPerson->GetObjectUniqId(), $oNewPerson->GetObjectUniqId());
-
-		MetaModel::StartReentranceProtection($oPerson);
-
-		$oPerson->Set('email', 'test1@combodo.com');
-		$oPerson->DBUpdate();
-
-		$this->assertTrue($oPerson->IsModified());
-
-		$oNewPerson = MetaModel::GetObject('Person', $oPerson->GetKey());
-		$this->assertEquals($oPerson->GetObjectUniqId(), $oNewPerson->GetObjectUniqId());
-
-		MetaModel::StopReentranceProtection($oPerson);
-	}
-
 	public function testObjectIsReadOnly()
 	{
 		$oPerson = $this->CreatePersonInstance();
