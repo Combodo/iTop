@@ -830,6 +830,31 @@ HTML;
 	 */
 	public function output()
 	{
+		// Send headers
+		if ($this->GetOutputFormat() === 'html') {
+			foreach ($this->a_headers as $sHeader) {
+				header($sHeader);
+			}
+		}
+
+		// Render HTKL content
+		$sHtml = $this->RenderContent();
+
+		// Echo global HTML
+		$oKpi = new ExecutionKPI();
+		echo $sHtml;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+
+		DBSearch::RecordQueryTrace();
+		ExecutionKPI::ReportStats();
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.2.0 N°6935
+	 */
+	protected function RenderContent(): string
+	{
 		$oKpi = new ExecutionKPI();
 
 		// Data to be passed to the view
@@ -933,16 +958,16 @@ HTML;
 		$aData['aDeferredBlocks']['oPageContent'] = $this->GetDeferredBlocks($this->GetContentLayout());
 		// - Prepare generic templates
 		$aData['aTemplates'] = array();
-		
+
 		// TODO 3.1 Replace hardcoded 'Please wait' with dict entries
-		
+
 		// - Modal template with loader
 		$oModalTemplateContentBlock = new UIContentBlock();
 		$oModalTemplateContentBlock->AddCSSClass('ibo-modal')
 			->AddDataAttribute('role', 'ibo-modal')
 			->AddSubBlock(SpinnerUIBlockFactory::MakeMedium(null, 'Please wait'));
 		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-modal-template', $oModalTemplateContentBlock);
-		
+
 		// - Small loader template
 		$oSmallLoaderTemplateContentBlock = new UIContentBlock();
 		$oSmallLoaderTemplateContentBlock->AddSubBlock(SpinnerUIBlockFactory::MakeSmall(null , 'Please wait'));
@@ -997,26 +1022,13 @@ HTML;
 
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 
-		// Send headers
-		if ($this->GetOutputFormat() === 'html') {
-			foreach ($this->a_headers as $sHeader) {
-				header($sHeader);
-			}
-		}
-
 		// Render final TWIG into global HTML
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
 
-		$oKpi->ComputeAndReport(get_class($this).' output');
-		
-		// Echo global HTML
-		echo $sHtml;
-		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+		$oKpi->ComputeAndReport("Rendering content (".static::class.")");
 
-		DBSearch::RecordQueryTrace();
-		ExecutionKPI::ReportStats();
+		return $sHtml;
 	}
-
 
 	/**
 	 * @inheritDoc
