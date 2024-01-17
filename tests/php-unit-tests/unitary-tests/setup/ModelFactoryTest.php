@@ -727,7 +727,33 @@ XML
   <nodeB id="Banner">
     <nodeE/>
     <nodeC>
-      <nodeD id="Bruce" _delta="define"/>
+      <nodeD id="Bruce"/>
+    </nodeC>
+  </nodeB>
+</nodeA>
+XML
+		];
+		$aDeltas['nested _delta should be cleaned'] = [
+			'sInitialXML' => <<<XML
+<nodeA>
+</nodeA>
+XML
+			,
+			'sDeltaXML' => <<<XML
+<nodeA>
+	<nodeB id="Banner" _delta="define">
+		<nodeC>
+			<nodeD id="Bruce" _delta="define"/>
+		</nodeC>
+	</nodeB>
+</nodeA>
+XML
+			,
+			'sExpectedXML' => <<<XML
+<nodeA>
+  <nodeB id="Banner">
+    <nodeC>
+      <nodeD id="Bruce"/>
     </nodeC>
   </nodeB>
 </nodeA>
