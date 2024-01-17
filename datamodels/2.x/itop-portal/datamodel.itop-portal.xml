@@ -41,7 +41,7 @@
         </allowed_portals>
       </properties>
       <classes>
-        <class id="User" _delta="define">
+        <class id="User">
           <!-- Allow <allowed_profile>s to apply the <transition>s below. Flags on <field>s will be merged with those from datamodel -->
           <!-- See example in UserRequest class -->
           <!--<lifecycle/>-->
@@ -56,21 +56,21 @@
             </scope>
           </scopes>
         </class>
-        <class id="Organization" _delta="define">
+        <class id="Organization">
           <scopes>
             <scope id="all">
               <oql_view><![CDATA[SELECT Organization WHERE id = :current_contact->org_id]]></oql_view>
             </scope>
           </scopes>
         </class>
-        <class id="Location" _delta="define">
+        <class id="Location">
           <scopes>
             <scope id="all">
               <oql_view><![CDATA[SELECT Location WHERE org_id = :current_contact->org_id]]></oql_view>
             </scope>
           </scopes>
         </class>
-        <class id="Contact" _delta="define">
+        <class id="Contact">
           <scopes>
             <scope id="all">
               <oql_view><![CDATA[SELECT Contact WHERE org_id = :current_contact->org_id]]></oql_view>
@@ -145,9 +145,9 @@
       </bricks>
       <navigation_rules>
         <!-- Close form (either the modal or the whole page) -->
-        <navigation_rule id="close-form" xsi:type="close" _delta="define"/>
+        <navigation_rule id="close-form" xsi:type="close"/>
         <!-- Go to the homepage -->
-        <navigation_rule id="go-to-homepage" xsi:type="go-to-homepage" _delta="define"/>
+        <navigation_rule id="go-to-homepage" xsi:type="go-to-homepage"/>
       </navigation_rules>
     </module_design>
   </module_designs>

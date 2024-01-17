@@ -2357,28 +2357,23 @@ EOF;
 	 */
 	public function ApplyChanges()
 	{
-		$oNodes = $this->ListChanges();
-		foreach ($oNodes as $oNode)
-		{
-			$sOperation = $oNode->GetAttribute('_alteration');
-			switch ($sOperation)
-			{
-				case 'added':
-				case 'replaced':
-				case 'needed':
-				case 'forced':
-					// marked as added or modified, just reset the flag
-					$oNode->removeAttribute('_alteration');
-					break;
-
-				case 'removed':
-					// marked as deleted, let's remove the node from the tree
-					$oNode->parentNode->removeChild($oNode);
-					break;
+		// Note: omitting the dot will make the query be global to the whole document!!!
+		$oNodes = $this->ownerDocument->GetNodes('.//*[@_alteration or @_old_id or @_delta]', $this, false);;
+		foreach ($oNodes as $oNode) {
+			// _delta must not exist after applying changes
+			if ($oNode->hasAttribute('_delta')) {
+				$oNode->removeAttribute('_delta');
 			}
-			if ($oNode->hasAttribute('_old_id'))
-			{
+			if ($oNode->hasAttribute('_old_id')) {
 				$oNode->removeAttribute('_old_id');
+			}
+			if ($oNode->hasAttribute('_alteration')) {
+				if ('removed' === $oNode->GetAttribute('_alteration')) {
+					$oNode->parentNode->removeChild($oNode);
+				} else {
+						// marked as added or modified, just reset the flag
+						$oNode->removeAttribute('_alteration');
+				}
 			}
 		}
 	}
