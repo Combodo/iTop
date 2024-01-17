@@ -19,6 +19,8 @@
  */
 
 use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Symfony\Component\DependencyInjection\Container;
 
 require_once(APPROOT.'application/newsroomprovider.class.inc.php');
@@ -270,14 +272,14 @@ interface iPreferencesExtension
 {
 	/**
 	 * @api
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 */
 	public function DisplayPreferences(WebPage $oPage);
 
 	/**
 	 * @api
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sOperation
 	 *
 	 * @return bool true if the operation has been used

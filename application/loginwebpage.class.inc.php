@@ -26,6 +26,8 @@
 
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
 
@@ -90,7 +92,7 @@ class LoginWebPage extends NiceWebPage
 		parent::__construct($sTitle);
 		$this->SetStyleSheet();
 		$this->no_cache();
-		$this->add_xframe_options();
+		$this->add_http_headers();
 	}
 	
 	public function SetStyleSheet()

@@ -23,7 +23,7 @@ use MetaModel;
 use UILinksWidget;
 use UserRights;
 use utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Class BlockIndirectLinkSetEditTable
@@ -131,7 +131,7 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $oValue
 	 * @param $aArgs
 	 * @param $sFormPrefix

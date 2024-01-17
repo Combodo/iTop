@@ -18,7 +18,6 @@ namespace Combodo\iTop\Test\UnitTest\Integration;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 
-
 /**
  * Wrapper to load dictionnary files without altering the main dictionnary
  * Eval will be called within the current namespace (this is done by adding a "namespace" statement)
@@ -110,7 +109,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 	{
 		$this->setUp();
 
-		$sAppRoot = $this->GetAppRoot();
+		$sAppRoot = static::GetAppRoot();
 
 		$aDictFiles = array_merge(
 			glob($sAppRoot.'datamodels/2.x/*/*.dict*.php'), // legacy form in modules
@@ -188,5 +187,14 @@ class DictionariesConsistencyTest extends ItopTestCase
 			}
 		}
 		$this->assertTrue(true);
+	}
+
+	public function testNoDictFileInDatamodelsModuleRootDirectory():void {
+		$sAppRoot = static::GetAppRoot();
+		$aDictFilesInDatamodelsModuleRootDir = glob($sAppRoot.'datamodels/2.x/*/*.dict*.php');
+
+		$this->assertNotFalse($aDictFilesInDatamodelsModuleRootDir, 'Searching for files returned an error');
+		$this->assertCount(0, $aDictFilesInDatamodelsModuleRootDir,
+			"There are some files in datamodels module root dirs ! You must move them to the `dictionaries` module subfolder. \n List of files: ".var_export($aDictFilesInDatamodelsModuleRootDir, true));
 	}
 }

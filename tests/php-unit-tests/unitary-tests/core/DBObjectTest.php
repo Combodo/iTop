@@ -32,6 +32,7 @@ use Organization;
 use Person;
 use Team;
 use User;
+use UserRequest;
 use UserRights;
 use utils;
 
@@ -46,6 +47,7 @@ class DBObjectTest extends ItopDataTestCase
 
 	// Counts
 	public $aReloadCount = [];
+
 
 	protected function setUp(): void
 	{
@@ -1199,7 +1201,7 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		return $this->aReloadCount[$sClass][$sKey] ?? 0;
 	}
-	
+
 	/**
 	 * @since 3.1.0-3 3.1.1 3.2.0 N°6716 test creation
 	 */
@@ -1234,5 +1236,98 @@ class DBObjectTest extends ItopDataTestCase
 
 		$fTotalDuration = microtime(true) - $fStart;
 		echo 'Total duration: '.sprintf('%.3f s', $fTotalDuration)."\n\n";
+	}
+
+	public function CheckLongValueInAttributeProvider() {
+		return [
+			// UserRequest.title is an AttributeString (maxsize = 255)
+			'title 250 chars' => ['title', 250],
+			'title 254 chars' => ['title', 254],
+			'title 255 chars' => ['title', 255],
+			'title 256 chars' => ['title', 256],
+			'title 300 chars' => ['title', 300],
+
+			// UserRequest.solution is an AttributeText (maxsize=65535) with format=text
+			'solution 250 chars' => ['solution', 250],
+			'solution 60000 chars' => ['solution', 60000],
+			'solution 65534 chars' => ['solution', 65534],
+			'solution 65535 chars' => ['solution', 65535],
+			'solution 65536 chars' => ['solution', 65536],
+			'solution 70000 chars' => ['solution', 70000],
+		];
+	}
+
+	/**
+	 * Test check long field with non ascii characters
+	 *
+	 * @covers       DBObject::Set
+	 * @covers       DBObject::CheckToWrite
+	 * @covers       DBObject::SetTrim
+	 *
+	 * @dataProvider CheckLongValueInAttributeProvider
+	 *
+	 * @since 3.1.2 N°3448 - Framework field size check not correctly implemented for multi-bytes languages/strings
+	 */
+	public function testCheckLongValueInAttribute(string $sAttrCode, int $iValueLength)
+	{
+		$sPrefix = 'a'; // just a small prefix so that the emoji bytes won't have a power of 2 (we want a non even value)
+		$sEmojiToRepeat = '😎'; // this emoji is 4 bytes long
+		$sEmojiRepeats = str_repeat($sEmojiToRepeat, $iValueLength - mb_strlen($sPrefix));
+		$sValueToSet = 	$sPrefix . $sEmojiRepeats;
+
+		$oTicket = MetaModel::NewObject('UserRequest', [
+			'ref'         => 'Test Ticket',
+			'title'       => 'Create OK',
+			'description' => 'Create OK',
+			'caller_id'   => 15,
+			'org_id'      => 3,
+		]);
+
+		$oTicket->Set($sAttrCode, $sValueToSet);
+		$sValueInObject = $oTicket->Get($sAttrCode);
+		$this->assertSame($sValueToSet, $sValueInObject, 'Set should not alter the value even if the value is too long');
+
+		$oAttDef = MetaModel::GetAttributeDef(UserRequest::class, $sAttrCode);
+		$iAttrMaxSize = $oAttDef->GetMaxSize();
+		$bIsValueToSetBelowAttrMaxSize = ($iValueLength <= $iAttrMaxSize);
+		/** @noinspection PhpUnusedLocalVariableInspection */
+		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTicket->CheckToWrite();
+		$this->assertEquals($bIsValueToSetBelowAttrMaxSize, $bCheckStatus, "CheckResult result:" . var_export($aCheckIssues, true));
+
+		$oTicket->SetTrim($sAttrCode, $sValueToSet);
+		$sValueInObject = $oTicket->Get($sAttrCode);
+		if ($bIsValueToSetBelowAttrMaxSize) {
+			$this->assertEquals($sValueToSet, $sValueInObject,'Should not alter string that is already shorter than attribute max length');
+		} else {
+			$this->assertEquals($iAttrMaxSize, mb_strlen($sValueInObject),'Should truncate at the same length than attribute max length');
+			$sLastCharsOfValueInObject = mb_substr($sValueInObject, -30);
+			$this->assertStringContainsString(' -truncated', $sLastCharsOfValueInObject, 'Should end with "truncated" comment');
+		}
+	}
+
+	public function SetTrimProvider()
+	{
+		return [
+				'short string should not be truncated' => ['name','name'],
+		        'simple ascii string longer than 255 characters truncated' => [
+							str_repeat('e',300),
+							str_repeat('e',232) . ' -truncated (300 chars)'
+		        ],
+				'smiley string longer than 255 characters truncated' => [
+					str_repeat('😃',300),
+					str_repeat('😃',232) . ' -truncated (300 chars)'
+				],
+
+			];
+	}
+
+	/**
+	 * @dataProvider SetTrimProvider
+	 * @return void
+	 */
+	public function testSetTrim($sName, $sResult){
+		$oOrganisation = MetaModel::NewObject(Organization::class);
+		$oOrganisation->SetTrim('name', $sName);
+		$this->assertEquals($sResult, $oOrganisation->Get('name'), 'SetTrim must limit string to 255 characters');
 	}
 }

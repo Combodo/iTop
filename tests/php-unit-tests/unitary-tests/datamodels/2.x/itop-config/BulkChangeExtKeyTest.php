@@ -58,7 +58,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	public function createRackObjects($aRackDict) {
 		foreach ($aRackDict as $iOrgId => $aRackNames) {
 			foreach ($aRackNames as $sRackName) {
-				$this->createObject('Rack', ['name' => $sRackName, 'description' => "${sRackName}Desc", 'org_id' => $iOrgId]);
+				$this->createObject('Rack', ['name' => $sRackName, 'description' => "{$sRackName}Desc", 'org_id' => $iOrgId]);
 			}
 		}
 	}

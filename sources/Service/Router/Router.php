@@ -118,7 +118,7 @@ class Router
 	 *
 	 * @return mixed Response from the route's handler, can be anything.
 	 *               Even though it can be anything, in most cases, response will either be:
-	 *               - A \WebPage for usual backoffice operations
+	 *               - A WebPage for usual backoffice operations
 	 *               - null for TwigBase backoffice operations
 	 */
 	public function DispatchRoute(string $sRoute)

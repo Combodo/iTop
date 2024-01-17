@@ -4,6 +4,11 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Application\WebPage;
+
+use CoreException;
+use ExecutionKPI;
+use utils;
 
 /**
  * Class JsonPPage
@@ -38,7 +43,7 @@ class JsonPPage extends JsonPage
 	 *
 	 * @return $this
 	 * @throws \CoreException
-	 *@see \JsonPPage::$sCallbackName
+	 *@see JsonPPage::$sCallbackName
 	 *
 	 */
 	public function SetCallbackName(string $sCallbackName)
@@ -54,7 +59,7 @@ class JsonPPage extends JsonPage
 
 	/**
 	 * @return string
-	 *@see \JsonPPage::$sCallbackName
+	 *@see JsonPPage::$sCallbackName
 	 */
 	public function GetCallbackName(): string
 	{

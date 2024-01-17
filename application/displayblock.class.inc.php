@@ -24,6 +24,8 @@ use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxBars\BlockChartAjaxBa
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxPie\BlockChartAjaxPie;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockCsv\BlockCsv;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockList\BlockList;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Router\Router;
 
 require_once(APPROOT.'/application/utils.inc.php');
@@ -595,7 +597,7 @@ class DisplayBlock
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 *
 	 * @throws \ApplicationException
@@ -1354,7 +1356,7 @@ JS
 }
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock
@@ -1378,7 +1380,7 @@ JS
 
 	/**
 	 * @param array $aExtraParams
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \ConfigException
@@ -1456,7 +1458,7 @@ JS
 
 	/**
 	 * @param array $aExtraParams
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 * @throws \ApplicationException
@@ -1564,7 +1566,7 @@ JS
 	/**
 	 * @deprecated 3.1.0 N°5957
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Html\Html|\Combodo\iTop\Application\UI\Base\Layout\UIContentBlock|string
@@ -1664,7 +1666,7 @@ JS
 
 	/**
 	 * @param array $aExtraParams
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -1830,7 +1832,7 @@ class MenuBlock extends DisplayBlock
 	 * an object in with the same tab active by default as the tab that was active when selecting
 	 * the "Modify..." action.
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 * @param string|null $sId
 	 *

@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventException;
@@ -757,11 +758,24 @@ abstract class DBObject implements iDisplay
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 		$iMaxSize = $oAttDef->GetMaxSize();
-		if ($iMaxSize && (strlen($sValue) > $iMaxSize))
-		{
-			$sValue = substr($sValue, 0, $iMaxSize);
+		$sLength = mb_strlen($sValue);
+		if ($iMaxSize && ($sLength > $iMaxSize)) {
+			$sMessage = " -truncated ($sLength chars)";
+			$sValue = mb_substr($sValue, 0, $iMaxSize - mb_strlen($sMessage)).$sMessage;
 		}
 		$this->Set($sAttCode, $sValue);
+	}
+
+	/**
+	 * @return void
+	 * @throws \ReflectionException
+	 */
+	protected function PostDeleteActions(): void
+	{
+		$this->FireEventAfterDelete();
+		$oKPI = new ExecutionKPI();
+		$this->AfterDelete();
+		$oKPI->ComputeStatsForExtension($this, 'AfterDelete');
 	}
 
 	/**
@@ -2099,33 +2113,26 @@ abstract class DBObject implements iDisplay
 				return true;
 			}
 
-			if ($toCheck instanceof ormSet)
-			{
+			if ($toCheck instanceof ormSet) {
 				return true;
 			}
 
 			return "Bad type";
-		}
-		elseif ($oAtt->IsScalar())
-		{
+		} elseif ($oAtt->IsScalar()) {
+
 			$aValues = $oAtt->GetAllowedValues($this->ToArgsForQuery());
-			if (is_array($aValues) && (count($aValues) > 0))
-			{
-				if (!array_key_exists($toCheck, $aValues))
-				{
+			if (is_array($aValues) && (count($aValues) > 0)) {
+				if (!array_key_exists($toCheck, $aValues)) {
 					return "Value not allowed [$toCheck]";
 				}
 			}
-			if (!is_null($iMaxSize = $oAtt->GetMaxSize()))
-			{
-				$iLen = strlen($toCheck);
-				if ($iLen > $iMaxSize)
-				{
+			if (!is_null($iMaxSize = $oAtt->GetMaxSize())) {
+				$iLen = mb_strlen($toCheck);
+				if ($iLen > $iMaxSize) {
 					return "String too long (found $iLen, limited to $iMaxSize)";
 				}
 			}
-			if (!$oAtt->CheckFormat($toCheck))
-			{
+			if (!$oAtt->CheckFormat($toCheck)) {
 				return "Wrong format [$toCheck]";
 			}
 		}
@@ -4095,6 +4102,8 @@ abstract class DBObject implements iDisplay
 			return;
 		}
 
+		$this->SetReadOnly("No modification allowed before delete");
+		$this->FireEventAboutToDelete();
 		$oKPI = new ExecutionKPI();
 		$this->OnDelete();
 		$oKPI->ComputeStatsForExtension($this, 'OnDelete');
@@ -4204,15 +4213,13 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
-		$this->FireEventAfterDelete();
-		$oKPI = new ExecutionKPI();
-		$this->AfterDelete();
-		$oKPI->ComputeStatsForExtension($this, 'AfterDelete');
+		$this->m_bIsInDB = false;
+
+		$this->PostDeleteActions();
 
 		// - Trigger for object pointing to the current object
 		$this->ActivateOnObjectUpdateTriggersForTargetObjects();
 
-		$this->m_bIsInDB = false;
 		$this->LogCRUDExit(__METHOD__);
 		// Fix for N°926: do NOT reset m_iKey as it can be used to have it for reporting purposes (see the REST service to delete
 		// objects, reported as bug N°926)
@@ -4268,6 +4275,7 @@ abstract class DBObject implements iDisplay
 				foreach ($aToDelete as $iId => $aData) {
 					/** @var \DBObject $oToDelete */
 					$oToDelete = $aData['to_delete'];
+
 					// The deletion based on a deletion plan should not be done for each object if the deletion plan is common (Trac #457)
 					// because for each object we would try to update all the preceding ones... that are already deleted
 					// A better approach would be to change the API to apply the DBDelete on the deletion plan itself... just once
@@ -6612,6 +6620,14 @@ abstract class DBObject implements iDisplay
 	 * @since 3.1.0
 	 */
 	protected function FireEventAfterDelete(): void
+	{
+	}
+
+	/**
+	 * @return void
+	 * @since 3.1.2
+	 */
+	protected function FireEventAboutToDelete(): void
 	{
 	}
 

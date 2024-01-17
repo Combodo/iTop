@@ -37,7 +37,7 @@ use MenuBlock;
 use MetaModel;
 use UserRights;
 use utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Class DataTableUIBlockFactory
@@ -58,7 +58,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 * If inside an iTop object, you can use {@see cmdbAbstractObject::DisplaySet()}
 	 *
 	 * @api
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sListId
 	 * @param \DBObjectSet $oSet
 	 * @param array $aExtraParams See possible values in {@see self::RenderDataTable()}
@@ -89,7 +89,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 * If inside an iTop object, you can use {@see cmdbAbstractObject::DisplaySet()}
 	 *
 	 * @api
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sListId
 	 * @param DBObjectSet $oSet
 	 * @param array $aExtraParams See possible values in {@see self::RenderDataTable()}
@@ -118,7 +118,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * @param \Combodo\iTop\Application\UI\Base\Component\DataTable\DataTable $oDataTable
 	 * @param string $sStyle
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sListId
 	 * @param \DBObjectSet $oSet
 	 * @param array $aExtraParams example keys used in this method :

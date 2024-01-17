@@ -100,6 +100,9 @@
  *
  */
 
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
+
 /**
  * Return a cleaned (i.e.
  * properly truncated) versin number from

@@ -9,6 +9,12 @@ use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\DownloadPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
+use Combodo\iTop\Application\WebPage\PDFPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\AjaxRenderController;
 use Combodo\iTop\Controller\Base\Layout\ActivityPanelController;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
@@ -77,18 +83,18 @@ try
 	if ($oRouter->CanDispatchRoute($sRoute)) {
 		$mResponse = $oRouter->DispatchRoute($sRoute);
 
-		// If response isn't a \WebPage, it is most likely that the output already occured, stop the script.
+		// If response isn't a WebPage, it is most likely that the output already occured, stop the script.
 		// Note that this is done here and not directly in the Router::DispatchRoute() so custom endpoint can handle null responses their own way.
 		if (false === ($mResponse instanceof WebPage)) {
 			die();
 		}
 
-		// Response is a \WebPage, let's handle it like legacy operations
+		// Response is a WebPage, let's handle it like legacy operations
 		$oPage = $mResponse;
 	}
 	// Otherwise, use legacy operation
 	else {
-		// Default for most operations, but can be switch to a \JsonPage, \DownloadPage or else if the operation requires it
+		// Default for most operations, but can be switch to a JsonPage, DownloadPage or else if the operation requires it
 		$oPage = new AjaxPage("");
 
 		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');

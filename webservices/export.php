@@ -26,6 +26,13 @@
  * @link https://www.itophub.io/wiki/page?id=latest:advancedtopics:exportdata_v1 script documentation
  */
 
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\CSVPage;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Application\WebPage\XMLPage;
+
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/excelexporter.class.inc.php');

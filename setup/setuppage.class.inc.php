@@ -20,6 +20,7 @@
 use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
 
 require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 require_once(APPROOT.'setup/runtimeenv.class.inc.php');

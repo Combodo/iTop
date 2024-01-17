@@ -21,7 +21,7 @@
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:UserLocal' => ITOP_APPLICATION_SHORT.' felhasználó',
-	'Class:UserLocal+' => '',
+    'Class:UserLocal+' => 'Rendszeren belül létrehozott felhasználó',
 	'Class:UserLocal/Attribute:password' => 'Jelszó',
 	'Class:UserLocal/Attribute:password+' => '',
 	'Class:UserLocal/Attribute:expiration' => 'Jelszó lejárati ideje',

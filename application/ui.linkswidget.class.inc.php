@@ -8,6 +8,8 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinkSetEditTable;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog;
+use Combodo\iTop\Application\WebPage\JsonPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 require_once(APPROOT.'application/displayblock.class.inc.php');

@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 if (!defined('APPROOT'))
 {
 	if (file_exists(__DIR__.'/../../approot.inc.php'))

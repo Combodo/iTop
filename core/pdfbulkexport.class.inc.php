@@ -12,6 +12,9 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\PDFPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Bulk export: PDF export, based on the HTML export converted to PDF
@@ -49,7 +52,7 @@ class PDFBulkExport extends HTMLBulkExport
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sPartId
 	 *
 	 * @return UIContentBlock

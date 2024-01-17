@@ -6,6 +6,7 @@
 
 use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeUIBlockFactory;
 use Combodo\iTop\Application\UI\Links\Set\BlockLinkSetDisplayAsProperty;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Form;
@@ -12996,7 +12997,7 @@ class AttributeRedundancySettings extends AttributeDBField
 	 * Display an option (form, or current value)
 	 *
 	 * @param string $sCurrentValue
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sFormPrefix
 	 * @param bool $bEditMode
 	 * @param string $sUserOption

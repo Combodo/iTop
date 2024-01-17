@@ -18,7 +18,7 @@ services:
         exclude:
           - '../../sources/alias.php'
           - '../../sources/FormImplementation/Symfony/Type'
-          - '../../sources/Application/WebPage'
+          - '../../sources/alias.php'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

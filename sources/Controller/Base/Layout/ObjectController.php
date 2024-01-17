@@ -6,7 +6,7 @@
 
 namespace Combodo\iTop\Controller\Base\Layout;
 
-use AjaxPage;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 use ApplicationContext;
 use ApplicationException;
 use cmdbAbstractObject;
@@ -26,8 +26,8 @@ use Dict;
 use Exception;
 use IssueLog;
 use iTopOwnershipLock;
-use iTopWebPage;
-use JsonPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
 use MetaModel;
 use SecurityException;
 use Combodo\iTop\Service\SummaryCard\SummaryCardService;
@@ -212,7 +212,7 @@ JS
 	}
 
 	/**
-	 * @return \iTopWebPage|\AjaxPage Object edit form in its webpage
+	 * @return iTopWebPage|AjaxPage Object edit form in its webpage
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -325,7 +325,7 @@ JS;
 	}
 	
 	/**
-	 * @return \iTopWebPage|\JsonPage Object edit form in its webpage
+	 * @return iTopWebPage|JsonPage Object edit form in its webpage
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -502,7 +502,7 @@ JS;
 	}
 
 	/**
-	 * @return \iTopWebPage|\JsonPage
+	 * @return iTopWebPage|JsonPage
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \ConfigException
@@ -764,7 +764,7 @@ JS;
 	/**
 	 * Add some JS files that are required during the modification of an object
 	 *
-	 * @param \iTopWebPage $oPage
+	 * @param iTopWebPage $oPage
 	 *
 	 * @return void
 	 */

@@ -21,6 +21,9 @@ use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\iTopPDF;
+use Combodo\iTop\Application\WebPage\PDFPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 /**
@@ -62,7 +65,7 @@ class DisplayableNode extends GraphNode
 
 	public function GetWidth()
 	{
-		return max(32, 5*strlen($this->GetProperty('label'))); // approximation of the text's bounding box
+		return max(32, 5 * mb_strlen($this->GetProperty('label'))); // approximation of the text's bounding box
 	}
 
 	public function GetHeight()
@@ -491,7 +494,7 @@ class DisplayableNode extends GraphNode
 		if ($bNoLabel)
 		{
 			// simulate a fake label with the approximate same size as the true label
-			$sLabel = str_repeat('x',strlen($this->GetProperty('label', $this->GetId())));
+			$sLabel = str_repeat('x', mb_strlen($this->GetProperty('label', $this->GetId())));
 			$sDot = 'label="'.$sLabel.'"';
 		}
 		else
@@ -1580,7 +1583,7 @@ EOF
 	 * @param string $sContextKey
 	 * @param array $aContextParams
 	 * @param array $aExcludedObjects
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param array $aResults
 	 * @param bool $bLazyLoading
 	 *
@@ -1602,7 +1605,7 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param array $aResults
 	 * @param bool $bLazyLoading
 	 *

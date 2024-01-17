@@ -17,6 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 require_once(__DIR__.'/../approot.inc.php');
 
 const EXIT_CODE_ERROR = -1;
@@ -40,10 +44,11 @@ if (!file_exists($sConfigFile))
 
 require_once(APPROOT.'/application/startup.inc.php');
 
-//temporary fix until below bug is resolvedd properly:
-//N°7008 - Fix missing background tasks in CRON when NOT in "developer_mode"
+// Temporary fix until below bug is resolved properly:
+// N°7008 - Fix missing background tasks in CRON when NOT in "developer_mode"
 require_once(APPROOT.'/sources/SessionTracker/SessionGC.php');
 require_once(APPROOT.'/sources/Service/TemporaryObjects/TemporaryObjectGC.php');
+require_once(APPROOT.'/sources/Service/Notification/Event/EventiTopNotificationGC.php');
 
 $oCtx = new ContextTag(ContextTag::TAG_CRON);
 
@@ -340,7 +345,7 @@ function CronExec($oP, $bVerbose, $bDebug=false)
 }
 
 /**
- * @param \WebPage $oP
+ * @param WebPage $oP
  */
 function CheckMaintenanceMode(Page $oP) {
 // Verify files instead of reloading the full config each time

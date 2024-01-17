@@ -81,6 +81,9 @@
       "application/logindefault.class.inc.php",
       "application/loginexternal.class.inc.php",
       "application/loginurl.class.inc.php"
+    ],
+    "files": [
+      "sources/alias.php"
     ]
   },
   "conflict": {

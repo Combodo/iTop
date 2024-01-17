@@ -1,4 +1,8 @@
 <?php
+
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\Page;
+
 require_once('xlsxwriter.class.php');
 
 class ExcelExporter

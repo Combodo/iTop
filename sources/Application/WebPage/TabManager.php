@@ -4,9 +4,13 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Application\WebPage;
+
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
+use DeprecatedCallsLog;
+use Dict;
 
 
 /**
@@ -307,7 +311,7 @@ class TabManager
 
 	/**
 	 * @param string $sContent
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 * @return mixed
 	 * @deprecated 3.0.0

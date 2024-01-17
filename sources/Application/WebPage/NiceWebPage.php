@@ -17,6 +17,15 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+namespace Combodo\iTop\Application\WebPage;
+
+use ApplicationContext;
+use ExecutionKPI;
+use MetaModel;
+use ThemeHandler;
+use UserRights;
+use utils;
+
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
  */
@@ -242,13 +251,6 @@ JS
 		// TODO 3.0.0: Reuse theming mechanism for Full Moon
 		$sCssThemeUrl = ThemeHandler::GetCurrentThemeUrl();
 		$this->add_linked_stylesheet($sCssThemeUrl);
-
-		$sCssRelPath = utils::GetCSSFromSASS(
-			'css/backoffice/main.scss',
-			array(
-				APPROOT.'css/backoffice/',
-			)
-		);
 	}
 
 	protected function GetReadyScriptsStartedTrigger(): ?string

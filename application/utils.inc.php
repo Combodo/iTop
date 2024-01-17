@@ -20,6 +20,8 @@
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Module\ModuleService;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
@@ -1453,7 +1455,7 @@ class utils
 	/**
 	 * Merge standard menu items with plugin provided menus items
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param int $iMenuId
 	 * @param \DBObjectSet $param
 	 * @param array $aActions
@@ -2956,7 +2958,7 @@ HTML;
 		$aResultPref = [];
 		$aShortcutPrefs = appUserPreferences::GetPref('keyboard_shortcuts', []);
 		// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
-		$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+		$aShortcutClasses = utils::GetClassesForInterface(iKeyboardShortcut::class, '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
 
 		foreach ($aShortcutClasses as $cShortcutPlugin) {
 			$sTriggeredElement = $cShortcutPlugin::GetShortcutTriggeredElementSelector();

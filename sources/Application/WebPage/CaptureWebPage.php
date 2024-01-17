@@ -15,8 +15,13 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+namespace Combodo\iTop\Application\WebPage;
+
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
+use Exception;
+use ExecutionKPI;
 
 /**
  * Adapter class: when an API requires WebPage and you want to produce something else

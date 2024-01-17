@@ -95,6 +95,10 @@ $(function()
 
 				me._onSubmitClick(oEvent);
 			});
+
+			this.element.on('get_attachment_ids', function(oEvent) {
+				return me.getAttachmentIds();
+			});
 		},
 
 		// - Callback when some fields have been touched

@@ -27,6 +27,9 @@
 // - not outputing xml when a wrong input is given (class, attribute names)
 //
 
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\CSVPage;
+
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 

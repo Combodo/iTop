@@ -23,7 +23,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIException;
 use Dict;
-use TabManager;
+use Combodo\iTop\Application\WebPage\TabManager;
 use utils;
 
 /**

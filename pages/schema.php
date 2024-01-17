@@ -12,6 +12,8 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Events\EventService;
 
 require_once('../approot.inc.php');
@@ -966,7 +968,7 @@ JS
 /**
  * Display the details of a given class of objects
  *
- * @param \iTopWebPage $oPage
+ * @param iTopWebPage $oPage
  * @param string $sClass
  * @param string $sContext
  *

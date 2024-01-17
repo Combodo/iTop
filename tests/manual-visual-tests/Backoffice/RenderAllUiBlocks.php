@@ -42,7 +42,7 @@ use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockWithJSRefreshCallback;
-use iTopWebPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 use LoginWebPage;
 use MetaModel;
 

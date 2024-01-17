@@ -22,6 +22,7 @@
 // Maintenance message display functions
 // Only included by approot.inc.php
 //
+use Combodo\iTop\Application\WebPage\ErrorPage;
 
 /**
  * Use a setup page to display the maintenance message

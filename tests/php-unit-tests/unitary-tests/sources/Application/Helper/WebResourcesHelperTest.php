@@ -10,7 +10,7 @@ use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
- * @covers \WebPage
+ * @covers WebPage
  */
 class WebResourcesHelperTest extends ItopTestCase
 {

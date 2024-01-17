@@ -68,6 +68,14 @@ if (!class_exists('StructureInstaller'))
 		{
 			if (strlen($sPreviousVersion) > 0)
 			{
+				// Search for existing ActionEmail where the language attribute was defined on its child
+				if (version_compare($sPreviousVersion, '3.2.0', '<')) {
+					SetupLog::Info("|  Migrate ActionEmail language attribute values to its parent.");
+					$sTableToRead = MetaModel::DBGetTable('ActionEmail');
+					$sTableToSet = MetaModel::DBGetTable('ActionNotification');
+					self::MoveColumnInDB($sTableToRead, 'language',  $sTableToSet, 'language');
+					SetupLog::Info("|  ActionEmail migration done.");
+				}
 				// If you want to migrate data from one format to another, do it here
 				self::RenameEnumValueInDB('Software', 'type', 'DBserver', 'DBServer');
 				self::RenameEnumValueInDB('Software', 'type', 'Webserver', 'WebServer');

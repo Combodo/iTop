@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 /**
  * This class manages the special template format used internally to build the iTop web pages

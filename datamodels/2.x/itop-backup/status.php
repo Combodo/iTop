@@ -25,6 +25,7 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 if (!defined('APPROOT')) {

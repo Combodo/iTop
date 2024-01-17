@@ -27,6 +27,10 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactor
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 use Combodo\iTop\Renderer\BlockRenderer;
 

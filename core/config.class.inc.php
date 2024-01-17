@@ -889,6 +889,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+        'forgot_password.url' => [
+			'type'                => 'string',
+			'description'         => 'Set this value to your "forgot password" service URL if it should be handled out of '.ITOP_APPLICATION_SHORT.'. Note that it will apply to all users (iTop users, LDAP users, ...)',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'deadline_format' => [
 			'type' => 'string',
 			'description' => 'The format used for displaying "deadline" attributes: any string with the following placeholders: $date$, $difference$',
@@ -1595,6 +1603,22 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'notifications.itop.read_notification_retention' => [
+			'type' => 'integer',
+			'description' => 'Duration in days after which iTop read notifications will be deleted',
+			'default' => 182,
+			'value' => 182,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'notifications.itop.newsroom_cache_time' => [
+			'type' => 'integer',
+			'description' => 'Duration in min between each fetch for notifications in newsroom',
+			'default' => 5,
+			'value' => 5,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'regenerate_session_id_enabled' => [
 			'type' => 'bool',
 			'description' => 'If true then session id will be regenerated on each login, to prevent session fixation.',
@@ -1639,6 +1663,14 @@ class Config
 			'type' => 'string',
 			'description' => 'Value of the X-Frame-Options HTTP header sent by iTop. Possible values : DENY, SAMEORIGIN, or empty string.',
 			'default' => 'SAMEORIGIN',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'security.enable_header_xcontent_type_options' => [
+			'type' => 'bool',
+			'description' => 'If set to false, iTop will stop sending the X-Content-Type-Options HTTP header. This header could trigger CORB protection on certain resources (JSON, XML, HTML, text) therefore blocking them.',
+			'default' => true,
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
@@ -1710,8 +1742,8 @@ class Config
 		'application.secret' => [
 			'type'                => 'string',
 			'description'         => 'Application secret, uses this value for encrypting the cookies used in the remember me functionality and for creating signed URIs when using ESI (Edge Side Includes).',
-			'default'             => true,
-			'value'               => true,
+			'default'             => '',
+			'value'               => '',
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
@@ -2335,6 +2367,24 @@ class Config
 	public function SetAllowedLoginTypes($aAllowedLoginTypes)
 	{
 		$this->m_sAllowedLoginTypes = implode('|', $aAllowedLoginTypes);
+	}
+
+	/**
+	 * @since 2.7.11 N°7085
+	 * Add login mode if not configured already
+	 * @param string $sLoginMode
+	 *
+	 * @return void
+	 */
+	public function AddAllowedLoginTypes($sLoginMode)
+	{
+		$aAllowedLoginTypes = $this->GetAllowedLoginTypes();
+		if (in_array($sLoginMode, $aAllowedLoginTypes)){
+			return;
+		}
+
+		$aAllowedLoginTypes[] = $sLoginMode;
+		$this->SetAllowedLoginTypes($aAllowedLoginTypes);
 	}
 
 	public function SetExternalAuthenticationVariable($sExtAuthVariable)

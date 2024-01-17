@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\JsonPage;
+use Combodo\iTop\Application\WebPage\JsonPPage;
+
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');

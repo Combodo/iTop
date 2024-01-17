@@ -1,9 +1,15 @@
 <?php
 
+namespace Combodo\iTop\Application\WebPage;
+
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Dict;
+use ExecutionKPI;
+use IssueLog;
+use utils;
 
 /**
  * @copyright   Copyright (C) 2010-2023 Combodo SARL

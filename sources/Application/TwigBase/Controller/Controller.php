@@ -19,16 +19,16 @@
 
 namespace Combodo\iTop\Application\TwigBase\Controller;
 
-use AjaxPage;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 use ApplicationMenu;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Controller\AbstractController;
 use Dict;
-use ErrorPage;
+use Combodo\iTop\Application\WebPage\ErrorPage;
 use Exception;
 use ExecutionKPI;
 use IssueLog;
-use iTopWebPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 use LoginWebPage;
 use MetaModel;
 use ReflectionClass;
@@ -37,7 +37,7 @@ use SetupUtils;
 use Twig\Error\Error;
 use Twig\Error\SyntaxError;
 use utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use ZipArchive;
 
 abstract class Controller extends AbstractController
@@ -53,7 +53,7 @@ abstract class Controller extends AbstractController
 	protected $m_sOperation;
 	/** @var string */
 	private $m_sModule;
-	/** @var iTopWebPage|\AjaxPage */
+	/** @var iTopWebPage|AjaxPage */
 	private $m_oPage;
 	/** @var bool */
 	private $m_bCheckDemoMode = false;
@@ -687,7 +687,7 @@ abstract class Controller extends AbstractController
 		{
 			case self::ENUM_PAGE_TYPE_HTML:
 				$this->m_oPage = new iTopWebPage($this->GetOperationTitle(), false);
-				$this->m_oPage->add_xframe_options();
+				$this->m_oPage->add_http_headers();
 
 				if ($this->m_bIsBreadCrumbEnabled) {
 					if (count($this->m_aBreadCrumbEntry) > 0) {
