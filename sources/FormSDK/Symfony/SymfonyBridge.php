@@ -125,7 +125,6 @@ class SymfonyBridge
 	private function TransformDurationOptions(array $aOptions) : array
 	{
 		$aOptions['input'] = 'array';
-//		$aOptions['widget'] = 'integer';
 
 		return $aOptions;
 	}
@@ -208,7 +207,7 @@ class SymfonyBridge
 			}
 		}
 
-		// handle global layout types
+		// handle global layout
 		['types_declarations' => $aLayoutSymfonyTypesDeclaration]  = $this->CreateLayoutTypes($aLayout, $oFormBuilder, $aSymfonyTypesDeclaration);
 		$aSymfonyTypesDeclaration = array_merge($aLayoutSymfonyTypesDeclaration, $aSymfonyTypesDeclaration);
 
@@ -261,7 +260,7 @@ class SymfonyBridge
 		// scan layout hierarchy...
 		foreach ($aLayout as $sKey => $oLayoutElement)
 		{
-			// properties
+			//parse properties
 			if(str_starts_with($sKey, '@')){
 
 				if($sKey === '@css_classes'){
@@ -276,7 +275,7 @@ class SymfonyBridge
 
 			}
 
-			// layout elements
+			// parse layout elements
 			else if(str_starts_with($sKey, ':')){
 
 				// layout type
@@ -297,11 +296,9 @@ class SymfonyBridge
 				['type' => $aType, 'rank' => $iTypeRank] = $this->CreateLayoutContainerType($oLayoutElement, $oFormBuilder, substr($sKey, 1), $sType, $aDescriptions);
 				$aRanks[$sKey] = $iTypeRank;
 				$aResult[$sKey] = $aType;
-
 			}
 
-
-			// fields
+			// parse form fields
 			else {
 
 				// field with information
@@ -319,7 +316,7 @@ class SymfonyBridge
 					unset($aDescriptions[$sKey]);
 				}
 
-				// only field
+				// field without information
 				else if (array_key_exists($oLayoutElement, $aDescriptions)) {
 
 					$aRanks[$oLayoutElement] = -1;
