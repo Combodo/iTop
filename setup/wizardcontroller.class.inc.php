@@ -217,7 +217,7 @@ HTML;
 				}
 			}			
 		}
-		$oPage->add_linked_script('../setup/setup.js');
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot() . 'setup/setup.js');
 		$oPage->add_script("function CanMoveForward()\n{\n".$oStep->JSCanMoveForward()."\n}\n");
 		$oPage->add_script("function CanMoveBackward()\n{\n".$oStep->JSCanMoveBackward()."\n}\n");
 		$oPage->add('<form id="wiz_form" class="ibo-setup--wizard" method="post">');
