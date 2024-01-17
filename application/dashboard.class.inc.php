@@ -563,8 +563,8 @@ JS
 		}
 
 		if (!$bEditMode) {
-			$oPage->add_linked_script('../js/dashlet.js');
-			$oPage->add_linked_script('../js/dashboard.js');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot() . 'js/dashlet.js');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot() . 'js/dashboard.js');
 		}
 
 		return $oDashboard;

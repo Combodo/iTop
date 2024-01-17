@@ -771,7 +771,7 @@ JS;
 	protected function AddRequiredForModificationJsFilesToPage(iTopWebPage &$oPage): void
 	{
 		foreach (static::EnumRequiredForModificationJsFilesRelPaths() as $sJsFileRelPath) {
-			$oPage->add_linked_script("../$sJsFileRelPath");
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot() . "$sJsFileRelPath");
 		}
 	}
 

@@ -735,15 +735,28 @@ class WebPage implements Page
 	 * Add a script (as an include, i.e. link) to the header of the page.<br>
 	 * Handles duplicates : calling twice with the same script will add the script only once
 	 *
-	 * @uses WebPage::$a_linked_scripts
-	 * @param string $s_linked_script
+	 * @param string $sLinkedScriptAbsUrl
+	 *
 	 * @return void
+	 * @uses WebPage::$a_linked_scripts
+	 * @since 3.2.0 N°6935 $sLinkedScriptAbsUrl MUST be an absolute URL
 	 */
-	public function add_linked_script($s_linked_script)
+	public function add_linked_script($sLinkedScriptAbsUrl)
 	{
-		if (!empty(trim($s_linked_script))) {
-			$this->a_linked_scripts[$s_linked_script] = $s_linked_script;
+		// Ensure there is actually an URI
+		if (utils::IsNullOrEmptyString(trim($sLinkedScriptAbsUrl))) {
+			return;
 		}
+
+		// Check if URI is absolute ("://" do allow any protocol), otherwise warn that it's a deprecated behavior
+		if (false === stripos($sLinkedScriptAbsUrl, "://")) {
+			IssueLog::Warning("Linked script added to page with a non absolute URL, which may lead to it not being loaded and causing javascript errors.", null, [
+				"linked_script_url" => $sLinkedScriptAbsUrl,
+				"request_uri" => $_SERVER['REQUEST_URI'],
+			]);
+		}
+
+		$this->a_linked_scripts[$sLinkedScriptAbsUrl] = $sLinkedScriptAbsUrl;
 	}
 
 	/**
