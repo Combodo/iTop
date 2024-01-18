@@ -651,7 +651,7 @@ try
 						$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 						$oP->add("<div style=\"padding: 10px;\">\n");
 						$oP->add("<div class=\"header_message\" id=\"full_text_progress\" style=\"position: fixed; background-color: #cccccc; opacity: 0.7; padding: 1.5em;\">\n");
-						$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', utils::EscapeHtml($sFullText)).'</span>');
+						$oP->add('<img id="full_text_indicator" src="' . utils::GetAbsoluteUrlAppRoot() . 'images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', utils::EscapeHtml($sFullText)).'</span>');
 						$oP->add("</div>\n");
 						$oP->add("<div id=\"full_text_results\">\n");
 						$oP->add("<div id=\"full_text_progress_placeholder\" style=\"padding: 1.5em;\">&nbsp;</div>\n");
@@ -703,7 +703,7 @@ try
 				break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
-			
+
 			/** @deprecated 3.1.0 Use the "object.new" route instead */
 			// Kept for backward compatibility
 			case 'new': // Form to create a new object

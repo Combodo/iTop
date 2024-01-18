@@ -133,7 +133,7 @@ function ValidateOtherSettings()
 	}
 	else
 	{
-		$('#v_default_page_size').html('<img src="../images/validation_error.png"/>');
+		$('#v_default_page_size').html('<img src="' + GetAbsoluteUrlAppRoot() + 'images/validation_error.png"/>');
 		$('#ibo-misc-settings-submit').prop('disabled', true);
 		return false;
 	}
@@ -421,7 +421,7 @@ JS
 
 	$oUserPicturePlaceHolderBlock = new Panel(Dict::S('UI:Preferences:ChooseAPlaceholder'), array(), 'grey', 'ibo-user-picture-placeholder');
 
-	$sUserPicturesFolder = '../images/user-pictures/';
+	$sUserPicturesFolder = utils::GetAbsoluteUrlAppRoot() . 'images/user-pictures/';
 	$sUserDefaultPicture = appUserPreferences::GetPref('user_picture_placeholder', 'default-placeholder.png');
 	$sUserPicturePlaceHolderHtml = '';
 	$sUserPicturePlaceHolderHtml .= '<p>'.Dict::S('UI:Preferences:ChooseAPlaceholder+').'</p> <div class="ibo-preferences--user-preferences--picture-placeholder">';

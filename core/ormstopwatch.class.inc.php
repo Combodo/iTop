@@ -217,7 +217,7 @@ class ormStopWatch
 		}
 		else
 		{
-			$aProperties['Elapsed'] = 'running <img src="../images/indicator.gif">';
+			$aProperties['Elapsed'] = 'running <img src="' . utils::GetAbsoluteUrlAppRoot() . 'images/indicator.gif">';
 		}
 
 		$aProperties['Started'] = $oAttDef->SecondsToDate($this->iStarted);

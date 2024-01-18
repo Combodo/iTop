@@ -1375,7 +1375,7 @@ JS
 						<<<EOF
 			$('.search-class-$sClassName button').prop('disabled', true);
 
-			$('.search-class-$sClassName h2').append('&nbsp;<img id="indicator" src="../images/indicator.gif">');
+			$('.search-class-$sClassName h2').append('&nbsp;<img id="indicator" src="' + GetAbsoluteUrlAppRoot() + 'images/indicator.gif">');
 			var oParams = {operation: 'full_text_search_enlarge', class: '$sClassName', text: '$sFullTextJS'};
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
 				$('.search-class-$sClassName').html(data);
@@ -1532,6 +1532,7 @@ EOF
 			case 'xlsx_export_dialog':
 				DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 				$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+				$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
 				$oPage->SetContentType('text/html');
 				$oPage->add(
 					<<<EOF
@@ -1561,11 +1562,11 @@ EOF
 	padding-left: 16px;
 	cursor: pointer;
 	font-size: 10pt;
-	background: url(../images/minus.gif) 0 2px no-repeat;
+	background: url({$sAppRootUrl}images/minus.gif) 0 2px no-repeat;
 }				
 .statistics > div.closed {
 	padding-left: 16px;
-	background: url(../images/plus.gif) 0 2px no-repeat;
+	background: url({$sAppRootUrl}images/plus.gif) 0 2px no-repeat;
 }
 				
 .statistics .closed .stats-data {
@@ -1594,7 +1595,7 @@ EOF
 				);
 				$sJSLabels = json_encode($aLabels);
 				$sFilter = addslashes($sFilter);
-				$sJSPageUrl = addslashes(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php');
+				$sJSPageUrl = addslashes($sAppRootUrl.'pages/ajax.render.php');
 				$oPage->add_ready_script("$('#XlsxExportDlg').xlsxexporter({filter: '$sFilter', labels: $sJSLabels, ajax_page_url: '$sJSPageUrl'});");
 				break;
 
@@ -2208,7 +2209,8 @@ EOF
 				$oPage = new NiceWebPage(Dict::S('UI:BrowseInlineImages'));
 				$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/magnific-popup/dist/magnific-popup.css');
 				$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/magnific-popup/dist/jquery.magnific-popup.min.js');
-				$sImgUrl = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL;
+				$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
+				$sImgUrl = $sAppRootUrl.INLINEIMAGE_DOWNLOAD_URL;
 
 				/** @noinspection SuspiciousAssignmentsInspection cke_upload_and_browse and cke_browse are chained */
 				$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
@@ -2236,7 +2238,7 @@ EOF
 					}
 				}
 
-				$sPostUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?CKEditorFuncNum='.$sCKEditorFuncNum;
+				$sPostUrl = $sAppRootUrl.'pages/ajax.render.php?CKEditorFuncNum='.$sCKEditorFuncNum;
 
 				$oPage->add_style(
 					<<<EOF
@@ -2304,7 +2306,7 @@ EOF
 				$oPage->add_ready_script(
 					<<<EOF
 $('#upload_button').on('change', function() {
-	$('#upload_status').html('<img src="../images/indicator.gif">'); 
+	$('#upload_status').html('<img src="{$sAppRootUrl}images/indicator.gif">'); 
 	$('#upload_form').submit();
 	$(this).prop('disabled', true);
 });
