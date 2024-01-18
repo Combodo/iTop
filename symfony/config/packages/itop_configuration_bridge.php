@@ -26,34 +26,36 @@ return static function (ContainerConfigurator $container) {
 	// configuration entries
 	$aConfigurationEntries = $oConfig->ToArray();
 
-	///////////////////////////////////// NO DECLARATION
+	// 1 - NO DECLARATION ///////////////////////////////////////////////////////////////////////////////////
 
-	// on utilise un service accessible depuis de controlleur abstrait.
-	// on accède aux paramètres via le service
-	// Moins déclaratif, on perds l'information des paramètres utiles au servie
-	// + simple et comprehensible
-	// on redéfinit la function getParameter du controlleur abstrait pour véfifier les paramètre iTop avant ceux de Symfony.
+	// on utilise un service accessible depuis le controlleur abstrait.
+	// on accède aux paramètres via ce service que l'on peut injecter dans nos controlleurs et services.
+	// Moins déclaratif, on perds l'information des paramètres utiles aux services.
+	// on redéfinit la function getParameter du controlleur abstrait pour véfifier les paramètres en plus de ceux de Symfony.
 
-	///////////////////////////////////// EXPLICIT PARAMETERS DECLARATION
+	// 2 - EXPLICIT PARAMETERS DECLARATION //////////////////////////////////////////////////////////////////
 
 	// On déclare explicitement les paramètres d'iTop dont on a besoin dans nos services.
 	// On peut ensuite les injecter dans nos services mais il est nécessaire de binder les noms de variables.
 
 	/**
+	 * parameters:
+	 * apc_cache.enabled: true
+	 *
 	 * services:
 	 *     _defaults:
 	 *         bind:
-	 *           $sApplicationSecret: '%application.secret%'
+	 *           $bCacheEnabled: '%apc_cache.enabled%'
 	 *
-	 *  public function __construct(string $sApplicationSecret){
+	 *  public function __construct(bool $bCacheEnabled){
 	 *      ...
 	 *  }
 	 */
 
-	// kernel.secret
-	$container->parameters()->set('kernel.secret', $oConfig->Get('application.secret'));
+	// apc_cache.enabled
+	$container->parameters()->set('apc_cache.enabled', $oConfig->Get('apc_cache.enabled'));
 
-	///////////////////////////////////// 🧙‍♂️ AUTOMATIC PARAMETERS DECLARATION
+	// 3 - FULL PARAMETERS DECLARATION ///////////////////////////////////////////////////////////////////////
 
 	// On déclare automatiquement tous les paramètres d'iTop.
 	// On peut ensuite les injecter dans nos services mais il est nécessaire de binder les noms de variables.
@@ -62,26 +64,25 @@ return static function (ContainerConfigurator $container) {
 		$container->parameters()->set($key, $value);
 	}
 
-	///////////////////////////////////// AUTOMATIC PARAMETERS DECLARATION WITH AUTO WIRE ATTRIBUTE
+	// 4 - WITH AUTO WIRE ATTRIBUTE ///////////////////////////////////////////////////////////////////////////
 
-	// On déclare automatiquement tous les paramètres d'iTop.
-	// in utilise l'atttribute #[Autowire au lieu du binding
+	// On utilise l'atttribute #[Autowire au lieu du binding
 	// https://symfony.com/doc/current/service_container/autowiring.html#fixing-non-autowireable-arguments
 
 	/**
 	 *
-	 *  public function __construct(#[Autowire('%log_level_min%')] string $sApplicationSecret){
+	 *  public function __construct(#[Autowire('%apc_cache.enabled%')] bool $bCacheEnabled){
 	 *      ...
 	 *  }
 	 */
 
-	///////////////////////////////////// 🧘‍♂️ BIND AUTOMATIC
+	// 5 - BINDING AUTOMATIC //////////////////////////////////////////////////////////////////////////////////
 
 	// On bind tous les paramètres d'iTop en adaptant leur noms
 	// temporary_object.lifetime => temporaryObject_lifetime
 	// pour le faire en PHP, les services doivent êtres déclarés dans le même fichier.
 	// https://symfony.com/doc/6.4/service_container.html#binding-arguments-by-name-or-type
-	// ne marche pas et n'est pas clair sur le nommage
+	// ne marche pas et n'est de toutes les facons pas clair sur le nommage
 
 };
 
