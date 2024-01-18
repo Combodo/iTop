@@ -570,7 +570,7 @@ class DisplayBlock
 		} else {
 			// render it as an Ajax (asynchronous) call
 			$oHtml->AddCSSClass("loading");
-			$oHtml->AddHtml("<p><img src=\"../images/indicator_arrows.gif\"> ".Dict::S('UI:Loading').'</p>');
+			$oHtml->AddHtml("<p><img src=\"".utils::GetAbsoluteUrlAppRoot()."images/indicator_arrows.gif\"> ".Dict::S('UI:Loading').'</p>');
 			$oPage->add_script('
 			$.post("ajax.render.php?style='.$this->m_sStyle.'",
 			   { operation: "ajax", filter: "'.$sFilter.'", extra_params: "'.$sExtraParams.'" },
