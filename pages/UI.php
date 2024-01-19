@@ -6,14 +6,12 @@
 
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
@@ -23,7 +21,9 @@ use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
+use Combodo\iTop\Kernel;
 use Combodo\iTop\Service\Router\Router;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -319,6 +319,7 @@ try
 	$oKPI->ComputeAndReport('User login');
 
 	// First check if we can redirect the route to a dedicated controller
+	// IMPORTANT: Even though iTop router is deprecated, we must ensure old URLs keep working (for a while) as they can be used in received notifications, bookmarks, extensions, ...
 	$sRoute = utils::ReadParam('route', '', false, utils::ENUM_SANITIZATION_FILTER_ROUTE);
 	$oRouter = Router::GetInstance();
 	if ($oRouter->CanDispatchRoute($sRoute)) {
@@ -341,7 +342,131 @@ try
 		$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'), $bPrintable);
 		$oP->SetMessage($sLoginMessage);
 
-		// All the following actions use advanced forms that require more javascript to be loaded
+		//-----------------------------------------------------------------------------------------------------------------
+		//
+		// Mind that the following backward compatibility pattern is also present in the `pages/ajax.render.php` endpoint
+		//
+		//-----------------------------------------------------------------------------------------------------------------
+		//
+		// Kept for backward compatibility with iTop 3.1.x notification URLs, don't remove
+		// Non-dispatchable "routes" (iTop 3.1) are mapped to their old corresponding "operation" (iTop 3.0 and older), in order to be later redirected to the proper new URLs (iTop 3.2 and newer)
+		switch ($sRoute) {
+			case 'object.new':
+			case 'object.apply_new':
+			case 'object.modify':
+			case 'object.apply_modify':
+				$operation = str_ireplace("object.", "", $sRoute);
+				break;
+		}
+
+		if (utils::IsNotNullOrEmptyString($sRoute)) {
+			DeprecatedCallsLog::Debug("Calling UI.php with a deprecated \"route\" parameter that was migrated to Symfony router, redirecting to fallback \"operation\" parameter. If URI comes from a custom code, migrate it. If URI comes from an old notification, mind that it may not work in future versions.", LogChannels::ROUTER, [
+				"request_uri" => $_SERVER["REQUEST_URI"],
+				"route" => $sRoute,
+				"fallback_operation" => $operation,
+			]);
+		}
+
+		// Kept for backward compatibility with iTop 3.0 and older notification URLs, don't remove
+		// These operations have been migrated to Symfony router, we need to redirect to the proper new URLs
+		switch ($operation) {
+			/** @deprecated 3.1.0 Use the "b_object_new" Symfony route instead */
+			case 'new':
+			/** @deprecated 3.1.0 Use the "b_object_apply_new" Symfony route instead */
+			case 'apply_new':
+			/** @deprecated 3.1.0 Use the "b_object_modify" Symfony route instead */
+			case 'modify':
+			/** @deprecated 3.1.0 Use the "b_object_apply_new" Symfony route instead */
+			case 'apply_modify':
+				// Start a Symfony kernel and redirect to the corresponding route / controller
+				$oKernel = new Kernel("prod", false);
+				$oRequest = Request::createFromGlobals();
+
+				/** @var string $sRouteName Route name to redirect to */
+				$sRouteName = '';
+				/** @var string[] $aPath Parts of the Symfony route path (eg. for "/object/{sCLass}/{sId}", ["sClass" => "UserRequest", "sId" => "123"]) */
+				$aPath = [];
+				/** @var string[] $aQuery Query parameters of the request -parameters after the "?" of the URI- (eg. for "/object/UserRequest/123?a=1&b=2", ["a" => 1, "b" => 2]) */
+				$aQuery = $oRequest->query->all();
+
+				// Find controller corresponding to the old "operation"
+				switch ($operation) {
+					case 'new':
+						$sRouteName = 'b_object_new';
+						$aPath['_controller'] = ObjectController::class . "::OperationNew";
+						$aPath['sClass'] = utils::ReadParam('class', null, false, utils::ENUM_SANITIZATION_FILTER_CLASS);
+						break;
+
+					case 'apply_new':
+						$sRouteName = 'b_object_apply_new';
+						$aPath['_controller'] = ObjectController::class . "::OperationApplyNew";
+						break;
+
+					case 'modify':
+						$sRouteName = 'b_object_modify';
+						$aPath['_controller'] = ObjectController::class . "::OperationModify";
+						$aPath['sClass'] = utils::ReadParam('class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
+						$aPath['sId'] = utils::ReadParam('id', '');
+						break;
+
+					case 'apply_modify':
+						$sRouteName = 'b_object_apply_modify';
+						$aPath['_controller'] = ObjectController::class . "::OperationApplyModify";
+						break;
+				}
+
+				// Redirect
+				///** @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface $oUrlGenerator */
+				//$oResponse = $oKernel->handle($oRequest);
+				//$oUrlGenerator = $oKernel->getContainer()->get('router');
+
+				// - Solution 1: Simplement redirection
+				//   Pros:
+				//   - Redirects to the new URL
+				//   - Keeps query parameters
+				//   - Uses the real Symfony kernel as it will be a complete new process
+				//   Cons:
+				//   - Loose posted parameters if any (but could be ok as we essentially do this for notifications / bookmarks); extensions will be migrated
+				//   - Makes an HTTP redirection, could be an issue in some infras? I don't think so, we already do it in several places
+				/*$sRedirectUrl = $oUrlGenerator->generate($sRouteName, $aPath + $aQuery);
+				//   Generated URL is based on the script the Kernel is instantiated in, so we have to correct it to point to the new unique endpoint
+				$sRedirectUrl = str_ireplace("pages/UI.php", "app.php", $sRedirectUrl);
+				header("location: $sRedirectUrl");
+				die();*/
+
+				// - Solution 2: Symfony redirection
+				//   Pros:
+				//   - Redirects to the new URL
+				//   - Keeps query parameters
+				//   - Uses the real Symfony kernel as it will be a complete new process
+				//   - Keeps redirection working even though there are deprecated messages printed before headers are send (unlike with solution 1)
+				//   Cons:
+				//   - Loose posted parameters if any (but could be ok as we essentially do this for notifications / bookmarks); extensions will be migrated
+				//   - Makes an HTTP redirection, could be an issue in some infras? I don't think so, we already do it in several places
+				/*$sRedirectUrl = $oUrlGenerator->generate($sRouteName, $aPath + $aQuery);
+				//   Generated URL is based on the script the Kernel is instantiated in, so we have to correct it to point to the new unique endpoint
+				$sRedirectUrl = str_ireplace("pages/UI.php", "app.php", $sRedirectUrl);
+				$oResponse = new RedirectResponse($sRedirectUrl);
+				$oResponse->send();
+				$oKernel->terminate($oRequest, $oResponse);
+				die();*/
+
+
+				// - Solution 3: Internal redirection
+				//   Pros:
+				//   - Keeps query parameters
+				//   - Keeps posted parameters (essential for submission URLs)
+				//   Cons:
+				//   - Still displays the old URL
+				//   - Uses a not so well-formed Symfony kernel?
+				$oSubRequest = $oRequest->duplicate($aQuery, null, $aPath);
+				$oResponse = $oKernel->handle($oSubRequest, \Symfony\Component\HttpKernel\HttpKernelInterface::SUB_REQUEST);
+				$oResponse->send();
+				$oKernel->terminate($oSubRequest, $oResponse);
+				die();
+		}
+
+		// All the following operations use advanced forms that require more javascript to be loaded
 		switch($operation)
 		{
 			case 'new': // Form to create a new object
@@ -678,15 +803,6 @@ try
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
-			/** @deprecated 3.1.0 Use the "object.modify" route instead */
-			// Kept for backward compatibility with notification URLs, don't remove
-			case 'modify': // Legacy operation
-				$oController = new ObjectController();
-				$oP = $oController->OperationModify();
-				break;
-
-			///////////////////////////////////////////////////////////////////////////////////////////
-
 			case 'select_for_modify_all': // Select the list of objects to be modified (bulk modify)
 				UI::OperationSelectForModifyAll($oP);
 				break;
@@ -701,22 +817,6 @@ try
 			case 'preview_or_modify_all': // Preview or apply bulk modify
 				UI::OperationPreviewOrModifyAll($oP, $oAppContext);
 				break;
-
-			///////////////////////////////////////////////////////////////////////////////////////////
-
-			/** @deprecated 3.1.0 Use the "object.new" route instead */
-			// Kept for backward compatibility
-			case 'new': // Form to create a new object
-				$oController = new ObjectController();
-				$oP = $oController->OperationNew();
-			break;
-
-			///////////////////////////////////////////////////////////////////////////////////////////
-
-			case 'apply_modify': // Applying the modifications to an existing object
-				$oController = new ObjectController();
-				$oP = $oController->OperationApplyModify();
-			break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -809,14 +909,6 @@ try
 				}
 				// Go for the common part... (delete single, delete bulk, delete confirmed)
 				cmdbAbstractObject::DeleteObjects($oP, $sClass, $aObjects, ($operation != 'bulk_delete_confirmed'), 'bulk_delete_confirmed');
-				break;
-
-			///////////////////////////////////////////////////////////////////////////////////////////
-
-			case 'apply_new': // Creation of a new object
-
-				$oController = new ObjectController();
-				$oP = $oController->OperationApplyNew();
 				break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////

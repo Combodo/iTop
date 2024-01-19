@@ -21,8 +21,10 @@ use Combodo\iTop\Controller\Base\Layout\ObjectController;
 use Combodo\iTop\Controller\PreferencesController;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
+use Combodo\iTop\Kernel;
 use Combodo\iTop\Service\Router\Router;
 use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectManager;
+use Symfony\Component\HttpFoundation\Request;
 
 require_once('../approot.inc.php');
 
@@ -44,7 +46,6 @@ try
 	$oKPI = new ExecutionKPI();
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-	$sRoute = utils::ReadParam('route', '', false, utils::ENUM_SANITIZATION_FILTER_ROUTE);
 	$operation = utils::ReadParam('operation', '', false, utils::ENUM_SANITIZATION_FILTER_OPERATION);
 
 	// Only allow export functions to portal users
@@ -78,6 +79,7 @@ try
 	}
 
 	// First check if we can redirect the route to a dedicated controller
+	// IMPORTANT: Even though iTop router is deprecated, we must ensure old URLs keep working (for a while) as they can be used in received notifications, bookmarks, extensions, ...
 	$sRoute = utils::ReadParam('route', '', false, utils::ENUM_SANITIZATION_FILTER_ROUTE);
 	$oRouter = Router::GetInstance();
 	if ($oRouter->CanDispatchRoute($sRoute)) {
@@ -97,11 +99,81 @@ try
 		// Default for most operations, but can be switch to a JsonPage, DownloadPage or else if the operation requires it
 		$oPage = new AjaxPage("");
 
+		//---------------------------------------------------------------------------------------------------------
+		//
+		// Mind that the following backward compatibility pattern is also present in the `pages/UI.php` endpoint
+		//
+		//---------------------------------------------------------------------------------------------------------
+		//
+		// Kept for backward compatibility with iTop 3.1.x notification URLs, don't remove
+		// Non-dispatchable "routes" (iTop 3.1) are mapped to their old corresponding "operation" (iTop 3.0 and older), in order to be later redirected to the proper new URLs (iTop 3.2 and newer)
+		switch ($sRoute) {
+			case 'object.new':
+			case 'object.modify':
+				$operation = str_ireplace("object.", "", $sRoute);
+				break;
+		}
+
+		if (utils::IsNotNullOrEmptyString($sRoute)) {
+			DeprecatedCallsLog::Debug("Calling UI.php with a deprecated \"route\" parameter that was migrated to Symfony router, redirecting to fallback \"operation\" parameter. If URI comes from a custom code, migrate it. If URI comes from an old notification, mind that it may not work in future versions.", LogChannels::ROUTER, [
+				"request_uri" => $_SERVER["REQUEST_URI"],
+				"route" => $sRoute,
+				"fallback_operation" => $operation,
+			]);
+		}
+
+		// Kept for backward compatibility with iTop 3.0 and older notification URLs, don't remove
+		// These operations have been migrated to Symfony router, we need to redirect to the proper new URLs
+		switch ($operation) {
+			/** @deprecated 3.1.0 Use the "b_object_new" Symfony route instead */
+			case 'new':
+			/** @deprecated 3.1.0 Use the "b_object_modify" Symfony route instead */
+			case 'modify':
+				// Start a Symfony kernel and redirect to the corresponding route / controller
+				$oKernel = new Kernel("prod", false);
+				$oRequest = Request::createFromGlobals();
+
+				/** @var string $sRouteName Route name to redirect to */
+				$sRouteName = '';
+				/** @var string[] $aPath Parts of the Symfony route path (eg. for "/object/{sCLass}/{sId}", ["sClass" => "UserRequest", "sId" => "123"]) */
+				$aPath = [];
+				/** @var string[] $aQuery Query parameters of the request -parameters after the "?" of the URI- (eg. for "/object/UserRequest/123?a=1&b=2", ["a" => 1, "b" => 2]) */
+				$aQuery = $oRequest->query->all();
+
+				// Find controller corresponding to the old "operation"
+				switch ($operation) {
+					case 'new':
+						$sRouteName = 'b_object_new';
+						$aPath['_controller'] = ObjectController::class . "::OperationNew";
+						$aPath['sClass'] = utils::ReadParam('class', null, false, utils::ENUM_SANITIZATION_FILTER_CLASS);
+						break;
+
+					case 'modify':
+						$sRouteName = 'b_object_modify';
+						$aPath['_controller'] = ObjectController::class . "::OperationModify";
+						$aPath['sClass'] = utils::ReadParam('class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
+						$aPath['sId'] = utils::ReadParam('id', '');
+						break;
+				}
+
+				// Internal Symfony redirection
+				//   Pros:
+				//   - Keeps query parameters
+				//   - Keeps posted parameters (essential for submission URLs)
+				//   Cons:
+				//   - Still displays the old URL
+				//   - Uses a not so well-formed Symfony kernel?
+				$oSubRequest = $oRequest->duplicate($aQuery, null, $aPath);
+				$oResponse = $oKernel->handle($oSubRequest, \Symfony\Component\HttpKernel\HttpKernelInterface::SUB_REQUEST);
+				$oResponse->send();
+				$oKernel->terminate($oSubRequest, $oResponse);
+				die();
+		}
+
 		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 		$sEncoding = utils::ReadParam('encoding', 'serialize');
 		$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');
 		$sStyle = utils::ReadParam('style', 'list');
-
 
 		$oAjaxRenderController = new AjaxRenderController();
 
