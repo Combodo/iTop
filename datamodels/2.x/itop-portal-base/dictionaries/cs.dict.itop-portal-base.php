@@ -135,7 +135,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s uloženo',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Vybrat %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Vybrat %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Zkopíruj odkaz na objekt',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Zkopírováno'
 ));

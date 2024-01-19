@@ -374,7 +374,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Expression:Unit:Short:DAY' => 'd',
 	'Expression:Unit:Short:WEEK' => 'w',
 	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'y~',
+	'Expression:Unit:Short:YEAR' => 'y',
 ));
 
 //
@@ -466,7 +466,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:Close' => 'Zavřít',
 	'UI:Button:Apply' => 'Použít',
 	'UI:Button:Send' => 'Odeslat',
-	'UI:Button:SendAnd' => 'Odeslat a %1$s~~',
+	'UI:Button:SendAnd' => 'Odeslat a %1$s',
 	'UI:Button:Back' => ' << Zpět ',
 	'UI:Button:Restart' => ' |<< Začít znovu ',
 	'UI:Button:Next' => ' Další >> ',
@@ -1215,7 +1215,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:FavoriteLanguage' => 'Jazyk uživatelského rozhraní',
 	'UI:Favorites:SelectYourLanguage' => 'Preferovaný jazyk:',
 	'UI:FavoriteOtherSettings' => 'Další nastavení',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Výchozí délka seznamů: %1$s položek na stránku~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Výchozí délka seznamů: %1$s položek na stránku',
 	'UI:Favorites:ShowObsoleteData' => 'Zobrazit zastaralá data',
 	'UI:Favorites:ShowObsoleteData+' => 'Zobrazit zastaralá data ve výsledcích vyhledávání a umožnit jejich výběr',
 	'UI:NavigateAwayConfirmationMessage' => 'Všechny úpravy budou zahozeny.',
