@@ -30,7 +30,12 @@ use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
 use MetaModel;
 use SecurityException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Combodo\iTop\Service\SummaryCard\SummaryCardService;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use UserRights;
 use utils;
 
@@ -42,37 +47,53 @@ use utils;
  * @since 3.1.0
  * @package Combodo\iTop\Controller\Base\Layout
  */
+#[Route("/object", name: "b_object_")]
 class ObjectController extends AbstractController
 {
-	public const ROUTE_NAMESPACE = 'object';
+	/** @deprecated 3.2.0 N°6935 Replaced by Symfony route name prefix on the controller */
+	//public const ROUTE_NAMESPACE = 'object';
 
 	/**
-	 * @throws \CoreException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \MySQLException
-	 * @throws \DictExceptionMissingString
-	 * @throws \CoreUnexpectedValue
-	 * @throws \ConfigException
-	 * @throws \ApplicationException
-	 * @throws \MissingQueryArgument
+	 * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $oUrlGenerator
+	 * @since 3.2.0 N°6935
 	 */
-	public function OperationNew()
+	public function __construct(
+		protected UrlGeneratorInterface $oUrlGenerator
+	)
 	{
+	}
+
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
+	 * @param string $sClass Class of the datamodel object to create
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 *
+	 * @throws \Symfony\Component\HttpKernel\Exception\HttpException
+	 * @throws ApplicationException
+	 */
+	#[Route('/new/{sClass}', name: 'new')]
+	public function OperationNew(Request $oRequest, string $sClass): Response
+	{
+		// Retrieve parameters
 		$bPrintable = utils::ReadParam('printable', '0') === '1';
-		$sClass = utils::ReadParam('class', '', false, 'class');
 		$sStateCode = utils::ReadParam('state', '');
 		$bCheckSubClass = utils::ReadParam('checkSubclass', true);
+
+		// Check parameters
+		if (false === MetaModel::IsValidClass($sClass)) {
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
+
 		$oAppContext = new ApplicationContext();
-		$oRouter = Router::GetInstance();
-		
-		if ($this->IsHandlingXmlHttpRequest()) {
+
+		if ($oRequest->isXmlHttpRequest()) {
 			$oPage = new AjaxPage('');
 		} else {
 			$oPage = new iTopWebPage('', $bPrintable);
 			$oPage->DisableBreadCrumb();
 			$this->AddRequiredForModificationJsFilesToPage($oPage);
 		}
-
 
 		if (empty($sClass))
 		{
@@ -133,7 +154,7 @@ class ObjectController extends AbstractController
 			// - Update flags with parameters set in URL
 			FormHelper::UpdateFlagsFromContext($oObjToClone, $aFormExtraParams);
 			
-			if ($this->IsHandlingXmlHttpRequest()) {
+			if ($oRequest->isXmlHttpRequest()) {
 				$aFormExtraParams['js_handlers'] = [];
 				$aFormExtraParams['noRelations'] = true;
 				$aFormExtraParams['hide_transitions'] = true;
@@ -187,9 +208,9 @@ JS;
 
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObjToClone, array(), $aFormExtraParams);
 		} else {
-			if ($this->IsHandlingXmlHttpRequest()) {
+			if ($oRequest->isXmlHttpRequest()) {
 				$oClassForm = cmdbAbstractObject::DisplayFormBlockSelectClassToCreate($sClass, MetaModel::GetName($sClass), $oAppContext, $aPossibleClasses, ['state' => $sStateCode]);
-				$sCurrentUrl = $oRouter->GenerateUrl('object.new');
+				$sCurrentUrl = $this->oUrlGenerator->generate('b_object_new');
 				$oClassForm->SetOnSubmitJsCode(
 					<<<JS
 					let me = this;
@@ -208,25 +229,35 @@ JS
 				cmdbAbstractObject::DisplaySelectClassToCreate($sClass, $oPage, $oAppContext, $aPossibleClasses,['state' => $sStateCode]);
 			}
 		}
-		return $oPage;
+
+		return $oPage->GenerateResponse();
 	}
 
 	/**
-	 * @return iTopWebPage|AjaxPage Object edit form in its webpage
+	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
+	 * @param string $sClass Class of the datamodel object to modify
+	 * @param string $sId ID of the object to modify
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \SecurityException
 	 * @throws \Exception
 	 */
-	public function OperationModify()
+	#[Route('/modify/{sClass}/{sId}', name: 'modify')]
+	public function OperationModify(Request $oRequest, string $sClass, string $sId): Response
 	{
+		// Retrieve and check parameters
 		$bPrintable = utils::ReadParam('printable', '0') === '1';
-		$sClass = utils::ReadParam('class', '', false, 'class');
-		$sId = utils::ReadParam('id', '');
 		$sFormTitle = utils::ReadPostedParam('form_title', null, utils::ENUM_SANITIZATION_FILTER_STRING);
 
 		// Check parameters
+		if (false === MetaModel::IsValidClass($sClass)) {
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
+
 		if (utils::IsNullOrEmptyString($sClass) || utils::IsNullOrEmptyString($sId))
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
@@ -254,7 +285,7 @@ JS
 			$aFormExtraParams['form_title'] = $sFormTitle;
 		}
 
-		if ($this->IsHandlingXmlHttpRequest()) {
+		if ($oRequest->isXmlHttpRequest()) {
 			$oPage = new AjaxPage('');
 			$aFormExtraParams['js_handlers'] = [];
 			$aFormExtraParams['noRelations'] = true;
@@ -321,21 +352,25 @@ JS;
 		// Note: Code duplicated to the case 'apply_modify' in UI.php when a data integrity issue has been found
 		$oObj->DisplayModifyForm($oPage, $aFormExtraParams); // wizard_container: Display the title above the form
 
-		return $oPage;
+		return $oPage->GenerateResponse();
 	}
 	
 	/**
-	 * @return iTopWebPage|JsonPage Object edit form in its webpage
+	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \SecurityException
 	 */
-	public function OperationApplyNew()
+	#[Route('/apply_new', name: 'apply_new')]
+	public function OperationApplyNew(Request $oRequest): Response
 	{
 		$bPrintable = utils::ReadParam('printable', '0') === '1';
 		$aResult = [];
-		if ($this->IsHandlingXmlHttpRequest()) {
+		if ($oRequest->isXmlHttpRequest()) {
 			$oPage = new JsonPage();
 			$oPage->SetOutputDataOnly(true);
 			$aResult['success'] = false;
@@ -367,7 +402,7 @@ JS;
 			$sUser = UserRights::GetUser();
 			IssueLog::Error(__CLASS__.'::'.__METHOD__." : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 	
-			if ($this->IsHandlingXmlHttpRequest()) {
+			if ($oRequest->isXmlHttpRequest()) {
 				$aResult['data'] = ['error_message' => Dict::S('UI:Error:ObjectAlreadyCreated')];
 			} else {
 				$oErrorAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:Error:ObjectAlreadyCreated'));
@@ -464,7 +499,7 @@ JS;
 					}
 				} else {
 					// Nothing more to do
-					if ($this->IsHandlingXmlHttpRequest()) {
+					if ($oRequest->isXmlHttpRequest()) {
 						$aResult['success'] = true;
 						$aResult['data'] = ['object' => ObjectRepository::ConvertObjectToArray($oObj, $sClass)];
 					} else {
@@ -476,7 +511,7 @@ JS;
 				// Found issues, explain and give the user a second chance
 				//
 				$aIssues = $e->getIssues();
-				if ($this->IsHandlingXmlHttpRequest()) {
+				if ($oRequest->isXmlHttpRequest()) {
 					$aResult['data'] = ['error_message' => $e->getHtmlMessage()];
 				} else {
 					$sClassLabel = MetaModel::GetName($sClass);
@@ -494,15 +529,18 @@ JS;
 				}
 			}
 		}
-		if ($this->IsHandlingXmlHttpRequest()) {
+		if ($oRequest->isXmlHttpRequest()) {
 			$oPage->SetData($aResult);
 		}
 
-		return $oPage;
+		return $oPage->GenerateResponse();
 	}
 
 	/**
-	 * @return iTopWebPage|JsonPage
+	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \ConfigException
@@ -511,10 +549,12 @@ JS;
 	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 */
-	public function OperationApplyModify(){
+	public function OperationApplyModify(Request $oRequest): Response
+	{
 		$bPrintable = utils::ReadParam('printable', '0') === '1';
 		$aResult = [];
-		if ($this->IsHandlingXmlHttpRequest()) {
+
+		if ($oRequest->isXmlHttpRequest()) {
 			$oPage = new JsonPage();
 			$oPage->SetOutputDataOnly(true);
 			$aResult['success'] = false;
@@ -546,7 +586,7 @@ JS;
 		{
 			$bDisplayDetails = false;
 
-			if ($this->IsHandlingXmlHttpRequest()) {
+			if ($oRequest->isXmlHttpRequest()) {
 				$aResult['data'] = ['error_message' => Dict::S('UI:ObjectDoesNotExist')];
 			} else {
 				$oPage->set_title(Dict::S('UI:ErrorPageTitle'));
@@ -572,7 +612,7 @@ JS;
 			$sUser = UserRights::GetUser();
 			IssueLog::Error(__CLASS__.'::'.__METHOD__."  : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 			
-			if ($this->IsHandlingXmlHttpRequest()) {
+			if ($oRequest->isXmlHttpRequest()) {
 				$aResult['data'] = ['error_message' => Dict::S('UI:Error:ObjectAlreadyUpdated')];
 			} else {
 				$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
@@ -598,7 +638,7 @@ JS;
 
 			if (!$oObj->IsModified() && empty($aErrors))
 			{
-				if ($this->IsHandlingXmlHttpRequest()) {
+				if ($oRequest->isXmlHttpRequest()) {
 					$aResult['data'] = ['error_message' => Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName())];
 				} else {
 					$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
@@ -646,7 +686,7 @@ JS;
 
 					$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
 					$sSeverity = 'ok';
-					if ($this->IsHandlingXmlHttpRequest()) {
+					if ($oRequest->isXmlHttpRequest()) {
 						$aResult['success'] = true;
 					}
 				}
@@ -656,7 +696,7 @@ JS;
 					//
 					$bDisplayDetails = false;
 					$aIssues = $e->getIssues();
-					if ($this->IsHandlingXmlHttpRequest()) {
+					if ($oRequest->isXmlHttpRequest()) {
 						$aResult['data'] = ['error_message' => $e->getHtmlMessage()];
 					} else {
 						$oPage->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
@@ -667,7 +707,7 @@ JS;
 				}
 				catch (DeleteException $e)
 				{
-					if ($this->IsHandlingXmlHttpRequest()) {
+					if ($oRequest->isXmlHttpRequest()) {
 						$aResult['data'] = ['error_message' => Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName())];
 					} else {
 						// Say two things:
@@ -706,7 +746,7 @@ JS;
 					// Nothing more to do
 					$sMessage = isset($sMessage) ? $sMessage : '';
 					$sSeverity = isset($sSeverity) ? $sSeverity : null;
-					if ($this->IsHandlingXmlHttpRequest()) {
+					if ($oRequest->isXmlHttpRequest()) {
 						;
 					} else {
 						ReloadAndDisplay($oPage, $oObj, 'update', $sMessage, $sSeverity);
@@ -724,27 +764,38 @@ JS;
 				}
 			}
 		}
-		if ($this->IsHandlingXmlHttpRequest()) {
+		if ($oRequest->isXmlHttpRequest()) {
 			$oPage->SetData($aResult);
 		}
-		return $oPage;
+		return $oPage->GenerateResponse();
 	}
 
-	public function OperationSummary() {
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
+	 * @param string $sClass Class of the datamodel object to view
+	 * @param string $sId ID of the datamodel object to view (note that friendlyname can also be used but is less efficient)
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	#[Route('/summary/{sClass}/{sId}', name: 'summary')]
+	public function OperationSummary(Request $oRequest, string $sClass, string $sId): Response
+	{
 		$oPage = new AjaxPage('');
 
-		$sClass = utils::ReadParam('obj_class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
-		$sObjectKey = utils::ReadParam('obj_key', 0, false);
+		// Check parameters
+		if (false === MetaModel::IsValidClass($sClass)) {
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
 		
 		// - Check if we are allowed to see/make summary for this class
 		if(SummaryCardService::IsAllowedForClass($sClass)){
-			if (is_numeric($sObjectKey))
+			if (is_numeric($sId))
 			{
-				$oObj = MetaModel::GetObject($sClass, $sObjectKey, false /* MustBeFound */);
+				$oObj = MetaModel::GetObject($sClass, $sId, false /* MustBeFound */);
 			}
 			else
 			{
-				$oObj = MetaModel::GetObjectByName($sClass, $sObjectKey, false /* MustBeFound */);
+				$oObj = MetaModel::GetObjectByName($sClass, $sId, false /* MustBeFound */);
 			}
 	
 			if($oObj !== null) {
@@ -758,7 +809,7 @@ JS;
 					->SetIsClosable(false)
 			);
 		}
-		return $oPage;
+		return $oPage->GenerateResponse();
 	}
 
 	/**

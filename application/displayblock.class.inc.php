@@ -26,7 +26,6 @@ use Combodo\iTop\Application\UI\DisplayBlock\BlockCsv\BlockCsv;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockList\BlockList;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
-use Combodo\iTop\Service\Router\Router;
 
 require_once(APPROOT.'/application/utils.inc.php');
 
@@ -1848,7 +1847,6 @@ class MenuBlock extends DisplayBlock
 	 */
 	public function GetRenderContent(WebPage $oPage, array $aExtraParams, string $sId)
 	{
-		$oRouter = Router::GetInstance();
 		$oRenderBlock = new UIContentBlock();
 
 		if ($this->m_sStyle == 'popup') // popup is a synonym of 'list' for backward compatibility
@@ -2068,7 +2066,8 @@ class MenuBlock extends DisplayBlock
 								if ($bIsModifyAllowed) {
 									$aRegularActions['UI:Menu:Modify'] = array(
 											'label' => Dict::S('UI:Menu:Modify'),
-											'url'   => $oRouter->GenerateUrl('object.modify', ['class' => $sClass, 'id' => $id]) . "{$sContext}#",
+											// Can't use URL Generator (`$this->oUrlGenerator->generate("b_object_summary", [$sObjClass, $sObjKey])`) yet as we have to find how to inject it here
+											'url'   => "{$sRootUrl}app.php/object/modify/{$sClass}/{$id}{$sContext}#",
 										) + $aActionParams;
 								}
 								if ($bIsDeleteAllowed) {

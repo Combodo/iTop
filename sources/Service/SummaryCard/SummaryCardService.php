@@ -8,9 +8,10 @@ namespace Combodo\iTop\Service\SummaryCard;
 
 use appUserPreferences;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
-use Combodo\iTop\Service\Router\Router;
 use MetaModel;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use UserRights;
+use utils;
 
 /**
  * Class SummaryCardService
@@ -19,10 +20,22 @@ use UserRights;
  * 
  * @since 3.1.0
  */
-class SummaryCardService {
+class SummaryCardService
+{
+	/**
+	 * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $oUrlGenerator
+	 *
+	 * @since 3.2.0 Add constructor and dependency injection of $oUrlGenerator
+	 */
+	public function __construct(
+		protected UrlGeneratorInterface $oUrlGenerator
+	)
+	{
+	}
+
 
 	/**
-	 * @param $sObjClass
+	 * @param string $sObjClass
 	 * @param $sObjKey
 	 *
 	 * @return string
@@ -30,9 +43,9 @@ class SummaryCardService {
 	 */
 	public static function GetHyperlinkMarkup(string $sObjClass, $sObjKey): string
 	{
-		$oRouter = Router::GetInstance();
-		$sRoute = $oRouter->GenerateUrl("object.summary", ["obj_class" => $sObjClass, "obj_key" => $sObjKey]);
-		return 
+		// Can't use URL Generator (`$this->oUrlGenerator->generate("b_object_summary", [$sObjClass, $sObjKey])`) yet as we have to find how to inject it here
+		$sRoute = utils::GetAbsoluteUrlAppRoot() . "app.php/object/summary/$sObjClass/$sObjKey";
+		return
 	<<<HTML
 data-tooltip-content="$sRoute" 
 data-tooltip-interaction-enabled="true" 

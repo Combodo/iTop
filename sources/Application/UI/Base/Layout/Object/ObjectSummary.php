@@ -11,7 +11,6 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\Popov
 use Combodo\iTop\Application\UI\Base\tUIContentAreas;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
-use Combodo\iTop\Service\Router\Router;
 use DBObject;
 use Dict;
 use MetaModel;
@@ -100,12 +99,11 @@ class ObjectSummary extends ObjectDetails
 	 */
 	private function ComputeActions()
 	{
-		$oRouter = Router::GetInstance();
 		$oDetailsButton = null;
 		// We can pass a DBObject to the UIBlock, so we check for the DisplayModifyForm method
 		if(method_exists($this->oObject, 'DisplayModifyForm') && UserRights::IsActionAllowed($this->sClassName, UR_ACTION_MODIFY)) {
 			$oPopoverMenu = new PopoverMenu();
-			
+
 			$oDetailsAction = new URLPopupMenuItem(
 				'UI:Menu:View',
 				Dict::S('UI:Menu:View'),
@@ -113,12 +111,13 @@ class ObjectSummary extends ObjectDetails
 				'_blank'
 			); 
 			$oModifyButton = ButtonUIBlockFactory::MakeLinkNeutral(
-				$oRouter->GenerateUrl('object.modify', ['class' => $this->sClassName, 'id' => $this->sObjectId]),
+				// Can't use URL Generator (`$this->oUrlGenerator->generate("b_object_summary", [$sObjClass, $sObjKey])`) yet as we have to find how to inject it here
+				"{$sRootUrl}app.php/object/modify/{$this->sClassName}/{$this->sObjectId}",
 				Dict::S('UI:Menu:Modify'),
 				'fas fa-external-link-alt',
 				'_blank',
 			);
-			
+
 			$oPopoverMenu->AddItem('more-actions', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oDetailsAction))->SetContainer(PopoverMenu::ENUM_CONTAINER_PARENT);
 			
 			$oDetailsButton = ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu($oModifyButton, $oPopoverMenu);
