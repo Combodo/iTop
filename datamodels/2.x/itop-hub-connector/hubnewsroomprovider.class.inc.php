@@ -78,7 +78,7 @@ class HubNewsroomProvider extends NewsroomProviderBase
 		$sBaseUrl = $this->oConfig->GetModuleSetting('itop-hub-connector', 'url').MetaModel::GetModuleSetting('itop-hub-connector', $sRouteCode);
 		
 		$sParameters = 'uuid[bdd]='.urlencode((string) trim(DBProperty::GetProperty('database_uuid', ''), '{}'));
-		$sParameters .= '&uuid[file]='.urlencode((string) trim(@file_get_contents(APPROOT."data/instance.txt"), "{} \n"));
+		$sParameters .= '&uuid[file]='.urlencode((string) trim(@file_get_contents(utils::GetDataPath()."instance.txt"), "{} \n"));
 		$sParameters .= '&uuid[user]='.urlencode(UserRights::GetUserId());
 		
 		return $sBaseUrl.'?'.$sParameters;

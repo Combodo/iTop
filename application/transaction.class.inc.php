@@ -228,7 +228,7 @@ class privUITransactionFile
 	 */
 	public static function GetNewTransactionId()
 	{
-		if (!is_dir(APPROOT.'data/transactions'))
+		if (!is_dir(utils::GetDataPath().'transactions'))
 		{
 			if (!is_writable(APPROOT.'data'))
 			{
@@ -236,22 +236,22 @@ class privUITransactionFile
 			}
 			// condition avoids race condition N°2345
 			// See https://github.com/kalessil/phpinspectionsea/blob/master/docs/probable-bugs.md#mkdir-race-condition
-			if (!mkdir($concurrentDirectory = APPROOT.'data/transactions') && !is_dir($concurrentDirectory))
+			if (!mkdir($concurrentDirectory = utils::GetDataPath().'transactions') && !is_dir($concurrentDirectory))
 			{
-				throw new Exception('Failed to create the directory "'.APPROOT.'data/transactions". Ajust the rights on the parent directory or let an administrator create the transactions directory and give the web sever enough rights to write into it.');
+				throw new Exception('Failed to create the directory "'.utils::GetDataPath().'transactions". Ajust the rights on the parent directory or let an administrator create the transactions directory and give the web sever enough rights to write into it.');
 			}
 		}
 
-		if (!is_writable(APPROOT.'data/transactions'))
+		if (!is_writable(utils::GetDataPath().'transactions'))
 		{
-			throw new Exception('The directory "'.APPROOT.'data/transactions" must be writable to the application.');
+			throw new Exception('The directory "'.utils::GetDataPath().'transactions" must be writable to the application.');
 		}
 
 		$iCurrentUserId = static::GetCurrentUserId();
 
 		self::CleanupOldTransactions();
 
-		$sTransactionIdFullPath = tempnam(APPROOT.'data/transactions', static::GetUserPrefix());
+		$sTransactionIdFullPath = tempnam(utils::GetDataPath().'transactions', static::GetUserPrefix());
 		file_put_contents($sTransactionIdFullPath, $iCurrentUserId, LOCK_EX);
 
 		$sTransactionIdFileName = basename($sTransactionIdFullPath);
@@ -274,8 +274,8 @@ class privUITransactionFile
 	 */
 	public static function IsTransactionValid($id, $bRemoveTransaction = true)
 	{
-		// Constraint the transaction file within APPROOT.'data/transactions'
-		$sTransactionDir = realpath(APPROOT.'data/transactions');
+		// Constraint the transaction file within utils::GetDataPath().'transactions'
+		$sTransactionDir = realpath(utils::GetDataPath().'transactions');
 		$sFilepath = utils::RealPath($sTransactionDir.'/'.$id, $sTransactionDir);
 		if (($sFilepath === false) || (strlen($sTransactionDir) == strlen($sFilepath)))
 		{
@@ -348,7 +348,7 @@ class privUITransactionFile
 
 		clearstatcache();
 		$iLimit = time() - 24*3600;
-		$sPattern = $sTransactionDir ? "$sTransactionDir/*" : APPROOT.'data/transactions/*';
+		$sPattern = $sTransactionDir ? "$sTransactionDir/*" : utils::GetDataPath().'transactions/*';
 		$aTransactions = glob($sPattern);
 		foreach($aTransactions as $sFileName)
 		{
@@ -368,7 +368,7 @@ class privUITransactionFile
 	{
 		clearstatcache();
 		$aResult = array();
-		$aTransactions = glob(APPROOT.'data/transactions/'.self::GetUserPrefix().'*');
+		$aTransactions = glob(utils::GetDataPath().'transactions/'.self::GetUserPrefix().'*');
 		foreach($aTransactions as $sFileName)
 		{
 			$aResult[] = date('Y-m-d H:i:s', filemtime($sFileName)).' - '.basename($sFileName);

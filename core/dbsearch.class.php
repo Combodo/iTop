@@ -1503,13 +1503,13 @@ abstract class DBSearch
 		}
 
 		$sLogFile = 'queries.latest';
-		file_put_contents(APPROOT.'data/'.$sLogFile.'.html', $sHtml);
+		file_put_contents(utils::GetDataPath().$sLogFile.'.html', $sHtml);
 
 		$sLog = "<?php\n\$aQueriesLog = ".var_export(self::$m_aQueriesLog, true).";";
-		file_put_contents(APPROOT.'data/'.$sLogFile.'.log', $sLog);
+		file_put_contents(utils::GetDataPath().$sLogFile.'.log', $sLog);
 
 		// Cumulate the queries
-		$sAllQueries = APPROOT.'data/queries.log';
+		$sAllQueries = utils::GetDataPath().'queries.log';
 		if (file_exists($sAllQueries))
 		{
 			// Merge the new queries into the existing log

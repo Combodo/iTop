@@ -303,7 +303,7 @@ class ExcelExporter
 	{
 		if ($this->sOutputFilePath == null)
 		{
-			return APPROOT.'data/bulk_export/'.$this->sToken.'.xlsx';
+			return utils::GetDataPath().'bulk_export/'.$this->sToken.'.xlsx';
 		}
 		else
 		{
@@ -313,14 +313,14 @@ class ExcelExporter
 	
 	public static function GetExcelFileFromToken($sToken)
 	{
-		return @file_get_contents(APPROOT.'data/bulk_export/'.$sToken.'.xlsx');
+		return @file_get_contents(utils::GetDataPath().'bulk_export/'.$sToken.'.xlsx');
 	}
 	
 	public static function CleanupFromToken($sToken)
 	{
-		@unlink(APPROOT.'data/bulk_export/'.$sToken.'.status');
-		@unlink(APPROOT.'data/bulk_export/'.$sToken.'.data');
-		@unlink(APPROOT.'data/bulk_export/'.$sToken.'.xlsx');
+		@unlink(utils::GetDataPath().'bulk_export/'.$sToken.'.status');
+		@unlink(utils::GetDataPath().'bulk_export/'.$sToken.'.data');
+		@unlink(utils::GetDataPath().'bulk_export/'.$sToken.'.xlsx');
 	}
 	
 	public function Cleanup()
@@ -334,7 +334,7 @@ class ExcelExporter
 	 */
 	public static function CleanupOldFiles()
 	{
-		$aFiles = glob(APPROOT.'data/bulk_export/*.*');
+		$aFiles = glob(utils::GetDataPath().'bulk_export/*.*');
 		$iDelay = MetaModel::GetConfig()->Get('xlsx_exporter_cleanup_old_files_delay');
 		
 		if($iDelay > 0)
@@ -416,14 +416,14 @@ class ExcelExporter
 	
 	protected function CheckDataDir()
 	{
-		if(!is_dir(APPROOT."data/bulk_export"))
+		if(!is_dir(utils::GetDataPath()."bulk_export"))
 		{
-			@mkdir(APPROOT."data/bulk_export", 0777, true /* recursive */);
+			@mkdir(utils::GetDataPath()."bulk_export", 0777, true /* recursive */);
 			clearstatcache();
 		}
-		if (!is_writable(APPROOT."data/bulk_export"))
+		if (!is_writable(utils::GetDataPath()."bulk_export"))
 		{
-			throw new Exception('Data directory "'.APPROOT.'data/bulk_export" could not be written.');
+			throw new Exception('Data directory "'.utils::GetDataPath().'bulk_export" could not be written.');
 		}
 	}
 	
@@ -433,12 +433,12 @@ class ExcelExporter
 		{
 			$sToken = $this->sToken;
 		}
-		return APPROOT."data/bulk_export/$sToken.status";
+		return utils::GetDataPath()."bulk_export/$sToken.status";
 	}
 	
 	protected function GetDataFile()
 	{
-		return APPROOT.'data/bulk_export/'.$this->sToken.'.data';
+		return utils::GetDataPath().'bulk_export/'.$this->sToken.'.data';
 	}
 	
 	protected function GetNewToken()

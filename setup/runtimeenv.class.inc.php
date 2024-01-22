@@ -380,7 +380,7 @@ class RunTimeEnvironment
 		{
 			$aDirsToCompile[] = APPROOT.'extensions';
 		}
-		$sExtraDir = APPROOT.'data/'.$this->sTargetEnv.'-modules/';
+		$sExtraDir = utils::GetDataPath().$this->sTargetEnv.'-modules/';
 		if (is_dir($sExtraDir))
 		{
 			$aDirsToCompile[] = $sExtraDir;
@@ -475,7 +475,7 @@ class RunTimeEnvironment
 		}
 		while($bModuleAdded);
 
-		$sDeltaFile = APPROOT.'data/'.$this->sTargetEnv.'.delta.xml';
+		$sDeltaFile = utils::GetDataPath().$this->sTargetEnv.'.delta.xml';
 		if (file_exists($sDeltaFile))
 		{
 			$oDelta = new MFDeltaModule($sDeltaFile);
@@ -512,7 +512,7 @@ class RunTimeEnvironment
 			{
 				// Just before loading the delta, let's save an image of the datamodel
 				// in case there is no delta the operation will be done after the end of the loop
-				$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml');
+				$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sTargetEnv.'.xml');
 			}
 			$oFactory->LoadModule($oModule);
 		}
@@ -520,10 +520,10 @@ class RunTimeEnvironment
 
 		if ($oModule instanceof MFDeltaModule) {
 			// A delta was loaded, let's save a second copy of the datamodel
-			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'-with-delta.xml');
+			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sTargetEnv.'-with-delta.xml');
 		} else {
 			// No delta was loaded, let's save the datamodel now
-			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml');
+			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sTargetEnv.'.xml');
 		}
 
 		$sTargetDir = APPROOT.'env-'.$this->sTargetEnv;
@@ -532,7 +532,7 @@ class RunTimeEnvironment
 		$oMFCompiler = new MFCompiler($oFactory, $this->sFinalEnv);
 		$oMFCompiler->Compile($sTargetDir, null, $bUseSymLinks, $bSkipTempDir);
 
-		$sCacheDir = APPROOT.'data/cache-'.$this->sTargetEnv;
+		$sCacheDir = utils::GetDataPath().'cache-'.$this->sTargetEnv;
 		SetupUtils::builddir($sCacheDir);
 		SetupUtils::tidydir($sCacheDir);
 
@@ -942,38 +942,38 @@ class RunTimeEnvironment
 	{
 		if ($this->sFinalEnv != $this->sTargetEnv)
 		{
-			if (file_exists(APPROOT.'data/'.$this->sTargetEnv.'.delta.xml'))
+			if (file_exists(utils::GetDataPath().$this->sTargetEnv.'.delta.xml'))
 			{
-				if (file_exists(APPROOT.'data/'.$this->sFinalEnv.'.delta.xml'))
+				if (file_exists(utils::GetDataPath().$this->sFinalEnv.'.delta.xml'))
 				{
 					// Make a "previous" file
 					copy(
-						APPROOT.'data/'.$this->sFinalEnv.'.delta.xml',
-						APPROOT.'data/'.$this->sFinalEnv.'.delta.prev.xml'
+						utils::GetDataPath().$this->sFinalEnv.'.delta.xml',
+						utils::GetDataPath().$this->sFinalEnv.'.delta.prev.xml'
 					);
 				}
 				$this->CommitFile(
-					APPROOT.'data/'.$this->sTargetEnv.'.delta.xml',
-					APPROOT.'data/'.$this->sFinalEnv.'.delta.xml'
+					utils::GetDataPath().$this->sTargetEnv.'.delta.xml',
+					utils::GetDataPath().$this->sFinalEnv.'.delta.xml'
 				);
 			}
 			$this->CommitFile(
-				APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml',
-				APPROOT.'data/datamodel-'.$this->sFinalEnv.'.xml'
+				utils::GetDataPath().'datamodel-'.$this->sTargetEnv.'.xml',
+				utils::GetDataPath().'datamodel-'.$this->sFinalEnv.'.xml'
 			);
 			$this->CommitFile(
-				APPROOT.'data/datamodel-'.$this->sTargetEnv.'-with-delta.xml',
-				APPROOT.'data/datamodel-'.$this->sFinalEnv.'-with-delta.xml',
+				utils::GetDataPath().'datamodel-'.$this->sTargetEnv.'-with-delta.xml',
+				utils::GetDataPath().'datamodel-'.$this->sFinalEnv.'-with-delta.xml',
 				false
 			);
 			$this->CommitDir(
-				APPROOT.'data/'.$this->sTargetEnv.'-modules/',
-				APPROOT.'data/'.$this->sFinalEnv.'-modules/',
+				utils::GetDataPath().$this->sTargetEnv.'-modules/',
+				utils::GetDataPath().$this->sFinalEnv.'-modules/',
 				false
 			);
 			$this->CommitDir(
-				APPROOT.'data/cache-'.$this->sTargetEnv,
-				APPROOT.'data/cache-'.$this->sFinalEnv,
+				utils::GetDataPath().'cache-'.$this->sTargetEnv,
+				utils::GetDataPath().'cache-'.$this->sFinalEnv,
 				false
 			);
 			$this->CommitDir(
