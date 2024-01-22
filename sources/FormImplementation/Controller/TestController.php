@@ -2,6 +2,8 @@
 
 namespace Combodo\iTop\FormImplementation\Controller;
 
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Controller\AbstractAppController;
 use Combodo\iTop\FormImplementation\Dto\CountDto;
 use Combodo\iTop\FormImplementation\Dto\ObjectSearchDto;
@@ -54,6 +56,64 @@ class TestController extends AbstractAppController
 			'form' => $oForm->createView(),
 			'theme' => 'formSDK/themes/portal.html.twig'
 		]);
+
+	}
+
+	/**
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	#[Route('/formSDK/test_form_fragment/', name: 'formSDK_test_form_fragment')]
+	public function FormFragment(Request $oRequest, FormManager $oFormManager, RouterInterface $oRouter, #[MapQueryParameter] int $mode=0): Response
+	{
+		$sLoginMessage = \LoginWebPage::DoLogin();
+
+		$oPage = new iTopWebPage('Form SDK');
+
+		// create factory
+		$oFactory = FormHelper::CreateSampleFormFactory($oFormManager, $oRouter, $mode);
+
+		// get the form
+		$oForm = $oFactory->CreateForm();
+
+		// handle request
+		$oForm->handleRequest($oRequest);
+
+		// submitted and valid
+		if ($oForm->isSubmitted() && $oForm->isValid()) {
+
+			// retrieve form data
+			$data = $oForm->getData();
+
+			// let's adapters save theirs data
+			foreach($oFactory->GetAllAdapters() as $oAdapter){
+				$oAdapter->UpdateFieldsData($data);
+			}
+
+			return $this->redirectToRoute('app_success');
+		}
+
+		$oPage->add_linked_stylesheet(\utils::GetAbsoluteUrlAppRoot() . 'css/form-sdk/form.css');
+		$oPage->add_linked_stylesheet(\utils::GetAbsoluteUrlAppRoot() . 'css/form-sdk/test.css');
+		$oPage->add_linked_stylesheet(\utils::GetAbsoluteUrlAppRoot() . 'node_modules/tom-select/dist/css/tom-select.bootstrap5.css');
+		$oPage->add_linked_stylesheet('https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css');
+
+		$oPage->add_linked_script(\utils::GetAbsoluteUrlAppRoot() . 'js/form-sdk/widget-factory.js');
+		$oPage->add_linked_script(\utils::GetAbsoluteUrlAppRoot() . 'js/ckeditor/ckeditor.js');
+		$oPage->add_linked_script('https://unpkg.com/imask');
+		$oPage->add_linked_script(\utils::GetAbsoluteUrlAppRoot() . 'node_modules/tom-select/dist/js/tom-select.complete.js');
+		$oPage->add_linked_script('https://kit.fontawesome.com/f2d58012d0.js');
+
+		$oPage->add_ready_script('iTopFormWidgetFactory.AutoInstall();');
+
+		// render view
+		$sFormContent = $this->renderView('formSDK/form_fragment.html.twig', [
+			'form' => $oForm->createView(),
+			'theme' => 'formSDK/themes/portal.html.twig'
+		]);
+		$oPage->AddUiBlock(HtmlFactory::MakeRaw($sFormContent));
+
+		return $oPage->GenerateResponse();
 
 	}
 

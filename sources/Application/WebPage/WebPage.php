@@ -25,6 +25,7 @@ use Dict;
 use ExecutionKPI;
 use IssueLog;
 use MetaModel;
+use Symfony\Component\HttpFoundation\Response;
 use UserRights;
 use utils;
 
@@ -733,15 +734,28 @@ class WebPage implements Page
 	 * Add a script (as an include, i.e. link) to the header of the page.<br>
 	 * Handles duplicates : calling twice with the same script will add the script only once
 	 *
-	 * @uses WebPage::$a_linked_scripts
-	 * @param string $s_linked_script
+	 * @param string $sLinkedScriptAbsUrl
+	 *
 	 * @return void
+	 * @uses WebPage::$a_linked_scripts
+	 * @since 3.2.0 N°6935 $sLinkedScriptAbsUrl MUST be an absolute URL
 	 */
-	public function add_linked_script($s_linked_script)
+	public function add_linked_script($sLinkedScriptAbsUrl)
 	{
-		if (!empty(trim($s_linked_script))) {
-			$this->a_linked_scripts[$s_linked_script] = $s_linked_script;
+		// Ensure there is actually an URI
+		if (utils::IsNullOrEmptyString(trim($sLinkedScriptAbsUrl))) {
+			return;
 		}
+
+		// Check if URI is absolute ("://" do allow any protocol), otherwise warn that it's a deprecated behavior
+		if (false === stripos($sLinkedScriptAbsUrl, "://")) {
+			IssueLog::Warning("Linked script added to page with a non absolute URL, which may lead to it not being loaded and causing javascript errors.", null, [
+				"linked_script_url" => $sLinkedScriptAbsUrl,
+				"request_uri" => $_SERVER['REQUEST_URI'],
+			]);
+		}
+
+		$this->a_linked_scripts[$sLinkedScriptAbsUrl] = $sLinkedScriptAbsUrl;
 	}
 
 	/**
@@ -1330,12 +1344,56 @@ JS;
 	 */
 	public function output()
 	{
-		$oKpi = new ExecutionKPI();
 		// Send headers
 		foreach ($this->a_headers as $sHeader) {
 			header($sHeader);
 		}
 
+		// Render HTML content
+		$sHtml = $this->RenderContent();
+
+		// Echo global HTML
+		$oKpi = new ExecutionKPI();
+		echo $sHtml;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' KB)');
+
+		if (class_exists('DBSearch')) {
+			DBSearch::RecordQueryTrace();
+		}
+		ExecutionKPI::ReportStats();
+	}
+
+	/**
+	 * @return \Symfony\Component\HttpFoundation\Response Generate the Symfony Response object (content + code + headers) for the current page, this is equivalent (and new way) of \WebPage::output() for Symfony controllers
+	 * @since 3.2.0 N°6935
+	 */
+	public function GenerateResponse(): Response
+	{
+		// Render HTML content
+		$sHtml = $this->RenderContent();
+
+		// Prepare Symfony Response
+		$oKpi = new ExecutionKPI();
+		$oResponse = new Response($sHtml, Response::HTTP_OK, $this->a_headers);
+		$oKpi->ComputeAndReport('Preparing response ('.round(strlen($sHtml) / 1024).' KB)');
+
+		if (class_exists('DBSearch')) {
+			DBSearch::RecordQueryTrace();
+		}
+		ExecutionKPI::ReportStats();
+
+		return $oResponse;
+	}
+
+	/**
+	 * @return string Complete HTML content of the \WebPage
+	 * @throws \CoreTemplateException
+	 * @throws \Twig\Error\LoaderError
+	 * @since 3.2.0 N°6935
+	 */
+	protected function RenderContent(): string
+	{
+		$oKpi = new ExecutionKPI();
 		$s_captured_output = $this->ob_get_clean_safe();
 
 		$aData = [];
@@ -1389,16 +1447,10 @@ JS;
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 		// Render final TWIG into global HTML
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
-		$oKpi->ComputeAndReport(get_class($this).'output');
 
-		// Echo global HTML
-		echo $sHtml;
-		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+		$oKpi->ComputeAndReport("Rendering content (".static::class.")");
 
-		if (class_exists('DBSearch')) {
-			DBSearch::RecordQueryTrace();
-		}
-		ExecutionKPI::ReportStats();
+		return $sHtml;
 	}
 
 	/**

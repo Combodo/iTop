@@ -821,6 +821,27 @@ HTML;
 	 */
 	public function output()
 	{
+		// Send headers
+		if ($this->GetOutputFormat() === 'html') {
+			foreach ($this->a_headers as $sHeader) {
+				header($sHeader);
+			}
+		}
+
+		// Render HTKL content
+		$sHtml = $this->RenderContent();
+
+		// Echo global HTML
+		$oKpi = new ExecutionKPI();
+		echo $sHtml;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+
+		DBSearch::RecordQueryTrace();
+		ExecutionKPI::ReportStats();
+	}
+
+	protected function RenderContent(): string
+	{
 		$oKpi = new ExecutionKPI();
 
 		// Data to be passed to the view
@@ -924,16 +945,16 @@ HTML;
 		$aData['aDeferredBlocks']['oPageContent'] = $this->GetDeferredBlocks($this->GetContentLayout());
 		// - Prepare generic templates
 		$aData['aTemplates'] = array();
-		
+
 		// TODO 3.1 Replace hardcoded 'Please wait' with dict entries
-		
+
 		// - Modal template with loader
 		$oModalTemplateContentBlock = new UIContentBlock();
 		$oModalTemplateContentBlock->AddCSSClass('ibo-modal')
 			->AddDataAttribute('role', 'ibo-modal')
 			->AddSubBlock(SpinnerUIBlockFactory::MakeMedium(null, 'Please wait'));
 		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-modal-template', $oModalTemplateContentBlock);
-		
+
 		// - Small loader template
 		$oSmallLoaderTemplateContentBlock = new UIContentBlock();
 		$oSmallLoaderTemplateContentBlock->AddSubBlock(SpinnerUIBlockFactory::MakeSmall(null , 'Please wait'));
@@ -988,65 +1009,13 @@ HTML;
 
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 
-		// Send headers
-		if ($this->GetOutputFormat() === 'html') {
-			foreach ($this->a_headers as $sHeader) {
-				header($sHeader);
-			}
-		}
-
 		// Render final TWIG into global HTML
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
 
-		$oKpi->ComputeAndReport(get_class($this).' output');
-		
-		// Echo global HTML
-		echo $sHtml;
-		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+		$oKpi->ComputeAndReport("Rendering content (".static::class.")");
 
-		DBSearch::RecordQueryTrace();
-		ExecutionKPI::ReportStats();
-
-		return;
-
-		/////////////////////////////////////////////////////////
-		////////////////// ☢ DANGER ZONE ☢ /////////////////////
-		/////////////////////////////////////////////////////////
-		
-		// Render the tabs in the page (if any)
-//		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
-
-		// Put here the 'ready scripts' that must be executed after all others
-		$aMultiselectOptions = array(
-			'header' => true,
-			'checkAllText' => Dict::S('UI:SearchValue:CheckAll'),
-			'uncheckAllText' => Dict::S('UI:SearchValue:UncheckAll'),
-			'noneSelectedText' => Dict::S('UI:SearchValue:Any'),
-			'selectedText' => Dict::S('UI:SearchValue:NbSelected'),
-			'selectedList' => 1,
-		);
-		$sJSMultiselectOptions = json_encode($aMultiselectOptions);
-		$this->add_ready_script(
-			<<<EOF
-		// Since the event is only triggered when the hash changes, we need to trigger
-		// the event now, to handle the hash the page may have loaded with.
-		$(window).trigger( 'hashchange' );
-		
-		// Some table are sort-able, some are not, let's fix this
-		$('table.listResults').each( function() { FixTableSorter($(this)); } );
-		
-		$('.multiselect').multiselect($sJSMultiselectOptions);
-EOF
-		);
-
-		$this->outputCollapsibleSectionInit();
-
-		// TODO 3.0.0: Is this for the "Debug" popup? We should do a helper to display a popup in various cases (welcome message for example)
-		$s_captured_output = $this->ob_get_clean_safe();
-
-
+		return $sHtml;
 	}
-
 
 	/**
 	 * @inheritDoc

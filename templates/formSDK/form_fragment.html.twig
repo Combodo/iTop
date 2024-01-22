@@ -1,0 +1,10 @@
+
+{# specific form theme #}
+        {% if theme is defined %}
+            {% form_theme form theme %}
+        {% endif %}
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <input type="submit" class="btn btn-primary">
+    {{ form_end(form) }}
