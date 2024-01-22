@@ -5,8 +5,10 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBObject;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use CoreException;
 use Exception;
 use MetaModel;
+
 
 /**
  * @since 2.7.7 3.0.2 3.1.0 N°3717 tests history objects creation
@@ -168,6 +170,53 @@ class CMDBObjectTest extends ItopDataTestCase
 		CMDBObject::SetTrackInfo($sInitialTrackInfo);
 	}
 
+	/**
+	 * Data provider for test deletion
+	 *  N°5547 - Object deletion fails if friendlyname too long
+	 *
+	 * @return array data
+	 */
+	public function testRecordObjDeletionProvider()
+	{
+		return [
+			'friendlyname longer than 255 characters ending with multi-bytes characters' => [
+				str_repeat('e',250),
+				'😁😂🤣😃😄😅😆😗🥰😘😍😎😋😊😉😙😚',
+			],
+			'friendlyname longer than 255 characters ending with single byte characters' => [
+				'😁😂🤣😃😄😅😆😗🥰😘😍😎😋😊😉😙😚',
+				str_repeat('e',250),
+			],
+		];
+	}
+
+	/**
+	 * N°5547 - Object deletion fails if friendlyname too long
+	 *
+	 * @dataProvider testRecordObjDeletionProvider
+	 *
+	 */
+	public function testRecordObjDeletion( string $sFirstName, string $sName)
+	{
+		// Create a UserRequest with 2 contacts
+		$oPerson = MetaModel::NewObject('Person', [
+			'first_name' => $sFirstName,
+			'name'       => $sName,
+			'org_id'     => 1,
+		]);
+		$oPerson->DBWrite();
+
+		$bDeletionOK = true;
+		try {
+			$oDeletionPlan = $this->InvokeNonPublicMethod(CMDBObject::class,'RecordObjDeletion',$oPerson, [$oPerson->GetKey()]);
+		}
+		catch (CoreException $e) {
+			$bDeletionOK = false;
+		}
+		$this->assertTrue($bDeletionOK);
+	}
+
+
 	private function ReplaceByFriendlyNames($sMessage, $oAdminUser, $oImpersonatedUser) : string {
 		$sNewMessage = str_replace('AdminSurName AdminName', $oAdminUser->GetFriendlyName(), $sMessage);
 		$sNewMessage = str_replace('ImpersonatedSurName ImpersonatedName', $oImpersonatedUser->GetFriendlyName(), $sNewMessage);
@@ -197,4 +246,5 @@ class CMDBObjectTest extends ItopDataTestCase
 
 		return $oUser;
 	}
+
 }
