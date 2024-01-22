@@ -898,7 +898,7 @@ EOF
 		if (file_exists(APPROOT.'extensions')) {
 			$aSearchDirs[] = APPROOT.'extensions';
 		}
-		$sExtraDir = APPROOT.'data/'.$sCurrEnv.'-modules/';
+		$sExtraDir = utils::GetDataPath().$sCurrEnv.'-modules/';
 		if (file_exists($sExtraDir)) {
 			$aSearchDirs[] = $sExtraDir;
 		}

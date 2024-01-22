@@ -154,7 +154,7 @@ class DBRestore extends DBBackup
 
 				// Load the database
 				//
-				$sDataDir = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
+				$sDataDir = utils::GetDataPath().'tmp-backup-'.rand(10000, getrandmax());
 
 				SetupUtils::builddir($sDataDir); // Here is the directory
 				$oArchive->extractTo($sDataDir);
@@ -164,7 +164,7 @@ class DBRestore extends DBBackup
 
 				// Update the code
 				//
-				$sDeltaFile = APPROOT.'data/'.$sEnvironment.'.delta.xml';
+				$sDeltaFile = utils::GetDataPath().$sEnvironment.'.delta.xml';
 
 				if (is_file($sDataDir.'/delta.xml')) {
 					// Extract and rename delta.xml => <env>.delta.xml;
@@ -172,15 +172,15 @@ class DBRestore extends DBBackup
 				} else {
 					@unlink($sDeltaFile);
 				}
-				if (is_dir(APPROOT.'data/production-modules/')) {
+				if (is_dir(utils::GetDataPath().'production-modules/')) {
 					try {
-						SetupUtils::rrmdir(APPROOT.'data/production-modules/');
+						SetupUtils::rrmdir(utils::GetDataPath().'production-modules/');
 					} catch (Exception $e) {
 						throw new BackupException("Can't remove production-modules dir", 0, $e);
 					}
 				}
 				if (is_dir($sDataDir.'/production-modules')) {
-					rename($sDataDir.'/production-modules', APPROOT.'data/production-modules/');
+					rename($sDataDir.'/production-modules', utils::GetDataPath().'production-modules/');
 				}
 
 				$sConfigFile = APPROOT.'conf/'.$sEnvironment.'/config-itop.php';

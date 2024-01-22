@@ -240,7 +240,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$sPreviousVersionDir = '';
 		if ($sInstallMode == '')
 		{
-			$sDBBackupPath = APPROOT.'data/backups/manual/setup-'.date('Y-m-d_H_i');
+			$sDBBackupPath = utils::GetDataPath().'backups/manual/setup-'.date('Y-m-d_H_i');
 			$bDBBackup = true;
 			$aPreviousInstance = SetupUtils::GetPreviousInstance(APPROOT);
 			if ($aPreviousInstance['found']) {

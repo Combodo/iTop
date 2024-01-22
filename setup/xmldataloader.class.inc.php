@@ -24,7 +24,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-define ('KEYS_CACHE_FILE', APPROOT.'data/keyscache.tmp');
+define ('KEYS_CACHE_FILE', utils::GetDataPath().'keyscache.tmp');
 /**
  * Class to load sets of objects from XML files into the database
  * XML files can be produced by the 'export' web service or by any other means

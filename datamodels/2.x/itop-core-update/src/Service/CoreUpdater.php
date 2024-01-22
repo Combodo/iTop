@@ -486,7 +486,7 @@ final class CoreUpdater
 	 */
 	private static function GetItopArchiveName()
 	{
-		$sItopArchiveName = APPROOT.'data/backups/itop';
+		$sItopArchiveName = utils::GetDataPath().'backups/itop';
 		return $sItopArchiveName;
 	}
 
@@ -504,7 +504,7 @@ final class CoreUpdater
 	 */
 	private static function GetBackupName()
 	{
-		$sBackupName = APPROOT.'data/backups/manual/backup-core-update';
+		$sBackupName = utils::GetDataPath().'backups/manual/backup-core-update';
 		return $sBackupName;
 	}
 

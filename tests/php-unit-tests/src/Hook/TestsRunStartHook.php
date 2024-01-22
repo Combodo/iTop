@@ -36,7 +36,7 @@ class TestsRunStartHook implements BeforeFirstTestHook, AfterLastTestHook
 	{
 		// Note: This can't be put in the cache-<ENV> folder as we have multiple <ENV> running across the test cases
 		//       We also don't want to put it in the unit tests folder as it is not supposed to be writable
-		return APPROOT.'data/.php-unit-tests-run-started';
+		return utils::GetDataPath().'.php-unit-tests-run-started';
 	}
 
 	/**
