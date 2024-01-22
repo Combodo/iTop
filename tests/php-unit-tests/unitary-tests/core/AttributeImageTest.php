@@ -8,11 +8,6 @@ use MetaModel;
 use Person;
 use utils;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class AttributeImageTest extends ItopDataTestCase
 {
 	public function setUp(): void
