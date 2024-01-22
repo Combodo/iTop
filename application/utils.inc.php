@@ -23,6 +23,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Module\ModuleService;
+use Combodo\iTop\Test\UnitTest\Application\utilsTest;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
 use ScssPhp\ScssPhp\ValueConverter;
@@ -167,7 +168,11 @@ class utils
 
 	private static $iNextId = 0;
 
-	private static $m_sAppRootUrl = null;
+	/**
+	 * @var ?string
+	 * @used-by GetAbsoluteUrlAppRoot
+	 */
+	private static $sAbsoluteUrlAppRootCache = null;
 
 	protected static function LoadParamFile($sParamFile)
 	{
@@ -1037,28 +1042,27 @@ class utils
 		return $bTrustProxies;
 	}
 
-    /**
-     * Returns the absolute URL to the application root path
-     *
-     * @param bool $bForceTrustProxy
-     *
-     * @return string The absolute URL to the application root, without the first slash
-     *
-     * @throws \Exception
-     *
-     * @since 2.7.4 $bForceTrustProxy param added
-     */
+	/**
+	 * Returns the absolute URL to the application root path
+	 *
+	 * @param bool $bForceTrustProxy
+	 *
+	 * @return string The absolute URL to the application root, without the first slash
+	 *
+	 * @throws \Exception
+	 *
+	 * @since 2.7.4 $bForceTrustProxy param added
+	 */
 	public static function GetAbsoluteUrlAppRoot($bForceTrustProxy = false)
 	{
-		$sUrl = static::$m_sAppRootUrl;
-		if ($sUrl === null || $bForceTrustProxy)
+		if (static::$sAbsoluteUrlAppRootCache === null || $bForceTrustProxy)
 		{
-			$sUrl = self::GetConfig()->Get('app_root_url');
-			if ($sUrl == '')
+			static::$sAbsoluteUrlAppRootCache = self::GetConfig()->Get('app_root_url');
+			if (static::$sAbsoluteUrlAppRootCache == '')
 			{
-				$sUrl = self::GetDefaultUrlAppRoot($bForceTrustProxy);
+				static::$sAbsoluteUrlAppRootCache = self::GetDefaultUrlAppRoot($bForceTrustProxy);
 			}
-			elseif (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1)
+			elseif (strpos(static::$sAbsoluteUrlAppRootCache, SERVER_NAME_PLACEHOLDER) > -1)
 			{
 				if (isset($_SERVER['SERVER_NAME']))
 				{
@@ -1069,11 +1073,10 @@ class utils
 					// CLI mode ?
 					$sServerName = php_uname('n');
 				}
-				$sUrl = str_replace(SERVER_NAME_PLACEHOLDER, $sServerName, $sUrl);
+				static::$sAbsoluteUrlAppRootCache = str_replace(SERVER_NAME_PLACEHOLDER, $sServerName, static::$sAbsoluteUrlAppRootCache);
 			}
-			static::$m_sAppRootUrl = $sUrl;
 		}
-		return static::$m_sAppRootUrl;
+		return static::$sAbsoluteUrlAppRootCache;
 	}
 
 	/**

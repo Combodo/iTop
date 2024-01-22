@@ -8654,6 +8654,20 @@ class AttributeImage extends AttributeBlob
 		parent::__construct($sCode, $aParams);
 	}
 
+	public function Get($sParamName)
+	{
+		$oParamValue = parent::Get($sParamName);
+
+		if ($sParamName === 'default_image') {
+			/** @noinspection NestedPositiveIfStatementsInspection */
+			if (!empty($oParamValue)) {
+				return utils::GetAbsoluteUrlModulesRoot() . $oParamValue;
+			}
+		}
+
+		return $oParamValue;
+	}
+
 	public function GetEditClass()
 	{
 		return "Image";
