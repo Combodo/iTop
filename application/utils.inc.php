@@ -23,6 +23,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Module\ModuleService;
+use Combodo\iTop\Test\UnitTest\Application\utilsTest;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
 use ScssPhp\ScssPhp\ValueConverter;
@@ -172,6 +173,12 @@ class utils
 	 * @used-by GetAbsoluteUrlAppRoot
 	 */
 	private static $sAbsoluteUrlAppRootCache = null;
+
+	/**
+	 * @var string
+	 * @used-by utilsTest
+	 */
+	private static $m_sAppRootUrl = null;
 
 	protected static function LoadParamFile($sParamFile)
 	{
