@@ -2348,7 +2348,7 @@ EOF
 					break;
 				case 'default_image':
 					if (($sDefault = $oField->GetChildText('default_image')) && (strlen($sDefault) > 0)) {
-						$aParameters['default_image'] = "utils::GetAbsoluteUrlModulesRoot().'$sModuleRelativeDir/$sDefault'";
+						$aParameters['default_image'] = "'$sModuleRelativeDir/$sDefault'";
 					} else {
 						$aParameters['default_image'] = 'null';
 					}
