@@ -174,12 +174,6 @@ class utils
 	 */
 	private static $sAbsoluteUrlAppRootCache = null;
 
-	/**
-	 * @var string
-	 * @used-by utilsTest
-	 */
-	private static $m_sAppRootUrl = null;
-
 	protected static function LoadParamFile($sParamFile)
 	{
 		if (!file_exists($sParamFile)) {

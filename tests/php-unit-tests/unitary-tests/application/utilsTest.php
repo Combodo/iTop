@@ -275,9 +275,6 @@ class utilsTest extends ItopTestCase
 		$this->assertEquals($sExpectedAppRootUrl2, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy2));
 
 		$this->assertEquals($sExpectedAppRootUrl3, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy3));
-
-		// Leave the place clean
-		static::SetNonPublicStaticProperty('utils', 'm_sAppRootUrl', null);
 	}
 
 
