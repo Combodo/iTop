@@ -111,17 +111,17 @@ $sDotExecutable = MetaModel::GetConfig()->Get('graphviz_path');
 if (file_exists($sDotExecutable))
 {
 	// create the file with Graphviz
-	$sImageFilePath = APPROOT."data/lifecycle/".$sClass.".svg";
-	if (!is_dir(APPROOT."data"))
+	$sImageFilePath = utils::GetDataPath()."lifecycle/".$sClass.".svg";
+	if (!is_dir(utils::GetDataPath()))
 	{
-		@mkdir(APPROOT."data");
+		@mkdir(utils::GetDataPath());
 	}
-	if (!is_dir(APPROOT."data/lifecycle"))
+	if (!is_dir(utils::GetDataPath()."lifecycle"))
 	{
-		@mkdir(APPROOT."data/lifecycle");
+		@mkdir(utils::GetDataPath()."lifecycle");
 	}
 	$sDotDescription = GraphvizLifecycle($sClass);
-	$sDotFilePath = APPROOT."data/lifecycle/{$sClass}.dot";
+	$sDotFilePath = utils::GetDataPath()."lifecycle/{$sClass}.dot";
 	
 	$rFile = @fopen($sDotFilePath, "w");
 	@fwrite($rFile, $sDotDescription);

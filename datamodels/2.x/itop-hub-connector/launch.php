@@ -231,7 +231,7 @@ function MakeDataToPost($sTargetRoute)
 			'itop_hub_target_route' => $sTargetRoute,
 			'itop_stack' => array(
 				"uuidBdd" => (string)trim(DBProperty::GetProperty('database_uuid', ''), '{}'), // TODO check if empty and... regenerate a new UUID ??
-				"uuidFile" => (string)trim(@file_get_contents(APPROOT."data/instance.txt"), "{} \n"), // TODO check if empty and... regenerate a new UUID ??
+				"uuidFile" => (string)trim(@file_get_contents(utils::GetDataPath()."instance.txt"), "{} \n"), // TODO check if empty and... regenerate a new UUID ??
 				'instance_friendly_name' => (string)$_SERVER['SERVER_NAME'],
 				'instance_host' => (string)utils::GetAbsoluteUrlAppRoot(),
 				'application_name' => (string)ITOP_APPLICATION,

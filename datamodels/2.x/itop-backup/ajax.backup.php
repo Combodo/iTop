@@ -120,7 +120,7 @@ try
 			try
 			{
 				set_time_limit(0);
-				$oBB = new BackupExec(APPROOT.'data/backups/manual/', 0 /*iRetentionCount*/);
+				$oBB = new BackupExec(utils::GetDataPath().'backups/manual/', 0 /*iRetentionCount*/);
 				$sRes = $oBB->Process(time() + 36000); // 10 hours to complete should be sufficient!
 			}
 			catch (Exception $e)
@@ -185,7 +185,7 @@ try
 				$oDBRS = new DBRestore($oItopConfig);
 				$oDBRS->SetMySQLBinDir($sMySQLBinDir);
 
-				$sBackupDir = APPROOT.'data/backups/';
+				$sBackupDir = utils::GetDataPath().'backups/';
 				$sBackupFile = $sBackupDir.$sFile;
 				$sRes = $oDBRS->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
 
@@ -210,7 +210,7 @@ try
 			}
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oBackup = new DBBackupScheduled();
-			$sBackupDir = APPROOT.'data/backups/';
+			$sBackupDir = utils::GetDataPath().'backups/';
 			$sBackupFilePath = utils::RealPath($sBackupDir.$sFile, $sBackupDir);
 			if ($sBackupFilePath === false)
 			{

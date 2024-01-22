@@ -22,7 +22,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
 
 function LogResult($sString)
 {
-	file_put_contents(APPROOT.'data/queries.results.log', "\n".$sString, FILE_APPEND);
+	file_put_contents(utils::GetDataPath().'queries.results.log', "\n".$sString, FILE_APPEND);
 }
 
 function LogBenchmarkCSV()
@@ -40,7 +40,7 @@ function LogBenchmarkCSV()
 		}
 	}
 	$sLine = implode(';', $aValues); // the preferred for MS Excel
-	file_put_contents(APPROOT.'data/queries.benchmark.csv', "\n".$sLine, FILE_APPEND);
+	file_put_contents(utils::GetDataPath().'queries.benchmark.csv', "\n".$sLine, FILE_APPEND);
 }
 
 class QueryLogEntry
@@ -311,8 +311,8 @@ case 'check':
 case 'benchmark':
 	$oP->add("<h2>Create data/queries.xxx reports</h2>\n");
 	// Reset the log contents
-	file_put_contents(APPROOT.'data/queries.results.log', date('Y-m-d H:i:s')."\n");
-	file_put_contents(APPROOT.'data/queries.benchmark.csv', '');
+	file_put_contents(utils::GetDataPath().'queries.results.log', date('Y-m-d H:i:s')."\n");
+	file_put_contents(utils::GetDataPath().'queries.benchmark.csv', '');
 	LogBenchmarkCSV('type', 'properties', 'make duration', 'class', 'tables', 'query length', 'exec duration', 'rows', 'oql');
 
 	$iErrors = 0;

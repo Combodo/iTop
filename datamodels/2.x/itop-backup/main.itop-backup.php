@@ -109,7 +109,7 @@ class BackupExec extends AbstractWeeklyScheduledProcess
 	{
 		if (is_null($sBackupDir))
 		{
-			$this->sBackupDir = APPROOT.'data/backups/auto/';
+			$this->sBackupDir = utils::GetDataPath().'backups/auto/';
 		}
 		else
 		{
