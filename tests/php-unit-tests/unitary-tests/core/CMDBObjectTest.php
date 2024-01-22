@@ -180,12 +180,12 @@ class CMDBObjectTest extends ItopDataTestCase
 	{
 		return [
 			'friendlyname longer than 255 characters ending with multi-bytes characters' => [
-				str_repeat('e',250),
+				str_repeat('e', 250),
 				'😁😂🤣😃😄😅😆😗🥰😘😍😎😋😊😉😙😚',
 			],
 			'friendlyname longer than 255 characters ending with single byte characters' => [
 				'😁😂🤣😃😄😅😆😗🥰😘😍😎😋😊😉😙😚',
-				str_repeat('e',250),
+				str_repeat('e', 250),
 			],
 		];
 	}
@@ -208,7 +208,7 @@ class CMDBObjectTest extends ItopDataTestCase
 
 		$bDeletionOK = true;
 		try {
-			$oDeletionPlan = $this->InvokeNonPublicMethod(CMDBObject::class,'RecordObjDeletion',$oPerson, [$oPerson->GetKey()]);
+			$oDeletionPlan = $this->InvokeNonPublicMethod(CMDBObject::class, 'RecordObjDeletion', $oPerson, [$oPerson->GetKey()]);
 		}
 		catch (CoreException $e) {
 			$bDeletionOK = false;
@@ -246,5 +246,4 @@ class CMDBObjectTest extends ItopDataTestCase
 
 		return $oUser;
 	}
-
 }
