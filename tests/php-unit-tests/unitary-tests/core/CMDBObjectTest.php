@@ -198,7 +198,6 @@ class CMDBObjectTest extends ItopDataTestCase
 	 */
 	public function testRecordObjDeletion( string $sFirstName, string $sName)
 	{
-		// Create a UserRequest with 2 contacts
 		$oPerson = MetaModel::NewObject('Person', [
 			'first_name' => $sFirstName,
 			'name'       => $sName,
