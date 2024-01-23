@@ -179,11 +179,11 @@ class CMDBObjectTest extends ItopDataTestCase
 	public function testRecordObjDeletionProvider()
 	{
 		return [
-			'friendlyname longer than 255 characters ending with multi-bytes characters' => [
+			'friendlyname longer than 255 characters which will be truncated on a multi-bytes characters' => [
 				str_repeat('e', 250),
 				'😁😂🤣😃😄😅😆😗🥰😘😍😎😋😊😉😙😚',
 			],
-			'friendlyname longer than 255 characters ending with single byte characters' => [
+			'friendlyname longer than 255 characters which will be truncated after a single byte characters' => [
 				'😁😂🤣😃😄😅😆😗🥰😘😍😎😋😊😉😙😚',
 				str_repeat('e', 250),
 			],
