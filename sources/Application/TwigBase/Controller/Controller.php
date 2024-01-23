@@ -281,7 +281,6 @@ abstract class Controller extends AbstractController
 			}
 
 			$sDecodedPassedToken = urldecode($sPassedToken);
-			var_dump([$sPassedToken, $sDecodedPassedToken]);
 			if ($sDecodedPassedToken !== $sConfiguredAccessTokenValue){
 				$sMsg = "Invalid token passed under '$this->m_sAccessTokenConfigParamId' http param to reach '$sExecModule' page.";
 				IssueLog::Error($sMsg, null,
