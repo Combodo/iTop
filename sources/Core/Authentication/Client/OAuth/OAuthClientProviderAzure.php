@@ -20,6 +20,7 @@ class OAuthClientProviderAzure extends OAuthClientProviderAbstract
 			'clientId'               => $oOAuthClient->Get('client_id'),
 			'clientSecret'           => $oOAuthClient->Get('client_secret'),
 			'redirectUri'            => $oOAuthClient->Get('redirect_url'),
+            'tenant'                 => $oOAuthClient->Get('tenant'),
 		];
 
 		$this->oVendorProvider = new Azure($aOptions, $collaborators);

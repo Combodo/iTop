@@ -93,6 +93,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:OAuthClientAzure/Attribute:used_for_smtp+' => 'At least one OAuth client must have this flag to “Yes”, if you want iTop to use it for sending mails',
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:yes' => 'Yes',
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'No',
+    'Class:OAuthClientAzure/Attribute:tenant' => 'Tenant',
+    'Class:OAuthClientAzure/Attribute:tenant+' => 'Tenant ID of the configured application. For multi-tenant application, use common.',
 ));
 
 //
