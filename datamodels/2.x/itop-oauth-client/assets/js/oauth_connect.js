@@ -92,6 +92,8 @@ const OAuthConnect = function(sClass, sId, sAjaxUri) {
 		function (oData) {
 			if (oData.status === 'success') {
 				oOpenSignInWindow(oData.data.authorization_url, 'OAuth authorization')
+			} else {
+				alert(oData.error_description);
 			}
 		}
 	);
