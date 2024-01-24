@@ -64,16 +64,22 @@ class DesignDocument extends DOMDocument
 	/**
 	 * Overload of the standard API
 	 *
-	 * @param $filename
+	 * @param string $filename
 	 * @param int $options
+	 *
+	 * @return bool
 	 */
-	public function load($filename, $options = null)
+	public function load(string $filename, int $options = 0): bool
 	{
 		libxml_clear_errors();
 		if (parent::load($filename, LIBXML_NOBLANKS) === false) {
 			$aErrors = libxml_get_errors();
 			IssueLog::Error("Error loading $filename", LogAPI::CHANNEL_DEFAULT, $aErrors);
+
+			return false;
 		}
+
+		return true;
 	}
 
 	/**
