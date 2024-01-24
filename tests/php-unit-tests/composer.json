@@ -7,7 +7,8 @@
     "psr-4": {
       "Combodo\\iTop\\Test\\UnitTest\\": "src/BaseTestCase/",
       "Combodo\\iTop\\Test\\UnitTest\\Hook\\": "src/Hook/",
-      "Combodo\\iTop\\Test\\UnitTest\\Service\\": "src/Service/"
+      "Combodo\\iTop\\Test\\UnitTest\\Service\\": "src/Service/",
+      "Symfony\\Bundle\\FrameworkBundle\\Test\\": "../../lib/symfony/framework-bundle/Test/"
     }
   }
 }
