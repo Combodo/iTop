@@ -36,9 +36,7 @@ final class ConfigAbstractFactory implements AbstractFactoryInterface
         return is_array($dependencies) && array_key_exists($requestedName, $dependencies);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         if (! $container->has('config')) {

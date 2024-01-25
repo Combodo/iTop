@@ -24,7 +24,6 @@ use function array_intersect;
 use function array_key_exists;
 use function array_keys;
 use function class_exists;
-use function get_class;
 use function gettype;
 use function in_array;
 use function is_callable;
@@ -54,13 +53,47 @@ use const E_USER_DEPRECATED;
  *
  * @see ConfigInterface
  *
- * @psalm-import-type ServiceManagerConfigurationType from ConfigInterface
- * @psalm-import-type AbstractFactoriesConfigurationType from ConfigInterface
- * @psalm-import-type DelegatorsConfigurationType from ConfigInterface
- * @psalm-import-type FactoriesConfigurationType from ConfigInterface
- * @psalm-import-type InitializersConfigurationType from ConfigInterface
- * @psalm-import-type LazyServicesConfigurationType from ConfigInterface
- * @psalm-type ServiceManagerConfiguration = array{shared_by_default?:bool}&ServiceManagerConfigurationType
+ * @psalm-type AbstractFactoriesConfiguration = array<
+ *      array-key,
+ *      (class-string<Factory\AbstractFactoryInterface>|Factory\AbstractFactoryInterface)
+ * >
+ * @psalm-type DelegatorsConfiguration = array<
+ *      string,
+ *      array<
+ *          array-key,
+ *          (class-string<Factory\DelegatorFactoryInterface>|Factory\DelegatorFactoryInterface)
+ *          |callable(ContainerInterface,string,callable():object,array<mixed>|null):object
+ *      >
+ * >
+ * @psalm-type FactoriesConfiguration = array<
+ *      string,
+ *      (class-string<Factory\FactoryInterface>|Factory\FactoryInterface)
+ *      |callable(ContainerInterface,?string,?array<mixed>|null):object
+ * >
+ * @psalm-type InitializersConfiguration = array<
+ *      array-key,
+ *      (class-string<Initializer\InitializerInterface>|Initializer\InitializerInterface)
+ *      |callable(ContainerInterface,object):void
+ * >
+ * @psalm-type LazyServicesConfiguration = array{
+ *      class_map?:array<string,class-string>,
+ *      proxies_namespace?:non-empty-string,
+ *      proxies_target_dir?:non-empty-string,
+ *      write_proxy_files?:bool
+ * }
+ * @psalm-type ServiceManagerConfiguration = array{
+ *     abstract_factories?: AbstractFactoriesConfiguration,
+ *     aliases?: array<string,string>,
+ *     delegators?: DelegatorsConfiguration,
+ *     factories?: FactoriesConfiguration,
+ *     initializers?: InitializersConfiguration,
+ *     invokables?: array<string,string>,
+ *     lazy_services?: LazyServicesConfiguration,
+ *     services?: array<string,object|array<mixed>>,
+ *     shared?:array<string,bool>,
+ *     shared_by_default?:bool,
+ *     ...
+ * }
  */
 class ServiceManager implements ServiceLocatorInterface
 {
@@ -88,7 +121,7 @@ class ServiceManager implements ServiceLocatorInterface
 
     /**
      * @var string[][]|Factory\DelegatorFactoryInterface[][]
-     * @psalm-var DelegatorsConfigurationType
+     * @psalm-var DelegatorsConfiguration
      */
     protected $delegators = [];
 
@@ -96,19 +129,19 @@ class ServiceManager implements ServiceLocatorInterface
      * A list of factories (either as string name or callable)
      *
      * @var string[]|callable[]
-     * @psalm-var FactoriesConfigurationType
+     * @psalm-var FactoriesConfiguration
      */
     protected $factories = [];
 
     /**
      * @var Initializer\InitializerInterface[]|callable[]
-     * @psalm-var InitializersConfigurationType
+     * @psalm-var InitializersConfiguration
      */
     protected $initializers = [];
 
     /**
      * @var array
-     * @psalm-var LazyServicesConfigurationType
+     * @psalm-var LazyServicesConfiguration
      */
     protected $lazyServices = [];
 
@@ -158,7 +191,6 @@ class ServiceManager implements ServiceLocatorInterface
      * See {@see \Laminas\ServiceManager\ServiceManager::configure()} for details
      * on what $config accepts.
      *
-     * @param array $config
      * @psalm-param ServiceManagerConfiguration $config
      */
     public function __construct(array $config = [])
@@ -186,9 +218,7 @@ class ServiceManager implements ServiceLocatorInterface
         return $this->creationContext;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function get($name)
     {
         // We start by checking if we have cached the requested service;
@@ -247,9 +277,7 @@ class ServiceManager implements ServiceLocatorInterface
         return $object;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function build($name, ?array $options = null)
     {
         // We never cache when using "build".
@@ -290,7 +318,6 @@ class ServiceManager implements ServiceLocatorInterface
     }
 
     /**
-     * @param  array $config
      * @psalm-param ServiceManagerConfiguration $config
      * @return self
      * @throws ContainerModificationsNotAllowedException If the allow
@@ -507,7 +534,7 @@ class ServiceManager implements ServiceLocatorInterface
     /**
      * Instantiate initializers for to avoid checks during service construction.
      *
-     * @psalm-param InitializersConfigurationType $initializers
+     * @psalm-param InitializersConfiguration $initializers
      */
     private function resolveInitializers(array $initializers): void
     {
@@ -684,8 +711,8 @@ class ServiceManager implements ServiceLocatorInterface
      * It works with strings and class instances.
      * It's not possible to de-duple anonymous functions
      *
-     * @psalm-param DelegatorsConfigurationType $config
-     * @psalm-return DelegatorsConfigurationType
+     * @psalm-param DelegatorsConfiguration $config
+     * @psalm-return DelegatorsConfiguration
      */
     private function mergeDelegators(array $config): array
     {
@@ -740,7 +767,7 @@ class ServiceManager implements ServiceLocatorInterface
      * a given service name we do not have a service instance
      * in the cache OR override is explicitly allowed.
      *
-     * @psalm-param ServiceManagerConfigurationType $config
+     * @psalm-param ServiceManagerConfiguration $config
      * @throws ContainerModificationsNotAllowedException If any
      *     service key is invalid.
      */
@@ -976,7 +1003,7 @@ class ServiceManager implements ServiceLocatorInterface
         }
         throw new ServiceNotCreatedException(sprintf(
             'A non-callable delegator, "%s", was provided; expected a callable or instance of "%s"',
-            is_object($delegatorFactory) ? get_class($delegatorFactory) : gettype($delegatorFactory),
+            is_object($delegatorFactory) ? $delegatorFactory::class : gettype($delegatorFactory),
             DelegatorFactoryInterface::class
         ));
     }

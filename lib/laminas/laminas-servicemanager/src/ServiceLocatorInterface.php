@@ -19,7 +19,7 @@ interface ServiceLocatorInterface extends ContainerInterface
      * @param  string|class-string<T> $name
      * @param  null|array<mixed>  $options
      * @return mixed
-     * @psalm-return ($name is class-string ? T : mixed)
+     * @psalm-return ($name is class-string<T> ? T : mixed)
      * @throws Exception\ServiceNotFoundException If no factory/abstract
      *     factory could be found to create the instance.
      * @throws Exception\ServiceNotCreatedException If factory/delegator fails

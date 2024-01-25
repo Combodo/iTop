@@ -3,7 +3,7 @@
         'name' => 'combodo/itop',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '23a187a4582feb216abfcb822e06e2d9d1cf3705',
+        'reference' => '1c7dbcb1e90113dbf3a3f61fdae6519e492f6d4f',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'combodo/itop' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '23a187a4582feb216abfcb822e06e2d9d1cf3705',
+            'reference' => '1c7dbcb1e90113dbf3a3f61fdae6519e492f6d4f',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -107,9 +107,9 @@
             'dev_requirement' => false,
         ),
         'laminas/laminas-servicemanager' => array(
-            'pretty_version' => '3.16.0',
-            'version' => '3.16.0.0',
-            'reference' => '863c66733740cd36ebf5e700f4258ef2c68a2a24',
+            'pretty_version' => '3.22.1',
+            'version' => '3.22.1.0',
+            'reference' => 'de98d297d4743956a0558a6d71616979ff779328',
             'type' => 'library',
             'install_path' => __DIR__ . '/../laminas/laminas-servicemanager',
             'aliases' => array(),
@@ -241,8 +241,8 @@
         'psr/container-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '^1.0',
-                1 => '1.1|2.0',
+                0 => '1.1|2.0',
+                1 => '^1.0',
             ),
         ),
         'psr/event-dispatcher' => array(

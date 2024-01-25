@@ -19,12 +19,11 @@ interface PluginManagerInterface extends ServiceLocatorInterface
     /**
      * Validate an instance
      *
-     * @param  mixed $instance
      * @return void
      * @throws InvalidServiceException If created instance does not respect the
      *     constraint on type imposed by the plugin manager.
      * @throws ContainerExceptionInterface If any other error occurs.
      * @psalm-assert InstanceType $instance
      */
-    public function validate($instance);
+    public function validate(mixed $instance);
 }

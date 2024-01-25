@@ -45,15 +45,12 @@ EOH;
 
     private ConsoleHelper $helper;
 
-    private string $scriptName;
-
     /**
      * @param string $scriptName
      */
-    public function __construct($scriptName = self::DEFAULT_SCRIPT_NAME, ?ConsoleHelper $helper = null)
+    public function __construct(private $scriptName = self::DEFAULT_SCRIPT_NAME, ?ConsoleHelper $helper = null)
     {
-        $this->scriptName = $scriptName;
-        $this->helper     = $helper ?: new ConsoleHelper();
+        $this->helper = $helper ?: new ConsoleHelper();
     }
 
     /**
@@ -98,7 +95,6 @@ EOH;
     }
 
     /**
-     * @param array $args
      * @return ArgumentObject
      */
     private function parseArgs(array $args)
