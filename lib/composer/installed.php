@@ -3,7 +3,7 @@
         'name' => 'combodo/itop',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '02b3e7b6212c01722fdc90b2f636aef42af9a62b',
+        'reference' => '8eca2000238b2fbac7057654f08da00dd1b8eb88',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'apereo/phpcas' => array(
-            'pretty_version' => '1.6.0',
-            'version' => '1.6.0.0',
-            'reference' => 'f817c72a961484afef95ac64a9257c8e31f063b9',
+            'pretty_version' => '1.6.1',
+            'version' => '1.6.1.0',
+            'reference' => 'c129708154852656aabb13d8606cd5b12dbbabac',
             'type' => 'library',
             'install_path' => __DIR__ . '/../apereo/phpcas',
             'aliases' => array(),
@@ -22,7 +22,7 @@
         'combodo/itop' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '02b3e7b6212c01722fdc90b2f636aef42af9a62b',
+            'reference' => '8eca2000238b2fbac7057654f08da00dd1b8eb88',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -306,9 +306,9 @@
             ),
         ),
         'psr/log' => array(
-            'pretty_version' => '1.1.4',
-            'version' => '1.1.4.0',
-            'reference' => 'd49695b909c3b7628b6289db5479a1c204601f11',
+            'pretty_version' => '3.0.0',
+            'version' => '3.0.0.0',
+            'reference' => 'fe5ea303b0887d5caefd3d431c3e61ad47037001',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psr/log',
             'aliases' => array(),
