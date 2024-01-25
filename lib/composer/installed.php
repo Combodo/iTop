@@ -3,7 +3,7 @@
         'name' => 'combodo/itop',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '1c7dbcb1e90113dbf3a3f61fdae6519e492f6d4f',
+        'reference' => 'b13efeb3a87aebbbd77d8a37f17a1e7514964e3b',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'combodo/itop' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '1c7dbcb1e90113dbf3a3f61fdae6519e492f6d4f',
+            'reference' => 'b13efeb3a87aebbbd77d8a37f17a1e7514964e3b',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -134,18 +134,18 @@
             'dev_requirement' => false,
         ),
         'league/oauth2-client' => array(
-            'pretty_version' => '2.6.1',
-            'version' => '2.6.1.0',
-            'reference' => '2334c249907190c132364f5dae0287ab8666aa19',
+            'pretty_version' => '2.7.0',
+            'version' => '2.7.0.0',
+            'reference' => '160d6274b03562ebeb55ed18399281d8118b76c8',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/oauth2-client',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'league/oauth2-google' => array(
-            'pretty_version' => '3.0.4',
-            'version' => '3.0.4.0',
-            'reference' => '6b79441f244040760bed5fdcd092a2bda7cf34c6',
+            'pretty_version' => '4.0.1',
+            'version' => '4.0.1.0',
+            'reference' => '1b01ba18ba31b29e88771e3e0979e5c91d4afe76',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/oauth2-google',
             'aliases' => array(),
@@ -241,8 +241,8 @@
         'psr/container-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.1|2.0',
-                1 => '^1.0',
+                0 => '^1.0',
+                1 => '1.1|2.0',
             ),
         ),
         'psr/event-dispatcher' => array(

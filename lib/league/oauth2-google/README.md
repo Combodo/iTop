@@ -1,11 +1,9 @@
 # Google Provider for OAuth 2.0 Client
 
-[![Join the chat](https://img.shields.io/badge/gitter-join-1DCE73.svg)](https://gitter.im/thephpleague/oauth2-google)
-[![Build Status](https://img.shields.io/travis/thephpleague/oauth2-google.svg)](https://travis-ci.org/thephpleague/oauth2-google)
-[![Code Coverage](https://img.shields.io/coveralls/thephpleague/oauth2-google.svg)](https://coveralls.io/r/thephpleague/oauth2-google)
-[![Code Quality](https://img.shields.io/scrutinizer/g/thephpleague/oauth2-google.svg)](https://scrutinizer-ci.com/g/thephpleague/oauth2-google/)
-[![License](https://img.shields.io/packagist/l/league/oauth2-google.svg)](https://github.com/thephpleague/oauth2-google/blob/master/LICENSE)
-[![Latest Stable Version](https://img.shields.io/packagist/v/league/oauth2-google.svg)](https://packagist.org/packages/league/oauth2-google)
+[![Build Status](https://img.shields.io/github/workflow/status/thephpleague/oauth2-google/test/main)](https://github.com/thephpleague/oauth2-google/actions/workflows/test.yaml)
+[![Code Coverage](https://img.shields.io/codecov/c/gh/thephpleague/oauth2-google)](https://app.codecov.io/gh/thephpleague/oauth2-google)
+[![License](https://img.shields.io/packagist/l/league/oauth2-google)](https://github.com/thephpleague/oauth2-google/blob/main/LICENSE)
+[![Latest Stable Version](https://img.shields.io/packagist/v/league/oauth2-google)](https://packagist.org/packages/league/oauth2-google)
 
 This package provides Google OAuth 2.0 support for the PHP League's [OAuth 2.0 Client](https://github.com/thephpleague/oauth2-client).
 
@@ -20,11 +18,10 @@ a patch via pull request.
 
 The following versions of PHP are supported.
 
-* PHP 7.0
-* PHP 7.1
-* PHP 7.2
 * PHP 7.3
 * PHP 7.4
+* PHP 8.0
+* PHP 8.1
 
 This package uses [OpenID Connect][openid-connect] to authenticate users with
 Google accounts.
@@ -178,7 +175,7 @@ $refreshToken = $token->getRefreshToken();
 If you ever need to get a new refresh token you can request one by forcing the consent prompt:
 
 ```php
-$authUrl = $provider->getAuthorizationUrl(['prompt' => 'consent']);
+$authUrl = $provider->getAuthorizationUrl(['prompt' => 'consent', 'access_type' => 'offline']);
 ```
 
 Now you have everything you need to refresh an access token using a refresh token:
@@ -228,7 +225,7 @@ composer check
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/thephpleague/oauth2-google/blob/master/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/thephpleague/oauth2-google/blob/main/CONTRIBUTING.md) for details.
 
 
 ## Credits
@@ -239,4 +236,4 @@ Please see [CONTRIBUTING](https://github.com/thephpleague/oauth2-google/blob/mas
 
 ## License
 
-The MIT License (MIT). Please see [License File](https://github.com/thephpleague/oauth2-google/blob/master/LICENSE) for more information.
+The MIT License (MIT). Please see [License File](https://github.com/thephpleague/oauth2-google/blob/main/LICENSE) for more information.

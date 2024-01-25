@@ -314,8 +314,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         ),
         'League\\OAuth2\\Client\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/oauth2-client/src',
-            1 => __DIR__ . '/..' . '/league/oauth2-google/src',
+            0 => __DIR__ . '/..' . '/league/oauth2-google/src',
+            1 => __DIR__ . '/..' . '/league/oauth2-client/src',
         ),
         'Laminas\\Validator\\' => 
         array (
@@ -1274,7 +1274,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Laminas\\ServiceManager\\Proxy\\LazyServiceFactory' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/Proxy/LazyServiceFactory.php',
         'Laminas\\ServiceManager\\ServiceLocatorInterface' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/ServiceLocatorInterface.php',
         'Laminas\\ServiceManager\\ServiceManager' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/ServiceManager.php',
-        'Laminas\\ServiceManager\\Test\\CommonPluginManagerTrait' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/Test/CommonPluginManagerTrait.php',
         'Laminas\\ServiceManager\\Tool\\ConfigDumper' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/Tool/ConfigDumper.php',
         'Laminas\\ServiceManager\\Tool\\ConfigDumperCommand' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/Tool/ConfigDumperCommand.php',
         'Laminas\\ServiceManager\\Tool\\FactoryCreator' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/Tool/FactoryCreator.php',

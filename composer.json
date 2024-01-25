@@ -18,7 +18,7 @@
     "guzzlehttp/guzzle": "^7.5.1",
     "laminas/laminas-mail": "^2.11",
     "laminas/laminas-servicemanager": "^3.5",
-    "league/oauth2-google": "^3.0",
+    "league/oauth2-google": "^4.0.1",
     "nikic/php-parser": "~4.14.0",
     "pear/archive_tar": "~1.4.14",
     "pelago/emogrifier": "^6.0.0",

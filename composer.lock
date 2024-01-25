@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "441491944d0900502340912e2f2e1703",
+    "content-hash": "8fb5b1ba82a4784cb72cd95e4290c892",
     "packages": [
         {
             "name": "apereo/phpcas",
@@ -973,16 +973,16 @@
         },
         {
             "name": "league/oauth2-client",
-            "version": "2.6.1",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth2-client.git",
-                "reference": "2334c249907190c132364f5dae0287ab8666aa19"
+                "reference": "160d6274b03562ebeb55ed18399281d8118b76c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/oauth2-client/zipball/2334c249907190c132364f5dae0287ab8666aa19",
-                "reference": "2334c249907190c132364f5dae0287ab8666aa19",
+                "url": "https://api.github.com/repos/thephpleague/oauth2-client/zipball/160d6274b03562ebeb55ed18399281d8118b76c8",
+                "reference": "160d6274b03562ebeb55ed18399281d8118b76c8",
                 "shasum": ""
             },
             "require": {
@@ -1037,32 +1037,32 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/oauth2-client/issues",
-                "source": "https://github.com/thephpleague/oauth2-client/tree/2.6.1"
+                "source": "https://github.com/thephpleague/oauth2-client/tree/2.7.0"
             },
-            "time": "2021-12-22T16:42:49+00:00"
+            "time": "2023-04-16T18:19:15+00:00"
         },
         {
             "name": "league/oauth2-google",
-            "version": "3.0.4",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth2-google.git",
-                "reference": "6b79441f244040760bed5fdcd092a2bda7cf34c6"
+                "reference": "1b01ba18ba31b29e88771e3e0979e5c91d4afe76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/oauth2-google/zipball/6b79441f244040760bed5fdcd092a2bda7cf34c6",
-                "reference": "6b79441f244040760bed5fdcd092a2bda7cf34c6",
+                "url": "https://api.github.com/repos/thephpleague/oauth2-google/zipball/1b01ba18ba31b29e88771e3e0979e5c91d4afe76",
+                "reference": "1b01ba18ba31b29e88771e3e0979e5c91d4afe76",
                 "shasum": ""
             },
             "require": {
-                "league/oauth2-client": "^2.0"
+                "league/oauth2-client": "^2.0",
+                "php": "^7.3 || ^8.0"
             },
             "require-dev": {
-                "eloquent/phony-phpunit": "^2.0",
-                "php-coveralls/php-coveralls": "^2.1",
-                "phpunit/phpunit": "^6.0",
-                "squizlabs/php_codesniffer": "^2.0"
+                "eloquent/phony-phpunit": "^6.0 || ^7.1",
+                "phpunit/phpunit": "^8.0 || ^9.0",
+                "squizlabs/php_codesniffer": "^3.0"
             },
             "type": "library",
             "autoload": {
@@ -1077,8 +1077,8 @@
             "authors": [
                 {
                     "name": "Woody Gilk",
-                    "email": "woody.gilk@gmail.com",
-                    "homepage": "http://shadowhand.me"
+                    "email": "hello@shadowhand.com",
+                    "homepage": "https://shadowhand.com"
                 }
             ],
             "description": "Google OAuth 2.0 Client Provider for The PHP League OAuth2-Client",
@@ -1092,9 +1092,9 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/oauth2-google/issues",
-                "source": "https://github.com/thephpleague/oauth2-google/tree/3.0.4"
+                "source": "https://github.com/thephpleague/oauth2-google/tree/4.0.1"
             },
-            "time": "2021-01-27T16:09:03+00:00"
+            "time": "2023-03-17T15:20:52+00:00"
         },
         {
             "name": "nikic/php-parser",
