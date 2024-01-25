@@ -23,7 +23,7 @@ abstract class ErrorHandler
     /**
      * Active stack
      *
-     * @var array
+     * @var list<ErrorException|null>
      */
     protected static $stack = [];
 

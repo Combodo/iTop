@@ -154,12 +154,11 @@ class IsCountable extends AbstractValidator
     }
 
     /**
-     * @param mixed $value
      * @return void
      * @throws Exception\InvalidArgumentException If either a min or max option
      *     was previously set.
      */
-    private function setCount($value)
+    private function setCount(mixed $value)
     {
         if (isset($this->options['min']) || isset($this->options['max'])) {
             throw new Exception\InvalidArgumentException(
@@ -170,12 +169,11 @@ class IsCountable extends AbstractValidator
     }
 
     /**
-     * @param mixed $value
      * @return void
      * @throws Exception\InvalidArgumentException If either a count or max option
      *     was previously set.
      */
-    private function setMin($value)
+    private function setMin(mixed $value)
     {
         if (isset($this->options['count'])) {
             throw new Exception\InvalidArgumentException(
@@ -186,12 +184,11 @@ class IsCountable extends AbstractValidator
     }
 
     /**
-     * @param mixed $value
      * @return void
      * @throws Exception\InvalidArgumentException If either a count or min option
      *     was previously set.
      */
-    private function setMax($value)
+    private function setMax(mixed $value)
     {
         if (isset($this->options['count'])) {
             throw new Exception\InvalidArgumentException(

@@ -7,22 +7,40 @@ use Laminas\Mail\Storage\Exception;
 use Laminas\Mail\Storage\ParamsNormalizer;
 use Laminas\Stdlib\ErrorHandler;
 
+use function array_merge;
+use function closedir;
+use function explode;
+use function is_dir;
+use function is_file;
+use function opendir;
+use function readdir;
+use function rtrim;
+use function sprintf;
+use function str_contains;
+use function trim;
+
+use const DIRECTORY_SEPARATOR;
+use const E_WARNING;
+
 class Mbox extends Storage\Mbox implements FolderInterface
 {
     /**
      * Storage\Folder root folder for folder structure
+     *
      * @var Storage\Folder
      */
     protected $rootFolder;
 
     /**
      * rootdir of folder structure
+     *
      * @var string
      */
     protected $rootdir;
 
     /**
      * name of current folder
+     *
      * @var string
      */
     protected $currentFolder;
@@ -38,7 +56,7 @@ class Mbox extends Storage\Mbox implements FolderInterface
      * - dirname rootdir of mbox structure
      * - folder initial selected folder, default is 'INBOX'
      *
-     * @param $params array|object Array, iterable object, or stdClass object
+     * @param array|object $params Array, iterable object, or stdClass object
      *     with reader specific parameters
      * @throws Exception\InvalidArgumentException
      */
@@ -61,7 +79,7 @@ class Mbox extends Storage\Mbox implements FolderInterface
         }
 
         $this->rootdir = rtrim($dirname, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-        $folder = $params['folder'] ?? 'INBOX';
+        $folder        = $params['folder'] ?? 'INBOX';
 
         $this->buildFolderTree($this->rootdir);
         $this->selectFolder((string) $folder);
@@ -84,7 +102,7 @@ class Mbox extends Storage\Mbox implements FolderInterface
     {
         if (! $parentFolder) {
             $this->rootFolder = new Storage\Folder('/', '/', false);
-            $parentFolder = $this->rootFolder;
+            $parentFolder     = $this->rootFolder;
         }
 
         ErrorHandler::start(E_WARNING);
@@ -99,15 +117,15 @@ class Mbox extends Storage\Mbox implements FolderInterface
                 continue;
             }
             $absoluteEntry = $currentDir . $entry;
-            $globalName = $parentGlobalName . DIRECTORY_SEPARATOR . $entry;
+            $globalName    = $parentGlobalName . DIRECTORY_SEPARATOR . $entry;
             if (is_file($absoluteEntry) && $this->isMboxFile($absoluteEntry)) {
                 $parentFolder->$entry = new Storage\Folder($entry, $globalName);
                 continue;
             }
-            if (! is_dir($absoluteEntry) /* || $entry == '.' || $entry == '..' */) {
+            if (! is_dir($absoluteEntry)) { /* || $entry == '.' || $entry == '..' */
                 continue;
             }
-            $folder = new Storage\Folder($entry, $globalName, false);
+            $folder               = new Storage\Folder($entry, $globalName, false);
             $parentFolder->$entry = $folder;
             $this->buildFolderTree($absoluteEntry . DIRECTORY_SEPARATOR, $folder, $globalName);
         }
@@ -129,10 +147,10 @@ class Mbox extends Storage\Mbox implements FolderInterface
         }
 
         $currentFolder = $this->rootFolder;
-        $subname = trim($rootFolder, DIRECTORY_SEPARATOR);
+        $subname       = trim($rootFolder, DIRECTORY_SEPARATOR);
         while ($currentFolder) {
-            if (false !== strpos($subname, DIRECTORY_SEPARATOR)) {
-                list($entry, $subname) = explode(DIRECTORY_SEPARATOR, $subname, 2);
+            if (str_contains($subname, DIRECTORY_SEPARATOR)) {
+                [$entry, $subname] = explode(DIRECTORY_SEPARATOR, $subname, 2);
             } else {
                 $entry   = $subname;
                 $subname = null;
@@ -188,7 +206,7 @@ class Mbox extends Storage\Mbox implements FolderInterface
     /**
      * get Storage\Folder instance for current folder
      *
-     * @return Storage\Folder instance of current folder
+     * @return string instance of current folder
      * @throws Exception\ExceptionInterface
      */
     public function getCurrentFolder()

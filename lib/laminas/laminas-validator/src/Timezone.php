@@ -6,12 +6,10 @@ use DateTimeZone;
 
 use function array_key_exists;
 use function array_search;
-use function get_class;
 use function gettype;
 use function in_array;
 use function is_array;
 use function is_int;
-use function is_object;
 use function is_string;
 use function sprintf;
 
@@ -91,8 +89,7 @@ class Timezone extends AbstractValidator
             throw new Exception\InvalidArgumentException(sprintf(
                 'Unknown type "%s" provided',
                 is_string($type) || is_int($type)
-                    ? $type
-                    : (is_object($type) ? get_class($type) : gettype($type))
+                    ? $type : gettype($type)
             ));
         }
 

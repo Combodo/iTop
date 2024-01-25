@@ -294,9 +294,7 @@ class BusinessIdentifierCode extends AbstractValidator
      */
     private const KOSOVO_EXCEPTION = 'XK';
 
-    /**
-     * @inheritDoc
-     */
+    /** {@inheritDoc} */
     public function isValid($value): bool
     {
         if (! is_string($value)) {

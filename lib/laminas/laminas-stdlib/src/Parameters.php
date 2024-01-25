@@ -10,6 +10,12 @@ use ReturnTypeWillChange;
 use function http_build_query;
 use function parse_str;
 
+/**
+ * @template TKey of array-key
+ * @template TValue
+ * @template-extends PhpArrayObject<TKey, TValue>
+ * @template-implements ParametersInterface<TKey, TValue>
+ */
 class Parameters extends PhpArrayObject implements ParametersInterface
 {
     /**
@@ -18,7 +24,7 @@ class Parameters extends PhpArrayObject implements ParametersInterface
      * Enforces that we have an array, and enforces parameter access to array
      * elements.
      *
-     * @param  array $values
+     * @param array<TKey, TValue>|null $values
      */
     public function __construct(?array $values = null)
     {
@@ -31,7 +37,7 @@ class Parameters extends PhpArrayObject implements ParametersInterface
     /**
      * Populate from native PHP array
      *
-     * @param  array $values
+     * @param array<TKey, TValue> $values
      * @return void
      */
     public function fromArray(array $values)
@@ -55,7 +61,7 @@ class Parameters extends PhpArrayObject implements ParametersInterface
     /**
      * Serialize to native PHP array
      *
-     * @return array
+     * @return array<TKey, TValue>
      */
     public function toArray()
     {
@@ -77,8 +83,8 @@ class Parameters extends PhpArrayObject implements ParametersInterface
      *
      * Returns null if the key does not exist.
      *
-     * @param  string $name
-     * @return mixed
+     * @param  TKey $name
+     * @return TValue|null
      */
     #[ReturnTypeWillChange]
     public function offsetGet($name)
@@ -91,9 +97,10 @@ class Parameters extends PhpArrayObject implements ParametersInterface
     }
 
     /**
-     * @param string $name
-     * @param mixed $default optional default value
-     * @return mixed
+     * @template TDefault
+     * @param TKey $name
+     * @param TDefault $default optional default value
+     * @return TValue|TDefault|null
      */
     public function get($name, $default = null)
     {
@@ -104,9 +111,9 @@ class Parameters extends PhpArrayObject implements ParametersInterface
     }
 
     /**
-     * @param string $name
-     * @param mixed $value
-     * @return Parameters
+     * @param TKey   $name
+     * @param TValue $value
+     * @return $this
      */
     public function set($name, $value)
     {

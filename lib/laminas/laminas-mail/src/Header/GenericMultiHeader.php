@@ -2,15 +2,23 @@
 
 namespace Laminas\Mail\Header;
 
+use function explode;
+use function implode;
+use function strpos;
+
 /**
  * Generic class for Headers with multiple occurs in the same message
  */
 class GenericMultiHeader extends GenericHeader implements MultipleHeadersInterface
 {
+    /**
+     * @param string $headerLine
+     * @return array|GenericHeader|GenericMultiHeader|static
+     */
     public static function fromString($headerLine)
     {
-        list($fieldName, $fieldValue) = GenericHeader::splitHeaderLine($headerLine);
-        $fieldValue = HeaderWrap::mimeDecodeValue($fieldValue);
+        [$fieldName, $fieldValue] = GenericHeader::splitHeaderLine($headerLine);
+        $fieldValue               = HeaderWrap::mimeDecodeValue($fieldValue);
 
         if (strpos($fieldValue, ',')) {
             $headers = [];

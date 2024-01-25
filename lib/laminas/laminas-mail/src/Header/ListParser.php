@@ -3,6 +3,7 @@
 namespace Laminas\Mail\Header;
 
 use function in_array;
+use function strlen;
 
 /**
  * @internal
@@ -35,14 +36,14 @@ class ListParser
             // If we are in an escape sequence, append the character and continue.
             if ($inEscape) {
                 $currentValue .= $char;
-                $inEscape = false;
+                $inEscape      = false;
                 continue;
             }
 
             // If we are not in a quoted string, and have a delimiter, append
             // the current value to the list, and reset the current value.
             if (in_array($char, $delims, true) && ! $inQuote) {
-                $values [] = $currentValue;
+                $values []    = $currentValue;
                 $currentValue = '';
                 continue;
             }
@@ -66,7 +67,7 @@ class ListParser
             // we reset our quote status and the currently opened quote
             // delimiter.
             if ($char === $currentQuoteDelim) {
-                $inQuote = false;
+                $inQuote           = false;
                 $currentQuoteDelim = null;
                 continue;
             }
@@ -78,7 +79,7 @@ class ListParser
             }
 
             // Otherwise, we're starting a quoted string.
-            $inQuote = true;
+            $inQuote           = true;
             $currentQuoteDelim = $char;
         }
 
