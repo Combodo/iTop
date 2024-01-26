@@ -521,6 +521,6 @@ class Str
 
 	public static function islowcase($sString)
 	{
-		return (strtolower($sString) == $sString);
+		return (mb_strtolower($sString) == $sString);
 	}
 }

@@ -3506,7 +3506,7 @@ class AttributeBoolean extends AttributeInteger
 		$sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null,
 		$sAttributeQualifier = null
 	) {
-		$sInput = strtolower(trim($sProposedValue));
+		$sInput = mb_strtolower(trim($sProposedValue));
 		if ($bLocalizedValue)
 		{
 			switch ($sInput)
