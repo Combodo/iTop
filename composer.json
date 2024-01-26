@@ -22,6 +22,7 @@
     "nikic/php-parser": "^4.14.0",
     "pear/archive_tar": "~1.4.14",
     "pelago/emogrifier": "^6.0.0",
+    "psr/log": "^2.0.0",
     "scssphp/scssphp": "^1.10.3",
     "symfony/console": "~6.4.0",
     "symfony/dotenv": "~6.4.0",

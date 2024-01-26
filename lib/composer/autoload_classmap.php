@@ -3032,8 +3032,6 @@ return array(
     'Twig\\Source' => $vendorDir . '/twig/twig/src/Source.php',
     'Twig\\Template' => $vendorDir . '/twig/twig/src/Template.php',
     'Twig\\TemplateWrapper' => $vendorDir . '/twig/twig/src/TemplateWrapper.php',
-    'Twig\\Test\\IntegrationTestCase' => $vendorDir . '/twig/twig/src/Test/IntegrationTestCase.php',
-    'Twig\\Test\\NodeTestCase' => $vendorDir . '/twig/twig/src/Test/NodeTestCase.php',
     'Twig\\Token' => $vendorDir . '/twig/twig/src/Token.php',
     'Twig\\TokenParser\\AbstractTokenParser' => $vendorDir . '/twig/twig/src/TokenParser/AbstractTokenParser.php',
     'Twig\\TokenParser\\ApplyTokenParser' => $vendorDir . '/twig/twig/src/TokenParser/ApplyTokenParser.php',
