@@ -240,7 +240,7 @@ abstract class AbstractHtmlProcessor
     {
         $domDocument = new \DOMDocument();
         $domDocument->strictErrorChecking = false;
-        $domDocument->formatOutput = true;
+        $domDocument->formatOutput = false;
         $libXmlState = \libxml_use_internal_errors(true);
         $domDocument->loadHTML($this->prepareHtmlForDomConversion($html));
         \libxml_clear_errors();

@@ -50,7 +50,7 @@ class CssToAttributeConverter extends AbstractHtmlProcessor
     /**
      * Maps the CSS from the style nodes to visual HTML attributes.
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function convertCssToVisualAttributes(): self
     {

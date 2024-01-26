@@ -13,6 +13,7 @@ use Sabberworm\CSS\Property\Import as CssImport;
 use Sabberworm\CSS\Renderable as CssRenderable;
 use Sabberworm\CSS\RuleSet\DeclarationBlock as CssDeclarationBlock;
 use Sabberworm\CSS\RuleSet\RuleSet as CssRuleSet;
+use Sabberworm\CSS\Settings as ParserSettings;
 
 /**
  * Parses and stores a CSS document from a string of CSS, and provides methods to obtain the CSS in parts or as data
@@ -37,13 +38,30 @@ class CssDocument
 
     /**
      * @param string $css
+     * @param bool $debug
+     *        If this is `true`, an exception will be thrown if invalid CSS is encountered.
+     *        Otherwise the parser will try to do the best it can.
      */
-    public function __construct(string $css)
+    public function __construct(string $css, bool $debug)
     {
-        $cssParser = new CssParser($css);
-        /** @var SabberwormCssDocument $sabberwormCssDocument */
-        $sabberwormCssDocument = $cssParser->parse();
-        $this->sabberwormCssDocument = $sabberwormCssDocument;
+        // CSS Parser currently throws exception with nested at-rules (like `@media`) in strict parsing mode
+        $parserSettings = ParserSettings::create()->withLenientParsing(!$debug || $this->hasNestedAtRule($css));
+
+        // CSS Parser currently throws exception with non-empty whitespace-only CSS in strict parsing mode, so `trim()`
+        // @see https://github.com/sabberworm/PHP-CSS-Parser/issues/349
+        $this->sabberwormCssDocument = (new CssParser(\trim($css), $parserSettings))->parse();
+    }
+
+    /**
+     * Tests if a string of CSS appears to contain an at-rule with nested rules
+     * (`@media`, `@supports`, `@keyframes`, `@document`,
+     * the latter two additionally with vendor prefixes that may commonly be used).
+     *
+     * @see https://github.com/sabberworm/PHP-CSS-Parser/issues/127
+     */
+    private function hasNestedAtRule(string $css): bool
+    {
+        return \preg_match('/@(?:media|supports|(?:-webkit-|-moz-|-ms-|-o-)?+(keyframes|document))\\b/', $css) === 1;
     }
 
     /**
@@ -51,7 +69,7 @@ class CssDocument
      *
      * @param array<array-key, string> $allowedMediaTypes
      *
-     * @return array<int, StyleRule>
+     * @return list<StyleRule>
      */
     public function getStyleRulesData(array $allowedMediaTypes): array
     {
@@ -86,7 +104,6 @@ class CssDocument
     public function renderNonConditionalAtRules(): string
     {
         $this->isImportRuleAllowed = true;
-        /** @var array<int, CssRenderable> $cssContents */
         $cssContents = $this->sabberwormCssDocument->getContents();
         $atRules = \array_filter($cssContents, [$this, 'isValidAtRuleToRender']);
 
@@ -97,9 +114,7 @@ class CssDocument
         $atRulesDocument = new SabberwormCssDocument();
         $atRulesDocument->setContents($atRules);
 
-        /** @var string $renderedRules */
-        $renderedRules = $atRulesDocument->render();
-        return $renderedRules;
+        return $atRulesDocument->render();
     }
 
     /**
@@ -115,7 +130,6 @@ class CssDocument
         $result = null;
 
         if ($rule->atRuleName() === 'media') {
-            /** @var string $mediaQueryList */
             $mediaQueryList = $rule->atRuleArgs();
             [$mediaType] = \explode('(', $mediaQueryList, 2);
             if (\trim($mediaType) !== '') {
