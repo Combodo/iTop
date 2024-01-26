@@ -1938,7 +1938,7 @@ class FrameworkExtension extends Extension
             $container->removeDefinition('serializer.mapping.cache_class_metadata_factory');
         }
 
-        if (!class_exists(Translator::class)) {
+        if (!$this->readConfigEnabled('translator', $container, $config)) {
             $container->removeDefinition('serializer.normalizer.translatable');
         }
 
@@ -1990,21 +1990,23 @@ class FrameworkExtension extends Extension
             $container->getDefinition('serializer.name_converter.metadata_aware')->setArgument(1, new Reference($config['name_converter']));
         }
 
+        $defaultContext = $config['default_context'] ?? [];
+
+        if ($defaultContext) {
+            $container->setParameter('serializer.default_context', $defaultContext);
+        }
+
         if (isset($config['circular_reference_handler']) && $config['circular_reference_handler']) {
             $arguments = $container->getDefinition('serializer.normalizer.object')->getArguments();
-            $context = ($arguments[6] ?? []) + ['circular_reference_handler' => new Reference($config['circular_reference_handler'])];
+            $context = ($arguments[6] ?? $defaultContext) + ['circular_reference_handler' => new Reference($config['circular_reference_handler'])];
             $container->getDefinition('serializer.normalizer.object')->setArgument(5, null);
             $container->getDefinition('serializer.normalizer.object')->setArgument(6, $context);
         }
 
         if ($config['max_depth_handler'] ?? false) {
-            $defaultContext = $container->getDefinition('serializer.normalizer.object')->getArgument(6);
-            $defaultContext += ['max_depth_handler' => new Reference($config['max_depth_handler'])];
-            $container->getDefinition('serializer.normalizer.object')->replaceArgument(6, $defaultContext);
-        }
-
-        if (isset($config['default_context']) && $config['default_context']) {
-            $container->setParameter('serializer.default_context', $config['default_context']);
+            $arguments = $container->getDefinition('serializer.normalizer.object')->getArguments();
+            $context = ($arguments[6] ?? $defaultContext) + ['max_depth_handler' => new Reference($config['max_depth_handler'])];
+            $container->getDefinition('serializer.normalizer.object')->setArgument(6, $context);
         }
     }
 
@@ -2678,13 +2680,15 @@ class FrameworkExtension extends Extension
 
         if ($webhookEnabled) {
             $webhookRequestParsers = [
+                MailerBridge\Brevo\Webhook\BrevoRequestParser::class => 'mailer.webhook.request_parser.brevo',
                 MailerBridge\Mailgun\Webhook\MailgunRequestParser::class => 'mailer.webhook.request_parser.mailgun',
+                MailerBridge\Mailjet\Webhook\MailjetRequestParser::class => 'mailer.webhook.request_parser.mailjet',
                 MailerBridge\Postmark\Webhook\PostmarkRequestParser::class => 'mailer.webhook.request_parser.postmark',
                 MailerBridge\Sendgrid\Webhook\SendgridRequestParser::class => 'mailer.webhook.request_parser.sendgrid',
             ];
 
             foreach ($webhookRequestParsers as $class => $service) {
-                $package = substr($service, \strlen('mailer.transport_factory.'));
+                $package = substr($service, \strlen('mailer.webhook.request_parser.'));
 
                 if (!ContainerBuilder::willBeAvailable(sprintf('symfony/%s-mailer', 'gmail' === $package ? 'google' : $package), $class, ['symfony/framework-bundle', 'symfony/mailer'])) {
                     $container->removeDefinition($service);
@@ -2868,7 +2872,9 @@ class FrameworkExtension extends Extension
 
         if (ContainerBuilder::willBeAvailable('symfony/mercure-notifier', NotifierBridge\Mercure\MercureTransportFactory::class, $parentPackages) && ContainerBuilder::willBeAvailable('symfony/mercure-bundle', MercureBundle::class, $parentPackages) && \in_array(MercureBundle::class, $container->getParameter('kernel.bundles'), true)) {
             $container->getDefinition($classToServices[NotifierBridge\Mercure\MercureTransportFactory::class])
-                ->replaceArgument('$registry', new Reference(HubRegistry::class));
+                ->replaceArgument('$registry', new Reference(HubRegistry::class))
+                ->replaceArgument('$client', new Reference('http_client', ContainerBuilder::NULL_ON_INVALID_REFERENCE))
+                ->replaceArgument('$dispatcher', new Reference('event_dispatcher', ContainerBuilder::NULL_ON_INVALID_REFERENCE));
         } elseif (ContainerBuilder::willBeAvailable('symfony/mercure-notifier', NotifierBridge\Mercure\MercureTransportFactory::class, $parentPackages)) {
             $container->removeDefinition($classToServices[NotifierBridge\Mercure\MercureTransportFactory::class]);
         }
@@ -2876,13 +2882,17 @@ class FrameworkExtension extends Extension
         if (ContainerBuilder::willBeAvailable('symfony/fake-chat-notifier', NotifierBridge\FakeChat\FakeChatTransportFactory::class, ['symfony/framework-bundle', 'symfony/notifier', 'symfony/mailer'])) {
             $container->getDefinition($classToServices[NotifierBridge\FakeChat\FakeChatTransportFactory::class])
                 ->replaceArgument('$mailer', new Reference('mailer'))
-                ->replaceArgument('$logger', new Reference('logger'));
+                ->replaceArgument('$logger', new Reference('logger'))
+                ->replaceArgument('$client', new Reference('http_client', ContainerBuilder::NULL_ON_INVALID_REFERENCE))
+                ->replaceArgument('$dispatcher', new Reference('event_dispatcher', ContainerBuilder::NULL_ON_INVALID_REFERENCE));
         }
 
         if (ContainerBuilder::willBeAvailable('symfony/fake-sms-notifier', NotifierBridge\FakeSms\FakeSmsTransportFactory::class, ['symfony/framework-bundle', 'symfony/notifier', 'symfony/mailer'])) {
             $container->getDefinition($classToServices[NotifierBridge\FakeSms\FakeSmsTransportFactory::class])
                 ->replaceArgument('$mailer', new Reference('mailer'))
-                ->replaceArgument('$logger', new Reference('logger'));
+                ->replaceArgument('$logger', new Reference('logger'))
+                ->replaceArgument('$client', new Reference('http_client', ContainerBuilder::NULL_ON_INVALID_REFERENCE))
+                ->replaceArgument('$dispatcher', new Reference('event_dispatcher', ContainerBuilder::NULL_ON_INVALID_REFERENCE));
         }
 
         if (isset($config['admin_recipients'])) {
@@ -2896,6 +2906,19 @@ class FrameworkExtension extends Extension
 
         if ($webhookEnabled) {
             $loader->load('notifier_webhook.php');
+
+            $webhookRequestParsers = [
+                NotifierBridge\Twilio\Webhook\TwilioRequestParser::class => 'notifier.webhook.request_parser.twilio',
+                NotifierBridge\Vonage\Webhook\VonageRequestParser::class => 'notifier.webhook.request_parser.vonage',
+            ];
+
+            foreach ($webhookRequestParsers as $class => $service) {
+                $package = substr($service, \strlen('notifier.webhook.request_parser.'));
+
+                if (!ContainerBuilder::willBeAvailable(sprintf('symfony/%s-notifier', $package), $class, ['symfony/framework-bundle', 'symfony/notifier'])) {
+                    $container->removeDefinition($service);
+                }
+            }
         }
     }
 

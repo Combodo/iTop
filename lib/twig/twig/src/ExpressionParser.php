@@ -17,6 +17,7 @@ use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ArrowFunctionExpression;
 use Twig\Node\Expression\AssignNameExpression;
+use Twig\Node\Expression\Binary\AbstractBinary;
 use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConditionalExpression;
@@ -26,6 +27,7 @@ use Twig\Node\Expression\MethodCallExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\Expression\TestExpression;
+use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
@@ -40,8 +42,6 @@ use Twig\Node\Node;
  * @see https://en.wikipedia.org/wiki/Operator-precedence_parser
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @internal
  */
 class ExpressionParser
 {
@@ -50,7 +50,9 @@ class ExpressionParser
 
     private $parser;
     private $env;
+    /** @var array<string, array{precedence: int, class: class-string<AbstractUnary>}> */
     private $unaryOperators;
+    /** @var array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: self::OPERATOR_*}> */
     private $binaryOperators;
 
     public function __construct(Parser $parser, Environment $env)
@@ -80,7 +82,7 @@ class ExpressionParser
             } elseif (isset($op['callable'])) {
                 $expr = $op['callable']($this->parser, $expr);
             } else {
-                $expr1 = $this->parseExpression(self::OPERATOR_LEFT === $op['associativity'] ? $op['precedence'] + 1 : $op['precedence']);
+                $expr1 = $this->parseExpression(self::OPERATOR_LEFT === $op['associativity'] ? $op['precedence'] + 1 : $op['precedence'], true);
                 $class = $op['class'];
                 $expr = new $class($expr, $expr1, $token->getLine());
             }
@@ -181,11 +183,14 @@ class ExpressionParser
             if (!$this->parser->getStream()->nextIf(/* Token::PUNCTUATION_TYPE */ 9, ':')) {
                 $expr2 = $this->parseExpression();
                 if ($this->parser->getStream()->nextIf(/* Token::PUNCTUATION_TYPE */ 9, ':')) {
+                    // Ternary operator (expr ? expr2 : expr3)
                     $expr3 = $this->parseExpression();
                 } else {
+                    // Ternary without else (expr ? expr2)
                     $expr3 = new ConstantExpression('', $this->parser->getCurrentToken()->getLine());
                 }
             } else {
+                // Ternary without then (expr ?: expr3)
                 $expr2 = $expr;
                 $expr3 = $this->parseExpression();
             }
@@ -332,7 +337,14 @@ class ExpressionParser
             }
             $first = false;
 
-            $node->addElement($this->parseExpression());
+            if ($stream->test(/* Token::SPREAD_TYPE */ 13)) {
+                $stream->next();
+                $expr = $this->parseExpression();
+                $expr->setAttribute('spread', true);
+                $node->addElement($expr);
+            } else {
+                $node->addElement($this->parseExpression());
+            }
         }
         $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ']', 'An opened array is not properly closed');
 
@@ -356,6 +368,14 @@ class ExpressionParser
                 }
             }
             $first = false;
+
+            if ($stream->test(/* Token::SPREAD_TYPE */ 13)) {
+                $stream->next();
+                $value = $this->parseExpression();
+                $value->setAttribute('spread', true);
+                $node->addElement($value);
+                continue;
+            }
 
             // a hash key can be:
             //
@@ -489,10 +509,6 @@ class ExpressionParser
             }
 
             if ($node instanceof NameExpression && null !== $this->parser->getImportedSymbol('template', $node->getAttribute('name'))) {
-                if (!$arg instanceof ConstantExpression) {
-                    throw new SyntaxError(sprintf('Dynamic macro names are not supported (called on "%s").', $node->getAttribute('name')), $token->getLine(), $stream->getSourceContext());
-                }
-
                 $name = $arg->getAttribute('value');
 
                 $node = new MethodCallExpression($node, 'macro_'.$name, $arguments, $lineno);
