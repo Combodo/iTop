@@ -26,18 +26,18 @@
     "symfony/console": "~6.4.0",
     "symfony/dotenv": "~6.4.0",
     "symfony/framework-bundle": "~6.4.0",
-    "symfony/var-dumper": "~6.4.0",
-    "symfony/runtime": "~6.4.0",
     "symfony/http-foundation": "~6.4.0",
     "symfony/http-kernel": "~6.4.0",
+    "symfony/runtime": "~6.4.0",
     "symfony/twig-bundle": "~6.4.0",
+    "symfony/var-dumper": "~6.4.0",
     "symfony/yaml": "~6.4.0",
     "thenetworg/oauth2-azure": "^2.0"
   },
   "require-dev": {
+    "symfony/debug-bundle": "~6.4.0",
     "symfony/stopwatch": "~6.4.0",
-    "symfony/web-profiler-bundle": "~6.4.0",
-    "symfony/debug-bundle": "~6.4.0"
+    "symfony/web-profiler-bundle": "~6.4.0"
   },
   "suggest": {
     "ext-libsodium": "Required to use the AttributeEncryptedString.",
