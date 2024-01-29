@@ -2360,7 +2360,7 @@ EOF
 					break;
 
 				case 'LinkedSet':
-					if ($oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_PROPERTY ) {
+					if ($oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_PROPERTY) {
 						$sInputType = self::ENUM_INPUT_TYPE_TAGSET_LINKEDSET;
 						if (array_key_exists('bulk_context', $aArgs)) {
 							$oTagSetBlock = LinkSetUIBlockFactory::MakeForBulkLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['bulk_context']);
