@@ -134,6 +134,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	/** @var string */
 	public const ENUM_INPUT_TYPE_TAGSET = 'tagset';
 	/** @var string */
+	public const ENUM_INPUT_TYPE_TAGSET_LINKEDSET = 'tagset_linkedset';
+	/** @var string */
 	public const ENUM_INPUT_TYPE_RADIO = 'radio';
 	/** @var string */
 	public const ENUM_INPUT_TYPE_CHECKBOX = 'checkbox';
@@ -147,8 +149,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public const ENUM_INPUT_TYPE_AUTOCOMPLETE = 'autocomplete';
 	/** @var string */
 	public const ENUM_INPUT_TYPE_LINKEDSET = 'linkedset';
-	/** @var string */
-	public const ENUM_INPUT_TYPE_TAGSET_LINKEDSET = 'tagset_linkedset';
 
 	/**
 	 * @var string DEFAULT_DISPLAY_MODE
