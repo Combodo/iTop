@@ -5,18 +5,24 @@ namespace Laminas\Mail\Transport;
 use Laminas\Stdlib\ArrayUtils;
 use Traversable;
 
+use function class_exists;
+use function gettype;
+use function is_array;
+use function is_object;
+use function sprintf;
+use function strtolower;
+
+// phpcs:ignore WebimpressCodingStandard.NamingConventions.AbstractClass.Prefix
 abstract class Factory
 {
-    /**
-     * @var array Known transport types
-     */
+    /** @var array Known transport types */
     protected static $classMap = [
-        'file'      => File::class,
-        'inmemory'  => InMemory::class,
-        'memory'    => InMemory::class,
-        'null'      => InMemory::class,
-        'sendmail'  => Sendmail::class,
-        'smtp'      => Smtp::class,
+        'file'     => File::class,
+        'inmemory' => InMemory::class,
+        'memory'   => InMemory::class,
+        'null'     => InMemory::class,
+        'sendmail' => Sendmail::class,
+        'smtp'     => Smtp::class,
     ];
 
     /**
@@ -35,7 +41,7 @@ abstract class Factory
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable argument; received "%s"',
                 __METHOD__,
-                (is_object($spec) ? get_class($spec) : gettype($spec))
+                is_object($spec) ? $spec::class : gettype($spec)
             ));
         }
 

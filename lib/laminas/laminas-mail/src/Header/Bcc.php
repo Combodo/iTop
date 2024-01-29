@@ -4,13 +4,9 @@ namespace Laminas\Mail\Header;
 
 class Bcc extends AbstractAddressList
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $fieldName = 'Bcc';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected static $type = 'bcc';
 }

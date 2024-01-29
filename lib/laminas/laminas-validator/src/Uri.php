@@ -175,7 +175,7 @@ class Uri extends AbstractValidator
                     return true;
                 }
             }
-        } catch (UriException $ex) {
+        } catch (UriException) {
             // Error parsing URI, it must be invalid
         }
 

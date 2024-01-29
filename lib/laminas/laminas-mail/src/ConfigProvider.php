@@ -25,8 +25,8 @@ class ConfigProvider
     {
         return [
             // Legacy Zend Framework aliases
-            'aliases' => [
-                \Zend\Mail\Protocol\SmtpPluginManager::class => Protocol\SmtpPluginManager::class,
+            'aliases'   => [
+                'Zend\Mail\Protocol\SmtpPluginManager' => Protocol\SmtpPluginManager::class,
             ],
             'factories' => [
                 Protocol\SmtpPluginManager::class => Protocol\SmtpPluginManagerFactory::class,

@@ -19,8 +19,8 @@ use function in_array;
 use function is_array;
 use function is_callable;
 use function is_string;
+use function str_starts_with;
 use function strlen;
-use function strpos;
 use function strtoupper;
 
 class CreditCard extends AbstractValidator
@@ -381,7 +381,7 @@ class CreditCard extends AbstractValidator
         $foundl = false;
         foreach ($types as $type) {
             foreach ($this->cardType[$type] as $prefix) {
-                if (0 === strpos($value, (string) $prefix)) {
+                if (str_starts_with($value, (string) $prefix)) {
                     $foundp = true;
                     if (in_array($length, $this->cardLength[$type])) {
                         $foundl = true;
@@ -425,7 +425,7 @@ class CreditCard extends AbstractValidator
                     $this->error(self::SERVICE, $value);
                     return false;
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $this->error(self::SERVICEFAILURE, $value);
                 return false;
             }

@@ -1,5 +1,18 @@
 OAuth 2.0 Google Provider Changelog
 
+## 4.0.1 - 2022-03-17
+
+### Changed
+
+- Corrected file excludes for dist archive, #120 by @cedric-anne
+
+## 4.0.0 - 2022-03-04
+
+### Changed
+
+- Adding return type, #98 by @yozhef
+- Add PHP 8.0 support, require PHP 7.3 or newer, #102 by @yozhef
+
 ## 3.0.4 - 2021-01-27
 
 ### Fixed

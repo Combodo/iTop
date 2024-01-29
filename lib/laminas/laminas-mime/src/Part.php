@@ -3,7 +3,6 @@
 namespace Laminas\Mime;
 
 use function array_key_exists;
-use function get_class;
 use function gettype;
 use function is_object;
 use function is_resource;
@@ -315,7 +314,7 @@ class Part
         if (! is_string($content) && ! is_resource($content)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Content must be string or resource; received "%s"',
-                is_object($content) ? get_class($content) : gettype($content)
+                is_object($content) ? $content::class : gettype($content)
             ));
         }
         $this->content = $content;

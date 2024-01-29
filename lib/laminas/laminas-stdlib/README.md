@@ -1,7 +1,7 @@
 # laminas-stdlib
 
 [![Build Status](https://github.com/laminas/laminas-stdlib/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/laminas/laminas-stdlib/actions/workflows/continuous-integration.yml)
-[![Coverage Status](https://coveralls.io/repos/github/laminas/laminas-stdlib/badge.svg?branch=master)](https://coveralls.io/github/laminas/laminas-stdlib?branch=master)
+[![Type Coverage](https://shepherd.dev/github/laminas/laminas-stdlib/coverage.svg)](https://shepherd.dev/github/laminas/laminas-stdlib)
 
 > ## 🇷🇺 Русским гражданам
 >

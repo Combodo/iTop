@@ -24,7 +24,7 @@ abstract class CallExpression extends AbstractExpression
     {
         $callable = $this->getAttribute('callable');
 
-        if (\is_string($callable) && false === strpos($callable, '::')) {
+        if (\is_string($callable) && !str_contains($callable, '::')) {
             $compiler->raw($callable);
         } else {
             [$r, $callable] = $this->reflectCallable($callable);
@@ -297,14 +297,16 @@ abstract class CallExpression extends AbstractExpression
         }
         $r = new \ReflectionFunction($closure);
 
-        if (false !== strpos($r->name, '{closure}')) {
+        if (str_contains($r->name, '{closure}')) {
             return $this->reflector = [$r, $callable, 'Closure'];
         }
 
         if ($object = $r->getClosureThis()) {
             $callable = [$object, $r->name];
-            $callableName = (\function_exists('get_debug_type') ? get_debug_type($object) : \get_class($object)).'::'.$r->name;
-        } elseif ($class = $r->getClosureScopeClass()) {
+            $callableName = get_debug_type($object).'::'.$r->name;
+        } elseif (\PHP_VERSION_ID >= 80111 && $class = $r->getClosureCalledClass()) {
+            $callableName = $class->name.'::'.$r->name;
+        } elseif (\PHP_VERSION_ID < 80111 && $class = $r->getClosureScopeClass()) {
             $callableName = (\is_array($callable) ? $callable[0] : $class->name).'::'.$r->name;
         } else {
             $callable = $callableName = $r->name;

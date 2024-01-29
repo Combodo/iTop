@@ -8,6 +8,8 @@ use ArrayAccess;
 use Psr\Container\ContainerInterface;
 
 /**
+ * @deprecated Interface will be removed as of v4.0
+ *
  * @see ContainerInterface
  * @see ArrayAccess
  *
@@ -26,7 +28,7 @@ use Psr\Container\ContainerInterface;
  * @psalm-type FactoriesConfigurationType = array<
  *      string,
  *      (class-string<Factory\FactoryInterface>|Factory\FactoryInterface)
- *      |callable(ContainerInterface,string,array<mixed>|null):object
+ *      |callable(ContainerInterface,?string,?array<mixed>|null):object
  * >
  * @psalm-type InitializersConfigurationType = array<
  *      array-key,
@@ -48,7 +50,8 @@ use Psr\Container\ContainerInterface;
  *     invokables?: array<string,string>,
  *     lazy_services?: LazyServicesConfigurationType,
  *     services?: array<string,object|array>,
- *     shared?:array<string,bool>
+ *     shared?:array<string,bool>,
+ *     ...
  * }
  */
 interface ConfigInterface

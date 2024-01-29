@@ -6,8 +6,8 @@ use function explode;
 use function preg_match;
 use function preg_match_all;
 use function preg_replace;
+use function str_contains;
 use function str_replace;
-use function strpos;
 
 final class GpsPoint extends AbstractValidator
 {
@@ -35,7 +35,7 @@ final class GpsPoint extends AbstractValidator
      */
     public function isValid($value)
     {
-        if (strpos($value, ',') === false) {
+        if (! str_contains($value, ',')) {
             $this->error(self::INCOMPLETE_COORDINATE, $value);
             return false;
         }

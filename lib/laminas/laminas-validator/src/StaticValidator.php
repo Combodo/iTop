@@ -48,14 +48,13 @@ class StaticValidator
     }
 
     /**
-     * @param  mixed                            $value
      * @param  class-string<ValidatorInterface> $classBaseName
      * @param  array                            $options OPTIONAL associative array of options to pass as
      *                                                   the sole argument to the validator constructor.
      * @return bool
      * @throws Exception\InvalidArgumentException For an invalid $options argument.
      */
-    public static function execute($value, $classBaseName, array $options = [])
+    public static function execute(mixed $value, $classBaseName, array $options = [])
     {
         if ($options && array_values($options) === $options) {
             throw new Exception\InvalidArgumentException(

@@ -7,11 +7,9 @@ use Laminas\Stdlib\ArrayUtils;
 use Traversable;
 
 use function array_key_exists;
-use function get_class;
-use function gettype;
+use function get_debug_type;
 use function is_array;
 use function is_int;
-use function is_object;
 use function is_string;
 use function key;
 use function sprintf;
@@ -99,10 +97,9 @@ class Identical extends AbstractValidator
     /**
      * Set token against which to compare
      *
-     * @param  mixed $token
      * @return $this
      */
-    public function setToken($token)
+    public function setToken(mixed $token)
     {
         $this->tokenString = is_array($token) ? var_export($token, true) : (string) $token;
         $this->token       = $token;
@@ -173,7 +170,7 @@ class Identical extends AbstractValidator
                 throw new Exception\InvalidArgumentException(sprintf(
                     'Context passed to %s must be array, ArrayObject or null; received "%s"',
                     __METHOD__,
-                    is_object($context) ? get_class($context) : gettype($context)
+                    get_debug_type($context)
                 ));
             }
 

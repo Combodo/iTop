@@ -491,17 +491,22 @@ class Mime
      * Mail headers depend on an extended quoted printable algorithm otherwise
      * a range of bugs can occur.
      *
-     * @param string $str
-     * @param string $charset
-     * @param int $lineLength Defaults to {@link LINELENGTH}
-     * @param string $lineEnd Defaults to {@link LINEEND}
+     * @param string            $str
+     * @param string            $charset
+     * @param int               $lineLength       Defaults to {@link LINELENGTH}
+     * @param string            $lineEnd          Defaults to {@link LINEEND}
+     * @param positive-int|0    $headerNameSize   When folding a line, it is necessary to calculate
+     *                                            the length of the entire line (together with the header name).
+     *                                            Therefore, you can specify the header name and colon length
+     *                                            in this argument to fold the string properly.
      * @return string
      */
     public static function encodeQuotedPrintableHeader(
         $str,
         $charset,
         $lineLength = self::LINELENGTH,
-        $lineEnd = self::LINEEND
+        $lineEnd = self::LINEEND,
+        $headerNameSize = 0
     ) {
         // Reduce line-length by the length of the required delimiter, charsets and encoding
         $prefix     = sprintf('=?%s?Q?', $charset);
@@ -527,7 +532,14 @@ class Mime
             if ($token === '=20') {
                 // only if we have a single char token or space, we can append the
                 // tempstring it to the current line or start a new line if necessary.
-                $lineLimitReached = strlen($lines[$currentLine] . $tmp) > $lineLength;
+                if ($currentLine === 0) {
+                    // The size of the first line should be calculated with the header name.
+                    $currentLineLength = strlen($lines[$currentLine] . $tmp) + $headerNameSize;
+                } else {
+                    $currentLineLength = strlen($lines[$currentLine] . $tmp);
+                }
+
+                $lineLimitReached = $currentLineLength > $lineLength;
                 $noCurrentLine    = $lines[$currentLine] === '';
                 if ($noCurrentLine && $lineLimitReached) {
                     $lines[$currentLine]     = $tmp;

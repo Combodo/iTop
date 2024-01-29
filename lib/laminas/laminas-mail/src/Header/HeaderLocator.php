@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Laminas\Mail\Header;
 
+use function strtolower;
+
 /**
  * Plugin Class Loader implementation for HTTP headers
  */
 final class HeaderLocator implements HeaderLocatorInterface
 {
-    /**
-     * @var array Pre-aliased Header plugins
-     */
-    private $plugins = [
+    /** @var array Pre-aliased Header plugins */
+    private array $plugins = [
         'bcc'                       => Bcc::class,
         'cc'                        => Cc::class,
         'contentdisposition'        => ContentDisposition::class,

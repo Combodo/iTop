@@ -3,18 +3,20 @@
 namespace Laminas\Mail\Transport;
 
 use Laminas\Mail\Exception;
+use Laminas\Mail\Exception\InvalidArgumentException;
 use Laminas\Stdlib\AbstractOptions;
+
+use function gettype;
+use function is_object;
+use function is_string;
+use function sprintf;
 
 class SmtpOptions extends AbstractOptions
 {
-    /**
-     * @var string Local client hostname
-     */
+    /** @var string Local client hostname */
     protected $name = 'localhost';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $connectionClass = 'smtp';
 
     /**
@@ -24,14 +26,10 @@ class SmtpOptions extends AbstractOptions
      */
     protected $connectionConfig = [];
 
-    /**
-     * @var string Remote SMTP hostname or IP
-     */
+    /** @var string Remote SMTP hostname or IP */
     protected $host = '127.0.0.1';
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $port = 25;
 
     /**
@@ -57,7 +55,7 @@ class SmtpOptions extends AbstractOptions
      *
      * @todo   hostname/IP validation
      * @param  string $name
-     * @throws \Laminas\Mail\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return SmtpOptions
      */
     public function setName($name)
@@ -65,7 +63,7 @@ class SmtpOptions extends AbstractOptions
         if (! is_string($name) && $name !== null) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Name must be a string or null; argument of type "%s" provided',
-                (is_object($name) ? get_class($name) : gettype($name))
+                is_object($name) ? $name::class : gettype($name)
             ));
         }
         $this->name = $name;
@@ -90,7 +88,7 @@ class SmtpOptions extends AbstractOptions
      * Set connection class
      *
      * @param  string $connectionClass the value to be set
-     * @throws \Laminas\Mail\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return SmtpOptions
      */
     public function setConnectionClass($connectionClass)
@@ -98,7 +96,7 @@ class SmtpOptions extends AbstractOptions
         if (! is_string($connectionClass) && $connectionClass !== null) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Connection class must be a string or null; argument of type "%s" provided',
-                (is_object($connectionClass) ? get_class($connectionClass) : gettype($connectionClass))
+                is_object($connectionClass) ? $connectionClass::class : gettype($connectionClass)
             ));
         }
         $this->connectionClass = $connectionClass;
@@ -118,7 +116,6 @@ class SmtpOptions extends AbstractOptions
     /**
      * Set connection configuration array
      *
-     * @param  array $connectionConfig
      * @return SmtpOptions
      */
     public function setConnectionConfig(array $connectionConfig)
@@ -164,7 +161,7 @@ class SmtpOptions extends AbstractOptions
      * Set the port the SMTP server runs on
      *
      * @param  int $port
-     * @throws \Laminas\Mail\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return SmtpOptions
      */
     public function setPort($port)

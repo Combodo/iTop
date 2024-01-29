@@ -4,6 +4,10 @@ namespace Laminas\Mail\Protocol\Smtp\Auth;
 
 use Laminas\Mail\Protocol\Smtp;
 
+use function array_replace_recursive;
+use function base64_encode;
+use function is_array;
+
 /**
  * Performs PLAIN authentication
  */
@@ -24,8 +28,6 @@ class Plain extends Smtp
     protected $password;
 
     /**
-     * Constructor.
-     *
      * @param  string $host   (Default: 127.0.0.1)
      * @param  int    $port   (Default: null)
      * @param  array  $config Auth-specific parameters
@@ -58,7 +60,6 @@ class Plain extends Smtp
 
     /**
      * Perform PLAIN authentication with supplied credentials
-     *
      */
     public function auth()
     {

@@ -10,6 +10,7 @@ use function ip2long;
 use function is_string;
 use function long2ip;
 use function preg_match;
+use function str_contains;
 use function strlen;
 use function strpos;
 use function strrpos;
@@ -145,7 +146,7 @@ class Ip extends AbstractValidator
             $value = substr($value, 0, $lastcolon) . ':0:0';
         }
 
-        if (strpos($value, '::') === false) {
+        if (! str_contains($value, '::')) {
             return preg_match('/\A(?:[a-f0-9]{1,4}:){7}[a-f0-9]{1,4}\z/i', $value);
         }
 

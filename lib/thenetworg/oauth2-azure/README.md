@@ -45,6 +45,10 @@ $provider = new TheNetworg\OAuth2\Client\Provider\Azure([
     'clientId'          => '{azure-client-id}',
     'clientSecret'      => '{azure-client-secret}',
     'redirectUri'       => 'https://example.com/callback-url',
+    //Optional using key pair instead of secret
+    'clientCertificatePrivateKey' => '{azure-client-certificate-private-key}',
+    //Optional using key pair instead of secret
+    'clientCertificateThumbprint' => '{azure-client-certificate-thumbprint}',
     //Optional
     'scopes'            => ['openid'],
     //Optional
@@ -127,6 +131,19 @@ $authUrl = $provider->getAuthorizationUrl([
 ]);
 ```
 You can find additional parameters [here](https://msdn.microsoft.com/en-us/library/azure/dn645542.aspx).
+
+#### Using a certificate key pair instead of the shared secret
+
+- Generate a key pair, e.g. with:
+```bash
+openssl genrsa -out private.key 2048
+openssl req -new -x509 -key private.key -out publickey.cer -days 365
+```
+- Upload the `publickey.cer` to your app in the Azure portal
+- Note the displayed thumbprint for the certificate (it looks like `B4A94A83092455AC4D3AC827F02B61646EAAC43D`)
+- Put that thumbprint into the `clientCertificateThumbprint` constructor option
+- Put the contents of `private.key` into the `clientCertificatePrivateKey` constructor option
+- You can omit the `clientSecret` constructor option
 
 ### Logging out
 If you need to quickly generate a logout URL for the user, you can do following:

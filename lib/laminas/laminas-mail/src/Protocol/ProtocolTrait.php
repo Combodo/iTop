@@ -4,6 +4,17 @@ namespace Laminas\Mail\Protocol;
 
 use Laminas\Stdlib\ErrorHandler;
 
+use function defined;
+use function sprintf;
+use function stream_context_create;
+use function stream_set_timeout;
+use function stream_socket_client;
+
+use const STREAM_CLIENT_CONNECT;
+use const STREAM_CRYPTO_METHOD_TLS_CLIENT;
+use const STREAM_CRYPTO_METHOD_TLSv1_1_CLIENT;
+use const STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT;
+
 /**
  * https://bugs.php.net/bug.php?id=69195
  */
@@ -11,6 +22,7 @@ trait ProtocolTrait
 {
     /**
      * If set to true, do not validate the SSL certificate
+     *
      * @var null|bool
      */
     protected $novalidatecert;
@@ -45,8 +57,6 @@ trait ProtocolTrait
 
     /**
      * Should we validate SSL certificate?
-     *
-     * @return bool
      */
     public function validateCert(): bool
     {
@@ -94,7 +104,7 @@ trait ProtocolTrait
             STREAM_CLIENT_CONNECT,
             stream_context_create($this->prepareSocketOptions())
         );
-        $error = ErrorHandler::stop();
+        $error  = ErrorHandler::stop();
 
         if (! $socket) {
             throw new Exception\RuntimeException(sprintf(

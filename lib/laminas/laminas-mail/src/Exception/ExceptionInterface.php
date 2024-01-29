@@ -2,6 +2,8 @@
 
 namespace Laminas\Mail\Exception;
 
-interface ExceptionInterface
+use Throwable;
+
+interface ExceptionInterface extends Throwable
 {
 }
