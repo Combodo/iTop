@@ -10,11 +10,44 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ### Changed
 
 ### Deprecated
-- Support for PHP 7.3 will be removed in Emogrifier 8.0.
 
 ### Removed
 
 ### Fixed
+
+## 7.2.0: Add support for Symfony 7
+
+### Added
+- Add support for Symfony 7 (#1243)
+
+## 7.1.0: Add support for PHP 8.3
+
+### Added
+- Add support for PHP 8.3 (#1218)
+
+### Changed
+- Disable HTML formatting by default (#1214)
+
+## 7.0.0
+
+### Added
+- Add support for PHP 8.2 (#1155)
+
+### Changed
+- Throw exception with invalid CSS in debug mode (#1142)
+- Only support up to 69 atomic expressions in a selector (#1113)
+- Require `sabberworm/php-css-parser:^8.4.0` (#1134)
+- Upgrade to PHPUnit 9 (#1112)
+
+### Deprecated
+- Support for PHP 7.3 will be removed in Emogrifier 8.0.
+
+### Removed
+- Drop support for Symfony 3.x and 5.3 (#1120, #1162)
+- Drop support for PHP 7.2 (#1111)
+
+### Fixed
+- Bump the minimum Symfony 4.4 version to avoid PHP deprecation warnings (#1187)
 
 ## 6.0.0
 

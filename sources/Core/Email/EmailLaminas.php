@@ -30,6 +30,7 @@ use Laminas\Mime\Part;
 use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
+use Symfony\Component\CssSelector\Exception\ParseException;
 
 class EMailLaminas extends Email
 {
@@ -415,10 +416,8 @@ class EMailLaminas extends Email
 		$oBody = new \Laminas\Mime\Message();
 		$aAdditionalParts = [];
 
-		if (($sMimeType === Mime::TYPE_HTML) && ($sCustomStyles !== null)) {
-			$oDomDocument = CssInliner::fromHtml($sBody)->inlineCss($sCustomStyles)->getDomDocument();
-			HtmlPruner::fromDomDocument($oDomDocument)->removeElementsWithDisplayNone();
-			$sBody = CssToAttributeConverter::fromDomDocument($oDomDocument)->convertCssToVisualAttributes()->render(); // Adds html/body tags if not already present
+		if ($sMimeType === Mime::TYPE_HTML) {
+			$sBody = static::InlineCssIntoBodyContent($sBody, $sCustomStyles);
 		}
 		$this->m_aData['body'] = array('body' => $sBody, 'mimeType' => $sMimeType);
 
@@ -616,6 +615,27 @@ class EMailLaminas extends Email
 		} else if (!empty($sAddress)) {
 			$this->m_oMessage->setReplyTo($sAddress);
 		}
+	}
+
+	/**
+	 * @param string $sBody
+	 * @param string $sCustomStyles
+	 *
+	 * @return string
+	 * @throws \Symfony\Component\CssSelector\Exception\ParseException
+	 * @noinspection PhpUnnecessaryLocalVariableInspection
+	 */
+	protected static function InlineCssIntoBodyContent($sBody, $sCustomStyles): string
+	{
+		if (is_null($sCustomStyles)) {
+			return $sBody;
+		}
+
+		$oDomDocument = CssInliner::fromHtml($sBody)->inlineCss($sCustomStyles)->getDomDocument();
+		HtmlPruner::fromDomDocument($oDomDocument)->removeElementsWithDisplayNone();
+		$sBody = CssToAttributeConverter::fromDomDocument($oDomDocument)->convertCssToVisualAttributes()->render(); // Adds html/body tags if not already present
+
+		return $sBody;
 	}
 
 }
