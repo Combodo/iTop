@@ -148,7 +148,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	/** @var string */
 	public const ENUM_INPUT_TYPE_LINKEDSET = 'linkedset';
 	/** @var string */
-	public const ENUM_INPUT_TYPE_RELATIONSET = 'relationset';
+	public const ENUM_INPUT_TYPE_TAGSET_LINKEDSET = 'tagset_linkedset';
 
 	/**
 	 * @var string DEFAULT_DISPLAY_MODE
@@ -2360,8 +2360,8 @@ EOF
 					break;
 
 				case 'LinkedSet':
-					if ($oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_PROPERTY) {
-						$sInputType = self::ENUM_INPUT_TYPE_RELATIONSET;
+					if ($oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_PROPERTY ) {
+						$sInputType = self::ENUM_INPUT_TYPE_TAGSET_LINKEDSET;
 						if (array_key_exists('bulk_context', $aArgs)) {
 							$oTagSetBlock = LinkSetUIBlockFactory::MakeForBulkLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['bulk_context']);
 						} else {
