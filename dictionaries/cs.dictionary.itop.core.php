@@ -523,7 +523,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'ActionEmail:preview_tab' => 'Náhled',
 	'ActionEmail:preview_tab+' => 'Náhled emailové šablony',
 	'ActionEmail:preview_warning' => 'Finální podoba emailu může vypadat v emailovém klientu jinak, než tento aktuální náhled v prohlížeci',
-	'ActionEmail:preview_more_info' => 'Další informace ohledně podpory CSS v emailových klientech, se dozvíte zde %1$s~~',
+	'ActionEmail:preview_more_info' => 'Další informace ohledně podpory CSS v emailových klientech, se dozvíte zde %1$s',
 	'ActionEmail:content_placeholder_missing' => 'Odkaz "%1$s" nebyl v HMTL šabloně nalezen. Obsah pole "%2$s" nebude součástí generovaného emailu',
 ));
 
