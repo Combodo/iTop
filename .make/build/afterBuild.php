@@ -22,13 +22,13 @@ $iElapsed = time() - $iBeginTime;
 
 if (count($aFailedCommands))
 {
-	fwrite(STDERR, "\nafterBuild execution failed! (in ${iElapsed}s)\n");
+	fwrite(STDERR, "\nafterBuild execution failed! (in {$iElapsed}s)\n");
 	fwrite(STDERR, "List of failling commands:\n - " . implode("\n - ", $aFailedCommands) . "\n");
 	exit(1);
 }
 
 
-echo "\nDone (${iElapsed}s)\n";
+echo "\nDone ({$iElapsed}s)\n";
 exit(0);
 
 /**
@@ -74,7 +74,7 @@ function ExecCommand($cmd) {
 	}
 	else
 	{
-		echo "| elapsed:${iElapsed}s \n";
+		echo "| elapsed:{$iElapsed}s \n";
 	}
 
 	if (!empty($stderr))

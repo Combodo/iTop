@@ -345,7 +345,7 @@ abstract class ItopTestCase extends TestCase
 		foreach ($class->getProperties() as $property) {
 			if (!$property->isStatic()) continue;
 			$property->setAccessible(true);
-			$property->setValue(static::$aBackupStaticProperties[$sClass][$property->getName()]);
+			$property->setValue(null, static::$aBackupStaticProperties[$sClass][$property->getName()]);
 		}
 	}
 
@@ -381,7 +381,7 @@ abstract class ItopTestCase extends TestCase
 	public function SetNonPublicStaticProperty(string $sClass, string $sProperty, $value)
 	{
 		$oProperty = $this->GetProperty($sClass, $sProperty);
-		$oProperty->setValue($value);
+		$oProperty->setValue(null, $value);
 	}
 
 	public static function RecurseRmdir($dir)

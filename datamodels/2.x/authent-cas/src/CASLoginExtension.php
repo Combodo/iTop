@@ -488,7 +488,7 @@ class CASUserProvisioning
 		$aAllProfiles = array();
 		while($oProfile = $oProfilesSet->Fetch())
 		{
-			$aAllProfiles[strtolower($oProfile->GetName())] = $oProfile->GetKey();
+			$aAllProfiles[mb_strtolower($oProfile->GetName())] = $oProfile->GetKey();
 		}
 
 		// Translate the CAS/LDAP group names into iTop profile names
@@ -498,9 +498,9 @@ class CASUserProvisioning
 		{
 			if (preg_match($sPattern, $sGroupName, $aMatches))
 			{
-				if (array_key_exists(strtolower($aMatches[1]), $aAllProfiles))
+				if (array_key_exists(mb_strtolower($aMatches[1]), $aAllProfiles))
 				{
-					$aProfiles[] = $aAllProfiles[strtolower($aMatches[1])];
+					$aProfiles[] = $aAllProfiles[mb_strtolower($aMatches[1])];
 					phpCAS::log("Info: Adding the profile '{$aMatches[1]}' from CAS.");
 				}
 				else
@@ -522,10 +522,10 @@ class CASUserProvisioning
 			$aCASDefaultProfiles = explode(';', $sCASDefaultProfiles);
 			foreach($aCASDefaultProfiles as $sDefaultProfileName)
 			{
-				if (array_key_exists(strtolower($sDefaultProfileName), $aAllProfiles))
+				if (array_key_exists(mb_strtolower($sDefaultProfileName), $aAllProfiles))
 				{
-					$aProfiles[] = $aAllProfiles[strtolower($sDefaultProfileName)];
-					phpCAS::log("Info: Adding the default profile '".$aAllProfiles[strtolower($sDefaultProfileName)]."' from CAS.");
+					$aProfiles[] = $aAllProfiles[mb_strtolower($sDefaultProfileName)];
+					phpCAS::log("Info: Adding the default profile '".$aAllProfiles[mb_strtolower($sDefaultProfileName)]."' from CAS.");
 				}
 				else
 				{

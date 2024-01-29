@@ -910,13 +910,13 @@ class LoginWebPage extends NiceWebPage
 			$aAllProfiles = array();
 			while ($oProfile = $oProfilesSet->Fetch())
 			{
-				$aAllProfiles[strtolower($oProfile->GetName())] = $oProfile->GetKey();
+				$aAllProfiles[mb_strtolower($oProfile->GetName())] = $oProfile->GetKey();
 			}
 
 			$aProfiles = array();
 			foreach ($aRequestedProfiles as $sRequestedProfile)
 			{
-				$sRequestedProfile = strtolower($sRequestedProfile);
+				$sRequestedProfile = mb_strtolower($sRequestedProfile);
 				if (isset($aAllProfiles[$sRequestedProfile]))
 				{
 					$aProfiles[] = $aAllProfiles[$sRequestedProfile];
