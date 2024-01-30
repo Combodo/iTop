@@ -32,7 +32,7 @@
     "symfony/twig-bundle": "~6.4.0",
     "symfony/var-dumper": "~6.4.0",
     "symfony/yaml": "~6.4.0",
-    "tecnickcom/tcpdf": "~6.4.4",
+    "tecnickcom/tcpdf": "^6.6.0",
     "thenetworg/oauth2-azure": "^2.0"
   },
   "require-dev": {

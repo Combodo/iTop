@@ -12,8 +12,8 @@
         "barcodes"
     ],
     "homepage": "http://www.tcpdf.org/",
-    "version": "6.4.4",
-    "license": "LGPL-3.0-only",
+    "version": "6.6.5",
+    "license": "LGPL-3.0-or-later",
     "authors": [
         {
             "name": "Nicola Asuni",
@@ -42,6 +42,11 @@
             "include/barcodes/datamatrix.php",
             "include/barcodes/pdf417.php",
             "include/barcodes/qrcode.php"
+        ]
+    },
+    "archive": {
+        "exclude": [
+            "/examples"
         ]
     }
 }

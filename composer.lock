@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2b2656c246be97b7fb58fe614089449",
+    "content-hash": "f12a58e43bfb3a44aba20a73a8fd747f",
     "packages": [
         {
             "name": "apereo/phpcas",
@@ -4789,16 +4789,16 @@
         },
         {
             "name": "tecnickcom/tcpdf",
-            "version": "6.4.4",
+            "version": "6.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tecnickcom/TCPDF.git",
-                "reference": "42cd0f9786af7e5db4fcedaa66f717b0d0032320"
+                "reference": "5fce932fcee4371865314ab7f6c0d85423c5c7ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/42cd0f9786af7e5db4fcedaa66f717b0d0032320",
-                "reference": "42cd0f9786af7e5db4fcedaa66f717b0d0032320",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/5fce932fcee4371865314ab7f6c0d85423c5c7ce",
+                "reference": "5fce932fcee4371865314ab7f6c0d85423c5c7ce",
                 "shasum": ""
             },
             "require": {
@@ -4827,7 +4827,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-3.0-only"
+                "LGPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -4849,7 +4849,7 @@
             ],
             "support": {
                 "issues": "https://github.com/tecnickcom/TCPDF/issues",
-                "source": "https://github.com/tecnickcom/TCPDF/tree/6.4.4"
+                "source": "https://github.com/tecnickcom/TCPDF/tree/6.6.5"
             },
             "funding": [
                 {
@@ -4857,7 +4857,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2021-12-31T08:39:24+00:00"
+            "time": "2023-09-06T15:09:26+00:00"
         },
         {
             "name": "thenetworg/oauth2-azure",
