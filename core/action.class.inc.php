@@ -369,7 +369,7 @@ class ActionEmail extends ActionNotification
 	protected function FindRecipients($sRecipAttCode, $aArgs)
 	{
 		$sOQL = $this->Get($sRecipAttCode);
-		if (strlen($sOQL) === 0) return '';
+		if (utils::IsNullOrEmptyString($sOQL)) return '';
 
 		try
 		{
@@ -413,7 +413,7 @@ class ActionEmail extends ActionNotification
 		while ($oObj = $oSet->Fetch())
 		{
 			$sAddress = trim($oObj->Get($sEmailAttCode));
-			if (strlen($sAddress) > 0)
+			if (utils::IsNotNullOrEmptyString($sAddress))
 			{
 				$aRecipients[] = $sAddress;
 				$this->m_iRecipients++;
