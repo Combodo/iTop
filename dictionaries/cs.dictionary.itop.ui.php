@@ -710,7 +710,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Vyberte třídu pro hledání: ',
 	'UI:CSVReport-Value-Modified' => 'Upraveno',
 	'UI:CSVReport-Value-SetIssue' => 'Nemůže být změněno - důvod: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Nemůže být změněno na %1$s - důvod: %2$s',
+	'UI:CSVReport-Value-ChangeIssue' => 'Nemůže být změněno na %1$s',
 	'UI:CSVReport-Value-NoMatch' => 'Žádná shoda pro \'%1$s\'',
 	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
 	'UI:CSVReport-Value-NoMatch-NoObject' => '\'%1$s\' neobsahuje objekty',
