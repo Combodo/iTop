@@ -104,7 +104,7 @@ class SetupUtils
 	const PHP_NEXT_MIN_VERSION   = ''; // No new PHP requirement for next iTop version yet
 	const MYSQL_NEXT_MIN_VERSION = ''; // No new MySQL requirement for next iTop version yet
 	// -- First recent version that is not yet validated by Combodo (warning)
-	const PHP_NOT_VALIDATED_VERSION = '8.2.0';
+	const PHP_NOT_VALIDATED_VERSION = '8.4.0';
 
 	const MIN_MEMORY_LIMIT             = '32M';
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
