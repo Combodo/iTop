@@ -701,9 +701,9 @@ class ApplicationInstaller
 			));
 		}
 
+		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
-		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
 		// Migrate columns
 		self::MoveColumns($sDBPrefix);
