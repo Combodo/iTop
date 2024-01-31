@@ -123,9 +123,9 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
     .ibo-datatable--row-actions-toolbar{
       justify-content: end;
     }
-    /*N°6543 - We need the rule to keep text inside the column when width is defined*/
-    >[data-attribute-type="AttributeHtml"],
-    >[data-attribute-type="AttributeText"] {
+    /* N°6543 - We need the rule to keep text inside the column when width is defined */
+    > [data-attribute-type="AttributeHtml"],
+    > [data-attribute-type="AttributeText"] {
           max-width: 100%;
           overflow: auto;
     }
