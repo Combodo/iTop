@@ -26,10 +26,18 @@
 
 namespace Combodo\iTop;
 
+use DOMComment;
 use DOMDocument;
 use DOMFormatException;
+use DOMNode;
+use DOMNodeList;
+use DOMXPath;
+use Exception;
 use IssueLog;
 use LogAPI;
+use MFDocument;
+use MFElement;
+use ModelFactory;
 use utils;
 
 /**
@@ -41,6 +49,10 @@ use utils;
  */
 class DesignDocument extends DOMDocument
 {
+
+	public const XML_PARSE_BIG_LINES = 4194304;
+
+
 	/**
 	 * @throws \Exception
 	 */
@@ -70,7 +82,7 @@ class DesignDocument extends DOMDocument
 	public function load($filename, $options = null)
 	{
 		libxml_clear_errors();
-		if (parent::load($filename, LIBXML_NOBLANKS) === false) {
+		if (parent::load($filename, LIBXML_NOBLANKS | LIBXML_BIGLINES | LIBXML_PARSEHUGE | self::XML_PARSE_BIG_LINES) === false) {
 			$aErrors = libxml_get_errors();
 			IssueLog::Error("Error loading $filename", LogAPI::CHANNEL_DEFAULT, $aErrors);
 		}
@@ -306,5 +318,123 @@ class DesignElement extends \DOMElement
 			$sRet = $oChild->GetText($sDefault);
 		}
 		return $sRet;
+	}
+
+	/**
+	 * Check that the current node is actually a class node, under classes
+	 */
+	public function IsClassNode(): bool
+	{
+		if ($this->tagName == 'class') {
+			// Beware: classes/class also exists in the group definition
+			if (($this->parentNode->tagName == 'classes') && ($this->parentNode->parentNode->tagName == 'itop_design')) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Find the child node matching the given node.
+	 * UNSAFE: may return nodes marked as _alteration="removed"
+	 * A method with the same signature MUST exist in MFDocument for the recursion to work fine
+	 *
+	 * @param DesignElement $oRefNode The node to search for
+	 * @param string $sSearchId substitutes to the value of the 'id' attribute
+	 *
+	 * @return DesignElement|null
+	 * @throws \Exception
+	 */
+	public function _FindChildNode(DesignElement $oRefNode, $sSearchId = null)
+	{
+		return self::_FindNode($this, $oRefNode, $sSearchId);
+	}
+
+
+	/**
+	 * Find the child node matching the given node.
+	 * UNSAFE: may return nodes marked as _alteration="removed"
+	 * A method with the same signature MUST exist in MFDocument for the recursion to work fine
+	 *
+	 * @param DesignElement $oRefNode The node to search for
+	 * @param string $sSearchId substitutes to the value of the 'id' attribute
+	 *
+	 * @return DesignElement|null
+	 * @throws \Exception
+	 */
+	public function _FindChildNodes(DesignElement $oRefNode)
+	{
+		return self::_FindNodes($this, $oRefNode);
+	}
+
+	/**
+	 * Find the child node matching the given node under the specified parent.
+	 * UNSAFE: may return nodes marked as _alteration="removed"
+	 *
+	 * @param \DOMNode $oParent
+	 * @param DesignElement $oRefNode
+	 * @param string|null $sSearchId
+	 *
+	 * @return DesignElement|null
+	 * @throws Exception
+	 */
+	public static function _FindNode(DOMNode $oParent, DesignElement $oRefNode, string $sSearchId = null)
+	{
+		$oNodes = self::_FindNodes($oParent, $oRefNode, $sSearchId);
+		if ($oNodes instanceof DOMNodeList) {
+			/** @var DesignElement $oNode */
+			$oNode = $oNodes->item(0);
+
+			return $oNode;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Find the child node matching the given node under the specified parent.
+	 * UNSAFE: may return nodes marked as _alteration="removed"
+	 *
+	 * @param \DOMNode $oParent
+	 * @param DesignElement $oRefNode
+	 * @param string|null $sSearchId
+	 *
+	 * @return \DOMNodeList|false|mixed
+	 */
+	public static function _FindNodes(DOMNode $oParent, DesignElement $oRefNode, string $sSearchId = null)
+	{
+		if ($oParent instanceof DOMDocument)
+		{
+			$oDoc = $oParent->firstChild->ownerDocument;
+			$oRoot = $oParent;
+		}
+		else
+		{
+			$oDoc = $oParent->ownerDocument;
+			$oRoot = $oParent;
+		}
+
+		$oXPath = new DOMXPath($oDoc);
+		if ($oRefNode->hasAttribute('id'))
+		{
+			// Find the elements having the same tag name and id
+			if (!$sSearchId)
+			{
+				$sSearchId = $oRefNode->getAttribute('id');
+			}
+			$sXPath = './'.$oRefNode->tagName."[@id='$sSearchId']";
+
+			$oRes = $oXPath->query($sXPath, $oRoot);
+		}
+		else
+		{
+			// Get the elements having the same tag name
+			$sXPath = './'.$oRefNode->tagName;
+
+			$oRes = $oXPath->query($sXPath, $oRoot);
+		}
+
+		return $oRes;
 	}
 }

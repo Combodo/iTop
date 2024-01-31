@@ -27,13 +27,14 @@ use ModelFactory;
  *      Rename ────────►│                 │
  *    SetChildNode ────►│                 │
  *                      └─────────────────┘
+ *
  * @covers ModelFactory
  * @covers MFElement
  *
  */
 class ModelFactoryTest extends ItopTestCase
 {
-		protected function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -46,7 +47,7 @@ class ModelFactoryTest extends ItopTestCase
 	 * @param $sInitialXML
 	 *
 	 * @return \ModelFactory
-	 * @throws \ReflectionException
+	 * @throws \Exception
 	 */
 	protected function MakeVanillaModelFactory($sInitialXML): ModelFactory
 	{
@@ -75,14 +76,16 @@ class ModelFactoryTest extends ItopTestCase
 		$oExpectedDocument->preserveWhiteSpace = false;
 		$oExpectedDocument->loadXML($sXML);
 		$oExpectedDocument->formatOutput = true;
+
 		return $oExpectedDocument->saveXML($oExpectedDocument->firstChild);
 	}
 
 	/**
 	 * @param $sExpected
 	 * @param $sActual
+	 * @param string $sMessage
 	 */
-	protected function AssertEqualiTopXML($sExpected, $sActual, $sMessage = '')
+	protected function AssertEqualiTopXML($sExpected, $sActual, string $sMessage = '')
 	{
 		// Note: assertEquals reports the differences in a diff which is easier to interpret (in PHPStorm)
 		// as compared to the report given by assertEqualXMLStructure
@@ -94,19 +97,19 @@ class ModelFactoryTest extends ItopTestCase
 	 */
 	protected function AssertEqualModels(string $sExpectedXML, ModelFactory $oFactory, $sMessage = '')
 	{
-		return $this->AssertEqualiTopXML($sExpectedXML, $oFactory->Dump(null, true), $sMessage);
+		$this->AssertEqualiTopXML($sExpectedXML, $oFactory->Dump(null, true), $sMessage);
 	}
 
 	/**
 	 * @dataProvider ProviderGetPreviousComment
-	 * @covers ModelFactory::GetPreviousComment
+	 * @covers       ModelFactory::GetPreviousComment
 	 *
 	 * @param $sDeltaXML
 	 * @param $sClassName
 	 * @param $sExpectedComment
 	 *
 	 * @return void
-	 * @throws \ReflectionException
+	 * @throws \Exception
 	 */
 	public function testGetPreviousComment($sDeltaXML, $sClassName, $sExpectedComment)
 	{
@@ -132,47 +135,47 @@ class ModelFactoryTest extends ItopTestCase
 		$aData = [];
 
 		$aData['No Comment first Class'] = [
-			'sDeltaXML' => '<itop_design version="3.1">
+			'sDeltaXML'        => '<itop_design>
 	<classes>
 		<class id="A" _delta="define"/>
 	</classes>
 </itop_design>',
-			'sClassName' => 'A',
+			'sClassName'       => 'A',
 			'sExpectedComment' => null,
 		];
 
 		$aData['No Comment other Class'] = [
-			'sDeltaXML' => '<itop_design version="3.1">
+			'sDeltaXML'        => '<itop_design>
 	<classes>
 		<!-- Test comment -->
 		<class id="B" _delta="define"/>
 		<class id="A" _delta="define"/>
 	</classes>
 </itop_design>',
-			'sClassName' => 'A',
+			'sClassName'       => 'A',
 			'sExpectedComment' => null,
 		];
 
 		$aData['Comment first class'] = [
-			'sDeltaXML' => '<itop_design version="3.1">
+			'sDeltaXML'        => '<itop_design>
 	<classes>
 		<!-- Test comment -->
 		<class id="A" _delta="define"/>
 	</classes>
 </itop_design>',
-			'sClassName' => 'A',
+			'sClassName'       => 'A',
 			'sExpectedComment' => ' Test comment ',
 		];
 
 		$aData['Comment other Class'] = [
-			'sDeltaXML' => '<itop_design version="3.1">
+			'sDeltaXML'        => '<itop_design>
 	<classes>
 		<class id="B" _delta="define"/>
 		<!-- Test comment -->
 		<class id="A" _delta="define"/>
 	</classes>
 </itop_design>',
-			'sClassName' => 'A',
+			'sClassName'       => 'A',
 			'sExpectedComment' => ' Test comment ',
 		];
 
@@ -181,7 +184,7 @@ class ModelFactoryTest extends ItopTestCase
 
 	/**
 	 * @dataProvider ProviderFlattenDelta
-	 * @covers ModelFactory::FlattenClassesInDelta
+	 * @covers       ModelFactory::FlattenClassesInDelta
 	 *
 	 * @param $sDeltaXML
 	 * @param $sExpectedXML
@@ -205,34 +208,34 @@ class ModelFactoryTest extends ItopTestCase
 	{
 		return [
 			'Empty delta' => [
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 </itop_design>',
-				'sExpectedXML' => '<itop_design version="3.1">
-</itop_design>'
+				'sExpectedXML' => '<itop_design>
+</itop_design>',
 			],
 
 			'Flat delete' => [
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1_2" _delta="delete"/>
 		<class id="C_1_1" _delta="define"/>
 		<class id="C_1" _delta="delete"/>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design version="3.1">
+				'sExpectedXML' => '<itop_design>
 	<classes>
 		<class id="C_1_2" _delta="delete"/>
 		<class id="C_1_1" _delta="define"/>
 		<class id="C_1" _delta="delete"/>
 	</classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'flat define root' => [
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="define">
 			<parent>cmdbAbstractObject</parent>
@@ -242,7 +245,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design version="3.1">
+				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="C_1" _delta="define">
 		<parent>cmdbAbstractObject</parent>
@@ -251,12 +254,12 @@ class ModelFactoryTest extends ItopTestCase
 		<parent>cmdbAbstractObject</parent>
 	</class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'flat force root' => [
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="force">
 			<parent>cmdbAbstractObject</parent>
@@ -266,7 +269,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design version="3.1">
+				'sExpectedXML' => '<itop_design>
   <classes>
 	<!-- Automatically generated to remove class/C_1 hierarchy -->
     <class id="C_1" _delta="delete_if_exists"/>
@@ -279,12 +282,12 @@ class ModelFactoryTest extends ItopTestCase
 		<parent>cmdbAbstractObject</parent>
 	</class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'flat redefine root' => [
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="redefine">
 			<parent>cmdbAbstractObject</parent>
@@ -294,7 +297,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design version="3.1">
+				'sExpectedXML' => '<itop_design>
   <classes>
 	<!-- Automatically generated to remove class/C_1 hierarchy -->
     <class id="C_1" _delta="delete"/>
@@ -307,12 +310,12 @@ class ModelFactoryTest extends ItopTestCase
 		<parent>cmdbAbstractObject</parent>
 	</class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Simple hierarchy define root' => [
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="define">
 			<parent>cmdbAbstractObject</parent>
@@ -322,7 +325,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design version="3.1">
+				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="C_1" _delta="define">
 		<parent>cmdbAbstractObject</parent>
@@ -332,12 +335,12 @@ class ModelFactoryTest extends ItopTestCase
       <parent>C_1</parent>
     </class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Complex hierarchy delete' => [
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1">
 			<parent>cmdbAbstractObject</parent>
@@ -355,7 +358,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design version="3.1">
+				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="C_1">
 		<parent>cmdbAbstractObject</parent>
@@ -377,12 +380,12 @@ class ModelFactoryTest extends ItopTestCase
 	<!-- Automatically moved from class/C_1_2 to classes -->
     <class id="C_1_2_1" _delta="delete"/>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Complex hierarchy define root' => [
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="define">
 			<parent>cmdbAbstractObject</parent>
@@ -404,7 +407,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design version="3.1">
+				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="C_1" _delta="define">
 		<parent>cmdbAbstractObject</parent>
@@ -430,12 +433,12 @@ class ModelFactoryTest extends ItopTestCase
       <parent>C_1_2</parent>
     </class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Complex hierarchy define' => [
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1">
 			<parent>cmdbAbstractObject</parent>
@@ -457,7 +460,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design version="3.1">
+				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="C_1">
 		<parent>cmdbAbstractObject</parent>
@@ -483,12 +486,12 @@ class ModelFactoryTest extends ItopTestCase
       <parent>C_1_2</parent>
     </class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Complex hierarchy force' => [
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1">
 			<parent>cmdbAbstractObject</parent>
@@ -510,7 +513,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design version="3.1">
+				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="C_1">
 		<parent>cmdbAbstractObject</parent>
@@ -540,12 +543,12 @@ class ModelFactoryTest extends ItopTestCase
       <parent>C_1_2</parent>
     </class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Complex hierarchy force root' => [
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="force">
 			<parent>cmdbAbstractObject</parent>
@@ -567,7 +570,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design version="3.1">
+				'sExpectedXML' => '<itop_design>
   <classes>
 	<!-- Automatically generated to remove class/C_1 hierarchy -->
     <class id="C_1" _delta="delete_if_exists"/>
@@ -595,12 +598,12 @@ class ModelFactoryTest extends ItopTestCase
       <parent>C_1_2</parent>
     </class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Complex hierarchy redefine' => [
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1">
 			<parent>cmdbAbstractObject</parent>
@@ -622,7 +625,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design version="3.1">
+				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="C_1">
 		<parent>cmdbAbstractObject</parent>
@@ -652,12 +655,12 @@ class ModelFactoryTest extends ItopTestCase
       <parent>C_1_2</parent>
     </class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Complex hierarchy redefine root' => [
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="redefine">
 			<parent>cmdbAbstractObject</parent>
@@ -679,7 +682,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design version="3.1">
+				'sExpectedXML' => '<itop_design>
   <classes>
 	<!-- Automatically generated to remove class/C_1 hierarchy -->
     <class id="C_1" _delta="delete"/>
@@ -707,14 +710,14 @@ class ModelFactoryTest extends ItopTestCase
       <parent>C_1_2</parent>
     </class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 		];
 	}
 
 	/**
 	 * @dataProvider ProviderLoadDelta
-	 * @covers ModelFactory::LoadDelta
+	 * @covers       ModelFactory::LoadDelta
 	 *
 	 * @param $sDeltaXML
 	 * @param $bHierarchicalClasses
@@ -734,38 +737,66 @@ class ModelFactoryTest extends ItopTestCase
 		$oDocument->loadXML($sDeltaXML);
 		/* @var MFElement $oDeltaRoot */
 		$oDeltaRoot = $oDocument->firstChild;
-		$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument);
+		try {
+			$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument);
+		}
+		catch (\Exception $e) {
+			$this->assertNull($sExpectedXML, 'LoadDelta() must fail with exception: '.$e->getMessage());
 
+			return;
+		}
 		$this->AssertEqualModels($sExpectedXML, $oFactory, 'LoadDelta() must result in a datamodel without hierarchical classes');
 	}
 
 	public function ProviderLoadDelta()
 	{
 		return [
-			'empty delta' => [
-				'sInitialXML' => '
+			'empty delta'          => [
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '<itop_design></itop_design>',
+				'sDeltaXML'    => '<itop_design></itop_design>',
 				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
-
-			'Add a class' => [
-				'sInitialXML' => '
+			'merge delta lax mode' => [
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '<itop_design>
+	<classes>
+		<class id="C_1">
+            <parent>cmdbAbstractObject</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+</itop_design>',
+			],
+			'Add a class'          => [
+				'sInitialXML'  => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="define">
             <parent>cmdbAbstractObject</parent>
@@ -779,18 +810,18 @@ class ModelFactoryTest extends ItopTestCase
       <parent>cmdbAbstractObject</parent>
     </class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Add a class and subclass in hierarchy' => [
-				'sInitialXML' => '
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="define">
             <parent>cmdbAbstractObject</parent>
@@ -811,11 +842,11 @@ class ModelFactoryTest extends ItopTestCase
 	  <parent>C_1</parent>
 	</class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Delete a class' => [
-				'sInitialXML' => '
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
@@ -824,8 +855,8 @@ class ModelFactoryTest extends ItopTestCase
     </class>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="delete">
 		</class>
@@ -836,11 +867,11 @@ class ModelFactoryTest extends ItopTestCase
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="removed"/>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Delete hierarchically a class' => [
-				'sInitialXML' => '
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
@@ -849,8 +880,8 @@ class ModelFactoryTest extends ItopTestCase
     </class>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="delete">
 		</class>
@@ -861,11 +892,11 @@ class ModelFactoryTest extends ItopTestCase
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="removed"/>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Delete hierarchically a class and subclass' => [
-				'sInitialXML' => '
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
@@ -877,8 +908,8 @@ class ModelFactoryTest extends ItopTestCase
 	</class>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="delete"/>
 	</classes>
@@ -889,11 +920,11 @@ class ModelFactoryTest extends ItopTestCase
     <class id="C_1" _alteration="removed"/>
     <class id="C_1_1" _alteration="removed"/>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Delete hierarchically a class and subclass already deleted' => [
-				'sInitialXML' => '
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
@@ -911,8 +942,8 @@ class ModelFactoryTest extends ItopTestCase
 	</class>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1_2" _delta="delete"/>
 		<class id="C_1" _delta="delete"/>
@@ -926,11 +957,11 @@ class ModelFactoryTest extends ItopTestCase
     <class id="C_1_2" _alteration="removed"/>
     <class id="C_1_2_1" _alteration="removed"/>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Delete if exist hierarchically an existing class' => [
-				'sInitialXML' => '
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
@@ -939,8 +970,8 @@ class ModelFactoryTest extends ItopTestCase
     </class>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="delete_if_exists">
 		</class>
@@ -951,11 +982,11 @@ class ModelFactoryTest extends ItopTestCase
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="removed"/>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Delete if exist hierarchically an non existing class' => [
-				'sInitialXML' => '
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
@@ -964,8 +995,8 @@ class ModelFactoryTest extends ItopTestCase
     </class>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="delete_if_exists">
 		</class>
@@ -978,11 +1009,11 @@ class ModelFactoryTest extends ItopTestCase
       <parent>cmdbAbstractObject</parent>
     </class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Delete if exist hierarchically a removed class' => [
-				'sInitialXML' => '
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
@@ -991,8 +1022,8 @@ class ModelFactoryTest extends ItopTestCase
     </class>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="delete"/>
 		<class id="C_1" _delta="delete_if_exists"/>
@@ -1003,11 +1034,11 @@ class ModelFactoryTest extends ItopTestCase
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="removed"/>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Delete if exist hierarchically an existing class and subclass' => [
-				'sInitialXML' => '
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
@@ -1019,8 +1050,8 @@ class ModelFactoryTest extends ItopTestCase
 	</class>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1" _delta="delete_if_exists"/>
 	</classes>
@@ -1031,11 +1062,11 @@ class ModelFactoryTest extends ItopTestCase
     <class id="C_1" _alteration="removed"/>
     <class id="C_1_1" _alteration="removed"/>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
 			'Delete if exist hierarchically a non existing subclass' => [
-				'sInitialXML' => '
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
@@ -1047,8 +1078,8 @@ class ModelFactoryTest extends ItopTestCase
 	</class>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<class id="C_1_1" _delta="delete"/>
 		<class id="C_1" _delta="delete_if_exists"/>
@@ -1060,18 +1091,18 @@ class ModelFactoryTest extends ItopTestCase
     <class id="C_1" _alteration="removed"/>
     <class id="C_1_1" _alteration="removed"/>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
 
-			'Class comment should be preserved' => [
-				'sInitialXML' => '
+			'Class comment should be preserved'              => [
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '
-<itop_design version="3.1">
+				'sDeltaXML'    => '
+<itop_design>
 	<classes>
 		<!-- Test Comment on class C_1 -->
 		<class id="C_1" _delta="define">
@@ -1091,16 +1122,14 @@ class ModelFactoryTest extends ItopTestCase
       <parent>cmdbAbstractObject</parent>
     </class>
 	<!-- Test Comment on merged class -->
-	<class id="C_2">
-        <parent></parent>
+	<class id="C_2" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
 	</class>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
-
-
 			'Delete hierarchically a class and add it again' => [
-				'sInitialXML' => '
+				'sInitialXML'  => '
 <itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
@@ -1115,7 +1144,7 @@ class ModelFactoryTest extends ItopTestCase
 	</class>
   </classes>
 </itop_design>',
-				'sDeltaXML' => '
+				'sDeltaXML'    => '
 <itop_design>
 	<classes>
 		<class id="C_1" _delta="delete"/>
@@ -1133,16 +1162,31 @@ class ModelFactoryTest extends ItopTestCase
     <class id="C_1_1" _alteration="removed"/>
     <class id="C_1_1_1" _alteration="removed"/>
   </classes>
-</itop_design>'
+</itop_design>',
 			],
-
+			'merge delta strict'                             => [
+				'sInitialXML'  => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design load="strict">
+	<classes>
+		<class id="C_1">
+            <parent>cmdbAbstractObject</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => null,
+			],
 		];
 	}
 
 	/**
 	 * @dataProvider ProviderAlterationByXMLDelta
-	 * @covers ModelFactory::LoadDelta
-	 * @covers ModelFactory::ApplyChanges
+	 * @covers       ModelFactory::LoadDelta
+	 * @covers       ModelFactory::ApplyChanges
 	 */
 	public function testAlterationByXMLDelta($sInitialXML, $sDeltaXML, $sExpectedXML)
 	{
@@ -1169,99 +1213,105 @@ class ModelFactoryTest extends ItopTestCase
 	public function ProviderAlterationByXMLDelta()
 	{
 		// Basic (structure)
-		$aDeltas['No change at all'] = [
-			'sInitialXML' => <<<XML
+		return [
+			'No change at all'                                     => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
 XML
-		];
-		$aDeltas['No change at all - mini delta'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'No change at all - mini delta'                        => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA/>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="merge" implicit'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="merge" implicit'                              => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="merge" explicit'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="merge" explicit (lax)'                        => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB _delta="merge"/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="merge" does not handle data'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="merge" does preserve text in lax mode'        => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
-	<nodeB>Ghost busters!!!</nodeB>
+	<nodeB>Maintained Text</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
-	<nodeB/>
+	<nodeB>Maintained Text</nodeB>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="merge" recursively'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="merge" recursively'                           => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB>
 		<nodeC>
@@ -1270,8 +1320,8 @@ XML
 	</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>
 		<nodeC>
@@ -1280,454 +1330,489 @@ XML
 	</nodeB>
 </nodeA>
 XML
-		];
-
-		// Define or redefine
-		$aDeltas['_delta="define" without id'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			// Define or redefine
+			'_delta="define" without id'                           => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
-	<nodeB _delta="define"></nodeB>
+	<nodeB _delta="define"/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="define" with id'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="define" with id'                              => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
-	<item id="toto" _delta="define"></item>
+	<item id="toto" _delta="define"/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
-	<item id="toto"></item>
+	<item id="toto"/>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="define" but existing node'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="define" but existing node'                    => [
+				'sInitialXML'  => <<<XML
 <nodeA>
-	<item id="toto" _delta="define"></item>
+	<item id="toto"/>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
-	<item id="toto" _delta="define"></item>
+	<item id="toto" _delta="define"/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => null
-		];
-		$aDeltas['_delta="redefine" without id'] = [
-			'sInitialXML' => <<<XML
+				,
+				'sExpectedXML' => null,
+			],
+			'_delta="redefine" without id'                         => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<nodeB>Initial BB</nodeB>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB _delta="redefine">Gainsbourg</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>Gainsbourg</nodeB>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="redefine" with id'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="redefine" with id'                            => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<item id="toto">Initial BB</item>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<item id="toto" _delta="redefine">Gainsbourg</item>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<item id="toto">Gainsbourg</item>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="redefine" but missing node'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="redefine" but missing node'                   => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<item id="toto" _delta="redefine">Gainsbourg</item>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => null
-		];
-		$aDeltas['_delta="force" without id + missing node'] = [
-			'sInitialXML' => <<<XML
+				,
+				'sExpectedXML' => null,
+			],
+			'_delta="force" without id + missing node'             => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB _delta="force">Hulk</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>Hulk</nodeB>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="force" with id + missing node'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="force" with id + missing node'                => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<item id="toto" _delta="force">Hulk</item>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<item id="toto">Hulk</item>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="force" without id + existing node'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="force" without id + existing node'            => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<nodeB>Initial BB</nodeB>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB _delta="force">Gainsbourg</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>Gainsbourg</nodeB>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="force" with id + existing node'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="force" with id + existing node'               => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<item id="toto">Initial BB</item>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<item id="toto" _delta="force">Gainsbourg</item>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<item id="toto">Gainsbourg</item>
 </nodeA>
 XML
-		];
-
-		// Rename
-		$aDeltas['rename'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			// Rename
+			'rename'                                               => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<item id="Kent">Kryptonite</item>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<item id="Superman" _rename_from="Kent"/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<item id="Superman">Kryptonite</item>
 </nodeA>
 XML
-		];
-		$aDeltas['rename but missing node NOT INTUITIVE!!!'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'rename but missing node NOT INTUITIVE!!!'             => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<item id="Superman" _rename_from="Kent"/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<item id="Superman"/>
 </nodeA>
 XML
-		];
-
-		// Delete
-		$aDeltas['_delta="delete" without id'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			// Delete
+			'_delta="delete" without id'                           => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<nodeB>Initial BB</nodeB>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB _delta="delete"/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA/>
 XML
-		];
-		$aDeltas['_delta="delete" with id'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="delete" with id'                              => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<item id="toto">Initial BB</item>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<item id="toto" _delta="delete"/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA/>
 XML
-		];
-		$aDeltas['_delta="delete" but missing node'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="delete" but missing node'                     => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<item id="toto" _delta="delete"/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => null,
-		];
-		$aDeltas['_delta="delete_if_exists" without id + existing node'] = [
-			'sInitialXML' => <<<XML
+				,
+				'sExpectedXML' => null,
+			],
+			'_delta="delete_if_exists" without id + existing node' => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<nodeB>Initial BB</nodeB>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB _delta="delete_if_exists"/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => '<nodeA/>'
-		];
-		$aDeltas['_delta="delete_if_exists" with id + existing node'] = [
-			'sInitialXML' => <<<XML
+				,
+				'sExpectedXML' => '<nodeA/>',
+			],
+			'_delta="delete_if_exists" with id + existing node'    => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<item id="toto">Initial BB</item>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<item id="toto" _delta="delete_if_exists"/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => '<nodeA/>'
-		];
-		$aDeltas['_delta="delete_if_exists" without id + missing node'] = [
-			'sInitialXML' => <<<XML
+				,
+				'sExpectedXML' => '<nodeA/>',
+			],
+			'_delta="delete_if_exists" without id + missing node'  => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB _delta="delete_if_exists"/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA/>
 XML
-		];
-		$aDeltas['_delta="delete_if_exists" with id + missing node'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="delete_if_exists" with id + missing node'     => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<item id="toto" _delta="delete_if_exists"/>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA/>
 XML
-		];
-
-		// Conditionals
-		$aDeltas['_delta="must_exist"'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			// Conditionals
+			'_delta="must_exist"'                                  => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB _delta="must_exist">
 		<nodeC _delta="define"/>
 	</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>
 		<nodeC/>
 	</nodeB>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="must_exist on missing node"'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="must_exist on missing node"'                  => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB _delta="must_exist">
 		<nodeC _delta="define"/>
 	</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => null,
-		];
-		$aDeltas['_delta="if_exists on missing node"'] = [
-			'sInitialXML' => <<<XML
+				,
+				'sExpectedXML' => null,
+			],
+			'_delta="if_exists on missing node (lax)'                   => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB _delta="if_exists">
 		<nodeC _delta="define"/>
 	</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 </nodeA>
 XML
-			,
-		];
-		$aDeltas['_delta="if_exists on existing node"'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="if_exists on missing node (strict)'                   => [
+				'sInitialXML'  => <<<XML
+<itop_design>
+</itop_design>
+XML
+				,
+				'sDeltaXML'    => <<<XML
+<itop_design load="strict">
+	<nodeB _delta="if_exists">
+		<nodeC _delta="define"/>
+	</nodeB>
+</itop_design>
+XML
+				,
+				'sExpectedXML' => <<<XML
+<itop_design>
+</itop_design>
+XML
+				,
+			],
+			'_delta="if_exists on existing node"'                  => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB _delta="if_exists">
 		<nodeC _delta="define"/>
 	</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>
 		<nodeC/>
 	</nodeB>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="define_if_not_exists on missing node"'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="define_if_not_exists on missing node"'        => [
+				'sInitialXML'  => <<<XML
 <nodeA/>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB _delta="define_if_not_exists">The incredible Hulk</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>The incredible Hulk</nodeB>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="define_if_not_exists on existing node"'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="define_if_not_exists on existing node"'       => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 	<nodeB>Luke Banner</nodeB>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB _delta="define_if_not_exists">The incredible Hulk</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>Luke Banner</nodeB>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="define_and_must_exits"'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="define_and_must_exits"'                       => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB id="Banner" _delta="define"/>
 	<nodeB id="Banner" _delta="must_exist">
@@ -1735,22 +1820,23 @@ XML
 	</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
   <nodeB id="Banner">
     <nodeC/>
   </nodeB>
 </nodeA>
 XML
-		];
-		$aDeltas['_delta="define_then_must_exist"'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'_delta="define_then_must_exist"'                      => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB id="Banner" _delta="define">
 		<nodeE/>
@@ -1762,8 +1848,8 @@ XML
 	</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
   <nodeB id="Banner">
     <nodeE/>
@@ -1773,14 +1859,15 @@ XML
   </nodeB>
 </nodeA>
 XML
-		];
-		$aDeltas['nested _delta should be cleaned'] = [
-			'sInitialXML' => <<<XML
+				,
+			],
+			'nested _delta should be cleaned'                      => [
+				'sInitialXML'  => <<<XML
 <nodeA>
 </nodeA>
 XML
-			,
-			'sDeltaXML' => <<<XML
+				,
+				'sDeltaXML'    => <<<XML
 <nodeA>
 	<nodeB id="Banner" _delta="define">
 		<nodeC>
@@ -1789,8 +1876,8 @@ XML
 	</nodeB>
 </nodeA>
 XML
-			,
-			'sExpectedXML' => <<<XML
+				,
+				'sExpectedXML' => <<<XML
 <nodeA>
   <nodeB id="Banner">
     <nodeC>
@@ -1799,61 +1886,144 @@ XML
   </nodeB>
 </nodeA>
 XML
-		];
-		$aDeltas['Class comments are stripped when class is deleted'] =[
-		'sInitialXML' => '
+				,
+			],
+			'Class comments are stripped when class is deleted'    => [
+				'sInitialXML'  => '
 <itop_design>
-  <classes>
-    <class id="cmdbAbstractObject"/>
-	<!-- Test Comment on class C_1 -->
-    <class id="C_1"/>
-  </classes>
+<classes>
+<class id="cmdbAbstractObject"/>
+<!-- Test Comment on class C_1 -->
+<class id="C_1"/>
+</classes>
 </itop_design>',
-		'sDeltaXML' => '
-<itop_design version="3.1">
-	<classes>
-		<class id="C_1" _delta="delete"/>
-	</classes>
-</itop_design>',
-		'sExpectedXML' => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject"/>
-  </classes>
-</itop_design>'
-	];
-		$aDeltas['Class comments are preserved'] =[
-			'sInitialXML' => '
+				'sDeltaXML'    => '
 <itop_design>
-  <classes>
-    <class id="cmdbAbstractObject"/>
-	<!-- Test Comment on class C_1 -->
-    <class id="C_1"/>
-  </classes>
+<classes>
+<class id="C_1" _delta="delete"/>
+</classes>
 </itop_design>',
-			'sDeltaXML' => '
-<itop_design version="3.1">
-	<classes>
-	</classes>
+				'sExpectedXML' => '<itop_design>
+<classes>
+<class id="cmdbAbstractObject"/>
+</classes>
 </itop_design>',
-			'sExpectedXML' => '<itop_design>
-  <classes>
-    <class id="cmdbAbstractObject"/>
-	<!-- Test Comment on class C_1 -->
-    <class id="C_1"/>
-  </classes>
-</itop_design>'
+			],
+			'Class comments are preserved'                         => [
+				'sInitialXML'  => '
+<itop_design>
+<classes>
+<class id="cmdbAbstractObject"/>
+<!-- Test Comment on class C_1 -->
+<class id="C_1"/>
+</classes>
+</itop_design>',
+				'sDeltaXML'    => '
+<itop_design>
+<classes>
+</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+<classes>
+<class id="cmdbAbstractObject"/>
+<!-- Test Comment on class C_1 -->
+<class id="C_1"/>
+</classes>
+</itop_design>',
+			],
+			'if_exist on removed node does nothing'                => [
+				'sInitialXML'  => '
+<root>
+<nodeA _alteration="removed"/>
+</root>',
+				'sDeltaXML'    => '
+<root>
+<nodeA _delta="if_exists">
+<nodeB _delta="define"/>
+</nodeA>
+</root>',
+				'sExpectedXML' => '<root/>',
+			],
+			'if_exist on missing node does nothing'                => [
+				'sInitialXML'  => '
+<root/>',
+				'sDeltaXML'    => '
+<root>
+<nodeA _delta="if_exists">
+<nodeB _delta="define"/>
+</nodeA>
+</root>',
+				'sExpectedXML' => '<root/>',
+			],
+			'if_exist on existing node merges'                     => [
+				'sInitialXML'  => '
+<root>
+<nodeA/>
+</root>',
+				'sDeltaXML'    => '
+<root>
+<nodeA _delta="if_exists">
+<nodeB _delta="define"/>
+</nodeA>
+</root>',
+				'sExpectedXML' => '<root>
+<nodeA>
+<nodeB/>
+</nodeA>
+</root>',
+			],
+			'must_exist on removed node does error'                => [
+				'sInitialXML'  => '
+<root>
+<nodeA _alteration="removed"/>
+</root>',
+				'sDeltaXML'    => '
+<root>
+<nodeA _delta="must_exist">
+<nodeB _delta="define"/>
+</nodeA>
+</root>',
+				'sExpectedXML' => null,
+			],
+			'must_exist on missing node does error'                => [
+				'sInitialXML'  => '
+<root/>',
+				'sDeltaXML'    => '
+<root>
+<nodeA _delta="must_exist">
+<nodeB _delta="define"/>
+</nodeA>
+</root>',
+				'sExpectedXML' => null,
+			],
+			'must_exist on existing node merges'                   => [
+				'sInitialXML'  => '
+<root>
+<nodeA/>
+</root>',
+				'sDeltaXML'    => '
+<root>
+<nodeA _delta="must_exist">
+<nodeB _delta="define"/>
+</nodeA>
+</root>',
+				'sExpectedXML' => '<root>
+<nodeA>
+<nodeB/>
+</nodeA>
+</root>',
+			],
 		];
-
-		return $aDeltas;
 	}
 
 	/**
 	 * @dataProvider ProviderAlterationAPIs
-	 * @covers \ModelFactory::GetDelta
-	 * @covers \MFElement::AddChildNode
-	 * @covers \MFElement::RedefineChildNode
-	 * @covers \MFElement::SetChildNode
-	 * @covers \MFElement::Delete
+	 * @covers       \ModelFactory::GetDelta
+	 * @covers       \MFElement::AddChildNode
+	 * @covers       \MFElement::RedefineChildNode
+	 * @covers       \MFElement::SetChildNode
+	 * @covers       \MFElement::Delete
+	 * @throws \MFException
 	 */
 	public function testAlterationsByAPIs($sInitialXML, $sOperation, $sExpectedXML)
 	{
@@ -1915,7 +2085,7 @@ XML
 		define('CASE_NO_FLAG', <<<XML
 <root_tag>
 	<container_tag>
-		<target_tag></target_tag>
+		<target_tag/>
 	</container_tag>
 </root_tag>
 XML
@@ -1995,254 +2165,400 @@ XML
 XML
 		);
 		$aData = [
-			'CASE_NO_FLAG Delete' => [CASE_NO_FLAG , 'Delete', <<<XML
+			'CASE_NO_FLAG Delete'                            => [
+				CASE_NO_FLAG,
+				'Delete',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="removed"/>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_ABOVE_A_FLAG Delete' => [CASE_ABOVE_A_FLAG , 'Delete', <<<XML
+			'CASE_ABOVE_A_FLAG Delete'                       => [
+				CASE_ABOVE_A_FLAG,
+				'Delete',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="removed"/>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_IN_A_DEFINITION Delete' => [CASE_IN_A_DEFINITION , 'Delete', <<<XML
+			'CASE_IN_A_DEFINITION Delete'                    => [
+				CASE_IN_A_DEFINITION,
+				'Delete',
+				<<<XML
 <root_tag>
 	<container_tag _alteration="added"/>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_define Delete' => [CASE_FLAG_ON_TARGET_define , 'Delete', <<<XML
+			'CASE_FLAG_ON_TARGET_define Delete'              => [
+				CASE_FLAG_ON_TARGET_define,
+				'Delete',
+				<<<XML
 <root_tag>
 	<container_tag/>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_redefine Delete' => [CASE_FLAG_ON_TARGET_redefine , 'Delete', <<<XML
+			'CASE_FLAG_ON_TARGET_redefine Delete'            => [
+				CASE_FLAG_ON_TARGET_redefine,
+				'Delete',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="removed"/>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_needed Delete' => [CASE_FLAG_ON_TARGET_needed , 'Delete', <<<XML
+			'CASE_FLAG_ON_TARGET_needed Delete'              => [
+				CASE_FLAG_ON_TARGET_needed,
+				'Delete',
+				<<<XML
 <root_tag>
   <container_tag/>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_forced Delete' => [CASE_FLAG_ON_TARGET_forced , 'Delete', <<<XML
+			'CASE_FLAG_ON_TARGET_forced Delete'              => [
+				CASE_FLAG_ON_TARGET_forced,
+				'Delete',
+				<<<XML
 <root_tag>
   <container_tag/>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_removed Delete' => [CASE_FLAG_ON_TARGET_removed , 'Delete', null
+			'CASE_FLAG_ON_TARGET_removed Delete'             => [
+				CASE_FLAG_ON_TARGET_removed,
+				'Delete',
+				null,
 			],
-			'CASE_FLAG_ON_TARGET_old_id Delete' => [CASE_FLAG_ON_TARGET_old_id , 'Delete', <<<XML
+			'CASE_FLAG_ON_TARGET_old_id Delete'              => [
+				CASE_FLAG_ON_TARGET_old_id,
+				'Delete',
+				<<<XML
 <root_tag>
   <container_tag>
       <target_tag id="fraise" _old_id="tagada" _alteration="removed"/>
 	</container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_NO_FLAG AddChildNode' => [CASE_NO_FLAG , 'AddChildNodeToContainer', null
+			'CASE_NO_FLAG AddChildNode'                      => [
+				CASE_NO_FLAG,
+				'AddChildNodeToContainer',
+				null,
 			],
-			'CASE_ABOVE_A_FLAG AddChildNode' => [CASE_ABOVE_A_FLAG , 'AddChildNodeToContainer', null
+			'CASE_ABOVE_A_FLAG AddChildNode'                 => [
+				CASE_ABOVE_A_FLAG,
+				'AddChildNodeToContainer',
+				null,
 			],
-			'CASE_IN_A_DEFINITION AddChildNode' => [CASE_IN_A_DEFINITION , 'AddChildNodeToContainer', null
+			'CASE_IN_A_DEFINITION AddChildNode'              => [
+				CASE_IN_A_DEFINITION,
+				'AddChildNodeToContainer',
+				null,
 			],
-			'CASE_FLAG_ON_TARGET_define AddChildNode' => [CASE_FLAG_ON_TARGET_define , 'AddChildNodeToContainer', null
+			'CASE_FLAG_ON_TARGET_define AddChildNode'        => [
+				CASE_FLAG_ON_TARGET_define,
+				'AddChildNodeToContainer',
+				null,
 			],
-			'CASE_FLAG_ON_TARGET_redefine AddChildNode' => [CASE_FLAG_ON_TARGET_redefine , 'AddChildNodeToContainer', null
+			'CASE_FLAG_ON_TARGET_redefine AddChildNode'      => [
+				CASE_FLAG_ON_TARGET_redefine,
+				'AddChildNodeToContainer',
+				null,
 			],
-			'CASE_FLAG_ON_TARGET_needed AddChildNode' => [CASE_FLAG_ON_TARGET_needed , 'AddChildNodeToContainer', null
+			'CASE_FLAG_ON_TARGET_needed AddChildNode'        => [
+				CASE_FLAG_ON_TARGET_needed,
+				'AddChildNodeToContainer',
+				null,
 			],
-			'CASE_FLAG_ON_TARGET_forced AddChildNode' => [CASE_FLAG_ON_TARGET_forced , 'AddChildNodeToContainer', null
+			'CASE_FLAG_ON_TARGET_forced AddChildNode'        => [
+				CASE_FLAG_ON_TARGET_forced,
+				'AddChildNodeToContainer',
+				null,
 			],
-			'CASE_FLAG_ON_TARGET_removed AddChildNode' => [CASE_FLAG_ON_TARGET_removed , 'AddChildNodeToContainer', <<<XML
+			'CASE_FLAG_ON_TARGET_removed AddChildNode'       => [
+				CASE_FLAG_ON_TARGET_removed,
+				'AddChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
       <target_tag _alteration="replaced">Hello, I'm a newly added node</target_tag>
 	</container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_old_id AddChildNode' => [CASE_FLAG_ON_TARGET_old_id , 'AddChildNodeToContainer', null
+			'CASE_FLAG_ON_TARGET_old_id AddChildNode'        => [
+				CASE_FLAG_ON_TARGET_old_id,
+				'AddChildNodeToContainer',
+				null,
 			],
-			'CASE_MISSING_TARGET AddChildNode' => [CASE_MISSING_TARGET , 'AddChildNodeToContainer', <<<XML
+			'CASE_MISSING_TARGET AddChildNode'               => [
+				CASE_MISSING_TARGET,
+				'AddChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
       <target_tag _alteration="added">Hello, I'm a newly added node</target_tag>
 	</container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_NO_FLAG RedefineChildNode' => [CASE_NO_FLAG , 'RedefineChildNodeToContainer', <<<XML
+			'CASE_NO_FLAG RedefineChildNode'                 => [
+				CASE_NO_FLAG,
+				'RedefineChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="replaced">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_ABOVE_A_FLAG RedefineChildNode' => [CASE_ABOVE_A_FLAG , 'RedefineChildNodeToContainer', <<<XML
+			'CASE_ABOVE_A_FLAG RedefineChildNode'            => [
+				CASE_ABOVE_A_FLAG,
+				'RedefineChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="replaced">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_IN_A_DEFINITION RedefineChildNode' => [CASE_IN_A_DEFINITION , 'RedefineChildNodeToContainer', <<<XML
+			'CASE_IN_A_DEFINITION RedefineChildNode'         => [
+				CASE_IN_A_DEFINITION,
+				'RedefineChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag _alteration="added">
     <target_tag>Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_define RedefineChildNode' => [CASE_FLAG_ON_TARGET_define , 'RedefineChildNodeToContainer', <<<XML
+			'CASE_FLAG_ON_TARGET_define RedefineChildNode'   => [
+				CASE_FLAG_ON_TARGET_define,
+				'RedefineChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="added">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_redefine RedefineChildNode' => [CASE_FLAG_ON_TARGET_redefine , 'RedefineChildNodeToContainer', <<<XML
+			'CASE_FLAG_ON_TARGET_redefine RedefineChildNode' => [
+				CASE_FLAG_ON_TARGET_redefine,
+				'RedefineChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="replaced">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
 			// Note: buggy case ?
-			'CASE_FLAG_ON_TARGET_needed RedefineChildNode' => [CASE_FLAG_ON_TARGET_needed , 'RedefineChildNodeToContainer', <<<XML
+			'CASE_FLAG_ON_TARGET_needed RedefineChildNode'   => [
+				CASE_FLAG_ON_TARGET_needed,
+				'RedefineChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="needed">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_forced RedefineChildNode' => [CASE_FLAG_ON_TARGET_forced , 'RedefineChildNodeToContainer', <<<XML
+			'CASE_FLAG_ON_TARGET_forced RedefineChildNode'   => [
+				CASE_FLAG_ON_TARGET_forced,
+				'RedefineChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="forced">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_removed RedefineChildNode' => [CASE_FLAG_ON_TARGET_removed , 'RedefineChildNodeToContainer', null
+			'CASE_FLAG_ON_TARGET_removed RedefineChildNode'  => [
+				CASE_FLAG_ON_TARGET_removed,
+				'RedefineChildNodeToContainer',
+				null,
 			],
-			'CASE_FLAG_ON_TARGET_old_id RedefineChildNode' => [CASE_FLAG_ON_TARGET_old_id , 'RedefineChildNodeToContainer', <<<XML
+			'CASE_FLAG_ON_TARGET_old_id RedefineChildNode'   => [
+				CASE_FLAG_ON_TARGET_old_id,
+				'RedefineChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="replaced">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_MISSING_TARGET RedefineChildNode' => [CASE_MISSING_TARGET , 'RedefineChildNodeToContainer', null
+			'CASE_MISSING_TARGET RedefineChildNode'          => [
+				CASE_MISSING_TARGET,
+				'RedefineChildNodeToContainer',
+				null,
 			],
-			'CASE_NO_FLAG SetChildNode' => [CASE_NO_FLAG , 'SetChildNodeToContainer', <<<XML
+			'CASE_NO_FLAG SetChildNode'                      => [
+				CASE_NO_FLAG,
+				'SetChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="replaced">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_ABOVE_A_FLAG SetChildNode' => [CASE_ABOVE_A_FLAG , 'SetChildNodeToContainer', <<<XML
+			'CASE_ABOVE_A_FLAG SetChildNode'                 => [
+				CASE_ABOVE_A_FLAG,
+				'SetChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="replaced">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_IN_A_DEFINITION SetChildNode' => [CASE_IN_A_DEFINITION , 'SetChildNodeToContainer', <<<XML
+			'CASE_IN_A_DEFINITION SetChildNode'              => [
+				CASE_IN_A_DEFINITION,
+				'SetChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag _alteration="added">
     <target_tag>Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_define SetChildNode' => [CASE_FLAG_ON_TARGET_define , 'SetChildNodeToContainer', <<<XML
+			'CASE_FLAG_ON_TARGET_define SetChildNode'        => [
+				CASE_FLAG_ON_TARGET_define,
+				'SetChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="added">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_redefine SetChildNode' => [CASE_FLAG_ON_TARGET_redefine , 'SetChildNodeToContainer', <<<XML
+			'CASE_FLAG_ON_TARGET_redefine SetChildNode'      => [
+				CASE_FLAG_ON_TARGET_redefine,
+				'SetChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="replaced">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
 			// Note: buggy case ?
-			'CASE_FLAG_ON_TARGET_needed SetChildNode' => [CASE_FLAG_ON_TARGET_needed , 'SetChildNodeToContainer', <<<XML
+			'CASE_FLAG_ON_TARGET_needed SetChildNode'        => [
+				CASE_FLAG_ON_TARGET_needed,
+				'SetChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="needed">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_forced SetChildNode' => [CASE_FLAG_ON_TARGET_forced , 'SetChildNodeToContainer', <<<XML
+			'CASE_FLAG_ON_TARGET_forced SetChildNode'        => [
+				CASE_FLAG_ON_TARGET_forced,
+				'SetChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="forced">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_removed SetChildNode' => [CASE_FLAG_ON_TARGET_removed , 'SetChildNodeToContainer', <<<XML
+			'CASE_FLAG_ON_TARGET_removed SetChildNode'       => [
+				CASE_FLAG_ON_TARGET_removed,
+				'SetChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="replaced">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_FLAG_ON_TARGET_old_id SetChildNode' => [CASE_FLAG_ON_TARGET_old_id , 'SetChildNodeToContainer', <<<XML
+			'CASE_FLAG_ON_TARGET_old_id SetChildNode'        => [
+				CASE_FLAG_ON_TARGET_old_id,
+				'SetChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _old_id="tagada" _alteration="replaced">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
-			'CASE_MISSING_TARGET SetChildNode' => [CASE_MISSING_TARGET , 'SetChildNodeToContainer', <<<XML
+			'CASE_MISSING_TARGET SetChildNode'               => [
+				CASE_MISSING_TARGET,
+				'SetChildNodeToContainer',
+				<<<XML
 <root_tag>
   <container_tag>
     <target_tag _alteration="added">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
+				,
 			],
 		];
+
 		return $aData;
 	}
 
 	/**
-	 * @covers \ModelFactory::LoadDelta
-	 * @covers \ModelFactory::GetDelta
-	 * @covers \ModelFactory::GetDeltaDocument
+	 * @covers       \ModelFactory::LoadDelta
+	 * @covers       \ModelFactory::GetDelta
+	 * @covers       \ModelFactory::GetDeltaDocument
 	 * @dataProvider ProviderGetDelta
 	 */
 	public function testGetDelta($sInitialXMLInternal, $sExpectedXMLDelta)
@@ -2264,7 +2580,7 @@ XML
 	public function ProviderGetDelta()
 	{
 		return [
-			'no alteration' => [
+			'no alteration'                       => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond>Roger Moore</james_bond>
@@ -2274,42 +2590,44 @@ XML
 XML
 				,
 				// Weird, but seems ok as of now
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="##ITOP_DESIGN_LATEST_VERSION##"/>
 XML
 				,
 			],
-			'_alteration="added" singleton' => [
+			'_alteration="added" singleton'       => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond _alteration="added"/>
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
   <james_bond _delta="define"/>
 </root_node>
 
 XML
+				,
 			],
-			'_alteration="added" with value' => [
+			'_alteration="added" with value'      => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond _alteration="added">Roger Moore</james_bond>
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
   <james_bond _delta="define">Roger Moore</james_bond>
 </root_node>
 XML
+				,
 			],
-			'_alteration="added" with subtree' => [
+			'_alteration="added" with subtree'    => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond _alteration="added">
@@ -2319,7 +2637,7 @@ XML
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
   <james_bond _delta="define">
@@ -2328,36 +2646,39 @@ XML
   </james_bond>
 </root_node>
 XML
+				,
 			],
-			'_alteration="forced" singleton' => [
+			'_alteration="forced" singleton'      => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond _alteration="forced"/>
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
   <james_bond _delta="force"/>
 </root_node>
 XML
+				,
 			],
-			'_alteration="forced" with value' => [
+			'_alteration="forced" with value'     => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond _alteration="forced">Roger Moore</james_bond>
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
   <james_bond _delta="force">Roger Moore</james_bond>
 </root_node>
 XML
+				,
 			],
-			'_alteration="forced" with subtree' => [
+			'_alteration="forced" with subtree'   => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond _alteration="forced">
@@ -2367,7 +2688,7 @@ XML
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
   <james_bond _delta="force">
@@ -2376,36 +2697,39 @@ XML
   </james_bond>
 </root_node>
 XML
+				,
 			],
-			'_alteration="needed" singleton' => [
+			'_alteration="needed" singleton'      => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond _alteration="needed"/>
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
   <james_bond _delta="define_if_not_exists"/>
 </root_node>
 XML
+				,
 			],
-			'_alteration="needed" with value' => [
+			'_alteration="needed" with value'     => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond _alteration="needed">Roger Moore</james_bond>
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
   <james_bond _delta="define_if_not_exists">Roger Moore</james_bond>
 </root_node>
 XML
+				,
 			],
-			'_alteration="needed" with subtree' => [
+			'_alteration="needed" with subtree'   => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond _alteration="needed">
@@ -2415,7 +2739,7 @@ XML
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
   <james_bond _delta="define_if_not_exists">
@@ -2424,20 +2748,22 @@ XML
   </james_bond>
 </root_node>
 XML
+				,
 			],
-			'_alteration="replaced" with value' => [
+			'_alteration="replaced" with value'   => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond _alteration="replaced">Sean Connery</james_bond>
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
   <james_bond _delta="redefine">Sean Connery</james_bond>
 </root_node>
 XML
+				,
 			],
 			'_alteration="replaced" with subtree' => [
 				'sInitialXMLInternal' => <<<XML
@@ -2449,7 +2775,7 @@ XML
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
   <james_bond _delta="define">
@@ -2458,36 +2784,39 @@ XML
   </james_bond>
 </root_node>
 XML
+				,
 			],
-			'_alteration="removed"' => [
+			'_alteration="removed"'               => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond _alteration="removed"/>
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
 	<james_bond _delta="delete"/>
 </root_node>
 XML
+				,
 			],
-			'_old_id' => [
+			'_old_id'                             => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond id="Sean" _old_id="Roger"/>
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
 	<james_bond  id="Sean" _rename_from="Roger"/>
 </root_node>
 XML
+				,
 			],
-			'_old_id with subtree' => [
+			'_old_id with subtree'                => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
 	<james_bond id="Sean" _old_id="Roger">
@@ -2496,7 +2825,7 @@ XML
 </root_node>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
 	<james_bond  id="Sean" _rename_from="Roger">
@@ -2504,6 +2833,7 @@ XML
 </james_bond>
 </root_node>
 XML
+				,
 			],
 
 			'Class Comments are kept for created classes' => [
@@ -2518,8 +2848,8 @@ XML
   </classes>
 </itop_design>
 XML
-			,
-			'sExpectedXMLDelta' => <<<XML
+				,
+				'sExpectedXMLDelta'   => <<<XML
 <itop_design>
 	<classes>
 		<!-- Test Comment on class C_1 -->
@@ -2529,10 +2859,9 @@ XML
 	</classes>
 </itop_design>
 XML
-			,
+				,
 			],
-
-			'Class Comments should be preserved' => [
+			'Class Comments should be preserved'          => [
 				'sInitialXMLInternal' => <<<XML
 <itop_design>
   <classes>
@@ -2549,7 +2878,7 @@ XML
 </itop_design>
 XML
 				,
-				'sExpectedXMLDelta' => <<<XML
+				'sExpectedXMLDelta'   => <<<XML
 <itop_design>
 	<classes>
 		<!-- Test Comment on class C_1 -->
@@ -2596,7 +2925,7 @@ XML
 			$oFactory->AddClass($oNode, $sModuleName);
 		}
 	}
-	
+
 	/**
 	 * @dataProvider ProviderAddClass
 	 * @return void
@@ -2743,13 +3072,12 @@ XML
 	 */
 	public function ProviderAddClass()
 	{
-		$aClasses = [];
-
-		$aClasses["1 root class"] = [
-			'aClasses' => [
-				['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
-			],
-			'sExpectedXML' => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+		$aClasses = [
+			"1 root class"           => [
+				'aClasses'                 => [
+					['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
+				],
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -2768,19 +3096,18 @@ XML
   <meta/>
   <events/>
 </itop_design>',
-			'aExpectedRootClasses' => [],
-			'aExpectedClasses' => ['A'],
-			'aExpectedClassNotExist' => ['B'],
-			'aExpectedClassesByModule' => ['M' => ['A']],
-			'aExpectedChildClasses' => ['A' => []],
-		];
-
-		$aClasses['2 root classes'] = [
-			'aClasses'     => [
-				['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
-				['name' => 'B', 'module' => 'M2', 'parent' => 'cmdbAbstractObject'],
+				'aExpectedRootClasses'     => [],
+				'aExpectedClasses'         => ['A'],
+				'aExpectedClassNotExist'   => ['B'],
+				'aExpectedClassesByModule' => ['M' => ['A']],
+				'aExpectedChildClasses'    => ['A' => []],
 			],
-			'sExpectedXML' => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+			'2 root classes'         => [
+				'aClasses'                 => [
+					['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
+					['name' => 'B', 'module' => 'M2', 'parent' => 'cmdbAbstractObject'],
+				],
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -2806,20 +3133,18 @@ XML
   <meta/>
   <events/>
 </itop_design>',
-			'aExpectedRootClasses' => [],
-			'aExpectedClasses' => ['A', 'B'],
-			'aExpectedClassNotExist' => ['C'],
-			'aExpectedClassesByModule' => ['M' => ['A'], 'M2' => ['B']],
-			'aExpectedChildClasses' => ['A' => [], 'B' => []],
-		];
-
-
-		$aClasses['2 hierarchical classes'] = [
-			'aClasses'     => [
-				['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
-				['name' => 'B', 'module' => 'M2', 'parent' => 'A'],
+				'aExpectedRootClasses'     => [],
+				'aExpectedClasses'         => ['A', 'B'],
+				'aExpectedClassNotExist'   => ['C'],
+				'aExpectedClassesByModule' => ['M' => ['A'], 'M2' => ['B']],
+				'aExpectedChildClasses'    => ['A' => [], 'B' => []],
 			],
-			'sExpectedXML' => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+			'2 hierarchical classes' => [
+				'aClasses'                 => [
+					['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
+					['name' => 'B', 'module' => 'M2', 'parent' => 'A'],
+				],
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -2845,21 +3170,20 @@ XML
   <meta/>
   <events/>
 </itop_design>',
-			'aExpectedRootClasses' => ['A'],
-			'aExpectedClasses' => ['A', 'B'],
-			'aExpectedClassNotExist' => ['C'],
-			'aExpectedClassesByModule' => ['M' => ['A'], 'M2' => ['B']],
-			'aExpectedChildClasses' => ['A' => ['B'], 'B' => []],
-		];
-
-		$aClasses['4 mixed classes'] = [
-			'aClasses'     => [
-				['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
-				['name' => 'B', 'module' => 'M2', 'parent' => 'A'],
-				['name' => 'C', 'module' => 'M3', 'parent' => 'cmdbAbstractObject'],
-				['name' => 'D', 'module' => 'M3', 'parent' => 'B'],
+				'aExpectedRootClasses'     => ['A'],
+				'aExpectedClasses'         => ['A', 'B'],
+				'aExpectedClassNotExist'   => ['C'],
+				'aExpectedClassesByModule' => ['M' => ['A'], 'M2' => ['B']],
+				'aExpectedChildClasses'    => ['A' => ['B'], 'B' => []],
 			],
-			'sExpectedXML' => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+			'4 mixed classes'        => [
+				'aClasses'                 => [
+					['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
+					['name' => 'B', 'module' => 'M2', 'parent' => 'A'],
+					['name' => 'C', 'module' => 'M3', 'parent' => 'cmdbAbstractObject'],
+					['name' => 'D', 'module' => 'M3', 'parent' => 'B'],
+				],
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -2899,11 +3223,12 @@ XML
   <meta/>
   <events/>
 </itop_design>',
-			'aExpectedRootClasses' => ['A'],
-			'aExpectedClasses' => ['A', 'B', 'C', 'D'],
-			'aExpectedClassNotExist' => ['E'],
-			'aExpectedClassesByModule' => ['M' => ['A'], 'M2' => ['B'], 'M3' => ['C', 'D']],
-			'aExpectedChildClasses' => ['A' => ['B'], 'B' => ['D'], 'C' => [], 'D' => []],
+				'aExpectedRootClasses'     => ['A'],
+				'aExpectedClasses'         => ['A', 'B', 'C', 'D'],
+				'aExpectedClassNotExist'   => ['E'],
+				'aExpectedClassesByModule' => ['M' => ['A'], 'M2' => ['B'], 'M3' => ['C', 'D']],
+				'aExpectedChildClasses'    => ['A' => ['B'], 'B' => ['D'], 'C' => [], 'D' => []],
+			],
 		];
 
 		return $aClasses;
