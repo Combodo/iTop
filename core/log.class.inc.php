@@ -1090,6 +1090,11 @@ class DeadLockLog extends LogAPI
  */
 class DeprecatedCallsLog extends LogAPI
 {
+	/**
+	 * @var string
+	 * @since 3.2.0 N°4897
+	 */
+	public const ENUM_CHANNEL_PHP_API = 'deprecated-php-api';
 	public const ENUM_CHANNEL_PHP_METHOD = 'deprecated-php-method';
 	/**
 	 * @var string
@@ -1281,6 +1286,35 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		static::Warning($sMessage, static::ENUM_CHANNEL_FILE);
+	}
+
+	/**
+	 * @param string $sImplementationClass Class implementing the deprecated API
+	 * @param string $sDeprecatedApi Class name of the deprecated API
+	 * @param string $sDeprecatedMethod Method name of the deprecated API
+	 * @param string|null $sAdditionalMessage Additional message, mostly used to explain what API to use instead
+	 *
+	 * @return void
+	 * @since 3.2.0 N°4897
+	 */
+	public static function NotifyDeprecatedPhpApi(string $sImplementationClass, string $sDeprecatedApi, string $sDeprecatedMethod, ?string $sAdditionalMessage = null): void
+	{
+		try {
+			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_API)) {
+				return;
+			}
+		}
+		catch (ConfigException $oException) {
+			return;
+		}
+
+		$sMessage = "Implementation of {$sDeprecatedApi}::{$sDeprecatedMethod}() in class {$sImplementationClass}";
+
+		if (!is_null($sAdditionalMessage)) {
+			$sMessage .= " : $sAdditionalMessage";
+		}
+
+		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_API);
 	}
 
 	/**

@@ -37,6 +37,8 @@ use DeprecatedCallsLog;
 use Dict;
 use ExecutionKPI;
 use InlineImage;
+use iPageUIBlockExtension;
+use iPageUIExtension;
 use MetaModel;
 use UserRights;
 use utils;
@@ -635,9 +637,10 @@ JS
 		$sBannerHtml = '';
 
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
+		$sAPIClassName = iPageUIExtension::class;
 		/** @var \iPageUIExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-		{
+		foreach (MetaModel::EnumPlugins($sAPIClassName) as $oExtensionInstance) {
+			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetBannerHtml", "use " . iPageUIBlockExtension::class . "::GetBannerBlock() instead");
 			$sBannerHtml .= $oExtensionInstance->GetBannerHtml($this);
 		}
 
@@ -684,9 +687,10 @@ JS
 		$sHeaderHtml = '';
 
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
+		$sAPIClassName = iPageUIExtension::class;
 		/** @var \iPageUIExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-		{
+		foreach (MetaModel::EnumPlugins($sAPIClassName) as $oExtensionInstance) {
+			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetNorthPaneHtml", "use " . iPageUIBlockExtension::class . "::GetHeaderBlock() instead");
 			$sHeaderHtml .= $oExtensionInstance->GetNorthPaneHtml($this);
 		}
 
@@ -782,8 +786,10 @@ HTML;
 		$sFooterHtml = '';
 
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
+		$sAPIClassName = iPageUIExtension::class;
 		/** @var \iPageUIExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance) {
+		foreach (MetaModel::EnumPlugins($sAPIClassName) as $oExtensionInstance) {
+			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetSouthPaneHtml", "use " . iPageUIBlockExtension::class . "::GetFooterBlock() instead");
 			$sFooterHtml .= $oExtensionInstance->GetSouthPaneHtml($this);
 		}
 
