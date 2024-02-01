@@ -27,7 +27,15 @@ use RecursiveIteratorIterator;
 
 class iTopComposer
 {
-	const TEST_DIR_REGEXP = '/^tests?$/i';
+	/**
+	 * Parenthesis around alternation as it is eager (see linked ref), and we really want to use start / end of string
+	 * `^test|examples$i` would match Tester for example
+	 * `^(test|examples)$i` is not !
+	 *
+	 * @since 3.2.0 N°7175 update regexp to also remove `examples` dir
+	 * @link https://www.regular-expressions.info/alternation.html RegExp alternation reference
+	 */
+	public const TEST_DIR_REGEXP = '/^(tests?|examples)$/i';
 
 	/**
 	 * @return array List of all subdirs of /lib that are {@see IsTestDir}.
@@ -139,6 +147,8 @@ class iTopComposer
 			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/web-profiler-bundle/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/yaml/Tests',
+
+			$APPROOT_WITH_SLASHES.'lib/tecnickcom/tcpdf/examples',
 
 			$APPROOT_WITH_SLASHES.'lib/thenetworg/oauth2-azure/tests',
 
