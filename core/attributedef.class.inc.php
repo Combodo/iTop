@@ -8542,7 +8542,7 @@ class AttributeBlob extends AttributeDefinition
 		$sFingerprint = '';
 		if ($value instanceOf ormDocument)
 		{
-			$sFingerprint = md5($value->GetData());
+			$sFingerprint = md5($value->GetData() ?? '');
 		}
 
 		return $sFingerprint;
