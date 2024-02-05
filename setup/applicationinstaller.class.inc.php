@@ -685,6 +685,8 @@ class ApplicationInstaller
 	 */
 	protected static function DoUpdateDBSchema($aSelectedModules, $sModulesDir, $aParamValues, $sTargetEnvironment = '', $bOldAddon = false, $sAppRootUrl = '')
 	{
+		/** @noinspection PhpUnusedLocalVariableInspection */
+		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 		SetupLog::Info("Update Database Schema for environment '$sTargetEnvironment'.");
 		$sMode = $aParamValues['mode'];
 		$sDBPrefix = $aParamValues['db_prefix'];
@@ -703,7 +705,6 @@ class ApplicationInstaller
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
-		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
 		// Migrate columns
 		self::MoveColumns($sDBPrefix);
@@ -886,6 +887,8 @@ class ApplicationInstaller
 		$bOldAddon
 	)
 	{
+		/** @noinspection PhpUnusedLocalVariableInspection */
+		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 		SetupLog::Info('After Database Creation');
 
 		$sMode = $aParamValues['mode'];
@@ -902,8 +905,7 @@ class ApplicationInstaller
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
-		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
-		self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously 
+		self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously
 		
 		// Perform here additional DB setup... profiles, etc...
 		//
@@ -952,6 +954,9 @@ class ApplicationInstaller
 		$bSampleData = false
 	)
 	{
+		/** @noinspection PhpUnusedLocalVariableInspection */
+		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
+
 		$oConfig = new Config();
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
 
@@ -969,7 +974,6 @@ class ApplicationInstaller
 		if (!self::$bMetaModelStarted)
 		{
 			$oProductionEnv->InitDataModel($oConfig, false);  // load data model and connect to the database
-			$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
 			self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously
 		} 
@@ -1002,6 +1006,8 @@ class ApplicationInstaller
 		$sModulesDir, $sPreviousConfigFile, $sTargetEnvironment, $sDataModelVersion, $bOldAddon, $aSelectedModuleCodes,
 		$aSelectedExtensionCodes, $aParamValues, $sInstallComment = null
 	) {
+		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
+
 		$aParamValues['selected_modules'] = implode(',', $aSelectedModuleCodes);
 		$sMode = $aParamValues['mode'];
 
@@ -1042,7 +1048,6 @@ class ApplicationInstaller
 		// Record which modules are installed...
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
-		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
 		if (!$oProductionEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sInstallComment))
 		{
