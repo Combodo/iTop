@@ -886,18 +886,23 @@ abstract class DBSearch
 	}
 
     /**
-     * Selects a column ($sAttCode) from the main class of the DBsearch object and gives the result as an array
-     * @param String $sAttCode
-     * @return array|CoreException|void
+     * Selects a column ($sAttCode) from the specified class ($sClassAlias - default main class) of the DBsearch object and gives the result as an array
+     * @param string $sAttCode
+     * @param string|null $sClassAlias
+     *
+     * @return array
      * @throws ConfigException
      * @throws CoreException
      * @throws MissingQueryArgument
      * @throws MySQLException
      * @throws MySQLHasGoneAwayException
      */
-    public function SelectAttributeToArray(string $sAttCode)
+    public function SelectAttributeToArray(string $sAttCode, ?string $sClassAlias = null):array
     {
-       $sClassAlias = $this->GetClassAlias();
+       if(is_null($sClassAlias)) {
+           $sClassAlias = $this->GetClassAlias();
+       }
+
        $sClass = $this->GetClass();
        if($sAttCode === 'id'){
            $aAttToLoad[$sClassAlias]=[];
@@ -914,7 +919,7 @@ abstract class DBSearch
 
         $sColName = $sClassAlias.$sAttCode;
 
-        $aRes = array();
+        $aRes = [];
         while ($aRow = CMDBSource::FetchArray($resQuery))
         {
             $aMappedRow = array();
