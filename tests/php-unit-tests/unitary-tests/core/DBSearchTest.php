@@ -746,34 +746,32 @@ class DBSearchTest extends ItopDataTestCase
 		$oSearch->MakeSelectQuery();
 		self::assertTrue(true);
 	}
+    /**
+     * @dataProvider QueriesProvider
+     * @param $sOQL
+     *
+     * @return void
+     */
+    public function testQueries($sOQL)
+    {
+        $oSearch = DBSearch::FromOQL($sOQL);
+        $oSet = new DBObjectSet($oSearch);
+        if ($oSet->Count() > 0) {
+            $aSelectedAliases = array_keys($oSearch->GetSelectedClasses());
+            $aFirstRow = $oSet->FetchAssoc();
+            $aAliases = array_keys($aFirstRow);
+            $this->assertEquals($aSelectedAliases, $aAliases);
+        }
+    }
 
-	/**
-	 * @dataProvider QueriesProvider
-	 * @param $sOQL
-	 *
-	 * @return void
-	 */
-	public function testQueries($sOQL)
-	{
-		$oSearch = DBSearch::FromOQL($sOQL);
-		$oSet = new DBObjectSet($oSearch);
-		if ($oSet->Count() > 0) {
-			$aSelectedAliases = array_keys($oSearch->GetSelectedClasses());
-			$aFirstRow = $oSet->FetchAssoc();
-			$aAliases = array_keys($aFirstRow);
-			$this->assertEquals($aSelectedAliases, $aAliases);
-		}
-	}
-
-	public function QueriesProvider()
-	{
-		return [
-			['SELECT L,P FROM Person AS P JOIN Location AS L ON P.location_id=L.id'],
-			['SELECT P,L FROM Person AS P JOIN Location AS L ON P.location_id=L.id'],
-		];
-	}
-
-    public function GetTestFunctionToArrayProvider()
+    public function QueriesProvider()
+    {
+        return [
+                ['SELECT L,P FROM Person AS P JOIN Location AS L ON P.location_id=L.id'],
+                ['SELECT P,L FROM Person AS P JOIN Location AS L ON P.location_id=L.id'],
+        ];
+    }
+    public function SelectAttributeToArrayProvider()
     {
         return array(
                 'select id from functionalCI' => array(
@@ -784,11 +782,23 @@ class DBSearchTest extends ItopDataTestCase
                         'SELECT FunctionalCI',
                         'name',
                 ),
+                'select org_id from functionalCI' => array(
+                        'SELECT FunctionalCI',
+                        'org_id',
+                ),
+                'select org_id from person' => array(
+                        'SELECT Person',
+                        'org_id',
+                ),
+                'select picture from person' => array(
+                        'SELECT Person',
+                        'picture',
+                ),
         );
     }
 
     /**
-     * @dataProvider GetTestFunctionToArrayProvider
+     * @dataProvider SelectAttributeToArrayProvider
      *
      * @return void
      * @throws \ConfigException
@@ -798,13 +808,20 @@ class DBSearchTest extends ItopDataTestCase
      * @throws \MySQLHasGoneAwayException
      * @throws \OQLException
      */
-    public function testAttributeToArray($sQuery, $sField){
+    public function testSelectAttributeToArray($sQuery, $sField){
 		$oSearch = \DBObjectSearch::FromOQL($sQuery);
-        $aResToDataArray = $oSearch->ToDataArray(array($sField));
-        asort($aResToDataArray);
+       //  = $oSearch->ToDataArray(array($sField));
+        $aResToDataArray=[];
+        $oSet = new \DBObjectSet($oSearch);
+        while ($oRecord = $oSet->Fetch()){
+            echo ' pop'.$sField;
+            $aMappedRow[$sField]  =$oRecord->Get($sField);
+            $aResToDataArray[] =   $aMappedRow;
+        }
+       asort($aResToDataArray);
         $aResSelectColumnToArray = $oSearch->SelectAttributeToArray($sField);
-        asort($aResSelectColumnToArray);
-        self::assertEquals($aResToDataArray, $aResSelectColumnToArray, 'ToDataArray and SelectColumnToArray must return the same results');
+         asort($aResSelectColumnToArray);
+        self::assertEquals( $aResToDataArray, $aResSelectColumnToArray, 'ToDataArray and SelectColumnToArray must return the same results');
     }
 
 }
