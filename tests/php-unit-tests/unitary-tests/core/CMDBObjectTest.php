@@ -176,7 +176,7 @@ class CMDBObjectTest extends ItopDataTestCase
 	 *
 	 * @return array data
 	 */
-	public function testRecordObjDeletionProvider()
+	public function RecordObjDeletionProvider()
 	{
 		return [
 			'friendlyname longer than 255 characters which will be truncated on a multi-bytes characters' => [
@@ -193,7 +193,7 @@ class CMDBObjectTest extends ItopDataTestCase
 	/**
 	 * N°5547 - Object deletion fails if friendlyname too long
 	 *
-	 * @dataProvider testRecordObjDeletionProvider
+	 * @dataProvider RecordObjDeletionProvider
 	 *
 	 */
 	public function testRecordObjDeletion( string $sFirstName, string $sName)
