@@ -212,6 +212,7 @@ class CMDBObjectTest extends ItopDataTestCase
 		catch (CoreException $e) {
 			$bDeletionOK = false;
 		}
+		// We d'ont need to test the result (truncated string), it's already done in \DBObject::SetTrim() with N°3448
 		$this->assertTrue($bDeletionOK);
 	}
 
