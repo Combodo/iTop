@@ -519,7 +519,7 @@ class BulkChange
 		foreach ($this->m_aExtKeys[$sAttCode] as $sForeignAttCode => $iCol)
 		{
 			// The foreign attribute is one of our reconciliation key
-			if (strlen($aRowData[$iCol]) > 0)
+			if (isset($aRowData[$iCol]) && strlen($aRowData[$iCol]) > 0)
 			{
 				return false;
 			}
@@ -1233,11 +1233,19 @@ class BulkChange
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 
+		$iNBFields = count($this->m_aAttList) +  count($this->m_aExtKeys);
+
 		// Avoid too many events
 		cmdbAbstractObject::SetEventDBLinksChangedBlocked(true);
 		try {
 			foreach ($this->m_aData as $iRow => $aRowData) {
 				set_time_limit(intval($iLoopTimeLimit));
+				//stop if not enough cols in $aRowData
+				if(count($aRowData) != $iNBFields){
+					$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue('not enough col at line '.$iRow );
+					continue;
+				}
+
 				if (isset($aResult[$iRow]["__STATUS__"])) {
 					// An issue at the earlier steps - skip the rest
 					continue;
@@ -1348,7 +1356,12 @@ class BulkChange
 			{
 				if (!array_key_exists($iCol, $aResult[$iRow]))
 				{
-					$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
+					if(isset($aRowData[$iCol])) {
+						$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
+					} else {
+					//TODO improve message
+						$aResult[$iRow][$iCol] = new CellStatus_Void('!missing value!');
+					}
 				}
 			}
 			foreach($this->m_aExtKeys as $sAttCode => $aForeignAtts)
@@ -1362,7 +1375,12 @@ class BulkChange
 					if (!array_key_exists($iCol, $aResult[$iRow]))
 					{
 						// The foreign attribute is one of our reconciliation key
-						$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
+						if(isset($aRowData[$iCol])) {
+							$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
+						} else {
+								//TODO improve message
+							$aResult[$iRow][$iCol] = new CellStatus_Void('!missing value!');
+						}
 					}
 				}
 			}
