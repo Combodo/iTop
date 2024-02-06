@@ -37,6 +37,7 @@ class DisplayableNode extends GraphNode
 {
 	public $x;
 	public $y;
+	public bool $bFiltered;
 
 	/**
 	 * Create a new node inside a graph
