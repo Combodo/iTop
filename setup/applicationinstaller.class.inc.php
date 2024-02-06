@@ -685,7 +685,10 @@ class ApplicationInstaller
 	 */
 	protected static function DoUpdateDBSchema($aSelectedModules, $sModulesDir, $aParamValues, $sTargetEnvironment = '', $bOldAddon = false, $sAppRootUrl = '')
 	{
-		/** @noinspection PhpUnusedLocalVariableInspection */
+		/**
+		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
+		 * @noinspection PhpUnusedLocalVariableInspection
+		 */
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 		SetupLog::Info("Update Database Schema for environment '$sTargetEnvironment'.");
 		$sMode = $aParamValues['mode'];
@@ -887,7 +890,10 @@ class ApplicationInstaller
 		$bOldAddon
 	)
 	{
-		/** @noinspection PhpUnusedLocalVariableInspection */
+		/**
+		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
+		 * @noinspection PhpUnusedLocalVariableInspection
+		 */
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 		SetupLog::Info('After Database Creation');
 
@@ -954,7 +960,10 @@ class ApplicationInstaller
 		$bSampleData = false
 	)
 	{
-		/** @noinspection PhpUnusedLocalVariableInspection */
+		/**
+		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
+		 * @noinspection PhpUnusedLocalVariableInspection
+		 */
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
 		$oConfig = new Config();
@@ -1006,6 +1015,10 @@ class ApplicationInstaller
 		$sModulesDir, $sPreviousConfigFile, $sTargetEnvironment, $sDataModelVersion, $bOldAddon, $aSelectedModuleCodes,
 		$aSelectedExtensionCodes, $aParamValues, $sInstallComment = null
 	) {
+		/**
+		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
+		 * @noinspection PhpUnusedLocalVariableInspection
+		 */
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
 		$aParamValues['selected_modules'] = implode(',', $aSelectedModuleCodes);

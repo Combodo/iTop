@@ -285,7 +285,10 @@ on the page's parameters
 	 */
 	public function Run()
 	{
-		/** @noinspection PhpUnusedLocalVariableInspection */
+		/**
+		 * @since 3.2.0 Add the ContextTag init
+		 * @noinspection PhpUnusedLocalVariableInspection
+		 */
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
 		$sOperation = utils::ReadParam('operation');
