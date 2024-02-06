@@ -126,22 +126,6 @@ $(function()
 		        	 jsonp: "callback"
 		     })
 		     .done(function(oJSONData) {
-				 oJSONData = [{
-					 "id": 31,
-					 "image": "https:\/\/www.itophub.io\/bundles\/combodonotifications\/images\/messages-default-images.svg",
-					 "url": "https:\/\/www.itophub.io\/api\/messages\/messages\/redirect\/30?uuid%5Bbdd%5D=1C4F5832-F6F8-B5C1-8728-BF599B001826&uuid%5Bfile%5D=3AD70B4D-54F8-3556-EBA3-0DC66E53BD4D&uuid%5Buser%5D=1",
-					 "start_date": "2020-12-17T15:39:00+00:00",
-					 "priority": 1,
-					 "text": "Discover the \"Time Tracking\" extension for iTop.\r\n\r\nMake it [clear](https://www.google.com) and easy to track the time spent."
-				 }, {
-					 "id": 51,
-					 "image": "https:\/\/www.itophub.io\/bundles\/combodonotifications\/images\/messages-default-images.svg",
-					 "url": "https:\/\/www.itophub.io\/api\/messages\/messages\/redirect\/50?uuid%5Bbdd%5D=1C4F5832-F6F8-B5C1-8728-BF599B001826&uuid%5Bfile%5D=3AD70B4D-54F8-3556-EBA3-0DC66E53BD4D&uuid%5Buser%5D=1",
-					 "start_date": "2024-01-03T10:43:00+00:00",
-					 "priority": 3,
-					 "text": "Happy New Year to our community!\r\niTop 3.1.1-1 is now out!\r\n\r\nThis maintenance version includes bug and security fixes described in the changelog, as well as improvements to:\r\n* Bring new possibilities for controlling link edition in iTop console\r\n* Enable the creation of calculated fields and integrity checks that take into account the evolution of links between objects.\r\n* Improve search indexing on Enum, Date and Tagset values\r\n* Support localization in portal tooltips\r\n* Improve printing of portal object page and portal dashboard page\r\n\r\nEnjoy!"
-				 }];
-
 			     me._cacheData(idx, oJSONData);
 		    	 me._onMessagesFetched(idx, oJSONData);
 		    }).error(function() {
