@@ -28,6 +28,8 @@ $(function()
 		{
 			menu_toggler: '[data-role="ibo-navigation-menu--notifications-toggler"]',
 			menu_toggler_message: '[data-role="ibo-navigation-menu--user-notifications--toggler--message"]',
+			notification_message: '[data-role="ibo-navigation-menu--notifications-item"]',
+			notification_dismiss_all: '[data-role="ibo-navigation-menu--notifications-dismiss-all"]',
 		},
 	
 		// the constructor
@@ -124,7 +126,23 @@ $(function()
 		        	 jsonp: "callback"
 		     })
 		     .done(function(oJSONData) {
-		    	 me._cacheData(idx, oJSONData);
+				 oJSONData = [{
+					 "id": 31,
+					 "image": "https:\/\/www.itophub.io\/bundles\/combodonotifications\/images\/messages-default-images.svg",
+					 "url": "https:\/\/www.itophub.io\/api\/messages\/messages\/redirect\/30?uuid%5Bbdd%5D=1C4F5832-F6F8-B5C1-8728-BF599B001826&uuid%5Bfile%5D=3AD70B4D-54F8-3556-EBA3-0DC66E53BD4D&uuid%5Buser%5D=1",
+					 "start_date": "2020-12-17T15:39:00+00:00",
+					 "priority": 1,
+					 "text": "Discover the \"Time Tracking\" extension for iTop.\r\n\r\nMake it [clear](https://www.google.com) and easy to track the time spent."
+				 }, {
+					 "id": 51,
+					 "image": "https:\/\/www.itophub.io\/bundles\/combodonotifications\/images\/messages-default-images.svg",
+					 "url": "https:\/\/www.itophub.io\/api\/messages\/messages\/redirect\/50?uuid%5Bbdd%5D=1C4F5832-F6F8-B5C1-8728-BF599B001826&uuid%5Bfile%5D=3AD70B4D-54F8-3556-EBA3-0DC66E53BD4D&uuid%5Buser%5D=1",
+					 "start_date": "2024-01-03T10:43:00+00:00",
+					 "priority": 3,
+					 "text": "Happy New Year to our community!\r\niTop 3.1.1-1 is now out!\r\n\r\nThis maintenance version includes bug and security fixes described in the changelog, as well as improvements to:\r\n* Bring new possibilities for controlling link edition in iTop console\r\n* Enable the creation of calculated fields and integrity checks that take into account the evolution of links between objects.\r\n* Improve search indexing on Enum, Date and Tagset values\r\n* Support localization in portal tooltips\r\n* Improve printing of portal object page and portal dashboard page\r\n\r\nEnjoy!"
+				 }];
+
+			     me._cacheData(idx, oJSONData);
 		    	 me._onMessagesFetched(idx, oJSONData);
 		    }).error(function() {
 		    	 console.warn('Newsroom: failed to fetch data from the web for provider '+idx+' url: '+me.options.providers[idxProvider].fetch_url);
@@ -213,8 +231,8 @@ $(function()
 
 			var sBottomText = '<span class="ibo-navigation-menu--notifications--item--bottom-text">' + sImage + '<span>' + this.options.providers[sProvider].label + '</span> <span> ' + moment(sStartDate).fromNow() + '</span></span>';
 
-			return '<a class="ibo-popover-menu--item ibo-navigation-menu--notifications-item" data-role="ibo-navigation-menu--notifications-item" data-msg-id="' + sId + '" data-provider-id="' + sProvider + '" href="' + sUrl + '" target="' + sTarget + '" id="newsroom_menu_item_' + sId + '">' +
-				sNewMessageIndicator + sRichDescription + sBottomText + '</a>';
+			return '<div class="ibo-popover-menu--item ibo-navigation-menu--notifications-item" data-role="ibo-navigation-menu--notifications-item" data-msg-id="' + sId + '" data-provider-id="' + sProvider + '" href="' + sUrl + '" target="' + sTarget + '" id="newsroom_menu_item_' + sId + '">' +
+				sNewMessageIndicator + sRichDescription + sBottomText + '</div>';
 		},
 		_buildNoMessageItem: function()
 		{
@@ -242,7 +260,7 @@ $(function()
 		},
 		_buildMenu: function(aAllMessages)
 		{
-			var me = this;
+			const me = this;
 			var iTotalCount = aAllMessages.length;
 			var iCount = 0;
 			var sDismissAllSection = this._buildDismissAllSection();
@@ -291,11 +309,15 @@ $(function()
 				$('.ibo-navigation-menu--notifications--item--content img').each(function(){
 					tippy(this, {'content': this.outerHTML, 'placement': 'left', 'trigger': 'mouseenter focus', 'animation':'shift-away-subtle', 'allowHTML': true });
 				});
-				var me = this;
-				$('[data-role="ibo-navigation-menu--notifications-item"]').on('click', function(oEvent){
-					me._handleClick(this);
+
+				// Add events listeners
+				$(this.js_selectors.notification_message).on('click', function(oEvent){
+					me._handleClick(this, oEvent);
 				});
-				$('[data-role="ibo-navigation-menu--notifications-dismiss-all"]').on('click', function(ev) { me._markAllAsRead(); });
+				$(this.js_selectors.notification_dismiss_all).on('click', function(ev) {
+					me._markAllAsRead();
+				});
+
 				// Remove class to show there is new messages
 				$(this.js_selectors.menu_toggler).removeClass(this.css_classes.empty);
 
@@ -303,7 +325,7 @@ $(function()
 			else
 			{
 				$(this.element).html(sMessageSection + sShowAllMessagesSection);
-				var me = this;
+
 				// Add class to show there is no messages
 				$(this.js_selectors.menu_toggler).addClass(this.css_classes.empty);
 			}
@@ -320,14 +342,20 @@ $(function()
 			}
 			this._initializePopoverMenu();
 		},
-		_handleClick: function(elem)
+		_handleClick: function(oElem, oEvent)
 		{
-			var me = this;
-			var idxProvider = $(elem).attr('data-provider-id');
-			var msgId = $(elem).attr('data-msg-id');
+			// If click was made on an hyperlink in the message, just follow the hyperlink
+			if (oEvent.target.nodeName.toLowerCase() === 'a') {
+				oEvent.stopPropagation();
+				return;
+			}
+
+			// Otherwise we open the message as intended
+			var idxProvider = $(oElem).attr('data-provider-id');
+			var msgId = $(oElem).attr('data-msg-id');
 			
 			this._markOneMessageAsRead(idxProvider, msgId);
-			$(me.element).popover_menu("togglePopup");
+			$(this.element).popover_menu("togglePopup");
 			this._getAllMessages();
 		},
 		clearCache: function(idx)
