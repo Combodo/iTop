@@ -36,5 +36,5 @@
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:UserLDAP' => 'Utente LDAP',
 	'Class:UserLDAP+' => 'Utente autenticato da LDAP',
-	'UserLDAP:server' => 'Specifiche LDAP~~',
+	'UserLDAP:server' => 'Specifiche LDAP',
 ));
