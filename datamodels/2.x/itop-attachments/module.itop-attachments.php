@@ -194,14 +194,25 @@ SQL;
 
 				$oContainer = MetaModel::GetObject($oAttachment->Get('item_class'), $oAttachment->Get('item_id'), false /* must be found */, true /* allow all data */);
 
-				if ($oContainer)
-				{
+				if ($oContainer) {
 					$oAttachment->SetItem($oContainer, true /*updateonchange*/);
 					$iUpdated++;
 				}
 			}
-
 			SetupLog::Info("Initializing attachment/item_org_id - $iUpdated records have been adjusted");
+
+			if (MetaModel::GetAttributeDef('Attachment', 'contact_id') instanceof AttributeExternalKey) {
+				SetupLog::Info("Upgrading itop-attachment from '$sPreviousVersion' to '$sCurrentVersion'. Starting with 3.2.0, contact_id will be added into the DB...");
+				$sUserTableName = MetaModel::DBGetTable('User');
+				$sUserFieldContactId = MetaModel::GetAttributeDef('User', 'contactid')->Get('sql');
+				$sAttachmentFieldUserId = MetaModel::GetAttributeDef('Attachment', 'user_id')->Get('sql');
+				$sAttachmentFieldContactId = MetaModel::GetAttributeDef('Attachment', 'contact_id')->Get('sql');
+				$sAddContactId = "UPDATE `$sTableName` att, `$sUserTableName` us SET att.`$sAttachmentFieldContactId` = us.`$sUserFieldContactId` WHERE att.`$sAttachmentFieldUserId` = us.id AND att.`$sAttachmentFieldContactId` = 0";
+
+				CMDBSource::Query($sAddContactId);
+				$iNbProcessed = CMDBSource::AffectedRows();
+				SetupLog::Info("|  | ".$iNbProcessed." attachment processed.");
+			}
 		}
 	}
 }
