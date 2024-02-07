@@ -918,7 +918,6 @@ class ModelFactoryTest extends ItopTestCase
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="removed"/>
-    <class id="C_1_1" _alteration="removed"/>
   </classes>
 </itop_design>',
 			],
@@ -952,10 +951,8 @@ class ModelFactoryTest extends ItopTestCase
 				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
-    <class id="C_1" _alteration="removed"/>
-    <class id="C_1_1" _alteration="removed"/>
     <class id="C_1_2" _alteration="removed"/>
-    <class id="C_1_2_1" _alteration="removed"/>
+    <class id="C_1" _alteration="removed"/>
   </classes>
 </itop_design>',
 			],
@@ -1060,7 +1057,6 @@ class ModelFactoryTest extends ItopTestCase
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="removed"/>
-    <class id="C_1_1" _alteration="removed"/>
   </classes>
 </itop_design>',
 			],
@@ -1088,8 +1084,8 @@ class ModelFactoryTest extends ItopTestCase
 				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
-    <class id="C_1" _alteration="removed"/>
     <class id="C_1_1" _alteration="removed"/>
+    <class id="C_1" _alteration="removed"/>
   </classes>
 </itop_design>',
 			],
@@ -1159,8 +1155,6 @@ class ModelFactoryTest extends ItopTestCase
     <class id="C_1" _alteration="replaced">
       <parent>cmdbAbstractObject</parent>
     </class>
-    <class id="C_1_1" _alteration="removed"/>
-    <class id="C_1_1_1" _alteration="removed"/>
   </classes>
 </itop_design>',
 			],
@@ -3232,5 +3226,95 @@ XML
 		];
 
 		return $aClasses;
+	}
+
+	/**
+	 * @dataProvider ProviderLoadDeltaMode
+	 * @param $sInitialXML
+	 * @param $sDeltaXML
+	 * @param $sMode
+	 * @param $sExpectedXML
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function testLoadDeltaMode($sInitialXML, $sDeltaXML, $sExpectedXMLInLaxMode, $sExpectedXMLInStrictMode)
+	{
+		// Load in Lax mode
+		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
+		$oFactoryDocument = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
+
+		$oDocument = new MFDocument();
+		$oDocument->loadXML($sDeltaXML);
+		/* @var MFElement $oDeltaRoot */
+		$oDeltaRoot = $oDocument->firstChild;
+		try {
+			$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument, ModelFactory::LOAD_DELTA_MODE_LAX);
+			$this->AssertEqualModels($sExpectedXMLInLaxMode, $oFactory, 'LoadDelta(lax) did not produce the expected result');
+		}
+		catch (\Exception $e) {
+			$this->assertNull($sExpectedXMLInLaxMode, 'LoadDelta(lax) must fail with exception: '.$e->getMessage());
+		}
+
+		// Load in Strict mode
+		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
+		$oFactoryDocument = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
+
+		$oDocument = new MFDocument();
+		$oDocument->loadXML($sDeltaXML);
+		/* @var MFElement $oDeltaRoot */
+		$oDeltaRoot = $oDocument->firstChild;
+		try {
+			$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument, ModelFactory::LOAD_DELTA_MODE_STRICT);
+			$this->AssertEqualModels($sExpectedXMLInStrictMode, $oFactory, 'LoadDelta(strict) did not produce the expected result');
+		}
+		catch (\Exception $e) {
+			$this->assertNull($sExpectedXMLInStrictMode, 'LoadDelta(strict) must fail with exception: '.$e->getMessage());
+		}
+	}
+
+
+	public function ProviderLoadDeltaMode()
+	{
+		return [
+			'merge delta have different behavior depending on the mode' => [
+				'sInitialXML'  => '
+<itop_design>
+  <nodeA>
+  </nodeA>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<nodeA>
+		<nodeB id="C_1">
+			<parent>cmdbAbstractObject</parent>
+		</nodeB>
+	</nodeA>
+</itop_design>',
+				'sExpectedXMLInLaxMode' => '<itop_design>
+  <nodeA>
+    <nodeB id="C_1" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
+    </nodeB>
+  </nodeA>
+</itop_design>',
+				'sExpectedXMLInStrictMode' => null,
+			],
+			'mode specified in delta takes precedence' => [
+				'sInitialXML'  => '
+<itop_design>
+  <nodeA>
+  </nodeA>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design load="strict">
+	<nodeA>
+		<nodeB id="C_1">
+			<parent>cmdbAbstractObject</parent>
+		</nodeB>
+	</nodeA>
+</itop_design>',
+				'sExpectedXMLInLaxMode' => null,
+				'sExpectedXMLInStrictMode' => null,
+			],
+		];
 	}
 }

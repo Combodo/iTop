@@ -919,7 +919,17 @@ class ModelFactory
 		}
 	}
 
-	private function DeleteSubClasses($oClassNode, $bIsRoot = true)
+	/**
+	 * Remove completely the subclasses node in the datamodel to comply with the previous behavior (hierarchical classes)
+	 * Only the root class is marked with _alteration="removed"
+	 *
+	 * @param $oClassNode
+	 * @param $bIsRoot
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function DeleteSubClasses($oClassNode, $bIsRoot = true)
 	{
 		if (!$oClassNode instanceof MFElement) {
 			return;
@@ -931,7 +941,8 @@ class ModelFactory
 			$this->DeleteSubClasses($oSubClassNode, false);
 		}
 		if (!$bIsRoot) {
-			$oClassNode->Delete();
+			// Hard deletion is necessary
+			$oClassNode->remove();
 		}
 	}
 
@@ -2263,6 +2274,12 @@ EOF;
 		}
 		if ($sFlag)
 		{
+			// If class move the node AFTER all the removed classes to keep the delete order
+			// and remain compatible with GetDelta/LoadDelta class flattening
+			if ($this->IsClassNode()) {
+				$this->parentNode->appendChild($this);
+			}
+
 			$this->setAttribute('_alteration', $sFlag);
 			$this->DeleteChildren();
 
