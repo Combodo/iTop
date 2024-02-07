@@ -34,21 +34,21 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkFunctionalCIToTicket' => 'Link FunctionalCI / Ticket~~',
 	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Rif~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Titolo del Ticket~~',
+ 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Rif',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Titolo del Ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'CI~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Nome CI~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Impatto (testo)~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Impatto~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Aggiunto manualmente~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Calcolato~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Non impattato~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Nome CI',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Impatto (testo',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Impatto',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Aggiunto manualmente',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Calcolato',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Non impattato',
 ));
 
 //
 // Class: FunctionalCI
 //
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:FunctionalCI/Attribute:tickets_list' => 'Ticket~~',
-	'Class:FunctionalCI/Attribute:tickets_list+' => 'Tutti i ticket per questo elemento di configurazione~~',
+	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets~~',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'Tutti i ticket per questo elemento di configurazione',
 ));

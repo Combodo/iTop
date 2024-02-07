@@ -17,6 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Aggiungi una voce nella lista~~',
+	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Aggiungi una voce nella lista',
 
 ));

@@ -21,7 +21,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Core:ormValue:ormDocument:DownloadsCount' => '%1$s~~',
-	'Core:ormValue:ormDocument:DownloadsCount+' => 'Scaricato %1$s volta(e)~~',
+	'Core:ormValue:ormDocument:DownloadsCount' => '%1$s',
+	'Core:ormValue:ormDocument:DownloadsCount+' => 'Scaricato %1$s volta(e)',
 
 ]);
