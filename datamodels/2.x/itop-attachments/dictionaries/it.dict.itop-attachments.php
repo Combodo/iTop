@@ -49,12 +49,19 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Attachment' => 'Allegato',
+	'Class:Attachment+' => '~~',
 	'Class:Attachment/Attribute:expire' => 'Scadenza',
+	'Class:Attachment/Attribute:expire+' => '~~',
 	'Class:Attachment/Attribute:temp_id' => 'ID temporaneo',
+	'Class:Attachment/Attribute:temp_id+' => '~~',
 	'Class:Attachment/Attribute:item_class' => 'Classe dell\'oggetto',
+	'Class:Attachment/Attribute:item_class+' => '~~',
 	'Class:Attachment/Attribute:item_id' => 'Oggetto',
+	'Class:Attachment/Attribute:item_id+' => '~~',
 	'Class:Attachment/Attribute:item_org_id' => 'Organizzazione dell\'oggetto',
+	'Class:Attachment/Attribute:item_org_id+' => '~~',
 	'Class:Attachment/Attribute:contents' => 'Contenuti',
+	'Class:Attachment/Attribute:contents+' => '~~',
 ));
 
 
@@ -73,8 +80,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Attachment/Attribute:creation_date' => 'Data di creazione',
+	'Class:Attachment/Attribute:creation_date+' => '~~',
 	'Class:Attachment/Attribute:user_id' => 'ID utente',
+	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'ID contatto',
+	'Class:Attachment/Attribute:contact_id+' => '~~',
 ));
 
 //
