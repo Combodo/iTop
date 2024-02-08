@@ -210,7 +210,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs~~',
 	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
-	'Class:Document/Attribute:finalclass' => 'Document Type~~',
+	'Class:Document/Attribute:finalclass' => 'Document sub-class~~',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
 ));
 
@@ -256,7 +256,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Typology+' => '~~',
 	'Class:Typology/Attribute:name' => 'Name~~',
 	'Class:Typology/Attribute:name+' => '~~',
-	'Class:Typology/Attribute:finalclass' => 'Type~~',
+	'Class:Typology/Attribute:finalclass' => 'Typology sub-class~~',
 	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
 ));
 

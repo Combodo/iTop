@@ -383,8 +383,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:WelcomeMenu:MyIncidents' => 'Incidentes atribuídos a mim',
 	'UI:AllOrganizations' => ' Todas organizações ',
 	'UI:YourSearch' => 'Sua pesquisa',
-	'UI:LoggedAsMessage' => 'Logado como %1$s (%2$s)~~',
-	'UI:LoggedAsMessage+Admin' => 'Logado como %1$s (%2$s, Administrador)~~',
+	'UI:LoggedAsMessage' => 'Logado como %1$s (%2$s)',
+	'UI:LoggedAsMessage+Admin' => 'Logado como %1$s (%2$s, Administrador)',
 	'UI:Button:Logoff' => 'Sair',
 	'UI:Button:GlobalSearch' => 'Pesquisar',
 	'UI:Button:Search' => ' Pesquisar ',
@@ -728,7 +728,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Query:UrlForExcel' => 'URL a ser usada para consultas web MS-Excel',
 	'UI:Query:UrlV1' => 'A lista de campos não foi especificada. A página <em>export-V2.php</em> não pode ser chamada sem essa informação. Portanto, o URL sugerido abaixo aponta para a página herdada: <em>export.php</em>. Essa versão herdada da exportação tem a seguinte limitação: a lista de campos exportados pode variar dependendo do formato de saída e do modelo de dados do '.ITOP_APPLICATION_SHORT.'. Se você quiser garantir que a lista de colunas exportadas permaneça estável a longo prazo, então você deve especificar um valor para o atributo "Fields" e usar a página <em>export-V2.php</em>.',
 	'UI:Schema:Title' => 'Esquema de objetos',
-	'UI:Schema:TitleForClass' => 'Esquema de %1$s~~',
+	'UI:Schema:TitleForClass' => 'Esquema de %1$s',
 	'UI:Schema:CategoryMenuItem' => 'Categoria <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relações',
 	'UI:Schema:AbstractClass' => 'Classe abstrata: nenhum objeto desta classe pode ser instanciada.',
@@ -999,7 +999,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 </ol>
 </p>
 <p>To be executed, actions must be associated to triggers.
-When associated with a trigger, each action is given an "order" number, specifying in which order the actions are to be executed.</p>~~',
+When associated with a trigger, each action is given an "order" number, specifying in which order the actions are to be executed.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Gatilhos',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Available triggers',
 	'UI:NotificationsMenu:OnCreate' => 'When an object is created',
@@ -1052,8 +1052,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:iTopVersion:Long' => '%1$s versão %2$s-%3$s construído %4$s',
 	'UI:PropertiesTab' => 'Propriedades',
 
-	'UI:OpenDocumentInNewWindow_' => 'Abrir~~',
-	'UI:DownloadDocument_' => 'Baixar~~',
+	'UI:OpenDocumentInNewWindow_' => 'Abrir',
+	'UI:DownloadDocument_' => 'Baixar',
 	'UI:Document:NoPreview' => 'Nenhuma visualização está disponível para este documento',
 	'UI:Download-CSV' => 'Download %1$s',
 
@@ -1175,10 +1175,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ArchiveMode:Banner+' => 'Objetos arquivados são visíveis e nenhuma modificação é permitida',
 	'UI:FavoriteOrganizations' => 'Organizações favoritas',
 	'UI:FavoriteOrganizations+' => 'Confira na lista abaixo as organizações que você deseja ver no menu drop-down para um acesso rápido.Note-se que esta não é uma configuração de segurança, objetos de qualquer organização ainda são visíveis e podem ser acessadas ao selecionar \\"Todos Organizações\\" na lista drop-down.',
-	'UI:FavoriteLanguage' => 'Idioma do painel do Usuário~~',
+	'UI:FavoriteLanguage' => 'Idioma do painel do Usuário',
 	'UI:Favorites:SelectYourLanguage' => 'Selecione sua linguagem preferida',
 	'UI:FavoriteOtherSettings' => 'Outras configurações',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Quantidade padrão para listas:  %1$s itens por página~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Quantidade padrão para listas:  %1$s itens por página',
 	'UI:Favorites:ShowObsoleteData' => 'Mostrar dados obsoletos',
 	'UI:Favorites:ShowObsoleteData+' => 'Mostrar dados obsoletos nos resultados de pesquisa e listas de itens para selecionar',
 	'UI:NavigateAwayConfirmationMessage' => 'Qualquer modificações serão descartados.',
@@ -1616,7 +1616,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Expression:Unit:Short:YEAR' => 'a',
 
 	'Expression:Unit:Long:DAY' => 'dia(s)',
-	'Expression:Unit:Long:HOUR' => 'hora(s)~~',
+	'Expression:Unit:Long:HOUR' => 'hora(s)',
 	'Expression:Unit:Long:MINUTE' => 'minuto(s)',
 
 	'Expression:Verb:NOW' => 'agora',

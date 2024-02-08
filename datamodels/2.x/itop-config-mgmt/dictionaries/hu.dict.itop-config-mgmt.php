@@ -1397,7 +1397,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink' => 'Bejövő',
     'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'bejövő link',
     'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'Kimenő',
-    'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'kimenő link~~',
+    'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'kimenő link',
 ));
 
 //

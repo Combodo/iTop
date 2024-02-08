@@ -356,7 +356,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 <li>Implement ITIL processes at your own pace.</li>
 <li>Manage the most important asset of your IT: Documentation.</li>
 </ul>
-</p>~~',
+</p>',
 	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 
 <div>This version features a brand new modern and accessible backoffice design.</div>
@@ -372,8 +372,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:WelcomeMenu:MyIncidents' => 'Incidents tildelt mig',
 	'UI:AllOrganizations' => ' Alle Organisationer',
 	'UI:YourSearch' => 'Din Søgning',
-	'UI:LoggedAsMessage' => 'Logget ind som %1$s (%2$s)~~',
-	'UI:LoggedAsMessage+Admin' => 'Logget ind som %1$s (%2$s, Administrator)~~',
+	'UI:LoggedAsMessage' => 'Logget ind som %1$s (%2$s)',
+	'UI:LoggedAsMessage+Admin' => 'Logget ind som %1$s (%2$s, Administrator)',
 	'UI:Button:Logoff' => 'Log ud',
 	'UI:Button:GlobalSearch' => 'Søg',
 	'UI:Button:Search' => ' Søg ',
@@ -420,7 +420,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:InputFile:SelectFile' => 'Select a file~~',
 
 	'UI:SearchToggle' => 'Søg',
-	'UI:ClickToCreateNew' => 'Opret nyt objekt af typen %1$s~~',
+	'UI:ClickToCreateNew' => 'Opret nyt objekt af typen %1$s',
 	'UI:SearchFor_Class' => 'Søg efter objekter af typen %1$s',
 	'UI:NoObjectToDisplay' => 'Ingen objekter at vise.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
@@ -582,7 +582,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - Bulk import',
 	'UI:Title:BulkImport+'                         => 'CSV-Import assistent',
 	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => 'Synchronisering af %1$d objekter af klasse %2$s',
-	'UI:CSVImport:ClassesSelectOne'                => '-- Vælg venligst --~~',
+	'UI:CSVImport:ClassesSelectOne'                => '-- Vælg venligst --',
 	'UI:CSVImport:ErrorExtendedAttCode'            => 'Intern fejl: "%1$s" er en ukorrekt kode fordi "%2$s" er IKKE en fremmed nøgle af klassen "%3$s"',
 	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d objekt(er) vil forblive uændrede.',
 	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d objekt(er) vil blive ændret.',
@@ -715,9 +715,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Der opstod en fejl under afviklingen af forespøgrslen',
 	'UI:Query:UrlForExcel' => 'URL til brug for MS-Excel web forespøgrsler',
-	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
+	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' objekt skema',
-	'UI:Schema:TitleForClass' => '%1$s skema~~',
+	'UI:Schema:TitleForClass' => '%1$s skema',
 	'UI:Schema:CategoryMenuItem' => 'Kategori <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relationer',
 	'UI:Schema:AbstractClass' => 'Abstrakt klasse: intet objekt fra denne klasse kan instantieres.',
@@ -849,8 +849,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:SearchResultsTitle' => 'Søge Resultater',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => 'Intet at søge efter',
-	'UI:Search:NeedleTooShort' => 'The search string \\"%1$s\\" is too short. Please type at least %2$d characters.~~',
-	'UI:Search:Ongoing' => 'Searching for \\"%1$s\\"~~',
+	'UI:Search:NeedleTooShort' => 'The search string "%1$s" is too short. Please type at least %2$d characters.~~',
+	'UI:Search:Ongoing' => 'Searching for "%1$s"~~',
 	'UI:Search:Enlarge' => 'Broaden the search~~',
 	'UI:FullTextSearchTitle_Text' => 'Resultater for "%1$s":',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d objekt(er) af klasse %2$s fundet.',
@@ -858,7 +858,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ModificationPageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s ændring',
 	'UI:ModificationTitle_Class_Object' => 'Ændring af %1$s: <span class=\\"hilite\\">%2$s</span>',
 	'UI:ClonePageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - Clone %1$s - %2$s ændring',
-	'UI:CloneTitle_Class_Object' => 'Clone af %1$s: <span class=\\"hilite\\">%2$s</span>~~',
+	'UI:CloneTitle_Class_Object' => 'Clone af %1$s: <span class=\\"hilite\\">%2$s</span>',
 	'UI:CreationPageTitle_Class' => ITOP_APPLICATION_SHORT.' - Oprettelse af ny %1$s ',
 	'UI:CreationTitle_Class' => 'Oprettelse af ny %1$s',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Vælg type af %1$s for oprettelse:',
@@ -969,7 +969,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 
 	'Menu:NotificationsMenu' => 'Notifikationer',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuration of the Notifications~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Konfiguration af Notifikationer~~',
+	'UI:NotificationsMenu:Title' => 'Konfiguration af Notifikationer',
 	'UI:NotificationsMenu:Help' => 'Hjælp',
 	'UI:NotificationsMenu:HelpContent' => '<p>I '.ITOP_APPLICATION_SHORT.' er notifikationer fuldt modificerbare. De er baseret på to sæt af objekter: <i>triggers og handlinger</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of '.ITOP_APPLICATION_SHORT.' core, but others can be brought by extensions:
@@ -988,7 +988,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 </ol>
 </p>
 <p>For udførelse, handlinger skal være knyttet til triggers.
-Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge" nummer, der specificerer i hvilken rækkefølge handlingerne udføres.</p>~~',
+Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge" nummer, der specificerer i hvilken rækkefølge handlingerne udføres.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Triggers',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Tilgængelige triggers',
 	'UI:NotificationsMenu:OnCreate' => 'Når et objekt oprettes',
@@ -1041,8 +1041,8 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => 'Egenskaber',
 
-	'UI:OpenDocumentInNewWindow_' => 'Åben~~',
-	'UI:DownloadDocument_' => 'Hent~~',
+	'UI:OpenDocumentInNewWindow_' => 'Åben',
+	'UI:DownloadDocument_' => 'Hent',
 	'UI:Document:NoPreview' => 'Forhåndsvisning er ikke tilgængelig for denne dokumenttype',
 	'UI:Download-CSV' => 'Download %1$s',
 
@@ -1164,10 +1164,10 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Favorit Organisationer',
 	'UI:FavoriteOrganizations+' => '',
-	'UI:FavoriteLanguage' => 'Sprog i brugergrænseflade~~',
+	'UI:FavoriteLanguage' => 'Sprog i brugergrænseflade',
 	'UI:Favorites:SelectYourLanguage' => 'Vælg dit foretrukne sprog',
 	'UI:FavoriteOtherSettings' => 'Andre indstillinger',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Default længde for lister:  %1$s emner per side~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Default længde for lister:  %1$s emner per side',
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data~~',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => 'Enhver ændring vil blive kasseret.',

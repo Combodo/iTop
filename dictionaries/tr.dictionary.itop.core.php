@@ -152,7 +152,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Date format:<br/>
-	<b>%1$ss</b><br/>
+	<b>%1$s</b><br/>
 	Example: %2$s
 </p>
 <p>
@@ -163,7 +163,7 @@ Operators:<br/>
 </p>
 <p>
 If the time is omitted, it defaults to 00:00:00
-</p>~~',
+</p>',
 
 	'Core:AttributeDate' => 'Tarih',
 	'Core:AttributeDate+' => 'Tarih (yıl-ay-gün)',
@@ -214,7 +214,7 @@ Operators:<br/>
 	'Core:FriendlyName-Description' => 'Yaygın Adı',
 
 	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => 'Tags~~',
+	'Core:AttributeTag+' => '',
 
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
@@ -534,12 +534,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Test alıcısı',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Durumu "Test" olması durumundaki alıcı',
-	'Class:ActionEmail/Attribute:from' => 'Kimden~~',
-	'Class:ActionEmail/Attribute:from+' => 'e-posta başlığında gönderilecek~~',
+	'Class:ActionEmail/Attribute:from' => 'Kimden',
+	'Class:ActionEmail/Attribute:from+' => 'e-posta başlığında gönderilecek',
 	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
 	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
-	'Class:ActionEmail/Attribute:reply_to' => 'Yanıtla~~',
-	'Class:ActionEmail/Attribute:reply_to+' => 'e-posta başlığında gönderilecek~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Yanıtla',
+	'Class:ActionEmail/Attribute:reply_to+' => 'e-posta başlığında gönderilecek',
 	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
 	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => 'Kime',
@@ -792,7 +792,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:SynchroReplica:PrivateDetails' => 'Özel detaylar',
 	'Core:SynchroReplica:BackToDataSource' => 'Synchro veri kaynağına geri dön: %1$s',
 	'Core:SynchroReplica:ListOfReplicas' => 'Replika listesi',
-	'Core:SynchroAttExtKey:ReconciliationById' => 'id (birincil anahtar)~~',
+	'Core:SynchroAttExtKey:ReconciliationById' => 'id (birincil anahtar)',
 	'Core:SynchroAtt:attcode' => 'Öznitelik',
 	'Core:SynchroAtt:attcode+' => 'Nesnenin alanı',
 	'Core:SynchroAtt:reconciliation' => 'Uzlaşma ?',
@@ -817,7 +817,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:SyncTooManyMissingReplicas' => 'Tüm kayıtlar bir süredir dokunulmamıştır (tüm nesneler silinebilir). Lütfen senkronizasyon tablosuna yazan işlemin hala çalıştığını kontrol edin. İşlem iptal edildi.',
 	'Core:SyncSplitModeCLIOnly' => 'Senkronizasyon parçalı olarak, yalnızca Mode CLI \'de çalıştırıldığında yapılabilir',
 	'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s Replika,%2$s Hata (lar),%3$s Uyarı (lar).',
-	'Core:SynchroReplica:TargetObject' => 'Senkronize Nesne: %1$s~~',
+	'Core:SynchroReplica:TargetObject' => 'Senkronize Nesne: %1$s',
 	'Class:AsyncSendEmail' => 'E-posta (Asenkron)',
 	'Class:AsyncSendEmail/Attribute:to' => 'Kime',
 	'Class:AsyncSendEmail/Attribute:subject' => 'Konu',
@@ -1017,7 +1017,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters, starting with a letter.~~',
 	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',

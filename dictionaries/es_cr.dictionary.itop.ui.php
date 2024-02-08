@@ -1053,8 +1053,8 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:iTopVersion:Long' => '%1$s versión %2$s-%3$s compilada en %4$s',
 	'UI:PropertiesTab' => 'Propiedades',
 
-	'UI:OpenDocumentInNewWindow_' => 'Abrir~~',
-	'UI:DownloadDocument_' => 'Descargar~~',
+	'UI:OpenDocumentInNewWindow_' => 'Abrir',
+	'UI:DownloadDocument_' => 'Descargar',
 	'UI:Document:NoPreview' => 'No hay prevista disponible para este tipo de archivo',
 	'UI:Download-CSV' => 'Descargar %1$s',
 
