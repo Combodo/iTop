@@ -103,7 +103,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:FunctionalCI/Attribute:org_id+' => '',
 	'Class:FunctionalCI/Attribute:organization_name' => 'Organization name~~',
 	'Class:FunctionalCI/Attribute:organization_name+' => 'Common name~~',
-	'Class:FunctionalCI/Attribute:business_criticity' => 'Business criticity~~',
+	'Class:FunctionalCI/Attribute:business_criticity' => 'Business criticality~~',
 	'Class:FunctionalCI/Attribute:business_criticity+' => '~~',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high' => 'high~~',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => 'high~~',
@@ -261,7 +261,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:DatacenterDevice/Attribute:enclosure_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:nb_u' => 'Rack units~~',
 	'Class:DatacenterDevice/Attribute:nb_u+' => '~~',
-	'Class:DatacenterDevice/Attribute:managementip' => 'Management ip~~',
+	'Class:DatacenterDevice/Attribute:managementip' => 'Management IP~~',
 	'Class:DatacenterDevice/Attribute:managementip+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerA_id' => 'PowerA source~~',
 	'Class:DatacenterDevice/Attribute:powerA_id+' => '~~',
@@ -318,9 +318,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Server/Attribute:osversion_id+' => '~~',
 	'Class:Server/Attribute:osversion_name' => 'OS version name~~',
 	'Class:Server/Attribute:osversion_name+' => '~~',
-	'Class:Server/Attribute:oslicence_id' => 'OS licence~~',
+	'Class:Server/Attribute:oslicence_id' => 'OS license~~',
 	'Class:Server/Attribute:oslicence_id+' => '~~',
-	'Class:Server/Attribute:oslicence_name' => 'OS licence name~~',
+	'Class:Server/Attribute:oslicence_name' => 'OS license name~~',
 	'Class:Server/Attribute:oslicence_name+' => '~~',
 	'Class:Server/Attribute:cpu' => 'CPU',
 	'Class:Server/Attribute:cpu+' => '',
@@ -528,9 +528,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SoftwareInstance/Attribute:software_id+' => '~~',
 	'Class:SoftwareInstance/Attribute:software_name' => 'Software',
 	'Class:SoftwareInstance/Attribute:software_name+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Software licence~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Software license~~',
 	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '~~',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Software licence name~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Software license name~~',
 	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '~~',
 	'Class:SoftwareInstance/Attribute:path' => 'Path~~',
 	'Class:SoftwareInstance/Attribute:path+' => '~~',
@@ -718,9 +718,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
 	'Class:VirtualMachine/Attribute:osversion_name' => 'OS version name~~',
 	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
-	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS licence~~',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS license~~',
 	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
-	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS licence name~~',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS license name~~',
 	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
 	'Class:VirtualMachine/Attribute:cpu' => 'CPU~~',
 	'Class:VirtualMachine/Attribute:cpu+' => '~~',
@@ -867,7 +867,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Software+' => '',
 	'Class:Software/Attribute:name' => 'Nome',
 	'Class:Software/Attribute:name+' => '',
-	'Class:Software/Attribute:vendor' => 'vendor~~',
+	'Class:Software/Attribute:vendor' => 'Vendor~~',
 	'Class:Software/Attribute:vendor+' => '~~',
 	'Class:Software/Attribute:version' => 'Version~~',
 	'Class:Software/Attribute:version+' => '~~',
@@ -889,8 +889,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Software/Attribute:softwareinstance_list+' => 'All the software instances for this software~~',
 	'Class:Software/Attribute:softwarepatch_list' => 'Software Patches~~',
 	'Class:Software/Attribute:softwarepatch_list+' => 'All the patchs for this software~~',
-	'Class:Software/Attribute:softwarelicence_list' => 'Software Licences~~',
-	'Class:Software/Attribute:softwarelicence_list+' => 'All the licences for this software~~',
+	'Class:Software/Attribute:softwarelicence_list' => 'Software Licenses~~',
+	'Class:Software/Attribute:softwarelicence_list+' => 'All the licenses for this software~~',
 ));
 
 //
@@ -906,7 +906,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Patch/Attribute:documents_list+' => 'All the documents linked to this patch~~',
 	'Class:Patch/Attribute:description' => 'Descrizione',
 	'Class:Patch/Attribute:description+' => '',
-	'Class:Patch/Attribute:finalclass' => 'Type~~',
+	'Class:Patch/Attribute:finalclass' => 'Patch sub-class~~',
 	'Class:Patch/Attribute:finalclass+' => 'Name of the final class~~',
 ));
 
@@ -941,7 +941,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 ));
 
 //
-// Class: Licence
+// Class: License
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
@@ -950,7 +950,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Licence/Attribute:name' => 'Nome',
 	'Class:Licence/Attribute:name+' => '',
 	'Class:Licence/Attribute:documents_list' => 'Documents~~',
-	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this licence~~',
+	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this license~~',
 	'Class:Licence/Attribute:org_id' => 'Proprietario',
 	'Class:Licence/Attribute:org_id+' => '',
 	'Class:Licence/Attribute:organization_name' => 'Organization name~~',
@@ -971,7 +971,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Licence/Attribute:perpetual/Value:no+' => 'no~~',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'yes~~',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'yes~~',
-	'Class:Licence/Attribute:finalclass' => 'Type~~',
+	'Class:Licence/Attribute:finalclass' => 'License sub-class~~',
 	'Class:Licence/Attribute:finalclass+' => 'Name of the final class~~',
 ));
 
@@ -980,16 +980,16 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:OSLicence' => 'OS Licence~~',
+	'Class:OSLicence' => 'OS License~~',
 	'Class:OSLicence+' => '~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS version~~',
 	'Class:OSLicence/Attribute:osversion_id+' => '~~',
 	'Class:OSLicence/Attribute:osversion_name' => 'OS version name~~',
 	'Class:OSLicence/Attribute:osversion_name+' => '~~',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtual machines~~',
-	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this licence is used~~',
-	'Class:OSLicence/Attribute:servers_list' => 'servers~~',
-	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this licence is used~~',
+	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this license is used~~',
+	'Class:OSLicence/Attribute:servers_list' => 'Servers~~',
+	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this license is used~~',
 ));
 
 //
@@ -997,14 +997,14 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:SoftwareLicence' => 'Software Licence~~',
+	'Class:SoftwareLicence' => 'Software License~~',
 	'Class:SoftwareLicence+' => '~~',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Software~~',
 	'Class:SoftwareLicence/Attribute:software_id+' => '~~',
 	'Class:SoftwareLicence/Attribute:software_name' => 'Software name~~',
 	'Class:SoftwareLicence/Attribute:software_name+' => '~~',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Software instances~~',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this licence is used~~',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this license is used~~',
 ));
 
 //
@@ -1012,11 +1012,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:lnkDocumentToLicence' => 'Link Document / Licence~~',
+	'Class:lnkDocumentToLicence' => 'Link Document / License~~',
 	'Class:lnkDocumentToLicence+' => '~~',
-	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence~~',
+	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'License~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '~~',
-	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Licence name~~',
+	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'License name~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Document~~',
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '~~',
@@ -1278,7 +1278,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:NetworkInterface+' => '',
 	'Class:NetworkInterface/Attribute:name' => 'Name~~',
 	'Class:NetworkInterface/Attribute:name+' => '~~',
-	'Class:NetworkInterface/Attribute:finalclass' => 'Type~~',
+	'Class:NetworkInterface/Attribute:finalclass' => 'NetworkInterface sub-class~~',
 	'Class:NetworkInterface/Attribute:finalclass+' => 'Name of the final class~~',
 ));
 

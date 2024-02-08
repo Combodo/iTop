@@ -10,8 +10,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', [
 	'Menu:CreateMailbox' => 'Create a mailbox...~~',
 	'Menu:OAuthClient' => 'OAuth Client~~',
 	'Menu:OAuthClient+' => '~~',
-	'Menu:GenerateTokens' => 'Generate access tokens...~~',
-	'Menu:RegenerateTokens' => 'Regenerate access tokens...~~',
+	'Menu:GenerateTokens' => 'Generate access token...~~',
+	'Menu:RegenerateTokens' => 'Regenerate access token...~~',
 
 	'itop-oauth-client/Operation:CreateMailBox/Title' => 'Mailbox creation~~',
 

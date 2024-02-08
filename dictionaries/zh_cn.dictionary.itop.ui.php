@@ -76,7 +76,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Query/Attribute:is_template/Value:yes' => '是',
 	'Class:Query/Attribute:is_template/Value:no' => '否',
 	'Class:QueryOQL/Attribute:fields' => '区域',
-	'Class:QueryOQL/Attribute:fields+' => '属性之间使用逗号分隔 (or alias.attribute) to export~~',
+	'Class:QueryOQL/Attribute:fields+' => '属性之间使用逗号分隔 (or alias.attribute) to export',
 	'Class:QueryOQL' => 'OQL 查询',
 	'Class:QueryOQL+' => 'A query based on the Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => '表达式',
@@ -1004,7 +1004,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 </ol>
 </p>
 <p>若要执行, 操作必须和触发器相关联.
-当与一个触发器关联时, 每个操作都被赋予一个顺序号, 规定了按什么样的顺序执行这些操作.</p>~~',
+当与一个触发器关联时, 每个操作都被赋予一个顺序号, 规定了按什么样的顺序执行这些操作.</p>',
 	'UI:NotificationsMenu:Triggers' => '触发器',
 	'UI:NotificationsMenu:AvailableTriggers' => '可用的触发器',
 	'UI:NotificationsMenu:OnCreate' => '当对象被创建',
@@ -1183,7 +1183,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:FavoriteLanguage' => '语言',
 	'UI:Favorites:SelectYourLanguage' => '选择语言',
 	'UI:FavoriteOtherSettings' => '其他设置',
-	'UI:Favorites:Default_X_ItemsPerPage' => '默认列表: 每页 %1$s 个项目~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => '默认列表: 每页 %1$s 个项目',
 	'UI:Favorites:ShowObsoleteData' => '显示废弃的数据',
 	'UI:Favorites:ShowObsoleteData+' => '在搜索结果中显示已废弃的数据',
 	'UI:NavigateAwayConfirmationMessage' => '所有修改都将丢失.',
@@ -1671,9 +1671,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:UniversalSearchMenu+'   => '搜索所有...',
 	'Menu:UserManagementMenu'     => '用户管理',
 	'Menu:UserManagementMenu+'    => '用户管理',
-	'Menu:ProfilesMenu'           => '角色~~',
-	'Menu:ProfilesMenu+'          => '角色~~',
-	'Menu:ProfilesMenu:Title'     => '角色~~',
 	'Menu:UserAccountsMenu'       => '用户帐户',
 	'Menu:UserAccountsMenu+'      => '用户帐户',
 	'Menu:UserAccountsMenu:Title' => '用户帐户',

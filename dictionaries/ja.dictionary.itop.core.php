@@ -204,7 +204,7 @@ Operators:<br/>
 	'Core:FriendlyName-Description' => 'Friendly name',
 
 	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => 'Tags~~',
+	'Core:AttributeTag+' => '',
 
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
@@ -524,12 +524,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'テストレシピ',
 	'Class:ActionEmail/Attribute:test_recipient+' => '状態がテストの場合の宛先',
-	'Class:ActionEmail/Attribute:from' => 'From~~',
-	'Class:ActionEmail/Attribute:from+' => '電子メールのヘッダーに挿入されます~~',
+	'Class:ActionEmail/Attribute:from' => 'From (email)~~',
+	'Class:ActionEmail/Attribute:from+' => '電子メールのヘッダーに挿入されます',
 	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
 	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
-	'Class:ActionEmail/Attribute:reply_to' => 'Reply to~~',
-	'Class:ActionEmail/Attribute:reply_to+' => '電子メールのヘッダーに挿入されます~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Reply to (email)~~',
+	'Class:ActionEmail/Attribute:reply_to+' => '電子メールのヘッダーに挿入されます',
 	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
 	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => 'To',
@@ -581,7 +581,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
 	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
-	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \\"%1$s\\"~~',
+	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class "%1$s"~~',
 ));
 
 //
@@ -910,13 +910,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$s日 %2$d時 %3$d分 %4$d秒',
 
 	// Explain working time computing
-	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \\"%1$s\\")~~',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \\"%1$s\\"~~',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \\"%1$s\\" at %2$d%%~~',
+	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as "%1$s")~~',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for "%1$s"~~',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for "%1$s" at %2$d%%~~',
 
 	// Bulk export
-	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \\"%1$s\\"~~',
-	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \\"query\\". There is no Query Phrasebook corresponding to the id: \\"%1$s\\".~~',
+	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter "%1$s"~~',
+	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter "query". There is no Query Phrasebook corresponding to the id: "%1$s".~~',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
 	'Core:BulkExportOf_Class' => '%1$s Export~~',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
@@ -1000,14 +1000,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
 	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
 	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:description+' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters, starting with a letter.~~',
 	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',

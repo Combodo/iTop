@@ -25,7 +25,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
     'itop-core-update:UI:SelectUpdateFile' => '应用升级',
     'itop-core-update:UI:ConfirmUpdate' => ' 升级',
     'itop-core-update:UI:UpdateCoreFiles' => '应用升级',
-	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance, no user can access the application. You have to run a setup or restore the application archive to return in normal mode.~~',
+	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance in read-only mode. You have to run a setup to return in normal mode.~~',
 	'itop-core-update:UI:UpdateDone' => '应用升级',
 
 	'itop-core-update/Operation:SelectUpdateFile/Title' => '应用升级',

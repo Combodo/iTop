@@ -52,7 +52,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Attachment/Attribute:item_class+' => '~~',
 	'Class:Attachment/Attribute:item_id' => '项目',
 	'Class:Attachment/Attribute:item_id+' => '~~',
-	'Class:Attachment/Attribute:item_org_id' => 'Item 组织~~',
+	'Class:Attachment/Attribute:item_org_id' => 'Item 组织',
 	'Class:Attachment/Attribute:item_org_id+' => '',
 	'Class:Attachment/Attribute:contents' => '内容',
 	'Class:Attachment/Attribute:contents+' => '',

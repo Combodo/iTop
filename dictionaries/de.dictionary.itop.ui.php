@@ -364,7 +364,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 <div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
 We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
 
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Offene Requests: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'An mich gestellte Benutzeranfragen',
 	'UI:WelcomeMenu:OpenIncidents' => 'Offene Incidents: %1$d',

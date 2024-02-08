@@ -1002,9 +1002,9 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:TagSetFieldData/Attribute:label+' => 'Wyświetlana etykieta',
 	'Class:TagSetFieldData/Attribute:description' => 'Opis',
 	'Class:TagSetFieldData/Attribute:description+' => '',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Klasa Tagu~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Klasa obiektu~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Kod pola~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Klasa Tagu',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Klasa obiektu',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Kod pola',
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Nie można usunąć używanych tagów',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Kody tagów lub etykiety muszą być unikalne',
