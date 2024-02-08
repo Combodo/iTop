@@ -19,8 +19,10 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 
 /**
- * Wrapper to load dictionnary files without altering the main dictionnary
+ * Wrapper to load dictionary files without altering the main dictionary
  * Eval will be called within the current namespace (this is done by adding a "namespace" statement)
+ *
+ * @since 3.0.4 3.1.1 3.2.0 Optimize PHPUnit tests process time
  */
 class Dict
 {
@@ -28,6 +30,7 @@ class Dict
 	{
 	}
 }
+
 /**
  * For tests on compiled dict files, see {@see CompiledDictionariesConsistencyTest}
  * @group beforeSetup
