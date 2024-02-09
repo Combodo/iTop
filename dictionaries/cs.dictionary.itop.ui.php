@@ -317,16 +317,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:UserDashboard/Attribute:contents+' => '~~',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1640,37 +1630,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:DataSources' => 'Zdroje dat pro synchronizaci',
 	'Menu:DataSources+' => 'Všechny zdroje dat pro synchronizaci',
-	'Menu:WelcomeMenu' => 'Vítejte',
-	'Menu:WelcomeMenu+' => 'Vítejte v '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => 'Vítejte',
-	'Menu:WelcomeMenuPage+' => 'Vítejte v '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => 'Administrace',
-	'Menu:AdminTools+' => 'Nástroje pro administraci',
-	'Menu:AdminTools?' => 'Nástroje přístupné pouze uživatelům, kteří mají potřbná oprávnění',
-	'Menu:DataModelMenu' => 'Datový model',
-	'Menu:DataModelMenu+' => 'Přehled datového modelu',
-	'Menu:ExportMenu' => 'Exportovat',
-	'Menu:ExportMenu+' => 'Exportovat výsledky jakéhokoli dotazu do HTML, CSV nebo XML',
-	'Menu:NotificationsMenu' => 'Upozornění',
-	'Menu:NotificationsMenu+' => 'Konfigurace upozornění',
-	'Menu:AuditCategories' => 'Kategorie auditu',
-	'Menu:AuditCategories+' => 'Kategorie auditu',
-	'Menu:Notifications:Title' => 'Kategorie auditu',
-	'Menu:RunQueriesMenu'         => 'Provést dotaz',
-	'Menu:RunQueriesMenu+'        => 'Provést dotaz',
-	'Menu:QueryMenu'              => 'Knihovna dotazů',
-	'Menu:QueryMenu+'             => 'Knihovna dotazů',
-	'Menu:UniversalSearchMenu'    => 'Univerzální hledání',
-	'Menu:UniversalSearchMenu+'   => 'Hledejte cokoli...',
-	'Menu:UserManagementMenu'     => 'Správa uživatelů',
-	'Menu:UserManagementMenu+'    => 'Správa uživatelů',
-	'Menu:ProfilesMenu'           => 'Profily (Role)',
-	'Menu:ProfilesMenu+'          => 'Profily (Role)',
-	'Menu:ProfilesMenu:Title'     => 'Profily (Role)',
-	'Menu:UserAccountsMenu'       => 'Uživatelské účty',
-	'Menu:UserAccountsMenu+'      => 'Uživatelské účty',
-	'Menu:UserAccountsMenu:Title' => 'Uživatelské účty',
-	'Menu:MyShortcuts'            => 'Mé odkazy',
 	'Menu:UserManagement'         => 'User Management~~',
 	'Menu:Queries'                => 'Queries~~',
 	'Menu:ConfigurationTools'     => 'Configuration~~',

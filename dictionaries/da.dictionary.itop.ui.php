@@ -306,16 +306,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:UserDashboard/Attribute:contents+' => '~~',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1631,37 +1621,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:DataSources' => 'Synkroniserings Data Kilder',
 	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
-	'Menu:WelcomeMenu' => 'Velkomen',
-	'Menu:WelcomeMenu+' => 'Velkommen til '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => 'Velkomen',
-	'Menu:WelcomeMenuPage+' => 'Velkommen til '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => 'Admin værktøjer',
-	'Menu:AdminTools+' => 'Administration tools~~',
-	'Menu:AdminTools?' => 'Værktøjer kun tilgængelige for brugere med administrator profil',
-	'Menu:DataModelMenu' => 'Data Model~~',
-	'Menu:DataModelMenu+' => 'Overview of the Data Model~~',
-	'Menu:ExportMenu' => 'Export~~',
-	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML~~',
-	'Menu:NotificationsMenu' => 'Notifikationer',
-	'Menu:NotificationsMenu+' => 'Configuration of the Notifications~~',
-	'Menu:AuditCategories' => 'Audit Kategorier',
-	'Menu:AuditCategories+' => 'Audit Categories~~',
-	'Menu:Notifications:Title' => 'Audit Kategorier',
-	'Menu:RunQueriesMenu'         => 'Kør forespørgsler',
-	'Menu:RunQueriesMenu+'        => 'Run any query~~',
-	'Menu:QueryMenu'              => 'Query parlør',
-	'Menu:QueryMenu+'             => 'Query phrasebook~~',
-	'Menu:UniversalSearchMenu'    => 'Universal Søgning',
-	'Menu:UniversalSearchMenu+'   => 'Search for anything...~~',
-	'Menu:UserManagementMenu'     => 'Bruger styring',
-	'Menu:UserManagementMenu+'    => 'User management~~',
-	'Menu:ProfilesMenu'           => 'Profiler',
-	'Menu:ProfilesMenu+'          => 'Profiles~~',
-	'Menu:ProfilesMenu:Title'     => 'Profiler',
-	'Menu:UserAccountsMenu'       => 'Bruger konti',
-	'Menu:UserAccountsMenu+'      => 'User Accounts~~',
-	'Menu:UserAccountsMenu:Title' => 'Bruger konti',
-	'Menu:MyShortcuts'            => 'Mine Genveje',
 	'Menu:UserManagement'         => 'User Management~~',
 	'Menu:Queries'                => 'Queries~~',
 	'Menu:ConfigurationTools'     => 'Configuration~~',

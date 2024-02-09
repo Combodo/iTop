@@ -318,16 +318,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 't',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'r',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1641,37 +1631,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Menu:DataSources' => 'Źródła danych synchronizacji',
 	'Menu:DataSources+' => 'Wszystkie źródła danych synchronizacji',
-	'Menu:WelcomeMenu' => 'Witaj',
-	'Menu:WelcomeMenu+' => 'Witaj w '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => 'Witaj',
-	'Menu:WelcomeMenuPage+' => 'Witaj w '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => 'Administracja',
-	'Menu:AdminTools+' => 'Narzędzia administracyjne',
-	'Menu:AdminTools?' => 'Narzędzia dostępne tylko dla użytkowników posiadających profil administratora',
-	'Menu:DataModelMenu' => 'Model danych',
-	'Menu:DataModelMenu+' => 'Omówienie modelu danych',
-	'Menu:ExportMenu' => 'Eksport',
-	'Menu:ExportMenu+' => 'Eksportuj wyniki dowolnego zapytania w formacie HTML, CSV lub XML',
-	'Menu:NotificationsMenu' => 'Powiadomienia',
-	'Menu:NotificationsMenu+' => 'Konfiguracja powiadomień',
-	'Menu:AuditCategories' => 'Kategorie audytu',
-	'Menu:AuditCategories+' => 'Kategorie audytu',
-	'Menu:Notifications:Title' => 'Kategorie audytu',
-	'Menu:RunQueriesMenu'         => 'Zapytania',
-	'Menu:RunQueriesMenu+'        => 'Uruchom dowolne zapytanie',
-	'Menu:QueryMenu'              => 'Słownik zapytań',
-	'Menu:QueryMenu+'             => 'Słownik zapytań',
-	'Menu:UniversalSearchMenu'    => 'Wyszukiwanie uniwersalne',
-	'Menu:UniversalSearchMenu+'   => 'Wyszukiwanie wszystkiego...',
-	'Menu:UserManagementMenu'     => 'Zarządzanie użytkownikami',
-	'Menu:UserManagementMenu+'    => 'UZarządzanie użytkownikami',
-	'Menu:ProfilesMenu'           => 'Profile',
-	'Menu:ProfilesMenu+'          => 'Profile',
-	'Menu:ProfilesMenu:Title'     => 'Profile',
-	'Menu:UserAccountsMenu'       => 'Konta użytkowników',
-	'Menu:UserAccountsMenu+'      => 'Konta użytkowników',
-	'Menu:UserAccountsMenu:Title' => 'Konta użytkowników',
-	'Menu:MyShortcuts'            => 'Moje skróty',
 	'Menu:UserManagement'         => 'Zarządzanie użytkownikami',
 	'Menu:Queries'                => 'Zapytania',
 	'Menu:ConfigurationTools'     => 'Konfiguracja',

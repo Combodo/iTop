@@ -317,16 +317,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'j',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1645,37 +1635,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:DataSources' => 'Synchronisatie-databronnen',
 	'Menu:DataSources+' => 'Alle Synchronisatie-databronnen',
-	'Menu:WelcomeMenu' => 'Welkom',
-	'Menu:WelcomeMenu+' => 'Welkom in '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => 'Welkom',
-	'Menu:WelcomeMenuPage+' => 'Welkom in '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => 'Admintools',
-	'Menu:AdminTools+' => 'Beheertools',
-	'Menu:AdminTools?' => 'Tools die enkel toegankelijk zijn voor gebruikers met een administratorprofiel.',
-	'Menu:DataModelMenu' => 'Datamodel',
-	'Menu:DataModelMenu+' => 'Overzicht van het datamodel',
-	'Menu:ExportMenu' => 'Export',
-	'Menu:ExportMenu+' => 'Exporteer de resultaten van query\'s als HTML, CSV of XML',
-	'Menu:NotificationsMenu' => 'Meldingen',
-	'Menu:NotificationsMenu+' => 'Configuratie van de meldingen',
-	'Menu:AuditCategories' => 'Auditcategorieën',
-	'Menu:AuditCategories+' => 'Auditcategorieën',
-	'Menu:Notifications:Title' => 'Auditcategorieën',
-	'Menu:RunQueriesMenu'         => 'Query\'s uitvoeren',
-	'Menu:RunQueriesMenu+'        => 'Voer een query uit',
-	'Menu:QueryMenu'              => 'Voorgedefinieerde query\'s',
-	'Menu:QueryMenu+'             => 'Voorgedefinieerde query\'s',
-	'Menu:UniversalSearchMenu'    => 'Globale zoekopdracht',
-	'Menu:UniversalSearchMenu+'   => 'Zoek in alle data...',
-	'Menu:UserManagementMenu'     => 'Gebruikersbeheer',
-	'Menu:UserManagementMenu+'    => 'Gebruikersbeheer',
-	'Menu:ProfilesMenu'           => 'Profielen',
-	'Menu:ProfilesMenu+'          => 'Profielen',
-	'Menu:ProfilesMenu:Title'     => 'Profielen',
-	'Menu:UserAccountsMenu'       => 'Gebruikersaccounts',
-	'Menu:UserAccountsMenu+'      => 'Gebruikersaccounts',
-	'Menu:UserAccountsMenu:Title' => 'Gebruikersaccounts',
-	'Menu:MyShortcuts'            => 'Mijn snelkoppelingen',
 	'Menu:UserManagement'         => 'Gebruikersbeheer',
 	'Menu:Queries'                => 'Query\'s',
 	'Menu:ConfigurationTools'     => 'Configuratie',

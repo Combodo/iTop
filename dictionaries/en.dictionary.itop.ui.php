@@ -322,16 +322,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('EN US', 'English', 'English', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'y',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1649,37 +1639,6 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Menu:DataSources' => 'Synchronization Data Sources',
 	'Menu:DataSources+' => 'All Synchronization Data Sources',
-	'Menu:WelcomeMenu' => 'Welcome',
-	'Menu:WelcomeMenu+' => 'Welcome to '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => 'Welcome',
-	'Menu:WelcomeMenuPage+' => 'Welcome to '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => 'Administration',
-	'Menu:AdminTools+' => 'Administration tools',
-	'Menu:AdminTools?' => 'Tools accessible only to users having the administrator profile',
-	'Menu:DataModelMenu' => 'Data Model',
-	'Menu:DataModelMenu+' => 'Overview of the Data Model',
-	'Menu:ExportMenu' => 'Export',
-	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML',
-	'Menu:NotificationsMenu' => 'Notifications',
-	'Menu:NotificationsMenu+' => 'Configuration of the Notifications',
-	'Menu:AuditCategories' => 'Audit Categories',
-	'Menu:AuditCategories+' => 'Audit Categories',
-	'Menu:Notifications:Title' => 'Audit Categories',
-	'Menu:RunQueriesMenu' => 'Run Queries',
-	'Menu:RunQueriesMenu+' => 'Run any query',
-	'Menu:QueryMenu' => 'Query phrasebook',
-	'Menu:QueryMenu+' => 'Query phrasebook',
-	'Menu:UniversalSearchMenu' => 'Universal Search',
-	'Menu:UniversalSearchMenu+' => 'Search for anything...',
-	'Menu:UserManagementMenu' => 'User Management',
-	'Menu:UserManagementMenu+' => 'User management',
-	'Menu:ProfilesMenu' => 'Profiles',
-	'Menu:ProfilesMenu+' => 'Profiles',
-	'Menu:ProfilesMenu:Title' => 'Profiles',
-	'Menu:UserAccountsMenu' => 'User Accounts',
-	'Menu:UserAccountsMenu+' => 'User Accounts',
-	'Menu:UserAccountsMenu:Title' => 'User Accounts',
-	'Menu:MyShortcuts' => 'My Shortcuts',
 	'Menu:UserManagement' => 'User Management',
 	'Menu:Queries' => 'Queries',
 	'Menu:ConfigurationTools' => 'Configuration',

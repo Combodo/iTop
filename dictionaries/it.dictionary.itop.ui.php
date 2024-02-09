@@ -317,16 +317,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:UserDashboard/Attribute:contents+' => '~~',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1642,37 +1632,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:DataSources' => 'Sorgente di sincronizzazione dei dati',
 	'Menu:DataSources+' => '',
-	'Menu:WelcomeMenu' => 'Benveuto',
-	'Menu:WelcomeMenu+' => '',
-	'Menu:WelcomeMenuPage' => 'Benvenuto',
-	'Menu:WelcomeMenuPage+' => '',
-	'Menu:AdminTools' => 'Strumenti di amministrazione',
-	'Menu:AdminTools+' => '',
-	'Menu:AdminTools?' => 'Strumenti accessibile solo agli utenti con il profilo di amministratore',
-	'Menu:DataModelMenu' => 'Modello Dati',
-	'Menu:DataModelMenu+' => '',
-	'Menu:ExportMenu' => 'Esporta',
-	'Menu:ExportMenu+' => '',
-	'Menu:NotificationsMenu' => 'Notifiche',
-	'Menu:NotificationsMenu+' => '',
-	'Menu:AuditCategories' => 'Categorie di Audit',
-	'Menu:AuditCategories+' => '',
-	'Menu:Notifications:Title' => 'Categorie di Audit',
-	'Menu:RunQueriesMenu'         => 'Esegui query',
-	'Menu:RunQueriesMenu+'        => '',
-	'Menu:QueryMenu'              => 'Rubbrica delle Query',
-	'Menu:QueryMenu+'             => 'Rubbrica delle Query',
-	'Menu:UniversalSearchMenu'    => 'Ricerca universale',
-	'Menu:UniversalSearchMenu+'   => '',
-	'Menu:UserManagementMenu'     => 'Gestione degli utenti',
-	'Menu:UserManagementMenu+'    => '',
-	'Menu:ProfilesMenu'           => 'Profili',
-	'Menu:ProfilesMenu+'          => '',
-	'Menu:ProfilesMenu:Title'     => 'Profili',
-	'Menu:UserAccountsMenu'       => 'Account utente',
-	'Menu:UserAccountsMenu+'      => '',
-	'Menu:UserAccountsMenu:Title' => 'Account utente',
-	'Menu:MyShortcuts'            => 'Le mie scorciatoie',
 	'Menu:UserManagement'         => 'Gestione utenti',
 	'Menu:Queries'                => 'Interrogazioni',
 	'Menu:ConfigurationTools'     => 'configurazione',
