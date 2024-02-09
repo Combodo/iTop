@@ -318,16 +318,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserDashboard/Attribute:contents+' => 'Contenidos',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 's',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'a',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1644,37 +1634,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:DataSources' => 'Fuentes de Datos Sincronizables',
 	'Menu:DataSources+' => 'Fuentes de Datos Sincronizables',
-	'Menu:WelcomeMenu' => 'Bienvenido',
-	'Menu:WelcomeMenu+' => 'Bienvenido a '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => 'Bienvenido',
-	'Menu:WelcomeMenuPage+' => 'Bienvenido a '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => 'Herramientas Administrativas',
-	'Menu:AdminTools+' => 'Herramientas Administrativas',
-	'Menu:AdminTools?' => 'Herramientas accesibles sólo a usuarios con Perfil de administrador',
-	'Menu:DataModelMenu' => 'Modelo de Datos',
-	'Menu:DataModelMenu+' => 'Resumen del Modelo de Datos',
-	'Menu:ExportMenu' => 'Exportar',
-	'Menu:ExportMenu+' => 'Exportar los Resultados de Cualquier Consulta en HTML, CSV o XML',
-	'Menu:NotificationsMenu' => 'Notificaciones',
-	'Menu:NotificationsMenu+' => 'Configuración de las Notificaciones',
-	'Menu:AuditCategories' => 'Auditar Categorías',
-	'Menu:AuditCategories+' => 'Auditar Categorías',
-	'Menu:Notifications:Title' => 'Auditar Categorías',
-	'Menu:RunQueriesMenu'         => 'Ejecutar Consultas',
-	'Menu:RunQueriesMenu+'        => 'Ejecutar Cualquier Consulta',
-	'Menu:QueryMenu'              => 'Libreta de Consultas',
-	'Menu:QueryMenu+'             => 'Libreta de Consultas',
-	'Menu:UniversalSearchMenu'    => 'Búsqueda Universal',
-	'Menu:UniversalSearchMenu+'   => 'Buscar cualquier cosa',
-	'Menu:UserManagementMenu'     => 'Administración de Usuarios',
-	'Menu:UserManagementMenu+'    => 'Administración de Usuarios',
-	'Menu:ProfilesMenu'           => 'Perfiles',
-	'Menu:ProfilesMenu+'          => 'Perfiles',
-	'Menu:ProfilesMenu:Title'     => 'Perfiles',
-	'Menu:UserAccountsMenu'       => 'Cuentas de Usuario',
-	'Menu:UserAccountsMenu+'      => 'Cuentas de Usuario',
-	'Menu:UserAccountsMenu:Title' => 'Cuentas de Usuario',
-	'Menu:MyShortcuts' => 'Mis Accesos Rápidos',
 	'Menu:UserManagement' => 'Administración de usuarios',
 	'Menu:Queries' => 'Consultas',
 	'Menu:ConfigurationTools' => 'Configuración',

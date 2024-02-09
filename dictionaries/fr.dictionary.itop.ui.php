@@ -306,16 +306,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Expression:Unit:Short:DAY' => 'j',
-	'Expression:Unit:Short:WEEK' => 's',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'a',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1630,37 +1620,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:DataSources' => 'Synchronisation',
 	'Menu:DataSources+' => '',
-	'Menu:WelcomeMenu' => 'Bienvenue',
-	'Menu:WelcomeMenu+' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => 'Bienvenue',
-	'Menu:WelcomeMenuPage+' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => 'Administration',
-	'Menu:AdminTools+' => 'Outils d\'administration',
-	'Menu:AdminTools?' => 'Ces outils sont accessibles uniquement aux utilisateurs possédant le profil Administrateur.',
-	'Menu:DataModelMenu' => 'Modèle de Données',
-	'Menu:DataModelMenu+' => 'Résumé du Modèle de Données',
-	'Menu:ExportMenu' => 'Export',
-	'Menu:ExportMenu+' => 'Export des résultats d\'une requête en HTML, CSV ou XML',
-	'Menu:NotificationsMenu' => 'Notifications',
-	'Menu:NotificationsMenu+' => 'Configuration des Notifications',
-	'Menu:AuditCategories' => 'Catégories d\'audit',
-	'Menu:AuditCategories+' => 'Catégories d\'audit',
-	'Menu:Notifications:Title' => 'Catégories d\'audit',
-	'Menu:RunQueriesMenu'         => 'Requêtes OQL',
-	'Menu:RunQueriesMenu+'        => 'Executer une requête OQL',
-	'Menu:QueryMenu'              => 'Livre des requêtes',
-	'Menu:QueryMenu+'             => 'Livre des requêtes',
-	'Menu:UniversalSearchMenu'    => 'Recherche Universelle',
-	'Menu:UniversalSearchMenu+'   => 'Rechercher n\'importe quel objet...',
-	'Menu:UserManagementMenu'     => 'Gestion des Utilisateurs',
-	'Menu:UserManagementMenu+'    => 'Gestion des Utilisateurs',
-	'Menu:ProfilesMenu'           => 'Profils',
-	'Menu:ProfilesMenu+'          => 'Profils',
-	'Menu:ProfilesMenu:Title'     => 'Profils',
-	'Menu:UserAccountsMenu'       => 'Comptes Utilisateurs',
-	'Menu:UserAccountsMenu+'      => 'Comptes Utilisateurs',
-	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs',
-	'Menu:MyShortcuts'            => 'Mes raccourcis',
 	'Menu:UserManagement'         => 'Utilisateurs',
 	'Menu:Queries'                => 'Requêtes',
 	'Menu:ConfigurationTools'     => 'Configuration',

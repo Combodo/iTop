@@ -322,16 +322,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Expression:Unit:Short:DAY' => '日',
-	'Expression:Unit:Short:WEEK' => '周',
-	'Expression:Unit:Short:MONTH' => '月',
-	'Expression:Unit:Short:YEAR' => '年',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1647,34 +1637,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:DataSources' => '同步数据源',
 	'Menu:DataSources+' => '所有同步数据源',
-	'Menu:WelcomeMenu' => '欢迎',
-	'Menu:WelcomeMenu+' => '欢迎使用 '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => '欢迎',
-	'Menu:WelcomeMenuPage+' => '欢迎使用 '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => '管理工具',
-	'Menu:AdminTools+' => '管理工具',
-	'Menu:AdminTools?' => '具有管理员角色的用户才能使用的工具',
-	'Menu:DataModelMenu' => '数据模型',
-	'Menu:DataModelMenu+' => '数据模型概况',
-	'Menu:ExportMenu' => '导出',
-	'Menu:ExportMenu+' => '以HTML, CSV 或XML 格式导出任何查询的结果',
-	'Menu:NotificationsMenu' => '通知',
-	'Menu:NotificationsMenu+' => '配置通知',
-	'Menu:AuditCategories' => '审计类别',
-	'Menu:AuditCategories+' => '审计类别',
-	'Menu:Notifications:Title' => '审计类别',
-	'Menu:RunQueriesMenu'         => '运行查询',
-	'Menu:RunQueriesMenu+'        => '运行任何查询',
-	'Menu:QueryMenu'              => '查询手册',
-	'Menu:QueryMenu+'             => '查询手册',
-	'Menu:UniversalSearchMenu'    => '全局搜索',
-	'Menu:UniversalSearchMenu+'   => '搜索所有...',
-	'Menu:UserManagementMenu'     => '用户管理',
-	'Menu:UserManagementMenu+'    => '用户管理',
-	'Menu:UserAccountsMenu'       => '用户帐户',
-	'Menu:UserAccountsMenu+'      => '用户帐户',
-	'Menu:UserAccountsMenu:Title' => '用户帐户',
-	'Menu:MyShortcuts'            => '我的快捷方式',
 	'Menu:UserManagement'         => '用户管理',
 	'Menu:Queries'                => '查询',
 	'Menu:ConfigurationTools'     => '配置',

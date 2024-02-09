@@ -306,16 +306,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserDashboard/Attribute:contents+' => '~~',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1631,37 +1621,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:DataSources' => '同期データソース',
 	'Menu:DataSources+' => '全ての同期データソース',
-	'Menu:WelcomeMenu' => 'ようこそ',
-	'Menu:WelcomeMenu+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
-	'Menu:WelcomeMenuPage' => 'ようこそ',
-	'Menu:WelcomeMenuPage+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
-	'Menu:AdminTools' => '管理ツール',
-	'Menu:AdminTools+' => '管理ツール',
-	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。',
-	'Menu:DataModelMenu' => 'データモデル',
-	'Menu:DataModelMenu+' => 'データモデル概要',
-	'Menu:ExportMenu' => 'エクスポート',
-	'Menu:ExportMenu+' => '任意のクエリ結果をHTML、CSV、XMLでエクスポートする',
-	'Menu:NotificationsMenu' => '通知',
-	'Menu:NotificationsMenu+' => '通知の設定',
-	'Menu:AuditCategories' => '監査カテゴリ',
-	'Menu:AuditCategories+' => '監査カテゴリ',
-	'Menu:Notifications:Title' => '監査カテゴリ',
-	'Menu:RunQueriesMenu'         => 'クエリ実行',
-	'Menu:RunQueriesMenu+'        => '任意のクエリを実行',
-	'Menu:QueryMenu'              => 'クエリのフレーズブック',
-	'Menu:QueryMenu+'             => 'クエリのフレーズブック',
-	'Menu:UniversalSearchMenu'    => '全検索',
-	'Menu:UniversalSearchMenu+'   => '何か...検索',
-	'Menu:UserManagementMenu'     => 'ユーザ管理',
-	'Menu:UserManagementMenu+'    => 'ユーザ管理',
-	'Menu:ProfilesMenu'           => 'プロフィール',
-	'Menu:ProfilesMenu+'          => 'プロフィール',
-	'Menu:ProfilesMenu:Title'     => 'プロフィール',
-	'Menu:UserAccountsMenu'       => 'ユーザアカウント',
-	'Menu:UserAccountsMenu+'      => 'ユーザアカウント',
-	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント',
-	'Menu:MyShortcuts'            => '私のショートカット',
 	'Menu:UserManagement'         => 'User Management~~',
 	'Menu:Queries'                => 'Queries~~',
 	'Menu:ConfigurationTools'     => 'Configuration~~',

@@ -317,16 +317,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:UserDashboard/Attribute:contents+' => '~~',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1675,37 +1665,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:DataSources' => 'Synchronization Data Sources~~',
 	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
-	'Menu:WelcomeMenu' => 'Hoşgeldiniz',
-	'Menu:WelcomeMenu+' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
-	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz',
-	'Menu:WelcomeMenuPage+' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
-	'Menu:AdminTools' => 'Yönetim Araçları',
-	'Menu:AdminTools+' => 'Yönetim Araçları',
-	'Menu:AdminTools?' => 'Yönetici profiline izin verilen araçlar',
-	'Menu:DataModelMenu' => 'Veri Modeli',
-	'Menu:DataModelMenu+' => 'Veri Modeli Özeti',
-	'Menu:ExportMenu' => 'Dışarı ver',
-	'Menu:ExportMenu+' => 'Sorgu sonucunu HTML, CSV veya XML olarak dışarı aktar',
-	'Menu:NotificationsMenu' => 'Uyarılar',
-	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması',
-	'Menu:AuditCategories' => 'Denetleme Kategorileri',
-	'Menu:AuditCategories+' => 'Denetleme Kategorileri',
-	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
-	'Menu:RunQueriesMenu'         => 'Sorgu çalıştır',
-	'Menu:RunQueriesMenu+'        => 'Sorgu çalıştır',
-	'Menu:QueryMenu'              => 'Query phrasebook~~',
-	'Menu:QueryMenu+'             => 'Query phrasebook~~',
-	'Menu:UniversalSearchMenu'    => 'Genel sorgu',
-	'Menu:UniversalSearchMenu+'   => 'Herhangi bir arama...',
-	'Menu:UserManagementMenu'     => 'Kullanıcı Yönetimi',
-	'Menu:UserManagementMenu+'    => 'Kullanıcı Yönetimi',
-	'Menu:ProfilesMenu'           => 'Profiller',
-	'Menu:ProfilesMenu+'          => 'Profiller',
-	'Menu:ProfilesMenu:Title'     => 'Profiller',
-	'Menu:UserAccountsMenu'       => 'Kullanıcı Hesapları',
-	'Menu:UserAccountsMenu+'      => 'Kullanıcı Hesapları',
-	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
-	'Menu:MyShortcuts'            => 'My Shortcuts~~',
 	'Menu:UserManagement'         => 'User Management~~',
 	'Menu:Queries'                => 'Queries~~',
 	'Menu:ConfigurationTools'     => 'Configuration~~',
@@ -1715,7 +1674,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Toggle:StandardDashboard' => 'Standard~~',
 	'UI:Toggle:CustomDashboard'   => 'Custom~~',
-	'UI:Display_X_ItemsPerPage'   => 'Display %1$s items per page~~',
 	'UI:Dashboard:Edit'           => 'Edit This Page...~~',
 	'UI:Dashboard:Revert'         => 'Revert To Original Version...~~',
 ));

@@ -317,16 +317,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 's',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'a',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1642,37 +1632,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:DataSources' => 'Fontes de dados de sincronização',
 	'Menu:DataSources+' => 'Todas fontes de dados de sincronização',
-	'Menu:WelcomeMenu' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenu+' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage+' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => 'Ferramentas Administrativas',
-	'Menu:AdminTools+' => 'Ferramentas Administrativas',
-	'Menu:AdminTools?' => 'Ferramentas acessíveis apenas para usuários com o perfil do administrador',
-	'Menu:DataModelMenu' => 'Modelo Dados',
-	'Menu:DataModelMenu+' => 'Visão geral do Modelo Dados',
-	'Menu:ExportMenu' => 'Exportar',
-	'Menu:ExportMenu+' => 'Exportar o resultado de qualquer consulta em HTML, CSV ou XML',
-	'Menu:NotificationsMenu' => 'Notificações',
-	'Menu:NotificationsMenu+' => 'Configuração de Notificações',
-	'Menu:AuditCategories' => 'Categoria Auditorias',
-	'Menu:AuditCategories+' => 'Categoria Auditorias',
-	'Menu:Notifications:Title' => 'Categoria Auditorias',
-	'Menu:RunQueriesMenu'         => 'Executar consultas',
-	'Menu:RunQueriesMenu+'        => 'Executar qualquer consulta',
-	'Menu:QueryMenu'              => 'Consulta  definida',
-	'Menu:QueryMenu+'             => 'Consulta  definida',
-	'Menu:UniversalSearchMenu'    => 'Pesquisa Universal',
-	'Menu:UniversalSearchMenu+'   => 'Pesquisar por nada...',
-	'Menu:UserManagementMenu'     => 'Gerenciamento Usuários',
-	'Menu:UserManagementMenu+'    => 'Gerenciamento Usuários',
-	'Menu:ProfilesMenu'           => 'Perfis',
-	'Menu:ProfilesMenu+'          => 'Perfis',
-	'Menu:ProfilesMenu:Title'     => 'Perfis',
-	'Menu:UserAccountsMenu'       => 'Contas usuários',
-	'Menu:UserAccountsMenu+'      => 'Contas usuários',
-	'Menu:UserAccountsMenu:Title' => 'Contas usuários',
-	'Menu:MyShortcuts'            => 'Meus atalhos',
 	'Menu:UserManagement'         => 'Gerenciamento de usuários',
 	'Menu:Queries'                => 'Consultas',
 	'Menu:ConfigurationTools'     => 'Configuração',

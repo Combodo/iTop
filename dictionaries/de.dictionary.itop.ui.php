@@ -306,16 +306,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Expression:Unit:Short:DAY' => 't',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'j',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1630,37 +1620,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:DataSources' => 'Datenquellen für die Synchronisation',
 	'Menu:DataSources+' => 'Alle Datenquellen für die Synchronisation',
-	'Menu:WelcomeMenu' => 'Willkommen',
-	'Menu:WelcomeMenu+' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => 'Willkommen',
-	'Menu:WelcomeMenuPage+' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => 'Admin-Tools',
-	'Menu:AdminTools+' => 'Administrationswerkzeuge',
-	'Menu:AdminTools?' => 'Werkzeuge, die nur für Benutzer mit Adminstratorprofil zugänglich sind',
-	'Menu:DataModelMenu' => 'Datenmodell',
-	'Menu:DataModelMenu+' => 'Übersicht des Datenmodells',
-	'Menu:ExportMenu' => 'Export',
-	'Menu:ExportMenu+' => 'Export einer beliebigen Abfrage in HTML, CSV oder XML',
-	'Menu:NotificationsMenu' => 'Benachrichtigungen',
-	'Menu:NotificationsMenu+' => 'Einstellungen der Benachrichtigungen',
-	'Menu:AuditCategories' => 'Audit-Kategorien',
-	'Menu:AuditCategories+' => 'Audit-Kategorien',
-	'Menu:Notifications:Title' => 'Audit-Kategorien',
-	'Menu:RunQueriesMenu' => 'Abfrage ausführen',
-	'Menu:RunQueriesMenu+' => 'Eine beliebige Abfrage ausführen',
-	'Menu:QueryMenu' => 'Query-Bibliothek',
-	'Menu:QueryMenu+' => '',
-	'Menu:UniversalSearchMenu' => 'Universelle Suche',
-	'Menu:UniversalSearchMenu+' => 'Suchen Sie nach beliebigen Inhalt...',
-	'Menu:UserManagementMenu' => 'Benutzerverwaltung',
-	'Menu:UserManagementMenu+' => 'Benutzerverwaltung',
-	'Menu:ProfilesMenu' => 'Profile',
-	'Menu:ProfilesMenu+' => 'Profile',
-	'Menu:ProfilesMenu:Title' => 'Profile',
-	'Menu:UserAccountsMenu' => 'Benutzerkonten',
-	'Menu:UserAccountsMenu+' => 'Benutzerkonten',
-	'Menu:UserAccountsMenu:Title' => 'Benutzerkonten',
-	'Menu:MyShortcuts' => 'Meine Shortcuts',
 	'Menu:UserManagement' => 'Benutzerverwaltung',
 	'Menu:Queries' => 'OQL Abfragen',
 	'Menu:ConfigurationTools' => 'Konfiguration',

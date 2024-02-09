@@ -306,16 +306,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:UserDashboard/Attribute:contents+' => '~~',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-    'Expression:Unit:Short:DAY' => 'n',
-    'Expression:Unit:Short:WEEK' => 'w~~',
-    'Expression:Unit:Short:MONTH' => 'h',
-    'Expression:Unit:Short:YEAR' => 'é',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1631,37 +1621,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Menu:DataSources' => 'Szinkronizációs adatforrások',
     'Menu:DataSources+' => '',
-    'Menu:WelcomeMenu' => 'Kezdőoldal',
-    'Menu:WelcomeMenu+' => '',
-    'Menu:WelcomeMenuPage' => 'Áttekintő',
-    'Menu:WelcomeMenuPage+' => '',
-    'Menu:AdminTools' => 'Adminisztrációs eszközök',
-    'Menu:AdminTools+' => '',
-    'Menu:AdminTools?' => 'Az eszközök csak az adminisztrátori profilhoz rendelt felhasználók számára elérhetők.',
-    'Menu:DataModelMenu' => 'Adatmodell',
-    'Menu:DataModelMenu+' => '',
-    'Menu:ExportMenu' => 'Exportálás',
-    'Menu:ExportMenu+' => '',
-    'Menu:NotificationsMenu' => 'Értesítések',
-    'Menu:NotificationsMenu+' => '',
-    'Menu:AuditCategories' => 'Audit kategóriák',
-    'Menu:AuditCategories+' => '',
-    'Menu:Notifications:Title' => 'Audit kategóriák',
-    'Menu:RunQueriesMenu'         => 'Lekérdezés futtatás',
-    'Menu:RunQueriesMenu+'        => '',
-    'Menu:QueryMenu'              => 'Lekérdezés gyűjtemény',
-    'Menu:QueryMenu+'             => 'Lekérdezések gyűjteménye',
-    'Menu:UniversalSearchMenu'    => 'Univerzális keresés',
-    'Menu:UniversalSearchMenu+'   => '',
-    'Menu:UserManagementMenu'     => 'Felhasználókezelés',
-    'Menu:UserManagementMenu+'    => '',
-    'Menu:ProfilesMenu'           => 'Profilok',
-    'Menu:ProfilesMenu+'          => '',
-    'Menu:ProfilesMenu:Title'     => 'Profilok',
-    'Menu:UserAccountsMenu'       => 'Felhasználói fiókok',
-    'Menu:UserAccountsMenu+'      => '',
-    'Menu:UserAccountsMenu:Title' => 'Felhasználói fiókok',
-    'Menu:MyShortcuts'            => 'Saját gyorsgombok',
     'Menu:UserManagement'         => 'Felhasználókezelés',
     'Menu:Queries'                => 'Lekérdezések',
     'Menu:ConfigurationTools'     => 'Konfiguráció',

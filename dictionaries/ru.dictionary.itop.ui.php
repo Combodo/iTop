@@ -318,16 +318,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
-//
-// Expression to Natural language
-//
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'y',
-));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -1642,37 +1632,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:DataSources' => 'Синхронизация данных',
 	'Menu:DataSources+' => 'Синхронизация данных',
-	'Menu:WelcomeMenu' => 'Добро пожаловать',
-	'Menu:WelcomeMenu+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => 'Добро пожаловать',
-	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => 'Инструменты администратора',
-	'Menu:AdminTools+' => 'Инструменты администратора',
-	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей c правами администратора',
-	'Menu:DataModelMenu' => 'Модель данных',
-	'Menu:DataModelMenu+' => 'Обзор модели данных',
-	'Menu:ExportMenu' => 'Экспорт',
-	'Menu:ExportMenu+' => 'Экспорт результатов любого запроса в HTML, CSV или XML',
-	'Menu:NotificationsMenu' => 'Уведомления',
-	'Menu:NotificationsMenu+' => 'Настройка уведомлений',
-	'Menu:AuditCategories' => 'Категории аудита',
-	'Menu:AuditCategories+' => 'Категории аудита',
-	'Menu:Notifications:Title' => 'Категории аудита',
-	'Menu:RunQueriesMenu'         => 'Выполнение запросов',
-	'Menu:RunQueriesMenu+'        => 'Выполнение любых запросов',
-	'Menu:QueryMenu'              => 'Книга запросов',
-	'Menu:QueryMenu+'             => 'Книга запросов',
-	'Menu:UniversalSearchMenu'    => 'Универсальный поиск',
-	'Menu:UniversalSearchMenu+'   => 'Поиск чего угодно...',
-	'Menu:UserManagementMenu'     => 'Управление пользователями',
-	'Menu:UserManagementMenu+'    => 'Управление пользователями',
-	'Menu:ProfilesMenu'           => 'Профили',
-	'Menu:ProfilesMenu+'          => 'Профили пользователей',
-	'Menu:ProfilesMenu:Title'     => 'Профили пользователей',
-	'Menu:UserAccountsMenu'       => 'Учетные записи',
-	'Menu:UserAccountsMenu+'      => 'Учетные записи пользователей',
-	'Menu:UserAccountsMenu:Title' => 'Учетные записи пользователей',
-	'Menu:MyShortcuts'            => 'Избранное',
 	'Menu:UserManagement'         => 'Управление пользователями',
 	'Menu:Queries'                => 'Запросы OQL',
 	'Menu:ConfigurationTools'     => 'Конфигурация',
