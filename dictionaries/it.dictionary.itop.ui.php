@@ -1183,7 +1183,7 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => 'Any modification will be discarded.~~',
 	'UI:CancelConfirmationMessage' => 'You will loose your changes. Continue anyway?~~',
-	'UI:AutoApplyConfirmationMessage' => 'Some changes have not been applied yet. Do you want itop to take them into account?~~',
+	'UI:AutoApplyConfirmationMessage' => 'Some changes have not been applied yet. Do you want '.ITOP_APPLICATION_SHORT.' to take them into account?',
 	'UI:Create_Class_InState' => 'Create the %1$s in state: ~~',
 	'UI:OrderByHint_Values' => 'Sort order: %1$s~~',
 	'UI:Menu:AddToDashboard' => 'Add To Dashboard...~~',
