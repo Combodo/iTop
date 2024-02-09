@@ -2,7 +2,7 @@
 
 ## File location
 
-In order to better separate our developments from the embedded third-party libs, files should be moved in either the /components or /lib folders.
+In order to better separate our developments from the embedded third-party libs, files should be moved in either the `/js/components`, `/lib`, `/node_modules` folders.
 
 IMPORTANT: Before moving a file, we should first consider if:
 
