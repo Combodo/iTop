@@ -30,7 +30,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:iTopHub:MyExtensions+' => 'See the list of extensions deployed on this instance of '.ITOP_APPLICATION_SHORT.'~~',
 	'Menu:iTopHub:BrowseExtensions' => 'Get extensions from iTop Hub~~',
 	'Menu:iTopHub:BrowseExtensions+' => 'Browse for more extensions on iTop Hub~~',
-	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Look into iTop Hub’s store, your one stop place to find wonderful iTop extensions !<br>Find the ones that will help you customize and adapt itop to your processes.<br><br>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>~~',
+	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Look into iTop Hub’s store, your one stop place to find wonderful iTop extensions !<br>Find the ones that will help you customize and adapt '.ITOP_APPLICATION_SHORT.' to your processes.<br><br>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>',
 	'iTopHub:GoBtn' => 'Go To iTop Hub~~',
 	'iTopHub:CloseBtn' => 'Close~~',
 	'iTopHub:GoBtn:Tooltip' => 'Jump to www.itophub.io~~',

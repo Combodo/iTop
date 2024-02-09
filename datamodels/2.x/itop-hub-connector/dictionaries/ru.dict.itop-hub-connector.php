@@ -18,7 +18,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:iTopHub:MyExtensions+' => 'Расширения, развернутые на данном экземпляре '.ITOP_APPLICATION_SHORT,
 	'Menu:iTopHub:BrowseExtensions' => 'Получить расширения из iTop Hub',
 	'Menu:iTopHub:BrowseExtensions+' => 'Найдите дополнительные расширения на iTop Hub',
-	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Look into iTop Hub’s store, your one stop place to find wonderful iTop extensions !<br>Find the ones that will help you customize and adapt itop to your processes.<br><br>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>~~',
+	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Look into iTop Hub’s store, your one stop place to find wonderful iTop extensions !<br>Find the ones that will help you customize and adapt '.ITOP_APPLICATION_SHORT.' to your processes.<br><br>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>',
 	'iTopHub:GoBtn' => 'Go To iTop Hub~~',
 	'iTopHub:CloseBtn' => 'Close~~',
 	'iTopHub:GoBtn:Tooltip' => 'Jump to www.itophub.io~~',
