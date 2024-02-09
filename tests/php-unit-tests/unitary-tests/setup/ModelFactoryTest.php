@@ -8,6 +8,7 @@ use DOMDocument;
 use MFDocument;
 use MFElement;
 use ModelFactory;
+use PHPUnit\Framework\ExpectationFailedException;
 
 
 /**
@@ -200,8 +201,13 @@ class ModelFactoryTest extends ItopTestCase
 		/* @var MFElement $oDeltaRoot */
 		$oDeltaRoot = $oDocument->firstChild;
 		/** @var MFElement $oFlattenDeltaRoot */
+		if (is_null($sExpectedXML)) {
+			$this->expectException(\MFException::class);
+		}
 		$oFlattenDeltaRoot = $this->InvokeNonPublicMethod(ModelFactory::class, 'FlattenClassesInDelta', $oFactory, [$oDeltaRoot]);
-		$this->AssertEqualiTopXML($sExpectedXML, $oFlattenDeltaRoot->ownerDocument->saveXML());
+		if (!is_null($sExpectedXML)) {
+			$this->AssertEqualiTopXML($sExpectedXML, $oFlattenDeltaRoot->ownerDocument->saveXML());
+		}
 	}
 
 	public function ProviderFlattenDelta()
@@ -712,6 +718,43 @@ class ModelFactoryTest extends ItopTestCase
   </classes>
 </itop_design>',
 			],
+
+			'Complex hierarchy define_if_not_exists flattening generates an error' => [
+				'sDeltaXML'    => '
+<itop_design>
+	<classes>
+		<class id="C_1">
+			<parent>cmdbAbstractObject</parent>
+			<class id="C_1_1" _delta="define_if_not_exists">
+				<parent>C_1</parent>
+				<class id="C_1_1_1">
+					<parent>C_1_1</parent>
+				</class>
+			</class>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => null,
+			],
+
+			'Complex hierarchy if_exists flattening generates an error' => [
+				'sDeltaXML'    => '
+<itop_design>
+	<classes>
+		<class id="C_1">
+			<parent>cmdbAbstractObject</parent>
+			<class id="C_1_1" _delta="if_exists">
+				<parent>C_1</parent>
+				<class id="C_1_1_1" _delta="define">
+					<parent>C_1_1</parent>
+				</class>
+			</class>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => null,
+			],
+
 		];
 	}
 
@@ -807,6 +850,30 @@ class ModelFactoryTest extends ItopTestCase
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="added">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+</itop_design>',
+			],
+			'Add a class if not exists (N°6660)' => [
+				'sInitialXML'  => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '
+<itop_design>
+	<classes>
+		<class id="C_1" _delta="define_if_not_exists">
+            <parent>cmdbAbstractObject</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="needed">
       <parent>cmdbAbstractObject</parent>
     </class>
   </classes>
@@ -2412,7 +2479,7 @@ XML
 				<<<XML
 <root_tag>
   <container_tag>
-    <target_tag _alteration="replaced">Hello, I'm replacing the previous node</target_tag>
+    <target_tag _alteration="replaced" _old_id="tagada">Hello, I'm replacing the previous node</target_tag>
   </container_tag>
 </root_tag>
 XML
@@ -3252,8 +3319,11 @@ XML
 			$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument, ModelFactory::LOAD_DELTA_MODE_LAX);
 			$this->AssertEqualModels($sExpectedXMLInLaxMode, $oFactory, 'LoadDelta(lax) did not produce the expected result');
 		}
+		catch (ExpectationFailedException $e) {
+			throw $e;
+		}
 		catch (\Exception $e) {
-			$this->assertNull($sExpectedXMLInLaxMode, 'LoadDelta(lax) must fail with exception: '.$e->getMessage());
+			$this->assertNull($sExpectedXMLInLaxMode, 'LoadDelta(lax) should not have failed with exception: '.$e->getMessage());
 		}
 
 		// Load in Strict mode
@@ -3268,8 +3338,11 @@ XML
 			$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument, ModelFactory::LOAD_DELTA_MODE_STRICT);
 			$this->AssertEqualModels($sExpectedXMLInStrictMode, $oFactory, 'LoadDelta(strict) did not produce the expected result');
 		}
+		catch (ExpectationFailedException $e) {
+			throw $e;
+		}
 		catch (\Exception $e) {
-			$this->assertNull($sExpectedXMLInStrictMode, 'LoadDelta(strict) must fail with exception: '.$e->getMessage());
+			$this->assertNull($sExpectedXMLInStrictMode, 'LoadDelta(strict) should not have failed with exception: '.$e->getMessage());
 		}
 	}
 
@@ -3314,6 +3387,66 @@ XML
 </itop_design>',
 				'sExpectedXMLInLaxMode' => null,
 				'sExpectedXMLInStrictMode' => null,
+			],
+			'merge leaf nodes have different behavior depending on the mode' => [
+				'sInitialXML'  => '
+<itop_design>
+  <nodeA>Test</nodeA>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<nodeA>Taste</nodeA>
+</itop_design>',
+				'sExpectedXMLInLaxMode' => '<itop_design>
+  <nodeA _alteration="replaced">Taste</nodeA>
+</itop_design>',
+				'sExpectedXMLInStrictMode' => null,
+			],
+			'merge existing leaf nodes without text have same behavior' => [
+				'sInitialXML'  => '
+<itop_design>
+  <nodeA/>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<nodeA/>
+</itop_design>',
+				'sExpectedXMLInLaxMode' => '<itop_design>
+  <nodeA/>
+</itop_design>',
+				'sExpectedXMLInStrictMode' => '<itop_design>
+  <nodeA/>
+</itop_design>',
+			],
+			'merge non-existing leaf nodes without text have different behavior' => [
+				'sInitialXML'  => '
+<itop_design>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<nodeA/>
+</itop_design>',
+				'sExpectedXMLInLaxMode' => '<itop_design>
+  <nodeA/>
+</itop_design>',
+				'sExpectedXMLInStrictMode' => null,
+			],
+			'merge non-existing nodes with sub-nodes defined' => [
+				'sInitialXML'  => '
+<itop_design>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<nodeA>
+		<nodeB _delta="define"/>
+	</nodeA>
+</itop_design>',
+				'sExpectedXMLInLaxMode' => '<itop_design>
+	<nodeA>
+		<nodeB _alteration="added"/>
+	</nodeA>
+</itop_design>',
+				'sExpectedXMLInStrictMode' => '<itop_design>
+	<nodeA>
+		<nodeB _alteration="added"/>
+	</nodeA>
+</itop_design>',
 			],
 		];
 	}
