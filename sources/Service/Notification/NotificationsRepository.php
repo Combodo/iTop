@@ -44,7 +44,7 @@ class NotificationsRepository
 		return $oSet;
 	}
 
-	public function SearchLnkByTriggerContactAndSubscription(int $iTriggerId, int $iContactId, int $sSubscription): \DBObjectSet {
+	public function SearchLnkByTriggerContactAndSubscription(int $iTriggerId, int $iContactId, string $sSubscription): \DBObjectSet {
 		$oSearch = \DBObjectSearch::FromOQL("SELECT lnkActionNotificationToContact AS lnk WHERE lnk.contact_id = :contact_id AND lnk.trigger_id = :trigger_id AND lnk.subscribed = :subscription");
 		$oSet = new \DBObjectSet($oSearch, array(), array('trigger_id' => $iTriggerId, 'contact_id' => $iContactId, 'subscription' => $sSubscription));
 
@@ -52,7 +52,7 @@ class NotificationsRepository
 	}
 
 	
-	public function SearchLnkByTriggerContactSubscriptionAndFinalclass(int $iTriggerId, int $iContactId, int $sSubscription, int $sFinalclass): \DBObjectSet
+	public function SearchLnkByTriggerContactSubscriptionAndFinalclass(int $iTriggerId, int $iContactId, int $sSubscription, string $sFinalclass): \DBObjectSet
 	{
 		$oSearch = \DBObjectSearch::FromOQL("SELECT lnkActionNotificationToContact AS lnk JOIN ActionNotification AS an ON lnk.action_id = an.id WHERE lnk.contact_id = :contact_id AND lnk.trigger_id = :trigger_id AND lnk.subscribed = :subscription AND an.finalclass = :finalclass");
 		$oSet = new \DBObjectSet($oSearch, array(), array('trigger_id' => $iTriggerId, 'contact_id' => $iContactId, 'subscription' => $sSubscription, 'finalclass' => $sFinalclass));
