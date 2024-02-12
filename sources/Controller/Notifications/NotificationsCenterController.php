@@ -4,9 +4,12 @@ namespace Combodo\iTop\Controller\Notifications;
 use ActionNotification;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Set\Set;
 use Combodo\iTop\Application\UI\Base\Component\Input\Set\SetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Service\Notification\NotificationsRepository;
@@ -28,6 +31,11 @@ class NotificationsCenterController extends Controller
 {
 	public const ROUTE_NAMESPACE = 'notificationscenter';
 
+	public function CheckPostedCSRF(){
+		$sToken = utils::ReadParam('token', '', true, 'raw_data');
+		return utils::IsTransactionValid($sToken, false);
+	}
+	
 	/**
 	 * Displays a table containing all ActionNotifications that current user is likely to receive and allows to unsubscribe from them.
 	 *
@@ -49,9 +57,13 @@ class NotificationsCenterController extends Controller
 		// Create a panel that will contain the table
 		$oNotificationsPanel = new Panel(Dict::S('UI:NotificationsCenter:Panel:Title'), array(), 'grey', 'ibo-notifications-center');
 		$oNotificationsPanel->AddCSSClass('ibo-datatable-panel');
+		$oSubtitleBlock = new UIContentBlock(null, ['ibo-notifications-center--sub-title']);
+		$sDisplayAdvancedPageUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.display_advanced_page', [], true);
+		$oSubtitleBlock->AddSubBlock(new Html(Dict::Format('UI:NotificationsCenter:Panel:SubTitle', $sDisplayAdvancedPageUrl)));
+		$oNotificationsPanel->SetSubTitleBlock($oSubtitleBlock);
 		$oNotificationsCenterTableColumns = [
 			'trigger'  => array('label' => MetaModel::GetName('Trigger')),
-			'channels' => array('label' => 'channels'),
+			'channels' => array('label' => Dict::S('UI:NotificationsCenter:Panel:Table:Channels')),
 		];
 
 		// Get all subscribed/unsubscribed actions notifications for the current user
@@ -250,15 +262,110 @@ JS
 
 		return $oPage;
 	}
+	
+	public function OperationDisplayAdvancedPage(){
+		$oPage = new iTopWebPage(Dict::S('UI:NotificationsCenter:Page:Title'));
+		// Create a panel that will contain the table
+		$oNotificationsPanel = new Panel(Dict::S('UI:NotificationsCenter:Panel:Title'), array(), 'grey', 'ibo-notifications-center');
+		$oSubtitleBlock = new UIContentBlock(null, ['ibo-notifications-center--sub-title']);
+		$sDisplayAdvancedPageUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.display_page', [], true);
+		$oSubtitleBlock->AddSubBlock(new Html(Dict::Format('UI:NotificationsCenter:Panel:Advanced:SubTitle', $sDisplayAdvancedPageUrl)));
+		$oNotificationsPanel->SetSubTitleBlock($oSubtitleBlock);
+		$oPage->AddUiBlock($oNotificationsPanel);
+
+		// Get all subscribed/unsubscribed actions notifications for the current user
+		$oLnkNotificationsSet = NotificationsRepository::GetInstance()->SearchLnkByContact(\UserRights::GetContactId());
+		$oActionsNotificationsByTrigger = [];
+		$aSubscribedActionsNotificationsByTrigger = [];
+		while ($oLnkActionsNotifications = $oLnkNotificationsSet->Fetch()) {
+			$oSubscribedActionNotification = MetaModel::GetObject(ActionNotification::class, $oLnkActionsNotifications->Get('action_id'));
+			$oTrigger = MetaModel::GetObject('Trigger', $oLnkActionsNotifications->Get('trigger_id'));
+			$iTriggerId = $oTrigger->GetKey();
+			// Create a new array for the trigger if it doesn't exist
+			if (!isset($oActionsNotificationsByTrigger[$iTriggerId])) {
+				$oActionsNotificationsByTrigger[$iTriggerId] = [];
+				$aSubscribedActionsNotificationsByTrigger[$iTriggerId] = [];
+			}
+			// Add the action notification to the list of actions notifications for the trigger
+			$oActionsNotificationsByTrigger[$iTriggerId][] = $oSubscribedActionNotification;
+			// Add the subscribed status to the list of subscribed actions notifications for the trigger
+			$aSubscribedActionsNotificationsByTrigger[$iTriggerId][$oSubscribedActionNotification->GetKey()] = $oLnkActionsNotifications->Get('subscribed') || $oTrigger->Get('subscription_policy') === 'force_all_channels';
+		}
+
+		$oPage->AddTabContainer('NotificationsCenter', '', $oNotificationsPanel);
+		$oPage->SetCurrentTabContainer('NotificationsCenter');
+		// Create a new tab for each trigger
+		foreach ($oActionsNotificationsByTrigger as $iTriggerId => $aActionsNotifications) {
+			$oTrigger = MetaModel::GetObject('Trigger', $iTriggerId, false);
+			if ($oTrigger === null) {
+				continue;
+			}
+			foreach ($aActionsNotifications as $oActionNotification) {
+				$oPage->SetCurrentTab(MetaModel::GetName(get_class($oActionNotification)));
+				$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel(
+					Dict::Format('UI:NotificationsCenter:Advanced:Input:Label', $oTrigger->Get('description'), $oActionNotification->Get('name')),
+					$oTrigger->GetKey().'|'.$oActionNotification->GetKey(),
+					"",
+					$oTrigger->GetKey().'|'.$oActionNotification->GetKey(),
+					"checkbox"
+				);
+				$oCheckBox->GetInput()->SetIsChecked($aSubscribedActionsNotificationsByTrigger[$iTriggerId][$oActionNotification->GetKey()] === true);
+				$oCheckBox->SetBeforeInput(false);
+				$oCheckBox->GetInput()->AddCSSClass('ibo-input--label-right');
+				$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
+				$oContainer = new UIContentBlock(null, ['ibo-notifications-center-advanced--input--container']);
+				$oContainer->AddSubBlock($oCheckBox);
+				$oPage->AddUiBlock($oContainer);
+			}
+		}
+		$sSubscribeUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.subscribe', [], true);
+		$sUnsubscribeUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.unsubscribe', [], true);
+		$sCSRFToken = utils::GetNewTransactionId();
+		$oPage->add_ready_script(
+<<<JS
+$('.ibo-notifications-center-advanced--input--container .ibo-input-checkbox').on('change', function(){
+	let sUrl = '{$sUnsubscribeUrl}';
+	 if ($(this).prop("checked")) {
+		sUrl = '{$sSubscribeUrl}'
+	}
+	$.ajax({
+			url: sUrl,
+			type: 'POST',
+			data: {
+				channel: $(this).attr('name'),
+				token: '{$sCSRFToken}',
+			},
+			dataType: 'json',
+			success: function (data) {
+					if (data.status === 'success') {
+						// Display success message
+						CombodoModal.OpenSuccessModal(data.message);
+					}
+					else {
+						CombodoModal.OpenErrorModal(data.message);
+					}
+				},
+			error: function (jqXHR, textStatus, errorThrown) {
+					CombodoModal.OpenErrorModal(data.message);
+				}
+	});
+});
+
+JS
+			);
+		
+		return $oPage;
+	}
 
 	/**
 	 * @return \JsonPage
 	 */
 	function OperationUnsubscribe()
 	{
-		// Unused for now
-		return;
-		
+		// Get the CSRF token from the request and check if it's valid
+		if (!$this->CheckPostedCSRF()) {
+			throw new \Exception('Invalid token');
+		}
 		
 		$sChannel = utils::ReadParam('channel', '', true, 'raw_data');
 		$aChannel = explode('|', $sChannel);
@@ -306,11 +413,15 @@ JS
 
 	function OperationSubscribe()
 	{
-		// Unused for now
-		return;
+		
+		// Get the CSRF token from the request and check if it's valid
+		if (!$this->CheckPostedCSRF()) {
+			throw new \Exception('Invalid token');
+		}
 		
 		$sChannel = utils::ReadParam('channel', '', true, 'raw_data');
 		$aChannel = explode('|', $sChannel);
+		
 		$oPage = new \JsonPage();
 		$aReturnData = [];
 		try {
@@ -359,14 +470,14 @@ JS
 	 */
 	function OperationUnsubscribeFromChannel(): \JsonPage
 	{
+		// Get the CSRF token from the request and check if it's valid
+		if (!$this->CheckPostedCSRF()) {
+			throw new \Exception('Invalid token');
+		}
+		
 		// Get the channel from the request
 		$sChannel = utils::ReadParam('channel', '', true, 'raw_data');
 		$aChannel = explode('|', $sChannel);
-		// Get the CSRF token from the request and check if it's valid
-		$sToken = utils::ReadParam('token', '', true, 'raw_data');
-		if (!utils::IsTransactionValid($sToken, false)) {
-			throw new \Exception('Invalid token');
-		}
 
 		$oPage = new \JsonPage();
 		$aReturnData = [];
@@ -425,14 +536,14 @@ JS
 	 */
 	function OperationSubscribeToChannel(): \JsonPage
 	{
+		// Get the CSRF token from the request and check if it's valid
+		if (!$this->CheckPostedCSRF()) {
+			throw new \Exception('Invalid token');
+		}
+		
 		// Get the channel from the request
 		$sChannel = utils::ReadParam('channel', '', true, 'raw_data');
 		$aChannel = explode('|', $sChannel);
-		// Get the CSRF token from the request and check if it's valid
-		$sToken = utils::ReadParam('token', '', true, 'raw_data');
-		if (!utils::IsTransactionValid($sToken, false)) {
-			throw new \Exception('Invalid token');
-		}
 		
 		$oPage = new \JsonPage();
 		$aReturnData = [];
