@@ -1242,7 +1242,7 @@ class BulkChange
 				set_time_limit(intval($iLoopTimeLimit));
 				//stop if not enough cols in $aRowData
 				if(count($aRowData) != $iNBFields){
-					$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue('not enough col at line '.$iRow );
+					$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::Format('UI:CSVReport-Row-Issue-NbField',count($aRowData),$iNBFields) );
 					continue;
 				}
 
@@ -1359,8 +1359,7 @@ class BulkChange
 					if(isset($aRowData[$iCol])) {
 						$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
 					} else {
-					//TODO improve message
-						$aResult[$iRow][$iCol] = new CellStatus_Void('!missing value!');
+						$aResult[$iRow][$iCol] = new CellStatus_Issue('', null, Dict::S('UI:CSVReport-Value-Issue-NoValue'));
 					}
 				}
 			}
@@ -1378,8 +1377,7 @@ class BulkChange
 						if(isset($aRowData[$iCol])) {
 							$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
 						} else {
-								//TODO improve message
-							$aResult[$iRow][$iCol] = new CellStatus_Void('!missing value!');
+							$aResult[$iRow][$iCol] = new CellStatus_Issue('', null, 'UI:CSVReport-Value-Issue-NoValue');
 						}
 					}
 				}
