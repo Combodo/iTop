@@ -21,6 +21,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:NotificationsCenter:Page:Title' => 'Notifications center',
 	'UI:NotificationsCenter:Panel:Title' => 'Notifications center',
 	'UI:NotificationsCenter:Unsubscribe:Success' => 'You have been successfully unsubscribed from the selected notifications.',
+	'UI:NotificationsCenter:Unsubscribe:Error' => 'An error occurred while unsubscribing from the selected notifications.',
+	'UI:NotificationsCenter:Subscribe:Success' => 'You have been successfully subscribed to the selected notifications.',
 	'UI:NotificationsCenter:Subscribe:Error' => 'An error occurred while subscribing to the selected notifications.',
 	'UI:NotificationsCenter:Channel:OutOf:Text' => '%1$s out of %2$s',
 ));
