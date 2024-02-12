@@ -49,6 +49,13 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
         {% if oUIBlock.HasRemoveItemButton() %}
         'remove_button' : {},
         {% endif %}
+
+        {# PLUGIN min items #}
+        {% if oUIBlock.GetMinItems() is not empty %}
+        'combodo_min_items' : {
+            minItems: {{ oUIBlock.GetMinItems() }}
+        },
+        {% endif %}
     },
 
     {# Max items you can select #}
@@ -197,6 +204,31 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
             'data-tooltip-html-enabled': true
         });
         CombodoTooltip.InitTooltipFromMarkup($item);
+
+        {% if oUIBlock.GetOnItemAddJs() is not null %}
+            {{ oUIBlock.GetOnItemAddJs()|raw }}
+        {% endif %}
+    },
+
+    {# On item remove #}
+    onItemRemove: function(value, $item){
+        {% if oUIBlock.GetOnItemRemoveJs() is not null %}
+            {{ oUIBlock.GetOnItemRemoveJs()|raw }}
+        {% endif %}
+    },
+    
+    {# On option remove #}
+    onOptionRemove: function(value, $item){
+        {% if oUIBlock.GetOnOptionRemoveJs() is not null %}
+            {{ oUIBlock.GetOnOptionRemoveJs()|raw }}
+        {% endif %}
+    },
+
+    {# On option add #}
+    onOptionAdd: function(value, $item){
+        {% if oUIBlock.GetOnOptionAddJs() is not null %}
+            {{ oUIBlock.GetOnOptionAddJs()|raw }}
+        {% endif %}
     },
 
     {# plugin combodo_add_button #}

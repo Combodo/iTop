@@ -43,10 +43,15 @@ class Set extends AbstractInput
 		'js/selectize/plugin_combodo_auto_position.js',
 		'js/selectize/plugin_combodo_update_operations.js',
 		'js/selectize/plugin_combodo_multi_values_synthesis.js',
+		'js/selectize/plugin_combodo_min_items.js',
 	];
+	protected $bIsDisabled = false;
 
 	/** @var int|null $iMaxItems Maximum number of items selectable */
 	private ?int $iMaxItems;
+	/** @var int|null $iMinItems Minimum number of items selectable */
+	private ?int $iMinItems;
+
 
 	/** @var int|null $iMaxItem Maximum number of displayed options */
 	private ?int $iMaxOptions;
@@ -62,6 +67,14 @@ class Set extends AbstractInput
 
 	/** @var string $sAddButtonTitle Add button title */
 	private string $sAddButtonTitle;
+	/** @var string|null $sOnOptionRemoveJs JS code to execute on button click */
+	private ?string $sOnOptionRemoveJs;
+	/** @var string|null $sOnOptionAddJs JS code to execute on button click */
+	private ?string $sOnOptionAddJs;
+	/** @var string|null $sOnItemRemoveJs JS code to execute on button click */
+	private ?string $sOnItemRemoveJs;
+	/** @var string|null $sOnItemAddJs JS code to execute on button click */
+	private ?string $sOnItemAddJs;
 
 	/** @var bool $bIsPreloadEnabled Load data at initialization (ajax data provider only) */
 	private bool $bIsPreloadEnabled;
@@ -107,16 +120,22 @@ class Set extends AbstractInput
 		// @todo BDA placeholder depending on autocomplete activation (search...., click to add...)
 		$this->SetPlaceholder(Dict::S('Core:AttributeSet:placeholder'));
 		$this->iMaxItems = null;
+		$this->iMinItems = null;
 		$this->iMaxOptions = null;
 		$this->bHasRemoveItemButton = true;
 		$this->bHasAddOptionButton = false;
 		$this->sAddOptionButtonJsOnClick = null;
 		$this->sAddButtonTitle = Dict::S('UI:Button:Create');
+		$this->sOnItemAddJs = null;
+		$this->sOnItemRemoveJs = null;
+		$this->sOnOptionAddJs = null;
+		$this->sOnOptionRemoveJs = null;
 		$this->bIsPreloadEnabled = false;
 		$this->sTemplateOptions = null;
 		$this->sTemplateItems = null;
 		$this->bIsMultiValuesSynthesis = false;
 		$this->bHasError = false;
+		$this->bIsDisabled = false;
 	}
 
 	/**
@@ -141,6 +160,30 @@ class Set extends AbstractInput
 	public function GetMaxItems(): ?int
 	{
 		return $this->iMaxItems;
+	}
+
+	/**
+	 * SetMinItems.
+	 *
+	 * @param int|null $iMinItems
+	 *
+	 * @return $this
+	 */
+	public function SetMinItems(?int $iMinItems)
+	{
+		$this->iMinItems = $iMinItems;
+
+		return $this;
+	}
+
+	/**
+	 * GetMinItems.
+	 *
+	 * @return int|null
+	 */
+	public function GetMinItems(): ?int
+	{
+		return $this->iMinItems;
 	}
 
 	/**
@@ -456,6 +499,105 @@ class Set extends AbstractInput
 	{
 		$this->sInitialValue = $sInitialValue;
 
+		return $this;
+	}
+
+	/**
+	 * @param string|null $sOnOptionRemoveJs
+	 *
+	 * @return $this
+	 */
+	public function SetOnOptionRemoveJs(?string $sOnOptionRemoveJs)
+	{
+		$this->sOnOptionRemoveJs = $sOnOptionRemoveJs;
+
+		return $this;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function GetOnOptionRemoveJs(): ?string
+	{
+		return $this->sOnOptionRemoveJs;
+	}
+
+	/**
+	 * @param string|null $sOnOptionAddJs
+	 *
+	 * @return $this
+	 */
+	public function SetOnOptionAddJs(?string $sOnOptionAddJs)
+	{
+		$this->sOnOptionAddJs = $sOnOptionAddJs;
+
+		return $this;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function GetOnOptionAddJs(): ?string
+	{
+		return $this->sOnOptionAddJs;
+	}
+
+	/**
+	 * @param string|null $sOnItemRemoveJs
+	 *
+	 * @return $this
+	 */
+	public function SetOnItemRemoveJs(?string $sOnItemRemoveJs)
+	{
+		$this->sOnItemRemoveJs = $sOnItemRemoveJs;
+
+		return $this;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function GetOnItemRemoveJs(): ?string
+	{
+		return $this->sOnItemRemoveJs;
+	}
+
+	/**
+	 * @param string|null $sOnItemAddJs
+	 *
+	 * @return $this
+	 */
+	public function SetOnItemAddJs(?string $sOnItemAddJs)
+	{
+		$this->sOnItemAddJs = $sOnItemAddJs;
+
+		return $this;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function GetOnItemAddJs(): ?string
+	{
+		return $this->sOnItemAddJs;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsDisabled(): bool
+	{
+		return $this->bIsDisabled;
+	}
+
+	/**
+	 * @param bool $bIsDisabled
+	 *
+	 * @return $this
+	 */
+	public function SetIsDisabled(bool $bIsDisabled)
+	{
+		$this->bIsDisabled = $bIsDisabled;
 		return $this;
 	}
 }
