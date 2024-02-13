@@ -99,10 +99,13 @@ function apc_delete($key)
 
 /**
  * Checks if APCu emulation key exists
+ *
  * @param string|string[] $keys A string, or an array of strings, that contain keys.
+ *
  * @return bool|string[] Returns TRUE if the key exists, otherwise FALSE
  * Or if an array was passed to keys, then an array is returned that
  * contains all existing keys, or an empty array if none exist.
+ * @since 3.2.0 N°7068
  */
 function apc_exists($keys)
 {
@@ -209,6 +212,7 @@ class apcFile
 	 * Check if cache key exists
 	 * @param $sKey
 	 * @return bool
+	 * @since 3.2.0 N°7068
 	 */
 	static public function ExistsOneFile($sKey) {
 		return is_file(self::GetCacheFileName('-' . $sKey)) || is_file(self::GetCacheFileName($sKey));
