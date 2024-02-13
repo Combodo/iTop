@@ -73,10 +73,4 @@
             }
         });
     {% endblock %}
-
-    {% block iboModelLink %}
-        $('.ibo-object-details--object-class').on('click', function(){
-            window.open('./schema.php?operation=details_class&class={{ oUIBlock.GetClassName() }}');
-        } )
-    {% endblock %}
 {% endblock %}

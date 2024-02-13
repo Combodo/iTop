@@ -83,12 +83,6 @@ $ibo-object-details--header-right--padding-right--is-sticking: $ibo-spacing-300 
 
 .ibo-object-details--status + .ibo-object-details--object-class {
   margin-left: 0.5rem;
-  cursor: pointer;
-
-  &:hover{
-    color: $ibo-hyperlink-color--on-hover;
-    text-decoration: $ibo-hyperlink-text-decoration--on-hover;
-  }
 
   &::before {
     content: "(";
