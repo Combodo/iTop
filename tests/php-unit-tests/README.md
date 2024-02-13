@@ -7,7 +7,6 @@
 - Covers the consistency of some data through the app?
   - Most likely in "integration-tests".
 
-
 ## Tests prerequisites
 
 Install iTop with default setup options : 
@@ -20,7 +19,13 @@ Plus :
 -  Additional ITIL tickets : check Known Errors Management and FAQ
 
 
-## How do I make sure that my tests are efficient?
+## What about skipped tests ?
+A test can be marked as skipped by using the `markTestAsSkipped()` PHPUnit method. Please use it only for temporary disabled tests, for example the ones that are pushed before their corresponding fix.
+
+For other cases like non-relevant data provider cases, just mark the test valid with `assertTrue(true)` and `return`. 
+
+
+## How do I make sure that my tests are efficient? (performences)
 
 ### Derive from the relevant test class
 
