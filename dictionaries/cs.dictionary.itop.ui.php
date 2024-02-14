@@ -368,16 +368,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
@@ -450,8 +440,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:WelcomeMenu:MyIncidents' => 'Incidenty přidělené mně',
 	'UI:AllOrganizations' => ' Všechny organizace ',
 	'UI:YourSearch' => 'hledat',
-	'UI:LoggedAsMessage' => 'Přihlášen - %1$s (%2$s)~~',
-	'UI:LoggedAsMessage+Admin' => 'Přihlášen - %1$s (%2$s, Administrátor)~~',
+	'UI:LoggedAsMessage' => 'Přihlášen - %1$s (%2$s)',
+	'UI:LoggedAsMessage+Admin' => 'Přihlášen - %1$s (%2$s, Administrátor)',
 	'UI:Button:Logoff' => 'Odhlásit',
 	'UI:Button:GlobalSearch' => 'Hledat',
 	'UI:Button:Search' => ' Hledat ',
@@ -498,7 +488,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
 	'UI:InputFile:SelectFile' => 'Select a file~~',
 	'UI:SearchToggle' => 'Hledání',
-	'UI:ClickToCreateNew' => 'Nový objekt (%1$s)~~',
+	'UI:ClickToCreateNew' => 'Nový objekt (%1$s)',
 	'UI:SearchFor_Class' => 'Hledat objekty třídy %1$s',
 	'UI:NoObjectToDisplay' => 'Žádný objekt k zobrazení.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
@@ -565,7 +555,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:Actions' => 'Akce',
 	'UI:Menu:OtherActions' => 'Další akce',
 	'UI:Menu:Transitions' => 'Transitions~~',
-	'UI:Menu:OtherTransitions' => 'Other transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:View' => 'View this object~~',
 	'UI:Menu:New' => 'Nový...',
 	'UI:Menu:Add' => 'Přidat...',
@@ -709,7 +699,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:Error' => 'Chyba: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Vyberte třídu pro hledání: ',
 	'UI:CSVReport-Value-Modified' => 'Upraveno',
-	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-SetIssue' => 'Invalid value for attribute~~',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
@@ -793,7 +783,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
-	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%% of the object are valid~~',
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Vyhodnocení OQL dotazu',
 	'UI:RunQuery:QueryExamples' => 'Příklady dotazů',
 	'UI:RunQuery:QueryResults' => 'Query Results~~',
@@ -814,7 +804,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Query:UrlForExcel' => 'URL pro MS-Excel web queries',
 	'UI:Query:UrlV1' => 'Nebyl specifikován seznam sloupců k exportu. Bez této informace nemůže stránka <em>export-V2.php</em> provést export. Pro export všech polí použijte stránku <em>export.php</em>. Pokud však chcete udržet konzistenci v delším časovém horzontu, použijte stávající stránku a specifikujte paramter "fields".',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' schéma objektů',
-	'UI:Schema:TitleForClass' => '%1$s schéma~~',
+	'UI:Schema:TitleForClass' => '%1$s schema~~',
 	'UI:Schema:CategoryMenuItem' => 'Kategorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Vztahy',
 	'UI:Schema:AbstractClass' => 'Abstraktní třída: instance objektu této třídy nemůže být vytvořena.',
@@ -1067,7 +1057,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
 </ol>
 </p>
-<p>Aby mohly být akce spuštěny, musí být přiřazeny ke triggerům. Každá akce pak dostane své "pořadové" číslo, které určí v jakém pořadí se akce spustí.</p>~~',
+<p>Aby mohly být akce spuštěny, musí být přiřazeny ke triggerům. Každá akce pak dostane své "pořadové" číslo, které určí v jakém pořadí se akce spustí.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Triggery',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Dostupné triggery',
 	'UI:NotificationsMenu:OnCreate' => 'Při vytvoření objektu',
@@ -1086,8 +1076,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:iTopVersion:Short' => '%1$s verze %2$s',
 	'UI:iTopVersion:Long' => '%1$s verze %2$s-%3$s ze dne %4$s',
 	'UI:PropertiesTab' => 'Vlastnosti',
-	'UI:OpenDocumentInNewWindow_' => 'Otevřít~~',
-	'UI:DownloadDocument_' => 'Stáhnout~~',
+	'UI:OpenDocumentInNewWindow_' => 'Otevřít',
+	'UI:DownloadDocument_' => 'Stáhnout',
 	'UI:Document:NoPreview' => 'Pro tento typ dokumentu není k dispozici žádný náhled',
 	'UI:Download-CSV' => 'Stáhnout %1$s',
 	'UI:DeadlineMissedBy_duration' => 'Zmeškáno o %1$s',
@@ -1212,10 +1202,10 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Oblíbené organizace',
 	'UI:FavoriteOrganizations+' => 'Zaškrtněte, které organizace chcete vidět v rozbalovacím menu pro rychlý přístup. Mějte na paměti, že toto není bezpečnostní opatření. Objekty všech organizací jsou pořád viditelné a přístupné vybráním "Všechny organizace" z rozbalovacího menu.',
-	'UI:FavoriteLanguage' => 'Jazyk uživatelského rozhraní~~',
+	'UI:FavoriteLanguage' => 'Jazyk uživatelského rozhraní',
 	'UI:Favorites:SelectYourLanguage' => 'Preferovaný jazyk:',
 	'UI:FavoriteOtherSettings' => 'Další nastavení',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Výchozí délka seznamů: %1$s položek na stránku~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Výchozí délka seznamů: %1$s položek na stránku',
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data~~',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => 'Všechny úpravy budou zahozeny.',
@@ -1659,7 +1649,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:UserAccountsMenu' => 'Uživatelské účty',
 	'Menu:UserAccountsMenu+' => 'Uživatelské účty',
 	'Menu:UserAccountsMenu:Title' => 'Uživatelské účty',
-	'Menu:UserManagement' => 'User Management~~',
+	'Menu:UserManagement' => 'User management~~',
 	'Menu:Queries' => 'Queries~~',
 	'Menu:ConfigurationTools' => 'Configuration~~'
 ));

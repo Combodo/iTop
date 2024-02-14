@@ -1281,7 +1281,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:VLAN/Attribute:org_id' => 'Organization~~',
 	'Class:VLAN/Attribute:org_id+' => '~~',
 	'Class:VLAN/Attribute:org_name' => 'Organization name~~',
-	'Class:VLAN/Attribute:org_name+' => 'Common name~~',
+	'Class:VLAN/Attribute:org_name+' => '~~',
 	'Class:VLAN/Attribute:subnets_list' => 'Subnets~~',
 	'Class:VLAN/Attribute:subnets_list+' => '~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Physical network interfaces~~',

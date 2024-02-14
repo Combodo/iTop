@@ -347,7 +347,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:SLA/Attribute:slts_list' => 'SLTs',
 	'Class:SLA/Attribute:slts_list+' => 'All the service level targets for this SLA~~',
 	'Class:SLA/Attribute:customercontracts_list' => 'Zákaznícke zmluvy',
-	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracts using this SLA~~',
+	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracted services using this SLA~~',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
 ));
 

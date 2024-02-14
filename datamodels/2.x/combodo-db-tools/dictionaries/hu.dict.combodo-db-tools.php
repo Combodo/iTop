@@ -50,7 +50,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Árva rekord a `%1$s` -ban, kell hogy legyen megfelelője a `%2$s` táblázatban',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Érvénytelen a %1$s  külső kulcs (oszlop: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Hiányzik a %1$s külső külcs (oszlop: `%2$s.%3$s`)',
-	'DBAnalyzer-Integrity-InvalidValue' => '%1$s értéke érvénytelen (oszlop: `%2$s.%3$s`)~~',
+	'DBAnalyzer-Integrity-InvalidValue' => '%1$s értéke érvénytelen (oszlop: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Néhány felhasználónak egyáltalán nincs fiókja',
 	'DBAnalyzer-Integrity-HKInvalid' => 'Sérült a `%1$s` hierarchikus kulcs',
 	'DBAnalyzer-Fetch-Count-Error' => 'Lekérési hiba a `%1$s` -nál, %2$d bejegyzés lekérve / %3$d megszámlálva',

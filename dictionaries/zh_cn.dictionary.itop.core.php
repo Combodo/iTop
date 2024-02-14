@@ -420,7 +420,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventIssue/Attribute:arguments_get' => 'URL参数',
 	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET参数',
 	'Class:EventIssue/Attribute:callstack' => '调用栈',
-	'Class:EventIssue/Attribute:callstack+' => 'Call stack~~',
+	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => '数据',
 	'Class:EventIssue/Attribute:data+' => '更多信息',
 ));
@@ -1060,9 +1060,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TagSetFieldData/Attribute:label+' => '显示的标签',
 	'Class:TagSetFieldData/Attribute:description' => '描述',
 	'Class:TagSetFieldData/Attribute:description+' => '描述',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => '已使用的标签无法删除',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',

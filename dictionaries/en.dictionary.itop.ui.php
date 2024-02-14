@@ -376,16 +376,6 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('EN US', 'English', 'English', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'y',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('EN US', 'English', 'English', array(
@@ -901,13 +891,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:LifeCycleAttributeMustChange' => 'Must change',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'User will be prompted to change the value',
 	'UI:Schema:LifeCycleEmptyList' => 'empty list',
-	'UI:Schema:ClassFilter' => 'Class:~~',
-	'UI:Schema:DisplayLabel' => 'Display:~~',
-	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code~~',
-	'UI:Schema:DisplaySelector/Label' => 'Label~~',
-	'UI:Schema:DisplaySelector/Code' => 'Code~~',
-	'UI:Schema:Attribute/Filter' => 'Filter~~',
-	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
+	'UI:Schema:ClassFilter' => 'Class:',
+	'UI:Schema:DisplayLabel' => 'Display:',
+	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code',
+	'UI:Schema:DisplaySelector/Label' => 'Label',
+	'UI:Schema:DisplaySelector/Code' => 'Code',
+	'UI:Schema:Attribute/Filter' => 'Filter',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"',
 	'UI:Schema:Events' => 'Events',
 	'UI:Schema:Events:Defined' => 'Defined events',
 	'UI:Schema:Events:NoEvent' => 'No event defined',
@@ -1461,7 +1451,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Month-10-Short'                => 'Oct',
 	'Month-11-Short'                => 'Nov',
 	'Month-12-Short'                => 'Dec',
-	'Calendar-FirstDayOfWeek'       => 0,
+	'Calendar-FirstDayOfWeek'       => '0',
 	// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList'                                 => 'Create a Shortcut...',

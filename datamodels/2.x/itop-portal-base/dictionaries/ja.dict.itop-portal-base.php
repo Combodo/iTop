@@ -81,7 +81,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Confirm password~~',
 	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'To change your password, please contact your %1$s administrator~~',
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Can\'t change password, please contact your %1$s administrator~~',
-	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Personal informations~~',
+	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Personal information~~',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Photo~~',
 ));
 
@@ -129,8 +129,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Brick:Portal:Object:Name' => 'Object~~',
 	'Brick:Portal:Object:Form:Create:Title' => 'New %1$s~~',
 	'Brick:Portal:Object:Form:Edit:Title' => 'Updating %2$s (%1$s)~~',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s~~',
-	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, fill the following informations:~~',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s: %2$s~~',
+	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, complete the following information:~~',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Saved~~',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s saved~~',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s (%2$s)~~',

@@ -31,12 +31,12 @@ It groups all audit rules applying to that object scope~~',
 	'Class:AuditCategory/Attribute:definition_set+'          => '定义用于审计的对象的OQL表达式',
 	'Class:AuditCategory/Attribute:rules_list'               => '审计规则',
 	'Class:AuditCategory/Attribute:rules_list+'              => '此类别的审计规则',
-	'Class:AuditCategory/Attribute:ok_error_tolerance'       => 'Error tolerance (OK)~~',
-	'Class:AuditCategory/Attribute:ok_error_tolerance+'      => 'Allowed percentage of invalid objects at which the result is still displayed as OK (green)~~',
-	'Class:AuditCategory/Attribute:warning_error_tolerance'  => 'Error tolerance (warning)~~',
-	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Allowed percentage of invalid objects at which the result is still displayed as a warning (orange)~~',
+	'Class:AuditCategory/Attribute:ok_error_tolerance'       => 'Warning threshold~~',
+	'Class:AuditCategory/Attribute:ok_error_tolerance+'      => 'Percentage of invalid objects below which the result is a warning (orange)~~',
+	'Class:AuditCategory/Attribute:warning_error_tolerance'  => 'Error threshold~~',
+	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list'             => 'Domains~~',
-	'Class:AuditCategory/Attribute:domains_list+'            => 'List of domains linked to this category~~',
+	'Class:AuditCategory/Attribute:domains_list+'            => 'Domains which includes this category~~',
 ));
 
 //
@@ -82,7 +82,7 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon'             => '图标',
 	'Class:AuditDomain/Attribute:icon+'            => '',
 	'Class:AuditDomain/Attribute:categories_list'  => '类别',
-	'Class:AuditDomain/Attribute:categories_list+' => 'Linked audit categories~~',
+	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
 ));
 
 //
@@ -128,7 +128,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Query:baseinfo'                                  => '基本信息',
 	'Query:exportInfo'                                => '导出信息',
 	'Class:QueryOQL/Attribute:fields'                 => '区域',
-	'Class:QueryOQL/Attribute:fields+'                => '属性之间使用逗号分隔 (or alias.attribute) to export~~',
+	'Class:QueryOQL/Attribute:fields+'                => '属性之间使用逗号分隔 (or alias.attribute) to export',
 	'Class:QueryOQL'                                  => 'OQL查询',
 	'Class:QueryOQL+'                                 => '一种基于对象查询的语言',
 	'Class:QueryOQL/Attribute:oql'                    => '表达式',
@@ -372,16 +372,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '',
 	'Class:UserDashboard/Attribute:contents' => '内容',
 	'Class:UserDashboard/Attribute:contents+' => '',
-));
-
-//
-// Expression to Natural language
-//
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Expression:Unit:Short:DAY' => '日',
-	'Expression:Unit:Short:WEEK' => '周',
-	'Expression:Unit:Short:MONTH' => '月',
-	'Expression:Unit:Short:YEAR' => '年',
 ));
 
 //
@@ -729,7 +719,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:UniversalSearch:LabelSelectTheClass'    => '选择要搜索的类别: ',
 
     'UI:CSVReport-Value-Modified'                       => '已修改',
-	'UI:CSVReport-Value-SetIssue'                       => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-SetIssue'                       => 'Invalid value for attribute~~',
 	'UI:CSVReport-Value-ChangeIssue'                    => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch'                        => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-NoMatch-PossibleValues'         => 'Some possible \'%1$s\' value(s): %2$s~~',
@@ -779,7 +769,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
     'UI:CSVExport:AdvancedMode'     => '高级模式',
 	'UI:CSVExport:AdvancedMode+'    => 'In advanced mode, several columns are added to the export: the id of the object, the id of external keys and their reconciliation attributes.~~',
 	'UI:CSVExport:LostChars'        => '编码问题',
-	'UI:CSVExport:LostChars+'       => 'The downloaded file will be encoded into %1$s. iTop has detected some characters that are not compatible with this format. Those characters will either be replaced by a substitute (e.g. accentuated chars losing the accent), or they will be discarded. You can copy/paste the data from your web browser. Alternatively, you can contact your administrator to change the encoding (See parameter \'csv_file_default_charset\').~~',
+	'UI:CSVExport:LostChars+'       => 'The downloaded file will be encoded into %1$s. '.ITOP_APPLICATION_SHORT.' has detected some characters that are not compatible with this format. Those characters will either be replaced by a substitute (e.g. accentuated chars losing the accent), or they will be discarded. You can copy/paste the data from your web browser. Alternatively, you can contact your administrator to change the encoding (See parameter \'csv_file_default_charset\').~~',
 
     'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB 审计',
 
@@ -1108,7 +1098,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 </ol>
 </p>
 <p>若要执行, 操作必须和触发器相关联.
-当与一个触发器关联时, 每个操作都被赋予一个顺序号, 规定了按什么样的顺序执行这些操作.</p>~~',
+当与一个触发器关联时, 每个操作都被赋予一个顺序号, 规定了按什么样的顺序执行这些操作.</p>',
 	'UI:NotificationsMenu:Triggers' => '触发器',
 	'UI:NotificationsMenu:AvailableTriggers' => '可用的触发器',
 	'UI:NotificationsMenu:OnCreate' => '当对象被创建',

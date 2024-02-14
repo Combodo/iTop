@@ -1081,13 +1081,14 @@ class RunTimeEnvironment
 			SetupUtils::tidydir(APPROOT.'env-'.$this->sTargetEnv);
 		}
 	}
-	
-	/**
-	 * Call the given handler method for all selected modules having an installation handler
-	 * @param array[] $aAvailableModules
-	 * @param string[] $aSelectedModules
-	 * @param string $sHandlerName
-	 */
+
+    /**
+     * Call the given handler method for all selected modules having an installation handler
+     * @param array[] $aAvailableModules
+     * @param string[] $aSelectedModules
+     * @param string $sHandlerName
+     * @throws CoreException
+     */
 	public function CallInstallerHandlers($aAvailableModules, $aSelectedModules, $sHandlerName)
 	{
 	    foreach($aAvailableModules as $sModuleId => $aModule)
@@ -1100,8 +1101,20 @@ class RunTimeEnvironment
 	            $aCallSpec = array($sModuleInstallerClass, $sHandlerName);
 	            if (is_callable($aCallSpec))
 	            {
-	               call_user_func_array($aCallSpec, array(MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']));
-	            }
+                    try {
+                        call_user_func_array($aCallSpec, array(MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']));
+                    } catch (Exception $e) {
+                        $sErrorMessage = "Module $sModuleId : error when calling module installer class $sModuleInstallerClass for $sHandlerName handler";
+                        $aExceptionContextData = [
+                                'ModulelId' => $sModuleId,
+                                'ModuleInstallerClass' => $sModuleInstallerClass,
+                                'ModuleInstallerHandler' => $sHandlerName,
+                                'ExceptionClass' => get_class($e),
+                                'ExceptionMessage' => $e->getMessage(),
+                        ];
+                        throw new CoreException($sErrorMessage, $aExceptionContextData, '', $e);
+                    }
+                }
 	        }
 	    }
 	}

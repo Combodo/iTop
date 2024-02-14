@@ -13,7 +13,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:AuditCategory/Attribute:definition_set' => 'Definíciókészlet',
 	'Class:AuditCategory/Attribute:definition_set+' => '',
 	'Class:AuditCategory/Attribute:rules_list' => 'Auditszabályok',
-	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules for this category~~',
+	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules using the object scope of this category~~',
 	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Warning threshold~~',
 	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Percentage of invalid objects below which the result is a warning (orange)~~',
 	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error threshold~~',
@@ -354,16 +354,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Tartalom',
 	'Class:UserDashboard/Attribute:contents+' => '~~',
-));
-
-//
-// Expression to Natural language
-//
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Expression:Unit:Short:DAY' => 'n',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'h',
-	'Expression:Unit:Short:YEAR' => 'é',
 ));
 
 //

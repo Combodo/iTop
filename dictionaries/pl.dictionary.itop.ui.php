@@ -368,16 +368,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'y',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('PL PL', 'Polish', 'Polski', array(

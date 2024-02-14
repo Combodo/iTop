@@ -368,16 +368,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'j',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
@@ -709,7 +699,7 @@ We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben ge
 	'UI:UniversalSearch:Error' => 'Fout: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Selecteer de klasse om te zoeken: ',
 	'UI:CSVReport-Value-Modified' => 'Aangepast',
-	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-SetIssue' => 'Invalid value for attribute~~',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
