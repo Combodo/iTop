@@ -71,7 +71,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:FAQCategory' => 'Fategoria FAQ',
+	'Class:FAQCategory' => 'Categoria FAQ',
 	'Class:FAQCategory+' => 'Categoria per FAQ',
 	'Class:FAQCategory/Attribute:name' => 'Nome',
 	'Class:FAQCategory/Attribute:name+' => '~~',

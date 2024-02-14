@@ -18,5 +18,6 @@
  */
 // Global search
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Previous pages~~',
+	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Pagine precedenti',
+
 ));

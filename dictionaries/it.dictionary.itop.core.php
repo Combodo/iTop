@@ -22,73 +22,73 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Core:DeletedObjectLabel' => '%1s (deleted)~~',
-	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)~~',
-	'Core:UnknownObjectLabel' => 'Object not found (class: %1$s, id: %2$d)~~',
-	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.~~',
-	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
-	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s~~',
-	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
+	'Core:DeletedObjectLabel' => '%1s (cancellato)',
+	'Core:DeletedObjectTip' => 'L\'oggetto è stato cancellato il %1$s (%2$s)',
+	'Core:UnknownObjectLabel' => 'Oggetto non trovato (classe: %1$s, id: %2$d)',
+	'Core:UnknownObjectTip' => 'L\'oggetto non può essere trovato. Potrebbe essere stato cancellato tempo fa e il registro è stato purgato da allora.',
+	'Core:UniquenessDefaultError' => 'Regola di unicità \'%1$s\' in errore',
+	'Core:CheckConsistencyError' => 'Regole di coerenza non rispettate: %1$s',
+	'Core:CheckValueError' => 'Valore inatteso per l\'attributo \'%1$s\' (%2$s): %3$s',
 	'Core:AttributeLinkedSet' => 'Array di oggetti',
 	'Core:AttributeLinkedSet+' => 'Ogni tipo di oggetto della stessa classe o sottoclasse',
-	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicati nel campo \'%1$s\': %2$s',
 	'Core:AttributeDashboard' => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '',
-	'Core:AttributePhoneNumber' => 'Phone number~~',
+	'Core:AttributePhoneNumber' => 'Numero di telefono',
 	'Core:AttributePhoneNumber+' => '',
-	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
+	'Core:AttributeObsolescenceDate' => 'Data di obsolescenza',
 	'Core:AttributeObsolescenceDate+' => '',
-	'Core:AttributeTagSet' => 'List of tags~~',
+	'Core:AttributeTagSet' => 'Elenco di tag',
 	'Core:AttributeTagSet+' => '',
-	'Core:AttributeSet:placeholder' => 'click to add~~',
-	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
-	'Core:AttributeCaseLog' => 'Log~~',
+	'Core:AttributeSet:placeholder' => 'clicca per aggiungere',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s da %3$s)',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s da classi figlie)',
+	'Core:AttributeCaseLog' => 'Registro',
 	'Core:AttributeCaseLog+' => '',
-	'Core:AttributeMetaEnum' => 'Computed enum~~',
+	'Core:AttributeMetaEnum' => 'Enum calcolato',
 	'Core:AttributeMetaEnum+' => '',
 	'Core:AttributeLinkedSetIndirect' => 'Array di oggetti (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'ogni tipo di oggetti [sottoclasse] della stessa classe',
-	'Core:AttributeInteger' => 'Integer',
+	'Core:AttributeInteger' => 'Interger',
 	'Core:AttributeInteger+' => 'Valore numerico (non può essere negativo)',
-	'Core:AttributeDecimal' => 'Decimal',
-	'Core:AttributeDecimal+' => 'valore decimale (non può essere negativo)',
+	'Core:AttributeDecimal' => 'Decimale',
+	'Core:AttributeDecimal+' => 'Valore decimale (non può essere negativo)',
 	'Core:AttributeBoolean' => 'Booleano',
 	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => '',
-	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
-	'Core:AttributeBoolean/Value:no' => 'No~~',
-	'Core:AttributeArchiveFlag' => 'Archive flag~~',
-	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
-	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
-	'Core:AttributeArchiveFlag/Value:no' => 'No~~',
-	'Core:AttributeArchiveFlag/Label' => 'Archived~~',
+	'Core:AttributeBoolean/Value:yes' => 'Sì',
+	'Core:AttributeBoolean/Value:no' => 'No',
+	'Core:AttributeArchiveFlag' => 'Flag di archiviazione',
+	'Core:AttributeArchiveFlag/Value:yes' => 'Sì',
+	'Core:AttributeArchiveFlag/Value:yes+' => 'Questo oggetto è visibile solo in modalità archivio',
+	'Core:AttributeArchiveFlag/Value:no' => 'No',
+	'Core:AttributeArchiveFlag/Label' => 'Archiviato',
 	'Core:AttributeArchiveFlag/Label+' => '',
-	'Core:AttributeArchiveDate/Label' => 'Archive date~~',
+	'Core:AttributeArchiveDate/Label' => 'Data di archiviazione',
 	'Core:AttributeArchiveDate/Label+' => '',
-	'Core:AttributeObsolescenceFlag' => 'Obsolescence flag~~',
-	'Core:AttributeObsolescenceFlag/Value:yes' => 'Yes~~',
-	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
-	'Core:AttributeObsolescenceFlag/Value:no' => 'No~~',
-	'Core:AttributeObsolescenceFlag/Label' => 'Obsolete~~',
-	'Core:AttributeObsolescenceFlag/Label+' => 'Computed dynamically on other attributes~~',
-	'Core:AttributeObsolescenceDate/Label' => 'Obsolescence date~~',
-	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete~~',
+	'Core:AttributeObsolescenceFlag' => 'Flag di obsolescenza',
+	'Core:AttributeObsolescenceFlag/Value:yes' => 'Sì',
+	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Questo oggetto è escluso dall\'analisi dell\'impatto ed è nascosto dai risultati della ricerca',
+	'Core:AttributeObsolescenceFlag/Value:no' => 'No',
+	'Core:AttributeObsolescenceFlag/Label' => 'Obsoleto',
+	'Core:AttributeObsolescenceFlag/Label+' => 'Calcolato dinamicamente su altri attributi',
+	'Core:AttributeObsolescenceDate/Label' => 'Data di obsolescenza',
+	'Core:AttributeObsolescenceDate/Label+' => 'Data approssimativa in cui l\'oggetto è stato considerato obsoleto',
 	'Core:AttributeString' => 'Stringa',
 	'Core:AttributeString+' => 'Stringa alfanumerica',
 	'Core:AttributeClass' => 'Classe',
 	'Core:AttributeClass+' => '',
-	'Core:AttributeApplicationLanguage' => 'Lingua Utente',
+	'Core:AttributeApplicationLanguage' => 'Lingua dell\'applicazione',
 	'Core:AttributeApplicationLanguage+' => 'Lingua e Paese (EN US)',
-	'Core:AttributeFinalClass' => 'Classe (auto)',
-	'Core:AttributeFinalClass+' => 'Classe reale dell\'oggetto (automaticamente creata dal core)',
+	'Core:AttributeFinalClass' => 'Classe finale (auto)',
+	'Core:AttributeFinalClass+' => 'Classe effettiva dell\'oggetto (creata automaticamente dal core)',
 	'Core:AttributePassword' => 'Password',
 	'Core:AttributePassword+' => 'Password per un dispositivo',
 	'Core:AttributeEncryptedString' => 'Stringa criptata',
-	'Core:AttributeEncryptedString+' => 'Stringa cripta con una chiave locale',
-	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
-	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
+	'Core:AttributeEncryptedString+' => 'Stringa criptata con una chiave locale',
+	'Core:AttributeEncryptUnknownLibrary' => 'Libreria di crittografia specificata (%1$s) sconosciuta',
+	'Core:AttributeEncryptFailedToDecrypt' => '** errore nella decrittazione **',
 	'Core:AttributeText' => 'Testo',
 	'Core:AttributeText+' => 'Stringa di caratteri multilinea',
 	'Core:AttributeHTML' => 'HTML',
@@ -475,24 +475,20 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ActionEmail' => 'Email di notifica',
 	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: 
-- Being tested: just the Test recipient, 
-- In production: all (To, cc and Bcc) 
-- Inactive: no-one~~',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
-	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
-	'Class:ActionEmail/Attribute:test_recipient' => 'Test destinatario',
+	'Class:ActionEmail/Attribute:status+' => 'Questo stato determina chi verrà notificato: solo il destinatario di prova, tutti (To, Cc e Bcc) o nessuno',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Solo il destinatario di prova verrà notificato',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Tutte le email To, Cc e Bcc saranno notificate',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'La notifica via email non verrà inviata',
+	'Class:ActionEmail/Attribute:test_recipient' => 'Destinatario di prova',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
 	'Class:ActionEmail/Attribute:from' => 'Da',
 	'Class:ActionEmail/Attribute:from+' => '',
-	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
-	'Class:ActionEmail/Attribute:from_label+' => 'Either a static label or a placeholder like $this->agent_id->friendlyname$~~',
+	'Class:ActionEmail/Attribute:from_label' => 'Da (etichetta)',
+	'Class:ActionEmail/Attribute:from_label+' => 'Il nome visualizzato del mittente verrà inviato nell\'intestazione dell\'email',
 	'Class:ActionEmail/Attribute:reply_to' => 'Rispondi A',
 	'Class:ActionEmail/Attribute:reply_to+' => '',
-	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
-	'Class:ActionEmail/Attribute:reply_to_label+' => 'Either a static label or a placeholder like $this->team_id->friendlyname$.
-If omitted the From (label) is used.~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Rispondi a (etichetta)',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Il nome visualizzato del mittente di risposta verrà inviato nell\'intestazione dell\'email',
 	'Class:ActionEmail/Attribute:to' => 'A',
 	'Class:ActionEmail/Attribute:to+' => 'Destinatario dell\'email',
 	'Class:ActionEmail/Attribute:cc' => 'Cc',
@@ -501,32 +497,32 @@ If omitted the From (label) is used.~~',
 	'Class:ActionEmail/Attribute:bcc+' => 'Copia Carbone Nascosta',
 	'Class:ActionEmail/Attribute:subject' => 'Oggetto',
 	'Class:ActionEmail/Attribute:subject+' => 'Titolo dell\'email',
-	'Class:ActionEmail/Attribute:body' => 'corpo',
+	'Class:ActionEmail/Attribute:body' => 'Corpo',
 	'Class:ActionEmail/Attribute:body+' => 'Contenuto dell\'email',
 	'Class:ActionEmail/Attribute:importance' => 'Priorità',
 	'Class:ActionEmail/Attribute:importance+' => '',
-	'Class:ActionEmail/Attribute:importance/Value:low' => 'bassa',
+	'Class:ActionEmail/Attribute:importance/Value:low' => 'Bassa',
 	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
-	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normale',
+	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Normale',
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
-	'Class:ActionEmail/Attribute:importance/Value:high' => 'alta',
+	'Class:ActionEmail/Attribute:importance/Value:high' => 'Alta',
 	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
-	'Class:ActionEmail/Attribute:language' => 'Language~~',
-	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
-	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
-	'Class:ActionEmail/Attribute:html_template+' => 'Optional HTML template wrapping around the content of the \'Body\' attribute below, useful for tailored email layouts (in the template, content of the \'Body\' attribute will replace the $content$ placeholder)~~',
-	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignore the Notify flag~~',
-	'Class:ActionEmail/Attribute:ignore_notify+' => 'If set to \'Yes\' the \'Notify\' flag on Contacts has no effect.~~',
-	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'No~~',
-	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Yes~~',
-	'ActionEmail:main' => 'Message~~',
-	'ActionEmail:trigger' => 'Triggers~~',
-	'ActionEmail:recipients' => 'Contacts~~',
-	'ActionEmail:preview_tab' => 'Preview~~',
-	'ActionEmail:preview_tab+' => 'Preview of the eMail template~~',
-	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
-	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
-	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
+	'Class:ActionEmail/Attribute:language' => 'Lingua',
+	'Class:ActionEmail/Attribute:language+' => 'Lingua da utilizzare per i segnaposto ($xxx$) all\'interno del messaggio (stato, importanza, priorità, ecc.)',
+	'Class:ActionEmail/Attribute:html_template' => 'Template HTML',
+	'Class:ActionEmail/Attribute:html_template+' => 'Template HTML opzionale che avvolge il contenuto dell\'attributo \'Corpo\' di seguito, utile per layout email personalizzati (nel template, il contenuto dell\'attributo \'Corpo\' sostituirà il segnaposto $content$)',
+	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignora il flag Notifica',
+	'Class:ActionEmail/Attribute:ignore_notify+' => 'Se impostato su \'Sì\', il flag \'Notifica\' sui Contatti non avrà alcun effetto.',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'No',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Sì',
+	'ActionEmail:main' => 'Messaggio',
+	'ActionEmail:trigger' => 'Triggers',
+	'ActionEmail:recipients' => 'Contatti',
+	'ActionEmail:preview_tab' => 'Anteprima',
+	'ActionEmail:preview_tab+' => 'Anteprima del modello di e-mail',
+	'ActionEmail:preview_warning' => 'L\'e-mail effettiva potrebbe apparire diversa nel client di posta elettronica rispetto a questa anteprima nel tuo browser.',
+	'ActionEmail:preview_more_info' => 'Per ulteriori informazioni sulle funzionalità CSS supportate dai diversi client di posta elettronica, consulta %1$s',
+	'ActionEmail:content_placeholder_missing' => 'Il segnaposto "%1$s" non è stato trovato nel template HTML. Il contenuto del campo "%2$s" non verrà incluso nelle email generate.',
 ));
 
 //
@@ -536,17 +532,18 @@ If omitted the From (label) is used.~~',
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Trigger' => 'Trigger',
 	'Class:Trigger+' => 'Gestore di eventi personalizzati',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
+	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
 	'Class:Trigger/Attribute:description' => 'Descrizione',
-	'Class:Trigger/Attribute:description+' => 'una linea di descrizione',
+	'Class:Trigger/Attribute:description+' => 'Una linea di descrizione',
 	'Class:Trigger/Attribute:action_list' => 'Azioni triggerate',
-	'Class:Trigger/Attribute:action_list+' => 'Azioni eseguite quando il trigger viene attivato ',
+	'Class:Trigger/Attribute:action_list+' => 'Azioni eseguite quando il trigger viene attivato',
 	'Class:Trigger/Attribute:finalclass' => 'Tipo',
 	'Class:Trigger/Attribute:finalclass+' => '',
-	'Class:Trigger/Attribute:context' => 'Context~~',
-	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
-	'Class:Trigger/Attribute:complement' => 'Additional information~~',
-	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
+	'Class:Trigger/Attribute:context' => 'Contesto',
+	'Class:Trigger/Attribute:context+' => 'Contesto che consente al trigger di essere attivato',
+	'Class:Trigger/Attribute:complement' => 'Informazioni aggiuntive',
+	'Class:Trigger/Attribute:complement+' => 'Ulteriori informazioni fornite in inglese da questo trigger',
+
 ));
 
 //
@@ -558,10 +555,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:TriggerOnObject+' => 'Trigger su una determinata classe di oggetti',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe Bersaglio',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
-	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
-	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
-	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
-	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class "%1$s"~~',
+	'Class:TriggerOnObject/Attribute:filter' => 'Filtro',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limita l\'elenco degli oggetti (della classe bersaglio) che attiveranno il trigger',
+	'TriggerOnObject:WrongFilterQuery' => 'Query di filtro errata: %1$s',
+	'TriggerOnObject:WrongFilterClass' => 'La query di filtro deve restituire oggetti della classe \\"%1$s\\"',
+
 ));
 
 //
@@ -616,8 +614,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
-	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
+	'Class:TriggerOnObjectDelete' => 'Trigger (alla cancellazione dell\'oggetto)',
+	'Class:TriggerOnObjectDelete+' => 'Trigger alla cancellazione dell\'oggetto di [una classe figlia della] classe specificata',
+
 ));
 
 //
@@ -625,10 +624,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
-	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnObjectUpdate' => 'Trigger (alla modifica dell\'oggetto)',
+	'Class:TriggerOnObjectUpdate+' => 'Trigger alla modifica dell\'oggetto di [una classe figlia della] classe specificata',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Campi di destinazione',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
+
 ));
 
 //
@@ -636,10 +636,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
-	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
+	'Class:TriggerOnObjectMention' => 'Trigger (alla menzione dell\'oggetto)',
+	'Class:TriggerOnObjectMention+' => 'Trigger alla menzione (@xxx) di un oggetto di [una classe figlia della] classe specificata in un attributo di log',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Filtro menzionato',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limita l\'elenco degli oggetti menzionati che attiveranno il trigger. Se vuoto, qualsiasi oggetto menzionato (di qualsiasi classe) lo attiverà.',
+
 ));
 
 //
@@ -647,10 +648,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
-	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
-	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
-	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
+	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (al download del documento dell\'oggetto)',
+	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger al download del campo documento dell\'oggetto di [una classe figlia della] classe specificata',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Campi di destinazione',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
+
 ));
 
 //
@@ -658,12 +660,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:TriggerOnThresholdReached' => 'Trigger (on threshold)~~',
-	'Class:TriggerOnThresholdReached+' => 'Trigger on Stop-Watch threshold reached~~',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stop watch~~',
+	'Class:TriggerOnThresholdReached' => 'Trigger (sulla soglia raggiunta)',
+	'Class:TriggerOnThresholdReached+' => 'Trigger sulla soglia del cronometro raggiunta',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Cronometro',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Threshold~~',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Soglia',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
+
 ));
 
 //
@@ -695,7 +698,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SynchroDataSource/Attribute:description' => 'Descrizione',
 	'Class:SynchroDataSource/Attribute:status' => 'Stato',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Classe bersaglio',
-	'Class:SynchroDataSource/Attribute:scope_class+' => 'A Synchro Data Source can only populate a single '.ITOP_APPLICATION_SHORT.' class~~',
+	'Class:SynchroDataSource/Attribute:scope_class+' => 'Una Fonte dati di sincronizzazione può popolare solo una singola classe '.ITOP_APPLICATION_SHORT.'',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Utente',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contatto a cui notificare',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contatto a cui notificare in caso di errore ',
@@ -704,8 +707,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SynchroDataSource/Attribute:url_application' => 'Collegamento ipertestuale all\'applicazione',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Collegamento ipertestuale all\'oggetto ITOP nell\'applicazione esterna con la quale QiTop è sincronizzato (se applicabile). Possibili segnaposto: $this->attribute$ e $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Policy di riconciliazione',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Use the attributes": '.ITOP_APPLICATION_SHORT.' object matches replica values for each Synchro attributes flagged for Reconciliation.
-"Use primary_key": the column primary_key of the replica is expected to contain the identifier of the '.ITOP_APPLICATION_SHORT.' object~~',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Utilizza gli attributi": L\'oggetto '.ITOP_APPLICATION_SHORT.' corrisponde ai valori replica per ciascun attributo di sincronizzazione contrassegnato per la Conciliazione.
+	"Utilizza la chiave primaria": si prevede che la colonna primary_key della replica contenga l\'identificatore dell\'oggetto '.ITOP_APPLICATION_SHORT.'',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Intervallo di pieno carico',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Una ricarica completa di tutti i dati deve verificarsi almeno come specificato qui',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Azione su zero',
@@ -723,8 +726,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_update+' => 'Sintassi: nome_del_campo:valore; ...',
 	'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Durata della conservazione',
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Quanto tempo un oggetto obsoleto è tenuto prima di essere eliminato',
-	'Class:SynchroDataSource/Attribute:database_table_name' => 'Data table~~',
-	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Name of the table to store the synchronization data. If left empty, a default name will be computed.~~',
+	'Class:SynchroDataSource/Attribute:database_table_name' => 'Data table',
+	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Nome della tabella per memorizzare i dati di sincronizzazione. Se lasciato vuoto, verrà calcolato un nome predefinito.',
 	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Implementazione',
 	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Obsoleto',
 	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Produzione',
@@ -739,11 +742,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Errore',
 	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Prendi il primo (casualmente?)',
 	'Class:SynchroDataSource/Attribute:delete_policy' => 'Policy di cancellazione',
-	'Class:SynchroDataSource/Attribute:delete_policy+' => 'What to do when a replica becomes obsolete:
-"Ignore": do nothing, the associated object remains as is in iTop.
-"Delete": Delete the associated object in iTop (and the replica in the data table).
-"Update": Update the associated object as specified by the Update rules (see below).
-"Update then Delete": apply the "Update rules". When Retention Duration expires, execute a "Delete" ~~',
+	'Class:SynchroDataSource/Attribute:delete_policy+' => 'Cosa fare quando una replica diventa obsoleta:
+	"Ignora": Non fare nulla, l\'oggetto associato rimane invariato in iTop.
+	"Cancella": Cancella l\'oggetto associato in iTop (e la replica nella tabella dei dati).
+	"Aggiorna": Aggiorna l\'oggetto associato come specificato dalle regole di aggiornamento (vedi sotto).
+	"Aggiorna e cancella": applica le "Regole di aggiornamento". Quando scade la Durata di conservazione, esegui una "Cancellazione ',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Cancella',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignora',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Aggiorna',
@@ -801,7 +804,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Almeno una chiave riconciliazione deve essere specificata, o la policy di conciliazione deve essere quella di utilizzare la chiave primaria',
 	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Deve essere specificato un periodo di conservazione di cancellazione , dato che gli oggetti devono essere eliminati dopo essere contrassegnati come obsoleti ',
 	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Oggetti obsoleti devono essere aggiornati, ma nessun aggiornamento è specificato',
-	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'The table %1$s already exists in the database. Please use another name for the synchro data table.~~',
+    'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'La tabella %1$s esiste già nel database. Si prega di utilizzare un altro nome per la tabella dei dati di sincronizzazione.',
 	'Core:SynchroReplica:PublicData' => 'Dati Pubblici',
 	'Core:SynchroReplica:PrivateDetails' => 'Dettagli Privati',
 	'Core:SynchroReplica:BackToDataSource' => 'Torna indietro alla sorgente di sincronizzazione dei dati: %1$s',
@@ -895,76 +898,78 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SynchroReplica/Attribute:status/Value:synchronized' => 'Sincronizzato',
 	'Class:SynchroReplica/Attribute:status_dest_creator' => 'Oggetto creato ?',
 	'Class:SynchroReplica/Attribute:status_last_error' => 'Utimo errore',
-	'Class:SynchroReplica/Attribute:status_last_warning' => 'Warnings',
+	'Class:SynchroReplica/Attribute:status_last_warning' => 'Avvisi',
 	'Class:SynchroReplica/Attribute:info_creation_date' => 'Data di creazione',
 	'Class:SynchroReplica/Attribute:info_last_modified' => 'Data di ultima modifica',
 	'Class:appUserPreferences' => 'Preferenze utente',
 	'Class:appUserPreferences/Attribute:userid' => 'Utente',
 	'Class:appUserPreferences/Attribute:preferences' => 'Prefs',
 	'Core:ExecProcess:Code1' => 'Comando errato o comando finito con errori (es. errato nome dello script)',
-	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)',
+    'Core:ExecProcess:Code255' => 'Errore PHP (parsing o runtime)',
     // Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$sec',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sg %2$dh %3$dmin %4$ds',
     // Explain working time computing
-	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as "%1$s")~~',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for "%1$s"~~',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for "%1$s" at %2$d%%~~',
+	'Core:ExplainWTC:ElapsedTime' => 'Tempo trascorso (memorizzato come \\"%1$s\\")',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tempo trascorso per \\"%1$s\\"',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Scadenza per \\"%1$s\\" al %2$d%%',
+
     // Bulk export
-	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter "%1$s"~~',
-	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter "query". There is no Query Phrasebook corresponding to the id: "%1$s".~~',
-	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
-	'Core:BulkExportOf_Class' => '%1$s Export~~',
-	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
-	'Core:BulkExport:ExportResult' => 'Result of the export:~~',
-	'Core:BulkExport:RetrievingData' => 'Retrieving data...~~',
-	'Core:BulkExport:HTMLFormat' => 'Web Page (*.html)~~',
-	'Core:BulkExport:CSVFormat' => 'Comma Separated Values (*.csv)~~',
-	'Core:BulkExport:XLSXFormat' => 'Excel 2007 or newer (*.xlsx)~~',
-	'Core:BulkExport:PDFFormat' => 'PDF Document (*.pdf)~~',
-	'Core:BulkExport:DragAndDropHelp' => 'Drag and drop the columns\' headers to arrange the columns. Preview of %1$s lines. Total number of lines to export: %2$s.~~',
-	'Core:BulkExport:EmptyPreview' => 'Select the columns to be exported from the list above~~',
-	'Core:BulkExport:ColumnsOrder' => 'Columns order~~',
-	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Available columns from %1$s~~',
-	'Core:BulkExport:NoFieldSelected' => 'Select at least one column to be exported~~',
-	'Core:BulkExport:CheckAll' => 'Check All~~',
-	'Core:BulkExport:UncheckAll' => 'Uncheck All~~',
-	'Core:BulkExport:ExportCancelledByUser' => 'Export cancelled by the user~~',
-	'Core:BulkExport:CSVOptions' => 'CSV Options~~',
-	'Core:BulkExport:CSVLocalization' => 'Localization~~',
-	'Core:BulkExport:PDFOptions' => 'PDF Options~~',
-	'Core:BulkExport:PDFPageFormat' => 'Page Format~~',
-	'Core:BulkExport:PDFPageSize' => 'Page Size:~~',
+	'Core:BulkExport:MissingParameter_Param' => 'Parametro mancante \\"%1$s\\"',
+	'Core:BulkExport:InvalidParameter_Query' => 'Valore non valido per il parametro \\"query\\". Non esiste un Query Phrasebook corrispondente all\'ID: \\"%1$s\\".',
+	'Core:BulkExport:ExportFormatPrompt' => 'Formato di esportazione:',
+	'Core:BulkExportOf_Class' => 'Esporta %1$s',
+	'Core:BulkExport:ClickHereToDownload_FileName' => 'Clicca qui per scaricare %1$s',
+	'Core:BulkExport:ExportResult' => 'Risultato dell\'esportazione:',
+	'Core:BulkExport:RetrievingData' => 'Recupero dei dati...',
+	'Core:BulkExport:HTMLFormat' => 'Pagina Web (*.html)',
+	'Core:BulkExport:CSVFormat' => 'Valori separati da virgola (*.csv)',
+	'Core:BulkExport:XLSXFormat' => 'Excel 2007 o successivo (*.xlsx)',
+	'Core:BulkExport:PDFFormat' => 'Documento PDF (*.pdf)',
+	'Core:BulkExport:DragAndDropHelp' => 'Trascina e rilascia gli header delle colonne per organizzare le colonne. Anteprima di %1$s righe. Numero totale di righe da esportare: %2$s.',
+	'Core:BulkExport:EmptyPreview' => 'Seleziona almeno una colonna da esportare dalla lista sopra',
+	'Core:BulkExport:ColumnsOrder' => 'Ordine delle colonne',
+	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Colonnette disponibili da %1$s',
+	'Core:BulkExport:NoFieldSelected' => 'Seleziona almeno una colonna da esportare',
+	'Core:BulkExport:CheckAll' => 'Seleziona tutto',
+	'Core:BulkExport:UncheckAll' => 'Deseleziona tutto',
+	'Core:BulkExport:ExportCancelledByUser' => 'Esportazione annullata dall\'utente',
+	'Core:BulkExport:CSVOptions' => 'Opzioni CSV',
+	'Core:BulkExport:CSVLocalization' => 'Localizzazione',
+	'Core:BulkExport:PDFOptions' => 'Opzioni PDF',
+	'Core:BulkExport:PDFPageFormat' => 'Formato Pagina',
+	'Core:BulkExport:PDFPageSize' => 'Dimensioni Pagina:',
 	'Core:BulkExport:PageSize-A4' => 'A4~~',
 	'Core:BulkExport:PageSize-A3' => 'A3~~',
 	'Core:BulkExport:PageSize-Letter' => 'Letter~~',
-	'Core:BulkExport:PDFPageOrientation' => 'Page Orientation:~~',
-	'Core:BulkExport:PageOrientation-L' => 'Landscape~~',
-	'Core:BulkExport:PageOrientation-P' => 'Portrait~~',
-	'Core:BulkExport:XMLFormat' => 'XML file (*.xml)~~',
-	'Core:BulkExport:XMLOptions' => 'XML Options~~',
-	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)~~',
-	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
-	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
-	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
-	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting~~',
-	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
-	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
-	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:~~',
-	'Core:BulkExportMessageEmptyOQL' => 'Please enter a valid OQL query.~~',
-	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Please select a valid phrasebook entry.~~',
-	'Core:BulkExportQueryPlaceholder' => 'Type an OQL query here...~~',
-	'Core:BulkExportCanRunNonInteractive' => 'Click here to run the export in non-interactive mode.~~',
-	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
-	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
-	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
-	'Core:BulkExport:DateTimeFormat' => 'Date and Time format~~',
-	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s~~',
-	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
-	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
+	'Core:BulkExport:PDFPageOrientation' => 'Orientamento Pagina:',
+	'Core:BulkExport:PageOrientation-L' => 'Orizzontale',
+	'Core:BulkExport:PageOrientation-P' => 'Verticale',
+	'Core:BulkExport:XMLFormat' => 'File XML (*.xml)',
+	'Core:BulkExport:XMLOptions' => 'Opzioni XML',
+	'Core:BulkExport:SpreadsheetFormat' => 'Formato HTML per foglio di calcolo (*.html)',
+	'Core:BulkExport:SpreadsheetOptions' => 'Opzioni Foglio di calcolo',
+	'Core:BulkExport:OptionNoLocalize' => 'Esporta Codice invece di Etichetta',
+	'Core:BulkExport:OptionLinkSets' => 'Includi oggetti collegati',
+	'Core:BulkExport:OptionFormattedText' => 'Preserva la formattazione del testo',
+	'Core:BulkExport:ScopeDefinition' => 'Definizione degli oggetti da esportare',
+	'Core:BulkExportLabelOQLExpression' => 'Query OQL:',
+	'Core:BulkExportLabelPhrasebookEntry' => 'Voce del Phrasebook della Query:',
+	'Core:BulkExportMessageEmptyOQL' => 'Inserisci una query OQL valida.',
+	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Seleziona una voce valida del phrasebook della query.',
+	'Core:BulkExportQueryPlaceholder' => 'Digita una query OQL qui...',
+	'Core:BulkExportCanRunNonInteractive' => 'Fai clic qui per eseguire l\'esportazione in modalità non interattiva.',
+	'Core:BulkExportLegacyExport' => 'Fai clic qui per accedere all\'esportazione legacy.',
+	'Core:BulkExport:XLSXOptions' => 'Opzioni Excel',
+	'Core:BulkExport:TextFormat' => 'Campi di testo contenenti markup HTML',
+	'Core:BulkExport:DateTimeFormat' => 'Formato data e ora',
+	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Formato predefinito (%1$s), ad esempio %2$s',
+	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Formato personalizzato: %1$s',
+	'Core:BulkExport:PDF:PageNumber' => 'Pagina %1$s',
 	'Core:DateTime:Placeholder_d' => 'GG',
+
     // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'G',
     // Day of the month: 1 or 2 digits (without leading zero)
@@ -992,115 +997,120 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
     // minutes, 2 digits: 00..59
 	'Core:DateTime:Placeholder_s' => 'ss',
     // seconds, 2 digits 00..59
-	'Core:Validator:Default' => 'Wrong format~~',
-	'Core:Validator:Mandatory' => 'Please, fill this field~~',
-	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
-	'Core:Validator:MustSelectOne' => 'Please, select one~~',
+	'Core:Validator:Default' => 'Formato errato',
+	'Core:Validator:Mandatory' => 'Per favore, compila questo campo',
+	'Core:Validator:MustBeInteger' => 'Deve essere un numero intero',
+	'Core:Validator:MustSelectOne' => 'Per favore, seleziona uno',
+
 ));
 
 //
 // Class: TagSetFieldData
 //
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
+	'Class:TagSetFieldData' => '%2$s per la classe %1$s',
 	'Class:TagSetFieldData+' => '',
-	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
-	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
-	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
-	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
-	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:code' => 'Codice',
+	'Class:TagSetFieldData/Attribute:code+' => 'Codice interno. Deve contenere almeno 3 caratteri alfanumerici',
+	'Class:TagSetFieldData/Attribute:label' => 'Etichetta',
+	'Class:TagSetFieldData/Attribute:label+' => 'Etichetta visualizzata',
+	'Class:TagSetFieldData/Attribute:description' => 'Descrizione',
 	'Class:TagSetFieldData/Attribute:description+' => '',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
-	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
-	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters, starting with a letter.~~',
-	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
-	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
-	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',
-	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" cannot be changed~~',
-	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
-	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
-	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Classe tag',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Classe oggetto',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Codice campo',
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'I tag utilizzati non possono essere eliminati',
+	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'I codici o le etichette dei tag devono essere unici',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Il codice del tag deve contenere tra 3 e %1$d caratteri alfanumerici',
+	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'Il codice del tag scelto è una parola riservata',
+	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'L\'etichetta del tag non deve contenere \'%1$s\' né essere vuota',
+	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Il codice del tag non può essere cambiato quando è in uso',
+	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'La "Classe oggetto" dei tag non può essere cambiata',
+	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Il "Codice attributo" dei tag non può essere cambiato',
+	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Utilizzo tag (%1$d)',
+	'Core:TagSetFieldData:NoEntryFound' => 'Nessuna voce trovata per questo tag',
+
 ));
 
 //
 // Class: DBProperty
 //
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:DBProperty' => 'DB property~~',
+	'Class:DBProperty' => 'Proprietà DB',
 	'Class:DBProperty+' => '',
-	'Class:DBProperty/Attribute:name' => 'Name~~',
+	'Class:DBProperty/Attribute:name' => 'Nome',
 	'Class:DBProperty/Attribute:name+' => '',
-	'Class:DBProperty/Attribute:description' => 'Description~~',
+	'Class:DBProperty/Attribute:description' => 'Descrizione',
 	'Class:DBProperty/Attribute:description+' => '',
-	'Class:DBProperty/Attribute:value' => 'Value~~',
+	'Class:DBProperty/Attribute:value' => 'Valore',
 	'Class:DBProperty/Attribute:value+' => '',
-	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
+	'Class:DBProperty/Attribute:change_date' => 'Data di modifica',
 	'Class:DBProperty/Attribute:change_date+' => '',
-	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
+	'Class:DBProperty/Attribute:change_comment' => 'Commento modifica',
 	'Class:DBProperty/Attribute:change_comment+' => '',
+
 ));
 
 //
 // Class: BackgroundTask
 //
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:BackgroundTask' => 'Background task~~',
+	'Class:BackgroundTask' => 'Task in background',
 	'Class:BackgroundTask+' => '',
-	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
+	'Class:BackgroundTask/Attribute:class_name' => 'Nome della classe',
 	'Class:BackgroundTask/Attribute:class_name+' => '',
-	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
+	'Class:BackgroundTask/Attribute:first_run_date' => 'Data della prima esecuzione',
 	'Class:BackgroundTask/Attribute:first_run_date+' => '',
-	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
+	'Class:BackgroundTask/Attribute:latest_run_date' => 'Data dell\'ultima esecuzione',
 	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
-	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
+	'Class:BackgroundTask/Attribute:next_run_date' => 'Data della prossima esecuzione',
 	'Class:BackgroundTask/Attribute:next_run_date+' => '',
-	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
+	'Class:BackgroundTask/Attribute:total_exec_count' => 'Totale esecuzioni',
 	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
-	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Durata dell\'ultima esecuzione',
 	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
-	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
+	'Class:BackgroundTask/Attribute:min_run_duration' => 'Durata minima di esecuzione',
 	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
-	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
+	'Class:BackgroundTask/Attribute:max_run_duration' => 'Durata massima di esecuzione',
 	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
-	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
+	'Class:BackgroundTask/Attribute:average_run_duration' => 'Durata media di esecuzione',
 	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
-	'Class:BackgroundTask/Attribute:running' => 'Running~~',
+	'Class:BackgroundTask/Attribute:running' => 'In esecuzione',
 	'Class:BackgroundTask/Attribute:running+' => '',
-	'Class:BackgroundTask/Attribute:status' => 'Status~~',
+	'Class:BackgroundTask/Attribute:status' => 'Stato',
 	'Class:BackgroundTask/Attribute:status+' => '',
+
 ));
 
 //
 // Class: AsyncTask
 //
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:AsyncTask' => 'Async. task~~',
+	'Class:AsyncTask' => 'Attività asincrona',
 	'Class:AsyncTask+' => '',
-	'Class:AsyncTask/Attribute:created' => 'Created~~',
+	'Class:AsyncTask/Attribute:created' => 'Creata',
 	'Class:AsyncTask/Attribute:created+' => '',
-	'Class:AsyncTask/Attribute:started' => 'Started~~',
+	'Class:AsyncTask/Attribute:started' => 'Iniziata',
 	'Class:AsyncTask/Attribute:started+' => '',
-	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
+	'Class:AsyncTask/Attribute:planned' => 'Pianificata',
 	'Class:AsyncTask/Attribute:planned+' => '',
-	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
+	'Class:AsyncTask/Attribute:event_id' => 'Evento',
 	'Class:AsyncTask/Attribute:event_id+' => '',
-	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
+	'Class:AsyncTask/Attribute:finalclass' => 'Classe finale',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
-	'Class:AsyncTask/Attribute:status' => 'Status~~',
+	'Class:AsyncTask/Attribute:status' => 'Stato',
 	'Class:AsyncTask/Attribute:status+' => '',
-	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Tentativi rimanenti',
 	'Class:AsyncTask/Attribute:remaining_retries+' => '',
-	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Ultimo codice di errore',
 	'Class:AsyncTask/Attribute:last_error_code+' => '',
-	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
+	'Class:AsyncTask/Attribute:last_error' => 'Ultimo errore',
 	'Class:AsyncTask/Attribute:last_error+' => '',
-	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Ultimo tentativo',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Formato non valido per la configurazione di "async_task_retries[%1$s]". Ci si aspetta un array con le seguenti chiavi: %2$s',
+	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Formato non valido per la configurazione di "async_task_retries[%1$s]": chiave "%2$s" inaspettata. Ci si aspetta solo le seguenti chiavi: %3$s',
+
 ));
 
 //
@@ -1108,8 +1118,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource' => 'Risorsa Astratta', // o 'Risorsa di Base'
 	'Class:AbstractResource+' => '',
+
 ));
 
 //
@@ -1117,8 +1128,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu' => 'Menu di Amministrazione delle Risorse',
 	'Class:ResourceAdminMenu+' => '',
+		
 ));
 
 //
@@ -1126,8 +1138,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu' => 'Menu Esegui Query Risorse',
 	'Class:ResourceRunQueriesMenu+' => '',
+
 ));
 
 //
@@ -1135,8 +1148,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu' => 'Menu di Sistema delle Risorse',
 	'Class:ResourceSystemMenu+' => '',
+		
 ));
 
 
