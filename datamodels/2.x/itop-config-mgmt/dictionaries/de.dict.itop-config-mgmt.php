@@ -34,7 +34,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Relation:depends on/UpStream'    => 'Wirkt auf ...',
 	'Relation:impacts/LoadData'       => 'Daten laden',
 	'Relation:impacts/FilteredData'   => 'Daten sind über den Tab "Grafische Ansicht" gefiltert',
-	'Relation:impacts/NoFilteredData' => 'Bitte wählen Sie Objekte ~~',
+	'Relation:impacts/NoFilteredData' => 'Bitte wählen Sie Objekte',
 ));
 
 

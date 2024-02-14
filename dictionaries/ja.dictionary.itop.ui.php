@@ -357,16 +357,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('JA JP', 'Japanese', '日本語', array(
@@ -439,8 +429,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:WelcomeMenu:MyIncidents' => '担当中のインシデント',
 	'UI:AllOrganizations' => '全ての組織',
 	'UI:YourSearch' => '検索',
-	'UI:LoggedAsMessage' => '%1$s としてログイン済み (%2$s)~~',
-	'UI:LoggedAsMessage+Admin' => '%1$s　(管理者)としてログイン済み (%2$s)~~',
+	'UI:LoggedAsMessage' => '%1$s としてログイン済み (%2$s)',
+	'UI:LoggedAsMessage+Admin' => '%1$s　(管理者)としてログイン済み (%2$s)',
 	'UI:Button:Logoff' => 'ログオフ',
 	'UI:Button:GlobalSearch' => '検索',
 	'UI:Button:Search' => '　検索　',
@@ -487,7 +477,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
 	'UI:InputFile:SelectFile' => 'Select a file~~',
 	'UI:SearchToggle' => '検索（トグル↓↑)',
-	'UI:ClickToCreateNew' => '新規 %1$s を作成~~',
+	'UI:ClickToCreateNew' => '新規 %1$s を作成',
 	'UI:SearchFor_Class' => '%1$s オブジェクトを検索',
 	'UI:NoObjectToDisplay' => '表示するオブジェクトはありません。',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
@@ -607,8 +597,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ResetPwd-Error-NoEmail' => 'missing an email address. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.~~',
 	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
-	'UI:ResetPwd-EmailSubject' => 'Reset your iTop password~~',
-	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your iTop password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
+	'UI:ResetPwd-EmailSubject' => 'Reset your '.ITOP_APPLICATION_SHORT.' password~~',
+	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your '.ITOP_APPLICATION_SHORT.' password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
 	'UI:ResetPwd-Title' => 'Reset password~~',
 	'UI:ResetPwd-Error-InvalidToken' => 'Sorry, either the password has already been reset, or you have received several emails. Please make sure that you use the link provided in the very last email received.~~',
 	'UI:ResetPwd-Error-EnterPassword' => 'Enter a new password for the account \'%1$s\'.~~',
@@ -698,7 +688,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:Error' => 'エラー：%1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => '検索するクラスを選択してください。',
 	'UI:CSVReport-Value-Modified' => '修正済み',
-	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-SetIssue' => 'Invalid value for attribute~~',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
@@ -782,7 +772,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
-	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%% of the object are valid~~',
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQLクエリ評価',
 	'UI:RunQuery:QueryExamples' => 'クエリの例',
 	'UI:RunQuery:QueryResults' => 'Query Results~~',
@@ -801,7 +791,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'An error occured while running the query~~',
 	'UI:Query:UrlForExcel' => 'MS-Excel Webクエリに使用するURL',
-	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'.Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
+	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' オブジェクトスキーマ',
 	'UI:Schema:TitleForClass' => '%1$s schema~~',
 	'UI:Schema:CategoryMenuItem' => 'カテゴリ <b>%1$s</b>',
@@ -944,8 +934,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:SearchResultsTitle' => '検索結果',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => '検索するものがありません。',
-	'UI:Search:NeedleTooShort' => 'The search string \\"%1$s\\" is too short. Please type at least %2$d characters.~~',
-	'UI:Search:Ongoing' => 'Searching for \\"%1$s\\"~~',
+	'UI:Search:NeedleTooShort' => 'The search string "%1$s" is too short. Please type at least %2$d characters.~~',
+	'UI:Search:Ongoing' => 'Searching for "%1$s"~~',
 	'UI:Search:Enlarge' => 'Broaden the search~~',
 	'UI:FullTextSearchTitle_Text' => '"%1$s"の結果：',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%2$sクラスの%1$dオブジェクトが見つかりました。',
@@ -1058,7 +1048,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 </ol>
 </p>
 <p>実行するには、アクションがトリガーに関連づけられている必要があります。
-トリガーに関連づけられると、各々のアクションは順番が与えられ、どの順序でアクションが実行されるかが指定されます。</p>~~',
+トリガーに関連づけられると、各々のアクションは順番が与えられ、どの順序でアクションが実行されるかが指定されます。</p>',
 	'UI:NotificationsMenu:Triggers' => 'トリガー',
 	'UI:NotificationsMenu:AvailableTriggers' => '利用可能トリガー',
 	'UI:NotificationsMenu:OnCreate' => 'オブジェクトが作成された時',
@@ -1202,10 +1192,10 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'クイックアクセス組織',
 	'UI:FavoriteOrganizations+' => '迅速なアクセスのためのドロップダウンメニューに表示したい組織は、以下のリストで確認してください。セキュリティ設定ではないことに注意してください。全ての組織のオブジェクトは、表示可能です。ドロップダウンリストで「すべての組織(All Organizations)」を選択することでアクセスすることができます。',
-	'UI:FavoriteLanguage' => 'ユーザインターフェースの言語~~',
+	'UI:FavoriteLanguage' => 'ユーザインターフェースの言語',
 	'UI:Favorites:SelectYourLanguage' => '希望する言語を選択ください。',
 	'UI:FavoriteOtherSettings' => '他のセッティング',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'リストの規定の長さ: %1$s items 毎ページ~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'リストの規定の長さ: %1$s items 毎ページ',
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data~~',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => '全ての変更を破棄します。',
@@ -1649,7 +1639,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:UserAccountsMenu' => 'ユーザアカウント',
 	'Menu:UserAccountsMenu+' => 'ユーザアカウント',
 	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント',
-	'Menu:UserManagement' => 'User Management~~',
+	'Menu:UserManagement' => 'User management~~',
 	'Menu:Queries' => 'Queries~~',
 	'Menu:ConfigurationTools' => 'Configuration~~'
 ));

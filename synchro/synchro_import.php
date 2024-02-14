@@ -467,6 +467,8 @@ try
 	$aIsBinaryToTransform = array();
 	foreach ($aInputColumns as $iFieldId => $sInputColumn)
 	{
+		$aIsBinaryToTransform[$iFieldId] = false;
+
 		if (array_key_exists($sInputColumn, $aDateColumns))
 		{
 			$aIsDateToTransform[$iFieldId] = $aDateColumns[$sInputColumn]; // either DATE or DATETIME
@@ -487,7 +489,8 @@ try
 		{
 			throw new ExchangeException("Unknown column '$sInputColumn' (class: '$sClass')");
 		}
-		$aIsBinaryToTransform[$iFieldId] = $aColumns[$sInputColumn] === 'LONGBLOB';
+
+		$aIsBinaryToTransform[$iFieldId] = ($aColumns[$sInputColumn] === 'LONGBLOB');
 	}
 	if (!isset($iPrimaryKeyCol))
 	{

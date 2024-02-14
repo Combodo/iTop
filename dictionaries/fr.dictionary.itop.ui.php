@@ -360,16 +360,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Expression:Unit:Short:DAY' => 'j',
-	'Expression:Unit:Short:WEEK' => 's',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'a',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('FR FR', 'French', 'Français', array(
@@ -806,7 +796,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Query:UrlForExcel' => 'Lien à copier-coller dans Excel, pour déclarer une source de données à partir du web',
 	'UI:Query:UrlV1' => 'La liste des champs à exporter n\'a pas été spécifiée. La page <em>export-V2.php</em> ne peut pas fonctionner sans cette information. Par conséquent, le lien fourni ci-dessous pointe sur l\'ancienne page: <em>export.php</em>. Cette ancienne version de l\'export présente la limitation suivante : la liste des champs exportés varie en fonction du format de l\'export et du modèle de données. <br/>Si vous devez garantir la stabilité du format de l\'export (liste des colonnes) sur le long terme, alors vous devrez renseigner l\'attribut "Champs" et utiliser la page <em>export-V2.php</em>.',
 	'UI:Schema:Title' => 'Modèle de données '.ITOP_APPLICATION_SHORT,
-	'UI:Schema:TitleForClass' => 'Modèle de données de %1$s~~',
+	'UI:Schema:TitleForClass' => 'Modèle de données de %1$s',
 	'UI:Schema:CategoryMenuItem' => 'Catégorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relations',
 	'UI:Schema:AbstractClass' => 'Classe abstraite : les objets de cette classe ne peuvent pas être instanciés.',
@@ -939,7 +929,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'Tag:Archived' => 'Archivé',
 	'Tag:Archived+' => 'Accessible seulement dans le mode Archive',
 	'Tag:Obsolete' => 'Obsolète',
-	'Tag:Obsolete+' => 'Exclu de l\'analyse d\'impact et des résultats de recherche~~',
+	'Tag:Obsolete+' => 'Exclu de l\'analyse d\'impact et des résultats de recherche',
 	'Tag:Synchronized' => 'Synchronisé',
 	'ObjectRef:Archived' => 'Archivé',
 	'ObjectRef:Obsolete' => 'Obsolète',

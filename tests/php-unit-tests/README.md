@@ -3,34 +3,24 @@
 Documentation on creating and maintaining tests in iTop.
 
 
-Table of content:
-<!-- TOC -->
-* [Prerequisites](#prerequisites)
-* [Create an iTop PHPUnit test](#create-an-itop-phpunit-test)
-* [Tips: generic PHPUnit](#tips-generic-phpunit)
-* [Tips: iTop tests](#tips-itop-tests)
-* [Test performances](#test-performances)
-* [PHPUnit process isolation](#phpunit-process-isolation)
-<!-- TOC -->
-
 
 
 ## Prerequisites
 
-### PHPUnit configuration file 
+### PHPUnit configuration file
 A default file is located in `/tests/php-unit-tests/phpunit.xml.dist`
 
-If you need to customize it, copy it to `phpunit.xml` (not versioned). 
+If you need to customize it, copy it to `phpunit.xml` (not versioned).
 
 ### PHP configuration
 * PHPUnit configuration file
-  - `memory_limit`: as the tests are for the most part ran in the same process, memory usage may become an issue! A default value is set in default PHPUnit configuration XML file, don't hesitate to update it if needed
+    - `memory_limit`: as the tests are for the most part ran in the same process, memory usage may become an issue! A default value is set in default PHPUnit configuration XML file, don't hesitate to update it if needed
 * PHP CLI php.ini
-  - enable OpCache
-  - disable Xdebug (xdebug.mode=off) : huge performance improvements (between X2 and X3), and we can still debug using PHPStorm !
+    - enable OpCache
+    - disable Xdebug (xdebug.mode=off) : huge performance improvements (between X2 and X3), and we can still debug using PHPStorm !
 
 ### Dependencies
-Whereas iTop dependencies are bundled inside its repository, the tests dependencies are not, and must be added manually. To do so, run `composer install` in the `/tests/php-unit-tests` directory. 
+Whereas iTop dependencies are bundled inside its repository, the tests dependencies are not, and must be added manually. To do so, run `composer install` in the `/tests/php-unit-tests` directory.
 
 ### iTop instance prerequisites to run its test suite
 Install iTop with default setup options :
@@ -40,11 +30,7 @@ Install iTop with default setup options :
 - Simple Change Management
 
 Plus :
--  Additional ITIL tickets : check "Known Errors Management and FAQ"
-
-
-
-
+-  Additional ITIL tickets : check Known Errors Management and FAQ
 
 ## Create an iTop PHPUnit test
 
@@ -53,7 +39,7 @@ Plus :
 - Covers the consistency of some data through the app? => Most likely in `integration-tests` directory
 
 ### iTop test parent classes
-iTop provides PHPUnit TestCase children that provides some helpers and setUp/tearDown overrides : 
+iTop provides PHPUnit TestCase children that provides some helpers and setUp/tearDown overrides :
 - `\Combodo\iTop\Test\UnitTest\ItopTestCase` : for the most simple iTop tests
 - `\Combodo\iTop\Test\UnitTest\ItopDataTestCase` : to get a started metamodel and have cleanup of CRUD operations on iTop objects (transactions by default)
 - `\Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase` : to test a non standard datamodel (available since iTop 2.7.9, 3.0.4, 3.1.0 N°6097)
@@ -65,7 +51,10 @@ iTop provides PHPUnit TestCase children that provides some helpers and setUp/tea
 
 Source [PHPUnit Manual – Chapter 2. Writing Tests for PHPUnit](https://docs.phpunit.de/en/9.6/writing-tests-for-phpunit.html#writing-tests-for-phpunit)
 
+### What about skipped tests ?
+A test can be marked as skipped by using the `markTestAsSkipped()` PHPUnit method. Please use it only for temporary disabled tests, for example the ones that are pushed before their corresponding fix.
 
+For other cases like non-relevant data provider cases, just mark the test valid with `assertTrue(true)` and `return`.
 
 
 
@@ -80,7 +69,7 @@ $this->markTestSkipped('explanation');
 ### Test an exception
 Just before calling the code throwing the exception, call `\PHPUnit\Framework\TestCase::expectException`. You might also use `expectExceptionMessage` and/or `expectExceptionMessageMatches`.
 
-Example : 
+Example :
 
 ```php
 		// Try to delete the tag, must complain !
@@ -91,7 +80,7 @@ Example :
 
 Warning : when the condition is met the test is finished and following code will be ignored !
 
-Another way to do is using try/catch blocks, for example : 
+Another way to do is using try/catch blocks, for example :
 ```php
         $validator = new FormValidator();
  
@@ -136,9 +125,18 @@ Use `UserRights::Login()`
 
 
 
-
-
 ## Test performances
+
+### Memory limit
+
+As the tests are run in the same process, memory usage
+may become an issue as soon as tests are all executed at once.
+
+Fix that in the XML configuration in the PHP section
+```xml
+<ini name="memory_limit" value="512M"/>
+```
+
 
 ### Measure the time spent in a test
 
@@ -185,8 +183,6 @@ By the way, some patterns do not pollute, because they are handled by the test f
 See also `@beforeClass` and `@afterClass` to handle cleanup.
 
 If you can't, then ok you will have to isolate it!
-
-
 
 
 
@@ -240,7 +236,6 @@ the exact same effect as `@runTestsInSeparateProcesses`.
 Note : this option is documented only in the [attributes part of the documentation](https://docs.phpunit.de/en/10.0/attributes.html).
 
 ### Traps
-
 #### Doc block comment format : when it is a matter of stars
 ```php
 /*

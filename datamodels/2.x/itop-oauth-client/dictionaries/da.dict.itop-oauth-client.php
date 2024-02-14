@@ -7,10 +7,10 @@
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:CreateMailbox' => 'Create a mailbox...~~',
-	'Menu:OAuthClient' => 'OAuth Client~~',
+	'Menu:OAuthClient' => 'OAuth client~~',
 	'Menu:OAuthClient+' => '~~',
-	'Menu:GenerateTokens' => 'Generate access tokens...~~',
-	'Menu:RegenerateTokens' => 'Regenerate access tokens...~~',
+	'Menu:GenerateTokens' => 'Generate access token...~~',
+	'Menu:RegenerateTokens' => 'Regenerate access token...~~',
 	'itop-oauth-client/Operation:CreateMailBox/Title' => 'Mailbox creation~~',
 	'itop-oauth-client:UsedForSMTP' => 'This OAuth client is used for SMTP~~',
 	'itop-oauth-client:TestSMTP' => 'Email send test~~',

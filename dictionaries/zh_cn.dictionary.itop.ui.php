@@ -376,16 +376,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Expression:Unit:Short:DAY' => '日',
-	'Expression:Unit:Short:WEEK' => '周',
-	'Expression:Unit:Short:MONTH' => '月',
-	'Expression:Unit:Short:YEAR' => '年',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
@@ -561,7 +551,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:HistoryTab'                 => '历史',
 	'UI:NotificationsTab' => '通知',
 	'UI:History:BulkImports' => '历史',
-	'UI:History:BulkImports+' => 'CSV导入列表 (最新导入在最)~~',
+	'UI:History:BulkImports+' => 'CSV导入列表 (最新导入在最)',
 	'UI:History:BulkImportDetails' => '在%1$s执行CSV导入时造成的变更 (由%2$s)',
 	'UI:History:Date' => '日期',
 	'UI:History:Date+' => '变更日期',

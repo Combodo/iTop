@@ -368,16 +368,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'y',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
@@ -498,7 +488,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:InputFile:NoFileSelected' => 'Žádný soubor nebyl vybrán',
 	'UI:InputFile:SelectFile' => 'Vyberte soubor',
 	'UI:SearchToggle' => 'Hledání',
-	'UI:ClickToCreateNew' => 'Nový objekt (%1$s)~~',
+	'UI:ClickToCreateNew' => 'Nový objekt (%1$s)',
 	'UI:SearchFor_Class' => 'Hledat objekty třídy %1$s',
 	'UI:NoObjectToDisplay' => 'Žádný objekt k zobrazení.',
 	'UI:Error:SaveFailed' => 'Objekt nelze uložit :',
@@ -565,7 +555,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:Actions' => 'Akce',
 	'UI:Menu:OtherActions' => 'Další akce',
 	'UI:Menu:Transitions' => 'Transitions~~',
-	'UI:Menu:OtherTransitions' => 'Other transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:View' => 'Zobrazit tento objekt',
 	'UI:Menu:New' => 'Nový...',
 	'UI:Menu:Add' => 'Přidat...',
@@ -814,7 +804,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Query:UrlForExcel' => 'URL pro MS-Excel web queries',
 	'UI:Query:UrlV1' => 'Nebyl specifikován seznam sloupců k exportu. Bez této informace nemůže stránka <em>export-V2.php</em> provést export. Pro export všech polí použijte stránku <em>export.php</em>. Pokud však chcete udržet konzistenci v delším časovém horzontu, použijte stávající stránku a specifikujte paramter "fields".',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' schéma objektů',
-	'UI:Schema:TitleForClass' => '%1$s schéma~~',
+	'UI:Schema:TitleForClass' => '%1$s schéma',
 	'UI:Schema:CategoryMenuItem' => 'Kategorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Vztahy',
 	'UI:Schema:AbstractClass' => 'Abstraktní třída: instance objektu této třídy nemůže být vytvořena.',
@@ -1067,7 +1057,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
 </ol>
 </p>
-<p>Aby mohly být akce spuštěny, musí být přiřazeny ke triggerům. Každá akce pak dostane své "pořadové" číslo, které určí v jakém pořadí se akce spustí.</p>~~',
+<p>Aby mohly být akce spuštěny, musí být přiřazeny ke triggerům. Každá akce pak dostane své "pořadové" číslo, které určí v jakém pořadí se akce spustí.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Triggery',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Dostupné triggery',
 	'UI:NotificationsMenu:OnCreate' => 'Při vytvoření objektu',
@@ -1082,7 +1072,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Menu:TagAdminMenu+' => 'Tags values management~~',
 	'UI:TagAdminMenu:Title' => 'Tags configuration~~',
 	'UI:TagAdminMenu:NoTags' => 'No Tag field configured~~',
-	'UI:TagSetFieldData:Error' => 'Chyba: %1$s~~',
+	'UI:TagSetFieldData:Error' => 'Chyba: %1$s',
 	'UI:iTopVersion:Short' => '%1$s verze %2$s',
 	'UI:iTopVersion:Long' => '%1$s verze %2$s-%3$s ze dne %4$s',
 	'UI:PropertiesTab' => 'Vlastnosti',

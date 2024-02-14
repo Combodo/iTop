@@ -16,6 +16,10 @@
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Error;
+use Exception;
+use const ARRAY_FILTER_USE_BOTH;
+use const DIRECTORY_SEPARATOR;
 
 
 /**
@@ -26,10 +30,53 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  */
 class Dict
 {
+	/**
+	 * @var bool if true will keep entries in {@see m_aData}
+	 */
+	private static $bLoadEntries = false;
+
+	private static $bSaveKeyDuplicates = false;
+
+	/**
+	 * @var array same as the real Dict class : language code as key, value containing array of dict key / label
+	 */
+	public static $m_aData = [];
+
+	public static $aKeysDuplicate = [];
+
+	public static $sLastAddedLanguageCode = null;
+
+	public static function EnableLoadEntries(bool $bSaveKeyDuplicates = false) :void {
+		self::$sLastAddedLanguageCode = null;
+		self::$m_aData = [];
+		self::$aKeysDuplicate = [];
+		self::$bLoadEntries = true;
+		self::$bSaveKeyDuplicates = $bSaveKeyDuplicates;
+	}
+
 	public static function Add($sLanguageCode, $sEnglishLanguageDesc, $sLocalizedLanguageDesc, $aEntries)
 	{
+		if (false === static::$bLoadEntries) {
+			return;
+		}
+
+		static::$sLastAddedLanguageCode = $sLanguageCode;
+		foreach ($aEntries as $sDictKey => $sDictLabel) {
+			if (self::$bSaveKeyDuplicates) {
+				if (isset(static::$m_aData[$sLanguageCode][$sDictKey])) {
+					if (array_key_exists($sDictKey, self::$aKeysDuplicate)) {
+						self::$aKeysDuplicate[$sDictKey]++;
+					} else {
+						self::$aKeysDuplicate[$sDictKey] = 1;
+					}
+				}
+			}
+			static::$m_aData[$sLanguageCode][$sDictKey] = $sDictLabel;
+		}
 	}
 }
+
+
 
 /**
  * For tests on compiled dict files, see {@see CompiledDictionariesConsistencyTest}
@@ -152,23 +199,35 @@ class DictionariesConsistencyTest extends ItopTestCase
 		$this->CheckDictionarySyntax(__DIR__.'/dictionaries-test/fr.dictionary.itop.core.OK.php', true);
 	}
 
-	/**
-	 * @param string $sDictFile complete path for the file to check
-	 * @param bool $bIsSyntaxValid expected assert value
-	 */
-	private function CheckDictionarySyntax(string $sDictFile, $bIsSyntaxValid = true): void
-	{
+	private function GetPhpCodeFromDictFile(string $sDictFile) : string {
 		$sPHP = file_get_contents($sDictFile);
 		// Strip php tag to allow "eval"
 		$sPHP = substr(trim($sPHP), strlen('<?php'));
 		// Make sure the Dict class is the one declared in the current file
 		$sPHP = 'namespace '.__NAMESPACE__.";\n".$sPHP;
-		$iLineShift = 1; // Cope with the shift due to the namespace statement
+
+		// we are replacing instead of defining the constant so that if the constant is inside the string it will trigger an error
+		// eg 	`'UI:Audit:Title' => 'ITOP_APPLICATION_SHORT - CMDB Audit',`
+		// which should be `'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB Audit',`
+		// Also we are replacing with - instead of _ as ITOP_APPLICATION_SHORT contains ITOP_APPLICATION and we don't want this replacement to occur
 		$sPHP = str_replace(
 			['ITOP_APPLICATION_SHORT', 'ITOP_APPLICATION', 'ITOP_VERSION_NAME'],
-			['\'itop\'', '\'itop\'', '\'1.2.3\''],
+			['\'CONST__ITOP-APPLICATION-SHORT\'', '\'CONST__ITOP-APPLICATION\'', '\'CONST__ITOP-VERSION-NAME\''],
 			$sPHP
 		);
+
+		return $sPHP;
+	}
+
+	/**
+	 * @param string $sDictFile complete path for the file to check
+	 * @param bool $bIsSyntaxValid expected assert value
+	 */
+	private function CheckDictionarySyntax(string $sDictFile, bool $bIsSyntaxValid = true): void
+	{
+		$sPHP = $this->GetPhpCodeFromDictFile($sDictFile);
+		$iLineShift = 1; // Cope with the shift due to the namespace statement added in GetPhpCodeFromDictFile
+
 		try {
 			eval($sPHP);
 			// Reaching this point => No syntax error
@@ -176,13 +235,13 @@ class DictionariesConsistencyTest extends ItopTestCase
 				$this->fail("Failed to detect syntax error in dictionary `{$sDictFile}` (which is known as being INCORRECT)");
 			}
 		}
-		catch (\Error $e) {
+		catch (Error $e) {
 			if ($bIsSyntaxValid) {
 				$iLine = $e->getLine() - $iLineShift;
 				$this->fail("Invalid dictionary: {$e->getMessage()} in {$sDictFile}:{$iLine}");
 			}
 		}
-		catch (\Exception $e) {
+		catch (Exception $e) {
 			if ($bIsSyntaxValid) {
 				$iLine = $e->getLine() - $iLineShift;
 				$sExceptionClass = get_class($e);
@@ -270,4 +329,139 @@ EOF
 			'templates-base',
 		];
 	}
+
+	/**
+	 * @dataProvider DictionaryFileProvider
+	 */
+	public function testDictKeyDefinedOncePerFile(string $sDictFileToTestFullPath): void {
+		Dict::EnableLoadEntries(true);
+
+		$sDictFileToTestPhp = $this->GetPhpCodeFromDictFile($sDictFileToTestFullPath);
+		eval($sDictFileToTestPhp);
+
+		$aDictKeysDefinedMultipleTimes = [];
+		foreach (Dict::$aKeysDuplicate as $sDictKey => $iNumberOfDuplicates) {
+			$sFirstKeyDeclaration = $this->FindDictKeyLineNumberInContent($sDictFileToTestPhp, $sDictKey);
+			$aDictKeysDefinedMultipleTimes[$sDictKey] = $this->MakeFilePathClickable($sDictFileToTestFullPath, $sFirstKeyDeclaration);
+		}
+		$this->assertEmpty(Dict::$aKeysDuplicate, 'Some keys are defined multiple times in this file:'.var_export($aDictKeysDefinedMultipleTimes, true));
+	}
+
+	/**
+	 * @dataProvider DictionaryFileProvider
+	 */
+	public function testNoRemainingTildesInTranslatedKeys(string $sDictFileToTestFullPath): void
+	{
+		Dict::EnableLoadEntries();
+		$sReferenceLangCode = 'EN US';
+		$sReferenceDictName = 'en';
+
+
+		$sDictFileToTestPhp = $this->GetPhpCodeFromDictFile($sDictFileToTestFullPath);
+		eval($sDictFileToTestPhp);
+
+		$sLanguageCodeToTest = Dict::$sLastAddedLanguageCode;
+		if (is_null($sLanguageCodeToTest)) {
+			$this->assertTrue(true, 'No Dict::Add call in this file !');
+			return;
+		}
+		if ($sLanguageCodeToTest === $sReferenceLangCode) {
+			$this->assertTrue(true, 'Not testing reference lang !');
+			return;
+		}
+		if (empty(Dict::$m_aData[$sLanguageCodeToTest])) {
+			$this->assertTrue(true, 'No Dict key defined in this file !');
+			return;
+		}
+
+		$oDictFileToTestInfo = pathinfo($sDictFileToTestFullPath);
+		$sDictFilesDir = $oDictFileToTestInfo['dirname'];
+		$sDictFileToTestFilename = $oDictFileToTestInfo['basename'];
+		$sDictFileReferenceFilename = preg_replace('/^[^.]*./', $sReferenceDictName.'.', $sDictFileToTestFilename);
+		$sDictFileReferenceFullPath = $sDictFilesDir.DIRECTORY_SEPARATOR.$sDictFileReferenceFilename;
+		$sDictFileReferencePhp = $this->GetPhpCodeFromDictFile($sDictFileReferenceFullPath);
+		eval($sDictFileReferencePhp);
+		if (empty(Dict::$m_aData[$sReferenceLangCode])) {
+			$this->assertTrue(true, 'No Dict key defined in the reference file !');
+			return;
+		}
+
+		$aLangToTestDictEntries = Dict::$m_aData[$sLanguageCodeToTest];
+		$aReferenceLangDictEntries = Dict::$m_aData[$sReferenceLangCode];
+
+
+		$this->assertGreaterThan(0, count($aLangToTestDictEntries), 'There should be at least one entry in the dictionary file to test');
+		$aLangToTestDictEntriesNotEmptyValues = array_filter(
+			$aLangToTestDictEntries,
+			static function ($value, $key) {
+				return !empty($value);
+			},
+			ARRAY_FILTER_USE_BOTH
+		);
+		$this->assertNotEmpty($aLangToTestDictEntriesNotEmptyValues);
+
+
+		$aTranslatedKeysWithTildes = [];
+		foreach ($aReferenceLangDictEntries as $sDictKey => $sReferenceLangLabel) {
+			if (false === array_key_exists($sDictKey, $aLangToTestDictEntries)) {
+				continue;
+			}
+
+			$sTranslatedLabel = $aLangToTestDictEntries[$sDictKey];
+
+			$bTranslatedLabelHasTildes = preg_match('/~~$/', $sTranslatedLabel) === 1;
+			if (false === $bTranslatedLabelHasTildes) {
+				continue;
+			}
+
+			$sTranslatedLabelWithoutTildes = preg_replace('/~~$/', '', $sTranslatedLabel);
+			if ($sTranslatedLabelWithoutTildes === '') {
+				continue;
+			}
+
+			if ($sTranslatedLabelWithoutTildes === $sReferenceLangLabel) {
+				continue;
+			}
+
+			$sDictKeyLineNumberInDictFileToTest = $this->FindDictKeyLineNumberInContent($sDictFileToTestPhp, $sDictKey);
+			$sDictKeyLineNumberInDictFileReference = $this->FindDictKeyLineNumberInContent($sDictFileReferencePhp, $sDictKey);
+			$aTranslatedKeysWithTildes[$sDictKey] = [
+				$sLanguageCodeToTest.'_file_location' => $this->MakeFilePathClickable($sDictFileToTestFullPath, $sDictKeyLineNumberInDictFileToTest),
+				$sLanguageCodeToTest => $sTranslatedLabel,
+				$sReferenceLangCode.'_file_location' => $this->MakeFilePathClickable($sDictFileReferenceFullPath, $sDictKeyLineNumberInDictFileReference),
+				$sReferenceLangCode => $sReferenceLangLabel
+			];
+		}
+
+		$sPathRoot = static::GetAppRoot();
+		$sDictFileToTestRelativePath = str_replace($sPathRoot, '', $sDictFileToTestFullPath);
+		$this->assertEmpty($aTranslatedKeysWithTildes, "In {$sDictFileToTestRelativePath} \n following keys are different from their '{$sReferenceDictName}' counterpart (translated ?) but have tildes at the end:\n" . var_export($aTranslatedKeysWithTildes, true));
+	}
+
+	/**
+	 * @param string $sFullPath
+	 * @param int $iLineNumber
+	 *
+	 * @return string a path that is clickable in PHPStorm 🤩
+	 *              For this to happen we need full path with correct dir sep + line number
+	 *              If it is not, check in File | Settings | Tools | Terminal the hyperlink option is checked
+     */
+	private function MakeFilePathClickable(string $sFullPath, int $iLineNumber):string {
+		return str_replace(array('//', '/'), array('/', DIRECTORY_SEPARATOR), $sFullPath).':'.$iLineNumber;
+	}
+
+	private function FindDictKeyLineNumberInContent(string $sFileContent, string $sDictKey): int
+	{
+    	$aContentLines = explode("\n", $sFileContent);
+		$sDictKeyToFind = "'{$sDictKey}'"; // adding string delimiters to match exact dict key (eg if not we would match 'Core:AttributeDateTime?SmartSearch' for 'Core:AttributeDateTime')
+
+		foreach($aContentLines as $iLineNumber => $line) {
+			if(strpos($line, $sDictKeyToFind) !== false){
+				return $iLineNumber;
+			}
+		}
+
+		return 1;
+	}
+
 }
