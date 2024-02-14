@@ -65,7 +65,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'iTopHub:Uncompressing' => 'Uncompressing extensions...',
 	'iTopHub:InstallationWelcome' => 'Installation of the extensions downloaded from iTop Hub',
 	'iTopHub:DBBackupLabel' => 'Instance backup',
-	'iTopHub:DBBackupSentence' => 'Do a backup of the database and iTop configuration before updating',
+	'iTopHub:DBBackupSentence' => 'Do a backup of the database and '.ITOP_APPLICATION_SHORT.' configuration before updating',
 	'iTopHub:DeployBtn' => 'Deploy !',
 	'iTopHub:DatabaseBackupProgress' => 'Instance backup...',
 

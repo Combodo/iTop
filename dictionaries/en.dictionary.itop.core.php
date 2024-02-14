@@ -539,6 +539,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Action/Attribute:finalclass' => 'Action sub-class',
 	'Class:Action/Attribute:finalclass+' => 'Name of the final class',
 	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.',
+	'Action:last_executions_tab' => 'Last executions',
+	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)',
+	'Action:last_executions_tab_limit_days' => 'past %1$s days',
+	'Action:last_executions_tab_limit_none' => 'no limit',
 ));
 
 //
@@ -1130,9 +1134,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label',
 	'Class:TagSetFieldData/Attribute:description' => 'Description',
 	'Class:TagSetFieldData/Attribute:description+' => '',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code',
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique',

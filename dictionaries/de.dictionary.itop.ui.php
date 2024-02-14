@@ -356,16 +356,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Expression:Unit:Short:DAY' => 't',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'j',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('DE DE', 'German', 'Deutsch', array(

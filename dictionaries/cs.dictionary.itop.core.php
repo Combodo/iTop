@@ -477,7 +477,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ActionEmail' => 'Emailové upozornění',
 	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: 
+- Being tested: just the Test recipient, 
+- In production: all (To, cc and Bcc) 
+- Inactive: no-one~~',
 	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
 	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
 	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
@@ -486,11 +489,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ActionEmail/Attribute:from' => 'Odesílatel',
 	'Class:ActionEmail/Attribute:from+' => '',
 	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
-	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Either a static label or a placeholder like $this->agent_id->friendlyname$~~',
 	'Class:ActionEmail/Attribute:reply_to' => 'Odpověď na',
 	'Class:ActionEmail/Attribute:reply_to+' => '',
 	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
-	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Either a static label or a placeholder like $this->team_id->friendlyname$.
+If omitted the From (label) is used.~~',
 	'Class:ActionEmail/Attribute:to' => 'To',
 	'Class:ActionEmail/Attribute:to+' => 'Adresát',
 	'Class:ActionEmail/Attribute:cc' => 'Cc',
@@ -703,7 +707,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Hypertextový odkaz na '.ITOP_APPLICATION_SHORT.' objekt v externí aplikaci, se kterou je '.ITOP_APPLICATION_SHORT.' synchronizován (pokud je to relevantní). Možné zástupné symboly: $this->attribute$ a $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Způsob párování',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Use the attributes": '.ITOP_APPLICATION_SHORT.' object matches replica values for each Synchro attributes flagged for Reconciliation.
-	"Use primary_key": the column primary_key of the replica is expected to contain the identifier of the '.ITOP_APPLICATION_SHORT.' object~~',
+"Use primary_key": the column primary_key of the replica is expected to contain the identifier of the '.ITOP_APPLICATION_SHORT.' object~~',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Interval mezi dvěma kompletními načteními',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Kompletní načtení všech dat musí proběhnout nejméně tak často, jak je uvedeno zde',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Akce pro nula výsledků',

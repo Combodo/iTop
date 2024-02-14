@@ -17,7 +17,9 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\Router\Router;
 
 /**
  * Persistent classes (internal): user defined actions
@@ -167,6 +169,61 @@ abstract class Action extends cmdbAbstractObject
 		if ($oTriggersSet->Count() === 0) {
 			$this->m_aCheckWarnings[] = Dict::S('Action:WarningNoTriggerLinked');
 		}
+	}
+
+	/**
+	 * @since 3.2.0 N°5472 method creation
+	 */
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	{
+		parent::DisplayBareRelations($oPage, false);
+
+		if ($oPage instanceof iTopWebPage) {
+			$this->GenerateLastExecutionsTab($oPage, $bEditMode);
+		}
+	}
+
+	/**
+	 * @since 3.2.0 N°5472 method creation
+	 */
+	protected function GenerateLastExecutionsTab(iTopWebPage $oPage, $bEditMode)
+	{
+		$oRouter = Router::GetInstance();
+		$sActionLastExecutionsPageUrl = $oRouter->GenerateUrl('notifications.action.last_executions_tab', ['action_id' => $this->GetKey()]);
+		$oPage->AddAjaxTab('action_errors', $sActionLastExecutionsPageUrl, false, Dict::S('Action:last_executions_tab'));
+	}
+
+	/**
+	 * @throws InvalidConfigParamException
+	 * @since 3.2.0 N°5472 method creation
+	 */
+	public function GetLastExecutionsTabContent(WebPage $oPage): void
+	{
+		$oConfig = utils::GetConfig();
+		$sLastExecutionDaysConfigParamName = 'notifications.last_executions_days';
+		$iLastExecutionDays = $oConfig->Get($sLastExecutionDaysConfigParamName);
+
+		if ($iLastExecutionDays < 0) {
+			throw new InvalidConfigParamException("Invalid value for {$sLastExecutionDaysConfigParamName} config parameter. Param desc: " . $oConfig->GetDescription($sLastExecutionDaysConfigParamName));
+		}
+
+		$sActionQueryOql = 'SELECT EventNotification WHERE action_id = :action_id';
+		$aActionQueryParams = ['action_id' => $this->GetKey()];
+		if ($iLastExecutionDays > 0) {
+			$sActionQueryOql .= ' AND date > DATE_SUB(NOW(), INTERVAL :days DAY)';
+			$aActionQueryParams['days'] = $iLastExecutionDays;
+			$sActionQueryLimit = Dict::Format('Action:last_executions_tab_limit_days', $iLastExecutionDays);
+		} else {
+			$sActionQueryLimit = Dict::S('Action:last_executions_tab_limit_none');
+		}
+
+		$oActionFilter = DBObjectSearch::FromOQL($sActionQueryOql, $aActionQueryParams);
+		$oSet = new DBObjectSet($oActionFilter, ['date' => false]);
+
+		$sPanelTitle = Dict::Format('Action:last_executions_tab_panel_title', $sActionQueryLimit);
+		$oExecutionsListBlock = DataTableUIBlockFactory::MakeForResult($oPage, 'action_executions_list', $oSet, ['panel_title' => $sPanelTitle]);
+
+		$oPage->AddUiBlock($oExecutionsListBlock);
 	}
 }
 
@@ -646,9 +703,7 @@ class ActionEmail extends ActionNotification
 				$oLog->Set('body', HTMLSanitizer::Sanitize($aMessageContent['body']));
 			}
 		}
-		$sStyles = file_get_contents(APPROOT.'css/email.css');
-		$sStyles .= MetaModel::GetConfig()->Get('email_css');
-		
+
 		if ($this->IsBeingTested()) {
 			$sTestBody = $aMessageContent['body'];
 			$sTestBody .= "<div style=\"border: dashed;\">\n";

@@ -1619,6 +1619,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'notifications.last_executions_days' => [
+			'type' => 'integer',
+			'description' => 'Number of days to display in the Action\'s last executions tab (0 means no limit)',
+			'default' => 30 + 31, // 2 months
+			'value' => 61,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'regenerate_session_id_enabled' => [
 			'type' => 'bool',
 			'description' => 'If true then session id will be regenerated on each login, to prevent session fixation.',

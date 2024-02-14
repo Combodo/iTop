@@ -53,7 +53,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBAnalyzer-Integrity-InvalidValue' => '无效的值%1$s (列: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => '一些用户账号没有角色',
 	'DBAnalyzer-Integrity-HKInvalid' => '损坏的层级链 `%1$s`',
-	'DBAnalyzer-Fetch-Count-Error' => '读取计数出错于 `%1$s`, %2$d个记录已读取 / %3$d已~~',
+	'DBAnalyzer-Fetch-Count-Error' => '读取计数出错于 `%1$s`, %2$d个记录已读取 / %3$d已',
 	'DBAnalyzer-Integrity-FinalClass' => '字段 `%2$s`.`%1$s` 必须是相同的值, 而不是 `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => '字段 `%2$s`.`%1$s` 必须包含一个有效的类型',
 ));

@@ -1218,7 +1218,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => '最近尝试',
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
-	'Class:AsyncTask:InvalidConfig_Class_Keys' => '配置 "async_task_retries[%1$s]" 的格式无效. 应该为包含以下值的数组: %2$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => '配置 "async_task_retries[%1$s]" 的格式无效. 应该为包含以下值的数组: %2$s',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => '配置 "async_task_retries[%1$s]" 的格式无效: 未知的值 "%2$s". 应该只包含以下值: %3$s',
 ));
 

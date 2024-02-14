@@ -769,6 +769,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Controller\\Base\\Layout\\ObjectController' => __DIR__ . '/../..' . '/sources/Controller/Base/Layout/ObjectController.php',
         'Combodo\\iTop\\Controller\\Links\\LinkSetController' => __DIR__ . '/../..' . '/sources/Controller/Links/LinkSetController.php',
         'Combodo\\iTop\\Controller\\Newsroom\\iTopNewsroomController' => __DIR__ . '/../..' . '/sources/Controller/Newsroom/iTopNewsroomController.php',
+        'Combodo\\iTop\\Controller\\Notifications\\ActionController' => __DIR__ . '/../..' . '/sources/Controller/Notifications/ActionController.php',
         'Combodo\\iTop\\Controller\\OAuth\\OAuthLandingController' => __DIR__ . '/../..' . '/sources/Controller/OAuth/OAuthLandingController.php',
         'Combodo\\iTop\\Controller\\PreferencesController' => __DIR__ . '/../..' . '/sources/Controller/PreferencesController.php',
         'Combodo\\iTop\\Controller\\TemporaryObjects\\TemporaryObjectController' => __DIR__ . '/../..' . '/sources/Controller/TemporaryObjects/TemporaryObjectController.php',

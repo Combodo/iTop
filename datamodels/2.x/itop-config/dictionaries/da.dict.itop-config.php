@@ -21,7 +21,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Menu:ConfigEditor' => 'Configuration~~',
+	'Menu:ConfigEditor' => 'General configuration~~',
 	'config-edit-title' => 'Configuration File Editor~~',
 	'config-edit-intro' => 'Be very cautious when editing the configuration file.~~',
 	'config-apply' => 'Apply~~',
