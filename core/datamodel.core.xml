@@ -94,6 +94,13 @@
                     </item>
                   </items>
                 </item>
+                <item id="fieldset:ActioniTopNotification:trigger">
+                  <items>
+                    <item id="trigger_list">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
               </items>
             </item>
             <item id="col:col2">

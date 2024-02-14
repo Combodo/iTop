@@ -584,7 +584,10 @@ En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ActioniTopNotification' => 'ActioniTopNotification',
+	'ActioniTopNotification:trigger' => 'Conditions de déclenchement',
+	'ActioniTopNotification:content' => 'Message',
+	'ActioniTopNotification:settings' => 'Paramètres',
+	'Class:ActioniTopNotification' => 'iTop Notification',
 	'Class:ActioniTopNotification+' => '',
 	'Class:ActioniTopNotification/Attribute:title' => 'Titre',
 	'Class:ActioniTopNotification/Attribute:title+' => '',
