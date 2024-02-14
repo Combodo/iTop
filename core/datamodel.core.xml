@@ -166,6 +166,10 @@
 		$oRecipientsSet = new DBObjectSet($oRecipientsSearch);
 		[$sPreviousLanguage, $aPreviousPluginProperties] = $this->SetNotificationLanguage();
 		while ($oRecipient = $oRecipientsSet->Fetch()) {
+		  // Skip recipients that have no users
+		  if(get_class($oRecipient) === Person::class && UserRights::GetUserFromPerson($oRecipient) === null) {
+        continue;
+      }
 			$oEvent = new EventiTopNotification();
 			$oEvent->Set('title', MetaModel::ApplyParams($this->Get('title'), $aContextArgs));
 			$oEvent->Set('message', MetaModel::ApplyParams($this->Get('message'), $aContextArgs));
