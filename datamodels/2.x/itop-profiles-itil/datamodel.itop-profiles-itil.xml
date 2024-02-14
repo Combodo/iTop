@@ -128,6 +128,7 @@
           <class id="AuditDomain"/>
           <class id="AuditCategory"/>
           <class id="AuditRule"/>
+          <class id="lnkAuditCategoryToAuditDomain"/>
           <class id="ResourceRunQueriesMenu"/>
         </classes>
       </group>
@@ -170,6 +171,7 @@
           <class id="AuditDomain"/>
           <class id="AuditCategory"/>
           <class id="AuditRule"/>
+          <class id="lnkAuditCategoryToAuditDomain"/>
           <!-- Query group -->
           <class id="Query"/>
           <class id="QueryOQL"/>
