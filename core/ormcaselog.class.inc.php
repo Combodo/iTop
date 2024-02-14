@@ -169,7 +169,7 @@ class ormCaseLog {
 		}
 
 		// Process the case of an eventual remainder (quick migration of AttributeText fields)
-		if ($iPos < (strlen($this->m_sLog) - 1))
+		if ($iPos < (utils::StrLen($this->m_sLog) - 1))
 		{
 			$sTextEntry = substr($this->m_sLog, $iPos);
 
@@ -292,7 +292,7 @@ class ormCaseLog {
 		}
 
 		// Process the case of an eventual remainder (quick migration of AttributeText fields)
-		if ($iPos < (strlen($this->m_sLog) - 1)) {
+		if ($iPos < (utils::StrLen($this->m_sLog) - 1)) {
 			$sTextEntry = substr($this->m_sLog, $iPos);
 			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
 
@@ -373,7 +373,7 @@ class ormCaseLog {
 		}
 
 		// Process the case of an eventual remainder (quick migration of AttributeText fields)
-		if ($iPos < (strlen($this->m_sLog) - 1)) {
+		if ($iPos < (utils::StrLen($this->m_sLog) - 1)) {
 			$sTextEntry = substr($this->m_sLog, $iPos);
 			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
 
@@ -467,7 +467,7 @@ class ormCaseLog {
 			$oBlock->AddSubBlock($oCollapsibleBlock);
 		}
 		// Process the case of an eventual remainder (quick migration of AttributeText fields)
-		if ($iPos < (strlen($this->m_sLog) - 1)) {
+		if ($iPos < (utils::StrLen($this->m_sLog) - 1)) {
 			// In this case the format is always "text"
 			$sTextEntry = substr($this->m_sLog, $iPos);
 			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
