@@ -1575,3 +1575,62 @@ let CombodoModal = {
 		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR, oOptions);
 	},
 };
+
+/**
+ * Abstract wrapper to manage toasts in iTop.
+ * Implementations for the various GUIs may vary but APIs are the same.
+ *
+ * @since 3.2.0
+ */
+let CombodoToast= {
+	/**
+	 * Open a standard toast and put the content into it.
+	 *
+	 * @param sMessage {String} Message to be displayed in the toast
+	 * @param sSeverity {String} Severity of the information. Default values are success, information, warning, error.
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenToast: function(sMessage, sSeverity, aOptions = {}) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoToast.OpenToast not implemented');
+	},
+	/**
+	 * Open a standard toast for success messages.
+	 *
+	 * @param sMessage {String} Success message to be displayed in the toast
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenSuccessToast: function(sMessage, aOptions = {}) {
+		CombodoToast.OpenToast(sMessage, 'success', aOptions);
+	},
+	
+	/**
+	 * Open a standard toast for information messages.
+	 *
+	 * @param sMessage {String} Information message to be displayed in the toast
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenInformationToast: function(sMessage, aOptions = {}) {
+		CombodoToast.OpenToast(sMessage, 'information', aOptions);
+	},
+	
+	/**
+	 * Open a standard toast for warning messages.
+	 *
+	 * @param sMessage {String} Warning message to be displayed in the toast
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenWarningToast: function(sMessage, aOptions = {}) {
+		CombodoToast.OpenToast(sMessage, 'warning', aOptions);
+	},
+	
+	/**
+	 * Open a standard toast for error messages.
+	 *
+	 * @param sMessage {String} Error message to be displayed in the toast
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenErrorToast: function(sMessage, aOptions = {}) {
+		CombodoToast.OpenToast(sMessage, 'error', aOptions);
+	}
+};

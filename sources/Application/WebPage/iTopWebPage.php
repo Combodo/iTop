@@ -198,6 +198,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// Tooltips
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.min.js');
+		
+		// Toast
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/toastify-js/src/toastify.js');
 
 		// Keyboard shortcuts
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap.min.js');
