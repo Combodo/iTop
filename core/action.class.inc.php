@@ -629,9 +629,7 @@ class ActionEmail extends ActionNotification
 				$oLog->Set('body', HTMLSanitizer::Sanitize($aMessageContent['body']));
 			}
 		}
-		$sStyles = file_get_contents(APPROOT.'css/email.css');
-		$sStyles .= MetaModel::GetConfig()->Get('email_css');
-		
+
 		if ($this->IsBeingTested()) {
 			$sTestBody = $aMessageContent['body'];
 			$sTestBody .= "<div style=\"border: dashed;\">\n";
