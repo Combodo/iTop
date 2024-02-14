@@ -285,6 +285,12 @@ on the page's parameters
 	 */
 	public function Run()
 	{
+		/**
+		 * @since 3.2.0 Add the ContextTag init
+		 * @noinspection PhpUnusedLocalVariableInspection
+		 */
+		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
+
 		$sOperation = utils::ReadParam('operation');
 		$this->aParameters = utils::ReadParam('_params', array(), false, 'raw_data');
 		$this->aSteps  = json_decode(utils::ReadParam('_steps', '[]', false, 'raw_data'), true /* bAssoc */);
