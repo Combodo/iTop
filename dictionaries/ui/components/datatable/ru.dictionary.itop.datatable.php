@@ -24,7 +24,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Datatables:Language:Info' => '_TOTAL_ элементов',
 	'UI:Datatables:Language:InfoEmpty' => 'Нет информации',
 	'UI:Datatables:Language:EmptyTable' => 'Нет данных для отображения',
-	'UI:Datatables:Language:Error' => 'An error occured while running the query~~',
+	'UI:Datatables:Language:Error' => 'An error occurred while running the query~~',
 	'UI:Datatables:Language:DisplayLength:All' => 'Все',
 	'UI:Datatables:Language:Sort:Ascending' => 'Включить для сортировки по возрастанию',
 	'UI:Datatables:Language:Sort:Descending' => 'Включить для сортировки по убыванию',

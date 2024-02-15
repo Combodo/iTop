@@ -18,6 +18,9 @@ namespace Combodo\iTop\Test\UnitTest\Integration;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Error;
 use Exception;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use RegexIterator;
 use const ARRAY_FILTER_USE_BOTH;
 use const DIRECTORY_SEPARATOR;
 
@@ -161,16 +164,28 @@ class DictionariesConsistencyTest extends ItopTestCase
 		$sAppRoot = static::GetAppRoot();
 
 
-		$aDictFiles = array_merge(
+		$aDictFilesCore = [];
+		$sCoreDictionariesPath = realpath($sAppRoot.'dictionaries');
+		$sDictFilePattern = '/^.+\.dict.*\.php$/i';
+		$oDirIterator = new RecursiveDirectoryIterator($sCoreDictionariesPath, RecursiveDirectoryIterator::SKIP_DOTS);
+		$oIterator = new RecursiveIteratorIterator($oDirIterator, RecursiveIteratorIterator::SELF_FIRST);
+		$oRegexIterator = new RegexIterator($oIterator, $sDictFilePattern, RegexIterator::GET_MATCH);
+		foreach($oRegexIterator as $file) {
+			$aDictFilesCore[] = $file[0];
+		}
+
+
+		$aDictFilesModules = array_merge(
 			glob($sAppRoot.'datamodels/2.x/*/*.dict*.php'), // legacy form in modules
 			glob($sAppRoot.'datamodels/2.x/*/dictionaries/*.dict*.php'), // modern form in modules
-			glob($sAppRoot.'dictionaries/*.dict*.php'), // framework
 
 			//--- Following should not be present in packages, but are convenient for local debugging !
 			glob($sAppRoot.'extensions/*/*.dict*.php'),
 			glob($sAppRoot.'extensions/*/dictionaries/*.dict*.php'),
 		);
 
+
+		$aDictFiles = array_merge($aDictFilesCore, $aDictFilesModules);
 
 		$aTestCases = array();
 		foreach ($aDictFiles as $sDictFile) {
