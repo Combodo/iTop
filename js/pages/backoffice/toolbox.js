@@ -468,7 +468,7 @@ CombodoToast.OpenToast = function(sMessage, sSeverity, aOptions) {
 		className: "ibo-toast ibo-is-" + sSeverity,
 		duration: 6000,
 		close: true,
-		gravity: GetUserPreference('toast_vertical_position', 'bottom'),
+		gravity: GetUserPreference('toasts_vertical_position', 'bottom'),
 		position: "right",
 		stopOnFocus: true,
 	}, aOptions);
