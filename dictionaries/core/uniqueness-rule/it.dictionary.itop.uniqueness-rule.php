@@ -22,4 +22,4 @@
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s è già collegato a %3$s: %4$s, i duplicati non sono consentiti su questa relazione.',
-
+]);
