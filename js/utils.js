@@ -1591,7 +1591,7 @@ let CombodoToast = {
 	 * @param aOptions {Object} {@see CombodoModal.OpenModal
 	 */
 	OpenToast: function(sMessage, sSeverity, aOptions = {}) {
-		// Meant for overlaoding
+		// Meant for overloading
 		CombodoJSConsole.Debug('CombodoToast.OpenToast not implemented');
 	},
 	/**
