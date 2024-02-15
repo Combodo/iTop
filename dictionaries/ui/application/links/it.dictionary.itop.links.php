@@ -24,51 +24,52 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
  // $%3s : current tab name
  // $%4s : remote object class name
  // $%5s : remote object friendlyname
-	'UI:Links:Object:New:Modal:Title' => 'Create an object~~',
-
+	'UI:Links:Object:New:Modal:Title' => 'Crea un oggetto',
+	
 	// Create
-	'UI:Links:Create:Button' => 'Create~~',
-	'UI:Links:Create:Button+' => 'Create a %4$s~~',
-	'UI:Links:Create:Modal:Title' => 'Create a %4$s in %2$s~~',
-
+	'UI:Links:Create:Button' => 'Crea',
+	'UI:Links:Create:Button+' => 'Crea un %4$s',
+	'UI:Links:Create:Modal:Title' => 'Crea un %4$s in %2$s',
+	
 	// Add
-	'UI:Links:Add:Button' => 'Add~~',
-	'UI:Links:Add:Button+' => 'Add a %4$s~~',
-	'UI:Links:Add:Modal:Title' => 'Add a %4$s to %2$s~~',
-
+	'UI:Links:Add:Button' => 'Aggiungi',
+	'UI:Links:Add:Button+' => 'Aggiungi un %4$s',
+	'UI:Links:Add:Modal:Title' => 'Aggiungi un %4$s a %2$s',
+	
 	// Modify link
-	'UI:Links:ModifyLink:Button' => 'Modify~~',
-	'UI:Links:ModifyLink:Button+' => 'Modify this link~~',
-	'UI:Links:ModifyLink:Modal:Title' => 'Modify the link between %2$s and %5$s~~',
-
+	'UI:Links:ModifyLink:Button' => 'Modifica',
+	'UI:Links:ModifyLink:Button+' => 'Modifica questo link',
+	'UI:Links:ModifyLink:Modal:Title' => 'Modifica il link tra %2$s e %5$s',
+	
 	// Modify object
-	'UI:Links:ModifyObject:Button' => 'Modify~~',
-	'UI:Links:ModifyObject:Button+' => 'Modify this object~~',
-	'UI:Links:ModifyObject:Modal:Title' => '%5$s~~',
-
+	'UI:Links:ModifyObject:Button' => 'Modifica',
+	'UI:Links:ModifyObject:Button+' => 'Modifica questo oggetto',
+	'UI:Links:ModifyObject:Modal:Title' => '%5$s',
+	
 	// Remove
-	'UI:Links:Remove:Button' => 'Remove~~',
-	'UI:Links:Remove:Button+' => 'Remove this %4$s~~',
-	'UI:Links:Remove:Modal:Title' => 'Remove a %4$s from its %1$s~~',
-	'UI:Links:Remove:Modal:Message' => 'Do you really want to remove %5$s from %2$s?~~',
-
+	'UI:Links:Remove:Button' => 'Rimuovi',
+	'UI:Links:Remove:Button+' => 'Rimuovi questo %4$s',
+	'UI:Links:Remove:Modal:Title' => 'Rimuovi un %4$s dal suo %1$s',
+	'UI:Links:Remove:Modal:Message' => 'Vuoi davvero rimuovere %5$s da %2$s?',
+	
 	// Delete
-	'UI:Links:Delete:Button' => 'Delete~~',
-	'UI:Links:Delete:Button+' => 'Delete this %4$s~~',
-	'UI:Links:Delete:Modal:Title' => 'Delete a %4$s~~',
-	'UI:Links:Delete:Modal:Message' => 'Do you really want to delete %5$s?~~',
-
+	'UI:Links:Delete:Button' => 'Elimina',
+	'UI:Links:Delete:Button+' => 'Elimina questo %4$s',
+	'UI:Links:Delete:Modal:Title' => 'Elimina un %4$s',
+	'UI:Links:Delete:Modal:Message' => 'Vuoi davvero eliminare %5$s?',
+	
 	// Bulk
-	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects' => 'Add to all objects~~',
-	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => 'Remove from all objects~~',
-	'UI:Links:Bulk:LinkWillBeCreatedFor1Object' => 'Add to one object~~',
-	'UI:Links:Bulk:LinkWillBeDeletedFrom1Object' => 'Remove from one object~~',
-	'UI:Links:Bulk:LinkWillBeCreatedForXObjects' => 'Add {count} objects~~',
-	'UI:Links:Bulk:LinkWillBeDeletedFromXObjects' => 'Remove {count} objects~~',
-	'UI:Links:Bulk:LinkExistForAllObjects' => 'All objets are already linked~~',
-	'UI:Links:Bulk:LinkExistForOneObject' => 'One object is linked~~',
-	'UI:Links:Bulk:LinkExistForXObjects' => '{count} objects are linked~~',
-
+	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects' => 'Aggiungi a tutti gli oggetti',
+	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => 'Rimuovi da tutti gli oggetti',
+	'UI:Links:Bulk:LinkWillBeCreatedFor1Object' => 'Aggiungi a un oggetto',
+	'UI:Links:Bulk:LinkWillBeDeletedFrom1Object' => 'Rimuovi da un oggetto',
+	'UI:Links:Bulk:LinkWillBeCreatedForXObjects' => 'Aggiungi {count} oggetti',
+	'UI:Links:Bulk:LinkWillBeDeletedFromXObjects' => 'Rimuovi {count} oggetti',
+	'UI:Links:Bulk:LinkExistForAllObjects' => 'Tutti gli oggetti sono già collegati',
+	'UI:Links:Bulk:LinkExistForOneObject' => 'Un oggetto è collegato',
+	'UI:Links:Bulk:LinkExistForXObjects' => '{count} oggetti sono collegati',
+	
 	// New item
-	'UI:Links:NewItem' => 'New item~~',
+	'UI:Links:NewItem' => 'Nuovo elemento',
+
 ));

@@ -344,6 +344,6 @@ class ormDocument
 	 */
 	public function GetSignature(): string
 	{
-		return md5($this->GetData());
+		return md5($this->GetData() ?? '');
 	}
 }

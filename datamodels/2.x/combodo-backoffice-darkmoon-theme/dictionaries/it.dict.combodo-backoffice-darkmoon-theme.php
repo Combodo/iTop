@@ -21,5 +21,5 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'theme:darkmoon' => 'Dark moon~~',
+	'theme:darkmoon' => 'Luna scura',
 ));

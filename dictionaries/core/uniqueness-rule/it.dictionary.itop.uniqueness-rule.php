@@ -21,5 +21,5 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s is already linked to %3$s: %4$s, duplicates are not allowed on this relation.~~',
-]);
+	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s è già collegato a %3$s: %4$s, i duplicati non sono consentiti su questa relazione.',
+
