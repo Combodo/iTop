@@ -716,14 +716,14 @@ HTML;
  * @throws \MySQLException
  * @since 3.2.0
  */
-function GetToastPositionFieldBlock(): iUIBlock
+function GetToastsPositionFieldBlock(): iUIBlock
 {
-	$sPosition = appUserPreferences::GetPref('toast_vertical_position', "bottom");
+	$sPosition = appUserPreferences::GetPref('toasts_vertical_position', "bottom");
 
-	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('toast_vertical_position', Dict::S('UI:Preferences:General:Toast'));
+	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('toasts_vertical_position', Dict::S('UI:Preferences:General:Toasts'));
 	
-	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("bottom", Dict::S('UI:Preferences:General:Toast:Bottom'), $sPosition === "bottom"));
-	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("top", Dict::S('UI:Preferences:General:Toast:Top'), $sPosition === "top"));
+	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("bottom", Dict::S('UI:Preferences:General:Toasts:Bottom'), $sPosition === "bottom"));
+	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("top", Dict::S('UI:Preferences:General:Toasts:Top'), $sPosition === "top"));
 
 	return $oSelect;
 }
