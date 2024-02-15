@@ -46,9 +46,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Preferences:Tabs:Scrollable:Label'                             => 'Navigation',
 	'UI:Preferences:Tabs:Scrollable:Classic'                           => 'Classic',
 	'UI:Preferences:Tabs:Scrollable:Scrollable'                        => 'Scrollable',
-	'UI:Preferences:General:Toast'                                     => 'Toast notification position',
-	'UI:Preferences:General:Toast:Bottom'                              => 'Bottom',
-	'UI:Preferences:General:Toast:Top'                                 => 'Top',
+	'UI:Preferences:General:Toasts'                                     => 'Toast notifications position',
+	'UI:Preferences:General:Toasts:Bottom'                              => 'Bottom',
+	'UI:Preferences:General:Toasts:Top'                                 => 'Top',
 	'UI:Preferences:ChooseAPlaceholder'                                => 'User placeholder image',
 	'UI:Preferences:ChooseAPlaceholder+'                               => 'Choose a placeholder image that will be displayed if the contact linked to your user doesn\'t have one',
 ));
