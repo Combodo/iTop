@@ -126,7 +126,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 
 		$sLangPrefix = $aMatches[1];
 		if (!array_key_exists($sLangPrefix, $aPrefixToLanguageData)) {
-			static::fail("Unknown prefix '$sLangPrefix' for dictionary file '$sDictFile'");
+			static::fail("Unknown prefix '$sLangPrefix' for dictionary file '$sDictFile:1'");
 		}
 
 		[$sExpectedLanguageCode, $sExpectedEnglishLanguageDesc, $aExpectedLocalizedLanguageDesc] = $aPrefixToLanguageData[$sLangPrefix];
