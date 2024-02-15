@@ -872,7 +872,11 @@ class ModelFactory
 					$sDictFileContents = file_get_contents($sPHPFile);
 					$sDictFileContents = str_replace(array('<'.'?'.'php', '?'.'>'), '', $sDictFileContents);
 					$sDictFileContents = str_replace('Dict::Add', '$this->AddToTempDictionary', $sDictFileContents);
-					eval($sDictFileContents);
+                    try {
+                        eval($sDictFileContents);
+                    } catch (Error $e) {
+                        throw new DictException("Error when loading dict file $sPHPFile: " . $e->getMessage());
+                    }
 				}
 
 				foreach ($this->aDict as $sLanguageCode => $aDictDefinition)
