@@ -157,14 +157,20 @@ class DictionariesConsistencyTest extends ItopTestCase
 	public function DictionaryFileProvider(): array
 	{
 		$this->setUp();
-
 		$sAppRoot = static::GetAppRoot();
+
 
 		$aDictFiles = array_merge(
 			glob($sAppRoot.'datamodels/2.x/*/*.dict*.php'), // legacy form in modules
 			glob($sAppRoot.'datamodels/2.x/*/dictionaries/*.dict*.php'), // modern form in modules
-			glob($sAppRoot.'dictionaries/*.dict*.php') // framework
+			glob($sAppRoot.'dictionaries/*.dict*.php'), // framework
+
+			//--- Following should not be present in packages, but are convenient for local debugging !
+			glob($sAppRoot.'extensions/*/*.dict*.php'),
+			glob($sAppRoot.'extensions/*/dictionaries/*.dict*.php'),
 		);
+
+
 		$aTestCases = array();
 		foreach ($aDictFiles as $sDictFile) {
 			$aTestCases[$sDictFile] = array('sDictFile' => $sDictFile);
