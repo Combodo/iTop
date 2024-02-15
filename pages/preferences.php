@@ -825,10 +825,10 @@ try {
 				$bShowSummaryCards = (bool)utils::ReadParam('show_summary_cards', 0);
 				appUserPreferences::SetPref('show_summary_cards', $bShowSummaryCards);
 
-				// - Summary cards
-				$sToastVerticalPosition = utils::ReadParam('toast_vertical_position', "bottom");
-				if(utils::IsNotNullOrEmptyString($sToastVerticalPosition) && in_array($sToastVerticalPosition, ["bottom", "top"], true)) {
-					appUserPreferences::SetPref('toast_vertical_position', $sToastVerticalPosition);
+				// - Toast notifications
+				$sToastsVerticalPosition = utils::ReadParam('toasts_vertical_position', "bottom");
+				if(utils::IsNotNullOrEmptyString($sToastsVerticalPosition) && in_array($sToastsVerticalPosition, ["bottom", "top"], true)) {
+					appUserPreferences::SetPref('toasts_vertical_position', $sToastsVerticalPosition);
 				}
 				
 				// Redirect to force a reload/display of the page in case language has been changed
