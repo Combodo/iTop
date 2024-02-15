@@ -1582,7 +1582,7 @@ let CombodoModal = {
  *
  * @since 3.2.0
  */
-let CombodoToast= {
+let CombodoToast = {
 	/**
 	 * Open a standard toast and put the content into it.
 	 *
