@@ -21,7 +21,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Logo entreprise',
 	'UI:Layout:NavigationMenu:Silo:Label' => 'Selectionnez l\'organisation sur laquelle filtrer',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Déplier / Replier',
-	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Déplier / Replier (Filtré sur %1$s)~~',
+	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Déplier / Replier (Filtré sur %1$s)',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filtrer...',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Saisir des mots-clés pour filtrer les menus',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Les correspondances dans chaque groupe de menu seront affichées',
