@@ -126,7 +126,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 
 		$sLangPrefix = $aMatches[1];
 		if (!array_key_exists($sLangPrefix, $aPrefixToLanguageData)) {
-			static::fail("Unknown prefix '$sLangPrefix' for dictionary file '$sDictFile'");
+			static::fail("Unknown prefix '$sLangPrefix' for dictionary file '$sDictFile:1'");
 		}
 
 		[$sExpectedLanguageCode, $sExpectedEnglishLanguageDesc, $aExpectedLocalizedLanguageDesc] = $aPrefixToLanguageData[$sLangPrefix];
@@ -183,6 +183,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 			glob($sAppRoot.'extensions/*/*.dict*.php'),
 			glob($sAppRoot.'extensions/*/dictionaries/*.dict*.php'),
 		);
+		$this->RemoveModulesWithout7246Fixes($aDictFilesModules);
 
 
 		$aDictFiles = array_merge($aDictFilesCore, $aDictFilesModules);
@@ -193,6 +194,42 @@ class DictionariesConsistencyTest extends ItopTestCase
 		}
 
 		return $aTestCases;
+	}
+
+	/**
+	 * Most of our product packages uses tags for extensions modules, so they won't get the fixes. We are removing them, as we will test on newer packages anyway !
+	 *
+	 * @since 3.0.5 3.1.2 3.2.0 N°7246
+	 */
+	private function RemoveModulesWithout7246Fixes(array &$aDictFilesModules):void
+	{
+		require_once static::GetAppRoot() . 'approot.inc.php'; // mandatory for tearDownAfterClass to work, of not present will thow `Undefined constant "LINKSET_TRACKING_LIST"`
+		$this->RequireOnceItopFile('core/config.class.inc.php'); // source of the ITOP_VERSION constant
+		if (version_compare(ITOP_VERSION, '3.2.0', '>=')) { 
+			return;
+		}
+
+		$aLegacyModulesList = [
+			'authent-token',
+			'combodo-approval-extended',
+			'combodo-calendar-view',
+			'combodo-oauth-email-synchro',
+			'combodo-webhook-integration',
+			'customer-survey',
+			'itop-communications',
+			'itop-fence',
+			'itop-system-information',
+			'itsm-designer-connector',
+			'templates-base',
+		];
+
+		foreach ($aDictFilesModules as $key => $sDictFileFullPath) {
+			$sDictFilePath = dirname($sDictFileFullPath);
+			$sDictFileModuleName = basename($sDictFilePath);
+			if (in_array($sDictFileModuleName, $aLegacyModulesList)) {
+				unset($aDictFilesModules[$key]);
+			}
+		}
 	}
 
 	/**
@@ -484,5 +521,4 @@ EOF
 
 		return 1;
 	}
-
 }
