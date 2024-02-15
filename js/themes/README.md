@@ -1,0 +1,1 @@
+@deprecated 3.2.0 N°7251 will be removed in a future version.
