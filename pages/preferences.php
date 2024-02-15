@@ -115,7 +115,7 @@ function DisplayPreferences($oP)
 	$oSecondColumn->AddSubBlock($oMiscOptionsFieldset);
 	$oMiscOptionsFieldset->AddSubBlock(GetObsoleteDataFieldBlock());
 	$oMiscOptionsFieldset->AddSubBlock(GetSummaryCardsFieldBlock());
-	$oMiscOptionsFieldset->AddSubBlock(GetToastPositionFieldBlock());
+	$oMiscOptionsFieldset->AddSubBlock(GetToastsPositionFieldBlock());
 
 	$oP->add_script(
 		<<<JS
