@@ -186,6 +186,7 @@ $(function () {
 					var sSortDirection = 'asc';
 					var oColumns = $('#datatable_dlg_'+this.options.sListId).find(':itop-fieldsorter').fieldsorter('get_params');
 					var iPageSize = parseInt($('#datatable_dlg_'+this.options.sListId+' input[name="page_size"]').val(), 10);
+					// Fallback to default page size in case of invalid number
 					if (isNaN(iPageSize) || iPageSize <= 0) {
 						iPageSize = this.options.oDefaultSettings.iDefaultPageSize;
 						$('#datatable_dlg_'+this.options.sListId+' input[name="page_size"]').val(iPageSize);
