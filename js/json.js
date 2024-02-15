@@ -1,3 +1,6 @@
+/**
+ * @deprecated 3.2.0 N°7251 will be removed in a future version. Use instead the native methods (no need for this polyfill)
+ */
 /*
     http://www.JSON.org/json2.js
     2008-06-15

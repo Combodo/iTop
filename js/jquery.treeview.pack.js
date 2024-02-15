@@ -1,3 +1,6 @@
+/**
+ * @deprecated 3.2.0 N°7251 will be removed in a future version. Use instead the min version
+ */
 /*
  * Treeview 1.4 - jQuery plugin to hide and show branches of a tree
  * 
