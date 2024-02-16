@@ -19,5 +19,15 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:Newsroom:iTopNotification:Label' => ITOP_APPLICATION_SHORT,
-	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => ITOP_APPLICATION_SHORT.' notifications',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Your ' . ITOP_APPLICATION_SHORT.' notifications',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Read:Label' => 'Read',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Unread:Label' => 'Unread',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label' => 'Delete this notification',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:ViewObject:Label' => 'Go to the notification url',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Label' => 'Mark as read',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Label' => 'Mark as unread',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Success:Message' => 'The notification has been marked as read',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Success:Message' => 'The notification has been marked as unread',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Success:Message' => 'The notification has been deleted',
+
 ));

@@ -105,6 +105,17 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 
 	/**
 	 * @see self::$sClassLabel
+	 * @return $this
+	 */
+	public function SetClassLabel($sClassLabel)
+	{
+		$this->sClassLabel = $sClassLabel;
+
+		return $this;
+	}
+	
+	/**
+	 * @see self::$sClassLabel
 	 * @return string
 	 */
 	public function GetClassLabel(): string

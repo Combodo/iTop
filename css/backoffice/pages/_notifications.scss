@@ -1,0 +1,45 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-notifications--view-all--container--grid-gap: $ibo-spacing-600 !default;
+$ibo-notifications--view-all--container--object-summary--panel--body--max-height: unset !default;
+
+$ibo-notifications--view-all--item--unread--highlight--background-color: $ibo-color-red-600 !default;
+$ibo-notifications--view-all--item--read--highlight--background-color: $ibo-color-grey-200 !default;
+
+$ibo-notifications--view-all--container--large--grid-template-columns: repeat(3, 1fr) !default;
+$ibo-notifications--view-all--container--medium--grid-template-columns: repeat(2, 1fr) !default;
+$ibo-notifications--view-all--container--small--grid-template-columns: repeat(1, 1fr) !default;
+
+.ibo-notifications--view-all--container{
+  display: grid;
+  grid-gap: $ibo-notifications--view-all--container--grid-gap;
+  .ibo-object-summary  .ibo-panel--title{
+    font-size: $ibo-font-size-250;
+  }
+  .ibo-object-summary > .ibo-panel--body{
+    box-shadow: none;
+    max-height: $ibo-notifications--view-all--container--object-summary--panel--body--max-height;
+  }
+  .ibo-object-summary + .ibo-object-summary{
+    margin-top: 0;
+  }
+
+  @include mobile {
+    grid-template-columns: $ibo-notifications--view-all--container--small--grid-template-columns;
+  }
+  @include desktop {
+    grid-template-columns: $ibo-notifications--view-all--container--medium--grid-template-columns;
+  }
+  @include fullhd {
+    grid-template-columns: $ibo-notifications--view-all--container--large--grid-template-columns;  }
+}
+
+.ibo-notifications--view-all--item--read .ibo-panel--body::before{
+  background-color: $ibo-notifications--view-all--item--read--highlight--background-color;
+}
+.ibo-notifications--view-all--item--unread .ibo-panel--body::before{
+  background-color: $ibo-notifications--view-all--item--unread--highlight--background-color;
+}
