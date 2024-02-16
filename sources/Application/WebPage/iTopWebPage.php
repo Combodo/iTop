@@ -203,8 +203,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/toastify-js/src/toastify.js');
 
 		// Keyboard shortcuts
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap-record.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/mousetrap/mousetrap.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/mousetrap/plugins/record/mousetrap-record.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/keyboard-shortcuts.js');
 
 		// Used throughout the app.
