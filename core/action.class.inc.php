@@ -491,7 +491,7 @@ class ActionEmail extends ActionNotification
 				$this->m_iRecipients++;
 			}
 			if (in_array('Contact', MetaModel::EnumParentClasses($sClass, ENUM_CHILD_CLASSES_ALL), true)) {
-				NotificationsService::RegisterSubscription($oTrigger, $this, $oObj);
+				NotificationsService::GetInstance()->RegisterSubscription($oTrigger, $this, $oObj);
 			}
 		}
 		return implode(', ', $aRecipients);

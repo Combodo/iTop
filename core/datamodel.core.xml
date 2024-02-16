@@ -261,11 +261,10 @@
 		[$sPreviousLanguage, $aPreviousPluginProperties] = $this->SetNotificationLanguage();
 		while ($oRecipient = $oRecipientsSet->Fetch()) {
 		  // Skip recipients that have no users
-		  if(get_class($oRecipient) === Person::class && UserRights::GetUserFromPerson($oRecipient) === null) {
+		  if (get_class($oRecipient) === Person::class && UserRights::GetUserFromPerson($oRecipient) === null) {
         continue;
       }
-		  if(!\Combodo\iTop\Service\Notification\NotificationsService::IsSubscribed($oTrigger, $this, $oRecipient))
-      {
+		  if (!\Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->IsSubscribed($oTrigger, $this, $oRecipient)) {
         continue;
       }
 			$oEvent = new EventiTopNotification();
@@ -282,7 +281,7 @@
 			$oEvent->Set('url', MetaModel::ApplyParams($this->Get('url'), $aContextArgs));
 			$oEvent->DBInsertNoReload();
 
-      \Combodo\iTop\Service\Notification\NotificationsService::RegisterSubscription($oTrigger, $this, $oRecipient);
+      \Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->RegisterSubscription($oTrigger, $this, $oRecipient);
 		}
 		$this->SetNotificationLanguage($sPreviousLanguage, $aPreviousPluginProperties['language_code'] ?? null);
 	}

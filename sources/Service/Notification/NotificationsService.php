@@ -2,11 +2,51 @@
 namespace Combodo\iTop\Service\Notification;
 
 
+use ActionNotification;
 use Contact;
+use lnkActionNotificationToContact;
 use Trigger;
 
+/**
+ * Class NotificationsService
+ *
+ * @author Stephen Abello <stephen.abello@combodo.com>
+ * @package Combodo\iTop\Service\Notification
+ * @since 3.2.0
+ */
 class NotificationsService {
+	protected static ?NotificationsService $oSingleton = null;
+
 	/**
+	 * @api
+	 * @return static The singleton instance of the notifications service
+	 */
+	public static function GetInstance(): static
+	{
+		if (null === static::$oSingleton) {
+			static::$oSingleton = new static();
+		}
+
+		return static::$oSingleton;
+	}
+
+	/**********************/
+	/* Non-static methods */
+	/**********************/
+
+	/**
+	 * Singleton pattern, can't use the constructor. Use {@see \Combodo\iTop\Service\Notification\NotificationsService::GetInstance()} instead.
+	 *
+	 * @return void
+	 */
+	protected function __construct()
+	{
+		// Don't do anything, we don't want to be initialized
+	}
+
+	/**
+	 * Register that $oRecipient was a recipient for the $oTrigger / $oActionNotification tuple at least one time
+	 *
 	 * @param \Trigger $oTrigger
 	 * @param \ActionNotification $oActionNotification
 	 * @param \Contact $oRecipient
@@ -22,12 +62,13 @@ class NotificationsService {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public static function RegisterSubscription(Trigger $oTrigger, \ActionNotification $oActionNotification, Contact $oRecipient): void {
+	public function RegisterSubscription(Trigger $oTrigger, ActionNotification $oActionNotification, Contact $oRecipient): void
+	{
 		// Check if the user is already subscribed to the action notification
 		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchLnkByTriggerContactAndAction($oTrigger->GetKey(), $oRecipient->GetKey(), $oActionNotification->GetKey());
 		if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 			// Create a new subscription
-			$oSubscribedActionsNotifications = new \lnkActionNotificationToContact();
+			$oSubscribedActionsNotifications = new lnkActionNotificationToContact();
 			$oSubscribedActionsNotifications->Set('action_id', $oActionNotification->GetKey());
 			$oSubscribedActionsNotifications->Set('contact_id', $oRecipient->GetKey());
 			$oSubscribedActionsNotifications->Set('trigger_id', $oTrigger->GetKey());
@@ -48,7 +89,7 @@ class NotificationsService {
 	 * @param \ActionNotification $oActionNotification
 	 * @param \Contact $oRecipient
 	 *
-	 * @return bool|int|mixed|\ormLinkSet|string|void|null
+	 * @return bool
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -56,9 +97,10 @@ class NotificationsService {
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public static function IsSubscribed(Trigger $oTrigger, \ActionNotification $oActionNotification, Contact $oRecipient): bool{
+	public function IsSubscribed(Trigger $oTrigger, ActionNotification $oActionNotification, Contact $oRecipient): bool
+	{
 		// Check if the trigger subscription policy is 'force_all_channels'
-		if($oTrigger->Get('subscription_policy') === 'force_all_channels'){
+		if ($oTrigger->Get('subscription_policy') === 'force_all_channels') {
 			return true;
 		}
 		// Check if the user is already subscribed to the action notification
@@ -66,10 +108,10 @@ class NotificationsService {
 		if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 			return false;
 		}
+
 		// Return the subscribed status
-		while ($oSubscribedActionsNotifications = $oSubscribedActionsNotificationsSet->Fetch()) {
-			return $oSubscribedActionsNotifications->Get('subscribed');
-		}
+		$oSubscribedActionsNotifications = $oSubscribedActionsNotificationsSet->Fetch();
+		return $oSubscribedActionsNotifications->Get('subscribed');
 	}
 
 }
