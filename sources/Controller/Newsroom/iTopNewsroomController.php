@@ -96,10 +96,10 @@ $.ajax({
 	success: function(data) {
 		if (data.status === 'success') {
 			$(oSelf).parents('.ibo-object-summary').remove();
-			CombodoModal.OpenSuccessModal(data.message);
+			CombodoToast.OpenSuccessToast(data.message);
 		}
 		else {
-			CombodoModal.OpenErrorModal(data.message);
+			CombodoToast.OpenErrorToast(data.message);
 		}
 	}
 });
@@ -142,10 +142,10 @@ JS,
 							$(oSelf).parent('.ibo-button-group').addClass('ibo-is-hidden');
 							$(oSelf).parent('.ibo-button-group').siblings('.ibo-button-group').removeClass('ibo-is-hidden');
 							$(oSelf).parents('.ibo-object-summary').removeClass('ibo-notifications--view-all--item--unread').addClass('ibo-notifications--view-all--item--read');
-							CombodoModal.OpenSuccessModal(data.message);
+							CombodoToast.OpenSuccessToast(data.message);
 						}
 						else {
-							CombodoModal.OpenErrorModal(data.message);
+							CombodoToast.OpenErrorToast(data.message);
 						}
 					}
 				});
@@ -171,10 +171,10 @@ JS
 							$(oSelf).parent('.ibo-button-group').addClass('ibo-is-hidden');
 							$(oSelf).parent('.ibo-button-group').siblings('.ibo-button-group').removeClass('ibo-is-hidden');
 							$(oSelf).parents('.ibo-object-summary').removeClass('ibo-notifications--view-all--item--read').addClass('ibo-notifications--view-all--item--unread');
-							CombodoModal.OpenSuccessModal(data.message);
+							CombodoToast.OpenSuccessToast(data.message);
 						}
 						else {
-							CombodoModal.OpenErrorModal(data.message);
+							CombodoToast.OpenErrorToast(data.message);
 						}
 					}
 				});
