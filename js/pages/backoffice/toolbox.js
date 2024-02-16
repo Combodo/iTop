@@ -458,6 +458,27 @@ CombodoModal.OpenInformativeModal = function(sMessage, sSeverity, oOptions) {
 	// Open modal
 	CombodoModal.OpenModal(oOptions);
 }
+/**
+ * @override
+ * @inheritDoc
+ */
+CombodoToast.OpenToast = function(sMessage, sSeverity, aOptions) {
+	aOptions = $.extend({
+		text: sMessage,
+		className: "ibo-toast ibo-is-" + sSeverity,
+		duration: 6000,
+		close: true,
+		gravity: GetUserPreference('toasts_vertical_position', 'bottom'),
+		position: "right",
+		stopOnFocus: true,
+	}, aOptions);
+	
+	if(aOptions.duration !== -1){
+		aOptions.className += ' ibo-is-auto-closeable';
+	}
+	
+	Toastify(aOptions).showToast();
+};
 
 // Processing on each pages of the backoffice
 $(document).ready(function(){
