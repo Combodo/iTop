@@ -1,0 +1,76 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+
+$ibo-vendors-toastify--right--right: $ibo-spacing-500 !default; 
+$ibo-vendors-toastify--left--left: $ibo-spacing-500 !default; 
+$ibo-vendors-toastify--top--top: -150px !default; 
+$ibo-vendors-toastify--bottom--bottom: -150px !default; 
+
+$ibo-vendors-toastify--close--background: transparent !default; 
+$ibo-vendors-toastify--close--padding: 0 !default; 
+$ibo-vendors-toastify--close--margin-left: $ibo-spacing-300 !default;
+
+.toastify.on {
+  opacity: 1;
+}
+
+.toast-close {
+  background: $ibo-vendors-toastify--close--background;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font-family: inherit;
+  padding: $ibo-vendors-toastify--close--padding;
+  margin-left: $ibo-vendors-toastify--close--margin-left;
+}
+
+.toastify-right {
+  right: $ibo-vendors-toastify--right--right;
+}
+
+.toastify-left {
+  left: $ibo-vendors-toastify--left--left;
+}
+
+.toastify-top {
+  top: $ibo-vendors-toastify--top--top;
+}
+
+.toastify-bottom {
+  bottom: $ibo-vendors-toastify--bottom--bottom;
+}
+
+.toastify-rounded {
+  border-radius: 25px;
+}
+
+.toastify-avatar {
+  width: 1.5em;
+  height: 1.5em;
+  margin: -7px 5px;
+  border-radius: 2px;
+}
+
+.toastify-center {
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  max-width: fit-content;
+  max-width: -moz-fit-content;
+}
+
+@media only screen and (max-width: 360px) {
+  .toastify-right, .toastify-left {
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    max-width: fit-content;
+  }
+}
+

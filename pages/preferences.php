@@ -115,6 +115,7 @@ function DisplayPreferences($oP)
 	$oSecondColumn->AddSubBlock($oMiscOptionsFieldset);
 	$oMiscOptionsFieldset->AddSubBlock(GetObsoleteDataFieldBlock());
 	$oMiscOptionsFieldset->AddSubBlock(GetSummaryCardsFieldBlock());
+	$oMiscOptionsFieldset->AddSubBlock(GetToastsPositionFieldBlock());
 
 	$oP->add_script(
 		<<<JS
@@ -708,6 +709,25 @@ HTML;
 	return new Html($sHtml);
 }
 
+/**
+ * @return \Combodo\iTop\Application\UI\Base\iUIBlock
+ * @throws \CoreException
+ * @throws \CoreUnexpectedValue
+ * @throws \MySQLException
+ * @since 3.2.0
+ */
+function GetToastsPositionFieldBlock(): iUIBlock
+{
+	$sPosition = appUserPreferences::GetPref('toasts_vertical_position', "bottom");
+
+	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('toasts_vertical_position', Dict::S('UI:Preferences:General:Toasts'));
+	
+	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("bottom", Dict::S('UI:Preferences:General:Toasts:Bottom'), $sPosition === "bottom"));
+	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("top", Dict::S('UI:Preferences:General:Toasts:Top'), $sPosition === "top"));
+
+	return $oSelect;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Main program
@@ -805,6 +825,12 @@ try {
 				$bShowSummaryCards = (bool)utils::ReadParam('show_summary_cards', 0);
 				appUserPreferences::SetPref('show_summary_cards', $bShowSummaryCards);
 
+				// - Toast notifications
+				$sToastsVerticalPosition = utils::ReadParam('toasts_vertical_position', "bottom");
+				if(utils::IsNotNullOrEmptyString($sToastsVerticalPosition) && in_array($sToastsVerticalPosition, ["bottom", "top"], true)) {
+					appUserPreferences::SetPref('toasts_vertical_position', $sToastsVerticalPosition);
+				}
+				
 				// Redirect to force a reload/display of the page in case language has been changed
 				$oAppContext = new ApplicationContext();
 				$sURL = utils::GetAbsoluteUrlAppRoot().'pages/preferences.php?'.$oAppContext->GetForLink();
