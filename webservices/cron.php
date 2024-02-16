@@ -44,12 +44,6 @@ if (!file_exists($sConfigFile))
 
 require_once(APPROOT.'/application/startup.inc.php');
 
-// Temporary fix until below bug is resolved properly:
-// N°7008 - Fix missing background tasks in CRON when NOT in "developer_mode"
-require_once(APPROOT.'/sources/SessionTracker/SessionGC.php');
-require_once(APPROOT.'/sources/Service/TemporaryObjects/TemporaryObjectGC.php');
-require_once(APPROOT.'/sources/Service/Notification/Event/EventiTopNotificationGC.php');
-
 $oCtx = new ContextTag(ContextTag::TAG_CRON);
 
 function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
@@ -414,71 +408,63 @@ function ReSyncProcesses($oP, $bVerbose, $bDebug)
 	$oNow = new DateTime();
 
 	$aProcesses = array();
-	foreach (get_declared_classes() as $sTaskClass)
+	foreach (utils::GetClassesForInterface('iProcess', '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]']) as $sTaskClass)
 	{
-		$oRefClass = new ReflectionClass($sTaskClass);
-		if ($oRefClass->isAbstract())
-		{
-			continue;
-		}
-		if ($oRefClass->implementsInterface('iProcess'))
-		{
-			$oProcess = new $sTaskClass;
-			$aProcesses[$sTaskClass] = $oProcess;
+		$oProcess = new $sTaskClass;
+		$aProcesses[$sTaskClass] = $oProcess;
 
-			// Create missing entry if needed
-			if (!array_key_exists($sTaskClass, $aTasks))
+		// Create missing entry if needed
+		if (!array_key_exists($sTaskClass, $aTasks))
+		{
+			// New entry, let's create a new BackgroundTask record, and plan the first execution
+			$oTask = new BackgroundTask();
+			$oTask->SetDebug($bDebug);
+			$oTask->Set('class_name', $sTaskClass);
+			$oTask->Set('total_exec_count', 0);
+			$oTask->Set('min_run_duration', 99999.999);
+			$oTask->Set('max_run_duration', 0);
+			$oTask->Set('average_run_duration', 0);
+			$oRefClass = new ReflectionClass($sTaskClass);
+			if ($oRefClass->implementsInterface('iScheduledProcess'))
 			{
-				// New entry, let's create a new BackgroundTask record, and plan the first execution
-				$oTask = new BackgroundTask();
-				$oTask->SetDebug($bDebug);
-				$oTask->Set('class_name', $sTaskClass);
-				$oTask->Set('total_exec_count', 0);
-				$oTask->Set('min_run_duration', 99999.999);
-				$oTask->Set('max_run_duration', 0);
-				$oTask->Set('average_run_duration', 0);
+				$oNextOcc = $oProcess->GetNextOccurrence();
+				$oTask->Set('next_run_date', $oNextOcc->format('Y-m-d H:i:s'));
+			}
+			else
+			{
+				// Background processes do start asap, i.e. "now"
+				$oTask->Set('next_run_date', $oNow->format('Y-m-d H:i:s'));
+			}
+			if ($bVerbose)
+			{
+				$oP->p('Creating record for: '.$sTaskClass);
+				$oP->p('First execution planned at: '.$oTask->Get('next_run_date'));
+			}
+			$oTask->DBInsert();
+		}
+		else
+		{
+			/** @var \BackgroundTask $oTask */
+			$oTask = $aTasks[$sTaskClass];
+			if ($oTask->Get('next_run_date') == '3000-01-01 00:00:00')
+			{
+				// check for rescheduled tasks
 				$oRefClass = new ReflectionClass($sTaskClass);
 				if ($oRefClass->implementsInterface('iScheduledProcess'))
 				{
 					$oNextOcc = $oProcess->GetNextOccurrence();
 					$oTask->Set('next_run_date', $oNextOcc->format('Y-m-d H:i:s'));
-				}
-				else
-				{
-					// Background processes do start asap, i.e. "now"
-					$oTask->Set('next_run_date', $oNow->format('Y-m-d H:i:s'));
-				}
-				if ($bVerbose)
-				{
-					$oP->p('Creating record for: '.$sTaskClass);
-					$oP->p('First execution planned at: '.$oTask->Get('next_run_date'));
-				}
-				$oTask->DBInsert();
-			}
-			else
-			{
-				/** @var \BackgroundTask $oTask */
-				$oTask = $aTasks[$sTaskClass];
-				if ($oTask->Get('next_run_date') == '3000-01-01 00:00:00')
-				{
-					// check for rescheduled tasks
-					$oRefClass = new ReflectionClass($sTaskClass);
-					if ($oRefClass->implementsInterface('iScheduledProcess'))
-					{
-						$oNextOcc = $oProcess->GetNextOccurrence();
-						$oTask->Set('next_run_date', $oNextOcc->format('Y-m-d H:i:s'));
-						$oTask->DBUpdate();
-					}
-				}
-				// Reactivate task if necessary
-				if ($oTask->Get('status') == 'removed')
-				{
-					$oTask->Set('status', 'active');
 					$oTask->DBUpdate();
 				}
-				// task having a real class to execute
-				unset($aTasks[$sTaskClass]);
 			}
+			// Reactivate task if necessary
+			if ($oTask->Get('status') == 'removed')
+			{
+				$oTask->Set('status', 'active');
+				$oTask->DBUpdate();
+			}
+			// task having a real class to execute
+			unset($aTasks[$sTaskClass]);
 		}
 	}
 
