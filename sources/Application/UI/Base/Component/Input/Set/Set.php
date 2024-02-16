@@ -45,11 +45,13 @@ class Set extends AbstractInput
 		'js/selectize/plugin_combodo_multi_values_synthesis.js',
 		'js/selectize/plugin_combodo_min_items.js',
 	];
+
 	protected $bIsDisabled = false;
 
 	/** @var int|null $iMaxItems Maximum number of items selectable */
 	private ?int $iMaxItems;
 	/** @var int|null $iMinItems Minimum number of items selectable */
+
 	private ?int $iMinItems;
 
 
@@ -67,13 +69,17 @@ class Set extends AbstractInput
 
 	/** @var string $sAddButtonTitle Add button title */
 	private string $sAddButtonTitle;
-	/** @var string|null $sOnOptionRemoveJs JS code to execute on button click */
+
+	/** @var string|null $sOnOptionRemoveJs JS code to execute when an option is no longer among available options */
 	private ?string $sOnOptionRemoveJs;
-	/** @var string|null $sOnOptionAddJs JS code to execute on button click */
+
+	/** @var string|null $sOnOptionAddJs JS code to execute when an option is added to the available options */
 	private ?string $sOnOptionAddJs;
-	/** @var string|null $sOnItemRemoveJs JS code to execute on button click */
+
+	/** @var string|null $sOnItemRemoveJs JS code to execute when a selected item is removed */
 	private ?string $sOnItemRemoveJs;
-	/** @var string|null $sOnItemAddJs JS code to execute on button click */
+
+	/** @var string|null $sOnItemAddJs JS code to execute when a new item is selected */
 	private ?string $sOnItemAddJs;
 
 	/** @var bool $bIsPreloadEnabled Load data at initialization (ajax data provider only) */
@@ -168,6 +174,7 @@ class Set extends AbstractInput
 	 * @param int|null $iMinItems
 	 *
 	 * @return $this
+	 * @since 3.2.0
 	 */
 	public function SetMinItems(?int $iMinItems)
 	{
@@ -180,6 +187,7 @@ class Set extends AbstractInput
 	 * GetMinItems.
 	 *
 	 * @return int|null
+	 * @since 3.2.0
 	 */
 	public function GetMinItems(): ?int
 	{

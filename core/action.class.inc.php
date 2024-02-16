@@ -428,7 +428,7 @@ class ActionEmail extends ActionNotification
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	protected function FindRecipients($sRecipAttCode, $aArgs, $oTrigger = null)
+	protected function FindRecipients($sRecipAttCode, $aArgs, ?Trigger $oTrigger = null)
 	{
 		$sOQL = $this->Get($sRecipAttCode);
 		if (utils::IsNullOrEmptyString($sOQL)) return '';
@@ -639,13 +639,19 @@ class ActionEmail extends ActionNotification
 	/**
 	 * @param array $aContextArgs
 	 * @param \EventNotification $oLog
+	 * @param \Trigger|null $oTrigger
 	 *
 	 * @return array
+	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
-	 * @throws \Exception
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MySQLException
 	 * @since 3.1.0 N°918
+	 * @since 3.2.0 Added $oTrigger parameter
 	 */
-	protected function PrepareMessageContent($aContextArgs, &$oLog, $oTrigger = null): array
+	protected function PrepareMessageContent($aContextArgs, &$oLog, ?Trigger $oTrigger = null): array
 	{
 		$aMessageContent = [
 			'to' => '',

@@ -146,7 +146,7 @@ JS
 	// Notifications
 	//
 	//////////////////////////////////////////////////////////////////////////
-	$oNotificationsBlock = new Panel(Dict::S('UI:Preferences:Notifications'), array(), 'grey', 'ibo-notifications');
+	$oNotificationsBlock = new Panel(Dict::S('UI:Preferences:Notifications'), array(), Panel::ENUM_COLOR_SCHEME_GREY, 'ibo-notifications');
 	$sNotificationsCenterUrl = Router::GetInstance()->GenerateUrl(NotificationsCenterController::ROUTE_NAMESPACE.'.display_page', [], true);
 	$oNotificationsBlock->AddSubBlock(new Html('<p>'.Dict::Format('UI:Preferences:Notifications+', $sNotificationsCenterUrl).'</p>'));
 	$oContentLayout->AddMainBlock($oNotificationsBlock);
