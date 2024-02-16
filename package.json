@@ -5,6 +5,7 @@
     "ace-builds": "^1.2.8",
     "bulma-scss": "^0.9.4",
     "c3": "^0.4.11",
+    "d3": "^3.5.16",
     "datatables.net": "^1.11.3",
     "datatables.net-fixedheader": "^3.1.2",
     "datatables.net-responsive": "^2.1.0",

@@ -1,3 +1,7 @@
+/**
+ * @deprecated 3.2.0 N°5621 Moved to NPM
+ */
+
 !function() {
   var d3 = {
     version: "3.5.16"
