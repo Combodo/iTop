@@ -161,7 +161,7 @@ JS
 		} else {
 			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
 		}
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/jquery-ui-dist/jquery-ui.min.js');
 
 		// Used throughout the app.
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
