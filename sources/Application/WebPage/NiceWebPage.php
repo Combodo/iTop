@@ -152,7 +152,7 @@ JS
 		parent::InitializeLinkedScripts();
 
 		// Used throughout the app.
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/jquery/dist/jquery.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.blockUI.js');
 		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
 		{
