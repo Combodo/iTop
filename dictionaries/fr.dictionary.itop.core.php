@@ -587,7 +587,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'ActioniTopNotification:trigger' => 'Conditions de déclenchement',
 	'ActioniTopNotification:content' => 'Message',
 	'ActioniTopNotification:settings' => 'Paramètres',
-	'Class:ActioniTopNotification' => 'iTop Notification',
+	'Class:ActioniTopNotification' => ITOP_APPLICATION_SHORT.' Notification',
 	'Class:ActioniTopNotification+' => '',
 	'Class:ActioniTopNotification/Attribute:title' => 'Titre',
 	'Class:ActioniTopNotification/Attribute:title+' => '',

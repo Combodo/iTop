@@ -636,7 +636,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'ActioniTopNotification:trigger' => 'Trigger',
 	'ActioniTopNotification:content' => 'Message',
 	'ActioniTopNotification:settings' => 'Settings',
-	'Class:ActioniTopNotification' => 'iTop Notification',
+	'Class:ActioniTopNotification' => ITOP_APPLICATION_SHORT.' Notification',
 	'Class:ActioniTopNotification+' => '',
 	'Class:ActioniTopNotification/Attribute:language' => 'Language',
 	'Class:ActioniTopNotification/Attribute:language+' => '',
