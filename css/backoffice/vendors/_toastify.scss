@@ -5,71 +5,14 @@
 
 /* SCSS variables */
 
-$ibo-vendors-toastify--padding-y: 12px !default;
-$ibo-vendors-toastify--padding-right: 10px !default;
-$ibo-vendors-toastify--padding-left: 18px !default;
-$ibo-vendors-toastify--border-radius: $ibo-border-radius-300 !default;
-$ibo-vendors-toastify--box-shadow: $ibo-elevation-200 !default; 
-$ibo-vendors-toastify--max-width: calc(50% - 20px) !default; 
-
-$ibo-vendors-toastify--right--right: 15px !default; 
-$ibo-vendors-toastify--left--left: 15px !default; 
+$ibo-vendors-toastify--right--right: $ibo-spacing-500 !default; 
+$ibo-vendors-toastify--left--left: $ibo-spacing-500 !default; 
 $ibo-vendors-toastify--top--top: -150px !default; 
 $ibo-vendors-toastify--bottom--bottom: -150px !default; 
 
 $ibo-vendors-toastify--close--background: transparent !default; 
 $ibo-vendors-toastify--close--padding: 0 !default; 
-$ibo-vendors-toastify--close--margin-left: 8px !default; 
-
-@keyframes decreaseHighlight {
-  0% {
-    height: 100%;
-  }
-  8%{
-    border-radius: 0 0 0 3px;
-  }
-  100% {
-    height: 0;
-  }
-}
-
-.ibo-toast {
-  display: inline-flex;
-  position: fixed;
-  align-items: center;
-  
-  max-width: $ibo-vendors-toastify--max-width ;
-  padding: $ibo-vendors-toastify--padding-y $ibo-vendors-toastify--padding-right $ibo-vendors-toastify--padding-y $ibo-vendors-toastify--padding-left;
-  border-radius: $ibo-vendors-toastify--border-radius;
-  
-  box-shadow: $ibo-vendors-toastify--box-shadow;
-  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
-  z-index: 2147483647;
-  &::before {
-    @include ibo-vertical-highlight;
-    top: initial;
-    bottom: 0;
-    border-radius: $ibo-vendors-toastify--border-radius 0 0 $ibo-vendors-toastify--border-radius;
-  }
-  &.ibo-is-auto-closeable::before{
-    animation: decreaseHighlight 5s linear forwards;
-  }
-  &:hover::before {
-    animation: none; /* Pause animation on hover */
-  }
-  &.ibo-is-error{
-    @extend .ibo-alert.ibo-is-danger;
-  }
-  &.ibo-is-warning{
-    @extend .ibo-alert.ibo-is-warning;
-  }
-  &.ibo-is-success{
-    @extend .ibo-alert.ibo-is-success;
-  }
-  &.ibo-is-information{
-    @extend .ibo-alert.ibo-is-information;
-  }
-}
+$ibo-vendors-toastify--close--margin-left: $ibo-spacing-300 !default;
 
 .toastify.on {
   opacity: 1;
