@@ -107,7 +107,7 @@ class WebResourcesHelper
 	public static function GetCSSFilesRelPathsForC3JS(): array
 	{
 		return [
-			'css/c3.min.css',
+			'node_modules/c3/c3.min.css',
 		];
 	}
 
@@ -118,7 +118,7 @@ class WebResourcesHelper
 	{
 		return [
 			'js/d3.js',
-			'js/c3.js',
+			'node_modules/c3/c3.min.js',
 		];
 	}
 

@@ -61,7 +61,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		'js/jquery.ba-bbq.min.js',
 		// - DashletGroupBy & other specific places
 		'js/d3.js',
-		'js/c3.js',
+		'js/c3.js', // 3.2.0 N°5261 moved to NPM
 		// - DisplayableGraph, impact analysis
 		'js/raphael-min.js',
 		'js/jquery.mousewheel.js',
@@ -80,7 +80,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	protected const COMPATIBILITY_MOVED_LINKED_STYLESHEETS_REL_PATH = [
 		// Moved files
 		// - DashletGroupBy & other specific places
-		'css/c3.min.css',
+		'node_modules/c3/c3.min.css',
 	];
 
 	/** @var string DEFAULT_PAGE_TEMPLATE_REL_PATH The relative path (from <ITOP>/templates/) to the default page template */
