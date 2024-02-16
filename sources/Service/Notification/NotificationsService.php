@@ -39,8 +39,7 @@ class NotificationsService {
 	 *
 	 * @return void
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 		// Don't do anything, we don't want to be initialized
 	}
 
@@ -65,7 +64,7 @@ class NotificationsService {
 	public function RegisterSubscription(Trigger $oTrigger, ActionNotification $oActionNotification, Contact $oRecipient): void
 	{
 		// Check if the user is already subscribed to the action notification
-		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchLnkByTriggerContactAndAction($oTrigger->GetKey(), $oRecipient->GetKey(), $oActionNotification->GetKey());
+		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactAndAction($oTrigger->GetKey(), $oRecipient->GetKey(), $oActionNotification->GetKey());
 		if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 			// Create a new subscription
 			$oSubscribedActionsNotifications = new lnkActionNotificationToContact();
@@ -104,7 +103,7 @@ class NotificationsService {
 			return true;
 		}
 		// Check if the user is already subscribed to the action notification
-		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchLnkByTriggerContactAndAction($oTrigger->GetKey(), $oRecipient->GetKey(), $oActionNotification->GetKey());
+		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactAndAction($oTrigger->GetKey(), $oRecipient->GetKey(), $oActionNotification->GetKey());
 		if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 			return false;
 		}
