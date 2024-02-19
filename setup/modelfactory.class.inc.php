@@ -872,7 +872,7 @@ class ModelFactory
 					$sDictFileContents = file_get_contents($sPHPFile);
 					$sDictFileContents = str_replace(array('<'.'?'.'php', '?'.'>'), '', $sDictFileContents);
 					$sDictFileContents = str_replace('Dict::Add', '$this->AddToTempDictionary', $sDictFileContents);
-                    eval($sDictFileContents);
+					eval($sDictFileContents);
 				}
 
 				foreach ($this->aDict as $sLanguageCode => $aDictDefinition)
