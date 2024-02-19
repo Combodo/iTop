@@ -7,6 +7,9 @@
     name="{{ oUIBlock.GetName() }}"
     multiple
     style="display: none;"
+    {% if oUIBlock.IsDisabled() == true %}
+        disabled
+    {% endif %}
 >
 </select>
 

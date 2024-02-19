@@ -797,7 +797,7 @@ const CombodoGlobalToolbox = {
 		}
 
 		// Attribute replacement
-		let aAttrElements = ['title', 'name', 'for'];
+		let aAttrElements = ['title', 'name', 'for', 'src'];
 		aAttrElements.forEach(function(e){
 			$(`[data-template-attr-${e}]`, oElement).each(function(){
 				$(this).attr(e, aData[$(this).attr(`data-template-attr-${e}`)]);

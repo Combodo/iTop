@@ -23,6 +23,8 @@ use Combodo\iTop\Application\UI\Preferences\BlockShortcuts\BlockShortcuts;
 use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Controller\Notifications\NotificationsCenterController;
+use Combodo\iTop\Service\Router\Router;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -138,6 +140,17 @@ function ValidateOtherSettings()
 }
 JS
 	);
+
+	//////////////////////////////////////////////////////////////////////////
+	//
+	// Notifications
+	//
+	//////////////////////////////////////////////////////////////////////////
+	$oNotificationsBlock = new Panel(Dict::S('UI:Preferences:Notifications'), array(), Panel::ENUM_COLOR_SCHEME_GREY, 'ibo-notifications');
+	$sNotificationsCenterUrl = Router::GetInstance()->GenerateUrl(NotificationsCenterController::ROUTE_NAMESPACE.'.display_page', [], true);
+	$oNotificationsBlock->AddSubBlock(new Html('<p>'.Dict::Format('UI:Preferences:Notifications+', $sNotificationsCenterUrl).'</p>'));
+	$oContentLayout->AddMainBlock($oNotificationsBlock);
+
 
 	//////////////////////////////////////////////////////////////////////////
 	//
