@@ -57,7 +57,8 @@ Selectize.define("combodo_update_operations", function (aOptions) {
 		let oOriginal = oSelf.disable;
 		return function () {
 			oOriginal.apply(oSelf, arguments);
-			oSelf.$operationsInput.prop('disabled', true);
+			if(oSelf.$operationsInput !== undefined)
+				oSelf.$operationsInput.prop('disabled', true);
 		}
 	})();
 

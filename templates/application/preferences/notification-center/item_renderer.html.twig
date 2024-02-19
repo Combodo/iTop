@@ -1,15 +1,10 @@
-<div class="option ibo-input-select--autocomplete-item" role="option" >
+<div class="item ibo-input-select--notification-item" role="item" >
 
     {# Image #}
     <span class="ibo-input-select--autocomplete-item-image" data-template-add-class="class" data-template-condition="has_image" data-template-css-background-image="picture_url" data-template-text="initials"></span>
 
     {# Desc #}
     <span class="ibo-input-select--autocomplete-item-txt">
-
-        {# Obsolescnce #}
-		<span class="object-ref-icon text_decoration" data-template-condition="obsolescence_flag">
-            <span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>
-        </span>
 
         {# Friendly name #}
 		<span data-template-text="friendlyname"></span>
@@ -18,12 +13,9 @@
         {% block additional_content %}
         {% endblock %}
 
-        {# Additional field #}
-		<div data-template-condition="has_additional_field">
-			<i data-template-text="additional_field"></i>
-		</div>
-
+        <span class="ibo-input-select--notification-item--mixed-value" data-template-condition="mixed">
+              <span data-template-text="mixed_value"></span>
+        </span>
 	</span>
-
-
+    
 </div>

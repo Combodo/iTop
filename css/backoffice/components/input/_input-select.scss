@@ -224,7 +224,11 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
   margin-right: $ibo-input-select--autocomplete-item-image--margin-right;
   background-color: $ibo-input-select--autocomplete-item-image--background-color;
   border: $ibo-input-select--autocomplete-item-image--border;
-
+  &.ibo-is-not-medallion{
+    border: unset;
+    border-radius: 0;
+    background-color: unset;
+  }
   @extend %ibo-fully-centered-content;
 }
 

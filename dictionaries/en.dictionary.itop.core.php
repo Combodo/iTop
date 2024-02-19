@@ -680,6 +680,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Trigger/Attribute:context+'     => 'Context to allow the trigger to start',
 	'Class:Trigger/Attribute:complement'   => 'Additional information',
 	'Class:Trigger/Attribute:complement+'  => 'Further information as provided in english, by this trigger',
+	'Class:Trigger/Attribute:subscription_policy'       => 'Subscription policy',
+	'Class:Trigger/Attribute:subscription_policy+'      => 'Allows users to unsubscribe from the trigger',
+	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow no channel',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Force all channels',
 ));
 
 //

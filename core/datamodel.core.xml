@@ -1,6 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
   <classes>
+    <class id="lnkActionNotificationToContact" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>core/cmdb,application</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>priv_lnk_action_notif_to_contact</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="action_id"/>
+            <attribute id="contact_id"/>
+          </attributes>
+        </naming>
+        <uniqueness_rules>
+          <rule>
+            <attributes>
+              <attribute id="action_id"/>
+              <attribute id="contact_id"/>
+              <attribute id="trigger_id"/>
+            </attributes>
+            <filter/>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="action_id" xsi:type="AttributeExternalKey">
+          <sql>action_id</sql>
+          <target_class>ActionNotification</target_class>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="trigger_id" xsi:type="AttributeExternalKey">
+          <sql>trigger_id</sql>
+          <target_class>Trigger</target_class>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="subscribed" xsi:type="AttributeBoolean">
+          <sql>subscribed</sql>
+          <default_value>true</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:lnkActionNotificationToContact:content">
+                  <items>
+                    <item id="action_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="contact_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="title">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <list>
+          <items>
+            <item id="action_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="title">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+      <methods/>
+    </class>
     <class id="ActioniTopNotification"  _delta="define">
       <php_parent>
         <name>ActionNotification</name>
@@ -18,6 +109,9 @@
             <attribute id="title"/>
           </attributes>
         </naming>
+        <style>
+          <icon>../../images/icons/icons8-notification.svg</icon>
+        </style>
       </properties>
       <fields>
         <field id="title" xsi:type="AttributeString">
@@ -167,7 +261,10 @@
 		[$sPreviousLanguage, $aPreviousPluginProperties] = $this->SetNotificationLanguage();
 		while ($oRecipient = $oRecipientsSet->Fetch()) {
 		  // Skip recipients that have no users
-		  if(get_class($oRecipient) === Person::class && UserRights::GetUserFromPerson($oRecipient) === null) {
+		  if (get_class($oRecipient) === Person::class && UserRights::GetUserFromPerson($oRecipient) === null) {
+        continue;
+      }
+		  if (!\Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->IsSubscribed($oTrigger, $this, $oRecipient)) {
         continue;
       }
 			$oEvent = new EventiTopNotification();
@@ -183,6 +280,8 @@
 			$oEvent->Set('object_id', $iObjectId);
 			$oEvent->Set('url', MetaModel::ApplyParams($this->Get('url'), $aContextArgs));
 			$oEvent->DBInsertNoReload();
+
+      \Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->RegisterSubscription($oTrigger, $this, $oRecipient);
 		}
 		$this->SetNotificationLanguage($sPreviousLanguage, $aPreviousPluginProperties['language_code'] ?? null);
 	}

@@ -19,6 +19,8 @@
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\Notification\NotificationsRepository;
+use Combodo\iTop\Service\Notification\NotificationsService;
 use Combodo\iTop\Service\Router\Router;
 
 /**
@@ -342,6 +344,7 @@ class ActionEmail extends ActionNotification
 			"db_table"            => "priv_action_email",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
+			'style' =>  new ormStyle(null, null, null, null, null, '../images/icons/icons8-mailing.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -412,18 +415,20 @@ class ActionEmail extends ActionNotification
 	protected $m_aMailErrors; //array of strings explaining the issue
 
 	/**
-	 * Return a the list of emails as a string, or a detailed error description
+	 * Return the list of emails as a string, or a detailed error description
 	 *
 	 * @param string $sRecipAttCode
 	 * @param array $aArgs
+	 * @param \Trigger|null $oTrigger
 	 *
 	 * @return string
+	 * @since 3.2.0 $oTrigger parameter added
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	protected function FindRecipients($sRecipAttCode, $aArgs)
+	protected function FindRecipients($sRecipAttCode, $aArgs, ?Trigger $oTrigger = null)
 	{
 		$sOQL = $this->Get($sRecipAttCode);
 		if (utils::IsNullOrEmptyString($sOQL)) return '';
@@ -432,7 +437,7 @@ class ActionEmail extends ActionNotification
 		{
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
 			if ($this->Get('ignore_notify') === 'no') {
-				// In theory it is possible to notify *any* kind of object, 
+				// In theory, it is possible to notify *any* kind of object,
 				// as long as there is an email attribute in the class
 				// So let's not assume that the selected class is a Person
 				$sFirstSelectedClass = $oSearch->GetClass();
@@ -465,6 +470,16 @@ class ActionEmail extends ActionNotification
 			return "The objects of the class '$sClass' do not have any email attribute";
 		}
 
+		if(in_array('Contact', MetaModel::EnumParentClasses($sClass, ENUM_CHILD_CLASSES_ALL), true)) {
+			$aArgs['trigger_id'] = $oTrigger->GetKey();
+			$aArgs['action_id'] = $this->GetKey();
+
+			$sSubscribedContactsOQL = NotificationsRepository::GetInstance()->GetSearchOQLContactUnsubscribedByTriggerAndAction();
+			$sSubscribedContactsOQL->ApplyParameters($aArgs);
+			$sAlias = $oSearch->GetClassAlias();
+			$oSearch->AddConditionExpression(Expression::FromOQL("`$sAlias`.id NOT IN ($sSubscribedContactsOQL)"));
+		}
+
 		$oSet = new DBObjectSet($oSearch, array() /* order */, $aArgs);
 		$aRecipients = array();
 		while ($oObj = $oSet->Fetch())
@@ -474,6 +489,9 @@ class ActionEmail extends ActionNotification
 			{
 				$aRecipients[] = $sAddress;
 				$this->m_iRecipients++;
+			}
+			if (in_array('Contact', MetaModel::EnumParentClasses($sClass, ENUM_CHILD_CLASSES_ALL), true)) {
+				NotificationsService::GetInstance()->RegisterSubscription($oTrigger, $this, $oObj);
 			}
 		}
 		return implode(', ', $aRecipients);
@@ -569,7 +587,7 @@ class ActionEmail extends ActionNotification
 		
 		$oEmail = new EMail();
 		
-		$aEmailContent = $this->PrepareMessageContent($aContextArgs, $oLog);
+		$aEmailContent = $this->PrepareMessageContent($aContextArgs, $oLog, $oTrigger);
 		$oEmail->SetSubject($aEmailContent['subject']);
 		$oEmail->SetBody($aEmailContent['body'], 'text/html', $sStyles);
 		$oEmail->SetRecipientTO($aEmailContent['to']);
@@ -621,13 +639,19 @@ class ActionEmail extends ActionNotification
 	/**
 	 * @param array $aContextArgs
 	 * @param \EventNotification $oLog
+	 * @param \Trigger|null $oTrigger
 	 *
 	 * @return array
+	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
-	 * @throws \Exception
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MySQLException
 	 * @since 3.1.0 N°918
+	 * @since 3.2.0 Added $oTrigger parameter
 	 */
-	protected function PrepareMessageContent($aContextArgs, &$oLog): array
+	protected function PrepareMessageContent($aContextArgs, &$oLog, ?Trigger $oTrigger = null): array
 	{
 		$aMessageContent = [
 			'to' => '',
@@ -654,9 +678,9 @@ class ActionEmail extends ActionNotification
 			
 			// Determine recipients
 			//
-			$aMessageContent['to'] = $this->FindRecipients('to', $aContextArgs);
-			$aMessageContent['cc'] = $this->FindRecipients('cc', $aContextArgs);
-			$aMessageContent['bcc'] = $this->FindRecipients('bcc', $aContextArgs);
+			$aMessageContent['to'] = $this->FindRecipients('to', $aContextArgs, $oTrigger);
+			$aMessageContent['cc'] = $this->FindRecipients('cc', $aContextArgs, $oTrigger);
+			$aMessageContent['bcc'] = $this->FindRecipients('bcc', $aContextArgs, $oTrigger);
 			
 			$aMessageContent['from'] = MetaModel::ApplyParams($this->Get('from'), $aContextArgs);
 			$aMessageContent['from_label'] = MetaModel::ApplyParams($this->Get('from_label'), $aContextArgs);
