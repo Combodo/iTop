@@ -470,7 +470,7 @@ class ActionEmail extends ActionNotification
 			return "The objects of the class '$sClass' do not have any email attribute";
 		}
 
-		if(in_array('Contact', MetaModel::EnumParentClasses($sClass, ENUM_CHILD_CLASSES_ALL), true)) {
+		if($oTrigger !== null && in_array('Contact', MetaModel::EnumParentClasses($sClass, ENUM_CHILD_CLASSES_ALL), true)) {
 			$aArgs['trigger_id'] = $oTrigger->GetKey();
 			$aArgs['action_id'] = $this->GetKey();
 
@@ -490,7 +490,7 @@ class ActionEmail extends ActionNotification
 				$aRecipients[] = $sAddress;
 				$this->m_iRecipients++;
 			}
-			if (in_array('Contact', MetaModel::EnumParentClasses($sClass, ENUM_CHILD_CLASSES_ALL), true)) {
+			if ($oTrigger !== null && in_array('Contact', MetaModel::EnumParentClasses($sClass, ENUM_CHILD_CLASSES_ALL), true)) {
 				NotificationsService::GetInstance()->RegisterSubscription($oTrigger, $this, $oObj);
 			}
 		}
