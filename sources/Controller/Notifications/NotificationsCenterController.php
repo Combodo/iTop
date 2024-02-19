@@ -178,14 +178,14 @@ $.ajax({
 			// Display success message
 						oSelf.refreshItems();
 
-			CombodoModal.OpenSuccessModal(data.message);
+			CombodoToast.OpenSuccessToast(data.message);
 		}
 		else {
-			CombodoModal.OpenErrorModal(data.message);
+			CombodoToast.OpenErrorToast(data.message);
 		}
 	},
 	error: function (jqXHR, textStatus, errorThrown) {
-		CombodoModal.OpenErrorModal(data.message);
+		CombodoToast.OpenErrorToast(data.message);
 	}
 });
 JS
@@ -210,7 +210,7 @@ $.ajax({
 	success: function (data) {
 		if (data.status === 'success') {
 			// Display success message
-			CombodoModal.OpenSuccessModal(data.message);
+			CombodoToast.OpenSuccessToast(data.message);
 			// Remove item from set
 			oSelf.options[value]['mixed'] = false;
 			oSelf.clearCache();
@@ -219,11 +219,11 @@ $.ajax({
 			$('#channel$iTriggerId').trigger('change');
 		}
 		else {
-			CombodoModal.OpenErrorModal(data.message);
+			CombodoToast.OpenErrorToast(data.message);
 		}
 	},
 	error: function (jqXHR, textStatus, errorThrown) {
-		CombodoModal.OpenErrorModal(data.message);
+		CombodoToast.OpenErrorToast(data.message);
 	}
 });
 JS
@@ -339,14 +339,14 @@ $('.ibo-notifications-center-advanced--input--container .ibo-input-checkbox').on
 			success: function (data) {
 					if (data.status === 'success') {
 						// Display success message
-						CombodoModal.OpenSuccessModal(data.message);
+						CombodoToast.OpenSuccessToast(data.message);
 					}
 					else {
-						CombodoModal.OpenErrorModal(data.message);
+						CombodoToast.OpenErrorToast(data.message);
 					}
 				},
 			error: function (jqXHR, textStatus, errorThrown) {
-					CombodoModal.OpenErrorModal(data.message);
+					CombodoToast.OpenErrorToast(data.message);
 				}
 	});
 });
