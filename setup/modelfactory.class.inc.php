@@ -872,11 +872,7 @@ class ModelFactory
 					$sDictFileContents = file_get_contents($sPHPFile);
 					$sDictFileContents = str_replace(array('<'.'?'.'php', '?'.'>'), '', $sDictFileContents);
 					$sDictFileContents = str_replace('Dict::Add', '$this->AddToTempDictionary', $sDictFileContents);
-                    try {
-                        eval($sDictFileContents);
-                    } catch (Error $e) {
-                        throw new DictException("Error when loading dict file $sPHPFile: " . $e->getMessage());
-                    }
+                    eval($sDictFileContents);
 				}
 
 				foreach ($this->aDict as $sLanguageCode => $aDictDefinition)
@@ -936,10 +932,12 @@ class ModelFactory
 						$this->aDictKeys[$sLanguageCode][$sCode] = $oXmlEntry;
 					}
 				}
-			}
-			catch (Exception $e)
+            } catch (Exception|Error $e) // Error can occurs on eval() calls
 			{
-				throw new Exception('Failed to load dictionary file "'.$sPHPFile.'", reason: '.$e->getMessage());
+                throw new DictException('Failed to load dictionary file "' . $sPHPFile . '"', [
+                        'exception_class' => get_class($e),
+                        'exception_msg' => $e->getMessage(),
+                ]);
 			}
 
 		}
