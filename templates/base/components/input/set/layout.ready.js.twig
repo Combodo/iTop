@@ -53,7 +53,8 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
         {# PLUGIN min items #}
         {% if oUIBlock.GetMinItems() is not empty %}
         'combodo_min_items' : {
-            minItems: {{ oUIBlock.GetMinItems() }}
+            minItems: {{ oUIBlock.GetMinItems() }},
+            errorMessage: '{{ 'UI:Component:Input:Set:MinimumItems'|dict_format(oUIBlock.GetMinItems()) }}'
         },
         {% endif %}
     },

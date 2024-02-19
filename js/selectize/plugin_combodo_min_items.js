@@ -6,6 +6,7 @@ Selectize.define("combodo_min_items", function (aOptions) {
 	// Plugin options
 	aOptions = $.extend({
 			minItems: 0,
+			errorMessage: 'Minimum ' + aOptions.minItems + ' item(s) required.'
 		},
 		aOptions
 	);
@@ -15,7 +16,7 @@ Selectize.define("combodo_min_items", function (aOptions) {
 		let oOriginal = oSelf.removeItem;
 		return function () {
 			if(oSelf.items.length <= aOptions.minItems) {
-				CombodoModal.OpenErrorModal('Minimum ' + aOptions.minItems + ' items required.');
+				CombodoModal.OpenErrorModal(aOptions.errorMessage, []);
 				return;
 			}
 			return oOriginal.apply(this, arguments);
