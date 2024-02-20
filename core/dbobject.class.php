@@ -532,11 +532,10 @@ abstract class DBObject implements iDisplay
      * Attributes setter
      *
      * Set $sAttCode to $value.
-     * The value must be valid according to the type of attribute.
+     * The value must be valid according to the type of attribute : see the different {@see AttributeDefinition::MakeRealValue()} implementations
      * The value will not be recorded into the DB until DBObject::DBWrite() is called.
      *
      * @api
-     * @see DBWrite()
      *
      * @param string $sAttCode
      * @param mixed $value
@@ -544,6 +543,8 @@ abstract class DBObject implements iDisplay
      * @return bool
      * @throws CoreException
      * @throws CoreUnexpectedValue
+     *
+     * @see DBWrite()
      */
 	public function Set($sAttCode, $value)
 	{
