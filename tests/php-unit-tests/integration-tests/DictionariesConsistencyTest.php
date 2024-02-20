@@ -211,6 +211,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 		$aLegacyModulesList = [
 			'authent-token',
 			'combodo-approval-extended',
+			'combodo-approval-light',
 			'combodo-calendar-view',
 			'combodo-oauth-email-synchro',
 			'combodo-webhook-integration',
