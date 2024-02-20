@@ -2766,6 +2766,11 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 		return ((int) $proposedValue) !== 0;
 	}
 
+    /**
+     * @inheritDoc
+     *
+     * @param int|DBObject $proposedValue Object key or valid ({@see MetaModel::IsValidObject()}) datamodel object
+     */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue))
@@ -2778,7 +2783,6 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 		}
 		if (MetaModel::IsValidObject($proposedValue))
 		{
-			/** @var \DBObject $proposedValue */
 			return $proposedValue->GetKey();
 		}
 
@@ -6167,6 +6171,11 @@ class AttributeDateTime extends AttributeDBField
 		}
 	}
 
+    /**
+     * @inheritDoc
+     *
+     * @param int|string $proposedValue timestamp ({@see DateTime::getTimestamp()) or date as string, following the {@see GetInternalFormat} format.
+     */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue))
@@ -7934,9 +7943,9 @@ class AttributeBlob extends AttributeDefinition
 	}
 
 	/**
-	 * Users can provide the document from an URL (including an URL on iTop itself)
-	 * for CSV import. Administrators can even provide the path to a local file
-	 * {@inheritDoc}
+     * {@inheritDoc}
+     *
+     * @param string $proposedValue Can be an URL (including an URL to iTop itself), or a local path (CSV import)
 	 *
 	 * @see AttributeDefinition::MakeRealValue()
 	 */
