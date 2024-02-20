@@ -41,7 +41,7 @@ $ibo-alert-colors: (
 	$bg-color: nth($aColorValues, 1);
 	$highlight-color: nth($aColorValues, 2);
 	$text-color: nth($aColorValues, 3);
-	.ibo-alert.ibo-is-#{$sColor} {
+	%ibo-alert-#{$sColor}, .ibo-alert.ibo-is-#{$sColor} {
 		background-color: $bg-color;
 		color: $text-color;
     a {

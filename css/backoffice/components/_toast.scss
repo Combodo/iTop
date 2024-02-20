@@ -48,15 +48,15 @@ $ibo-toast--max-width: calc(50% - 20px) !default;
     animation: none; /* Pause animation on hover */
   }
   &.ibo-is-error{
-    @extend .ibo-alert.ibo-is-danger;
+    @extend %ibo-alert-danger;
   }
   &.ibo-is-warning{
-    @extend .ibo-alert.ibo-is-warning;
+    @extend %ibo-alert-warning;
   }
   &.ibo-is-success{
-    @extend .ibo-alert.ibo-is-success;
+    @extend %ibo-alert-success;
   }
   &.ibo-is-information{
-    @extend .ibo-alert.ibo-is-information;
+    @extend %ibo-alert-information;
   }
 }
