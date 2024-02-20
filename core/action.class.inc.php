@@ -41,6 +41,11 @@ require_once(APPROOT.'/core/email.class.inc.php');
  */
 abstract class Action extends cmdbAbstractObject
 {
+	/** @var $oCallingTrigger Trigger|null The trigger that called this action {@see DoExecute}
+	 * @since 3.2.0
+	 * */
+	protected ?Trigger $oCallingTrigger = null;
+	
 	/**
 	 * @throws \CoreException
 	 * @throws \Exception
@@ -271,6 +276,14 @@ abstract class ActionNotification extends Action
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function DoExecute($oTrigger, $aContextArgs)
+	{
+		$this->oCallingTrigger = $oTrigger;
+	}
+
+	/**
 	 * @param $sLanguage
 	 * @param $sLanguageCode
 	 *
@@ -419,17 +432,21 @@ class ActionEmail extends ActionNotification
 	 *
 	 * @param string $sRecipAttCode
 	 * @param array $aArgs
-	 * @param \Trigger|null $oTrigger
 	 *
 	 * @return string
-	 * @since 3.2.0 $oTrigger parameter added
 	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
-	protected function FindRecipients($sRecipAttCode, $aArgs, ?Trigger $oTrigger = null)
+	protected function FindRecipients($sRecipAttCode, $aArgs)
 	{
+		$oTrigger = $this->oCallingTrigger;
 		$sOQL = $this->Get($sRecipAttCode);
 		if (utils::IsNullOrEmptyString($sOQL)) return '';
 
@@ -505,6 +522,7 @@ class ActionEmail extends ActionNotification
 	 */
 	public function DoExecute($oTrigger, $aContextArgs)
 	{
+		parent::DoExecute($oTrigger, $aContextArgs);
 		if (MetaModel::IsLogEnabledNotification())
 		{
 			$oLog = new EventNotificationEmail();
@@ -587,7 +605,7 @@ class ActionEmail extends ActionNotification
 		
 		$oEmail = new EMail();
 		
-		$aEmailContent = $this->PrepareMessageContent($aContextArgs, $oLog, $oTrigger);
+		$aEmailContent = $this->PrepareMessageContent($aContextArgs, $oLog);
 		$oEmail->SetSubject($aEmailContent['subject']);
 		$oEmail->SetBody($aEmailContent['body'], 'text/html', $sStyles);
 		$oEmail->SetRecipientTO($aEmailContent['to']);
@@ -639,19 +657,22 @@ class ActionEmail extends ActionNotification
 	/**
 	 * @param array $aContextArgs
 	 * @param \EventNotification $oLog
-	 * @param \Trigger|null $oTrigger
 	 *
 	 * @return array
 	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
 	 * @throws \DictExceptionMissingString
 	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 * @since 3.1.0 N°918
-	 * @since 3.2.0 Added $oTrigger parameter
 	 */
-	protected function PrepareMessageContent($aContextArgs, &$oLog, ?Trigger $oTrigger = null): array
+	protected function PrepareMessageContent($aContextArgs, &$oLog): array
 	{
 		$aMessageContent = [
 			'to' => '',
@@ -678,9 +699,9 @@ class ActionEmail extends ActionNotification
 			
 			// Determine recipients
 			//
-			$aMessageContent['to'] = $this->FindRecipients('to', $aContextArgs, $oTrigger);
-			$aMessageContent['cc'] = $this->FindRecipients('cc', $aContextArgs, $oTrigger);
-			$aMessageContent['bcc'] = $this->FindRecipients('bcc', $aContextArgs, $oTrigger);
+			$aMessageContent['to'] = $this->FindRecipients('to', $aContextArgs);
+			$aMessageContent['cc'] = $this->FindRecipients('cc', $aContextArgs);
+			$aMessageContent['bcc'] = $this->FindRecipients('bcc', $aContextArgs);
 			
 			$aMessageContent['from'] = MetaModel::ApplyParams($this->Get('from'), $aContextArgs);
 			$aMessageContent['from_label'] = MetaModel::ApplyParams($this->Get('from_label'), $aContextArgs);
