@@ -180,7 +180,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 
 			//--- Following should not be present in packages, but are convenient for local debugging !
 			glob($sAppRoot.'extensions/*/*.dict*.php'),
-			glob($sAppRoot.'extensions/*/dictionaries/*.dict*.php'),
+			glob($sAppRoot.'extensions/*/dictionaries/*.dict*.php')
 		);
 		$this->RemoveModulesWithout7246Fixes($aDictFilesModules);
 
