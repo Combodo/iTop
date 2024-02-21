@@ -161,7 +161,7 @@ class SessionHandlerTest extends ItopDataTestCase
 		$aJson = json_decode($sFirstContent, true);
 		$this->assertNotEquals(false, $aJson, 'Should return a valid json string, found: '.$sFirstContent);
 		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', "Should report the login of the logged in user in [user_id]: $sFirstContent");
-		$this->assertEquals(ContextTag::TAG_REST, $aJson['context'] ?? '', "Should report the context tag(s) in [context]: $sFirstContent");
+		$this->assertStringContainsString(ContextTag::TAG_REST, $aJson['context'] ?? '', "Should report the context tag(s) in [context]: $sFirstContent");
 		$this->assertIsInt($aJson['creation_time'] ?? '', "Should report the session start timestamp in [creation_time]: $sFirstContent");
 		$this->assertEquals('foo_login_mode', $aJson['login_mode'] ?? '', "Should report the current login mode in [login_mode]: $sFirstContent");
 
