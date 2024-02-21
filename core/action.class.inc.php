@@ -41,9 +41,10 @@ require_once(APPROOT.'/core/email.class.inc.php');
  */
 abstract class Action extends cmdbAbstractObject
 {
-	/** @var $oCallingTrigger Trigger|null The trigger that called this action {@see DoExecute}
+	/**
+	 * @var $oCallingTrigger Trigger|null The trigger that called this action {@see DoExecute}
 	 * @since 3.2.0
-	 * */
+	 */
 	protected ?Trigger $oCallingTrigger = null;
 	
 	/**
