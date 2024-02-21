@@ -340,11 +340,9 @@ $(function()
 			this._markOneMessageAsRead(idxProvider, msgId);
 
 			// ... and open it as intended
-			if ($(oElem).attr('target') !== 'undefined') {
-				window.open($(oElem).attr('href'), $(oElem).attr('target'));
-			} else {
-				window.location.href = $(oElem).attr('href');
-			}
+			// Note: Default behavior is to open the news on a new tab unless it is specified otherwise
+			const urlTarget = $(oElem).attr('target') !== 'undefined' ? $(oElem).attr('target') : '_blank';
+			window.open($(oElem).attr('href'), urlTarget);
 
 			// Finally refresh messages
 			$(this.element).popover_menu("togglePopup");
