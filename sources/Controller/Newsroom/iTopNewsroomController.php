@@ -83,6 +83,7 @@ HTML;
 					'id'         => $oMessage->GetKey(),
 					'text'       => $sText,
 					'url'        => Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.view_event', ['event_id' => $oMessage->GetKey()]),
+					'target'     => '_self',
 					'start_date' => $oMessage->Get('date'),
 					'priority'   => $oMessage->Get('priority'),
 					'image'      => $sIcon,
