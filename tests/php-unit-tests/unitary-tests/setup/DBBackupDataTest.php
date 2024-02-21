@@ -32,11 +32,14 @@ class DBBackupDataTest extends ItopDataTestCase
 			if ($bUnsafeFileException) {
 				$this->expectExceptionMessage("Backup: Aborting, resource '$sExtraFile'. Considered as UNSAFE because not inside the iTop directory.");
 			}
-			$aFiles = $this->InvokeNonPublicMethod('DBBackup', 'PrepareFilesToBackup', $oBackup, [APPROOT . '/conf/production/config-itop.php', $sTmpDir, true]);
+			$aFiles = $this->InvokeNonPublicMethod('DBBackup', 'PrepareFilesToBackup', $oBackup, [APPROOT . '/conf/'.$this->GetTestEnvironment().'/config-itop.php', $sTmpDir, true]);
 			SetupUtils::rrmdir($sTmpDir);
 			$aExpectedFiles = [
 				$sTmpDir . '/config-itop.php',
 			];
+			if (file_exists(APPROOT.'/data/'.$this->GetTestEnvironment().'.delta.xml')) {
+				$aExpectedFiles[] = $sTmpDir . '/' . 'delta.xml';
+			}
 			foreach ($aExtraFiles as $sRelFile => $bExists) {
 				if ($bExists) {
 					$aExpectedFiles[] = $sTmpDir . '/' . $sRelFile;
@@ -47,13 +50,17 @@ class DBBackupDataTest extends ItopDataTestCase
 			foreach ($aExtraFiles as $sExtraFile => $bExists) {
 				if ($bExists) {
 					unlink(APPROOT . '/' . $sExtraFile);
+					$folderPath = dirname(APPROOT . '/' . $sExtraFile);
+					if (is_dir($folderPath) && count(glob($folderPath . '/*')) === 0) {
+						rmdir($folderPath);
+					}
 				}
 			}
 		}
 
 		sort($aFiles);
 		sort($aExpectedFiles);
-		$this->assertEquals($aFiles, $aExpectedFiles);
+		$this->assertEquals($aExpectedFiles, $aFiles);
 	}
 	
 	function prepareFilesToBackupProvider()
