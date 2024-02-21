@@ -55,7 +55,7 @@ class CliResetSessionTest extends ItopDataTestCase
 			@chmod($sConfigPath, 0770);
 			$oConfig = new Config($this->sConfigTmpBackupFile);
 			$oConfig->WriteToFile($sConfigPath);
-			@chmod($sConfigPath, 0440);
+			@chmod($sConfigPath, 0444);
 			unlink($this->sConfigTmpBackupFile);
 		}
 
@@ -72,14 +72,14 @@ class CliResetSessionTest extends ItopDataTestCase
 			MetaModel::GetConfig()->SetAllowedLoginTypes($aAllowedLoginTypes);
 			MetaModel::GetConfig()->WriteToFile();
 		}
-		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0440);
+		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0444);
 	}
 
 	protected function SetLoginModes($aAllowedLoginTypes){
 		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0770);
 		MetaModel::GetConfig()->SetAllowedLoginTypes($aAllowedLoginTypes);
 		MetaModel::GetConfig()->WriteToFile();
-		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0440);
+		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0444);
 	}
 
 	public function RestProvider(){
