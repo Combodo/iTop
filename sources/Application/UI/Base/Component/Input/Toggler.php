@@ -25,7 +25,7 @@ class Toggler extends Input {
 		$this->SetType('checkbox');
 	}
 	
-	public function SetIsToggled($bIsToggled)
+	public function SetIsToggled(bool $bIsToggled): static
 	{
 		return $this->SetIsChecked($bIsToggled);
 	}
