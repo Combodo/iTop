@@ -29,7 +29,7 @@ class Toggler extends Input {
 		return $this->SetIsChecked($bIsToggled);
 	}
 
-	public function IsToggled()
+	public function IsToggled(): bool
 	{
 		return $this->IsChecked();
 	}
