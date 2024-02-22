@@ -132,7 +132,7 @@
           <display_max_height>96</display_max_height>
           <storage_max_width>256</storage_max_width>
           <storage_max_height>256</storage_max_height>
-          <default_image>null</default_image>
+          <default_image />
         </field>
         <field id="priority" xsi:type="AttributeEnum">
           <sql>priority</sql>
@@ -338,7 +338,7 @@
           <sql>icon</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
-          <default_image>null</default_image>
+          <default_image />
         </field>
         <field id="priority" xsi:type="AttributeEnum">
           <sql>priority</sql>
