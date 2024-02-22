@@ -22,7 +22,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Vos notifications ' . ITOP_APPLICATION_SHORT,
 	'UI:Newsroom:iTopNotification:ViewAllPage:Read:Label' => 'Lue',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Unread:Label' => 'Non lue',
-	'UI:Newsroom:iTopNotification:SelectMode:Label' => 'Mode de sélection',
+	'UI:Newsroom:iTopNotification:SelectMode:Label' => 'Sélection multiple',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAllAsRead:Label' => 'Marquer tout comme lu',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAllAsUnread:Label' => 'Marquer tout comme non lu',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Label' => 'Supprimer tout',
