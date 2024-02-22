@@ -30,6 +30,6 @@ let fReadUnreadDisabled = function() {
 	}
 }
 
-$('body').on('itop.notification.read', '.ibo-notifications--view-all--container', fReadUnreadDisabled);
+$('body').on('itop.notification.read itop.notification.unread', '.ibo-notifications--view-all--container', fReadUnreadDisabled);
 
 $('body').on('itop.notification.unread', '.ibo-notifications--view-all--container', fReadUnreadDisabled);
