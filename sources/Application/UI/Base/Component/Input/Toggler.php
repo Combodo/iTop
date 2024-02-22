@@ -9,6 +9,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Input;
 
 /**
  * @package Combodo\iTop\Application\UI\Base\Component\Input
+ * @since 3.2.0
  */
 class Toggler extends Input {
 	
