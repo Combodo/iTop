@@ -59,7 +59,7 @@ $ibo-notifications--view-all--empty--svg--max-width: 30% !default;
   flex-direction: column;
   margin-top: $ibo-notifications--view-all--empty--margin-top;
   
-svg {
+  svg {
     max-width: $ibo-notifications--view-all--empty--svg--max-width;
     height: auto;
   }
