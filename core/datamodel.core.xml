@@ -132,7 +132,7 @@
           <display_max_height>96</display_max_height>
           <storage_max_width>256</storage_max_width>
           <storage_max_height>256</storage_max_height>
-          <default_image>null</default_image>
+          <default_image />
         </field>
         <field id="priority" xsi:type="AttributeEnum">
           <sql>priority</sql>
@@ -253,7 +253,7 @@
           <static>false</static>
           <access>public</access>
           <code><![CDATA[
-              public function DoExecute($oTrigger, $aContextArgs)
+	public function DoExecute($oTrigger, $aContextArgs)
 	{
 		$oRecipientsSearch = DBObjectSearch::FromOQL($this->Get('recipients'));
 		$oRecipientsSearch->AllowAllData();
@@ -262,15 +262,36 @@
 		while ($oRecipient = $oRecipientsSet->Fetch()) {
 		  // Skip recipients that have no users
 		  if (get_class($oRecipient) === Person::class && UserRights::GetUserFromPerson($oRecipient) === null) {
-        continue;
-      }
+				continue;
+			}
 		  if (!\Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->IsSubscribed($oTrigger, $this, $oRecipient)) {
-        continue;
-      }
+				continue;
+			}
+
+			if (array_key_exists('this->object()', $aContextArgs)) {
+				$iObjectId = $aContextArgs['this->object()']->GetKey();
+				$sObjectClass = get_class($aContextArgs['this->object()']);
+			} else {
+				$iObjectId = 0;
+				$sObjectClass = null;
+			}
+
 			$oEvent = new EventiTopNotification();
 			$oEvent->Set('title', MetaModel::ApplyParams($this->Get('title'), $aContextArgs));
 			$oEvent->Set('message', MetaModel::ApplyParams($this->Get('message'), $aContextArgs));
-			$oIcon = !$this->Get('icon')->IsEmpty() ? $this->Get('icon') : MetaModel::GetAttributeDef('EventiTopNotification', 'icon')->MakeRealValue(Combodo\iTop\Application\Branding::GetCompactMainLogoAbsoluteUrl(), $oEvent);
+			// Compute icon
+			// - First check if one is defined on the action
+			if (false === $this->Get('icon')->IsEmpty()) {
+				$oIcon = $this->Get('icon');
+			}
+			// - Then, check if the action is for a DM object and if its class has an icon
+			elseif ($iObjectId > 0 && utils::IsNotNullOrEmptyString(MetaModel::GetClassIcon($sObjectClass, false))) {
+				$oIcon = MetaModel::GetAttributeDef(EventiTopNotification::class, 'icon')->MakeRealValue(MetaModel::GetClassIcon($sObjectClass, false), $oEvent);
+			}
+			// - Otherwise, fallback on the compact logo of the application
+			else {
+				$oIcon = MetaModel::GetAttributeDef(EventiTopNotification::class, 'icon')->MakeRealValue(\Combodo\iTop\Application\Branding::GetCompactMainLogoAbsoluteUrl(), $oEvent);
+			}
 			$oEvent->Set('icon', $oIcon);
 			$oEvent->Set('priority', $this->Get('priority'));
 			$oEvent->Set('contact_id', $oRecipient->GetKey());
@@ -281,7 +302,7 @@
 			$oEvent->Set('url', MetaModel::ApplyParams($this->Get('url'), $aContextArgs));
 			$oEvent->DBInsertNoReload();
 
-      \Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->RegisterSubscription($oTrigger, $this, $oRecipient);
+			\Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->RegisterSubscription($oTrigger, $this, $oRecipient);
 		}
 		$this->SetNotificationLanguage($sPreviousLanguage, $aPreviousPluginProperties['language_code'] ?? null);
 	}
@@ -317,7 +338,7 @@
           <sql>icon</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
-          <default_image>null</default_image>
+          <default_image />
         </field>
         <field id="priority" xsi:type="AttributeEnum">
           <sql>priority</sql>

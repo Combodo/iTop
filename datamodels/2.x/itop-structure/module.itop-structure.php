@@ -73,7 +73,7 @@ if (!class_exists('StructureInstaller'))
 					SetupLog::Info("|  Migrate ActionEmail language attribute values to its parent.");
 					$sTableToRead = MetaModel::DBGetTable('ActionEmail');
 					$sTableToSet = MetaModel::DBGetTable('ActionNotification');
-					self::MoveColumnInDB($sTableToRead, 'language',  $sTableToSet, 'language');
+					self::MoveColumnInDB($sTableToRead, 'language',  $sTableToSet, 'language', true);
 					SetupLog::Info("|  ActionEmail migration done.");
 				}
 				// If you want to migrate data from one format to another, do it here

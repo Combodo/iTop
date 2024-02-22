@@ -58,7 +58,7 @@ class AttributeDefinitionTest extends ItopDataTestCase {
 		// Note: This is test is not great as we are datamodel dependent and don't have a class with all the attribute types
 		return [
 			'AttributeDateTime' => [
-				Change::class,
+				UserRequest::class,
 				'start_date', // no default value on this field
 				<<<PHP
 \$oObject->Set('start_date', '2023-09-06 12:26:00');

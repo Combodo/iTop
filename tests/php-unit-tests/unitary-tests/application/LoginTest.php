@@ -26,7 +26,7 @@ class LoginTest extends ItopDataTestCase {
 
 		@chmod($this->sConfigPath, 0770);
 		$oConfig->WriteToFile();
-		@chmod($this->sConfigPath, 0440);
+		@chmod($this->sConfigPath, 0444);
 	}
 
 	protected function tearDown(): void {
@@ -34,7 +34,7 @@ class LoginTest extends ItopDataTestCase {
 			//put config back
 			@chmod($this->sConfigPath, 0770);
 			file_put_contents($this->sConfigPath, file_get_contents($this->sConfigTmpBackupFile));
-			@chmod($this->sConfigPath, 0440);
+			@chmod($this->sConfigPath, 0444);
 			@unlink($this->sConfigTmpBackupFile);
 		}
 		parent::tearDown();

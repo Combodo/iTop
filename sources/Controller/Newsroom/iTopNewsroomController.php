@@ -11,6 +11,7 @@ use Combodo\iTop\Service\Router\Router;
 use CoreException;
 use DBObjectSearch;
 use DBObjectSet;
+use Dict;
 use DisplayBlock;
 use MetaModel;
 use UserRights;

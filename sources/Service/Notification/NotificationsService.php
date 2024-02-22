@@ -105,7 +105,7 @@ class NotificationsService {
 		// Check if the user is already subscribed to the action notification
 		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactAndAction($oTrigger->GetKey(), $oRecipient->GetKey(), $oActionNotification->GetKey());
 		if ($oSubscribedActionsNotificationsSet->Count() === 0) {
-			return false;
+			return true;
 		}
 
 		// Return the subscribed status
