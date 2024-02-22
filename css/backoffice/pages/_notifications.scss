@@ -13,6 +13,9 @@ $ibo-notifications--view-all--container--large--grid-template-columns: repeat(3,
 $ibo-notifications--view-all--container--medium--grid-template-columns: repeat(2, 1fr) !default;
 $ibo-notifications--view-all--container--small--grid-template-columns: repeat(1, 1fr) !default;
 
+$ibo-notifications--view-all--empty--margin-top: $ibo-spacing-950 !default;
+$ibo-notifications--view-all--empty--svg--max-width: 30% !default;
+
 .ibo-notifications--view-all--container{
   display: grid;
   grid-gap: $ibo-notifications--view-all--container--grid-gap;
@@ -36,10 +39,30 @@ $ibo-notifications--view-all--container--small--grid-template-columns: repeat(1,
   @include fullhd {
     grid-template-columns: $ibo-notifications--view-all--container--large--grid-template-columns;  }
 }
+.ibo-notifications--view-all--toolbar {
+  justify-content: space-between;
+}
+.ibo-notifications--view-all--toggler {
+  display: flex;
+  align-content: center;
+}
 
 .ibo-notifications--view-all--item--read .ibo-panel--body::before{
   background-color: $ibo-notifications--view-all--item--read--highlight--background-color;
 }
 .ibo-notifications--view-all--item--unread .ibo-panel--body::before{
   background-color: $ibo-notifications--view-all--item--unread--highlight--background-color;
+}
+
+.ibo-notifications--view-all--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: $ibo-notifications--view-all--empty--margin-top;
+  
+svg {
+    max-width: $ibo-notifications--view-all--empty--svg--max-width;
+    height: auto;
+  }
 }

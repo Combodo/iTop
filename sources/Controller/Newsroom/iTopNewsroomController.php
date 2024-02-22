@@ -5,12 +5,18 @@ namespace Combodo\iTop\Controller\Newsroom;
 use ArchivedObjectException;
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
+use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Toggler;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectSummary;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
@@ -21,7 +27,6 @@ use CoreException;
 use DBObjectSearch;
 use DBObjectSet;
 use Dict;
-use DisplayBlock;
 use JSPopupMenuItem;
 use MetaModel;
 use SecurityException;
@@ -50,19 +55,319 @@ class iTopNewsroomController extends Controller
 	public function OperationViewAll()
 	{
 		$oPage = new iTopWebPage(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Title'));
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/itop-newsroom.view-all.js');
 		// Add title block
-		$oTitleBlock = TitleUIBlockFactory::MakeNeutral(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Title'));
-		$oPage->AddUiBlock($oTitleBlock);
+		// Make bulk actions block
+		$oBulkActionsBlock = PanelUIBlockFactory::MakeForInformation(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Title'));
+		$oToolbar = ToolbarUIBlockFactory::MakeStandard();
+		$oToolbar->AddCSSClass('ibo-notifications--view-all--toolbar');
+		$oAllModeButtonsContainer = new UIContentBlock('ibo-notifications--view-all--all-mode-buttons', ['ibo-notifications--view-all--bulk-buttons', 'ibo-notifications--view-all--all-mode-buttons']);
+		// Create CSRF token we'll use in this page
+		$sCSRFToken = utils::GetNewTransactionId();
+		// Make button to mark all as read
+		$sMarkMultipleAsReadUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.mark_multiple_as_read', ['token' => $sCSRFToken]);
+		$sMarkMultipleAsUnreadUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.mark_multiple_as_unread', ['token' => $sCSRFToken]);
+		$sDeleteMultipleUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.delete_multiple', ['token' => $sCSRFToken]);
+
+		$oMarkAllAsReadButton = ButtonUIBlockFactory::MakeForSecondaryAction(
+			Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAllAsRead:Label'),
+			'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAllAsRead:Label',
+			'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAllAsRead:Label'
+		);
+		$oMarkAllAsReadButton->SetIconClass('far fa-envelope-open')
+			->AddCSSClass('ibo-notifications--view-all--read-action')
+			->SetOnClickJsCode(
+			<<<JS
+let oSelf = this;
+let oNotificationToMarkAsRead = $('.ibo-notifications--view-all--container [data-role="ibo-object-summary"].ibo-notifications--view-all--item--unread');
+let aNotificationIds = [];
+oNotificationToMarkAsRead.each(function(){
+	aNotificationIds.push($(this).attr('data-object-id'));
+});
+$.ajax({
+	url: '{$sMarkMultipleAsReadUrl}',
+	data: {
+		notification_ids: aNotificationIds
+	},
+	type: 'POST',
+	success: function(data) {
+		if (data.status === 'success') {
+			let MarkAsReadButton = oNotificationToMarkAsRead.find('.ibo-button-group:not(.ibo-is-hidden)');
+			let MarkAsUnreadButton = oNotificationToMarkAsRead.find('.ibo-button-group.ibo-is-hidden');
+			MarkAsReadButton.addClass('ibo-is-hidden');
+			MarkAsUnreadButton.removeClass('ibo-is-hidden');
+			oNotificationToMarkAsRead.removeClass('ibo-notifications--view-all--item--unread').addClass('ibo-notifications--view-all--item--read');
+			CombodoToast.OpenSuccessToast(data.message);
+			$('.ibo-notifications--view-all--container').trigger('itop.notification.read');
+		}
+		else {
+			CombodoToast.OpenErrorToast(data.message);
+		}
+	}
+});
+JS
+		);
+		
+		// Make button to mark all as unread
+		$oMarkAllAsUnreadButton = ButtonUIBlockFactory::MakeForSecondaryAction(
+			Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAllAsUnread:Label'),
+			'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAllAsUnread:Label',
+			'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAllAsUnread:Label',
+		);
+		$oMarkAllAsUnreadButton->SetIconClass('far fa-envelope')
+			->AddCSSClass('ibo-notifications--view-all--unread-action')
+			->SetOnClickJsCode(
+			<<<JS
+let oSelf = this;
+let oNotificationToMarkAsUnread = $('.ibo-notifications--view-all--container [data-role="ibo-object-summary"].ibo-notifications--view-all--item--read');
+let aNotificationIds = [];
+oNotificationToMarkAsUnread.each(function(){
+	aNotificationIds.push($(this).attr('data-object-id'));
+});
+$.ajax({
+	url: '{$sMarkMultipleAsUnreadUrl}',
+	data: {
+		notification_ids: aNotificationIds
+	},
+	type: 'POST',
+	success: function(data) {
+		if (data.status === 'success') {
+			let MarkAsUnreadButton  = oNotificationToMarkAsUnread.find('.ibo-button-group:not(.ibo-is-hidden)');
+			let MarkAsReadButton = oNotificationToMarkAsUnread.find('.ibo-button-group.ibo-is-hidden');
+
+			MarkAsReadButton.removeClass('ibo-is-hidden');
+			MarkAsUnreadButton.addClass('ibo-is-hidden');
+			oNotificationToMarkAsUnread.removeClass('ibo-notifications--view-all--item--read').addClass('ibo-notifications--view-all--item--unread');
+			CombodoToast.OpenSuccessToast(data.message);
+						$('.ibo-notifications--view-all--container').trigger('itop.notification.unread');
+		}
+		else {
+			CombodoToast.OpenErrorToast(data.message);
+		}
+	}
+});
+JS
+		);
+
+		// Make button to delete all
+		$oDeleteAllButton = ButtonUIBlockFactory::MakeForDestructiveAction(
+			Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Label'),
+			'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Label',
+			'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Label'
+		);
+		$oDeleteAllButtonConfirmTitle = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Confirmation:Title');
+		$oDeleteAllButtonConfirmMessage = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Confirmation:Message');
+		$oDeleteAllButton->SetActionType(Button::ENUM_ACTION_TYPE_ALTERNATIVE);
+		$oDeleteAllButton->SetIconClass('fas fa-trash-alt')
+			->AddCSSClass('ibo-notifications--view-all--delete-action')
+			->SetOnClickJsCode(
+			<<<JS
+let oSelf = this;
+let oNotificationToDelete = $('.ibo-notifications--view-all--container [data-role="ibo-object-summary"]');
+let aNotificationIds = [];
+oNotificationToDelete.each(function(){
+	aNotificationIds.push($(this).attr('data-object-id'));
+});
+CombodoModal.OpenConfirmationModal({
+    title: '$oDeleteAllButtonConfirmTitle',
+    content: '$oDeleteAllButtonConfirmMessage',
+    callback_on_confirm: function() {
+		$.ajax({
+			url: '{$sDeleteMultipleUrl}',
+			data: {
+				notification_ids: aNotificationIds
+			},
+			type: 'POST',
+			success: function(data) {
+				if (data.status === 'success') {
+					oNotificationToDelete.remove();
+					CombodoToast.OpenSuccessToast(data.message);
+					$('.ibo-notifications--view-all--container').trigger('itop.notification.deleted');
+				}
+				else {
+					CombodoToast.OpenErrorToast(data.message);
+				}
+			}
+		});
+	},
+    buttons: {
+        confirm: {
+            text: '$oDeleteAllButtonConfirmTitle',
+            classes: ['ibo-is-danger']
+        }
+    },
+    do_not_show_again_pref_key: 'notifications-center.delete-all-confirmation-modal.do-not-show-again',
+}, []);
+
+JS
+		);
+		// Add "all" buttons to their container
+		$oAllModeButtonsContainer->AddSubBlock($oMarkAllAsReadButton);
+		$oAllModeButtonsContainer->AddSubBlock($oMarkAllAsUnreadButton);
+		$oAllModeButtonsContainer->AddSubBlock($oDeleteAllButton);
+		$oToolbar->AddSubBlock($oAllModeButtonsContainer);
+		
+		$oSelectedModelButtonsContainer = new UIContentBlock('ibo-notifications--view-all--selected-mode-buttons', ['ibo-is-hidden', 'ibo-notifications--view-all--bulk-buttons', 'ibo-notifications--view-all--selected-mode-buttons']);
+		// Make button mark all selected as read
+		$oMarkSelectedAsReadButton = ButtonUIBlockFactory::MakeForSecondaryAction(
+			Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkSelectedAsRead:Label'),
+			'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkSelectedAsRead:Label',
+			'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkSelectedAsRead:Label'
+		);
+		$oMarkSelectedAsReadButton->SetIconClass('far fa-envelope-open')
+			->AddCSSClass('ibo-notifications--view-all--read-action')
+			->SetOnClickJsCode(
+			<<<JS
+let oSelf = this;
+let oNotificationToMarkAsRead = $('.ibo-notifications--view-all--container [data-role="ibo-object-summary"].ibo-notifications--view-all--item--unread.ibo-is-selected');
+let aNotificationIds = [];
+oNotificationToMarkAsRead.each(function(){
+	aNotificationIds.push($(this).attr('data-object-id'));
+});
+$.ajax({
+	url: '{$sMarkMultipleAsReadUrl}',
+	data: {
+		notification_ids: aNotificationIds
+	},
+	type: 'POST',
+	success: function(data) {
+		if (data.status === 'success') {
+			let MarkAsReadButton = oNotificationToMarkAsRead.find('.ibo-button-group:not(.ibo-is-hidden)');
+			let MarkAsUnreadButton = oNotificationToMarkAsRead.find('.ibo-button-group.ibo-is-hidden');
+			MarkAsReadButton.addClass('ibo-is-hidden');
+			MarkAsUnreadButton.removeClass('ibo-is-hidden');
+			oNotificationToMarkAsRead.removeClass('ibo-notifications--view-all--item--unread').addClass('ibo-notifications--view-all--item--read');
+			CombodoToast.OpenSuccessToast(data.message);
+			$('.ibo-notifications--view-all--container').trigger('itop.notification.read');
+		}
+		else {
+			CombodoToast.OpenErrorToast(data.message);
+		}
+	}
+});
+JS
+		);
+
+		// Make button mark all selected as unread
+		$oMarkSelectedAsUnreadButton = ButtonUIBlockFactory::MakeForSecondaryAction(
+			Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkSelectedAsUnread:Label'),
+			'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkSelectedAsUnread:Label',
+			'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkSelectedAsUnread:Label'
+		);
+		$oMarkSelectedAsUnreadButton->SetIconClass('far fa-envelope')
+			->AddCSSClass('ibo-notifications--view-all--unread-action')
+			->SetOnClickJsCode(
+			<<<JS
+let oSelf = this;
+let oNotificationToMarkAsUnread = $('.ibo-notifications--view-all--container [data-role="ibo-object-summary"].ibo-notifications--view-all--item--read.ibo-is-selected');
+let aNotificationIds = [];
+oNotificationToMarkAsUnread.each(function(){
+	aNotificationIds.push($(this).attr('data-object-id'));
+});
+$.ajax({
+	url: '{$sMarkMultipleAsUnreadUrl}',
+	data: {
+		notification_ids: aNotificationIds
+	},
+	type: 'POST',
+	success: function(data) {
+		if (data.status === 'success') {
+			let MarkAsUnreadButton  = oNotificationToMarkAsUnread.find('.ibo-button-group:not(.ibo-is-hidden)');
+			let MarkAsReadButton = oNotificationToMarkAsUnread.find('.ibo-button-group.ibo-is-hidden');
+			
+			MarkAsReadButton.removeClass('ibo-is-hidden');
+			MarkAsUnreadButton.addClass('ibo-is-hidden');
+			
+			oNotificationToMarkAsUnread.removeClass('ibo-notifications--view-all--item--read').addClass('ibo-notifications--view-all--item--unread');
+			CombodoToast.OpenSuccessToast(data.message);
+			$('.ibo-notifications--view-all--container').trigger('itop.notification.unread');
+		}
+		else {
+			CombodoToast.OpenErrorToast(data.message);
+		}
+	}
+});
+JS
+		);
+
+		// Make button delete all selected
+		$oDeleteSelectedButton = ButtonUIBlockFactory::MakeForDestructiveAction(
+			Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteSelected:Label'),
+			'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteSelected:Label',
+			'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteSelected:Label'
+		);
+		$oDeleteSelectedButtonConfirmTitle = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteSelected:Confirmation:Title');
+		$oDeleteSelectedButtonConfirmMessage = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteSelected:Confirmation:Message');
+		$oDeleteSelectedButton->SetActionType(Button::ENUM_ACTION_TYPE_ALTERNATIVE);
+		$oDeleteSelectedButton->SetIconClass('fas fa-trash-alt')
+			->AddCSSClass('ibo-notifications--view-all--delete-action')
+			->SetOnClickJsCode(
+			<<<JS
+let oSelf = this;
+let oNotificationToDelete = $('.ibo-notifications--view-all--container [data-role="ibo-object-summary"].ibo-is-selected');
+let aNotificationIds = [];
+oNotificationToDelete.each(function(){
+	aNotificationIds.push($(this).attr('data-object-id'));
+});
+CombodoModal.OpenConfirmationModal({
+	title: '$oDeleteSelectedButtonConfirmTitle',
+	content: '$oDeleteSelectedButtonConfirmMessage',
+	callback_on_confirm: function() {
+		$.ajax({
+			url: '{$sDeleteMultipleUrl}',
+			data: {
+				notification_ids: aNotificationIds
+			},
+			type: 'POST',
+			success: function(data) {
+				if (data.status === 'success') {
+					oNotificationToDelete.remove();
+					CombodoToast.OpenSuccessToast(data.message);
+					$('.ibo-notifications--view-all--container').trigger('itop.notification.deleted');
+				}
+				else {
+					CombodoToast.OpenErrorToast(data.message);
+				}
+			}
+		});
+	},
+	buttons: {
+		confirm: {
+			text: '$oDeleteSelectedButtonConfirmTitle',
+			classes: ['ibo-is-danger']
+		}
+	},
+	do_not_show_again_pref_key: 'notifications-center.delete-all-confirmation-modal.do-not-show-again',
+}, []);
+JS
+);
+
+		// Add "selected" buttons to their container
+		$oSelectedModelButtonsContainer->AddSubBlock($oMarkSelectedAsReadButton);
+		$oSelectedModelButtonsContainer->AddSubBlock($oMarkSelectedAsUnreadButton);
+		$oSelectedModelButtonsContainer->AddSubBlock($oDeleteSelectedButton);
+		
+		$oToolbar->AddSubBlock($oSelectedModelButtonsContainer);
+		
+		// Make toggler to switch between "all" and "selected" mode
+		$oTogglerContentBlock = new UIContentBlock('ibo-notifications--view-all--toggler', ['ibo-notifications--view-all--toggler']);
+		$oToggler = new Toggler();
+		$oInputWithLabel = InputUIBlockFactory::MakeInputWithLabel('slider', Dict::S('UI:Newsroom:iTopNotification:SelectMode:Label'), $oToggler);
+		$oTogglerContentBlock->AddSubBlock($oInputWithLabel);
+		$oToolbar->AddSubBlock($oTogglerContentBlock);
+		
+		$oBulkActionsBlock->AddSubBlock($oToolbar);
+		$oPage->AddUiBlock($oBulkActionsBlock);
+		
 		// Search for all notifications for the current user
 		$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification');
 		$oSearch->AddCondition('contact_id', UserRights::GetContactId(), '=');
 		$oSet = new DBObjectSet($oSearch, array('read' => true, 'date' => true), array());
 		
 		// Add main content block
-		$oContentBlock = new UIContentBlock(null, ['ibo-notifications--view-all--container']);
-		$oPage->AddUiBlock($oContentBlock);
+		$oMainContentBlock = new UIContentBlock(null, ['ibo-notifications--view-all--container']);
+		$oPage->AddUiBlock($oMainContentBlock);
 		
-		$sCSRFToken = utils::GetNewTransactionId();
 		while ($oEvent = $oSet->Fetch()) {
 			$iEventId = $oEvent->GetKey();
 			// Prepare object summary block
@@ -97,6 +402,7 @@ $.ajax({
 		if (data.status === 'success') {
 			$(oSelf).parents('.ibo-object-summary').remove();
 			CombodoToast.OpenSuccessToast(data.message);
+			$('.ibo-notifications--view-all--container').trigger('itop.notification.deleted');
 		}
 		else {
 			CombodoToast.OpenErrorToast(data.message);
@@ -143,6 +449,7 @@ JS,
 							$(oSelf).parent('.ibo-button-group').siblings('.ibo-button-group').removeClass('ibo-is-hidden');
 							$(oSelf).parents('.ibo-object-summary').removeClass('ibo-notifications--view-all--item--unread').addClass('ibo-notifications--view-all--item--read');
 							CombodoToast.OpenSuccessToast(data.message);
+							$('.ibo-notifications--view-all--container').trigger('itop.notification.read');
 						}
 						else {
 							CombodoToast.OpenErrorToast(data.message);
@@ -172,6 +479,7 @@ JS
 							$(oSelf).parent('.ibo-button-group').siblings('.ibo-button-group').removeClass('ibo-is-hidden');
 							$(oSelf).parents('.ibo-object-summary').removeClass('ibo-notifications--view-all--item--read').addClass('ibo-notifications--view-all--item--unread');
 							CombodoToast.OpenSuccessToast(data.message);
+							$('.ibo-notifications--view-all--container').trigger('itop.notification.unread');
 						}
 						else {
 							CombodoToast.OpenErrorToast(data.message);
@@ -200,9 +508,23 @@ JS
 				$oMarkAsReadButtonGroup->SetCSSClasses(['ibo-is-hidden']);
 			}
 			
-			$oContentBlock->AddSubBlock($oEventBlock);
+			$oMainContentBlock->AddSubBlock($oEventBlock);
 		}
-
+		
+		// Add empty content block
+		$oEmptyContentBlock = new UIContentBlock('ibo-notifications--view-all--empty', ['ibo-notifications--view-all--empty', 'ibo-svg-illustration--container']);
+		$oEmptyContentBlock->AddSubBlock(new Html(file_get_contents(APPROOT.'/images/illustrations/undraw_social_serenity.svg')));
+		$oEmptyContentBlock->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Empty:Title')));
+		$oPage->AddUiBlock($oEmptyContentBlock);
+		
+		// Hide empty content block if there are notifications
+		if($oSet->Count() === 0){
+			$oMainContentBlock->AddCSSClass('ibo-is-hidden');
+		}
+		else {
+			$oEmptyContentBlock->AddCSSClass('ibo-is-hidden');
+		}
+		
 		return $oPage;
 	}
 
@@ -338,16 +660,20 @@ HTML;
 		if ($sEventId > 0) {
 			try {
 				$oEvent = MetaModel::GetObject('EventiTopNotification', $sEventId);
-				if ($oEvent !== null && $oEvent->Get('contact_id') === UserRights::GetContactId()) {
+				if ($oEvent !== null && $oEvent->Get('read') === 'yes' && $oEvent->Get('contact_id') === UserRights::GetContactId()) {
 					$oEvent->Set('read', 'no');
 					$oEvent->DBWrite();
 					$aReturnData['status'] = 'success';
 					$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Success:Message');
+				} else {
+					$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:NoEvent:Message');
 				}
 			}
 			catch (ArchivedObjectException|CoreException $e) {
-			$aReturnData['message'] = $e->getMessage();
+				$aReturnData['message'] = $e->getMessage();
 			}
+		} else {
+			$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:NoEvent:Message');
 		}
 		$oPage->SetData($aReturnData);
 		$oPage->SetOutputDataOnly(true);
@@ -373,17 +699,21 @@ HTML;
 		if ($sEventId > 0) {
 			try {
 				$oEvent = MetaModel::GetObject('EventiTopNotification', $sEventId);
-				if ($oEvent !== null && $oEvent->Get('contact_id') === UserRights::GetContactId()) {
+				if ($oEvent !== null && $oEvent->Get('read') === 'no' && $oEvent->Get('contact_id') === UserRights::GetContactId()) {
 					$oEvent->Set('read', 'yes');
 					$oEvent->SetCurrentDate('read_date');
 					$oEvent->DBWrite();
 					$aReturnData['status'] = 'success';
 					$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Success:Message');
+				} else {
+					$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:NoEvent:Message');
 				}
 			}
 			catch (ArchivedObjectException|CoreException $e) {
 				$aReturnData['message'] = $e->getMessage();
 			}
+		} else {
+			$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:NoEvent:Message');
 		}
 		$oPage->SetData($aReturnData);
 		$oPage->SetOutputDataOnly(true);
@@ -413,11 +743,153 @@ HTML;
 					$oEvent->DBDelete();
 					$aReturnData['status'] = 'success';
 					$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Success:Message');
+				} else {
+					$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message');
 				}
 			}
 			catch (ArchivedObjectException|CoreException $e) {
 				$aReturnData['message'] = $e->getMessage();
 			}
+		}
+		else {
+			$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message');
+		}
+		
+		$oPage->SetData($aReturnData);
+		$oPage->SetOutputDataOnly(true);
+		return $oPage;
+	}
+
+	/**
+	 * @return \Combodo\iTop\Application\WebPage\JsonPage
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \SecurityException
+	 */
+	public function OperationMarkMultipleAsRead(): JsonPage {
+		$oPage = new JsonPage();
+		$sCSRFToken = utils::ReadParam('token', '', 'raw_data');
+		if(utils::IsTransactionValid($sCSRFToken, false) === false){
+			throw new SecurityException('Invalid CSRF token');
+		}
+		$aNotificationIds = utils::ReadParam('notification_ids', []);
+		$aReturnData = [
+			'status' => 'error',
+			'message' => 'Invalid event'
+		];
+		if (count($aNotificationIds) > 0) {
+			$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification WHERE id IN (:notification_ids) AND contact_id = :contact_id AND read = "no"');
+			$oSet = new DBObjectSet($oSearch, array(), array('notification_ids' => $aNotificationIds, 'contact_id' => UserRights::GetContactId()));
+			if($oSet->Count() > 0){
+				while ($oEvent = $oSet->Fetch()) {
+					$oEvent->Set('read', 'yes');
+					$oEvent->SetCurrentDate('read_date');
+					$oEvent->DBWrite();
+				}
+				$aReturnData['status'] = 'success';
+				$aReturnData['message'] = Dict::Format('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkMultipleAsRead:Success:Message', $oSet->Count());
+			} else {
+				$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:NoEvent:Message');
+			}
+		}
+		else {
+			$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:NoEvent:Message');
+		}
+		$oPage->SetData($aReturnData);
+		$oPage->SetOutputDataOnly(true);
+		return $oPage;
+	}
+
+	/**
+	 * @return \Combodo\iTop\Application\WebPage\JsonPage
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \SecurityException
+	 */
+	public function OperationMarkMultipleAsUnread(): JsonPage {
+		$oPage = new JsonPage();
+		$sCSRFToken = utils::ReadParam('token', '', 'raw_data');
+		if(utils::IsTransactionValid($sCSRFToken, false) === false){
+			throw new SecurityException('Invalid CSRF token');
+		}
+		$aNotificationIds = utils::ReadParam('notification_ids', []);
+		$aReturnData = [
+			'status' => 'error',
+			'message' => 'Invalid event'
+		];
+		if (count($aNotificationIds) > 0) {
+			$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification WHERE id IN (:notification_ids) AND contact_id = :contact_id AND read = "yes"');
+			$oSet = new DBObjectSet($oSearch, array(), array('notification_ids' => $aNotificationIds, 'contact_id' => UserRights::GetContactId()));
+			if ($oSet->Count() > 0) {
+				while ($oEvent = $oSet->Fetch()) {
+					$oEvent->Set('read', 'no');
+					$oEvent->DBWrite();
+				}
+				$aReturnData['status'] = 'success';
+				$aReturnData['message'] = Dict::Format('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkMultipleAsUnread:Success:Message', $oSet->Count());
+			} else {
+				$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:NoEvent:Message');
+			}
+		}
+		else {
+			$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:NoEvent:Message');
+		}
+		
+		$oPage->SetData($aReturnData);
+		$oPage->SetOutputDataOnly(true);
+		return $oPage;
+	}
+
+	/**
+	 * @return \Combodo\iTop\Application\WebPage\JsonPage
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \SecurityException
+	 */
+	public function OperationDeleteMultiple(): JsonPage{
+		$oPage = new JsonPage();
+		$sCSRFToken = utils::ReadParam('token', '', 'raw_data');
+		if(utils::IsTransactionValid($sCSRFToken, false) === false){
+			throw new SecurityException('Invalid CSRF token');
+		}
+		$aNotificationIds = utils::ReadParam('notification_ids', []);
+		$aReturnData = [
+			'status' => 'error',
+			'message' => 'Invalid event'
+		];
+		if (count($aNotificationIds) > 0) {
+			$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification WHERE id IN (:notification_ids) AND contact_id = :contact_id');
+			$oSet = new DBObjectSet($oSearch, array(), array('notification_ids' => $aNotificationIds, 'contact_id' => UserRights::GetContactId()));
+			if ($oSet->Count() > 0) {
+				while ($oEvent = $oSet->Fetch()) {
+					$oEvent->DBDelete();
+				}
+				$aReturnData['status'] = 'success';
+				$aReturnData['message'] = Dict::Format('UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteMultiple:Success:Message', $oSet->Count());
+			} else {
+				$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message');
+			}
+		}
+		else {
+			$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message');
 		}
 		$oPage->SetData($aReturnData);
 		$oPage->SetOutputDataOnly(true);
