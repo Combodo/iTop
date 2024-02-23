@@ -106,7 +106,7 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="title"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <style>
