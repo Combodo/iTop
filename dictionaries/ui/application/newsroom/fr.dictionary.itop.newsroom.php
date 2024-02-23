@@ -32,9 +32,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'UI:Newsroom:iTopNotification:ViewAllPage:Empty:Title' => 'Aucune notification, vous êtes à jour !',
 
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkSelectedAsRead:Label' => 'Marquer sélectionné comme lu',
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkSelectedAsUnread:Label' => 'Marquer sélectionné comme non lu',
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteSelected:Label' =>  'Supprimer sélectionné',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkSelectedAsRead:Label' => 'Marquer sélectionnée(s) comme lu',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkSelectedAsUnread:Label' => 'Marquer sélectionnée(s) comme non lu',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteSelected:Label' =>  'Supprimer sélectionnée(s)',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteSelected:Confirmation:Title' => 'Supprimer les notifications sélectionnées',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteSelected:Confirmation:Message' => 'Êtes-vous sûr de vouloir supprimer les notifications sélectionnées ?',
 
