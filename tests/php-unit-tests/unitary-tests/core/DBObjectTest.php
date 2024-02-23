@@ -20,9 +20,11 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Attachment;
+use AttributeDateTime;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreException;
+use DateTime;
 use DBObject;
 use InvalidExternalKeyValueException;
 use lnkContactToFunctionalCI;
@@ -412,7 +414,34 @@ class DBObjectTest extends ItopDataTestCase
 		$oObject->Set('org_id', 3);
 		$this->assertDBQueryCount(1, function() use (&$oObject){
 			static::assertNotEmpty($oObject->Get('org_name'));
-		});	}
+		});
+	}
+
+	public function testSetAttributeDateTime():void {
+		$oUserRequest = $this->CreateUserRequest(0);
+		$iNow = time();
+		$oMyDate = new DateTime('2024-02-14 18:12');
+
+		//--- timestamp
+		$oUserRequest->Set('start_date', $iNow);
+		$sSavedDate = $oUserRequest->Get('start_date');
+		$oSavedDate = new DateTime($sSavedDate);
+		$this->assertSame($iNow, $oSavedDate->getTimestamp());
+
+		$oUserRequest->Set('start_date', $oMyDate->getTimestamp());
+		$this->assertEquals($oMyDate->format(AttributeDateTime::GetInternalFormat()), $oUserRequest->Get('start_date'));
+
+
+		//--- String
+		$sMyDate = $oMyDate->format(AttributeDateTime::GetInternalFormat());
+		$oUserRequest->Set('start_date', $sMyDate);
+		$this->assertEquals($sMyDate, $oUserRequest->Get('start_date'));
+
+
+		//-- DateTime
+		$oUserRequest->Set('start_date', $oMyDate);
+		$this->assertEquals($sMyDate, $oUserRequest->Get('start_date'));
+	}
 
 	/**
 	 * @group Integration
