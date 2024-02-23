@@ -87,7 +87,7 @@ class NewsroomMenuFactory
 		$sPlaceholderImageUrl= 'far fa-envelope';
 		$aParams = array(
 			'image_icon' => $sImageUrl,
-			'no_message_icon' => file_get_contents(APPROOT.'images/illustrations/undraw_empty.svg'),
+			'no_message_icon' => file_get_contents(APPROOT.'images/illustrations/undraw_social_serenity.svg'),
 			'placeholder_image_icon' => $sPlaceholderImageUrl,
 			'cache_uuid' => 'itop-newsroom-'.UserRights::GetUserId().'-'.md5(APPROOT),
 			'providers' => $aProviderParams,
