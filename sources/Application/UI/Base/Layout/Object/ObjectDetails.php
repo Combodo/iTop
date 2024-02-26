@@ -7,12 +7,14 @@
 namespace Combodo\iTop\Application\UI\Base\Layout\Object;
 
 
+use ApplicationMenu;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Helper\UIHelper;
 use DBObject;
 use Dict;
 use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
+use GuzzleHttp\Utils;
 use MetaModel;
 
 /**
@@ -194,6 +196,16 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	{
 		return $this->sStatusLabel;
 	}
+    public function HasSchemaLink(): bool
+    {
+        ApplicationMenu::LoadAdditionalMenus();
+        $oMenuNode = ApplicationMenu::GetMenuNode(ApplicationMenu::GetMenuIndexById('DataModelMenu'));
+        if (is_null($oMenuNode) || !$oMenuNode->IsEnabled())
+        {
+           return false;
+        }
+        return true;
+    }
 
 	/**
 	 * @see self::$sStatusColor
