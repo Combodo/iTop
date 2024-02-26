@@ -23,7 +23,7 @@
 	{% block pPageExtraMetas %}
 	{% endblock %}
 	<title>{% block pPageTitle %}{% if sPageTitle is defined and sPageTitle is not null %}{{ sPageTitle }} - {{ constant('ITOP_APPLICATION_SHORT') }}{% else %}{{ 'Page:DefaultTitle'|dict_format(constant('ITOP_APPLICATION_SHORT')) }}{% endif %}{% endblock %}</title>
-<link rel="shortcut icon" href="{{ app['combodo.portal.instance.conf'].properties.favicon|add_itop_version }}"/>
+    <link rel="shortcut icon" href="{{ app['combodo.portal.instance.conf'].properties.favicon|add_itop_version }}"/>
 
 	{% block pPageStylesheets %}
         {# First bootstrap core, lib themes, then bootstrap theme, portal adjustements #}
@@ -250,7 +250,7 @@
 				</nav>
 			{% endblock %}
 
-            {# Sidebar navigation menu for normal screens #}
+			{# Sidebar navigation menu for normal screens #}
 			{% block pNavigationSideMenuWrapper %}
 				<nav class="navbar-default hidden-xs col-sm-3 col-md-2" id="sidebar" role="navigation">
 					<div class="user_card bg-primary">

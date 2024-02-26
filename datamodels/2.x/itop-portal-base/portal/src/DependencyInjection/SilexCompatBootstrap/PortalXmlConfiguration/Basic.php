@@ -71,7 +71,6 @@ class Basic extends AbstractConfiguration
 	 */
 	private function GetInitialPortalConf()
 	{
-
 		$aPortalConf = array(
 			'properties' => array(
 				'id'              => $_ENV['PORTAL_ID'],
@@ -80,15 +79,15 @@ class Basic extends AbstractConfiguration
 				'favicon'         => Branding::GetPortalFavIconAbsoluteUrl(),
 				'themes'          => array(
 					'bootstrap' => 'itop-portal-base/portal/public/css/bootstrap-theme-combodo.scss',
-					'portal'    => 'itop-portal-base/portal/public/css/portal.scss',
-					'others'    => array(),
+					'portal' => 'itop-portal-base/portal/public/css/portal.scss',
+					'others' => array(),
 				),
-				'templates'       => array(
+				'templates' => array(
 					'layout' => 'itop-portal-base/portal/templates/layout.html.twig',
-					'home'   => 'itop-portal-base/portal/templates/home/layout.html.twig',
+					'home' => 'itop-portal-base/portal/templates/home/layout.html.twig',
 				),
-				'urlmaker_class'  => null,
-				'triggers_query'  => null,
+				'urlmaker_class' => null,
+				'triggers_query' => null,
 				'attachments' => array(
 					'allow_delete' => true,
 				),

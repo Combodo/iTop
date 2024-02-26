@@ -1995,7 +1995,7 @@
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
   </menus>
-  <brandings>
+  <branding>
     <themes>
       <theme id="fullmoon" _delta="define">
         <variables>
@@ -2024,13 +2024,13 @@
     </themes>
     <themes_common>
       <variables>
-      </variables>
+        </variables>
       <imports>
-      </imports>
+        </imports>
       <stylesheets>
-      </stylesheets>
+        </stylesheets>
     </themes_common>
-  </brandings>
+  </branding>
   <user_rights>
     <groups>
     </groups>

@@ -88,28 +88,18 @@ class Branding
 	 *
 	 * @return string
 	 */
-	protected static function GetLogoPath(string $sType, string $sAppPath, ?string $sModulePath = null): string
+	protected static function GetLogoPath(string $sType, string $sAppPath, ?string $sModulePath = null): ?string
 	{
 		$sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
 		$aThemeParameters = json_decode(@file_get_contents($sWorkingPath.'branding/logos.json'), true);
-		//environment type from config.php
-		$sEnvType = MetaModel::GetConfig()->Get('branding_environment');
-		if (utils::IsNullOrEmptyString($sEnvType)) {
-			$sEnvType = 'default';
-		}
-		if (isset($aThemeParameters[$sEnvType]) && isset($aThemeParameters[$sEnvType][$sType])) {
-			$sCustomLogoPath = $aThemeParameters[$sEnvType][$sType];
+		if (isset($aThemeParameters[$sType])) {
+			$sCustomLogoPath = $aThemeParameters[$sType];
 			if (file_exists($sWorkingPath.$sCustomLogoPath)) {
 				return ($sModulePath ?? $sAppPath).$sCustomLogoPath;
 			}
 		}
-		//if not found => take the default logo
-		$sEnvType = 'default';
-		if (isset($aThemeParameters[$sEnvType]) && isset($aThemeParameters[$sEnvType][$sType])) {
-			$sCustomLogoPath = $aThemeParameters[$sEnvType][$sType];
-			if (file_exists($sWorkingPath.$sCustomLogoPath)) {
-				return ($sModulePath ?? $sAppPath).$sCustomLogoPath;
-			}
+		if (!isset(static::$aLogoPaths[$sType])) {
+			return null;
 		}
 		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
 
