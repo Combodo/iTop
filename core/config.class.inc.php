@@ -185,7 +185,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'temporary_object.garbage_interval'  => [
+		'temporary_object.garbage_interval' => [
 			'type'                => 'integer',
 			'description'         => 'Seconds between garbage collections',
 			'default'             => 60,
@@ -193,7 +193,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'app_env_label'                      => [
+		'app_env_label'                     => [
 			'type'                => 'string',
 			'description'         => 'Label displayed to describe the current application environment, defaults to the environment name (e.g. "production")',
 			'default'             => '',
@@ -201,7 +201,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'app_root_url'                       => [
+		'app_root_url'                      => [
 			'type'                => 'string',
 			'description'         => 'Root URL used for navigating within the application, or from an email to the application (you can put $SERVER_NAME$ as a placeholder for the server\'s name)',
 			'default'             => '',
@@ -209,7 +209,15 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'app_icon_url'                       => [
+		'branding_environment' => [
+			'type'                => 'string',
+			'description'         => 'type of branding. usefull for put different logo depending environment',
+			'default'             => null,
+			'value'               => null,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'app_icon_url'                      => [
 			'type'                => 'string',
 			'description'         => 'Hyperlink to redirect the user when clicking on the application icon (in the main window, or login/logoff pages)',
 			'default'             => 'http://www.combodo.com/itop',
@@ -217,50 +225,50 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'db_host'                                       => [
+		'db_host'                           => [
 			'type'                => 'string',
 			'default'             => null,
 			'value'               => '',
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'db_user'                            => [
-			'type' => 'string',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
+		'db_user'                           => [
+			'type'                => 'string',
+			'default'             => null,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'db_pwd' => [
-			'type' => 'string',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
+		'db_pwd'                            => [
+			'type'                => 'string',
+			'default'             => null,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'db_name' => [
-			'type' => 'string',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
+		'db_name'                           => [
+			'type'                => 'string',
+			'default'             => null,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'db_subname' => [
-			'type' => 'string',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
+		'db_subname'                        => [
+			'type'                => 'string',
+			'default'             => null,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'db_tls.enabled' => [
-			'type' => 'bool',
-			'description' => 'If true then the connection to the DB will be encrypted',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+		'db_tls.enabled'                    => [
+			'type'                => 'bool',
+			'description'         => 'If true then the connection to the DB will be encrypted',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'db_tls.ca' => [
+		'db_tls.ca'                         => [
 			'type' => 'string',
 			'description' => 'Path to certificate authority file for SSL',
 			'default' => null,
@@ -268,7 +276,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'db_core_transactions_enabled' => [
+		'db_core_transactions_enabled'      => [
 			'type' => 'bool',
 			'description' => 'If true, CRUD transactions in iTop core will be enabled',
 			'default' => true,
@@ -1833,6 +1841,7 @@ class Config
 	 */
 	public function Get($sPropCode)
 	{
+
 		return $this->m_aSettings[$sPropCode]['value'];
 	}
 
