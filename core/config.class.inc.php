@@ -1121,7 +1121,7 @@ class Config
 		],
 		'purge_data.max_chunk_size' => [
 			'type' => 'integer',
-			'description' => 'Maximum item deleted per loop. Used in function MetaModel::purgeData',
+			'description' => 'Maximum item deleted per loop. Used in function MetaModel::PurgeData',
 			// examples... not used
 			'default' => 1000,
 			'value' => 1000,
