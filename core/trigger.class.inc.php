@@ -116,7 +116,7 @@ abstract class Trigger extends cmdbAbstractObject
 		$oLinkedActions = $this->Get('action_list');
 		$aActionListOrdered = [];
 		while ($oLink = $oLinkedActions->Fetch()) {
-			$aActionListOrdered[$oLink->Get('order')][] = $oLink;
+			$aActionListOrdered[(int) $oLink->Get('order')][] = $oLink;
 		}
 		ksort($aActionListOrdered);
 		foreach ($aActionListOrdered as $aActionSubList) {
