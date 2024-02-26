@@ -93,7 +93,7 @@
       "require": "3.4.*"
     },
     "runtime": {
-      "dotenv_path": "symfony/.env"
+      "dotenv_path": "resources/symfony/.env"
     }
   },
   "scripts": {

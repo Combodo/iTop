@@ -35,7 +35,7 @@ class Kernel extends BaseKernel
 
 	private function getConfigDir(): string
 	{
-		return $this->getProjectDir() . '/symfony/config';
+		return $this->getProjectDir() . '/resources/symfony/config';
 	}
 
 	public function getCacheDir(): string
@@ -46,6 +46,6 @@ class Kernel extends BaseKernel
 
 	public function getLogDir(): string
 	{
-		return $this->getProjectDir() . 'log/symfony';
+		return $this->getProjectDir() . '/log/symfony';
 	}
 }
