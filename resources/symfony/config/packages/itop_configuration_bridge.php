@@ -19,8 +19,8 @@
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-require_once(__DIR__ . '/../../../approot.inc.php');
-require_once(__DIR__ . '/../../../application/startup.inc.php');
+require_once(__DIR__.'/../../../../approot.inc.php');
+require_once(__DIR__.'/../../../../application/startup.inc.php');
 
 return static function (ContainerConfigurator $container) {
 

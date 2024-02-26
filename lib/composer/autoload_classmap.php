@@ -393,6 +393,7 @@ return array(
     'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => $baseDir . '/sources/Controller/Base/Layout/ActivityPanelController.php',
     'Combodo\\iTop\\Controller\\Base\\Layout\\ObjectController' => $baseDir . '/sources/Controller/Base/Layout/ObjectController.php',
     'Combodo\\iTop\\Controller\\Links\\LinkSetController' => $baseDir . '/sources/Controller/Links/LinkSetController.php',
+    'Combodo\\iTop\\Controller\\MyController' => $baseDir . '/sources/Controller/MyController.php',
     'Combodo\\iTop\\Controller\\Newsroom\\iTopNewsroomController' => $baseDir . '/sources/Controller/Newsroom/iTopNewsroomController.php',
     'Combodo\\iTop\\Controller\\Notifications\\ActionController' => $baseDir . '/sources/Controller/Notifications/ActionController.php',
     'Combodo\\iTop\\Controller\\Notifications\\NotificationsCenterController' => $baseDir . '/sources/Controller/Notifications/NotificationsCenterController.php',
