@@ -692,6 +692,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:TreatFirstLineAsHeader'     => 'Treat the first line as a header (column names)',
 	'UI:CSVImport:Skip_N_LinesAtTheBeginning' => 'Skip %1$s line(s) at the beginning of the file',
 	'UI:CSVImport:CSVDataPreview'             => 'CSV Data Preview',
+	'UI:CSVImport:Column'                     => 'Column',
 	'UI:CSVImport:SelectFile'                 => 'Select the file to import:',
 	'UI:CSVImport:Tab:LoadFromFile'           => 'Load from a file',
 	'UI:CSVImport:Tab:CopyPaste'              => 'Copy and paste data',

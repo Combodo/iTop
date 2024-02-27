@@ -227,37 +227,47 @@ try
 				$sMaxLen = (strlen(''.$iTarget) < 3) ? 3 : strlen(''.$iTarget); // Pad line numbers to the appropriate number of chars, but at least 3
 				$sFormat = '%0'.$sMaxLen.'d';
 
-				//$oTitle = TitleUIBlockFactory::MakeForPage(Dict::S('UI:Title:DataPreview'));
-				//$oPage->AddSubBlock($oTitle);
-
-				//$oContainer = UIContentBlockUIBlockFactory::MakeStandard();
-				//$oContainer->AddCSSClass("ibo-is-visible");
-				//$oPage->AddSubBlock($oContainer);
-
-				$index = 1;
 				$aColumns = [];
 				$aTableData = [];
-				foreach ($aData as $aRow) {
-					$sCSSClass = 'csv_row'.($index % 2);
-					if (($bFirstLineAsHeader) && ($index == 1)) {
-						$aColumns[] = ["label" => sprintf($sFormat, $index)];
-						foreach ($aRow as $sCell) {
-							$aColumns[] = ["label" => utils::EscapeHtml($sCell)];
-						}
+
+				// iterate throw data elements...
+				for ($i = 0 ; $i < count($aData) ; $i++) {
+
+					// get data element
+					$aRow = $aData[$i];
+
+					// when first line
+					if ($i === 0) {
+
+						// columns
 						$iNbCols = count($aRow);
-					} else {
-						$aTableRow = [];
-						if ($index == 1) {
-							$iNbCols = count($aRow);
+						$aColumns[] = '';
+
+						// first line as header
+						if($bFirstLineAsHeader){
+							foreach ($aRow as $sCell) {
+								$aColumns[] = ["label" => utils::EscapeHtml($sCell)];
+							}
+							continue;
 						}
-						$aTableRow[] = sprintf($sFormat, $index);
-						foreach ($aRow as $sCell) {
-							$aTableRow[] = utils::EscapeHtml($sCell);
+
+						// default headers
+						for ($j = 0 ; $j < count($aRow) ; $j++) {
+							$aColumns[] = ["label" => Dict::S('UI:CSVImport:Column') . ' #' . ($j + 1)];
 						}
-						$aTableData[$index] = $aTableRow;
+
 					}
-					$index++;
-					if ($index > $iMaxIndex) {
+
+					// create table row
+					$aTableRow = [];
+					$aTableRow[] = sprintf($sFormat, count($aTableData) + 1);
+					foreach ($aRow as $sCell) {
+						$aTableRow[] = utils::EscapeHtml($sCell);
+					}
+					$aTableData[] = $aTableRow;
+
+					// max elements
+					if ($i > $iMaxIndex) {
 						break;
 					}
 				}
