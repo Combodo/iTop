@@ -2311,6 +2311,7 @@ abstract class DBObject implements iDisplay
 	protected function HasObjectsInDbForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties)
 	{
 		$oUniquenessQuery = $this->GetSearchForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties);
+		$oUniquenessQuery->AllowAllData();
 		$oUniquenessDuplicates = new DBObjectSet($oUniquenessQuery);
 		$bHasDuplicates = $oUniquenessDuplicates->CountExceeds(0);
 
