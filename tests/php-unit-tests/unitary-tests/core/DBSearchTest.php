@@ -774,25 +774,53 @@ class DBSearchTest extends ItopDataTestCase
     public function SelectAttributeToArrayProvider()
     {
         return array(
-                'select id from functionalCI' => array(
+                'select id from FunctionalCI' => array(
                         'SELECT FunctionalCI',
                         'id',
                 ),
-                'select name from functionalCI' => array(
+                'select name from FunctionalCI' => array(
                         'SELECT FunctionalCI',
                         'name',
                 ),
-                'select org_id from functionalCI' => array(
+                'select org_id from FunctionalCI' => array(
                         'SELECT FunctionalCI',
                         'org_id',
                 ),
-                'select org_id from person' => array(
-                        'SELECT Person',
-                        'org_id',
+                'select organization_name from FunctionalCI' => array(
+	                'SELECT FunctionalCI',
+	                'organization_name',
                 ),
-                'select picture from person' => array(
+                'select business_criticity from FunctionalCI' => array(
+	                'SELECT FunctionalCI',
+	                'business_criticity',
+                ),
+                'select org_id from FunctionalCI' => array(
+	                'SELECT FunctionalCI',
+	                'org_id',
+                ),
+                'select email from Person' => array(
+                        'SELECT Person',
+                        'email',
+                ),
+                'select phone from Person' => array(
+	                'SELECT Person',
+	                'phone',
+                ),
+                'select picture from Person' => array(
                         'SELECT Person',
                         'picture',
+                ),
+                'select description from Ticket' => array(
+	                'SELECT Ticket',
+	                'description',
+                ),
+                'select start_date from Ticket' => array(
+	                'SELECT Ticket',
+	                'start_date',
+                ),
+                'select private_log from Ticket' => array(
+	                'SELECT Ticket',
+	                'private_log',
                 ),
         );
     }
@@ -809,19 +837,19 @@ class DBSearchTest extends ItopDataTestCase
      * @throws \OQLException
      */
     public function testSelectAttributeToArray($sQuery, $sField){
+
 		$oSearch = \DBObjectSearch::FromOQL($sQuery);
-       //  = $oSearch->ToDataArray(array($sField));
         $aResToDataArray=[];
         $oSet = new \DBObjectSet($oSearch);
-        while ($oRecord = $oSet->Fetch()){
-            echo ' pop'.$sField;
+        while ($oRecord = $oSet->Fetch()) {
             $aMappedRow[$sField]  =$oRecord->Get($sField);
             $aResToDataArray[] =   $aMappedRow;
         }
-       asort($aResToDataArray);
-        $aResSelectColumnToArray = $oSearch->SelectAttributeToArray($sField);
-         asort($aResSelectColumnToArray);
-        self::assertEquals( $aResToDataArray, $aResSelectColumnToArray, 'ToDataArray and SelectColumnToArray must return the same results');
-    }
+	    array_multisort (array_column($aResToDataArray, $sField), SORT_DESC, $aResToDataArray);
 
+		$aResSelectColumnToArray = $oSearch->SelectAttributeToArray($sField);
+	    array_multisort (array_column($aResSelectColumnToArray, $sField), SORT_DESC, $aResSelectColumnToArray);
+
+		self::assertEquals( $aResToDataArray, $aResSelectColumnToArray, 'The array constructed using the OQL query and the result of testSelectAttributeToArray must be the same');
+    }
 }
