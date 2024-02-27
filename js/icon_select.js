@@ -214,7 +214,7 @@ $(function()
 		_upload_dlg: function()
 		{
 			var me = this;
-			this.oUploadDlg = $('<div><p>'+this.options.labels['pick_icon_file']+'</p><p><input type="file" name="file" id="file"/></p></div>');
+			this.oUploadDlg = $('<div><p>'+this.options.labels['pick_icon_file']+'</p><p><input type="file" accept="image/*" name="file" id="file"/></p></div>');
 			this.element.after(this.oUploadDlg);
 			$('input[type=file]').bind('change', function() { me._do_upload(); });
 			this.oUploadDlg.dialog({
@@ -281,13 +281,13 @@ $(function()
 		},
 		_on_upload_error: function(data, status, e)
 		{
-			if(data.responseText.indexOf('login-body') !== false)
-			{
+			if (data.responseText.indexOf('login-body') !== -1) {
 				alert('Sorry, your session has expired. In order to continue, the whole page has to be loaded again.');
 				this.oUploadDlg.dialog('close');
-			}
-			else
-			{
+			} else if (data.responseText.length > 0) {
+				alert(data.responseText);
+				this.oUploadDlg.dialog('close');
+			} else {
 				alert(e);
 				this.oUploadDlg.closest('.ui-dialog').find('.ui-button').button('enable');
 			}
