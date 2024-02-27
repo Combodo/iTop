@@ -5,8 +5,10 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBObject;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use CoreException;
 use Exception;
 use MetaModel;
+
 
 /**
  * @since 2.7.7 3.0.2 3.1.0 N°3717 tests history objects creation
@@ -167,6 +169,53 @@ class CMDBObjectTest extends ItopDataTestCase
 		CMDBObject::SetCurrentChange($oInitialCurrentChange);
 		CMDBObject::SetTrackInfo($sInitialTrackInfo);
 	}
+
+	/**
+	 * Data provider for test deletion
+	 *  N°5547 - Object deletion fails if friendlyname too long
+	 *
+	 * @return array data
+	 */
+	public function RecordObjDeletionProvider()
+	{
+		return [
+			'friendlyname longer than 255 characters which will be truncated on a multi-bytes characters' => [
+				str_repeat('e', 250),
+				'😁😂🤣😃😄😅😆😗🥰😘😍😎😋😊😉😙😚',
+			],
+			'friendlyname longer than 255 characters which will be truncated after a single byte characters' => [
+				'😁😂🤣😃😄😅😆😗🥰😘😍😎😋😊😉😙😚',
+				str_repeat('e', 250),
+			],
+		];
+	}
+
+	/**
+	 * N°5547 - Object deletion fails if friendlyname too long
+	 *
+	 * @dataProvider RecordObjDeletionProvider
+	 *
+	 */
+	public function testRecordObjDeletion( string $sFirstName, string $sName)
+	{
+		$oPerson = MetaModel::NewObject('Person', [
+			'first_name' => $sFirstName,
+			'name'       => $sName,
+			'org_id'     => 1,
+		]);
+		$oPerson->DBWrite();
+
+		$bDeletionOK = true;
+		try {
+			$oDeletionPlan = $this->InvokeNonPublicMethod(CMDBObject::class, 'RecordObjDeletion', $oPerson, [$oPerson->GetKey()]);
+		}
+		catch (CoreException $e) {
+			$bDeletionOK = false;
+		}
+		// We don't need to test the result (truncated string), it's already done in \DBObject::SetTrim() with N°3448
+		$this->assertTrue($bDeletionOK);
+	}
+
 
 	private function ReplaceByFriendlyNames($sMessage, $oAdminUser, $oImpersonatedUser) : string {
 		$sNewMessage = str_replace('AdminSurName AdminName', $oAdminUser->GetFriendlyName(), $sMessage);
