@@ -22,6 +22,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\Application\WebPage\JsonPPage;
+use Combodo\iTop\Service\Notification\NotificationsRepository;
 use Combodo\iTop\Service\Router\Router;
 use CoreException;
 use DBObjectSearch;
@@ -388,7 +389,7 @@ JS
 			$oMarkAsUnreadPopoverMenu = new PopoverMenu();
 			
 			// Common actions
-			$sDeleteUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.delete_event', ['event_id' => $oEvent->GetKey(), 'token' => $sCSRFToken]);
+			$sDeleteUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.delete_event', ['notification_id' => $oEvent->GetKey(), 'token' => $sCSRFToken]);
 			$oDeleteButton = new JSPopupMenuItem(
 				'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label',
 				Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label'),
@@ -436,7 +437,7 @@ JS,
 
 
 			// Mark as unread action
-			$sMarkAsReadUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.mark_as_read', ['event_id' => $oEvent->GetKey(), 'token' => $sCSRFToken]);
+			$sMarkAsReadUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.mark_as_read', ['notification_id' => $oEvent->GetKey(), 'token' => $sCSRFToken]);
 			$oMarkAsReadButton->SetOnClickJsCode(
 				<<<JS
 				let oSelf = this;
@@ -466,7 +467,7 @@ JS
 				'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Label',
 				'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Label'
 			);
-			$sMarkAsUnreadUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.mark_as_unread', ['event_id' => $oEvent->GetKey(), 'token' => $sCSRFToken]);
+			$sMarkAsUnreadUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.mark_as_unread', ['notification_id' => $oEvent->GetKey(), 'token' => $sCSRFToken]);
 			$oMarkAsUnreadButton->SetOnClickJsCode(
 				<<<JS
 				let oSelf = this;
@@ -643,256 +644,160 @@ HTML;
 
 	/**
 	 * @return \Combodo\iTop\Application\WebPage\JsonPage
-	 * @throws \SecurityException
 	 */
 	public function OperationMarkAsUnread(): JsonPage
 	{
 		$oPage = new JsonPage();
-		$sCSRFToken = utils::ReadParam('token', '', 'raw_data');
-		if(utils::IsTransactionValid($sCSRFToken, false) === false){
-			throw new SecurityException('Invalid CSRF token');
-		}
-		$sEventId = utils::ReadParam('event_id', 0);
-		$aReturnData = [
-			'status' => 'error',
-			'message' => 'Invalid event'
-		];
-		if ($sEventId > 0) {
-			try {
-				$oEvent = MetaModel::GetObject('EventiTopNotification', $sEventId);
-				if ($oEvent !== null && $oEvent->Get('read') === 'yes' && $oEvent->Get('contact_id') === UserRights::GetContactId()) {
-					$oEvent->Set('read', 'no');
-					$oEvent->DBWrite();
-					$aReturnData['status'] = 'success';
-					$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Success:Message');
-				} else {
-					$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:NoEvent:Message');
-				}
-			}
-			catch (ArchivedObjectException|CoreException $e) {
-				$aReturnData['message'] = $e->getMessage();
-			}
-		} else {
-			$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:NoEvent:Message');
-		}
-		$oPage->SetData($aReturnData);
+		$oPage->SetData($this->PerformActionOnSingleNotification('mark_as_unread'));
 		$oPage->SetOutputDataOnly(true);
 		return $oPage;
 	}
 
 	/**
 	 * @return \Combodo\iTop\Application\WebPage\JsonPage
-	 * @throws \SecurityException
 	 */
 	public function OperationMarkAsRead(): JsonPage
 	{
 		$oPage = new JsonPage();
-		$sCSRFToken = utils::ReadParam('token', '', 'raw_data');
-		if(utils::IsTransactionValid($sCSRFToken, false) === false){
-			throw new SecurityException('Invalid CSRF token');
-		}
-		$sEventId = utils::ReadParam('event_id', 0);
-		$aReturnData = [
-			'status' => 'error',
-			'message' => 'Invalid event'
-		];
-		if ($sEventId > 0) {
-			try {
-				$oEvent = MetaModel::GetObject('EventiTopNotification', $sEventId);
-				if ($oEvent !== null && $oEvent->Get('read') === 'no' && $oEvent->Get('contact_id') === UserRights::GetContactId()) {
-					$oEvent->Set('read', 'yes');
-					$oEvent->SetCurrentDate('read_date');
-					$oEvent->DBWrite();
-					$aReturnData['status'] = 'success';
-					$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Success:Message');
-				} else {
-					$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:NoEvent:Message');
-				}
-			}
-			catch (ArchivedObjectException|CoreException $e) {
-				$aReturnData['message'] = $e->getMessage();
-			}
-		} else {
-			$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:NoEvent:Message');
-		}
-		$oPage->SetData($aReturnData);
+		$oPage->SetData($this->PerformActionOnSingleNotification('mark_as_read'));
 		$oPage->SetOutputDataOnly(true);
 		return $oPage;
 	}
 
 	/**
 	 * @return \Combodo\iTop\Application\WebPage\JsonPage
-	 * @throws \SecurityException
 	 */
 	public function OperationDeleteEvent(): JsonPage
 	{
 		$oPage = new JsonPage();
-		$sCSRFToken = utils::ReadParam('token', '', 'raw_data');
-		if(utils::IsTransactionValid($sCSRFToken, false) === false){
-			throw new SecurityException('Invalid CSRF token');
-		}
-		$sEventId = utils::ReadParam('event_id', 0);
-		$aReturnData = [
-			'status' => 'error',
-			'message' => 'Invalid event'
-		];
-		if ($sEventId > 0) {
-			try {
-				$oEvent = MetaModel::GetObject('EventiTopNotification', $sEventId);
-				if ($oEvent !== null && $oEvent->Get('contact_id') === UserRights::GetContactId()) {
-					$oEvent->DBDelete();
-					$aReturnData['status'] = 'success';
-					$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Success:Message');
-				} else {
-					$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message');
-				}
-			}
-			catch (ArchivedObjectException|CoreException $e) {
-				$aReturnData['message'] = $e->getMessage();
-			}
-		}
-		else {
-			$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message');
-		}
-		
-		$oPage->SetData($aReturnData);
+		$oPage->SetData($this->PerformActionOnSingleNotification('delete'));
 		$oPage->SetOutputDataOnly(true);
 		return $oPage;
 	}
 
 	/**
 	 * @return \Combodo\iTop\Application\WebPage\JsonPage
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
+	 */
+	public function OperationMarkMultipleAsRead(): JsonPage
+	{
+		$oPage = new JsonPage();
+		$oPage->SetData($this->PerformActionOnMultipleNotifications('mark_as_read'));
+		$oPage->SetOutputDataOnly(true);
+		return $oPage;
+	}
+
+	/**
+	 * @return \Combodo\iTop\Application\WebPage\JsonPage
+	 */
+	public function OperationMarkMultipleAsUnread(): JsonPage
+	{
+		$oPage = new JsonPage();
+		$oPage->SetData($this->PerformActionOnMultipleNotifications('mark_as_unread'));
+		$oPage->SetOutputDataOnly(true);
+		return $oPage;
+	}
+
+	/**
+	 * @return \Combodo\iTop\Application\WebPage\JsonPage
+	 */
+	public function OperationDeleteMultiple(): JsonPage
+	{
+		$oPage = new JsonPage();
+		$oPage->SetData($this->PerformActionOnMultipleNotifications('delete'));
+		$oPage->SetOutputDataOnly(true);
+		return $oPage;
+	}
+
+	/**
+	 * @param string $sAction
+	 *
+	 * @return string[]
 	 * @throws \SecurityException
 	 */
-	public function OperationMarkMultipleAsRead(): JsonPage {
-		$oPage = new JsonPage();
-		$sCSRFToken = utils::ReadParam('token', '', 'raw_data');
+	protected function PerformActionOnSingleNotification(string $sAction): array
+	{
+		$iNotificationId = utils::ReadParam('notification_id', 0, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
+		return $this->PerformAction($sAction, [$iNotificationId]);
+	}
+
+	/**
+	 * @param string $sAction
+	 *
+	 * @return string[]
+	 * @throws \SecurityException
+	 */
+	protected function PerformActionOnMultipleNotifications(string $sAction): array
+	{
+		$aNotificationIds = utils::ReadParam('notification_ids', []);
+		return $this->PerformAction($sAction, $aNotificationIds);
+	}
+
+	/**
+	 * @param string $sAction
+	 * @param array $aNotificationIds
+	 *
+	 * @return string[]
+	 * @throws \SecurityException
+	 */
+	protected function PerformAction(string $sAction, array $aNotificationIds): array
+	{
+		$sCSRFToken = utils::ReadParam('token', '', false, 'raw_data');
 		if(utils::IsTransactionValid($sCSRFToken, false) === false){
 			throw new SecurityException('Invalid CSRF token');
 		}
-		$aNotificationIds = utils::ReadParam('notification_ids', []);
+
+		$sActionAsCamelCase = utils::ToCamelCase($sAction);
 		$aReturnData = [
 			'status' => 'error',
-			'message' => 'Invalid event'
+			'message' => 'Invalid notification(s)'
 		];
-		if (count($aNotificationIds) > 0) {
-			$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification WHERE id IN (:notification_ids) AND contact_id = :contact_id AND read = "no"');
-			$oSet = new DBObjectSet($oSearch, array(), array('notification_ids' => $aNotificationIds, 'contact_id' => UserRights::GetContactId()));
-			if($oSet->Count() > 0){
-				while ($oEvent = $oSet->Fetch()) {
+
+		// Check action type
+		if (false === in_array($sAction, ['mark_as_read', 'mark_as_unread', 'delete'])) {
+			$aReturnData['message'] = Dict::S("UI:Newsroom:iTopNotification:ViewAllPage:Action:InvalidAction:Message");
+			return $aReturnData;
+		}
+
+		// No ID passed to the API
+		if (count($aNotificationIds) === 0) {
+			$aReturnData['message'] = Dict::S("UI:Newsroom:iTopNotification:ViewAllPage:Action:$sActionAsCamelCase:NoEvent:Message");
+			return $aReturnData;
+		}
+
+		try {
+			$sRepositoryMethodName = "SearchNotificationsTo{$sActionAsCamelCase}ByContact";
+			$oSet = NotificationsRepository::GetInstance()->$sRepositoryMethodName(UserRights::GetContactId(), $aNotificationIds);
+
+			// No notification found
+			$iCount = $oSet->Count();
+			if($iCount === 0) {
+				$aReturnData['message'] = Dict::S("UI:Newsroom:iTopNotification:ViewAllPage:Action:$sActionAsCamelCase:NoEvent:Message");
+				return $aReturnData;
+			}
+
+			while ($oEvent = $oSet->Fetch()) {
+				if ($sAction === 'mark_as_read') {
 					$oEvent->Set('read', 'yes');
 					$oEvent->SetCurrentDate('read_date');
 					$oEvent->DBWrite();
-				}
-				$aReturnData['status'] = 'success';
-				$aReturnData['message'] = Dict::Format('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkMultipleAsRead:Success:Message', $oSet->Count());
-			} else {
-				$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:NoEvent:Message');
-			}
-		}
-		else {
-			$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:NoEvent:Message');
-		}
-		$oPage->SetData($aReturnData);
-		$oPage->SetOutputDataOnly(true);
-		return $oPage;
-	}
-
-	/**
-	 * @return \Combodo\iTop\Application\WebPage\JsonPage
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 * @throws \SecurityException
-	 */
-	public function OperationMarkMultipleAsUnread(): JsonPage {
-		$oPage = new JsonPage();
-		$sCSRFToken = utils::ReadParam('token', '', 'raw_data');
-		if(utils::IsTransactionValid($sCSRFToken, false) === false){
-			throw new SecurityException('Invalid CSRF token');
-		}
-		$aNotificationIds = utils::ReadParam('notification_ids', []);
-		$aReturnData = [
-			'status' => 'error',
-			'message' => 'Invalid event'
-		];
-		if (count($aNotificationIds) > 0) {
-			$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification WHERE id IN (:notification_ids) AND contact_id = :contact_id AND read = "yes"');
-			$oSet = new DBObjectSet($oSearch, array(), array('notification_ids' => $aNotificationIds, 'contact_id' => UserRights::GetContactId()));
-			if ($oSet->Count() > 0) {
-				while ($oEvent = $oSet->Fetch()) {
+				} elseif ($sAction === 'mark_as_unread') {
 					$oEvent->Set('read', 'no');
 					$oEvent->DBWrite();
-				}
-				$aReturnData['status'] = 'success';
-				$aReturnData['message'] = Dict::Format('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkMultipleAsUnread:Success:Message', $oSet->Count());
-			} else {
-				$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:NoEvent:Message');
-			}
-		}
-		else {
-			$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:NoEvent:Message');
-		}
-		
-		$oPage->SetData($aReturnData);
-		$oPage->SetOutputDataOnly(true);
-		return $oPage;
-	}
-
-	/**
-	 * @return \Combodo\iTop\Application\WebPage\JsonPage
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 * @throws \SecurityException
-	 */
-	public function OperationDeleteMultiple(): JsonPage{
-		$oPage = new JsonPage();
-		$sCSRFToken = utils::ReadParam('token', '', 'raw_data');
-		if(utils::IsTransactionValid($sCSRFToken, false) === false){
-			throw new SecurityException('Invalid CSRF token');
-		}
-		$aNotificationIds = utils::ReadParam('notification_ids', []);
-		$aReturnData = [
-			'status' => 'error',
-			'message' => 'Invalid event'
-		];
-		if (count($aNotificationIds) > 0) {
-			$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification WHERE id IN (:notification_ids) AND contact_id = :contact_id');
-			$oSet = new DBObjectSet($oSearch, array(), array('notification_ids' => $aNotificationIds, 'contact_id' => UserRights::GetContactId()));
-			if ($oSet->Count() > 0) {
-				while ($oEvent = $oSet->Fetch()) {
+				} elseif ($sAction === 'delete') {
 					$oEvent->DBDelete();
 				}
-				$aReturnData['status'] = 'success';
-				$aReturnData['message'] = Dict::Format('UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteMultiple:Success:Message', $oSet->Count());
-			} else {
-				$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message');
 			}
+
+			$aReturnData['status'] = 'success';
+			if ($iCount === 1) {
+				$aReturnData['message'] = Dict::S("UI:Newsroom:iTopNotification:ViewAllPage:Action:{$sActionAsCamelCase}:Success:Message");
+			} else {
+				$aReturnData['message'] = Dict::Format("UI:Newsroom:iTopNotification:ViewAllPage:Action:{$sActionAsCamelCase}Multiple:Success:Message", $iCount);
+			}
+		} catch (Exception $oException) {
+			$aReturnData['message'] = $oException->getMessage();
 		}
-		else {
-			$aReturnData['message'] = Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message');
-		}
-		$oPage->SetData($aReturnData);
-		$oPage->SetOutputDataOnly(true);
-		return $oPage;
+
+		return $aReturnData;
 	}
 }

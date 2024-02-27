@@ -32,25 +32,31 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'UI:Newsroom:iTopNotification:ViewAllPage:Empty:Title' => 'Aucune notification, vous êtes à jour !',
 
+	// Actions
+	// - Unitary buttons
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label' => 'Supprimer cette notification',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:ViewObject:Label' => 'Aller à l\'url de la notification',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Label' => 'Marquer comme lu',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Label' => 'Marquer comme non lu',
+	// - Bulk buttons
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkSelectedAsRead:Label' => 'Marquer sélectionnée(s) comme lu',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkSelectedAsUnread:Label' => 'Marquer sélectionnée(s) comme non lu',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteSelected:Label' =>  'Supprimer sélectionnée(s)',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteSelected:Confirmation:Title' => 'Supprimer les notifications sélectionnées',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteSelected:Confirmation:Message' => 'Êtes-vous sûr de vouloir supprimer les notifications sélectionnées ?',
 
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkMultipleAsRead:Success:Message' => '%1$s notifications ont été marquées comme lues',
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkMultipleAsUnread:Success:Message' => '%1$s notifications ont été marquées comme non lues',
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteMultiple:Success:Message' => '%1$s notifications ont été supprimées',
-
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label' => 'Supprimer cette notification',
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:ViewObject:Label' => 'Aller à l\'url de la notification',
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Label' => 'Marquer comme lu',
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Label' => 'Marquer comme non lu',
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Success:Message' => 'La notification a été marquée comme lue',
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Success:Message' => 'La notification a été marquée comme non lue',
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Success:Message' => 'La notification a été supprimée',
-
+	// Feedback messages
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:InvalidAction:Message' => 'Action invalide : "%1$s"',
+	// - Mark as read
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:NoEvent:Message' => 'Aucune notification à marquer comme lue',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Success:Message' => 'La notification a été marquée comme lue',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsReadMultiple:Success:Message' => '%1$s notifications ont été marquées comme lues',
+	// - Mark as unread
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:NoEvent:Message' => 'Aucune notification à marquer comme non lue',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Success:Message' => 'La notification a été marquée comme non lue',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnreadMultiple:Success:Message' => '%1$s notifications ont été marquées comme non lues',
+	// Delete
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message' => 'Aucune notification à supprimer',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Success:Message' => 'La notification a été supprimée',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteMultiple:Success:Message' => '%1$s notifications ont été supprimées',
 ));

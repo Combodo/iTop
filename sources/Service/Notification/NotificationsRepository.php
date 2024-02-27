@@ -2,8 +2,12 @@
 
 namespace Combodo\iTop\Service\Notification;
 
+use BinaryExpression;
 use DBObjectSearch;
 use DBObjectSet;
+use Expression;
+use FieldExpression;
+use VariableExpression;
 
 /**
  * Class NotificationsRepository
@@ -42,6 +46,74 @@ class NotificationsRepository
 	protected function __construct()
 	{
 		// Don't do anything, we don't want to be initialized
+	}
+
+	/**
+	 * @param int $iContactId ID of the contact to retrieve notifications for
+	 * @param array $aNotificationIds Optional IDs of the notifications to retrieve, if omitted all notifications will be retrieved
+	 *
+	 * @return \DBObjectSet Set of notifications for $iContactId, optionally limited to $aNotificationIds
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function SearchNotificationsByContact(int $iContactId, array $aNotificationIds = []): DBObjectSet
+	{
+		$oSearch = DBObjectSearch::FromOQL("SELECT EventiTopNotification WHERE contact_id = :contact_id");
+		$aParams = [
+			"contact_id" => $iContactId,
+		];
+
+		if (count($aNotificationIds) > 0) {
+			$oSearch->AddConditionExpression(Expression::FromOQL("{$oSearch->GetClassAlias()}.id IN (:notification_ids)"));
+			$aParams["notification_ids"] = $aNotificationIds;
+		}
+
+		return new DBObjectSet($oSearch, [], $aParams);
+	}
+
+	/**
+	 * @param int $iContactId ID of the contact to retrieve unread notifications for
+	 * @param array $aNotificationIds Optional IDs of the unread notifications to retrieve, if omitted all unread notifications will be retrieved
+	 *
+	 * @return \DBObjectSet Set of unread notifications for $iContactId, optionally limited to $aNotificationIds
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function SearchNotificationsToMarkAsReadByContact(int $iContactId, array $aNotificationIds = []): DBObjectSet
+	{
+		$oSet = $this->SearchNotificationsByContact($iContactId, $aNotificationIds);
+		$oSet->GetFilter()->AddCondition("read", "=", "no");
+
+		return $oSet;
+	}
+
+	/**
+	 * @param int $iContactId ID of the contact to retrieve read notifications for
+	 * @param array $aNotificationIds Optional IDs of the read notifications to retrieve, if omitted all read notifications will be retrieved
+	 *
+	 * @return \DBObjectSet Set of read notifications for $iContactId, optionally limited to $aNotificationIds
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function SearchNotificationsToMarkAsUnreadByContact(int $iContactId, array $aNotificationIds = []): DBObjectSet
+	{
+		$oSet = $this->SearchNotificationsByContact($iContactId, $aNotificationIds);
+		$oSet->GetFilter()->AddCondition("read", "=", "yes");
+
+		return $oSet;
+	}
+
+	/**
+	 * @param int $iContactId ID of the contact to retrieve read notifications for
+	 * @param array $aNotificationIds Optional IDs of the notifications to retrieve, if omitted all notifications will be retrieved
+	 *
+	 * @return \DBObjectSet Set of notifications for $iContactId, optionally limited to $aNotificationIds
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function SearchNotificationsToDeleteByContact(int $iContactId, array $aNotificationIds = []): DBObjectSet
+	{
+		return $this->SearchNotificationsByContact($iContactId, $aNotificationIds);
 	}
 
 	/**
