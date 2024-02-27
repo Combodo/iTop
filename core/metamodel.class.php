@@ -7173,6 +7173,7 @@ abstract class MetaModel
 		$iNbIdsDeleted = 0;
 		$bExecuteQuery = true;
 
+		// This loop allows you to delete objects in batches of $iMaxChunkSize elements
 		while ($bExecuteQuery) {
 			$oSet = new DBObjectSet($oFilter);
 			$oSet->SetLimit($iMaxChunkSize);
@@ -7197,7 +7198,9 @@ abstract class MetaModel
 				}
 				$iNbIdsDeleted += $iNbIds;
 			}
-			if ($iNbIds == 0 || $iNbIds < $iMaxChunkSize) {
+
+			// stop loop if query returned fewer objects than  $iMaxChunkSize. In this case, all objects have been deleted.
+			if ($iNbIds < $iMaxChunkSize) {
 				$bExecuteQuery = false;
 			}
 		}
