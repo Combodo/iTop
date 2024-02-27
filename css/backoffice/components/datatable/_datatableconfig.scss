@@ -24,7 +24,7 @@ $ibo-datatableconfig--settings-panel--option--margin-right: $ibo-spacing-200 !de
   margin: $ibo-datatableconfig--attributes-panel--per-page--input--margin-y $ibo-datatableconfig--attributes-panel--per-page--input--margin-x;
   max-width: 4em;
   @extend .ibo-input;
-  display: unset;
+  display: initial;
 }
 
 .ibo-datatableconfig--settings-panel .ibo-panel--body{
