@@ -23,16 +23,16 @@
         {% if aAction.confirmation is defined %}
 
             // Prepare confirmation title
-            let sTitle = '{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s  }}';
+            let sTitle = `{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s|escape('js') }}`;
             {% if aAction.confirmation.title is defined %}
-                sTitle = '{{ aAction.confirmation.title|dict_s }}';
+                sTitle = `{{ aAction.confirmation.title|dict_s|escape('js') }}`;
             {% endif %}
             sTitle = sTitle.replaceAll('{item}', aRowData['{{ aAction.confirmation.row_data }}']);
 
             // Prepare confirmation message
-            let sMessage = '{{ 'UI:Datatables:RowActions:ConfirmationMessage'|dict_s  }}';
+            let sMessage = `{{ 'UI:Datatables:RowActions:ConfirmationMessage'|dict_s|escape('js') }}`;
             {% if aAction.confirmation.message is defined %}
-                sMessage = '{{ aAction.confirmation.message|dict_s }}';
+                sMessage = `{{ aAction.confirmation.message|dict_s|escape('js') }}`;
             {% endif %}
             sMessage = sMessage.replaceAll('{item}', aRowData['{{ aAction.confirmation.row_data }}']);
 

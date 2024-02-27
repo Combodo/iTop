@@ -4535,7 +4535,6 @@ class AttributeText extends AttributeString
 		$sStyle = '';
 		if (count($aStyles) > 0)
 		{
-			$aStyles[] = 'overflow:auto';
 			$sStyle = 'style="'.implode(';', $aStyles).'"';
 		}
 
