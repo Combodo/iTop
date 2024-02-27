@@ -114,11 +114,15 @@ abstract class Trigger extends cmdbAbstractObject
 
 		// Find the related actions
 		$oLinkedActions = $this->Get('action_list');
+
+		// Order actions as expected
 		$aActionListOrdered = [];
 		while ($oLink = $oLinkedActions->Fetch()) {
 			$aActionListOrdered[(int) $oLink->Get('order')][] = $oLink;
 		}
 		ksort($aActionListOrdered);
+		
+		// Execute actions
 		foreach ($aActionListOrdered as $aActionSubList) {
 			foreach ($aActionSubList as $oLink) /** @var \DBObject $oLink */ {
 				/** @var \DBObject $oLink */
