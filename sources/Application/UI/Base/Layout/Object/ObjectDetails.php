@@ -14,7 +14,6 @@ use Combodo\iTop\Application\UI\Helper\UIHelper;
 use DBObject;
 use Dict;
 use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
-use GuzzleHttp\Utils;
 use MetaModel;
 
 /**
