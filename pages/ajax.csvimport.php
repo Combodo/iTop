@@ -253,7 +253,7 @@ try
 
 						// default headers
 						for ($j = 0 ; $j < count($aRow) ; $j++) {
-							$aColumns[] = ["label" => Dict::S('UI:CSVImport:Column') . ' #' . ($j + 1)];
+							$aColumns[] = ["label" => Dict::Format('UI:CSVImport:Column',$j+1)];
 						}
 
 					}
