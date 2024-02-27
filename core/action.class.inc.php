@@ -433,7 +433,7 @@ class ActionEmail extends ActionNotification
 	 */
 	protected function FindRecipients($sRecipAttCode, $aArgs)
 	{
-		$oTrigger = $aArgs['trigger->object()'];
+		$oTrigger = $aArgs['trigger->object()'] ?? null;
 		$sOQL = $this->Get($sRecipAttCode);
 		if (utils::IsNullOrEmptyString($sOQL)) return '';
 
