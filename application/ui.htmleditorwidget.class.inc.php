@@ -71,15 +71,16 @@ class UIHTMLEditorWidget
 		// To change the default settings of the editor,
 		// a) edit the file /js/ckeditor/config.js
 		// b) or override some of the configuration settings, using the second parameter of ckeditor()
+		$sJSDefineWidth = '';
 		$aConfig = utils::GetCkeditorPref();
 		$sWidthSpec = addslashes(trim($this->m_oAttDef->GetWidth()));
-		if ($sWidthSpec != '')
-		{
-			$aConfig['width'] = $sWidthSpec;
+		if ($sWidthSpec != '') {
+			/*N°6543 - the function min allow to keep text inside the column when width is defined*/
+			$aConfig['width'] = "min($sWidthSpec,100%)";
+			$sJSDefineWidth = '$("#cke_'.$iId.' iframe").contents().find("body").css("width", "'.$sWidthSpec.'")';
 		}
 		$sHeightSpec = addslashes(trim($this->m_oAttDef->GetHeight()));
-		if ($sHeightSpec != '')
-		{
+		if ($sHeightSpec != '') {
 			$aConfig['height'] = $sHeightSpec;
 		}
 		$sConfigJS = json_encode($aConfig);
@@ -110,6 +111,7 @@ $('#$iId').on('update', function(evt){
 		else
 		{
 			oMe.data('ckeditorInstance').setReadOnly(oMe.prop('disabled'));
+			$sJSDefineWidth
 		}
 	};
 	setTimeout(delayedSetReadOnly, 50);
