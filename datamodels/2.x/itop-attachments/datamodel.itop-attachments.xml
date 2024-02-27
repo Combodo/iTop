@@ -269,16 +269,15 @@
       <description>An attachment has been added to an object</description>
       <replaces>Attachment::AfterUpdate</replaces>
       <sources>
-        <source id="Attachment">Attachment</source>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
       <event_data>
         <event_datum id="object">
-          <description>The attachment updated</description>
+          <description>The object where the attachment is added</description>
           <type>DBObject</type>
         </event_datum>
-        <event_datum id="target_object">
-          <description>The object to which the attachment is linked</description>
+        <event_datum id="attachment">
+          <description>The attachment added to the objet</description>
           <type>DBObject</type>
         </event_datum>
         <event_datum id="debug_info">
@@ -291,16 +290,15 @@
       <description>An attachment has been removed from an object</description>
       <replaces>Attachment::AfterUpdate</replaces>
       <sources>
-        <source id="Attachment">Attachment</source>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
       <event_data>
         <event_datum id="object">
-          <description>The attachment updated</description>
+          <description>The object where the attachment is removed</description>
           <type>DBObject</type>
         </event_datum>
-        <event_datum id="target_object">
-          <description>The object to which the attachment is linked</description>
+        <event_datum id="attachment">
+          <description>The attachment removed</description>
           <type>DBObject</type>
         </event_datum>
         <event_datum id="debug_info">
