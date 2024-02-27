@@ -536,7 +536,7 @@ CSS;
 			if (static::HasImageExtension($sImg)
 				&& ! array_key_exists($sImg, $aImages))
 			{
-				$sFilePath = realpath($sImg);
+				$sFilePath = utils::RealPath($sImg, APPROOT);
 				if ($sFilePath !== false) {
 					$sFilePathWithSlashes = str_replace('\\', '/', $sFilePath);
 					$aImages[$sImg] = $sFilePathWithSlashes;
@@ -544,7 +544,7 @@ CSS;
 				}
 
 				$sCanonicalPath = static::CanonicalizePath($sTargetThemeFolderPath.'/'.$sImg);
-				$sFilePath = realpath($sCanonicalPath);
+				$sFilePath = utils::RealPath($sCanonicalPath, APPROOT);
 				if ($sFilePath !== false) {
 					$sFilePathWithSlashes = str_replace('\\', '/', $sFilePath);
 					$aImages[$sImg] = $sFilePathWithSlashes;

@@ -278,7 +278,7 @@ class AjaxRenderController
 		}
 
 		$sTableId = utils::ReadParam('list_id', '');
-		$iLength = utils::ReadParam('end', 10);
+		$iLength = utils::ReadParam('end', 10, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
 		$sSelectMode = utils::ReadParam('select_mode', '');
 		$aClassAliases = utils::ReadParam('class_aliases', array());
@@ -499,7 +499,7 @@ class AjaxRenderController
 	 */
 	public static function DatatableSaveSettings(): bool
 	{
-		$iPageSize = utils::ReadParam('page_size', 10);
+		$iPageSize = utils::ReadParam('page_size', 10, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 		$sTableId = utils::ReadParam('table_id', null, false, 'raw_data');
 		$bSaveAsDefaults = (utils::ReadParam('defaults', 'true') == 'true');
 		$aClassAliases = utils::ReadParam('class_aliases', array(), false, 'raw_data');
