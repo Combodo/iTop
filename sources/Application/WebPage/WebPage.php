@@ -1762,9 +1762,7 @@ EOD
 	}
 
 	/**
-	 * Return the absolute URL for the favicon
-	 *
-	 * @return string
+	 * @return string Absolute URL for the favicon
 	 * @throws \Exception
 	 * @since 3.0.0
 	 */

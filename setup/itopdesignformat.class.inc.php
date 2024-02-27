@@ -1110,7 +1110,6 @@ class iTopDesignFormat
 	 */
 	protected function From32To31($oFactory)
 	{
-
 		// N°3363 - Add favicon in branding
 		$this->RemoveNodeFromXPath('/itop_design/branding/main_favicon');
 		$this->RemoveNodeFromXPath('/itop_design/branding/portal_favicon');

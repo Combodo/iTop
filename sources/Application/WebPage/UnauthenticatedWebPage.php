@@ -290,10 +290,8 @@ class UnauthenticatedWebPage extends NiceWebPage
 	}
 
 	/**
-	 * Return the absolute URL for the favicon
-	 *
-	 * @return string
-	 * @throws \Exception
+	 * @inheritDoc
+	 * @since 3.2.0
 	 */
 	protected function GetFaviconAbsoluteUrl()
 	{
