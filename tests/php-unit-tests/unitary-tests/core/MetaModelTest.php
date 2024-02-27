@@ -464,19 +464,19 @@ class MetaModelTest extends ItopDataTestCase
      * @throws \OQLException
      */
     public function testPurgeData(){
-        //Set max_chunk_size to 2 (default 1000) to test chunk deletion with only 10 items
+        // Set max_chunk_size to 2 (default 1000) to test chunk deletion with only 10 items
         $oConfig = MetaModel::GetConfig();
-        $oConfig->Set('purge_data.max_chunk_size',2);
+        $oConfig->Set('purge_data.max_chunk_size', 2);
         MetaModel::SetConfig($oConfig);
 
         $aPkPerson = [];
-        for ($i=0;$i<10;$i++) {
+        for ($i=0; $i < 10; $i++) {
             $oPerson = $this->CreatePerson($i, 1);
             $sClass = get_class($oPerson);
             $aPkPerson[] = $oPerson->GetKey();
         }
 
-        $sDeleteOQL = 'SELECT '.$sClass.' WHERE id IN ('.implode(',',$aPkPerson).')';
+        $sDeleteOQL = 'SELECT '.$sClass.' WHERE id IN ('.implode(',', $aPkPerson).')';
         $oFilter = DBObjectSearch::FromOQL($sDeleteOQL);
 
         $iNbDelete = MetaModel::PurgeData($oFilter);
