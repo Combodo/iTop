@@ -277,6 +277,7 @@
 				$iObjectId = $aContextArgs['this->object()']->GetKey();
 				$sObjectClass = get_class($aContextArgs['this->object()']);
     }
+    
 		while ($oRecipient = $oRecipientsSet->Fetch()) {
 		  // Skip recipients that have no users
 		  if (get_class($oRecipient) === Person::class && UserRights::GetUserFromPerson($oRecipient) === null) {

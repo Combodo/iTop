@@ -243,8 +243,9 @@ abstract class Action extends cmdbAbstractObject
 	}
 
 	/**
-	 * Will be overloaded by the children classes to return the value of their global asynchronous setting
-	 * @return bool
+	 * Will be overloaded by the children classes to return the value of their global asynchronous setting (eg. `email_asynchronous` for `\ActionEmail`, `prefer_asynchronous` for `\ActionWebhook`, ...)
+	 *
+	 * @return bool true if the global setting for this kind of action if to be executed asynchronously, false otherwise.
 	 * @since 3.2.0
 	 */
 	public function GetAsynchronousGlobalSetting(): bool
@@ -253,7 +254,7 @@ abstract class Action extends cmdbAbstractObject
 	}
 
 	/**
-	 * @return bool
+	 * @return bool true if that action instance should be executed asynchronously, otherwise false
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @since 3.2.0

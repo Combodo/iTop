@@ -494,7 +494,6 @@ class AsyncSendiTopNotifications extends AsyncTask {
 	}
 
 	/**
-	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
@@ -520,14 +519,7 @@ class AsyncSendiTopNotifications extends AsyncTask {
 	}
 
 	/**
-	 * @return string
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
+	 * @inheritDoc
 	 */
 	public function DoProcess()
 	{

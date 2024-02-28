@@ -1,4 +1,5 @@
-<?php namespace  Combodo\iTop\Service\Notification\Event;
+<?php
+namespace  Combodo\iTop\Service\Notification\Event;
 
 
 
@@ -60,7 +61,7 @@ class EventiTopNotificationService {
 		$oEvent->Set('action_id', $oAction->GetKey());
 		$oEvent->Set('object_id', $iObjectId);
 		$oEvent->Set('url', $sUrl);
-		if($sDate !== null){
+		if ($sDate !== null) {
 			$oEvent->Set('date', $sDate);
 		} else {
 			$oEvent->SetCurrentDate('date');
