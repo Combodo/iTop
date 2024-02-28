@@ -42,12 +42,6 @@ require_once(APPROOT.'/core/email.class.inc.php');
 abstract class Action extends cmdbAbstractObject
 {
 	/**
-	 * @var $oCallingTrigger Trigger|null The trigger that called this action {@see DoExecute}
-	 * @since 3.2.0
-	 */
-	protected ?Trigger $oCallingTrigger = null;
-	
-	/**
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
@@ -277,14 +271,6 @@ abstract class ActionNotification extends Action
 	}
 
 	/**
-	 * @inheritDoc
-	 */
-	public function DoExecute($oTrigger, $aContextArgs)
-	{
-		$this->oCallingTrigger = $oTrigger;
-	}
-
-	/**
 	 * @param $sLanguage
 	 * @param $sLanguageCode
 	 *
@@ -447,7 +433,7 @@ class ActionEmail extends ActionNotification
 	 */
 	protected function FindRecipients($sRecipAttCode, $aArgs)
 	{
-		$oTrigger = $this->oCallingTrigger;
+		$oTrigger = $aArgs['trigger->object()'] ?? null;
 		$sOQL = $this->Get($sRecipAttCode);
 		if (utils::IsNullOrEmptyString($sOQL)) return '';
 
@@ -523,7 +509,6 @@ class ActionEmail extends ActionNotification
 	 */
 	public function DoExecute($oTrigger, $aContextArgs)
 	{
-		parent::DoExecute($oTrigger, $aContextArgs);
 		if (MetaModel::IsLogEnabledNotification())
 		{
 			$oLog = new EventNotificationEmail();

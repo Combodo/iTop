@@ -3,7 +3,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-object-summary--header--margin-y: $ibo-panel--highlight--height!default;
+$ibo-object-summary--header--margin-top: $ibo-panel--highlight--height!default;
+$ibo-object-summary--header--margin-bottom: $ibo-spacing-0!default;
 $ibo-object-summary--header--margin-x: $ibo-spacing-0 !default;
 
 $ibo-object-summary--header--padding-y: $ibo-spacing-300 !default;
@@ -51,7 +52,7 @@ $ibo-object-summary--content--attributes--code--padding-right: $ibo-spacing-500 
 }
 
 .ibo-object-summary--header{
-  margin: $ibo-object-summary--header--margin-y $ibo-object-summary--header--margin-x;
+  margin: $ibo-object-summary--header--margin-top $ibo-object-summary--header--margin-x $ibo-object-summary--header--margin-bottom $ibo-object-summary--header--margin-x;
   padding: $ibo-object-summary--header--padding-y $ibo-object-summary--header--padding-x;
   background-color: $ibo-object-summary--header--background-color;
   border-bottom:  $ibo-object-summary--header--border;

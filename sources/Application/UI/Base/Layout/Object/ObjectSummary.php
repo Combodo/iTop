@@ -102,8 +102,8 @@ class ObjectSummary extends ObjectDetails
 	{
 		$oRouter = Router::GetInstance();
 		$oDetailsButton = null;
-		if(UserRights::IsActionAllowed($this->sClassName, UR_ACTION_MODIFY)) {
-			$sRootUrl = utils::GetAbsoluteUrlAppRoot();
+		// We can pass a DBObject to the UIBlock, so we check for the DisplayModifyForm method
+		if(method_exists($this->oObject, 'DisplayModifyForm') && UserRights::IsActionAllowed($this->sClassName, UR_ACTION_MODIFY)) {
 			$oPopoverMenu = new PopoverMenu();
 			
 			$oDetailsAction = new URLPopupMenuItem(

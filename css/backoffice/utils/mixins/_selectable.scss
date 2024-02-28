@@ -1,0 +1,40 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-selectable--background-color: transparent !default;
+
+$ibo-selectable--hover--color: $ibo-color-grey-100 !default;
+$ibo-selectable--hover--background-color: $ibo-color-grey-600 !default;
+$ibo-selectable--hover--background-opacity: 0.6 !default;
+
+$ibo-selected--color: $ibo-color-grey-100 !default;
+$ibo-selected--background-color: $ibo-color-grey-900 !default;
+$ibo-selected--background-opacity: 0.5 !default;
+
+$ibo-selected--hover--background-color: $ibo-color-grey-700 !default;
+$ibo-selected--hover--background-opacity: 0.5 !default;
+@mixin ibo-selectable {
+  content: ' ';
+  @extend %fa-solid-base;
+  background-color: $ibo-selectable--background-color;
+  cursor: pointer;
+}
+@mixin ibo-selectable-hover {
+  @extend %fa-regular-base;
+  content: '\f058';
+  color: $ibo-selectable--hover--color;
+  background-color: transparentize($ibo-selectable--hover--background-color, $ibo-selectable--hover--background-opacity);
+}
+
+@mixin ibo-selected {
+  @extend %fa-solid-base;
+  content: '\f058';
+  color: $ibo-selected--color;
+  background-color: transparentize($ibo-selected--background-color, $ibo-selected--background-opacity);
+}
+
+@mixin ibo-selected-hover {
+  background-color: transparentize($ibo-selected--hover--background-color, $ibo-selected--hover--background-opacity);
+}

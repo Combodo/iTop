@@ -41,7 +41,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 	private $sContent;
 	private $sPanelTitle;
 	private $sPanelIcon;
-	
+
 	// TODO 3.0 Find a clever way to allow theme customization for unauthenticated webpages
 	private $sCustomThemeUrl;
 
@@ -287,5 +287,14 @@ class UnauthenticatedWebPage extends NiceWebPage
 		{
 			$this->add_linked_stylesheet($this->sCustomThemeUrl);
 		}
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.2.0
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		return Branding::GetLoginFavIconAbsoluteUrl();
 	}
 }

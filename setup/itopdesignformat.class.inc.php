@@ -910,8 +910,8 @@ class iTopDesignFormat
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-background-color"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--background-color');
-		}		
-		
+		}
+
 		$oNodeList = $oXPath->query( '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-color"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--text-color');
@@ -1108,7 +1108,10 @@ class iTopDesignFormat
 	 */
 	protected function From32To31($oFactory)
 	{
-		// Nothing for now...
+		// N°3363 - Add favicon in branding
+		$this->RemoveNodeFromXPath('/itop_design/branding/main_favicon');
+		$this->RemoveNodeFromXPath('/itop_design/branding/portal_favicon');
+		$this->RemoveNodeFromXPath('/itop_design/branding/login_favicon');
 	}
 
 	/**

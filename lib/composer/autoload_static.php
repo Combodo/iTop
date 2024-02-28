@@ -640,6 +640,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\Set' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/Set/Set.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\SetUIBlockFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/Set/SetUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\TextArea' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/TextArea.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Toggler' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/Toggler.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\tInputLabel' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/tInputLabel.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\MedallionIcon\\MedallionIcon' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/MedallionIcon/MedallionIcon.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Modal\\DoNotShowAgainOptionBlock' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Modal/DoNotShowAgainOptionBlock.php',

@@ -38,14 +38,8 @@ class ButtonGroup extends UIBlock
 	/**
 	 * Button constructor.
 	 *
-	 * @param string $sLabel
+	 * @param array $aButtons
 	 * @param string|null $sId
-	 * @param string $sTooltip
-	 * @param string $sIconClass
-	 * @param string $sActionType
-	 * @param string $sColor
-	 * @param string $sJsCode
-	 * @param string $sOnClickJsCode
 	 */
 	public function __construct(array $aButtons = [], ?string $sId = null)
 	{

@@ -265,6 +265,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\Set' => $baseDir . '/sources/Application/UI/Base/Component/Input/Set/Set.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Set\\SetUIBlockFactory' => $baseDir . '/sources/Application/UI/Base/Component/Input/Set/SetUIBlockFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\TextArea' => $baseDir . '/sources/Application/UI/Base/Component/Input/TextArea.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Toggler' => $baseDir . '/sources/Application/UI/Base/Component/Input/Toggler.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\tInputLabel' => $baseDir . '/sources/Application/UI/Base/Component/Input/tInputLabel.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\MedallionIcon\\MedallionIcon' => $baseDir . '/sources/Application/UI/Base/Component/MedallionIcon/MedallionIcon.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Modal\\DoNotShowAgainOptionBlock' => $baseDir . '/sources/Application/UI/Base/Component/Modal/DoNotShowAgainOptionBlock.php',

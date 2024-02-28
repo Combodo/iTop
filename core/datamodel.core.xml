@@ -106,7 +106,7 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="title"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <style>
@@ -390,7 +390,18 @@
           <is_null_allowed>false</is_null_allowed>
         </field>
       </fields>
-      <presentation/>
+      <presentation>
+        <summary>
+        <items>
+          <item id="date">
+            <rank>10</rank>
+          </item>
+          <item id="message">
+            <rank>20</rank>
+          </item>
+        </items>
+        </summary>
+      </presentation>
       <methods/>
     </class>
   </classes>

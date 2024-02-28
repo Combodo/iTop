@@ -112,6 +112,8 @@ abstract class Trigger extends cmdbAbstractObject
 			return;
 		}
 
+		$aContextArgs['trigger->object()'] = $this;
+
 		// Find the related actions
 		$oLinkedActions = $this->Get('action_list');
 
@@ -121,7 +123,7 @@ abstract class Trigger extends cmdbAbstractObject
 			$aActionListOrdered[(int) $oLink->Get('order')][] = $oLink;
 		}
 		ksort($aActionListOrdered);
-		
+
 		// Execute actions
 		foreach ($aActionListOrdered as $aActionSubList) {
 			foreach ($aActionSubList as $oLink) /** @var \DBObject $oLink */ {
@@ -131,6 +133,7 @@ abstract class Trigger extends cmdbAbstractObject
 				$oAction = MetaModel::GetObject('Action', $iActionId);
 				if ($oAction->IsActive()) {
 					$oKPI = new ExecutionKPI();
+					$aContextArgs['action->object()'] = $oAction;
 					$oAction->DoExecute($this, $aContextArgs);
 					$oKPI->ComputeStatsForExtension($oAction, 'DoExecute');
 				}
