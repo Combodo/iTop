@@ -925,6 +925,6 @@ class ActionEmail extends ActionNotification
 	 */
 	public function GetAsynchronousGlobalSetting(): bool
 	{
-		return MetaModel::GetConfig()->Get('email_asynchronous');
+		return utils::GetConfig()->Get('email_asynchronous');
 	}
 }
