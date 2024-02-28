@@ -1356,4 +1356,27 @@ class DBObjectTest extends ItopDataTestCase
 		$oOrganisation->SetTrim('name', $sName);
 		$this->assertEquals($sResult, $oOrganisation->Get('name'), 'SetTrim must limit string to 255 characters');
 	}
+
+	/**
+	 * @covers DBObject::SetComputedDate
+	 * @return void
+	 */
+	public function testSetComputedDateOnAttributeDate(){
+		$oObject = MetaModel::NewObject(\CustomerContract::class, ['name'=>'Test contract','org_id'=>'3','provider_id'=>'2']);
+		$oObject->Set('start_date',time());
+		$oObject->SetComputedDate('end_date', "+2 weeks", 'start_date');
+		$this->assertTrue(true,'No fatal error on computing date');
+	}
+	/**
+	 * @covers DBObject::SetComputedDate
+	 * @return void
+	 */
+	public function testSetComputedDateOnAttributeDateTime(){
+		$oObject = MetaModel::NewObject(\WorkOrder::class, ['name'=>'Test workorder','description'=>'Toto']);
+		$oObject->Set('start_date','2024-01-01 09:45:00');
+		$oObject->SetComputedDate('end_date', "+2 weeks", 'start_date');
+		$this->assertTrue(true,'No fatal error on computing date');
+		$this->assertEquals("2024-01-15 09:45:00", $oObject->Get('end_date'), 'SetComputedDate +2 weeks on a WorkOrder DateTimeAttribute');
+
+	}
 }
