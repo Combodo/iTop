@@ -489,7 +489,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Action/Attribute:trigger_list' => 'Déclencheurs liés',
 	'Class:Action/Attribute:trigger_list+' => 'Déclencheurs à l\'origine de cette action',
 	'Class:Action/Attribute:asynchronous' => 'Asynchrone',
-	'Class:Action/Attribute:asynchronous+' => 'L\'action est-elle exécutée de manière asynchrone ?',
+	'Class:Action/Attribute:asynchronous+' => 'L\'action est-elle exécutée en arrière plan ?',
 	'Class:Action/Attribute:asynchronous/Value:follow_global_setting' => 'Suivre le paramétrage global',
 	'Class:Action/Attribute:asynchronous/Value:yes' => 'Oui',
 	'Class:Action/Attribute:asynchronous/Value:no' => 'Non',
