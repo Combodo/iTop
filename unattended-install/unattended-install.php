@@ -1,6 +1,6 @@
 <?php
 $bBypassMaintenance = true;
-require_once('../approot.inc.php');
+require_once(dirname(__FILE__, 2) . '/approot.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/clipage.class.inc.php');
 require_once(APPROOT.'/core/config.class.inc.php');
