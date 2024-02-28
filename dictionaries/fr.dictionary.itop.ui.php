@@ -666,6 +666,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:CSVImport:TreatFirstLineAsHeader' => 'La première ligne est l\'en-tête (noms des colonnes)',
 	'UI:CSVImport:Skip_N_LinesAtTheBeginning' => 'Ignorer les %1$s premières lignes du fichier',
 	'UI:CSVImport:CSVDataPreview' => 'Aperçu des données CSV',
+	'UI:CSVImport:Column' => 'Colonne %1$s',
 	'UI:CSVImport:SelectFile' => 'Sélectionnez le fichier à importer:',
 	'UI:CSVImport:Tab:LoadFromFile' => 'Import depuis un fichier',
 	'UI:CSVImport:Tab:CopyPaste' => 'Copier/Coller de données',

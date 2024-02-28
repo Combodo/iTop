@@ -219,7 +219,7 @@ try
 			$sData = stripslashes(utils::ReadParam('csvdata', true, false, 'raw_data'));
 			$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop'));
 			$iMaxIndex = 10; // Display maximum 10 lines for the preview
-			$aData = $oCSVParser->ToArray($iLinesToSkip, null, $iMaxIndex);
+			$aData = $oCSVParser->ToArray($iLinesToSkip, null, $bFirstLineAsHeader ? $iMaxIndex + 1 : $iMaxIndex);
 			$iTarget = count($aData);
 			if ($iTarget == 0) {
 				$oPage->p(Dict::S('UI:CSVImport:NoData'));
@@ -227,39 +227,45 @@ try
 				$sMaxLen = (strlen(''.$iTarget) < 3) ? 3 : strlen(''.$iTarget); // Pad line numbers to the appropriate number of chars, but at least 3
 				$sFormat = '%0'.$sMaxLen.'d';
 
-				//$oTitle = TitleUIBlockFactory::MakeForPage(Dict::S('UI:Title:DataPreview'));
-				//$oPage->AddSubBlock($oTitle);
-
-				//$oContainer = UIContentBlockUIBlockFactory::MakeStandard();
-				//$oContainer->AddCSSClass("ibo-is-visible");
-				//$oPage->AddSubBlock($oContainer);
-
-				$index = 1;
 				$aColumns = [];
 				$aTableData = [];
-				foreach ($aData as $aRow) {
-					$sCSSClass = 'csv_row'.($index % 2);
-					if (($bFirstLineAsHeader) && ($index == 1)) {
-						$aColumns[] = ["label" => sprintf($sFormat, $index)];
-						foreach ($aRow as $sCell) {
-							$aColumns[] = ["label" => utils::EscapeHtml($sCell)];
-						}
+				$iNbCols = 0;
+
+				// iterate throw data elements...
+				for ($iDataLineNumber = 0 ; $iDataLineNumber < count($aData) && count($aTableData) <= $iMaxIndex ; $iDataLineNumber++) {
+
+					// get data element
+					$aRow = $aData[$iDataLineNumber];
+
+					// when first line
+					if ($iDataLineNumber === 0) {
+
+						// columns
 						$iNbCols = count($aRow);
-					} else {
-						$aTableRow = [];
-						if ($index == 1) {
-							$iNbCols = count($aRow);
+						$aColumns[] = '';
+
+						// first line as header
+						if($bFirstLineAsHeader){
+							foreach ($aRow as $sCell) {
+								$aColumns[] = ["label" => utils::EscapeHtml($sCell)];
+							}
+							continue;
 						}
-						$aTableRow[] = sprintf($sFormat, $index);
-						foreach ($aRow as $sCell) {
-							$aTableRow[] = utils::EscapeHtml($sCell);
+
+						// default headers
+						for ($iDataColumnNumber = 0 ; $iDataColumnNumber < count($aRow) ; $iDataColumnNumber++) {
+							$aColumns[] = ["label" => Dict::Format('UI:CSVImport:Column', $iDataColumnNumber+1)];
 						}
-						$aTableData[$index] = $aTableRow;
+
 					}
-					$index++;
-					if ($index > $iMaxIndex) {
-						break;
+
+					// create table row
+					$aTableRow = [];
+					$aTableRow[] = sprintf($sFormat, count($aTableData) + 1);
+					foreach ($aRow as $sCell) {
+						$aTableRow[] = utils::EscapeHtml($sCell);
 					}
+					$aTableData[] = $aTableRow;
 				}
 				$oTable = DataTableUIBlockFactory::MakeForForm("parser_preview", $aColumns, $aTableData);
 				$oPage->AddSubBlock($oTable);
