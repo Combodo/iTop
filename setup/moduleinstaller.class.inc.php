@@ -258,7 +258,7 @@ abstract class ModuleInstallerAPI
 			return;
 		}
 
-		if (!CMDBSource::IsTable($sOrigTable) || !CMDBSource::IsField($sOrigTable, $sOrigColumn))
+		if (!CMDBSource::IsField($sOrigTable, $sOrigColumn))
 		{
 			// Original field is not present
 			return;
@@ -290,4 +290,40 @@ abstract class ModuleInstallerAPI
 		CMDBSource::CacheReset($sDstTable);
 	}
 
+	/**
+	 * Rename a table providing:
+	 *   - The original name exists
+	 *   - The destination name does not exist
+	 *
+	 * @param $sOrigTable string
+	 * @param $sDstTable string
+	 * @return void
+	 * @throws CoreException
+	 * @throws MySQLException
+	 */
+	public static function RenameTableInDB(string $sOrigTable, string $sDstTable)
+	{
+		if (!MetaModel::DBExists(false))
+		{
+			// Install from scratch, no migration
+			return;
+		}
+
+		if (!CMDBSource::IsTable($sOrigTable))
+		{
+			// Origin table is not present
+			return;
+		}
+
+		if (CMDBSource::IsTable($sDstTable))
+		{
+			// Destination table is already present
+			return;
+		}
+
+		$sQueryRename = sprintf(/** @lang MariaDB */ "RENAME TABLE `%s` TO `%s`;", $sOrigTable, $sDstTable);
+		CMDBSource::Query($sQueryRename);
+
+		CMDBSource::CacheReset($sOrigTable);
+	}
 }

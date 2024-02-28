@@ -128,4 +128,27 @@ SQL
 		];
 	}
 
+	/**
+	 * Test that the table has been renamed
+	 *
+	 * @covers \ModuleInstallerAPI::MoveColumnInDB
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 */
+	public function testRenameTableInDB()
+	{
+		$sOrigTable = MetaModel::DBGetTable('Person');
+		$this->assertTrue(CMDBSource::IsTable($sOrigTable), 'Origin table does not exist');
+		$aOrigTableInfo = CMDBSource::GetTableInfo($sOrigTable);
+		$this->assertNotEmpty($aOrigTableInfo);
+
+		$sDstTable = static::$sWorkTable;
+		$this->assertFalse(CMDBSource::IsTable($sDstTable), 'Work table already exists');
+
+		ModuleInstallerAPI::RenameTableInDB();
+
+		$this->assertEquals($aOrigTableInfo, CMDBSource::GetTableInfo($sDstTable), 'Table was not renamed');
+	}
 }
