@@ -231,13 +231,13 @@ try
 				$aTableData = [];
 
 				// iterate throw data elements...
-				for ($i = 0 ; $i < count($aData) ; $i++) {
+				for ($iDataLineNumber = 0 ; $iDataLineNumber < count($aData) ; $iDataLineNumber++) {
 
 					// get data element
-					$aRow = $aData[$i];
+					$aRow = $aData[$iDataLineNumber];
 
 					// when first line
-					if ($i === 0) {
+					if ($iDataLineNumber === 0) {
 
 						// columns
 						$iNbCols = count($aRow);
@@ -252,8 +252,8 @@ try
 						}
 
 						// default headers
-						for ($j = 0 ; $j < count($aRow) ; $j++) {
-							$aColumns[] = ["label" => Dict::Format('UI:CSVImport:Column', $j+1)];
+						for ($iDataColumnNumber = 0 ; $iDataColumnNumber < count($aRow) ; $iDataColumnNumber++) {
+							$aColumns[] = ["label" => Dict::Format('UI:CSVImport:Column', $iDataColumnNumber+1)];
 						}
 
 					}
@@ -267,7 +267,7 @@ try
 					$aTableData[] = $aTableRow;
 
 					// max elements
-					if ($i > $iMaxIndex) {
+					if ($iDataLineNumber > $iMaxIndex) {
 						break;
 					}
 				}
