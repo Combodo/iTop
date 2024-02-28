@@ -3652,12 +3652,15 @@ EOF;
 			$this->CompileFiles($oBrandingNode, $sTempTargetDir.'/branding', $sFinalTargetDir.'/branding', 'branding');
 			$aDataBranding = [];
 
-			$aLogosToCompile = [
-				['sNodeName' => 'login_logo', 'sTargetFile' => 'login-logo', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_LOGO],
-				['sNodeName' => 'main_logo', 'sTargetFile' => 'main-logo-full', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_FULL],
-				['sNodeName' => 'main_logo_compact', 'sTargetFile' => 'main-logo-compact', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT],
-				['sNodeName' => 'portal_logo', 'sTargetFile' =>'portal-logo', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_LOGO],
-			];
+				$aLogosToCompile = [
+					['sNodeName' => 'login_logo', 'sTargetFile' => 'login-logo', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_LOGO],
+					['sNodeName' => 'main_logo', 'sTargetFile' => 'main-logo-full', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_FULL],
+					['sNodeName' => 'main_logo_compact', 'sTargetFile' => 'main-logo-compact', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT],
+					['sNodeName' => 'portal_logo', 'sTargetFile' => 'portal-logo', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_LOGO],
+					['sNodeName' => 'login_favicon', 'sTargetFile' => 'login_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_FAVICON],
+					['sNodeName' => 'main_favicon', 'sTargetFile' => 'main_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_FAVICON],
+					['sNodeName' => 'portal_favicon', 'sTargetFile' => 'portal_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_FAVICON],
+				];
 			foreach ($aLogosToCompile as $aLogo) {
 				$sLogo = $this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $aLogo['sNodeName'], $aLogo['sTargetFile']);
 				if ($sLogo != null) {
@@ -3677,7 +3680,7 @@ EOF;
 			{
 				SetupUtils::rrmdir($sTempTargetDir.'/branding/images');
 			}
-			
+
 			// Compile themes 
 			$this->CompileThemes($oBrandingNode, $sTempTargetDir);
 		}

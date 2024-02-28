@@ -6,6 +6,7 @@
 
 namespace Combodo\iTop\Application\WebPage;
 
+use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
@@ -1761,17 +1762,13 @@ EOD
 	}
 
 	/**
-	 * Return the absolute URL for the favicon
-	 *
-	 * @return string
+	 * @return string Absolute URL for the favicon
 	 * @throws \Exception
 	 * @since 3.0.0
 	 */
 	protected function GetFaviconAbsoluteUrl()
 	{
-		// TODO 3.0.0: Make it a property so it can be changed programmatically
-		// TODO 3.0.0: How to set both dark/light mode favicons
-		return utils::GetAbsoluteUrlAppRoot().'images/favicon.ico';
+		return Branding::GetMainFavIconAbsoluteUrl();
 	}
 
 	/**
@@ -1838,7 +1835,7 @@ EOD
 
 	/**
 	 * @return bool
-	 * 
+	 *
 	 * @since 3.2.0
 	 */
 	public function GetAddJSDict(): bool
@@ -1850,7 +1847,7 @@ EOD
 	 * @param bool $bAddJSDict
 	 *
 	 * @return $this
-	 * 
+	 *
 	 * @since 3.2.0
 	 */
 	public function SetAddJSDict(bool $bAddJSDict)
