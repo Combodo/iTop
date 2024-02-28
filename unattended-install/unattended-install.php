@@ -32,27 +32,43 @@ if (false === file_exists($sParamFile)) {
 }
 $oParams = new XMLParameters($sParamFile);
 
-$aDBSettings = $oParams->Get('database', array());
-$sDBServer = $aDBSettings['server'];
-$sDBUser = $aDBSettings['user'];
-$sDBPwd = $aDBSettings['pwd'];
-$sDBName = $aDBSettings['name'];
-$sDBPrefix = $aDBSettings['prefix'];
-
 $sMode = $oParams->Get('mode');
+$bUseItopConfig = ((bool) utils::ReadParam('use-itop-config', 0, true /* CLI allowed */));
+
+$sTargetEnvironment = $oParams->Get('target_env', '');
+if ($sTargetEnvironment == '')
+{
+	$sTargetEnvironment = 'production';
+}
+
+if ($bUseItopConfig){
+	$aDBXmlSettings = $oParams->Get('database', array());
+	$oConfig = new Config(APPROOT . "/conf/$sTargetEnvironment/config-itop.php");
+	$aDBXmlSettings['server'] = $oConfig->Get('db_host');
+	$aDBXmlSettings['user'] = $oConfig->Get('db_user');
+	$aDBXmlSettings['pwd'] = $oConfig->Get('db_pwd');
+	$aDBXmlSettings['name'] = $oConfig->Get('db_name');
+	$aDBXmlSettings['prefix'] = $oConfig->Get('db_subname');
+	$oParams->Set('database', $aDBXmlSettings);
+	$oParams->Set('url', $oConfig->Get('app_root_url'));
+} else {
+	$aDBXmlSettings = $oParams->Get('database', array());
+}
+
+$sDBServer = $aDBXmlSettings['server'];
+$sDBUser = $aDBXmlSettings['user'];
+$sDBPwd = $aDBXmlSettings['pwd'];
+$sDBName = $aDBXmlSettings['name'];
+$sDBPrefix = $aDBXmlSettings['prefix'];
 
 if ($sMode == 'install')
 {
 	echo "Installation mode detected.\n";
+
 	$bClean = utils::ReadParam('clean', false, true /* CLI allowed */);
 	if ($bClean)
 	{
 		echo "Cleanup mode detected.\n";
-		$sTargetEnvironment = $oParams->Get('target_env', '');
-		if ($sTargetEnvironment == '')
-		{
-			$sTargetEnvironment = 'production';
-		}
 
 		// Configuration file
 		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
@@ -147,6 +163,7 @@ if ($sMode == 'install')
 }
 else
 {
+	//use settings from itop conf
 	$sTargetEnvironment = $oParams->Get('target_env', '');
 	if ($sTargetEnvironment == '')
 	{
@@ -196,9 +213,7 @@ foreach($aChecks as $oCheckResult)
 
 if ($bHasErrors)
 {
-	$sLogMsg = "Encountered stopper issues. Aborting...";
-	echo "$sLogMsg\n";
-	SetupLog::Error($sLogMsg);
+	echo "Encountered stopper issues. Aborting...\n";
 	die;
 }
 
@@ -295,15 +310,5 @@ if (!$bFoundIssues)
 	// last line: used to check the install
 	// the only way to track issues in case of Fatal error or even parsing error!
 	echo "\ninstalled!";
-	if ($sMode == 'install' && is_file($sConfigFile.backup))
-	{
-		echo "\nuse config file provided by backup in $sConfigFile.";
-		copy("$sConfigFile.backup", $sConfigFile);
-	}
-	exit(0);
+	exit;
 }
-
-$sLogMsg = "installation failed!";
-SetupLog::Error($sLogMsg);
-echo "\n$sLogMsg";
-exit(-1);
