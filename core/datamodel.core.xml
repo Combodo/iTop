@@ -310,7 +310,7 @@
           <code><![CDATA[
 	public function GetAsynchronousGlobalSetting(): bool
 	{
-		return MetaModel::GetConfig()->Get('notifications.itop.send_asynchronously');
+		return utils::GetConfig()->Get('notifications.itop.send_asynchronously');
 	}
 ]]></code>
         </method>
