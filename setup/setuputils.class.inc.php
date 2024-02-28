@@ -897,9 +897,13 @@ class SetupUtils
 		return $f;
 	}
 
+    /**
+     * @link https://en.wiktionary.org/wiki/petabyte petabyte PB
+     * @link https://en.wiktionary.org/wiki/exabyte#English exabyte EB
+     */
 	public static function HumanReadableSize($fBytes)
 	{
-		$aSizes = array('bytes', 'Kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Hb');
+        $aSizes = array('bytes', 'Kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Eb');
 		$index = 0;
 		while (($fBytes > 1000) && ($index < count($aSizes)))
 		{
