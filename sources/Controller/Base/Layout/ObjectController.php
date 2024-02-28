@@ -781,7 +781,6 @@ JS;
 	public static function EnumRequiredForModificationJsFilesRelPaths(): array
 	{
 		return [
-			'js/json.js',
 			'js/forms-json-utils.js',
 			'js/wizardhelper.js',
 			'js/wizard.utils.js',
