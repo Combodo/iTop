@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design version="3.2">
-  <branding>
+  <brandings>
     <themes>
       <theme id="light-grey" _delta="define">
         <variables>
@@ -29,5 +29,5 @@
         </stylesheets>
       </theme>
     </themes>
-  </branding>
+  </brandings>
 </itop_design>
