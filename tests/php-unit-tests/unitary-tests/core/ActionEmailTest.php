@@ -359,7 +359,7 @@ HTML
 			],
 			'ActionEmail is asynchronous and config is asynchronous' => [
 				'yes',
-				false,
+				true,
 				true
 			],
 			'ActionEmail is not asynchronous and config is not asynchronous' => [
