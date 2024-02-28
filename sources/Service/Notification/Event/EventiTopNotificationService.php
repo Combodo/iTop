@@ -26,7 +26,7 @@ class EventiTopNotificationService {
 	 * @param string $sTitle
 	 * @param string $sUrl
 	 * @param int $iObjectId
-	 * @param string $sObjectClass
+	 * @param string|null $sObjectClass
 	 * @param string|null $sDate
 	 *
 	 * @return \EventiTopNotification
