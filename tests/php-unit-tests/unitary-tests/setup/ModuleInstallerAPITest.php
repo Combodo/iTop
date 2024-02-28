@@ -146,7 +146,7 @@ SQL
 		$sDstTable = static::$sWorkTable;
 		$this->assertFalse(CMDBSource::IsTable($sDstTable), 'Work table already exists');
 
-		ModuleInstallerAPI::RenameTableInDB();
+		ModuleInstallerAPI::RenameTableInDB($sOrigTable, $sDstTable);
 
 		$this->assertEquals($aOrigTableInfo, CMDBSource::GetTableInfo($sDstTable), 'Table was not renamed');
 	}

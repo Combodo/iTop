@@ -297,6 +297,7 @@ abstract class ModuleInstallerAPI
 	 *
 	 * @param $sOrigTable string
 	 * @param $sDstTable string
+	 *
 	 * @return void
 	 * @throws CoreException
 	 * @throws MySQLException
