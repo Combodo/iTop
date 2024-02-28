@@ -447,14 +447,14 @@ class Config
 			'show_in_conf_sample' => true,
 		],
 		'export_pdf_font' => [ // @since 2.7.0 PR #49 / N°1947
-			'type' => 'string',
-			'description' => 'Font used when generating a PDF file',
-			'default' => 'DejaVuSans', // DejaVuSans is a UTF-8 Unicode font, embedded in the TCPPDF lib we're using
-			// Standard PDF fonts like helvetica or times newroman are NOT Unicode
-			// A new DroidSansFallback can be used to improve CJK support (se PR #49)
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
+		                       'type'                => 'string',
+		                       'description'         => 'Font used when generating a PDF file',
+		                       'default'             => 'DejaVuSans', // DejaVuSans is a UTF-8 Unicode font, embedded in the TCPPDF lib we're using
+		                       // Standard PDF fonts like helvetica or times newroman are NOT Unicode
+		                       // A new DroidSansFallback can be used to improve CJK support (se PR #49)
+		                       'value'               => '',
+		                       'source_of_value'     => '',
+		                       'show_in_conf_sample' => false,
 		],
 		'access_mode' => [
 			'type' => 'integer',
@@ -1119,6 +1119,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'purge_data.max_chunk_size' => [
+			'type' => 'integer',
+			'description' => 'Maximum number of items deleted per loop. Used in function MetaModel::PurgeData',
+			'default' => 1000,
+			'value' => 1000,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'max_history_length' => [
 			'type' => 'integer',
 			'description' => 'Maximum length of the history table (in the "History" tab on each object) before it gets truncated. Latest modifications are displayed first.',
@@ -1324,9 +1332,9 @@ class Config
 		'draft_attachments_lifetime' => [
 			'type'                => 'integer',
 			'description'         => 'Lifetime (in seconds) of drafts\' attachments and inline images: after this duration, the garbage collector will delete them.',
-			'default' => 86400,
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => 86400,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'date_and_time_format' => [
@@ -1882,6 +1890,7 @@ class Config
 	 * @var integer Number of seconds between two reloads of the display (standard)
 	 */
 	protected $m_iStandardReloadInterval;
+
 	/**
 	 * @var integer Number of seconds between two reloads of the display (fast)
 	 */
@@ -2553,9 +2562,9 @@ class Config
 
 			// Old fashioned integer settings
 			$aIntValues = array(
-				'fast_reload_interval' => $this->m_iFastReloadInterval,
-				'max_display_limit' => $this->m_iMaxDisplayLimit,
-				'min_display_limit' => $this->m_iMinDisplayLimit,
+				'fast_reload_interval'     => $this->m_iFastReloadInterval,
+				'max_display_limit'        => $this->m_iMaxDisplayLimit,
+				'min_display_limit'        => $this->m_iMinDisplayLimit,
 				'standard_reload_interval' => $this->m_iStandardReloadInterval,
 			);
 			foreach ($aIntValues as $sKey => $iValue)

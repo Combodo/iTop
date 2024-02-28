@@ -7168,32 +7168,45 @@ abstract class MetaModel
 	 */
 	public static function PurgeData($oFilter)
 	{
+		$iMaxChunkSize = MetaModel::GetConfig()->Get('purge_data.max_chunk_size');
 		$sTargetClass = $oFilter->GetClass();
-		$oSet = new DBObjectSet($oFilter);
-		$oSet->OptimizeColumnLoad(array($sTargetClass => array('finalclass')));
-		$aIdToClass = $oSet->GetColumnAsArray('finalclass', true);
+		$iNbIdsDeleted = 0;
+		$bExecuteQuery = true;
 
-		$aIds = array_keys($aIdToClass);
-		if (count($aIds) > 0)
-		{
-			$aQuotedIds = CMDBSource::Quote($aIds);
-			$sIdList = implode(',', $aQuotedIds);
-			$aTargetClasses = array_merge(
-				self::EnumChildClasses($sTargetClass, ENUM_CHILD_CLASSES_ALL),
-				self::EnumParentClasses($sTargetClass, ENUM_PARENT_CLASSES_EXCLUDELEAF)
-			);
-			foreach($aTargetClasses as $sSomeClass)
-			{
-				$sTable = MetaModel::DBGetTable($sSomeClass);
-				$sPKField = MetaModel::DBGetKey($sSomeClass);
+		// This loop allows you to delete objects in batches of $iMaxChunkSize elements
+		while ($bExecuteQuery) {
+			$oSet = new DBObjectSet($oFilter);
+			$oSet->SetLimit($iMaxChunkSize);
+			$oSet->OptimizeColumnLoad(array($sTargetClass => array('finalclass')));
+			$aIdToClass = $oSet->GetColumnAsArray('finalclass', true);
 
-				$sDeleteSQL = "DELETE FROM `$sTable` WHERE `$sPKField` IN ($sIdList)";
-				CMDBSource::DeleteFrom($sDeleteSQL);
+			$aIds = array_keys($aIdToClass);
+			$iNbIds = count($aIds);
+			if ($iNbIds > 0) {
+				$aQuotedIds = CMDBSource::Quote($aIds);
+				$sIdList = implode(',', $aQuotedIds);
+				$aTargetClasses = array_merge(
+					self::EnumChildClasses($sTargetClass, ENUM_CHILD_CLASSES_ALL),
+					self::EnumParentClasses($sTargetClass, ENUM_PARENT_CLASSES_EXCLUDELEAF)
+				);
+				foreach ($aTargetClasses as $sSomeClass) {
+					$sTable = MetaModel::DBGetTable($sSomeClass);
+					$sPKField = MetaModel::DBGetKey($sSomeClass);
+
+					$sDeleteSQL = "DELETE FROM `$sTable` WHERE `$sPKField` IN ($sIdList)";
+					CMDBSource::DeleteFrom($sDeleteSQL);
+				}
+				$iNbIdsDeleted += $iNbIds;
+			}
+
+			// stop loop if query returned fewer objects than  $iMaxChunkSize. In this case, all objects have been deleted.
+			if ($iNbIds < $iMaxChunkSize) {
+				$bExecuteQuery = false;
 			}
 		}
-		return count($aIds);
-	}
 
+		return $iNbIdsDeleted;
+	}
 	// Links
 	//
 	//
