@@ -502,7 +502,7 @@ class AsyncSendiTopNotifications extends AsyncTask {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public static function AddToQueue(int $iActionId, int $iTriggerId, array $aRecipients, string $sMessage, string $sTitle, string $sUrl, int $iObjectId, string $sObjectClass): void
+	public static function AddToQueue(int $iActionId, int $iTriggerId, array $aRecipients, string $sMessage, string $sTitle, string $sUrl, int $iObjectId, ?string $sObjectClass): void
 	{
 		$oNew = new static();
 		$oNew->Set('action_id', $iActionId);
