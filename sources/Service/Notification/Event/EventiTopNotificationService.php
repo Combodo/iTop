@@ -34,7 +34,7 @@ class EventiTopNotificationService {
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public static function MakeEventFromAction(Action $oAction, int $iContactId, int $iTriggerId, string $sMessage, string $sTitle, string $sUrl, int $iObjectId, string $sObjectClass, string|null $sDate = null): EventiTopNotification
+	public static function MakeEventFromAction(Action $oAction, int $iContactId, int $iTriggerId, string $sMessage, string $sTitle, string $sUrl, int $iObjectId, ?string $sObjectClass, string|null $sDate = null): EventiTopNotification
 	{
 		
 		$oEvent = new EventiTopNotification();
