@@ -364,7 +364,7 @@ HTML
 			],
 			'ActionEmail is not asynchronous and config is not asynchronous' => [
 				'no',
-				true,
+				false,
 				false
 			],
 			'ActionEmail follows global settings, config is not asynchronous' => [
