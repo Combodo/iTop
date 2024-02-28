@@ -292,8 +292,8 @@ abstract class ModuleInstallerAPI
 
 	/**
 	 * Rename a table providing:
-	 *   - The original name exists
-	 *   - The destination name does not exist
+	 * - The original name exists
+	 * - The destination name does not exist
 	 *
 	 * @param $sOrigTable string
 	 * @param $sDstTable string

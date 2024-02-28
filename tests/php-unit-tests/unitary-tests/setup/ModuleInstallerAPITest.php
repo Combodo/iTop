@@ -140,9 +140,8 @@ SQL
 	public function testRenameTableInDB()
 	{
 		$sOrigTable = MetaModel::DBGetTable('Person');
-		$this->assertTrue(CMDBSource::IsTable($sOrigTable), 'Origin table does not exist');
 		$aOrigTableInfo = CMDBSource::GetTableInfo($sOrigTable);
-		$this->assertNotEmpty($aOrigTableInfo);
+		$this->assertNotEmpty($aOrigTableInfo, 'Origin table does not exist');
 
 		$sDstTable = static::$sWorkTable;
 		$this->assertFalse(CMDBSource::IsTable($sDstTable), 'Work table already exists');
