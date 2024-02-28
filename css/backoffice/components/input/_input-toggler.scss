@@ -1,0 +1,72 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-toggler--wrapper--width: 36px !default;
+$ibo-toggler--wrapper--height: 20px !default;
+
+$ibo-toggler--slider--border-radius: $ibo-border-radius-900 !default;
+$ibo-toggler--slider--background-color: $ibo-color-secondary-600 !default;
+
+$ibo-toggler--slider--before--height: 15px !default;
+$ibo-toggler--slider--before--width: 15px !default;
+$ibo-toggler--slider--before--border-radius: $ibo-border-radius-full !default;
+$ibo-toggler--slider--before--background-color: $ibo-color-grey-100 !default;
+
+$ibo-toggler--slider--checked--background-color: $ibo-color-primary-600 !default;
+$ibo-toggler--slider--focus--box-shadow: 0 0 1px $ibo-color-primary-600 !default;
+
+$ibo-toggler--label--margin-left: 4px !default;
+
+
+.ibo-toggler--wrapper {
+  position: relative;
+  display: inline-block;
+  width: $ibo-toggler--wrapper--width;
+  height: $ibo-toggler--wrapper--height;
+  vertical-align: baseline;
+  .ibo-toggler {
+    display: none;
+  }
+}
+
+.ibo-toggler--slider{
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: $ibo-toggler--slider--border-radius;
+  background-color: $ibo-toggler--slider--background-color;
+  transition: .4s;
+}
+
+.ibo-toggler--slider:before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  bottom: 3px;
+  height: $ibo-toggler--slider--before--height;
+  width: $ibo-toggler--slider--before--width;
+  border-radius: $ibo-toggler--slider--before--border-radius;
+  background-color: $ibo-toggler--slider--before--background-color;
+  transition: .4s;
+}
+
+.ibo-toggler--wrapper input:checked + .ibo-toggler--slider {
+  background-color: $ibo-toggler--slider--checked--background-color;
+}
+
+input:focus + .ibo-toggler--slider {
+  box-shadow: $ibo-toggler--slider--focus--box-shadow;
+}
+
+input:checked + .ibo-toggler--slider:before {
+  transform: translateX(14.5px);
+}
+
+label ~ .ibo-toggler--wrapper {
+  margin-left: $ibo-toggler--label--margin-left;
+}

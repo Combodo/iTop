@@ -1,0 +1,5 @@
+$('#{{ oUIBlock.GetId() }}').parent().on('click', function() {
+    let oInput = $(this).find('.ibo-toggler');
+    oInput.prop('checked', !oInput.prop('checked'));
+    oInput.trigger('change');
+});

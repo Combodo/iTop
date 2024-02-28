@@ -390,7 +390,18 @@
           <is_null_allowed>false</is_null_allowed>
         </field>
       </fields>
-      <presentation/>
+      <presentation>
+        <summary>
+        <items>
+          <item id="date">
+            <rank>10</rank>
+          </item>
+          <item id="message">
+            <rank>20</rank>
+          </item>
+        </items>
+        </summary>
+      </presentation>
       <methods/>
     </class>
   </classes>
