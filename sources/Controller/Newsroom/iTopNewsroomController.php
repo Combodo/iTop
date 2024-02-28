@@ -363,7 +363,7 @@ JS
 		// Search for all notifications for the current user
 		$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification');
 		$oSearch->AddCondition('contact_id', UserRights::GetContactId(), '=');
-		$oSet = new DBObjectSet($oSearch, array('read' => true, 'date' => true), array());
+		$oSet = new DBObjectSet($oSearch, array('read' => true, 'date' => false), array());
 		
 		// Add main content block
 		$oMainContentBlock = new UIContentBlock(null, ['ibo-notifications--view-all--container']);
