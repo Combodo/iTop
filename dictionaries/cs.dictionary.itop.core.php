@@ -457,7 +457,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Action/Attribute:trigger_list' => 'Související triggery',
 	'Class:Action/Attribute:trigger_list+' => 'Triggery spojené s touto akcí',
 	'Class:Action/Attribute:asynchronous' => 'Asynchronous~~',
-	'Class:Action/Attribute:asynchronous+' => 'The action is executed in background~~',
+	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in background or not~~',
 	'Class:Action/Attribute:asynchronous/Value:follow_global_setting' => 'Follow global setting~~',
 	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes~~',
 	'Class:Action/Attribute:asynchronous/Value:no' => 'No~~',

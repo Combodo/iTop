@@ -454,7 +454,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Action/Attribute:trigger_list' => 'Powiązane wyzwalacze',
 	'Class:Action/Attribute:trigger_list+' => 'Wyzwalacze powiązane z działaniem',
 	'Class:Action/Attribute:asynchronous' => 'Asynchronous~~',
-	'Class:Action/Attribute:asynchronous+' => 'The action is executed in background~~',
+	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in background or not~~',
 	'Class:Action/Attribute:asynchronous/Value:follow_global_setting' => 'Follow global setting~~',
 	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes~~',
 	'Class:Action/Attribute:asynchronous/Value:no' => 'No~~',
