@@ -13,6 +13,7 @@
     "datatables.net-scroller": "^1.4.2",
     "datatables.net-select": "^1.2.0",
     "jquery": "^3.5.1",
+    "jquery-contextmenu": "^1.6.7",
     "jquery-ui-dist": "^1.12.1",
     "mousetrap": "^1.6.5",
     "scrollmagic": "^2.0.8",
