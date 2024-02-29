@@ -1628,6 +1628,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Newsroom:Preferences' => 'Voorkeuren voor Newsroom',
 	'UI:Newsroom:ConfigurationLink' => 'Configuratie',
 	'UI:Newsroom:ResetCache' => 'Maak cache leeg',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Bekijk berichten van %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Toon maximaal %1$s berichten in het %2$s menu.',
 ));

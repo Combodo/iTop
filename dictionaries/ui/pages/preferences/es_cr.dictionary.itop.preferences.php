@@ -47,4 +47,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'Desplazable',
 	'UI:Preferences:ChooseAPlaceholder' => 'Imagen de marcador de posición de usuario',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Elija una imagen de marcador de posición que se mostrará si el contacto vinculado a su usuario no tiene uno',
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated~~',
 ));

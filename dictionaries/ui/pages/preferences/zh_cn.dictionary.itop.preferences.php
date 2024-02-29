@@ -47,4 +47,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => '可滚动',
 	'UI:Preferences:ChooseAPlaceholder' => '用户的默认头像',
 	'UI:Preferences:ChooseAPlaceholder+' => '选择一个占位图片, 将在用户联系人没有设定头像图片时显示',
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated~~',
 ));

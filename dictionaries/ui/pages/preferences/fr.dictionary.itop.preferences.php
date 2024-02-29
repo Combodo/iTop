@@ -47,4 +47,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'Défilement',
 	'UI:Preferences:ChooseAPlaceholder' => 'Avatar de l\'utilisateur',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Choisissez un avatar qui sera affiché si le contact associé à votre compte utilisateur n\'en possède pas',
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Votre avatar a été mis à jour avec succès',
 ));

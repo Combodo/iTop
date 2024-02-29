@@ -434,6 +434,7 @@ JS
 		}
 		$sUserPicturePlaceHolderHtml .= '<a class="ibo-preferences--user-preferences--picture-placeholder--image'.$sAdditionalClass.'" data-image-name="'.$sUserPicture.'" data-role="ibo-preferences--user-preferences--picture-placeholder--image" href="#"> <img src="'.$sUserPicturesFolder.$sUserPicture.'"/> </a>';
 	}
+	$sUserPictureChangedSuccessMessage = Dict::S('UI:Preferences:ChooseAPlaceholder:Success:Message');
 	$oP->add_ready_script(
 		<<<JS
 $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').on('click',function(){
@@ -458,6 +459,9 @@ $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]')
 		
 		// Update navigation menu
 		$('[data-role="ibo-navigation-menu--user-picture--image"]').attr('src', oData.data.image_url);
+		
+		// Display success message
+		CombodoToast.OpenSuccessToast('{$sUserPictureChangedSuccessMessage}');
 	});
 });
 JS

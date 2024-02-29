@@ -47,4 +47,5 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'Rolável',
 	'UI:Preferences:ChooseAPlaceholder' => 'Avatar padrão do usuário',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Escolha uma imagem padrão que será exibida caso o contato associado ao usuário não possuir nenhuma',
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated~~',
 ));

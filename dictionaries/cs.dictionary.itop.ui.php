@@ -1623,6 +1623,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Newsroom:Preferences' => 'Nastavení novinek a upozornění',
 	'UI:Newsroom:ConfigurationLink' => 'Konfigurace',
 	'UI:Newsroom:ResetCache' => 'Resetuj cache',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Zobrazit zprávy od %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Zobrazit %1$s zpráv v menu %2$s',
 ));

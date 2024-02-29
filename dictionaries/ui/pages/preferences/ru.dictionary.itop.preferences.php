@@ -47,4 +47,5 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'Прокручиваемая',
 	'UI:Preferences:ChooseAPlaceholder' => 'Аватар пользователя',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Выберите аватар, который будет отображаться, если у связанного с вашей учетной записью контакта нет фотографии',
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated~~',
 ));

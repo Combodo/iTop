@@ -1612,6 +1612,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Newsroom:Preferences' => 'Newsroom-Einstellungen',
 	'UI:Newsroom:ConfigurationLink' => 'Konfiguration',
 	'UI:Newsroom:ResetCache' => 'Cache zurücksetzen',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Nachrichten von  %1$s anzeigen',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Zeigen Sie höchstens %1$s Beiträge im Menü (%2$s) an.',
 ));

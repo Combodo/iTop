@@ -114,7 +114,7 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
 	{
 		// The query returns only the valid elements, all the others are invalid
 		// Warning : we're generating a `WHERE ID IN`... query, and this could be very slow if there are lots of id !
-		$aValidRows = $oRuleFilter->ToDataArray(array('id'));
+      	$aValidRows = $oRuleFilter->ToDataArray(array('id'));
 		$aValidIds = array();
 		foreach($aValidRows as $aRow)
 		{
@@ -431,7 +431,7 @@ try
 						} else {
 							try {
 								$oFilter = GetRuleResultFilter($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext);
-								$aErrors = $oFilter->ToDataArray(array('id'));
+							$aErrors = $oFilter->SelectAttributeToArray('id');
 								$iErrorsCount = count($aErrors);
 								foreach ($aErrors as $aErrorRow) {
 									$aObjectsWithErrors[$aErrorRow['id']] = true;
@@ -471,7 +471,7 @@ try
 				$oP->AddUiBlock($oErrorAlert);
 				continue;
 			}
-			
+
 			$oAuditCategoryPanelBlock->SetColorFromColorSemantic($sClass);
 			$oAuditCategoryPanelBlock->AddCSSClass('ibo-audit--audit-category--panel');
 			$aData = [];
@@ -490,7 +490,7 @@ try
 				'nb_err' => array('label' => Dict::S('UI:Audit:HeaderNbErrors'), 'description' => Dict::S('UI:Audit:HeaderNbErrors')),
 				'percentage_ok' => array('label' => Dict::S('UI:Audit:PercentageOk'), 'description' => Dict::S('UI:Audit:PercentageOk')),
 			);
-			
+
 			$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData, null, [], "", array('pageLength' => -1));
 			$oAuditCategoryPanelBlock->AddSubBlock($oAttachmentTableBlock);
 			$aAuditCategoryPanels[] = $oAuditCategoryPanelBlock;

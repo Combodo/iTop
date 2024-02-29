@@ -1620,6 +1620,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Newsroom:Preferences' => 'Préférences du centre d\'information',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration',
 	'UI:Newsroom:ResetCache' => 'Ràz du cache',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Le cache a été réinitialisé avec succès',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Afficher les messages de %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Afficher au plus %1$s messages dans le menu %2$s.',
 ));

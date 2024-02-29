@@ -3592,16 +3592,26 @@ EOF
 			$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
 		} else {
 			//we can directly apply the stimuli
+			$sExceptionMessage = null;
+			try {
 			$bApplyStimulus = $this->ApplyStimulus($sStimulus); // will write the object in the DB
-			if (!$bApplyStimulus) {
-				throw new ApplicationException(Dict::S('UI:FailedToApplyStimuli'));
-			} else {
+			}
+			catch (Exception $oException) {
+				// Catch any exception happening during the stimulus
+				$bApplyStimulus = false;
+				$sExceptionMessage =   ($oException instanceof CoreCannotSaveObjectException) ? $oException->getHtmlMessage() : $oException->getMessage();
+			}
+			finally {
 				if ($sOwnershipToken !== null) {
 					// Release the concurrent lock, if any
 					iTopOwnershipLock::ReleaseLock($sClass, $iKey, $sOwnershipToken);
 				}
-
-				return true;
+				if (!$bApplyStimulus) {
+					// Throw an application oriented exception if necessary
+					throw new ApplicationException($sExceptionMessage ?? Dict::S('UI:FailedToApplyStimuli'));
+				} else {
+					return true;
+				}
 			}
 		}
 

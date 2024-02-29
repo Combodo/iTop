@@ -47,4 +47,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'scrollbar',
 	'UI:Preferences:ChooseAPlaceholder' => 'Platzhalterbild für Profilbild',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Nutzen Sie ein Platzhalterbild, das angezeigt wird, wenn der Kontakt, der mit dem User verlinkt ist, kein Profilbild gesetzt hat.',
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated~~',
 ));

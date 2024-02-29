@@ -1625,6 +1625,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Newsroom:Preferences' => 'Preferências da sala de notícias',
 	'UI:Newsroom:ConfigurationLink' => 'Configuração',
 	'UI:Newsroom:ResetCache' => 'Redefinir cache',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Exibir mensagens do(a) %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Exibir até %1$s mensagem(ns) no menu %2$s',
 ));
