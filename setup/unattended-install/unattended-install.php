@@ -219,6 +219,9 @@ foreach($aChecks as $oCheckResult)
 if ($bHasErrors)
 {
 	echo "Encountered stopper issues. Aborting...\n";
+	$sLogMsg = "Encountered stopper issues. Aborting...";
+	echo "$sLogMsg\n";
+	SetupLog::Error($sLogMsg);
 	die;
 }
 
@@ -315,5 +318,15 @@ if (!$bFoundIssues)
 	// last line: used to check the install
 	// the only way to track issues in case of Fatal error or even parsing error!
 	echo "\ninstalled!";
-	exit;
+	if ($sMode == 'install' && is_file("$sConfigFile.backup"))
+	{
+		echo "\nuse config file provided by backup in $sConfigFile.";
+		copy("$sConfigFile.backup", $sConfigFile);
+	}
+	exit(0);
 }
+
+$sLogMsg = "installation failed!";
+SetupLog::Error($sLogMsg);
+echo "\n$sLogMsg";
+exit(-1);
