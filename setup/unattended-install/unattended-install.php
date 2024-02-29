@@ -42,16 +42,21 @@ if ($sTargetEnvironment == '')
 }
 
 if ($bUseItopConfig){
-	$aDBXmlSettings = $oParams->Get('database', array());
+	//unattended run based on db settings coming from itop configuration
 	$oConfig = new Config(APPROOT . "/conf/$sTargetEnvironment/config-itop.php");
-	$aDBXmlSettings['server'] = $oConfig->Get('db_host');
-	$aDBXmlSettings['user'] = $oConfig->Get('db_user');
-	$aDBXmlSettings['pwd'] = $oConfig->Get('db_pwd');
-	$aDBXmlSettings['name'] = $oConfig->Get('db_name');
-	$aDBXmlSettings['prefix'] = $oConfig->Get('db_subname');
+	$aDBXmlSettings = [
+		'server' => $oConfig->Get('db_host'),
+		'user' => $oConfig->Get('db_user'),
+		'pwd' => $oConfig->Get('db_pwd'),
+		'name' => $oConfig->Get('db_name'),
+		'prefix' => $oConfig->Get('db_subname'),
+		'db_tls_enabled' => $oConfig->Get('db_tls_enabled'),
+		'db_tls_ca' => $oConfig->Get('db_tls_ca'),
+	];
 	$oParams->Set('database', $aDBXmlSettings);
 	$oParams->Set('url', $oConfig->Get('app_root_url'));
 } else {
+	//unattended run based on db settings coming from response_file (XML file)
 	$aDBXmlSettings = $oParams->Get('database', array());
 }
 
