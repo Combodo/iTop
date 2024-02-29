@@ -48,16 +48,18 @@ if ($bUseItopConfig && file_exists($sConfigFile)){
 	copy($sConfigFile, "$sConfigFile.backup");
 
 	$oConfig = new Config($sConfigFile);
-	$aDBXmlSettings = [
-		'server' => $oConfig->Get('db_host'),
-		'user' => $oConfig->Get('db_user'),
-		'pwd' => $oConfig->Get('db_pwd'),
-		'name' => $oConfig->Get('db_name'),
-		'prefix' => $oConfig->Get('db_subname'),
-		'db_tls_enabled' => $oConfig->Get('db_tls.enabled'),
-		'db_tls_ca' => $oConfig->Get('db_tls.ca'),
-	];
+	$aDBXmlSettings = $oParams->Get('database', array());
+	$aDBXmlSettings ['server'] = $oConfig->Get('db_host');
+	$aDBXmlSettings ['user'] = $oConfig->Get('db_user');
+	$aDBXmlSettings ['pwd'] = $oConfig->Get('db_pwd');
+	$aDBXmlSettings ['name'] = $oConfig->Get('db_name');
+	$aDBXmlSettings ['prefix'] = $oConfig->Get('db_subname');
+	$aDBXmlSettings ['db_tls_enabled'] = $oConfig->Get('db_tls.enabled');
+	//cannot be null or infinite loop triggered!
+	$aDBXmlSettings ['db_tls_ca'] = $oConfig->Get('db_tls.ca') ?? "";
+
 	$oParams->Set('database', $aDBXmlSettings);
+
 	$oParams->Set('url', $oConfig->Get('app_root_url'));
 } else {
 	//unattended run based on db settings coming from response_file (XML file)
