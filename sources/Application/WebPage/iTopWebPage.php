@@ -193,7 +193,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/moment-with-locales.min.js');
 
 		// Used by the newsroom
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/showdown.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/showdown/dist/showdown.min.js');
 
 		// Tooltips
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.min.js');
