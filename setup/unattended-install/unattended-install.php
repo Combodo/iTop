@@ -59,10 +59,6 @@ if ($sMode == 'install')
 
 		// Configuration file
 		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
-		if (is_file($sConfigFile))
-		{
-			copy($sConfigFile, "$sConfigFile.backup");
-		}
 		if (file_exists($sConfigFile))
 		{
 			echo "Trying to delete the configuration file: '$sConfigFile'.\n";
@@ -299,12 +295,9 @@ if (!$bFoundIssues)
 {
 	// last line: used to check the install
 	// the only way to track issues in case of Fatal error or even parsing error!
-	echo "\ninstalled!";
-	if ($sMode == 'install' && is_file("$sConfigFile.backup"))
-	{
-		echo "\nuse config file provided by backup in $sConfigFile.";
-		copy("$sConfigFile.backup", $sConfigFile);
-	}
+	$sLogMsg = "installed!";
+	SetupLog::Error($sLogMsg);
+	echo "\n$sLogMsg";
 	exit(0);
 }
 
