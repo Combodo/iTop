@@ -1631,6 +1631,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Newsroom:Preferences' => 'Preferencia de Notificaciones',
 	'UI:Newsroom:ConfigurationLink' => 'Configuración',
 	'UI:Newsroom:ResetCache' => 'Borrar caché',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Desplegar mensajes de %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Desplegar hasta %1$s mensajes en el menú %2$s.',
 ));

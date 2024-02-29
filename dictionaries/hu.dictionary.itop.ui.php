@@ -1615,6 +1615,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Newsroom:Preferences' => 'Hírfolyam beállítások',
 	'UI:Newsroom:ConfigurationLink' => 'Konfiguráció',
 	'UI:Newsroom:ResetCache' => 'Gyorstár ürítése',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => '%1$s üzeneteinek megjelenítése',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Mutasson %1$s üzenetet a %2$s menüben.',
 ));

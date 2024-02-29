@@ -1625,6 +1625,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Newsroom:Preferences' => 'Центр новостей',
 	'UI:Newsroom:ConfigurationLink' => 'Конфигурация',
 	'UI:Newsroom:ResetCache' => 'Сбросить кеш',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Показать сообщения от %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Отобразите не более %1$s сообщений в меню %2$s.',
 ));

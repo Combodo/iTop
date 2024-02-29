@@ -1709,6 +1709,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Newsroom:Preferences' => '消息选项',
 	'UI:Newsroom:ConfigurationLink' => '配置',
 	'UI:Newsroom:ResetCache' => '刷新缓存',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => '显示来自%1$s的消息',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => '在%2$s菜单中最多显示%1$s条消息.',
 ));

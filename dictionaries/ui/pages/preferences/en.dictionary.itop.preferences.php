@@ -51,6 +51,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Preferences:General:Toasts:Top'                                 => 'Top',
 	'UI:Preferences:ChooseAPlaceholder'                                => 'User placeholder image',
 	'UI:Preferences:ChooseAPlaceholder+'                               => 'Choose a placeholder image that will be displayed if the contact linked to your user doesn\'t have one',
+	'UI:Preferences:ChooseAPlaceholder:Success:Message'                => 'Your placeholder image has been successfully updated',
 	'UI:Preferences:Notifications' 								       => 'Notifications',
 	'UI:Preferences:Notifications+' 								   => 'Configure the notifications you want to receive <a href="%1$s">on this page</a>.',
 	

@@ -1625,6 +1625,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Newsroom:Preferences' => 'Preferencje newsroomu',
 	'UI:Newsroom:ConfigurationLink' => 'Konfiguracja',
 	'UI:Newsroom:ResetCache' => 'Zresetuj pamięć podręczną',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Wyświetl wiadomości od %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Wyświetlaj do %1$s wiadomiości w %2$s menu.',
 ));

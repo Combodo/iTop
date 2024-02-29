@@ -47,4 +47,5 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'Görgethető',
 	'UI:Preferences:ChooseAPlaceholder' => 'Felhasználói helyettesítő kép',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Válasszon ki egy helyettesítő képet, amely akkor jelenik meg, ha a kapcsolattartói beállításaiban még nem adott meg fényképet.',
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated~~',
 ));

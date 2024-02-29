@@ -363,6 +363,7 @@ $(function()
 				var sKey = this._makeCacheKey(idx);
 				localStorage.removeItem(sKey);			
 			}
+			CombodoToast.OpenSuccessToast(Dict.S('UI:Newsroom:ResetCache:Success:Message'));
 		},
 		_makeCacheKey: function(idxProvider)
 		{

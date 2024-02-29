@@ -1710,6 +1710,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Newsroom:Preferences' => 'Newsroom preferences',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration',
 	'UI:Newsroom:ResetCache' => 'Reset cache',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.',
 ));
