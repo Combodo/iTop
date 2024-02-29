@@ -187,7 +187,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.multiselect.js');
 
 		// Used by inline image, CKEditor and other places
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/magnific-popup/dist/jquery.magnific-popup.min.js');
 
 		// Used by date(time) attibutes, activity panel, ...
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/moment-with-locales.min.js');
@@ -260,7 +260,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery-ui-timepicker-addon.css');
 
 		// Used by inline image, CKEditor and other places
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/magnific-popup.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/magnific-popup/dist/magnific-popup.css');
 
 		// Tooltips
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
