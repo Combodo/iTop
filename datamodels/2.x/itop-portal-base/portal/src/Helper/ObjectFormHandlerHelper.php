@@ -27,7 +27,6 @@ use Combodo\iTop\Portal\Twig\AppExtension;
 use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 use DBObjectSet;
 use Dict;
-use Exception;
 use iPopupMenuExtension;
 use IssueLog;
 use JSButtonItem;
@@ -322,18 +321,20 @@ class ObjectFormHandlerHelper
 							'applyStimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
 						)
 					);
-					if ($aFormData['validation']['valid'] === true) {
+					if ($aFormData['validation']['valid'] === true)
+					{
 						// Note : We don't use $sObjectId there as it can be null if we are creating a new one. Instead we use the id from the created object once it has been serialized
 						// Check if stimulus has to be applied
 						$sStimulusCode = $this->oRequestManipulator->ReadParam('stimulus_code', '');
-						if (!empty($sStimulusCode)) {
+						if (!empty($sStimulusCode))
+						{
 							$aFormData['validation']['redirection'] = array(
-								'url'   => $this->oUrlGenerator->generate('p_object_apply_stimulus', array('sObjectClass' => $sObjectClass, 'sObjectId' => $oFormManager->GetObject()->GetKey(), 'sStimulusCode' => $sStimulusCode)),
+								'url' => $this->oUrlGenerator->generate('p_object_apply_stimulus', array('sObjectClass' => $sObjectClass, 'sObjectId' => $oFormManager->GetObject()->GetKey(), 'sStimulusCode' => $sStimulusCode)),
 								'modal' => true,
 							);
 						}
 					} else {
-						throw new Exception(implode('<br/>', $aFormData['validation']['messages']['error']['_main']));
+						throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, implode('<br/>', $aFormData['validation']['messages']['error']['_main']));
 					}
 					break;
 
