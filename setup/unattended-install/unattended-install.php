@@ -1,6 +1,7 @@
 <?php
 $bBypassMaintenance = true;
 require_once(dirname(__FILE__, 3) . '/approot.inc.php');
+require_once(__DIR__ . '/InstallationFileService.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/clipage.class.inc.php');
 require_once(APPROOT.'/core/config.class.inc.php');
@@ -38,6 +39,17 @@ $sTargetEnvironment = $oParams->Get('target_env', '');
 if ($sTargetEnvironment == '')
 {
 	$sTargetEnvironment = 'production';
+}
+
+$sInstallationXmlPath = utils::ReadParam('use_installation_xml', 'null', true /* CLI allowed */, 'raw_data');
+if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)){
+	echo "Use $sInstallationXmlPath for module selection\n";
+	$oInstallationFileService = new InstallationFileService($sInstallationXmlPath);
+	$oInstallationFileService->Init(true);
+	$aSelectedModules = $oInstallationFileService->GetSelectedModules();
+
+	$oParams->Set('selected_modules', $aSelectedModules);
+	$oParams->Set('selected_extensions', []);
 }
 
 // Configuration file
