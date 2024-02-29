@@ -368,12 +368,12 @@ HTML
 				false
 			],
 			'ActionEmail follows global settings, config is not asynchronous' => [
-				'follow_global_setting',
+				'use_global_setting',
 				false,
 				false
 			],
 			'ActionEmail follows global settings, config is asynchronous' => [
-				'follow_global_setting',
+				'use_global_setting',
 				true,
 				true
 			],

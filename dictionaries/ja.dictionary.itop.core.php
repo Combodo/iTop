@@ -454,7 +454,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Action/Attribute:trigger_list+' => 'このアクションにリンクされたトリガー',
 	'Class:Action/Attribute:asynchronous' => 'Asynchronous~~',
 	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in background or not~~',
-	'Class:Action/Attribute:asynchronous/Value:follow_global_setting' => 'Follow global setting~~',
+	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Use global setting~~',
 	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes~~',
 	'Class:Action/Attribute:asynchronous/Value:no' => 'No~~',
 	'Class:Action/Attribute:finalclass' => 'タイプ',

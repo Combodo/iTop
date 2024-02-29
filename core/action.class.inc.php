@@ -81,7 +81,7 @@ abstract class Action extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("trigger_list",
 			array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "action_id", "ext_key_to_remote" => "trigger_id", "allowed_values" => null, "count_min" => 0, "count_max" => 0, "depends_on" => array(), "display_style" => 'property')));
-		MetaModel::Init_AddAttribute(new AttributeEnum("asynchronous", array("allowed_values" => new ValueSetEnum(['follow_global_setting' => 'Follow global settings','yes' => 'Yes' ,'no' => 'No']), "sql" => "asynchronous", "default_value" => 'follow_global_setting', "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("asynchronous", array("allowed_values" => new ValueSetEnum(['use_global_setting' => 'Use global settings','yes' => 'Yes' ,'no' => 'No']), "sql" => "asynchronous", "default_value" => 'use_global_setting', "is_null_allowed" => false, "depends_on" => array())));
 
 		// Display lists
 		// - Attributes to be displayed for the complete details
@@ -262,7 +262,7 @@ abstract class Action extends cmdbAbstractObject
 	public function IsAsynchronous(): bool
 	{
 		$sAsynchronous = $this->Get('asynchronous');
-		if ($sAsynchronous === 'follow_global_setting') {
+		if ($sAsynchronous === 'use_global_setting') {
 			return static::GetAsynchronousGlobalSetting();
 		}
 		return $sAsynchronous === 'yes';

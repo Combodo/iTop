@@ -537,7 +537,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Action/Attribute:trigger_list+' => '此操作关联的触发器',
 	'Class:Action/Attribute:asynchronous' => 'Asynchronous~~',
 	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in background or not~~',
-	'Class:Action/Attribute:asynchronous/Value:follow_global_setting' => 'Follow global setting~~',
+	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Use global setting~~',
 	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes~~',
 	'Class:Action/Attribute:asynchronous/Value:no' => 'No~~',
 	'Class:Action/Attribute:finalclass' => '操作类型',
