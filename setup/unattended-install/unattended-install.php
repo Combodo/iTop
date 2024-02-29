@@ -40,8 +40,30 @@ if ($sTargetEnvironment == '')
 	$sTargetEnvironment = 'production';
 }
 
-//unattended run based on db settings coming from response_file (XML file)
-$aDBXmlSettings = $oParams->Get('database', array());
+// Configuration file
+$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
+$bUseItopConfig = ((bool) utils::ReadParam('use-itop-config', 0, true /* CLI allowed */));
+if ($bUseItopConfig && file_exists($sConfigFile)){
+	//unattended run based on db settings coming from itop configuration
+	copy($sConfigFile, "$sConfigFile.backup");
+
+	$oConfig = new Config($sConfigFile);
+	$aDBXmlSettings = [
+		'server' => $oConfig->Get('db_host'),
+		'user' => $oConfig->Get('db_user'),
+		'pwd' => $oConfig->Get('db_pwd'),
+		'name' => $oConfig->Get('db_name'),
+		'prefix' => $oConfig->Get('db_subname'),
+		'db_tls_enabled' => $oConfig->Get('db_tls.enabled'),
+		'db_tls_ca' => $oConfig->Get('db_tls.ca'),
+	];
+	$oParams->Set('database', $aDBXmlSettings);
+	$oParams->Set('url', $oConfig->Get('app_root_url'));
+} else {
+	//unattended run based on db settings coming from response_file (XML file)
+	$aDBXmlSettings = $oParams->Get('database', array());
+}
+
 $sDBServer = $aDBXmlSettings['server'];
 $sDBUser = $aDBXmlSettings['user'];
 $sDBPwd = $aDBXmlSettings['pwd'];
@@ -57,8 +79,6 @@ if ($sMode == 'install')
 	{
 		echo "Cleanup mode detected.\n";
 
-		// Configuration file
-		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
 		if (file_exists($sConfigFile))
 		{
 			echo "Trying to delete the configuration file: '$sConfigFile'.\n";
@@ -291,11 +311,18 @@ if (!$bFoundIssues && $bCheckConsistency)
 	}
 }
 
-if (!$bFoundIssues)
+if (! $bFoundIssues)
 {
 	// last line: used to check the install
 	// the only way to track issues in case of Fatal error or even parsing error!
 	$sLogMsg = "installed!";
+
+	if ($bUseItopConfig && is_file("$sConfigFile.backup"))
+	{
+		echo "\nuse config file provided by backup in $sConfigFile.";
+		copy("$sConfigFile.backup", $sConfigFile);
+	}
+
 	SetupLog::Info($sLogMsg);
 	echo "\n$sLogMsg";
 	exit(0);
