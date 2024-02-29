@@ -33,7 +33,6 @@ if (false === file_exists($sParamFile)) {
 $oParams = new XMLParameters($sParamFile);
 
 $sMode = $oParams->Get('mode');
-$bUseItopConfig = ((bool) utils::ReadParam('use-itop-config', 0, true /* CLI allowed */));
 
 $sTargetEnvironment = $oParams->Get('target_env', '');
 if ($sTargetEnvironment == '')
@@ -41,25 +40,8 @@ if ($sTargetEnvironment == '')
 	$sTargetEnvironment = 'production';
 }
 
-if ($bUseItopConfig){
-	//unattended run based on db settings coming from itop configuration
-	$oConfig = new Config(APPROOT . "/conf/$sTargetEnvironment/config-itop.php");
-	$aDBXmlSettings = [
-		'server' => $oConfig->Get('db_host'),
-		'user' => $oConfig->Get('db_user'),
-		'pwd' => $oConfig->Get('db_pwd'),
-		'name' => $oConfig->Get('db_name'),
-		'prefix' => $oConfig->Get('db_subname'),
-		'db_tls_enabled' => $oConfig->Get('db_tls_enabled'),
-		'db_tls_ca' => $oConfig->Get('db_tls_ca'),
-	];
-	$oParams->Set('database', $aDBXmlSettings);
-	$oParams->Set('url', $oConfig->Get('app_root_url'));
-} else {
-	//unattended run based on db settings coming from response_file (XML file)
-	$aDBXmlSettings = $oParams->Get('database', array());
-}
-
+//unattended run based on db settings coming from response_file (XML file)
+$aDBXmlSettings = $oParams->Get('database', array());
 $sDBServer = $aDBXmlSettings['server'];
 $sDBUser = $aDBXmlSettings['user'];
 $sDBPwd = $aDBXmlSettings['pwd'];
