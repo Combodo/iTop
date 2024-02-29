@@ -1,6 +1,6 @@
 <?php
 
-namespace Combodo\iTop\Test\UnitTest\UnattendedInstall;
+namespace Combodo\iTop\Test\UnitTest\Setup\UnattendedInstall;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
