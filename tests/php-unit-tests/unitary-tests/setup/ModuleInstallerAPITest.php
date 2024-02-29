@@ -149,5 +149,9 @@ SQL
 		ModuleInstallerAPI::RenameTableInDB($sOrigTable, $sDstTable);
 
 		$this->assertEquals($aOrigTableInfo, CMDBSource::GetTableInfo($sDstTable), 'Table was not renamed');
+
+		// Revert
+		ModuleInstallerAPI::RenameTableInDB($sDstTable, $sOrigTable);
+		$this->assertEquals($aOrigTableInfo, CMDBSource::GetTableInfo($sOrigTable));
 	}
 }
