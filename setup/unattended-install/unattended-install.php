@@ -296,7 +296,7 @@ if (!$bFoundIssues)
 	// last line: used to check the install
 	// the only way to track issues in case of Fatal error or even parsing error!
 	$sLogMsg = "installed!";
-	SetupLog::Error($sLogMsg);
+	SetupLog::Info($sLogMsg);
 	echo "\n$sLogMsg";
 	exit(0);
 }
