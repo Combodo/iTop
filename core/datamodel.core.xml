@@ -305,10 +305,10 @@
         </method>
         <method id="GetAsynchronousGlobalSetting">
           <comment></comment>
-          <static>false</static>
+          <static>true</static>
           <access>public</access>
           <code><![CDATA[
-	public function GetAsynchronousGlobalSetting(): bool
+	public static function GetAsynchronousGlobalSetting(): bool
 	{
 		return utils::GetConfig()->Get('notifications.itop.send_asynchronously');
 	}

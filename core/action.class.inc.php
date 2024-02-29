@@ -248,7 +248,7 @@ abstract class Action extends cmdbAbstractObject
 	 * @return bool true if the global setting for this kind of action if to be executed asynchronously, false otherwise.
 	 * @since 3.2.0
 	 */
-	public function GetAsynchronousGlobalSetting(): bool
+	public static function GetAsynchronousGlobalSetting(): bool
 	{
 		return false;	
 	}
@@ -263,7 +263,7 @@ abstract class Action extends cmdbAbstractObject
 	{
 		$sAsynchronous = $this->Get('asynchronous');
 		if ($sAsynchronous === 'follow_global_setting') {
-			return $this->GetAsynchronousGlobalSetting();
+			return static::GetAsynchronousGlobalSetting();
 		}
 		return $sAsynchronous === 'yes';
 	}
@@ -923,7 +923,7 @@ class ActionEmail extends ActionNotification
 	 * @inheritDoc
 	 * @since 3.2.0
 	 */
-	public function GetAsynchronousGlobalSetting(): bool
+	public static function GetAsynchronousGlobalSetting(): bool
 	{
 		return utils::GetConfig()->Get('email_asynchronous');
 	}
