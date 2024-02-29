@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /**
@@ -113,7 +100,7 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
 	{
 		// The query returns only the valid elements, all the others are invalid
 		// Warning : we're generating a `WHERE ID IN`... query, and this could be very slow if there are lots of id !
-		$aValidRows = $oRuleFilter->ToDataArray(array('id'));
+      	$aValidRows = $oRuleFilter->ToDataArray(array('id'));
 		$aValidIds = array();
 		foreach($aValidRows as $aRow)
 		{
@@ -163,7 +150,7 @@ try
 	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 	require_once(APPROOT.'/application/csvpage.class.inc.php');
 
-	
+
 	require_once(APPROOT.'/application/startup.inc.php');
 	$operation = utils::ReadParam('operation', '');
 	$oAppContext = new ApplicationContext();
@@ -232,7 +219,7 @@ try
 			$oP->p("<div id=\"$sBlockId\" style=\"clear:both\">\n");
 			$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'csv', array('show_obsolete_data' => true));
 			$oBlock->Display($oP, 1);
-			$oP->p("</div>\n");    
+			$oP->p("</div>\n");
 			// Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
 			$oP->add_ready_script(" $('#1>textarea').height(400);"); // adjust the size of the block			
 			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
@@ -246,7 +233,7 @@ try
 		$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
 		$iCategory = utils::ReadParam('category', '');
 		$iRuleIndex = utils::ReadParam('rule', 0);
-	
+
 		$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
 		$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
 		$oDefinitionFilter->UpdateContextFromUser();
@@ -265,7 +252,7 @@ try
 		$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
 		$oP->add_ready_script("$('a[href*=\"pages/UI.php?operation=search\"]').attr('href', '".$sExportUrl."')");
 		break;
-		
+
 		case 'audit':
 		default:
 		$oP->SetBreadCrumbEntry('ui-tool-audit', Dict::S('Menu:Audit'), Dict::S('UI:Audit:InteractiveAudit'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
@@ -286,7 +273,7 @@ try
 				$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
 				$oDefinitionFilter->UpdateContextFromUser();
 				FilterByContext($oDefinitionFilter, $oAppContext);
-				
+
 				$aObjectsWithErrors = array();
 				if (!empty($currentOrganization))
 				{
@@ -308,7 +295,7 @@ try
 					if ($iCount == 0)
 					{
 						// nothing to check, really !
-						$aRow['nb_errors'] = "<a href=\"audit.php?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."\">0</a>"; 
+						$aRow['nb_errors'] = "<a href=\"audit.php?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."\">0</a>";
 						$aRow['percent_ok'] = '100.00';
 						$aRow['class'] = GetReportColor($iCount, 0);
 					}
@@ -317,19 +304,19 @@ try
 						try
 						{
 							$oFilter = GetRuleResultFilter($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext);
-							$aErrors = $oFilter->ToDataArray(array('id'));
+							$aErrors = $oFilter->SelectAttributeToArray('id');
 							$iErrorsCount = count($aErrors);
 							foreach($aErrors as $aErrorRow)
 							{
 								$aObjectsWithErrors[$aErrorRow['id']] = true;
 							}
-							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">(CSV)</a>"; 
+							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">(CSV)</a>";
 							$aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
-							$aRow['class'] = GetReportColor($iCount, $iErrorsCount);							
+							$aRow['class'] = GetReportColor($iCount, $iErrorsCount);
 						}
 						catch(Exception $e)
 						{
-							$aRow['nb_errors'] = "OQL Error"; 
+							$aRow['nb_errors'] = "OQL Error";
 							$aRow['percent_ok'] = 'n/a';
 							$aRow['class'] = 'red';
 							$sMessage = Dict::Format('UI:Audit:ErrorIn_Rule_Reason', $oAuditRule->GetHyperlink(), $e->getMessage());
@@ -346,12 +333,12 @@ try
 			{
 				$aRow = array();
 				$aRow['description'] = "OQL error";
-				$aRow['nb_errors'] = "n/a"; 
+				$aRow['nb_errors'] = "n/a";
 				$aRow['percent_ok'] = '';
-				$aRow['class'] = 'red';				
+				$aRow['class'] = 'red';
 				$sMessage = Dict::Format('UI:Audit:ErrorIn_Category_Reason', $oAuditCategory->GetHyperlink(), utils::HtmlEntities($e->getMessage()));
 				$oP->p("<img style=\"vertical-align:middle\" src=\"../images/stop-mid.png\"/>&nbsp;".$sMessage);
-				$aResults[] = $aRow;					
+				$aResults[] = $aRow;
 
 				$sClass = 'red';
 				$iTotalErrors = 'n/a';
