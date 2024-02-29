@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -110,7 +110,7 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
 	{
 		// The query returns only the valid elements, all the others are invalid
 		// Warning : we're generating a `WHERE ID IN`... query, and this could be very slow if there are lots of id !
-		$aValidRows = $oRuleFilter->ToDataArray(array('id'));
+      	$aValidRows = $oRuleFilter->ToDataArray(array('id'));
 		$aValidIds = array();
 		foreach($aValidRows as $aRow)
 		{
@@ -159,7 +159,7 @@ try
 	require_once(APPROOT.'/application/application.inc.php');
 	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
-	
+
 	require_once(APPROOT.'/application/startup.inc.php');
 	$operation = utils::ReadParam('operation', '');
 	$oAppContext = new ApplicationContext();
@@ -291,11 +291,11 @@ try
 		$oDashboardColumnTotal = new DashboardColumn(false, true);
 		$oDashboardColumnError = new DashboardColumn(false, true);
 		$oDashboardColumnWorking = new DashboardColumn(false, true);
-		
+
 		$oDashboardColumnTotal->AddUIBlock($oDashletContainerTotal);
 		$oDashboardColumnError->AddUIBlock($oDashletContainerError);
 		$oDashboardColumnWorking->AddUIBlock($oDashletContainerWorking);
-		
+
 		$oDashboardRow->AddDashboardColumn($oDashboardColumnTotal);
 		$oDashboardRow->AddDashboardColumn($oDashboardColumnError);
 		$oDashboardRow->AddDashboardColumn($oDashboardColumnWorking);
@@ -306,7 +306,7 @@ try
 
 		$oAuditFilter = new DBObjectSearch('AuditCategory');
 		$oCategoriesSet = new DBObjectSet($oAuditFilter);
-		
+
 		$aAuditCategoryPanels = [];
 		while($oAuditCategory = $oCategoriesSet->fetch())
 		{
@@ -319,7 +319,7 @@ try
 				$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
 				$oDefinitionFilter->UpdateContextFromUser();
 				FilterByContext($oDefinitionFilter, $oAppContext);
-				
+
 				$aObjectsWithErrors = array();
 				if (!empty($currentOrganization))
 				{
@@ -340,7 +340,7 @@ try
 					if ($iCount == 0)
 					{
 						// nothing to check, really !
-						$aRow['nb_errors'] = "<a href=\"audit.php?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."\">0</a>"; 
+						$aRow['nb_errors'] = "<a href=\"audit.php?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."\">0</a>";
 						$aRow['percent_ok'] = '100.00';
 						$aRow['class'] = GetReportColor($iCount, 0);
 					}
@@ -349,19 +349,19 @@ try
 						try
 						{
 							$oFilter = GetRuleResultFilter($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext);
-							$aErrors = $oFilter->ToDataArray(array('id'));
+							$aErrors = $oFilter->SelectAttributeToArray('id');
 							$iErrorsCount = count($aErrors);
 							foreach($aErrors as $aErrorRow)
 							{
 								$aObjectsWithErrors[$aErrorRow['id']] = true;
 							}
-							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\"><img src=\"../images/icons/icons8-export-csv.svg\" class=\"ibo-audit--audit-line--csv-download\"></a>"; 
+							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\"><img src=\"../images/icons/icons8-export-csv.svg\" class=\"ibo-audit--audit-line--csv-download\"></a>";
 							$aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
-							$aRow['class'] = GetReportColor($iCount, $iErrorsCount);							
+							$aRow['class'] = GetReportColor($iCount, $iErrorsCount);
 						}
 						catch(Exception $e)
 						{
-							$aRow['nb_errors'] = Dict::S('UI:Audit:OqlError'); 
+							$aRow['nb_errors'] = Dict::S('UI:Audit:OqlError');
 							$aRow['percent_ok'] = Dict::S('UI:Audit:Error:ValueNA');
 							$aRow['class'] = 'red';
 							$sMessage = Dict::Format('UI:Audit:ErrorIn_Rule_Reason', $oAuditRule->GetHyperlink(), $e->getMessage());
@@ -376,7 +376,7 @@ try
 				$iTotalErrors = count($aObjectsWithErrors);
 				$sOverallPercentOk = ($iCount == 0) ? '100.00' : sprintf('%.2f', 100.0 * (($iCount - $iTotalErrors) / $iCount));
 				$sClass = GetReportColor($iCount, $iTotalErrors);
-				
+
 				$oTotalBlock->SetCount((int)$oTotalBlock->GetCount() + ($iCount));
 				$oErrorBlock->SetCount((int)$oErrorBlock->GetCount() + $iTotalErrors);
 				$oWorkingBlock->SetCount((int)$oWorkingBlock->GetCount() + ($iCount - $iTotalErrors));
@@ -391,7 +391,7 @@ try
 				$oP->AddUiBlock($oErrorAlert);
 				continue;
 			}
-			
+
 			$oAuditCategoryPanelBlock->SetColorFromColorSemantic($sClass);
 			$oAuditCategoryPanelBlock->AddCSSClass('ibo-audit--audit-category--panel');
 			$aData = [];
@@ -410,7 +410,7 @@ try
 				'nb_err' => array('label' => Dict::S('UI:Audit:HeaderNbErrors'), 'description' => Dict::S('UI:Audit:HeaderNbErrors')),
 				'percentage_ok' => array('label' => Dict::S('UI:Audit:PercentageOk'), 'description' => Dict::S('UI:Audit:PercentageOk')),
 			);
-			
+
 			$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData, null, [], "", array('pageLength' => -1));
 			$oAuditCategoryPanelBlock->AddSubBlock($oAttachmentTableBlock);
 			$aAuditCategoryPanels[] = $oAuditCategoryPanelBlock;

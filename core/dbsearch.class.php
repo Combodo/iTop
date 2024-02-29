@@ -885,11 +885,11 @@ abstract class DBSearch
 			return;
 		}
 
-		if (count($aColumns) == 0)
-		{
-			$aColumns = array_keys(MetaModel::ListAttributeDefs($this->GetClass()));
-			// Add the standard id (as first column)
-			array_unshift($aColumns, 'id');
+        if (count($aColumns) == 0)
+        {
+            $aColumns = array_keys(MetaModel::ListAttributeDefs($this->GetClass()));
+            // Add the standard id (as first column)
+            array_unshift($aColumns, 'id');
 		}
 
 		$aQueryCols = CMDBSource::GetColumns($resQuery, $sSQL);
@@ -918,6 +918,55 @@ abstract class DBSearch
 		CMDBSource::FreeResult($resQuery);
 		return $aRes;
 	}
+
+    /**
+     * Selects a column ($sAttCode) from the specified class ($sClassAlias - default main class) of the DBsearch object and gives the result as an array
+     * @param string $sAttCode
+     * @param string|null $sClassAlias
+     *
+     * @return array
+     * @throws ConfigException
+     * @throws CoreException
+     * @throws MissingQueryArgument
+     * @throws MySQLException
+     * @throws MySQLHasGoneAwayException
+     */
+    public function SelectAttributeToArray(string $sAttCode, ?string $sClassAlias = null):array
+    {
+       if(is_null($sClassAlias)) {
+           $sClassAlias = $this->GetClassAlias();
+       }
+
+       $sClass = $this->GetClass();
+       if($sAttCode === 'id'){
+           $aAttToLoad[$sClassAlias]=[];
+       } else {
+           $aAttToLoad[$sClassAlias][$sAttCode] = MetaModel::GetAttributeDef($sClass, $sAttCode);
+       }
+
+        $sSQL = $this->MakeSelectQuery([], [], $aAttToLoad);
+        $resQuery = CMDBSource::Query($sSQL);
+        if (!$resQuery)
+        {
+            return [];
+        }
+
+        $sColName = $sClassAlias.$sAttCode;
+
+        $aRes = [];
+        while ($aRow = CMDBSource::FetchArray($resQuery))
+        {
+            $aMappedRow = array();
+            if($sAttCode === 'id') {
+                $aMappedRow[$sAttCode] = $aRow[$sColName];
+            } else {
+                $aMappedRow[$sAttCode] = $aAttToLoad[$sClassAlias][$sAttCode]->FromSQLToValue($aRow, $sColName);
+            }
+            $aRes[] = $aMappedRow;
+        }
+        CMDBSource::FreeResult($resQuery);
+        return $aRes;
+    }
 
 	////////////////////////////////////////////////////////////////////////////
 	//
