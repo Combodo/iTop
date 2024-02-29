@@ -3,6 +3,7 @@
     "@fontsource/raleway": "^4.5.0",
     "@popperjs/core": "^2.4.4",
     "ace-builds": "^1.2.8",
+    "blueimp-file-upload": "^9.22.1",
     "bulma-scss": "^0.9.4",
     "c3": "^0.4.11",
     "clipboard": "^2.0.4",

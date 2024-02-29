@@ -202,8 +202,8 @@ abstract class AbstractAttachmentsRenderer
 		$this->oPage->add(Dict::S('UI:Attachments:DropYourFileHint').'</div>');
 		
 
-		$this->oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
-		$this->oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
+		$this->oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/blueimp-file-upload/js/jquery.iframe-transport.js');
+		$this->oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/blueimp-file-upload/js/jquery.fileupload.js');
 
 		$this->oPage->add_ready_script(
 			<<<JS
