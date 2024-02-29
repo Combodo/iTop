@@ -898,12 +898,15 @@ class SetupUtils
 	}
 
     /**
+     * @param float $fBytes size in raw bytes, for example 162594750464.0
+     * @return string formatted string, for example "161.62 Gb"
+     *
      * @link https://en.wiktionary.org/wiki/petabyte petabyte PB
      * @link https://en.wiktionary.org/wiki/exabyte#English exabyte EB
      */
 	public static function HumanReadableSize($fBytes)
 	{
-        $aSizes = array('bytes', 'Kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Eb');
+        $aSizes = array('Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB');
 		$index = 0;
 		while (($fBytes > 1000) && ($index < count($aSizes)))
 		{
