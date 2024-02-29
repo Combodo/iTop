@@ -1206,8 +1206,16 @@ try
 					$bApplyTransition = $oObj->DisplayStimulusForm($oP, $sStimulus, $aPrefillFormParam);
 				}
 				catch (ApplicationException $e) {
+					$bApplyTransition = false;
 					$sMessage = $e->getMessage();
-					$sSeverity = 'info';
+					$sSeverity = 'warning';
+					ReloadAndDisplay($oP, $oObj, 'stimulus', $sMessage, $sSeverity);
+				}
+				catch (CoreCannotSaveObjectException $e) {
+					$bApplyTransition = false;
+					$aIssues = $e->getIssues();
+					$sMessage = $e->getHtmlMessage();
+					$sSeverity = 'warning';
 					ReloadAndDisplay($oP, $oObj, 'stimulus', $sMessage, $sSeverity);
 				}
 				if ($bApplyTransition) {

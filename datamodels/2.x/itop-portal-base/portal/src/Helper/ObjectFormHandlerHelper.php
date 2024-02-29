@@ -333,6 +333,8 @@ class ObjectFormHandlerHelper
 								'modal' => true,
 							);
 						}
+					} else {
+						throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, implode('<br/>', $aFormData['validation']['messages']['error']['_main']));
 					}
 					break;
 
