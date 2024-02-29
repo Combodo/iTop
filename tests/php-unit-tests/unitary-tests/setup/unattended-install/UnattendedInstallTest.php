@@ -9,11 +9,23 @@ class UnattendedInstallTest extends ItopDataTestCase
     protected function setUp(): void
     {
 	    parent::setUp();
-
-	    $this->sUrl = \MetaModel::GetConfig()->Get('app_root_url');
     }
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		$aFiles = [
+			'web.config',
+			'.htaccess',
+		];
+		foreach ($aFiles as $sFile){
+			$sPath = APPROOT."setup/unattended-install/$sFile";
+			if (is_file("$sPath.back")){
+				rename("$sPath.back", $sPath);
+			}
+		}
+	}
 
-	public function testCallUnattendedInstallFromHttp(){
+	private function callUnattendedFromHttp() : string {
 		$ch = curl_init();
 
 		$sUrl = \MetaModel::GetConfig()->Get('app_root_url');
@@ -27,8 +39,27 @@ class UnattendedInstallTest extends ItopDataTestCase
 
 		$sJson = curl_exec($ch);
 		curl_close ($ch);
+		return $sJson;
+	}
+	public function testCallUnattendedInstallFromHttp(){
+		$sJson = $this->callUnattendedFromHttp();
+		if (false !== strpos($sJson, "403 Forbidden")){
+			//.htaccess / webconfig effect
+			$aFiles = [
+				'web.config',
+				'.htaccess',
+			];
+			foreach ($aFiles as $sFile){
+				$sPath = APPROOT."setup/unattended-install/$sFile";
+				if (is_file("$sPath")) {
+					rename($sPath, "$sPath.back");
+				}
+			}
 
-		$this->assertEquals("Mode CLI only", $sJson);
+			$sJson = $this->callUnattendedFromHttp();
+		}
+
+		$this->assertEquals("Mode CLI only", $sJson, "even without HTTP protection, script should be called directly by HTTP");
 	}
 
 	public function testCallUnattendedInstallFromCLI() {
