@@ -180,23 +180,17 @@ abstract class UserRightsAddOnAPI
 				$sShareClass = $aShareProperties['share_class'];
 				$sShareAttCode = $aShareProperties['attcode'];
 
-				$oSearchShares = new DBObjectSearch($sShareClass);
-				$oSearchShares->AllowAllData();
+				$oSearchShares = new DBSharedSearch($sShareClass);
+					$oSearchShares->AllowAllData();
 
 				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass('Organization');
 				$oOrgField = new FieldExpression('org_id', $sShareClass);
 				$oSearchShares->AddConditionExpression(new BinaryExpression($oOrgField, 'IN', $oListExpr));
-				$aShared = array();
-				foreach($oSearchShares->SelectAttributeToArray($sShareAttCode) as $aRow)
-				{
-					$aShared[] = $aRow[$sShareAttCode];
-				}
-				if (count($aShared) > 0)
-				{
-					$oObjId = new FieldExpression('id', $sClass);
-					$oSharedIdList = ListExpression::FromScalars($aShared);
-					$oFilter->MergeConditionExpression(new BinaryExpression($oObjId, 'IN', $oSharedIdList));
-				}
+
+				$oNested = SharedQueryExpression::FromOQLObjectQuery($oSearchShares, [$sShareClass =>[$sShareAttCode]]);
+				$oObjId = new FieldExpression('id', $sClass);
+				$oFilter->MergeConditionExpression(new BinaryExpression($oObjId, 'IN', $oNested));
+
 			}
 		} // if HasSharing
 

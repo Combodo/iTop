@@ -6,7 +6,102 @@
 
 /** @internal Dev hack for disabling some query build optimizations (Folding/Merging) */
 define('ENABLE_OPT', true);
+class DBSharedSearch extends DBObjectSearch {
 
+	public function MakeSelectQuery($aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bBeautifulSQL = true)
+	{
+		// Check the order by specification, and prefix with the class alias
+		// and make sure that the ordering columns are going to be selected
+		//
+		$sClass = $this->GetClass();
+		$sClassAlias = $this->GetClassAlias();
+		$aOrderSpec = array();
+		foreach ($aOrderBy as $sFieldAlias => $bAscending)
+		{
+			if (!is_bool($bAscending))
+			{
+				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
+			}
+
+			$iDotPos = strpos($sFieldAlias, '.');
+			if ($iDotPos === false)
+			{
+				$sAttClass = $sClass;
+				$sAttClassAlias = $sClassAlias;
+				$sAttCode = $sFieldAlias;
+			}
+			else
+			{
+				$sAttClassAlias = substr($sFieldAlias, 0, $iDotPos);
+				$sAttClass = $this->GetClassName($sAttClassAlias);
+				$sAttCode = substr($sFieldAlias, $iDotPos + 1);
+			}
+
+			if ($sAttCode != 'id')
+			{
+				MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sAttCode, MetaModel::GetAttributesList($sAttClass));
+
+				$oAttDef = MetaModel::GetAttributeDef($sAttClass, $sAttCode);
+				foreach($oAttDef->GetOrderBySQLExpressions($sAttClassAlias) as $sSQLExpression)
+				{
+					$aOrderSpec[$sSQLExpression] = $bAscending;
+				}
+			}
+			else
+			{
+				$aOrderSpec['`'.$sAttClassAlias.$sAttCode.'`'] = $bAscending;
+			}
+
+			// Make sure that the columns used for sorting are present in the loaded columns
+			if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sAttClassAlias][$sAttCode]))
+			{
+				$aAttToLoad[$sAttClassAlias][$sAttCode] = MetaModel::GetAttributeDef($sAttClass, $sAttCode);
+			}
+		}
+		/*******START difference with MakeSelectQuery **************/
+		$sClass = key($aAttToLoad);
+		$sKey = $aAttToLoad[$sClass][0];
+		$oObjId = new FieldExpression($sKey, $sClass);
+
+		$oSQLQuery = $this->GetSQLQuery($aOrderBy, $aArgs, [], $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, null, [$oObjId] );
+		/********END difference with MakeSelectQuery*************/
+
+		if ($this->m_bNoContextParameters)
+		{
+			// Only internal parameters
+			$aScalarArgs = $this->GetInternalParams();
+		}
+		else
+		{
+			// The complete list of arguments will include magic arguments (e.g. current_user->attcode)
+			$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams(), $this->GetExpectedArguments());
+		}
+		try
+		{
+			$sRes = $oSQLQuery->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount, $bBeautifulSQL);
+			if ($sClassAlias == '_itop_')
+			{
+				IssueLog::Info('SQL Query (_itop_): '.$sRes);
+			}
+		}
+		catch (MissingQueryArgument $e)
+		{
+			// Add some information...
+			$e->addInfo('OQL', $this->ToOQL());
+			throw $e;
+		}
+		$this->AddQueryTraceSelect($oSQLQuery->GetSourceOQL(), $aOrderBy, $aScalarArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sRes);
+		return $sRes;
+	}
+	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null, $aSelectExpr = null)
+	{
+		$oSQLQuery = parent::GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr, $aSelectExpr);
+
+		$oSQLQuery->SetSelect($aSelectExpr);
+		return $oSQLQuery;
+	}
+
+}
 /**
  * A search over a DBObject
  *
@@ -909,15 +1004,15 @@ class DBObjectSearch extends DBSearch
 	 */
 	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
-		if (!MetaModel::IsValidKeyAttCode($this->GetClass(), $sExtKeyAttCode))
+			if (!MetaModel::IsValidKeyAttCode($this->GetClass(), $sExtKeyAttCode))
 		{
 			throw new CoreWarning("The attribute code '$sExtKeyAttCode' is not an external key of the class '{$this->GetClass()}'");
 		}
 		$oAttExtKey = MetaModel::GetAttributeDef($this->GetClass(), $sExtKeyAttCode);
 		if(!MetaModel::IsSameFamilyBranch($oFilter->GetClass(), $oAttExtKey->GetTargetClass()))
 		{
-			throw new CoreException("The specified filter (pointing to {$oFilter->GetClass()}) is not compatible with the key '{$this->GetClass()}::$sExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}");
-		}
+				throw new CoreException("The specified filter (pointing to {$oFilter->GetClass()}) is not compatible with the key '{$this->GetClass()}::$sExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}");
+			}
 		if(($iOperatorCode != TREE_OPERATOR_EQUALS) && !($oAttExtKey instanceof AttributeHierarchicalKey))
 		{
 			throw new CoreException("The specified tree operator $iOperatorCode is not applicable to the key '{$this->GetClass()}::$sExtKeyAttCode', which is not a HierarchicalKey");
@@ -1615,6 +1710,10 @@ class DBObjectSearch extends DBSearch
 		elseif ($oExpression instanceof NestedQueryOqlExpression)
 		{
 			return NestedQueryExpression::FromOQLObjectQuery($oExpression->GetOQLObjectQuery());
+		}
+		elseif ($oExpression instanceof SharedQueryExpression)
+		{
+			return SharedQueryExpression::FromOQLObjectQuery($oExpression->GetOQLObjectQuery());
 		}
 		else
 		{
