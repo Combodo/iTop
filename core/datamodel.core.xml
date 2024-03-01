@@ -193,6 +193,9 @@
                     <item id="trigger_list">
                       <rank>10</rank>
                     </item>
+                    <item id="asynchronous">
+                      <rank>20</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -258,7 +261,23 @@
 		$oRecipientsSearch = DBObjectSearch::FromOQL($this->Get('recipients'));
 		$oRecipientsSearch->AllowAllData();
 		$oRecipientsSet = new DBObjectSet($oRecipientsSearch);
+		$bIsAsync = $this->IsAsynchronous();
 		[$sPreviousLanguage, $aPreviousPluginProperties] = $this->SetNotificationLanguage();
+		
+		if($bIsAsync === true){
+		$aRecipients = [];
+		}
+		
+		$sMessage = MetaModel::ApplyParams($this->Get('message'), $aContextArgs);
+		$sTitle = MetaModel::ApplyParams($this->Get('title'), $aContextArgs);
+		$sUrl = MetaModel::ApplyParams($this->Get('url'), $aContextArgs);
+    $iObjectId = 0;
+    $sObjectClass = null;
+		if (array_key_exists('this->object()', $aContextArgs)) {
+				$iObjectId = $aContextArgs['this->object()']->GetKey();
+				$sObjectClass = get_class($aContextArgs['this->object()']);
+    }
+    
 		while ($oRecipient = $oRecipientsSet->Fetch()) {
 		  // Skip recipients that have no users
 		  if (get_class($oRecipient) === Person::class && UserRights::GetUserFromPerson($oRecipient) === null) {
@@ -267,44 +286,31 @@
 		  if (!\Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->IsSubscribed($oTrigger, $this, $oRecipient)) {
 				continue;
 			}
-
-			if (array_key_exists('this->object()', $aContextArgs)) {
-				$iObjectId = $aContextArgs['this->object()']->GetKey();
-				$sObjectClass = get_class($aContextArgs['this->object()']);
-			} else {
-				$iObjectId = 0;
-				$sObjectClass = null;
-			}
-
-			$oEvent = new EventiTopNotification();
-			$oEvent->Set('title', MetaModel::ApplyParams($this->Get('title'), $aContextArgs));
-			$oEvent->Set('message', MetaModel::ApplyParams($this->Get('message'), $aContextArgs));
-			// Compute icon
-			// - First check if one is defined on the action
-			if (false === $this->Get('icon')->IsEmpty()) {
-				$oIcon = $this->Get('icon');
-			}
-			// - Then, check if the action is for a DM object and if its class has an icon
-			elseif ($iObjectId > 0 && utils::IsNotNullOrEmptyString(MetaModel::GetClassIcon($sObjectClass, false))) {
-				$oIcon = MetaModel::GetAttributeDef(EventiTopNotification::class, 'icon')->MakeRealValue(MetaModel::GetClassIcon($sObjectClass, false), $oEvent);
-			}
-			// - Otherwise, fallback on the compact logo of the application
-			else {
-				$oIcon = MetaModel::GetAttributeDef(EventiTopNotification::class, 'icon')->MakeRealValue(\Combodo\iTop\Application\Branding::GetCompactMainLogoAbsoluteUrl(), $oEvent);
-			}
-			$oEvent->Set('icon', $oIcon);
-			$oEvent->Set('priority', $this->Get('priority'));
-			$oEvent->Set('contact_id', $oRecipient->GetKey());
-			$oEvent->Set('trigger_id', $oTrigger->GetKey());
-			$oEvent->Set('action_id', $this->GetKey());
-			$iObjectId = array_key_exists('this->object()', $aContextArgs) ? $aContextArgs['this->object()']->GetKey() : 0;
-			$oEvent->Set('object_id', $iObjectId);
-			$oEvent->Set('url', MetaModel::ApplyParams($this->Get('url'), $aContextArgs));
-			$oEvent->DBInsertNoReload();
+			
+      if($bIsAsync === true) {
+        $aRecipients[] = $oRecipient->GetKey();      
+      } else { 
+        $oEvent = Combodo\iTop\Service\Notification\Event\EventiTopNotificationService::MakeEventFromAction($this, $oRecipient->GetKey(), $oTrigger->GetKey(), $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
+        $oEvent->DBInsertNoReload();
+      }
 
 			\Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->RegisterSubscription($oTrigger, $this, $oRecipient);
 		}
+		if ($bIsAsync === true) {
+		    AsyncSendiTopNotifications::AddToQueue($this->GetKey(), $oTrigger->GetKey(), $aRecipients, $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
+    }
 		$this->SetNotificationLanguage($sPreviousLanguage, $aPreviousPluginProperties['language_code'] ?? null);
+	}
+]]></code>
+        </method>
+        <method id="GetAsynchronousGlobalSetting">
+          <comment></comment>
+          <static>true</static>
+          <access>public</access>
+          <code><![CDATA[
+	public static function GetAsynchronousGlobalSetting(): bool
+	{
+		return utils::GetConfig()->Get('notifications.itop.send_asynchronously');
 	}
 ]]></code>
         </method>
