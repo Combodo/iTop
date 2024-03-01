@@ -17,9 +17,12 @@ class InstallationFileService {
 	private $sInstallationPath;
 	private $aSelectedModules;
 	private $aUnSelectedModules;
+	private $aAutoSelectModules;
 
 	public function __construct(string $sInstallationPath) {
 		$this->sInstallationPath = $sInstallationPath;
+		$this->aSelectedModules = [];
+		$this->aUnSelectedModules = [];
 	}
 
 	public function GetSelectedModules(): array {
@@ -30,13 +33,19 @@ class InstallationFileService {
 		return $this->aUnSelectedModules;
 	}
 
-	public function Init(bool $bAllChecked): void {
-		$this->aSelectedModules = [];
-		$this->aUnSelectedModules = [];
+	public function Init(bool $bInstallationOptionalChoicesChecked=true): void {
+		clearstatcache();
+		$this->bInstallationOptionalChoicesChecked = $bInstallationOptionalChoicesChecked;
 
+		$this->ProcessDefaultModules();
+		$this->ProcessInstallationChoices($bInstallationOptionalChoicesChecked);
+		$this->ProcessAutoSelectModules();
+	}
+
+	public function ProcessInstallationChoices(bool $bInstallationOptionalChoicesChecked): void {
 		$oXMLParameters = new XMLParameters($this->sInstallationPath);
 		$aSteps = $oXMLParameters->Get('steps', []);
-		if (!is_array($aSteps)) {
+		if (! is_array($aSteps)) {
 			return;
 		}
 
@@ -44,7 +53,7 @@ class InstallationFileService {
 			$aOptions = $aStepInfo["options"] ?? null;
 			if (! is_null($aOptions) && is_array($aOptions)) {
 				foreach ($aOptions as $aChoiceInfo) {
-					$this->ProcessSelectedChoice($aChoiceInfo, $bAllChecked);
+					$this->ProcessSelectedChoice($aChoiceInfo, $bInstallationOptionalChoicesChecked);
 				}
 			}
 			$aOptions = $aStepInfo["alternatives"] ?? null;
@@ -55,10 +64,11 @@ class InstallationFileService {
 			}
 		}
 
-		$this->aSelectedModules = array_unique($this->aSelectedModules);
-		$this->aUnSelectedModules = array_unique($this->aUnSelectedModules);
-
-		$this->aUnSelectedModules = array_diff($this->aUnSelectedModules, $this->aSelectedModules);
+		foreach ($this->aSelectedModules as $sModuleId => $sVal){
+			if (array_key_exists($sModuleId, $this->aUnSelectedModules)){
+				unset($this->aUnSelectedModules[$sModuleId]);
+			}
+		}
 	}
 
 	private function ProcessUnSelectedChoice($aChoiceInfo) {
@@ -67,7 +77,9 @@ class InstallationFileService {
 		}
 
 		$aCurrentModules = $aChoiceInfo["modules"] ?? [];
-		$this->aUnSelectedModules = array_merge($this->aUnSelectedModules, $aCurrentModules);
+		foreach ($aCurrentModules as $sModuleId){
+			$this->aUnSelectedModules[$sModuleId] = true;
+		}
 
 		$aAlternatives = $aChoiceInfo["alternatives"] ?? null;
 		if (!is_null($aAlternatives) && is_array($aAlternatives)) {
@@ -107,10 +119,12 @@ class InstallationFileService {
 		$aCurrentModules = $aChoiceInfo["modules"] ?? [];
 		$bSelected = $bAllChecked || $sDefault === "true" || $sMandatory === "true";
 
-		if ($bSelected) {
-			$this->aSelectedModules = array_merge($this->aSelectedModules, $aCurrentModules);
-		} else {
-			$this->aUnSelectedModules = array_merge($this->aUnSelectedModules, $aCurrentModules);
+		foreach ($aCurrentModules as $sModuleId){
+			if ($bSelected) {
+				$this->aSelectedModules[$sModuleId] = true;
+			} else {
+				$this->aUnSelectedModules[$sModuleId] = true;
+			}
 		}
 
 		$aAlternatives = $aChoiceInfo["alternatives"] ?? null;
@@ -148,6 +162,73 @@ class InstallationFileService {
 						}
 					}
 				}
+			}
+		}
+	}
+
+	private function GetExtraDirs() : array {
+		$aSearchDirs = [];
+
+		$aDirs = [
+			'/datamodels/1.x',
+			'/datamodels/2.x',
+			'data/production-modules',
+			'extensions',
+		];
+		foreach ($aDirs as $sRelativeDir){
+			$sDirPath = APPROOT.$sRelativeDir;
+			if (is_dir($sDirPath))
+			{
+				$aSearchDirs[] = $sDirPath;
+			}
+		}
+
+		return $aSearchDirs;
+	}
+
+	public function ProcessDefaultModules() : void {
+		$sProductionModuleDir = APPROOT.'data/production-modules/';
+
+		$oProductionEnv = new RunTimeEnvironment();
+		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), $this->GetExtraDirs(), false, null);
+
+		$this->aAutoSelectModules = [];
+		foreach ($aAvailableModules as $sModuleId => $aModule) {
+			if (($sModuleId != ROOT_MODULE)) {
+				if (isset($aModule['auto_select'])) {
+					$this->aAutoSelectModules[$sModuleId] = $aModule;
+					continue;
+				}
+
+				if (($aModule['category'] == 'authentication') || (!$aModule['visible'])) {
+					$this->aSelectedModules[$sModuleId] = true;
+					continue;
+				}
+
+				$bIsExtra = (array_key_exists('root_dir', $aModule) && (strpos($aModule['root_dir'],
+							$sProductionModuleDir) !== false)); // Some modules (root, datamodel) have no 'root_dir'
+				if ($bIsExtra) {
+					// Modules in data/production-modules/ are considered as mandatory and always installed
+					$this->aSelectedModules[$sModuleId] = true;
+				}
+			}
+		}
+	}
+
+	public function ProcessAutoSelectModules() : void {
+		foreach($this->aAutoSelectModules as $sModuleId => $aModule)
+		{
+			try {
+				$bSelected = false;
+				SetupInfo::SetSelectedModules($this->aSelectedModules);
+				eval('$bSelected = ('.$aModule['auto_select'].');');
+				if ($bSelected)
+				{
+					// Modules in data/production-modules/ are considered as mandatory and always installed
+					$this->aSelectedModules[$sModuleId] = true;
+				}
+			}
+			catch (Exception $e) {
 			}
 		}
 	}
