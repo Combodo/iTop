@@ -898,8 +898,9 @@ try {
 					}
 				}
 				$bProvidersModified = false;
-				foreach ($aProviders as $oProvider)
+				foreach ($aProviders as $cProvider)
 				{
+					$oProvider = new $cProvider();
 					if ($oProvider->IsApplicable($oUser))
 					{
 						$sProviderClass = get_class($oProvider);
