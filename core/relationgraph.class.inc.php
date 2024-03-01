@@ -20,7 +20,7 @@
 /**
  * Data structures (i.e. PHP classes) to build and use relation graphs
  *
- * @copyright   Copyright (C) 2015-2023 Combodo SARL
+ * @copyright   Copyright (C) 2015-2024 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * 
  */
@@ -367,7 +367,9 @@ class RelationGraph extends SimpleGraph
 				$oNode->ReachDown('is_reached', true);
 			}	
 		}
-		$this->ApplyUserRightOnGraph();
+		if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
+			$this->ApplyUserRightOnGraph();
+		}
 	}
 
 	/**
@@ -402,7 +404,9 @@ class RelationGraph extends SimpleGraph
 				$oNode->ReachDown('is_reached', true);
 			}	
 		}
-		$this->ApplyUserRightOnGraph();
+		if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
+			$this->ApplyUserRightOnGraph();
+		}
 	}
 
 
@@ -462,8 +466,10 @@ class RelationGraph extends SimpleGraph
 					try
 					{
 						$oFlt = static::MakeSearch($sQuery);
-						//no filter to find all impacts
-						$oFlt->AllowAllData(true);
+						if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
+							//no filter to find all impacts
+							$oFlt->AllowAllData(true);
+						}
 						$oObjSet = new DBObjectSet($oFlt, array(), $oObject->ToArgsForQuery());
 						$oRelatedObj = $oObjSet->Fetch();
 					}
@@ -539,7 +545,10 @@ class RelationGraph extends SimpleGraph
 				try
 				{
 					$oFlt = static::MakeSearch($sQuery);
-					$oFlt->AllowAllData();
+					if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
+						//no filter to find all impacts
+						$oFlt->AllowAllData(true);
+					}
 					$oObjSet = new DBObjectSet($oFlt, array(), $oObject->ToArgsForQuery());
 					$iCount = $oObjSet->Count();
 				}
@@ -723,10 +732,9 @@ class RelationGraph extends SimpleGraph
 			foreach ($aArrayTest as $sClass => $aKeys) {
 				$sOQL = "SELECT ".$sClass.' WHERE id IN ('.implode(',', $aKeys).')';
 				$oSearch = DBObjectSearch::FromOQL($sOQL);
-				$oSet = new CMDBObjectSet($oSearch);
-				$oSet->OptimizeColumnLoad([$sClass => []]);
-				while ($oObj = $oSet->Fetch()) {
-					unset($aArrayTest[$sClass][$oObj->GetKey()]);
+				$aListId = $oSearch->SelectAttributeToArray('id');
+				foreach($aListId as$aItem ) {
+					unset($aArrayTest[$sClass][$aItem['id']]);
 				}
 			}
 			//then removes from the graph all objects still present in $aArrayTest
