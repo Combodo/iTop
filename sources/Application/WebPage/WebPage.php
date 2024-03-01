@@ -1329,6 +1329,7 @@ JS;
 	/**
 	 * @inheritDoc
 	 * @throws \Exception
+	 * @since 3.2.0 Prefer using {@see static::GenerateResponse()} in with a Symfony style controller and route
 	 */
 	public function output()
 	{
