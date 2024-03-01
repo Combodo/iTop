@@ -65,7 +65,7 @@ Don't remove these lines, check them once done.
 - [ ] I have performed a self-review of my code
 - [ ] I have tested all changes I made on an iTop instance
 - [ ] I have added a unit test, otherwise I have explained why I couldn't
-- [ ] Is the PR clear and detailled enough so anyone can understand digging in the code?
+- [ ] Is the PR clear and detailed enough so anyone can understand digging in the code?
 
 ## Checklist of things to do before PR is ready to merge
 <!--
