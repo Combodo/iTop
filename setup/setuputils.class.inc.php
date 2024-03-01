@@ -904,11 +904,11 @@ class SetupUtils
      * @link https://en.wiktionary.org/wiki/byte byte and not Byte
      * @link https://en.wikipedia.org/wiki/Kilobyte kB and not KB (IEC 80000-13)
      * @link https://en.wiktionary.org/wiki/petabyte petabyte PB
-     * @link https://en.wiktionary.org/wiki/exabyte#English exabyte EB
+     * @link https://en.wiktionary.org/wiki/exabyte exabyte EB
      */
 	public static function HumanReadableSize($fBytes)
 	{
-        $aSizes = array('bytes', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB');
+		$aSizes = array('bytes', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB');
 		$index = 0;
 		while (($fBytes > 1000) && ($index < count($aSizes)))
 		{
