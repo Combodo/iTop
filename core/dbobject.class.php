@@ -210,6 +210,7 @@ abstract class DBObject implements iDisplay
 	const MAX_UPDATE_LOOP_COUNT = 10;
 
 	private $aEventListeners = [];
+	private array $aAllowedTransitions = [];
 
 	/**
 	 * DBObject constructor.
@@ -4404,7 +4405,30 @@ abstract class DBObject implements iDisplay
 				]);
 		}
 
+		$this->aAllowedTransitions = $aSortedTransitions;
+		$this->FireEvent(EVENT_ENUM_TRANSITIONS, ['allowed_stimuli' => array_keys($aSortedTransitions)]);
+		$aSortedTransitions = $this->aAllowedTransitions;
+		$this->aAllowedTransitions = [];
+
 		return $aSortedTransitions;
+	}
+
+	/**
+	 * Remove a transition for a specific stimulus.
+	 * This is only usable by EVENT_ENUM_TRANSITIONS listeners in order
+	 * to manage the allowed transitions in the current object state.
+	 *
+	 * @param string $sStimulus
+	 *
+	 * @return void
+	 * @api
+	 * @since 3.1.2
+	 */
+	public function DenyTransition(string $sStimulus): void
+	{
+		if (isset($this->aAllowedTransitions[$sStimulus])) {
+			unset($this->aAllowedTransitions[$sStimulus]);
+		}
 	}
 
     /**
@@ -4492,14 +4516,6 @@ abstract class DBObject implements iDisplay
 		$sNewState = $aTransitionDef['target_state'];
 		$this->Set($sStateAttCode, $sNewState);
 
-		$aEventData = [
-			'stimulus' => $sStimulusCode,
-			'previous_state' => $sPreviousState,
-			'new_state' => $sNewState,
-			'save_object' => !$bDoNotWrite,
-		];
-		$this->FireEvent(EVENT_DB_BEFORE_APPLY_STIMULUS, $aEventData);
-
 		// $aTransitionDef is an
 		//    array('target_state'=>..., 'actions'=>array of handlers procs, 'user_restriction'=>TBD
 
@@ -4584,8 +4600,6 @@ abstract class DBObject implements iDisplay
 			if (!$bDoNotWrite) {
 				$this->DBWrite();
 			}
-
-			$this->FireEvent(EVENT_DB_AFTER_APPLY_STIMULUS, $aEventData);
 		}
 		else
 		{
@@ -4594,8 +4608,6 @@ abstract class DBObject implements iDisplay
 			{
 				$this->m_aCurrValues[$sAttCode] = $aBackupValues[$sAttCode];
 			}
-			$aEventData['action'] = $sActionDesc;
-			$this->FireEvent(EVENT_DB_APPLY_STIMULUS_FAILED, $aEventData);
 		}
 		return $bSuccess;
 	}
