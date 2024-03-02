@@ -295,8 +295,8 @@ abstract class ModuleInstallerAPI
 	 * - The original name exists
 	 * - The destination name does not exist
 	 *
-	 * @param $sOrigTable string
-	 * @param $sDstTable string
+	 * @param string $sOrigTable
+	 * @param string $sDstTable
 	 *
 	 * @return void
 	 * @throws CoreException
