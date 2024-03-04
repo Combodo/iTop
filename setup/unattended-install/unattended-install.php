@@ -48,7 +48,7 @@ if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)){
 	$oInstallationFileService->Init();
 	$aSelectedModules = $oInstallationFileService->GetSelectedModules();
 
-	$oParams->Set('selected_modules', $aSelectedModules);
+	$oParams->Set('selected_modules', array_keys($aSelectedModules));
 	$oParams->Set('selected_extensions', []);
 }
 
