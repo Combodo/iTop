@@ -107,7 +107,7 @@ class WebResourcesHelper
 	public static function GetCSSFilesRelPathsForC3JS(): array
 	{
 		return [
-			'css/c3.min.css',
+			'node_modules/c3/c3.min.css',
 		];
 	}
 
@@ -117,8 +117,8 @@ class WebResourcesHelper
 	public static function GetJSFilesRelPathsForC3JS(): array
 	{
 		return [
-			'js/d3.js',
-			'js/c3.js',
+			'node_modules/d3/d3.min.js',
+			'node_modules/c3/c3.min.js',
 		];
 	}
 
@@ -137,8 +137,8 @@ class WebResourcesHelper
 	{
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/raphael-min.js');
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
-		$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
+		$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/jquery-contextmenu/src/jquery.contextMenu.css');
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/jquery-contextmenu/src/jquery.contextMenu.js');
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.mousewheel.js');

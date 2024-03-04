@@ -1,3 +1,7 @@
+/**
+ * @deprecated 3.2.0 N°5621 Moved to NPM
+ */
+
 /*!
  * jQuery contextMenu - Plugin for simple contextMenu handling
  *

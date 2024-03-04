@@ -60,8 +60,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// - TabContainer
 		'js/jquery.ba-bbq.min.js',
 		// - DashletGroupBy & other specific places
-		'js/d3.js',
-		'js/c3.js',
+		'js/d3.js', // 3.2.0 N°5261 moved to NPM
+		'js/c3.js', // 3.2.0 N°5261 moved to NPM
 		// - DisplayableGraph, impact analysis
 		'js/raphael-min.js',
 		'js/jquery.mousewheel.js',
@@ -80,7 +80,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	protected const COMPATIBILITY_MOVED_LINKED_STYLESHEETS_REL_PATH = [
 		// Moved files
 		// - DashletGroupBy & other specific places
-		'css/c3.min.css',
+		'node_modules/c3/c3.min.css',
 	];
 
 	/** @var string DEFAULT_PAGE_TEMPLATE_REL_PATH The relative path (from <ITOP>/templates/) to the default page template */
@@ -187,13 +187,13 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.multiselect.js');
 
 		// Used by inline image, CKEditor and other places
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/magnific-popup/dist/jquery.magnific-popup.min.js');
 
 		// Used by date(time) attibutes, activity panel, ...
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/moment-with-locales.min.js');
 
 		// Used by the newsroom
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/showdown.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/showdown/dist/showdown.min.js');
 
 		// Tooltips
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.min.js');
@@ -203,8 +203,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/toastify-js/src/toastify.js');
 
 		// Keyboard shortcuts
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap-record.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/mousetrap/mousetrap.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/mousetrap/plugins/record/mousetrap-record.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/keyboard-shortcuts.js');
 
 		// Used throughout the app.
@@ -260,7 +260,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery-ui-timepicker-addon.css');
 
 		// Used by inline image, CKEditor and other places
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/magnific-popup.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/magnific-popup/dist/magnific-popup.css');
 
 		// Tooltips
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');

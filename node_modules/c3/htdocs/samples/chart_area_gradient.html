@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <link href="/css/c3.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div id="chart1"></div>
+    <div id="chart2"></div>
+    <div id="chart3"></div>
+
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="/js/c3.js"></script>
+    <script>
+
+      var chart1 = c3.generate({
+        bindto: '#chart1',
+        data: {
+          columns: [
+            ['data1', 300, 350, 300, 0, 0, 0],
+            ['data2', 130, 100, 140, 200, 150, 50]
+          ],
+          type: 'area'
+        }
+      });
+
+      var chart2 = c3.generate({
+        bindto: '#chart2',
+        data: {
+          columns: [
+            ['data1', -300, -350, -300, 0, 0, 0],
+            ['data2', -130, -100, -140, -200, -150, -50]
+          ],
+          type: 'area'
+        }
+      });
+
+      var chart3 = c3.generate({
+        bindto: '#chart3',
+        data: {
+          columns: [
+            ['data1', -300, 350, -300, 0, 0, 0],
+            ['data2', -130, -100, 140, -200, 150, -50]
+          ],
+          type: 'area'
+        }
+      });
+
+// Insert gradient
+                var SVG_URL                = 'http://www.w3.org/2000/svg';
+                var grad = document.createElementNS(SVG_URL, 'linearGradient');
+                grad.setAttribute('id', 'GRADIENTID')
+                d3.select('svg defs').node().appendChild(grad);
+
+                // create color stop 1 and add to gradient
+                var stop1                = document.createElementNS(SVG_URL, 'stop');
+                stop1.setAttributeNS(null, 'style', 'stop-color:#c4f');
+                stop1.setAttributeNS(null, 'offset', 0);
+                grad.appendChild(stop1);
+                
+                // create color stop 2 and add to gradient
+                var stop2                = document.createElementNS(SVG_URL, 'stop');
+                stop2.setAttributeNS(null, 'style', 'stop-color:#a45');
+                stop2.setAttributeNS(null, 'offset', 1);
+                grad.appendChild(stop2);
+    </script>
+  </body>
+</html>

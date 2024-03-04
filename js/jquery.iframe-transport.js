@@ -1,3 +1,7 @@
+/**
+ * @deprecated 3.2.0 N°5621 Moved to NPM
+ */
+
 /*
  * jQuery Iframe Transport Plugin 1.8.2
  * https://github.com/blueimp/jQuery-File-Upload

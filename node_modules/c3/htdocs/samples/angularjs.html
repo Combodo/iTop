@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/css/c3.css">
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/d3.min.js" charset="utf-8"></script>
+    <script src="/js/c3.js"></script>
+    <script src="/js/samples/angularjs.js"></script>
+  </head>
+  <body ng-app="myApp">
+    <div ng-controller="myCtrl">
+      <div ng-hide="loading">
+        <p>Hello, {{text}}</p>
+        <div id="chart"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

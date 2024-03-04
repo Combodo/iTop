@@ -1,3 +1,7 @@
+/**
+ * @deprecated 3.2.0 N°5621 Moved to NPM
+ */
+
 /*
  * jQuery File Upload Plugin
  * https://github.com/blueimp/jQuery-File-Upload

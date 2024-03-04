@@ -1118,8 +1118,8 @@ JS
 	 */
 	protected function RenderEditionTools(WebPage $oPage, DashboardLayoutUIBlock $oDashboard, $aExtraParams)
 	{
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/blueimp-file-upload/js/jquery.iframe-transport.js');
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/blueimp-file-upload/js/jquery.fileupload.js');
 		$sId = utils::Sanitize($this->GetId(), '', 'element_identifier');
 
 		$sMenuTogglerId = "ibo-dashboard-menu-toggler-{$sId}";

@@ -55,7 +55,7 @@ class NiceWebPage extends WebPage
 		'js/field_sorter.js',
 		'js/table-selectable-lines.js',
 		// - Not used internally or by extensions yet
-		'js/clipboard.min.js',
+		'js/clipboard.min.js', // 3.2.0 N°5261 moved to NPM
 		'js/clipboardwidget.js',
 		// - SearchForm
 		'js/searchformforeignkeys.js',
@@ -152,7 +152,7 @@ JS
 		parent::InitializeLinkedScripts();
 
 		// Used throughout the app.
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/jquery/dist/jquery.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.blockUI.js');
 		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
 		{
@@ -161,7 +161,7 @@ JS
 		} else {
 			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
 		}
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/jquery-ui-dist/jquery-ui.min.js');
 
 		// Used throughout the app.
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');

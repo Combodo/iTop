@@ -2206,8 +2206,8 @@ EOF
 
 			case 'cke_browse':
 				$oPage = new NiceWebPage(Dict::S('UI:BrowseInlineImages'));
-				$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/magnific-popup.css');
-				$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
+				$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/magnific-popup/dist/magnific-popup.css');
+				$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/magnific-popup/dist/jquery.magnific-popup.min.js');
 				$sImgUrl = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL;
 
 				/** @noinspection SuspiciousAssignmentsInspection cke_upload_and_browse and cke_browse are chained */
