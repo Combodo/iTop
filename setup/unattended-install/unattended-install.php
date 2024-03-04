@@ -44,7 +44,7 @@ if ($sTargetEnvironment == '')
 $sInstallationXmlPath = utils::ReadParam('use_installation_xml', 'null', true /* CLI allowed */, 'raw_data');
 if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)){
 	echo "Use $sInstallationXmlPath for module selection\n";
-	$oInstallationFileService = new InstallationFileService($sInstallationXmlPath);
+	$oInstallationFileService = new InstallationFileService($sInstallationXmlPath, $sTargetEnvironment);
 	$oInstallationFileService->Init();
 	$aSelectedModules = $oInstallationFileService->GetSelectedModules();
 
