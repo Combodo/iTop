@@ -1712,7 +1712,7 @@ class RestUtils
             try {
                 $oSearch = DBObjectSearch::FromOQL($key);
             } catch (Exception $e) {
-                throw new CoreOqlException('json_data key parameter: query failed to execute', [
+                throw new CoreOqlException('Query failed to execute', [
                         'query' => $key,
                         'exception_class' => get_class($e),
                         'exception_message' => $e->getMessage(),
