@@ -30,6 +30,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreOqlMultipleResultsForbiddenException;
+use DBObjectSet;
 use DBSearch;
 use Exception;
 use Expression;
