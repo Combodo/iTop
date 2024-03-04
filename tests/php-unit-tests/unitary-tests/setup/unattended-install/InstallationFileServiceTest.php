@@ -4,6 +4,11 @@ namespace Combodo\iTop\Test\UnitTest\Setup\UnattendedInstall;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class InstallationFileServiceTest extends ItopDataTestCase {
 	protected function setUp(): void {
 		parent::setUp();
@@ -202,5 +207,10 @@ class InstallationFileServiceTest extends ItopDataTestCase {
 		}
 
 		@rmdir($sFromDir);
+
+		$aInfo = [];
+		$aInfo[$sFromDir] = exec("tree -L 2 $sFromDir");
+		$aInfo[$sToDir] = exec("tree -L 2 $sToDir");
+		\IssueLog::Info("RecurseMoveDir", null, $aInfo);
 	}
 }
