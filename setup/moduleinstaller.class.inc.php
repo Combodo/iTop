@@ -304,6 +304,11 @@ abstract class ModuleInstallerAPI
 	 */
 	public static function RenameTableInDB(string $sOrigTable, string $sDstTable)
 	{
+		if ($sOrigTable == $sDstTable)
+		{
+			throw new CoreUnexpectedValue("Origin table and destination table are the same");
+		}
+
 		if (!MetaModel::DBExists(false))
 		{
 			// Install from scratch, no migration
