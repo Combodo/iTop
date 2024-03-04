@@ -968,7 +968,7 @@ class ModelFactory
 					MFException::INVALID_DELTA, $iLine, $sPath, $sDeltaSpec);
 		}
 
-		if ($oTargetNode) {
+		if ($oTargetNode && $oTargetNode->parentNode) {
 			if ($oSourceNode->hasAttribute('_rename_from')) {
 				$oTargetNode->Rename($oSourceNode->getAttribute('id'));
 			}
@@ -979,7 +979,12 @@ class ModelFactory
 				$oComment = $this->GetPreviousComment($oSourceNode);
 				if (!is_null($oComment)) {
 					$oCommentNode = $oTargetDocument->importNode(new DOMComment($oComment->textContent));
-					$oTargetParentNode->insertBefore($oCommentNode, $oTargetNode);
+					try {
+						$oTargetParentNode->insertBefore($oCommentNode, $oTargetNode);
+					} catch (Exception $e) {
+						$sComment = $oCommentNode->textContent;
+						throw new Exception("Error Not Found: delta: $sDeltaSpec - Comment: $sComment - ".MFDocument::GetItopNodePath($oSourceNode));
+					}
 				}
 			}
 		}

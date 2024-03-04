@@ -102,7 +102,8 @@ class ModelFactoryTest extends ItopTestCase
 	}
 
 	/**
-	 * @dataProvider ProviderGetPreviousComment
+	 * @test
+	 * @dataProvider GetPreviousCommentProvider
 	 * @covers       ModelFactory::GetPreviousComment
 	 *
 	 * @param $sDeltaXML
@@ -112,9 +113,8 @@ class ModelFactoryTest extends ItopTestCase
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testGetPreviousComment($sDeltaXML, $sClassName, $sExpectedComment)
+	public function GetPreviousCommentTest($sDeltaXML, $sClassName, $sExpectedComment)
 	{
-		$oFactory = new ModelFactory([]);
 		$oDocument = new MFDocument();
 		$oDocument->loadXML($sDeltaXML);
 		$oXPath = new \DOMXPath($oDocument);
@@ -131,7 +131,7 @@ class ModelFactoryTest extends ItopTestCase
 		}
 	}
 
-	public function ProviderGetPreviousComment()
+	public function GetPreviousCommentProvider()
 	{
 		$aData = [];
 
@@ -184,7 +184,8 @@ class ModelFactoryTest extends ItopTestCase
 	}
 
 	/**
-	 * @dataProvider ProviderFlattenDelta
+	 * @test
+	 * @dataProvider FlattenDeltaProvider
 	 * @covers       ModelFactory::FlattenClassesInDelta
 	 *
 	 * @param $sDeltaXML
@@ -193,7 +194,7 @@ class ModelFactoryTest extends ItopTestCase
 	 * @return void
 	 * @throws \ReflectionException
 	 */
-	public function testFlattenDelta($sDeltaXML, $sExpectedXML)
+	public function FlattenDeltaTest($sDeltaXML, $sExpectedXML)
 	{
 		$oFactory = new ModelFactory([]);
 		$oDocument = new MFDocument();
@@ -210,7 +211,7 @@ class ModelFactoryTest extends ItopTestCase
 		}
 	}
 
-	public function ProviderFlattenDelta()
+	public function FlattenDeltaProvider()
 	{
 		return [
 			'Empty delta' => [
@@ -759,18 +760,18 @@ class ModelFactoryTest extends ItopTestCase
 	}
 
 	/**
-	 * @dataProvider ProviderLoadDelta
+	 * @test
+	 * @dataProvider LoadDeltaProvider
 	 * @covers       ModelFactory::LoadDelta
 	 *
+	 * @param $sInitialXML
 	 * @param $sDeltaXML
-	 * @param $bHierarchicalClasses
 	 * @param $sExpectedXML
 	 *
 	 * @return void
-	 * @throws \DOMFormatException
-	 * @throws \MFException
+	 * @throws \Exception
 	 */
-	public function testLoadDelta($sInitialXML, $sDeltaXML, $sExpectedXML)
+	public function LoadDeltaTest($sInitialXML, $sDeltaXML, $sExpectedXML)
 	{
 		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
 		$oFactoryDocument = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
@@ -784,14 +785,14 @@ class ModelFactoryTest extends ItopTestCase
 			$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument);
 		}
 		catch (\Exception $e) {
-			$this->assertNull($sExpectedXML, 'LoadDelta() must fail with exception: '.$e->getMessage());
+			$this->assertNull($sExpectedXML, 'LoadDelta() should not have failed with exception: '.$e->getMessage());
 
 			return;
 		}
 		$this->AssertEqualModels($sExpectedXML, $oFactory, 'LoadDelta() must result in a datamodel without hierarchical classes');
 	}
 
-	public function ProviderLoadDelta()
+	public function LoadDeltaProvider()
 	{
 		return [
 			'empty delta'          => [
@@ -937,6 +938,66 @@ class ModelFactoryTest extends ItopTestCase
 </itop_design>',
 			],
 
+			'Redefine a recently added subclass' => [
+				'sInitialXML'  => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="added">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+	<class id="C_1_1" _alteration="added">
+	  <parent>C_1</parent>
+	</class>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '
+<itop_design>
+	<classes>
+		<class id="C_1" _delta="merge"/>
+		<class id="C_1_1" _delta="redefine">
+			<parent>C_1</parent>
+			<properties/>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="added">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+	<class id="C_1_1" _alteration="added">
+		<parent>C_1</parent>
+		<properties/>
+	</class>        
+  </classes>
+</itop_design>',
+				],
+
+			'Delete a recently added class' => [
+				'sInitialXML'  => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1" _alteration="added">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '
+<itop_design>
+	<classes>
+		<!-- Comment -->
+		<class id="C_1" _delta="delete"/>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+  </classes>
+</itop_design>',
+			],
 			'Delete hierarchically a class' => [
 				'sInitialXML'  => '
 <itop_design>
@@ -1245,11 +1306,12 @@ class ModelFactoryTest extends ItopTestCase
 	}
 
 	/**
-	 * @dataProvider ProviderAlterationByXMLDelta
+	 * @test
+	 * @dataProvider AlterationByXMLDeltaProvider
 	 * @covers       ModelFactory::LoadDelta
 	 * @covers       ModelFactory::ApplyChanges
 	 */
-	public function testAlterationByXMLDelta($sInitialXML, $sDeltaXML, $sExpectedXML)
+	public function AlterationByXMLDeltaTest($sInitialXML, $sDeltaXML, $sExpectedXML)
 	{
 		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
 		$oFactoryRoot = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
@@ -1271,7 +1333,7 @@ class ModelFactoryTest extends ItopTestCase
 	/**
 	 * @return array
 	 */
-	public function ProviderAlterationByXMLDelta()
+	public function AlterationByXMLDeltaProvider()
 	{
 		// Basic (structure)
 		return [
@@ -2078,7 +2140,8 @@ XML
 	}
 
 	/**
-	 * @dataProvider ProviderAlterationAPIs
+	 * @test
+	 * @dataProvider AlterationAPIsProvider
 	 * @covers       \ModelFactory::GetDelta
 	 * @covers       \MFElement::AddChildNode
 	 * @covers       \MFElement::RedefineChildNode
@@ -2086,7 +2149,7 @@ XML
 	 * @covers       \MFElement::Delete
 	 * @throws \MFException
 	 */
-	public function testAlterationsByAPIs($sInitialXML, $sOperation, $sExpectedXML)
+	public function AlterationsByAPIsTest($sInitialXML, $sOperation, $sExpectedXML)
 	{
 		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
 
@@ -2141,7 +2204,7 @@ XML
 	/**
 	 * @return array[]
 	 */
-	public function ProviderAlterationAPIs()
+	public function AlterationAPIsProvider()
 	{
 		define('CASE_NO_FLAG', <<<XML
 <root_tag>
@@ -2617,12 +2680,13 @@ XML
 	}
 
 	/**
+	 * @test
 	 * @covers       \ModelFactory::LoadDelta
 	 * @covers       \ModelFactory::GetDelta
 	 * @covers       \ModelFactory::GetDeltaDocument
-	 * @dataProvider ProviderGetDelta
+	 * @dataProvider GetDeltaProvider
 	 */
-	public function testGetDelta($sInitialXMLInternal, $sExpectedXMLDelta)
+	public function GetDeltaTest($sInitialXMLInternal, $sExpectedXMLDelta)
 	{
 		// constants aren't accessible in the data provider :(
 		$sExpectedXMLDelta = str_replace('##ITOP_DESIGN_LATEST_VERSION##', ITOP_DESIGN_LATEST_VERSION, $sExpectedXMLDelta);
@@ -2638,7 +2702,7 @@ XML
 	/**
 	 * @return array[]
 	 */
-	public function ProviderGetDelta()
+	public function GetDeltaProvider()
 	{
 		return [
 			'no alteration'                       => [
@@ -2988,11 +3052,13 @@ XML
 	}
 
 	/**
-	 * @dataProvider ProviderAddClass
+	 * @test
+	 *
+	 * @dataProvider AddClassProvider
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testAddClass($aClasses, $sExpectedXML)
+	public function AddClassTest($aClasses, $sExpectedXML)
 	{
 		$oFactory = new ModelFactory([]);
 		$this->CreateClasses($aClasses, $oFactory);
@@ -3001,11 +3067,12 @@ XML
 	}
 
 	/**
-	 * @dataProvider ProviderAddClass
+	 * @test
+	 * @dataProvider AddClassProvider
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testListRootClasses($aClasses, $sExpectedXML, $aExpectedRootClasses)
+	public function ListRootClassesTest($aClasses, $sExpectedXML, $aExpectedRootClasses)
 	{
 		$oFactory = new ModelFactory([]);
 		$this->CreateClasses($aClasses, $oFactory);
@@ -3023,11 +3090,12 @@ XML
 	}
 
 	/**
-	 * @dataProvider ProviderAddClass
+	 * @test
+	 * @dataProvider AddClassProvider
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testClassNameExists($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses, $aExpectedClassNotExist)
+	public function ClassNameExistsTest($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses, $aExpectedClassNotExist)
 	{
 		$oFactory = new ModelFactory([]);
 		$this->CreateClasses($aClasses, $oFactory);
@@ -3041,11 +3109,12 @@ XML
 	}
 
 	/**
-	 * @dataProvider ProviderAddClass
+	 * @test
+	 * @dataProvider AddClassProvider
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testListClasses($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses, $aExpectedClassNotExist, $aExpectedClassesByModule)
+	public function ListClassesTest($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses, $aExpectedClassNotExist, $aExpectedClassesByModule)
 	{
 		$oFactory = new ModelFactory([]);
 		$this->CreateClasses($aClasses, $oFactory);
@@ -3065,11 +3134,12 @@ XML
 	}
 
 	/**
-	 * @dataProvider ProviderAddClass
+	 * @test
+	 * @dataProvider AddClassProvider
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testListAllClasses($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses)
+	public function ListAllClassesTest($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses)
 	{
 		$oFactory = new ModelFactory([]);
 		$this->CreateClasses($aClasses, $oFactory);
@@ -3087,11 +3157,12 @@ XML
 
 
 	/**
-	 * @dataProvider ProviderAddClass
+	 * @test
+	 * @dataProvider AddClassProvider
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testGetClass($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses)
+	public function GetClassTest($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses)
 	{
 		$oFactory = new ModelFactory([]);
 		$this->CreateClasses($aClasses, $oFactory);
@@ -3103,11 +3174,12 @@ XML
 	}
 
 	/**
-	 * @dataProvider ProviderAddClass
+	 * @test
+	 * @dataProvider AddClassProvider
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testGetChildClasses($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses, $aExpectedClassNotExist, $aExpectedClassesByModule, $aExpectedChildClasses)
+	public function GetChildClassesTest($aClasses, $sExpectedXML, $aExpectedRootClasses, $aExpectedClasses, $aExpectedClassNotExist, $aExpectedClassesByModule, $aExpectedChildClasses)
 	{
 		$oFactory = new ModelFactory([]);
 		$this->CreateClasses($aClasses, $oFactory);
@@ -3131,7 +3203,7 @@ XML
 	/**
 	 * @return array
 	 */
-	public function ProviderAddClass()
+	public function AddClassProvider()
 	{
 		$aClasses = [
 			"1 root class"           => [
@@ -3296,7 +3368,9 @@ XML
 	}
 
 	/**
-	 * @dataProvider ProviderLoadDeltaMode
+	 * @test
+	 * @dataProvider LoadDeltaModeProvider
+	 *
 	 * @param $sInitialXML
 	 * @param $sDeltaXML
 	 * @param $sMode
@@ -3305,7 +3379,7 @@ XML
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testLoadDeltaMode($sInitialXML, $sDeltaXML, $sExpectedXMLInLaxMode, $sExpectedXMLInStrictMode)
+	public function LoadDeltaModeTest($sInitialXML, $sDeltaXML, $sExpectedXMLInLaxMode, $sExpectedXMLInStrictMode)
 	{
 		// Load in Lax mode
 		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
@@ -3347,7 +3421,7 @@ XML
 	}
 
 
-	public function ProviderLoadDeltaMode()
+	public function LoadDeltaModeProvider()
 	{
 		return [
 			'merge delta have different behavior depending on the mode' => [
