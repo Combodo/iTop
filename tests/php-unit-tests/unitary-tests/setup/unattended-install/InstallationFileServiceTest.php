@@ -2,14 +2,9 @@
 
 namespace Combodo\iTop\Test\UnitTest\Setup\UnattendedInstall;
 
-use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use PHPUnit\Framework\TestCase;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
-class InstallationFileServiceTest extends ItopDataTestCase {
+class InstallationFileServiceTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 		require_once(dirname(__FILE__, 6) . '/setup/unattended-install/InstallationFileService.php');
@@ -20,7 +15,6 @@ class InstallationFileServiceTest extends ItopDataTestCase {
 	protected function tearDown(): void {
 		parent::tearDown();
 
-		\ModuleDiscovery::$bDebugUnattended = false;
 		$sModuleId = "itop-problem-mgmt";
 		$this->RecurseMoveDir(APPROOT."data/production-modules/$sModuleId", APPROOT . "datamodels/2.x/$sModuleId");
 	}
@@ -176,7 +170,10 @@ class InstallationFileServiceTest extends ItopDataTestCase {
 	public function testGetAllSelectedModules_ProductionModules(bool $bModuleInProductionModulesFolder) {
 		$sModuleId = "itop-problem-mgmt";
 		if ($bModuleInProductionModulesFolder){
-			\ModuleDiscovery::$bDebugUnattended = true;
+			if (! is_dir(APPROOT."data/production-modules")){
+				@mkdir(APPROOT."data/production-modules");
+			}
+
 			$this->RecurseMoveDir(APPROOT . "datamodels/2.x/$sModuleId", APPROOT."data/production-modules/$sModuleId");
 		}
 
@@ -207,10 +204,5 @@ class InstallationFileServiceTest extends ItopDataTestCase {
 		}
 
 		@rmdir($sFromDir);
-
-		$aInfo = [];
-		$aInfo[$sFromDir] = exec("tree -L 2 $sFromDir");
-		$aInfo[$sToDir] = exec("tree -L 2 $sToDir");
-		\IssueLog::Info("RecurseMoveDir", null, $aInfo);
 	}
 }

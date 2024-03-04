@@ -94,8 +94,6 @@ class ModuleDiscovery
 		self::$m_sModulePath = $sModulePath;
 	}
 
-	public static $bDebugUnattended = false;
-
 	/**
 	 * @param string $sFilePath
 	 * @param string $sId
@@ -119,16 +117,6 @@ class ModuleDiscovery
 		}
 
 		$aArgs['root_dir'] = dirname($sFilePath);
-		if (strpos($sId, "itop-problem-mgmt") !== false){
-			$e = new \Exception("");
-			\IssueLog::Error("load itop-problem-mgmt", null,
-				[
-					'bDebugUnattended' => self::$bDebugUnattended,
-					'root_dir' => $aArgs['root_dir'],
-					'stacktrace' => $e->getTraceAsString(),
-				]
-			);
-		}
 		$aArgs['module_file'] = $sFilePath;
 
 		list($sModuleName, $sModuleVersion) = static::GetModuleName($sId);
