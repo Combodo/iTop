@@ -2,13 +2,12 @@
 
 namespace Combodo\iTop\Test\UnitTest\Setup\UnattendedInstall;
 
-use PHPUnit\Framework\TestCase;
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
-class InstallationFileServiceTest extends TestCase {
-
+class InstallationFileServiceTest extends ItopDataTestCase {
 	protected function setUp(): void {
-		require_once(dirname(__FILE__, 6) . '/setup/unattended-install/InstallationFileService.php');
 		parent::setUp();
+		require_once(dirname(__FILE__, 6) . '/setup/unattended-install/InstallationFileService.php');
 		$this->sFolderToCleanup = null;
 		\ModuleDiscovery::ResetCache();
 	}
@@ -16,6 +15,7 @@ class InstallationFileServiceTest extends TestCase {
 	protected function tearDown(): void {
 		parent::tearDown();
 
+		\ModuleDiscovery::$bDebugUnattended = false;
 		$sModuleId = "itop-problem-mgmt";
 		$this->RecurseMoveDir(APPROOT."data/production-modules/$sModuleId", APPROOT . "datamodels/2.x/$sModuleId");
 	}
@@ -171,6 +171,7 @@ class InstallationFileServiceTest extends TestCase {
 	public function testGetAllSelectedModules_ProductionModules(bool $bModuleInProductionModulesFolder) {
 		$sModuleId = "itop-problem-mgmt";
 		if ($bModuleInProductionModulesFolder){
+			\ModuleDiscovery::$bDebugUnattended = true;
 			$this->RecurseMoveDir(APPROOT . "datamodels/2.x/$sModuleId", APPROOT."data/production-modules/$sModuleId");
 		}
 

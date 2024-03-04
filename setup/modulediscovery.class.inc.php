@@ -76,7 +76,7 @@ class ModuleDiscovery
 		'doc.manual_setup' => 'url',
 		'doc.more_information' => 'url',
 	);
-	
+
 
 	// Cache the results and the source directories
 	protected static $m_aSearchDirs = null;
@@ -93,6 +93,8 @@ class ModuleDiscovery
 	{
 		self::$m_sModulePath = $sModulePath;
 	}
+
+	public static $bDebugUnattended = false;
 
 	/**
 	 * @param string $sFilePath
@@ -117,6 +119,16 @@ class ModuleDiscovery
 		}
 
 		$aArgs['root_dir'] = dirname($sFilePath);
+		if (strpos($sId, "itop-problem-mgmt") !== false){
+			$e = new \Exception("");
+			\IssueLog::Error("load itop-problem-mgmt", null,
+				[
+					'bDebugUnattended' => self::$bDebugUnattended,
+					'root_dir' => $aArgs['root_dir'],
+					'stacktrace' => $e->getTraceAsString(),
+				]
+			);
+		}
 		$aArgs['module_file'] = $sFilePath;
 
 		list($sModuleName, $sModuleVersion) = static::GetModuleName($sId);
@@ -148,7 +160,7 @@ class ModuleDiscovery
 			self::$m_aModuleVersionByName[$sModuleName]['version'] = $sModuleVersion;
 			self::$m_aModuleVersionByName[$sModuleName]['id'] = $sId;
 		}
-		
+
 		self::$m_aModules[$sId] = $aArgs;
 
 		// Now keep the relative paths, as provided
@@ -250,7 +262,7 @@ class ModuleDiscovery
 		if ($bAbortOnMissingDependency && count($aDependencies) > 0)
 		{
 			$aModulesInfo = array();
-			$aModuleDeps = array();			
+			$aModuleDeps = array();
 			foreach($aDependencies as $sId => $aDeps)
 			{
 				$aModule = $aModules[$sId];
@@ -282,7 +294,7 @@ class ModuleDiscovery
 		// The de-duplication is now done directly by the AddModule method
 		return $aModules;
 	}
-		
+
 	protected static function DependencyIsResolved($sDepString, $aOrderedModules, $aSelectedModules)
 	{
 		$bResult = false;
@@ -329,12 +341,12 @@ class ModuleDiscovery
 							if (version_compare($sCurrentVersion, $sExpectedVersion, $sOperator))
 							{
 								$aReplacements[$sModuleId] = '(true)'; // Add parentheses to protect against invalid condition causing
-																	   // a function call that results in a runtime fatal error								
+																	   // a function call that results in a runtime fatal error
 							}
 							else
 							{
 								$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
-																	   // a function call that results in a runtime fatal error								
+																	   // a function call that results in a runtime fatal error
 							}
 						}
 						else
@@ -393,20 +405,20 @@ class ModuleDiscovery
 		{
 			self::ResetCache();
 		}
-		
+
 		if (is_null(self::$m_aSearchDirs))
 		{
 			self::$m_aSearchDirs = $aSearchDirs;
-			
+
 			// Not in cache, let's scan the disk
 			foreach($aSearchDirs as $sSearchDir)
 			{
-				$sLookupDir = realpath($sSearchDir);			
+				$sLookupDir = realpath($sSearchDir);
 				if ($sLookupDir == '')
 				{
 					throw new Exception("Invalid directory '$sSearchDir'");
 				}
-	
+
 				clearstatcache();
 				self::ListModuleFiles(basename($sSearchDir), dirname($sSearchDir));
 			}
@@ -418,7 +430,7 @@ class ModuleDiscovery
 			return self::GetModules($bAbortOnMissingDependency, $aModulesToLoad);
 		}
 	}
-	
+
 	public static function ResetCache()
 	{
 		self::$m_aSearchDirs = null;
@@ -430,7 +442,7 @@ class ModuleDiscovery
 	 * Helper function to interpret the name of a module
 	 * @param $sModuleId string Identifier of the module, in the form 'name/version'
 	 * @return array(name, version)
-	 */    
+	 */
 	public static function GetModuleName($sModuleId)
 	{
 		$aMatches = array();
@@ -459,7 +471,7 @@ class ModuleDiscovery
 	{
 		static $iDummyClassIndex = 0;
 		$sDirectory = $sRootDir.'/'.$sRelDir;
-		
+
 		if ($hDir = opendir($sDirectory))
 		{
 			// This is the correct way to loop over the directory. (according to the documentation)
@@ -495,12 +507,12 @@ class ModuleDiscovery
 							$idx++;
 						}
 						$bRet = eval($sModuleFileContents);
-						
+
 						if ($bRet === false)
 						{
 							SetupPage::log_warning("Eval of $sRelDir/$sFile returned false");
 						}
-						
+
 						//echo "<p>Done.</p>\n";
 					}
 					catch(ParseError $e)
@@ -528,7 +540,7 @@ class ModuleDiscovery
 /** Alias for backward compatibility with old module files in which
  *  the declaration of a module invokes SetupWebPage::AddModule()
  *  whereas the new form is ModuleDiscovery::AddModule()
- */  
+ */
 class SetupWebPage extends ModuleDiscovery
 {
 	// For backward compatibility with old modules...
@@ -555,9 +567,9 @@ class SetupWebPage extends ModuleDiscovery
 	public static function log($sText)
 	{
 		SetupPage::log($sText);
-	}	
+	}
 }
-		
+
 /** Ugly patch !!!
  * In order to be able to analyse / load several times
  * the same module file, we rename the class (to avoid duplicate class definitions)

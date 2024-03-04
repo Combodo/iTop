@@ -14,15 +14,17 @@ require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
 require_once(APPROOT.'/setup/applicationinstaller.class.inc.php');
 
 class InstallationFileService {
+	private $sTargetEnvironment;
 	private $sInstallationPath;
 	private $aSelectedModules;
 	private $aUnSelectedModules;
 	private $aAutoSelectModules;
 
-	public function __construct(string $sInstallationPath) {
+	public function __construct(string $sInstallationPath,string $sTargetEnvironment='production') {
 		$this->sInstallationPath = $sInstallationPath;
 		$this->aSelectedModules = [];
 		$this->aUnSelectedModules = [];
+		$this->sTargetEnvironment = $sTargetEnvironment;
 	}
 
 	public function GetSelectedModules(): array {
@@ -172,7 +174,7 @@ class InstallationFileService {
 		$aDirs = [
 			'/datamodels/1.x',
 			'/datamodels/2.x',
-			'data/production-modules',
+			'data/' . $this->sTargetEnvironment . '-modules',
 			'extensions',
 		];
 		foreach ($aDirs as $sRelativeDir){
@@ -187,7 +189,7 @@ class InstallationFileService {
 	}
 
 	public function ProcessDefaultModules() : void {
-		$sProductionModuleDir = APPROOT.'data/production-modules/';
+		$sProductionModuleDir = APPROOT.'data/' . $this->sTargetEnvironment . '-modules/';
 
 		$oProductionEnv = new RunTimeEnvironment();
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), $this->GetExtraDirs(), false, null);
