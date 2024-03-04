@@ -315,7 +315,11 @@ JS
 
 		// - Reset button
 		$oNewsroomResetCacheButton = ButtonUIBlockFactory::MakeForAlternativeDestructiveAction(Dict::S('UI:Newsroom:ResetCache'));
-		$oNewsroomResetCacheButton->SetOnClickJsCode("$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')");
+		$oNewsroomResetCacheButton->SetOnClickJsCode(<<<JS
+$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')
+CombodoToast.OpenSuccessToast(Dict.S('UI:Newsroom:ResetCache:Success:Message'));
+JS
+		);
 		$oNewsroomToolbar->AddSubBlock($oNewsroomResetCacheButton);
 		// - Cancel button
 		$oNewsroomCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'));
@@ -916,7 +920,12 @@ try {
 				}
 				if ($bProvidersModified)
 				{
-					$oPage->add_ready_script('$(".itop-newsroom_menu").newsroom_menu("clearCache");');
+					$oPage->add_ready_script(
+						<<<JS
+$('#ibo-navigation-menu--notifications-menu').newsroom_menu("clearCache");
+CombodoToast.OpenSuccessToast(Dict.S('UI:Newsroom:ResetCache:Success:Message'));
+JS
+					);
 				}
 				DisplayPreferences($oPage);
 				break;
