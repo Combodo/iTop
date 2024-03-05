@@ -25,10 +25,13 @@ use DeprecatedCallsLog;
 use Dict;
 use ExecutionKPI;
 use IssueLog;
+use LogChannels;
 use MetaModel;
 use Symfony\Component\HttpFoundation\Response;
 use UserRights;
 use utils;
+use const APPROOT;
+use const MODULESROOT;
 
 
 /**
@@ -740,23 +743,121 @@ class WebPage implements Page
 	 * @return void
 	 * @uses WebPage::$a_linked_scripts
 	 * @since 3.2.0 N°6935 $sLinkedScriptAbsUrl MUST be an absolute URL
+	 * @deprecated 3.2.0 N°7315 Use {@see static::LinkScriptFromXXX()} instead
 	 */
 	public function add_linked_script($sLinkedScriptAbsUrl)
 	{
-		// Ensure there is actually an URI
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+
+		// Ensure there is actually a URI
 		if (utils::IsNullOrEmptyString(trim($sLinkedScriptAbsUrl))) {
 			return;
 		}
 
 		// Check if URI is absolute ("://" do allow any protocol), otherwise warn that it's a deprecated behavior
 		if (false === stripos($sLinkedScriptAbsUrl, "://")) {
-			IssueLog::Warning("Linked script added to page with a non absolute URL, which may lead to it not being loaded and causing javascript errors.", null, [
+			IssueLog::Warning("Linked script added to page via deprecated API with a non absolute URL, it may lead to it not being loaded and causing javascript errors.", null, [
 				"linked_script_url" => $sLinkedScriptAbsUrl,
 				"request_uri" => $_SERVER['REQUEST_URI'],
 			]);
 		}
 
 		$this->a_linked_scripts[$sLinkedScriptAbsUrl] = $sLinkedScriptAbsUrl;
+	}
+
+	/**
+	 * Use to link JS files from the iTop package (e.g. `<ITOP>/js/*`)
+	 *
+	 * @param string $sFileRelPath Rel. path from iTop app. root of the JS file to link (e.g. `js/utils.js`)
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkScriptFromAppRoot(string $sFileRelPath): void
+	{
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sFileRelPath))) {
+			return;
+		}
+
+		if (false === utils::RealPath(APPROOT . $sFileRelPath, APPROOT)) {
+			IssueLog::Warning("Linked script added to page with a path from outside app directory, it will be ignored.", LogChannels::CONSOLE, [
+				"linked_script_url" => $sFileRelPath,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+			return;
+		}
+
+		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
+
+		// Ensure app root url ends with a slash as it is not guaranteed by the API
+		if (strcmp(substr($sFileRelPath, -1), '/') !== 0) {
+			$sAppRootUrl .= '/';
+		}
+
+		$sFileAbsURI = $sAppRootUrl . $sFileRelPath;
+		$this->a_linked_scripts[$sFileAbsURI] = $sFileAbsURI;
+	}
+
+	/**
+	 * Use to link JS files from any module
+	 *
+	 * @param string $sFileRelPath Rel. path from current environment (e.g. `<ITOP>/env-production/`) of the JS file to link (e.g. `some-module/asset/js/some-file.js`)
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkScriptFromModule(string $sFileRelPath): void
+	{
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sFileRelPath))) {
+			return;
+		}
+
+		if (false === utils::RealPath(MODULESROOT . $sFileRelPath, MODULESROOT)) {
+			IssueLog::Warning("Linked script added to page with a path from outside current env. directory, it will be ignored.", LogChannels::CONSOLE, [
+				"linked_script_url" => $sFileRelPath,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+			return;
+		}
+
+		$sFileAbsURI = utils::GetAbsoluteUrlModulesRoot() . $sFileRelPath;
+		$this->a_linked_scripts[$sFileAbsURI] = $sFileAbsURI;
+	}
+
+	/**
+	 * Use to link JS files from any URI, typically an external server
+	 *
+	 * @param string $sFileAbsURI Abs. URI of the JS file to link (e.g. `https://external.server.com/some-file.js`)
+	 *                            Note: Any non-absolute URI will be ignored.
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkScriptFromURI(string $sFileAbsURI): void
+	{
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sFileAbsURI))) {
+			return;
+		}
+
+		// Check if URI is absolute ("://" do allow any protocol), otherwise ignore the file
+		if (false === stripos($sFileAbsURI, "://")) {
+			IssueLog::Warning("Linked script added to page with a non absolute URI, it will be ignored.", LogChannels::CONSOLE, [
+				"linked_script_url" => $sFileAbsURI,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+			return;
+		}
+
+		$this->a_linked_scripts[$sFileAbsURI] = $sFileAbsURI;
 	}
 
 	/**
