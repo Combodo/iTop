@@ -78,6 +78,17 @@ class WebPage implements Page
 
 	/**
 	 * @var string
+	 * @since 3.2.0
+	 */
+	protected const ENUM_RESOURCE_TYPE_JS = "js";
+	/**
+	 * @var string
+	 * @since 3.2.0
+	 */
+	protected const ENUM_RESOURCE_TYPE_CSS = "css";
+
+	/**
+	 * @var string
 	 * @since 3.0.0
 	 */
 	protected const ENUM_COMPATIBILITY_FILE_TYPE_JS = 'js';
@@ -516,6 +527,109 @@ class WebPage implements Page
 	}
 
 	/**
+	 * Internal helper to link a resource from the iTop package (e.g. `<ITOP/`)
+	 *
+	 * @param string $sFileRelPath Rel. path from iTop app. root of the resource to link (e.g. `css/login.css`)
+	 * @param string $sResourceType {@see static::ENUM_RESOURCE_TYPE_JS}, {@see static::ENUM_RESOURCE_TYPE_CSS}
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @internal
+	 * @since 3.2.0 N°7315
+	 */
+	private function LinkResourceFromAppRoot(string $sFileRelPath, string $sResourceType): void
+	{
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sFileRelPath))) {
+			return;
+		}
+
+		if (false === utils::RealPath(APPROOT . $sFileRelPath, APPROOT)) {
+			IssueLog::Warning("Linked resource added to page with a path from outside app directory, it will be ignored.", LogChannels::CONSOLE, [
+				"linked_resource_uri" => $sFileRelPath,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+			return;
+		}
+
+		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
+
+		// Ensure app root url ends with a slash as it is not guaranteed by the API
+		if (strcmp(substr($sFileRelPath, -1), '/') !== 0) {
+			$sAppRootUrl .= '/';
+		}
+
+		$this->LinkResourceFromURI($sAppRootUrl . $sFileRelPath, $sResourceType);
+	}
+
+	/**
+	 * Internal helper to link a resource from any module
+	 *
+	 * @param string $sFileRelPath Rel. path from current environment (e.g. `<ITOP>/env-production/`) of the resource to link (e.g. `some-module/asset/css/some-file.css`)
+	 * @param string $sResourceType {@see static::ENUM_RESOURCE_TYPE_JS}, {@see static::ENUM_RESOURCE_TYPE_CSS}
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @internal
+	 * @since 3.2.0 N°7315
+	 */
+	private function LinkResourceFromModule(string $sFileRelPath, string $sResourceType): void
+	{
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sFileRelPath))) {
+			return;
+		}
+
+		if (false === utils::RealPath(MODULESROOT . $sFileRelPath, MODULESROOT)) {
+			IssueLog::Warning("Linked resource added to page with a path from outside current env. directory, it will be ignored.", LogChannels::CONSOLE, [
+				"linked_resource_url" => $sFileRelPath,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+			return;
+		}
+
+		$this->LinkResourceFromURI(utils::GetAbsoluteUrlModulesRoot() . $sFileRelPath, $sResourceType);
+	}
+
+	/**
+	 * Internal helper to link a resource from any URI, may it be on iTop server or an external one
+	 *
+	 * @param string $sFileAbsURI Abs. URI of the resource to link (e.g. `https://external.server.com/some-file.css`)
+	 * @param string $sResourceType {@see static::ENUM_RESOURCE_TYPE_JS}, {@see static::ENUM_RESOURCE_TYPE_CSS}
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @internal
+	 * @since 3.2.0 N°7315
+	 */
+	private function LinkResourceFromURI(string $sFileAbsURI, string $sResourceType): void
+	{
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sFileAbsURI))) {
+			return;
+		}
+
+		// Check if URI is absolute ("://" do allow any protocol), otherwise ignore the file
+		if (false === stripos($sFileAbsURI, "://")) {
+			IssueLog::Warning("Linked resource added to page with a non absolute URI, it will be ignored.", LogChannels::CONSOLE, [
+				"linked_resource_url" => $sFileAbsURI,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+			return;
+		}
+
+		switch ($sResourceType) {
+			case static::ENUM_RESOURCE_TYPE_JS:
+				$this->a_linked_scripts[$sFileAbsURI] = $sFileAbsURI;
+				break;
+
+			case static::ENUM_RESOURCE_TYPE_CSS:
+				$this->a_linked_stylesheets[$sFileAbsURI] = $sFileAbsURI;
+				break;
+		}
+	}
+
+	/**
 	 * Empty all base JS in the page's header
 	 *
 	 * @uses WebPage::$a_a_early_scripts
@@ -758,7 +872,7 @@ class WebPage implements Page
 		if (false === stripos($sLinkedScriptAbsUrl, "://")) {
 			IssueLog::Warning("Linked script added to page via deprecated API with a non absolute URL, it may lead to it not being loaded and causing javascript errors.", null, [
 				"linked_script_url" => $sLinkedScriptAbsUrl,
-				"request_uri" => $_SERVER['REQUEST_URI'],
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
 			]);
 		}
 
@@ -777,28 +891,7 @@ class WebPage implements Page
 	 */
 	public function LinkScriptFromAppRoot(string $sFileRelPath): void
 	{
-		// Ensure there is actually a URI
-		if (utils::IsNullOrEmptyString(trim($sFileRelPath))) {
-			return;
-		}
-
-		if (false === utils::RealPath(APPROOT . $sFileRelPath, APPROOT)) {
-			IssueLog::Warning("Linked script added to page with a path from outside app directory, it will be ignored.", LogChannels::CONSOLE, [
-				"linked_script_url" => $sFileRelPath,
-				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
-			]);
-			return;
-		}
-
-		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
-
-		// Ensure app root url ends with a slash as it is not guaranteed by the API
-		if (strcmp(substr($sFileRelPath, -1), '/') !== 0) {
-			$sAppRootUrl .= '/';
-		}
-
-		$sFileAbsURI = $sAppRootUrl . $sFileRelPath;
-		$this->a_linked_scripts[$sFileAbsURI] = $sFileAbsURI;
+		$this->LinkResourceFromAppRoot($sFileRelPath, static::ENUM_RESOURCE_TYPE_JS);
 	}
 
 	/**
@@ -813,21 +906,7 @@ class WebPage implements Page
 	 */
 	public function LinkScriptFromModule(string $sFileRelPath): void
 	{
-		// Ensure there is actually a URI
-		if (utils::IsNullOrEmptyString(trim($sFileRelPath))) {
-			return;
-		}
-
-		if (false === utils::RealPath(MODULESROOT . $sFileRelPath, MODULESROOT)) {
-			IssueLog::Warning("Linked script added to page with a path from outside current env. directory, it will be ignored.", LogChannels::CONSOLE, [
-				"linked_script_url" => $sFileRelPath,
-				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
-			]);
-			return;
-		}
-
-		$sFileAbsURI = utils::GetAbsoluteUrlModulesRoot() . $sFileRelPath;
-		$this->a_linked_scripts[$sFileAbsURI] = $sFileAbsURI;
+		$this->LinkResourceFromModule($sFileRelPath, static::ENUM_RESOURCE_TYPE_JS);
 	}
 
 	/**
@@ -843,21 +922,7 @@ class WebPage implements Page
 	 */
 	public function LinkScriptFromURI(string $sFileAbsURI): void
 	{
-		// Ensure there is actually a URI
-		if (utils::IsNullOrEmptyString(trim($sFileAbsURI))) {
-			return;
-		}
-
-		// Check if URI is absolute ("://" do allow any protocol), otherwise ignore the file
-		if (false === stripos($sFileAbsURI, "://")) {
-			IssueLog::Warning("Linked script added to page with a non absolute URI, it will be ignored.", LogChannels::CONSOLE, [
-				"linked_script_url" => $sFileAbsURI,
-				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
-			]);
-			return;
-		}
-
-		$this->a_linked_scripts[$sFileAbsURI] = $sFileAbsURI;
+		$this->LinkResourceFromURI($sFileAbsURI, static::ENUM_RESOURCE_TYPE_JS);
 	}
 
 	/**
@@ -1039,13 +1104,76 @@ JS;
 	 * Add a CSS stylesheet (as an include, i.e. link) to the header of the page
 	 * Handles duplicates since 3.0.0 : calling twig with the same stylesheet will add the stylesheet only once
 	 *
-	 * @param string $s_linked_stylesheet
-	 * @param string $s_condition
+	 * @param string $sLinkedStylesheet
+	 * @param string $sCondition
 	 * @return void
+	 * @since 3.2.0 N°6935 $sLinkedStylesheet MUST be an absolute URL
+	 * @deprecated 3.2.0 N°7315 Use {@see static::LinkStylesheetFromXXX()} instead
 	 */
-	public function add_linked_stylesheet($s_linked_stylesheet, $s_condition = "")
+	public function add_linked_stylesheet($sLinkedStylesheet, $sCondition = "")
 	{
-		$this->a_linked_stylesheets[$s_linked_stylesheet] = array('link' => $s_linked_stylesheet, 'condition' => $s_condition);
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sLinkedStylesheet))) {
+			return;
+		}
+
+		// Check if URI is absolute ("://" do allow any protocol), otherwise warn that it's a deprecated behavior
+		if (false === stripos($sLinkedStylesheet, "://")) {
+			IssueLog::Warning("Linked stylesheet added to page via deprecated API with a non absolute URL, it may lead to it not being loaded and causing visual glitches.", null, [
+				"linked_stylesheet_url" => $sLinkedStylesheet,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+		}
+
+		$this->a_linked_stylesheets[$sLinkedStylesheet] = array('link' => $sLinkedStylesheet, 'condition' => $sCondition);
+	}
+
+	/**
+	 * Use to link CSS files from the iTop package (e.g. `<ITOP>/css/*`)
+	 *
+	 * @param string $sFileRelPath Rel. path from iTop app. root of the CSS file to link (e.g. `css/login.css`)
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkStylesheetFromAppRoot(string $sFileRelPath): void
+	{
+		$this->LinkResourceFromAppRoot($sFileRelPath, static::ENUM_RESOURCE_TYPE_CSS);
+	}
+
+	/**
+	 * Use to link CSS files from any module
+	 *
+	 * @param string $sFileRelPath Rel. path from current environment (e.g. `<ITOP>/env-production/`) of the CSS file to link (e.g. `some-module/asset/css/some-file.css`)
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkStylesheetFromModule(string $sFileRelPath): void
+	{
+		$this->LinkResourceFromModule($sFileRelPath, static::ENUM_RESOURCE_TYPE_CSS);
+	}
+
+	/**
+	 * Use to link CSS files from any URI, typically an external server
+	 *
+	 * @param string $sFileAbsURI Abs. URI of the CSS file to link (e.g. `https://external.server.com/some-file.css`)
+	 *                            Note: Any non-absolute URI will be ignored.
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkStylesheetFromURI(string $sFileAbsURI): void
+	{
+		$this->LinkResourceFromURI($sFileAbsURI, static::ENUM_RESOURCE_TYPE_CSS);
 	}
 
 	/**
