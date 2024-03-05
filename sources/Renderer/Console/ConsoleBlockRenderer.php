@@ -80,7 +80,7 @@ class ConsoleBlockRenderer extends BlockRenderer
 	{
 		// CSS files
 		foreach ($oBlock->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
-			$oPage->add_linked_stylesheet($sFileAbsUrl);
+			$oPage->LinkStylesheetFromURI($sFileAbsUrl);
 		}
 		// JS files
 		foreach ($oBlock->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {

@@ -43,10 +43,10 @@ class SetupPage extends NiceWebPage
 		$this->LinkScriptFromAppRoot('node_modules/@popperjs/core/dist/umd/popper.js');
 		$this->LinkScriptFromAppRoot('node_modules/tippy.js/dist/tippy-bundle.umd.js');
 		$this->LinkScriptFromAppRoot("setup/setup.js");
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
+		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
+		$this->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
+		$this->LinkStylesheetFromAppRoot('node_modules/tippy.js/dist/tippy.css');
+		$this->LinkStylesheetFromAppRoot('node_modules/tippy.js/animations/shift-away-subtle.css');
 
 		$this->LoadTheme();
 		$this->add_saas("css/setup.scss");

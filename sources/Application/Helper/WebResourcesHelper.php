@@ -93,7 +93,7 @@ class WebResourcesHelper
 	public static function EnableC3JSToWebPage(WebPage &$oPage): void
 	{
 		foreach (static::GetCSSFilesRelPathsForC3JS() as $sFile) {
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().$sFile);
+			$oPage->LinkStylesheetFromAppRoot($sFile);
 		}
 
 		foreach (static::GetJSFilesRelPathsForC3JS() as $sFile) {
@@ -137,7 +137,7 @@ class WebResourcesHelper
 	{
 		$oPage->LinkScriptFromAppRoot('js/raphael-min.js');
 		$oPage->LinkScriptFromAppRoot('js/fraphael.js');
-		$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/jquery-contextmenu/src/jquery.contextMenu.css');
+		$oPage->LinkStylesheetFromAppRoot('node_modules/jquery-contextmenu/src/jquery.contextMenu.css');
 		$oPage->LinkScriptFromAppRoot('node_modules/jquery-contextmenu/src/jquery.contextMenu.js');
 		$oPage->LinkScriptFromAppRoot('js/jquery.positionBy.js');
 		$oPage->LinkScriptFromAppRoot('js/jquery.popupmenu.js');

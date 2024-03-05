@@ -97,8 +97,8 @@ class LoginWebPage extends NiceWebPage
 	
 	public function SetStyleSheet()
 	{
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/login.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+		$this->LinkStylesheetFromAppRoot('css/login.css');
+		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
 	}
 
 	/**

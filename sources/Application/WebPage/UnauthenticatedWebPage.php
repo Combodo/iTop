@@ -85,9 +85,9 @@ class UnauthenticatedWebPage extends NiceWebPage
 		$this->LinkScriptFromURI(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
 
 		// CSS files
-		$this->add_linked_stylesheet(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap/css/bootstrap.min.css');
+		$this->LinkStylesheetFromURI(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap/css/bootstrap.min.css');
 		$this->add_saas(UAWP_PORTAL_PUBLIC_FOLDER_RELATIVE_PATH . 'css/bootstrap-theme-combodo.scss');
-		$this->add_linked_stylesheet(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css');
+		$this->LinkStylesheetFromURI(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css');
 
 		// Default theme
 		$this->add_saas('css/unauthenticated.scss');
@@ -278,13 +278,13 @@ class UnauthenticatedWebPage extends NiceWebPage
 	 */
 	protected function LoadTheme()
 	{
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
 		// Default theme
 		$this->add_saas('css/unauthenticated.scss');
 		// Custom theme to allow admin to override the default one.
 		if(!empty($this->sCustomThemeUrl))
 		{
-			$this->add_linked_stylesheet($this->sCustomThemeUrl);
+			$this->LinkStylesheetFromURI($this->sCustomThemeUrl);
 		}
 	}
 

@@ -306,8 +306,8 @@ try {
 
 			$oPage = new HubConnectorPage(Dict::S('iTopHub:Connect'));
 			$oPage->LinkScriptFromModule('itop-hub-connector/js/hub.js');
-			$oPage->add_linked_stylesheet('../css/font-combodo/font-combodo.css');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/css/hub.css');
+			$oPage->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
+			$oPage->LinkStylesheetFromModule('itop-hub-connector/css/hub.css');
 
 			$aDataToPost = MakeDataToPost($sTargetRoute);
 

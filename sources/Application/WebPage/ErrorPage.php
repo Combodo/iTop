@@ -28,8 +28,8 @@ class ErrorPage extends NiceWebPage
 		parent::__construct($sTitle);
 		$this->LinkScriptFromAppRoot("js/jquery.blockUI.js");
 		$this->LinkScriptFromAppRoot("setup/setup.js");
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
+		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
+		$this->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
 		$this->add_saas("css/setup.scss");
 		$oKpi->ComputeStats(get_class($this).' creation', 'ErrorPage');
 	}

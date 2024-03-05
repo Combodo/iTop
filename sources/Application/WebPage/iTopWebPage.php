@@ -257,24 +257,24 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		parent::InitializeLinkedStylesheets();
 
 		// Used by advanced search, date(time) attributes. Coupled to the PrepareWidgets() JS function.
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery-ui-timepicker-addon.css');
+		$this->LinkStylesheetFromAppRoot('css/jquery-ui-timepicker-addon.css');
 
 		// Used by inline image, CKEditor and other places
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/magnific-popup/dist/magnific-popup.css');
+		$this->LinkStylesheetFromAppRoot('node_modules/magnific-popup/dist/magnific-popup.css');
 
 		// Tooltips
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
+		$this->LinkStylesheetFromAppRoot('node_modules/tippy.js/dist/tippy.css');
+		$this->LinkStylesheetFromAppRoot('node_modules/tippy.js/animations/shift-away-subtle.css');
 
 		// Icons
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
+		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
+		$this->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
 
 		// Note: CKEditor files can't be moved easily as we need to find a way to init the "disabler" plugin, {@see js/toolbox.js}
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
+		$this->LinkStylesheetFromAppRoot('js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
 
 		// Used by external keys and other drop down lists
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
+		$this->LinkStylesheetFromAppRoot('css/selectize.default.css');
 	}
 
 	/**
@@ -898,7 +898,7 @@ HTML;
 		/** @var \iBackofficeLinkedStylesheetsExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iBackofficeLinkedStylesheetsExtension') as $oExtensionInstance) {
 			foreach ($oExtensionInstance->GetLinkedStylesheetsAbsUrls() as $sStylesheetUrl) {
-				$this->add_linked_stylesheet($sStylesheetUrl);
+				$this->LinkStylesheetFromURI($sStylesheetUrl);
 			}
 		}
 		// - API: Inline style

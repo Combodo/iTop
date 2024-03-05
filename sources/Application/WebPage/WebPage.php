@@ -1243,7 +1243,7 @@ JS;
 			$sRootUrl = '../';
 		}
 		$sCSSUrl = $sRootUrl.$sCssRelPath;
-		$this->add_linked_stylesheet($sCSSUrl);
+		$this->LinkStylesheetFromURI($sCSSUrl);
 	}
 
 	/**
