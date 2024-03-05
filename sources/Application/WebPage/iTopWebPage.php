@@ -172,49 +172,49 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		parent::InitializeLinkedScripts();
 
 		// Used by forms
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/leave_handler.js');
+		$this->LinkScriptFromAppRoot('js/leave_handler.js');
 
 		// Used by external keys, DM viewer
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.min.js');
+		$this->LinkScriptFromAppRoot('js/jquery.treeview.min.js');
 
 		// Used by advanced search, date(time) attributes. Coupled to the PrepareWidgets() JS function.
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon-i18n.min.js');
+		$this->LinkScriptFromAppRoot('js/jquery-ui-timepicker-addon.min.js');
+		$this->LinkScriptFromAppRoot('js/jquery-ui-timepicker-addon-i18n.min.js');
 
 		// Used by external keys and other drop down lists
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/selectize-plugin-a11y/selectize-plugin-a11y.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.multiselect.js');
+		$this->LinkScriptFromAppRoot('js/selectize.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/selectize-plugin-a11y/selectize-plugin-a11y.js');
+		$this->LinkScriptFromAppRoot('js/jquery.multiselect.js');
 
 		// Used by inline image, CKEditor and other places
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/magnific-popup/dist/jquery.magnific-popup.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/magnific-popup/dist/jquery.magnific-popup.min.js');
 
 		// Used by date(time) attibutes, activity panel, ...
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/moment-with-locales.min.js');
+		$this->LinkScriptFromAppRoot('js/moment-with-locales.min.js');
 
 		// Used by the newsroom
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/showdown/dist/showdown.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/showdown/dist/showdown.min.js');
 
 		// Tooltips
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/@popperjs/core/dist/umd/popper.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/tippy.js/dist/tippy-bundle.umd.min.js');
 		
 		// Toasts
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/toastify-js/src/toastify.js');
+		$this->LinkScriptFromAppRoot('node_modules/toastify-js/src/toastify.js');
 
 		// Keyboard shortcuts
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/mousetrap/mousetrap.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/mousetrap/plugins/record/mousetrap-record.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/keyboard-shortcuts.js');
+		$this->LinkScriptFromAppRoot('node_modules/mousetrap/mousetrap.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/mousetrap/plugins/record/mousetrap-record.min.js');
+		$this->LinkScriptFromAppRoot('js/pages/backoffice/keyboard-shortcuts.js');
 
 		// Used throughout the app.
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/toolbox.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/on-ready.js');
+		$this->LinkScriptFromAppRoot('js/pages/backoffice/toolbox.js');
+		$this->LinkScriptFromAppRoot('js/pages/backoffice/on-ready.js');
 
 		// Used by dashboard editor
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/property_field.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/icon_select.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ajaxfileupload.js');
+		$this->LinkScriptFromAppRoot('js/property_field.js');
+		$this->LinkScriptFromAppRoot('js/icon_select.js');
+		$this->LinkScriptFromAppRoot('js/ajaxfileupload.js');
 	}
 
 	/**
@@ -871,7 +871,7 @@ HTML;
 		/** @var \iBackofficeLinkedScriptsExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iBackofficeLinkedScriptsExtension') as $oExtensionInstance) {
 			foreach ($oExtensionInstance->GetLinkedScriptsAbsUrls() as $sScriptUrl) {
-				$this->add_linked_script($sScriptUrl);
+				$this->LinkScriptFromURI($sScriptUrl);
 			}
 		}
 		// - API: Early inline scripts

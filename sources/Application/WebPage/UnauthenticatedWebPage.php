@@ -77,13 +77,12 @@ class UnauthenticatedWebPage extends NiceWebPage
 		$this->SetContentType('text/html');
 
 		// - bootstrap
-		$this->add_linked_script(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap/js/bootstrap.min.js');
+		$this->LinkScriptFromURI(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap/js/bootstrap.min.js');
 
 		// Note: Since 2.6.0 moment was moved from portal to iTop core
-		$sMomentURL = utils::GetAbsoluteUrlAppRoot().'/js/moment-with-locales.min.js';
-		$this->add_linked_script($sMomentURL);
+		$this->LinkScriptFromAppRoot('js/moment-with-locales.min.js');
 
-		$this->add_linked_script(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
+		$this->LinkScriptFromURI(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
 
 		// CSS files
 		$this->add_linked_stylesheet(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap/css/bootstrap.min.css');

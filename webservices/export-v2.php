@@ -235,8 +235,8 @@ function FormatDatesInPreview(sRadioSelector, sPreviewSelector)
 }
 EOF
 	);
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
+	$oP->LinkScriptFromAppRoot('js/tabularfieldsselector.js');
+	$oP->LinkScriptFromAppRoot('js/jquery.dragtable.js');
 	$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
 
 	$oForm = FormUIBlockFactory::MakeStandard("export-form");

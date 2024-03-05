@@ -305,7 +305,7 @@ try {
 			$sCloseUrl = utils::GetAbsoluteUrlModulesRoot().'/itop-hub-connector/images/black-close.svg';
 
 			$oPage = new HubConnectorPage(Dict::S('iTopHub:Connect'));
-			$oPage->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/js/hub.js');
+			$oPage->LinkScriptFromModule('itop-hub-connector/js/hub.js');
 			$oPage->add_linked_stylesheet('../css/font-combodo/font-combodo.css');
 			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/css/hub.css');
 

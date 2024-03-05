@@ -263,7 +263,7 @@ try {
 	}
 
 	$oPage = new SetupPage(''); // Title will be set later, depending on $sOperation
-	$oPage->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/js/hub.js');
+	$oPage->LinkScriptFromModule('itop-hub-connector/js/hub.js');
 	$oPage->add_linked_stylesheet('../css/font-combodo/font-combodo.css');
 
 	$oPage->add_style(<<<CSS

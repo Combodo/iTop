@@ -62,7 +62,7 @@ class WebResourcesHelper
 		//when ckeditor is loaded in ajax,  CKEDITOR_BASEPATH  is not well defined (this constant is used to load additional js)
 		$oPage->add_script("if (! window.CKEDITOR_BASEPATH) { var CKEDITOR_BASEPATH = '".utils::GetAbsoluteUrlAppRoot()."js/ckeditor/';}");
 		foreach (static::GetJSFilesRelPathsForCKEditor() as $sFile) {
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sFile);
+			$oPage->LinkScriptFromAppRoot($sFile);
 		}
 	}
 
@@ -97,7 +97,7 @@ class WebResourcesHelper
 		}
 
 		foreach (static::GetJSFilesRelPathsForC3JS() as $sFile) {
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sFile);
+			$oPage->LinkScriptFromAppRoot($sFile);
 		}
 	}
 
@@ -135,13 +135,13 @@ class WebResourcesHelper
 	 */
 	public static function EnableSimpleGraphInWebPage(WebPage &$oPage): void
 	{
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/raphael-min.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
+		$oPage->LinkScriptFromAppRoot('js/raphael-min.js');
+		$oPage->LinkScriptFromAppRoot('js/fraphael.js');
 		$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/jquery-contextmenu/src/jquery.contextMenu.css');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/jquery-contextmenu/src/jquery.contextMenu.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.mousewheel.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
+		$oPage->LinkScriptFromAppRoot('node_modules/jquery-contextmenu/src/jquery.contextMenu.js');
+		$oPage->LinkScriptFromAppRoot('js/jquery.positionBy.js');
+		$oPage->LinkScriptFromAppRoot('js/jquery.popupmenu.js');
+		$oPage->LinkScriptFromAppRoot('js/jquery.mousewheel.js');
+		$oPage->LinkScriptFromAppRoot('js/simple_graph.js');
 	}
 }

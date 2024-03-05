@@ -152,20 +152,20 @@ JS
 		parent::InitializeLinkedScripts();
 
 		// Used throughout the app.
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/jquery/dist/jquery.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.blockUI.js');
+		$this->LinkScriptFromAppRoot('node_modules/jquery/dist/jquery.min.js');
+		$this->LinkScriptFromAppRoot('js/jquery.blockUI.js');
 		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
 		{
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev-params.js');
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev.js');
+			$this->LinkScriptFromAppRoot('js/jquery-migrate.dev-params.js');
+			$this->LinkScriptFromAppRoot('js/jquery-migrate.dev.js');
 		} else {
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
+			$this->LinkScriptFromAppRoot('js/jquery-migrate.prod.min.js');
 		}
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/jquery-ui-dist/jquery-ui.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/jquery-ui-dist/jquery-ui.min.js');
 
 		// Used throughout the app.
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/latinise/latinise.min.js');
+		$this->LinkScriptFromAppRoot('js/utils.js');
+		$this->LinkScriptFromAppRoot('js/latinise/latinise.min.js');
 	}
 
 	/**

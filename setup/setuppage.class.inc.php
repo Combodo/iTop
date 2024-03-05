@@ -39,10 +39,10 @@ class SetupPage extends NiceWebPage
 	public function __construct($sTitle)
 	{
 		parent::__construct($sTitle);
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot() . "js/jquery.blockUI.js");
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot() . "setup/setup.js");
+		$this->LinkScriptFromAppRoot("js/jquery.blockUI.js");
+		$this->LinkScriptFromAppRoot('node_modules/@popperjs/core/dist/umd/popper.js');
+		$this->LinkScriptFromAppRoot('node_modules/tippy.js/dist/tippy-bundle.umd.js');
+		$this->LinkScriptFromAppRoot("setup/setup.js");
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');

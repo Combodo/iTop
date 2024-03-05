@@ -37,11 +37,11 @@ try
 	// Main program
 	//
 	$oP = new iTopWebPage(Dict::S('Menu:TagAdminMenu+'));
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot() . "js/forms-json-utils.js");
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot() . "js/wizardhelper.js");
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot() . "js/wizard.utils.js");
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot() . "js/extkeywidget.js");
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot() . "js/jquery.blockUI.js");
+	$oP->LinkScriptFromAppRoot("js/forms-json-utils.js");
+	$oP->LinkScriptFromAppRoot("js/wizardhelper.js");
+	$oP->LinkScriptFromAppRoot("js/wizard.utils.js");
+	$oP->LinkScriptFromAppRoot("js/extkeywidget.js");
+	$oP->LinkScriptFromAppRoot("js/jquery.blockUI.js");
 
 	$sBaseClass = 'TagSetFieldData';
 	$sClass = utils::ReadParam('class', '', false, 'class');

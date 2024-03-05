@@ -350,7 +350,7 @@ try
 			case 'stimulus': // Form displayed when applying a stimulus (state change)
 			case 'apply_stimulus': // Form displayed when applying a stimulus (state change)
 				foreach (ObjectController::EnumRequiredForModificationJsFilesRelPaths() as $sJsFileRelPath) {
-					$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot() . "$sJsFileRelPath");
+					$oP->LinkScriptFromAppRoot($sJsFileRelPath);
 				}
 				break;
 		}

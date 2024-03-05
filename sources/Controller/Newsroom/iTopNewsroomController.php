@@ -56,7 +56,7 @@ class iTopNewsroomController extends Controller
 	public function OperationViewAll()
 	{
 		$oPage = new iTopWebPage(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Title'));
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/itop-newsroom.view-all.js');
+		$oPage->LinkScriptFromAppRoot('js/pages/backoffice/itop-newsroom.view-all.js');
 		// Add title block
 		// Make bulk actions block
 		$oBulkActionsBlock = PanelUIBlockFactory::MakeForInformation(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Title'));
