@@ -3,6 +3,7 @@ namespace Combodo\iTop\Service\Notification;
 
 
 use ActionNotification;
+use Combodo\iTop\Core\Trigger\Enum\SubscriptionPolicy;
 use Contact;
 use lnkActionNotificationToContact;
 use Trigger;
@@ -99,7 +100,7 @@ class NotificationsService {
 	public function IsSubscribed(Trigger $oTrigger, ActionNotification $oActionNotification, Contact $oRecipient): bool
 	{
 		// Check if the trigger subscription policy is 'force_all_channels'
-		if ($oTrigger->Get('subscription_policy') === 'force_all_channels') {
+		if ($oTrigger->Get('subscription_policy') === SubscriptionPolicy::ForceAllChannels) {
 			return true;
 		}
 		// Check if the user is already subscribed to the action notification

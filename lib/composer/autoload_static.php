@@ -792,6 +792,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Core\\Kpi\\KpiLogData' => __DIR__ . '/../..' . '/sources/Core/Kpi/KpiLogData.php',
         'Combodo\\iTop\\Core\\MetaModel\\FriendlyNameType' => __DIR__ . '/../..' . '/sources/Core/MetaModel/FriendlyNameType.php',
         'Combodo\\iTop\\Core\\MetaModel\\HierarchicalKey' => __DIR__ . '/../..' . '/sources/Core/MetaModel/HierarchicalKey.php',
+        'Combodo\\iTop\\Core\\Trigger\\Enum\\SubscriptionPolicy' => __DIR__ . '/../..' . '/sources/Core/Trigger/Enum/SubscriptionPolicy.php',
         'Combodo\\iTop\\DesignDocument' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\DesignElement' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\Form\\Field\\AbstractSimpleField' => __DIR__ . '/../..' . '/sources/Form/Field/AbstractSimpleField.php',

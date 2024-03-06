@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Set\SetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Core\Trigger\Enum\SubscriptionPolicy;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Service\Notification\NotificationsRepository;
 use Combodo\iTop\Service\Router\Router;
@@ -82,7 +83,7 @@ class NotificationsCenterController extends Controller
 			// Add the action notification to the list of actions notifications for the trigger
 			$oActionsNotificationsByTrigger[$iTriggerId][] = $oSubscribedActionNotification;
 			// Add the subscribed status to the list of subscribed actions notifications for the trigger
-			$aSubscribedActionsNotificationsByTrigger[$iTriggerId][$oSubscribedActionNotification->GetKey()] = $oLnkActionsNotifications->Get('subscribed') || $oTrigger->Get('subscription_policy') === 'force_all_channels';
+			$aSubscribedActionsNotificationsByTrigger[$iTriggerId][$oSubscribedActionNotification->GetKey()] = $oLnkActionsNotifications->Get('subscribed') || $oTrigger->Get('subscription_policy') === SubscriptionPolicy::ForceAllChannels;
 		}
 
 		// Build table rows
@@ -155,7 +156,7 @@ class NotificationsCenterController extends Controller
 			$oChannelSet->SetOptionsTemplate('application/object/set/option_renderer.html.twig');
 			$oChannelSet->SetItemsTemplate('application/preferences/notification-center/item_renderer.html.twig');
 			// Disable the input set if the subscription policy is 'force_all_channels'
-			if($sTriggerSubscriptionPolicy === 'force_all_channels'){
+			if ($sTriggerSubscriptionPolicy === SubscriptionPolicy::ForceAllChannels) {
 				$oChannelSet->SetIsDisabled(true);
 			}
 			// Add a CSRF Token
@@ -190,8 +191,8 @@ $.ajax({
 });
 JS
 			);
-			// Set the minimum number of channels to 1 if the subscription policy is 'force_at_least_one_channel'
-			if($sTriggerSubscriptionPolicy === 'force_at_least_one_channel')
+			// Set the minimum number of channels to 1 if the subscription policy is {@see SubscriptionPolicy::ForceAtLeastOneChannel}
+			if($sTriggerSubscriptionPolicy === SubscriptionPolicy::ForceAtLeastOneChannel)
 			{
 				$oChannelSet->SetMinItems(1);
 			}
@@ -289,7 +290,7 @@ JS
 			// Add the action notification to the list of actions notifications for the trigger
 			$oActionsNotificationsByTrigger[$iTriggerId][] = $oSubscribedActionNotification;
 			// Add the subscribed status to the list of subscribed actions notifications for the trigger
-			$aSubscribedActionsNotificationsByTrigger[$iTriggerId][$oSubscribedActionNotification->GetKey()] = $oLnkActionsNotifications->Get('subscribed') || $oTrigger->Get('subscription_policy') === 'force_all_channels';
+			$aSubscribedActionsNotificationsByTrigger[$iTriggerId][$oSubscribedActionNotification->GetKey()] = $oLnkActionsNotifications->Get('subscribed') || $oTrigger->Get('subscription_policy') === SubscriptionPolicy::ForceAllChannels;
 		}
 
 		$oPage->AddTabContainer('NotificationsCenter', '', $oNotificationsPanel);
@@ -491,7 +492,7 @@ JS
 				throw new \Exception('Invalid trigger');
 			}
 			// Check the trigger subscription policy
-			if($oTrigger->Get('subscription_policy') === 'force_all_channels'){
+			if ($oTrigger->Get('subscription_policy') === SubscriptionPolicy::ForceAllChannels) {
 				throw new \Exception('You are not allowed to unsubscribe from this channel');
 			}
 			
@@ -501,7 +502,7 @@ JS
 				throw new \Exception('You are not subscribed to any channel');
 			}
 			// Check the trigger subscription policy and if we are subscribed to at least 1 channel if necessary
-			if($oTrigger->Get('subscription_policy') === 'force_at_least_one_channel') {
+			if($oTrigger->Get('subscription_policy') === SubscriptionPolicy::ForceAtLeastOneChannel) {
 				$oTotalSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactAndSubscription($iTriggerId, \UserRights::GetContactId(), '1');
 				if (($oTotalSubscribedActionsNotificationsSet->Count() - $oSubscribedActionsNotificationsSet->Count()) === 0) {
 					throw new \Exception('You can\'t unsubscribe from this channel, you must be subscribed to at least one channel');
