@@ -472,6 +472,29 @@ class ValueSetEnum extends ValueSetDefinition
 	protected bool $bSortByValues;
 
 	/**
+	 * @param string $sBackedEnumFQCN FQCN of the backed enum to use
+	 * @param bool $bSortValues {@see static::$bSortValues}
+	 *
+	 * @return \ValueSetEnum ValueSetEnum based on the values of the $sBackedEnumFQCN backed enum
+	 * @throws \CoreException
+	 * @since 3.2.0
+	 */
+	public static function FromBackedEnum(string $sBackedEnumFQCN, bool $bSortValues = false): ValueSetEnum
+	{
+		// First, check that we pass an enum as there is no generic type hint for that yet
+		if (false === enum_exists($sBackedEnumFQCN)) {
+			throw new CoreException("Can't instantiate " . __CLASS__ . "::" . __METHOD__ . " from a non-enum argument", [
+				"argument" => $sBackedEnumFQCN
+			]);
+		}
+
+		// Implode cases
+		$sJoinedValues = implode(",", array_map(fn($case) => $case->value, $sBackedEnumFQCN::cases()));
+
+		return new ValueSetEnum($sJoinedValues, $bSortValues);
+	}
+
+	/**
 	 * @param array|string $Values
 	 * @param bool $bLocalizedSort
 	 *
