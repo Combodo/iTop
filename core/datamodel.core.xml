@@ -397,6 +397,34 @@
         </field>
       </fields>
       <presentation>
+        <details>
+          <items>
+            <item id="date">
+              <rank>10</rank>
+            </item>
+            <item id="title">
+              <rank>20</rank>
+            </item>
+            <item id="message">
+              <rank>30</rank>
+            </item>
+            <item id="contact_id">
+              <rank>40</rank>
+            </item>
+            <item id="trigger_id">
+              <rank>50</rank>
+            </item>
+            <item id="action_id">
+              <rank>60</rank>
+            </item>
+            <item id="read">
+              <rank>70</rank>
+            </item>
+            <item id="url">
+              <rank>80</rank>
+            </item>
+          </items>
+        </details>
         <summary>
         <items>
           <item id="date">

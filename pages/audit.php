@@ -281,7 +281,7 @@ try
 			$oAllCategoriesDashlet
 				->AddCSSClasses(['ibo-dashlet--is-inline', 'ibo-dashlet-badge'])
 				->AddSubBlock(DashletFactory::MakeForDashletBadge(
-					'../images/icons/icons8-audit.svg',
+					utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-audit.svg',
 					utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit",
 					$iCategoryCount,
 					Dict::S('UI:Audit:Interactive:Selection:BadgeAll')
@@ -304,7 +304,7 @@ try
 			/** @var AuditDomain $oAuditDomain */
 			while($oAuditDomain = $oDomainSet->Fetch()) {
 				$sDomainUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit&domain=".$oAuditDomain->GetKey();
-				$sIconUrl = '../images/icons/icons8-puzzle.svg';
+				$sIconUrl = utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-puzzle.svg';
 					/** @var \ormDocument $oImage */
 				$oImage = $oAuditDomain->Get('icon');
 				if (!$oImage->IsEmpty()) {
@@ -357,9 +357,9 @@ try
 			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle));
 			$oP->AddUiBlock(new Text($sSubTitle));
 
-			$oTotalBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-audit.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsAudited'));
-			$oErrorBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-delete.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsInError'));
-			$oWorkingBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-checkmark.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsValidated'));
+			$oTotalBlock = DashletFactory::MakeForDashletBadge(utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-audit.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsAudited'));
+			$oErrorBlock = DashletFactory::MakeForDashletBadge(utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-delete.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsInError'));
+			$oWorkingBlock = DashletFactory::MakeForDashletBadge(utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-checkmark.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsValidated'));
 
 			$aCSSClasses = ['ibo-dashlet--is-inline', 'ibo-dashlet-badge'];
 
@@ -436,7 +436,7 @@ try
 								foreach ($aErrors as $aErrorRow) {
 									$aObjectsWithErrors[$aErrorRow['id']] = true;
 								}
-								$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\"><img src=\"../images/icons/icons8-export-csv.svg\" class=\"ibo-audit--audit-line--csv-download\"></a>";
+								$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\"><img src=\"" . utils::GetAbsoluteUrlAppRoot() . "images/icons/icons8-export-csv.svg\" class=\"ibo-audit--audit-line--csv-download\"></a>";
 								$aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
 								$aRow['class'] = $oAuditCategory->GetReportColor($iCount, $iErrorsCount);
 							}

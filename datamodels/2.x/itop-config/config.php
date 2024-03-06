@@ -110,10 +110,10 @@ ApplicationMenu::CheckMenuIdEnabled('ConfigEditor');
 $oP = new iTopWebPage(Dict::S('config-edit-title'));
 $oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
 $sAceDir = 'node_modules/ace-builds/src-min/';
-$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sAceDir.'ace.js');
-$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sAceDir.'mode-php.js');
-$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sAceDir.'theme-eclipse.js');
-$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sAceDir.'ext-searchbox.js');
+$oP->LinkScriptFromAppRoot($sAceDir.'ace.js');
+$oP->LinkScriptFromAppRoot($sAceDir.'mode-php.js');
+$oP->LinkScriptFromAppRoot($sAceDir.'theme-eclipse.js');
+$oP->LinkScriptFromAppRoot($sAceDir.'ext-searchbox.js');
 
 try {
 	$sOperation = utils::ReadParam('operation', '');

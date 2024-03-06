@@ -17,7 +17,7 @@ class HubConnectorPage extends NiceWebPage
 		$sModuleImagesDir = utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/images';
 
 		$sUserPrefs = appUserPreferences::GetAsJSON();
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
+		$this->LinkScriptFromAppRoot('js/utils.js');
 		$this->add_script(<<<JS
 		var oUserPreferences = $sUserPrefs;
 JS

@@ -1446,7 +1446,7 @@ EOF
 					<<<EOF
 	function OnTruncatedHistoryToggle(bShowAll)
 	{
-		$('#csv_history_reload').html('<img src="../images/indicator.gif"/>');
+		$('#csv_history_reload').html('<img src="' + GetAbsoluteUrlAppRoot() + 'images/indicator.gif"/>');
 		$.get(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?{$sAppContext}', {operation: 'displayCSVHistory', showall: bShowAll}, function(data)
 			{
 				$('#$sAjaxDivId').html(data);

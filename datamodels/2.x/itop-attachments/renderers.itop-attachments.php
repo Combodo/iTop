@@ -185,6 +185,7 @@ abstract class AbstractAttachmentsRenderer
 	{
 		$sClass = $this->sObjClass;
 		$sId = $this->iObjKey;
+		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
 		$iMaxUploadInBytes = AttachmentPlugIn::GetMaxUploadSize();
 		$sMaxUploadLabel = AttachmentPlugIn::GetMaxUpload();
 		$sFileTooBigLabel = Dict::Format('Attachments:Error:FileTooLarge', $sMaxUploadLabel);
@@ -195,15 +196,15 @@ abstract class AbstractAttachmentsRenderer
 		$oAddButton = FileSelectUIBlockFactory::MakeStandard('file', 'file');
 		$oAddButton->SetShowFilename(false);
 		$this->oPage->AddUiBlock($oAddButton);
-		$this->oPage->add('<span style="display:none;" id="attachment_loading"><img src="../images/indicator.gif"></span> '.$sMaxUploadLabel);
+		$this->oPage->add('<span style="display:none;" id="attachment_loading"><img src="' . $sAppRootUrl . 'images/indicator.gif"></span> ' . $sMaxUploadLabel);
 		$this->oPage->add('</div>');
 		$this->oPage->add('<div class="ibo-attachment--upload-file--drop-zone-hint ibo-svg-illustration--container">');
 		$this->oPage->add(file_get_contents(APPROOT.'images/illustrations/undraw_upload.svg'));
 		$this->oPage->add(Dict::S('UI:Attachments:DropYourFileHint').'</div>');
 		
 
-		$this->oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/blueimp-file-upload/js/jquery.iframe-transport.js');
-		$this->oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/blueimp-file-upload/js/jquery.fileupload.js');
+		$this->oPage->LinkScriptFromAppRoot('node_modules/blueimp-file-upload/js/jquery.iframe-transport.js');
+		$this->oPage->LinkScriptFromAppRoot('node_modules/blueimp-file-upload/js/jquery.fileupload.js');
 
 		$this->oPage->add_ready_script(
 			<<<JS
@@ -342,7 +343,7 @@ abstract class AbstractAttachmentsRenderer
 				$('.attachment a[href="'+sSrc+'"]').parent().addClass('image-in-use').find('img').wrap('<div class="image-in-use-wrapper" style="position:relative;display:inline-block;"></div>');
 			});
 		});
-		$('.image-in-use-wrapper').append('<div style="position:absolute;top:0;left:0;"><img src="../images/transp-lock.png"></div>');
+		$('.image-in-use-wrapper').append('<div style="position:absolute;top:0;left:0;"><img src="' + GetAbsoluteUrlModulesRoot() + 'images/transp-lock.png"></div>');
 	}, 200 );
 JS
 		);

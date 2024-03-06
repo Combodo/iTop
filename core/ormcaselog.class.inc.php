@@ -516,7 +516,7 @@ class ormCaseLog {
 					$sScript = '<script src="'.$sFileAbsUrl.'"></></script>';
 					$sHtml .= $sScript;
 				} else {
-					$oP->add_linked_script($sFileAbsUrl);
+					$oP->LinkScriptFromURI($sFileAbsUrl);
 				}
 			}
 		}

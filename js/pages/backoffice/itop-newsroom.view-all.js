@@ -15,6 +15,8 @@ $('body').on('itop.notification.deleted', '.ibo-notifications--view-all--contain
 		$('.ibo-notifications--view-all--unread-action').attr('disabled', 'disabled');
 		$('.ibo-notifications--view-all--delete-action').attr('disabled', 'disabled');
 	}
+
+	$('#ibo-navigation-menu--notifications-menu').newsroom_menu("clearCache");
 });
 
 let fReadUnreadDisabled = function() {
@@ -28,6 +30,8 @@ let fReadUnreadDisabled = function() {
 		$('.ibo-notifications--view-all--read-action').removeAttr('disabled');
 		$('.ibo-notifications--view-all--unread-action').removeAttr('disabled');
 	}
+
+	$('#ibo-navigation-menu--notifications-menu').newsroom_menu("clearCache");
 }
 
 $('body').on('itop.notification.read itop.notification.unread', '.ibo-notifications--view-all--container', fReadUnreadDisabled);

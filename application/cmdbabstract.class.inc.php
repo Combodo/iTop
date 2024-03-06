@@ -2429,7 +2429,7 @@ HTML;
 					$sInputType = self::ENUM_INPUT_TYPE_IMAGE;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'change';
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/edit_image.js');
+					$oPage->LinkScriptFromAppRoot('js/edit_image.js');
 					$oDocument = $value; // Value is an ormDocument objectm
 					$sDefaultUrl = $oAttDef->Get('default_image');
 					if (is_object($oDocument) && !$oDocument->IsEmpty()) {
@@ -2545,11 +2545,11 @@ HTML;
 					$sHTMLValue .= '</div></div>';
 					$sHTMLValue .= '<div>'.$sReloadSpan.'</div>'; // No validation span for this one: it does handle its own validation!
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_handler.js');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/console_form_handler.js');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_set.js');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_field.js');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/subform_field.js');
+					$oPage->LinkScriptFromAppRoot('js/form_handler.js');
+					$oPage->LinkScriptFromAppRoot('js/console_form_handler.js');
+					$oPage->LinkScriptFromAppRoot('js/field_set.js');
+					$oPage->LinkScriptFromAppRoot('js/form_field.js');
+					$oPage->LinkScriptFromAppRoot('js/subform_field.js');
 					$oPage->add_ready_script(
 						<<<JS
 $('#{$iId}_field_set').field_set($sFieldSetOptions);
@@ -2575,9 +2575,9 @@ JS
 				case 'Set':
 				case 'TagSet':
 					$sInputType = self::ENUM_INPUT_TYPE_TAGSET;
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
-					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.itop-set-widget.js');
+					$oPage->LinkScriptFromAppRoot('js/selectize.min.js');
+					$oPage->LinkStylesheetFromAppRoot('css/selectize.default.css');
+					$oPage->LinkScriptFromAppRoot('js/jquery.itop-set-widget.js');
 
 					$oPage->add_dict_entry('Core:AttributeSet:placeholder');
 
@@ -3452,7 +3452,7 @@ EOF
 								// Dummy collapsible section created in order to get JS files
 								$oCollapsibleSection = new CollapsibleSection('');
 								foreach ($oCollapsibleSection->GetJsFilesUrlRecursively(true) as $sJSFile) {
-									$oPage->add_linked_script($sJSFile);
+									$oPage->LinkScriptFromURI($sJSFile);
 								}
 							}
 							$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);

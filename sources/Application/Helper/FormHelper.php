@@ -55,7 +55,6 @@ class FormHelper
 	 */
 	public static function DisableAttributeBlobInputs(string $sClassName, array &$aExtraParams): void
 	{
-
 		// Initialize extra params array
 		if (!array_key_exists('fieldsFlags', $aExtraParams)) {
 			$aExtraParams['fieldsFlags'] = [];
@@ -64,13 +63,13 @@ class FormHelper
 			$aExtraParams['fieldsComments'] = [];
 		}
 
-		// Iterate throw class attributes...
+		// Iterate through class attributes...
+		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
 		foreach (MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef) {
-
 			// Set attribute blobs in read only
 			if ($oAttDef instanceof AttributeBlob) {
 				$aExtraParams['fieldsFlags'][$sAttCode] = OPT_ATT_READONLY;
-				$aExtraParams['fieldsComments'][$sAttCode] = '&nbsp;<img src="../images/transp-lock.png" style="vertical-align:middle" title="'.utils::EscapeHtml(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
+				$aExtraParams['fieldsComments'][$sAttCode] = '&nbsp;<img src="' . $sAppRootUrl . 'images/transp-lock.png" style="vertical-align:middle" title="'.utils::EscapeHtml(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
 			}
 		}
 	}

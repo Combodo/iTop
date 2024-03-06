@@ -315,7 +315,7 @@ JS;
 		}
 		// - JS files
 		foreach (static::EnumRequiredForModificationJsFilesRelPaths() as $sJsFileRelPath) {
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sJsFileRelPath);
+			$oPage->LinkScriptFromAppRoot($sJsFileRelPath);
 		}
 
 		// Note: Code duplicated to the case 'apply_modify' in UI.php when a data integrity issue has been found
@@ -771,7 +771,7 @@ JS;
 	protected function AddRequiredForModificationJsFilesToPage(iTopWebPage &$oPage): void
 	{
 		foreach (static::EnumRequiredForModificationJsFilesRelPaths() as $sJsFileRelPath) {
-			$oPage->add_linked_script("../$sJsFileRelPath");
+			$oPage->LinkScriptFromAppRoot($sJsFileRelPath);
 		}
 	}
 

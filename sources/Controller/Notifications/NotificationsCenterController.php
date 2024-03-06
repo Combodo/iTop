@@ -255,7 +255,7 @@ JS
 
 		// Add Set JS files to the page as we used a renderer ourselves, they are not added automatically by the page
 		foreach (Set::DEFAULT_JS_FILES_REL_PATH as $sJsFile) {
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sJsFile);
+			$oPage->LinkScriptFromAppRoot($sJsFile);
 		}
 
 		$oPage->AddSubBlock($oNotificationsPanel);

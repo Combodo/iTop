@@ -133,7 +133,7 @@ function ValidateOtherSettings()
 	}
 	else
 	{
-		$('#v_default_page_size').html('<img src="../images/validation_error.png"/>');
+		$('#v_default_page_size').html('<img src="' + GetAbsoluteUrlAppRoot() + 'images/validation_error.png"/>');
 		$('#ibo-misc-settings-submit').prop('disabled', true);
 		return false;
 	}
@@ -315,7 +315,11 @@ JS
 
 		// - Reset button
 		$oNewsroomResetCacheButton = ButtonUIBlockFactory::MakeForAlternativeDestructiveAction(Dict::S('UI:Newsroom:ResetCache'));
-		$oNewsroomResetCacheButton->SetOnClickJsCode("$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')");
+		$oNewsroomResetCacheButton->SetOnClickJsCode(<<<JS
+$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')
+CombodoToast.OpenSuccessToast(Dict.S('UI:Newsroom:ResetCache:Success:Message'));
+JS
+		);
 		$oNewsroomToolbar->AddSubBlock($oNewsroomResetCacheButton);
 		// - Cancel button
 		$oNewsroomCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'));
@@ -417,7 +421,7 @@ JS
 
 	$oUserPicturePlaceHolderBlock = new Panel(Dict::S('UI:Preferences:ChooseAPlaceholder'), array(), 'grey', 'ibo-user-picture-placeholder');
 
-	$sUserPicturesFolder = '../images/user-pictures/';
+	$sUserPicturesFolder = utils::GetAbsoluteUrlAppRoot() . 'images/user-pictures/';
 	$sUserDefaultPicture = appUserPreferences::GetPref('user_picture_placeholder', 'default-placeholder.png');
 	$sUserPicturePlaceHolderHtml = '';
 	$sUserPicturePlaceHolderHtml .= '<p>'.Dict::S('UI:Preferences:ChooseAPlaceholder+').'</p> <div class="ibo-preferences--user-preferences--picture-placeholder">';
@@ -916,7 +920,12 @@ try {
 				}
 				if ($bProvidersModified)
 				{
-					$oPage->add_ready_script('$(".itop-newsroom_menu").newsroom_menu("clearCache");');
+					$oPage->add_ready_script(
+						<<<JS
+$('#ibo-navigation-menu--notifications-menu').newsroom_menu("clearCache");
+CombodoToast.OpenSuccessToast(Dict.S('UI:Newsroom:ResetCache:Success:Message'));
+JS
+					);
 				}
 				DisplayPreferences($oPage);
 				break;

@@ -26,10 +26,10 @@ class ErrorPage extends NiceWebPage
 	{
 		$oKpi = new ExecutionKPI();
 		parent::__construct($sTitle);
-		$this->add_linked_script("../js/jquery.blockUI.js");
-		$this->add_linked_script("../setup/setup.js");
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
+		$this->LinkScriptFromAppRoot("js/jquery.blockUI.js");
+		$this->LinkScriptFromAppRoot("setup/setup.js");
+		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
+		$this->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
 		$this->add_saas("css/setup.scss");
 		$oKpi->ComputeStats(get_class($this).' creation', 'ErrorPage');
 	}
@@ -58,7 +58,7 @@ class ErrorPage extends NiceWebPage
 		if(utils::IsEasterEggAllowed())
 		{
 			$this->add('<div class="message message-valid">'.Dict::S('UI:ErrorPage:UnstableVersion').'</div>');
-			$this->add('<img src="../images/alpha-fatal-error.gif">');
+			$this->add('<img src="' . utils::GetAbsoluteUrlAppRoot() . 'images/alpha-fatal-error.gif">');
 			$this->add('<div class="message message-valid">'.nl2br(Dict::S('UI:ErrorPage:KittyDisclaimer')).'</div>');
 		}
 		$this->log_error($sText);

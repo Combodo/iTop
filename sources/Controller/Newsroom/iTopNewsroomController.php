@@ -56,7 +56,7 @@ class iTopNewsroomController extends Controller
 	public function OperationViewAll()
 	{
 		$oPage = new iTopWebPage(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Title'));
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/itop-newsroom.view-all.js');
+		$oPage->LinkScriptFromAppRoot('js/pages/backoffice/itop-newsroom.view-all.js');
 		// Add title block
 		// Make bulk actions block
 		$oBulkActionsBlock = PanelUIBlockFactory::MakeForInformation(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Title'));
@@ -233,10 +233,6 @@ $.ajax({
 	type: 'POST',
 	success: function(data) {
 		if (data.status === 'success') {
-			let MarkAsReadButton = oNotificationToMarkAsRead.find('.ibo-button-group:not(.ibo-is-hidden)');
-			let MarkAsUnreadButton = oNotificationToMarkAsRead.find('.ibo-button-group.ibo-is-hidden');
-			MarkAsReadButton.addClass('ibo-is-hidden');
-			MarkAsUnreadButton.removeClass('ibo-is-hidden');
 			oNotificationToMarkAsRead.removeClass('ibo-notifications--view-all--item--unread').addClass('ibo-notifications--view-all--item--read');
 			CombodoToast.OpenSuccessToast(data.message);
 			$('.ibo-notifications--view-all--container').trigger('itop.notification.read');
@@ -273,12 +269,6 @@ $.ajax({
 	type: 'POST',
 	success: function(data) {
 		if (data.status === 'success') {
-			let MarkAsUnreadButton  = oNotificationToMarkAsUnread.find('.ibo-button-group:not(.ibo-is-hidden)');
-			let MarkAsReadButton = oNotificationToMarkAsUnread.find('.ibo-button-group.ibo-is-hidden');
-			
-			MarkAsReadButton.removeClass('ibo-is-hidden');
-			MarkAsUnreadButton.addClass('ibo-is-hidden');
-			
 			oNotificationToMarkAsUnread.removeClass('ibo-notifications--view-all--item--read').addClass('ibo-notifications--view-all--item--unread');
 			CombodoToast.OpenSuccessToast(data.message);
 			$('.ibo-notifications--view-all--container').trigger('itop.notification.unread');
@@ -384,15 +374,15 @@ JS
 				$oEventBlock->SetIcon($sIconUrl, Panel::ENUM_ICON_COVER_METHOD_COVER,true);
 			}
 			
-			// Prepare Event actions
-			$oMarkAsReadPopoverMenu = new PopoverMenu();
-			$oMarkAsUnreadPopoverMenu = new PopoverMenu();
 			
 			// Common actions
 			$sDeleteUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.delete_event', ['notification_id' => $oEvent->GetKey(), 'token' => $sCSRFToken]);
-			$oDeleteButton = new JSPopupMenuItem(
+			$oDeleteButton = ButtonUIBlockFactory::MakeForAlternativeDestructiveAction(
+				'',
 				'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label',
-				Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label'),
+				'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label'
+			);
+			$oDeleteButton->SetOnClickJsCode(
 				<<<JS
 let	oSelf = this;
 
@@ -410,31 +400,26 @@ $.ajax({
 		}
 	}
 });
-JS,
-				'_blank'
-			);
-			$oViewButton = new URLPopupMenuItem(
-				'UI:Newsroom:iTopNotification:ViewAllPage:Action:ViewObject:Label',
+JS
+			)
+				->SetIconClass('fas fa-trash-alt')
+				->SetTooltip(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label'));
+
+			$oViewButton = ButtonUIBlockFactory::MakeIconLink('fas fa-external-link-alt',
 				Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:ViewObject:Label'),
-				Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.view_event', ['event_id' => $oEvent->GetKey()]),
+				Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.view_event', ['event_id' => $iEventId]),
 				'_blank'
 			);
 			
 			// Mark as read action
 			$oMarkAsReadButton = ButtonUIBlockFactory::MakeForAlternativeSecondaryAction(
-				Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Label'),
+				'',
 				'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Label',
-				'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Label',
+				'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Label'
 			);
-			
-			// Mark as read action
-			$oMarkAsReadPopoverMenu->AddItem('more-actions', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oViewButton))->SetContainer(PopoverMenu::ENUM_CONTAINER_PARENT);
-			$oMarkAsReadPopoverMenu->AddItem('more-actions', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oDeleteButton))->SetContainer(PopoverMenu::ENUM_CONTAINER_PARENT);
-
-			// Mark as unread action
-			$oMarkAsUnreadPopoverMenu->AddItem('more-actions', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oViewButton))->SetContainer(PopoverMenu::ENUM_CONTAINER_PARENT);
-			$oMarkAsUnreadPopoverMenu->AddItem('more-actions', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oDeleteButton))->SetContainer(PopoverMenu::ENUM_CONTAINER_PARENT);
-
+			$oMarkAsReadButton->AddCSSClass('ibo-notifications--view-all--read-action')
+				->SetIconClass('far fa-envelope-open')
+				->SetTooltip(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Label'));
 
 			// Mark as unread action
 			$sMarkAsReadUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.mark_as_read', ['notification_id' => $oEvent->GetKey(), 'token' => $sCSRFToken]);
@@ -446,8 +431,6 @@ JS,
 					type: 'POST',
 					success: function(data) {
 						if (data.status === 'success') {
-							$(oSelf).parent('.ibo-button-group').addClass('ibo-is-hidden');
-							$(oSelf).parent('.ibo-button-group').siblings('.ibo-button-group').removeClass('ibo-is-hidden');
 							$(oSelf).parents('.ibo-object-summary').removeClass('ibo-notifications--view-all--item--unread').addClass('ibo-notifications--view-all--item--read');
 							CombodoToast.OpenSuccessToast(data.message);
 							$('.ibo-notifications--view-all--container').trigger('itop.notification.read');
@@ -460,13 +443,14 @@ JS,
 JS
 			);
 			
-			$oMarkAsReadButtonGroup = ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu($oMarkAsReadButton, $oMarkAsReadPopoverMenu);
-
 			$oMarkAsUnreadButton = ButtonUIBlockFactory::MakeForAlternativeSecondaryAction(
-				Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Label'),
+				'',
 				'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Label',
 				'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Label'
 			);
+			$oMarkAsUnreadButton->AddCSSClass('ibo-notifications--view-all--unread-action')
+			->SetIconClass('far fa-envelope')
+			->SetTooltip(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Label'));
 			$sMarkAsUnreadUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.mark_as_unread', ['notification_id' => $oEvent->GetKey(), 'token' => $sCSRFToken]);
 			$oMarkAsUnreadButton->SetOnClickJsCode(
 				<<<JS
@@ -476,8 +460,6 @@ JS
 					type: 'POST',
 					success: function(data) {
 						if (data.status === 'success') {
-							$(oSelf).parent('.ibo-button-group').addClass('ibo-is-hidden');
-							$(oSelf).parent('.ibo-button-group').siblings('.ibo-button-group').removeClass('ibo-is-hidden');
 							$(oSelf).parents('.ibo-object-summary').removeClass('ibo-notifications--view-all--item--read').addClass('ibo-notifications--view-all--item--unread');
 							CombodoToast.OpenSuccessToast(data.message);
 							$('.ibo-notifications--view-all--container').trigger('itop.notification.unread');
@@ -489,25 +471,18 @@ JS
 				});
 JS
 			);
-
-			$oMarkAsUnreadButtonGroup = ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu($oMarkAsUnreadButton, $oMarkAsUnreadPopoverMenu);
 			
 			// Add actions to the object summary block and remove old button
 			$oOldButtonId = $oEventBlock->GetActions()->GetId();
 			$oEventBlock->RemoveSubBlock($oOldButtonId);
-			$oEventBlock->SetToolBlocks([$oMarkAsReadButtonGroup, $oMarkAsUnreadButtonGroup]);
+			$oEventBlock->SetToolBlocks([$oMarkAsUnreadButton, $oMarkAsReadButton, $oViewButton, $oDeleteButton]);
 			$oActionsBlock = new UIContentBlock();
-			$oActionsBlock->AddSubBlock($oMarkAsReadButtonGroup);
-			$oActionsBlock->AddSubBlock($oMarkAsUnreadButtonGroup);
+			$oActionsBlock->AddSubBlock($oMarkAsUnreadButton);
+			$oActionsBlock->AddSubBlock($oMarkAsReadButton);
+			$oActionsBlock->AddSubBlock($oViewButton);
+			$oActionsBlock->AddSubBlock($oDeleteButton);
 			$oEventBlock->SetActions($oActionsBlock);
 			
-			// Display the right button depending on the read status
-			if($oEvent->Get('read') === 'no'){
-				$oMarkAsUnreadButtonGroup->SetCSSClasses(['ibo-is-hidden']);
-			}
-			else{
-				$oMarkAsReadButtonGroup->SetCSSClasses(['ibo-is-hidden']);
-			}
 			
 			$oMainContentBlock->AddSubBlock($oEventBlock);
 		}

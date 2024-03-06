@@ -161,8 +161,8 @@ class UIExtKeyWidget
 	public function DisplaySelect(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, DBObjectset $oAllowedValues, $value, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), &$sInputType = '')
 	{
 		$sTitle = addslashes($sTitle);
-		$oPage->add_linked_script('../js/extkeywidget.js');
-		$oPage->add_linked_script('../js/forms-json-utils.js');
+		$oPage->LinkScriptFromAppRoot('js/extkeywidget.js');
+		$oPage->LinkScriptFromAppRoot('js/forms-json-utils.js');
 
 		$bCreate = (!$this->bSearchMode) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_MODIFY) && $bAllowTargetCreation);
 		$bExtensions = true;
@@ -368,7 +368,7 @@ JS
 	 */
 	public function DisplayRadio(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, DBObjectset $oAllowedValues, $value, $sFieldName, $sDisplayStyle)
 	{
-		$oPage->add_linked_script('../js/forms-json-utils.js');
+		$oPage->LinkScriptFromAppRoot('js/forms-json-utils.js');
 
 		$bCreate = (!$this->bSearchMode) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $bAllowTargetCreation);
 		$bExtensions = true;
@@ -477,8 +477,8 @@ JS
 			$this->bSearchMode = $bSearchMode;
 		}
 		$sTitle = addslashes($sTitle);
-		$oPage->add_linked_script('../js/extkeywidget.js');
-		$oPage->add_linked_script('../js/forms-json-utils.js');
+		$oPage->LinkScriptFromAppRoot('js/extkeywidget.js');
+		$oPage->LinkScriptFromAppRoot('js/forms-json-utils.js');
 
 		$bCreate = (!$this->bSearchMode) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $bAllowTargetCreation);
 		$bExtensions = true;
