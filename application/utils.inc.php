@@ -1299,9 +1299,14 @@ class utils
 			throw new Exception("The PHP exec() function has been disabled on this server");
 		}
 
-		$sPHPExec = trim(self::GetConfig()->Get('php_path'));
-		if (strlen($sPHPExec) == 0) {
-			throw new Exception("The path to php must not be empty. Please set a value for 'php_path' in your configuration file.");
+		if (defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME)) {
+			// PHPUnit context : using the php executable used for running the test
+			$sPHPExec = PHP_BINARY;
+		} else {
+			$sPHPExec = trim(self::GetConfig()->Get('php_path'));
+			if (strlen($sPHPExec) == 0) {
+				throw new Exception("The path to php must not be empty. Please set a value for 'php_path' in your configuration file.");
+			}
 		}
 
 		if (is_null($sAuthUser)) {
