@@ -5361,16 +5361,19 @@ abstract class DBObject implements iDisplay
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	protected function GetReferencingObjects($bAllowAllData = false)
+	protected function GetReferencingObjectsForDeletion($bAllowAllData = false)
 	{
 		$aDependentObjects = array();
 		$aRererencingMe = MetaModel::EnumReferencingClasses(get_class($this));
 		foreach($aRererencingMe as $sRemoteClass => $aExtKeys)
 		{
+			/** @var \AttributeExternalKey $oExtKeyAttDef */
 			foreach($aExtKeys as $sExtKeyAttCode => $oExtKeyAttDef)
 			{
+				// skip if external key doesn't require the deletion cascading
+				if($oExtKeyAttDef->GetDeletionPropagationOption() === DEL_NONE) continue;
+
 				// skip if this external key is behind an external field
-				/** @var \AttributeDefinition $oExtKeyAttDef */
 				if (!$oExtKeyAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) continue;
 
 				$oSearch = new DBObjectSearch($sRemoteClass);
@@ -5434,13 +5437,11 @@ abstract class DBObject implements iDisplay
 		$this->CheckToWriteForTargetObjects(true);
 		$oDeletionPlan->SetDeletionIssues($this, $this->m_aDeleteIssues, $this->m_bSecurityIssue);
 
-		$aDependentObjects = $this->GetReferencingObjects(true /* allow all data */);
-
 		// Getting and setting time limit are not symmetric:
 		// www.php.net/manual/fr/function.set-time-limit.php#72305
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 
-		foreach ($aDependentObjects as $aPotentialDeletes)
+		foreach ($this->GetReferencingObjectsForDeletion(true /* allow all data */) as $aPotentialDeletes)
 		{
 			foreach ($aPotentialDeletes as $aData)
 			{

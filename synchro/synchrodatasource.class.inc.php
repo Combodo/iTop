@@ -1037,6 +1037,11 @@ EOF
 		$sDropTable = "DROP TABLE IF EXISTS `$sTable`"; // Do not fail if the table is already deleted (corrupted database)
 		CMDBSource::Query($sDropTable);
 		// TO DO - check that triggers get dropped with the table
+
+		$sSyncReplicaTable = MetaModel::DBGetTable(SynchroReplica::class);
+		$sSyncSourceIDColumn =  MetaModel::GetAttributeDef(SynchroReplica::class, 'sync_source_id');
+		$sSqlDeleteReplica = "DELETE FROM `$sSyncReplicaTable` WHERE {$sSyncSourceIDColumn->Get('sql')} = '{$this->GetKey()}'";
+		CMDBSource::Query($sSqlDeleteReplica);
 	}
 
 	/**
@@ -1991,7 +1996,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			'allowed_values' => null,
 			'sql' => 'sync_source_id',
 			'is_null_allowed' => false,
-			'on_target_delete' => DEL_SILENT,
+			'on_target_delete' => DEL_NONE,
 			'depends_on' => array(),
 		)));
 		MetaModel::Init_AddAttribute(new AttributeExternalField('base_class',
@@ -2156,13 +2161,9 @@ class SynchroReplica extends DBObject implements iDisplay
 	}
 
 	// Overload the deletion -> the replica has been created by the mean of a trigger,
-	//                          it will be deleted by the mean of a trigger too
+	//                          it will be deleted by SynchroDataSource::AfterDelete
 	protected function DBDeleteSingleObject()
 	{
-		$oKPI = new ExecutionKPI();
-		$this->OnDelete();
-		$oKPI->ComputeStatsForExtension($this, 'OnDelete');
-
 		if (!MetaModel::DBIsReadOnly())
 		{
 			$oDataSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'), false);
@@ -2176,10 +2177,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			// else the whole datasource has probably been already deleted
 		}
 
-		$this->AfterDelete();
-
-		$this->m_bIsInDB = false;
-		$this->m_iKey = null;
+		parent::DBDeleteSingleObject();
 	}
 
 	public function SetLastError($sMessage, $oException = null)
