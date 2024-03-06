@@ -8,7 +8,7 @@
 namespace Combodo\iTop\Test\UnitTest\Status;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use Config;
+use const PHP_BINARY;
 
 class StatusTest extends ItopTestCase
 {
@@ -18,18 +18,11 @@ class StatusTest extends ItopTestCase
 		require_once APPROOT.'core/config.class.inc.php'; // for constants
 	}
 
-	protected function GetPHPCommand()
-	{
-		$this->RequireOnceItopFile('application/utils.inc.php');
-		$oConfig = new Config(ITOP_DEFAULT_CONFIG_FILE);
-		return $oConfig->Get('php_path');
-	}
-
 	public function testStatusPageRepliesAsExpected()
 	{
 		$sPath = APPROOT.'/webservices/status.php';
 
-		$sPHP = $this->GetPHPCommand();
+		$sPHP = PHP_BINARY;
 		exec("$sPHP $sPath", $aOutput, $iRet);
 		$this->assertEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n".var_export($aOutput, true));
 
