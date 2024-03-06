@@ -81,10 +81,12 @@ class DesignDocument extends DOMDocument
 	 */
 	public function load($filename, $options = null)
 	{
-		libxml_clear_errors();
-		if (parent::load($filename, LIBXML_NOBLANKS | LIBXML_BIGLINES | LIBXML_PARSEHUGE | self::XML_PARSE_BIG_LINES) === false) {
-			$aErrors = libxml_get_errors();
-			IssueLog::Error("Error loading $filename", LogAPI::CHANNEL_DEFAULT, $aErrors);
+		if (is_file($filename)) {
+			libxml_clear_errors();
+			if (parent::load($filename, LIBXML_NOBLANKS | LIBXML_BIGLINES | LIBXML_PARSEHUGE | self::XML_PARSE_BIG_LINES) === false) {
+				$aErrors = libxml_get_errors();
+				IssueLog::Error("Error loading $filename", LogAPI::CHANNEL_DEFAULT, $aErrors);
+			}
 		}
 	}
 

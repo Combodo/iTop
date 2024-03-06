@@ -706,7 +706,7 @@ class ModelFactory
 					$oSubClassNodes = $oXPath->query('.//class[parent::class or parent::classes]', $oClassCollectionNode);
 					foreach ($oSubClassNodes as $oSubClassNode) {
 						/** @var DesignElement $oSubClassNode */
-						$this->SpecifyDeltaSpecsOnSubClass($oSubClassNode, $oClassCollectionNode);
+						$this->SpecifyDeltaSpecsOnSubClass($oSubClassNode);
 						// Move comment along with class node
 						$oComment = ModelFactory::GetPreviousComment($oSubClassNode);
 						// Move (Sub)Classes from parent tree to the end of <classes>
@@ -730,42 +730,19 @@ class ModelFactory
 
 	/**
 	 * @param DesignElement $oSubClassNode
-	 * @param \MFElement $oClassCollectionNode
 	 *
 	 * @return void
 	 * @throws \MFException
 	 */
-	public function SpecifyDeltaSpecsOnSubClass(DesignElement $oSubClassNode, MFElement $oClassCollectionNode): void
+	public function SpecifyDeltaSpecsOnSubClass(DesignElement $oSubClassNode): void
 	{
 		$sParentDeltaSpec = $oSubClassNode->parentNode->getAttribute('_delta');
-		$sCurrentDeltaSpec = $oSubClassNode->getAttribute('_delta');
-		$sId = $oSubClassNode->getAttribute('id');
 		switch ($sParentDeltaSpec) {
 			case '':
-				switch ($sCurrentDeltaSpec) {
-					case 'force':
-						$oDeleteNode = $oSubClassNode->cloneNode();
-						$oDeleteNode->setAttribute('_delta', 'delete_if_exists');
-						$oClassCollectionNode->appendChild($oDeleteNode);
-						$sComment = " Automatically generated to remove class/$sId hierarchy ";
-						$oCommentNode = $oClassCollectionNode->ownerDocument->importNode(new DOMComment($sComment));
-						$oClassCollectionNode->insertBefore($oCommentNode, $oDeleteNode);
-						break;
-					case 'redefine':
-						$oDeleteNode = $oSubClassNode->cloneNode();
-						$oDeleteNode->setAttribute('_delta', 'delete');
-						$oClassCollectionNode->appendChild($oDeleteNode);
-						$oSubClassNode->setAttribute('_delta', 'define');
-						$sComment = " Automatically generated to remove class/$sId hierarchy ";
-						$oCommentNode = $oClassCollectionNode->ownerDocument->importNode(new DOMComment($sComment));
-						$oClassCollectionNode->insertBefore($oCommentNode, $oDeleteNode);
-						break;
-				}
 				break;
 			case 'define':
-				$oSubClassNode->setAttribute('_delta', 'define');
-				break;
 			case 'force':
+			case 'redefine':
 				$oSubClassNode->setAttribute('_delta', 'force');
 				break;
 			case 'if_exists':
@@ -776,7 +753,7 @@ class ModelFactory
 				$sItopNodePath = DesignDocument::GetItopNodePath($oParentNode);
 				throw new MFException("$sItopNodePath at line $iLine: _delta=\"$sParentDeltaSpec\" not supported for classes in hierarchy",
 					MFException::NOT_FOUND, $iLine, $sItopNodePath);
-			}
+		}
 	}
 
 	/**
@@ -792,6 +769,10 @@ class ModelFactory
 	private function LoadFlattenDelta(DesignElement $oSourceNode, MFDocument $oTargetDocument, $oTargetParentNode, string $sMode)
 	{
 		$sDeltaSpec = $oSourceNode->getAttribute('_delta');
+
+		// IMPORTANT: In case of a new flag value, mind to update the iTopDesignFormat methods
+		$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
+
 		if ($oSourceNode->IsClassNode()) {
 			switch ($sDeltaSpec) {
 				case 'delete_if_exists':
@@ -799,11 +780,51 @@ class ModelFactory
 					// Delete the nodes of all the subclasses
 					$this->DeleteSubClasses($oTargetParentNode->_FindChildNode($oSourceNode));
 					break;
+
+				case 'define_if_not_exists':
+				case 'define':
+					break;
+
+				default:
+					// In case the parent class has changed, be sure to move the class after its parent
+					/** @var MFElement $oTargetNode */
+					$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode, $sSearchId);
+					if (!$oTargetNode) {
+						// No need to move non-existing class
+						break;
+					}
+
+					// Check that the parent is defined before the class
+					$oSourceParentClassNode = $oSourceNode->GetOptionalElement("parent");
+					if ($oSourceParentClassNode) {
+						$sParentClassName = $oSourceParentClassNode->GetText();
+						$sClassName = $oSourceNode->getAttribute('id');
+						$oNodes = $oTargetDocument->GetNodes("/itop_design/classes/class[@id=\"$sParentClassName\"]/following-sibling::class[@id=\"$sClassName\"]");
+						if ($oNodes->length > 0) {
+							// The class is already after its parent, do not move
+							break;
+						}
+
+						// Move class after new parent class (before its next sibling)
+						$oNodeForTargetParent = $oTargetDocument->GetNodes("/itop_design/classes/class[@id=\"$sParentClassName\"]")->item(0);
+						if (is_null($oNodeForTargetParent)) {
+							$iLine = ModelFactory::GetXMLLineNumber($oSourceParentClassNode);
+							$sItopNodePath = DesignDocument::GetItopNodePath($oSourceParentClassNode);
+							throw new MFException($sItopNodePath." at line $iLine: invalid parent class '$sParentClassName'",
+								MFException::NOT_FOUND, $iLine, $sItopNodePath);
+						}
+						$oNextParentSibling = $oNodeForTargetParent->nextSibling;
+						if ($oNextParentSibling) {
+							$oTargetParentNode->insertBefore($oTargetNode, $oNextParentSibling);
+						} else {
+							// last node, append class at the end
+							$oTargetParentNode->appendChild($oTargetNode);
+						}
+					}
+					break;
 			}
 		}
 
-		// IMPORTANT: In case of a new flag value, mind to update the iTopDesignFormat methods
-		$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
 		switch ($sDeltaSpec) {
 			case 'if_exists':
 			case 'must_exist':
@@ -819,7 +840,7 @@ class ModelFactory
 					if ($bMustExist) {
 						$iLine = ModelFactory::GetXMLLineNumber($oSourceNode);
 						$sItopNodePath = DesignDocument::GetItopNodePath($oSourceNode);
-						throw new MFException(DesignDocument::GetItopNodePath($oSourceNode).' at line '.$iLine.': could not be found or marked as removed',
+						throw new MFException($sItopNodePath.' at line '.$iLine.': could not be found or marked as removed',
 							MFException::NOT_FOUND, $iLine, $sItopNodePath);
 					}
 					if ($bIfExists) {
@@ -878,7 +899,7 @@ class ModelFactory
 						if ($sMode === self::LOAD_DELTA_MODE_STRICT && !$oSourceNode->hasAttribute('_rename_from') && trim($oSourceNode->GetText('')) !== '') {
 							$iLine = ModelFactory::GetXMLLineNumber($oSourceNode);
 							$sItopNodePath = DesignDocument::GetItopNodePath($oSourceNode);
-							throw new MFException(DesignDocument::GetItopNodePath($oSourceNode).' at line '.$iLine.': cannot be modified without _delta flag (strict mode)',
+							throw new MFException($sItopNodePath.' at line '.$iLine.': cannot be modified without _delta flag (strict mode)',
 								MFException::AMBIGUOUS_LEAF, $iLine, $sItopNodePath, 'strict mode');
 						} else {
 							// Lax mode: same as redefine
@@ -1024,13 +1045,13 @@ class ModelFactory
 	/**
 	 * Get the comment node preceding the given node
 	 *
-	 * @param DesignElement $oClassNode
+	 * @param DesignElement $oNode
 	 *
 	 * @return \DOMComment|null null when no comment found for that node
 	 */
-	public static function GetPreviousComment(DesignElement $oClassNode)
+	public static function GetPreviousComment(DesignElement $oNode)
 	{
-		$oPreviousNode = $oClassNode->previousSibling;
+		$oPreviousNode = $oNode->previousSibling;
 
 		while (!is_null($oPreviousNode)) {
 			if ($oPreviousNode instanceof DOMComment) {
@@ -1764,14 +1785,6 @@ EOF
 				$oParentClone->appendChild($oNodeClone);
 			}
 		}
-		if ($oNode->IsClassNode()) {
-			// Copy the comment in the datamodel if exist
-			$oComment = $this->GetPreviousComment($oNode);
-			if (!is_null($oComment)) {
-				$oCommentNode = $oTargetDoc->importNode(new DOMComment($oComment->textContent));
-				$oParentClone->insertBefore($oCommentNode, $oNodeClone);
-			}
-		}
 
 		return $oNodeClone;
 	}
@@ -1989,7 +2002,8 @@ class MFElement extends Combodo\iTop\DesignElement
 		}
 		if ($bMustExist && is_null($oNode))
 		{
-			throw new DOMFormatException('Missing unique tag: '.$sTagName);
+			$sXPath = DesignDocument::GetItopNodePath($this);
+			throw new DOMFormatException("Missing unique tag: $sTagName in: $sXPath");
 		}
 
 		return $oNode;
@@ -2027,7 +2041,8 @@ class MFElement extends Combodo\iTop\DesignElement
 						if (array_key_exists($key, $res))
 						{
 							// Houston!
-							throw new DOMFormatException("id '$key' already used", null, null, $oItem);
+							$sXPath = DesignDocument::GetItopNodePath($this);
+							throw new DOMFormatException("id '$key' already used in $sXPath", null, null, $oItem);
 						}
 						$res[$key] = $oItem->GetNodeAsArrayOfItems();
 					}
@@ -2190,7 +2205,7 @@ class MFElement extends Combodo\iTop\DesignElement
 			if (!$oExisting->IsRemoved()) {
 				$sPath = MFDocument::GetItopNodePath($oNode);
 				$iLine = ModelFactory::GetXMLLineNumber($oNode);
-				$sExistingPath = MFDocument::GetItopNodePath($oExisting);
+				$sExistingPath = MFDocument::GetItopNodePath($oExisting).' created_in: ['.$oExisting->getAttribute('_created_in').']';
 				$iExistingLine = ModelFactory::GetXMLLineNumber($oExisting);
 				$sExceptionMessage = <<<EOF
 `{$sPath}` at line {$iLine} could not be added : already exists in `{$sExistingPath}` at line {$iExistingLine}
@@ -2585,7 +2600,7 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 
 		if ($bSafe)
 		{
-			$sXPath = "($sXPath)[not(@_alteration) or @_alteration!='removed' or @_alteration!='remove_needed']";
+			$sXPath = "($sXPath)[not(@_alteration) or (@_alteration!='removed' and @_alteration!='remove_needed')]";
 		}
 
 		if (is_null($oContextNode))

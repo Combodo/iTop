@@ -39,7 +39,7 @@ class ModelFactoryTest extends ItopTestCase
 	{
 		parent::setUp();
 
-		//static::$DEBUG_UNIT_TEST = true;
+		static::$DEBUG_UNIT_TEST = true;
 
 		$this->RequireOnceItopFile('setup/modelfactory.class.inc.php');
 	}
@@ -78,7 +78,7 @@ class ModelFactoryTest extends ItopTestCase
 		$oExpectedDocument->loadXML($sXML);
 		$oExpectedDocument->formatOutput = true;
 
-		return $oExpectedDocument->saveXML($oExpectedDocument->firstChild);
+		return $oExpectedDocument->C14N(false, true);
 	}
 
 	/**
@@ -278,13 +278,9 @@ class ModelFactoryTest extends ItopTestCase
 </itop_design>',
 				'sExpectedXML' => '<itop_design>
   <classes>
-	<!-- Automatically generated to remove class/C_1 hierarchy -->
-    <class id="C_1" _delta="delete_if_exists"/>
     <class id="C_1" _delta="force">
 		<parent>cmdbAbstractObject</parent>
 	</class>
-	<!-- Automatically generated to remove class/C_2 hierarchy -->
-    <class id="C_2" _delta="delete_if_exists"/>
     <class id="C_2" _delta="force">
 		<parent>cmdbAbstractObject</parent>
 	</class>
@@ -306,14 +302,10 @@ class ModelFactoryTest extends ItopTestCase
 </itop_design>',
 				'sExpectedXML' => '<itop_design>
   <classes>
-	<!-- Automatically generated to remove class/C_1 hierarchy -->
-    <class id="C_1" _delta="delete"/>
-    <class id="C_1" _delta="define">
+    <class id="C_1" _delta="redefine">
 		<parent>cmdbAbstractObject</parent>
 	</class>
-	<!-- Automatically generated to remove class/C_2 hierarchy -->
-    <class id="C_2" _delta="delete"/>
-    <class id="C_2" _delta="define">
+    <class id="C_2" _delta="redefine">
 		<parent>cmdbAbstractObject</parent>
 	</class>
   </classes>
@@ -338,7 +330,7 @@ class ModelFactoryTest extends ItopTestCase
 		<parent>cmdbAbstractObject</parent>
 	</class>
 	<!-- Automatically moved from class/C_1 to classes -->
-    <class id="C_1_1" _delta="define">
+    <class id="C_1_1" _delta="force">
       <parent>C_1</parent>
     </class>
   </classes>
@@ -420,23 +412,23 @@ class ModelFactoryTest extends ItopTestCase
 		<parent>cmdbAbstractObject</parent>
 	</class>
 	<!-- Automatically moved from class/C_1 to classes -->
-    <class id="C_1_1" _delta="define">
+    <class id="C_1_1" _delta="force">
       <parent>C_1</parent>
     </class>
 	<!-- Automatically moved from class/C_1_1 to classes -->
-    <class id="C_1_1_1" _delta="define">
+    <class id="C_1_1_1" _delta="force">
       <parent>C_1_1</parent>
     </class>
 	<!-- Automatically moved from class/C_1_1_1 to classes -->
-    <class id="C_1_1_1_1" _delta="define">
+    <class id="C_1_1_1_1" _delta="force">
       <parent>C_1_1_1</parent>
     </class>
 	<!-- Automatically moved from class/C_1 to classes -->
-    <class id="C_1_2" _delta="define">
+    <class id="C_1_2" _delta="force">
       <parent>C_1</parent>
     </class>
 	<!-- Automatically moved from class/C_1_2 to classes -->
-    <class id="C_1_2_1" _delta="define">
+    <class id="C_1_2_1" _delta="force">
       <parent>C_1_2</parent>
     </class>
   </classes>
@@ -477,11 +469,11 @@ class ModelFactoryTest extends ItopTestCase
       <parent>C_1</parent>
     </class>
 	<!-- Automatically moved from class/C_1_1 to classes -->
-    <class id="C_1_1_1" _delta="define">
+    <class id="C_1_1_1" _delta="force">
       <parent>C_1_1</parent>
     </class>
 	<!-- Automatically moved from class/C_1_1_1 to classes -->
-    <class id="C_1_1_1_1" _delta="define">
+    <class id="C_1_1_1_1" _delta="force">
       <parent>C_1_1_1</parent>
     </class>
 	<!-- Automatically moved from class/C_1 to classes -->
@@ -506,15 +498,6 @@ class ModelFactoryTest extends ItopTestCase
 				<parent>C_1</parent>
 				<class id="C_1_1_1">
 					<parent>C_1_1</parent>
-					<class id="C_1_1_1_1">
-						<parent>C_1_1_1</parent>
-					</class>
-				</class>
-			</class>
-			<class id="C_1_2">
-				<parent>C_1</parent>
-				<class id="C_1_2_1" _delta="force">
-					<parent>C_1_2</parent>
 				</class>
 			</class>
 		</class>
@@ -523,31 +506,15 @@ class ModelFactoryTest extends ItopTestCase
 				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="C_1">
-		<parent>cmdbAbstractObject</parent>
-	</class>
-	<!-- Automatically generated to remove class/C_1_1 hierarchy -->
-    <class id="C_1_1" _delta="delete_if_exists"/>
-	<!-- Automatically moved from class/C_1 to classes -->
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <!-- Automatically moved from class/C_1 to classes -->
     <class id="C_1_1" _delta="force">
       <parent>C_1</parent>
     </class>
-	<!-- Automatically moved from class/C_1_1 to classes -->
+    <!-- Automatically moved from class/C_1_1 to classes -->
     <class id="C_1_1_1" _delta="force">
       <parent>C_1_1</parent>
-    </class>
-	<!-- Automatically moved from class/C_1_1_1 to classes -->
-    <class id="C_1_1_1_1" _delta="force">
-      <parent>C_1_1_1</parent>
-    </class>
-	<!-- Automatically moved from class/C_1 to classes -->
-    <class id="C_1_2">
-      <parent>C_1</parent>
-    </class>
-	<!-- Automatically generated to remove class/C_1_2_1 hierarchy -->
-    <class id="C_1_2_1" _delta="delete_if_exists"/>
-	<!-- Automatically moved from class/C_1_2 to classes -->
-    <class id="C_1_2_1" _delta="force">
-      <parent>C_1_2</parent>
     </class>
   </classes>
 </itop_design>',
@@ -563,15 +530,6 @@ class ModelFactoryTest extends ItopTestCase
 				<parent>C_1</parent>
 				<class id="C_1_1_1">
 					<parent>C_1_1</parent>
-					<class id="C_1_1_1_1">
-						<parent>C_1_1_1</parent>
-					</class>
-				</class>
-			</class>
-			<class id="C_1_2">
-				<parent>C_1</parent>
-				<class id="C_1_2_1">
-					<parent>C_1_2</parent>
 				</class>
 			</class>
 		</class>
@@ -579,30 +537,16 @@ class ModelFactoryTest extends ItopTestCase
 </itop_design>',
 				'sExpectedXML' => '<itop_design>
   <classes>
-	<!-- Automatically generated to remove class/C_1 hierarchy -->
-    <class id="C_1" _delta="delete_if_exists"/>
     <class id="C_1" _delta="force">
-		<parent>cmdbAbstractObject</parent>
-	</class>
-	<!-- Automatically moved from class/C_1 to classes -->
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <!-- Automatically moved from class/C_1 to classes -->
     <class id="C_1_1" _delta="force">
       <parent>C_1</parent>
     </class>
-	<!-- Automatically moved from class/C_1_1 to classes -->
+    <!-- Automatically moved from class/C_1_1 to classes -->
     <class id="C_1_1_1" _delta="force">
       <parent>C_1_1</parent>
-    </class>
-	<!-- Automatically moved from class/C_1_1_1 to classes -->
-    <class id="C_1_1_1_1" _delta="force">
-      <parent>C_1_1_1</parent>
-    </class>
-	<!-- Automatically moved from class/C_1 to classes -->
-    <class id="C_1_2" _delta="force">
-      <parent>C_1</parent>
-    </class>
-	<!-- Automatically moved from class/C_1_2 to classes -->
-    <class id="C_1_2_1" _delta="force">
-      <parent>C_1_2</parent>
     </class>
   </classes>
 </itop_design>',
@@ -618,15 +562,6 @@ class ModelFactoryTest extends ItopTestCase
 				<parent>C_1</parent>
 				<class id="C_1_1_1">
 					<parent>C_1_1</parent>
-					<class id="C_1_1_1_1">
-						<parent>C_1_1_1</parent>
-					</class>
-				</class>
-			</class>
-			<class id="C_1_2">
-				<parent>C_1</parent>
-				<class id="C_1_2_1" _delta="redefine">
-					<parent>C_1_2</parent>
 				</class>
 			</class>
 		</class>
@@ -635,31 +570,15 @@ class ModelFactoryTest extends ItopTestCase
 				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="C_1">
-		<parent>cmdbAbstractObject</parent>
-	</class>
-	<!-- Automatically generated to remove class/C_1_1 hierarchy -->
-    <class id="C_1_1" _delta="delete"/>
-	<!-- Automatically moved from class/C_1 to classes -->
-    <class id="C_1_1" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_1" _delta="redefine">
       <parent>C_1</parent>
     </class>
-	<!-- Automatically moved from class/C_1_1 to classes -->
-    <class id="C_1_1_1" _delta="define">
+    <!-- Automatically moved from class/C_1_1 to classes -->
+    <class id="C_1_1_1" _delta="force">
       <parent>C_1_1</parent>
-    </class>
-	<!-- Automatically moved from class/C_1_1_1 to classes -->
-    <class id="C_1_1_1_1" _delta="define">
-      <parent>C_1_1_1</parent>
-    </class>
-	<!-- Automatically moved from class/C_1 to classes -->
-    <class id="C_1_2">
-      <parent>C_1</parent>
-    </class>
-	<!-- Automatically generated to remove class/C_1_2_1 hierarchy -->
-    <class id="C_1_2_1" _delta="delete"/>
-	<!-- Automatically moved from class/C_1_2 to classes -->
-    <class id="C_1_2_1" _delta="define">
-      <parent>C_1_2</parent>
     </class>
   </classes>
 </itop_design>',
@@ -673,48 +592,18 @@ class ModelFactoryTest extends ItopTestCase
 			<parent>cmdbAbstractObject</parent>
 			<class id="C_1_1">
 				<parent>C_1</parent>
-				<class id="C_1_1_1">
-					<parent>C_1_1</parent>
-					<class id="C_1_1_1_1">
-						<parent>C_1_1_1</parent>
-					</class>
-				</class>
-			</class>
-			<class id="C_1_2">
-				<parent>C_1</parent>
-				<class id="C_1_2_1">
-					<parent>C_1_2</parent>
-				</class>
 			</class>
 		</class>
 	</classes>
 </itop_design>',
 				'sExpectedXML' => '<itop_design>
   <classes>
-	<!-- Automatically generated to remove class/C_1 hierarchy -->
-    <class id="C_1" _delta="delete"/>
-    <class id="C_1" _delta="define">
-		<parent>cmdbAbstractObject</parent>
-	</class>
-	<!-- Automatically moved from class/C_1 to classes -->
-    <class id="C_1_1" _delta="define">
+    <class id="C_1" _delta="redefine">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <!-- Automatically moved from class/C_1 to classes -->
+    <class id="C_1_1" _delta="force">
       <parent>C_1</parent>
-    </class>
-	<!-- Automatically moved from class/C_1_1 to classes -->
-    <class id="C_1_1_1" _delta="define">
-      <parent>C_1_1</parent>
-    </class>
-	<!-- Automatically moved from class/C_1_1_1 to classes -->
-    <class id="C_1_1_1_1" _delta="define">
-      <parent>C_1_1_1</parent>
-    </class>
-	<!-- Automatically moved from class/C_1 to classes -->
-    <class id="C_1_2" _delta="define">
-      <parent>C_1</parent>
-    </class>
-	<!-- Automatically moved from class/C_1_2 to classes -->
-    <class id="C_1_2_1" _delta="define">
-      <parent>C_1_2</parent>
     </class>
   </classes>
 </itop_design>',
@@ -771,10 +660,14 @@ class ModelFactoryTest extends ItopTestCase
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function LoadDeltaTest($sInitialXML, $sDeltaXML, $sExpectedXML)
+	public function LoadDeltaTest($sInitialXML, $sDeltaXML, $sExpectedXMLOrErrorMessage)
 	{
 		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
 		$oFactoryDocument = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
+		$sExpectedXML = null;
+		if (\utils::StartsWith($sExpectedXMLOrErrorMessage, '<')) {
+			$sExpectedXML = $sExpectedXMLOrErrorMessage;
+		}
 
 		// Load the delta
 		$oDocument = new MFDocument();
@@ -786,10 +679,10 @@ class ModelFactoryTest extends ItopTestCase
 		}
 		catch (\Exception $e) {
 			$this->assertNull($sExpectedXML, 'LoadDelta() should not have failed with exception: '.$e->getMessage());
-
+			$this->assertEquals($sExpectedXMLOrErrorMessage, $e->getMessage());
 			return;
 		}
-		$this->AssertEqualModels($sExpectedXML, $oFactory, 'LoadDelta() must result in a datamodel without hierarchical classes');
+		$this->AssertEqualModels($sExpectedXML, $oFactory, 'LoadDelta() did not produce the expected result');
 	}
 
 	public function LoadDeltaProvider()
@@ -803,7 +696,7 @@ class ModelFactoryTest extends ItopTestCase
   </classes>
 </itop_design>',
 				'sDeltaXML'    => '<itop_design></itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
   </classes>
@@ -823,7 +716,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="added">
@@ -847,7 +740,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="added">
@@ -871,7 +764,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="needed">
@@ -898,7 +791,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1">
@@ -926,14 +819,14 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="added">
       <parent>cmdbAbstractObject</parent>
     </class>
     <!-- Automatically moved from class/C_1 to classes -->
-    <class id="C_1_1" _alteration="added">
+    <class id="C_1_1" _alteration="forced">
 	  <parent>C_1</parent>
 	</class>
   </classes>
@@ -957,7 +850,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="removed"/>
@@ -988,7 +881,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="added">
@@ -1019,7 +912,7 @@ class ModelFactoryTest extends ItopTestCase
 		<class id="C_1" _delta="delete"/>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
   </classes>
@@ -1042,7 +935,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="removed"/>
@@ -1069,7 +962,7 @@ class ModelFactoryTest extends ItopTestCase
 		<class id="C_1" _delta="delete"/>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="removed"/>
@@ -1103,7 +996,7 @@ class ModelFactoryTest extends ItopTestCase
 		<class id="C_1" _delta="delete"/>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1_2" _alteration="removed"/>
@@ -1129,7 +1022,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="remove_needed"/>
@@ -1153,7 +1046,7 @@ class ModelFactoryTest extends ItopTestCase
 		<class id="C_1" _delta="delete_if_exists"/>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_2">
@@ -1181,7 +1074,7 @@ class ModelFactoryTest extends ItopTestCase
 		<class id="C_1" _delta="delete_if_exists"/>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="removed"/>
@@ -1208,7 +1101,7 @@ class ModelFactoryTest extends ItopTestCase
 		<class id="C_1" _delta="delete_if_exists"/>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="remove_needed"/>
@@ -1236,7 +1129,7 @@ class ModelFactoryTest extends ItopTestCase
 		<class id="C_1" _delta="delete_if_exists"/>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1_1" _alteration="removed"/>
@@ -1265,7 +1158,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <!-- Test Comment on class C_1 -->
@@ -1304,7 +1197,7 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => '<itop_design>
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1" _alteration="replaced">
@@ -1327,8 +1220,82 @@ class ModelFactoryTest extends ItopTestCase
 		</class>
 	</classes>
 </itop_design>',
-				'sExpectedXML' => null,
+				'sExpectedXMLOrErrorMessage' => '/itop_design/classes/class[C_1] at line 3: could not be found or marked as removed (strict mode)',
 			],
+			'Redefine classes and changing parent' => [
+				'sInitialXML'  => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="FunctionalCI">
+        <parent>cmdbAbstractObject</parent>
+    </class>
+	<class id="Licence">
+		<parent>cmdbAbstractObject</parent>
+	</class>
+	<class id="Certificat">
+		<parent>Licence</parent>
+	</class>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<classes>
+		<class id="ConfigElement" _delta="define">
+			<parent>FunctionalCI</parent>
+			<class id="Key">
+				<parent>ConfigElement</parent>
+				<class id="Certificat">
+					<parent>Key</parent>
+				</class>
+			</class>
+		</class>
+		<class id="Licence" _delta="redefine">
+			<parent>Key</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXMLOrErrorMessage' => '<itop_design>
+	<classes>
+		<class id="cmdbAbstractObject"/>
+		<class id="FunctionalCI">
+			<parent>cmdbAbstractObject</parent>
+		</class>
+		<class id="ConfigElement" _alteration="added">
+			<parent>FunctionalCI</parent>
+		</class>
+		<!-- Automatically moved from class/ConfigElement to classes -->
+		<class id="Key" _alteration="forced">
+			<parent>ConfigElement</parent>
+		</class>
+		<class id="Licence" _alteration="replaced">
+			<parent>Key</parent>
+		</class>
+		<!-- Automatically moved from class/Key to classes -->
+		<class id="Certificat" _alteration="forced">
+			<parent>Key</parent>
+		</class>
+	</classes>
+</itop_design>',
+			],
+			'Class with wrong parent should generate an error' => [
+				'sInitialXML'  => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1">
+        <parent>cmdbAbstractObject</parent>
+	</class>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<classes>
+		<class id="C_1" _delta="redefine">
+            <parent>toto</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXMLOrErrorMessage' => "/itop_design/classes/class[C_1]/parent at line 4: invalid parent class 'toto'",
+			],
+
 		];
 	}
 
@@ -3003,7 +2970,7 @@ XML
 				,
 			],
 
-			'Class Comments are kept for created classes' => [
+			'Class Comments are not kept for created classes' => [
 				'sInitialXMLInternal' => <<<XML
 <itop_design>
   <classes>
@@ -3019,7 +2986,6 @@ XML
 				'sExpectedXMLDelta'   => <<<XML
 <itop_design>
 	<classes>
-		<!-- Test Comment on class C_1 -->
 		<class id="C_1" _delta="define">
             <parent>cmdbAbstractObject</parent>
 		</class>
@@ -3028,7 +2994,7 @@ XML
 XML
 				,
 			],
-			'Class Comments should be preserved'          => [
+			'Class Comments are not preserved'          => [
 				'sInitialXMLInternal' => <<<XML
 <itop_design>
   <classes>
@@ -3048,11 +3014,9 @@ XML
 				'sExpectedXMLDelta'   => <<<XML
 <itop_design>
 	<classes>
-		<!-- Test Comment on class C_1 -->
 		<class id="C_1" _delta="define">
             <parent>cmdbAbstractObject</parent>
 		</class>
-		<!-- Test Comment on merged class -->
 		<class id="C_2">
             <parent _delta="define">cmdbAbstractObject</parent>
 		</class>

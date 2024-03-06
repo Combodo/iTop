@@ -35,6 +35,7 @@
         <field id="status" _delta="must_exist">
           <values>
             <value id="test" _delta="define">test</value>
+            <value id="nada" _delta="define"/>
           </values>
         </field>
       </fields>
