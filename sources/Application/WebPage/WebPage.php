@@ -624,7 +624,7 @@ class WebPage implements Page
 				break;
 
 			case static::ENUM_RESOURCE_TYPE_CSS:
-				$this->a_linked_stylesheets[$sFileAbsURI] = $sFileAbsURI;
+				$this->a_linked_stylesheets[$sFileAbsURI] = ['link' => $sFileAbsURI, 'condition' => ''];
 				break;
 		}
 	}
