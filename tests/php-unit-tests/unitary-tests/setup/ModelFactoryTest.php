@@ -880,6 +880,33 @@ class ModelFactoryTest extends ItopTestCase
   </classes>
 </itop_design>',
 			],
+			'Conditionally add a class but it already exists' => [
+				'sInitialXML'  => '
+<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '
+<itop_design>
+	<classes>
+		<class id="C_1" _delta="define_if_not_exists">
+            <parent>toto</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1">
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+</itop_design>',
+			],
 
 			'Add a class and subclass in hierarchy' => [
 				'sInitialXML'  => '
@@ -1105,7 +1132,7 @@ class ModelFactoryTest extends ItopTestCase
 				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
-    <class id="C_1" _alteration="removed"/>
+    <class id="C_1" _alteration="remove_needed"/>
   </classes>
 </itop_design>',
 			],
@@ -1123,8 +1150,7 @@ class ModelFactoryTest extends ItopTestCase
 				'sDeltaXML'    => '
 <itop_design>
 	<classes>
-		<class id="C_1" _delta="delete_if_exists">
-		</class>
+		<class id="C_1" _delta="delete_if_exists"/>
 	</classes>
 </itop_design>',
 				'sExpectedXML' => '<itop_design>
@@ -1133,6 +1159,7 @@ class ModelFactoryTest extends ItopTestCase
     <class id="C_2">
       <parent>cmdbAbstractObject</parent>
     </class>
+    <class id="C_1" _alteration="remove_needed"/>
   </classes>
 </itop_design>',
 			],
@@ -1184,7 +1211,7 @@ class ModelFactoryTest extends ItopTestCase
 				'sExpectedXML' => '<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
-    <class id="C_1" _alteration="removed"/>
+    <class id="C_1" _alteration="remove_needed"/>
   </classes>
 </itop_design>',
 			],
@@ -1213,7 +1240,7 @@ class ModelFactoryTest extends ItopTestCase
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1_1" _alteration="removed"/>
-    <class id="C_1" _alteration="removed"/>
+    <class id="C_1" _alteration="remove_needed"/>
   </classes>
 </itop_design>',
 			],
@@ -2926,6 +2953,21 @@ XML
 XML
 				,
 			],
+			'_alteration="remove_needed"'               => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond _alteration="remove_needed"/>
+</root_node>
+XML
+				,
+				'sExpectedXMLDelta'   => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+	<james_bond _delta="delete_if_exists"/>
+</root_node>
+XML
+				,
+			],
 			'_old_id'                             => [
 				'sInitialXMLInternal' => <<<XML
 <root_node>
@@ -3019,6 +3061,22 @@ XML
 XML
 				,
 			],
+			'Conditionally deleted class' => [
+				'sInitialXMLInternal' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+    <class id="C_1_1" _alteration="removed"/>
+    <class id="C_1" _alteration="remove_needed"/>
+  </classes>
+</itop_design>',
+				'sExpectedXMLDelta'   => '<itop_design>
+  <classes>
+    <class id="C_1_1" _delta="delete"/>
+    <class id="C_1" _delta="delete_if_exists"/>
+  </classes>
+</itop_design>
+				',
+				],
 		];
 	}
 

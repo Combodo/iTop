@@ -814,7 +814,7 @@ class ModelFactory
 
 				/** @var MFElement $oTargetNode */
 				$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode, $sSearchId);
-				if (!$oTargetNode || $oTargetNode->getAttribute('_alteration') === 'removed') {
+				if (!$oTargetNode || $oTargetNode->IsRemoved()) {
 					// The node does not exist or is marked as removed
 					if ($bMustExist) {
 						$iLine = ModelFactory::GetXMLLineNumber($oSourceNode);
@@ -901,15 +901,15 @@ class ModelFactory
 
 			case 'define_if_not_exists':
 				$oExistingNode = $oTargetParentNode->_FindChildNode($oSourceNode, $sSearchId);
-				if (($oExistingNode == null) || ($oExistingNode->getAttribute('_alteration') == 'removed')) {
+				if (($oExistingNode == null) || ($oExistingNode->IsRemoved())) {
 					// Same as 'define' below
 					/** @var \MFElement $oTargetNode */
 					$oTargetNode = $oTargetDocument->importNode($oSourceNode, true);
 					$oTargetParentNode->AddChildNode($oTargetNode);
+					$oTargetNode->SetAlteration('needed');
 				} else {
 					$oTargetNode = $oExistingNode;
 				}
-				$oTargetNode->setAttribute('_alteration', 'needed');
 				break;
 
 			case 'define':
@@ -937,9 +937,13 @@ class ModelFactory
 			case 'delete_if_exists':
 				/** @var \MFElement $oTargetNode */
 				$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode, $sSearchId);
-				if (($oTargetNode !== null) && ($oTargetNode->getAttribute('_alteration') !== 'removed')) {
+				if (is_null($oTargetNode)) {
+					$oTargetNode = $oTargetDocument->importNode($oSourceNode, false);
+					$oTargetParentNode->appendChild($oTargetNode);
+				}
+				if (!$oTargetNode->IsRemoved()) {
 					// Delete the node if it actually exists and is not already marked as deleted
-					$oTargetNode->Delete();
+					$oTargetNode->Delete(true);
 				}
 				// otherwise fail silently
 				break;
@@ -954,7 +958,7 @@ class ModelFactory
 					throw new MFException($sPath.' at line '.$iLine.": could not be deleted (not found)", MFException::COULD_NOT_BE_DELETED,
 						$iLine, $sPath);
 				}
-				if ($oTargetNode->getAttribute('_alteration') == 'removed') {
+				if ($oTargetNode->IsRemoved()) {
 					throw new MFException($sPath.' at line '.$iLine.": could not be deleted (already marked as deleted)",
 						MFException::ALREADY_DELETED, $iLine, $sPath);
 				}
@@ -1192,19 +1196,19 @@ class ModelFactory
 								$this->aDictKeys[$sLanguageCode]))
 						{
 							$oMe = $this->aDictKeys[$sLanguageCode][$sCode];
-							$sFlag = $oMe->getAttribute('_alteration');
+							$sFlag = $oMe->GetAlteration();
 							$oMe->parentNode->replaceChild($oXmlEntry, $oMe);
 							$sNewFlag = $sFlag;
 							if ($sFlag == '')
 							{
 								$sNewFlag = 'replaced';
 							}
-							$oXmlEntry->setAttribute('_alteration', $sNewFlag);
+							$oXmlEntry->SetAlteration($sNewFlag);
 
 						}
 						else
 						{
-							$oXmlEntry->setAttribute('_alteration', 'added');
+							$oXmlEntry->SetAlteration('added');
 							$oXmlEntries->appendChild($oXmlEntry);
 						}
 						$this->aDictKeys[$sLanguageCode][$sCode] = $oXmlEntry;
@@ -1667,14 +1671,14 @@ EOF
 	/**
 	 * Import the node into the delta
 	 *
-	 * @param $oNodeClone
+	 * @param DesignElement $oNodeClone
 	 *
 	 * @return mixed
 	 */
 	protected function SetDeltaFlags($oNodeClone)
 	{
-		$sAlteration = $oNodeClone->getAttribute('_alteration');
-		$oNodeClone->removeAttribute('_alteration');
+		$sAlteration = $oNodeClone->GetAlteration();
+		$oNodeClone->RemoveAlteration();
 		if ($oNodeClone->hasAttribute('_old_id')) {
 			$oNodeClone->setAttribute('_rename_from', $oNodeClone->getAttribute('_old_id'));
 			$oNodeClone->removeAttribute('_old_id');
@@ -1694,6 +1698,9 @@ EOF
 				break;
 			case 'removed':
 				$oNodeClone->setAttribute('_delta', 'delete');
+				break;
+			case 'remove_needed':
+				$oNodeClone->setAttribute('_delta', 'delete_if_exists');
 				break;
 			case 'needed':
 				$oNodeClone->setAttribute('_delta', 'define_if_not_exists');
@@ -1726,7 +1733,7 @@ EOF
 			$oParentClone = $oTargetDoc;
 		}
 
-		$sAlteration = $oNode->getAttribute('_alteration');
+		$sAlteration = $oNode->GetAlteration();
 		if ($oNode->IsClassNode() && ($sAlteration != '')) {
 			// Handle the moved classes
 			//
@@ -1973,7 +1980,8 @@ class MFElement extends Combodo\iTop\DesignElement
 		$oNode = null;
 		foreach ($this->childNodes as $oChildNode)
 		{
-			if (($oChildNode->nodeName == $sTagName) && (($oChildNode->getAttribute('_alteration') != 'removed')))
+			/** @var MFElement $oChildNode */
+			if (($oChildNode->nodeName == $sTagName) && !$oChildNode->IsRemoved())
 			{
 				$oNode = $oChildNode;
 				break;
@@ -2106,7 +2114,7 @@ class MFElement extends Combodo\iTop\DesignElement
 		// Iterate through the parents: reset the flag if any of them has a flag set 
 		for ($oParent = $this; $oParent instanceof MFElement; $oParent = $oParent->parentNode)
 		{
-			if ($oParent->getAttribute('_alteration') != '')
+			if ($oParent->GetAlteration() != '')
 			{
 				return true;
 			}
@@ -2179,7 +2187,7 @@ class MFElement extends Combodo\iTop\DesignElement
 		$oExisting = $this->_FindChildNode($oNode);
 		if ($oExisting)
 		{
-			if ($oExisting->getAttribute('_alteration') != 'removed') {
+			if (!$oExisting->IsRemoved()) {
 				$sPath = MFDocument::GetItopNodePath($oNode);
 				$iLine = ModelFactory::GetXMLLineNumber($oNode);
 				$sExistingPath = MFDocument::GetItopNodePath($oExisting);
@@ -2199,7 +2207,7 @@ EOF;
 		}
 		if (!$this->IsInDefinition())
 		{
-			$oNode->setAttribute('_alteration', $sFlag);
+			$oNode->SetAlteration($sFlag);
 		}
 	}
 
@@ -2228,9 +2236,9 @@ EOF;
 			throw new MFException($sPath." at line $iLine: could not be modified (not found)", MFException::COULD_NOT_BE_MODIFIED_NOT_FOUND,
 				$sPath, $iLine);
 		}
-		$sPrevFlag = $oExisting->getAttribute('_alteration');
+		$sPrevFlag = $oExisting->GetAlteration();
 		$sOldId = $oExisting->getAttribute('_old_id');
-		if ($sPrevFlag == 'removed') {
+		if ($oExisting->IsRemoved()) {
 			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
 			$iLine = ModelFactory::GetXMLLineNumber($oNode);
 			throw new MFException($sPath." at line $iLine: could not be modified (marked as deleted)",
@@ -2241,7 +2249,7 @@ EOF;
 			if ($sPrevFlag == '') {
 				$sPrevFlag = 'replaced';
 			}
-			$oNode->setAttribute('_alteration', $sPrevFlag);
+			$oNode->SetAlteration($sPrevFlag);
 			if ($sOldId !== '') {
 				$oNode->setAttribute('_old_id', $sOldId);
 			}
@@ -2273,8 +2281,8 @@ EOF;
 				$oNode->setAttribute('_old_id', $sOldId);
 			}
 
-			$sPrevFlag = $oExisting->getAttribute('_alteration');
-			if ($sPrevFlag == 'removed') {
+			$sPrevFlag = $oExisting->GetAlteration();
+			if ($oExisting->IsRemoved()) {
 				$sFlag = $bForce ? 'forced' : 'replaced';
 			} else {
 				$sFlag = $sPrevFlag; // added, replaced or ''
@@ -2292,7 +2300,7 @@ EOF;
 			{
 				$sFlag = $bForce ? 'forced' : 'replaced';
 			}
-			$oNode->setAttribute('_alteration', $sFlag);
+			$oNode->SetAlteration($sFlag);
 		}
 	}
 
@@ -2325,12 +2333,12 @@ EOF;
 	 *
 	 * @throws \Exception
 	 */
-	public function Delete()
+	public function Delete(bool $bIsConditional = false)
 	{
-		switch ($this->getAttribute('_alteration'))
+		switch ($this->GetAlteration())
 		{
 			case 'replaced':
-				$sFlag = 'removed';
+				$sFlag = $bIsConditional ? 'remove_needed' : 'removed';
 				break;
 			case 'added':
 			case 'needed':
@@ -2340,7 +2348,7 @@ EOF;
 				throw new Exception("Attempting to remove a deleted node: $this->tagName (id: ".$this->getAttribute('id')."");
 
 			default:
-				$sFlag = 'removed';
+				$sFlag = $bIsConditional ? 'remove_needed' : 'removed';
 				if ($this->IsInDefinition())
 				{
 					$sFlag = null;
@@ -2355,7 +2363,7 @@ EOF;
 				$this->parentNode->appendChild($this);
 			}
 
-			$this->setAttribute('_alteration', $sFlag);
+			$this->SetAlteration($sFlag);
 			$this->DeleteChildren();
 
 			// Add trace data
@@ -2375,7 +2383,8 @@ EOF;
 	 */
 	public function Rename($sId)
 	{
-		if (($this->getAttribute('_alteration') == 'replaced') || ($this->getAttribute('_alteration') == 'forced') || !$this->IsInDefinition())
+		$sAlteration = $this->GetAlteration();
+		if (($sAlteration == 'replaced') || ($sAlteration == 'forced') || !$this->IsInDefinition())
 		{
 			$sOriginalId = $this->getAttribute('_old_id');
 			if ($sOriginalId == '')
@@ -2422,6 +2431,7 @@ EOF;
 	{
 		// Note: omitting the dot will make the query be global to the whole document!!!
 		$oNodes = $this->ownerDocument->GetNodes('.//*[@_alteration or @_old_id or @_delta]', $this, false);
+		/** @var DesignElement $oNode */
 		foreach ($oNodes as $oNode) {
 			// _delta must not exist after applying changes
 			if ($oNode->hasAttribute('_delta')) {
@@ -2430,8 +2440,8 @@ EOF;
 			if ($oNode->hasAttribute('_old_id')) {
 				$oNode->removeAttribute('_old_id');
 			}
-			if ($oNode->hasAttribute('_alteration')) {
-				if ('removed' === $oNode->GetAttribute('_alteration')) {
+			if ($oNode->HasAlteration()) {
+				if ($oNode->IsRemoved()) {
 					$oComment = ModelFactory::GetPreviousComment($oNode);
 					if (!is_null($oComment)) {
 						$oNode->parentNode->removeChild($oComment);
@@ -2439,10 +2449,36 @@ EOF;
 					$oNode->parentNode->removeChild($oNode);
 				} else {
 						// marked as added or modified, just reset the flag
-						$oNode->removeAttribute('_alteration');
+						$oNode->RemoveAlteration();
 				}
 			}
 		}
+	}
+
+	public function IsRemoved(): bool
+	{
+		$sAlteration = $this->GetAlteration();
+		return $sAlteration === 'removed' || $sAlteration === 'remove_needed';
+	}
+
+	public function GetAlteration(): string
+	{
+		return $this->getAttribute('_alteration');
+	}
+
+	public function SetAlteration(string $sAlteration)
+	{
+		return $this->setAttribute('_alteration', $sAlteration);
+	}
+
+	public function RemoveAlteration()
+	{
+		$this->removeAttribute('_alteration');
+	}
+
+	public function HasAlteration(): bool
+	{
+		return $this->hasAttribute('_alteration');
 	}
 }
 
@@ -2549,7 +2585,7 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 
 		if ($bSafe)
 		{
-			$sXPath = "($sXPath)[not(@_alteration) or @_alteration!='removed']";
+			$sXPath = "($sXPath)[not(@_alteration) or @_alteration!='removed' or @_alteration!='remove_needed']";
 		}
 
 		if (is_null($oContextNode))
@@ -2575,7 +2611,7 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	{
 		$oXPath = new DOMXPath($this);
 		$sQuotedId = self::XPathQuote($sId);
-		$sXPath = "($sXPath)[@id=$sQuotedId and (not(@_alteration) or @_alteration!='removed')]";
+		$sXPath = "($sXPath)[@id=$sQuotedId and (not(@_alteration) or @_alteration!='removed' or @_alteration!='remove_needed')]";
 
 		if (is_null($oContextNode))
 		{
