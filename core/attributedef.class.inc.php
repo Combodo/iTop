@@ -73,6 +73,11 @@ define('DEL_SILENT', 2);
  */
 define('DEL_MOVEUP', 3);
 
+/**
+ * Do nothing at least automatically
+ */
+define('DEL_NONE', 4);
+
 
 /**
  * For Link sets: tracking_level
