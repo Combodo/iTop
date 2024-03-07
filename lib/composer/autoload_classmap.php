@@ -418,6 +418,7 @@ return array(
     'Combodo\\iTop\\Core\\Kpi\\KpiLogData' => $baseDir . '/sources/Core/Kpi/KpiLogData.php',
     'Combodo\\iTop\\Core\\MetaModel\\FriendlyNameType' => $baseDir . '/sources/Core/MetaModel/FriendlyNameType.php',
     'Combodo\\iTop\\Core\\MetaModel\\HierarchicalKey' => $baseDir . '/sources/Core/MetaModel/HierarchicalKey.php',
+    'Combodo\\iTop\\Core\\Trigger\\Enum\\SubscriptionPolicy' => $baseDir . '/sources/Core/Trigger/Enum/SubscriptionPolicy.php',
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\DesignElement' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\Form\\Field\\AbstractSimpleField' => $baseDir . '/sources/Form/Field/AbstractSimpleField.php',

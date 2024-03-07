@@ -476,6 +476,7 @@ class ValueSetEnum extends ValueSetDefinition
 	 * @param bool $bLocalizedSort
 	 *
 	 * @since 3.1.0 N°1646 Add $bLocalizedSort parameter
+	 * @since 3.2.0 N°7157 $Values can be an array of backed-enum cases
 	 */
 	public function __construct($Values, bool $bSortByValues = false)
 	{
@@ -523,13 +524,21 @@ class ValueSetEnum extends ValueSetDefinition
 	 */
 	protected function LoadValues($aArgs)
 	{
+		$aValues = [];
 		if (is_array($this->m_values))
 		{
-			$aValues = $this->m_values;
+			foreach ($this->m_values as $value) {
+				// Handle backed-enum case
+				if (is_object($value) && enum_exists(get_class($value))) {
+					$aValues[] = $value->value;
+					continue;
+				}
+
+				$aValues[] = $value;
+			}
 		}
 		elseif (is_string($this->m_values) && strlen($this->m_values) > 0)
 		{
-			$aValues = array();
 			foreach (explode(",", $this->m_values) as $sVal)
 			{
 				$sVal = trim($sVal);
@@ -539,7 +548,7 @@ class ValueSetEnum extends ValueSetDefinition
 		}
 		else
 		{
-			$aValues = array();
+			$aValues = [];
 		}
 		$this->m_aValues = $aValues;
 		return true;
