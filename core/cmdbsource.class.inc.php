@@ -548,10 +548,9 @@ class CMDBSource
 	/**
 	 * @param string $sSQLQuery
 	 *
-	 * @return \mysqli_result|null
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \CoreException
+     * @return mysqli_result|null
+     * @throws MySQLException
+     * @throws MySQLHasGoneAwayException
 	 *
 	 * @since 2.7.0 N°679 handles nested transactions
 	 */
