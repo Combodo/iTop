@@ -2953,7 +2953,7 @@ CSS;
 					if (($sAttType == 'AttributeExternalKey') || ($sAttType == 'AttributeHierarchicalKey'))
 					{
 						$sOnTargetDel = $oField->GetChildText('on_target_delete');
-						if (($sOnTargetDel == 'DEL_AUTO') || ($sOnTargetDel == 'DEL_SILENT'))
+						if (($sOnTargetDel == 'DEL_AUTO') || ($sOnTargetDel == 'DEL_SILENT') || ($sOnTargetDel == 'DEL_NONE'))
 						{
 							$sTargetClass = $oField->GetChildText('target_class');
 							$aLinkToClasses[$oClass->getAttribute('id')][] = $sTargetClass;
