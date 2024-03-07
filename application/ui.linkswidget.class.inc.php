@@ -144,6 +144,27 @@ class UILinksWidget
 		return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
 	}
 
+    /**
+     * @param WebPage $oPage
+     * @param $oValue
+     * @param $aArgs
+     * @param $sFormPrefix
+     * @param $oCurrentObj
+     * @return BlockIndirectLinkSetEditTable
+     * @throws ArchivedObjectException
+     * @throws ConfigException
+     * @throws CoreException
+     * @throws CoreUnexpectedValue
+     * @since 3.2
+     */
+    public function GetBlock(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj): BlockIndirectLinkSetEditTable
+    {
+        $oBlock = new BlockIndirectLinkSetEditTable($this);
+        $oBlock->InitTable($oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $this->m_aTableConfig);
+
+        return $oBlock;
+    }
+
 	/**
 	 * @param WebPage $oPage
 	 * @param DBObject $oCurrentObj
