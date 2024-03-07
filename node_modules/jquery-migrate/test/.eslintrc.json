@@ -1,0 +1,34 @@
+{
+	"extends": "../src/.eslintrc.json",
+	"root": true,
+	"env": {
+		"browser": true,
+		"node": false
+	},
+	// Support: IE <=9 only, Android <=4.0 only
+	// The above browsers are failing a lot of tests in the ES5
+	// test suite at http://test262.ecmascript.org.
+	"parserOptions": {
+		"ecmaVersion": 3
+	},
+	"globals": {
+		"expectWarning": true,
+		"expectNoWarning": true,
+		"TestManager": true,
+
+		"jQuery": true,
+		"QUnit": true,
+		"module": true,
+		"ok": true,
+		"equal": true,
+		"test": true,
+		"asyncTest": true,
+		"notEqual": true,
+		"deepEqual": true,
+		"strictEqual": true,
+		"notStrictEqual": true,
+		"start": true,
+		"stop": true,
+		"expect": true
+	}
+}

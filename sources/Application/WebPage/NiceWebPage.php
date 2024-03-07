@@ -157,9 +157,9 @@ JS
 		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
 		{
 			$this->LinkScriptFromAppRoot('js/jquery-migrate.dev-params.js');
-			$this->LinkScriptFromAppRoot('js/jquery-migrate.dev.js');
+			$this->LinkScriptFromAppRoot('node_modules/jquery-migrate/dist/jquery-migrate.js');
 		} else {
-			$this->LinkScriptFromAppRoot('js/jquery-migrate.prod.min.js');
+			$this->LinkScriptFromAppRoot('node_modules/jquery-migrate/dist/jquery-migrate.min.js');
 		}
 		$this->LinkScriptFromAppRoot('node_modules/jquery-ui-dist/jquery-ui.min.js');
 

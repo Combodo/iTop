@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery Migrate Test Suite</title>
+	<!-- // Support: IE <= 10 only -->
+	<!-- Ensure IE doesn't fall back into oldIE modes -->
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+
+	<!-- QUnit -->
+	<link rel="stylesheet" href="../node_modules/qunit/qunit/qunit.css" media="screen">
+	<script src="../node_modules/qunit/qunit/qunit.js"></script>
+
+	<!-- Load a jQuery and jquery-migrate plugin file based on URL -->
+	<script src="testinit.js"></script>
+	<script>
+		TestManager.loadProject( "jquery", "git" );
+		// Close this script tag so file will load
+	</script>
+	<script>
+		jQuery.noConflict();
+		TestManager.loadProject( "jquery-migrate", "min", true );
+	</script>
+
+	<!-- Version comparisons -->
+	<script src="../src/compareVersions.js"></script>
+
+	<!-- Unit test files -->
+	<script src="migrate.js"></script>
+	<script src="core.js"></script>
+	<script src="ajax.js"></script>
+	<script src="attributes.js"></script>
+	<script src="css.js"></script>
+	<script src="data.js"></script>
+	<script src="event.js"></script>
+	<script src="offset.js"></script>
+	<script src="serialize.js"></script>
+	<script src="traversing.js"></script>
+	<script src="deferred.js"></script>
+	<script src="effects.js"></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+</body>
+</html>
