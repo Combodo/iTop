@@ -64,7 +64,7 @@ class ValueSetEnumTest extends ItopTestCase
 					"c" => "c",
 				],
 			],
-			"Array, already ordered" => [
+			"Array without keys, already ordered" => [
 				["a", "b", "c"],
 				[
 					0 => "a",
@@ -72,12 +72,20 @@ class ValueSetEnumTest extends ItopTestCase
 					2 => "c",
 				],
 			],
+			"Array with keys, already ordered" => [
+				["a" => "a", "b" => "b", "c" => "c"],
+				[
+					"a" => "a",
+					"b" => "b",
+					"c" => "c",
+				],
+			],
 			"Backed-Enum" => [
 				ABCEnum::class,
 				[
-					0 => "a",
-					1 => "b",
-					2 => "c",
+					"a" => "a",
+					"b" => "b",
+					"c" => "c",
 				],
 				true,   // Is the input value a backed enum?
 			],
