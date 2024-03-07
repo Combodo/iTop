@@ -52,6 +52,7 @@ tests/*/vendor/*
 /node_modules/ace-builds/src/**
 /node_modules/ace-builds/src-min-noconflict/**
 /node_modules/ace-builds/src-noconflict/**
+/node_modules/jquery-ui/**
 
 # PHPUnit: Cache file, local XML working copies
 /tests/php-unit-tests/.phpunit.result.cache
