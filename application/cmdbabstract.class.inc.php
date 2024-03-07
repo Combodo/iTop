@@ -759,10 +759,11 @@ HTML
 			if ($bEditMode && (!$bReadOnly)) {
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
 				$sDisplayValue = ''; // not used
-				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode,
-						$oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+				$oDiv=UIContentBlockUIBlockFactory::MakeStandard('field_'.$sInputId);
+				$oLinkBlock = self::GetBlockFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs);
+				$oDiv->AddSubBlock($oLinkBlock);
 				$this->AddToFieldsMap($sAttCode, $sInputId);
-				$oPage->add($sHTMLValue);
+				$oPage->AddUiBlock($oDiv);
 			} else {
 				if ($oAttDef->IsIndirect()) {
 					$oBlockLinkSetViewTable = new BlockIndirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef, $bReadOnly);
