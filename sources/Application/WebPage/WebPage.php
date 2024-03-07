@@ -555,7 +555,7 @@ class WebPage implements Page
 		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
 
 		// Ensure app root url ends with a slash as it is not guaranteed by the API
-		if (strcmp(substr($sFileRelPath, -1), '/') !== 0) {
+		if (strcmp(substr($sAppRootUrl, -1), '/') !== 0) {
 			$sAppRootUrl .= '/';
 		}
 
