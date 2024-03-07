@@ -260,7 +260,7 @@
 	{
 		$oRecipientsSearch = DBObjectSearch::FromOQL($this->Get('recipients'));
 		$oRecipientsSearch->AllowAllData();
-		$oRecipientsSet = new DBObjectSet($oRecipientsSearch);
+		$oRecipientsSet = new DBObjectSet($oRecipientsSearch, array(), $aContextArgs);
 		$bIsAsync = $this->IsAsynchronous();
 		[$sPreviousLanguage, $aPreviousPluginProperties] = $this->SetNotificationLanguage();
 		
