@@ -527,14 +527,14 @@ class ValueSetEnum extends ValueSetDefinition
 		$aValues = [];
 		if (is_array($this->m_values))
 		{
-			foreach ($this->m_values as $value) {
+			foreach ($this->m_values as $key => $value) {
 				// Handle backed-enum case
 				if (is_object($value) && enum_exists(get_class($value))) {
-					$aValues[] = $value->value;
+					$aValues[$value->value] = $value->value;
 					continue;
 				}
 
-				$aValues[] = $value;
+				$aValues[$key] = $value;
 			}
 		}
 		elseif (is_string($this->m_values) && strlen($this->m_values) > 0)
