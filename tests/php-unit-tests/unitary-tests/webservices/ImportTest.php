@@ -174,7 +174,7 @@ CSVFILE;
 		foreach (["ORGID" => $iOrgId, "UID" => $this->sUid] as $sSearch => $sReplace){
 			$sLastLineNeedle = str_replace($sSearch, $sReplace, $sLastLineNeedle);
 		}
-		$this->assertStringContainsString($sLastLineNeedle, $sLastline, $sLastline);
+		$this->assertStringContainsString($sLastLineNeedle, $sLastline, 'The script we launched in an external process returned a value different than the expected error message');
 
 		$sPattern = "/Person;(\d+);/";
 		if (preg_match($sPattern,$sLastline,$aMatches)){
