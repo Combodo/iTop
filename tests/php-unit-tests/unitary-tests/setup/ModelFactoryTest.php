@@ -1423,4 +1423,332 @@ XML
 			],
 		];
 	}
+
+	/**
+	 * @test
+	 * @dataProvider LoadDeltaProvider
+	 * @covers       ModelFactory::LoadDelta
+	 *
+	 * @param $sInitialXML
+	 * @param $sDeltaXML
+	 * @param $sExpectedXML
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function LoadDeltaTest($sInitialXML, $sDeltaXML, $sExpectedXML)
+	{
+		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
+		$oFactoryDocument = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
+
+		// Load the delta
+		$oDocument = new MFDocument();
+		$oDocument->loadXML($sDeltaXML);
+		/* @var MFElement $oDeltaRoot */
+		$oDeltaRoot = $oDocument->firstChild;
+		try {
+			$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument);
+		}
+		catch (\Exception $e) {
+			$this->assertNull($sExpectedXML, 'LoadDelta() should not have failed with exception: '.$e->getMessage());
+
+			return;
+		}
+		$this->AssertEqualModels($sExpectedXML, $oFactory, 'LoadDelta() did not produce the expected result');
+	}
+
+	public function LoadDeltaProvider()
+	{
+		return [
+			'Creating classes' => [
+				'sInitialXML'  => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject"/>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<classes>
+		<class id="Contact" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+		</class>
+		<class id="Person" _delta="define">
+            <parent>Contact</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject">
+      <class id="Contact" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
+        <class id="Person">
+          <parent>Contact</parent>
+        </class>
+      </class>
+    </class>
+  </classes>
+</itop_design>',
+			],
+			'Error merging classes' => [
+				'sInitialXML'  => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject">
+        <class id="Contact" _alteration="added">
+			<parent>cmdbAbstractObject</parent>
+			<class id="Person">
+				<parent>Contact</parent>
+			</class>
+		</class>
+    </class>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<classes>
+		<class id="Person" _delta="merge">
+            <properties _delta="define">titi</properties>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject">
+      <class id="Contact" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
+        <class id="Person">
+          <parent>Contact</parent>
+          <properties>titi</properties>
+        </class>
+      </class>
+    </class>
+  </classes>
+</itop_design>',
+			],
+			'Error loading module - could not be deleted' => [
+				'sInitialXML'  => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject">
+      <class id="Contact" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
+        <class id="Person">
+          <parent>Contact</parent>
+        </class>
+      </class>
+    </class>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<classes>
+		<class id="Contact" _delta="redefine">
+			<parent>cmdbAbstractObject</parent>
+			<methods/>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject">
+      <class id="Contact" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
+		<methods/>
+        <class id="Person">
+          <parent>Contact</parent>
+        </class>
+      </class>
+    </class>
+  </classes>
+</itop_design>',
+			],
+			'redefine class with sub-class' => [
+				'sInitialXML'  => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject">
+      <class id="Contact" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
+        <class id="Person">
+          <parent>Contact</parent>
+        </class>
+      </class>
+    </class>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<classes>
+		<class id="Contact" _delta="redefine">
+			<parent>cmdbAbstractObject</parent>
+			<methods/>
+			<class id="Team">
+				<parent>Contact</parent>
+			</class>
+	        <class id="Person">
+	          <parent>Contact</parent>
+	        </class>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject">
+      <class id="Contact" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
+		<methods/>
+		<class id="Team">
+			<parent>Contact</parent>
+		</class>
+        <class id="Person">
+          <parent>Contact</parent>
+        </class>
+        <class id="Person">
+          <parent>Contact</parent>
+        </class>
+      </class>
+    </class>
+  </classes>
+</itop_design>',
+			],
+			'force class with sub-class' => [
+				'sInitialXML'  => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject">
+      <class id="Contact" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
+        <class id="Person">
+          <parent>Contact</parent>
+        </class>
+      </class>
+    </class>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<classes>
+		<class id="Contact" _delta="force">
+			<parent>cmdbAbstractObject</parent>
+			<methods/>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject">
+      <class id="Contact" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
+		<methods/>
+        <class id="Person">
+          <parent>Contact</parent>
+        </class>
+      </class>
+    </class>
+  </classes>
+</itop_design>',
+			],
+			'Class added with hierarchy' => [
+				'sInitialXML'  => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject">
+        <class id="FunctionalCI" _alteration="added">
+            <parent>cmdbAbstractObject</parent>
+        </class>
+		<class id="Licence" _alteration="added">
+			<parent>cmdbAbstractObject</parent>
+			<class id="Certificat">
+				<parent>Licence</parent>
+			</class>
+		</class>
+    </class>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<classes>
+		<class id="ConfigElement" _delta="define">
+			<parent>FunctionalCI</parent>
+			<class id="Key">
+				<parent>ConfigElement</parent>
+				<class id="Certificat" _created_in="itop-config-mgmt">
+					<parent>Key</parent>
+				</class>
+			</class>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject">
+      <class id="FunctionalCI" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
+        <class id="ConfigElement">
+          <parent>FunctionalCI</parent>
+          <class id="Key">
+            <parent>ConfigElement</parent>
+            <class id="Certificat" _created_in="itop-config-mgmt">
+              <parent>Key</parent>
+            </class>
+          </class>
+        </class>
+      </class>
+      <class id="Licence" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
+        <class id="Certificat">
+          <parent>Licence</parent>
+        </class>
+      </class>
+    </class>
+  </classes>
+</itop_design>',
+			],
+			'Class added with hierarchy needs redefine' => [
+				'sInitialXML'  => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject">
+        <class id="FunctionalCI" _alteration="added">
+            <parent>cmdbAbstractObject</parent>
+        </class>
+		<class id="Licence" _alteration="added">
+			<parent>cmdbAbstractObject</parent>
+			<class id="Certificat">
+				<parent>Licence</parent>
+			</class>
+		</class>
+    </class>
+  </classes>
+</itop_design>',
+				'sDeltaXML'    => '<itop_design>
+	<classes>
+		<class id="ConfigElement" _delta="define">
+			<parent>FunctionalCI</parent>
+			<class id="Key">
+				<parent>ConfigElement</parent>
+				<class id="Certificat">
+					<parent>Key</parent>
+				</class>
+			</class>
+		</class>
+		<class id="Licence" _delta="redefine">
+			<parent>Key</parent>
+		</class>
+	</classes>
+</itop_design>',
+				'sExpectedXML' => '<itop_design>
+  <classes>
+    <class id="cmdbAbstractObject">
+      <class id="FunctionalCI" _alteration="added">
+        <parent>cmdbAbstractObject</parent>
+        <class id="ConfigElement">
+          <parent>FunctionalCI</parent>
+          <class id="Key">
+            <parent>ConfigElement</parent>
+            <class id="Certificat">
+              <parent>Key</parent>
+            </class>
+            <class id="Licence">
+              <parent>Key</parent>
+            </class>
+          </class>
+        </class>
+      </class>
+    </class>
+  </classes>
+</itop_design>',
+			],
+
+		];
+	}
 }
