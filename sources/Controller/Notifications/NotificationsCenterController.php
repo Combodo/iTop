@@ -64,6 +64,8 @@ class NotificationsCenterController extends Controller
 		$oNotificationsPanel->SetSubTitleBlock($oSubtitleBlock);
 		$oNotificationsCenterTableColumns = [
 			'trigger'  => array('label' => MetaModel::GetName('Trigger')),
+			'trigger_class' => array('label' => MetaModel::GetAttributeDef('Trigger', 'finalclass')->GetLabel()),
+			'complement' => array('label' => MetaModel::GetAttributeDef('Trigger', 'complement')->GetLabel()),
 			'channels' => array('label' => Dict::S('UI:NotificationsCenter:Panel:Table:Channels')),
 		];
 
@@ -234,6 +236,8 @@ JS
 
 			$aTableRows[] = [
 				'trigger'  => $oTrigger->Get('description'),
+				'trigger_class' => MetaModel::GetName($oTrigger->Get('finalclass')),
+				'complement' => $oTrigger->Get('complement'),
 				'channels' => $oBlockRenderer->RenderHtml(),
 				'js'       => $oBlockRenderer->RenderJsInline($oChannelSet::ENUM_JS_TYPE_ON_READY),
 			];
