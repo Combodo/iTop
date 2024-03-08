@@ -1626,6 +1626,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Zobrazit zprávy od %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Zobrazit %1$s zpráv v menu %2$s',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
 ));
 
 

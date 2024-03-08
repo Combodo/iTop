@@ -1623,6 +1623,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Newsroom:ResetCache:Success:Message' => 'Le cache de la newsroom a été réinitialisé avec succès',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Afficher les messages de %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Afficher au plus %1$s messages dans le menu %2$s.',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critique',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Standard',
 ));
 
 

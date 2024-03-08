@@ -1618,6 +1618,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => '%1$s üzeneteinek megjelenítése',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Mutasson %1$s üzenetet a %2$s menüben.',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
 ));
 
 

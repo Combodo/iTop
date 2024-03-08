@@ -1628,6 +1628,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Wyświetl wiadomości od %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Wyświetlaj do %1$s wiadomiości w %2$s menu.',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
 ));
 
 

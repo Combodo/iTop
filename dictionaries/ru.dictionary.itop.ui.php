@@ -1628,6 +1628,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Показать сообщения от %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Отобразите не более %1$s сообщений в меню %2$s.',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
 ));
 
 
