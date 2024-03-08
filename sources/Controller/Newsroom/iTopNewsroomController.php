@@ -22,6 +22,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\Application\WebPage\JsonPPage;
+use Combodo\iTop\Controller\Notifications\NotificationsCenterController;
 use Combodo\iTop\Service\Notification\NotificationsRepository;
 use Combodo\iTop\Service\Router\Router;
 use CoreException;
@@ -60,6 +61,12 @@ class iTopNewsroomController extends Controller
 		// Add title block
 		// Make bulk actions block
 		$oBulkActionsBlock = PanelUIBlockFactory::MakeForInformation(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Title'));
+		$oNotificationsCenterButton = ButtonUIBlockFactory::MakeIconLink(
+			'fas fa-cogs',
+			Dict::S('UI:NotificationsCenter:Panel:Title'),
+			Router::GetInstance()->GenerateUrl(NotificationsCenterController::ROUTE_NAMESPACE.'.display_page'),
+		);
+		$oBulkActionsBlock->SetToolBlocks([$oNotificationsCenterButton]);
 		$oToolbar = ToolbarUIBlockFactory::MakeStandard();
 		$oToolbar->AddCSSClass('ibo-notifications--view-all--toolbar');
 		$oAllModeButtonsContainer = new UIContentBlock('ibo-notifications--view-all--all-mode-buttons', ['ibo-notifications--view-all--bulk-buttons', 'ibo-notifications--view-all--all-mode-buttons']);

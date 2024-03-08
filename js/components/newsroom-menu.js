@@ -203,8 +203,9 @@ $(function()
 		_buildShowAllMessagesSection: function () {
 			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications--show-all-messages" data-role="ibo-popover-menu--section">';
 		},
-		_buildMessageItems: function (sId, sText, sImage, sStartDate, sProvider, sUrl, sTarget, oConverter) {
-			var sNewMessageIndicator = '<div class="ibo-navigation-menu--notifications--item--new-message-indicator"></div>';
+		_buildMessageItems: function (sId, sText, sImage, sStartDate, sProvider, sUrl, sTarget, sPriority, oConverter) {
+			let sNewMessageIndicatorTooltip = Dict.S('UI:Newsroom:Priority:'+sPriority+':Tooltip');
+			var sNewMessageIndicator = '<div class="ibo-navigation-menu--notifications--item--new-message-indicator ibo-is-priority-'+sPriority+'" data-tooltip-content="'+sNewMessageIndicatorTooltip+'"></div>';
 			sImage = '<img class="ibo-navigation-menu--notifications--item--image" src="' + sImage + '"><i class="ibo-navigation-menu--notifications--item--image ' + this.options.placeholder_image_icon + '"></i>';
 
 			var div = document.createElement("div");
@@ -263,7 +264,7 @@ $(function()
 				var oMessage = aAllMessages[k];
 				aUnreadMessagesByProvider[oMessage.provider]++;
 				if (iCount < this.options.display_limit + 4) {
-					var sMessageItem = this._buildMessageItems(oMessage.id, oMessage.text, oMessage.image, oMessage.start_date, oMessage.provider, oMessage.url, oMessage.target, oConverter)
+					var sMessageItem = this._buildMessageItems(oMessage.id, oMessage.text, oMessage.image, oMessage.start_date, oMessage.provider, oMessage.url, oMessage.target, oMessage.priority, oConverter)
 					sMessageSection += sMessageItem;
 				}
 				iCount++;
@@ -293,7 +294,7 @@ $(function()
 				$('.ibo-navigation-menu--notifications--item--content img').each(function(){
 					tippy(this, {'content': this.outerHTML, 'placement': 'left', 'trigger': 'mouseenter focus', 'animation':'shift-away-subtle', 'allowHTML': true });
 				});
-
+				CombodoTooltip.InitAllNonInstantiatedTooltips($(this.element), true);
 				// Add events listeners
 				$(this.js_selectors.notification_message).on('click', function(oEvent){
 					me._handleClick(this, oEvent);

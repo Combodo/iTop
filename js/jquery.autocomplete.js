@@ -1,3 +1,7 @@
+/**
+ * @deprecated 3.2.0 N°7328 use JQUery UI autocomplete widget instead
+ */
+
 /*
  * jQuery Autocomplete plugin 1.2.3
  *

@@ -64,11 +64,13 @@ class NotificationsCenterController extends Controller
 		$oNotificationsPanel->SetSubTitleBlock($oSubtitleBlock);
 		$oNotificationsCenterTableColumns = [
 			'trigger'  => array('label' => MetaModel::GetName('Trigger')),
+			'trigger_class' => array('label' => MetaModel::GetAttributeDef('Trigger', 'finalclass')->GetLabel()),
+			'complement' => array('label' => MetaModel::GetAttributeDef('Trigger', 'complement')->GetLabel()),
 			'channels' => array('label' => Dict::S('UI:NotificationsCenter:Panel:Table:Channels')),
 		];
 
 		// Get all subscribed/unsubscribed actions notifications for the current user
-		$oLnkNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByContact(\UserRights::GetContactId());
+		$oLnkNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByContact(\UserRights::GetContactId());
 		$oActionsNotificationsByTrigger = [];
 		$aSubscribedActionsNotificationsByTrigger = [];
 		while ($oLnkActionsNotifications = $oLnkNotificationsSet->Fetch()) {
@@ -234,6 +236,8 @@ JS
 
 			$aTableRows[] = [
 				'trigger'  => $oTrigger->Get('description'),
+				'trigger_class' => MetaModel::GetName($oTrigger->Get('finalclass')),
+				'complement' => $oTrigger->Get('complement'),
 				'channels' => $oBlockRenderer->RenderHtml(),
 				'js'       => $oBlockRenderer->RenderJsInline($oChannelSet::ENUM_JS_TYPE_ON_READY),
 			];
@@ -275,7 +279,7 @@ JS
 		$oPage->AddUiBlock($oNotificationsPanel);
 
 		// Get all subscribed/unsubscribed actions notifications for the current user
-		$oLnkNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByContact(\UserRights::GetContactId());
+		$oLnkNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByContact(\UserRights::GetContactId());
 		$oActionsNotificationsByTrigger = [];
 		$aSubscribedActionsNotificationsByTrigger = [];
 		while ($oLnkActionsNotifications = $oLnkNotificationsSet->Fetch()) {
@@ -386,8 +390,7 @@ JS
 			if ($oActionNotification === null) {
 				throw new \Exception('Invalid action notification');
 			}
-			$oSubscribedActionsNotificationsSearch = \DBObjectSearch::FromOQL("SELECT lnkActionNotificationToContact AS lnk WHERE lnk.action_id = :actionnotification_id AND lnk.contact_id = :contact_id AND lnk.trigger_id = :trigger_id AND lnk.subscribed = '1'");
-			$oSubscribedActionsNotificationsSet = new \DBObjectSet($oSubscribedActionsNotificationsSearch, array(), array('actionnotification_id' => $iActionNotificationKey, 'contact_id' => \UserRights::GetContactId(), 'trigger_id' => $iTriggerKey));
+			$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscribedSubscriptionsByTriggerContactAndAction($iTriggerKey, $iActionNotificationKey);
 			if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 				throw new \Exception('You are not subscribed to this channel');
 			}
@@ -439,8 +442,7 @@ JS
 			if ($oActionNotification === null) {
 				throw new \Exception('Invalid action notification');
 			}
-			$oSubscribedActionsNotificationsSearch = \DBObjectSearch::FromOQL("SELECT lnkActionNotificationToContact AS lnk WHERE lnk.action_id = :actionnotification_id AND lnk.contact_id = :contact_id AND lnk.trigger_id = :trigger_id AND lnk.subscribed = '0'");
-			$oSubscribedActionsNotificationsSet = new \DBObjectSet($oSubscribedActionsNotificationsSearch, array(), array('actionnotification_id' => $iActionNotificationKey, 'contact_id' => \UserRights::GetContactId(), 'trigger_id' => $iTriggerKey));
+			$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchUnsubscribedSubscriptionsByTriggerContactAndAction($iTriggerKey, $iActionNotificationKey);
 			if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 				throw new \Exception('You are not allow to subscribe to this channel');
 			}
@@ -497,13 +499,13 @@ JS
 			}
 			
 			// Check if we are subscribed to at least 1 channel
-			$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactSubscriptionAndFinalclass($iTriggerId, \UserRights::GetContactId(), '1', $sFinalclass);
+			$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByTriggerContactSubscriptionAndFinalclass($iTriggerId, \UserRights::GetContactId(), '1', $sFinalclass);
 			if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 				throw new \Exception('You are not subscribed to any channel');
 			}
 			// Check the trigger subscription policy and if we are subscribed to at least 1 channel if necessary
 			if($oTrigger->Get('subscription_policy') === SubscriptionPolicy::ForceAtLeastOneChannel->value) {
-				$oTotalSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactAndSubscription($iTriggerId, \UserRights::GetContactId(), '1');
+				$oTotalSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByTriggerContactAndSubscription($iTriggerId, \UserRights::GetContactId(), '1');
 				if (($oTotalSubscribedActionsNotificationsSet->Count() - $oSubscribedActionsNotificationsSet->Count()) === 0) {
 					throw new \Exception('You can\'t unsubscribe from this channel, you must be subscribed to at least one channel');
 				}
@@ -557,7 +559,7 @@ JS
 			if ($oTrigger === null) {
 				throw new \Exception('Invalid trigger');
 			}
-			$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactSubscriptionAndFinalclass($iTriggerId, \UserRights::GetContactId(), '0', $sFinalclass);
+			$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByTriggerContactSubscriptionAndFinalclass($iTriggerId, \UserRights::GetContactId(), '0', $sFinalclass);
 			if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 				throw new \Exception('You are not subscribed to any channel');
 			}
