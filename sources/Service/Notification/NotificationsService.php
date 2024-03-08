@@ -65,7 +65,7 @@ class NotificationsService {
 	public function RegisterSubscription(Trigger $oTrigger, ActionNotification $oActionNotification, Contact $oRecipient): void
 	{
 		// Check if the user is already subscribed to the action notification
-		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactAndAction($oTrigger->GetKey(), $oRecipient->GetKey(), $oActionNotification->GetKey());
+		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByTriggerContactAndAction($oTrigger->GetKey(), $oActionNotification->GetKey(), $oRecipient->GetKey());
 		if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 			// Create a new subscription
 			$oSubscribedActionsNotifications = new lnkActionNotificationToContact();
@@ -104,7 +104,7 @@ class NotificationsService {
 			return true;
 		}
 		// Check if the user is already subscribed to the action notification
-		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactAndAction($oTrigger->GetKey(), $oRecipient->GetKey(), $oActionNotification->GetKey());
+		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByTriggerContactAndAction($oTrigger->GetKey(), $oActionNotification->GetKey(), $oRecipient->GetKey());
 		if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 			return true;
 		}
