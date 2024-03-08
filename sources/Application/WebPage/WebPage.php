@@ -580,7 +580,9 @@ class WebPage implements Page
 			return;
 		}
 
-		if (false === utils::RealPath(MODULESROOT . $sFileRelPath, MODULESROOT)) {
+		$sFileAbsPath = MODULESROOT . $sFileRelPath;
+		// For modules only, we don't check real path if symlink as the file would not be in under MODULESROOT
+		if (false === is_link($sFileAbsPath) && false === utils::RealPath($sFileAbsPath, MODULESROOT)) {
 			IssueLog::Warning("Linked resource added to page with a path from outside current env. directory, it will be ignored.", LogChannels::CONSOLE, [
 				"linked_resource_url" => $sFileRelPath,
 				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
