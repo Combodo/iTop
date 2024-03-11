@@ -47,6 +47,8 @@ class UserProvider implements ContainerAwareInterface
 	private $oContainer;
 	/** @var \User $oUser */
 	private $oUser;
+	/** @var bool $bUserCanLogOff Whether the current user can log off or not */
+	private $bUserCanLogOff;
 	/** @var array $aAllowedPortals */
 	private $aAllowedPortals;
 
@@ -93,7 +95,7 @@ class UserProvider implements ContainerAwareInterface
 		}
 
         // User allowed to log off or not
-        $this->oContainer->set('combodo.current_user.can_logoff', utils::CanLogOff());
+        $this->bUserCanLogOff = utils::CanLogOff();
 
 		// Allowed portals
 		$aAllowedPortals = UserRights::GetAllowedPortals();
@@ -123,6 +125,15 @@ class UserProvider implements ContainerAwareInterface
 	public function getCurrentUser()
 	{
 		return $this->oUser;
+	}
+
+	/**
+	 * @return bool {@see static::$bUserCanLogOff}
+	 * @since 3.1.2 3.2.0
+	 */
+	public function getCurrentUserCanLogOff(): bool
+	{
+		return $this->bUserCanLogOff;
 	}
 
 	/**
