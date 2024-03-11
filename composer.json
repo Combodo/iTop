@@ -97,9 +97,9 @@
     }
   },
   "scripts": {
-    "post-install-cmd": ["@rmDeniedTestDir", "@tcpdfCustomFonts"],
-    "post-update-cmd": ["@rmDeniedTestDir", "@tcpdfCustomFonts"],
-    "rmDeniedTestDir":  "@php .make/composer/rmDeniedTestDir.php",
-    "tcpdfCustomFonts":  "@php .make/composer/tcpdf/tcpdfUpdateFonts.php"
+    "post-install-cmd": ["@rmUnnecessaryFolders", "@tcpdfCustomFonts"],
+    "post-update-cmd": ["@rmUnnecessaryFolders", "@tcpdfCustomFonts"],
+    "rmUnnecessaryFolders":  "@php .make/dependencies/rmUnnecessaryFolders.php --manager composer",
+    "tcpdfCustomFonts":  "@php .make/dependencies/composer/tcpdf/tcpdfUpdateFonts.php"
   }
 }

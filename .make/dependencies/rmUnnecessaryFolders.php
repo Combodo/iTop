@@ -19,8 +19,6 @@
  *
  */
 
-use Combodo\iTop\Composer\iTopComposer;
-
 $iTopFolder = __DIR__ . "/../../" ;
 
 require_once ("$iTopFolder/approot.inc.php");
@@ -33,13 +31,34 @@ if  (php_sapi_name() !== 'cli')
 
 clearstatcache();
 
-$oiTopComposer = new iTopComposer();
-$aDeniedButStillPresent = $oiTopComposer->ListDeniedButStillPresent();
+// Read params
+$key = array_search("--manager", $argv);
+if (false === $key || false === isset($argv[$key + 1]) ) {
+	throw new \Exception("Usage: " . __FILE__ . " --manager composer|npm");
+}
+$sDependenciesHandlerCode = $argv[$key + 1];
+
+switch ($sDependenciesHandlerCode) {
+	case "composer":
+		$sDependenciesHandlerFQCN = \Combodo\iTop\Dependencies\Composer\iTopComposer::class;
+		break;
+
+	case "npm":
+		$sDependenciesHandlerFQCN = \Combodo\iTop\Dependencies\NPM\iTopNPM::class;
+		break;
+
+	default:
+		throw new \Exception("Invalid dependencies handler code, $sDependenciesHandlerCode given, expected composer|npm");
+}
+
+// Start handler
+$oDependenciesHandler = new $sDependenciesHandlerFQCN();
+$aDeniedButStillPresent = $oDependenciesHandler->ListDeniedButStillPresent();
 
 echo "\n";
 foreach ($aDeniedButStillPresent as $sDir)
 {
-	if (false === iTopComposer::IsTestDir($sDir))
+	if (false === $oDependenciesHandler::IsQuestionnableFolder($sDir))
 	{
 		echo "ERROR found INVALID denied test dir: '$sDir'\n";
 		throw new \Exception("$sDir must end with /Test/ or /test/");
@@ -61,13 +80,13 @@ foreach ($aDeniedButStillPresent as $sDir)
 
 
 $aAllowedAndDeniedDirs = array_merge(
-	$oiTopComposer->ListAllowedTestDir(),
-	$oiTopComposer->ListDeniedTestDir()
+	$oDependenciesHandler->ListAllowedQuestionnableFoldersAbsPaths(),
+	$oDependenciesHandler->ListDeniedQuestionnableFolderAbsPaths()
 );
-$aExistingDirs = $oiTopComposer->ListAllTestDir();
+$aExistingDirs = $oDependenciesHandler->ListAllQuestionnableFoldersAbsPaths();
 $aMissing = array_diff($aExistingDirs, $aAllowedAndDeniedDirs);
 if (false === empty($aMissing)) {
 	echo "Some new tests dirs exists !\n"
-		.'  They must be declared either in the allowed or denied list in '.iTopComposer::class." (see N°2651).\n"
-		.'  List of dirs:'."\n".var_export($aMissing, true);
+		.'  They must be declared either in the allowed or denied list in '.$sDependenciesHandlerFQCN." (see N°2651).\n"
+		.'  List of dirs:'."\n".var_export($aMissing, true)."\n";
 }

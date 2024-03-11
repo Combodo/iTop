@@ -26,7 +26,7 @@
  * @link https://getcomposer.org/doc/03-cli.md#show
  */
 
-$iTopFolder = __DIR__."/../../";
+$iTopFolder = __DIR__."/../../../";
 
 require_once("$iTopFolder/approot.inc.php");
 $sApproot = APPROOT;

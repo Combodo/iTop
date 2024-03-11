@@ -13,7 +13,7 @@
  * @link https://github.com/tecnickcom/TCPDF?tab=readme-ov-file#note TCPDF is in support only mode
  */
 
-$sItopRootFolder = realpath(__DIR__ . "/../../../");
+$sItopRootFolder = realpath(__DIR__ . "/../../../../");
 $sCurrentScriptFileName = basename(__FILE__);
 
 
