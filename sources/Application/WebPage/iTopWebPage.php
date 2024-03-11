@@ -189,8 +189,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// Used by inline image, CKEditor and other places
 		$this->LinkScriptFromAppRoot('node_modules/magnific-popup/dist/jquery.magnific-popup.min.js');
 
-		// Used by date(time) attibutes, activity panel, ...
-		$this->LinkScriptFromAppRoot('js/moment-with-locales.min.js');
+		// Used by date(time) attributes, activity panel, ...
+		$this->LinkScriptFromAppRoot('node_modules/moment/min/moment-with-locales.min.js');
 
 		// Used by the newsroom
 		$this->LinkScriptFromAppRoot('node_modules/showdown/dist/showdown.min.js');

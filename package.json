@@ -19,6 +19,7 @@
     "jquery-ui": "^1.13.2",
     "jquery-ui-dist": "^1.13.2",
     "magnific-popup": "^1.0.0",
+    "moment": "^2.30.1",
     "mousetrap": "^1.6.5",
     "scrollmagic": "^2.0.8",
     "selectize-plugin-a11y": "^1.1.0",
