@@ -57,8 +57,10 @@ $ibo-notifications--view-all--empty--svg--max-width: 30% !default;
   background-color: $ibo-notifications--view-all--item--unread--highlight--background-color;
 }
   
-.ibo-notifications--view-all--read-action, .ibo-notifications--view-all--unread-action {
-  margin-left: 0 !important;
+.ibo-notifications--view-all--container {
+  .ibo-notifications--view-all--read-action, .ibo-notifications--view-all--unread-action {
+    margin-left: 0 !important;
+  }
 }
 
 .ibo-notifications--view-all--item--read .ibo-notifications--view-all--read-action {
