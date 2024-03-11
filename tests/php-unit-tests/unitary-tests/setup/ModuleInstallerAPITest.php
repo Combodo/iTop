@@ -17,6 +17,8 @@ use ModuleInstallerAPI;
 class ModuleInstallerAPITest extends ItopDataTestCase
 {
 	protected static string $sWorkTable = "unit_tests_work_table";
+	protected static string $sWorkTable2 = "unit_tests_work_table2";
+	protected static string $sWorkTable3 = "unit_tests_work_table3";
 
 	protected function setUp(): void
 	{
@@ -27,11 +29,64 @@ class ModuleInstallerAPITest extends ItopDataTestCase
 
 	public function tearDown(): void
 	{
-		if (CMDBSource::IsTable(static::$sWorkTable)) {
-			CMDBSource::DropTable(static::$sWorkTable);
+		foreach ([static::$sWorkTable, static::$sWorkTable2, static::$sWorkTable3] as $sTable) {
+			if (CMDBSource::IsTable($sTable)) {
+				CMDBSource::DropTable($sTable);
+			}
 		}
 
 		parent::tearDown();
+	}
+
+
+	/**
+	 * @param string $sTable
+	 * @param string $sAttCode
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 */
+	protected function GetInfoFromTable(string $sTable, string $sAttCode): array
+	{
+		$sOrigTable = MetaModel::DBGetTable($sTable);
+		$oOrigAttDef = MetaModel::GetAttributeDef($sTable, $sAttCode);
+		$sOrigColName = array_key_first($oOrigAttDef->GetSQLColumns());
+
+		return array($sOrigTable, $sOrigColName);
+	}
+
+	/**
+	 * @param string $sDstTable
+	 * @param array $aOrigTables
+	 * @param string $sDstExistingColName
+	 *
+	 * @return void
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	protected function CreateDestinationTable(string $sDstTable, array $aOrigTables, string $sDstExistingColName): void
+	{
+		// Create a table with the same structure as the original table(s)
+		// - Create a SQL query to get all the ids from the original tables
+		if(is_array($aOrigTables)) {
+			$sOrigDataQuery = implode(" UNION ", array_map(fn($sTable) => "SELECT id FROM `{$sTable}`", $aOrigTables));
+		}
+
+		CMDBSource::Query(
+			<<<SQL
+CREATE TABLE `{$sDstTable}` AS {$sOrigDataQuery}
+SQL
+		);
+
+		// Add a column to the destination table
+		CMDBSource::Query(
+			<<<SQL
+ALTER TABLE `{$sDstTable}`
+ADD `{$sDstExistingColName}` VARCHAR(255)
+SQL
+		);
+
+		CMDBSource::CacheReset($sDstTable);
 	}
 
 	/**
@@ -53,32 +108,14 @@ class ModuleInstallerAPITest extends ItopDataTestCase
 	{
 		// Info from the original table
 		$sOrigClass = "Person";
-		$sOrigTable = MetaModel::DBGetTable($sOrigClass);
 		$sOrigAttCode = "first_name";
-		$oOrigAttDef = MetaModel::GetAttributeDef($sOrigClass, $sOrigAttCode);
-		$sOrigColName = array_key_first($oOrigAttDef->GetSQLColumns());
+		[$sOrigTable, $sOrigColName] = $this->GetInfoFromTable($sOrigClass, $sOrigAttCode);
 
 		// Info for the destination table
 		$sDstTable = static::$sWorkTable;
 		$sDstNonExistingColName = "non_existing_column";
 		$sDstExistingColName = "existing_column";
-
-		// Create work table with an empty $sDstExistingColName column
-		// Data will then either be moved to the $sDstExistingColName or $sDstNonExistingColName column depending on the test case
-		CMDBSource::Query(
-			<<<SQL
-CREATE TABLE `{$sDstTable}` AS
-SELECT id
-FROM {$sOrigTable}
-SQL
-		);
-		CMDBSource::Query(
-			<<<SQL
-ALTER TABLE `{$sDstTable}`
-ADD `{$sDstExistingColName}` VARCHAR(255)
-SQL
-		);
-		CMDBSource::CacheReset($sDstTable);
+		$this->CreateDestinationTable($sDstTable, [$sOrigTable], $sDstExistingColName);
 
 		// Save value from original table as a reference
 		$oPerson = MetaModel::GetObject($sOrigClass, 1);
@@ -115,17 +152,93 @@ SQL
 				"bIgnoreExistingDstColumn param" => false,
 				"Should work" => true,
 			],
-			"Move data to non-existing table fails if not explicitly wanted" => [
+			"Move data to existing table fails if not explicitly wanted" => [
 				"Dest. col. already exists?" => true,
 				"bIgnoreExistingDstColumn param" => false,
 				"Should work" => false,
 			],
-			"Move data to non-existing table on purpose" => [
+			"Move data to existing table on purpose" => [
 				"Dest. col. already exists?" => true,
 				"bIgnoreExistingDstColumn param" => true,
 				"Should work" => true,
 			],
 		];
+	}
+
+	/**
+	 *  Test that if we move two columns into the same one using $bIgnoreExistingDstColumn, we don't lose data from one of the columns
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \MySQLQueryHasNoResultException
+	 */
+	public function testMoveColumnInDB_MoveMultipleTable(): void
+	{
+		// Create 2 objects, so we know the ids for one of each class
+		$oPerson = $this->createObject('Person', ['first_name' => 'John', 'name' => 'Doe', 'org_id' => 1]);
+		$oTeam = $this->createObject('Team', ['name' => 'La tcheam', 'org_id' => 1]);
+		
+		// Info from the original tables (we don't need real data, just the ids)
+		$sOrigClass = "Person";
+		[$sOrigTable, $sOrigColName] = $this->GetInfoFromTable($sOrigClass, "first_name");
+	
+		$sOrigClass2 = "Team";
+		[$sOrigTable2, $sOrigColName2] = $this->GetInfoFromTable($sOrigClass2, "friendlyname");
+
+		// Info for the destination table
+		$sDstTable = static::$sWorkTable3;
+		$sDstColName = "existing_column";
+		
+		// Insert our ids into similar work tables
+		// Then insert data into their respective columns to be moved
+		$sOrigWorkTable = static::$sWorkTable;
+		$this->CreateDestinationTable($sOrigWorkTable, [$sOrigTable], $sDstColName);
+		CMDBSource::Query(
+			<<<SQL
+	UPDATE `{$sOrigWorkTable}`
+	SET `{$sDstColName}` = 'from table 1'
+	WHERE 1
+	SQL
+		);
+		
+		$sOrigWorkTable2 = static::$sWorkTable2;
+		$this->CreateDestinationTable($sOrigWorkTable2, [$sOrigTable2], $sDstColName);
+		CMDBSource::Query(
+			<<<SQL
+	UPDATE `{$sOrigWorkTable2}`
+	SET `{$sDstColName}` = 'from table 2'
+	WHERE 1
+	SQL
+		);
+	
+		// Create our destination table
+		$this->CreateDestinationTable($sDstTable, [$sOrigTable, $sOrigTable2], $sDstColName);
+		
+		// Try to move data from both tables into the same column
+		ModuleInstallerAPI::MoveColumnInDB($sOrigWorkTable, $sDstColName, $sDstTable, $sDstColName, true);
+		ModuleInstallerAPI::MoveColumnInDB($sOrigWorkTable2, $sDstColName, $sDstTable, $sDstColName, true);
+	
+		// Check if data was actually moved by getting the value from the destination table for the ids we stored earlier
+		$iPersonId = $oPerson->GetKey(); 
+		$sFromTable1Data = CMDBSource::QueryToScalar(
+			<<<SQL
+	SELECT `{$sDstColName}` FROM `{$sDstTable}` WHERE `id` = {$iPersonId}
+	LIMIT 1
+	SQL
+		);
+	
+		$iTeamId = $oTeam->GetKey();
+		$sFromTable2Data = CMDBSource::QueryToScalar(
+			<<<SQL
+	SELECT `{$sDstColName}` FROM `{$sDstTable}` WHERE `id` = {$iTeamId}
+	LIMIT 1
+	SQL
+		);
+		
+		$this->assertEquals('from table 1', $sFromTable1Data, "Data was not moved as expected");
+		$this->assertEquals('from table 2', $sFromTable2Data, "Data was not moved as expected");
 	}
 
 }
