@@ -80,7 +80,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 		$this->LinkScriptFromURI(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap/js/bootstrap.min.js');
 
 		// Note: Since 2.6.0 moment was moved from portal to iTop core
-		$this->LinkScriptFromAppRoot('js/moment-with-locales.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/moment/min/moment-with-locales.min.js');
 
 		$this->LinkScriptFromURI(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
 
