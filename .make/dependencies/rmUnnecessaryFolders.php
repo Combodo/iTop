@@ -71,10 +71,10 @@ foreach ($aDeniedButStillPresent as $sDir)
 
 	try {
 		SetupUtils::rrmdir($sDir);
-		echo "OK Remove denied test dir: '$sDir'\n";
+		echo "✔️ Remove denied test dir: '$sDir'\n";
 	}
 	catch (\Exception $e) {
-		echo "\nFAILED to remove denied test dir: '$sDir'\n";
+		echo "\n❌ FAILED to remove denied test dir: '$sDir'\n";
 	}
 }
 
@@ -90,3 +90,6 @@ if (false === empty($aMissing)) {
 		.'  They must be declared either in the allowed or denied list in '.$sDependenciesHandlerFQCN." (see N°2651).\n"
 		.'  List of dirs:'."\n".var_export($aMissing, true)."\n";
 }
+
+// Ensure separation with following scripts
+echo "\n";
