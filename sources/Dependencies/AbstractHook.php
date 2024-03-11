@@ -31,7 +31,7 @@ abstract class AbstractHook
 	 * @since 3.2.0 N°7175 update regexp to also remove `examples` folder
 	 * @link https://www.regular-expressions.info/alternation.html RegExp alternation reference
 	 */
-	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples|htdocs?|demos?|external)$/i';
+	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|external)$/i';
 
 	/**
 	 * @return string Absolute path to the root folder of the dependencies (composer, npm, ...)

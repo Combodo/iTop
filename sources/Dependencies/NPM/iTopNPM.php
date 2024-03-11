@@ -81,6 +81,7 @@ class iTopNPM extends AbstractHook
 			$APPROOT_WITH_SLASHES . '/select/test',
 			$APPROOT_WITH_SLASHES . '/selectize-plugin-a11y/examples',
 			$APPROOT_WITH_SLASHES . '/tiny-emitter/test',
+			$APPROOT_WITH_SLASHES . '/toastify-js/example',
 		];
 	}
 }
