@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
+use utils;
 
 /**
  * Class UserProvider
@@ -90,6 +91,9 @@ class UserProvider implements ContainerAwareInterface
 		if ($this->oUser === null) {
 			throw new Exception('Could not load connected user.');
 		}
+
+        // User allowed to log off or not
+        $this->oContainer->set('combodo.current_user.can_logoff', utils::CanLogOff());
 
 		// Allowed portals
 		$aAllowedPortals = UserRights::GetAllowedPortals();
