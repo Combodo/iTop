@@ -794,6 +794,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Core\\Trigger\\Enum\\SubscriptionPolicy' => __DIR__ . '/../..' . '/sources/Core/Trigger/Enum/SubscriptionPolicy.php',
         'Combodo\\iTop\\Dependencies\\AbstractHook' => __DIR__ . '/../..' . '/sources/Dependencies/AbstractHook.php',
         'Combodo\\iTop\\Dependencies\\Composer\\iTopComposer' => __DIR__ . '/../..' . '/sources/Dependencies/Composer/iTopComposer.php',
+        'Combodo\\iTop\\Dependencies\\NPM\\iTopNPM' => __DIR__ . '/../..' . '/sources/Dependencies/NPM/iTopNPM.php',
         'Combodo\\iTop\\DesignDocument' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\DesignElement' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\Form\\Field\\AbstractSimpleField' => __DIR__ . '/../..' . '/sources/Form/Field/AbstractSimpleField.php',

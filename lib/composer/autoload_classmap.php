@@ -419,6 +419,7 @@ return array(
     'Combodo\\iTop\\Core\\Trigger\\Enum\\SubscriptionPolicy' => $baseDir . '/sources/Core/Trigger/Enum/SubscriptionPolicy.php',
     'Combodo\\iTop\\Dependencies\\AbstractHook' => $baseDir . '/sources/Dependencies/AbstractHook.php',
     'Combodo\\iTop\\Dependencies\\Composer\\iTopComposer' => $baseDir . '/sources/Dependencies/Composer/iTopComposer.php',
+    'Combodo\\iTop\\Dependencies\\NPM\\iTopNPM' => $baseDir . '/sources/Dependencies/NPM/iTopNPM.php',
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\DesignElement' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\Form\\Field\\AbstractSimpleField' => $baseDir . '/sources/Form/Field/AbstractSimpleField.php',
