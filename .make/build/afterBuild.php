@@ -4,7 +4,7 @@ $iBeginTime = time();
 chdir(__DIR__);
 
 $aCommands = [
-	'php composer/rmDeniedTestDir.php',
+	'php composer/rmUnnecessaryFolders.php',
 	'php build/commands/setupCssCompiler.php',
 //	'bash /tmp/gabuzomeu.sh',
 ];

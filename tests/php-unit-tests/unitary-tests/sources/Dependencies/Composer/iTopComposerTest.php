@@ -1,8 +1,8 @@
 <?php
 
-namespace Combodo\iTop\Test\UnitTest\Composer;
+namespace Combodo\iTop\Test\UnitTest\Dependencies\Composer;
 
-use Combodo\iTop\Composer\iTopComposer;
+use Combodo\iTop\Dependencies\Composer\iTopComposer;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
@@ -34,12 +34,12 @@ class iTopComposerTest extends ItopTestCase
 	}
 
 	/**
-	 * @dataProvider IsTestDirProvider
+	 * @dataProvider IsTestFolderProvider
 	 * @return void
 	 */
-	public function testIsTestDir($sDirName, $bIsTest)
+	public function testIsTestFolder($sDirName, $bIsTest)
 	{
-		$isTestDir = iTopComposer::IsTestDir($sDirName);
+		$isTestDir = iTopComposer::IsQuestionnableFolder($sDirName);
 		$this->assertIsInt($isTestDir);
 		if (true === $bIsTest) {
 			$this->assertTrue(($isTestDir > 0));
@@ -48,7 +48,7 @@ class iTopComposerTest extends ItopTestCase
 		}
 	}
 
-	public function IsTestDirProvider()
+	public function IsTestFolderProvider()
 	{
 		return [
 			'test'    => ['test', true],
@@ -62,42 +62,42 @@ class iTopComposerTest extends ItopTestCase
 		];
 	}
 
-	public function testListAllTestDir()
+	public function testListAllTestFoldersAbsPaths()
 	{
 		$oiTopComposer = new iTopComposer();
-		$aDirs = $oiTopComposer->ListAllTestDir();
+		$aDirs = $oiTopComposer->ListAllQuestionnableFoldersAbsPaths();
 
 		$this->assertTrue(is_array($aDirs));
 
 		foreach ($aDirs as $sDir) {
 			$sDirName = basename($sDir);
-			$this->assertMatchesRegularExpression(iTopComposer::TEST_DIR_REGEXP, $sDirName, "Directory not matching test dir : $sDir");
+			$this->assertMatchesRegularExpression(iTopComposer::QUESTIONNABLE_FOLDER_REGEXP, $sDirName, "Directory not matching test dir : $sDir");
 		}
 
 	}
 
-	public function testListDeniedTestDir()
+	public function testListDeniedTestFolderAbsPaths()
 	{
 		$oiTopComposer = new iTopComposer();
-		$aDirs = $oiTopComposer->ListDeniedTestDir();
+		$aDirs = $oiTopComposer->ListDeniedQuestionnableFolderAbsPaths();
 
 		$this->assertTrue(is_array($aDirs));
 
 		$aDeniedDirWrongFormat = [];
 		foreach ($aDirs as $sDir) {
-			if (false === iTopComposer::IsTestDir($sDir)) {
+			if (false === iTopComposer::IsQuestionnableFolder($sDir)) {
 				$aDeniedDirWrongFormat[] = $sDir;
 			}
 		}
 
 		$this->assertEmpty($aDeniedDirWrongFormat,
-			'There are elements in \Combodo\iTop\Composer\iTopComposer::ListDeniedTestDir that are not test dirs :'.var_export($aDeniedDirWrongFormat, true));
+			'There are elements in \Combodo\iTop\Dependencies\Composer\iTopComposer::ListDeniedQuestionnableFolderAbsPaths that are not test dirs :'.var_export($aDeniedDirWrongFormat, true));
 	}
 
-	public function testListAllowedTestDir()
+	public function testListAllowedTestFoldersAbsPaths()
 	{
 		$oiTopComposer = new iTopComposer();
-		$aDirs = $oiTopComposer->ListAllowedTestDir();
+		$aDirs = $oiTopComposer->ListAllowedQuestionnableFoldersAbsPaths();
 
 		$this->assertTrue(is_array($aDirs));
 	}
@@ -105,7 +105,7 @@ class iTopComposerTest extends ItopTestCase
 	/**
 	 * This is NOT a unit test, this test the iTop instance running the test ...
 	 */
-	public function testNoDeniedDirIsPresentForNow()
+	public function testNoDeniedFolderIsPresentForNow()
 	{
 		$oiTopComposer = new iTopComposer();
 
@@ -121,15 +121,15 @@ class iTopComposerTest extends ItopTestCase
 	/**
 	 * This is NOT a unit test, this test the iTop instance running the test ...
 	 */
-	public function testAllDirCovered()
+	public function testAllFoldersCovered()
 	{
-		$oiTopComposer = new iTopComposer();
+		$oDependenciesHandler = new iTopComposer();
 		$aAllowedAndDeniedDirs = array_merge(
-			$oiTopComposer->ListAllowedTestDir(),
-			$oiTopComposer->ListDeniedTestDir()
+			$oDependenciesHandler->ListAllowedQuestionnableFoldersAbsPaths(),
+			$oDependenciesHandler->ListDeniedQuestionnableFolderAbsPaths()
 		);
 
-		$aExistingDirs = $oiTopComposer->ListAllTestDir();
+		$aExistingDirs = $oDependenciesHandler->ListAllQuestionnableFoldersAbsPaths();
 
 		$aMissing = array_diff($aExistingDirs, $aAllowedAndDeniedDirs);
 		$aExtra = array_diff($aAllowedAndDeniedDirs, $aExistingDirs);
