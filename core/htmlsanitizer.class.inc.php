@@ -15,6 +15,8 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Masterminds\HTML5;
+
 /**
  * Base class for all possible implementations of HTML Sanitization
  */
@@ -287,7 +289,7 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		'u' => array(),
 		'em' => array(),
 		'strong' => array(),
-		'img' => array('src', 'style', 'alt', 'title'),
+		'img' => array('src', 'style', 'alt', 'title', 'width', 'height'),
 		'ul' => array('style'),
 		'ol' => array('reversed', 'start', 'style', 'type'),
 		'li' => array('style', 'value'),
@@ -321,6 +323,8 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		'hr' => array('style'),
 		'pre' => array(),
 		'center' => array(),
+		'figure' => array('class'), // Ckeditor 5 puts images in figures
+		'mark' => array('class')
 	);
 
 	protected static $aAttrsWhiteList = array(
@@ -332,6 +336,7 @@ class HTMLDOMSanitizer extends DOMSanitizer
 	 * @see https://www.itophub.io/wiki/page?id=2_6_0%3Aadmin%3Arich_text_limitations
 	 */
 	protected static $aStylesWhiteList = array(
+		'aspect-ratio',
 		'background-color',
 		'border',
 		'border-collapse',

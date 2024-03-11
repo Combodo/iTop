@@ -3,18 +3,32 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-/* These rules should be the same as those in css/backoffice/vendors/ckeditor.css */
-body{
-	margin: 5px 10px;
+.ibo-mention-item{
+	line-height: 1.6rem;
 }
-.cke_editable{
-	line-height: 1.4;
+
+[data-role="object-mention"]{
+	color: #0782C1;
 }
-figure{
-	 border: solid 1px #ccc;
-	border-radius: 2px;
- }
-p{
-	margin-top: 0.25em;
-	margin-bottom: 0.25em;
+[data-role="object-mention"]:hover{
+	color: #2b6bb0;
+}
+
+.ck.ck-editor.cke-maximized{
+	position: fixed;
+	left: 0px;
+	top:0px;
+	right: 0px;
+	bottom: 0px;
+	z-index: 999;
+	display: flex;
+	flex-direction: column;
+}
+
+.ck.ck-editor.cke-maximized .ck.ck-editor__main{
+	flex-grow: 1;
+}
+
+.ck.ck-editor.cke-maximized .ck-editor__editable_inline:not(.ck-comment__input *){
+	height: 100%;
 }

@@ -72,10 +72,8 @@ class WebResourcesHelper
 	public static function GetJSFilesRelPathsForCKEditor(): array
 	{
 		return [
-			'js/ckeditor/ckeditor.js',
-			'js/ckeditor/adapters/jquery.js',
-			'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js',
-			'js/ckeditor.on-init.js',
+			'js/ckeditor/build/ckeditor.js',
+			'js/highlight/highlight.js',
 		];
 	}
 

@@ -465,7 +465,7 @@ $(function()
 			 * been edited and the user hasn't dismiss the dialog.
 			 * @private
 			 */
-			_onRequestSubmission: function (oEvent, oData) {
+			_onRequestSubmission: async function (oEvent, oData) {
 				// Check lock state
 				if ((this.options.lock_enabled === true) && (this.enums.lock_status.locked_by_myself !== this.options.lock_status)) {
 					CombodoJSConsole.Debug('ActivityPanel: Could not submit entries, current user does not have the lock on the object');
@@ -474,7 +474,7 @@ $(function()
 
 				let sStimulusCode = (undefined !== oData.stimulus_code) ? oData.stimulus_code : null
 				// If several entry forms filled, show a confirmation message
-				if ((true === this.options.show_multiple_entries_submit_confirmation) && (Object.keys(this._GetEntriesFromAllForms()).length > 1)) {
+				if ((true === this.options.show_multiple_entries_submit_confirmation) && (Object.keys(await this._GetEntriesFromAllForms()).length > 1)) {
 					this._ShowEntriesSubmitConfirmation(sStimulusCode);
 				}
 				// Else push data directly to the server
@@ -807,22 +807,41 @@ $(function()
 			 * @returns {Object} The case logs having a new entry and their values, format is {<ATT_CODE_1>: <HTML_VALUE_1>, <ATT_CODE_2>: <HTML_VALUE_2>}
 			 * @private
 			 */
-			_GetEntriesFromAllForms: function () {
+			_GetEntriesFromAllForms: async function () {
 				const me = this;
-
 				let oEntries = {};
-				this.element.find(this.js_selectors.caselog_entry_form).each(function () {
-					const oEntryFormElem = $(this);
-					const sEntryFormValue = oEntryFormElem.triggerHandler('get_entry.caselog_entry_form.itop');
+				// this.element.find(this.js_selectors.caselog_entry_form).each(async function () {
+				// 	const oEntryFormElem = $(this);
+				// 	const sEntryFormValue = await oEntryFormElem.triggerHandler('get_entry.caselog_entry_form.itop');
+				// 	console.log('huhu');
+				//
+				// 	if ('' !== sEntryFormValue) {
+				// 		const sCaseLogAttCode = oEntryFormElem.attr('data-attribute-code');
+				// 		oEntries[sCaseLogAttCode] = {
+				// 			value: sEntryFormValue,
+				// 			rank: me.element.find(me.js_selectors.tab_toggler+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').attr('data-caselog-rank'),
+				// 		};
+				// 	}
+				// });
+				
+				const aFormElements = this.element.find(this.js_selectors.caselog_entry_form);
+
+				// Create an array of promises for each form element
+				const aEntryPromises = aFormElements.map(async (index, element) => {
+					const oEntryFormElem = $(element);
+					const sEntryFormValue = await oEntryFormElem.triggerHandler('get_entry.caselog_entry_form.itop');
 
 					if ('' !== sEntryFormValue) {
 						const sCaseLogAttCode = oEntryFormElem.attr('data-attribute-code');
 						oEntries[sCaseLogAttCode] = {
 							value: sEntryFormValue,
-							rank: me.element.find(me.js_selectors.tab_toggler+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').attr('data-caselog-rank'),
+							rank: this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="caselog"][data-caselog-attribute-code="' + sCaseLogAttCode + '"]').attr('data-caselog-rank'),
 						};
 					}
-				});
+				}).get(); // convert jQuery object to array
+
+				// Wait for all promises to resolve
+				await Promise.all(aEntryPromises);
 
 				return oEntries;
 			},
@@ -924,9 +943,9 @@ $(function()
 			 * @return {void}
 			 * @private
 			 */
-			_SendEntriesToServer: function (sStimulusCode = null) {
+			_SendEntriesToServer: async function (sStimulusCode = null) {
 				const me = this;
-				const oEntries = this._GetEntriesFromAllForms();
+				const oEntries = await this._GetEntriesFromAllForms();
 				const oExtraInputs = this._GetExtraInputsFromAllForms();
 
 				// Proceed only if entries to send
@@ -979,7 +998,7 @@ $(function()
 						if (null !== sStimulusCode) {
 							if (me.options.lock_enabled) {
 								// Use a Promise to ensure that we redirect to the stimulus page ONLY when the lock is released, otherwise we might lock ourselves
-								const oPromise = new Promise(function(resolve) {
+								const oPromise = new Promise(function (resolve) {
 									// Store the resolve callback so we can call it later from outside
 									me.release_lock_promise_resolve = resolve;
 								});

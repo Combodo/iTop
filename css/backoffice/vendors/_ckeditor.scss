@@ -22,6 +22,10 @@ $ibo-vendors-ckeditor--autocomplete-item-image--border: 1px solid $ibo-color-gre
 
 $ibo-vendors-ckeditor--autocomplete-item-title--text-color: #3A3A3A !default;
 
+.ck-editor__editable_inline:not(.ck-comment__input *) {
+  min-height: 200px;
+}
+
 /* Fullscreen button (Combodo custom) */
 .ibo-vendors-ckeditor--toolbar-fullscreen-button {
 	display: none;

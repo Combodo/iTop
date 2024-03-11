@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
@@ -627,7 +628,7 @@ function GetTabsNavigationFieldBlock(): iUIBlock
  */
 function GetRichTextToolbarExpandedFieldBlock(): iUIBlock
 {
-	$bCurrentValue = isset(utils::GetCkeditorPref()['toolbarStartupExpanded']) ? (bool)utils::GetCkeditorPref()['toolbarStartupExpanded'] : false;
+	$bCurrentValue = isset(CKEditorHelper::GetCkeditorPref()['toolbarStartupExpanded']) ? (bool)CKEditorHelper::GetCkeditorPref()['toolbarStartupExpanded'] : false;
 	$sCurrentValueAsString = $bCurrentValue ? 'true' : 'false';
 
 	$aOptionsValues = [

@@ -774,10 +774,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					if (this.name != '') {
 						if ($(this).hasClass('htmlEditor')) {
 							var sId = $(this).attr('id');
-							var editorInst = CKEDITOR.instances[sId];
-							if (editorInst) {
-								editorInst.destroy();
-							}
+							CombodoCKEditorHandler.DeleteInstance(sId);
 							if ($('#'+sId).data('timeout_validate') != undefined) {
 								clearInterval($('#'+sId).data('timeout_validate'));
 							}
