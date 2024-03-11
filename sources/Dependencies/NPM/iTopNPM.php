@@ -52,6 +52,11 @@ class iTopNPM extends AbstractHook
 	{
 		$APPROOT_WITH_SLASHES = $this->GetDependenciesRootFolderAbsPath();
 		return [
+			$APPROOT_WITH_SLASHES . '/ace-builds/demo',
+			$APPROOT_WITH_SLASHES . '/ace-builds/src',
+			$APPROOT_WITH_SLASHES . '/ace-builds/src-min-noconflict',
+			$APPROOT_WITH_SLASHES . '/ace-builds/src-noconflict',
+
 			$APPROOT_WITH_SLASHES . '/c3/htdocs',
 			$APPROOT_WITH_SLASHES . '/clipboard/demo',
 			$APPROOT_WITH_SLASHES . '/clipboard/test',
@@ -60,7 +65,15 @@ class iTopNPM extends AbstractHook
 			$APPROOT_WITH_SLASHES . '/good-listener/demo',
 			$APPROOT_WITH_SLASHES . '/good-listener/test',
 			$APPROOT_WITH_SLASHES . '/jquery-migrate/test',
+
+			// `jquery-ui` package is just there for vulnerability scans, so we don't want to version its files (only `jquery-ui-dist` is used within the code base)
+			$APPROOT_WITH_SLASHES . '/jquery-ui/.github',
+			$APPROOT_WITH_SLASHES . '/jquery-ui/build',
+			$APPROOT_WITH_SLASHES . '/jquery-ui/dist',
 			$APPROOT_WITH_SLASHES . '/jquery-ui/external',
+			$APPROOT_WITH_SLASHES . '/jquery-ui/themes',
+			$APPROOT_WITH_SLASHES . '/jquery-ui/ui',
+
 			$APPROOT_WITH_SLASHES . '/jquery-ui-dist/external',
 			$APPROOT_WITH_SLASHES . '/mousetrap/plugins/record/tests',
 			$APPROOT_WITH_SLASHES . '/mousetrap/tests',

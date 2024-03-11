@@ -47,11 +47,7 @@ tests/*/vendor/*
 !/log/index.php
 !/log/web.config
 
-# node_modules NPM : only keep used files to lower iTop packages size
-/node_modules/ace-builds/demo/**
-/node_modules/ace-builds/src/**
-/node_modules/ace-builds/src-min-noconflict/**
-/node_modules/ace-builds/src-noconflict/**
+# NPM: `jquery-ui` package is just there for vulnerability scans, so we don't want to version its files (only `jquery-ui-dist` is used within the code base)
 /node_modules/jquery-ui/**
 
 # PHPUnit: Cache file, local XML working copies
