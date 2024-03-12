@@ -4745,7 +4745,7 @@ abstract class DBObject implements iDisplay
 			}
 		}
 		$oDate->modify($sModifier);
-		$this->Set($sAttCode, $oDate->getTimestamp());
+		$this->Set($sAttCode, $oDate);
 	}
 
 	/**
