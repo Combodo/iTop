@@ -2319,16 +2319,17 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+     * @param array $aUniquenessRuleProperties uniqueness rule properties
+	 *
+     * @param string $sUniquenessRuleId uniqueness rule ID
+	 * @return \DBSearch
+	 * @throws \OQLException
+     * @throws \CoreException
+     *
      * @internal
      *
-	 * @param string $sUniquenessRuleId uniqueness rule ID
-	 * @param array $aUniquenessRuleProperties uniqueness rule properties
-	 *
-	 * @return \DBSearch
-	 * @throws \CoreException
-	 * @throws \OQLException
-	 * @since 2.6.0 N°659 uniqueness constraint
-	 * @api
+     * @since 2.6.0 N°659 uniqueness constraint
+     * @since 2.7.11 3.1.2 3.2.0 N°4314 Fix Uniqueness rules not working with Silo
 	 */
 	protected function GetSearchForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties)
 	{
