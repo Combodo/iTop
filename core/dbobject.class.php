@@ -2085,7 +2085,6 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     * @api
      * @param array $aUniquenessRuleProperties uniqueness rule properties
 	 *
      * @param string $sUniquenessRuleId uniqueness rule ID
@@ -2093,10 +2092,10 @@ abstract class DBObject implements iDisplay
 	 * @throws \OQLException
      * @throws \CoreException
      *
-	 * @since 2.6.0 N°659 uniqueness constraint
-     * @since 2.7.11 3.1.2 3.2.0 N°4314 Fix Uniqueness rules not working with Silo
-     *
      * @internal
+     *
+     * @since 2.6.0 N°659 uniqueness constraint
+     * @since 2.7.11 3.1.2 3.2.0 N°4314 Fix Uniqueness rules not working with Silo
 	 */
 	protected function GetSearchForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties)
 	{
