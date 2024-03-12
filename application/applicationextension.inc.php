@@ -1709,8 +1709,16 @@ class RestUtils
 		elseif (is_string($key))
 		{
 			// OQL
-			$oSearch = DBObjectSearch::FromOQL($key);
-		}
+            try {
+                $oSearch = DBObjectSearch::FromOQL($key);
+            } catch (Exception $e) {
+                throw new CoreOqlException('Query failed to execute', [
+                        'query' => $key,
+                        'exception_class' => get_class($e),
+                        'exception_message' => $e->getMessage(),
+                ]);
+            }
+        }
 		else
 		{
 			throw new Exception("Wrong format for key");
