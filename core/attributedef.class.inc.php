@@ -6529,37 +6529,46 @@ class AttributeDateTime extends AttributeDBField
 		}
 	}
 
-    /**
-     * @inheritDoc
-     *
-     * @param int|string $proposedValue timestamp ({@see DateTime::getTimestamp()) or date as string, following the {@see GetInternalFormat} format.
-     */
+	/**
+	 * @inheritDoc
+	 *
+	 * @param int|DateTime|string $proposedValue possible values :
+	 *                      - timestamp ({@see DateTime::getTimestamp())
+	 *                      - {@see \DateTime} PHP object
+	 *                      - string, following the {@see GetInternalFormat} format.
+	 *
+	 * @throws \CoreUnexpectedValue if invalid value type or the string passed cannot be converted
+	 */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue))
 		{
 			return null;
 		}
-		if (is_string($proposedValue) && ($proposedValue == "") && $this->IsNullAllowed())
-		{
-			return null;
+
+		if (is_numeric($proposedValue)) {
+			return date(static::GetInternalFormat(), $proposedValue);
 		}
-		if (!is_numeric($proposedValue))
-		{
-			// Check the format
-			try
-			{
-				$oFormat = new DateTimeFormat($this->GetInternalFormat());
+
+		if (is_object($proposedValue) && ($proposedValue instanceof DateTime)) {
+			return $proposedValue->format(static::GetInternalFormat());
+		}
+
+		if (is_string($proposedValue)) {
+			if (($proposedValue === '') && $this->IsNullAllowed()) {
+				return null;
+			}
+			try {
+				$oFormat = new DateTimeFormat(static::GetInternalFormat());
 				$oFormat->Parse($proposedValue);
-			} catch (Exception $e)
-			{
-				throw new Exception('Wrong format for date attribute '.$this->GetCode().', expecting "'.$this->GetInternalFormat().'" and got "'.$proposedValue.'"');
+			} catch (Exception $e) {
+				throw new CoreUnexpectedValue('Wrong format for date attribute '.$this->GetCode().', expecting "'.$this->GetInternalFormat().'" and got "'.$proposedValue.'"');
 			}
 
 			return $proposedValue;
 		}
 
-		return date(static::GetInternalFormat(), $proposedValue);
+		throw new CoreUnexpectedValue('Wrong format for date attribute '.$this->GetCode());
 	}
 
 	public function ScalarToSQL($value)
