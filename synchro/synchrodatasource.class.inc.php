@@ -1961,6 +1961,12 @@ class SynchroLog extends DBObject
 	{
 		$this->TraceToText();
 		$sMemPeak = max($this->Get('memory_usage_peak'), ExecutionKPI::memory_get_peak_usage());
+
+		// memory peak overflow protection
+		if($sMemPeak > 2147483647){
+			$sMemPeak = 2147483647;
+		}
+
 		$this->Set('memory_usage_peak', $sMemPeak);
 		parent::OnUpdate();
 	}
