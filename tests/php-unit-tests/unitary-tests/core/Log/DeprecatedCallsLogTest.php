@@ -58,4 +58,43 @@ class DeprecatedCallsLogTest extends ItopTestCase {
 			//Do nothing, just raising a undefined offset warning
 		}
 	}
+
+	/**
+	 * @dataProvider GetMessageFromStackProvider
+	 */
+	public function testGetMessageFromStack($aDebugBacktrace): void
+	{
+		$this->InvokeNonPublicStaticMethod(DeprecatedCallsLog::class, 'GetMessageFromStack', [$aDebugBacktrace]);
+		$this->assertTrue(true, 'calling with the stack should not throw a notice or error');
+	}
+
+	public function GetMessageFromStackProvider()
+	{
+		return [
+			'Call in a file outside of a function or class' => [
+				[
+					[
+						'file'     => 'C:\Dev\wamp64\www\itop-32\sources\Application\WebPage\WebPage.php',
+						'line'     => '866',
+						'function' => 'NotifyDeprecatedPhpMethod',
+						'class'    => 'DeprecatedCallsLog',
+						'type'     => '::',
+					],
+					[
+						'file'     => 'C:\Dev\wamp64\www\itop-32\extensions\itop-object-copier\copy.php',
+						'line'     => '130',
+						'function' => 'add_linked_script',
+						'class'    => 'Combodo\iTop\Application\WebPage\WebPage',
+						'type'     => '->',
+					],
+					[
+						'file'     => 'C:\Dev\wamp64\www\itop-32\pages\exec.php',
+						'line'     => '102',
+						'args'     => ['C:\Dev\wamp64\www\itop-32\extensions\itop-object-copier\copy.php'],
+						'function' => 'require_once',
+					],
+				],
+			],
+		];
+	}
 }

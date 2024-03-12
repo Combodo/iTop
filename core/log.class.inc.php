@@ -1238,25 +1238,32 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-		$iStackDeprecatedMethodLevel = 1; // level 0 = current method, level 1 = method containing the `NotifyDeprecatedPhpMethod` call
-		$sDeprecatedObject = $aStack[$iStackDeprecatedMethodLevel]['class'];
-		$sDeprecatedMethod = $aStack[$iStackDeprecatedMethodLevel]['function'];
-		$sCallerFile = $aStack[$iStackDeprecatedMethodLevel]['file'];
-		$sCallerLine = $aStack[$iStackDeprecatedMethodLevel]['line'];
-		$sMessage = "Call to {$sDeprecatedObject}::{$sDeprecatedMethod} in {$sCallerFile}#L{$sCallerLine}";
-
-		$iStackCallerMethodLevel = $iStackDeprecatedMethodLevel + 1; // level 2 = caller of the deprecated method
-		if (array_key_exists($iStackCallerMethodLevel, $aStack)) {
-			$sCallerObject = $aStack[$iStackCallerMethodLevel]['class'];
-			$sCallerMethod = $aStack[$iStackCallerMethodLevel]['function'];
-			$sMessage .= " ({$sCallerObject}::{$sCallerMethod})";
-		}
+		$sMessage = self::GetMessageFromStack($aStack);
 
 		if (!is_null($sAdditionalMessage)) {
 			$sMessage .= ' : '.$sAdditionalMessage;
 		}
 
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_METHOD);
+	}
+
+	private static function GetMessageFromStack(array $aDebugBacktrace): string
+	{
+		$iStackDeprecatedMethodLevel = 1; // level 0 = current method, level 1 = method containing the `NotifyDeprecatedPhpMethod` call
+		$sDeprecatedObject = $aDebugBacktrace[$iStackDeprecatedMethodLevel]['class'];
+		$sDeprecatedMethod = $aDebugBacktrace[$iStackDeprecatedMethodLevel]['function'];
+		$sCallerFile = $aDebugBacktrace[$iStackDeprecatedMethodLevel]['file'];
+		$sCallerLine = $aDebugBacktrace[$iStackDeprecatedMethodLevel]['line'];
+		$sMessage = "Call to {$sDeprecatedObject}::{$sDeprecatedMethod} in {$sCallerFile}#L{$sCallerLine}";
+
+		$iStackCallerMethodLevel = $iStackDeprecatedMethodLevel + 1; // level 2 = caller of the deprecated method
+		if (array_key_exists($iStackCallerMethodLevel, $aDebugBacktrace)) {
+			$sCallerObject = $aDebugBacktrace[$iStackCallerMethodLevel]['class'];
+			$sCallerMethod = $aDebugBacktrace[$iStackCallerMethodLevel]['function'];
+			$sMessage .= " ({$sCallerObject}::{$sCallerMethod})";
+		}
+
+		return $sMessage;
 	}
 
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void
