@@ -1,14 +1,38 @@
-$('#welcome_popup').dialog( { width:'60%', height: 'auto', title: '{{ 'UI:WelcomeMenu:Title'|dict_s }}', autoOpen: true, modal:true,
-    close: function() {
-        var bDisplay = $('#display_welcome_popup:checked').length;
-        SetUserPreference('welcome_popup', bDisplay, true);
-    },
-    buttons: [{
-        text: "{{ 'UI:Button:Ok'|dict_s }}", click: function() {
-            $(this).dialog( "close" ); $(this).remove();
-        }}],
+$('#welcome_popup_dialog').removeClass('ibo-is-hidden');
+$('#welcome_popup_dialog').dialog({
+	modal: true,
+	width: '60%', 
+	autoOpen: true,
+	title: $('div[data_role=welcome-popup-title]').first().attr('data-title'),
+	close: function() { $('#welcome_popup_dialog').remove(); }
+ });
+$('.ui-widget-overlay').click(function() { $('#welcome_popup_dialog').dialog('close'); } );
+$('.ibo-welcome-popup--indicator').click(function() {
+	const id = $(this).attr('data-message-uuid');
+	const escaped_id = id.replace(/\\/g, '\\\\'); // All backslashes must be doubled in a jQuery selector 
+	const new_title = $('.ibo-welcome-popup--message[data-message-uuid="'+escaped_id+'"]').attr('data-title');
+	$('.ibo-welcome-popup--message').addClass('ibo-is-hidden');
+	$('.ibo-welcome-popup--indicator').removeClass('ibo-welcome-popup--active');
+	$('.ibo-welcome-popup--message[data-message-uuid="'+escaped_id+'"]').removeClass('ibo-is-hidden');
+	$('.ibo-welcome-popup--indicator[data-message-uuid="'+escaped_id+'"]').addClass('ibo-welcome-popup--active');
+	$('#welcome_popup_dialog').dialog('option', 'title', new_title);
+	$('.ibo-welcome-popup--message[data-message-uuid="'+escaped_id+'"] button').focus();
 });
-if ($('#welcome_popup').height() > ($(window).height()-70))
-{
-    $('#welcome_popup').height($(window).height()-70);
-}
+$('.ibo-welcome-popup--button').click('button', function() {
+	const id = $(this).attr('data-message-uuid');
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'welcome_popup.acknowledge_message', message_uuid: id});
+	const escaped_id = id.replace(/\\/g, '\\\\');;  // All backslashes must be doubled in a jQuery selector
+	$('.ibo-welcome-popup--message[data-message-uuid="'+escaped_id+'"]').remove();
+	if($('.ibo-welcome-popup--message').length == 0) {
+		// Last message, close the dialog
+		$('#welcome_popup_dialog').dialog('close');
+	} else {
+    	// Move the active state to the next message
+    	$('.ibo-welcome-popup--indicator[data-message-uuid="'+escaped_id+'"]').siblings().first().trigger('click');
+    	$('.ibo-welcome-popup--indicator[data-message-uuid="'+escaped_id+'"]').remove();
+    	if ($('.ibo-welcome-popup--indicator').length == 1) {
+    		// Last indicator, remove it
+    		$('.ibo-welcome-popup--indicator').remove();
+    	}
+	}
+});

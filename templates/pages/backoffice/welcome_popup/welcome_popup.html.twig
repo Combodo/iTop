@@ -1,14 +1,25 @@
-<div id="welcome_popup">
-    <div class="ibo-welcome-popup--image ibo-svg-illustration--container">
-        {{ source("images/illustrations/undraw_relaunch_day.svg") }}
-    </div>
-    <div class="ibo-welcome-popup--text">
-        <div>
-            {{ 'UI:WelcomeMenu:Text'| dict_s|raw }}
-        </div>
-        <div class="ibo-welcome-popup--text--options">
-        <input type="checkbox" checked id="display_welcome_popup"/><label for="display_welcome_popup">{{'UI:DisplayThisMessageAtStartup'| dict_s}}</label>
-        </div>
-    </div>
-
+<div id="welcome_popup_dialog" class="ibo-welcome-popup--dialog ibo-is-hidden">
+<div class="ibo-welcome-popup--content">
+{% for message in messages %}
+	<div class="ibo-welcome-popup--message {% if not loop.first %}ibo-is-hidden{% endif %}" data-message-uuid="{{ message.uuid }}" data_role="welcome-popup-title" data-title="{{ message.title }}">
+	    {% if message.twig is defined %}
+	        {{ include([message.twig ~ '.html.twig', message.twig ~ '.twig', message.twig], message.parameters ?? {}, sandboxed = true) }}
+	    {% else %}
+	        {{ message.html|raw }}	    
+	    {% endif %}
+	    <div class="ibo-welcome-popup--button" data-message-uuid="{{ message.uuid }}">
+	    {% UIButton ForPrimaryAction{'sLabel':'UI:WelcomePopup:Button:Acknowledge'|dict_s,  'bIsSubmit': false } %}
+	    </div>
+	</div>
+{% endfor %}
 </div>
+<div class="ibo-welcome-popup--indicators">
+{% if messages|length > 1 %}
+    {% for message in messages %}
+    	<span class="ibo-welcome-popup--indicator {% if loop.first %}ibo-welcome-popup--active{% endif %}" data-message-uuid="{{ message.uuid }}"></span>
+    {% endfor %}
+{% endif %}
+</div>
+</div>
+
+

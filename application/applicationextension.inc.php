@@ -2278,3 +2278,61 @@ interface iKPILoggerExtension
      */
     public function LogOperation($oKpiLogData);
 }
+
+/**
+ * Interface to provide messages to be displayed in the "Welcome Popup"
+ *
+ * @api
+ * @private
+ * @since 3.1.0
+ */
+interface iWelcomePopupExtension
+{
+	// Importance for ordering messages
+	// Just two levels since less important messages have nothing to do in the welcome popup
+	public const IMPORTANCE_CRITICAL = 0;
+	public const IMPORTANCE_HIGH = 1;
+	/**
+	 * @return array [
+	 *			[
+	 *				'importance' => IMPORTANCE_CRITICAL|IMPORTANCE_HIGH,
+	 *				'id' => '...',
+	 *				'title' => '',
+	 * 			'html' => '',
+	 *				'twig' => ''
+	 *			],
+	 *			...
+	 *		]
+	 */
+	public function GetMessages(): array;
+	/**
+	 * The message specified by the given Id has been acknowledged by the current user
+	 * @param string $sMessageId
+	 */
+	public function AcknowledgeMessage(string $sMessageId): void;
+}
+
+/**
+ * Inherit from this class to provide messages to be displayed in the "Welcome Popup"
+ *
+ * @api
+ * @since 3.1.0
+ */
+abstract class AbstractWelcomePopupExtension implements iWelcomePopupExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function GetMessages(): array
+	{
+		return [];
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function AcknowledgeMessage(string $sMessageId): void
+	{
+		return;
+	}
+}
