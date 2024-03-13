@@ -982,10 +982,13 @@ class ModelFactory
 						$this->aDictKeys[$sLanguageCode][$sCode] = $oXmlEntry;
 					}
 				}
-			}
-			catch (Exception $e) {
-				throw new Exception('Failed to load dictionary file "'.$sPHPFile.'", reason: '.$e->getMessage());
-			}
+			} catch (Exception|Error $e) // Error can occurs on eval() calls
+			{
+                throw new DictException('Failed to load dictionary file "' . $sPHPFile . '"', [
+                        'exception_class' => get_class($e),
+                        'exception_msg' => $e->getMessage(),
+                ]);
+            }
 
 		}
 		catch (Exception $e) {
