@@ -73,15 +73,19 @@ $(function () {
 				this.element.block();
 
 				$.post(this.options.sRenderUrl, oParams, function(data) {
+
+					let oTableElement = $('#'+me.options.sListId);
+					let oDataTable = oTableElement.DataTable();
+
 					// Nasty workaround to clear the pager's state for paginated lists !!!
 					// See jquery.tablesorter.pager.js / saveParams / restoreParams
 					if (window.pager_params) {
 						window.pager_params['pager'+me.options.sListId] = undefined;
 					}
-					var parentElt = $('#'+me.options.sListId).closest('.dataTables_wrapper').parent();
-					var aOptions = $('#'+me.options.sListId).DataTable().context[0].oInit;
+					var parentElt = oTableElement.closest('.dataTables_wrapper').parent();
+					var aOptions = oDataTable.context[0].oInit;
 					window['bSelectAllowed'+me.options.sListId] = false;
-					$('#'+me.options.sListId).DataTable().destroy(true);
+					oDataTable.destroy(true);
 					var sThead = "";
 					if (me.options.sSelectMode != "") {
 						sThead += "<th></th>";
@@ -127,7 +131,20 @@ $(function () {
 					aOptions["lengthMenu"] = [[oParams.end, oParams.end * 2, oParams.end * 3, oParams.end * 4, -1], [oParams.end, oParams.end * 2, oParams.end * 3, oParams.end * 4, aOptions["lengthMenu"]]];
 					aOptions["ajax"] = eval(aOptions["ajax"]);
 
-					$('#'+me.options.sListId).DataTable(aOptions);
+					//  Rebuild table
+					oTableElement = $('#'+me.options.sListId);
+					oDataTable = oTableElement.DataTable(aOptions);
+
+					// Update tab information (when data received)
+					oDataTable.on('xhr', ( e, settings, json, xhr) => {
+						const sPanelTitle = oParams['extra_params']['panel_title']; // retrieve panel title
+						const oTabsPanel =  oTableElement.closest('.ui-tabs-panel'); // search for tabs panel
+						if(oTabsPanel !== undefined){
+							const sLabelledBy = oTabsPanel.attr('aria-labelledby'); // key to search for corresponding tab
+							const oTab = $(`.ibo-tab-container .ui-tabs-tab[aria-labelledby="${sLabelledBy}"] a`); // tab
+							oTab.html(json.recordsTotal > 0 ? sPanelTitle +  ` (${json.recordsTotal})` : sPanelTitle); // update tab information
+						}
+					});
 
 					me.element.unblock();
 
