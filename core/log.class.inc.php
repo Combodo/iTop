@@ -1247,25 +1247,40 @@ class DeprecatedCallsLog extends LogAPI
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_METHOD);
 	}
 
+	/**
+	 * @param array $aDebugBacktrace data from {@see debug_backtrace()}
+	 * @return string message to print to the log
+	 */
 	private static function GetMessageFromStack(array $aDebugBacktrace): string
 	{
-		$iStackDeprecatedMethodLevel = 1; // level 0 = current method, level 1 = method containing the `NotifyDeprecatedPhpMethod` call
-		$sDeprecatedObject = $aDebugBacktrace[$iStackDeprecatedMethodLevel]['class'];
-		$sDeprecatedMethod = $aDebugBacktrace[$iStackDeprecatedMethodLevel]['function'];
-		$sCallerFile = $aDebugBacktrace[$iStackDeprecatedMethodLevel]['file'];
-		$sCallerLine = $aDebugBacktrace[$iStackDeprecatedMethodLevel]['line'];
-		$sMessage = "Call to {$sDeprecatedObject}::{$sDeprecatedMethod} in {$sCallerFile}#L{$sCallerLine}";
+		// level 0 = current method
+		/** @noinspection PhpUnusedLocalVariableInspection */
+		$iStackLevelCurrentMethod = 0;
+		// level 1 = deprecated method, containing the `NotifyDeprecatedPhpMethod` call
+		$iStackLevelMethodWithCallToNotifyDeprecated = 1;
+		// level 2 = caller of the deprecated method
+		$iStackLevelDeprecatedMethodCaller = 2;
 
-		$iStackCallerMethodLevel = $iStackDeprecatedMethodLevel + 1; // level 2 = caller of the deprecated method
-		if (array_key_exists($iStackCallerMethodLevel, $aDebugBacktrace)) {
+		$sMessage = 'Call';
+
+		if (array_key_exists('class', $aDebugBacktrace[$iStackLevelMethodWithCallToNotifyDeprecated])) {
+			$sDeprecatedObject = $aDebugBacktrace[$iStackLevelMethodWithCallToNotifyDeprecated]['class'];
+			$sDeprecatedMethod = $aDebugBacktrace[$iStackLevelMethodWithCallToNotifyDeprecated]['function'];
+			$sMessage .= " to {$sDeprecatedObject}::{$sDeprecatedMethod}";
+		}
+		$sCallerFile = $aDebugBacktrace[$iStackLevelMethodWithCallToNotifyDeprecated]['file'];
+		$sCallerLine = $aDebugBacktrace[$iStackLevelMethodWithCallToNotifyDeprecated]['line'];
+		$sMessage .= " in {$sCallerFile}#L{$sCallerLine}";
+
+		if (array_key_exists($iStackLevelDeprecatedMethodCaller, $aDebugBacktrace)) {
 			$sMessage .= ' (from ';
-			if (array_key_exists('class', $aDebugBacktrace[$iStackCallerMethodLevel])) {
-				$sCallerObject = $aDebugBacktrace[$iStackCallerMethodLevel]['class'];
-				$sCallerMethod = $aDebugBacktrace[$iStackCallerMethodLevel]['function'];
+			if (array_key_exists('class', $aDebugBacktrace[$iStackLevelDeprecatedMethodCaller])) {
+				$sCallerObject = $aDebugBacktrace[$iStackLevelDeprecatedMethodCaller]['class'];
+				$sCallerMethod = $aDebugBacktrace[$iStackLevelDeprecatedMethodCaller]['function'];
 				$sMessage .= "{$sCallerObject}::{$sCallerMethod}";
 			} else {
-				$sCallerFile = $aDebugBacktrace[$iStackCallerMethodLevel]['file'];
-				$sCallerLine = $aDebugBacktrace[$iStackCallerMethodLevel]['line'];
+				$sCallerFile = $aDebugBacktrace[$iStackLevelDeprecatedMethodCaller]['file'];
+				$sCallerLine = $aDebugBacktrace[$iStackLevelDeprecatedMethodCaller]['line'];
 				$sMessage .= "{$sCallerFile}#L{$sCallerLine}";
 			}
 			$sMessage .= ')';
