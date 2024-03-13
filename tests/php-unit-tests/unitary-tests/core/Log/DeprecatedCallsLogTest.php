@@ -149,7 +149,7 @@ class DeprecatedCallsLogTest extends ItopTestCase
 						'type'     => '::',
 					],
 				],
-				'Call to Combodo\iTop\Application\WebPage\WebPage::add_linked_script in C:\Dev\wamp64\www\itop-32\extensions\itop-object-copier\copy.php#L82 (from MyClass::MyMethod)',
+				'Call to Combodo\iTop\Application\WebPage\WebPage::add_linked_script in C:\Dev\wamp64\www\itop-32\extensions\itop-object-copier\copy.php#L82 (from MyClass::MyMethod in C:\Dev\wamp64\www\itop-32\extensions\itop-object-copier\copy.php#L125)',
 			],
 		];
 	}
