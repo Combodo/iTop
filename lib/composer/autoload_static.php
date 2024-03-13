@@ -792,7 +792,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Core\\MetaModel\\FriendlyNameType' => __DIR__ . '/../..' . '/sources/Core/MetaModel/FriendlyNameType.php',
         'Combodo\\iTop\\Core\\MetaModel\\HierarchicalKey' => __DIR__ . '/../..' . '/sources/Core/MetaModel/HierarchicalKey.php',
         'Combodo\\iTop\\Core\\Trigger\\Enum\\SubscriptionPolicy' => __DIR__ . '/../..' . '/sources/Core/Trigger/Enum/SubscriptionPolicy.php',
-        'Combodo\\iTop\\Dependencies\\AbstractHook' => __DIR__ . '/../..' . '/sources/Dependencies/AbstractHook.php',
+        'Combodo\\iTop\\Dependencies\\AbstractFolderAnalyzer' => __DIR__ . '/../..' . '/sources/Dependencies/AbstractFolderAnalyzer.php',
         'Combodo\\iTop\\Dependencies\\Composer\\iTopComposer' => __DIR__ . '/../..' . '/sources/Dependencies/Composer/iTopComposer.php',
         'Combodo\\iTop\\Dependencies\\NPM\\iTopNPM' => __DIR__ . '/../..' . '/sources/Dependencies/NPM/iTopNPM.php',
         'Combodo\\iTop\\DesignDocument' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',

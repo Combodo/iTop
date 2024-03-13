@@ -34,7 +34,7 @@ clearstatcache();
 // Read params
 $key = array_search("--manager", $argv);
 if (false === $key || false === isset($argv[$key + 1]) ) {
-	throw new \Exception("Usage: " . __FILE__ . " --manager composer|npm");
+	throw new \InvalidArgumentException("Usage: " . __FILE__ . " --manager composer|npm");
 }
 $sDependenciesHandlerCode = $argv[$key + 1];
 
@@ -53,7 +53,7 @@ switch ($sDependenciesHandlerCode) {
 
 // Start handler
 $oDependenciesHandler = new $sDependenciesHandlerFQCN();
-$aDeniedButStillPresent = $oDependenciesHandler->ListDeniedButStillPresent();
+$aDeniedButStillPresent = $oDependenciesHandler->ListDeniedButStillPresentFoldersAbsPaths();
 
 echo "\n";
 foreach ($aDeniedButStillPresent as $sDir)
@@ -61,7 +61,7 @@ foreach ($aDeniedButStillPresent as $sDir)
 	if (false === $oDependenciesHandler::IsQuestionnableFolder($sDir))
 	{
 		echo "ERROR found INVALID denied test dir: '$sDir'\n";
-		throw new \Exception("$sDir must end with /Test/ or /test/");
+		throw new \RuntimeException("$sDir is in the denied list but doesn't comply with the rule (see IsQuestionnableFolder method)");
 	}
 
 	if (false === file_exists($sDir)) {
@@ -80,14 +80,14 @@ foreach ($aDeniedButStillPresent as $sDir)
 
 
 $aAllowedAndDeniedDirs = array_merge(
-	$oDependenciesHandler->ListAllowedQuestionnableFoldersAbsPaths(),
-	$oDependenciesHandler->ListDeniedQuestionnableFolderAbsPaths()
+	$oDependenciesHandler->ListAllowedFoldersRelPaths(),
+	$oDependenciesHandler->ListDeniedFoldersRelPaths()
 );
-$aExistingDirs = $oDependenciesHandler->ListAllQuestionnableFoldersAbsPaths();
+$aExistingDirs = $oDependenciesHandler->ListAllFoldersAbsPaths();
 $aMissing = array_diff($aExistingDirs, $aAllowedAndDeniedDirs);
 if (false === empty($aMissing)) {
 	echo "Some new tests dirs exists !\n"
-		.'  They must be declared either in the allowed or denied list in '.$sDependenciesHandlerFQCN." (see N°2651).\n"
+		."  They must be declared either in the allowed or denied list in {$sDependenciesHandlerFQCN}\n"
 		.'  List of dirs:'."\n".var_export($aMissing, true)."\n";
 }
 
