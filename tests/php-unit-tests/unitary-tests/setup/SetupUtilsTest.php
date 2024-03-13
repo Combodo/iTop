@@ -46,8 +46,8 @@ class SetupUtilsTest extends ItopTestCase
 		$this->assertTrue($bLabelFound, "label '$sLabel' not found");
 	}
 
-	public function CheckGraphvizProvider(){
-		if (substr(PHP_OS,0,3) === 'WIN'){
+	public function CheckGraphvizProvider() {
+		if (substr(PHP_OS, 0, 3) === 'WIN') {
 			return [];
 		}
 
