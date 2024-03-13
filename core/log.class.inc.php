@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -1238,25 +1238,51 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-		$iStackDeprecatedMethodLevel = 1; // level 0 = current method, level 1 = method containing the `NotifyDeprecatedPhpMethod` call
-		$sDeprecatedObject = $aStack[$iStackDeprecatedMethodLevel]['class'];
-		$sDeprecatedMethod = $aStack[$iStackDeprecatedMethodLevel]['function'];
-		$sCallerFile = $aStack[$iStackDeprecatedMethodLevel]['file'];
-		$sCallerLine = $aStack[$iStackDeprecatedMethodLevel]['line'];
-		$sMessage = "Call to {$sDeprecatedObject}::{$sDeprecatedMethod} in {$sCallerFile}#L{$sCallerLine}";
-
-		$iStackCallerMethodLevel = $iStackDeprecatedMethodLevel + 1; // level 2 = caller of the deprecated method
-		if (array_key_exists($iStackCallerMethodLevel, $aStack)) {
-			$sCallerObject = $aStack[$iStackCallerMethodLevel]['class'];
-			$sCallerMethod = $aStack[$iStackCallerMethodLevel]['function'];
-			$sMessage .= " ({$sCallerObject}::{$sCallerMethod})";
-		}
+		$sMessage = self::GetMessageFromStack($aStack);
 
 		if (!is_null($sAdditionalMessage)) {
 			$sMessage .= ' : '.$sAdditionalMessage;
 		}
 
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_METHOD);
+	}
+
+	/**
+	 * @param array $aDebugBacktrace data from {@see debug_backtrace()}
+	 * @return string message to print to the log
+	 */
+	private static function GetMessageFromStack(array $aDebugBacktrace): string
+	{
+		// level 0 = current method
+		// level 1 = deprecated method, containing the `NotifyDeprecatedPhpMethod` call
+		$sMessage = 'Call' . self::GetMessageForCurrentStackLevel($aDebugBacktrace[1], " to ");
+
+		// level 2 = caller of the deprecated method
+		if (array_key_exists(2, $aDebugBacktrace)) {
+			$sMessage .= ' (from ';
+			$sMessage .= self::GetMessageForCurrentStackLevel($aDebugBacktrace[2]);
+			$sMessage .= ')';
+		}
+
+		return $sMessage;
+	}
+
+	private static function GetMessageForCurrentStackLevel(array $aCurrentLevelDebugTrace, ?string $sPrefix=""): string
+	{
+		$sMessage = "";
+		if (array_key_exists('class', $aCurrentLevelDebugTrace)) {
+			$sDeprecatedObject = $aCurrentLevelDebugTrace['class'];
+			$sDeprecatedMethod = $aCurrentLevelDebugTrace['function'] ?? "";
+			$sMessage = "{$sPrefix}{$sDeprecatedObject}::{$sDeprecatedMethod} in ";
+		}
+
+		if (array_key_exists('file', $aCurrentLevelDebugTrace)) {
+			$sCallerFile = $aCurrentLevelDebugTrace['file'];
+			$sCallerLine = $aCurrentLevelDebugTrace['line'] ?? "";
+			$sMessage .= "{$sCallerFile}#L{$sCallerLine}";
+		}
+
+		return $sMessage;
 	}
 
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void
