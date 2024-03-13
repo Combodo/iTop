@@ -35,8 +35,8 @@ class SetupUtilsTest extends ItopTestCase
 		$this->assertContains($sLabel, $oCheck->sLabel);
 	}
 
-	public function CheckGraphvizProvider(){
-		if (substr(PHP_OS,0,3) === 'WIN'){
+	public function CheckGraphvizProvider() {
+		if (substr(PHP_OS, 0, 3) === 'WIN') {
 			return [];
 		}
 
@@ -64,5 +64,46 @@ class SetupUtilsTest extends ItopTestCase
 		];
 	}
 
+	/**
+	 * @dataProvider HumanReadableSizeProvider
+	 */
+	public function testHumanReadableSize($fBytes, $sExpected)
+	{
+		$sOutput = SetupUtils::HumanReadableSize($fBytes);
+		$this->assertEquals($sExpected, $sOutput);
+	}
 
+	public function HumanReadableSizeProvider(): array
+	{
+		return [
+			'10 bytes' => [
+				10,
+				'10 bytes',
+			],
+			'10 kilobytes' => [
+				10 * 1024,
+				'10.24 kB',
+			],
+			'10 megabytes' => [
+				10 * 1024 * 1024,
+				'10.49 MB',
+			],
+			'10 gigabytes' => [
+				10 * 1024 * 1024 * 1024,
+				'10.74 GB',
+			],
+			'10 terabytes' => [
+				10 * 1024 * 1024 * 1024 * 1024,
+				'11.00 TB',
+			],
+			'10 petabytes' => [
+				10 * 1024 * 1024 * 1024 * 1024 * 1024,
+				'11.26 PB',
+			],
+			'10 exabytes' => [
+				10 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024,
+				'11.53 EB',
+			],
+		];
+	}
 }
