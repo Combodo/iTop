@@ -93,7 +93,7 @@ class SetupUtilsTest extends ItopTestCase
 			],
 			'10 kilobytes' => [
 				10 * 1024,
-				'10.24 KB',
+				'10.24 kB',
 			],
 			'10 megabytes' => [
 				10 * 1024 * 1024,
@@ -111,9 +111,9 @@ class SetupUtilsTest extends ItopTestCase
 				10 * 1024 * 1024 * 1024 * 1024 * 1024,
 				'11.26 PB',
 			],
-			'10 heptabytes' => [
+			'10 exabytes'  => [
 				10 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024,
-				'11.53 HB',
+				'11.53 EB',
 			],
 		];
 	}
