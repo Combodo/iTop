@@ -1,4 +1,5 @@
 {
+  "name" : "itop-core",
   "dependencies": {
     "@fontsource/raleway": "^4.5.0",
     "@popperjs/core": "^2.4.4",
