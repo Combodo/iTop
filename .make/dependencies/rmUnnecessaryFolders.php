@@ -80,8 +80,8 @@ foreach ($aDeniedButStillPresent as $sDir)
 
 
 $aAllowedAndDeniedDirs = array_merge(
-	$oDependenciesHandler->ListAllowedFoldersRelPaths(),
-	$oDependenciesHandler->ListDeniedFoldersRelPaths()
+	$oDependenciesHandler->ListAllowedFoldersAbsPaths(),
+	$oDependenciesHandler->ListDeniedFoldersAbsPaths()
 );
 $aExistingDirs = $oDependenciesHandler->ListAllFoldersAbsPaths();
 $aMissing = array_diff($aExistingDirs, $aAllowedAndDeniedDirs);
