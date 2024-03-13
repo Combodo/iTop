@@ -11,14 +11,16 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
 /**
- * Class AbstractHook
+ * Class AbstractFolderAnalyzer
  *
  * Extend this class to enable a dependency manager such as Composer or NPM to clean unnecessary files after an installation or update of a package.
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Dependencies
+ *
+ * @since 3.2.0 N°7331 class creation to have managers for both Composer and NPM (only Composer was existing before)
  */
-abstract class AbstractHook
+abstract class AbstractFolderAnalyzer
 {
 	/**
 	 * Questionnable folder is a folder name that seems like it doesn't need to be package as it only contain
@@ -34,15 +36,32 @@ abstract class AbstractHook
 	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|external)$/i';
 
 	/**
-	 * @return string Absolute path to the root folder of the dependencies (composer, npm, ...)
+	 * @return string Relative path to the root folder of the dependencies (e.g. "lib" for composer, "node_modules" for npm, ...) from iTop app. root
 	 */
-	abstract protected function GetDependenciesRootFolderAbsPath(): string;
+	abstract protected function GetDependenciesRootFolderRelPath(): string;
+
+	/**
+	 * @return string Absolute path to the root folder of the dependencies
+	 */
+	public function GetDependenciesRootFolderAbsPath(): string
+	{
+		return $this->GetApprootPathWithSlashes() . $this->GetDependenciesRootFolderRelPath();
+	}
+
+	/**
+	 * @return string APPROOT constant but with slashes instead of DIRECTORY_SEPARATOR.
+	 *      This ease writing our paths, as we can use '/' for every platform.
+	 */
+	final protected function GetApprootPathWithSlashes(): string
+	{
+		return str_replace(DIRECTORY_SEPARATOR, '/', APPROOT);
+	}
 
 	/**
 	 * @return array List of all subdirs of the dependencies folder that are {@see IsQuestionnableFolder}.
 	 *              Warning : each path contains slashes (meaning on Windows you'll get eg `C:/Dev/wamp64/www/itop-27/lib/goaop/framework/tests`)
 	 */
-	public function ListAllQuestionnableFoldersAbsPaths(): array
+	public function ListAllFoldersAbsPaths(): array
 	{
 		$aAllTestDirs = array();
 		$sPath = realpath($this->GetDependenciesRootFolderAbsPath());
@@ -84,31 +103,38 @@ abstract class AbstractHook
 	}
 
 	/**
-	 * @return string APPROOT constant but with slashes instead of DIRECTORY_SEPARATOR.
-	 *      This ease writing our paths, as we can use '/' for every platform.
+	 * @return array Array of absolute paths to allowed questionnable folders
 	 */
-	final protected function GetApprootPathWithSlashes(): string
+	abstract public function ListAllowedFoldersRelPaths(): array;
+
+	/**
+	 * @return array Array of absolute paths to allowed folders
+	 */
+	public function ListAllowedFoldersAbsPaths(): array
 	{
-		return str_replace(DIRECTORY_SEPARATOR, '/', APPROOT);
+		return array_map(fn ($sRelPath): string => $this->GetDependenciesRootFolderAbsPath() . $sRelPath, $this->ListAllowedFoldersRelPaths());
 	}
 
 	/**
-	 * @return array Array of absolute paths to allowed questionnable folders
+	 * @return array Array of relative paths (from dependencies root folder {@see static::GetDependenciesRootFolderAbsPath()}) to denied folders
 	 */
-	abstract public function ListAllowedQuestionnableFoldersAbsPaths(): array;
+	abstract public function ListDeniedFoldersRelPaths(): array;
 
 	/**
-	 * @return array Array of absolute paths to denied questionnable folders
+	 * @return array Array of absolute paths to denied folders
 	 */
-	abstract public function ListDeniedQuestionnableFolderAbsPaths(): array;
+	public function ListDeniedFoldersAbsPaths(): array
+	{
+		return array_map(fn ($sRelPath): string => $this->GetDependenciesRootFolderAbsPath() . $sRelPath, $this->ListDeniedFoldersRelPaths());
+	}
 
 	/**
 	 * @return array Array of absolute paths to questionnable denied test folders that need to be marked as allowed or denied
 	 */
-	public function ListDeniedButStillPresent(): array
+	public function ListDeniedButStillPresentFoldersAbsPaths(): array
 	{
-		$aDeniedTestDir = $this->ListDeniedQuestionnableFolderAbsPaths();
-		$aAllTestDir = $this->ListAllQuestionnableFoldersAbsPaths();
+		$aDeniedTestDir = $this->ListDeniedFoldersAbsPaths();
+		$aAllTestDir = $this->ListAllowedFoldersAbsPaths();
 		return array_intersect($aDeniedTestDir, $aAllTestDir);
 	}
 }

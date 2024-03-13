@@ -34,10 +34,10 @@ class iTopComposerTest extends ItopTestCase
 	}
 
 	/**
-	 * @dataProvider IsTestFolderProvider
+	 * @dataProvider IsQuestionnableFolderProvider
 	 * @return void
 	 */
-	public function testIsTestFolder($sDirName, $bIsTest)
+	public function testIsQuestionnableFolder($sDirName, $bIsTest)
 	{
 		$isTestDir = iTopComposer::IsQuestionnableFolder($sDirName);
 		$this->assertIsInt($isTestDir);
@@ -48,7 +48,7 @@ class iTopComposerTest extends ItopTestCase
 		}
 	}
 
-	public function IsTestFolderProvider()
+	public function IsQuestionnableFolderProvider()
 	{
 		return [
 			'test'    => ['test', true],
@@ -62,10 +62,10 @@ class iTopComposerTest extends ItopTestCase
 		];
 	}
 
-	public function testListAllTestFoldersAbsPaths()
+	public function testListAllFoldersAbsPaths()
 	{
 		$oiTopComposer = new iTopComposer();
-		$aDirs = $oiTopComposer->ListAllQuestionnableFoldersAbsPaths();
+		$aDirs = $oiTopComposer->ListAllFoldersAbsPaths();
 
 		$this->assertTrue(is_array($aDirs));
 
@@ -76,10 +76,10 @@ class iTopComposerTest extends ItopTestCase
 
 	}
 
-	public function testListDeniedTestFolderAbsPaths()
+	public function testListDeniedFolderAbsPaths()
 	{
 		$oiTopComposer = new iTopComposer();
-		$aDirs = $oiTopComposer->ListDeniedQuestionnableFolderAbsPaths();
+		$aDirs = $oiTopComposer->ListDeniedFoldersAbsPaths();
 
 		$this->assertTrue(is_array($aDirs));
 
@@ -91,13 +91,13 @@ class iTopComposerTest extends ItopTestCase
 		}
 
 		$this->assertEmpty($aDeniedDirWrongFormat,
-			'There are elements in \Combodo\iTop\Dependencies\Composer\iTopComposer::ListDeniedQuestionnableFolderAbsPaths that are not test dirs :'.var_export($aDeniedDirWrongFormat, true));
+			'There are elements in \Combodo\iTop\Dependencies\Composer\iTopComposer::ListDeniedFoldersRelPaths that are not test dirs :'.var_export($aDeniedDirWrongFormat, true));
 	}
 
-	public function testListAllowedTestFoldersAbsPaths()
+	public function testListAllowedFoldersAbsPaths()
 	{
 		$oiTopComposer = new iTopComposer();
-		$aDirs = $oiTopComposer->ListAllowedQuestionnableFoldersAbsPaths();
+		$aDirs = $oiTopComposer->ListAllowedFoldersAbsPaths();
 
 		$this->assertTrue(is_array($aDirs));
 	}
@@ -109,7 +109,7 @@ class iTopComposerTest extends ItopTestCase
 	{
 		$oiTopComposer = new iTopComposer();
 
-		$aDeniedButStillPresent = $oiTopComposer->ListDeniedButStillPresent();
+		$aDeniedButStillPresent = $oiTopComposer->ListDeniedButStillPresentFoldersAbsPaths();
 
 		$this->assertEmpty(
 			$aDeniedButStillPresent,
@@ -125,11 +125,11 @@ class iTopComposerTest extends ItopTestCase
 	{
 		$oDependenciesHandler = new iTopComposer();
 		$aAllowedAndDeniedDirs = array_merge(
-			$oDependenciesHandler->ListAllowedQuestionnableFoldersAbsPaths(),
-			$oDependenciesHandler->ListDeniedQuestionnableFolderAbsPaths()
+			$oDependenciesHandler->ListAllowedFoldersAbsPaths(),
+			$oDependenciesHandler->ListDeniedFoldersAbsPaths()
 		);
 
-		$aExistingDirs = $oDependenciesHandler->ListAllQuestionnableFoldersAbsPaths();
+		$aExistingDirs = $oDependenciesHandler->ListAllFoldersAbsPaths();
 
 		$aMissing = array_diff($aExistingDirs, $aAllowedAndDeniedDirs);
 		$aExtra = array_diff($aAllowedAndDeniedDirs, $aExistingDirs);

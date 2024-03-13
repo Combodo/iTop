@@ -21,89 +21,87 @@
 
 namespace  Combodo\iTop\Dependencies\Composer;
 
-use Combodo\iTop\Dependencies\AbstractHook;
+use Combodo\iTop\Dependencies\AbstractFolderAnalyzer;
 
-class iTopComposer extends AbstractHook
+class iTopComposer extends AbstractFolderAnalyzer
 {
 	/**
 	 * @inheritDoc
 	 */
-	protected function GetDependenciesRootFolderAbsPath(): string
+	protected function GetDependenciesRootFolderRelPath(): string
 	{
-		return $this->GetApprootPathWithSlashes() . "lib";
+		return "lib/";
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function ListAllowedQuestionnableFoldersAbsPaths(): array
+	public function ListAllowedFoldersRelPaths(): array
 	{
-		$APPROOT_WITH_SLASHES = $this->GetDependenciesRootFolderAbsPath();
 		return [
-			$APPROOT_WITH_SLASHES . '/twig/twig/src/Node/Expression/Test',
+			'twig/twig/src/Node/Expression/Test',
 		];
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function ListDeniedQuestionnableFolderAbsPaths(): array
+	public function ListDeniedFoldersRelPaths(): array
 	{
-		$APPROOT_WITH_SLASHES = $this->GetDependenciesRootFolderAbsPath();
 		return [
-			$APPROOT_WITH_SLASHES . '/doctrine/lexer/tests',
+			'doctrine/lexer/tests',
 
-			$APPROOT_WITH_SLASHES . '/goaop/framework/tests',
+			'goaop/framework/tests',
 
-			$APPROOT_WITH_SLASHES . '/laminas/laminas-servicemanager/src/Test',
+			'laminas/laminas-servicemanager/src/Test',
 
-			$APPROOT_WITH_SLASHES . '/nikic/php-parser/test',
+			'nikic/php-parser/test',
 
-			$APPROOT_WITH_SLASHES . '/pear/archive_tar/tests',
-			$APPROOT_WITH_SLASHES . '/pear/console_getopt/tests',
-			$APPROOT_WITH_SLASHES . '/pear/pear_exception/tests',
+			'pear/archive_tar/tests',
+			'pear/console_getopt/tests',
+			'pear/pear_exception/tests',
 
-			$APPROOT_WITH_SLASHES . '/psr/log/Psr/Log/Test',
+			'psr/log/Psr/Log/Test',
 
-			$APPROOT_WITH_SLASHES . '/symfony/cache/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/cache/Tests/DoctrineProviderTest.php',
-			$APPROOT_WITH_SLASHES . '/symfony/class-loader/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/config/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/console/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/css-selector/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/debug/Resources/ext/tests',
-			$APPROOT_WITH_SLASHES . '/symfony/debug/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/dependency-injection/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/dotenv/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/event-dispatcher/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/filesystem/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/finder/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/http-client-contracts/Test',
-			$APPROOT_WITH_SLASHES . '/symfony/http-foundation/Test',
-			$APPROOT_WITH_SLASHES . '/symfony/http-kernel/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/service-contracts/Test',
-			$APPROOT_WITH_SLASHES . '/symfony/framework-bundle/Test',
-			$APPROOT_WITH_SLASHES . '/symfony/mime/Test',
-			$APPROOT_WITH_SLASHES . '/symfony/routing/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/stopwatch/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/translation-contracts/Test',
-			$APPROOT_WITH_SLASHES . '/symfony/twig-bridge/Test',
-			$APPROOT_WITH_SLASHES . '/symfony/twig-bundle/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/var-dumper/Test',
-			$APPROOT_WITH_SLASHES . '/symfony/var-dumper/Tests/Test',
-			$APPROOT_WITH_SLASHES . '/symfony/var-dumper/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/web-profiler-bundle/Tests',
-			$APPROOT_WITH_SLASHES . '/symfony/yaml/Tests',
+			'symfony/cache/Tests',
+			'symfony/cache/Tests/DoctrineProviderTest.php',
+			'symfony/class-loader/Tests',
+			'symfony/config/Tests',
+			'symfony/console/Tests',
+			'symfony/css-selector/Tests',
+			'symfony/debug/Resources/ext/tests',
+			'symfony/debug/Tests',
+			'symfony/dependency-injection/Tests',
+			'symfony/dotenv/Tests',
+			'symfony/event-dispatcher/Tests',
+			'symfony/filesystem/Tests',
+			'symfony/finder/Tests',
+			'symfony/http-client-contracts/Test',
+			'symfony/http-foundation/Test',
+			'symfony/http-kernel/Tests',
+			'symfony/service-contracts/Test',
+			'symfony/framework-bundle/Test',
+			'symfony/mime/Test',
+			'symfony/routing/Tests',
+			'symfony/stopwatch/Tests',
+			'symfony/translation-contracts/Test',
+			'symfony/twig-bridge/Test',
+			'symfony/twig-bundle/Tests',
+			'symfony/var-dumper/Test',
+			'symfony/var-dumper/Tests/Test',
+			'symfony/var-dumper/Tests',
+			'symfony/web-profiler-bundle/Tests',
+			'symfony/yaml/Tests',
 
-			$APPROOT_WITH_SLASHES . '/tecnickcom/tcpdf/examples',
+			'tecnickcom/tcpdf/examples',
 
-			$APPROOT_WITH_SLASHES . '/thenetworg/oauth2-azure/tests',
+			'thenetworg/oauth2-azure/tests',
 
-			$APPROOT_WITH_SLASHES . '/twig/twig/src/Test',
-			$APPROOT_WITH_SLASHES . '/twig/twig/lib/Twig/Test',
-			$APPROOT_WITH_SLASHES . '/twig/twig/doc/tests',
+			'twig/twig/src/Test',
+			'twig/twig/lib/Twig/Test',
+			'twig/twig/doc/tests',
 
-			$APPROOT_WITH_SLASHES . '/laminas/laminas-servicemanager/src/Test',
+			'laminas/laminas-servicemanager/src/Test',
 		];
 	}
 }

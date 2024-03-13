@@ -417,7 +417,7 @@ return array(
     'Combodo\\iTop\\Core\\MetaModel\\FriendlyNameType' => $baseDir . '/sources/Core/MetaModel/FriendlyNameType.php',
     'Combodo\\iTop\\Core\\MetaModel\\HierarchicalKey' => $baseDir . '/sources/Core/MetaModel/HierarchicalKey.php',
     'Combodo\\iTop\\Core\\Trigger\\Enum\\SubscriptionPolicy' => $baseDir . '/sources/Core/Trigger/Enum/SubscriptionPolicy.php',
-    'Combodo\\iTop\\Dependencies\\AbstractHook' => $baseDir . '/sources/Dependencies/AbstractHook.php',
+    'Combodo\\iTop\\Dependencies\\AbstractFolderAnalyzer' => $baseDir . '/sources/Dependencies/AbstractFolderAnalyzer.php',
     'Combodo\\iTop\\Dependencies\\Composer\\iTopComposer' => $baseDir . '/sources/Dependencies/Composer/iTopComposer.php',
     'Combodo\\iTop\\Dependencies\\NPM\\iTopNPM' => $baseDir . '/sources/Dependencies/NPM/iTopNPM.php',
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',

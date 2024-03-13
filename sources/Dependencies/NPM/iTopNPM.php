@@ -21,67 +21,66 @@
 
 namespace  Combodo\iTop\Dependencies\NPM;
 
-use Combodo\iTop\Dependencies\AbstractHook;
+use Combodo\iTop\Dependencies\AbstractFolderAnalyzer;
 
-class iTopNPM extends AbstractHook
+class iTopNPM extends AbstractFolderAnalyzer
 {
 	/**
 	 * @inheritDoc
 	 */
-	protected function GetDependenciesRootFolderAbsPath(): string
+	protected function GetDependenciesRootFolderRelPath(): string
 	{
-		return $this->GetApprootPathWithSlashes() . "node_modules";
+		return "node_modules/";
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function ListAllowedQuestionnableFoldersAbsPaths(): array
+	public function ListAllowedFoldersRelPaths(): array
 	{
-		$APPROOT_WITH_SLASHES = $this->GetDependenciesRootFolderAbsPath();
 		return [
 			// jQuery Sizzle used by jQuery
-			$APPROOT_WITH_SLASHES . '/jquery/external',
+			'jquery/external',
 		];
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function ListDeniedQuestionnableFolderAbsPaths(): array
+	public function ListDeniedFoldersRelPaths(): array
 	{
-		$APPROOT_WITH_SLASHES = $this->GetDependenciesRootFolderAbsPath();
 		return [
-			$APPROOT_WITH_SLASHES . '/ace-builds/demo',
-			$APPROOT_WITH_SLASHES . '/ace-builds/src',
-			$APPROOT_WITH_SLASHES . '/ace-builds/src-min-noconflict',
-			$APPROOT_WITH_SLASHES . '/ace-builds/src-noconflict',
+			// ACE Editor see https://www.npmjs.com/package/ace-builds for dir contents
+			'ace-builds/demo',
+			'ace-builds/src',
+			'ace-builds/src-min-noconflict',
+			'ace-builds/src-noconflict',
 
-			$APPROOT_WITH_SLASHES . '/c3/htdocs',
-			$APPROOT_WITH_SLASHES . '/clipboard/demo',
-			$APPROOT_WITH_SLASHES . '/clipboard/test',
-			$APPROOT_WITH_SLASHES . '/delegate/demo',
-			$APPROOT_WITH_SLASHES . '/delegate/test',
-			$APPROOT_WITH_SLASHES . '/good-listener/demo',
-			$APPROOT_WITH_SLASHES . '/good-listener/test',
-			$APPROOT_WITH_SLASHES . '/jquery-migrate/test',
+			'c3/htdocs',
+			'clipboard/demo',
+			'clipboard/test',
+			'delegate/demo',
+			'delegate/test',
+			'good-listener/demo',
+			'good-listener/test',
+			'jquery-migrate/test',
 
 			// `jquery-ui` package is just there for vulnerability scans, so we don't want to version its files (only `jquery-ui-dist` is used within the code base)
-			$APPROOT_WITH_SLASHES . '/jquery-ui/.github',
-			$APPROOT_WITH_SLASHES . '/jquery-ui/build',
-			$APPROOT_WITH_SLASHES . '/jquery-ui/dist',
-			$APPROOT_WITH_SLASHES . '/jquery-ui/external',
-			$APPROOT_WITH_SLASHES . '/jquery-ui/themes',
-			$APPROOT_WITH_SLASHES . '/jquery-ui/ui',
+			'jquery-ui/.github',
+			'jquery-ui/build',
+			'jquery-ui/dist',
+			'jquery-ui/external',
+			'jquery-ui/themes',
+			'jquery-ui/ui',
 
-			$APPROOT_WITH_SLASHES . '/jquery-ui-dist/external',
-			$APPROOT_WITH_SLASHES . '/mousetrap/plugins/record/tests',
-			$APPROOT_WITH_SLASHES . '/mousetrap/tests',
-			$APPROOT_WITH_SLASHES . '/select/demo',
-			$APPROOT_WITH_SLASHES . '/select/test',
-			$APPROOT_WITH_SLASHES . '/selectize-plugin-a11y/examples',
-			$APPROOT_WITH_SLASHES . '/tiny-emitter/test',
-			$APPROOT_WITH_SLASHES . '/toastify-js/example',
+			'jquery-ui-dist/external',
+			'mousetrap/plugins/record/tests',
+			'mousetrap/tests',
+			'select/demo',
+			'select/test',
+			'selectize-plugin-a11y/examples',
+			'tiny-emitter/test',
+			'toastify-js/example',
 		];
 	}
 }
