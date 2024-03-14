@@ -313,7 +313,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 	/**
 	 * Since 3.0.0 and N°2969 it is possible to have a dictionaries directory in modules. We want to ensure that core modules use this functionality !
 	 *
-	 * @since 2.7.11 3.0.5 3.1.2 3.2.0 N°7143
+	 * @since 3.0.5 3.1.2 3.2.0 N°7143
 	 */
 	public function testNoDictFileInDatamodelsModuleRootDirectory():void {
 		$sAppRoot = static::GetAppRoot();
@@ -362,6 +362,7 @@ EOF
 			'combodo-dispatch-incident',
 			'combodo-dispatch-userrequest',
 			'combodo-email-synchro',
+			'combodo-fulltext-search',
 			'combodo-hybridauth',
 			'combodo-impersonate',
 			'combodo-notify-on-expiration',
@@ -381,6 +382,7 @@ EOF
 			'itop-object-copier',
 			'itop-request-template',
 			'itop-standard-email-synchro',
+			'itop-synchro-dashboard',
 			'itop-system-information',
 			'itsm-designer-connector',
 			'precanned-replies-pro',
