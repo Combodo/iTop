@@ -543,7 +543,12 @@
                 });
 
                 // Initialize confirmation message handler when a form with touched fields is closed
-                oBodyElem.portal_leave_handler({'message': '{{ 'Portal:Form:Close:Warning'|dict_s }}'});
+                oBodyElem.leave_handler({
+                    'message': '{{ 'Portal:Form:Close:Warning'|dict_s }}',
+                    'extra_events': {
+                        'body': ['hide.bs.modal']
+                    }
+                });
                 {% endblock %}
 			});
 		</script>
