@@ -8,7 +8,7 @@
 namespace Combodo\iTop\Test\UnitTest\Status;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use const PHP_BINARY;
+use utils;
 
 class StatusTest extends ItopTestCase
 {
@@ -22,7 +22,7 @@ class StatusTest extends ItopTestCase
 	{
 		$sPath = APPROOT.'/webservices/status.php';
 
-		$sPHP = PHP_BINARY;
+		$sPHP = utils::GetConfig()->Get('php_path');
 		exec("$sPHP $sPath", $aOutput, $iRet);
 		$this->assertEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n".var_export($aOutput, true));
 
