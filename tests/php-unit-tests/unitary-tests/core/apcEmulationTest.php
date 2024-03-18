@@ -27,6 +27,7 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\Application\ApplicationExtensionTest;
+use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use utils;
 
 define('UNIT_MAX_CACHE_FILES', 10);
@@ -34,12 +35,8 @@ define('UNIT_MAX_CACHE_FILES', 10);
 
 /**
  * @runTestsInSeparateProcesses Required (at least) to mock the MetaModel and utils class
- *
- * Extending {@see ApplicationExtensionTest} as we don't want to create apc emul files in the production data dir, in consequence :
- * - we are using a specific env ({@see \utils::GetCachePath})
- * - by extending {@see ApplicationExtensionTest} there won't be any perf issue as the env will already be there
  */
-class apcEmulationTest extends ApplicationExtensionTest
+class apcEmulationTest extends ItopCustomDatamodelTestCase
 {
 
 	protected function setUp(): void
@@ -50,6 +47,20 @@ class apcEmulationTest extends ApplicationExtensionTest
 
 		$this->RequireOnceItopFile('core/apc-emulation.php');
 		apc_clear_cache();
+	}
+
+	/**
+	 * We don't want to create apc emul files in the production data dir, in consequence :
+	 *  - we are using a specific env ({@see \utils::GetCachePath})
+	 *  - by using {@see ApplicationExtensionTest} there won't be any perf issue as the env will already be there
+	 *
+	 * @return string
+	 */
+	public function GetDatamodelDeltaAbsPath(): string
+	{
+		$this->RequireOnceUnitTestFile('../application/applicationextension/ApplicationExtensionTest.php');
+
+		return ApplicationExtensionTest::DELTA_ABS_PATH;
 	}
 
 	public function tearDown(): void
@@ -196,5 +207,4 @@ class apcEmulationTest extends ApplicationExtensionTest
 			$this->assertEquals($ilen, strlen(apc_fetch('testHuge'.$i)));
 		}
 	}
-
 }

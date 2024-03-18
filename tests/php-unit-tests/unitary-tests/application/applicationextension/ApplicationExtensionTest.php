@@ -17,13 +17,14 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 {
 	protected const ENUM_API_CALL_METHOD_ENUMPLUGINS = 'MetaModel::EnumPlugins';
 	protected const ENUM_API_CALL_METHOD_GETCLASSESFORINTERFACE = 'utils::GetClassesForInterface';
+	public const DELTA_ABS_PATH = __DIR__.'/Delta/application-extension-usages-in-snippets.xml';
 
 	/**
 	 * @inheritDoc
 	 */
 	public function GetDatamodelDeltaAbsPath(): string
 	{
-		return __DIR__ . '/Delta/application-extension-usages-in-snippets.xml';
+		return self::DELTA_ABS_PATH;
 	}
 
 	/**
