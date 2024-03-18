@@ -249,14 +249,14 @@ class apcFile
 	 * remove older files if the mamximum is reached.
 	 * @param $sNewFilename
 	 */
-	static protected function AddFile($sNewFilename)
+	protected static function AddFile($sNewFilename)
 	{
 		if (strpos(basename($sNewFilename), '-') !== 0)
 		{
 			return;
 		}
 
-		$iMaxFiles = MetaModel::GetConfig()->Get('apc_cache_emulation.max_entries');
+		$iMaxFiles = utils::GetConfig()->Get('apc_cache_emulation.max_entries');
 		if ($iMaxFiles == 0)
 		{
 			return;

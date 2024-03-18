@@ -26,22 +26,29 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
-use PHPUnit\Framework\TestCase;
+use Combodo\iTop\Test\UnitTest\Application\ApplicationExtensionTest;
+use utils;
 
 define('UNIT_MAX_CACHE_FILES', 10);
 
 
 /**
  * @runTestsInSeparateProcesses Required (at least) to mock the MetaModel and utils class
+ *
+ * Extending {@see ApplicationExtensionTest} as we don't want to create apc emul files in the production data dir, in consequence :
+ * - we are using a specific env ({@see \utils::GetCachePath})
+ * - by extending {@see ApplicationExtensionTest} there won't be any perf issue as the env will already be there
  */
-class apcEmulationTest extends TestCase
+class apcEmulationTest extends ApplicationExtensionTest
 {
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once __DIR__.'/../../../../core/apc-emulation.php';
-		require_once 'mockApcEmulation.incphp';
+
+		utils::GetConfig()->Set('apc_cache_emulation.max_entries', UNIT_MAX_CACHE_FILES);
+
+		$this->RequireOnceItopFile('core/apc-emulation.php');
 		apc_clear_cache();
 	}
 
