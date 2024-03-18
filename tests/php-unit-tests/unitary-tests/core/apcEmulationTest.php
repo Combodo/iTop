@@ -26,7 +26,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use PHPUnit\Framework\TestCase;
 
 define('UNIT_MAX_CACHE_FILES', 10);
 
@@ -34,13 +34,13 @@ define('UNIT_MAX_CACHE_FILES', 10);
 /**
  * @runTestsInSeparateProcesses Required (at least) to mock the MetaModel and utils class
  */
-class apcEmulationTest extends ItopTestCase
+class apcEmulationTest extends TestCase
 {
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->RequireOnceItopFile('core/apc-emulation.php');
+		require_once __DIR__.'/../../../../core/apc-emulation.php';
 		require_once 'mockApcEmulation.incphp';
 		apc_clear_cache();
 	}
