@@ -321,7 +321,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// Date picker options
 		$aPickerOptions = array(
 			'showOn' => 'button',
-			'buttonText' => '<i class="fas fa-calendar-alt"></i>',
+			'buttonText' => '', // N°6455 class will be added after JQuery UI widget
 			'dateFormat' => AttributeDate::GetFormat()->ToDatePicker(),
 			'constrainInput' => false,
 			'changeMonth' => true,
@@ -374,6 +374,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	    // Note: Trigger image is wrapped in a span so we can display it we want 
 		$(".date-pick").datepicker($sJSDatePickerOptions)
 		    .next("img").wrap("<span>");
+		$("button.ui-datepicker-trigger").addClass('fas fa-calendar-alt');
 	
 		// Hack for the date and time picker addon issue on Chrome (see #1305)
 		// The workaround is to instantiate the widget on demand
