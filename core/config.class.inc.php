@@ -1212,7 +1212,7 @@ class Config
 		'relations.complete_analysis' => [
 			'type' => 'bool',
 			'description' => 'Continue the impact/depends analysis even if a step is not visible to the user',
-			'default' =>true,
+			'default' =>false,
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
