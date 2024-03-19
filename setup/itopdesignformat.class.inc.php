@@ -901,7 +901,9 @@ class iTopDesignFormat
 			// N°6562 textContent is readonly, see https://www.php.net/manual/en/class.domnode.php#95545
 			// $oNode->textContent = '';
 			// N°6562 to update text node content we must use the node methods !
-			$oNode->removeChild($oNode->firstChild);
+			if ($oNode->firstChild) {
+				$oNode->removeChild($oNode->firstChild);
+			}
 			$oCodeNode = $oNode->ownerDocument->createElement("code", $sCode);
 			$oNode->appendChild($oCodeNode);
 		}

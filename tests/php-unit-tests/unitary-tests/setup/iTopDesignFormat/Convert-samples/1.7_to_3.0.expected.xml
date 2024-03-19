@@ -37,6 +37,9 @@
             <value id="test" _delta="define">
               <code>test</code>
             </value>
+            <value id="nada" _delta="define">
+              <code/>
+            </value>
           </values>
         </field>
       </fields>
