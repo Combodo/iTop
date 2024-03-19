@@ -324,6 +324,7 @@ class DesignElement extends \DOMElement
 
 	/**
 	 * Check that the current node is actually a class node, under classes
+	 * @since 3.1.2 3.2.0 N°6974
 	 */
 	public function IsClassNode(): bool
 	{
@@ -343,12 +344,13 @@ class DesignElement extends \DOMElement
 	 * A method with the same signature MUST exist in MFDocument for the recursion to work fine
 	 *
 	 * @param DesignElement $oRefNode The node to search for
-	 * @param string $sSearchId substitutes to the value of the 'id' attribute
+	 * @param null|string $sSearchId substitutes to the value of the 'id' attribute
 	 *
 	 * @return DesignElement|null
 	 * @throws \Exception
+	 * @since 3.1.2 3.2.0 N°6974
 	 */
-	public function _FindChildNode(DesignElement $oRefNode, $sSearchId = null)
+	public function _FindChildNode(DesignElement $oRefNode, $sSearchId = null): ?DesignElement
 	{
 		return self::_FindNode($this, $oRefNode, $sSearchId);
 	}
@@ -360,12 +362,12 @@ class DesignElement extends \DOMElement
 	 * A method with the same signature MUST exist in MFDocument for the recursion to work fine
 	 *
 	 * @param DesignElement $oRefNode The node to search for
-	 * @param string $sSearchId substitutes to the value of the 'id' attribute
 	 *
 	 * @return DesignElement|null
 	 * @throws \Exception
+	 * @since 3.1.2 3.2.0 N°6974
 	 */
-	public function _FindChildNodes(DesignElement $oRefNode)
+	public function _FindChildNodes(DesignElement $oRefNode): ?DesignElement
 	{
 		return self::_FindNodes($this, $oRefNode);
 	}
@@ -380,8 +382,9 @@ class DesignElement extends \DOMElement
 	 *
 	 * @return DesignElement|null
 	 * @throws Exception
+	 * @since 3.1.2 3.2.0 N°6974
 	 */
-	public static function _FindNode(DOMNode $oParent, DesignElement $oRefNode, string $sSearchId = null)
+	public static function _FindNode(DOMNode $oParent, DesignElement $oRefNode, string $sSearchId = null): ?DesignElement
 	{
 		$oNodes = self::_FindNodes($oParent, $oRefNode, $sSearchId);
 		if ($oNodes instanceof DOMNodeList) {
@@ -403,6 +406,7 @@ class DesignElement extends \DOMElement
 	 * @param string|null $sSearchId
 	 *
 	 * @return \DOMNodeList|false|mixed
+	 * @since 3.1.2 3.2.0 N°6974
 	 */
 	public static function _FindNodes(DOMNode $oParent, DesignElement $oRefNode, string $sSearchId = null)
 	{
