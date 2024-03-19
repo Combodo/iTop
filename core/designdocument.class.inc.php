@@ -50,6 +50,7 @@ use utils;
 class DesignDocument extends DOMDocument
 {
 
+	/** To fix DOMNode::getLineNo() ref https://www.php.net/manual/en/domnode.getlineno.php */
 	public const XML_PARSE_BIG_LINES = 4194304;
 
 
