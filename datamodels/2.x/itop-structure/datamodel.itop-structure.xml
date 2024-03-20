@@ -564,6 +564,9 @@
             <item id="org_id">
               <rank>30</rank>
             </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
           </items>
         </default_search>
         <list>
