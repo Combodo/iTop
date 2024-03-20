@@ -15,9 +15,13 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+/* integrityCheck: begin (do not remove/edit) */
 /* Helpers classes */
 .center {
   text-align: center;
+}
+.hidden {
+  display: none;
 }
 /* Animations */
 @keyframes progress_bar_color_ongoing {
@@ -265,4 +269,4 @@ fieldset > legend {
   font-weight: bold;
   color: #e60000b8;
 }
-
+/* integrityCheck: end (do not remove/edit) */

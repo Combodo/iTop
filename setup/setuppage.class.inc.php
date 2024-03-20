@@ -35,6 +35,7 @@ class SetupPage extends NiceWebPage
 		parent::__construct($sTitle);
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script("../setup/setup.js");
+		$this->add_linked_script("../setup/csp-detection.js?itop_version_wiki_syntax=" . utils::GetItopVersionWikiSyntax());
 		$this->add_saas("css/setup.scss");
 	}
 
