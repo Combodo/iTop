@@ -9,6 +9,7 @@ namespace  Combodo\iTop\Dependencies;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use const DIRECTORY_SEPARATOR;
 
 /**
  * Class AbstractFolderAnalyzer
@@ -36,7 +37,7 @@ abstract class AbstractFolderAnalyzer
 	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|external)$/i';
 
 	/**
-	 * @return string Relative path to the root folder of the dependencies (e.g. "lib" for composer, "node_modules" for npm, ...) from iTop app. root
+	 * @return string Relative path to the root folder of the dependencies (e.g. "lib" for composer, "node_modules" for npm, ...) from iTop app. root. Must end with slash !
 	 */
 	abstract protected function GetDependenciesRootFolderRelPath(): string;
 
@@ -58,10 +59,12 @@ abstract class AbstractFolderAnalyzer
 	}
 
 	/**
+	 * @param bool $bCheckQuestionnable if true will only return dirs matching {@see IsQuestionnableFolder}, otherwise all dirs
+	 *
 	 * @return array List of all subdirs of the dependencies folder that are {@see IsQuestionnableFolder}.
 	 *              Warning : each path contains slashes (meaning on Windows you'll get eg `C:/Dev/wamp64/www/itop-27/lib/goaop/framework/tests`)
 	 */
-	public function ListAllFoldersAbsPaths(): array
+	public function ListAllFoldersAbsPaths(bool $bCheckQuestionnable = true): array
 	{
 		$aAllTestDirs = array();
 		$sPath = realpath($this->GetDependenciesRootFolderAbsPath());
@@ -77,7 +80,7 @@ abstract class AbstractFolderAnalyzer
 				continue;
 			}
 			$sDirName = $file->getFilename();
-			if (!$this->IsQuestionnableFolder($sDirName))
+			if ($bCheckQuestionnable && !static::IsQuestionnableFolder($sDirName))
 			{
 				continue;
 			}
@@ -112,7 +115,7 @@ abstract class AbstractFolderAnalyzer
 	 */
 	public function ListAllowedFoldersAbsPaths(): array
 	{
-		return array_map(fn ($sRelPath): string => $this->GetDependenciesRootFolderAbsPath() . $sRelPath, $this->ListAllowedFoldersRelPaths());
+		return $this->TransformRelToAbsPaths($this->ListAllowedFoldersRelPaths());
 	}
 
 	/**
@@ -125,7 +128,7 @@ abstract class AbstractFolderAnalyzer
 	 */
 	public function ListDeniedFoldersAbsPaths(): array
 	{
-		return array_map(fn ($sRelPath): string => $this->GetDependenciesRootFolderAbsPath() . $sRelPath, $this->ListDeniedFoldersRelPaths());
+		return $this->TransformRelToAbsPaths($this->ListDeniedFoldersRelPaths());
 	}
 
 	/**
@@ -134,7 +137,12 @@ abstract class AbstractFolderAnalyzer
 	public function ListDeniedButStillPresentFoldersAbsPaths(): array
 	{
 		$aDeniedTestDir = $this->ListDeniedFoldersAbsPaths();
-		$aAllTestDir = $this->ListAllowedFoldersAbsPaths();
+		$aAllTestDir = $this->ListAllFoldersAbsPaths(false);
 		return array_intersect($aDeniedTestDir, $aAllTestDir);
+	}
+
+	final public function TransformRelToAbsPaths(array $aRelPaths): array
+	{
+		return array_map(fn($sRelPath): string => $this->GetDependenciesRootFolderAbsPath().$sRelPath, $aRelPaths);
 	}
 }
