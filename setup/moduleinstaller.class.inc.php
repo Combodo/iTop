@@ -272,6 +272,16 @@ abstract class ModuleInstallerAPI
 			return;
 		}
 
+		// Simple rename
+		if ($sOrigTable === $sDstTable)
+		{
+			$sQueryRename = /** @lang MySQL */ "ALTER TABLE `{$sOrigTable}` RENAME COLUMN `{$sOrigColumn}` TO `{$sDstColumn}`;";
+			CMDBSource::Query($sQueryRename);
+
+			CMDBSource::CacheReset($sOrigTable);
+			return;
+		}
+
 		// Create the destination field if necessary
 		if($bDstTableFieldExists === false){
 			$sSpec = CMDBSource::GetFieldSpec($sOrigTable, $sOrigColumn);
