@@ -301,6 +301,7 @@ abstract class ModuleInstallerAPI
 	 *
 	 * @return void
 	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
 	 * @throws MySQLException
 	 */
 	public static function RenameTableInDB(string $sOrigTable, string $sDstTable)

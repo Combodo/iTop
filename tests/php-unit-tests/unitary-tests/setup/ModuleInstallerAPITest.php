@@ -244,9 +244,10 @@ SQL
 	/**
 	 * Test that the table has been renamed
 	 *
-	 * @covers \ModuleInstallerAPI::MoveColumnInDB
+	 * @covers ModuleInstallerAPI::RenameTableInDB
 	 *
 	 * @return void
+	 * @throws \CoreException
 	 * @throws \MySQLException
 	 */
 	public function testRenameTableInDB()
