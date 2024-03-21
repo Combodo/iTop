@@ -1619,6 +1619,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'notifications.itop.send_asynchronously' => [
+			'type' => 'bool',
+			'description' => 'If true then iTop notifications will be sent asynchronously',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'notifications.itop.newsroom_cache_time' => [
 			'type' => 'integer',
 			'description' => 'Duration in min between each fetch for notifications in newsroom',

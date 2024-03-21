@@ -692,6 +692,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:TreatFirstLineAsHeader'     => 'Treat the first line as a header (column names)',
 	'UI:CSVImport:Skip_N_LinesAtTheBeginning' => 'Skip %1$s line(s) at the beginning of the file',
 	'UI:CSVImport:CSVDataPreview'             => 'CSV Data Preview',
+	'UI:CSVImport:Column'                     => 'Column %1$s',
 	'UI:CSVImport:SelectFile'                 => 'Select the file to import:',
 	'UI:CSVImport:Tab:LoadFromFile'           => 'Load from a file',
 	'UI:CSVImport:Tab:CopyPaste'              => 'Copy and paste data',
@@ -1709,8 +1710,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Newsroom:Preferences' => 'Newsroom preferences',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration',
 	'UI:Newsroom:ResetCache' => 'Reset cache',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal',
 ));
 
 

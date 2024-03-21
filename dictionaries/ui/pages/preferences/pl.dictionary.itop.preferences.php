@@ -47,4 +47,5 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'Przewijana',
 	'UI:Preferences:ChooseAPlaceholder' => 'Obraz zastępczy użytkownika',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Wybierz obraz zastępczy, który będzie wyświetlany, jeśli kontakt powiązany z Twoim użytkownikiem go nie ma',
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated~~',
 ));

@@ -55,7 +55,7 @@ class NiceWebPage extends WebPage
 		'js/field_sorter.js',
 		'js/table-selectable-lines.js',
 		// - Not used internally or by extensions yet
-		'js/clipboard.min.js',
+		'js/clipboard.min.js', // 3.2.0 N°5261 moved to NPM
 		'js/clipboardwidget.js',
 		// - SearchForm
 		'js/searchformforeignkeys.js',
@@ -152,20 +152,20 @@ JS
 		parent::InitializeLinkedScripts();
 
 		// Used throughout the app.
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.blockUI.js');
+		$this->LinkScriptFromAppRoot('node_modules/jquery/dist/jquery.min.js');
+		$this->LinkScriptFromAppRoot('js/jquery.blockUI.js');
 		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
 		{
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev-params.js');
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev.js');
+			$this->LinkScriptFromAppRoot('js/jquery-migrate.dev-params.js');
+			$this->LinkScriptFromAppRoot('node_modules/jquery-migrate/dist/jquery-migrate.js');
 		} else {
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
+			$this->LinkScriptFromAppRoot('node_modules/jquery-migrate/dist/jquery-migrate.min.js');
 		}
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/jquery-ui-dist/jquery-ui.min.js');
 
 		// Used throughout the app.
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/latinise/latinise.min.js');
+		$this->LinkScriptFromAppRoot('js/utils.js');
+		$this->LinkScriptFromAppRoot('js/latinise/latinise.min.js');
 	}
 
 	/**
@@ -250,7 +250,7 @@ JS
 		// TODO 3.0.0: Remove light-grey when development of Full Moon is done.
 		// TODO 3.0.0: Reuse theming mechanism for Full Moon
 		$sCssThemeUrl = ThemeHandler::GetCurrentThemeUrl();
-		$this->add_linked_stylesheet($sCssThemeUrl);
+		$this->LinkStylesheetFromURI($sCssThemeUrl);
 	}
 
 	protected function GetReadyScriptsStartedTrigger(): ?string

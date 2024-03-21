@@ -32,6 +32,7 @@ use const EVENT_DB_CHECK_TO_DELETE;
 use const EVENT_DB_CHECK_TO_WRITE;
 use const EVENT_DB_COMPUTE_VALUES;
 use const EVENT_DB_LINKS_CHANGED;
+use const EVENT_ENUM_TRANSITIONS;
 
 class CRUDEventTest extends ItopDataTestCase
 {
@@ -624,6 +625,29 @@ class CRUDEventTest extends ItopDataTestCase
 
 		//echo($oDBObject->oEventDataReceived->Get('debug_info'));
 	}
+
+	public function testEnumTransitions()
+	{
+		$oEventReceiver = new CRUDEventReceiver($this);
+		$oEventReceiver->RegisterCRUDListeners();
+
+		// Object with no lifecycle
+		/** @var DBObject $oPerson */
+		$oPerson = $this->CreatePerson(1);
+		$oEventReceiver->AddCallback(EVENT_ENUM_TRANSITIONS, Person::class, 'EnumTransitions');
+		self::CleanCallCount();
+		$oPerson->EnumTransitions();
+		$this->assertEquals(0, self::$iEventCalls);
+
+		// Object with lifecycle
+		$oTicket = $this->CreateTicket(1);
+		$oEventReceiver->AddCallback(EVENT_ENUM_TRANSITIONS, UserRequest::class, 'EnumTransitions');
+		self::CleanCallCount();
+		$aTransitions = $oTicket->EnumTransitions();
+		$this->assertEquals(1, self::$aEventCalls[EVENT_ENUM_TRANSITIONS]);
+		$this->assertEquals(1, self::$iEventCalls);
+		$this->assertCount(0, $aTransitions);
+	}
 }
 
 /**
@@ -713,7 +737,7 @@ class CRUDEventReceiver extends ClassesWithDebug
 			$aCallBack = $this->aCallbacks[$sEvent][$sClass];
 			if ($aCallBack['count'] > 0) {
 				$this->aCallbacks[$sEvent][$sClass]['count']--;
-				call_user_func($this->aCallbacks[$sEvent][$sClass]['callback'], $oObject);
+				call_user_func($this->aCallbacks[$sEvent][$sClass]['callback'], $oData);
 			}
 		}
 	}
@@ -730,6 +754,7 @@ class CRUDEventReceiver extends ClassesWithDebug
 			$this->oTestCase->EventService_RegisterListener(EVENT_DB_ABOUT_TO_DELETE, [$this, 'OnEvent']);
 			$this->oTestCase->EventService_RegisterListener(EVENT_DB_AFTER_DELETE, [$this, 'OnEvent']);
 			$this->oTestCase->EventService_RegisterListener(EVENT_DB_LINKS_CHANGED, [$this, 'OnEvent']);
+			$this->oTestCase->EventService_RegisterListener(EVENT_ENUM_TRANSITIONS, [$this, 'OnEvent']);
 
 			return;
 		}
@@ -739,9 +764,10 @@ class CRUDEventReceiver extends ClassesWithDebug
 	/**
 	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
 	 */
-	private function AddRoleToLink($oObject): void
+	private function AddRoleToLink(EventData $oData): void
 	{
 		$this->Debug(__METHOD__);
+		$oObject = $oData->Get('object');
 		$oContactType = MetaModel::NewObject(ContactType::class, ['name' => 'test_'.$oObject->GetKey()]);
 		$oContactType->DBInsert();
 		$oObject->Set('role_id', $oContactType->GetKey());
@@ -750,27 +776,44 @@ class CRUDEventReceiver extends ClassesWithDebug
 	/**
 	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
 	 */
-	private function SetPersonFunction($oObject): void
+	private function SetPersonFunction(EventData $oData): void
 	{
 		$this->Debug(__METHOD__);
+		$oObject = $oData->Get('object');
 		$oObject->Set('function', 'CRUD_function_'.rand());
 	}
 
 	/**
 	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
 	 */
-	private function SetPersonFirstName($oObject): void
+	private function SetPersonFirstName(EventData $oData): void
 	{
 		$this->Debug(__METHOD__);
+		$oObject = $oData->Get('object');
 		$oObject->Set('first_name', 'CRUD_first_name_'.rand());
 	}
 
 	/**
 	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
 	 */
-	private function CheckCrudStack(DBObject $oObject): void
+	private function CheckCrudStack(EventData $oData): void
 	{
+		$this->Debug(__METHOD__);
+		$oObject = $oData->Get('object');
 		self::$bIsObjectInCrudStack = DBObject::IsObjectCurrentlyInCrud(get_class($oObject), $oObject->GetKey());
+	}
+
+	private function EnumTransitions(EventData $oData): void
+	{
+		$this->Debug(__METHOD__);
+		/** @var \DBObject $oObject */
+		$oObject = $oData->Get('object');
+		$aAllowedStimuli = $oData->Get('allowed_stimuli');
+		// Deny all transitions
+		foreach ($aAllowedStimuli as $sStimulus) {
+			$this->debug(" * Deny $sStimulus");
+			$oObject->DenyTransition($sStimulus);
+		}
 	}
 
 }

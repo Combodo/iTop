@@ -210,6 +210,7 @@ abstract class DBObject implements iDisplay
 	const MAX_UPDATE_LOOP_COUNT = 10;
 
 	private $aEventListeners = [];
+	private array $aAllowedTransitions = [];
 
 	/**
 	 * DBObject constructor.
@@ -2318,16 +2319,17 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+     * @param array $aUniquenessRuleProperties uniqueness rule properties
+	 *
+     * @param string $sUniquenessRuleId uniqueness rule ID
+	 * @return \DBSearch
+	 * @throws \OQLException
+     * @throws \CoreException
+     *
      * @internal
      *
-	 * @param string $sUniquenessRuleId uniqueness rule ID
-	 * @param array $aUniquenessRuleProperties uniqueness rule properties
-	 *
-	 * @return \DBSearch
-	 * @throws \CoreException
-	 * @throws \OQLException
-	 * @since 2.6.0 N°659 uniqueness constraint
-	 * @api
+     * @since 2.6.0 N°659 uniqueness constraint
+     * @since 2.7.11 3.1.2 3.2.0 N°4314 Fix Uniqueness rules not working with Silo
 	 */
 	protected function GetSearchForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties)
 	{
@@ -4404,7 +4406,30 @@ abstract class DBObject implements iDisplay
 				]);
 		}
 
+		$this->aAllowedTransitions = $aSortedTransitions;
+		$this->FireEvent(EVENT_ENUM_TRANSITIONS, ['allowed_stimuli' => array_keys($aSortedTransitions)]);
+		$aSortedTransitions = $this->aAllowedTransitions;
+		$this->aAllowedTransitions = [];
+
 		return $aSortedTransitions;
+	}
+
+	/**
+	 * Remove a transition for a specific stimulus.
+	 * This is only usable by EVENT_ENUM_TRANSITIONS listeners in order
+	 * to manage the allowed transitions in the current object state.
+	 *
+	 * @param string $sStimulus
+	 *
+	 * @return void
+	 * @api
+	 * @since 3.1.2
+	 */
+	public function DenyTransition(string $sStimulus): void
+	{
+		if (isset($this->aAllowedTransitions[$sStimulus])) {
+			unset($this->aAllowedTransitions[$sStimulus]);
+		}
 	}
 
     /**
@@ -4492,14 +4517,6 @@ abstract class DBObject implements iDisplay
 		$sNewState = $aTransitionDef['target_state'];
 		$this->Set($sStateAttCode, $sNewState);
 
-		$aEventData = [
-			'stimulus' => $sStimulusCode,
-			'previous_state' => $sPreviousState,
-			'new_state' => $sNewState,
-			'save_object' => !$bDoNotWrite,
-		];
-		$this->FireEvent(EVENT_DB_BEFORE_APPLY_STIMULUS, $aEventData);
-
 		// $aTransitionDef is an
 		//    array('target_state'=>..., 'actions'=>array of handlers procs, 'user_restriction'=>TBD
 
@@ -4584,8 +4601,6 @@ abstract class DBObject implements iDisplay
 			if (!$bDoNotWrite) {
 				$this->DBWrite();
 			}
-
-			$this->FireEvent(EVENT_DB_AFTER_APPLY_STIMULUS, $aEventData);
 		}
 		else
 		{
@@ -4594,8 +4609,6 @@ abstract class DBObject implements iDisplay
 			{
 				$this->m_aCurrValues[$sAttCode] = $aBackupValues[$sAttCode];
 			}
-			$aEventData['action'] = $sActionDesc;
-			$this->FireEvent(EVENT_DB_APPLY_STIMULUS_FAILED, $aEventData);
 		}
 		return $bSuccess;
 	}
@@ -4732,7 +4745,7 @@ abstract class DBObject implements iDisplay
 			}
 		}
 		$oDate->modify($sModifier);
-		$this->Set($sAttCode, $oDate->getTimestamp());
+		$this->Set($sAttCode, $oDate);
 	}
 
 	/**
@@ -5349,16 +5362,19 @@ abstract class DBObject implements iDisplay
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	protected function GetReferencingObjects($bAllowAllData = false)
+	protected function GetReferencingObjectsForDeletion($bAllowAllData = false)
 	{
 		$aDependentObjects = array();
 		$aRererencingMe = MetaModel::EnumReferencingClasses(get_class($this));
 		foreach($aRererencingMe as $sRemoteClass => $aExtKeys)
 		{
+			/** @var \AttributeExternalKey $oExtKeyAttDef */
 			foreach($aExtKeys as $sExtKeyAttCode => $oExtKeyAttDef)
 			{
+				// skip if external key doesn't require the deletion cascading
+				if($oExtKeyAttDef->GetDeletionPropagationOption() === DEL_NONE) continue;
+
 				// skip if this external key is behind an external field
-				/** @var \AttributeDefinition $oExtKeyAttDef */
 				if (!$oExtKeyAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) continue;
 
 				$oSearch = new DBObjectSearch($sRemoteClass);
@@ -5422,13 +5438,11 @@ abstract class DBObject implements iDisplay
 		$this->CheckToWriteForTargetObjects(true);
 		$oDeletionPlan->SetDeletionIssues($this, $this->m_aDeleteIssues, $this->m_bSecurityIssue);
 
-		$aDependentObjects = $this->GetReferencingObjects(true /* allow all data */);
-
 		// Getting and setting time limit are not symmetric:
 		// www.php.net/manual/fr/function.set-time-limit.php#72305
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 
-		foreach ($aDependentObjects as $aPotentialDeletes)
+		foreach ($this->GetReferencingObjectsForDeletion(true /* allow all data */) as $aPotentialDeletes)
 		{
 			foreach ($aPotentialDeletes as $aData)
 			{

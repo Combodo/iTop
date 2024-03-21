@@ -15,6 +15,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Synchro;
 
+use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
 use DBObjectSet;
@@ -363,6 +364,8 @@ class DataSynchroTest extends ItopDataTestCase
 				}
 			}
 		}
+
+		return $oDataSource;
 	}
 
 	private function GetNominalUsecaseData(){
@@ -421,6 +424,38 @@ class DataSynchroTest extends ItopDataTestCase
 		$aUserLoginUsecase = $this->GetNominalUsecaseData();
 		$aUserLoginUsecase['bSynchroByHttp'] = true;
 		$this->RunDataSynchroTest($aUserLoginUsecase);
+	}
+
+	public function testDataSynchroDeletionCleanup(){
+
+		// run test data synchro
+		$oDataSource = $this->RunDataSynchroTest($this->GetNominalUsecaseData());
+
+		// QUERY to check data table for the new data source
+		$sDataSourceTable = $oDataSource->Get('database_table_name');
+		$sShowTable = "SHOW TABLES LIKE '$sDataSourceTable'";
+
+		// AFTER CREATION TEST A: Verify that replicas have been created
+		$oObjects = new DBObjectSet(DBObjectSearch::FromOQL("SELECT SynchroReplica WHERE sync_source_id='{$oDataSource->GetKey()}'"));
+		$aCountReplicaBeforeDelete = count($oObjects->ToArray());
+		$this->assertEquals(1, $aCountReplicaBeforeDelete);
+		// AFTER CREATION TEST B: Verify that data source table exist
+		$aResult = CMDBSource::Query($sShowTable);
+		$this->assertEquals(1, $aResult->num_rows, 'We must have a table in the database for the datasource');
+		// AFTER CREATION TEST C: Verify that data source table have one row
+		$sCountRows = CMDBSource::QueryToScalar("SELECT count(*) FROM $sDataSourceTable");
+		$this->assertEquals(1, $sCountRows, 'We must have a one row in datasource table');
+
+		// datasource deletion
+		$oDataSource->DBDelete();
+
+		// AFTER DELETION TEST A:  Verify that replicas have been deleted
+		$oObjects = new DBObjectSet(DBObjectSearch::FromOQL("SELECT SynchroReplica WHERE sync_source_id='{$oDataSource->GetKey()}'"));
+		$aCountReplicaAfterDelete = count($oObjects->ToArray());
+		$this->assertEquals(0, $aCountReplicaAfterDelete);
+		// AFTER DELETION TEST B: Verify that data source table have been dropped
+		$aResult = CMDBSource::Query($sShowTable);
+		$this->assertEquals(0, $aResult->num_rows, 'The database datasource table must have been deleted');
 	}
 
 	/*public function testWithDeleteOption(){

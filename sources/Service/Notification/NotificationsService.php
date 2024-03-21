@@ -3,6 +3,7 @@ namespace Combodo\iTop\Service\Notification;
 
 
 use ActionNotification;
+use Combodo\iTop\Core\Trigger\Enum\SubscriptionPolicy;
 use Contact;
 use lnkActionNotificationToContact;
 use Trigger;
@@ -64,7 +65,7 @@ class NotificationsService {
 	public function RegisterSubscription(Trigger $oTrigger, ActionNotification $oActionNotification, Contact $oRecipient): void
 	{
 		// Check if the user is already subscribed to the action notification
-		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactAndAction($oTrigger->GetKey(), $oRecipient->GetKey(), $oActionNotification->GetKey());
+		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByTriggerContactAndAction($oTrigger->GetKey(), $oActionNotification->GetKey(), $oRecipient->GetKey());
 		if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 			// Create a new subscription
 			$oSubscribedActionsNotifications = new lnkActionNotificationToContact();
@@ -99,11 +100,11 @@ class NotificationsService {
 	public function IsSubscribed(Trigger $oTrigger, ActionNotification $oActionNotification, Contact $oRecipient): bool
 	{
 		// Check if the trigger subscription policy is 'force_all_channels'
-		if ($oTrigger->Get('subscription_policy') === 'force_all_channels') {
+		if ($oTrigger->Get('subscription_policy') === SubscriptionPolicy::ForceAllChannels->value) {
 			return true;
 		}
 		// Check if the user is already subscribed to the action notification
-		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactAndAction($oTrigger->GetKey(), $oRecipient->GetKey(), $oActionNotification->GetKey());
+		$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByTriggerContactAndAction($oTrigger->GetKey(), $oActionNotification->GetKey(), $oRecipient->GetKey());
 		if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 			return true;
 		}

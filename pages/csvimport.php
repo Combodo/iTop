@@ -400,6 +400,7 @@ try {
 		$iUnchanged = 0;
 
 		$aTableData = [];
+		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
 
 		foreach ($aRes as $iLine => $aResRow) {
 			$aTableRow = [];
@@ -414,7 +415,7 @@ try {
 					$sFinalClass = $aResRow['finalclass'];
 					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
-					$sStatus = '<img src="../images/unchanged.png" title="'.Dict::S('UI:CSVReport-Icon-Unchanged').'">';
+					$sStatus = '<img src="' . $sAppRootUrl . 'images/unchanged.png" title="'.Dict::S('UI:CSVReport-Icon-Unchanged').'">';
 					$sCSSRowClass = 'ibo-csv-import--row-unchanged';
 					break;
 
@@ -423,7 +424,7 @@ try {
 					$sFinalClass = $aResRow['finalclass'];
 					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
-					$sStatus = '<img src="../images/modified.png" title="'.Dict::S('UI:CSVReport-Icon-Modified').'">';
+					$sStatus = '<img src="' . $sAppRootUrl . 'images/modified.png" title="'.Dict::S('UI:CSVReport-Icon-Modified').'">';
 					$sCSSRowClass = 'ibo-csv-import--row-modified';
 					break;
 
@@ -432,7 +433,7 @@ try {
 					$sFinalClass = $aResRow['finalclass'];
 					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
-					$sStatus = '<img src="../images/delete.png" title="'.Dict::S('UI:CSVReport-Icon-Missing').'">';
+					$sStatus = '<img src="' . $sAppRootUrl . 'images/delete.png" title="'.Dict::S('UI:CSVReport-Icon-Missing').'">';
 					$sCSSRowClass = 'ibo-csv-import--row-modified';
 					if ($bSimulate) {
 						$sMessage = Dict::S('UI:CSVReport-Object-MissingToUpdate');
@@ -443,7 +444,7 @@ try {
 
 				case 'RowStatus_NewObj':
 					$iCreated++;
-					$sStatus = '<img src="../images/added.png" title="'.Dict::S('UI:CSVReport-Icon-Created').'">';
+					$sStatus = '<img src="' . $sAppRootUrl . 'images/added.png" title="'.Dict::S('UI:CSVReport-Icon-Created').'">';
 					$sCSSRowClass = 'ibo-csv-import--row-added';
 					if ($bSimulate) {
 						$sMessage = Dict::S('UI:CSVReport-Object-ToCreate');
@@ -585,21 +586,21 @@ HTML;
 		$oMulticolumn->AddCSSClass('ml-1');
 		$oForm->AddSubBlock($oMulticolumn);
 
-		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/unchanged.png">&nbsp;'.sprintf($aDisplayFilters['unchanged'], $iUnchanged), '', "1", "show_unchanged", "checkbox");
+		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="' . $sAppRootUrl . 'images/unchanged.png">&nbsp;'.sprintf($aDisplayFilters['unchanged'], $iUnchanged), '', "1", "show_unchanged", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
 		$oPage->add_ready_script("$('#show_unchanged').on('click', function(){ToggleRows('ibo-csv-import--row-unchanged')})");
 
-		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/modified.png">&nbsp;'.sprintf($aDisplayFilters['modified'], $iModified), '', "1", "show_modified", "checkbox");
+		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="' . $sAppRootUrl . 'images/modified.png">&nbsp;'.sprintf($aDisplayFilters['modified'], $iModified), '', "1", "show_modified", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
 		$oPage->add_ready_script("$('#show_modified').on('click', function(){ToggleRows('ibo-csv-import--row-modified')})");
 
-		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/added.png">&nbsp;'.sprintf($aDisplayFilters['added'], $iCreated), '', "1", "show_created", "checkbox");
+		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="' . $sAppRootUrl . 'images/added.png">&nbsp;'.sprintf($aDisplayFilters['added'], $iCreated), '', "1", "show_created", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');

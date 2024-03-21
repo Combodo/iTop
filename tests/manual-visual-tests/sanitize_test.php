@@ -72,7 +72,7 @@ $aTypes = array(
 <!DOCTYPE>
 <html>
 <head>
-<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../node_modules/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="../../js/utils.js"></script>
 <style>
 table, tr, td {

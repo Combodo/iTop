@@ -81,6 +81,7 @@ abstract class Action extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("trigger_list",
 			array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "action_id", "ext_key_to_remote" => "trigger_id", "allowed_values" => null, "count_min" => 0, "count_max" => 0, "depends_on" => array(), "display_style" => 'property')));
+		MetaModel::Init_AddAttribute(new AttributeEnum("asynchronous", array("allowed_values" => new ValueSetEnum(['use_global_setting' => 'Use global settings','yes' => 'Yes' ,'no' => 'No']), "sql" => "asynchronous", "default_value" => 'use_global_setting', "is_null_allowed" => false, "depends_on" => array())));
 
 		// Display lists
 		// - Attributes to be displayed for the complete details
@@ -196,7 +197,20 @@ abstract class Action extends cmdbAbstractObject
 	}
 
 	/**
-	 * @throws InvalidConfigParamException
+	 * @param \Combodo\iTop\Application\WebPage\WebPage $oPage
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \InvalidConfigParamException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
 	 * @since 3.2.0 N°5472 method creation
 	 */
 	public function GetLastExecutionsTabContent(WebPage $oPage): void
@@ -226,6 +240,32 @@ abstract class Action extends cmdbAbstractObject
 		$oExecutionsListBlock = DataTableUIBlockFactory::MakeForResult($oPage, 'action_executions_list', $oSet, ['panel_title' => $sPanelTitle]);
 
 		$oPage->AddUiBlock($oExecutionsListBlock);
+	}
+
+	/**
+	 * Will be overloaded by the children classes to return the value of their global asynchronous setting (eg. `email_asynchronous` for `\ActionEmail`, `prefer_asynchronous` for `\ActionWebhook`, ...)
+	 *
+	 * @return bool true if the global setting for this kind of action if to be executed asynchronously, false otherwise.
+	 * @since 3.2.0
+	 */
+	public static function GetAsynchronousGlobalSetting(): bool
+	{
+		return false;	
+	}
+
+	/**
+	 * @return bool true if that action instance should be executed asynchronously, otherwise false
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @since 3.2.0
+	 */
+	public function IsAsynchronous(): bool
+	{
+		$sAsynchronous = $this->Get('asynchronous');
+		if ($sAsynchronous === 'use_global_setting') {
+			return static::GetAsynchronousGlobalSetting();
+		}
+		return $sAsynchronous === 'yes';
 	}
 }
 
@@ -381,6 +421,7 @@ class ActionEmail extends ActionNotification
 				),
 				'fieldset:ActionEmail:trigger' => array(
 					0 => 'trigger_list',
+					1 => 'asynchronous'
 				),
 			),
 			'col:col2' => array(
@@ -616,7 +657,7 @@ class ActionEmail extends ActionNotification
 			else
 			{
 				$aErrors = [];
-				$iRes = $oEmail->Send($aErrors, false, $oLog); // allow asynchronous mode
+				$iRes = $oEmail->Send($aErrors, $this->IsAsynchronous() ? Email::ENUM_SEND_FORCE_ASYNCHRONOUS : Email::ENUM_SEND_FORCE_SYNCHRONOUS, $oLog);
 				switch ($iRes)
 				{
 					case EMAIL_SEND_OK:
@@ -876,5 +917,14 @@ class ActionEmail extends ActionNotification
 				$this->m_aCheckWarnings[] = Dict::Format('ActionEmail:content_placeholder_missing', static::TEMPLATE_BODY_CONTENT, Dict::S('Class:ActionEmail/Attribute:body'));
 			}
 		}
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.2.0
+	 */
+	public static function GetAsynchronousGlobalSetting(): bool
+	{
+		return utils::GetConfig()->Get('email_asynchronous');
 	}
 }

@@ -326,6 +326,7 @@ class DataTable
 		$sPagesLinks = implode('', $aPagesToDisplay);
 		$sPagesList = '['.implode(',', array_keys($aPagesToDisplay)).']';
 
+		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
 		$sSelectionMode = ($iNbPages == 1) ? '' : 'positive';
 		$sHtml =
 <<<EOF
@@ -333,11 +334,11 @@ class DataTable
 		<div $sPagerStyle>
 		<table id="pager{$this->iListId}" class="pager"><tr>
 		<td>$sPages</td>
-		<td><img src="../images/first.png" class="first"/></td>
-		<td><img src="../images/prev.png" class="prev"/></td>
+		<td><img src="{$sAppRootUrl}images/first.png" class="first"/>AAAA</td>
+		<td><img src="{$sAppRootUrl}images/prev.png" class="prev"/></td>
 		<td><span id="index">$sPagesLinks</span></td>
-		<td><img src="../images/next.png" class="next"/></td>
-		<td><img src="../images/last.png" class="last"/></td>
+		<td><img src="{$sAppRootUrl}images/next.png" class="next"/></td>
+		<td><img src="{$sAppRootUrl}images/last.png" class="last"/></td>
 		<td>$sPageSizeCombo</td>
 		<td><span id="loading">&nbsp;</span><input type="hidden" name="selectionMode" value="$sSelectionMode"></input>
 		</td>

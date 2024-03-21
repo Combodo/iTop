@@ -2307,7 +2307,7 @@ class WizStepSummary extends WizardStep
 
 		$oPage->add('<fieldset id="installation_progress"><legend>Progress of the installation</legend>');
 		$oPage->add('<div id="progress_content">');
-		$oPage->add_linked_script('../setup/jquery.progression.js');
+		$oPage->LinkScriptFromAppRoot('setup/jquery.progression.js');
 		$oPage->add('<p class="center"><span id="setup_msg">Ready to start...</span></p><div style="display:block;margin-left: auto; margin-right:auto;" id="progress">0%</div>');
 		$oPage->add('</div>'); // progress_content
 		$oPage->add('</fieldset>');

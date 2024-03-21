@@ -666,6 +666,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:CSVImport:TreatFirstLineAsHeader' => 'La première ligne est l\'en-tête (noms des colonnes)',
 	'UI:CSVImport:Skip_N_LinesAtTheBeginning' => 'Ignorer les %1$s premières lignes du fichier',
 	'UI:CSVImport:CSVDataPreview' => 'Aperçu des données CSV',
+	'UI:CSVImport:Column' => 'Colonne %1$s',
 	'UI:CSVImport:SelectFile' => 'Sélectionnez le fichier à importer:',
 	'UI:CSVImport:Tab:LoadFromFile' => 'Import depuis un fichier',
 	'UI:CSVImport:Tab:CopyPaste' => 'Copier/Coller de données',
@@ -1619,8 +1620,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Newsroom:Preferences' => 'Préférences du centre d\'information',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration',
 	'UI:Newsroom:ResetCache' => 'Ràz du cache',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Le cache de la newsroom a été réinitialisé avec succès',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Afficher les messages de %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Afficher au plus %1$s messages dans le menu %2$s.',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critique',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Standard',
 ));
 
 

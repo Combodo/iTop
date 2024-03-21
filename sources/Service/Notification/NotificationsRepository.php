@@ -2,12 +2,11 @@
 
 namespace Combodo\iTop\Service\Notification;
 
-use BinaryExpression;
 use DBObjectSearch;
 use DBObjectSet;
+use DBSearch;
 use Expression;
-use FieldExpression;
-use VariableExpression;
+use UserRights;
 
 /**
  * Class NotificationsRepository
@@ -58,17 +57,8 @@ class NotificationsRepository
 	 */
 	public function SearchNotificationsByContact(int $iContactId, array $aNotificationIds = []): DBObjectSet
 	{
-		$oSearch = DBObjectSearch::FromOQL("SELECT EventiTopNotification WHERE contact_id = :contact_id");
-		$aParams = [
-			"contact_id" => $iContactId,
-		];
-
-		if (count($aNotificationIds) > 0) {
-			$oSearch->AddConditionExpression(Expression::FromOQL("{$oSearch->GetClassAlias()}.id IN (:notification_ids)"));
-			$aParams["notification_ids"] = $aNotificationIds;
-		}
-
-		return new DBObjectSet($oSearch, [], $aParams);
+		$oSearch = $this->PrepareSearchForNotificationsByContact($iContactId, $aNotificationIds);
+		return new DBObjectSet($oSearch);
 	}
 
 	/**
@@ -81,10 +71,10 @@ class NotificationsRepository
 	 */
 	public function SearchNotificationsToMarkAsReadByContact(int $iContactId, array $aNotificationIds = []): DBObjectSet
 	{
-		$oSet = $this->SearchNotificationsByContact($iContactId, $aNotificationIds);
-		$oSet->GetFilter()->AddCondition("read", "=", "no");
+		$oSearch = $this->PrepareSearchForNotificationsByContact($iContactId, $aNotificationIds);
+		$oSearch->AddCondition("read", "no");
 
-		return $oSet;
+		return new DBObjectSet($oSearch);
 	}
 
 	/**
@@ -97,10 +87,10 @@ class NotificationsRepository
 	 */
 	public function SearchNotificationsToMarkAsUnreadByContact(int $iContactId, array $aNotificationIds = []): DBObjectSet
 	{
-		$oSet = $this->SearchNotificationsByContact($iContactId, $aNotificationIds);
-		$oSet->GetFilter()->AddCondition("read", "=", "yes");
+		$oSearch = $this->PrepareSearchForNotificationsByContact($iContactId, $aNotificationIds);
+		$oSearch->AddCondition("read", "yes");
 
-		return $oSet;
+		return new DBObjectSet($oSearch);
 	}
 
 	/**
@@ -117,35 +107,117 @@ class NotificationsRepository
 	}
 
 	/**
+	 * @param int $iContactId ID of the contact to retrieve notifications for
+	 * @param array $aNotificationIds Optional IDs of the notifications to retrieve, if omitted all notifications will be retrieved
+	 *
+	 * @internal
+	 * @return \DBSearch
+	 * @throws \OQLException
+	 */
+	protected function PrepareSearchForNotificationsByContact(int $iContactId, array $aNotificationIds = []): DBSearch
+	{
+		$oSearch = DBObjectSearch::FromOQL("SELECT EventiTopNotification WHERE contact_id = :contact_id");
+		$aParams = [
+			"contact_id" => $iContactId,
+		];
+
+		if (count($aNotificationIds) > 0) {
+			$oSearch->AddConditionExpression(Expression::FromOQL("{$oSearch->GetClassAlias()}.id IN (:notification_ids)"));
+			$aParams["notification_ids"] = $aNotificationIds;
+		}
+
+		$oSearch->SetInternalParams($aParams);
+
+		return $oSearch;
+	}
+
+	/**
 	 * Search for subscriptions by contact ID.
 	 *
 	 * @param int $iContactId The ID of the contact.
 	 *
 	 * @return DBObjectSet The result set of subscriptions associated with the contact.
 	 */
-	public function SearchSubscriptionByContact(int $iContactId): DBObjectSet
+	public function SearchSubscriptionsByContact(int $iContactId): DBObjectSet
 	{
 		$oSearch = DBObjectSearch::FromOQL("SELECT lnkActionNotificationToContact AS lnk WHERE lnk.contact_id = :contact_id");
-		$oSet = new DBObjectSet($oSearch, array(), array('contact_id' => $iContactId));
+		$oSearch->SetInternalParams([
+			"contact_id" => $iContactId
+		]);
 
-		return $oSet;
+		return new DBObjectSet($oSearch);
 	}
 
 	/**
-	 * Searches for a subscription by trigger, contact, and action.
+	 * Searches for subscriptions by trigger, contact, and action; no matter it subscription status.
 	 *
 	 * @param int $iTriggerId The ID of the trigger.
-	 * @param int $iContactId The ID of the contact.
-	 * @param int $iActionID The ID of the action.
+	 * @param int $iActionId The ID of the action.
+	 * @param int|null $iContactId The ID of the contact. If null, current user will be used.
 	 *
 	 * @return DBObjectSet The set of subscriptions matching the given trigger, contact, and action.
 	 */
-	public function SearchSubscriptionByTriggerContactAndAction(int $iTriggerId, int $iContactId, int $iActionID): DBObjectSet
+	public function SearchSubscriptionsByTriggerContactAndAction(int $iTriggerId, int $iActionId, int|null $iContactId = null): DBObjectSet
 	{
-		$oSearch = DBObjectSearch::FromOQL("SELECT lnkActionNotificationToContact AS lnk WHERE lnk.contact_id = :contact_id AND lnk.trigger_id = :trigger_id AND lnk.action_id = :action_id");
-		$oSet = new DBObjectSet($oSearch, array(), array('trigger_id' => $iTriggerId, 'contact_id' => $iContactId, 'action_id' => $iActionID));
+		$oSearch = $this->PrepareSearchForSubscriptionsByTriggerContactAndAction($iTriggerId, $iActionId, $iContactId);
+		return new DBObjectSet($oSearch);
+	}
 
-		return $oSet;
+	/**
+	 * Searches for subscriptions by trigger, contact, and action; where contact is subscribed.
+	 *
+	 * @param int $iTriggerId The ID of the trigger.
+	 * @param int $iActionId The ID of the action.
+	 * @param int|null $iContactId The ID of the contact. If null, current user will be used.
+	 *
+	 * @return DBObjectSet The set of subscriptions matching the given trigger, contact, and action.
+	 */
+	public function SearchSubscribedSubscriptionsByTriggerContactAndAction(int $iTriggerId, int $iActionId, int|null $iContactId = null): DBObjectSet
+	{
+		$oSearch = $this->PrepareSearchForSubscriptionsByTriggerContactAndAction($iTriggerId, $iActionId, $iContactId);
+		$oSearch->AddCondition("subscribed", "1");
+		return new DBObjectSet($oSearch);
+	}
+
+	/**
+	 * Searches for subscriptions by trigger, contact, and action; where contact is unsubscribed.
+	 *
+	 * @param int $iTriggerId The ID of the trigger.
+	 * @param int $iActionId The ID of the action.
+	 * @param int|null $iContactId The ID of the contact. If null, current user will be used.
+	 *
+	 * @return DBObjectSet The set of subscriptions matching the given trigger, contact, and action.
+	 */
+	public function SearchUnsubscribedSubscriptionsByTriggerContactAndAction(int $iTriggerId, int $iActionId, int $iContactId = null): DBObjectSet
+	{
+		$oSearch = $this->PrepareSearchForSubscriptionsByTriggerContactAndAction($iTriggerId, $iActionId, $iContactId);
+		$oSearch->AddCondition("subscribed", "0");
+		return new DBObjectSet($oSearch);
+	}
+
+	/**
+	 * @param int $iTriggerId The ID of the trigger.
+	 * @param int $iActionId The ID of the action.
+	 * @param int|null $iContactId The ID of the contact. If null, current user will be used.
+	 *
+	 * @internal
+	 * @return \DBSearch Search for subscriptions given tuple of $iTriggerId, $iActionId and $iContactId
+	 * @throws \OQLException
+	 */
+	protected function PrepareSearchForSubscriptionsByTriggerContactAndAction(int $iTriggerId, int $iActionId, int|null $iContactId = null): DBSearch
+	{
+		if (null === $iContactId) {
+			$iContactId = UserRights::GetContactId();
+		}
+
+		$oSearch = DBObjectSearch::FromOQL("SELECT lnkActionNotificationToContact AS lnk WHERE lnk.contact_id = :contact_id AND lnk.trigger_id = :trigger_id AND lnk.action_id = :action_id");
+		$oSearch->SetInternalParams([
+			"contact_id" => $iContactId,
+			"trigger_id" => $iTriggerId,
+			"action_id" => $iActionId,
+		]);
+
+		return $oSearch;
 	}
 
 	/**
@@ -157,12 +229,16 @@ class NotificationsRepository
 	 *
 	 * @return DBObjectSet A set of subscription objects matching the given parameters.
 	 */
-	public function SearchSubscriptionByTriggerContactAndSubscription(int $iTriggerId, int $iContactId, string $sSubscription): DBObjectSet
+	public function SearchSubscriptionsByTriggerContactAndSubscription(int $iTriggerId, int $iContactId, string $sSubscription): DBObjectSet
 	{
 		$oSearch = DBObjectSearch::FromOQL("SELECT lnkActionNotificationToContact AS lnk WHERE lnk.contact_id = :contact_id AND lnk.trigger_id = :trigger_id AND lnk.subscribed = :subscription");
-		$oSet = new DBObjectSet($oSearch, array(), array('trigger_id' => $iTriggerId, 'contact_id' => $iContactId, 'subscription' => $sSubscription));
+		$oSearch->SetInternalParams([
+			"trigger_id" => $iTriggerId,
+			"contact_id" => $iContactId,
+			"subscription" => $sSubscription]
+		);
 
-		return $oSet;
+		return new DBObjectSet($oSearch);
 	}
 
 
@@ -176,12 +252,17 @@ class NotificationsRepository
 	 *
 	 * @return DBObjectSet A set of subscription objects matching the given parameters.
 	 */
-	public function SearchSubscriptionByTriggerContactSubscriptionAndFinalclass(int $iTriggerId, int $iContactId, int $sSubscription, string $sFinalclass): DBObjectSet
+	public function SearchSubscriptionsByTriggerContactSubscriptionAndFinalclass(int $iTriggerId, int $iContactId, int $sSubscription, string $sFinalclass): DBObjectSet
 	{
 		$oSearch = DBObjectSearch::FromOQL("SELECT lnkActionNotificationToContact AS lnk JOIN ActionNotification AS an ON lnk.action_id = an.id WHERE lnk.contact_id = :contact_id AND lnk.trigger_id = :trigger_id AND lnk.subscribed = :subscription AND an.finalclass = :finalclass");
-		$oSet = new DBObjectSet($oSearch, array(), array('trigger_id' => $iTriggerId, 'contact_id' => $iContactId, 'subscription' => $sSubscription, 'finalclass' => $sFinalclass));
+		$oSearch->SetInternalParams([
+			"trigger_id" => $iTriggerId,
+			"contact_id" => $iContactId,
+			"subscription" => $sSubscription,
+			"finalclass" => $sFinalclass
+		]);
 
-		return $oSet;
+		return new DBObjectSet($oSearch);
 	}
 
 	public function GetSearchOQLContactUnsubscribedByTriggerAndAction(): DBObjectSearch

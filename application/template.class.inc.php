@@ -232,12 +232,13 @@ class DisplayTemplate
 	static public function UnitTest()
 	{
 		require_once(APPROOT.'/application/startup.inc.php');
-		
+
+		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
 		$sTemplate = '<div class="page_header">
 		<div class="actions_details"><a href="#"><span>Actions</span></a></div>
 		<h1>$class$: <span class="hilite">$name$</span></h1>
 		</div>
-		<img src="../../images/connect_to_network.png" style="margin-top:-10px; margin-right:10px; float:right">
+		<img src="'.$sAppRootUrl.'images/connect_to_network.png" style="margin-top:-10px; margin-right:10px; float:right">
 		<itoptabs>
 			<itoptab name="Interfaces">
 				<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT Interface AS i WHERE i.device_id = $id$</itopblock>
@@ -350,7 +351,8 @@ class ObjectDetailsTemplate extends DisplayTemplate
 						if ($iFlags & OPT_ATT_SLAVE)
 						{
 							$iSynchroFlags = $this->m_oObj->GetSynchroReplicaFlags($sAttCode, $aReasons);
-							$sSynchroIcon = "&nbsp;<img id=\"synchro_$iInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
+							$sAppRooturl = utils::GetAbsoluteUrlAppRoot();
+							$sSynchroIcon = "&nbsp;<img id=\"synchro_$iInputId\" src=\"{$sAppRooturl}images/transp-lock.png\" style=\"vertical-align:middle\"/>";
 							$sTip = '';
 							foreach($aReasons as $aRow)
 							{

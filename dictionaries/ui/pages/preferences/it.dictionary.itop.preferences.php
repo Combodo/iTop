@@ -47,5 +47,5 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'Scorrevole',
 	'UI:Preferences:ChooseAPlaceholder' => 'Seleziona un\'immagine placeholder utente',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Scegli un\'immagine placeholder che verrà visualizzata se il contatto associato al tuo utente non ne ha una',
-
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated~~',
 ));

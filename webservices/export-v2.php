@@ -235,9 +235,9 @@ function FormatDatesInPreview(sRadioSelector, sPreviewSelector)
 }
 EOF
 	);
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-	$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
+	$oP->LinkScriptFromAppRoot('js/tabularfieldsselector.js');
+	$oP->LinkScriptFromAppRoot('js/jquery.dragtable.js');
+	$oP->LinkStylesheetFromAppRoot('css/dragtable.css');
 
 	$oForm = FormUIBlockFactory::MakeStandard("export-form");
 	$oForm->SetAction($sAction);
@@ -707,8 +707,8 @@ try
 				$oP = new NiceWebPage('iTop export');
 				$oP->add_http_headers();
 				$oP->add_ready_script("$('table.listResults').tablesorter({widgets: ['MyZebra']});");
-				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
+				$oP->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
+				$oP->LinkStylesheetFromAppRoot('css/font-awesome/css/v4-shims.min.css');
 			} else {
 				$oP = new WebPage('iTop export');
 				$oP->add_http_headers();

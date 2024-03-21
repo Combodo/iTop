@@ -304,8 +304,8 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_DB_BEFORE_APPLY_STIMULUS" _delta="define">
-      <description>A stimulus is about to be applied to an object</description>
+    <event id="EVENT_ENUM_TRANSITIONS" _delta="define">
+      <description>Manage the allowed transitions in current object state. The only action allowed is to deny transitions with DBObject::DenyTransition()</description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -314,89 +314,9 @@
           <description>The object where the stimulus is targeted</description>
           <type>DBObject</type>
         </event_datum>
-        <event_datum id="stimulus">
-          <description>Current stimulus applied</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="previous_state">
-          <description>Object previous state</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="new_state">
-          <description>Object new state</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="save_object">
-          <description>The object must be saved in the database</description>
-          <type>boolean</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_DB_AFTER_APPLY_STIMULUS" _delta="define">
-      <description>A stimulus has been applied to an object</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <event_data>
-        <event_datum id="object">
-          <description>The object where the stimulus is targeted</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="stimulus">
-          <description>Current stimulus applied</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="previous_state">
-          <description>Object previous state</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="new_state">
-          <description>Object new state</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="save_object">
-          <description>The object is asked to be saved in the database</description>
-          <type>boolean</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_DB_APPLY_STIMULUS_FAILED" _delta="define">
-      <description>A stimulus has failed</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <event_data>
-        <event_datum id="action">
-          <description>The action that failed to apply the stimulus</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="object">
-          <description>The object where the stimulus is targeted</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="stimulus">
-          <description>Current stimulus applied</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="previous_state">
-          <description>Object previous state</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="new_state">
-          <description>Object new state</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="save_object">
-          <description>The object must be saved in the database</description>
-          <type>boolean</type>
+        <event_datum id="allowed_stimuli">
+          <description>The list of available stimuli in the current state</description>
+          <type>array</type>
         </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>

@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Set\SetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Core\Trigger\Enum\SubscriptionPolicy;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Service\Notification\NotificationsRepository;
 use Combodo\iTop\Service\Router\Router;
@@ -58,16 +59,15 @@ class NotificationsCenterController extends Controller
 		$oNotificationsPanel = new Panel(Dict::S('UI:NotificationsCenter:Panel:Title'), array(), 'grey', 'ibo-notifications-center');
 		$oNotificationsPanel->AddCSSClass('ibo-datatable-panel');
 		$oSubtitleBlock = new UIContentBlock(null, ['ibo-notifications-center--sub-title']);
-		$sDisplayAdvancedPageUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.display_advanced_page', [], true);
-		$oSubtitleBlock->AddSubBlock(new Html(Dict::Format('UI:NotificationsCenter:Panel:SubTitle', $sDisplayAdvancedPageUrl)));
-		$oNotificationsPanel->SetSubTitleBlock($oSubtitleBlock);
 		$oNotificationsCenterTableColumns = [
 			'trigger'  => array('label' => MetaModel::GetName('Trigger')),
+			'trigger_class' => array('label' => MetaModel::GetAttributeDef('Trigger', 'finalclass')->GetLabel()),
+			'complement' => array('label' => MetaModel::GetAttributeDef('Trigger', 'complement')->GetLabel()),
 			'channels' => array('label' => Dict::S('UI:NotificationsCenter:Panel:Table:Channels')),
 		];
 
 		// Get all subscribed/unsubscribed actions notifications for the current user
-		$oLnkNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByContact(\UserRights::GetContactId());
+		$oLnkNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByContact(\UserRights::GetContactId());
 		$oActionsNotificationsByTrigger = [];
 		$aSubscribedActionsNotificationsByTrigger = [];
 		while ($oLnkActionsNotifications = $oLnkNotificationsSet->Fetch()) {
@@ -82,7 +82,7 @@ class NotificationsCenterController extends Controller
 			// Add the action notification to the list of actions notifications for the trigger
 			$oActionsNotificationsByTrigger[$iTriggerId][] = $oSubscribedActionNotification;
 			// Add the subscribed status to the list of subscribed actions notifications for the trigger
-			$aSubscribedActionsNotificationsByTrigger[$iTriggerId][$oSubscribedActionNotification->GetKey()] = $oLnkActionsNotifications->Get('subscribed') || $oTrigger->Get('subscription_policy') === 'force_all_channels';
+			$aSubscribedActionsNotificationsByTrigger[$iTriggerId][$oSubscribedActionNotification->GetKey()] = $oLnkActionsNotifications->Get('subscribed') || $oTrigger->Get('subscription_policy') === SubscriptionPolicy::ForceAllChannels->value;
 		}
 
 		// Build table rows
@@ -155,7 +155,7 @@ class NotificationsCenterController extends Controller
 			$oChannelSet->SetOptionsTemplate('application/object/set/option_renderer.html.twig');
 			$oChannelSet->SetItemsTemplate('application/preferences/notification-center/item_renderer.html.twig');
 			// Disable the input set if the subscription policy is 'force_all_channels'
-			if($sTriggerSubscriptionPolicy === 'force_all_channels'){
+			if ($sTriggerSubscriptionPolicy === SubscriptionPolicy::ForceAllChannels->value) {
 				$oChannelSet->SetIsDisabled(true);
 			}
 			// Add a CSRF Token
@@ -190,8 +190,8 @@ $.ajax({
 });
 JS
 			);
-			// Set the minimum number of channels to 1 if the subscription policy is 'force_at_least_one_channel'
-			if($sTriggerSubscriptionPolicy === 'force_at_least_one_channel')
+			// Set the minimum number of channels to 1 if the subscription policy is {@see SubscriptionPolicy::ForceAtLeastOneChannel}
+			if($sTriggerSubscriptionPolicy === SubscriptionPolicy::ForceAtLeastOneChannel->value)
 			{
 				$oChannelSet->SetMinItems(1);
 			}
@@ -233,6 +233,8 @@ JS
 
 			$aTableRows[] = [
 				'trigger'  => $oTrigger->Get('description'),
+				'trigger_class' => MetaModel::GetName($oTrigger->Get('finalclass')),
+				'complement' => $oTrigger->Get('complement'),
 				'channels' => $oBlockRenderer->RenderHtml(),
 				'js'       => $oBlockRenderer->RenderJsInline($oChannelSet::ENUM_JS_TYPE_ON_READY),
 			];
@@ -255,211 +257,10 @@ JS
 
 		// Add Set JS files to the page as we used a renderer ourselves, they are not added automatically by the page
 		foreach (Set::DEFAULT_JS_FILES_REL_PATH as $sJsFile) {
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sJsFile);
+			$oPage->LinkScriptFromAppRoot($sJsFile);
 		}
 
 		$oPage->AddSubBlock($oNotificationsPanel);
-
-		return $oPage;
-	}
-	
-	public function OperationDisplayAdvancedPage(){
-		$oPage = new iTopWebPage(Dict::S('UI:NotificationsCenter:Page:Title'));
-		// Create a panel that will contain the table
-		$oNotificationsPanel = new Panel(Dict::S('UI:NotificationsCenter:Panel:Title'), array(), 'grey', 'ibo-notifications-center');
-		$oSubtitleBlock = new UIContentBlock(null, ['ibo-notifications-center--sub-title']);
-		$sDisplayAdvancedPageUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.display_page', [], true);
-		$oSubtitleBlock->AddSubBlock(new Html(Dict::Format('UI:NotificationsCenter:Panel:Advanced:SubTitle', $sDisplayAdvancedPageUrl)));
-		$oNotificationsPanel->SetSubTitleBlock($oSubtitleBlock);
-		$oPage->AddUiBlock($oNotificationsPanel);
-
-		// Get all subscribed/unsubscribed actions notifications for the current user
-		$oLnkNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByContact(\UserRights::GetContactId());
-		$oActionsNotificationsByTrigger = [];
-		$aSubscribedActionsNotificationsByTrigger = [];
-		while ($oLnkActionsNotifications = $oLnkNotificationsSet->Fetch()) {
-			$oSubscribedActionNotification = MetaModel::GetObject(ActionNotification::class, $oLnkActionsNotifications->Get('action_id'));
-			$oTrigger = MetaModel::GetObject('Trigger', $oLnkActionsNotifications->Get('trigger_id'));
-			$iTriggerId = $oTrigger->GetKey();
-			// Create a new array for the trigger if it doesn't exist
-			if (!isset($oActionsNotificationsByTrigger[$iTriggerId])) {
-				$oActionsNotificationsByTrigger[$iTriggerId] = [];
-				$aSubscribedActionsNotificationsByTrigger[$iTriggerId] = [];
-			}
-			// Add the action notification to the list of actions notifications for the trigger
-			$oActionsNotificationsByTrigger[$iTriggerId][] = $oSubscribedActionNotification;
-			// Add the subscribed status to the list of subscribed actions notifications for the trigger
-			$aSubscribedActionsNotificationsByTrigger[$iTriggerId][$oSubscribedActionNotification->GetKey()] = $oLnkActionsNotifications->Get('subscribed') || $oTrigger->Get('subscription_policy') === 'force_all_channels';
-		}
-
-		$oPage->AddTabContainer('NotificationsCenter', '', $oNotificationsPanel);
-		$oPage->SetCurrentTabContainer('NotificationsCenter');
-		// Create a new tab for each trigger
-		foreach ($oActionsNotificationsByTrigger as $iTriggerId => $aActionsNotifications) {
-			$oTrigger = MetaModel::GetObject('Trigger', $iTriggerId, false);
-			if ($oTrigger === null) {
-				continue;
-			}
-			foreach ($aActionsNotifications as $oActionNotification) {
-				$oPage->SetCurrentTab(MetaModel::GetName(get_class($oActionNotification)));
-				$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel(
-					Dict::Format('UI:NotificationsCenter:Advanced:Input:Label', $oTrigger->Get('description'), $oActionNotification->Get('name')),
-					$oTrigger->GetKey().'|'.$oActionNotification->GetKey(),
-					"",
-					$oTrigger->GetKey().'|'.$oActionNotification->GetKey(),
-					"checkbox"
-				);
-				$oCheckBox->GetInput()->SetIsChecked($aSubscribedActionsNotificationsByTrigger[$iTriggerId][$oActionNotification->GetKey()] === true);
-				$oCheckBox->SetBeforeInput(false);
-				$oCheckBox->GetInput()->AddCSSClass('ibo-input--label-right');
-				$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
-				$oContainer = new UIContentBlock(null, ['ibo-notifications-center-advanced--input--container']);
-				$oContainer->AddSubBlock($oCheckBox);
-				$oPage->AddUiBlock($oContainer);
-			}
-		}
-		$sSubscribeUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.subscribe', [], true);
-		$sUnsubscribeUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.unsubscribe', [], true);
-		$sCSRFToken = utils::GetNewTransactionId();
-		$oPage->add_ready_script(
-<<<JS
-$('.ibo-notifications-center-advanced--input--container .ibo-input-checkbox').on('change', function(){
-	let sUrl = '{$sUnsubscribeUrl}';
-	 if ($(this).prop("checked")) {
-		sUrl = '{$sSubscribeUrl}'
-	}
-	$.ajax({
-			url: sUrl,
-			type: 'POST',
-			data: {
-				channel: $(this).attr('name'),
-				token: '{$sCSRFToken}',
-			},
-			dataType: 'json',
-			success: function (data) {
-					if (data.status === 'success') {
-						// Display success message
-						CombodoToast.OpenSuccessToast(data.message);
-					}
-					else {
-						CombodoToast.OpenErrorToast(data.message);
-					}
-				},
-			error: function (jqXHR, textStatus, errorThrown) {
-					CombodoToast.OpenErrorToast(data.message);
-				}
-	});
-});
-
-JS
-			);
-		
-		return $oPage;
-	}
-
-	/**
-	 * @return \JsonPage
-	 */
-	function OperationUnsubscribe()
-	{
-		// Get the CSRF token from the request and check if it's valid
-		if (!$this->CheckPostedCSRF()) {
-			throw new \Exception('Invalid token');
-		}
-		
-		$sChannel = utils::ReadParam('channel', '', true, 'raw_data');
-		$aChannel = explode('|', $sChannel);
-		$oPage = new \JsonPage();
-		$aReturnData = [];
-		try {
-			if (count($aChannel) !== 2) {
-				throw new \Exception('Invalid channel');
-			}
-			$iTriggerKey = $aChannel[0];
-			$iActionNotificationKey = $aChannel[1];
-			$oTrigger = MetaModel::GetObject('Trigger', $iTriggerKey, false);
-			if ($oTrigger === null) {
-				throw new \Exception('Invalid trigger');
-			}
-			$oActionNotification = MetaModel::GetObject('ActionNotification', $iActionNotificationKey, false);
-			if ($oActionNotification === null) {
-				throw new \Exception('Invalid action notification');
-			}
-			$oSubscribedActionsNotificationsSearch = \DBObjectSearch::FromOQL("SELECT lnkActionNotificationToContact AS lnk WHERE lnk.action_id = :actionnotification_id AND lnk.contact_id = :contact_id AND lnk.trigger_id = :trigger_id AND lnk.subscribed = '1'");
-			$oSubscribedActionsNotificationsSet = new \DBObjectSet($oSubscribedActionsNotificationsSearch, array(), array('actionnotification_id' => $iActionNotificationKey, 'contact_id' => \UserRights::GetContactId(), 'trigger_id' => $iTriggerKey));
-			if ($oSubscribedActionsNotificationsSet->Count() === 0) {
-				throw new \Exception('You are not subscribed to this channel');
-			}
-			while ($oSubscribedActionsNotifications = $oSubscribedActionsNotificationsSet->Fetch()) {
-				$oSubscribedActionsNotifications->Set('subscribed', false);
-				$oSubscribedActionsNotifications->DBUpdate();
-			}
-			$aReturnData = [
-				'status'  => 'success',
-				'message' => Dict::S('UI:NotificationsCenter:Unsubscribe:Success'),
-			];
-		}
-		catch (Exception $e) {
-			$aReturnData = [
-				'status'  => 'error',
-				'message' => $e->getMessage(),
-			];
-		}
-		$oPage->SetData($aReturnData);
-		$oPage->SetOutputDataOnly(true);
-
-		return $oPage;
-	}
-
-	function OperationSubscribe()
-	{
-		
-		// Get the CSRF token from the request and check if it's valid
-		if (!$this->CheckPostedCSRF()) {
-			throw new \Exception('Invalid token');
-		}
-		
-		$sChannel = utils::ReadParam('channel', '', true, 'raw_data');
-		$aChannel = explode('|', $sChannel);
-		
-		$oPage = new \JsonPage();
-		$aReturnData = [];
-		try {
-			if (count($aChannel) !== 2) {
-				throw new \Exception('Invalid channel');
-			}
-			$iTriggerKey = $aChannel[0];
-			$iActionNotificationKey = $aChannel[1];
-			$oTrigger = MetaModel::GetObject('Trigger', $iTriggerKey, false);
-			if ($oTrigger === null) {
-				throw new \Exception('Invalid trigger');
-			}
-			$oActionNotification = MetaModel::GetObject('ActionNotification', $iActionNotificationKey, false);
-			if ($oActionNotification === null) {
-				throw new \Exception('Invalid action notification');
-			}
-			$oSubscribedActionsNotificationsSearch = \DBObjectSearch::FromOQL("SELECT lnkActionNotificationToContact AS lnk WHERE lnk.action_id = :actionnotification_id AND lnk.contact_id = :contact_id AND lnk.trigger_id = :trigger_id AND lnk.subscribed = '0'");
-			$oSubscribedActionsNotificationsSet = new \DBObjectSet($oSubscribedActionsNotificationsSearch, array(), array('actionnotification_id' => $iActionNotificationKey, 'contact_id' => \UserRights::GetContactId(), 'trigger_id' => $iTriggerKey));
-			if ($oSubscribedActionsNotificationsSet->Count() === 0) {
-				throw new \Exception('You are not allow to subscribe to this channel');
-			}
-			while ($oSubscribedActionsNotifications = $oSubscribedActionsNotificationsSet->Fetch()) {
-				$oSubscribedActionsNotifications->Set('subscribed', true);
-				$oSubscribedActionsNotifications->DBUpdate();
-			}
-			$aReturnData = [
-				'status'  => 'success',
-				'message' => Dict::S('UI:NotificationsCenter:Subscribe:Success'),
-			];
-		}
-		catch (Exception $e) {
-			$aReturnData = [
-				'status'  => 'error',
-				'message' => $e->getMessage(),
-			];
-		}
-		$oPage->SetData($aReturnData);
-		$oPage->SetOutputDataOnly(true);
 
 		return $oPage;
 	}
@@ -491,18 +292,18 @@ JS
 				throw new \Exception('Invalid trigger');
 			}
 			// Check the trigger subscription policy
-			if($oTrigger->Get('subscription_policy') === 'force_all_channels'){
+			if ($oTrigger->Get('subscription_policy') === SubscriptionPolicy::ForceAllChannels->value) {
 				throw new \Exception('You are not allowed to unsubscribe from this channel');
 			}
 			
 			// Check if we are subscribed to at least 1 channel
-			$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactSubscriptionAndFinalclass($iTriggerId, \UserRights::GetContactId(), '1', $sFinalclass);
+			$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByTriggerContactSubscriptionAndFinalclass($iTriggerId, \UserRights::GetContactId(), '1', $sFinalclass);
 			if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 				throw new \Exception('You are not subscribed to any channel');
 			}
 			// Check the trigger subscription policy and if we are subscribed to at least 1 channel if necessary
-			if($oTrigger->Get('subscription_policy') === 'force_at_least_one_channel') {
-				$oTotalSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactAndSubscription($iTriggerId, \UserRights::GetContactId(), '1');
+			if($oTrigger->Get('subscription_policy') === SubscriptionPolicy::ForceAtLeastOneChannel->value) {
+				$oTotalSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByTriggerContactAndSubscription($iTriggerId, \UserRights::GetContactId(), '1');
 				if (($oTotalSubscribedActionsNotificationsSet->Count() - $oSubscribedActionsNotificationsSet->Count()) === 0) {
 					throw new \Exception('You can\'t unsubscribe from this channel, you must be subscribed to at least one channel');
 				}
@@ -556,7 +357,7 @@ JS
 			if ($oTrigger === null) {
 				throw new \Exception('Invalid trigger');
 			}
-			$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionByTriggerContactSubscriptionAndFinalclass($iTriggerId, \UserRights::GetContactId(), '0', $sFinalclass);
+			$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByTriggerContactSubscriptionAndFinalclass($iTriggerId, \UserRights::GetContactId(), '0', $sFinalclass);
 			if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 				throw new \Exception('You are not subscribed to any channel');
 			}

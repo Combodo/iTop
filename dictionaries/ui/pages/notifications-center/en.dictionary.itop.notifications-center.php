@@ -20,8 +20,6 @@
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:NotificationsCenter:Page:Title' => 'Notifications center',
 	'UI:NotificationsCenter:Panel:Title' => 'Notifications center',
-	'UI:NotificationsCenter:Panel:SubTitle' => 'Manage your notifications subscriptions. For more granularity, you can also manage individual subscriptions using the <a href="%1$s">advanced mode</a>.',
-	'UI:NotificationsCenter:Panel:Advanced:SubTitle' => 'Manage your notifications subscriptions individually. To manage your subscriptions by type, use the <a href="%1$s">standard mode</a>.',
 	'UI:NotificationsCenter:Panel:Table:Channels' => 'Channels.',
 	'UI:NotificationsCenter:Unsubscribe:Success' => 'You have been successfully unsubscribed from the selected notifications.',
 	'UI:NotificationsCenter:Unsubscribe:Error' => 'An error occurred while unsubscribing from the selected notifications.',

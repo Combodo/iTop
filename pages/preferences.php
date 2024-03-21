@@ -133,7 +133,7 @@ function ValidateOtherSettings()
 	}
 	else
 	{
-		$('#v_default_page_size').html('<img src="../images/validation_error.png"/>');
+		$('#v_default_page_size').html('<img src="' + GetAbsoluteUrlAppRoot() + 'images/validation_error.png"/>');
 		$('#ibo-misc-settings-submit').prop('disabled', true);
 		return false;
 	}
@@ -315,7 +315,11 @@ JS
 
 		// - Reset button
 		$oNewsroomResetCacheButton = ButtonUIBlockFactory::MakeForAlternativeDestructiveAction(Dict::S('UI:Newsroom:ResetCache'));
-		$oNewsroomResetCacheButton->SetOnClickJsCode("$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')");
+		$oNewsroomResetCacheButton->SetOnClickJsCode(<<<JS
+$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')
+CombodoToast.OpenSuccessToast(Dict.S('UI:Newsroom:ResetCache:Success:Message'));
+JS
+		);
 		$oNewsroomToolbar->AddSubBlock($oNewsroomResetCacheButton);
 		// - Cancel button
 		$oNewsroomCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'));
@@ -417,11 +421,13 @@ JS
 
 	$oUserPicturePlaceHolderBlock = new Panel(Dict::S('UI:Preferences:ChooseAPlaceholder'), array(), 'grey', 'ibo-user-picture-placeholder');
 
-	$sUserPicturesFolder = '../images/user-pictures/';
+	$sUserPicturesFolderRelPath = 'images/user-pictures/';
+	$sUserPicturesFolderAbsPath = APPROOT . $sUserPicturesFolderRelPath;
+	$sUserPicturesFolderAbsUrl = utils::GetAbsoluteUrlAppRoot() . $sUserPicturesFolderRelPath;
 	$sUserDefaultPicture = appUserPreferences::GetPref('user_picture_placeholder', 'default-placeholder.png');
 	$sUserPicturePlaceHolderHtml = '';
 	$sUserPicturePlaceHolderHtml .= '<p>'.Dict::S('UI:Preferences:ChooseAPlaceholder+').'</p> <div class="ibo-preferences--user-preferences--picture-placeholder">';
-	foreach (scandir($sUserPicturesFolder) as $sUserPicture)
+	foreach (scandir($sUserPicturesFolderAbsPath) as $sUserPicture)
 	{
 		if ($sUserPicture === '.' || $sUserPicture === '..')
 		{
@@ -432,8 +438,9 @@ JS
 		{
 			$sAdditionalClass = ' ibo-is-active';
 		}
-		$sUserPicturePlaceHolderHtml .= '<a class="ibo-preferences--user-preferences--picture-placeholder--image'.$sAdditionalClass.'" data-image-name="'.$sUserPicture.'" data-role="ibo-preferences--user-preferences--picture-placeholder--image" href="#"> <img src="'.$sUserPicturesFolder.$sUserPicture.'"/> </a>';
+		$sUserPicturePlaceHolderHtml .= '<a class="ibo-preferences--user-preferences--picture-placeholder--image'.$sAdditionalClass.'" data-image-name="'.$sUserPicture.'" data-role="ibo-preferences--user-preferences--picture-placeholder--image" href="#"> <img src="'.$sUserPicturesFolderAbsUrl.$sUserPicture.'"/> </a>';
 	}
+	$sUserPictureChangedSuccessMessage = Dict::S('UI:Preferences:ChooseAPlaceholder:Success:Message');
 	$oP->add_ready_script(
 		<<<JS
 $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').on('click',function(){
@@ -458,6 +465,9 @@ $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]')
 		
 		// Update navigation menu
 		$('[data-role="ibo-navigation-menu--user-picture--image"]').attr('src', oData.data.image_url);
+		
+		// Display success message
+		CombodoToast.OpenSuccessToast('{$sUserPictureChangedSuccessMessage}');
 	});
 });
 JS
@@ -894,8 +904,9 @@ try {
 					}
 				}
 				$bProvidersModified = false;
-				foreach ($aProviders as $oProvider)
+				foreach ($aProviders as $cProvider)
 				{
+					$oProvider = new $cProvider();
 					if ($oProvider->IsApplicable($oUser))
 					{
 						$sProviderClass = get_class($oProvider);
@@ -911,7 +922,12 @@ try {
 				}
 				if ($bProvidersModified)
 				{
-					$oPage->add_ready_script('$(".itop-newsroom_menu").newsroom_menu("clearCache");');
+					$oPage->add_ready_script(
+						<<<JS
+$('#ibo-navigation-menu--notifications-menu').newsroom_menu("clearCache");
+CombodoToast.OpenSuccessToast(Dict.S('UI:Newsroom:ResetCache:Success:Message'));
+JS
+					);
 				}
 				DisplayPreferences($oPage);
 				break;

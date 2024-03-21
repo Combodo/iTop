@@ -3,7 +3,7 @@
 {% apply spaceless %}
     <div style="height:250px;width:100%" class="dashboard_chart" id="my_chart_{{ oUIBlock.sChartId }}{{ oUIBlock.iChartCounter }}">
         <div style="height:200px;line-height:200px;vertical-align:center;text-align:center;width:100%">
-            <img src="../images/indicator.gif">
+            <img src="{{ get_absolute_url_app_root() }}images/indicator.gif">
         </div>
     </div>
 {% endapply %}

@@ -1631,8 +1631,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Newsroom:Preferences' => 'Preferenze Newsroom',
 	'UI:Newsroom:ConfigurationLink' => 'Configurazione',
 	'UI:Newsroom:ResetCache' => 'Resetta la cache',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Mostra messaggi da %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Mostra fino a %1$s messaggi nel menu %2$s.',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
 
 ));
 

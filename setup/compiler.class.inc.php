@@ -2259,7 +2259,7 @@ EOF
 			$this->CompileCommonProperty('default_value', $oField, $aParameters, $sModuleRelativeDir, '');
 			$this->CompileCommonProperty('allowed_values', $oField, $aParameters, $sModuleRelativeDir);
 			$aParameters['class_category'] = $this->GetPropString($oField, 'class_category');
-			$aParameters['more_values'] = $this->GetPropString($oField, 'more_values');
+			$aParameters['more_values'] = $this->GetPropString($oField, 'more_values', '');
 			$aParameters['depends_on'] = $sDependencies;
 		}else {
 			$this->CompileCommonProperty('sql', $oField, $aParameters, $sModuleRelativeDir);
@@ -2953,7 +2953,7 @@ CSS;
 					if (($sAttType == 'AttributeExternalKey') || ($sAttType == 'AttributeHierarchicalKey'))
 					{
 						$sOnTargetDel = $oField->GetChildText('on_target_delete');
-						if (($sOnTargetDel == 'DEL_AUTO') || ($sOnTargetDel == 'DEL_SILENT'))
+						if (($sOnTargetDel == 'DEL_AUTO') || ($sOnTargetDel == 'DEL_SILENT') || ($sOnTargetDel == 'DEL_NONE'))
 						{
 							$sTargetClass = $oField->GetChildText('target_class');
 							$aLinkToClasses[$oClass->getAttribute('id')][] = $sTargetClass;

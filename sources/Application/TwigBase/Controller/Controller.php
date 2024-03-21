@@ -583,6 +583,7 @@ abstract class Controller extends AbstractController
 	 * @api
 	 *
 	 * @param string $sScript Script path to link
+	 * @since 3.2.0 $sScript must be absolute URI
 	 */
 	public function AddLinkedScript($sScript)
 	{
@@ -595,6 +596,7 @@ abstract class Controller extends AbstractController
 	 * @api
 	 *
 	 * @param string $sStylesheet Stylesheet path to link
+	 * @since 3.2.0 $sScript must be absolute URI
 	 */
 	public function AddLinkedStylesheet($sStylesheet)
 	{
@@ -769,12 +771,23 @@ abstract class Controller extends AbstractController
 
 	private function AddLinkedScriptToPage($sLinkedScript)
 	{
-		$this->m_oPage->add_linked_script($sLinkedScript);
+		// iTop 3.1 and older compatibility, if not an URI we don't know if its relative to app root or module root
+		if (strpos($sLinkedScript, "://") === false) {
+			$this->m_oPage->add_linked_script($sLinkedScript);
+			return;
+		}
+
+		$this->m_oPage->LinkScriptFromURI($sLinkedScript);
 	}
 
 	private function AddLinkedStylesheetToPage($sLinkedStylesheet)
 	{
-		$this->m_oPage->add_linked_stylesheet($sLinkedStylesheet);
+		// iTop 3.1 and older compatibility, if not an URI we don't know if its relative to app root or module root
+		if (strpos($sLinkedStylesheet, "://") === false) {
+			$this->m_oPage->add_linked_stylesheet($sLinkedStylesheet);
+		}
+
+		$this->m_oPage->LinkStylesheetFromURI($sLinkedStylesheet);
 	}
 
 	private function AddStyleToPage($sStyle)

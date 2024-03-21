@@ -61,4 +61,13 @@ class CurrentUserAccessor
 	{
 		return $this->userProvider->getCurrentUser()->Get($key);
 	}
+
+	/**
+	 * @return bool
+	 * @since 3.1.2 3.2.0
+	 */
+	public function CanLogOff(): bool
+	{
+		return $this->userProvider->getCurrentUserCanLogOff();
+	}
 }

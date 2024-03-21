@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
+use utils;
 
 /**
  * Class UserProvider
@@ -44,6 +45,8 @@ class UserProvider
 	private $sPortalId;
 	/** @var \User $oUser */
 	private $oUser;
+	/** @var bool $bUserCanLogOff Whether the current user can log off or not */
+	private $bUserCanLogOff;
 	/** @var array $aAllowedPortals */
 	private $aAllowedPortals;
 
@@ -89,6 +92,9 @@ class UserProvider
 			throw new Exception('Could not load connected user.');
 		}
 
+        // User allowed to log off or not
+        $this->bUserCanLogOff = utils::CanLogOff();
+
 		// Allowed portals
 		$aAllowedPortals = UserRights::GetAllowedPortals();
 
@@ -117,6 +123,15 @@ class UserProvider
 	public function getCurrentUser()
 	{
 		return $this->oUser;
+	}
+
+	/**
+	 * @return bool {@see static::$bUserCanLogOff}
+	 * @since 3.1.2 3.2.0
+	 */
+	public function getCurrentUserCanLogOff(): bool
+	{
+		return $this->bUserCanLogOff;
 	}
 
 	/**

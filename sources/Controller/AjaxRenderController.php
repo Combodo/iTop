@@ -845,7 +845,7 @@ EOF
 		);
 		$sVersionString = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
 		$oPage->add('<div id="about_box"><div class="ibo-about-box--top-part">');
-		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
+		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="' . utils::GetAbsoluteUrlAppRoot() . 'images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
 		$oPage->add('<div>'.$sVersionString.'</div>');
 		$oPage->add("</div>");
 		self::DisplayAboutLicenses($oPage);
@@ -927,7 +927,7 @@ EOF
 		// Display
 		//
 		$oPage->add('<div id="about_box"><div class="ibo-about-box--top-part">');
-		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
+		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="' . utils::GetAbsoluteUrlAppRoot() . 'images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
 		$oPage->add('<div>'.$sVersionString.'<br/>'.'MySQL: '.$sMySQLVersion.'<br/>'.'PHP: '.$sPHPVersion.'<br/></div>');
 		$oPage->add("</div>");
 

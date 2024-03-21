@@ -249,8 +249,9 @@ abstract class ModuleInstallerAPI
 	 * @throws \MySQLHasGoneAwayException
 	 *
 	 * @since 3.2.0 N°7130 Add parameter $bIgnoreExistingDstColumn
+	 * @since 3.2.0 No longer copy NULL data in order to avoid writing over existing data
 	 */
-	public static function MoveColumnInDB($sOrigTable, $sOrigColumn, $sDstTable, $sDstColumn, $bIgnoreExistingDstColumn = false)
+	public static function MoveColumnInDB($sOrigTable, $sOrigColumn, $sDstTable, $sDstColumn, bool $bIgnoreExistingDstColumn = false)
 	{
 		if (!MetaModel::DBExists(false))
 		{
@@ -279,7 +280,7 @@ abstract class ModuleInstallerAPI
 		}
 
 		// Copy the data
-		$sQueryUpdate = "UPDATE `{$sDstTable}` AS d LEFT JOIN `{$sOrigTable}` AS o ON d.id = o.id SET d.`{$sDstColumn}` = o.`{$sOrigColumn}` WHERE 1";
+		$sQueryUpdate = "UPDATE `{$sDstTable}` AS d LEFT JOIN `{$sOrigTable}` AS o ON d.id = o.id SET d.`{$sDstColumn}` = o.`{$sOrigColumn}` WHERE o.`{$sOrigColumn}` IS NOT NULL";
 		CMDBSource::Query($sQueryUpdate);
 
 		// Drop original field

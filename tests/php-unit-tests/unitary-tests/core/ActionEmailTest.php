@@ -318,4 +318,65 @@ HTML
 			],
 		];	
 	}
+
+	/**
+	 * @dataProvider asynchronousValuesContentProvider
+	 */
+	public function testAsynchronousValues($sActionAsyncValue, $sConfigAsyncValue, $sExpectedValue)
+	{
+		$oConfig = utils::GetConfig();
+		$sCurrentEmailAsync = $oConfig->Get('email_asynchronous');
+		
+		$oConfig->Set('email_asynchronous', $sConfigAsyncValue);
+		
+		$oActionEmail = MetaModel::NewObject('ActionEmail', [
+			'name'    => 'Test action',
+			'status'  => 'disabled',
+			'from'    => 'unit-test@openitop.org',
+			'subject' => 'Test subject',
+			'body'    => 'Test body',
+			'asynchronous' => $sActionAsyncValue,
+		]);
+		
+		self::assertEquals($sExpectedValue, $oActionEmail->IsAsynchronous());
+
+		$oConfig->Set('email_asynchronous', $sCurrentEmailAsync);
+	}
+
+
+	public function asynchronousValuesContentProvider()
+	{
+		return [
+			'ActionEmail is asynchronous' => [
+				'yes',
+				false,
+				true
+			],
+			'ActionEmail is not asynchronous' => [
+				'no',
+				true,
+				false
+			],
+			'ActionEmail is asynchronous and config is asynchronous' => [
+				'yes',
+				true,
+				true
+			],
+			'ActionEmail is not asynchronous and config is not asynchronous' => [
+				'no',
+				false,
+				false
+			],
+			'ActionEmail follows global settings, config is not asynchronous' => [
+				'use_global_setting',
+				false,
+				false
+			],
+			'ActionEmail follows global settings, config is asynchronous' => [
+				'use_global_setting',
+				true,
+				true
+			],
+		];
+	}
 }
