@@ -58,6 +58,9 @@ $progress-bar-error-bg-color: #F56565 !default;
 .center {
   text-align: center;
 }
+.hidden {
+  display: none;
+}
 
 /* Animations */
 @keyframes progress_bar_color_ongoing {

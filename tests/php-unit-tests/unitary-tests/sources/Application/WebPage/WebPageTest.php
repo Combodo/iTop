@@ -58,6 +58,11 @@ class WebPageTest extends ItopDataTestCase
 				"js/utils.js",
 				1,
 			],
+			"LinkScriptFromAppRoot: Relative URI of existing file with query params should be completed / added" => [
+				"LinkScriptFromAppRoot",
+				"js/utils.js?foo=bar",
+				1,
+			],
 			"LinkScriptFromAppRoot: Relative URI of NON existing file should be ignored" => [
 				"LinkScriptFromAppRoot",
 				"js/some-file.js",
@@ -78,6 +83,11 @@ class WebPageTest extends ItopDataTestCase
 			"LinkScriptFromModule: Relative URI of existing file should be completed / added" => [
 				"LinkScriptFromModule",
 				"itop-portal-base/portal/public/js/toolbox.js",
+				1,
+			],
+			"LinkScriptFromModule: Relative URI of existing file with query params should be completed / added" => [
+				"LinkScriptFromModule",
+				"itop-portal-base/portal/public/js/toolbox.js?foo=bar",
 				1,
 			],
 			"LinkScriptFromModule: Relative URI of NON existing file should be completed / added" => [
@@ -105,6 +115,11 @@ class WebPageTest extends ItopDataTestCase
 			"LinkScriptFromURI: Absolute URI should be added" => [
 				"LinkScriptFromURI",
 				"https://external.server/file.js",
+				1,
+			],
+			"LinkScriptFromURI: Absolute URI with query params should be added" => [
+				"LinkScriptFromURI",
+				"https://external.server/file.js?foo=bar",
 				1,
 			],
 		];
@@ -148,6 +163,11 @@ class WebPageTest extends ItopDataTestCase
 				"css/login.css",
 				1,
 			],
+			"LinkStylesheetFromAppRoot: Relative URI of existing file with query params should be completed / added" => [
+				"LinkStylesheetFromAppRoot",
+				"css/login.css?foo=bar",
+				1,
+			],
 			"LinkStylesheetFromAppRoot: Relative URI of NON existing file should be ignored" => [
 				"LinkStylesheetFromAppRoot",
 				"css/some-file.css",
@@ -168,6 +188,11 @@ class WebPageTest extends ItopDataTestCase
 			"LinkStylesheetFromModule: Relative URI of existing file should be completed / added" => [
 				"LinkStylesheetFromModule",
 				"itop-portal-base/portal/public/css/portal.css",
+				1,
+			],
+			"LinkStylesheetFromModule: Relative URI of existing file with query params should be completed / added" => [
+				"LinkStylesheetFromModule",
+				"itop-portal-base/portal/public/css/portal.css?foo=bar",
 				1,
 			],
 			"LinkStylesheetFromModule: Relative URI of NON existing file should be completed / added" => [
@@ -195,6 +220,11 @@ class WebPageTest extends ItopDataTestCase
 			"LinkStylesheetFromURI: Absolute URI should be added" => [
 				"LinkStylesheetFromURI",
 				"https://external.server/file.css",
+				1,
+			],
+			"LinkStylesheetFromURI: Absolute URI with query params should be added" => [
+				"LinkStylesheetFromURI",
+				"https://external.server/file.css?foo=bar",
 				1,
 			],
 		];
