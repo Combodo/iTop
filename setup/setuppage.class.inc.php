@@ -41,7 +41,8 @@ class SetupPage extends NiceWebPage
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.js');
-		$this->add_linked_script("../setup/setup.js");
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot()."setup/setup.js");
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot()."setup/csp-detection.js?itop_version_wiki_syntax=" . utils::GetItopVersionWikiSyntax());
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
