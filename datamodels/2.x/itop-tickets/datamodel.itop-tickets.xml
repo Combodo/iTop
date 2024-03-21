@@ -575,6 +575,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="ticket_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="role_code">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="ticket_id">
@@ -820,6 +833,25 @@
             </item>
           </items>
         </search>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="team_id">
+              <rank>20</rank>
+            </item>
+            <item id="agent_id">
+              <rank>30</rank>
+            </item>
+            <item id="start_date">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+          </items>
+        </default_search>
         <list>
           <items>
             <item id="status">

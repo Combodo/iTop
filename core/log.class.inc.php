@@ -575,6 +575,12 @@ class LogChannels
 	 */
 	public const DATATABLE = 'Datatable';
 
+	/**
+	 * @var string Everything related to the data integrity
+	 * @since 3.2.0
+	 */
+	public const DATA_INTEGRITY = 'DataIntegrity';
+
 	public const DEADLOCK = 'DeadLock';
 	/**
 	 * @var string Everything related to PHP sessions tracking
