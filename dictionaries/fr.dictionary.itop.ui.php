@@ -723,6 +723,8 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'Echec de réconciliation',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'Réconciliation ambigüe',
 	'UI:CSVReport-Row-Issue-Internal' => 'Erreur interne: %1$s, %2$s',
+	'UI:CSVReport-Value-Issue-NoValue' => 'Pas de valeur',
+	'UI:CSVReport-Row-Issue-NbField' => 'Le nombre de champs ne correspond pas à ce qui est attendu (courant : %1$s champs, %2$s champs attendus )',
 	'UI:CSVReport-Icon-Unchanged' => 'Non modifié',
 	'UI:CSVReport-Icon-Modified' => 'Modifié',
 	'UI:CSVReport-Icon-Missing' => 'A disparu',
