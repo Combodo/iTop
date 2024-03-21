@@ -2830,12 +2830,13 @@ HTML;
 HTML;
 
 				$aDefaultConf['mentions'][] = [
-					'feed' => $sMentionEndpoint,
-					'marker' => $sMentionMarker,
-					'minChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
-					'itemTemplate' => $sMentionItemTemplate,
+					'feed'           => $sMentionEndpoint,
+					'marker'         => $sMentionMarker,
+					'minChars'       => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
+					'itemTemplate'   => $sMentionItemTemplate,
 					'outputTemplate' => $sMentionOutputTemplate,
-					'throttle' => 500,
+					'throttle'       => 500,
+					'followingSpace' => true,
 				];
 			}
 		}

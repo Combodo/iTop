@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -15,32 +15,24 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'links' },
 		{ name: 'insert' },
 		{ name: 'forms' },
-		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
-		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-		{ name: 'others' },
 		{ name: 'tools' },
+		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
+		{ name: 'others' },
 		'/',
 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-		{ name: 'colors' },
+		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
 		{ name: 'styles' },
+		{ name: 'colors' },
 		{ name: 'about' }
 	];
 
-	config.removeButtons = 'Subscript,Superscript,Scayt,Anchor,Outdent,Indent,Blockquote,About,PasteFromWord';
-	config.removePlugins = 'elementspath';
-	config.resize_enabled = false;
-	config.toolbarCanCollapse = true;
-	config.toolbarStartupExpanded = false;
+	// Remove some buttons provided by the standard plugins, which are
+	// not needed in the Standard(s) toolbar.
+	config.removeButtons = 'Underline,Subscript,Superscript';
 
 	// Set the most common block elements.
 	config.format_tags = 'p;h1;h2;h3;pre';
 
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
-
-	// Enable the browser spell checking
-	config.disableNativeSpellChecker = false;
-
-	// Set theme for codesnippet plugin - N°1164
-	config.codeSnippet_theme = 'obsidian';
 };
