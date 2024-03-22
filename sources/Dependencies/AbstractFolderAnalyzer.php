@@ -33,7 +33,7 @@ abstract class AbstractFolderAnalyzer
 	 * @since 3.2.0 N°7175 update regexp to also remove `examples` folder
 	 * @link https://www.regular-expressions.info/alternation.html RegExp alternation reference
 	 */
-	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|external)$/i';
+	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?)$/i';
 
 	/**
 	 * @return string Relative path to the root folder of the dependencies (e.g. "lib" for composer, "node_modules" for npm, ...) from iTop app. root
@@ -134,7 +134,7 @@ abstract class AbstractFolderAnalyzer
 	public function ListDeniedButStillPresentFoldersAbsPaths(): array
 	{
 		$aDeniedTestDir = $this->ListDeniedFoldersAbsPaths();
-		$aAllTestDir = $this->ListAllowedFoldersAbsPaths();
+		$aAllTestDir = $this->ListAllFoldersAbsPaths();
 		return array_intersect($aDeniedTestDir, $aAllTestDir);
 	}
 }

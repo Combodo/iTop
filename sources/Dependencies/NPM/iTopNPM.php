@@ -25,6 +25,9 @@ use Combodo\iTop\Dependencies\AbstractFolderAnalyzer;
 
 class iTopNPM extends AbstractFolderAnalyzer
 {
+	/** @inheritDoc */
+	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|website|external|libs?|src)$/i';
+
 	/**
 	 * @inheritDoc
 	 */
@@ -39,8 +42,19 @@ class iTopNPM extends AbstractFolderAnalyzer
 	public function ListAllowedFoldersRelPaths(): array
 	{
 		return [
-			// jQuery Sizzle used by jQuery
-			'jquery/external',
+			'ace-builds/textarea/src',      // Unknown usage
+			'cliui/build/lib',              // Unknown usage
+
+			'jquery/external',              // jQuery Sizzle used by jQuery
+
+			'jquery-contextmenu/src',       // Used sources
+			'magnific-popup/libs',          // Unknown usage
+			'toastify-js/src',              // Used sources
+
+			'y18n/build/lib',               // Unknown usage
+			'yargs/build/lib',              // Unknown usage
+			'yargs/lib',                    // Unknown usage
+			'yargs-parser/build/lib',       // Unknown usage
 		];
 	}
 
@@ -50,6 +64,10 @@ class iTopNPM extends AbstractFolderAnalyzer
 	public function ListDeniedFoldersRelPaths(): array
 	{
 		return [
+			'@popperjs/core/dist/cjs',
+			'@popperjs/core/dist/esm',
+			'@popperjs/core/lib',
+
 			// ACE Editor see https://www.npmjs.com/package/ace-builds for dir contents
 			'ace-builds/demo',
 			'ace-builds/src',
@@ -57,12 +75,19 @@ class iTopNPM extends AbstractFolderAnalyzer
 			'ace-builds/src-noconflict',
 
 			'c3/htdocs',
+			'c3/src',
 			'clipboard/demo',
+			'clipboard/src',
 			'clipboard/test',
+			'd3/src',
 			'delegate/demo',
+			'delegate/src',
 			'delegate/test',
 			'good-listener/demo',
+			'good-listener/src',
 			'good-listener/test',
+			'jquery/src',
+			'jquery-migrate/src',
 			'jquery-migrate/test',
 
 			// `jquery-ui` package is just there for vulnerability scans, so we don't want to version its files (only `jquery-ui-dist` is used within the code base)
@@ -74,9 +99,14 @@ class iTopNPM extends AbstractFolderAnalyzer
 			'jquery-ui/ui',
 
 			'jquery-ui-dist/external',
+			'magnific-popup/libs/jquery',
+			'magnific-popup/src',
+			'magnific-popup/website',
+			'moment/src',
 			'mousetrap/plugins/record/tests',
 			'mousetrap/tests',
 			'select/demo',
+			'select/src',
 			'select/test',
 			'selectize-plugin-a11y/examples',
 			'tiny-emitter/test',
