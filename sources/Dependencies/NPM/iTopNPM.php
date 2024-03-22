@@ -26,7 +26,7 @@ use Combodo\iTop\Dependencies\AbstractFolderAnalyzer;
 class iTopNPM extends AbstractFolderAnalyzer
 {
 	/** @inheritDoc */
-	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|.github|website|external|libs?|src)$/i';
+	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|website|external|libs?|src|.github|.idea)$/i';
 
 	/**
 	 * @inheritDoc
@@ -82,6 +82,8 @@ class iTopNPM extends AbstractFolderAnalyzer
 			'good-listener/src',
 			'good-listener/test',
 			'jquery/src',
+			'jquery-migrate/.github',
+			'jquery-migrate/.idea',
 			'jquery-migrate/src',
 			'jquery-migrate/test',
 

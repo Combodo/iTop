@@ -33,7 +33,7 @@ abstract class AbstractFolderAnalyzer
 	 * @since 3.2.0 N°7175 update regexp to also remove `examples` folder
 	 * @link https://www.regular-expressions.info/alternation.html RegExp alternation reference
 	 */
-	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|.github)$/i';
+	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|.github|.idea)$/i';
 
 	/**
 	 * @param string $sFolderName
