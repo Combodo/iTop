@@ -69,6 +69,7 @@ class iTopNPM extends AbstractFolderAnalyzer
 			'@popperjs/core/lib',
 
 			// ACE Editor see https://www.npmjs.com/package/ace-builds for dir contents
+			'ace-builds/.github',
 			'ace-builds/demo',
 			'ace-builds/src',
 			'ace-builds/src-min-noconflict',
