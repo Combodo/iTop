@@ -43,18 +43,13 @@ class iTopNPM extends AbstractFolderAnalyzer
 	{
 		return [
 			'ace-builds/textarea/src',      // Unknown usage
-			'cliui/build/lib',              // Unknown usage
+			'commander/lib',                // Unknown usage
 
 			'jquery/external',              // jQuery Sizzle used by jQuery
 
 			'jquery-contextmenu/src',       // Used sources
 			'magnific-popup/libs',          // Unknown usage
 			'toastify-js/src',              // Used sources
-
-			'y18n/build/lib',               // Unknown usage
-			'yargs/build/lib',              // Unknown usage
-			'yargs/lib',                    // Unknown usage
-			'yargs-parser/build/lib',       // Unknown usage
 		];
 	}
 

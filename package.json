@@ -24,7 +24,7 @@
     "mousetrap": "^1.6.5",
     "scrollmagic": "^2.0.8",
     "selectize-plugin-a11y": "^1.1.0",
-    "showdown": "^2.0.0",
+    "showdown": "^2.1.0",
     "tippy.js": "^6.3.7",
     "toastify-js": "^1.12.0"
   },
