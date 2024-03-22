@@ -45,8 +45,6 @@ class iTopNPM extends AbstractFolderAnalyzer
 			'ace-builds/textarea/src',      // Unknown usage
 			'commander/lib',                // Unknown usage
 
-			'jquery/external',              // jQuery Sizzle used by jQuery
-
 			'jquery-contextmenu/src',       // Used sources
 			'magnific-popup/libs',          // Unknown usage
 			'toastify-js/src',              // Used sources
