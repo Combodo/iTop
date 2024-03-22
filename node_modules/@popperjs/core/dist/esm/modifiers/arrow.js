@@ -3,17 +3,24 @@ import getLayoutRect from "../dom-utils/getLayoutRect.js";
 import contains from "../dom-utils/contains.js";
 import getOffsetParent from "../dom-utils/getOffsetParent.js";
 import getMainAxisFromPlacement from "../utils/getMainAxisFromPlacement.js";
-import within from "../utils/within.js";
+import { within } from "../utils/within.js";
 import mergePaddingObject from "../utils/mergePaddingObject.js";
 import expandToHashMap from "../utils/expandToHashMap.js";
-import { left, right, basePlacements, top, bottom } from "../enums.js";
-import { isHTMLElement } from "../dom-utils/instanceOf.js"; // eslint-disable-next-line import/no-unused-modules
+import { left, right, basePlacements, top, bottom } from "../enums.js"; // eslint-disable-next-line import/no-unused-modules
+
+var toPaddingObject = function toPaddingObject(padding, state) {
+  padding = typeof padding === 'function' ? padding(Object.assign({}, state.rects, {
+    placement: state.placement
+  })) : padding;
+  return mergePaddingObject(typeof padding !== 'number' ? padding : expandToHashMap(padding, basePlacements));
+};
 
 function arrow(_ref) {
   var _state$modifiersData$;
 
   var state = _ref.state,
-      name = _ref.name;
+      name = _ref.name,
+      options = _ref.options;
   var arrowElement = state.elements.arrow;
   var popperOffsets = state.modifiersData.popperOffsets;
   var basePlacement = getBasePlacement(state.placement);
@@ -25,7 +32,7 @@ function arrow(_ref) {
     return;
   }
 
-  var paddingObject = state.modifiersData[name + "#persistent"].padding;
+  var paddingObject = toPaddingObject(options.padding, state);
   var arrowRect = getLayoutRect(arrowElement);
   var minProp = axis === 'y' ? top : left;
   var maxProp = axis === 'y' ? bottom : right;
@@ -47,12 +54,9 @@ function arrow(_ref) {
 
 function effect(_ref2) {
   var state = _ref2.state,
-      options = _ref2.options,
-      name = _ref2.name;
+      options = _ref2.options;
   var _options$element = options.element,
-      arrowElement = _options$element === void 0 ? '[data-popper-arrow]' : _options$element,
-      _options$padding = options.padding,
-      padding = _options$padding === void 0 ? 0 : _options$padding;
+      arrowElement = _options$element === void 0 ? '[data-popper-arrow]' : _options$element;
 
   if (arrowElement == null) {
     return;
@@ -67,24 +71,11 @@ function effect(_ref2) {
     }
   }
 
-  if (false) {
-    if (!isHTMLElement(arrowElement)) {
-      console.error(['Popper: "arrow" element must be an HTMLElement (not an SVGElement).', 'To use an SVG arrow, wrap it in an HTMLElement that will be used as', 'the arrow.'].join(' '));
-    }
-  }
-
   if (!contains(state.elements.popper, arrowElement)) {
-    if (false) {
-      console.error(['Popper: "arrow" modifier\'s `element` must be a child of the popper', 'element.'].join(' '));
-    }
-
     return;
   }
 
   state.elements.arrow = arrowElement;
-  state.modifiersData[name + "#persistent"] = {
-    padding: mergePaddingObject(typeof padding !== 'number' ? padding : expandToHashMap(padding, basePlacements))
-  };
 } // eslint-disable-next-line import/no-unused-modules
 
 

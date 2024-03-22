@@ -1,17 +1,17 @@
+import { isShadowRoot } from "./instanceOf.js";
 export default function contains(parent, child) {
-  // $FlowFixMe: hasOwnProperty doesn't seem to work in tests
-  var isShadow = Boolean(child.getRootNode && child.getRootNode().host); // First, attempt with faster native method
+  var rootNode = child.getRootNode && child.getRootNode(); // First, attempt with faster native method
 
   if (parent.contains(child)) {
     return true;
   } // then fallback to custom implementation with Shadow DOM support
-  else if (isShadow) {
+  else if (rootNode && isShadowRoot(rootNode)) {
       var next = child;
 
       do {
         if (next && parent.isSameNode(next)) {
           return true;
-        } // $FlowFixMe: need a better way to handle this...
+        } // $FlowFixMe[prop-missing]: need a better way to handle this...
 
 
         next = next.parentNode || next.host;

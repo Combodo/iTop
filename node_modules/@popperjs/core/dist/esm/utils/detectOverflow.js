@@ -1,6 +1,6 @@
-import getBoundingClientRect from "../dom-utils/getBoundingClientRect.js";
 import getClippingRect from "../dom-utils/getClippingRect.js";
 import getDocumentElement from "../dom-utils/getDocumentElement.js";
+import getBoundingClientRect from "../dom-utils/getBoundingClientRect.js";
 import computeOffsets from "./computeOffsets.js";
 import rectToClientRect from "./rectToClientRect.js";
 import { clippingParents, reference, popper, bottom, top, right, basePlacements, viewport } from "../enums.js";
@@ -16,6 +16,8 @@ export default function detectOverflow(state, options) {
   var _options = options,
       _options$placement = _options.placement,
       placement = _options$placement === void 0 ? state.placement : _options$placement,
+      _options$strategy = _options.strategy,
+      strategy = _options$strategy === void 0 ? state.strategy : _options$strategy,
       _options$boundary = _options.boundary,
       boundary = _options$boundary === void 0 ? clippingParents : _options$boundary,
       _options$rootBoundary = _options.rootBoundary,
@@ -28,18 +30,17 @@ export default function detectOverflow(state, options) {
       padding = _options$padding === void 0 ? 0 : _options$padding;
   var paddingObject = mergePaddingObject(typeof padding !== 'number' ? padding : expandToHashMap(padding, basePlacements));
   var altContext = elementContext === popper ? reference : popper;
-  var referenceElement = state.elements.reference;
   var popperRect = state.rects.popper;
   var element = state.elements[altBoundary ? altContext : elementContext];
-  var clippingClientRect = getClippingRect(isElement(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary);
-  var referenceClientRect = getBoundingClientRect(referenceElement);
+  var clippingClientRect = getClippingRect(isElement(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary, strategy);
+  var referenceClientRect = getBoundingClientRect(state.elements.reference);
   var popperOffsets = computeOffsets({
     reference: referenceClientRect,
     element: popperRect,
     strategy: 'absolute',
     placement: placement
   });
-  var popperClientRect = rectToClientRect(Object.assign(Object.assign({}, popperRect), popperOffsets));
+  var popperClientRect = rectToClientRect(Object.assign({}, popperRect, popperOffsets));
   var elementClientRect = elementContext === popper ? popperClientRect : referenceClientRect; // positive = overflowing the clipping rect
   // 0 or negative = within the clipping rect
 
