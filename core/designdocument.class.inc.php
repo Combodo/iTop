@@ -340,6 +340,26 @@ class DesignElement extends \DOMElement
 	}
 
 	/**
+	 * True if the node is contained in a _delta="merge" tree
+	 * @return bool
+	 */
+	public function IsInSpecifiedMerge(): bool
+	{
+		// Iterate through the parents: reset the flag if any of them has a flag set
+		for ($oParent = $this; $oParent instanceof MFElement; $oParent = $oParent->parentNode) {
+			$sDeltaSpec = $oParent->getAttribute('_delta');
+			if ($sDeltaSpec === 'merge') {
+				return true;
+			}
+			if (in_array($sDeltaSpec, ['define', 'define_if_not_exists', 'force', 'redefine'])) {
+				return false;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Find the child node matching the given node.
 	 * UNSAFE: may return nodes marked as _alteration="removed"
 	 * A method with the same signature MUST exist in MFDocument for the recursion to work fine
