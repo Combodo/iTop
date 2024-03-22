@@ -137,8 +137,8 @@ class WebResourcesHelper
 	{
 		$oPage->LinkScriptFromAppRoot('js/raphael-min.js');
 		$oPage->LinkScriptFromAppRoot('js/fraphael.js');
-		$oPage->LinkStylesheetFromAppRoot('node_modules/jquery-contextmenu/src/jquery.contextMenu.css');
-		$oPage->LinkScriptFromAppRoot('node_modules/jquery-contextmenu/src/jquery.contextMenu.js');
+		$oPage->LinkStylesheetFromAppRoot('node_modules/jquery-contextmenu/dist/jquery.contextMenu.min.css');
+		$oPage->LinkScriptFromAppRoot('node_modules/jquery-contextmenu/dist/jquery.contextMenu.min.js');
 		$oPage->LinkScriptFromAppRoot('js/jquery.positionBy.js');
 		$oPage->LinkScriptFromAppRoot('js/jquery.popupmenu.js');
 		$oPage->LinkScriptFromAppRoot('js/jquery.mousewheel.js');

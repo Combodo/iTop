@@ -82,6 +82,7 @@ class iTopNPM extends AbstractFolderAnalyzer
 			'good-listener/src',
 			'good-listener/test',
 			'jquery/src',
+			'jquery-contextmenu/src',
 			'jquery-migrate/.github',
 			'jquery-migrate/.idea',
 			'jquery-migrate/src',
