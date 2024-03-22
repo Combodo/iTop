@@ -6,11 +6,11 @@
   "authors": [
     {
       "name": "Zeno Rocha",
-      "url": "http://zenorocha.com/"
+      "homepage": "http://zenorocha.com/"
     }
   ],
   "require": {
-    "robloach/component-installer": "*"
+    "oomphinc/composer-installers-extender": "*"
   },
   "extra": {
     "component": {

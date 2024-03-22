@@ -26,7 +26,7 @@ use Combodo\iTop\Dependencies\AbstractFolderAnalyzer;
 class iTopNPM extends AbstractFolderAnalyzer
 {
 	/** @inheritDoc */
-	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|website|external|libs?|src)$/i';
+	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|.github|website|external|libs?|src)$/i';
 
 	/**
 	 * @inheritDoc
@@ -77,6 +77,7 @@ class iTopNPM extends AbstractFolderAnalyzer
 
 			'c3/htdocs',
 			'c3/src',
+			'clipboard/.github',
 			'clipboard/demo',
 			'clipboard/src',
 			'clipboard/test',
