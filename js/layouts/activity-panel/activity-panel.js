@@ -916,6 +916,7 @@ $(function()
 			_SaveSubmitConfirmationPref: function()
 			{
 				// Note: We have to send the value as a string because of the API limitation
+				this.options.show_multiple_entries_submit_confirmation = false;
 				SetUserPreference('activity_panel.show_multiple_entries_submit_confirmation', 'false', true);
 			},
 			/**
