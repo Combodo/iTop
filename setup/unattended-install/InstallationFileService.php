@@ -17,14 +17,24 @@ class InstallationFileService {
 	private $sTargetEnvironment;
 	private $sInstallationPath;
 	private $aSelectedModules;
+	private $aSelectedExtensions;
 	private $aUnSelectedModules;
 	private $aAutoSelectModules;
+	private $bInstallationOptionalChoicesChecked;
 
-	public function __construct(string $sInstallationPath,string $sTargetEnvironment='production') {
+	/**
+	 * @param string $sInstallationPath
+	 * @param string $sTargetEnvironment
+	 * @param array $aSelectedExtensions
+	 * @param bool $bInstallationOptionalChoicesChecked : this option is used only when no extensions are selected (ie empty $aSelectedExtensions)
+	 */
+	public function __construct(string $sInstallationPath, string $sTargetEnvironment='production', bool $bInstallationOptionalChoicesChecked=true, array $aSelectedExtensions = []) {
 		$this->sInstallationPath = $sInstallationPath;
 		$this->aSelectedModules = [];
 		$this->aUnSelectedModules = [];
 		$this->sTargetEnvironment = $sTargetEnvironment;
+		$this->aSelectedExtensions = $aSelectedExtensions;
+		$this->bInstallationOptionalChoicesChecked = $bInstallationOptionalChoicesChecked;
 	}
 
 	public function GetSelectedModules(): array {
@@ -35,16 +45,15 @@ class InstallationFileService {
 		return $this->aUnSelectedModules;
 	}
 
-	public function Init(bool $bInstallationOptionalChoicesChecked=true): void {
+	public function Init(): void {
 		clearstatcache();
-		$this->bInstallationOptionalChoicesChecked = $bInstallationOptionalChoicesChecked;
 
 		$this->ProcessDefaultModules();
-		$this->ProcessInstallationChoices($bInstallationOptionalChoicesChecked);
+		$this->ProcessInstallationChoices();
 		$this->ProcessAutoSelectModules();
 	}
 
-	public function ProcessInstallationChoices(bool $bInstallationOptionalChoicesChecked): void {
+	public function ProcessInstallationChoices(): void {
 		$oXMLParameters = new XMLParameters($this->sInstallationPath);
 		$aSteps = $oXMLParameters->Get('steps', []);
 		if (! is_array($aSteps)) {
@@ -55,7 +64,7 @@ class InstallationFileService {
 			$aOptions = $aStepInfo["options"] ?? null;
 			if (! is_null($aOptions) && is_array($aOptions)) {
 				foreach ($aOptions as $aChoiceInfo) {
-					$this->ProcessSelectedChoice($aChoiceInfo, $bInstallationOptionalChoicesChecked);
+					$this->ProcessSelectedChoice($aChoiceInfo, $this->bInstallationOptionalChoicesChecked);
 				}
 			}
 			$aOptions = $aStepInfo["alternatives"] ?? null;
@@ -119,7 +128,13 @@ class InstallationFileService {
 		$sMandatory = $aChoiceInfo["mandatory"] ?? "false";
 
 		$aCurrentModules = $aChoiceInfo["modules"] ?? [];
-		$bSelected = $bAllChecked || $sDefault === "true" || $sMandatory === "true";
+		if (0 === count($this->aSelectedExtensions)){
+			$bSelected = $bAllChecked || $sDefault === "true" || $sMandatory === "true";
+		} else {
+			$sExtensionCode = $aChoiceInfo["extension_code"] ?? null;
+			$bSelected = $sMandatory === "true" ||
+				(null !== $sExtensionCode && in_array($sExtensionCode, $this->aSelectedExtensions));
+		}
 
 		foreach ($aCurrentModules as $sModuleId){
 			if ($bSelected) {

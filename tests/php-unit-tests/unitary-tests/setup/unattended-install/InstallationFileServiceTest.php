@@ -32,8 +32,8 @@ class InstallationFileServiceTest extends TestCase {
 	public function testProcessInstallationChoices($bInstallationOptionalChoicesChecked=false) {
 		$sPath = realpath(dirname(__FILE__, 6)."/datamodels/2.x/installation.xml");
 		$this->assertTrue(is_file($sPath));
-		$oInstallationFileService = new \InstallationFileService($sPath);
-		$oInstallationFileService->ProcessInstallationChoices($bInstallationOptionalChoicesChecked);
+		$oInstallationFileService = new \InstallationFileService($sPath, 'production', $bInstallationOptionalChoicesChecked);
+		$oInstallationFileService->ProcessInstallationChoices();
 		$aExpectedModules = [
 			"itop-config-mgmt",
 			"itop-attachments",
@@ -88,8 +88,8 @@ class InstallationFileServiceTest extends TestCase {
 	 */
 	public function testGetAllSelectedModules($bInstallationOptionalChoicesChecked=false) {
 		$sPath = realpath(dirname(__FILE__, 6)."/datamodels/2.x/installation.xml");
-		$oInstallationFileService = new \InstallationFileService($sPath);
-		$oInstallationFileService->Init($bInstallationOptionalChoicesChecked);
+		$oInstallationFileService = new \InstallationFileService($sPath, 'production', $bInstallationOptionalChoicesChecked);
+		$oInstallationFileService->Init();
 
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
 		$aExpectedInstallationModules = [
@@ -115,6 +115,113 @@ class InstallationFileServiceTest extends TestCase {
 		];
 		if ($bInstallationOptionalChoicesChecked){
 			$aExpectedInstallationModules []= "itop-problem-mgmt";
+			$aExpectedInstallationModules []= "itop-knownerror-mgmt";
+		}
+
+		$aExpectedAuthenticationModules = [
+			'authent-cas',
+			'authent-external',
+			'authent-ldap',
+			'authent-local',
+		];
+
+		$aUnvisibleModules = [
+			'itop-backup',
+			'itop-config',
+			'itop-sla-computation',
+		];
+
+		$aAutoSelectedModules = [
+			'itop-bridge-virtualization-storage',
+		];
+
+		$this->checkModuleList("installation.xml choices", $aExpectedInstallationModules, $aSelectedModules);
+		$this->checkModuleList("authentication category", $aExpectedAuthenticationModules, $aSelectedModules);
+		$this->checkModuleList("unvisible", $aUnvisibleModules, $aSelectedModules);
+		$this->checkModuleList("auto-select", $aAutoSelectedModules, $aSelectedModules);
+		$this->assertEquals([], $aSelectedModules, "there should be no more modules remaining apart from below lists");
+	}
+
+	private function GetSelectedItilExtensions(bool $coreExtensionIncluded, bool $bKnownMgtIncluded) : array {
+		$aExtensions = [
+			'itop-config-mgmt-datacenter',
+			'itop-config-mgmt-end-user',
+			'itop-config-mgmt-storage',
+			'itop-config-mgmt-virtualization',
+			'itop-service-mgmt-enterprise',
+			'itop-ticket-mgmt-itil',
+			'itop-ticket-mgmt-itil-user-request',
+			'itop-ticket-mgmt-itil-incident',
+			'itop-ticket-mgmt-itil-enhanced-portal',
+			'itop-change-mgmt-itil',
+		];
+
+		if ($coreExtensionIncluded){
+			$aExtensions[]= 'itop-config-mgmt-core';
+		}
+
+		if ($bKnownMgtIncluded){
+			$aExtensions[]= 'itop-kown-error-mgmt';
+		}
+
+		return $aExtensions;
+
+	}
+
+	public function ItilExtensionProvider() {
+		return [
+			'all itil extensions + INCLUDING known-error-mgt' => [
+				'aSelectedExtensions' => $this->GetSelectedItilExtensions(true, true),
+				'bKnownMgtSelected' => true,
+			],
+			'all itil extensions WITHOUT known-error-mgt' => [
+				'aSelectedExtensions' => $this->GetSelectedItilExtensions(true, false),
+				'bKnownMgtSelected' => false,
+			],
+			'all itil extensions WITHOUT core mandatory ones + INCLUDING known-error-mgt' => [
+				'aSelectedExtensions' => $this->GetSelectedItilExtensions(false, true),
+				'bKnownMgtSelected' => true,
+			],
+			'all itil extensions WITHOUT core mandatory ones and WITHOUT known-error-mgt' => [
+				'aSelectedExtensions' => $this->GetSelectedItilExtensions(false, false),
+				'bKnownMgtSelected' => false,
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider ItilExtensionProvider
+	 */
+	public function testGetAllSelectedModules_withItilExtensions(array $aSelectedExtensions, bool $bKnownMgtSelected) {
+		$sPath = realpath(dirname(__FILE__, 6)."/datamodels/2.x/installation.xml");
+		$oInstallationFileService = new \InstallationFileService($sPath, 'production', false, $aSelectedExtensions);
+		$oInstallationFileService->Init();
+
+		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
+		$aExpectedInstallationModules = [
+			"itop-config-mgmt",
+			"itop-attachments",
+			"itop-profiles-itil",
+			"itop-welcome-itil",
+			"itop-tickets",
+			"itop-files-information",
+			"combodo-db-tools",
+			"itop-core-update",
+			"itop-hub-connector",
+			"itop-oauth-client",
+			"itop-datacenter-mgmt",
+			"itop-endusers-devices",
+			"itop-storage-mgmt",
+			"itop-virtualization-mgmt",
+			"itop-service-mgmt",
+			"itop-request-mgmt-itil",
+			"itop-incident-mgmt-itil",
+			"itop-portal",
+			"itop-portal-base",
+			"itop-change-mgmt-itil",
+			"itop-full-itil",
+		];
+		if ($bKnownMgtSelected){
 			$aExpectedInstallationModules []= "itop-knownerror-mgmt";
 		}
 
@@ -178,8 +285,8 @@ class InstallationFileServiceTest extends TestCase {
 		}
 
 		$sPath = realpath(dirname(__FILE__, 6)."/datamodels/2.x/installation.xml");
-		$oInstallationFileService = new \InstallationFileService($sPath);
-		$oInstallationFileService->Init(false);
+		$oInstallationFileService = new \InstallationFileService($sPath, 'production', false);
+		$oInstallationFileService->Init();
 
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
 		$this->assertEquals($bModuleInProductionModulesFolder, array_key_exists($sModuleId, $aSelectedModules));
