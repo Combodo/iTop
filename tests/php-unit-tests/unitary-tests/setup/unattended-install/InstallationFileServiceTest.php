@@ -32,7 +32,7 @@ class InstallationFileServiceTest extends TestCase {
 	public function testProcessInstallationChoices($bInstallationOptionalChoicesChecked=false) {
 		$sPath = realpath(dirname(__FILE__, 6)."/datamodels/2.x/installation.xml");
 		$this->assertTrue(is_file($sPath));
-		$oInstallationFileService = new \InstallationFileService($sPath, 'production', $bInstallationOptionalChoicesChecked);
+		$oInstallationFileService = new \InstallationFileService($sPath, 'production', [], $bInstallationOptionalChoicesChecked);
 		$oInstallationFileService->ProcessInstallationChoices();
 		$aExpectedModules = [
 			"itop-config-mgmt",
@@ -88,7 +88,7 @@ class InstallationFileServiceTest extends TestCase {
 	 */
 	public function testGetAllSelectedModules($bInstallationOptionalChoicesChecked=false) {
 		$sPath = realpath(dirname(__FILE__, 6)."/datamodels/2.x/installation.xml");
-		$oInstallationFileService = new \InstallationFileService($sPath, 'production', $bInstallationOptionalChoicesChecked);
+		$oInstallationFileService = new \InstallationFileService($sPath, 'production', [], $bInstallationOptionalChoicesChecked);
 		$oInstallationFileService->Init();
 
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
@@ -194,7 +194,7 @@ class InstallationFileServiceTest extends TestCase {
 	 */
 	public function testGetAllSelectedModules_withItilExtensions(array $aSelectedExtensions, bool $bKnownMgtSelected) {
 		$sPath = realpath(dirname(__FILE__, 6)."/datamodels/2.x/installation.xml");
-		$oInstallationFileService = new \InstallationFileService($sPath, 'production', false, $aSelectedExtensions);
+		$oInstallationFileService = new \InstallationFileService($sPath, 'production', $aSelectedExtensions);
 		$oInstallationFileService->Init();
 
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
@@ -285,7 +285,7 @@ class InstallationFileServiceTest extends TestCase {
 		}
 
 		$sPath = realpath(dirname(__FILE__, 6)."/datamodels/2.x/installation.xml");
-		$oInstallationFileService = new \InstallationFileService($sPath, 'production', false);
+		$oInstallationFileService = new \InstallationFileService($sPath, 'production', [], false);
 		$oInstallationFileService->Init();
 
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
