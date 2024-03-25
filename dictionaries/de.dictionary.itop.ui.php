@@ -1065,6 +1065,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:iTopVersion:Short' => '%1$s Version %2$s',
 	'UI:iTopVersion:Long' => '%1$s Version %2$s-%3$s compiliert am %4$s',
 	'UI:PropertiesTab' => 'Eigenschaften',
+	'UI:Details:LinkToClassDatamodelSchema' => 'Class data model schema~~',
 	'UI:OpenDocumentInNewWindow_' => 'Öffnen in neuem Fenster',
 	'UI:DownloadDocument_' => 'Herunterladen',
 	'UI:Document:NoPreview' => 'Für diesen Typ Dokument ist keine Vorschau vorhanden',

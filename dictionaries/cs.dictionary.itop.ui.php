@@ -1076,6 +1076,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:iTopVersion:Short' => '%1$s verze %2$s',
 	'UI:iTopVersion:Long' => '%1$s verze %2$s-%3$s ze dne %4$s',
 	'UI:PropertiesTab' => 'Vlastnosti',
+	'UI:Details:LinkToClassDatamodelSchema' => 'Class data model schema~~',
 	'UI:OpenDocumentInNewWindow_' => 'Otevřít',
 	'UI:DownloadDocument_' => 'Stáhnout',
 	'UI:Document:NoPreview' => 'Pro tento typ dokumentu není k dispozici žádný náhled',

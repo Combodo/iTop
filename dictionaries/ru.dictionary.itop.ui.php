@@ -1078,6 +1078,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:iTopVersion:Short' => '%1$s версия %2$s',
 	'UI:iTopVersion:Long' => '%1$s версия %2$s-%3$s основан на %4$s',
 	'UI:PropertiesTab' => 'Свойства',
+	'UI:Details:LinkToClassDatamodelSchema' => 'Class data model schema~~',
 	'UI:OpenDocumentInNewWindow_' => 'Открыть',
 	'UI:DownloadDocument_' => 'Скачать',
 	'UI:Document:NoPreview' => 'Предпросмотр документов данного типа недоступен',
