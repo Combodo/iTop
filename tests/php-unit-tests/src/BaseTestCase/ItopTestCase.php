@@ -11,7 +11,9 @@ use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
 use PHPUnit\Framework\TestCase;
 use SetupUtils;
+use utils;
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
+use const PHP_BINARY;
 
 define('DEBUG_UNIT_TEST', true);
 
@@ -58,6 +60,10 @@ abstract class ItopTestCase extends TestCase
 			// setUp might be called multiple times, so protecting the define() call !
 			define(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
 		}
+
+		// make sure that php scripts will be launched using the same php executable as phpunit tests
+		// config will be restored in tearDownAfterClass
+		utils::GetConfig()->Set('php_path', PHP_BINARY);
 	}
 
 	/**
