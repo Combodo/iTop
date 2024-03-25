@@ -1121,6 +1121,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => 'Properties',
+	'UI:Details:LinkToClassDatamodelSchema' => 'Link to %1$s class data model schema',
 
 	'UI:OpenDocumentInNewWindow_' => 'Open',
 	'UI:DownloadDocument_' => 'Download',

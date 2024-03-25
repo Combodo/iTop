@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\TwigBase\Twig;
 
 
+use ApplicationMenu;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeText;
@@ -180,6 +181,13 @@ class Extension
 		/** @since 3.0.0 */
 		$aFunctions[] = new TwigFunction('get_absolute_url_modules_root', function () {
 			return utils::GetAbsoluteUrlModulesRoot();
+		});
+
+		// Function to check if current user can access to the given menu
+		// Usage in twig: {% if is_backoffice_menu_enabled(''DataModelMenu) %}
+		/** @since 3.2.0 */
+		$aFunctions[] = new TwigFunction('is_backoffice_menu_enabled', function ($sMenuId) {
+			return ApplicationMenu::IsMenuIdEnabled($sMenuId);
 		});
 
 		// Function to render a UI block (HTML, inline CSS, inline JS) and its sub blocks directly in the TWIG
