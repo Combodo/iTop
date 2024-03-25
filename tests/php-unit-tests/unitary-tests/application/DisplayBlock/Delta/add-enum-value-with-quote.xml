@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+  <classes>
+    <class id="UserRequest">
+      <fields>
+      <field id="status" xsi:type="AttributeEnum">
+      <always_load_in_tables>true</always_load_in_tables>
+      <sort_type>rank</sort_type>
+      <values>
+        <value id="New_org_name_with_quote" _delta="define">
+          <code>New'status</code>
+          <rank>32</rank>
+        </value>
+      </values>
+      </field>
+      </fields>
+    </class>
+  </classes>
+</itop_design>
