@@ -1,0 +1,29 @@
+includes:
+    - php-includes/set-php-version-from-process.php # Workaround to set PHP version to the on running the CLI
+
+parameters:
+    level: 0
+    #phpVersion: null                   # Explicitly commented as we rather use the detected version from the above include (`php-includes/target-php-version.php`)
+    editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'    # Open in PHPStorm asit is Combodo's default IDE
+    bootstrapFiles:
+        - ../../../approot.inc.php
+        - ../../../bootstrap.inc.php
+    scanFiles:
+        # Files necessary as they contain some declarations (constants, classes, functions, ...)
+        - ../../../approot.inc.php
+        - ../../../bootstrap.inc.php
+    excludePaths:
+        analyse:
+            # For third-party libs we should analyse them in a dedicated configuration as we can't improve / clean them which would
+            # prevent us from raising the rules level as we improve / clean our codebase
+            - ../../../lib              # Irrelevant as we only want to analyze our codebase
+            - ../../../node_modules     # Irrelevant as we only want to analyze our codebase
+        analyseAndScan:
+            #- ../../../data            # Left and commented on purpose to show that we want to analyse the generated cache files
+            # Note 1: We can analyse these folders as if a PHP file requires another PHP element declared in an XML file, it won't find it. So we rely only on `env-production`
+            # Note 2: Only the options selected during the setup will be analysed correctly in `env-production`. For unselected options, we still want to ignore them during the analysis as they would only give a false sentiment of security as their XML PHP classes / snippets / etc would not be tested.
+            - ../../../data/production-modules  # Irrelevent as it will already be in `env-production` (for local run only, not useful in the CI)
+            - ../../../datamodels       # Irrelevent as it will already be in `env-production`
+            - ../../../extensions       # Irrelevent as it will already be in `env-production` (for local run only, not useful in the CI)
+            - ../../../tests            # Exclude tests for now
+            - ../../../toolkit          # Exlclude toolkit for now
