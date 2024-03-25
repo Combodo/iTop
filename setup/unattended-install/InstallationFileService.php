@@ -28,7 +28,7 @@ class InstallationFileService {
 	 * @param array $aSelectedExtensions
 	 * @param bool $bInstallationOptionalChoicesChecked : this option is used only when no extensions are selected (ie empty $aSelectedExtensions)
 	 */
-	public function __construct(string $sInstallationPath, string $sTargetEnvironment='production', bool $bInstallationOptionalChoicesChecked=true, array $aSelectedExtensions = []) {
+	public function __construct(string $sInstallationPath, string $sTargetEnvironment='production', array $aSelectedExtensions = [], bool $bInstallationOptionalChoicesChecked=true) {
 		$this->sInstallationPath = $sInstallationPath;
 		$this->aSelectedModules = [];
 		$this->aUnSelectedModules = [];
