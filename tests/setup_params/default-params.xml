@@ -31,16 +31,6 @@
     <selected_modules type="array">
     </selected_modules>
     <selected_extensions type="array">
-      <item>itop-config-mgmt-core</item>
-      <item>itop-config-mgmt-datacenter</item>
-      <item>itop-config-mgmt-end-user</item>
-      <item>itop-config-mgmt-storage</item>
-      <item>itop-config-mgmt-virtualization</item>
-      <item>itop-service-mgmt-enterprise</item>
-      <item>itop-ticket-mgmt-simple-ticket</item>
-      <item>itop-ticket-mgmt-simple-ticket-enhanced-portal</item>
-      <item>itop-change-mgmt-simple</item>
-      <item>itop-kown-error-mgmt</item>
     </selected_extensions>
     <sample_data>1</sample_data>
     <old_addon></old_addon>
