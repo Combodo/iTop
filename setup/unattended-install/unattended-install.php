@@ -41,22 +41,24 @@ if ($sTargetEnvironment == '')
 	$sTargetEnvironment = 'production';
 }
 
-$sInstallationXmlPath = utils::ReadParam('use_installation_xml', 'null', true /* CLI allowed */, 'raw_data');
-if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)){
-	echo "Use $sInstallationXmlPath for module selection\n";
-	$aSelectedExtensionsFromXmlSetup = $oParams->Get('selected_extensions', []);
-	if (count($aSelectedExtensionsFromXmlSetup) !== 0){
-		echo "Selected extensions specified in XML setup: \n" . implode('\t\n', $aSelectedExtensionsFromXmlSetup) . "\n\n";
+$aSelectedModules = $oParams->Get('selected_modules', []);
+if (count($aSelectedModules) === 0) {
+	$sInstallationXmlPath = utils::ReadParam('use_installation_xml', 'null', true /* CLI allowed */, 'raw_data');
+	if (!is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
+		echo "Use $sInstallationXmlPath for module selection\n";
+		$aSelectedExtensionsFromXmlSetup = $oParams->Get('selected_extensions', []);
+		if (count($aSelectedExtensionsFromXmlSetup) !== 0) {
+			echo "Selected extensions specified in XML setup: \n".implode('\t\n', $aSelectedExtensionsFromXmlSetup)."\n\n";
+		}
+
+		$oInstallationFileService = new InstallationFileService($sInstallationXmlPath, $sTargetEnvironment,
+			$aSelectedExtensionsFromXmlSetup);
+		$oInstallationFileService->Init();
+		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
+
+		$oParams->Set('selected_modules', array_keys($aSelectedModules));
 	}
-
-	$oInstallationFileService = new InstallationFileService($sInstallationXmlPath, $sTargetEnvironment, $aSelectedExtensionsFromXmlSetup);
-	$oInstallationFileService->Init();
-	$aSelectedModules = $oInstallationFileService->GetSelectedModules();
-
-	$oParams->Set('selected_modules', array_keys($aSelectedModules));
-	$oParams->Set('selected_extensions', []);
 }
-
 // Configuration file
 $sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
 $bUseItopConfig = ((bool) utils::ReadParam('use-itop-config', 0, true /* CLI allowed */));
