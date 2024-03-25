@@ -29,28 +29,6 @@
     </admin_account>
     <language>EN US</language>
     <selected_modules type="array">
-    <item>authent-cas</item>
-      <item>authent-external</item>
-      <item>authent-local</item>
-      <item>itop-backup</item>
-      <item>itop-config</item>
-      <item>itop-profiles-itil</item>
-      <item>itop-sla-computation</item>
-      <item>itop-tickets</item>
-      <item>itop-welcome-itil</item>
-      <item>itop-config-mgmt</item>
-      <item>itop-attachments</item>
-      <item>itop-datacenter-mgmt</item>
-      <item>itop-endusers-devices</item>
-      <item>itop-storage-mgmt</item>
-      <item>itop-virtualization-mgmt</item>
-      <item>itop-bridge-virtualization-storage</item>
-      <item>itop-service-mgmt</item>
-      <item>itop-request-mgmt</item>
-      <item>itop-portal</item>
-      <item>itop-portal-base</item>
-      <item>itop-change-mgmt</item>
-      <item>itop-knownerror-mgmt</item>
     </selected_modules>
     <selected_extensions type="array">
       <item>itop-config-mgmt-core</item>
