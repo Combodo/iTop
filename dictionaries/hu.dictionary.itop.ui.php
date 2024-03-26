@@ -1068,7 +1068,6 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:iTopVersion:Short' => '%1$s verzió: %2$s',
 	'UI:iTopVersion:Long' => '%1$s verzió: %2$s-%3$s %4$s',
 	'UI:PropertiesTab' => 'Tulajdonságok',
-	'UI:Details:LinkToClassDatamodelSchema' => 'Class data model schema~~',
 	'UI:OpenDocumentInNewWindow_' => 'Megnyitás',
 	'UI:DownloadDocument_' => 'Letöltés',
 	'UI:Document:NoPreview' => 'Nincs elérhető előnézet ehhez a dokumentumhoz',

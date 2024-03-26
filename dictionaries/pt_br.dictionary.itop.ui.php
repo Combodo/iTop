@@ -1078,7 +1078,6 @@ Quando associada a um gatilho, cada ação recebe um número de "ordem", especif
 	'UI:iTopVersion:Short' => '%1$s versão %2$s',
 	'UI:iTopVersion:Long' => '%1$s versão %2$s-%3$s compilação %4$s',
 	'UI:PropertiesTab' => 'Propriedades',
-	'UI:Details:LinkToClassDatamodelSchema' => 'Class data model schema~~',
 	'UI:OpenDocumentInNewWindow_' => 'Abrir',
 	'UI:DownloadDocument_' => 'Baixar',
 	'UI:Document:NoPreview' => 'Nenhuma visualização está disponível para este documento',

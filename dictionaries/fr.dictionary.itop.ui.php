@@ -1071,7 +1071,6 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s du %4$s',
 	'UI:PropertiesTab' => 'Propriétés',
-	'UI:Details:LinkToClassDatamodelSchema' => 'Schéma du modèle de données de la classe',
 	'UI:OpenDocumentInNewWindow_' => 'Ouvrir',
 	'UI:DownloadDocument_' => 'Télécharger',
 	'UI:Document:NoPreview' => 'L\'aperçu n\'est pas disponible pour ce type de documents',

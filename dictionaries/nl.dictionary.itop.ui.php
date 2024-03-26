@@ -1081,7 +1081,6 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:iTopVersion:Short' => '%1$s versie %2$s',
 	'UI:iTopVersion:Long' => '%1$s versie %2$s-%3$s uitgegeven op %4$s',
 	'UI:PropertiesTab' => 'Eigenschappen',
-	'UI:Details:LinkToClassDatamodelSchema' => 'Class data model schema~~',
 	'UI:OpenDocumentInNewWindow_' => 'Open',
 	'UI:DownloadDocument_' => 'Download',
 	'UI:Document:NoPreview' => 'Er is geen voorbeeld beschikbaar voor dit soort document',

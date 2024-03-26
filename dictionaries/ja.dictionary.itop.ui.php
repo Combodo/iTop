@@ -1067,7 +1067,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:iTopVersion:Short' => '%1$sバージョン%2$s',
 	'UI:iTopVersion:Long' => '%1$sバージョン%2$s-%3$s ビルド%4$s',
 	'UI:PropertiesTab' => 'プロパティ',
-	'UI:Details:LinkToClassDatamodelSchema' => 'Class data model schema~~',
 	'UI:OpenDocumentInNewWindow_' => 'Open~~',
 	'UI:DownloadDocument_' => 'Download~~',
 	'UI:Document:NoPreview' => 'このタイプの文書はプレビューできません。',

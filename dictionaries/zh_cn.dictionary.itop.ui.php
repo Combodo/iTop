@@ -1120,7 +1120,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:iTopVersion:Short' => '%1$s版本%2$s',
 	'UI:iTopVersion:Long' => '%1$s版本%2$s-%3$s创建于%4$s',
 	'UI:PropertiesTab' => '属性',
-	'UI:Details:LinkToClassDatamodelSchema' => 'Class data model schema~~',
 
 	'UI:OpenDocumentInNewWindow_' => '打开',
 	'UI:DownloadDocument_' => '下载',
