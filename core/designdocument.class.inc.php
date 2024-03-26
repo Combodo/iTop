@@ -26,7 +26,6 @@
 
 namespace Combodo\iTop;
 
-use DOMComment;
 use DOMDocument;
 use DOMFormatException;
 use DOMNode;
@@ -35,9 +34,7 @@ use DOMXPath;
 use Exception;
 use IssueLog;
 use LogAPI;
-use MFDocument;
 use MFElement;
-use ModelFactory;
 use utils;
 
 /**
@@ -246,6 +243,56 @@ class DesignElement extends \DOMElement
 
 		return '';
 	}
+
+	/**
+	 * Compatibility with PHP8.0
+	 *
+	 * @return \DOMElement|null
+	 *
+	 * @since 3.1.2
+	 */
+	public function GetFirstElementChild()
+	{
+		if (property_exists($this, 'firstElementChild')) {
+			return $this->firstElementChild;
+		}
+
+		$oChildNode = $this->firstChild;
+		while (!is_null($oChildNode)) {
+			if ($oChildNode instanceof \DOMElement) {
+				return $oChildNode;
+			}
+			$oChildNode = $oChildNode->nextSibling;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Compatibility with PHP8.0
+	 *
+	 * @return \DOMElement|null
+	 *
+	 * @since 3.1.2
+	 */
+	public function GetNextElementSibling()
+	{
+		if (property_exists($this, 'nextElementSibling')) {
+			return $this->nextElementSibling;
+		}
+
+		$oSibling = $this->nextSibling;
+		while (!is_null($oSibling)) {
+			if ($oSibling instanceof \DOMElement) {
+				return $oSibling;
+			}
+			$oSibling = $oSibling->nextSibling;
+		}
+
+		return null;
+
+	}
+
 	/**
 	 * Returns the node directly under the given node
 	 * @param $sTagName
