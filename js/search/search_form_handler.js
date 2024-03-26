@@ -1209,9 +1209,15 @@ $(function()
 		{
 			const me = this;
 			const oFormPanelHeaderElem = this._getFormPanelHeaderElem();
+			const oResultsPanelBodyElem = this._getResultsPanelElem().find('.ibo-panel--body:first');
+
+			// Ensure result body panel has been created
+			if (oResultsPanelBodyElem.length === 0) {
+				return;
+			}
 
 			// Note: As offset() starts from the very top of the window, we need to take into account the top container height!
-			let fOffset = this._getResultsPanelElem().find('.ibo-panel--body:first').offset().top - $('#ibo-top-container').outerHeight() - this._getFormPanelBodyElem().outerHeight();
+			let fOffset = oResultsPanelBodyElem.offset().top - $('#ibo-top-container').outerHeight() - this._getFormPanelBodyElem().outerHeight();
 			if (this._isInAModal()) {
 				fOffset = fOffset - this.element.closest('[role="dialog"]').offset().top;
 			}

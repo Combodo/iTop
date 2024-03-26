@@ -185,7 +185,7 @@ abstract class TriggerOnObject extends Trigger
 		MetaModel::Init_AddAttribute(new AttributeOQL("filter", array("allowed_values" => null, "sql" => "filter", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'description')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('default_search', array('description', 'target_class'));  // Default criteria of the search banner
@@ -385,7 +385,7 @@ class TriggerOnPortalUpdate extends TriggerOnObject
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'description')); // Attributes to be displayed for a list
 		// Search criteria
 	}
@@ -418,7 +418,7 @@ abstract class TriggerOnStateChange extends TriggerOnObject
 		MetaModel::Init_AddAttribute(new AttributeClassState("state", array("class_field" => 'target_class', "allowed_values" => null, "sql" => "state", "default_value" => null, "is_null_allowed" => false, "depends_on" => array('target_class'))));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'state', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'state', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'state')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class', 'state')); // Criteria of the std search form
@@ -840,7 +840,7 @@ class TriggerOnThresholdReached extends TriggerOnObject
 		MetaModel::Init_AddAttribute(new AttributeString("threshold_index", array("allowed_values" => null, "sql" => "threshold_index", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'stop_watch_code', 'threshold_index', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'stop_watch_code', 'threshold_index', 'filter', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('target_class', 'threshold_index', 'threshold_index')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form

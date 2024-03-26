@@ -57,6 +57,7 @@ class iTopComposer extends AbstractFolderAnalyzer
 
 			'nikic/php-parser/test',
 
+			'pear/archive_tar/.github',
 			'pear/archive_tar/tests',
 			'pear/console_getopt/tests',
 			'pear/pear_exception/tests',

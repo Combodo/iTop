@@ -51,7 +51,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		me.RegisterChange();
 
 		let oInput = $('#'+this.iInputId);
-		oInput.bind('update_value', function () {
+		oInput.on('update_value', function () {
 			$(this).val(me.GetUpdatedValue());
 		});
 		oInput.closest('form').on('submit', function () {

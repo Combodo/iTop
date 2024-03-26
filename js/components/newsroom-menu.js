@@ -128,8 +128,8 @@ $(function()
 		     .done(function(oJSONData) {
 			     me._cacheData(idx, oJSONData);
 		    	 me._onMessagesFetched(idx, oJSONData);
-		    }).error(function() {
-		    	 console.warn('Newsroom: failed to fetch data from the web for provider '+idx+' url: '+me.options.providers[idxProvider].fetch_url);
+		    }).fail(function() {
+				CombodoJSConsole.Warn('Newsroom: failed to fetch data from the web for provider '+idx+' url: '+me.options.providers[idxProvider].fetch_url);
 		    	 me._cacheData(idx, []);
 		    	 me._onMessagesFetched(idx, []);		    	
 		    });
@@ -383,7 +383,7 @@ $(function()
 			}
 			catch(e)
 			{
-				console.warn('Newsroom: Failed to store newsroom messages into local storage !! reason: ' + e);
+				CombodoJSConsole.Warn('Newsroom: Failed to store newsroom messages into local storage. Reason: ' + e);
 				bSuccess = false;
 			}
 			return bSuccess;
@@ -406,7 +406,7 @@ $(function()
 			}
 			catch(e)
 			{
-				console.warn('Newsroom: Failed to fetch newsroom messages from local storage !! reason: '+e);
+				CombodoJSConsole.Warn('Newsroom: Failed to fetch newsroom messages from local storage. Reason: '+e);
 				this.clearCache(idxProvider);
 				return null;
 			}

@@ -125,9 +125,7 @@ class ApplicationMenu
 	 */
 	public static function CheckMenuIdEnabled($sMenuId)
 	{
-		self::LoadAdditionalMenus();
-		$oMenuNode = self::GetMenuNode(self::GetMenuIndexById($sMenuId));
-		if (is_null($oMenuNode) || !$oMenuNode->IsEnabled())
+		if (self::IsMenuIdEnabled($sMenuId) === false)
 		{
 			require_once(APPROOT.'/setup/setuppage.class.inc.php');
 			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
@@ -136,6 +134,19 @@ class ApplicationMenu
 			$oP->output();
 			exit;
 		}
+	}
+
+	/**
+	 * @param $sMenuId
+	 *
+	 * @return bool true if the menu exists and current user is allowed to see the menu
+	 * @since 3.2.0
+	 */
+	public static function IsMenuIdEnabled($sMenuId):bool
+	{
+		self::LoadAdditionalMenus();
+		$oMenuNode = self::GetMenuNode(self::GetMenuIndexById($sMenuId));
+		return is_null($oMenuNode) === false && $oMenuNode->IsEnabled();
 	}
 
 	/**

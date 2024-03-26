@@ -832,6 +832,7 @@ class ModelFactory
 			case '':
 				$bMustExist = ($sDeltaSpec === 'must_exist');
 				$bIfExists = ($sDeltaSpec === 'if_exists');
+				$bSpecifiedMerge = $oSourceNode->IsInSpecifiedMerge();
 
 				/** @var MFElement $oTargetNode */
 				$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode, $sSearchId);
@@ -847,7 +848,7 @@ class ModelFactory
 						// Do not continue deeper
 						$oTargetNode = null;
 					} else {
-						if ($sMode === self::LOAD_DELTA_MODE_STRICT && ($sSearchId !== '' || is_null($oSourceNode->firstElementChild))) {
+						if (!$bSpecifiedMerge && $sMode === self::LOAD_DELTA_MODE_STRICT && ($sSearchId !== '' || is_null($oSourceNode->firstElementChild))) {
 							$iLine = ModelFactory::GetXMLLineNumber($oSourceNode);
 							$sItopNodePath = DesignDocument::GetItopNodePath($oSourceNode);
 							throw new MFException($sItopNodePath.' at line '.$iLine.': could not be found or marked as removed (strict mode)',
@@ -867,12 +868,15 @@ class ModelFactory
 							// Do not continue deeper everything is already copied
 							$oTargetNode = null;
 						} else {
-							// copy the node with attributes and continue deeper
+							// copy the node with attributes (except _delta) and continue deeper
 							$oTargetNode = $oTargetDocument->importNode($oSourceNode, false);
 							foreach ($oSourceNode->attributes as $oAttributeNode) {
 								$oTargetNode->setAttribute($oAttributeNode->name, $oAttributeNode->value);
 							}
-							if ($sSearchId !== '') {
+							if ($oTargetNode->hasAttribute('_delta')) {
+								$oTargetNode->removeAttribute('_delta');
+							}
+							if ($sSearchId !== '' || $bSpecifiedMerge) {
 								// Add the node by default
 								$oTargetParentNode->AddChildNode($oTargetNode);
 							} else {

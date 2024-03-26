@@ -491,7 +491,6 @@ HTML
 	//
 	// Footer
 	//
-	$oP->add_ready_script("$('#fav_page_length').bind('keyup change', function(){ ValidateOtherSettings(); })");
 	$oP->SetContentLayout($oContentLayout);
 }
 

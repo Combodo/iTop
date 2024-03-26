@@ -2,10 +2,12 @@
     "name": "datatables.net",
     "description": "jQuery DataTables",
     "main": "js/jquery.dataTables.js",
+    "module": "js/jquery.dataTables.mjs",
     "types": "./types/types.d.ts",
-    "version": "1.11.3",
+    "version": "1.13.11",
     "files": [
         "js/**/*.js",
+        "js/**/*.mjs",
         "types/**/*.d.ts"
     ],
     "keywords": [
@@ -16,7 +18,7 @@
         "sort"
     ],
     "dependencies": {
-        "jquery": ">=1.7"
+        "jquery": "1.8 - 4"
     },
     "moduleType": [
         "globals",

@@ -33,7 +33,19 @@ abstract class AbstractFolderAnalyzer
 	 * @since 3.2.0 N°7175 update regexp to also remove `examples` folder
 	 * @link https://www.regular-expressions.info/alternation.html RegExp alternation reference
 	 */
-	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|external)$/i';
+	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|.github|.idea)$/i';
+
+	/**
+	 * @param string $sFolderName
+	 *
+	 * @return false|int as {@see \preg_match()}
+	 * @uses static::QUESTIONNABLE_FOLDER_REGEXP
+	 * @uses \preg_match()
+	 */
+	public static function IsQuestionnableFolder(string $sFolderName): false|int
+	{
+		return preg_match(static::QUESTIONNABLE_FOLDER_REGEXP, $sFolderName);
+	}
 
 	/**
 	 * @return string Relative path to the root folder of the dependencies (e.g. "lib" for composer, "node_modules" for npm, ...) from iTop app. root
@@ -58,10 +70,12 @@ abstract class AbstractFolderAnalyzer
 	}
 
 	/**
+	 * @param bool $bCheckQuestionableFoldersOnly If true, only questionnable folders {@see \Combodo\iTop\Dependencies\AbstractFolderAnalyzer::IsQuestionnableFolder()} will be listed
+	 *
 	 * @return array List of all subdirs of the dependencies folder that are {@see IsQuestionnableFolder}.
 	 *              Warning : each path contains slashes (meaning on Windows you'll get eg `C:/Dev/wamp64/www/itop-27/lib/goaop/framework/tests`)
 	 */
-	public function ListAllFoldersAbsPaths(): array
+	public function ListAllFoldersAbsPaths(bool $bCheckQuestionableFoldersOnly = true): array
 	{
 		$aAllTestDirs = array();
 		$sPath = realpath($this->GetDependenciesRootFolderAbsPath());
@@ -77,8 +91,7 @@ abstract class AbstractFolderAnalyzer
 				continue;
 			}
 			$sDirName = $file->getFilename();
-			if (!$this->IsQuestionnableFolder($sDirName))
-			{
+			if ($bCheckQuestionableFoldersOnly && !static::IsQuestionnableFolder($sDirName)) {
 				continue;
 			}
 
@@ -88,18 +101,6 @@ abstract class AbstractFolderAnalyzer
 		}
 
 		return $aAllTestDirs;
-	}
-
-	/**
-	 * @param string $sFolderName
-	 *
-	 * @return false|int as {@see \preg_match()}
-	 * @uses static::QUESTIONNABLE_FOLDER_REGEXP
-	 * @uses \preg_match()
-	 */
-	public static function IsQuestionnableFolder(string $sFolderName): false|int
-	{
-		return preg_match(static::QUESTIONNABLE_FOLDER_REGEXP, $sFolderName);
 	}
 
 	/**
@@ -134,7 +135,7 @@ abstract class AbstractFolderAnalyzer
 	public function ListDeniedButStillPresentFoldersAbsPaths(): array
 	{
 		$aDeniedTestDir = $this->ListDeniedFoldersAbsPaths();
-		$aAllTestDir = $this->ListAllowedFoldersAbsPaths();
+		$aAllTestDir = $this->ListAllFoldersAbsPaths(false);
 		return array_intersect($aDeniedTestDir, $aAllTestDir);
 	}
 }
