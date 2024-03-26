@@ -184,7 +184,7 @@ class Extension
 		});
 
 		// Function to check if current user can access to the given menu
-		// Usage in twig: {% if is_backoffice_menu_enabled(''DataModelMenu) %}
+		// Usage in twig: {% if is_backoffice_menu_enabled('DataModelMenu') %}
 		/** @since 3.2.0 */
 		$aFunctions[] = new TwigFunction('is_backoffice_menu_enabled', function ($sMenuId) {
 			return ApplicationMenu::IsMenuIdEnabled($sMenuId);
