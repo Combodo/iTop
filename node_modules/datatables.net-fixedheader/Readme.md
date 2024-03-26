@@ -17,9 +17,15 @@ For inclusion of this library using a standard `<script>` tag, rather than using
 npm install datatables.net-fixedheader
 ```
 
+ES3 Syntax
 ```
 var $ = require( 'jquery' );
 require( 'datatables.net-fixedheader' )( window, $ );
+```
+
+ES6 Syntax
+```
+import 'datatables.net-fixedheader'
 ```
 
 ### bower
@@ -32,8 +38,7 @@ bower install --save datatables.net-fixedheader
 
 ## Documentation
 
-Full documentation of the DataTables options, API and plug-in interface are available on the DOCS_LINK. The site also contains information on the wide variety of plug-ins that are available for DataTables, which can be used to enhance and customise your table even further.
-
+Full documentation and examples for FixedHeader can be found [on the website](https://datatables.net/extensions/fixedheader).
 
 ## Bug / Support
 
