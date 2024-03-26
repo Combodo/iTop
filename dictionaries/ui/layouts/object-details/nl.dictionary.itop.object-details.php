@@ -9,5 +9,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Maak een nieuw object (van dezelfde klasse als het getoonde object)',
 	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Bewaar huidig object',
 	'UI:Layout:ObjectDetails:New:Modal:Title' => 'Creation of an object~~',
-	'UI:Layout:ObjectDetails:DatamodelSchemaLink:Tooltip' => 'Class data model schema~~',
+	'UI:Layout:ObjectDetails:DatamodelSchemaLink:Tooltip' => 'Objecten schema van deze klasse',
 ]);
