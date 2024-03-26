@@ -85,10 +85,6 @@ $ibo-object-details--header-right--padding-right--is-sticking: $ibo-spacing-300 
   margin-left: 0.5rem;
   display: inline-flex; /* To avoid having spaces around the class name due to the indentation */
 
-  a {
-    @extend %ibo-hyperlink-inherited-colors;
-  }
-
   &::before {
     content: "(";
   }
