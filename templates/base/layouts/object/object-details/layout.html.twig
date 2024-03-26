@@ -19,7 +19,7 @@
     {% endif %}
     <span class="ibo-object-details--object-class" data-role="ibo-object-details--object-class">
         {% if is_backoffice_menu_enabled('DataModelMenu') %}
-            <a href="{{ get_absolute_url_app_root() }}pages/schema.php?operation=details_class&class={{ oUIBlock.GetClassName() }}" target="_blank" data-tooltip-content="{{ 'UI:Layout:ObjectDetails:DatamodelSchemaLink:Tooltip' | dict_s }} <i class='fas fa-external-link-alt'></i>" data-tooltip-html-enabled="true">{{ oUIBlock.GetClassLabel() }}</a>
+            <a href="{{ get_absolute_url_app_root() }}pages/schema.php?operation=details_class&class={{ oUIBlock.GetClassName() }}" target="_blank" data-tooltip-content="{{ 'UI:Layout:ObjectDetails:DatamodelSchemaLink:Tooltip' | dict_s }}" data-tooltip-html-enabled="true">{{ oUIBlock.GetClassLabel() }}</a>
         {% else %}
             {{ oUIBlock.GetClassLabel() }}
         {% endif %}
