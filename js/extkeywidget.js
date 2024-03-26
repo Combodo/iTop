@@ -433,7 +433,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					me.UpdateSizes();
 					me.UpdateButtons();
 					me.ajax_request = null;
-					$('#count_'+me.id+'_results').change(function () {
+					$('#count_'+me.id+'_results').on('change', function () {
 						me.UpdateButtons();
 					});
 					if (me.bDoSearch) {

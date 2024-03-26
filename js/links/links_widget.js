@@ -162,7 +162,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 					if (me.bDoSearch) {
 						me.SearchObjectsToAdd();
 					} else {
-						$('#count_'+me.id).change(function () {
+						$('#count_'+me.id).on('change', function () {
 							let c = this.value;
 							me.UpdateButtons(c);
 						});
@@ -174,7 +174,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	};
 
 	this.SearchObjectsToAdd = function () {
-		$('#count_'+me.id).change(function () {
+		$('#count_'+me.id).on('change', function () {
 			let c = this.value;
 			me.UpdateButtons(c);
 		});

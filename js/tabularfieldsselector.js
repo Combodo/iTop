@@ -34,11 +34,11 @@ $(function () {
 				this._flatten_fields(this.options.fields);
 				this.sId = this.element.attr('id');
 				this.element.addClass('itop-tabularfieldsselector');
-				this.element.parent().bind('form-part-activate', function () {
+				this.element.parent().on('form-part-activate', function () {
 					me._update_from_holder();
 					me._update_preview();
 				});
-				this.element.parent().bind('validate', function () {
+				this.element.parent().on('validate', function () {
 					me.validate();
 				});
 

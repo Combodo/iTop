@@ -293,7 +293,7 @@ $("#attr_auto_reload_sec").attr('data-tooltip-content', '$sRateTitle');
 CombodoTooltip.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
 $("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
 
-$('#attr_auto_reload').change( function(ev) {
+$('#attr_auto_reload').on('change', function(ev) {
 	$("#attr_auto_reload_sec").prop('disabled', !$(this).is(':checked'));
 } );
 

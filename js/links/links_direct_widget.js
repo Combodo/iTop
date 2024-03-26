@@ -68,7 +68,7 @@ $(function()
 				.after(this.inputToBeRemoved)
 				.after(this.indicator);
 
-			this.element.find('.selectList'+this.id).bind('change', function () {
+			this.element.find('.selectList'+this.id).on('change', function () {
 				me._updateButtons();
 			});
 
@@ -206,7 +206,7 @@ $(function()
 					me._onSearchToAdd();
 					return false;
 				});
-				$('#SearchFormToAdd_'+me.id).resize(function () {
+				$('#SearchFormToAdd_'+me.id).on('resize', function () {
 					me._onSearchDlgUpdateSize();
 				});
 
@@ -249,7 +249,7 @@ $(function()
 				}
 				else
 				{
-					$('#count_'+me.id).change(function() {
+					$('#count_'+me.id).on('change', function() {
 						var c = this.value;
 						me._onUpdateDlgButtons(c);
 					});
@@ -298,7 +298,7 @@ $(function()
 			$.post(this.options.submit_to, oParams, function(data) {
 				
 				$('#SearchResultsToAdd_'+me.id).html(data);
-				$('#count_'+me.id).change(function() {
+				$('#count_'+me.id).on('change', function() {
 					var c = this.value;
 					me._onUpdateDlgButtons(c);
 				});
