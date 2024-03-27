@@ -28,10 +28,17 @@ $.ajax({
             $("#file-container").removeClass("ibo-is-hidden");
             $("#check-in-progress").addClass("ibo-is-hidden");
         } else {
-            $("#check-update").prop("disabled", true);
-            $("#file").prop("disabled", true);
-            $('#form-update-outer').slideUp(600);
             oRequirements.addClass("ibo-is-failure");
+            {% if bDontUpgradeIfIntegrityFailed %}
+                $("#check-update").prop("disabled", true);
+                $("#file").prop("disabled", true);
+                $('#form-update-outer').slideUp(600);
+            {% else %}
+                $("#check-update").prop("disabled", false);
+                $("#file").prop("disabled", false);
+                $("#file-container").removeClass("ibo-is-hidden");
+                $("#check-in-progress").addClass("ibo-is-hidden");
+            {% endif %}
         }
     }
 });
