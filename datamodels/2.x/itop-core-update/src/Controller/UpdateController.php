@@ -45,6 +45,7 @@ class UpdateController extends Controller
 		$aParams['sFileUploadMaxSize'] = utils::BytesToFriendlyFormat($aParams['iFileUploadMaxSize']);
 		$aParams['sPostMaxSize'] = ini_get('post_max_size');
 		$aParams['sUploadMaxSize'] = ini_get('upload_max_filesize');
+		$aParams['bDontUpgradeIfIntegrityFailed'] = !utils::IsDevelopmentEnvironment();
 		$oFilter = DBObjectSearch::FromOQL('SELECT ModuleInstallation WHERE parent_id=0 AND name!="datamodel"');
 		$oSet = new DBObjectSet($oFilter, ['installed' => false]); // Most recent first
 		$aParams['oSet'] = $oSet;
@@ -129,7 +130,6 @@ class UpdateController extends Controller
 		$sTransactionId = utils::GetNewTransactionId();
 		$aParams['sTransactionId'] = $sTransactionId;
 
-		$this->AddSaas('css/backoffice/main.scss');
 		$this->m_sOperation = 'ConfirmUpdate';
 		$this->DisplaySetupPage($aParams);
 	}
@@ -158,7 +158,6 @@ class UpdateController extends Controller
 			'sAjaxURL'        => utils::GetAbsoluteUrlAppRoot().'/pages/UI.php',
 		];
 		$this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().'setup/jquery.progression.js');
-		$this->AddSaas('css/backoffice/main.scss');
 		$this->AddSaas('env-'.utils::GetCurrentEnvironment().'/itop-core-update/css/itop-core-update.scss');
 		$this->m_sOperation = 'UpdateCoreFiles';
 		$this->DisplaySetupPage($aParams);
