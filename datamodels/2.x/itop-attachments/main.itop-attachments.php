@@ -265,6 +265,23 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		}
 	}
 
+	/**
+	 *
+	 * @see ObjectFormManager::FinalizeAttachments() for the portal version
+	 *
+	 * @param $oObject
+	 * @param $oChange
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	protected static function UpdateAttachments($oObject, $oChange = null)
 	{
 		self::$m_bIsModified = false;
