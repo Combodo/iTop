@@ -53,7 +53,7 @@ $(function()
 			});
 			this.element.after(this.oButton);
 			this.element.addClass( "itop-icon-select" ).button();
-			this.element.bind( "reverted.itop-icon-select", function(ev, data) {
+			this.element.on( "reverted.itop-icon-select", function(ev, data) {
 				var idx = me._find_item(data.previous_value);
 				if (idx != null)
 				{
@@ -68,7 +68,7 @@ $(function()
 				this.oButton.after(this.oUploadBtn);
 			}
 			var id = this.element.attr('id');
-			$('#event_bus').bind('tabshow.itop-icon-select'+id, function(event) {
+			$('#event_bus').on('tabshow.itop-icon-select'+id, function(event) {
 				// Compute the offsetX the first time the 'element' becomes visible...
 				var bVisible = me.element.parent().is(':visible');
 				if ((me.options.offsetX == null) && (bVisible))
@@ -216,7 +216,7 @@ $(function()
 			var me = this;
 			this.oUploadDlg = $('<div><p>'+this.options.labels['pick_icon_file']+'</p><p><input type="file" accept="image/*" name="file" id="file"/></p></div>');
 			this.element.after(this.oUploadDlg);
-			$('input[type=file]').bind('change', function() { me._do_upload(); });
+			$('input[type=file]').on('change', function() { me._do_upload(); });
 			this.oUploadDlg.dialog({
 				width: 400,
 				modal: true,

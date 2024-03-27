@@ -276,7 +276,7 @@ abstract class AbstractAttachmentsRenderer
     e.stopPropagation();
   })
   
-	$(document).bind('dragover', function (e) {
+	$(document).on('dragover', function (e) {
 		var bFiles = false;
 		if (e.dataTransfer && e.dataTransfer.types)
 		{
@@ -317,7 +317,7 @@ abstract class AbstractAttachmentsRenderer
         window.dropZoneCnt++;
     });
     
-	$(document).bind('dragend dragleave drop', function(event){
+	$(document).on('dragend dragleave drop', function(event){
         window.dropZoneCnt--;
 		if(window.dropZone && window.dropZoneCnt === 0){
 			window.dropZone.removeClass('ibo-drag-in');

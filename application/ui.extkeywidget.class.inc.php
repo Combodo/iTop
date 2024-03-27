@@ -734,7 +734,7 @@ HTML
 				],
 		});
 		$('#fs_{$this->iId}').on('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);
-		$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);
+		$('#dc_{$this->iId}').on('resize', oACWidget_{$this->iId}.UpdateSizes);
 JS
 		);
 	}

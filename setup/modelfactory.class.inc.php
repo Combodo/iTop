@@ -848,7 +848,7 @@ class ModelFactory
 						// Do not continue deeper
 						$oTargetNode = null;
 					} else {
-						if (!$bSpecifiedMerge && $sMode === self::LOAD_DELTA_MODE_STRICT && ($sSearchId !== '' || is_null($oSourceNode->firstElementChild))) {
+						if (!$bSpecifiedMerge && $sMode === self::LOAD_DELTA_MODE_STRICT && ($sSearchId !== '' || is_null($oSourceNode->GetFirstElementChild()))) {
 							$iLine = ModelFactory::GetXMLLineNumber($oSourceNode);
 							$sItopNodePath = DesignDocument::GetItopNodePath($oSourceNode);
 							throw new MFException($sItopNodePath.' at line '.$iLine.': could not be found or marked as removed (strict mode)',
@@ -889,7 +889,7 @@ class ModelFactory
 								$oTargetParentNode->insertBefore($oCommentNode, $oTargetNode);
 							}
 							// Continue deeper
-							for ($oSourceChild = $oSourceNode->firstElementChild; !is_null($oSourceChild); $oSourceChild = $oSourceChild->nextElementSibling) {
+							for ($oSourceChild = $oSourceNode->GetFirstElementChild(); !is_null($oSourceChild); $oSourceChild = $oSourceChild->GetNextElementSibling()) {
 								$this->LoadFlattenDelta($oSourceChild, $oTargetDocument, $oTargetNode, $sMode);
 							}
 							$oTargetNode = null;
@@ -898,7 +898,7 @@ class ModelFactory
 				}
 
 				if ($oTargetNode) {
-					if (is_null($oSourceNode->firstElementChild) && $oTargetParentNode instanceof MFElement) {
+					if (is_null($oSourceNode->GetFirstElementChild()) && $oTargetParentNode instanceof MFElement) {
 						// Leaf node
 						if ($sMode === self::LOAD_DELTA_MODE_STRICT && !$oSourceNode->hasAttribute('_rename_from') && trim($oSourceNode->GetText('')) !== '') {
 							$iLine = ModelFactory::GetXMLLineNumber($oSourceNode);
@@ -916,7 +916,7 @@ class ModelFactory
 							}
 						}
 					} else {
-						for ($oSourceChild = $oSourceNode->firstElementChild; !is_null($oSourceChild); $oSourceChild = $oSourceChild->nextElementSibling) {
+						for ($oSourceChild = $oSourceNode->GetFirstElementChild(); !is_null($oSourceChild); $oSourceChild = $oSourceChild->GetNextElementSibling()) {
 							// Continue deeper
 							$this->LoadFlattenDelta($oSourceChild, $oTargetDocument, $oTargetNode, $sMode);
 						}
@@ -1042,7 +1042,7 @@ class ModelFactory
 		}
 		if (!$bIsRoot) {
 			// Hard deletion is necessary
-			$oClassNode->remove();
+			$oClassNode->parentNode->removeChild($oClassNode);
 		}
 	}
 
@@ -1574,7 +1574,7 @@ EOF
 	public function GetClass($sClassName, $bIncludeMetas = false)
 	{
 		// Check if class among XML classes
-		/** @var \MFElemen|null $oClassNode */
+		/** @var \MFElement|null $oClassNode */
 		$oClassNode = $this->GetNodes("/itop_design/classes/class[@id='$sClassName']")->item(0);
 
 		// If not, check if class among exposed meta classes (PHP classes)

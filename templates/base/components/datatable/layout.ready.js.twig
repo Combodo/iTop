@@ -374,7 +374,7 @@ $('body').on('open_creation_modal.object.itop','#{{ oUIBlock.GetId() }}', functi
 {% endif %}
 
 {% if oUIBlock.GetOption('sCountSelector') is not empty %}
-$('#{{ sListId }} [name="selectionCount"]').bind('change', function () {
+$('#{{ sListId }} [name="selectionCount"]').on('change', function () {
     $('{{ oUIBlock.GetOption('sCountSelector') }}').val($('#{{ sListId }} [name="selectionCount"]').val());
     $('{{ oUIBlock.GetOption('sCountSelector') }}').trigger('change');
 });

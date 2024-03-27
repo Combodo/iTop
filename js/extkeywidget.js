@@ -433,7 +433,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					me.UpdateSizes();
 					me.UpdateButtons();
 					me.ajax_request = null;
-					$('#count_'+me.id+'_results').change(function () {
+					$('#count_'+me.id+'_results').on('change', function () {
 						me.UpdateButtons();
 					});
 					if (me.bDoSearch) {
@@ -600,12 +600,16 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	};
 
 	this.Clear = function () {
-		$('#'+me.id).val('');
-		$('#label_'+me.id).val('');
-		$('#label_'+me.id).data('selected_value', '');
-		$('#'+me.id).trigger('validate');
-		$('#'+me.id).trigger('extkeychange');
-		$('#'+me.id).trigger('change');
+		if (me.bSelectMode) {
+			$('#'+me.id)[0].selectize.clear();
+		} else {
+			$('#'+me.id).val('');
+			$('#label_'+me.id).val('');
+			$('#label_'+me.id).data('selected_value', '');
+			$('#'+me.id).trigger('validate');
+			$('#'+me.id).trigger('extkeychange');
+			$('#'+me.id).trigger('change');
+		}
 	};
 
 // Workaround for a ui.jquery limitation: if the content of

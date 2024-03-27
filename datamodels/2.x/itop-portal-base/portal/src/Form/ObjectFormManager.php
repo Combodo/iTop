@@ -1463,6 +1463,8 @@ class ObjectFormManager extends FormManager
 				// Remove attachments that are no longer attached to the current object
 				if (in_array($oAttachment->GetKey(), $aRemovedAttachmentsIds))
 				{
+					$aData = ['attachment' => $oAttachment];
+					$this->oObject->FireEvent(EVENT_REMOVE_ATTACHMENT_FROM_OBJECT, $aData);
 					$oAttachment->DBDelete();
 					$aActions[] = self::GetAttachmentActionChangeOp($oAttachment, false);
 				}
@@ -1487,6 +1489,8 @@ class ObjectFormManager extends FormManager
 				$oAttachment->Set('temp_id', '');
 				$oAttachment->DBUpdate();
 				$aActions[] = self::GetAttachmentActionChangeOp($oAttachment, true);
+				$aData = ['attachment' => $oAttachment];
+				$this->oObject->FireEvent(EVENT_ADD_ATTACHMENT_TO_OBJECT, $aData);
 			}
 		}
 		
