@@ -2,7 +2,8 @@
 <itop_design version="3.2">
   <events>
     <event id="EVENT_DISPLAY_OBJECT_DETAILS" _delta="define">
-      <description>An object details is about to be displayed to a user</description>
+      <name>Portal object displayed</name>
+      <description><![CDATA[An object details is about to be displayed to a user on a portal]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
