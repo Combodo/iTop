@@ -374,13 +374,13 @@ class utils
 		}
 		return self::Sanitize($retValue, $defaultValue, $sSanitizationFilter);
 	}
-	
+
 	public static function ReadPostedParam($sName, $defaultValue = '', $sSanitizationFilter = 'parameter')
 	{
 		$retValue = isset($_POST[$sName]) ? $_POST[$sName] : $defaultValue;
 		return self::Sanitize($retValue, $defaultValue, $sSanitizationFilter);
 	}
-	
+
 	public static function Sanitize($value, $defaultValue, $sSanitizationFilter)
 	{
 		if ($value === $defaultValue)
@@ -396,7 +396,7 @@ class utils
 				$retValue = $defaultValue;
 			}
 		}
-		return $retValue;		
+		return $retValue;
 	}
 
 	/**
@@ -511,7 +511,7 @@ class utils
 
 			// For URL
 			case static::ENUM_SANITIZATION_FILTER_URL:
-                // N°6350 - returns only valid URLs
+				// N°6350 - returns only valid URLs
 				$retValue = filter_var($value, FILTER_VALIDATE_URL);
 				break;
 
@@ -544,44 +544,44 @@ class utils
 			switch($sError)
 			{
 				case UPLOAD_ERR_OK:
-				$sTmpName = is_null($sIndex) ? $aFileInfo['tmp_name'] : $aFileInfo['tmp_name'][$sIndex];
-				$sMimeType = is_null($sIndex) ? $aFileInfo['type'] : $aFileInfo['type'][$sIndex];
-				$sName = is_null($sIndex) ? $aFileInfo['name'] : $aFileInfo['name'][$sIndex];
+					$sTmpName = is_null($sIndex) ? $aFileInfo['tmp_name'] : $aFileInfo['tmp_name'][$sIndex];
+					$sMimeType = is_null($sIndex) ? $aFileInfo['type'] : $aFileInfo['type'][$sIndex];
+					$sName = is_null($sIndex) ? $aFileInfo['name'] : $aFileInfo['name'][$sIndex];
 
-				$doc_content = file_get_contents($sTmpName);
+					$doc_content = file_get_contents($sTmpName);
 					$sMimeType = self::GetFileMimeType($sTmpName);
 					$oDocument = new ormDocument($doc_content, $sMimeType, $sName);
-				break;
-				
+					break;
+
 				case UPLOAD_ERR_NO_FILE:
-				// no file to load, it's a normal case, just return an empty document
-				break;
-				
+					// no file to load, it's a normal case, just return an empty document
+					break;
+
 				case UPLOAD_ERR_FORM_SIZE:
 				case UPLOAD_ERR_INI_SIZE:
-				throw new FileUploadException(Dict::Format('UI:Error:UploadedFileTooBig', ini_get('upload_max_filesize')));
-				break;
+					throw new FileUploadException(Dict::Format('UI:Error:UploadedFileTooBig', ini_get('upload_max_filesize')));
+					break;
 
 				case UPLOAD_ERR_PARTIAL:
-				throw new FileUploadException(Dict::S('UI:Error:UploadedFileTruncated.'));
-				break;
-				
+					throw new FileUploadException(Dict::S('UI:Error:UploadedFileTruncated.'));
+					break;
+
 				case UPLOAD_ERR_NO_TMP_DIR:
-				throw new FileUploadException(Dict::S('UI:Error:NoTmpDir'));
-				break;
+					throw new FileUploadException(Dict::S('UI:Error:NoTmpDir'));
+					break;
 
 				case UPLOAD_ERR_CANT_WRITE:
-				throw new FileUploadException(Dict::Format('UI:Error:CannotWriteToTmp_Dir', ini_get('upload_tmp_dir')));
-				break;
+					throw new FileUploadException(Dict::Format('UI:Error:CannotWriteToTmp_Dir', ini_get('upload_tmp_dir')));
+					break;
 
 				case UPLOAD_ERR_EXTENSION:
-				$sName = is_null($sIndex) ? $aFileInfo['name'] : $aFileInfo['name'][$sIndex];
-				throw new FileUploadException(Dict::Format('UI:Error:UploadStoppedByExtension_FileName', $sName));
-				break;
-				
+					$sName = is_null($sIndex) ? $aFileInfo['name'] : $aFileInfo['name'][$sIndex];
+					throw new FileUploadException(Dict::Format('UI:Error:UploadStoppedByExtension_FileName', $sName));
+					break;
+
 				default:
-				throw new FileUploadException(Dict::Format('UI:Error:UploadFailedUnknownCause_Code', $sError));
-				break;
+					throw new FileUploadException(Dict::Format('UI:Error:UploadFailedUnknownCause_Code', $sError));
+					break;
 
 			}
 		}
@@ -684,17 +684,17 @@ class utils
 
 		return $aSelectedObj;
 	}
-	
+
 	public static function GetNewTransactionId()
 	{
 		return privUITransaction::GetNewTransactionId();
 	}
-	
+
 	public static function IsTransactionValid($sId, $bRemoveTransaction = true)
 	{
 		return privUITransaction::IsTransactionValid($sId, $bRemoveTransaction);
 	}
-	
+
 	public static function RemoveTransaction($sId)
 	{
 		return privUITransaction::RemoveTransaction($sId);
@@ -878,11 +878,11 @@ class utils
 			$aDateTokens = array_keys($aSpec);
 			$aDateRegexps = array_values($aSpec);
 		}
-	   
-	   $sDateRegexp = str_replace($aDateTokens, $aDateRegexps, $sFormat);
-	   
-	   if (preg_match('!^(?<head>)'.$sDateRegexp.'(?<tail>)$!', $sDate, $aMatches))
-	   {
+
+		$sDateRegexp = str_replace($aDateTokens, $aDateRegexps, $sFormat);
+
+		if (preg_match('!^(?<head>)'.$sDateRegexp.'(?<tail>)$!', $sDate, $aMatches))
+		{
 			$sYear = isset($aMatches['year']) ? $aMatches['year'] : 0;
 			$sMonth = isset($aMatches['month']) ? $aMatches['month'] : 1;
 			$sDay = isset($aMatches['day']) ? $aMatches['day'] : 1;
@@ -891,13 +891,13 @@ class utils
 			$sSecond = isset($aMatches['second']) ? $aMatches['second'] : 0;
 			return strtotime("$sYear-$sMonth-$sDay $sHour:$sMinute:$sSecond");
 		}
-	   else
-	   {
-	   	return false;
-	   }
-	   // http://www.spaweditor.com/scripts/regex/index.php
+		else
+		{
+			return false;
+		}
+		// http://www.spaweditor.com/scripts/regex/index.php
 	}
-	
+
 	/**
 	 * Convert an old date/time format specification (using % placeholders)
 	 * to a format compatible with DateTime::createFromFormat
@@ -1324,8 +1324,8 @@ class utils
 		return Session::GetLog();
 	}
 
-	 static function DebugBacktrace($iLimit = 5)
-	 {
+	static function DebugBacktrace($iLimit = 5)
+	{
 		$aFullTrace = debug_backtrace();
 		$aLightTrace = array();
 		for($i=1; ($i<=$iLimit && $i < count($aFullTrace)); $i++) // Skip the last function call... which is the call to this function !
@@ -1333,7 +1333,7 @@ class utils
 			$aLightTrace[$i] = $aFullTrace[$i]['function'].'(), called from line '.$aFullTrace[$i]['line'].' in '.$aFullTrace[$i]['file'];
 		}
 		echo "<p><pre>".print_r($aLightTrace, true)."</pre></p>\n";
-	 }
+	}
 
 	/**
 	 * Execute the given iTop PHP script, passing it the current credentials
@@ -1493,7 +1493,7 @@ class utils
 		$aResult = [];
 
 		// 1st - add standard built-in menu items
-		// 
+		//
 		switch($iMenuId)
 		{
 			case iPopupMenuExtension::MENU_OBJLIST_ACTIONS:
@@ -1526,7 +1526,7 @@ class utils
 				if (strlen($sUrl) < SERVER_MAX_URL_LENGTH) {
 					// Static menus: Email this page, CSV Export & Add to Dashboard
 					$aResult[] = new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'),
-							"mailto:?body=".urlencode($sUrl).' ' // Add an extra space to make it work in Outlook
+						"mailto:?body=".urlencode($sUrl).' ' // Add an extra space to make it work in Outlook
 					);
 				}
 
@@ -1877,7 +1877,7 @@ SQL;
 			return $sProposed;
 		}
 	}
-	
+
 	/**
 	 * Some characters cause troubles with jQuery when used inside DOM IDs, so let's replace them by the safe _ (underscore)
 	 * @param string $sId The ID to sanitize
@@ -1887,7 +1887,7 @@ SQL;
 	{
 		return str_replace(array(':', '[', ']', '+', '-', ' '), '_', $sId);
 	}
-	
+
 	/**
 	 * Helper to execute an HTTP POST request, uses CURL PHP extension
 	 *
@@ -1972,8 +1972,8 @@ SQL;
 
 	/**
 	 * Get a standard list of character sets
-	 *	 
- 	 * @param array $aAdditionalEncodings Additional values
+	 *
+	 * @param array $aAdditionalEncodings Additional values
 	 * @return array of iconv code => english label, sorted by label
 	 */
 	public static function GetPossibleEncodings($aAdditionalEncodings = array())
@@ -2079,7 +2079,7 @@ SQL;
 			return $e->getMessage();
 		}
 	}
-	
+
 	/**
 	 * Convert (?) plain text to some HTML markup by replacing newlines by <br/> tags
 	 * and escaping HTML entities
@@ -2096,7 +2096,7 @@ SQL;
 
 		return str_replace("\n", '<br/>', utils::EscapeHtml($sText));
 	}
-	
+
 	/**
 	 * Eventually compiles the SASS (.scss) file into the CSS (.css) file
 	 *
@@ -2208,13 +2208,13 @@ SQL;
 			case 'image/gif':
 			case 'image/jpeg':
 			case 'image/png':
-			$img = @imagecreatefromstring($oImage->GetData());
-			break;
-			
+				$img = @imagecreatefromstring($oImage->GetData());
+				break;
+
 			default:
-			// Unsupported image type, return the image as-is
-			//throw new Exception("Unsupported image type: '".$oImage->GetMimeType()."'. Cannot resize the image, original image will be used.");
-			return $oImage;
+				// Unsupported image type, return the image as-is
+				//throw new Exception("Unsupported image type: '".$oImage->GetMimeType()."'. Cannot resize the image, original image will be used.");
+				return $oImage;
 		}
 		if ($img === false)
 		{
@@ -2224,14 +2224,14 @@ SQL;
 		else
 		{
 			// Let's scale the image, preserving the transparency for GIFs and PNGs
-			
+
 			$fScale = min($iMaxImageWidth / $iWidth, $iMaxImageHeight / $iHeight);
 
 			$iNewWidth = $iWidth * $fScale;
 			$iNewHeight = $iHeight * $fScale;
-			
+
 			$new = imagecreatetruecolor($iNewWidth, $iNewHeight);
-			
+
 			// Preserve transparency
 			if(($oImage->GetMimeType() == "image/gif") || ($oImage->GetMimeType() == "image/png"))
 			{
@@ -2239,38 +2239,38 @@ SQL;
 				imagealphablending($new, false);
 				imagesavealpha($new, true);
 			}
-			
+
 			imagecopyresampled($new, $img, 0, 0, 0, 0, $iNewWidth, $iNewHeight, $iWidth, $iHeight);
-			
+
 			ob_start();
 			switch ($oImage->GetMimeType())
 			{
 				case 'image/gif':
-				imagegif($new); // send image to output buffer
-				break;
-				
+					imagegif($new); // send image to output buffer
+					break;
+
 				case 'image/jpeg':
-				imagejpeg($new, null, 80); // null = send image to output buffer, 80 = good quality
-				break;
-				 
+					imagejpeg($new, null, 80); // null = send image to output buffer, 80 = good quality
+					break;
+
 				case 'image/png':
-				imagepng($new, null, 5); // null = send image to output buffer, 5 = medium compression
-				break;
+					imagepng($new, null, 5); // null = send image to output buffer, 5 = medium compression
+					break;
 			}
 			$oResampledImage = new ormDocument(ob_get_contents(), $oImage->GetMimeType(), $oImage->GetFileName());
 			@ob_end_clean();
-			
+
 			imagedestroy($img);
 			imagedestroy($new);
-							
+
 			return $oResampledImage;
 		}
-				
+
 	}
-	
+
 	/**
 	 * Create a 128 bit UUID in the format: {########-####-####-####-############}
-	 * 
+	 *
 	 * Note: this method can be run from the command line as well as from the web server.
 	 * Note2: this method is not cryptographically secure! If you need a cryptographically secure value
 	 * consider using open_ssl or PHP 7 methods.
@@ -2285,16 +2285,16 @@ SQL;
 		$data .= mt_rand();
 		$hash = strtoupper(hash('ripemd128', $uid . md5($data)));
 		$sUUID = '{' .
-				substr($hash,  0,  8) .
-				'-' .
-				substr($hash,  8,  4) .
-				'-' .
-				substr($hash, 12,  4) .
-				'-' .
-				substr($hash, 16,  4) .
-				'-' .
-				substr($hash, 20, 12) .
-				'}';
+			substr($hash,  0,  8) .
+			'-' .
+			substr($hash,  8,  4) .
+			'-' .
+			substr($hash, 12,  4) .
+			'-' .
+			substr($hash, 16,  4) .
+			'-' .
+			substr($hash, 20, 12) .
+			'}';
 		return $sUUID;
 	}
 
@@ -2306,9 +2306,9 @@ SQL;
 	 */
 	public static function GetCurrentModuleName($iCallDepth = 0)
 	{
-        return ModuleService::GetInstance()->GetCurrentModuleName($iCallDepth + 1);
+		return ModuleService::GetInstance()->GetCurrentModuleName($iCallDepth + 1);
 	}
-	
+
 	/**
 	 * **Warning** : returned result can be invalid as we're using backtrace to find the module dir name
 	 *
@@ -2345,7 +2345,7 @@ SQL;
 	{
 		return ModuleService::GetInstance()->GetCurrentModuleUrl(1);
 	}
-	
+
 	/**
 	 * @param string $sProperty The name of the property to retrieve
 	 * @param mixed $defaultvalue
@@ -2353,18 +2353,18 @@ SQL;
 	 */
 	public static function GetCurrentModuleSetting($sProperty, $defaultvalue = null)
 	{
-        return ModuleService::GetInstance()->GetCurrentModuleSetting($sProperty, $defaultvalue);
+		return ModuleService::GetInstance()->GetCurrentModuleSetting($sProperty, $defaultvalue);
 	}
-	
+
 	/**
 	 * @param string $sModuleName
 	 * @return string|NULL compiled version of a given module, as it was seen by the compiler
 	 */
 	public static function GetCompiledModuleVersion($sModuleName)
 	{
-        return ModuleService::GetInstance()->GetCompiledModuleVersion($sModuleName);
+		return ModuleService::GetInstance()->GetCompiledModuleVersion($sModuleName);
 	}
-	
+
 	/**
 	 * Check if the given path/url is an http(s) URL
 	 * @param string $sPath
@@ -2379,7 +2379,7 @@ SQL;
 		}
 		return $bRet;
 	}
-	
+
 	/**
 	 * Check if the given URL is a link to download a document/image on the CURRENT iTop
 	 * In such a case we can read the content of the file directly in the database (if the users rights allow) and return the ormDocument
@@ -2428,7 +2428,7 @@ SQL;
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Read the content of a file (and retrieve its MIME type) from either:
 	 * - an URL pointing to a blob (image/document) on the current iTop server
@@ -2442,24 +2442,24 @@ SQL;
 	{
 		$oUploadedDoc = null;
 		$aKnownExtensions = array(
-				'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-				'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-				'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
-				'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-				'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-				'sldx' => 'application/vnd.openxmlformats-officedocument.presentationml.slide',
-				'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-				'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
-				'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
-				'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
-				'jpg' => 'image/jpeg',
-				'jpeg' => 'image/jpeg',
-				'gif' => 'image/gif',
-				'png' => 'image/png',
-				'pdf' => 'application/pdf',
-				'doc' => 'application/msword',
-				'dot' => 'application/msword',
-				'xls' => 'application/vnd.ms-excel',
+			'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+			'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
+			'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+			'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+			'sldx' => 'application/vnd.openxmlformats-officedocument.presentationml.slide',
+			'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+			'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+			'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
+			'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+			'jpg' => 'image/jpeg',
+			'jpeg' => 'image/jpeg',
+			'gif' => 'image/gif',
+			'png' => 'image/png',
+			'pdf' => 'application/pdf',
+			'doc' => 'application/msword',
+			'dot' => 'application/msword',
+			'xls' => 'application/vnd.ms-excel',
 			'ppt' => 'application/vnd.ms-powerpoint',
 			'vsd' => 'application/x-visio',
 			'vdx' => 'application/visio.drawing',
@@ -2472,7 +2472,7 @@ SQL;
 			'html' => 'text/html',
 			'exe' => 'application/octet-stream',
 		);
-	
+
 		$sData = null;
 		$sMimeType = 'text/plain'; // Default MIME Type: treat the file as a bunch a characters...
 		$sFileName = 'uploaded-file'; // Default name for downloaded-files
@@ -2530,7 +2530,7 @@ SQL;
 			}
 			$sExtension = strtolower(pathinfo($sPath, PATHINFO_EXTENSION));
 			$sFileName = basename($sPath);
-				
+
 			if (array_key_exists($sExtension, $aKnownExtensions))
 			{
 				$sMimeType = $aKnownExtensions[$sExtension];
@@ -2544,7 +2544,7 @@ SQL;
 		}
 		return $oUploadedDoc;
 	}
-	
+
 	protected static function ParseHeaders($aHeaders)
 	{
 		$aCleanHeaders = array();
@@ -2569,7 +2569,7 @@ SQL;
 		}
 		return $aCleanHeaders;
 	}
-	
+
 	/**
 	 * @return string a string based on compilation time or (if not available because the datamodel has not been loaded)
 	 * the version of iTop. This string is useful to prevent browser side caching of content that may vary at each
@@ -3293,14 +3293,19 @@ HTML;
 		foreach ($aMentionMatches[0] as $iMatchIdx => $sCompleteMatch) {
 			$sMatchedClass = $aMentionMatches[2][$iMatchIdx];
 			$sMatchedId = $aMentionMatches[3][$iMatchIdx];
+			$sMatchedName = $aMentionMatches[1][$iMatchIdx];
 
-			// Prepare array for matched class if not already present
-			if (!array_key_exists($sMatchedClass, $aMentionedObjects)) {
-				$aMentionedObjects[$sMatchedClass] = array();
-			}
-			// Add matched ID if not already there
-			if (!in_array($sMatchedId, $aMentionedObjects[$sMatchedClass])) {
-				$aMentionedObjects[$sMatchedClass][] = $sMatchedId;
+			//tests if the name starts with @
+			if(str_starts_with($sMatchedName,'@')) {
+
+				// Prepare array for matched class if not already present
+				if (!array_key_exists($sMatchedClass, $aMentionedObjects)) {
+					$aMentionedObjects[$sMatchedClass] = array();
+				}
+				// Add matched ID if not already there
+				if (!in_array($sMatchedId, $aMentionedObjects[$sMatchedClass])) {
+					$aMentionedObjects[$sMatchedClass][] = $sMatchedId;
+				}
 			}
 		}
 
