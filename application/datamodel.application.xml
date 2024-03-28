@@ -187,7 +187,9 @@
   </menus>
   <events>
     <event id="EVENT_DB_BEFORE_WRITE" _delta="define">
-      <description>An object is about to be written into the database. The object can be modified.</description>
+      <name>Before create or update</name>
+      <description><![CDATA[An object is about to be written into the database.
+The object can be modified.]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -208,7 +210,9 @@
       </event_data>
     </event>
     <event id="EVENT_DB_CHECK_TO_WRITE" _delta="define">
-      <description>Check an object before it is written into the database (no change possible). Call DBObject::AddCheckIssue() to signal an issue</description>
+      <name>Check to write</name>
+      <description><![CDATA[Check an object before it is written into the database (no change possible).
+Call $this->AddCheckIssue() to signal an issue.]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -229,7 +233,9 @@
       </event_data>
     </event>
     <event id="EVENT_DB_AFTER_WRITE" _delta="define">
-      <description>An object has been written into the database. The modifications can be propagated to other objects.</description>
+      <name>After create or update</name>
+      <description><![CDATA[An object has been written into the database.
+The modifications can be propagated to other objects.]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -244,7 +250,7 @@
           <type>boolean</type>
         </event_datum>
         <event_datum id="changes">
-          <description>For updates, the list of changes done during this operation</description>
+          <description><![CDATA[For updates, the list of changes done during this operation]]></description>
           <type>array</type>
         </event_datum>
         <event_datum id="debug_info">
@@ -254,7 +260,9 @@
       </event_data>
     </event>
     <event id="EVENT_DB_CHECK_TO_DELETE" _delta="define">
-      <description>Check an object before it is deleted from the database. Call DBObject::AddDeleteIssue() to signal an issue</description>
+      <name>Check to delete</name>
+      <description><![CDATA[Check an object before it is deleted from the database.
+Call $this->AddDeleteIssue() to signal an issue.]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -271,7 +279,8 @@
       </event_data>
     </event>
     <event id="EVENT_DB_ABOUT_TO_DELETE" _delta="define">
-      <description>An object is about to be deleted from the database</description>
+      <name>Before delete</name>
+      <description><![CDATA[An object is about to be deleted from the database]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -288,7 +297,8 @@
       </event_data>
     </event>
     <event id="EVENT_DB_AFTER_DELETE" _delta="define">
-      <description>An object has been deleted into the database</description>
+      <name>After delete</name>
+      <description><![CDATA[An object has been deleted into the database]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -305,7 +315,9 @@
       </event_data>
     </event>
     <event id="EVENT_ENUM_TRANSITIONS" _delta="define">
-      <description>Manage the allowed transitions in current object state. The only action allowed is to deny transitions with DBObject::DenyTransition()</description>
+      <name>Enum transitions</name>
+      <description><![CDATA[Manage the allowed transitions in current object state.
+The only action allowed is to deny transitions with $this->DenyTransition()]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -325,7 +337,8 @@
       </event_data>
     </event>
     <event id="EVENT_DB_LINKS_CHANGED" _delta="define">
-      <description>At least one link class was changed</description>
+      <name>Links on object have changed</name>
+      <description><![CDATA[At least one link class was changed]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -341,7 +354,9 @@
       </event_data>
     </event>
     <event id="EVENT_DB_OBJECT_RELOAD" _delta="define">
-      <description>An object has been re-loaded from the database</description>
+      <name>Object reload</name>
+      <internal>true</internal>
+      <description><![CDATA[An object has been re-loaded from the database]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -357,7 +372,8 @@
       </event_data>
     </event>
     <event id="EVENT_DB_COMPUTE_VALUES" _delta="define">
-      <description>An object needs to be recomputed after changes</description>
+      <name>Recompute object values</name>
+      <description><![CDATA[An object needs to be recomputed after changes]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -374,7 +390,8 @@
       </event_data>
     </event>
     <event id="EVENT_DB_ARCHIVE" _delta="define">
-      <description>An object has been archived</description>
+      <name>Object archived</name>
+      <description><![CDATA[An object has been archived]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -390,7 +407,8 @@
       </event_data>
     </event>
     <event id="EVENT_DB_UNARCHIVE" _delta="define">
-      <description>An object has been unarchived</description>
+      <name>Object unarchived</name>
+      <description><![CDATA[An object has been unarchived]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -406,7 +424,9 @@
       </event_data>
     </event>
     <event id="EVENT_DB_SET_ATTRIBUTES_FLAGS" _delta="define">
-      <description>Set object attributes flags. Call cmdbAbstractObject::AddAttributeFlags() for all the attributes to be set for this target state.</description>
+      <name>Set attributes flags</name>
+      <description><![CDATA[Set object attributes flags.
+Call $this->AddAttributeFlags() for all the attributes to be set for this target state.]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -417,7 +437,7 @@
         </event_datum>
         <event_datum id="target_state">
           <description>The target state in which to evaluate the flags</description>
-          <type>array</type>
+          <type>string</type>
         </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
@@ -426,7 +446,9 @@
       </event_data>
     </event>
     <event id="EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS" _delta="define">
-      <description>Set object initial attributes flags. Call cmdbAbstractObject::AddInitialAttributeFlags() for all the initial attributes to be set initially.</description>
+      <name>Set initial attributes flags</name>
+      <description><![CDATA[Set object initial attributes flags.
+Call $this->AddInitialAttributeFlags() for all the initial attributes to be set initially.]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -442,7 +464,8 @@
       </event_data>
     </event>
     <event id="EVENT_DOWNLOAD_DOCUMENT" _delta="define">
-      <description>A document has been downloaded from the GUI</description>
+      <name>Document downloaded</name>
+      <description><![CDATA[A document has been downloaded from the GUI]]></description>
       <sources>
         <source id="Document">Document</source>
       </sources>
@@ -470,7 +493,9 @@
       </event_data>
     </event>
     <event id="EVENT_LOGIN" _delta="define">
-      <description>Inform the listeners about the connection states</description>
+      <name>Login</name>
+      <internal>true</internal>
+      <description><![CDATA[Inform the listeners about the connection states]]></description>
       <event_data>
         <event_datum id="code">
           <description>The login step result code (LoginWebPage::EXIT_CODE_...) </description>
