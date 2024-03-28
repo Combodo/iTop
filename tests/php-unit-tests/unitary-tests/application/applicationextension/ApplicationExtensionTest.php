@@ -161,6 +161,10 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 				\iNewsroomProvider::class,
 				static::ENUM_API_CALL_METHOD_GETCLASSESFORINTERFACE,
 			],
+			\iBackupExtraFilesExtension::class => [
+				\iBackupExtraFilesExtension::class,
+				static::ENUM_API_CALL_METHOD_GETCLASSESFORINTERFACE,
+			],
 		];
 	}
 }
