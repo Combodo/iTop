@@ -1,0 +1,78 @@
+$ibo-color-yellow-100: #fefce8;
+$ibo-color-yellow-200: #fef9c3;
+$ibo-color-yellow-300: #fef08a;
+$ibo-color-yellow-400: #fde047;
+$ibo-color-yellow-500: #facc15;
+$ibo-color-yellow-600: #eab308;
+$ibo-color-yellow-700: #ca8a04;
+$ibo-color-yellow-800: #a16207;
+$ibo-color-yellow-900: #854d0e;
+$ibo-color-yellow-950: #713f12;
+
+$ibo-color-success-100: $ibo-color-blue-100;
+$ibo-color-success-200: $ibo-color-blue-200;
+$ibo-color-success-300: $ibo-color-blue-300;
+$ibo-color-success-400: $ibo-color-blue-400;
+$ibo-color-success-500: $ibo-color-blue-500;
+$ibo-color-success-600: $ibo-color-blue-600;
+$ibo-color-success-700: $ibo-color-blue-700;
+$ibo-color-success-800: $ibo-color-blue-800;
+$ibo-color-success-900: $ibo-color-blue-900;
+$ibo-color-success-950: $ibo-color-blue-950;
+
+$ibo-color-information-100: #f1f5f9;
+$ibo-color-information-200: #e2e8f0;
+$ibo-color-information-300: #cbd5e1;
+$ibo-color-information-400: #94a3b8;
+$ibo-color-information-500: #64748b;
+$ibo-color-information-600: #475569;
+$ibo-color-information-700: #334155;
+$ibo-color-information-800: #1e293b;
+$ibo-color-information-900: #0f172a;
+$ibo-color-information-950: #020617;
+
+
+$ibo-lifecycle-new-state-primary-color: $ibo-color-information-600;
+$ibo-lifecycle-new-state-secondary-color: $ibo-color-white-100;
+$ibo-lifecycle-neutral-state-primary-color: $ibo-color-information-600;
+$ibo-lifecycle-neutral-state-secondary-color: $ibo-color-white-100;
+$ibo-lifecycle-waiting-state-primary-color: $ibo-color-red-200;
+$ibo-lifecycle-waiting-state-secondary-color: $ibo-color-red-800;
+$ibo-lifecycle-success-state-primary-color: $ibo-color-blue-700;
+$ibo-lifecycle-success-state-secondary-color: $ibo-color-white-100;
+$ibo-lifecycle-failure-state-primary-color: $ibo-color-red-800;
+$ibo-lifecycle-failure-state-secondary-color: $ibo-color-white-100;
+$ibo-lifecycle-frozen-state-primary-color: $ibo-color-information-200;
+$ibo-lifecycle-frozen-state-secondary-color: $ibo-color-information-700;
+
+$ibo-lifecycle-active-state-primary-color: $ibo-color-blue-700;
+$ibo-lifecycle-active-state-secondary-color: $ibo-color-white-100;
+$ibo-lifecycle-inactive-state-primary-color: $ibo-color-red-700;
+$ibo-lifecycle-inactive-state-secondary-color: $ibo-color-white-100;
+
+$ibo-caselog-highlight-color-1: $ibo-color-blue-700;
+$ibo-caselog-highlight-color-2: $ibo-color-red-700;
+$ibo-caselog-highlight-color-3: $ibo-color-information-600;
+$ibo-caselog-highlight-color-4: $ibo-color-red-500;
+$ibo-caselog-highlight-color-5: $ibo-color-blue-500;
+$ibo-caselog-highlight-color-6: $ibo-color-red-300;
+$ibo-caselog-highlight-color-7: $ibo-color-blue-300;
+
+$ibo-input-wrapper--is-error--border-color: $ibo-color-pink-700;
+$ibo-field-validation: $ibo-color-pink-800;
+
+$ibo-navigation-menu--visual-hint--background-color: $ibo-color-pink-600;
+
+$ibo-wizard-container--background-color: $ibo-color-information-200;
+$ibo-wizard-container--border-color: $ibo-color-information-600;
+
+$ibo-navigation-menu--notifications--item--new-message-indicator--background-color: $ibo-color-white-100;
+$ibo-navigation-menu--notifications--item--new-message-indicator--border: solid 2px $ibo-color-grey-500;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-1--background-color: $ibo-color-pink-100;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-1--border: solid 2px $ibo-color-pink-600;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-2--background-color: $ibo-color-warning-100;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-2--border: solid 2px $ibo-color-warning-400;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-3--background-color: $ibo-color-success-100;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-3--border: solid 2px $ibo-color-success-500;
+
+$ibo-notifications--view-all--item--unread--highlight--background-color: $ibo-color-pink-500;

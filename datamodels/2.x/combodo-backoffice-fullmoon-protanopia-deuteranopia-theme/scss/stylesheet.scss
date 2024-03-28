@@ -1,0 +1,73 @@
+$ibo-alert--icon--font-size: 3rem !default;
+$ibo-alert--icon--top: calc(50% - #{$ibo-alert--icon--font-size} / 2) !default;
+$ibo-alert--icon--left: $ibo-spacing-500 !default;
+$ibo-alert--icon--opacity: 0.3 !default;
+$ibo-alert--icons: (
+  'success': '\f00c',
+  'information': '\f129',
+  'warning': '\f12a',
+  'danger': '\f071',
+  'failure': '\f071',
+  'error': '\f071',
+) !default;
+
+$ibo-toast--icon--font-size: 2rem !default;
+$ibo-toast--icon--top: calc(50% - #{$ibo-toast--icon--font-size} / 2) !default;
+$ibo-toast--icon--left: $ibo-spacing-400 !default;
+
+
+@each $sName, $sIcon in $ibo-alert--icons {
+  %ibo-alert-#{$sName}, .ibo-alert.ibo-is-#{$sName} {
+    &::after {
+      content: $sIcon;
+      @extend %fa-solid-base;
+      position: absolute;
+      top: $ibo-alert--icon--top;
+      left: $ibo-alert--icon--left;
+      opacity: $ibo-alert--icon--opacity;
+      font-size: $ibo-alert--icon--font-size;
+      width: $ibo-alert--icon--font-size;
+      text-align: center;
+    }
+
+    .ibo-alert--body, .ibo-alert--title {
+      padding-left: calc(#{$ibo-alert--icon--left} + #{$ibo-alert--icon--font-size});
+    }
+  }
+
+  .ibo-toast.ibo-is-#{$sName} {
+    &::after{
+      font-size: $ibo-toast--icon--font-size !important;
+      top: $ibo-toast--icon--top !important;
+      left: $ibo-toast--icon--left !important;
+      width: $ibo-toast--icon--font-size !important;
+    }
+      padding-left: calc(#{$ibo-toast--padding-left} / 2 + #{$ibo-toast--icon--left} + #{$ibo-toast--icon--font-size});
+  }
+}
+
+.ibo-navigation-menu--notifications--item--new-message-indicator{
+  border: none !important;
+  background-color: transparent !important;
+  &.ibo-is-priority-1::before{
+    content: "\f12a \f12a \f12a";
+    @extend %fa-solid-base;
+    color: $ibo-color-danger-700;
+  }
+  &.ibo-is-priority-2::before{
+    content: "\f12a \f12a";
+    @extend %fa-solid-base;
+    color: $ibo-color-warning-700;
+  }
+  &.ibo-is-priority-3::before{
+    content: "\f12a";
+    @extend %fa-solid-base;
+    color: $ibo-color-success-700;
+  }
+  &.ibo-is-priority-4::before{
+    content: "\f129";
+    @extend %fa-solid-base;
+    color: $ibo-color-information-700;
+  }
+}
+
