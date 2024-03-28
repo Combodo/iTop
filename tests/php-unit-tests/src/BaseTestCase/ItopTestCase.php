@@ -10,6 +10,7 @@ use CMDBSource;
 use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use SetupUtils;
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
@@ -77,7 +78,54 @@ abstract class ItopTestCase extends TestCase
 		}
 	}
 
-	protected function setUp(): void {
+	/**
+	 * @param array $args
+	 * @param string $sExportFileName relative to log folder
+	 * @param array $aExcludedParams
+	 * Function that aims to export the values of the parameters of a function in a file
+	 * You can call the function anywhere like following :
+	 * ```
+	 * require __DIR__ . '/../../../tests/php-unit-tests/vendor/autoload.php'; // required to include phpunit autoload
+	 * ItopTestCase::ExportFunctionParameterValues(func_get_args(), "parameters.txt");
+	 * ```
+	 * Useful to generate realistic data for tests providers
+	 *
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+    public static function ExportFunctionParameterValues(array $args, string $sExportFileName, array $aExcludedParams = []): string
+    {
+		// get sclass et function dans la callstrack
+
+	    // in the callstack get the call function name
+	    $aCallStack = debug_backtrace();
+			    $sCallFunction = $aCallStack[1]['function'];
+	    // in the casll stack get the call class name
+	    $sCallClass = $aCallStack[1]['class'];
+	    $reflectionFunc = new ReflectionMethod($sCallClass, $sCallFunction);
+	    $parameters = $reflectionFunc->getParameters();
+
+	    $aParamValues = [];
+	    foreach ($parameters as $index => $param) {
+		    $aParamValues[$param->getName()] = $args[$index] ?? null;
+	    }
+
+	    $paramValues = $aParamValues;
+	    foreach ($aExcludedParams as $sExcludedParam) {
+		    unset($paramValues[$sExcludedParam]);
+	    }
+
+	    // extract oPage from the array in parameters and make a foreach on exlucded parameters
+	    foreach ($aExcludedParams as $sExcludedParam) {
+		    unset($paramValues[$sExcludedParam]);
+	    }
+
+	    $var_export = var_export($paramValues, true);
+	    file_put_contents(APPROOT.'/log/' .$sExportFileName, $var_export);
+		return $var_export;
+    }
+
+    protected function setUp(): void {
 		parent::setUp();
 
 		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");

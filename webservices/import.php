@@ -881,7 +881,7 @@ try
 			if (isset($aRowData["finalclass"]) && isset($aRowData["id"]))
 			{
 				$aRowDisp["__OBJECT_CLASS__"] = $aRowData["finalclass"];
-				$aRowDisp["__OBJECT_ID__"] = $aRowData["id"]->GetDisplayableValue();
+				$aRowDisp["__OBJECT_ID__"] = $aRowData["id"]->GetCLIValue();
 			}
 			else
 			{
@@ -900,7 +900,7 @@ try
 
 				if (is_object($value))
 				{
-					$aRowDisp["$sKey"] = $value->GetDisplayableValueAndDescription();
+					$aRowDisp["$sKey"] = $value->GetCLIValueAndDescription();
 				}
 				else
 				{
