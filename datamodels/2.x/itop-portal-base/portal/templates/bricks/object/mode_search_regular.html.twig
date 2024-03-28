@@ -9,7 +9,7 @@
 <div id="{{ sFormId }}">
 	{#<div class="form_alerts"></div>#}
 	<div class="form_fields">
-		<table id="{{ sTableId }}" class="table table-striped table-bordered responsive" cellspacing="0" width="100%">
+		<table id="{{ sTableId }}" class="object-list table table-striped table-bordered responsive" cellspacing="0" width="100%">
 			<tbody>
 			</tbody>
 		</table>
@@ -80,7 +80,17 @@
 					{
 						cellElem = $('<span></span>');
 					}
-					cellElem.attr('data-object-id', row.id).html('<span>' + row.attributes[data].value + '</span>');
+                    //Add markup
+					cellElem.attr('data-object-id', row.id)
+                    cellElem.attr('data-object-class', row.object_class);
+                    cellElem.attr('data-attribute-type', row.attributes[data]['attribute-type']);
+                    cellElem.attr('data-attribute-code', row.attributes[data]['att_code']);
+                    console.warn('bob');
+                    if (row.attributes[data]['value-raw']!== undefined) {
+                        cellElem.attr('data-value-raw', row.attributes[data]['value-raw']);
+                    }
+
+                    cellElem.html( row.attributes[data].value );
 					
 					return cellElem.prop('outerHTML');
 				},
@@ -92,7 +102,6 @@
 	
 	$(document).ready(function(){
 		showTableLoader();
-		
 		// Note : Those options should be externalized in an library so we can use them on any DataTables for the portal.
 		// We would just have to override / complete the necessary elements
 		oTable = $('#{{ sTableId }}').DataTable({

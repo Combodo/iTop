@@ -1408,14 +1408,15 @@ class ObjectController extends BrickController
 	protected function PrepareObjectInformation(DBObject $oObject, $aAttCodes = array())
 	{
 		$sObjectClass = get_class($oObject);
-		$aObjectData = array(
-			'id'         => $oObject->GetKey(),
-			'name'       => $oObject->GetName(),
-			'attributes' => array(),
-		);
+		$aObjectData = [
+			'id'                  => $oObject->GetKey(),
+			'object_class'  => $sObjectClass,
+			'name'             => $oObject->GetName(),
+			'attributes'        => [],
+		];
 
 		// Retrieving attributes definitions
-		$aAttDefs = array();
+		$aAttDefs = [];
 		foreach ($aAttCodes as $sAttCode)
 		{
 			if ($sAttCode === 'id')
@@ -1429,9 +1430,15 @@ class ObjectController extends BrickController
 		// Preparing attribute data
 		foreach ($aAttDefs as $oAttDef)
 		{
-			$aAttData = array(
+			$aAttData = [
 				'att_code' => $oAttDef->GetCode(),
-			);
+				'attribute-type' => get_class($oAttDef),
+			];
+
+			// - Value raw
+			if ($oAttDef::IsScalar()) {
+				$aAttData['value-raw'] =utils::HtmlEntities( (string)$oObject->Get($oAttDef->GetCode()));
+			}
 
 			if ($oAttDef->IsExternalKey())
 			{
