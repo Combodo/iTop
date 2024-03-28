@@ -132,10 +132,18 @@ $(function () {
 				})
 					// ... we consider the header as sticking...
 					.on('enter', function () {
+						// N°4631 - If a non-intersecting element is fullscreen, we do nothing
+						if ($('.ibo-is-fullscreen-non-intersecting').length > 0) {
+							return;
+						}
 						me._onHeaderBecomesSticky();
 					})
 					// ... and when it comes back in the viewport, it stops.
 					.on('leave', function () {
+						// N°4631 - If a non-intersecting element is fullscreen, we do nothing
+						if ($('.ibo-is-fullscreen-non-intersecting').length > 0) {
+							return;
+						}
 						me._onHeaderStopsBeingSticky();
 					})
 					.addTo(this.sticky_header_controller);

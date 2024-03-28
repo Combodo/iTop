@@ -141,6 +141,10 @@ $(function()
                 // Resize of the tab container
                 if(window.IntersectionObserver) {
                 	const oTabsListIntersectObs = new IntersectionObserver(function(aEntries, oTabsListIntersectObs){
+						// N°4631 - If a non-intersecting element is fullscreen, we do nothing
+						if ($('.ibo-is-fullscreen-non-intersecting').length > 0) {
+							return;
+						}
                 		aEntries.forEach(oEntry => {
                 			let oTabHeaderElem = $(oEntry.target);
                 			let bIsVisible = oEntry.isIntersecting;
