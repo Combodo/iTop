@@ -1,17 +1,7 @@
 <?php
-$bBypassMaintenance = true;
+
 require_once(dirname(__FILE__, 3) . '/approot.inc.php');
 require_once(__DIR__ . '/InstallationFileService.php');
-require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT.'/application/clipage.class.inc.php');
-require_once(APPROOT.'/core/config.class.inc.php');
-require_once(APPROOT.'/core/log.class.inc.php');
-require_once(APPROOT.'/core/kpi.class.inc.php');
-require_once(APPROOT.'/core/cmdbsource.class.inc.php');
-require_once(APPROOT.'/setup/setuppage.class.inc.php');
-require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
-require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
-require_once(APPROOT.'/setup/applicationinstaller.class.inc.php');
 
 /////////////////////////////////////////////////
 if (! utils::IsModeCLI())
