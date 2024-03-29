@@ -63,13 +63,13 @@ if ($bUseItopConfig && file_exists($sConfigFile)){
 		'url' => 'app_root_url',
 		'source_dir' => 'source_dir',
 		'graphviz_path' => 'graphviz_path',
-		'language' => 'default_language',
 	];
 	foreach($aFields as $sSetupField => $sConfField){
 		$oParams->Set($sSetupField, $oConfig->Get($sConfField));
 	}
 
 	$oParams->Set('mysql_bindir', $oConfig->GetModuleSetting('itop-backup', 'mysql_bindir', ""));
+	$oParams->Set('language', $oConfig->GetDefaultLanguage());
 } else {
 	//unattended run based on db settings coming from response_file (XML file)
 	$aDBXmlSettings = $oParams->Get('database', array());
