@@ -57,10 +57,19 @@ if ($bUseItopConfig && file_exists($sConfigFile)){
 	$aDBXmlSettings ['db_tls_enabled'] = $oConfig->Get('db_tls.enabled');
 	//cannot be null or infinite loop triggered!
 	$aDBXmlSettings ['db_tls_ca'] = $oConfig->Get('db_tls.ca') ?? "";
-
 	$oParams->Set('database', $aDBXmlSettings);
 
-	$oParams->Set('url', $oConfig->Get('app_root_url'));
+	$aFields = [
+		'url' => 'app_root_url',
+		'source_dir' => 'source_dir',
+		'graphviz_path' => 'graphviz_path',
+		'language' => 'default_language',
+	];
+	foreach($aFields as $sSetupField => $sConfField){
+		$oParams->Set($sSetupField, $oConfig->Get($sConfField));
+	}
+
+	$oParams->Set('mysql_bindir', $oConfig->GetModuleSetting('itop-backup', 'mysql_bindir', ""));
 } else {
 	//unattended run based on db settings coming from response_file (XML file)
 	$aDBXmlSettings = $oParams->Get('database', array());
