@@ -59,7 +59,7 @@ class UnattendedInstallTest extends ItopDataTestCase
 			$sJson = $this->callUnattendedFromHttp();
 		}
 
-		$this->assertEquals("Mode CLI only", $sJson, "even without HTTP protection, script should be called directly by HTTP");
+		$this->assertEquals("Mode CLI only", $sJson, "even without HTTP protection, script should NOT be called directly by HTTP");
 	}
 
 	public function testCallUnattendedInstallFromCLI() {
