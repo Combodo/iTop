@@ -11,7 +11,7 @@ node(){
 
   checkout scm
 
-  infra = load '/var/lib/jenkins/workspace/itop-test-infra_master/src/Infra.groovy'
+  infra = load '/var/lib/jenkins/workspace/itop-test-infra_6644-phpstan/src/Infra.groovy'
 }
 
 
