@@ -37,7 +37,9 @@ $(function () {
 					sticky_sentinel_top: 'ibo-sticky-sentinel-top',
 				},
 			js_selectors: {
-				global: {},
+				global: {
+					fullscreen_elements: '.ibo-is-fullscreen',
+				},
 				block: {
 					panel_header: '[data-role="ibo-panel--header"]:first',
 					panel_header_sticky_sentinel_top: '[data-role="ibo-panel--header--sticky-sentinel-top"]:first',
@@ -133,7 +135,7 @@ $(function () {
 					// ... we consider the header as sticking...
 					.on('enter', function () {
 						// N°4631 - If a non-intersecting element is fullscreen, we do nothing
-						if ($('.ibo-is-fullscreen-non-intersecting').length > 0) {
+						if ($(me.js_selectors.global.fullscreen_elements).length > 0) {
 							return;
 						}
 						me._onHeaderBecomesSticky();
@@ -141,7 +143,7 @@ $(function () {
 					// ... and when it comes back in the viewport, it stops.
 					.on('leave', function () {
 						// N°4631 - If a non-intersecting element is fullscreen, we do nothing
-						if ($('.ibo-is-fullscreen-non-intersecting').length > 0) {
+						if ($(me.js_selectors.global.fullscreen_elements).length > 0) {
 							return;
 						}
 						me._onHeaderStopsBeingSticky();

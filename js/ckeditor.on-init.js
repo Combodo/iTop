@@ -19,15 +19,16 @@ CKEDITOR.on('instanceReady', function (oEvent) {
 	// N°4631 - Add a custom class to the CKEditor container when it is in fullscreen mode
 	// so elements know they should take into account intersecting with the editor
 	oEvent.editor.on('maximize', function() {
+		const sFullscreenClass = 'ibo-is-fullscreen';
 		let container = this.container.getFirst( function( node ) {
 			return node.type === CKEDITOR.NODE_ELEMENT && node.hasClass( 'cke_inner' );
 		} );
 		if (this.commands.maximize.state === CKEDITOR.TRISTATE_ON) {
 			// The editor is in fullscreen mode, add the custom class
-			container.addClass('ibo-is-fullscreen-non-intersecting');
+			container.addClass(sFullscreenClass);
 		} else {
 			// The editor is not in fullscreen mode, remove the custom class
-			container.removeClass('ibo-is-fullscreen-non-intersecting');
+			container.removeClass(sFullscreenClass);
 		}
 	});
 });
