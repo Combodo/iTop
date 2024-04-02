@@ -2,7 +2,7 @@
 $bBypassMaintenance = true;
 require_once(dirname(__FILE__, 3) . '/approot.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT.'/application/clipage.class.inc.php');
+require_once(APPROOT.'sources/Application/WebPage/CLIPage.php');
 require_once(APPROOT.'/core/config.class.inc.php');
 require_once(APPROOT.'/core/log.class.inc.php');
 require_once(APPROOT.'/core/kpi.class.inc.php');
