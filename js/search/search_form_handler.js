@@ -1314,7 +1314,7 @@ $(function()
 			if(this._isElementSticking(oFormPanelBodyElem)) {
 				const oFormPanelElem = this._getFormPanelElem();
 				oFormPanelBodyElem.css({
-					'top': $(this.options.viewport_elem).offset().top,
+					'top': $(this.options.viewport_elem).offset()?.top, // N°7402 - In case viewport is the document, offset() will return undefined
 					'left': oFormPanelElem.offset().left,
 					'width': oFormPanelElem.outerWidth(),
 				});
