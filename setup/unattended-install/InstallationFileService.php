@@ -2,8 +2,21 @@
 
 require_once(dirname(__FILE__, 3) . '/approot.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT.'/application/clipage.class.inc.php');
+
+$aPath = [
+	'2.7' => 'application/clipage.class.inc.php',
+	'3.0' => 'sources/application/WebPage/CLIPage.php',
+	'3.1' => 'sources/Application/WebPage/CLIPage.php',
+];
+
+foreach ($aPath as $sVersion => $sPath){
+	$sAbsolutePath = APPROOT.$sPath;
+	if (is_file($sAbsolutePath)) {
+		require_once $sAbsolutePath;
+		break;
+	}
+}
+
 require_once(APPROOT.'/core/config.class.inc.php');
 require_once(APPROOT.'/core/log.class.inc.php');
 require_once(APPROOT.'/core/kpi.class.inc.php');
