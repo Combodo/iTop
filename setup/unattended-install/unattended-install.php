@@ -34,7 +34,7 @@ if ($sTargetEnvironment == '')
 $aSelectedModules = $oParams->Get('selected_modules', []);
 if (count($aSelectedModules) === 0) {
 	$sInstallationXmlPath = utils::ReadParam('use_installation_xml', 'null', true /* CLI allowed */, 'raw_data');
-	if (!is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
+	if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
 		echo "Use $sInstallationXmlPath for module selection\n";
 		$aSelectedExtensionsFromXmlSetup = $oParams->Get('selected_extensions', []);
 		if (count($aSelectedExtensionsFromXmlSetup) !== 0) {
@@ -46,6 +46,7 @@ if (count($aSelectedModules) === 0) {
 		$oInstallationFileService->Init();
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
 
+		SetupLog::Info("unattended setup redefined selected_modules: " .implode(',', $aSelectedModules));
 		$oParams->Set('selected_modules', array_keys($aSelectedModules));
 	}
 }
