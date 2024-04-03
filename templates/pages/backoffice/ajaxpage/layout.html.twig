@@ -70,7 +70,7 @@
                      * ```
                      */
                     
-                     // If these constants aren't defined by the main page, define them (global) ourselves
+                    // If these constants aren't defined by the main page, define them (global) ourselves
                     if (typeof aLoadedJsFilesRegister === "undefined") {
                         Object.defineProperty(window, "aLoadedJsFilesRegister", {
                             value: new Map(),
@@ -186,11 +186,25 @@
     {% endif %}
 
     {% block iboPageCssFiles %}
-        {% for aCssFileData in aPage.aCssFiles %}
-            <script type="text/javascript">
-                if (!$('link[href="{{ aCssFileData.link }}"]').length) $('<link href="{{ aCssFileData.link }}" rel="stylesheet">').appendTo('head');
-            </script>
-        {% endfor %}
+        <script type="text/javascript">
+            // If this constant isn't defined by the main page, define it (global) ourselves
+            if (typeof aLoadedCssFilesRegister === "undefined") {
+                Object.defineProperty(window, "aLoadedCssFilesRegister", {
+                    value: new Map(),
+                    writable: false,
+                    configurable: false,
+                    enumerable: true
+                });
+            }
+
+            {% for aCssFileData in aPage.aCssFiles %}
+                // Only if file is NOT already present in the register (see it declaration in WebPage TWIG template), add it to the page and register
+                if (aLoadedCssFilesRegister.has("{{ aCssFileData['link']|raw }}") === false) {
+                    $('<link href="{{ aCssFileData['link'] }}" rel="stylesheet">').appendTo('head');
+                    aLoadedCssFilesRegister.set("{{ aCssFileData['link']|raw }}", true);
+                }
+            {% endfor %}
+        </script>
     {% endblock %}
 
     {{ aPage.sCapturedOutput|raw }}
