@@ -23,6 +23,9 @@
 						<module>itop-hub-connector</module>
             <module>itop-oauth-client</module>
             <module>combodo-backoffice-darkmoon-theme</module>
+            <module>combodo-backoffice-fullmoon-high-contrast-theme</module>
+            <module>combodo-backoffice-fullmoon-protanopia-deuteranopia-theme</module>
+            <module>combodo-backoffice-fullmoon-tritanopia-theme</module>
             <module>itop-themes-compat</module>
 					</modules>
 					<mandatory>true</mandatory>
