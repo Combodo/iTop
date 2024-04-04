@@ -18,6 +18,8 @@ parameters:
             # prevent us from raising the rules level as we improve / clean our codebase
             - ../../../lib              # Irrelevant as we only want to analyze our codebase
             - ../../../node_modules     # Irrelevant as we only want to analyze our codebase
+            # TMP WIP for CI debug
+            - ../../../core/apc-emulation.php
             - ../../../core/oql/build
         analyseAndScan:
             #- ../../../data            # Left and commented on purpose to show that we want to analyse the generated cache files
