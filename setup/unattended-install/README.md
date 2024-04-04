@@ -8,14 +8,14 @@ For more information, see the official Wiki : [Automated installation [iTop Docu
 #install-itop.sh
 You can install your iTop by only using config-itop.php settings and run either
 
-- an iTop fresh installation (fresh-install.xml file used)
+- a non-ITIL iTop fresh installation (use itil-fresh-install.xml to have ITIL modules instead)
 ```
-./install-itop.sh
+./install-itop.sh ./xml_setup/fresh-install.xml
 ```
 
-- an iTop upgrade
+- a non-ITIL iTop upgrade (use itil-upgrade.xml to have ITIL modules instead)
 ```
-./install-itop.sh ./upgrade.xml
+./install-itop.sh ./xml_setup/upgrade.xml
 ```
 
 - a specific iTop installation by providing both xml setup file
