@@ -21,82 +21,87 @@ $ibo-vendors-selectize--item--ignore-partial--background-color: $ibo-color-grey-
 
 $ibo-vendors-selectize--input-error--border: 1px solid $ibo-color-red-600 !default;
 
-.selectize-dropdown-content {
-  max-height: unset; /* Overloaded as it will be handled by the _input-select.scss partial */
+.selectize-control.single .selectize-input {
+  box-shadow: unset;
+  background-color: unset;
+  background-image: unset;
+  background-repeat: unset;
 }
-.selectize-input input{
-  color: $ibo-vendors-selectize-input--color;
+
+.selectize-input,
+.selectize-control.single .selectize-input.input-active {
+  background: unset;
+  cursor: text;
+  display: inline-flex;
 }
 
+.selectize-control.single .selectize-input.dropdown-active:after {
+  margin-top: unset;
+  border-width: unset;
+  border-color: unset;
+}
+.selectize-control.single .selectize-input:after {
+  content: unset;
+}
+.selectize-input::after {
+  content: unset;
+}
 
-.selectize-control.plugin-combodo_add_button{
-  display: flex;
+.selectize-input>* {
+  display: inline-flex;
+}
 
-  .selectize-add-option {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    
-    position: absolute;
-    right: $ibo-vendors-selectize-control--plugin-add-button--add-option--right;
-    
-    height: $ibo-vendors-selectize-control--plugin-add-button--add-option--height;
-    width: $ibo-vendors-selectize-control--plugin-add-button--add-option--width;
-    z-index: 1;
-    
-    color: $ibo-vendors-selectize-control--plugin-add-button--add-option--color;
-    @extend %ibo-font-size-100;
+.selectize-control.single .selectize-input, .selectize-dropdown.single {
+  border-color: $ibo-color-grey-500;
+}
+
+.selectize-dropdown {
+  .selected,
+  .active,
+  .active:not(.selected){
+    background: #f5fafd;
+    color: #495c68;
+  }
+
+  [data-selectable],
+  .optgroup-header {
+    padding: 5px 8px;
+  }
+
+  .option {
+    opacity: 1;
   }
 }
 
-
-// Simple options renderer
-
-.simple-option-renderer--container {
-  display: flex;
-  align-items: center;
-}
-
-.simple-option-renderer--container--icon {
-  width: 25px;
-  text-align: center;
-}
-
-.simple-option-renderer--container--label {
-  margin-left: 3px;
-  flex-grow: 1;
-}
-
-
-
-.selectize-input{
-  .attribute-set-item{
-    >* {
+// Bulk modification: add / remove / partial items states
+.selectize-input {
+  .attribute-set-item {
+    > * {
       display: inline;
     }
-    &.item-add::before,&.item-remove::before{
+    &.item-add::before,&.item-remove::before {
       @extend %fa-solid-base;
       margin-right: $ibo-vendors-selectize--item--icon--margin-right;
     }
-    &.item-add{
+    &.item-add {
       background-color: $ibo-vendors-selectize--item--add--background-color !important;
-      &::before{
+      &::before {
         color: $ibo-vendors-selectize--item--add--icon--color;
         content: '\f067';
       }
     }
-    &.item-remove{
+    &.item-remove {
       background-color: $ibo-vendors-selectize--item--remove--background-color !important;
-      &::before{
+      &::before {
         color: $ibo-vendors-selectize--item--remove--icon--color;
         content: '\f1f8';
       }
     }
-    &.item-ignore-partial{
+    &.item-ignore-partial {
       background-color: $ibo-vendors-selectize--item--ignore-partial--background-color !important;
     }
   }
-  &.selectize-input-error{
+  &.selectize-input-error {
     border: $ibo-vendors-selectize--input-error--border;
   }
 }

@@ -24,8 +24,9 @@
 	- jQuery scripts spurious problems (like failing on a 'reload') #}
     {% block iboPageCssFiles %}
 	    {% for aCssFileData in aPage.aCssFiles %}
+            {# Mind that CSS files are registered in a JS variable below (@see aLoadedCssFilesRegister), to ensure that a file isn't loaded twice through an async call #}
 		    {% if aCssFileData['condition'] != '' %}<!--[if {{ aCssFileData['condition'] }}]>{% endif %}
-			<link type="text/css" href="{{ aCssFileData['link']|add_itop_version|raw }}" rel="stylesheet">
+			    <link type="text/css" href="{{ aCssFileData['link']|add_itop_version|raw }}" rel="stylesheet">
 			{% if aCssFileData['condition'] != '' %}<![endif]-->{% endif %}
 	    {% endfor %}
     {% endblock %}
@@ -66,11 +67,26 @@
 {% block iboPageTemplates %}
 {% endblock %}
 
+{# CSS files can either be loaded initially or requested by an XHR response                                                                    #}
+{# In order to ensure that a file isn't loaded twice, we register them here so async calls can check if they to load their dependencies or not #}
+{# Note that unlike for the JS files, we don't need to use promises, as we don't need them to wait for the previous one to be loaded           #}
+{# (Having a CSS loaded again can lead to rule overloads being reverted)                                                                       #}
 <script type="text/javascript">
+/**
+ * @var {Map} aLoadedCssFilesRegister
+ * Register of all CSS files loaded in this page.
+ * A CSS file MUST NOT be loaded more than once as it could compromise rules overloads loaded after the first time.
+ */
+const aLoadedCssFilesRegister = new Map();
+{% for aCssFileData in aPage.aCssFiles %}
+    aLoadedCssFilesRegister.set("{{ aCssFileData['link']|raw }}", true);
+{% endfor %}
+</script>
+
 {# JS files can either be loaded initially or requested by an XHR response                                          #}
 {# - For the initial page, all files are loaded before running inline snippets                                      #}
 {# - For XHR responses, we need to ensure that all required files are fully loaded before running inline snippets   #}
-
+<script type="text/javascript">
 /**
  * @var {Map} aLoadedJsFilesRegister
  * Register of all JS files loaded in this page, including the Promise corresponding to the loading state of each file.
@@ -83,11 +99,11 @@ const aLoadedJsFilesRegister = new Map();
  */
 const aLoadedJsFilesResolveCallbacks = new Map();
 {% for sJsFile in aPage.aJsFiles %}
-aLoadedJsFilesRegister.set("{{ sJsFile|raw }}", new Promise(function(resolve) {
-    aLoadedJsFilesResolveCallbacks.set("{{ sJsFile|raw }}", resolve);
-    // Resolve promise right away as these files are loaded immediately before any inline JS is executed
-    aLoadedJsFilesResolveCallbacks.get("{{ sJsFile|raw }}")();
-}));
+    aLoadedJsFilesRegister.set("{{ sJsFile|raw }}", new Promise(function(resolve) {
+        aLoadedJsFilesResolveCallbacks.set("{{ sJsFile|raw }}", resolve);
+        // Resolve promise right away as these files are loaded immediately before any inline JS is executed
+        aLoadedJsFilesResolveCallbacks.get("{{ sJsFile|raw }}")();
+    }));
 {% endfor %}
 </script>
 

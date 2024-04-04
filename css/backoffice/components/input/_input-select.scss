@@ -49,10 +49,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 .ibo-input-select {
   display: inline-flex;
   min-width: $ibo-input-select--value--min-midth;
-
-  &:not(.ibo-input-select-autocomplete):not(.ibo-input-selectize) {
-    appearance: none;
-  }
+  appearance: none;
 
   &.ibo-input-selectize {
     padding-right: 0;
@@ -108,7 +105,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
       outline: none !important; /* Overwrite browsers default focus outline */
     }
   }
-  
+
   &.input-active{
     border: 1px solid $ibo-input--focus--border-color;
   }
@@ -123,15 +120,16 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 }
 .ibo-input-select-wrapper::after{
 	position: absolute;
+  z-index: 1;
 	content: "\f0d7";
 	font-family: "Font Awesome 5 Free";
 	font-weight: 600;
-	
+
 	height: $ibo-input-select-wrapper--after--height;
 	margin-left: $ibo-input-select-wrapper--after--margin-left;
 	margin-top: $ibo-input-select-wrapper--after--margin-top;
 	padding-top: $ibo-input-select-wrapper--after--padding-top;
-	
+
 	background-color: $ibo-input-select-wrapper--after--background-color;
 	color: $ibo-input-select-wrapper--after--color;
 	pointer-events: none;
@@ -146,6 +144,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 
 .ibo-input-select-wrapper--with-buttons:not(.ibo-input-select-autocomplete-wrapper)::after {
   position: absolute;
+  z-index: 1;
   content: "\f0d7";
   font-family: "Font Awesome 5 Free";
   font-weight: 600;
@@ -163,6 +162,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 }
 .ibo-input-select--action-buttons{
   position: absolute;
+  z-index: 1;
   display: flex;
   height: $ibo-input-select--action-button--height;
   margin-top: $ibo-input-select--action-button--margin-top;

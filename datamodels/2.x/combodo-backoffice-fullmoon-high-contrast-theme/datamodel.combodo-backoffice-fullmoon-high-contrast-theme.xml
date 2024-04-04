@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+  <branding>
+    <themes>
+      <theme id="fullmoon-high-contrast" _delta="define">
+        <variables>
+        </variables>
+        <imports>
+          <import id="fullmoon-high-contrast-scss-variables" xsi:type="variables">combodo-backoffice-fullmoon-high-contrast-theme/scss/scss-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
+          <stylesheet id="high-contrast-stylesheet">combodo-backoffice-fullmoon-high-contrast-theme/scss/stylesheet.scss</stylesheet>
+        </stylesheets>
+        <precompiled_stylesheet>combodo-backoffice-fullmoon-high-contrast-theme/precompiled-themes/main.css</precompiled_stylesheet>
+      </theme>
+    </themes>
+  </branding>
+</itop_design>
