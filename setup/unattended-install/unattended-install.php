@@ -32,24 +32,33 @@ if ($sTargetEnvironment == '')
 }
 
 $aSelectedModules = $oParams->Get('selected_modules', []);
-if (count($aSelectedModules) === 0) {
-	$sInstallationXmlPath = utils::ReadParam('use_installation_xml', 'null', true /* CLI allowed */, 'raw_data');
-	if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
-		echo "Use $sInstallationXmlPath for module selection\n";
-		$aSelectedExtensionsFromXmlSetup = $oParams->Get('selected_extensions', []);
-		if (count($aSelectedExtensionsFromXmlSetup) !== 0) {
-			echo "Selected extensions specified in XML setup: \n".implode('\t\n', $aSelectedExtensionsFromXmlSetup)."\n\n";
-		}
-
-		$oInstallationFileService = new InstallationFileService($sInstallationXmlPath, $sTargetEnvironment,
-			$aSelectedExtensionsFromXmlSetup);
-		$oInstallationFileService->Init();
-		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
-
-		SetupLog::Info("unattended setup redefined selected_modules: " .implode(',', $aSelectedModules));
-		$oParams->Set('selected_modules', array_keys($aSelectedModules));
+$sInstallationXmlPath = utils::ReadParam('use_installation_xml', 'null', true /* CLI allowed */, 'raw_data');
+if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
+	echo "Use $sInstallationXmlPath for module selection\n";
+	$aSelectedExtensionsFromXmlSetup = $oParams->Get('selected_extensions', []);
+	if (count($aSelectedExtensionsFromXmlSetup) !== 0) {
+		$sMsg = "Installation choices found in `selected_extensions` section of `response_file` file";
+		echo "$sMsg:\n".implode(',', $aSelectedExtensionsFromXmlSetup)."\n\n";
+		SetupLog::Info($sMsg, null, $aSelectedExtensionsFromXmlSetup);
+	} else {
+		$sMsg = "No Installation choices found in `selected_extensions` section of `response_file` file";
+		echo "$sMsg:\n\n";
+		SetupLog::Info($sMsg);
 	}
+
+	$oInstallationFileService = new InstallationFileService($sInstallationXmlPath, $sTargetEnvironment, $aSelectedExtensionsFromXmlSetup);
+	$oInstallationFileService->Init();
+	$aSelectedModules = $oInstallationFileService->GetSelectedModules();
+
+	$sMsg = "Computed `selected_modules` modules to install via `use_installation_xml` file";
+	$aComputedModules = array_keys($aSelectedModules);
+	sort($aComputedModules);
+	echo "$sMsg:\n".implode(',', $aComputedModules)."\n\n";
+	SetupLog::Info($sMsg, null, $aComputedModules);
+
+	$oParams->Set('selected_modules', $aComputedModules);
 }
+
 // Configuration file
 $sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
 $bUseItopConfig = ((bool) utils::ReadParam('use-itop-config', 0, true /* CLI allowed */));
