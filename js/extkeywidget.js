@@ -321,6 +321,11 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	 * @return {void}
 	 */
 	this.UpdateDropdownPosition = function (oControlElem, oDropdownElem) {
+		// First fix width to ensure it's not too long
+		const fControlWidth = oControlElem.outerWidth();
+		oDropdownElem.css('width', fControlWidth);
+
+		// Then, fix height / position to ensure it's within the viewport
 		const fWindowHeight = window.innerHeight;
 
 		const fControlTopY = oControlElem.offset().top;
