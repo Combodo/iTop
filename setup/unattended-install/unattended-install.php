@@ -35,7 +35,6 @@ if (in_array('--help', $argv)) {
     PrintUsageAndExit();
 }
 
-var_dump(utils::ReadParam('param-file', null, true /* CLI allowed */, 'raw_data'));
 $sParamFile = utils::ReadParam('param-file', null, true /* CLI allowed */, 'raw_data') ?? utils::ReadParam('response_file', null, true /* CLI allowed */, 'raw_data');
 if (is_null($sParamFile)) {
 	echo "Missing mandatory argument `--param-file`.\n";

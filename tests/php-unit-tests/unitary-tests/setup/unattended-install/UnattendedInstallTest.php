@@ -64,16 +64,11 @@ class UnattendedInstallTest extends ItopDataTestCase
 
 	public function testCallUnattendedInstallFromCLI() {
 		$cliPath = realpath(APPROOT."/setup/unattended-install/unattended-install.php");
-		$res = exec("php ".$cliPath);
+		exec("php ".$cliPath, $aOutput, $iCode);
 
-		$this->assertEquals("Param file `default-params.xml` doesn't exist ! Exiting...", $res);
-	}
-
-	public function testCallUnattendedInstall_ReadInstallationOption() {
-		$cliPath = realpath(APPROOT."/setup/unattended-install/unattended-install.php");
-		$sXmlInstallationPath = realpath(APPROOT."/datamodels/2.x/installation.xml");
-		$res = exec("php ".$cliPath . " use-installation-xml=$sXmlInstallationPath");
-
-		$this->assertEquals("Param file `default-params.xml` doesn't exist ! Exiting...", $res);
+		$sOutput = implode('\n', $aOutput);
+		var_dump($sOutput);
+		$this->assertStringContainsString("Missing mandatory argument `--param-file`", $sOutput);
+		$this->assertEquals(255, $iCode);
 	}
 }
