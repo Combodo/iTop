@@ -60,6 +60,7 @@ class EventNotificationNewsroomService {
 		$oEvent->Set('trigger_id', $iTriggerId);
 		$oEvent->Set('action_id', $oAction->GetKey());
 		$oEvent->Set('object_id', $iObjectId);
+        $oEvent->Set('object_class', $sObjectClass);
 		$oEvent->Set('url', $sUrl);
 		if ($sDate !== null) {
 			$oEvent->Set('date', $sDate);

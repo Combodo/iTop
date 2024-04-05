@@ -566,6 +566,7 @@ class ActionEmail extends ActionNotification
 			$oLog->Set('trigger_id', $oTrigger->GetKey());
 			$oLog->Set('action_id', $this->GetKey());
 			$oLog->Set('object_id', $aContextArgs['this->object()']->GetKey());
+            $oLog->Set('object_class', get_class($aContextArgs['this->object()']));
 			// Must be inserted now so that it gets a valid id that will make the link
 			// between an eventual asynchronous task (queued) and the log
 			$oLog->DBInsertNoReload();
