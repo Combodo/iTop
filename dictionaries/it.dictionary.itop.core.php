@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
@@ -306,6 +306,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:EventNotification/Attribute:object_id+' => 'Id oggetto (classe definita dal trigger ?)',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
 	'Class:EventNotification/Attribute:trigger_id+' => 'account utente',
+    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'Emissione evento Email',
 	'Class:EventNotificationEmail+' => 'Traccia di una e-mail che è stato inviata',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Allegati',

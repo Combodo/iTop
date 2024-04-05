@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
@@ -311,6 +311,8 @@ If omitted the From (label) is used.~~',
 	'Class:EventNotification/Attribute:object_id+' => 'Идентификатор объекта целевого класса триггера',
 	'Class:EventNotification/Attribute:trigger_id' => 'Триггер',
 	'Class:EventNotification/Attribute:trigger_id+' => 'Сработавший триггер',
+    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'Уведомление по email',
 	'Class:EventNotificationEmail+' => 'Отслеживание уведомлений по email',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Вложения',

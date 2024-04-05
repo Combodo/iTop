@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
@@ -306,6 +306,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventNotification/Attribute:object_id+' => 'ID do objeto (classe definida pelo gatilho?)',
 	'Class:EventNotification/Attribute:trigger_id' => 'Gatilho',
 	'Class:EventNotification/Attribute:trigger_id+' => 'Conta de usuário',
+    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'Evento de envio de e-mail',
 	'Class:EventNotificationEmail+' => 'Controle de e-mails que foram enviados',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Anexos',

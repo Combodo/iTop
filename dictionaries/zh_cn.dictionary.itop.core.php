@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
@@ -322,6 +322,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventNotification/Attribute:object_id+' => '对象编号 (类型由触发器定义?)',
 	'Class:EventNotification/Attribute:trigger_id' => '触发器',
 	'Class:EventNotification/Attribute:trigger_id+' => '用户账号',
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => '邮件发送事件',
 	'Class:EventNotificationEmail+' => '跟踪每封已发送的邮件',
 	'Class:EventNotificationEmail/Attribute:attachments' => '附件',
