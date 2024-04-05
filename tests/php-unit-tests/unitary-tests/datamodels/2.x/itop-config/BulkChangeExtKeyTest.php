@@ -299,7 +299,6 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 			$this->debug("Process:");
 			static::assertNotNull($aRes);
 			$this->debug("assertNotNull:");
-			var_dump($aRes);
 			foreach ($aRes as $aRow) {
 				if (array_key_exists('__STATUS__', $aRow)) {
 					$sStatus = $aRow['__STATUS__'];
@@ -308,12 +307,11 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 					foreach ($aRow as $i => $oCell) {
 						if ($i != "finalclass" && $i != "__STATUS__" && $i != "__ERRORS__") {
 							$this->debug("i:" . $i);
-							$this->debug('GetDisplayableValue:' . $oCell->GetDisplayableValue());
 							if (array_key_exists($i, $aResult)) {
 								$this->debug("aResult:" . var_export($aResult[$i]));
 								if ($oCell instanceof \CellStatus_SearchIssue ||
 									$oCell instanceof \CellStatus_Ambiguous) {
-									$this->assertEquals($aResult[$i][0], $oCell->GetDisplayableValue(),
+									$this->assertEquals($aResult[$i][0], $oCell->GetCLIValue(),
 										"failure on " . get_class($oCell) . ' cell type');
 									$this->assertEquals($sSearchLinkUrl, $oCell->GetSearchLinkUrl(),
 										"failure on " . get_class($oCell) . ' cell type');
@@ -326,7 +324,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 							$this->assertEquals($sErrors, $oCell->GetDescription());
 						}
 					}
-					$this->assertEquals($aResult[0], $aRow[0]->GetDisplayableValue());
+					$this->assertEquals($aResult[0], $aRow[0]->GetCLIValue());
 				}
 			}
 			MetaModel::GetConfig()->Set('db_core_transactions_enabled', $db_core_transactions_enabled);
