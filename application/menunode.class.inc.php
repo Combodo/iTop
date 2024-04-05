@@ -280,9 +280,11 @@ class ApplicationMenu
 			$oMenuNode = static::GetMenuNode($sMenuGroupIdx);
 
 			if (!($oMenuNode instanceof MenuGroup)) {
-				IssueLog::Error('Menu node was not displayed as a menu group as it is actually not a menu group', LogChannels::CONSOLE, [
+				IssueLog::Error('Menu node without parent (root menu) must be of type menu group. Parent menu is missing or not visible to user.', LogChannels::CONSOLE, [
 					'menu_node_class' => get_class($oMenuNode),
+					'menu_node_id' => $oMenuNode->GetMenuID(),
 					'menu_node_label' => $oMenuNode->GetLabel(),
+					'current_user_id' => UserRights::GetUserId(),
 				]);
 				continue;
 			}
