@@ -211,21 +211,11 @@ class apcFile
 	 */
 	static public function StoreOneFile($sKey, $value, $iTTL)
 	{
-		if (empty($sKey))
-		{
+		if (empty($sKey)) {
 			return false;
 		}
 
-		if (is_file(self::GetCacheFileName($sKey)))
-		{
-			@unlink(self::GetCacheFileName($sKey));
-		}
-		if (is_file(self::GetCacheFileName('-'.$sKey)))
-		{
-			@unlink(self::GetCacheFileName('-'.$sKey));
-		}
-		if ($iTTL > 0)
-		{
+		if ($iTTL > 0) {
 			// hint for ttl management
 			$sKey = '-'.$sKey;
 		}
@@ -233,15 +223,14 @@ class apcFile
 		$sFilename = self::GetCacheFileName($sKey);
 		// try to create the folder
 		$sDirname = dirname($sFilename);
-		if (!file_exists($sDirname))
-		{
-			if (!@mkdir($sDirname, 0755, true))
-			{
+		if (!is_dir($sDirname)) {
+			if (!@mkdir($sDirname, 0755, true)) {
 				return false;
 			}
 		}
 		$bRes = !(@file_put_contents($sFilename, serialize($value), LOCK_EX) === false);
 		self::AddFile($sFilename);
+
 		return $bRes;
 	}
 
@@ -325,19 +314,15 @@ class apcFile
 	 */
 	static protected function ReadCacheLocked($sFilename)
 	{
-		if (!is_file($sFilename))
-		{
-			return false;
-		}
+		$sContent = false;
 		$file = @fopen($sFilename, 'r');
-		if ($file === false)
-		{
-			return false;
+		if ($file !== false) {
+			if (flock($file, LOCK_SH)) {
+				$sContent = file_get_contents($sFilename);
+				flock($file, LOCK_UN);
+			}
+			fclose($file);
 		}
-		flock($file, LOCK_SH);
-		$sContent = @fread($file, @filesize($sFilename));
-		flock($file, LOCK_UN);
-		fclose($file);
 		return $sContent;
 	}
 
