@@ -35,8 +35,9 @@ if (in_array('--help', $argv)) {
     PrintUsageAndExit();
 }
 
-$sParamFile = utils::ReadParam('param-file', 'null', true /* CLI allowed */, 'raw_data') ?? utils::ReadParam('response_file', 'null', true /* CLI allowed */, 'raw_data');
-if ($sParamFile === 'null') {
+var_dump(utils::ReadParam('param-file', null, true /* CLI allowed */, 'raw_data'));
+$sParamFile = utils::ReadParam('param-file', null, true /* CLI allowed */, 'raw_data') ?? utils::ReadParam('response_file', null, true /* CLI allowed */, 'raw_data');
+if (is_null($sParamFile)) {
 	echo "Missing mandatory argument `--param-file`.\n";
     PrintUsageAndExit();
 }
@@ -58,7 +59,7 @@ if ($sTargetEnvironment == '')
 }
 
 $sXmlSetupBaseName = basename($sParamFile);
-$sInstallationXmlPath = utils::ReadParam('installation-xml', 'null', true /* CLI allowed */, 'raw_data');
+$sInstallationXmlPath = utils::ReadParam('installation-xml', null, true /* CLI allowed */, 'raw_data');
 if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
 	$sInstallationBaseName = basename($sInstallationXmlPath);
 
