@@ -360,5 +360,5 @@ if (! $bFoundIssues)
 
 $sLogMsg = "installation failed!";
 SetupLog::Error($sLogMsg);
-echo "\n$sLogMsg";
+echo "\n$sLogMsg\n";
 exit(-1);
