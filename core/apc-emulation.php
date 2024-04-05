@@ -60,14 +60,15 @@ function apc_store($key, $var = NULL, $ttl = 0)
  */
 function apc_fetch($key)
 {
-	if (is_array($key))
-	{
-		$aResult = array();
-		foreach($key as $sKey)
-		{
+	if (is_array($key)) {
+		$aResult = [];
+		foreach ($key as $sKey) {
 			$aResult[$sKey] = apcFile::FetchOneFile($sKey);
 		}
+
 		return $aResult;
+	} elseif (is_null($key)) {
+		return false;
 	}
 	return apcFile::FetchOneFile($key);
 }
@@ -214,7 +215,12 @@ class apcFile
 		if (empty($sKey)) {
 			return false;
 		}
-
+		if (is_file(self::GetCacheFileName($sKey))) {
+			@unlink(self::GetCacheFileName($sKey));
+		}
+		if (is_file(self::GetCacheFileName('-'.$sKey))) {
+			@unlink(self::GetCacheFileName('-'.$sKey));
+		}
 		if ($iTTL > 0) {
 			// hint for ttl management
 			$sKey = '-'.$sKey;
