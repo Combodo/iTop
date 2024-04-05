@@ -1,4 +1,4 @@
-<p align="center"><a href="https://www.combodo.com/itop-193" target="_blank">
+![image](https://github.com/Combodo/iTop/assets/5130468/cfc7c8f7-beca-4e9d-bde3-4ebf81a8b74c)<p align="center"><a href="https://www.combodo.com/itop-193" target="_blank">
     <img src="https://www.combodo.com/logos/logo-itop-baseline.svg" width=350>
 </a></p>
 
@@ -90,6 +90,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Dejin, Bie (a.k.a [@bdejin](https://github.com/bdejin))
 - Dvořák, Lukáš
 - Goethals, Stefan
+- Giuva, Vincenzo Katriel (a.k.a [@DarkNight97boss](https://github.com/DarkNight97boss))
 - Gumble, David
 - Ji, Leeb (冀利斌) (a.k.a [@chileeb](https://github.com/chileeb))
 - Kaltefleiter, Lars (a.k.a [@larhip](https://www.github.com/larhip))
