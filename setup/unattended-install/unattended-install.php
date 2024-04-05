@@ -21,6 +21,7 @@ if (false === file_exists($sParamFile)) {
 	echo "Param file `$sParamFile` doesn't exist ! Exiting...";
 	exit(-1);
 }
+
 $oParams = new XMLParameters($sParamFile);
 
 $sMode = $oParams->Get('mode');
@@ -31,33 +32,37 @@ if ($sTargetEnvironment == '')
 	$sTargetEnvironment = 'production';
 }
 
-$aSelectedModules = $oParams->Get('selected_modules', []);
+$sXmlSetupBaseName = basename($sParamFile);
 $sInstallationXmlPath = utils::ReadParam('use_installation_xml', 'null', true /* CLI allowed */, 'raw_data');
 if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
-	echo "Use $sInstallationXmlPath for module selection\n";
+	$sInstallationBaseName = basename($sInstallationXmlPath);
+
 	$aSelectedExtensionsFromXmlSetup = $oParams->Get('selected_extensions', []);
 	if (count($aSelectedExtensionsFromXmlSetup) !== 0) {
-		$sMsg = "Installation choices found in `selected_extensions` section of `response_file` file";
+		$sMsg = "Modules to install computed based on $sInstallationBaseName file and installation choices (listed in section `selected_extensions` of $sXmlSetupBaseName file)";
 		echo "$sMsg:\n".implode(',', $aSelectedExtensionsFromXmlSetup)."\n\n";
 		SetupLog::Info($sMsg, null, $aSelectedExtensionsFromXmlSetup);
 	} else {
-		$sMsg = "No Installation choices found in `selected_extensions` section of `response_file` file";
-		echo "$sMsg:\n\n";
+		$sMsg = "Modules to install computed based on default installation choices inside $sInstallationBaseName (no choice specified in section `selected_extensions` of $sXmlSetupBaseName file).";
+		echo "$sMsg\n\n";
 		SetupLog::Info($sMsg);
 	}
 
 	$oInstallationFileService = new InstallationFileService($sInstallationXmlPath, $sTargetEnvironment, $aSelectedExtensionsFromXmlSetup);
 	$oInstallationFileService->Init();
-	$aSelectedModules = $oInstallationFileService->GetSelectedModules();
+	$aComputedModules = $oInstallationFileService->GetSelectedModules();
+	$aSelectedModules = array_keys($aComputedModules);
+	$oParams->Set('selected_modules', $aSelectedModules);
 
-	$sMsg = "Computed `selected_modules` modules to install via `use_installation_xml` file";
-	$aComputedModules = array_keys($aSelectedModules);
-	sort($aComputedModules);
-	echo "$sMsg:\n".implode(',', $aComputedModules)."\n\n";
-	SetupLog::Info($sMsg, null, $aComputedModules);
-
-	$oParams->Set('selected_modules', $aComputedModules);
+	$sMsg = "Modules to install computed";
+} else {
+	$aSelectedModules = $oParams->Get('selected_modules', []);
+	$sMsg = "Modules to install listed in $sXmlSetupBaseName (selected_modules section)";
 }
+
+sort($aSelectedModules);
+echo "$sMsg:\n".implode(',', $aSelectedModules)."\n\n";
+SetupLog::Info($sMsg, null, $aSelectedModules);
 
 // Configuration file
 $sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
@@ -250,7 +255,7 @@ if ($bHasErrors)
 	$sLogMsg = "Encountered stopper issues. Aborting...";
 	echo "$sLogMsg\n";
 	SetupLog::Error($sLogMsg);
-	die;
+	exit(-1);
 }
 
 $bFoundIssues = false;
