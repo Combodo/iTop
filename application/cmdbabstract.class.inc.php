@@ -759,10 +759,11 @@ HTML
 			if ($bEditMode && (!$bReadOnly)) {
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
 				$sDisplayValue = ''; // not used
-				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode,
-						$oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+				$oDiv=UIContentBlockUIBlockFactory::MakeStandard('field_'.$sInputId);
+				$oLinkBlock = self::GetBlockFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs);
+				$oDiv->AddSubBlock($oLinkBlock);
 				$this->AddToFieldsMap($sAttCode, $sInputId);
-				$oPage->add($sHTMLValue);
+				$oPage->AddUiBlock($oDiv);
 			} else {
 				if ($oAttDef->IsIndirect()) {
 					$oBlockLinkSetViewTable = new BlockIndirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef, $bReadOnly);
@@ -2043,161 +2044,200 @@ HTML
 	 */
 	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '', $iFlags = 0, $aArgs = array(), $bPreserveCurrentValue = true, &$sInputType = '')
 	{
-		$sFormPrefix = isset($aArgs['formPrefix']) ? $aArgs['formPrefix'] : '';
-		$sFieldPrefix = isset($aArgs['prefix']) ? $sFormPrefix.$aArgs['prefix'] : $sFormPrefix;
-		if ($sDisplayValue == '') {
-			$sDisplayValue = $value;
-		}
+	    $oBlock = self::GetBlockFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $sDisplayValue, $iId, $sNameSuffix, $iFlags, $aArgs, $bPreserveCurrentValue, $sInputType);
+        return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage,  $oBlock);
+    }
 
-		if (isset($aArgs[$sAttCode]) && empty($value)) {
-			// default value passed by the context (either the app context of the operation)
-			$value = $aArgs[$sAttCode];
-		}
+    /**
+     * @param \WebPage $oPage
+     * @param string $sClass
+     * @param string $sAttCode
+     * @param \AttributeDefinition $oAttDef
+     * @param string $value
+     * @param string $sDisplayValue
+     * @param string $iId
+     * @param string $sNameSuffix
+     * @param int $iFlags
+     * @param array{this: \DBObject, formPrefix: string} $aArgs
+     * @param bool $bPreserveCurrentValue Preserve the current value even if not allowed
+     * @param string $sInputType type of rendering used, see ENUM_INPUT_TYPE_* const
+     *
+     * @return UIContentBlock
+     *
+     * @throws \ArchivedObjectException
+     * @throws \ConfigException
+     * @throws \CoreException
+     * @throws \CoreUnexpectedValue
+     * @throws \DictExceptionMissingString
+     * @throws \MySQLException
+     * @throws \OQLException
+     * @throws \ReflectionException
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \Exception
+     */
+    public static function GetBlockFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '', $iFlags = 0, $aArgs = array(), $bPreserveCurrentValue = true, &$sInputType = ''):UIContentBlock
+    {
+        $sFormPrefix = isset($aArgs['formPrefix']) ? $aArgs['formPrefix'] : '';
+        $sFieldPrefix = isset($aArgs['prefix']) ? $sFormPrefix.$aArgs['prefix'] : $sFormPrefix;
+        if ($sDisplayValue == '') {
+            $sDisplayValue = $value;
+        }
 
-		if (!empty($iId)) {
-			$iInputId = $iId;
-		} else {
-			$iInputId = utils::GetUniqueId();
-		}
+        if (isset($aArgs[$sAttCode]) && empty($value)) {
+            // default value passed by the context (either the app context of the operation)
+            $value = $aArgs[$sAttCode];
+        }
 
-		$sHTMLValue = '';
+        if (!empty($iId)) {
+            $iInputId = $iId;
+        } else {
+            $iInputId = utils::GetUniqueId();
+        }
 
-		// attributes not compatible with bulk modify
-		$bAttNotCompatibleWithBulk = array_key_exists('bulk_context', $aArgs) && !$oAttDef->IsBulkModifyCompatible();
-		if ($bAttNotCompatibleWithBulk) {
-			$oTagSetBlock = new Html('<span class="ibo-bulk--bulk-modify--incompatible-attribute">'.Dict::S('UI:Bulk:modify:IncompatibleAttribute').'</span>');
-			$sHTMLValue = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oTagSetBlock);
-		}
+        $oBlockValue = null;
+        $sHTMLValue = '';
 
-		if (!$oAttDef->IsExternalField() && !$bAttNotCompatibleWithBulk) {
-			$bMandatory = 'false';
-			if ((!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY)) {
-				$bMandatory = 'true';
-			}
-			$sValidationSpan = "<span class=\"form_validation ibo-field-validation\" id=\"v_{$iId}\"></span>";
-			$sReloadSpan = "<span class=\"field_status\" id=\"fstatus_{$iId}\"></span>";
-			$sHelpText = utils::EscapeHtml($oAttDef->GetHelpOnEdition());
+        // attributes not compatible with bulk modify
+        $bAttNotCompatibleWithBulk = array_key_exists('bulk_context', $aArgs) && !$oAttDef->IsBulkModifyCompatible();
+        if ($bAttNotCompatibleWithBulk) {
+            $oBlockValue= new Html('<span class="ibo-bulk--bulk-modify--incompatible-attribute">'.Dict::S('UI:Bulk:modify:IncompatibleAttribute').'</span>');
+        }
 
-			// mandatory field control vars
-			$aEventsList = array(); // contains any native event (like change), plus 'validate' for the form submission
-			$sNullValue = $oAttDef->GetNullValue(); // used for the ValidateField() call in js/forms-json-utils.js
-			$sFieldToValidateId = $iId; // can be different than the displayed field (for example in TagSet)
+        if (!$oAttDef->IsExternalField() && !$bAttNotCompatibleWithBulk) {
+            $bMandatory = 'false';
+            if ((!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY)) {
+                $bMandatory = 'true';
+            }
+            $sValidationSpan = "<span class=\"form_validation ibo-field-validation\" id=\"v_{$iId}\"></span>";
+            $sReloadSpan = "<span class=\"field_status\" id=\"fstatus_{$iId}\"></span>";
+            $sHelpText = utils::EscapeHtml($oAttDef->GetHelpOnEdition());
 
-			// List of attributes that depend on the current one
-			// Might be modified depending on the current field
-			$sWizardHelperJsVarName = "oWizardHelper{$sFormPrefix}";
-			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode);
+            // mandatory field control vars
+            $aEventsList = array(); // contains any native event (like change), plus 'validate' for the form submission
+            $sNullValue = $oAttDef->GetNullValue(); // used for the ValidateField() call in js/forms-json-utils.js
+            $sFieldToValidateId = $iId; // can be different than the displayed field (for example in TagSet)
 
-			$sAttDefEditClass = $oAttDef->GetEditClass();
-			switch ($sAttDefEditClass) {
-				case 'Date':
-					$sInputType = self::ENUM_INPUT_TYPE_SINGLE_INPUT;
-					$aEventsList[] = 'validate';
-					$aEventsList[] = 'keyup';
-					$aEventsList[] = 'change';
+            // List of attributes that depend on the current one
+            // Might be modified depending on the current field
+            $sWizardHelperJsVarName = "oWizardHelper{$sFormPrefix}";
+            $aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode);
 
-					$sPlaceholderValue = 'placeholder="'.utils::EscapeHtml(AttributeDate::GetFormat()->ToPlaceholder()).'"';
-					$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
-					$sHTMLValue = <<<HTML
+            $sAttDefEditClass = $oAttDef->GetEditClass();
+            switch ($sAttDefEditClass) {
+                case 'Date':
+                    $sInputType = self::ENUM_INPUT_TYPE_SINGLE_INPUT;
+                    $aEventsList[] = 'validate';
+                    $aEventsList[] = 'keyup';
+                    $aEventsList[] = 'change';
+
+                    $sPlaceholderValue = 'placeholder="'.utils::EscapeHtml(AttributeDate::GetFormat()->ToPlaceholder()).'"';
+                    $sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
+                    $sHTMLValue = <<<HTML
 <div class="field_input_zone field_input_date ibo-input-wrapper ibo-input-date-wrapper" data-validation="untouched">
 	<input title="$sHelpText" class="date-pick ibo-input ibo-input-date" type="text" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autocomplete="off" />
 </div>{$sValidationSpan}{$sReloadSpan}
 HTML;
-					break;
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
 
-				case 'DateTime':
-					$sInputType = self::ENUM_INPUT_TYPE_SINGLE_INPUT;
-					$aEventsList[] = 'validate';
-					$aEventsList[] = 'keyup';
-					$aEventsList[] = 'change';
+                case 'DateTime':
+                    $sInputType = self::ENUM_INPUT_TYPE_SINGLE_INPUT;
+                    $aEventsList[] = 'validate';
+                    $aEventsList[] = 'keyup';
+                    $aEventsList[] = 'change';
 
-					$sPlaceholderValue = 'placeholder="'.utils::EscapeHtml(AttributeDateTime::GetFormat()->ToPlaceholder()).'"';
-					$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
-					$sHTMLValue = <<<HTML
+                    $sPlaceholderValue = 'placeholder="'.utils::EscapeHtml(AttributeDateTime::GetFormat()->ToPlaceholder()).'"';
+                    $sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
+                    $sHTMLValue = <<<HTML
 <div class="field_input_zone field_input_datetime ibo-input-wrapper ibo-input-datetime-wrapper" data-validation="untouched">
 	<input title="{$sHelpText}" class="datetime-pick ibo-input ibo-input-datetime" type="text" size="19" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autocomplete="off" />
 </div>{$sValidationSpan}{$sReloadSpan}
 HTML;
-					break;
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
 
-				case 'Duration':
-					$sInputType = self::ENUM_INPUT_TYPE_MULTIPLE_INPUTS;
-					$aEventsList[] = 'validate';
-					$aEventsList[] = 'change';
-					$oPage->add_ready_script("$('#{$iId}_d').on('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
-					$oPage->add_ready_script("$('#{$iId}_h').on('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
-					$oPage->add_ready_script("$('#{$iId}_m').on('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
-					$oPage->add_ready_script("$('#{$iId}_s').on('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
-					$aVal = AttributeDuration::SplitDuration($value);
-					$sDays = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"3\" name=\"attr_{$sFieldPrefix}{$sAttCode}[d]{$sNameSuffix}\" value=\"{$aVal['days']}\" id=\"{$iId}_d\"/>";
-					$sHours = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[h]{$sNameSuffix}\" value=\"{$aVal['hours']}\" id=\"{$iId}_h\"/>";
-					$sMinutes = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[m]{$sNameSuffix}\" value=\"{$aVal['minutes']}\" id=\"{$iId}_m\"/>";
-					$sSeconds = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
-					$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".utils::EscapeHtml($value)."\"/>";
-					$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
-					$oPage->add_ready_script("$('#{$iId}').on('update', function(evt, sFormId) { return ToggleDurationField('$iId'); });");
-					break;
+                case 'Duration':
+                    $sInputType = self::ENUM_INPUT_TYPE_MULTIPLE_INPUTS;
+                    $aEventsList[] = 'validate';
+                    $aEventsList[] = 'change';
+                    $oPage->add_ready_script("$('#{$iId}_d').on('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+                    $oPage->add_ready_script("$('#{$iId}_h').on('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+                    $oPage->add_ready_script("$('#{$iId}_m').on('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+                    $oPage->add_ready_script("$('#{$iId}_s').on('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+                    $aVal = AttributeDuration::SplitDuration($value);
+                    $sDays = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"3\" name=\"attr_{$sFieldPrefix}{$sAttCode}[d]{$sNameSuffix}\" value=\"{$aVal['days']}\" id=\"{$iId}_d\"/>";
+                    $sHours = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[h]{$sNameSuffix}\" value=\"{$aVal['hours']}\" id=\"{$iId}_h\"/>";
+                    $sMinutes = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[m]{$sNameSuffix}\" value=\"{$aVal['minutes']}\" id=\"{$iId}_m\"/>";
+                    $sSeconds = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
+                    $sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".utils::EscapeHtml($value)."\"/>";
+                    $sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
+                    $oPage->add_ready_script("$('#{$iId}').on('update', function(evt, sFormId) { return ToggleDurationField('$iId'); });");
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
 
-				case 'Password':
-					$sInputType = self::ENUM_INPUT_TYPE_PASSWORD;
-					$aEventsList[] = 'validate';
-					$aEventsList[] = 'keyup';
-					$aEventsList[] = 'change';
-					$sHTMLValue = "<div class=\"field_input_zone field_input_password ibo-input-wrapper ibo-input-password-wrapper\" data-validation=\"untouched\"><input class=\"ibo-input ibo-input-password\" title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".utils::EscapeHtml($value)."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
-					break;
+                case 'Password':
+                    $sInputType = self::ENUM_INPUT_TYPE_PASSWORD;
+                    $aEventsList[] = 'validate';
+                    $aEventsList[] = 'keyup';
+                    $aEventsList[] = 'change';
+                    $sHTMLValue = "<div class=\"field_input_zone field_input_password ibo-input-wrapper ibo-input-password-wrapper\" data-validation=\"untouched\"><input class=\"ibo-input ibo-input-password\" title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".utils::EscapeHtml($value)."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
 
-				case 'OQLExpression':
-				case 'Text':
-					$sInputType = self::ENUM_INPUT_TYPE_TEXTAREA;
-					$aEventsList[] = 'validate';
-					$aEventsList[] = 'keyup';
-					$aEventsList[] = 'change';
+                case 'OQLExpression':
+                case 'Text':
+                    $sInputType = self::ENUM_INPUT_TYPE_TEXTAREA;
+                    $aEventsList[] = 'validate';
+                    $aEventsList[] = 'keyup';
+                    $aEventsList[] = 'change';
 
-					$sEditValue = $oAttDef->GetEditValue($value);
-					$sEditValueForHtml = utils::EscapeHtml($sEditValue);
-					$sFullscreenLabelForHtml = utils::EscapeHtml(Dict::S('UI:ToggleFullScreen'));
+                    $sEditValue = $oAttDef->GetEditValue($value);
+                    $sEditValueForHtml = utils::EscapeHtml($sEditValue);
+                    $sFullscreenLabelForHtml = utils::EscapeHtml(Dict::S('UI:ToggleFullScreen'));
 
-					$aStyles = array();
-					$sStyle = '';
-					$sWidth = $oAttDef->GetWidth();
-					if (!empty($sWidth)) {
-						$aStyles[] = 'width:'.$sWidth;
-					}
-					$sHeight = $oAttDef->GetHeight();
-					if (!empty($sHeight)) {
-						$aStyles[] = 'height:'.$sHeight;
-					}
-					if (count($aStyles) > 0) {
-						$sStyle = 'style="'.implode('; ', $aStyles).'"';
-					}
+                    $aStyles = array();
+                    $sStyle = '';
+                    $sWidth = $oAttDef->GetWidth();
+                    if (!empty($sWidth)) {
+                        $aStyles[] = 'width:'.$sWidth;
+                    }
+                    $sHeight = $oAttDef->GetHeight();
+                    if (!empty($sHeight)) {
+                        $aStyles[] = 'height:'.$sHeight;
+                    }
+                    if (count($aStyles) > 0) {
+                        $sStyle = 'style="'.implode('; ', $aStyles).'"';
+                    }
 
-					$aTextareaCssClasses = [];
+                    $aTextareaCssClasses = [];
 
-					if ($oAttDef->GetEditClass() == 'OQLExpression') {
-						$aTextareaCssClasses[] = 'ibo-query-oql';
-						$aTextareaCssClasses[] = 'ibo-is-code';
-						// N°3227 button to open predefined queries dialog
-						$sPredefinedBtnId = 'predef_btn_'.$sFieldPrefix.$sAttCode.$sNameSuffix;
-						$sSearchQueryLbl = Dict::S('UI:Edit:SearchQuery');
-						$oPredefQueryButton = ButtonUIBlockFactory::MakeIconAction(
-							'fas fa-search',
-							$sSearchQueryLbl,
-							null,
-							null,
-							false,
-							$sPredefinedBtnId
-						);
-						$oPredefQueryButton->AddCSSClass('ibo-action-button')
-						->SetOnClickJsCode(
-							<<<JS
+                    if ($oAttDef->GetEditClass() == 'OQLExpression') {
+                        $aTextareaCssClasses[] = 'ibo-query-oql';
+                        $aTextareaCssClasses[] = 'ibo-is-code';
+                        // N°3227 button to open predefined queries dialog
+                        $sPredefinedBtnId = 'predef_btn_'.$sFieldPrefix.$sAttCode.$sNameSuffix;
+                        $sSearchQueryLbl = Dict::S('UI:Edit:SearchQuery');
+                        $oPredefQueryButton = ButtonUIBlockFactory::MakeIconAction(
+                            'fas fa-search',
+                            $sSearchQueryLbl,
+                            null,
+                            null,
+                            false,
+                            $sPredefinedBtnId
+                        );
+                        $oPredefQueryButton->AddCSSClass('ibo-action-button')
+                            ->SetOnClickJsCode(
+                                <<<JS
 	oACWidget_{$iId}.Search();
 JS
-						);
-						$oPredefQueryRenderer = new BlockRenderer($oPredefQueryButton);
-						$sAdditionalStuff = $oPredefQueryRenderer->RenderHtml();
-						$oPage->add_ready_script($oPredefQueryRenderer->RenderJsInline($oPredefQueryButton::ENUM_JS_TYPE_ON_INIT));
+                            );
+                        $oPredefQueryRenderer = new BlockRenderer($oPredefQueryButton);
+                        $sAdditionalStuff = $oPredefQueryRenderer->RenderHtml();
+                        $oPage->add_ready_script($oPredefQueryRenderer->RenderJsInline($oPredefQueryButton::ENUM_JS_TYPE_ON_INIT));
 
-						$oPage->add_ready_script(<<<JS
+                        $oPage->add_ready_script(<<<JS
 // noinspection JSAnnotator
 oACWidget_{$iId} = new ExtKeyWidget('$iId', 'QueryOQL', 'SELECT QueryOQL WHERE is_template = \'yes\'', '$sSearchQueryLbl', true, null, null, true, true, 'oql');
 // noinspection JSAnnotator
@@ -2217,38 +2257,38 @@ if ($('#ac_dlg_{$iId}').length == 0)
 		});
 }
 JS
-						);
+                        );
 
-						// test query link
-						$sTestResId = 'query_res_'.$sFieldPrefix.$sAttCode.$sNameSuffix; //$oPage->GetUniqueId();
-						$sBaseUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?expression=';
-						$sTestQueryLbl = Dict::S('UI:Edit:TestQuery');
-						$oTestQueryButton = ButtonUIBlockFactory::MakeIconAction(
-							'fas fa-play',
-							$sTestQueryLbl,
-							null,
-							null,
-							false,
-							$sTestResId
-						);
-						$oTestQueryButton->AddCSSClass('ibo-action-button')
-						->SetOnClickJsCode(
-							<<<JS
+                        // test query link
+                        $sTestResId = 'query_res_'.$sFieldPrefix.$sAttCode.$sNameSuffix; //$oPage->GetUniqueId();
+                        $sBaseUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?expression=';
+                        $sTestQueryLbl = Dict::S('UI:Edit:TestQuery');
+                        $oTestQueryButton = ButtonUIBlockFactory::MakeIconAction(
+                            'fas fa-play',
+                            $sTestQueryLbl,
+                            null,
+                            null,
+                            false,
+                            $sTestResId
+                        );
+                        $oTestQueryButton->AddCSSClass('ibo-action-button')
+                            ->SetOnClickJsCode(
+                                <<<JS
 var sQueryRaw = $("#$iId").val(),
 sQueryEncoded = encodeURI(sQueryRaw);
 window.open('$sBaseUrl' + sQueryEncoded, '_blank');
 JS
-						);
-						$oTestQueryRenderer = new BlockRenderer($oTestQueryButton);
-						$sAdditionalStuff .= $oTestQueryRenderer->RenderHtml();
-						$oPage->add_ready_script($oTestQueryRenderer->RenderJsInline($oTestQueryButton::ENUM_JS_TYPE_ON_INIT));
-					} else {
-						$sAdditionalStuff = '';
-					}
+                            );
+                        $oTestQueryRenderer = new BlockRenderer($oTestQueryButton);
+                        $sAdditionalStuff .= $oTestQueryRenderer->RenderHtml();
+                        $oPage->add_ready_script($oTestQueryRenderer->RenderJsInline($oTestQueryButton::ENUM_JS_TYPE_ON_INIT));
+                    } else {
+                        $sAdditionalStuff = '';
+                    }
 
-					// Ok, the text area is drawn here
-					$sTextareCssClassesAsString = implode(' ', $aTextareaCssClasses);
-					$sHTMLValue = <<<HTML
+                    // Ok, the text area is drawn here
+                    $sTextareCssClassesAsString = implode(' ', $aTextareaCssClasses);
+                    $sHTMLValue = <<<HTML
 {$sAdditionalStuff}
 <div class="field_input_zone field_input_text ibo-input-wrapper ibo-input-text-wrapper" data-validation="untouched">
 	<div class="f_i_text_header">
@@ -2258,8 +2298,8 @@ JS
 </div>
 {$sValidationSpan}{$sReloadSpan}
 HTML;
-					$oPage->add_ready_script(
-						<<<JS
+                    $oPage->add_ready_script(
+                        <<<JS
                         $('#$iId').closest('.field_input_text').find('.fullscreen_button').on('click', function(oEvent){
                             var oOriginField = $('#$iId').closest('.field_input_text');
                             var oClonedField = oOriginField.clone();
@@ -2280,60 +2320,61 @@ HTML;
                             }
                         });
 JS
-					);
-				break;
+                    );
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
 
-				// Since 3.0 not used for activity panel but kept for bulk modify and bulk-event extension
-				case 'CaseLog':
-					$sInputType = self::ENUM_INPUT_TYPE_HTML_EDITOR;
-					$aStyles = array();
-					$sStyle = '';
-					$sWidth = $oAttDef->GetWidth();
-					if (!empty($sWidth)) {
-						$aStyles[] = 'width:'.$sWidth;
-					}
-					$sHeight = $oAttDef->GetHeight();
-					if (!empty($sHeight)) {
-						$aStyles[] = 'height:'.$sHeight;
-					}
-					if (count($aStyles) > 0) {
-						$sStyle = 'style="'.implode('; ', $aStyles).'"';
-					}
+                // Since 3.0 not used for activity panel but kept for bulk modify and bulk-event extension
+                case 'CaseLog':
+                    $sInputType = self::ENUM_INPUT_TYPE_HTML_EDITOR;
+                    $aStyles = array();
+                    $sStyle = '';
+                    $sWidth = $oAttDef->GetWidth();
+                    if (!empty($sWidth)) {
+                        $aStyles[] = 'width:'.$sWidth;
+                    }
+                    $sHeight = $oAttDef->GetHeight();
+                    if (!empty($sHeight)) {
+                        $aStyles[] = 'height:'.$sHeight;
+                    }
+                    if (count($aStyles) > 0) {
+                        $sStyle = 'style="'.implode('; ', $aStyles).'"';
+                    }
 
-					$sHeader = '<div class="ibo-caselog-entry-form--actions"><div class="""ibo-caselog-entry-form--actions" data-role="ibo-caselog-entry-form--action-buttons--extra-actions"></div></div>'; // will be hidden in CSS (via :empty) if it remains empty
-					$sEditValue = is_object($value) ? $value->GetModifiedEntry('html') : '';
-					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */, array('AttributeText', 'RenderWikiHtml')) : '';
-					$iEntriesCount = is_object($value) ? count($value->GetIndex()) : 0;
-					$sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
+                    $sHeader = '<div class="ibo-caselog-entry-form--actions"><div class="""ibo-caselog-entry-form--actions" data-role="ibo-caselog-entry-form--action-buttons--extra-actions"></div></div>'; // will be hidden in CSS (via :empty) if it remains empty
+                    $sEditValue = is_object($value) ? $value->GetModifiedEntry('html') : '';
+                    $sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */, array('AttributeText', 'RenderWikiHtml')) : '';
+                    $iEntriesCount = is_object($value) ? count($value->GetIndex()) : 0;
+                    $sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
 
-					$sHTMLValue = "$sHeader<div class=\"ibo-caselog-entry-form--text-input\" $sStyle data-role=\"ibo-caselog-entry-form--text-input\">";
-					$sHTMLValue .= "<textarea class=\"htmlEditor ibo-input-richtext-placeholder\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".utils::EscapeHtml($sEditValue)."</textarea>";
-					$sHTMLValue .= "$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
+                    $sHTMLValue = "$sHeader<div class=\"ibo-caselog-entry-form--text-input\" $sStyle data-role=\"ibo-caselog-entry-form--text-input\">";
+                    $sHTMLValue .= "<textarea class=\"htmlEditor ibo-input-richtext-placeholder\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".utils::EscapeHtml($sEditValue)."</textarea>";
+                    $sHTMLValue .= "$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
 
-					// Note: This should be refactored for all types of attribute (see at the end of this function) but as we are doing this for a maintenance release, we are scheduling it for the next main release in to order to avoid regressions as much as possible.
-					$sNullValue = $oAttDef->GetNullValue();
-					if (!is_numeric($sNullValue)) {
-						$sNullValue = "'$sNullValue'"; // Add quotes to turn this into a JS string if it's not a number
-					}
-					$sOriginalValue = ($iFlags & OPT_ATT_MUSTCHANGE) ? json_encode($value->GetModifiedEntry('html')) : 'undefined';
+                    // Note: This should be refactored for all types of attribute (see at the end of this function) but as we are doing this for a maintenance release, we are scheduling it for the next main release in to order to avoid regressions as much as possible.
+                    $sNullValue = $oAttDef->GetNullValue();
+                    if (!is_numeric($sNullValue)) {
+                        $sNullValue = "'$sNullValue'"; // Add quotes to turn this into a JS string if it's not a number
+                    }
+                    $sOriginalValue = ($iFlags & OPT_ATT_MUSTCHANGE) ? json_encode($value->GetModifiedEntry('html')) : 'undefined';
 
-					$oPage->add_ready_script("$('#$iId').on('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );"); // Custom validation function
+                    $oPage->add_ready_script("$('#$iId').on('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );"); // Custom validation function
 
-					// Replace the text area with CKEditor
-					// To change the default settings of the editor,
-					// a) edit the file /js/ckeditor/config.js
-					// b) or override some of the configuration settings, using the second parameter of ckeditor()
-					$aConfig = utils::GetCkeditorPref();
-					$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
+                    // Replace the text area with CKEditor
+                    // To change the default settings of the editor,
+                    // a) edit the file /js/ckeditor/config.js
+                    // b) or override some of the configuration settings, using the second parameter of ckeditor()
+                    $aConfig = utils::GetCkeditorPref();
+                    $aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
 
-					// - Final config
-					$sConfigJS = json_encode($aConfig);
+                    // - Final config
+                    $sConfigJS = json_encode($aConfig);
 
-					WebResourcesHelper::EnableCKEditorToWebPage($oPage);
-					$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
+                    WebResourcesHelper::EnableCKEditorToWebPage($oPage);
+                    $oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
 
-					$oPage->add_ready_script(
-<<<EOF
+                    $oPage->add_ready_script(
+                        <<<EOF
 $('#$iId').on('update', function(evt){
 	BlockField('cke_$iId', $('#$iId').attr('disabled'));
 	//Delayed execution - ckeditor must be properly initialized before setting readonly
@@ -2351,62 +2392,63 @@ $('#$iId').on('update', function(evt){
 	setTimeout(delayedSetReadOnly, 50);
 });
 EOF
-					);
-					break;
+                    );
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
 
-				case 'HTML':
-					$sInputType = self::ENUM_INPUT_TYPE_HTML_EDITOR;
-					$sEditValue = $oAttDef->GetEditValue($value);
-					$oWidget = new UIHTMLEditorWidget($iId, $oAttDef, $sNameSuffix, $sFieldPrefix, $sHelpText,
-						$sValidationSpan.$sReloadSpan, $sEditValue, $bMandatory);
-					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
-					break;
+                case 'HTML':
+                    $sInputType = self::ENUM_INPUT_TYPE_HTML_EDITOR;
+                    $sEditValue = $oAttDef->GetEditValue($value);
+                    $oWidget = new UIHTMLEditorWidget($iId, $oAttDef, $sNameSuffix, $sFieldPrefix, $sHelpText,
+                        $sValidationSpan.$sReloadSpan, $sEditValue, $bMandatory);
+                    $sHTMLValue = $oWidget->Display($oPage, $aArgs);
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
 
-				case 'LinkedSet':
-					if ($oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_PROPERTY) {
-						$sInputType = self::ENUM_INPUT_TYPE_TAGSET_LINKEDSET;
-						if (array_key_exists('bulk_context', $aArgs)) {
-							$oTagSetBlock = LinkSetUIBlockFactory::MakeForBulkLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['bulk_context']);
-						} else {
-							$oTagSetBlock = LinkSetUIBlockFactory::MakeForLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['this']);
-						}
-						$oTagSetBlock->SetName("attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}");
-						$aEventsList[] = 'validate';
-						$aEventsList[] = 'change';
-						$sHTMLValue = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oTagSetBlock);
-					} else {
-						$sInputType = self::ENUM_INPUT_TYPE_LINKEDSET;
-						$oObj = $aArgs['this'] ?? null;
-						if ($oAttDef->IsIndirect()) {
-							$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix,
-								$oAttDef->DuplicatesAllowed());
-						} else {
-							$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iId, $sNameSuffix);
-						}
-						$aEventsList[] = 'validate';
-						$aEventsList[] = 'change';
-						$sHTMLValue = $oWidget->Display($oPage, $value, array(), $sFormPrefix, $oObj);
-					}
-					break;
+                case 'LinkedSet':
+                    if ($oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_PROPERTY) {
+                        $sInputType = self::ENUM_INPUT_TYPE_TAGSET_LINKEDSET;
+                        if (array_key_exists('bulk_context', $aArgs)) {
+                            $oBlockValue = LinkSetUIBlockFactory::MakeForBulkLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['bulk_context']);
+                        } else {
+                            $oBlockValue = LinkSetUIBlockFactory::MakeForLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['this']);
+                        }
+                        $oBlockValue->SetName("attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}");
+                        $aEventsList[] = 'validate';
+                        $aEventsList[] = 'change';
+                    } else {
+                        $sInputType = self::ENUM_INPUT_TYPE_LINKEDSET;
+                        $oObj = $aArgs['this'] ?? null;
+                        if ($oAttDef->IsIndirect()) {
+                            $oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix,
+                                $oAttDef->DuplicatesAllowed());
+                        } else {
+                            $oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iId, $sNameSuffix);
+                        }
+                        $aEventsList[] = 'validate';
+                        $aEventsList[] = 'change';
+                        $oBlockValue = $oWidget->GetBlock($oPage, $value, array(), $sFormPrefix, $oObj);
+                    }
+                    break;
 
-				case 'Document':
-					$sInputType = self::ENUM_INPUT_TYPE_DOCUMENT;
-					$aEventsList[] = 'validate';
-					$aEventsList[] = 'change';
-					$oDocument = $value; // Value is an ormDocument object
+                case 'Document':
+                    $sInputType = self::ENUM_INPUT_TYPE_DOCUMENT;
+                    $aEventsList[] = 'validate';
+                    $aEventsList[] = 'change';
+                    $oDocument = $value; // Value is an ormDocument object
 
-					$sFileName = '';
-					if (is_object($oDocument)) {
-						$sFileName = $oDocument->GetFileName();
-					}
-					$sFileNameForHtml = utils::EscapeHtml($sFileName);
-					$bHasFile = !empty($sFileName);
+                    $sFileName = '';
+                    if (is_object($oDocument)) {
+                        $sFileName = $oDocument->GetFileName();
+                    }
+                    $sFileNameForHtml = utils::EscapeHtml($sFileName);
+                    $bHasFile = !empty($sFileName);
 
-					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
-					$sRemoveBtnLabelForHtml = utils::EscapeHtml(Dict::S('UI:Button:RemoveDocument'));
-					$sExtraCSSClassesForRemoveButton = $bHasFile ? '' : 'ibo-is-hidden';
+                    $iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+                    $sRemoveBtnLabelForHtml = utils::EscapeHtml(Dict::S('UI:Button:RemoveDocument'));
+                    $sExtraCSSClassesForRemoveButton = $bHasFile ? '' : 'ibo-is-hidden';
 
-					$sHTMLValue = <<<HTML
+                    $sHTMLValue = <<<HTML
 <div class="field_input_zone field_input_document">
 	<input type="hidden" name="MAX_FILE_SIZE" value="{$iMaxFileSize}" />
 	<input type="hidden" id="do_remove_{$iId}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[remove]" value="0"/>
@@ -2420,138 +2462,145 @@ EOF
 {$sValidationSpan}{$sReloadSpan}
 HTML;
 
-					if ($sFileName == '') {
-						$oPage->add_ready_script("$('#remove_attr_{$iId}').addClass('ibo-is-hidden');");
-					}
-					break;
+                    if ($sFileName == '') {
+                        $oPage->add_ready_script("$('#remove_attr_{$iId}').addClass('ibo-is-hidden');");
+                    }
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
 
-				case 'Image':
-					$sInputType = self::ENUM_INPUT_TYPE_IMAGE;
-					$aEventsList[] = 'validate';
-					$aEventsList[] = 'change';
+                case 'Image':
+                    $sInputType = self::ENUM_INPUT_TYPE_IMAGE;
+                    $aEventsList[] = 'validate';
+                    $aEventsList[] = 'change';
 					$oPage->LinkScriptFromAppRoot('js/edit_image.js');
-					$oDocument = $value; // Value is an ormDocument objectm
-					$sDefaultUrl = $oAttDef->Get('default_image');
-					if (is_object($oDocument) && !$oDocument->IsEmpty()) {
-						$sUrl = 'data:'.$oDocument->GetMimeType().';base64,'.base64_encode($oDocument->GetData());
-					} else {
-						$sUrl = null;
-					}
+                    $oDocument = $value; // Value is an ormDocument objectm
+                    $sDefaultUrl = $oAttDef->Get('default_image');
+                    if (is_object($oDocument) && !$oDocument->IsEmpty()) {
+                        $sUrl = 'data:'.$oDocument->GetMimeType().';base64,'.base64_encode($oDocument->GetData());
+                    } else {
+                        $sUrl = null;
+                    }
 
-					$sHTMLValue = "<div class=\"field_input_zone ibo-input-image-wrapper\"><div id=\"edit_$iInputId\" class=\"ibo-input-image\"></div></div>\n";
-					$sHTMLValue .= "{$sValidationSpan}{$sReloadSpan}\n";
+                    $sHTMLValue = "<div class=\"field_input_zone ibo-input-image-wrapper\"><div id=\"edit_$iInputId\" class=\"ibo-input-image\"></div></div>\n";
+                    $sHTMLValue .= "{$sValidationSpan}{$sReloadSpan}\n";
 
-					$aEditImage = array(
-						'input_name' => 'attr_'.$sFieldPrefix.$sAttCode.$sNameSuffix,
-						'max_file_size' => utils::ConvertToBytes(ini_get('upload_max_filesize')),
-						'max_width_px' => $oAttDef->Get('display_max_width'),
-						'max_height_px' => $oAttDef->Get('display_max_height'),
-						'current_image_url' => $sUrl,
-						'default_image_url' => $sDefaultUrl,
-						'labels' => array(
-							'reset_button' => utils::EscapeHtml(Dict::S('UI:Button:ResetImage')),
-							'remove_button' => utils::EscapeHtml(Dict::S('UI:Button:RemoveImage')),
-							'upload_button' => !empty($sHelpText) ? $sHelpText : utils::EscapeHtml(Dict::S('UI:Button:UploadImage')),
-						),
-					);
-					$sEditImageOptions = json_encode($aEditImage);
-					$oPage->add_ready_script("$('#edit_$iInputId').edit_image($sEditImageOptions);");
-					break;
+                    $aEditImage = array(
+                        'input_name' => 'attr_'.$sFieldPrefix.$sAttCode.$sNameSuffix,
+                        'max_file_size' => utils::ConvertToBytes(ini_get('upload_max_filesize')),
+                        'max_width_px' => $oAttDef->Get('display_max_width'),
+                        'max_height_px' => $oAttDef->Get('display_max_height'),
+                        'current_image_url' => $sUrl,
+                        'default_image_url' => $sDefaultUrl,
+                        'labels' => array(
+                            'reset_button' => utils::EscapeHtml(Dict::S('UI:Button:ResetImage')),
+                            'remove_button' => utils::EscapeHtml(Dict::S('UI:Button:RemoveImage')),
+                            'upload_button' => !empty($sHelpText) ? $sHelpText : utils::EscapeHtml(Dict::S('UI:Button:UploadImage')),
+                        ),
+                    );
+                    $sEditImageOptions = json_encode($aEditImage);
+                    $oPage->add_ready_script("$('#edit_$iInputId').edit_image($sEditImageOptions);");
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
 
-				case 'StopWatch':
-					$sHTMLValue = "The edition of a stopwatch is not allowed!!!";
-					break;
+                case 'StopWatch':
+                    $sHTMLValue = "The edition of a stopwatch is not allowed!!!";
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
 
-				case 'List':
-					// Not editable for now...
-					$sHTMLValue = '';
-					break;
+                case 'List':
+                    // Not editable for now...
+                    $sHTMLValue = '';
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
 
-				case 'One Way Password':
-					$sInputType = self::ENUM_INPUT_TYPE_PASSWORD;
-					$aEventsList[] = 'validate';
-					$oWidget = new UIPasswordWidget($sAttCode, $iId, $sNameSuffix);
-					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
-					// Event list & validation is handled  directly by the widget
-					break;
+                case 'One Way Password':
+                    $sInputType = self::ENUM_INPUT_TYPE_PASSWORD;
+                    $aEventsList[] = 'validate';
+                    $oWidget = new UIPasswordWidget($sAttCode, $iId, $sNameSuffix);
+                    $sHTMLValue = $oWidget->Display($oPage, $aArgs);
+                    // Event list & validation is handled  directly by the widget
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
 
-				case 'ExtKey':
-					/** @var \AttributeExternalKey $oAttDef */
-					$aEventsList[] = 'validate';
-					$aEventsList[] = 'change';
+                case 'ExtKey':
+                    /** @var \AttributeExternalKey $oAttDef */
+                    $aEventsList[] = 'validate';
+                    $aEventsList[] = 'change';
 
-					if ($bPreserveCurrentValue) {
-						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '', $value);
-					} else {
-						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs);
-					}
-					$sFieldName = $sFieldPrefix.$sAttCode.$sNameSuffix;
-					$aExtKeyParams = $aArgs;
-					$aExtKeyParams['iFieldSize'] = $oAttDef->GetMaxSize();
-					$aExtKeyParams['iMinChars'] = $oAttDef->GetMinAutoCompleteChars();
-					$sHTMLValue = UIExtKeyWidget::DisplayFromAttCode($oPage, $sAttCode, $sClass, $oAttDef->GetLabel(),
-						$oAllowedValues, $value, $iId, $bMandatory, $sFieldName, $sFormPrefix, $aExtKeyParams, false, $sInputType);
-					$sHTMLValue .= "<!-- iFlags: $iFlags bMandatory: $bMandatory -->\n";
+                    if ($bPreserveCurrentValue) {
+                        $oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '', $value);
+                    } else {
+                        $oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs);
+                    }
+                    $sFieldName = $sFieldPrefix.$sAttCode.$sNameSuffix;
+                    $aExtKeyParams = $aArgs;
+                    $aExtKeyParams['iFieldSize'] = $oAttDef->GetMaxSize();
+                    $aExtKeyParams['iMinChars'] = $oAttDef->GetMinAutoCompleteChars();
+                    $sHTMLValue = UIExtKeyWidget::DisplayFromAttCode($oPage, $sAttCode, $sClass, $oAttDef->GetLabel(),
+                        $oAllowedValues, $value, $iId, $bMandatory, $sFieldName, $sFormPrefix, $aExtKeyParams, false, $sInputType);
+                    $sHTMLValue .= "<!-- iFlags: $iFlags bMandatory: $bMandatory -->\n";
 
-					$bHasExtKeyUpdatingRemoteClassFields = (
-						array_key_exists('replaceDependenciesByRemoteClassFields', $aArgs)
-						&& ($aArgs['replaceDependenciesByRemoteClassFields'])
-					);
-					if ($bHasExtKeyUpdatingRemoteClassFields) {
-						// On this field update we need to update all the corresponding remote class fields
-						// Used when extkey widget is in a linkedset indirect
-						$sWizardHelperJsVarName = $aArgs['wizHelperRemote'];
-						$aDependencies = $aArgs['remoteCodes'];
-					}
+                    $bHasExtKeyUpdatingRemoteClassFields = (
+                        array_key_exists('replaceDependenciesByRemoteClassFields', $aArgs)
+                        && ($aArgs['replaceDependenciesByRemoteClassFields'])
+                    );
+                    if ($bHasExtKeyUpdatingRemoteClassFields) {
+                        // On this field update we need to update all the corresponding remote class fields
+                        // Used when extkey widget is in a linkedset indirect
+                        $sWizardHelperJsVarName = $aArgs['wizHelperRemote'];
+                        $aDependencies = $aArgs['remoteCodes'];
+                    }
+                    $oBlockValue= new Html($sHTMLValue);
 
-					break;
+                    break;
 
-				case 'RedundancySetting':
-					$sHTMLValue .= '<div id="'.$iId.'">';
-					$sHTMLValue .= $oAttDef->GetDisplayForm($value, $oPage, true);
-					$sHTMLValue .= '</div>';
-					$sHTMLValue .= '<div>'.$sValidationSpan.$sReloadSpan.'</div>';
-					$oPage->add_ready_script("$('#$iId :input').on('keyup change validate', function(evt, sFormId) { return ValidateRedundancySettings('$iId',sFormId); } );"); // Custom validation function
-					break;
+                case 'RedundancySetting':
+                    $sHTMLValue .= '<div id="'.$iId.'">';
+                    $sHTMLValue .= $oAttDef->GetDisplayForm($value, $oPage, true);
+                    $sHTMLValue .= '</div>';
+                    $sHTMLValue .= '<div>'.$sValidationSpan.$sReloadSpan.'</div>';
+                    $oPage->add_ready_script("$('#$iId :input').on('keyup change validate', function(evt, sFormId) { return ValidateRedundancySettings('$iId',sFormId); } );"); // Custom validation function
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
 
-				case 'CustomFields':
-				case 'FormField':
-					if ($sAttDefEditClass === 'CustomFields') {
-						/** @var \ormCustomFieldsValue $value */
-						$oForm = $value->GetForm($sFormPrefix);
-					} else if ($sAttDefEditClass === 'FormField') {
-						$oForm = $oAttDef->GetForm($aArgs['this'], $sFormPrefix);
-					}
+                case 'CustomFields':
+                case 'FormField':
+                    if ($sAttDefEditClass === 'CustomFields') {
+                        /** @var \ormCustomFieldsValue $value */
+                        $oForm = $value->GetForm($sFormPrefix);
+                    } else if ($sAttDefEditClass === 'FormField') {
+                        $oForm = $oAttDef->GetForm($aArgs['this'], $sFormPrefix);
+                    }
 
-					$oFormRenderer = new ConsoleFormRenderer($oForm);
-					$aFormRenderedContent = $oFormRenderer->Render();
+                    $oFormRenderer = new ConsoleFormRenderer($oForm);
+                    $aFormRenderedContent = $oFormRenderer->Render();
 
-					$aFieldSetOptions = array(
-						'field_identifier_attr' => 'data-field-id',
-						// convention: fields are rendered into a div and are identified by this attribute
-						'fields_list'           => $aFormRenderedContent,
-						'fields_impacts'        => $oForm->GetFieldsImpacts(),
-						'form_path'             => $oForm->GetId(),
-					);
-					$sFieldSetOptions = json_encode($aFieldSetOptions);
-					$aFormHandlerOptions = array(
-						'wizard_helper_var_name' => 'oWizardHelper'.$sFormPrefix,
-						'custom_field_attcode'   => $sAttCode,
-					);
-					$sFormHandlerOptions = json_encode($aFormHandlerOptions);
+                    $aFieldSetOptions = array(
+                        'field_identifier_attr' => 'data-field-id',
+                        // convention: fields are rendered into a div and are identified by this attribute
+                        'fields_list'           => $aFormRenderedContent,
+                        'fields_impacts'        => $oForm->GetFieldsImpacts(),
+                        'form_path'             => $oForm->GetId(),
+                    );
+                    $sFieldSetOptions = json_encode($aFieldSetOptions);
+                    $aFormHandlerOptions = array(
+                        'wizard_helper_var_name' => 'oWizardHelper'.$sFormPrefix,
+                        'custom_field_attcode'   => $sAttCode,
+                    );
+                    $sFormHandlerOptions = json_encode($aFormHandlerOptions);
 
-					$sHTMLValue .= '<div id="'.$iId.'_console_form">';
-					$sHTMLValue .= '<div id="'.$iId.'_field_set">';
-					$sHTMLValue .= '</div></div>';
-					$sHTMLValue .= '<div>'.$sReloadSpan.'</div>'; // No validation span for this one: it does handle its own validation!
-					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
+                    $sHTMLValue .= '<div id="'.$iId.'_console_form">';
+                    $sHTMLValue .= '<div id="'.$iId.'_field_set">';
+                    $sHTMLValue .= '</div></div>';
+                    $sHTMLValue .= '<div>'.$sReloadSpan.'</div>'; // No validation span for this one: it does handle its own validation!
+                    $sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
 					$oPage->LinkScriptFromAppRoot('js/form_handler.js');
 					$oPage->LinkScriptFromAppRoot('js/console_form_handler.js');
 					$oPage->LinkScriptFromAppRoot('js/field_set.js');
 					$oPage->LinkScriptFromAppRoot('js/form_field.js');
 					$oPage->LinkScriptFromAppRoot('js/subform_field.js');
-					$oPage->add_ready_script(
-						<<<JS
+                    $oPage->add_ready_script(
+                        <<<JS
 $('#{$iId}_field_set').field_set($sFieldSetOptions);
 
 $('#{$iId}_console_form').console_form_handler($sFormHandlerOptions);
@@ -2568,98 +2617,100 @@ $('#{$iId}').on('validate', function(evt, sFormId) {
     return ValidateCustomFields('$iId', sFormId); // Custom validation function
 });
 JS
-					);
+                    );
+                    $oBlockValue= new Html($sHTMLValue);
 
-					break;
+                    break;
 
-				case 'Set':
-				case 'TagSet':
-					$sInputType = self::ENUM_INPUT_TYPE_TAGSET;
+                case 'Set':
+                case 'TagSet':
+                    $sInputType = self::ENUM_INPUT_TYPE_TAGSET;
 					$oPage->LinkScriptFromAppRoot('js/selectize.min.js');
 					$oPage->LinkStylesheetFromAppRoot('css/selectize.default.css');
 					$oPage->LinkScriptFromAppRoot('js/jquery.itop-set-widget.js');
 
-					$oPage->add_dict_entry('Core:AttributeSet:placeholder');
+                    $oPage->add_dict_entry('Core:AttributeSet:placeholder');
 
-					/** @var \ormSet $value */
-					$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
-					$sEscapedJson = utils::EscapeHtml($sJson);
-					$sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
+                    /** @var \ormSet $value */
+                    $sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
+                    $sEscapedJson = utils::EscapeHtml($sJson);
+                    $sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
 
-					// handle form validation
-					$aEventsList[] = 'change';
-					$aEventsList[] = 'validate';
-					$sNullValue = '';
-					$sFieldToValidateId = $sFieldToValidateId.AttributeSet::EDITABLE_INPUT_ID_SUFFIX;
+                    // handle form validation
+                    $aEventsList[] = 'change';
+                    $aEventsList[] = 'validate';
+                    $sNullValue = '';
+                    $sFieldToValidateId = $sFieldToValidateId.AttributeSet::EDITABLE_INPUT_ID_SUFFIX;
 
-					// generate form HTML output
-					$sValidationSpan = "<span class=\"form_validation ibo-field-validation\" id=\"v_{$sFieldToValidateId}\"></span>";
-					$sHTMLValue = '<div class="field_input_zone field_input_set ibo-input-wrapper ibo-input-tagset-wrapper" data-validation="untouched"><input id="'.$iId.'" name="'.$sSetInputName.'" type="hidden" value="'.$sEscapedJson.'"></div>'.$sValidationSpan.$sReloadSpan;
-					$sScript = "$('#$iId').set_widget({inputWidgetIdSuffix: '".AttributeSet::EDITABLE_INPUT_ID_SUFFIX."'});";
-					$oPage->add_ready_script($sScript);
+                    // generate form HTML output
+                    $sValidationSpan = "<span class=\"form_validation ibo-field-validation\" id=\"v_{$sFieldToValidateId}\"></span>";
+                    $sHTMLValue = '<div class="field_input_zone field_input_set ibo-input-wrapper ibo-input-tagset-wrapper" data-validation="untouched"><input id="'.$iId.'" name="'.$sSetInputName.'" type="hidden" value="'.$sEscapedJson.'"></div>'.$sValidationSpan.$sReloadSpan;
+                    $sScript = "$('#$iId').set_widget({inputWidgetIdSuffix: '".AttributeSet::EDITABLE_INPUT_ID_SUFFIX."'});";
+                    $oPage->add_ready_script($sScript);
+                    $oBlockValue= new Html($sHTMLValue);
 
-					break;
+                    break;
 
-				case 'String':
-				default:
-					$aEventsList[] = 'validate';
-					// #@# todo - add context information (depending on dimensions)
-					$aAllowedValues = $oAttDef->GetAllowedValues($aArgs);
-					$iFieldSize = $oAttDef->GetMaxSize();
-					if ($aAllowedValues !== null)
-					{
-						// Discrete list of values, use a SELECT or RADIO buttons depending on the config
-						$sDisplayStyle = $oAttDef->GetDisplayStyle();
-						switch ($sDisplayStyle)
-						{
-							case 'radio':
-							case 'radio_horizontal':
-							case 'radio_vertical':
-								$sInputType = self::ENUM_INPUT_TYPE_RADIO;
-								$aEventsList[] = 'change';
-								$sHTMLValue = "<div class=\"field_input_zone field_input_{$sDisplayStyle}\">";
-								$bVertical = ($sDisplayStyle != 'radio_horizontal');
-								$sHTMLValue .= $oPage->GetRadioButtons($aAllowedValues, $value, $iId,
-									"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}", $bMandatory, $bVertical, '');
-								$sHTMLValue .= "</div>{$sValidationSpan}{$sReloadSpan}\n";
-								break;
+                case 'String':
+                default:
+                    $aEventsList[] = 'validate';
+                    // #@# todo - add context information (depending on dimensions)
+                    $aAllowedValues = $oAttDef->GetAllowedValues($aArgs);
+                    $iFieldSize = $oAttDef->GetMaxSize();
+                    if ($aAllowedValues !== null)
+                    {
+                        // Discrete list of values, use a SELECT or RADIO buttons depending on the config
+                        $sDisplayStyle = $oAttDef->GetDisplayStyle();
+                        switch ($sDisplayStyle)
+                        {
+                            case 'radio':
+                            case 'radio_horizontal':
+                            case 'radio_vertical':
+                                $sInputType = self::ENUM_INPUT_TYPE_RADIO;
+                                $aEventsList[] = 'change';
+                                $sHTMLValue = "<div class=\"field_input_zone field_input_{$sDisplayStyle}\">";
+                                $bVertical = ($sDisplayStyle != 'radio_horizontal');
+                                $sHTMLValue .= $oPage->GetRadioButtons($aAllowedValues, $value, $iId,
+                                    "attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}", $bMandatory, $bVertical, '');
+                                $sHTMLValue .= "</div>{$sValidationSpan}{$sReloadSpan}\n";
+                                break;
 
-							case 'select':
-							default:
-								$sInputType = self::ENUM_INPUT_TYPE_DROPDOWN_RAW;
-								$aEventsList[] = 'change';
-								$sHTMLValue = "<div class=\"field_input_zone field_input_string ibo-input-wrapper ibo-input-select-wrapper\" data-validation=\"untouched\"><select class=\"ibo-input ibo-input-select\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
-								$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
-								foreach ($aAllowedValues as $key => $display_value) {
-									if ((count($aAllowedValues) == 1) && ($bMandatory == 'true')) {
-										// When there is only once choice, select it by default
-										if ($value != $key) {
-											$oPage->add_ready_script(
-												<<<EOF
+                            case 'select':
+                            default:
+                                $sInputType = self::ENUM_INPUT_TYPE_DROPDOWN_RAW;
+                                $aEventsList[] = 'change';
+                                $sHTMLValue = "<div class=\"field_input_zone field_input_string ibo-input-wrapper ibo-input-select-wrapper\" data-validation=\"untouched\"><select class=\"ibo-input ibo-input-select\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
+                                $sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
+                                foreach ($aAllowedValues as $key => $display_value) {
+                                    if ((count($aAllowedValues) == 1) && ($bMandatory == 'true')) {
+                                        // When there is only once choice, select it by default
+                                        if ($value != $key) {
+                                            $oPage->add_ready_script(
+                                                <<<EOF
 $('#$iId').attr('data-validate','dependencies');
 EOF
-											);
-										}
-										$sSelected = ' selected';
-									} else {
-										$sSelected = ($value == $key) ? ' selected' : '';
-									}
-									$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
-								}
-								$sHTMLValue .= "</select></div>{$sValidationSpan}{$sReloadSpan}\n";
-								break;
-						}
-					}
-					else
-					{
-						$sInputType = self::ENUM_INPUT_TYPE_SINGLE_INPUT;
-						$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
+                                            );
+                                        }
+                                        $sSelected = ' selected';
+                                    } else {
+                                        $sSelected = ($value == $key) ? ' selected' : '';
+                                    }
+                                    $sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
+                                }
+                                $sHTMLValue .= "</select></div>{$sValidationSpan}{$sReloadSpan}\n";
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        $sInputType = self::ENUM_INPUT_TYPE_SINGLE_INPUT;
+                        $sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
 
-						// Adding tooltip so we can read the whole value when its very long (eg. URL)
+                        // Adding tooltip so we can read the whole value when its very long (eg. URL)
                         $sTip = '';
-						if (!empty($sDisplayValue)) {
-							$sTip = 'data-tooltip-content="'.$sDisplayValueForHtml.'"';
-							$oPage->add_ready_script(<<<JS
+                        if (!empty($sDisplayValue)) {
+                            $sTip = 'data-tooltip-content="'.$sDisplayValueForHtml.'"';
+                            $oPage->add_ready_script(<<<JS
 								$('#{$iId}').on('keyup', function(evt, sFormId){ 
 									let sVal = $('#{$iId}').val();
 									const oTippy = this._tippy;
@@ -2676,32 +2727,33 @@ EOF
 									oTippy.setContent(sVal);
 								});
 JS
-							);
-						}
+                            );
+                        }
 
 
-						$sHTMLValue = <<<HTML
+                        $sHTMLValue = <<<HTML
 <div class="field_input_zone ibo-input-wrapper ibo-input-string-wrapper" data-validation="untouched">
 	<input class="ibo-input ibo-input-string" title="{$sHelpText}" type="text" maxlength="{$iFieldSize}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" {$sTip} />
 </div>
 {$sValidationSpan}{$sReloadSpan}
 HTML;
-						$aEventsList[] = 'keyup';
-						$aEventsList[] = 'change';
+                        $aEventsList[] = 'keyup';
+                        $aEventsList[] = 'change';
 
-					}
-					break;
-			}
-			$sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';			
-			if (!empty($aEventsList))
-			{
-				if (!is_numeric($sNullValue))
-				{
-					$sNullValue = "'$sNullValue'"; // Add quotes to turn this into a JS string if it's not a number
-				}
-				$sOriginalValue = ($iFlags & OPT_ATT_MUSTCHANGE) ? json_encode($value) : 'undefined';
-				$sEventList = implode(' ', $aEventsList);
-				$oPage->add_ready_script(<<<JS
+                    }
+                    $oBlockValue= new Html($sHTMLValue);
+                    break;
+            }
+            $sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';
+            if (!empty($aEventsList))
+            {
+                if (!is_numeric($sNullValue))
+                {
+                    $sNullValue = "'$sNullValue'"; // Add quotes to turn this into a JS string if it's not a number
+                }
+                $sOriginalValue = ($iFlags & OPT_ATT_MUSTCHANGE) ? json_encode($value) : 'undefined';
+                $sEventList = implode(' ', $aEventsList);
+                $oPage->add_ready_script(<<<JS
 $('#$sFieldToValidateId')
 	.on('$sEventList', function(oEvent, sFormId) {
 			// Bind to a custom event: validate
@@ -2709,20 +2761,20 @@ $('#$sFieldToValidateId')
 		} 
 	); 
 JS
-				);
-			}
+                );
+            }
 
-			// handle dependent fields updates (init for WizardHelper JS object)
-			if (count($aDependencies) > 0)
-			{
-				//--- Add an event handler to launch a custom event: validate
-				// * Unbind first to avoid duplicate event handlers in case of reload of the whole (or part of the) form
-				// * We were using off/on directly on the node before, but that was causing an issue when adding dynamically new nodes
-				//   indeed the events weren't attached on the of the new nodes !
-				//   So we're adding the handler on a node above, and we're using a selector to catch only the event we're interested in !
-				$sDependencies = implode("','", $aDependencies);
+            // handle dependent fields updates (init for WizardHelper JS object)
+            if (count($aDependencies) > 0)
+            {
+                //--- Add an event handler to launch a custom event: validate
+                // * Unbind first to avoid duplicate event handlers in case of reload of the whole (or part of the) form
+                // * We were using off/on directly on the node before, but that was causing an issue when adding dynamically new nodes
+                //   indeed the events weren't attached on the of the new nodes !
+                //   So we're adding the handler on a node above, and we're using a selector to catch only the event we're interested in !
+                $sDependencies = implode("','", $aDependencies);
 
-				$oPage->add_ready_script(<<<JS
+                $oPage->add_ready_script(<<<JS
 $('div#field_{$iId}')
 	.off('change.dependencies', '#$iId') 
 	.on('change.dependencies', '#$iId', 
@@ -2731,25 +2783,32 @@ $('div#field_{$iId}')
 		} 
 	);
 JS
-				);
-			}
-		}
-		$oPage->add_dict_entry('UI:ValueMustBeSet');
-		$oPage->add_dict_entry('UI:ValueMustBeChanged');
-		$oPage->add_dict_entry('UI:ValueInvalidFormat');
+                );
+            }
+        }
+        $oPage->add_dict_entry('UI:ValueMustBeSet');
+        $oPage->add_dict_entry('UI:ValueMustBeChanged');
+        $oPage->add_dict_entry('UI:ValueInvalidFormat');
 
-		// N°3750 refresh container data-input-type attribute if in an Ajax context
-		// indeed in such a case we're only returning the field value content and not the parent container, so we need to update it !
-		if (utils::IsXmlHttpRequest()) {
-			// We are refreshing the data attribute only with the .attr() method
-			// So any consumer that want to get this attribute value MUST use `.attr()` and not `.data()`
-			// Actually the later uses a dedicated memory (that is initialized by the DOM values on page loading)
-			// Whereas `.attr()` uses the DOM directly
-			$oPage->add_init_script('$("[data-input-id=\''.$iId.'\']").attr("data-input-type", "'.$sInputType.'");');
-		}
-		//TODO 3.0 remove the data-attcode attribute (either because it's has been moved to .field_container in 2.7 or even better because the admin. console has been reworked)
-		return "<div id=\"field_{$iId}\" class=\"field_value_container\"><div class=\"attribute-edit\" data-attcode=\"$sAttCode\">{$sHTMLValue}</div></div>";
-	}
+        // N°3750 refresh container data-input-type attribute if in an Ajax context
+        // indeed in such a case we're only returning the field value content and not the parent container, so we need to update it !
+        if (utils::IsXmlHttpRequest()) {
+            // We are refreshing the data attribute only with the .attr() method
+            // So any consumer that want to get this attribute value MUST use `.attr()` and not `.data()`
+            // Actually the later uses a dedicated memory (that is initialized by the DOM values on page loading)
+            // Whereas `.attr()` uses the DOM directly
+            $oPage->add_init_script('$("[data-input-id=\''.$iId.'\']").attr("data-input-type", "'.$sInputType.'");');
+        }
+        //TODO 3.0 remove the data-attcode attribute (either because it's has been moved to .field_container in 2.7 or even better because the admin. console has been reworked)
+        $oBlockEditContainer = UIContentBlockUIBlockFactory::MakeStandard(null, ['attribute-edit']);
+        $oBlockEditContainer->AddSubBlock($oBlockValue);
+
+        $oBlockContainer = UIContentBlockUIBlockFactory::MakeStandard('field_'.$iId, ['field_value_container']);
+        $oBlockContainer->AddSubBlock($oBlockEditContainer);
+
+        return $oBlockContainer;//// "<div id=\"field_{$iId}\" class=\"field_value_container\"><div class=\"attribute-edit\" >{$sHTMLValue}</div></div>";
+
+    }
 
 	/**
 	 * @param WebPage $oPage
