@@ -1,10 +1,11 @@
 includes:
     - php-includes/set-php-version-from-process.php # Workaround to set PHP version to the on running the CLI
+    # for an explanation of the baseline concept, see: https://phpstan.org/user-guide/baseline
+    #baseline HERE DO NOT REMOVE FOR CI
 
 parameters:
     level: 0
     #phpVersion: null                   # Explicitly commented as we rather use the detected version from the above include (`php-includes/target-php-version.php`)
-    #baseline: ../baselines/baseline.neon
     editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'    # Open in PHPStorm asit is Combodo's default IDE
     bootstrapFiles:
         - ../../../approot.inc.php
