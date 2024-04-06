@@ -1,7 +1,7 @@
 includes:
     - php-includes/set-php-version-from-process.php # Workaround to set PHP version to the on running the CLI
     # for an explanation of the baseline concept, see: https://phpstan.org/user-guide/baseline
-    #baseline HERE DO NOT REMOVE FOR CI
+    #baseline HERE DO NOT REMOVE FOR CI 
 
 parameters:
     level: 0
