@@ -20,7 +20,7 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
-use Combodo\iTop\Application\WebPage\WebPage;
+use WebPage;
 use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 use CoreException;
 use CSVParser;
