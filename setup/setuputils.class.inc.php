@@ -2169,6 +2169,7 @@ JS
 				'sodium' => 'Strong encryption will not be used.',
 				'openssl' => 'Strong encryption will not be used.',
 			],
+			'apcu' => 'Performances will be slightly degraded.',
 			'ldap' => 'LDAP authentication will be disabled.',
 		];
 

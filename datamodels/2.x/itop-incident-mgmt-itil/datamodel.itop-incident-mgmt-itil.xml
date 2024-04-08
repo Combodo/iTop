@@ -1083,64 +1083,6 @@
         }
         ]]></code>
         </method>
-        <method id="SetAssignedDate">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetAssignedDate($sStimulusCode)
-	{
-		$this->Set('assignment_date', time());
-		return true;
-	}]]></code>
-        </method>
-        <method id="SetLastPendingDate">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetLastPendingDate($sStimulusCode)
-	{
-		$this->Set('last_pending_date', time());
-		return true;
-	}]]></code>
-        </method>
-        <method id="SetResolveDate">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() and SetElapsedTime() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetResolveDate($sStimulusCode)
-	{
-		$this->Set('resolution_date', time());
-                $iTimeSpent = time() - AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
-		$this->Set('time_spent', $iTimeSpent);
-		return true;
-	}]]></code>
-        </method>
-        <method id="SetClosureDate">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetClosureDate($sStimulusCode)
-	{
-		$this->Set('close_date', time());
-		return true;
-	}]]></code>
-        </method>
         <method id="DoCheckToWrite">
           <static>false</static>
           <access>public</access>
@@ -1236,67 +1178,6 @@
         'panel_title_tooltip' => Dict::S($sTabCode."+"),
       ]);
 		}
-	}]]></code>
-        </method>
-        <method id="resolveChilds">
-          <comment><![CDATA[/**
-	 * To be deprecated: use ResolveChildTickets() instead
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function resolveChilds($sStimulusCode)
-	{
-        if (MetaModel::IsValidClass('UserRequest'))
-        {
-    		$sOQL = "SELECT UserRequest WHERE parent_incident_id=:ticket";
-    		$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-    						array(),
-    						array(
-    							'ticket' => $this->GetKey(),
-    							)
-    						);
-    		//automatically resolve child requests
-    		while($oRequest = $oChildRequestSet->Fetch())
-    		{
-    			if ( $oRequest->Get('status') != 'resolved')
-    			{
-    				$oRequest->set('servicesubcategory_id',$this->Get('servicesubcategory_id'));
-    				$oRequest->set('service_id',$this->Get('service_id'));		
-    				$oRequest->set('team_id',$this->Get('team_id'));
-    				$oRequest->set('agent_id',$this->Get('agent_id'));	
-    				$oRequest->set('resolution_code',$this->Get('resolution_code'));
-    				$oRequest->set('solution','Automatically resolved by incident:[[Incident:'.$this->Get('ref').']]');
-    				$oRequest->ApplyStimulus('ev_autoresolve');
-    				$oRequest->DBUpdate();
-    			}
-    		}
-        }
-
-		//automatically resolve child incidents
-		$sOQL = "SELECT Incident WHERE parent_incident_id=:ticket";
-		$oChildIncidentSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-						array(),
-						array(
-							'ticket' => $this->GetKey(),
-							)
-						);
-		while($oIncident = $oChildIncidentSet->Fetch())
-		{
-			if ( $oIncident->Get('status') != 'resolved')
-			{
-				$oIncident->set('servicesubcategory_id',$this->Get('servicesubcategory_id'));
-				$oIncident->set('service_id',$this->Get('service_id'));		
-				$oIncident->set('team_id',$this->Get('team_id'));
-				$oIncident->set('agent_id',$this->Get('agent_id'));	
-				$oIncident->set('resolution_code',$this->Get('resolution_code'));
-				$oIncident->set('solution','Automatically resolved by incident:[[Incident:'.$this->Get('ref').']]');
-				$oIncident->ApplyStimulus('ev_autoresolve');
-				$oIncident->DBUpdate();
-			}
-		}
-		return true;
-
 	}]]></code>
         </method>
         <method id="ResolveChildTickets">
