@@ -276,12 +276,21 @@ class CellStatus_NullIssue extends CellStatus_Issue
  */
 class ReportValue
 {
+	protected DBObject $oObject;
+	protected string $sAttCode;
+	protected bool $bOriginal;
+
 	/**
 	 * @param DBObject $oObject
 	 * @param string $sAttCode
 	 * @param bool $bOriginal
 	 */
-	public function __construct(protected DBObject $oObject, protected string $sAttCode, protected  bool $bOriginal){}
+	public function __construct(DBObject $oObject, string $sAttCode, bool $bOriginal)
+	{
+		$this->oObject = $oObject;
+		$this->sAttCode = $sAttCode;
+		$this->bOriginal = $bOriginal;
+	}
 
 	public function GetAsHTML(bool $bLocalizedValues)
 	{
