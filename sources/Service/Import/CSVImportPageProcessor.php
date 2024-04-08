@@ -45,26 +45,26 @@ class CSVImportPageProcessor
 {
 
 	/**
-	 * @param mixed $iBoxSkipLines
-	 * @param mixed $iNbSkippedLines
-	 * @param mixed $sDateTimeFormat
-	 * @param mixed $sCustomDateTimeFormat
-	 * @param mixed $sClassName
+	 * @param $iBoxSkipLines
+	 * @param $iNbSkippedLines
+	 * @param $sDateTimeFormat
+	 * @param $sCustomDateTimeFormat
+	 * @param $sClassName
 	 * @param WebPage $oPage
 	 * @param $aSynchroUpdate
-	 * @param mixed $sCSVData
-	 * @param mixed $sSeparator
-	 * @param mixed $sTextQualifier
+	 * @param $sCSVData
+	 * @param $sSeparator
+	 * @param $sTextQualifier
 	 * @param bool $bHeaderLine
 	 * @param array $aResult
-	 * @param mixed $aSearchFields
-	 * @param mixed $aFieldsMapping
+	 * @param $aSearchFields
+	 * @param $aFieldsMapping
 	 * @param bool $bSimulate
-	 * @param mixed $sCSVDataTruncated
+	 * @param $sCSVDataTruncated
 	 * @param int $iCurrentStep
-	 * @param mixed $sEncoding
-	 * @param mixed $bAdvanced
-	 * @param mixed $sSynchroScope
+	 * @param $sEncoding
+	 * @param $bAdvanced
+	 * @param $sSynchroScope
 	 *
 	 * @return array|null
 	 * @throws ArchivedObjectException
@@ -79,9 +79,9 @@ class CSVImportPageProcessor
 	 * @throws Exception
 	 */
     public static function ProcessData(
-        mixed $iBoxSkipLines, mixed $iNbSkippedLines, mixed $sDateTimeFormat, mixed $sCustomDateTimeFormat, mixed $sClassName, WebPage $oPage, $aSynchroUpdate, mixed $sCSVData, mixed $sSeparator,
-	    mixed $sTextQualifier, bool $bHeaderLine, array $aResult, mixed $aSearchFields, mixed $aFieldsMapping,
-	    bool $bSimulate, mixed $sCSVDataTruncated, int $iCurrentStep, mixed $sEncoding, mixed $bAdvanced, mixed $sSynchroScope
+        $iBoxSkipLines, $iNbSkippedLines, $sDateTimeFormat, $sCustomDateTimeFormat, $sClassName, WebPage $oPage, $aSynchroUpdate, $sCSVData, $sSeparator,
+	    $sTextQualifier, bool $bHeaderLine, array $aResult, $aSearchFields, $aFieldsMapping,
+	    bool $bSimulate, $sCSVDataTruncated, int $iCurrentStep, $sEncoding, $bAdvanced, $sSynchroScope
     ): ?array
     {
 	    $iSkippedLines = 0;
@@ -598,12 +598,12 @@ EOF
 	/**
 	 * @param Form $oForm
 	 * @param string $name
-	 * @param mixed $value
+	 * @param $value
 	 * @param null $id
 	 *
 	 * @return void
 	 */
-	public static function AddHiddenInputToForm(Form $oForm, string $name, mixed $value, $id = null): void
+	public static function AddHiddenInputToForm(Form $oForm, string $name, $value, $id = null): void
 	{
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($name, (string)$value, $id));
 	}
