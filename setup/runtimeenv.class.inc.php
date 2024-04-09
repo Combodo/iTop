@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -100,14 +100,14 @@ class RunTimeEnvironment
 		$this->log_info(sprintf('%.3fs - query: %s ', $fDuration, $sQuery));
 		$this->log_db_query($sQuery);
 	}
-	
+
 	/**
 	 * Helper function to initialize the ORM and load the data model
 	 * from the given file
 	 * @param $oConfig object The configuration (volatile, not necessarily already on disk)
-	 * @param $bModelOnly boolean Whether or not to allow loading a data model with no corresponding DB 
+	 * @param $bModelOnly boolean Whether or not to allow loading a data model with no corresponding DB
 	 * @return none
-	 */    
+	 */
 	public function InitDataModel($oConfig, $bModelOnly = true, $bUseCache = false)
 	{
 		require_once APPROOT.'/setup/moduleinstallation.class.inc.php';
@@ -121,15 +121,15 @@ class RunTimeEnvironment
 		{
 			$this->log_info("MetaModel::Startup (ModelOnly = $bModelOnly)");
 		}
-	
+
 		if (!$bUseCache)
 		{
 			// Reset the cache for the first use !
 			MetaModel::ResetCache(md5(APPROOT).'-'.$this->sTargetEnv);
 		}
-	
+
 		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache, false /* $bTraceSourceFiles */, $this->sTargetEnv);
-		
+
 		if ($this->oExtensionsMap === null)
 		{
 			$this->oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv);
@@ -139,7 +139,7 @@ class RunTimeEnvironment
 	/**
 	 * Analyzes the current installation and the possibilities
 	 *
-	 * @param Config $oConfig Defines the target environment (DB)
+	 * @param null|Config $oConfig Defines the target environment (DB)
 	 * @param mixed $modulesPath Either a single string or an array of absolute paths
 	 * @param bool $bAbortOnMissingDependency ...
 	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
@@ -178,7 +178,7 @@ class RunTimeEnvironment
 				'name_code' => ITOP_APPLICATION,
 			)
 		);
-	
+
 		$aDirs = is_array($modulesPath) ? $modulesPath : array($modulesPath);
 		$aModules = ModuleDiscovery::GetAvailableModules($aDirs, $bAbortOnMissingDependency, $aModulesToLoad);
 		foreach($aModules as $sModuleId => $aModuleInfo)
@@ -194,11 +194,11 @@ class RunTimeEnvironment
 				//throw new Exception("Missing version for the module: '$sModuleId'");
 				$sModuleVersion  = '1.0.0';
 			}
-	
+
 			$sModuleAppVersion = $aModuleInfo['itop_version'];
 			$aModuleInfo['version_db'] = '';
 			$aModuleInfo['version_code'] = $sModuleVersion;
-	
+
 			if (!in_array($sModuleAppVersion, array('1.0.0', '1.0.1', '1.0.2')))
 			{
 				// This module is NOT compatible with the current version
@@ -223,18 +223,20 @@ class RunTimeEnvironment
 			}
 			$aRes[$sModuleName] = $aModuleInfo;
 		}
-	
+
 		try
 		{
-			CMDBSource::InitFromConfig($oConfig);
-			$aSelectInstall = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_module_install");
+			$aSelectInstall = array();
+			if (! is_null($oConfig)) {
+				CMDBSource::InitFromConfig($oConfig);
+				$aSelectInstall = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_module_install");
+			}
 		}
 		catch (MySQLException $e)
 		{
 			// No database or erroneous information
-			$aSelectInstall = array();
 		}
-	
+
 		// Build the list of installed module (get the latest installation)
 		//
 		$aInstallByModule = array(); // array of <module> => array ('installed' => timestamp, 'version' => <version>)
@@ -251,7 +253,7 @@ class RunTimeEnvironment
 				}
 			}
 		}
-		
+
 		foreach ($aSelectInstall as $aInstall)
 		{
 			//$aInstall['comment']; // unsused
@@ -265,7 +267,7 @@ class RunTimeEnvironment
 				// as being installed
 				$sModuleVersion = '0.0.0';
 			}
-	
+
 			if ($aInstall['parent_id'] == 0)
 			{
 				$sModuleName = ROOT_MODULE;
@@ -275,7 +277,7 @@ class RunTimeEnvironment
 				// Skip all modules belonging to previous installations
 				continue;
 			}
-	
+
 			if (array_key_exists($sModuleName, $aInstallByModule))
 			{
 				if ($iInstalled < $aInstallByModule[$sModuleName]['installed'])
@@ -283,30 +285,30 @@ class RunTimeEnvironment
 					continue;
 				}
 			}
-	
+
 			if ($aInstall['parent_id'] == 0)
 			{
 				$aRes[$sModuleName]['version_db'] = $sModuleVersion;
 				$aRes[$sModuleName]['name_db'] = $aInstall['name'];
 			}
-	
+
 			$aInstallByModule[$sModuleName]['installed'] = $iInstalled;
 			$aInstallByModule[$sModuleName]['version'] = $sModuleVersion;
 		}
-	
+
 		// Adjust the list of proposed modules
 		//
 		foreach ($aInstallByModule as $sModuleName => $aModuleDB)
 		{
 			if ($sModuleName == ROOT_MODULE) continue; // Skip the main module
-				
+
 			if (!array_key_exists($sModuleName, $aRes))
 			{
-				// A module was installed, it is not proposed in the new build... skip 
+				// A module was installed, it is not proposed in the new build... skip
 				continue;
 			}
 			$aRes[$sModuleName]['version_db'] = $aModuleDB['version'];
-	
+
 			if ($aRes[$sModuleName]['install']['flag'] == MODULE_ACTION_MANDATORY)
 			{
 				$aRes[$sModuleName]['uninstall'] = array(
@@ -322,7 +324,7 @@ class RunTimeEnvironment
 				);
 			}
 		}
-	
+
 		return $aRes;
 	}
 
@@ -336,9 +338,9 @@ class RunTimeEnvironment
 	{
 		self::MakeDirSafe(APPCONF);
 		self::MakeDirSafe(APPCONF.$this->sTargetEnv);
-		
+
 		$sTargetConfigFile = APPCONF.$this->sTargetEnv.'/'.ITOP_CONFIG_FILE;
-		
+
 		// Write the config file
 		@chmod($sTargetConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
 		$oConfig->WriteToFile($sTargetConfigFile);
@@ -354,7 +356,7 @@ class RunTimeEnvironment
 		// Do nothing, overload this method if needed
 		return array();
 	}
-	
+
 	/**
 	 * Decide whether or not the given extension is selected for installation
 	 * @param iTopExtension $oExtension
@@ -364,10 +366,10 @@ class RunTimeEnvironment
 	{
 		return ($oExtension->sSource == iTopExtension::SOURCE_REMOTE);
 	}
-	
+
 	/**
-	 * Get the installed modules (only the installed ones)	
-	 */	
+	 * Get the installed modules (only the installed ones)
+	 */
 	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
 	{
 		$sSourceDirFull = APPROOT.$sSourceDir;
@@ -388,7 +390,7 @@ class RunTimeEnvironment
 
 		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
 		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
-				
+
 		$aRet = array();
 
 		// Determine the installed modules and extensions
@@ -396,7 +398,7 @@ class RunTimeEnvironment
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
 		$oSourceEnv = new RunTimeEnvironment($sSourceEnv);
 		$aAvailableModules = $oSourceEnv->AnalyzeInstallation($oSourceConfig, $aDirsToCompile);
-		
+
 		// Actually read the modules available for the target environment,
 		// but get the selection from the source environment and finally
 		// mark as (automatically) chosen alll the "remote" modules present in the
@@ -416,7 +418,7 @@ class RunTimeEnvironment
 		//
 		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
 		$aRet[$oDictModule->GetName()] = $oDictModule;
-		
+
 		$oFactory = new ModelFactory($aDirsToCompile);
 		$sDeltaFile = APPROOT.'core/datamodel.core.xml';
 		if (file_exists($sDeltaFile))
@@ -430,14 +432,14 @@ class RunTimeEnvironment
 			$oApplicationModule = new MFCoreModule('application', 'Application Module', $sDeltaFile);
 			$aRet[$oApplicationModule->GetName()] = $oApplicationModule;
 		}
-		
+
 		$aModules = $oFactory->FindModules();
 		foreach($aModules as $oModule)
 		{
 			$sModule = $oModule->GetName();
 			$sModuleRootDir = $oModule->GetRootDir();
 			$bIsExtra = $this->oExtensionsMap->ModuleIsChosenAsPartOfAnExtension($sModule, iTopExtension::SOURCE_REMOTE);
-			if (array_key_exists($sModule, $aAvailableModules)) 
+			if (array_key_exists($sModule, $aAvailableModules))
 			{
 				if (($aAvailableModules[$sModule]['version_db'] != '') ||  $bIsExtra && !$oModule->IsAutoSelect()) //Extra modules are always unless they are 'AutoSelect'
 				{
@@ -445,7 +447,7 @@ class RunTimeEnvironment
 				}
 			}
 		}
-		
+
 		// Now process the 'AutoSelect' modules
 		do
 		{
@@ -564,7 +566,7 @@ class RunTimeEnvironment
 		{
 			$this->log_info("Creating the structure in '".$oConfig->Get('db_name')."'.");
 		}
-	
+
 		//MetaModel::CheckDefinitions();
 		if ($sMode == 'install')
 		{
@@ -596,7 +598,7 @@ class RunTimeEnvironment
 
 				MetaModel::DBCreate(array($this, 'LogQueryCallback'));
 				$this->log_ok("Database structure successfully updated.");
-	
+
 				// Check (and update only if it seems needed) the hierarchical keys
 				if (MFCompiler::SkipRebuildHKeys()) {
 					$this->log_ok("Hierchical keys are NOT rebuilt due to the presence of the \"data/.setup-rebuild-hkeys-never\" file");
@@ -656,7 +658,7 @@ class RunTimeEnvironment
 			if ($aPredefinedObjects != null)
 			{
 				$this->log_info("$sClass::GetPredefinedObjects() returned " . count($aPredefinedObjects) . " elements.");
-				
+
 				// Create/Delete/Update objects of this class,
 				// according to the given constant values
 				//
@@ -698,7 +700,7 @@ class RunTimeEnvironment
 		// Restore the previous access mode
 		$oConfig->Set('access_mode', $iPrevAccessMode);
 	}
-	
+
 	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sShortComment = null)
 	{
 		// Have it work fine even if the DB has been set in read-only mode for the users
@@ -707,7 +709,7 @@ class RunTimeEnvironment
 		//$oConfig->Set('access_mode', ACCESS_FULL);
 
 		if (CMDBSource::DBName() == '')
-		{		
+		{
 			// In case this has not yet been done
 			CMDBSource::InitFromConfig($oConfig);
 		}
@@ -717,7 +719,7 @@ class RunTimeEnvironment
 			$sShortComment = 'Done by the setup program';
 		}
 		$sMainComment = $sShortComment."\nBuilt on ".ITOP_BUILD_DATE;
-		
+
 		// Record datamodel version
 		$aData = array(
 			'source_dir' => $oConfig->Get('source_dir'),
@@ -730,7 +732,7 @@ class RunTimeEnvironment
 		$oInstallRec->Set('parent_id', 0); // root module
 		$oInstallRec->Set('installed', $iInstallationTime);
 		$iMainItopRecord = $oInstallRec->DBInsertNoReload();
-		
+
 		// Record main installation
 		$oInstallRec = new ModuleInstallation();
 		$oInstallRec->Set('name', ITOP_APPLICATION);
@@ -793,7 +795,7 @@ class RunTimeEnvironment
 					$this->oExtensionsMap->MarkAsChosen($oExtension->sCode);
 				}
 			}
-			
+
 			foreach($this->oExtensionsMap->GetChoices() as $oExtension)
 			{
 				$oInstallRec = new ExtensionInstallation();
@@ -810,9 +812,9 @@ class RunTimeEnvironment
 		MetaModel::GetConfig()->Set('access_mode', $iPrevAccessMode);
 
 		// Database is created, installation has been tracked into it
-		return true;	
+		return true;
 	}
-	
+
 	public function GetApplicationVersion(Config $oConfig)
 	{
 		$aResult = false;
@@ -829,7 +831,7 @@ class RunTimeEnvironment
 			$this->log_error('Exception '.$e->getMessage());
 			return false;
 		}
-	
+
 		// Scan the list of installed modules to get the version of the 'ROOT' module which holds the main application version
 		foreach ($aSelectInstall as $aInstall)
 		{
@@ -841,7 +843,7 @@ class RunTimeEnvironment
 				// as being installed
 				$sModuleVersion = '0.0.0';
 			}
-			
+
 			if ($aInstall['parent_id'] == 0)
 			{
 				if ($aInstall['name'] == DATAMODEL_MODULE)
@@ -867,7 +869,7 @@ class RunTimeEnvironment
 			$aResult['datamodel_version'] = $aResult['product_version'];
 		}
 		$this->log_info("GetApplicationVersion returns: product_name: ".$aResult['product_name'].', product_version: '.$aResult['product_version']);
-		return $aResult;	
+		return $aResult;
 	}
 
 	public static function MakeDirSafe($sDir)
@@ -883,8 +885,8 @@ class RunTimeEnvironment
 	}
 
 	/**
-	 * Wrappers for logging into the setup log files	
-	 */	
+	 * Wrappers for logging into the setup log files
+	 */
 	protected function log_error($sText)
 	{
 		SetupLog::Error($sText);
@@ -920,7 +922,7 @@ class RunTimeEnvironment
 			fclose($hSetupQueriesFile);
 		}
 	}
-	
+
 	public function GetCurrentDataModelVersion()
 	{
 		$oSearch = DBObjectSearch::FromOQL("SELECT ModuleInstallation WHERE name='".DATAMODEL_MODULE."'");
@@ -1113,7 +1115,7 @@ class RunTimeEnvironment
 	        }
 	    }
 	}
-	
+
 	/**
 	 * Load data from XML files for the selected modules (structural data and/or sample data)
 	 * @param array[] $aAvailableModules All available modules and their definition
@@ -1123,13 +1125,13 @@ class RunTimeEnvironment
 	public function LoadData($aAvailableModules, $aSelectedModules, $bSampleData)
 	{
 	    $oDataLoader = new XMLDataLoader();
-	    
+
 	    CMDBObject::SetTrackInfo("Initialization");
 	    $oMyChange = CMDBObject::GetCurrentChange();
 
 		SetupLog::Info("starting data load session");
 	    $oDataLoader->StartSession($oMyChange);
-	    
+
 	    $aFiles = array();
 	    $aPreviouslyLoadedFiles = array();
 	    foreach($aAvailableModules as $sModuleId => $aModule)
@@ -1170,7 +1172,7 @@ class RunTimeEnvironment
 	            }
 	        }
 	    }
-	    
+
 	    // Simulate the load of the previously loaded files, in order to initialize
 	    // the mapping between the identifiers in the XML and the actual identifiers
 	    // in the current database
@@ -1182,12 +1184,12 @@ class RunTimeEnvironment
 	        {
 	            throw(new Exception("File $sFileName does not exist"));
 	        }
-	        
+
 	        $oDataLoader->LoadFile($sFileName, true);
 	        $sResult = sprintf("loading of %s done.", basename($sFileName));
 		    SetupLog::Info($sResult);
 	    }
-	    
+
 	    foreach($aFiles as $sFileRelativePath)
 	    {
 	        $sFileName = APPROOT.$sFileRelativePath;
@@ -1196,16 +1198,16 @@ class RunTimeEnvironment
 	        {
 	            throw(new Exception("File $sFileName does not exist"));
 	        }
-	        
+
 	        $oDataLoader->LoadFile($sFileName);
 	        $sResult = sprintf("loading of %s done.", basename($sFileName));
 		    SetupLog::Info($sResult);
 	    }
-	    
+
 	    $oDataLoader->EndSession();
 		SetupLog::Info("ending data load session");
 	}
-	
+
 	/**
 	 * Merge two arrays of file names, adding the relative path to the files provided in the array to merge
 	 * @param string[] $aSourceArray
@@ -1222,7 +1224,7 @@ class RunTimeEnvironment
 	    }
 	    return array_merge($aSourceArray, $aToMerge);
 	}
-	
+
 	/**
 	 * Check the MetaModel for some common pitfall (class name too long, classes requiring too many joins...)
 	 * The check takes about 900 ms for 200 classes
@@ -1262,7 +1264,7 @@ class RunTimeEnvironment
             $iCount++;
         }
         $fDuration = microtime(true) - $fStart;
-        
+
         return sprintf("Checked %d classes in %.1f ms. No error found.\n", $iCount, $fDuration*1000.0);
     }
 } // End of class
