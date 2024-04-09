@@ -35,6 +35,9 @@ class InstallationFileServiceTest extends TestCase {
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', [], $bInstallationOptionalChoicesChecked);
 		$oInstallationFileService->ProcessInstallationChoices();
 		$aExpectedModules = [
+			'combodo-backoffice-darkmoon-theme',
+		    'itop-structure',
+		    'itop-themes-compat',
 			"itop-config-mgmt",
 			"itop-attachments",
 			"itop-profiles-itil",
@@ -66,9 +69,11 @@ class InstallationFileServiceTest extends TestCase {
 		if ($bInstallationOptionalChoicesChecked){
 			$aExpectedModules []= "itop-problem-mgmt";
 			$aExpectedModules []= "itop-knownerror-mgmt";
+			$aExpectedModules []= "itop-faq-light";
 		} else {
 			$aExpectedUnselectedModules []= "itop-problem-mgmt";
 			$aExpectedUnselectedModules []= "itop-knownerror-mgmt";
+			$aExpectedUnselectedModules []= "itop-faq-light";
 		}
 
 		sort($aExpectedModules);
@@ -93,6 +98,9 @@ class InstallationFileServiceTest extends TestCase {
 
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
 		$aExpectedInstallationModules = [
+			'combodo-backoffice-darkmoon-theme',
+			'itop-structure',
+			'itop-themes-compat',
 			"itop-config-mgmt",
 			"itop-attachments",
 			"itop-profiles-itil",
@@ -116,6 +124,7 @@ class InstallationFileServiceTest extends TestCase {
 		if ($bInstallationOptionalChoicesChecked){
 			$aExpectedInstallationModules []= "itop-problem-mgmt";
 			$aExpectedInstallationModules []= "itop-knownerror-mgmt";
+			$aExpectedInstallationModules []= "itop-faq-light";
 		}
 
 		$aExpectedAuthenticationModules = [
@@ -132,7 +141,13 @@ class InstallationFileServiceTest extends TestCase {
 		];
 
 		$aAutoSelectedModules = [
+			'itop-bridge-cmdb-services',
 			'itop-bridge-virtualization-storage',
+			'itop-bridge-cmdb-ticket',
+			'itop-bridge-datacenter-mgmt-services',
+			'itop-bridge-endusers-devices-services',
+			'itop-bridge-storage-mgmt-services',
+			'itop-bridge-virtualization-mgmt-services',
 		];
 
 		$this->checkModuleList("installation.xml choices", $aExpectedInstallationModules, $aSelectedModules);
@@ -199,6 +214,9 @@ class InstallationFileServiceTest extends TestCase {
 
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
 		$aExpectedInstallationModules = [
+			'combodo-backoffice-darkmoon-theme',
+			'itop-structure',
+			'itop-themes-compat',
 			"itop-config-mgmt",
 			"itop-attachments",
 			"itop-profiles-itil",
@@ -223,6 +241,7 @@ class InstallationFileServiceTest extends TestCase {
 		];
 		if ($bKnownMgtSelected){
 			$aExpectedInstallationModules []= "itop-knownerror-mgmt";
+			$aExpectedInstallationModules []= "itop-faq-light";
 		}
 
 		$aExpectedAuthenticationModules = [
@@ -239,7 +258,13 @@ class InstallationFileServiceTest extends TestCase {
 		];
 
 		$aAutoSelectedModules = [
+			'itop-bridge-cmdb-services',
 			'itop-bridge-virtualization-storage',
+			'itop-bridge-cmdb-ticket',
+			'itop-bridge-datacenter-mgmt-services',
+		    'itop-bridge-endusers-devices-services',
+		    'itop-bridge-storage-mgmt-services',
+		    'itop-bridge-virtualization-mgmt-services',
 		];
 
 		$this->checkModuleList("installation.xml choices", $aExpectedInstallationModules, $aSelectedModules);
