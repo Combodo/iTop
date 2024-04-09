@@ -143,7 +143,6 @@ $(function()
 		_destroy: function()
 		{
 			this.element.removeClass( "itop-icon-select" );
-			this.oButton.button( "destroy" );
 		},
 		
 		// _setOptions is called with a hash of all options that are changing
