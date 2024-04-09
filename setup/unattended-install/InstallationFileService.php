@@ -5,14 +5,6 @@ require_once(APPROOT.'/setup/setuppage.class.inc.php');
 require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
 require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
 
-if (version_compare(ITOP_DESIGN_LATEST_VERSION, '2.7', '<=')) {
-	require_once(APPROOT.'/core/config.class.inc.php');
-	require_once(APPROOT.'/core/log.class.inc.php');
-	require_once(APPROOT.'/core/kpi.class.inc.php');
-	require_once(APPROOT.'/core/cmdbsource.class.inc.php');
-	require_once(APPROOT.'/application/clipage.class.inc.php');
-}
-
 class InstallationFileService {
 	private $sTargetEnvironment;
 	private $sInstallationPath;
