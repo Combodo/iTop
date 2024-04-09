@@ -63,8 +63,8 @@ class UnattendedInstallTest extends ItopDataTestCase
 	}
 
 	public function testCallUnattendedInstallFromCLI() {
-		$cliPath = realpath(APPROOT."/setup/unattended-install/unattended-install.php");
-		exec("php ".$cliPath, $aOutput, $iCode);
+		$sCliPath = realpath(APPROOT."/setup/unattended-install/unattended-install.php");
+		exec(sprintf("%s %s", PHP_BINARY . " ".$sCliPath), $aOutput, $iCode);
 
 		$sOutput = implode('\n', $aOutput);
 		var_dump($sOutput);
