@@ -818,7 +818,7 @@ class SetupUtils
 		{
 			if (!is_dir($sDest))
 			{
-				mkdir($sDest);
+				mkdir($sDest, 0777 /* Default */, true);
 			}
 			$aFiles = scandir($sSource);
 			if(sizeof($aFiles) > 0 )
