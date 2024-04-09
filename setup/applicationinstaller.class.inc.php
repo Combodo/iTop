@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -25,7 +25,7 @@ require_once(APPROOT.'setup/backup.class.inc.php');
  * The installation process is split into a sequence of unitary steps
  * for performance reasons (i.e; timeout, memory usage) and also in order
  * to provide some feedback about the progress of the installation.
- * 
+ *
  * This class can be used for a step by step interactive installation
  * while displaying a progress bar, or in an unattended manner
  * (for example from the command line), to run all the steps
@@ -157,7 +157,7 @@ class ApplicationInstaller
 			}
 		}
 		while(($aRes['status'] != self::ERROR) && ($aRes['next-step'] != ''));
-		
+
 		return ($iOverallStatus == self::OK);
 	}
 
@@ -228,7 +228,7 @@ class ApplicationInstaller
 
 				case 'copy':
 					$aPreinstall = $this->oParams->Get('preinstall');
-					$aCopies = $aPreinstall['copies'];
+					$aCopies = $aPreinstall['copies'] ?? [];
 
 					self::DoCopy($aCopies);
 					$sReport = "Copying...";
@@ -473,7 +473,7 @@ class ApplicationInstaller
 		{
 			$sSource = $aCopy['source'];
 			$sDestination = APPROOT.$aCopy['destination'];
-			
+
 			SetupUtils::builddir($sDestination);
 			SetupUtils::tidydir($sDestination);
 			SetupUtils::copydir($sSource, $sDestination);
@@ -598,10 +598,10 @@ class ApplicationInstaller
 		}
 
 		$oFactory = new ModelFactory($aDirsToScan);
-		
+
 		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
 		$oFactory->LoadModule($oDictModule);
-		
+
 		$sDeltaFile = APPROOT.'core/datamodel.core.xml';
 		if (file_exists($sDeltaFile))
 		{
@@ -614,7 +614,7 @@ class ApplicationInstaller
 			$oApplicationModule = new MFCoreModule('application', 'Application Module', $sDeltaFile);
 			$oFactory->LoadModule($oApplicationModule);
 		}
-		
+
 		$aModules = $oFactory->FindModules();
 
 		foreach($aModules as $oModule)
@@ -627,7 +627,7 @@ class ApplicationInstaller
 		}
 		// Dump the "reference" model, just before loading any actual delta
 		$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$sEnvironment.'.xml');
-		
+
 		$sDeltaFile = APPROOT.'data/'.$sEnvironment.'.delta.xml';
 		if (file_exists($sDeltaFile))
 		{
@@ -651,12 +651,12 @@ class ApplicationInstaller
 		if (file_exists($sFileToPatch))
 		{
 			$sContent = file_get_contents($sFileToPatch);
-			
+
 			$sContent = str_replace("require_once(APPROOT.'modules/itop-welcome-itil/model.itop-welcome-itil.php');", "//\n// The line below is no longer needed in iTop 2.0 -- patched by the setup program\n// require_once(APPROOT.'modules/itop-welcome-itil/model.itop-welcome-itil.php');", $sContent);
-			
+
 			file_put_contents($sFileToPatch, $sContent);
 		}
-		
+
 		// Set an "Instance UUID" identifying this machine based on a file located in the data directory
 		$sInstanceUUIDFile = APPROOT.'data/instance.txt';
 		SetupUtils::builddir(APPROOT.'data');
@@ -728,7 +728,7 @@ class ApplicationInstaller
 			{
 				SetupLog::Info("Renaming '{$sDBPrefix}priv_internalUser' failed (already done in a previous upgrade?)");
 			}
-			
+
 			// let's remove the records in priv_change which have no counterpart in priv_changeop
 			SetupLog::Info("Cleanup of '{$sDBPrefix}priv_change' to remove orphan records");
 			CMDBSource::SelectDB($sDBName);
@@ -737,7 +737,7 @@ class ApplicationInstaller
 				$sTotalCount = "SELECT COUNT(*) FROM `{$sDBPrefix}priv_change`";
 				$iTotalCount = (int)CMDBSource::QueryToScalar($sTotalCount);
 				SetupLog::Info("There is a total of $iTotalCount records in {$sDBPrefix}priv_change.");
-				
+
 				$sOrphanCount = "SELECT COUNT(c.id) FROM `{$sDBPrefix}priv_change` AS c left join `{$sDBPrefix}priv_changeop` AS o ON c.id = o.changeid WHERE o.id IS NULL";
 				$iOrphanCount = (int)CMDBSource::QueryToScalar($sOrphanCount);
 				SetupLog::Info("There are $iOrphanCount useless records in {$sDBPrefix}priv_change (".sprintf('%.2f', ((100.0*$iOrphanCount)/$iTotalCount))."%)");
@@ -763,9 +763,9 @@ class ApplicationInstaller
 			{
 				SetupLog::Info("Cleanup of orphan records in `{$sDBPrefix}priv_change` failed: ".$e->getMessage());
 			}
-			
+
 		}
-		
+
 		// Module specific actions (migrate the data)
 		//
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
@@ -773,9 +773,9 @@ class ApplicationInstaller
 
 		if(!$oProductionEnv->CreateDatabaseStructure(MetaModel::GetConfig(), $sMode))
 		{
-			throw new Exception("Failed to create/upgrade the database structure for environment '$sTargetEnvironment'");		
+			throw new Exception("Failed to create/upgrade the database structure for environment '$sTargetEnvironment'");
 		}
-		
+
 		// Set a DBProperty with a unique ID to identify this instance of iTop
 		$sUUID = DBProperty::GetProperty('database_uuid', '');
 		if ($sUUID === '')
@@ -783,10 +783,10 @@ class ApplicationInstaller
 			$sUUID = utils::CreateUUID('database');
 			DBProperty::SetProperty('database_uuid', $sUUID, 'Installation/upgrade of '.ITOP_APPLICATION, 'Unique ID of this '.ITOP_APPLICATION.' Database');
 		}
-		
+
 		// priv_change now has an 'origin' field to distinguish between the various input sources
 		// Let's initialize the field with 'interactive' for all records were it's null
-		// Then check if some records should hold a different value, based on a pattern matching in the userinfo field 
+		// Then check if some records should hold a different value, based on a pattern matching in the userinfo field
 		CMDBSource::SelectDB($sDBName);
 		try
 		{
@@ -795,20 +795,20 @@ class ApplicationInstaller
 			if ($iCount > 0)
 			{
 				SetupLog::Info("Initializing '{$sDBPrefix}priv_change.origin' ($iCount records to update)");
-				
+
 				// By default all uninitialized values are considered as 'interactive'
 				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'interactive' WHERE `origin` IS NULL";
 				CMDBSource::Query($sInit);
-				
+
 				// CSV Import was identified by the comment at the end
 				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'csv-import.php' WHERE `userinfo` LIKE '%Web Service (CSV)'";
 				CMDBSource::Query($sInit);
-				
+
 				// CSV Import was identified by the comment at the end
 				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'csv-interactive' WHERE `userinfo` LIKE '%(CSV)' AND origin = 'interactive'";
 				CMDBSource::Query($sInit);
-				
-				
+
+
 				// Syncho data sources were identified by the comment at the end
 				// Unfortunately the comment is localized, so we have to search for all possible patterns
 				$sCurrentLanguage = Dict::GetUserLanguage();
@@ -822,7 +822,7 @@ class ApplicationInstaller
 				Dict::SetUserLanguage($sCurrentLanguage);
 				$sCondition = "`userinfo` LIKE ".implode(" OR `userinfo` LIKE ", array_keys($aSuffixes));
 
-				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'synchro-data-source' WHERE ($sCondition)"; 
+				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'synchro-data-source' WHERE ($sCondition)";
 				CMDBSource::Query($sInit);
 
 				SetupLog::Info("Initialization of '{$sDBPrefix}priv_change.origin' completed.");
@@ -847,7 +847,7 @@ class ApplicationInstaller
 			if ($iCount > 0)
 			{
 				SetupLog::Info("Initializing '{$sDBPrefix}priv_async_task.status' ($iCount records to update)");
-				
+
 				$sInit = "UPDATE `{$sDBPrefix}priv_async_task` SET `status` = 'planned' WHERE (`status` IS NULL) AND (`started` IS NULL)";
 				CMDBSource::Query($sInit);
 
@@ -903,15 +903,15 @@ class ApplicationInstaller
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
-		self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously 
-		
+		self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously
+
 		// Perform here additional DB setup... profiles, etc...
 		//
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
 		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseCreation');
 
 		$oProductionEnv->UpdatePredefinedObjects();
-		
+
 		if($sMode == 'install')
 		{
 			if (!self::CreateAdminAccount(MetaModel::GetConfig(), $sAdminUser, $sAdminPwd, $sAdminLanguage))
@@ -923,20 +923,20 @@ class ApplicationInstaller
 				SetupLog::Info("Administrator account '$sAdminUser' created.");
 			}
 		}
-		
+
 		// Perform final setup tasks here
 		//
 		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseSetup');
 	}
-	
+
 	/**
 	 * Helper function to create and administrator account for iTop
-	 * @return boolean true on success, false otherwise 
+	 * @return boolean true on success, false otherwise
 	 */
 	protected static function CreateAdminAccount(Config $oConfig, $sAdminUser, $sAdminPwd, $sLanguage)
 	{
 		SetupLog::Info('CreateAdminAccount');
-	
+
 		if (UserRights::CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage))
 		{
 			return true;
@@ -962,9 +962,9 @@ class ApplicationInstaller
 				'user rights' => 'addons/userrights/userrightsprofile.db.class.inc.php',
 			));
 		}
-		
+
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
-		
+
 		//Load the MetaModel if needed (asynchronous mode)
 		if (!self::$bMetaModelStarted)
 		{
@@ -972,8 +972,8 @@ class ApplicationInstaller
 			$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
 			self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously
-		} 
-		
+		}
+
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, APPROOT.$sModulesDir);
 		$oProductionEnv->LoadData($aAvailableModules, $aSelectedModules, $bSampleData);
 
@@ -1008,7 +1008,7 @@ class ApplicationInstaller
 		$bPreserveModuleSettings = false;
 		if ($sMode == 'upgrade')
 		{
-			try 
+			try
 			{
 				$oOldConfig = new Config($sPreviousConfigFile);
 				$oConfig = clone($oOldConfig);
@@ -1064,7 +1064,7 @@ class ApplicationInstaller
 		@chmod($sConfigDir, 0770); // RWX for owner and group, nothing for others
 
 		$oConfig->WriteToFile($sConfigFile);
-			
+
 		// try to make the final config file read-only
 		@chmod($sConfigFile, 0440); // Read-only for owner and group, nothing for others
 
