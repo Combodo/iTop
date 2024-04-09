@@ -45,6 +45,6 @@ fi
 echo "$CLI_NAME: Using XML_SETUP ($XML_SETUP) and INSTALLATION_XML ($INSTALLATION_XML) files during unattended itop installation."
 
 rm -rf $ITOP_DIR/data/.maintenance;
-echo php $DIR/unattended-install.php --use-itop-config --installation-xml="$INSTALLATION_XML" --param-file="$XML_SETUP"
+echo php $DIR/unattended-install.php --use_itop_config --installation_xml="$INSTALLATION_XML" --param-file="$XML_SETUP"
 
-php $DIR/unattended-install.php --use-itop-config --installation-xml="$INSTALLATION_XML" --param-file="$XML_SETUP"
+php $DIR/unattended-install.php --use_itop_config --installation_xml="$INSTALLATION_XML" --param-file="$XML_SETUP"
