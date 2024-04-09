@@ -141,8 +141,13 @@ class InstallationFileServiceTest extends TestCase {
 		];
 
 		$aAutoSelectedModules = [
+			'itop-bridge-cmdb-services',
 			'itop-bridge-virtualization-storage',
 			'itop-bridge-cmdb-ticket',
+			'itop-bridge-datacenter-mgmt-services',
+			'itop-bridge-endusers-devices-services',
+			'itop-bridge-storage-mgmt-services',
+			'itop-bridge-virtualization-mgmt-services',
 		];
 
 		$this->checkModuleList("installation.xml choices", $aExpectedInstallationModules, $aSelectedModules);
@@ -253,8 +258,13 @@ class InstallationFileServiceTest extends TestCase {
 		];
 
 		$aAutoSelectedModules = [
+			'itop-bridge-cmdb-services',
 			'itop-bridge-virtualization-storage',
 			'itop-bridge-cmdb-ticket',
+			'itop-bridge-datacenter-mgmt-services',
+		    'itop-bridge-endusers-devices-services',
+		    'itop-bridge-storage-mgmt-services',
+		    'itop-bridge-virtualization-mgmt-services',
 		];
 
 		$this->checkModuleList("installation.xml choices", $aExpectedInstallationModules, $aSelectedModules);
