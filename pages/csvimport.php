@@ -226,7 +226,7 @@ try {
 		}
 
 		// CSRF transaction id verification
-		if(!$bSimulate && !utils::IsTransactionValid(utils::ReadPostedParam('transaction_id', '', 'raw_data'))){
+		if(!utils::IsTransactionValid(utils::ReadPostedParam('transaction_id', '', 'raw_data'))){
 			throw new CoreException(Dict::S('UI:Error:InvalidToken'));
 		}
 
@@ -375,6 +375,7 @@ try {
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("synchro_scope", $sSynchroScope));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", $sDateTimeFormat));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", $sCustomDateTimeFormat));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("transaction_id",  utils::GetNewTransactionId(), "transaction_id")); // adding transaction_id field for next step (simulation)
 
 		if (!empty($sSynchroScope)) {
 			foreach ($aSynchroUpdate as $sKey => $value) {
