@@ -401,6 +401,54 @@ if (!class_exists('StructureInstaller'))
 				$oAction->Set('message', $aData['message']);
 				$oAction->DBWrite();
 			}
+
+			//N°824 - Fill object_class in EventNotification from the Triggers target_class
+			if (version_compare($sPreviousVersion, '3.3.0', '<')) {
+				SetupLog::Info("Filling object_class in EventNotification from the Triggers target_class");
+				$iNbProcessed = 0;
+
+				$sTableToSet = MetaModel::DBGetTable('EventNotification', 'object_class');
+				$oAttDefToSet = MetaModel::GetAttributeDef('EventNotification', 'object_class');
+				$oAttDefObjectId = MetaModel::GetAttributeDef('EventNotification', 'object_id');
+				$oAttDefTriggerId = MetaModel::GetAttributeDef('EventNotification', 'trigger_id');
+
+				$aColumnsToSets = array_keys($oAttDefToSet->GetSQLColumns());
+				$sColumnToSet = $aColumnsToSets[0]; // We know that a string has only one column
+				$aColumnsTriggerId = array_keys($oAttDefTriggerId->GetSQLColumns());
+				$sColumnTriggerId = $aColumnsTriggerId[0]; // We know that a string has only one column
+				$aColumnsObjectd = array_keys($oAttDefObjectId->GetSQLColumns());
+				$sColumnObjectId = $aColumnsObjectd[0]; // We know that a string has only one column
+
+
+				$oSearch = DBObjectSearch::FromOQL('SELECT TriggerOnObject');
+				$oSet = new DBObjectSet($oSearch);
+				$aData = [];
+				while ($oTrigger = $oSet->Fetch()) {
+					$aData[$oTrigger->GetKey()] =  $oTrigger->Get('target_class');
+				}
+
+				foreach ($aData as $sKey => $sTargetClass) {
+
+					if (MetaModel::HasChildrenClasses($sTargetClass)) {
+						//in this case, we have toget the name of the final class
+						$sTableToRead = MetaModel::DBGetTable($sTargetClass, 'finalclass');
+						$oAttDefToRead = MetaModel::GetAttributeDef($sTargetClass, 'finalclass');
+						$aColumnsToReads = array_keys($oAttDefToRead->GetSQLColumns());
+						$sColumnToRead = $aColumnsToReads[0]; // We know that a string has only one column
+						$sObjectPrimaryKey = MetaModel::DBGetKey($sTargetClass);
+
+						$sRepair = "UPDATE `$sTableToSet` JOIN `$sTableToRead` ON `$sTableToSet`.`$sColumnObjectId` = `$sTableToRead`.`$sObjectPrimaryKey` SET `$sTableToSet`.`$sColumnToSet` = `$sTableToRead`.`$sColumnToRead` WHERE  `$sTableToSet`.`$sColumnTriggerId` = '".$sKey."' AND `$sTableToSet`.`$sColumnToSet` = ''";
+					} else {
+
+						$sRepair = "UPDATE `$sTableToSet` SET `$sTableToSet`.`$sColumnToSet` = '".$sTargetClass."' WHERE `$sTableToSet`.`$sColumnTriggerId` = '".$sKey."' AND `$sTableToSet`.`$sColumnToSet` = ''";
+					}
+
+					SetupLog::Info(" |  | Query: ".$sRepair);
+					CMDBSource::Query($sRepair);
+					$iNbProcessed += CMDBSource::AffectedRows();
+				}
+				SetupLog::Info("|  | ".$iNbProcessed." EventNotification processed.");
+			}
 		}
 	}
 }

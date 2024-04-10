@@ -809,12 +809,12 @@ HTML
 			$aTriggers = $this->GetRelatedTriggersIDs();
 			if (count($aTriggers) > 0) {
 				$iId = $this->GetKey();
-				$aParams = array('triggers' => $aTriggers, 'id' => $iId);
+				$aParams = array('class' => get_class($this), 'id' => $iId);
 				$aNotifSearches = array();
 				$iNotifsCount = 0;
 				$aNotificationClasses = MetaModel::EnumChildClasses('EventNotification');
 				foreach ($aNotificationClasses as $sNotifClass) {
-					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN (:triggers) AND Ev.object_id = :id");
+					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev WHERE Ev.object_id = :id AND Ev.object_class = :class");
 					$aNotifSearches[$sNotifClass]->SetInternalParams($aParams);
 					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array());
 					$iNotifsCount += $oNotifSet->Count();
