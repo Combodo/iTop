@@ -100,6 +100,9 @@ class InstallationFileServiceTest extends TestCase {
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
 		$aExpectedInstallationModules = [
 			'combodo-backoffice-darkmoon-theme',
+			'combodo-backoffice-fullmoon-high-contrast-theme',
+			'combodo-backoffice-fullmoon-protanopia-deuteranopia-theme',
+			'combodo-backoffice-fullmoon-tritanopia-theme',
 		    'itop-structure',
 			"itop-config-mgmt",
 			"itop-attachments",
@@ -214,6 +217,9 @@ class InstallationFileServiceTest extends TestCase {
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
 		$aExpectedInstallationModules = [
 			'combodo-backoffice-darkmoon-theme',
+			'combodo-backoffice-fullmoon-high-contrast-theme',
+			'combodo-backoffice-fullmoon-protanopia-deuteranopia-theme',
+			'combodo-backoffice-fullmoon-tritanopia-theme',
             'itop-structure',
 			"itop-config-mgmt",
 			"itop-attachments",
