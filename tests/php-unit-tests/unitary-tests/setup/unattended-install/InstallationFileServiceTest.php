@@ -21,6 +21,10 @@ class InstallationFileServiceTest extends TestCase {
 		$this->RecurseMoveDir(APPROOT."data/production-modules/$sModuleId", APPROOT . "datamodels/2.x/$sModuleId");
 	}
 
+	private function GetInstallationPath() : string {
+		return realpath(__DIR__ . '/installation.xml');
+	}
+
 	public function GetDefaultModulesProvider() {
 		return [
 			'all checked' => [ true ],
@@ -32,7 +36,7 @@ class InstallationFileServiceTest extends TestCase {
 	 * @dataProvider GetDefaultModulesProvider
 	 */
 	public function testProcessInstallationChoices($bInstallationOptionalChoicesChecked=false) {
-		$sPath = realpath(dirname(__FILE__, 6)."/datamodels/2.x/installation.xml");
+		$sPath = $this->GetInstallationPath();
 		$this->assertTrue(is_file($sPath));
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', [], $bInstallationOptionalChoicesChecked);
 		$oInstallationFileService->ProcessInstallationChoices();
@@ -94,7 +98,7 @@ class InstallationFileServiceTest extends TestCase {
 	 * @dataProvider GetDefaultModulesProvider
 	 */
 	public function testGetAllSelectedModules($bInstallationOptionalChoicesChecked=false) {
-		$sPath = realpath(dirname(__FILE__, 6)."/datamodels/2.x/installation.xml");
+		$sPath = $this->GetInstallationPath();
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', [], $bInstallationOptionalChoicesChecked);
 		$oInstallationFileService->Init();
 
@@ -205,7 +209,7 @@ class InstallationFileServiceTest extends TestCase {
 	 * @dataProvider ItilExtensionProvider
 	 */
 	public function testGetAllSelectedModules_withItilExtensions(array $aSelectedExtensions, bool $bKnownMgtSelected) {
-		$sPath = realpath(dirname(__FILE__, 6)."/datamodels/2.x/installation.xml");
+		$sPath = $this->GetInstallationPath();
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', $aSelectedExtensions);
 		$oInstallationFileService->Init();
 
@@ -301,7 +305,7 @@ class InstallationFileServiceTest extends TestCase {
 			$this->RecurseMoveDir(APPROOT . "datamodels/2.x/$sModuleId", APPROOT."data/production-modules/$sModuleId");
 		}
 
-		$sPath = realpath(dirname(__FILE__, 6)."/datamodels/2.x/installation.xml");
+		$sPath = $this->GetInstallationPath();
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', [], false);
 		$oInstallationFileService->Init();
 
