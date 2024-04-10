@@ -21,7 +21,7 @@ class InstallationFileServiceTest extends TestCase {
 		$this->RecurseMoveDir(APPROOT."data/production-modules/$sModuleId", APPROOT . "datamodels/2.x/$sModuleId");
 	}
 
-	private function GetInstallationPath() : string {
+	private function GetInstallationPath() {
 		return realpath(__DIR__ . '/installation.xml');
 	}
 
@@ -36,14 +36,11 @@ class InstallationFileServiceTest extends TestCase {
 	 * @dataProvider GetDefaultModulesProvider
 	 */
 	public function testProcessInstallationChoices($bInstallationOptionalChoicesChecked=false) {
-		$sPath = $this->GetInstallationPath();
+		$sPath = realpath($this->GetInstallationPath());
 		$this->assertTrue(is_file($sPath));
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', [], $bInstallationOptionalChoicesChecked);
 		$oInstallationFileService->ProcessInstallationChoices();
 		$aExpectedModules = [
-			'combodo-backoffice-darkmoon-theme',
-		    'itop-structure',
-		    'itop-themes-compat',
 			"itop-config-mgmt",
 			"itop-attachments",
 			"itop-profiles-itil",
@@ -75,11 +72,9 @@ class InstallationFileServiceTest extends TestCase {
 		if ($bInstallationOptionalChoicesChecked){
 			$aExpectedModules []= "itop-problem-mgmt";
 			$aExpectedModules []= "itop-knownerror-mgmt";
-			$aExpectedModules []= "itop-faq-light";
 		} else {
 			$aExpectedUnselectedModules []= "itop-problem-mgmt";
 			$aExpectedUnselectedModules []= "itop-knownerror-mgmt";
-			$aExpectedUnselectedModules []= "itop-faq-light";
 		}
 
 		sort($aExpectedModules);
@@ -98,15 +93,14 @@ class InstallationFileServiceTest extends TestCase {
 	 * @dataProvider GetDefaultModulesProvider
 	 */
 	public function testGetAllSelectedModules($bInstallationOptionalChoicesChecked=false) {
-		$sPath = $this->GetInstallationPath();
+		$sPath = realpath($this->GetInstallationPath());
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', [], $bInstallationOptionalChoicesChecked);
 		$oInstallationFileService->Init();
 
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
 		$aExpectedInstallationModules = [
 			'combodo-backoffice-darkmoon-theme',
-			'itop-structure',
-			'itop-themes-compat',
+		    'itop-structure',
 			"itop-config-mgmt",
 			"itop-attachments",
 			"itop-profiles-itil",
@@ -130,7 +124,6 @@ class InstallationFileServiceTest extends TestCase {
 		if ($bInstallationOptionalChoicesChecked){
 			$aExpectedInstallationModules []= "itop-problem-mgmt";
 			$aExpectedInstallationModules []= "itop-knownerror-mgmt";
-			$aExpectedInstallationModules []= "itop-faq-light";
 		}
 
 		$aExpectedAuthenticationModules = [
@@ -148,7 +141,7 @@ class InstallationFileServiceTest extends TestCase {
 
 		$aAutoSelectedModules = [
 			'itop-bridge-virtualization-storage',
-			'itop-bridge-cmdb-ticket',
+			'itop-bridge-cmdb-ticket'
 		];
 
 		$this->checkModuleList("installation.xml choices", $aExpectedInstallationModules, $aSelectedModules);
@@ -209,15 +202,15 @@ class InstallationFileServiceTest extends TestCase {
 	 * @dataProvider ItilExtensionProvider
 	 */
 	public function testGetAllSelectedModules_withItilExtensions(array $aSelectedExtensions, bool $bKnownMgtSelected) {
-		$sPath = $this->GetInstallationPath();
+		$sPath = realpath($this->GetInstallationPath());
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', $aSelectedExtensions);
 		$oInstallationFileService->Init();
 
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
 		$aExpectedInstallationModules = [
 			'combodo-backoffice-darkmoon-theme',
-			'itop-structure',
-			'itop-themes-compat',
+            'itop-structure',
+            'itop-bridge-cmdb-ticket',
 			"itop-config-mgmt",
 			"itop-attachments",
 			"itop-profiles-itil",
@@ -242,7 +235,6 @@ class InstallationFileServiceTest extends TestCase {
 		];
 		if ($bKnownMgtSelected){
 			$aExpectedInstallationModules []= "itop-knownerror-mgmt";
-			$aExpectedInstallationModules []= "itop-faq-light";
 		}
 
 		$aExpectedAuthenticationModules = [
@@ -260,7 +252,6 @@ class InstallationFileServiceTest extends TestCase {
 
 		$aAutoSelectedModules = [
 			'itop-bridge-virtualization-storage',
-			'itop-bridge-cmdb-ticket',
 		];
 
 		$this->checkModuleList("installation.xml choices", $aExpectedInstallationModules, $aSelectedModules);
@@ -305,7 +296,7 @@ class InstallationFileServiceTest extends TestCase {
 			$this->RecurseMoveDir(APPROOT . "datamodels/2.x/$sModuleId", APPROOT."data/production-modules/$sModuleId");
 		}
 
-		$sPath = $this->GetInstallationPath();
+		$sPath = realpath($this->GetInstallationPath());
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', [], false);
 		$oInstallationFileService->Init();
 
