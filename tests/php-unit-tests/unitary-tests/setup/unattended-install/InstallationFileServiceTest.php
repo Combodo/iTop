@@ -4,9 +4,10 @@ namespace Combodo\iTop\Test\UnitTest\Setup\UnattendedInstall;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group itop-clone-only
+ */
 class InstallationFileServiceTest extends TestCase {
-	private $sFolderToCleanup;
-
 	protected function setUp(): void {
 		parent::setUp();
 		require_once(dirname(__FILE__, 6) . '/setup/unattended-install/InstallationFileService.php');
