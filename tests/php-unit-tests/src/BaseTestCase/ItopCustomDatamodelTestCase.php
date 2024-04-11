@@ -190,6 +190,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 			}
 			CMDBSource::CreateDB($oTestConfig->Get('db_name'));
 			MetaModel::Startup($sConfFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sTestEnv);
+            MetaModel::DBCreate();
 
 			$this->MarkEnvironmentReady();
 			$this->debug('Preparation of custom environment "'.$sTestEnv.'" done.');
