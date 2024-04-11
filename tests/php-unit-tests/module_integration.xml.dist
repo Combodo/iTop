@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
+        bootstrap="vendor/autoload.php"
+        backupGlobals="true"
+        colors="true"
+        columns="120"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        processIsolation="false"
+        stopOnError="false"
+        stopOnFailure="false"
+        stopOnIncomplete="false"
+        stopOnRisky="false"
+        stopOnSkipped="false"
+        verbose="true"
+        printerClass="\Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9"
+>
+
+  <extensions>
+    <extension class="Combodo\iTop\Test\UnitTest\Hook\TestsRunStartHook" />
+  </extensions>
+
+  <php>
+    <ini name="error_reporting" value="E_ALL"/>
+    <ini name="display_errors" value="On"/>
+    <ini name="log_errors" value="On"/>
+    <ini name="html_errors" value="Off"/>
+    <env name="PHPUNIT_PRETTY_PRINT_PROGRESS" value="true"/>
+  </php>
+  <!-- N°6949 - file dedicated to validate modules/extensions -->
+  <testsuites>
+      <testsuite name="ModuleIntegration">
+        <file>integration-tests/DictionariesConsistencyAfterSetupTest.php</file>
+        <file>integration-tests/DictionariesConsistencyTest.php</file>
+      </testsuite>
+  </testsuites>
+
+  <!-- Code coverage white list -->
+  <filter>
+    <whitelist>
+      <file>../../core/apc-emulation.php</file>
+      <file>../../core/ormlinkset.class.inc.php</file>
+      <file>../../datamodels/2.x/itop-tickets/main.itop-tickets.php</file>
+    </whitelist>
+  </filter>
+</phpunit>

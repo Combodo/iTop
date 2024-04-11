@@ -195,7 +195,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sEx
 			oDiv.empty();
 			oDiv.append(data);
 			oDiv.unblock();
-			oDiv.parent().resize(); // Inform the parent that the form has just been (potentially) resized
+			oDiv.parent().trigger('resize'); // Inform the parent that the form has just been (potentially) resized
 			oDiv.find('form.search_form_handler').triggerHandler('itop.search.form.reloaded');
 		}
 	);
@@ -641,7 +641,7 @@ function Format() {
 
 /**
  * Enable to access translation keys client side.
- * The called keys needs to be exported using \WebPage::add_dict_entry
+ * The called keys needs to be exported using WebPage::add_dict_entry
  */
 var Dict = {};
 if (typeof aDictEntries == 'undefined') {
@@ -797,7 +797,7 @@ const CombodoGlobalToolbox = {
 		}
 
 		// Attribute replacement
-		let aAttrElements = ['title', 'name', 'for'];
+		let aAttrElements = ['title', 'name', 'for', 'src'];
 		aAttrElements.forEach(function(e){
 			$(`[data-template-attr-${e}]`, oElement).each(function(){
 				$(this).attr(e, aData[$(this).attr(`data-template-attr-${e}`)]);
@@ -1134,6 +1134,34 @@ const CombodoJSConsole = {
 	 */
 	Error: function(sMessage) {
 		this._Trace(sMessage, 'error');
+	}
+}
+
+/**
+ * Helper to reflect ongoing JS activity to other processes like BeHat
+ * @api
+ * @since 3.0.4 3.1.1 3.2.0 N°6765
+ */
+const CombodoJsActivity = {
+	BODY_DATA_ATTR_NAME_READY: "data-ready-scripts",
+
+	/**
+	 * Counter so that we set the flag as done only on the last call
+	 * @type number
+	 */
+	iOngoingScriptsCount: 0,
+
+	AddOngoingScript: function() {
+		this.iOngoingScriptsCount++;
+		$("body").attr(this.BODY_DATA_ATTR_NAME_READY, "start");
+	},
+
+	RemoveOngoingScript: function() {
+		this.iOngoingScriptsCount--;
+
+		if (this.iOngoingScriptsCount < 1) {
+			$("body").attr(this.BODY_DATA_ATTR_NAME_READY, "done");
+		}
 	}
 }
 
@@ -1546,4 +1574,63 @@ let CombodoModal = {
 	OpenErrorModal: function(sMessage, oOptions) {
 		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR, oOptions);
 	},
+};
+
+/**
+ * Abstract wrapper to manage toasts in iTop.
+ * Implementations for the various GUIs may vary but APIs are the same.
+ *
+ * @since 3.2.0
+ */
+let CombodoToast = {
+	/**
+	 * Open a standard toast and put the content into it.
+	 *
+	 * @param sMessage {String} Message to be displayed in the toast
+	 * @param sSeverity {String} Severity of the information. Default values are success, information, warning, error.
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenToast: function(sMessage, sSeverity, aOptions = {}) {
+		// Meant for overloading
+		CombodoJSConsole.Debug('CombodoToast.OpenToast not implemented');
+	},
+	/**
+	 * Open a standard toast for success messages.
+	 *
+	 * @param sMessage {String} Success message to be displayed in the toast
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenSuccessToast: function(sMessage, aOptions = {}) {
+		CombodoToast.OpenToast(sMessage, 'success', aOptions);
+	},
+	
+	/**
+	 * Open a standard toast for information messages.
+	 *
+	 * @param sMessage {String} Information message to be displayed in the toast
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenInformationToast: function(sMessage, aOptions = {}) {
+		CombodoToast.OpenToast(sMessage, 'information', aOptions);
+	},
+	
+	/**
+	 * Open a standard toast for warning messages.
+	 *
+	 * @param sMessage {String} Warning message to be displayed in the toast
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenWarningToast: function(sMessage, aOptions = {}) {
+		CombodoToast.OpenToast(sMessage, 'warning', aOptions);
+	},
+	
+	/**
+	 * Open a standard toast for error messages.
+	 *
+	 * @param sMessage {String} Error message to be displayed in the toast
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenErrorToast: function(sMessage, aOptions = {}) {
+		CombodoToast.OpenToast(sMessage, 'error', aOptions);
+	}
 };

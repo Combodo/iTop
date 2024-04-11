@@ -11,7 +11,6 @@ use Combodo\iTop\Test\UnitTest\Hook\TestsRunStartHook;
 use Combodo\iTop\Test\UnitTest\Service\UnitTestRunTimeEnvironment;
 use Config;
 use Exception;
-use IssueLog;
 use MetaModel;
 use SetupUtils;
 use utils;
@@ -26,7 +25,7 @@ use utils;
  *   - Override the {@see ItopCustomDatamodelTestCase::GetDatamodelDeltaAbsPath()} method to define where you XML delta is
  *   - Implement your test case methods as usual
  *
- * @since N°6097 2.7.9 3.0.4 3.1.0
+ * @since 2.7.9 3.0.4 3.1.0 N°6097
  */
 abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 {
@@ -87,7 +86,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 	/**
 	 * @return string Absolute path to the {@see \Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase::GetTestEnvironment()} folder
 	 */
-	final private function GetTestEnvironmentFolderAbsPath(): string
+	final protected function GetTestEnvironmentFolderAbsPath(): string
 	{
 		return APPROOT.'env-'.$this->GetTestEnvironment().'/';
 	}
@@ -97,7 +96,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 	 *
 	 * @return void
 	 */
-	final private function MarkEnvironmentReady(): void
+	private function MarkEnvironmentReady(): void
 	{
 		if (false === $this->IsEnvironmentReady()) {
 			touch(static::GetTestEnvironmentFolderAbsPath());
@@ -109,7 +108,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 	 *
 	 * @details Having the environment ready means that it has been compiled for this global tests run, not that it is a relic from a previous global tests run
 	 */
-	final private function IsEnvironmentReady(): bool
+	final protected function IsEnvironmentReady(): bool
 	{
 		// As these test cases run in separate processes, the best way we found to let know a process if its environment was already prepared for **this run** was to compare the modification times of:
 		// - its own env-<ENV> folder
@@ -181,7 +180,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 			// - Compile env. based on the existing 'production' env.
 			$oEnvironment = new UnitTestRunTimeEnvironment($sTestEnv);
 			$oEnvironment->WriteConfigFileSafe($oTestConfig);
-			$oEnvironment->CompileFrom($sSourceEnv, false);
+			$oEnvironment->CompileFrom($sSourceEnv);
 
 			// - Force re-creating a fresh DB
 			CMDBSource::InitFromConfig($oTestConfig);

@@ -19,6 +19,8 @@
 
 
 use Combodo\iTop\Application\Branding;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\Page;
 use Combodo\iTop\DesignElement;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
@@ -578,7 +580,7 @@ EOF;
 					}
 					try
 					{
-						/** @var \iTopWebPage $oP */
+						/** @var iTopWebPage $oP */
 						$aMenuLines = $this->CompileMenu($oMenuNode, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
 					}
 					catch (DOMFormatException $e)
@@ -938,6 +940,30 @@ EOF
 		return $aXmlToPHP[$sEditMode];
 	}
 
+
+	/**
+	 * Helper to format the edit-when for direct linkset
+	 *
+	 * @param string $sEditWhen Value set from within the XML
+	 * @return string PHP flag
+	 *
+	 * @throws \DOMFormatException
+	 */
+	protected function EditWhenToPHP($sEditWhen): string
+	{
+		static $aXmlToPHP = array(
+			'never' => 'LINKSET_EDITWHEN_NEVER',
+			'on_host_edition' => 'LINKSET_EDITWHEN_ON_HOST_EDITION',
+			'on_host_display' => 'LINKSET_EDITWHEN_ON_HOST_DISPLAY',
+			'always' => 'LINKSET_EDITWHEN_ALWAYS',
+		);
+
+		if (!array_key_exists($sEditWhen, $aXmlToPHP))
+		{
+			throw new DOMFormatException("Edit mode: unknown value '$sEditWhen'");
+		}
+		return $aXmlToPHP[$sEditWhen];
+	}
 	
 	/**
 	 * Format a path (file or url) as an absolute path or relative to the module or the app
@@ -2053,8 +2079,10 @@ EOF
 			$this->CompileCommonProperty('duplicates', $oField, $aParameters, $sModuleRelativeDir, false);
 			$this->CompileCommonProperty('display_style', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('edit_mode', $oField, $aParameters, $sModuleRelativeDir);
+			$this->CompileCommonProperty('edit_when', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('filter', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('with_php_constraint', $oField, $aParameters, $sModuleRelativeDir, false);
+			$this->CompileCommonProperty('with_php_computation', $oField, $aParameters, $sModuleRelativeDir, false);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeLinkedSet') {
 			$this->CompileCommonProperty('linked_class', $oField, $aParameters, $sModuleRelativeDir);
@@ -2063,8 +2091,10 @@ EOF
 			$this->CompileCommonProperty('count_max', $oField, $aParameters, $sModuleRelativeDir, 0);
 			$this->CompileCommonProperty('display_style', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('edit_mode', $oField, $aParameters, $sModuleRelativeDir);
+			$this->CompileCommonProperty('edit_when', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('filter', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('with_php_constraint', $oField, $aParameters, $sModuleRelativeDir, false);
+			$this->CompileCommonProperty('with_php_computation', $oField, $aParameters, $sModuleRelativeDir, false);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeExternalKey') {
 			$this->CompileCommonProperty('target_class', $oField, $aParameters, $sModuleRelativeDir);
@@ -2223,7 +2253,15 @@ EOF
 				$oXMLDoc->save($sTempTargetDir.'/'.$sFileName);
 				$aParameters['definition_file'] = "'".str_replace("'", "\\'", $sFileName)."'";
 			}
-		} else {
+		}  else if($sAttType == 'AttributeClass'){
+			$this->CompileCommonProperty('sql', $oField, $aParameters, $sModuleRelativeDir);
+			$this->CompileCommonProperty('is_null_allowed', $oField, $aParameters, $sModuleRelativeDir, false);
+			$this->CompileCommonProperty('default_value', $oField, $aParameters, $sModuleRelativeDir, '');
+			$this->CompileCommonProperty('allowed_values', $oField, $aParameters, $sModuleRelativeDir);
+			$aParameters['class_category'] = $this->GetPropString($oField, 'class_category');
+			$aParameters['more_values'] = $this->GetPropString($oField, 'more_values', '');
+			$aParameters['depends_on'] = $sDependencies;
+		}else {
 			$this->CompileCommonProperty('sql', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('is_null_allowed', $oField, $aParameters, $sModuleRelativeDir, false);
 			$this->CompileCommonProperty('default_value', $oField, $aParameters, $sModuleRelativeDir, '');
@@ -2288,6 +2326,12 @@ EOF
 						$aParameters['edit_mode'] = $this->EditModeToPHP($sEditMode);
 					}
 					break;
+				case 'edit_when':
+					$sEditWhen = $oField->GetChildText('edit_when');
+					if(!is_null($sEditWhen)){
+						$aParameters['edit_when'] = $this->EditWhenToPHP($sEditWhen);
+					}
+					break;
 				case 'mappings':
 					$oMappings = $oField->GetUniqueElement('mappings');
 					$oMappingNodes = $oMappings->getElementsByTagName('mapping');
@@ -2312,7 +2356,7 @@ EOF
 					break;
 				case 'default_image':
 					if (($sDefault = $oField->GetChildText('default_image')) && (strlen($sDefault) > 0)) {
-						$aParameters['default_image'] = "utils::GetAbsoluteUrlModulesRoot().'$sModuleRelativeDir/$sDefault'";
+						$aParameters['default_image'] = "'$sModuleRelativeDir/$sDefault'";
 					} else {
 						$aParameters['default_image'] = 'null';
 					}
@@ -2710,7 +2754,7 @@ CSS;
 	 * @param string $sTempTargetDir
 	 * @param string $sFinalTargetDir
 	 * @param string $sModuleRelativeDir
-	 * @param \iTopWebPage $oP
+	 * @param iTopWebPage $oP
 	 *
 	 * @return array
 	 * @throws \DOMException
@@ -2909,7 +2953,7 @@ CSS;
 					if (($sAttType == 'AttributeExternalKey') || ($sAttType == 'AttributeHierarchicalKey'))
 					{
 						$sOnTargetDel = $oField->GetChildText('on_target_delete');
-						if (($sOnTargetDel == 'DEL_AUTO') || ($sOnTargetDel == 'DEL_SILENT'))
+						if (($sOnTargetDel == 'DEL_AUTO') || ($sOnTargetDel == 'DEL_SILENT') || ($sOnTargetDel == 'DEL_NONE'))
 						{
 							$sTargetClass = $oField->GetChildText('target_class');
 							$aLinkToClasses[$oClass->getAttribute('id')][] = $sTargetClass;
@@ -3608,12 +3652,15 @@ EOF;
 			$this->CompileFiles($oBrandingNode, $sTempTargetDir.'/branding', $sFinalTargetDir.'/branding', 'branding');
 			$aDataBranding = [];
 
-			$aLogosToCompile = [
-				['sNodeName' => 'login_logo', 'sTargetFile' => 'login-logo', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_LOGO],
-				['sNodeName' => 'main_logo', 'sTargetFile' => 'main-logo-full', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_FULL],
-				['sNodeName' => 'main_logo_compact', 'sTargetFile' => 'main-logo-compact', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT],
-				['sNodeName' => 'portal_logo', 'sTargetFile' =>'portal-logo', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_LOGO],
-			];
+				$aLogosToCompile = [
+					['sNodeName' => 'login_logo', 'sTargetFile' => 'login-logo', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_LOGO],
+					['sNodeName' => 'main_logo', 'sTargetFile' => 'main-logo-full', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_FULL],
+					['sNodeName' => 'main_logo_compact', 'sTargetFile' => 'main-logo-compact', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT],
+					['sNodeName' => 'portal_logo', 'sTargetFile' => 'portal-logo', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_LOGO],
+					['sNodeName' => 'login_favicon', 'sTargetFile' => 'login_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_FAVICON],
+					['sNodeName' => 'main_favicon', 'sTargetFile' => 'main_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_FAVICON],
+					['sNodeName' => 'portal_favicon', 'sTargetFile' => 'portal_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_FAVICON],
+				];
 			foreach ($aLogosToCompile as $aLogo) {
 				$sLogo = $this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $aLogo['sNodeName'], $aLogo['sTargetFile']);
 				if ($sLogo != null) {
@@ -3633,7 +3680,7 @@ EOF;
 			{
 				SetupUtils::rrmdir($sTempTargetDir.'/branding/images');
 			}
-			
+
 			// Compile themes 
 			$this->CompileThemes($oBrandingNode, $sTempTargetDir);
 		}

@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/applicationcontext.class.inc.php');
@@ -31,12 +33,11 @@ ApplicationMenu::CheckMenuIdEnabled('UniversalSearchMenu');
 $oAppContext = new ApplicationContext();
 
 $oP = new iTopWebPage(Dict::S('UI:UniversalSearchTitle'));
-$oP->add_linked_script("../js/json.js");
-$oP->add_linked_script("../js/forms-json-utils.js");
-$oP->add_linked_script("../js/wizardhelper.js");
-$oP->add_linked_script("../js/wizard.utils.js");
-$oP->add_linked_script("../js/extkeywidget.js");
-$oP->add_linked_script("../js/jquery.blockUI.js");
+$oP->LinkScriptFromAppRoot("js/forms-json-utils.js");
+$oP->LinkScriptFromAppRoot("js/wizardhelper.js");
+$oP->LinkScriptFromAppRoot("js/wizard.utils.js");
+$oP->LinkScriptFromAppRoot("js/extkeywidget.js");
+$oP->LinkScriptFromAppRoot("js/jquery.blockUI.js");
 		
 // From now on the context is limited to the the selected organization ??
 

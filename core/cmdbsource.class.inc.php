@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -41,6 +41,12 @@ class CMDBSource
 	const ENUM_DB_VENDOR_MYSQL = 'MySQL';
 	const ENUM_DB_VENDOR_MARIADB = 'MariaDB';
 	const ENUM_DB_VENDOR_PERCONA = 'Percona';
+
+	/**
+	 * @since 2.7.10 3.0.4 3.1.2 3.0.2 N°6889 constant creation
+	 * @internal will be removed in a future version
+	 */
+	const MYSQL_DEFAULT_PORT = 3306;
 
 	/**
 	 * Error: 1205 SQLSTATE: HY000 (ER_LOCK_WAIT_TIMEOUT)
@@ -212,16 +218,19 @@ class CMDBSource
 	/**
 	 * @param string $sDbHost initial value ("p:domain:port" syntax)
 	 * @param string $sServer server variable to update
-	 * @param int $iPort port variable to update
+	 * @param int|null $iPort port variable to update, will return null if nothing is specified in $sDbHost
+	 *
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889 will return null in $iPort if port isn't present in $sDbHost. Use {@see MYSQL_DEFAULT_PORT} if needed
+	 *
+	 * @link http://php.net/manual/en/mysqli.persistconns.php documentation for the "p:" prefix (persistent connexion)
 	 */
 	public static function InitServerAndPort($sDbHost, &$sServer, &$iPort)
 	{
 		$aConnectInfo = explode(':', $sDbHost);
 
 		$bUsePersistentConnection = false;
-		if (strcasecmp($aConnectInfo[0], 'p') == 0)
+		if (strcasecmp($aConnectInfo[0], 'p') === 0)
 		{
-			// we might have "p:" prefix to use persistent connections (see http://php.net/manual/en/mysqli.persistconns.php)
 			$bUsePersistentConnection = true;
 			$sServer = $aConnectInfo[0].':'.$aConnectInfo[1];
 		}
@@ -238,10 +247,6 @@ class CMDBSource
 		else if (!$bUsePersistentConnection && ($iConnectInfoCount == 2))
 		{
 			$iPort = (int)($aConnectInfo[1]);
-		}
-		else
-		{
-			$iPort = 3306;
 		}
 	}
 
@@ -380,7 +385,7 @@ class CMDBSource
 	public static function GetDBVendor()
 	{
 		$sDBVendor = static::ENUM_DB_VENDOR_MYSQL;
-		
+
 		$sVersionComment = static::GetServerVariable('version') .  ' - ' . static::GetServerVariable('version_comment');
 		if(preg_match('/mariadb/i', $sVersionComment) === 1)
 		{
@@ -390,7 +395,7 @@ class CMDBSource
 		{
 			$sDBVendor = static::ENUM_DB_VENDOR_PERCONA;
 		}
-		
+
 		return $sDBVendor;
 	}
 
@@ -544,10 +549,9 @@ class CMDBSource
 	/**
 	 * @param string $sSQLQuery
 	 *
-	 * @return \mysqli_result|null
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \CoreException
+     * @return mysqli_result|null
+     * @throws MySQLException
+     * @throws MySQLHasGoneAwayException
 	 *
 	 * @since 2.7.0 N°679 handles nested transactions
 	 */
@@ -934,7 +938,7 @@ class CMDBSource
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
-				
+
 		while ($aRow = $oResult->fetch_array($iMode))
 		{
 			$aData[] = $aRow;
@@ -1088,7 +1092,7 @@ class CMDBSource
 		if (!array_key_exists($iKey, $aTableInfo["Fields"])) return false;
 		$aFieldData = $aTableInfo["Fields"][$iKey];
 		if (!array_key_exists("Key", $aFieldData)) return false;
-		return ($aFieldData["Key"] == "PRI"); 
+		return ($aFieldData["Key"] == "PRI");
 	}
 
 	public static function IsAutoIncrement($sTable, $sField)
@@ -1099,7 +1103,7 @@ class CMDBSource
 		$aFieldData = $aTableInfo["Fields"][$sField];
 		if (!array_key_exists("Extra", $aFieldData)) return false;
 		//MyHelpers::debug_breakpoint($aFieldData);
-		return (strstr($aFieldData["Extra"], "auto_increment")); 
+		return (strstr($aFieldData["Extra"], "auto_increment"));
 	}
 
 	public static function IsField($sTable, $sField)
@@ -1366,13 +1370,13 @@ class CMDBSource
 	public static function GetTableFieldsList($sTable)
 	{
 		assert(!empty($sTable));
-		
+
 		$aTableInfo = self::GetTableInfo($sTable);
 		if (empty($aTableInfo)) return array(); // #@# or an error ?
 
 		return array_keys($aTableInfo["Fields"]);
 	}
-	
+
 	// Cache the information about existing tables, and their fields
 	private static $m_aTablesInfo = array();
 	private static function _TablesInfoCacheReset($sTableName = null)
@@ -1505,7 +1509,7 @@ class CMDBSource
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
-		
+
 		$aRows = array();
 		while ($aRow = $oResult->fetch_array(MYSQLI_ASSOC))
 		{
@@ -1514,7 +1518,7 @@ class CMDBSource
 		$oResult->free();
 		return $aRows;
 	}
-	
+
 	/**
 	 * Returns the value of the specified server variable
 	 * @param string $sVarName Name of the server variable
@@ -1530,7 +1534,7 @@ class CMDBSource
 	/**
 	 * Returns the privileges of the current user
 	 * @return string privileges in a raw format
-	 */	   	
+	 */
 	public static function GetRawPrivileges()
 	{
 		try
@@ -1556,8 +1560,8 @@ class CMDBSource
 
 	/**
 	 * Determine the slave status of the server
-	 * @return bool true if the server is slave 
-	 */	   	
+	 * @return bool true if the server is slave
+	 */
 	public static function IsSlaveServer()
 	{
 		try

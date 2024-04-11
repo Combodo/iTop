@@ -95,10 +95,11 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string $sLabel
 	 * @param \Combodo\iTop\Application\UI\Base\Component\Input\Input $oInput
 	 * @param string|null $sId
+	 * @since 3.2.0 method is now public
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\InputWithLabel
 	 */
-	private static function MakeInputWithLabel(string $sName, string $sLabel, Input $oInput, ?string $sId = null)
+	public static function MakeInputWithLabel(string $sName, string $sLabel, Input $oInput, ?string $sId = null)
 	{
 		$oInput->SetName($sName);
 

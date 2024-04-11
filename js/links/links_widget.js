@@ -51,7 +51,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		me.RegisterChange();
 
 		let oInput = $('#'+this.iInputId);
-		oInput.bind('update_value', function () {
+		oInput.on('update_value', function () {
 			$(this).val(me.GetUpdatedValue());
 		});
 		oInput.closest('form').on('submit', function () {
@@ -162,7 +162,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 					if (me.bDoSearch) {
 						me.SearchObjectsToAdd();
 					} else {
-						$('#count_'+me.id).change(function () {
+						$('#count_'+me.id).on('change', function () {
 							let c = this.value;
 							me.UpdateButtons(c);
 						});
@@ -174,7 +174,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	};
 
 	this.SearchObjectsToAdd = function () {
-		$('#count_'+me.id).change(function () {
+		$('#count_'+me.id).on('change', function () {
 			let c = this.value;
 			me.UpdateButtons(c);
 		});

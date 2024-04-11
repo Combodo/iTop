@@ -4,9 +4,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject' => 'Edit displayed object~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => 'Delete displayed object~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Create a new object (with same class as displayed object)~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Save displayed object~~',
-	'UI:Layout:ObjectDetails:New:Modal:Title' => 'Creation of an object~~',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject' => 'Modifica oggetto visualizzato',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => 'Elimina oggetto visualizzato',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Crea un nuovo oggetto (con la stessa classe dell\'oggetto visualizzato)',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Salva oggetto visualizzato',
+	'UI:Layout:ObjectDetails:New:Modal:Title' => 'Creazione di un oggetto',
+	'UI:Layout:ObjectDetails:DatamodelSchemaLink:Tooltip' => 'Class data model schema~~',
 ]);

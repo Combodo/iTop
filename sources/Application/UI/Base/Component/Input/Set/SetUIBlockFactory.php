@@ -56,7 +56,7 @@ class SetUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Set\Set
 	 */
-	public static function MakeForSimple(string $sId, array $aOptions, string $sLabelFields, string $sValueField, array $aSearchFields, ?string $sGroupField = null): Set
+	public static function MakeForSimple(string $sId, array $aOptions, string $sLabelFields, string $sValueField, array $aSearchFields, ?string $sGroupField = null, ?string $sTooltipField = null): Set
 	{
 		// Create set ui block
 		$oSetUIBlock = new Set($sId);
@@ -67,7 +67,7 @@ class SetUIBlockFactory extends AbstractUIBlockFactory
 			->SetDataLabelField($sLabelFields)
 			->SetDataValueField($sValueField)
 			->SetDataSearchFields($aSearchFields)
-			->SetTooltipField($sLabelFields);
+			->SetTooltipField($sTooltipField ?? $sLabelFields);
 		if ($sGroupField != null) {
 			$oDataProvider->SetGroupField($sGroupField);
 		}

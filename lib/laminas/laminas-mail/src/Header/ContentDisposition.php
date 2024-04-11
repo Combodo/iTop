@@ -5,6 +5,21 @@ namespace Laminas\Mail\Header;
 use Laminas\Mail\Headers;
 use Laminas\Mime\Mime;
 
+use function count;
+use function explode;
+use function gettype;
+use function in_array;
+use function is_numeric;
+use function mb_strlen;
+use function mb_substr;
+use function sprintf;
+use function str_replace;
+use function strlen;
+use function strpos;
+use function strtolower;
+use function trim;
+use function var_export;
+
 class ContentDisposition implements UnstructuredInterface
 {
     /**
@@ -14,9 +29,7 @@ class ContentDisposition implements UnstructuredInterface
      */
     public const MAX_PARAMETER_LENGTH = 76;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $disposition = 'inline';
 
     /**
@@ -26,9 +39,7 @@ class ContentDisposition implements UnstructuredInterface
      */
     protected $encoding = 'ASCII';
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $parameters = [];
 
     /**
@@ -36,32 +47,32 @@ class ContentDisposition implements UnstructuredInterface
      */
     public static function fromString($headerLine)
     {
-        list($name, $value) = GenericHeader::splitHeaderLine($headerLine);
-        $value = HeaderWrap::mimeDecodeValue($value);
+        [$name, $value] = GenericHeader::splitHeaderLine($headerLine);
+        $value          = HeaderWrap::mimeDecodeValue($value);
 
         // check to ensure proper header type for this factory
-        if (strtolower($name) !== 'content-disposition') {
+        if (! in_array(strtolower($name), ['contentdisposition', 'content_disposition', 'content-disposition'])) {
             throw new Exception\InvalidArgumentException('Invalid header line for Content-Disposition string');
         }
 
-        $value  = str_replace(Headers::FOLDING, ' ', $value);
+        $value = str_replace(Headers::FOLDING, ' ', $value);
         $parts = explode(';', $value, 2);
 
         $header = new static();
         $header->setDisposition($parts[0]);
 
         if (isset($parts[1])) {
-            $values = ListParser::parse(trim($parts[1]), [';', '=']);
-            $length = count($values);
+            $values          = ListParser::parse(trim($parts[1]), [';', '=']);
+            $length          = count($values);
             $continuedValues = [];
 
             for ($i = 0; $i < $length; $i += 2) {
                 $value = $values[$i + 1];
                 $value = trim($value, "'\" \t\n\r\0\x0B");
-                $name = trim($values[$i], "'\" \t\n\r\0\x0B");
+                $name  = trim($values[$i], "'\" \t\n\r\0\x0B");
 
                 if (strpos($name, '*')) {
-                    list($name, $count) = explode('*', $name);
+                    [$name, $count] = explode('*', $name);
                     // allow optional count:
                     // Content-Disposition: attachment; filename*=UTF-8''%64%61%61%6D%69%2D%6D%C3%B5%72%76%2E%6A%70%67
                     if ($count === "") {
@@ -69,11 +80,11 @@ class ContentDisposition implements UnstructuredInterface
                     }
 
                     if (! is_numeric($count)) {
-                        $type = gettype($count);
-                        $value = var_export($count, 1);
+                        $type  = gettype($count);
+                        $value = var_export($count, true);
                         throw new Exception\InvalidArgumentException(sprintf(
-                            "Invalid header line for Content-Disposition string".
-                            " - count expected to be numeric, got %s with value %s",
+                            "Invalid header line for Content-Disposition string"
+                            . " - count expected to be numeric, got %s with value %s",
                             $type,
                             $value
                         ));
@@ -92,8 +103,8 @@ class ContentDisposition implements UnstructuredInterface
                 for ($i = 0, $iMax = count($values); $i < $iMax; $i++) {
                     if (! isset($values[$i])) {
                         throw new Exception\InvalidArgumentException(
-                            'Invalid header line for Content-Disposition string - incomplete continuation'.
-                            '; HeaderLine: '.$headerLine
+                            'Invalid header line for Content-Disposition string - incomplete continuation'
+                            . '; HeaderLine: ' . $headerLine
                         );
                     }
                     $value .= $values[$i];
@@ -126,7 +137,7 @@ class ContentDisposition implements UnstructuredInterface
         foreach ($this->parameters as $attribute => $value) {
             $valueIsEncoded = false;
             if (HeaderInterface::FORMAT_ENCODED === $format && ! Mime::isPrintable($value)) {
-                $value = $this->getEncodedValue($value);
+                $value          = $this->getEncodedValue($value);
                 $valueIsEncoded = true;
             }
 
@@ -152,13 +163,13 @@ class ContentDisposition implements UnstructuredInterface
                     $value = HeaderWrap::mimeDecodeValue($value);
                 }
 
-                $i = 0;
+                $i          = 0;
                 $fullLength = mb_strlen($value, 'UTF-8');
                 while ($fullLength > 0) {
                     $attributePart = $attribute . '*' . $i++ . '="';
-                    $attLen = mb_strlen($attributePart, 'UTF-8');
+                    $attLen        = mb_strlen($attributePart, 'UTF-8');
 
-                    $subPos = 1;
+                    $subPos    = 1;
                     $valuePart = '';
                     while ($subPos <= $fullLength) {
                         $sub = mb_substr($value, 0, $subPos, 'UTF-8');
@@ -173,9 +184,9 @@ class ContentDisposition implements UnstructuredInterface
                         $valuePart = $sub;
                     }
 
-                    $value = mb_substr($value, $subPos, null, 'UTF-8');
+                    $value      = mb_substr($value, $subPos, null, 'UTF-8');
                     $fullLength = mb_strlen($value, 'UTF-8');
-                    $result .= ';' . Headers::FOLDING . $attributePart . $valuePart . '"';
+                    $result    .= ';' . Headers::FOLDING . $attributePart . $valuePart . '"';
                 }
             }
         }
@@ -190,9 +201,9 @@ class ContentDisposition implements UnstructuredInterface
     protected function getEncodedValue($value)
     {
         $configuredEncoding = $this->encoding;
-        $this->encoding = 'UTF-8';
-        $value = HeaderWrap::wrap($value, $this);
-        $this->encoding = $configuredEncoding;
+        $this->encoding     = 'UTF-8';
+        $value              = HeaderWrap::wrap($value, $this);
+        $this->encoding     = $configuredEncoding;
         return $value;
     }
 
@@ -253,7 +264,7 @@ class ContentDisposition implements UnstructuredInterface
      */
     public function setParameter($name, $value)
     {
-        $name  = strtolower($name);
+        $name = strtolower($name);
 
         if (! HeaderValue::isValid($name)) {
             throw new Exception\InvalidArgumentException(

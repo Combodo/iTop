@@ -26,7 +26,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\JsPopoverMenuItem;
@@ -42,6 +42,9 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinkSetViewTable;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinkSetViewTable;
 use Combodo\iTop\Application\UI\Links\Set\LinkSetUIBlockFactory;
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
@@ -133,6 +136,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public const ENUM_INPUT_TYPE_PASSWORD = 'password';
 	/** @var string */
 	public const ENUM_INPUT_TYPE_TAGSET = 'tagset';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_TAGSET_LINKEDSET = 'tagset_linkedset';
 	/** @var string */
 	public const ENUM_INPUT_TYPE_RADIO = 'radio';
 	/** @var string */
@@ -285,7 +290,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \cmdbAbstractObject $oObj
 	 * @param array $aParams
 	 *
@@ -354,7 +359,7 @@ JS
 	 * @param int $iKey The identifier of the object
 	 * @param string $sMessageId Your id or one of the well-known ids: 'create', 'update' and 'apply_stimulus'
 	 * @param string $sMessage The HTML message (must be correctly escaped)
-	 * @param string $sSeverity Any of the \WebPage::ENUM_SESSION_MESSAGE_SEVERITY_XXX constants
+	 * @param string $sSeverity Any of the WebPage::ENUM_SESSION_MESSAGE_SEVERITY_XXX constants
 	 * @param float $fRank Ordering of the message: smallest displayed first (can be negative)
 	 * @param bool $bMustNotExist Do not alter any existing message (considering the id)
 	 *
@@ -376,7 +381,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage Warning, since 3.0.0 this parameter was kept for compatibility reason. You shouldn't write directly on the page!
+	 * @param WebPage $oPage Warning, since 3.0.0 this parameter was kept for compatibility reason. You shouldn't write directly on the page!
 	 *   When writing to the page, markup will be put above the real header of the panel.
 	 *   To insert something IN the panel, we now need to add UIBlocks in either the "subtitle" or "toolbar" sections of the array that will be returned.
 	 * @param bool $bEditMode Deprecated parameter in iTop 3.0.0, use {@see GetDisplayMode()} and ENUM_DISPLAY_MODE_* constants instead
@@ -554,7 +559,7 @@ HTML
 	/**
 	 * Display properties tab of an object
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 * @param string $sPrefix
 	 * @param array $aExtraParams
@@ -593,7 +598,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $sAttCode
 	 *
 	 * @throws \Exception
@@ -634,7 +639,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 *
 	 * @throws \CoreException
@@ -744,7 +749,13 @@ HTML
 			$oPage->SetCurrentTab($sTabCode, $oAttDef->GetLabel().$sCount, $sTabDescription);
 
 			$aArgs = array('this' => $this);
-			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE));
+			
+			$sEditWhen = $oAttDef->GetEditWhen();
+			// Calculate if edit_when allows to edit based on current $bEditMode
+			$bIsEditableBasedOnEditWhen =  ($sEditWhen === LINKSET_EDITWHEN_ALWAYS) || 
+				($bEditMode ? $sEditWhen === LINKSET_EDITWHEN_ON_HOST_EDITION : $sEditWhen === LINKSET_EDITWHEN_ON_HOST_DISPLAY);
+
+			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) || !$bIsEditableBasedOnEditWhen;
 			if ($bEditMode && (!$bReadOnly)) {
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
 				$sDisplayValue = ''; // not used
@@ -754,9 +765,9 @@ HTML
 				$oPage->add($sHTMLValue);
 			} else {
 				if ($oAttDef->IsIndirect()) {
-					$oBlockLinkSetViewTable = new BlockIndirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
+					$oBlockLinkSetViewTable = new BlockIndirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef, $bReadOnly);
 				} else {
-					$oBlockLinkSetViewTable = new BlockDirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
+					$oBlockLinkSetViewTable = new BlockDirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef, $bReadOnly);
 				}
 				$oPage->AddUiBlock($oBlockLinkSetViewTable);
 			}
@@ -855,7 +866,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 * @param string $sPrefix
 	 * @param array $aExtraParams
@@ -1059,7 +1070,7 @@ HTML
 
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode Note that this parameter is no longer used in this method, {@see static::$sDisplayMode} is used instead, but we cannot remove it as it part of the base interface (iDisplay)...
 	 *
 	 * @throws \ApplicationException
@@ -1106,7 +1117,7 @@ HTML
 		}
 
 		// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
-		/** @var \iTopWebPage $oPage */
+		/** @var iTopWebPage $oPage */
 		$aHeadersBlocks = $this->DisplayBareHeader($oPage, $bEditMode);
 		if (false === empty($aHeadersBlocks['subtitle'])) {
 			$oObjectDetails->AddSubTitleBlocks($aHeadersBlocks['subtitle']);
@@ -1141,7 +1152,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -1164,7 +1175,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
 	 * @param array $aExtraParams See possible values in {@see DataTableUIBlockFactory::RenderDataTable()}
 	 *
@@ -1226,7 +1237,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \DBObjectSet $oSet
 	 * @param array $aExtraParams
 	 *
@@ -1398,7 +1409,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
 	 * @param array $aExtraParams key used :
 	 *      <ul>
@@ -1521,7 +1532,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
 	 * @param array $aParams
 	 * @param string $sCharset
@@ -1680,7 +1691,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
 	 * @param array $aParams
 	 *
@@ -1893,7 +1904,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
 	 * @param array $aParams
 	 *
@@ -1971,7 +1982,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
 	 * @param array $aExtraParams
 	 *
@@ -2002,7 +2013,7 @@ HTML
 
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sClass
 	 * @param string $sAttCode
 	 * @param \AttributeDefinition $oAttDef
@@ -2353,6 +2364,7 @@ EOF
 
 				case 'LinkedSet':
 					if ($oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_PROPERTY) {
+						$sInputType = self::ENUM_INPUT_TYPE_TAGSET_LINKEDSET;
 						if (array_key_exists('bulk_context', $aArgs)) {
 							$oTagSetBlock = LinkSetUIBlockFactory::MakeForBulkLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['bulk_context']);
 						} else {
@@ -2417,7 +2429,7 @@ HTML;
 					$sInputType = self::ENUM_INPUT_TYPE_IMAGE;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'change';
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/edit_image.js');
+					$oPage->LinkScriptFromAppRoot('js/edit_image.js');
 					$oDocument = $value; // Value is an ormDocument objectm
 					$sDefaultUrl = $oAttDef->Get('default_image');
 					if (is_object($oDocument) && !$oDocument->IsEmpty()) {
@@ -2533,11 +2545,11 @@ HTML;
 					$sHTMLValue .= '</div></div>';
 					$sHTMLValue .= '<div>'.$sReloadSpan.'</div>'; // No validation span for this one: it does handle its own validation!
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_handler.js');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/console_form_handler.js');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_set.js');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_field.js');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/subform_field.js');
+					$oPage->LinkScriptFromAppRoot('js/form_handler.js');
+					$oPage->LinkScriptFromAppRoot('js/console_form_handler.js');
+					$oPage->LinkScriptFromAppRoot('js/field_set.js');
+					$oPage->LinkScriptFromAppRoot('js/form_field.js');
+					$oPage->LinkScriptFromAppRoot('js/subform_field.js');
 					$oPage->add_ready_script(
 						<<<JS
 $('#{$iId}_field_set').field_set($sFieldSetOptions);
@@ -2563,9 +2575,9 @@ JS
 				case 'Set':
 				case 'TagSet':
 					$sInputType = self::ENUM_INPUT_TYPE_TAGSET;
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
-					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.itop-set-widget.js');
+					$oPage->LinkScriptFromAppRoot('js/selectize.min.js');
+					$oPage->LinkStylesheetFromAppRoot('css/selectize.default.css');
+					$oPage->LinkScriptFromAppRoot('js/jquery.itop-set-widget.js');
 
 					$oPage->add_dict_entry('Core:AttributeSet:placeholder');
 
@@ -2740,7 +2752,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 *
 	 * @throws \ArchivedObjectException
@@ -3145,7 +3157,7 @@ EOF
 	/**
 	 *  Select the derived class to create
 	 * @param string $sClass
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param \ApplicationContext $oAppContext
 	 * @param array $aPossibleClasses
 	 * @param array $aHiddenFields
@@ -3240,7 +3252,7 @@ EOF
 		return $oBlock;
 	}
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sClass
 	 * @param \DBObject|null $oSourceObject Object to use for the creation form, can be either the class to instantiate, an object to clone or an object to use (eg. already prefilled / modeled object)
 	 * @param array $aArgs
@@ -3325,7 +3337,7 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage      $oPage
+	 * @param WebPage      $oPage
 	 * @param string        $sStimulus
 	 * @param array|null    $aPrefillFormParam
 	 * @param bool          $bDisplayBareProperties Whether to display the object details or not
@@ -3440,7 +3452,7 @@ EOF
 								// Dummy collapsible section created in order to get JS files
 								$oCollapsibleSection = new CollapsibleSection('');
 								foreach ($oCollapsibleSection->GetJsFilesUrlRecursively(true) as $sJSFile) {
-									$oPage->add_linked_script($sJSFile);
+									$oPage->LinkScriptFromURI($sJSFile);
 								}
 							}
 							$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
@@ -3580,16 +3592,26 @@ EOF
 			$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
 		} else {
 			//we can directly apply the stimuli
+			$sExceptionMessage = null;
+			try {
 			$bApplyStimulus = $this->ApplyStimulus($sStimulus); // will write the object in the DB
-			if (!$bApplyStimulus) {
-				throw new ApplicationException(Dict::S('UI:FailedToApplyStimuli'));
-			} else {
+			}
+			catch (Exception $oException) {
+				// Catch any exception happening during the stimulus
+				$bApplyStimulus = false;
+				$sExceptionMessage =   ($oException instanceof CoreCannotSaveObjectException) ? $oException->getHtmlMessage() : $oException->getMessage();
+			}
+			finally {
 				if ($sOwnershipToken !== null) {
 					// Release the concurrent lock, if any
 					iTopOwnershipLock::ReleaseLock($sClass, $iKey, $sOwnershipToken);
 				}
-
-				return true;
+				if (!$bApplyStimulus) {
+					// Throw an application oriented exception if necessary
+					throw new ApplicationException($sExceptionMessage ?? Dict::S('UI:FailedToApplyStimuli'));
+				} else {
+					return true;
+				}
 			}
 		}
 
@@ -3703,7 +3725,7 @@ HTML;
 			if ($oAttDef->GetEditClass() == 'Document') {
 				/** @var \ormDocument $oDocument */
 				$oDocument = $this->Get($sAttCode);
-				if (!$oDocument->IsEmpty()) {
+				if (is_object($oDocument) && !$oDocument->IsEmpty()) {
 					$sFieldAsHtml = $this->GetAsHTML($sAttCode);
 
 					$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
@@ -3738,7 +3760,7 @@ HTML;
 	/**
 	 * Displays a blob document *inline* (if possible, depending on the type of the document)
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $sAttCode
 	 *
 	 * @return string
@@ -4538,7 +4560,7 @@ HTML;
 		return $res;
 	}
 
-	public function PostInsertActions(): void
+	protected function PostInsertActions(): void
 	{
 		parent::PostInsertActions();
 
@@ -4562,6 +4584,9 @@ HTML;
 		InlineImage::FinalizeInlineImages($this);
 	}
 
+	/**
+	 * @deprecated 3.1.1 3.2.0 N°6966 We will have only one DBClone method in the future
+	 */
 	protected function DBCloneTracked_Internal($newKey = null)
 	{
         /** @var cmdbAbstractObject $oNewObj */
@@ -4582,6 +4607,7 @@ HTML;
 	public function DBUpdate()
 	{
 		$this->LogCRUDEnter(__METHOD__);
+		$res = 0;
 
 		try {
 			if (count($this->ListChanges()) === 0) {
@@ -4601,7 +4627,7 @@ HTML;
 		return $res;
 	}
 
-	public function PostUpdateActions(array $aChanges): void
+	protected function PostUpdateActions(array $aChanges): void
 	{
 		parent::PostUpdateActions($aChanges);
 
@@ -4642,6 +4668,7 @@ HTML;
 			if (static::IsCrudStackEmpty()) {
 				// Avoid signaling the current object that links were modified
 				static::RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
+				$this->LogCRUDDebug(__METHOD__, var_export(self::$aObjectsAwaitingEventDbLinksChanged, true));
 				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
@@ -4650,7 +4677,15 @@ HTML;
 		return $oDeletionPlan;
 	}
 
-		protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
+	protected function PostDeleteActions(): void
+	{
+		parent::PostDeleteActions();
+	}
+
+	/**
+	 * @deprecated 3.1.1 3.2.0 N°6967 We will have only one DBDelete method in the future
+	 */
+	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
@@ -4813,7 +4848,7 @@ HTML;
 	/**
 	 * Special display where the case log uses the whole "screen" at the bottom of the "Properties" tab
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sAttCode
 	 * @param string $sComment
 	 * @param string $sPrefix
@@ -4917,7 +4952,7 @@ HTML
 	/**
 	 * Special display where the case log uses the whole "screen" at the bottom of the "Properties" tab
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sAttCode
 	 * @param string $sComment
 	 * @param string $sPrefix
@@ -5042,7 +5077,7 @@ HTML
 	 * Display a form for modifying several objects at once
 	 * The form will be submitted to the current page, with the specified additional values
 	 *
-	 * @param \iTopWebPage $oP
+	 * @param iTopWebPage $oP
 	 * @param string $sClass
 	 * @param array $aSelectedObj
 	 * @param string $sCustomOperation
@@ -5286,7 +5321,7 @@ EOF
 	/**
 	 * Process the reply made from a form built with DisplayBulkModifyForm
 	 *
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param string $sClass
 	 * @param array $aSelectedObj
 	 * @param string $sCustomOperation
@@ -5342,7 +5377,7 @@ EOF
 			$aErrors = $oObj->UpdateObjectFromPostedForm('');
 			$bResult = (count($aErrors) == 0);
 			if ($bResult) {
-				list($bResult, $aErrors) = $oObj->CheckToWrite();
+				[$bResult, $aErrors] = $oObj->CheckToWrite();
 			}
 			if ($bPreview) {
 				$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusOk') : Dict::S('UI:BulkModifyStatusError');
@@ -5359,6 +5394,11 @@ EOF
 				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrorsToDisplay)).'</p>',
 			);
 			if ($bResult && (!$bPreview)) {
+				// doing the check will load multiple times same objects :/
+				// but it shouldn't cost too much on execution time
+				// user can mitigate by selecting less extkeys/lnk to set and/or less objects to update 🤷‍♂️
+				$oObj->CheckChangedExtKeysValues();
+
 				$oObj->DBUpdate();
 			}
 		}
@@ -5421,7 +5461,7 @@ EOF
 	/**
 	 * Perform all the needed checks to delete one (or more) objects
 	 *
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sClass
 	 * @param \DBObject[] $aObjects
 	 * @param $bPreview
@@ -5930,51 +5970,77 @@ JS
 	/**
 	 * @return void
 	 * @throws \CoreException
+	 * @since 3.1.2
+	 */
+	final protected function FireEventAboutToDelete(): void
+	{
+		$this->FireEvent(EVENT_DB_ABOUT_TO_DELETE);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
 	 *
 	 * @since 3.1.0
 	 */
 	final protected function FireEventAfterDelete(): void
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
-		$this->FireEventDbLinksChangedForCurrentObject();
 		$this->FireEvent(EVENT_DB_AFTER_DELETE);
 	}
 
 	/**
-	 * If the passed object is an instance of a link class, then will register each remote object for modification using {@see static::RegisterObjectAwaitingEventDbLinksChanged()}
+	 * Possibility for linked classes to be notified of current class modification
+	 *
 	 * If an external key was modified, register also the previous object that was linked previously.
 	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \Exception
+	 * @uses static::RegisterObjectAwaitingEventDbLinksChanged()
 	 *
-	 * @since 3.1.0 N°5906
+	 * @throws ArchivedObjectException
+	 * @throws CoreException
+	 * @throws Exception
+	 *
+	 * @since 3.1.0 N°5906 method creation
+	 * @since 3.1.1 3.2.0 N°6228 now just notify attributes having `with_php_computation`
 	 */
 	final protected function NotifyAttachedObjectsOnLinkClassModification(): void
 	{
-		$sClass = get_class($this);
-		if (false === MetaModel::IsLinkClass($sClass)) {
-			return;
-		}
 		// previous values in case of link change
 		$aPreviousValues = $this->ListPreviousValuesForUpdatedAttributes();
+		$sClass = get_class($this);
+		$aClassExtKeyAttCodes = MetaModel::GetAttributesList($sClass, [AttributeExternalKey::class]);
+		foreach ($aClassExtKeyAttCodes as $sExternalKeyAttCode) {
+			/** @var AttributeExternalKey $oAttDef */
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sExternalKeyAttCode);
 
-		$aLnkClassExternalKeys = MetaModel::GetAttributesList($sClass, [AttributeExternalKey::class]);
-		foreach ($aLnkClassExternalKeys as $sExternalKeyAttCode) {
-			/** @var \AttributeExternalKey $oExternalKeyAttDef */
-			$oExternalKeyAttDef = MetaModel::GetAttributeDef($sClass, $sExternalKeyAttCode);
-			$sRemoteClassName = $oExternalKeyAttDef->GetTargetClass();
-
-			$sRemoteObjectId = $this->Get($sExternalKeyAttCode);
-			if ($sRemoteObjectId > 0) {
-				self::RegisterObjectAwaitingEventDbLinksChanged($sRemoteClassName, $sRemoteObjectId);
+			if (false === $this->DoesTargetObjectHavePhpComputation($oAttDef)) {
+				continue;
 			}
 
-			$sPreviousRemoteObjectId = $aPreviousValues[$sExternalKeyAttCode] ?? 0;
-			if ($sPreviousRemoteObjectId > 0) {
-				self::RegisterObjectAwaitingEventDbLinksChanged($sRemoteClassName, $sPreviousRemoteObjectId);
+			$sTargetObjectId = $this->Get($sExternalKeyAttCode);
+			$sTargetClass = $oAttDef->GetTargetClass();
+			if ($sTargetObjectId > 0) {
+				$this->LogCRUDDebug(__METHOD__, "Add $sTargetClass:$sTargetObjectId for DBLINKS_CHANGED");
+				self::RegisterObjectAwaitingEventDbLinksChanged($sTargetClass, $sTargetObjectId);
+			}
+
+			$sPreviousTargetObjectId = $aPreviousValues[$sExternalKeyAttCode] ?? 0;
+			if ($sPreviousTargetObjectId > 0) {
+				$this->LogCRUDDebug(__METHOD__, "Add $sTargetClass:$sPreviousTargetObjectId for DBLINKS_CHANGED");
+				self::RegisterObjectAwaitingEventDbLinksChanged($sTargetClass, $sPreviousTargetObjectId);
 			}
 		}
+	}
+
+	private function DoesTargetObjectHavePhpComputation(AttributeExternalKey $oAttDef): bool
+	{
+		/** @var AttributeLinkedSet $oAttDefMirrorLink */
+		$oAttDefMirrorLink = $oAttDef->GetMirrorLinkAttribute();
+		if (is_null($oAttDefMirrorLink) || false === $oAttDefMirrorLink->HasPHPComputation()){
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -6011,7 +6077,12 @@ JS
 
 		$sClass = get_class($this);
 		$sId = $this->GetKey();
-		self::FireEventDbLinksChangedForClassId($sClass, $sId);
+		$bIsObjectAwaitingEventDbLinksChanged = self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
+		if (false === $bIsObjectAwaitingEventDbLinksChanged) {
+			return;
+		}
+		self::FireEventDbLinksChangedForObject($this);
+		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
 	}
 
 	/**
@@ -6043,9 +6114,15 @@ JS
 		// We want to avoid launching the listener twice, first here, and secondly after saving the Ticket in the listener
 		// By disabling the event to be fired, we can remove the current object from the attribute !
 		$oObject = MetaModel::GetObject($sClass, $sId, false);
+		self::FireEventDbLinksChangedForObject($oObject);
+		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
+	}
+
+	private static function FireEventDbLinksChangedForObject(DBObject $oObject)
+	{
+		self::SetEventDBLinksChangedBlocked(true);
 		// N°6408 The object can have been deleted
 		if (!is_null($oObject)) {
-			self::SetEventDBLinksChangedBlocked(true);
 			MetaModel::StartReentranceProtection($oObject);
 			$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
 			MetaModel::StopReentranceProtection($oObject);
@@ -6053,7 +6130,6 @@ JS
 				$oObject->DBUpdate();
 			}
 		}
-		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
 		cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
 	}
 

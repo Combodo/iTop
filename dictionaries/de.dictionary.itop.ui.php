@@ -356,16 +356,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Expression:Unit:Short:DAY' => 't',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'j',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('DE DE', 'German', 'Deutsch', array(
@@ -1622,8 +1612,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Newsroom:Preferences' => 'Newsroom-Einstellungen',
 	'UI:Newsroom:ConfigurationLink' => 'Konfiguration',
 	'UI:Newsroom:ResetCache' => 'Cache zurücksetzen',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Nachrichten von  %1$s anzeigen',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Zeigen Sie höchstens %1$s Beiträge im Menü (%2$s) an.',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
 ));
 
 

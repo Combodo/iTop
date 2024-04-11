@@ -138,4 +138,8 @@ class InputWithLabel extends UIBlock
 		return utils::IsNotNullOrEmptyString($this->sDescription);
 	}
 
+	public function GetSubBlocks(): array
+	{
+		return [$this->oInput->GetId() => $this->oInput];
+	}
 }

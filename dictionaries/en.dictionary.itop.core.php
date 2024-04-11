@@ -49,6 +49,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeTagSet' => 'List of tags',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'click to add',
+	'Core:Placeholder:CannotBeResolved' => '(%1$s : cannot be resolved)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)',
@@ -479,6 +480,41 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: EventiTopNotification
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:EventiTopNotification' => ITOP_APPLICATION_SHORT.' Notification',
+	'Class:EventiTopNotification+' => '',
+	'Class:EventiTopNotification/Attribute:title' => 'Title',
+	'Class:EventiTopNotification/Attribute:title+' => '',
+	'Class:EventiTopNotification/Attribute:icon' => 'Icon',
+	'Class:EventiTopNotification/Attribute:icon+' => '',
+	'Class:EventiTopNotification/Attribute:priority' => 'Priority',
+	'Class:EventiTopNotification/Attribute:priority+' => '',
+	'Class:EventiTopNotification/Attribute:priority/Value:1' => 'Critical',
+	'Class:EventiTopNotification/Attribute:priority/Value:1+' => 'Critical',
+	'Class:EventiTopNotification/Attribute:priority/Value:2' => 'Urgent',
+	'Class:EventiTopNotification/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:EventiTopNotification/Attribute:priority/Value:3' => 'Important',
+	'Class:EventiTopNotification/Attribute:priority/Value:3+' => 'Important',
+	'Class:EventiTopNotification/Attribute:priority/Value:4' => 'Standard',
+	'Class:EventiTopNotification/Attribute:priority/Value:4+' => 'Standard',
+	'Class:EventiTopNotification/Attribute:url' => 'URL',
+	'Class:EventiTopNotification/Attribute:url+' => '',
+	'Class:EventiTopNotification/Attribute:read' => 'Read',
+	'Class:EventiTopNotification/Attribute:read+' => '',
+	'Class:EventiTopNotification/Attribute:read/Value:no' => 'No',
+	'Class:EventiTopNotification/Attribute:read/Value:no+' => 'No',
+	'Class:EventiTopNotification/Attribute:read/Value:yes' => 'Yes',
+	'Class:EventiTopNotification/Attribute:read/Value:yes+' => 'Yes',
+	'Class:EventiTopNotification/Attribute:read_date' => 'Read date',
+	'Class:EventiTopNotification/Attribute:read_date+' => '',
+	'Class:EventiTopNotification/Attribute:contact_id' => 'Contact',
+	'Class:EventiTopNotification/Attribute:contact_id+' => '',
+));
+
+//
 // Class: Action
 //
 
@@ -500,9 +536,18 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Related Triggers',
 	'Class:Action/Attribute:trigger_list+' => 'Triggers linked to this action',
+	'Class:Action/Attribute:asynchronous' => 'Asynchronous',
+	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in background or not',
+	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Use global setting',
+	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes',
+	'Class:Action/Attribute:asynchronous/Value:no' => 'No',
 	'Class:Action/Attribute:finalclass' => 'Action sub-class',
 	'Class:Action/Attribute:finalclass+' => 'Name of the final class',
 	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.',
+	'Action:last_executions_tab' => 'Last executions',
+	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)',
+	'Action:last_executions_tab_limit_days' => 'past %1$s days',
+	'Action:last_executions_tab_limit_none' => 'no limit',
 ));
 
 //
@@ -587,6 +632,41 @@ While editing, click on the magnifier to get pertinent examples',
 	'ActionEmail:content_placeholder_missing'              => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.',
 ));
 
+
+//
+// Class: ActioniTopNotification
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'ActioniTopNotification:trigger' => 'Trigger',
+	'ActioniTopNotification:content' => 'Message',
+	'ActioniTopNotification:settings' => 'Settings',
+	'Class:ActioniTopNotification' => ITOP_APPLICATION_SHORT.' Notification',
+	'Class:ActioniTopNotification+' => '',
+	'Class:ActioniTopNotification/Attribute:language' => 'Language',
+	'Class:ActioniTopNotification/Attribute:language+' => '',
+	'Class:ActioniTopNotification/Attribute:title' => 'Title',
+	'Class:ActioniTopNotification/Attribute:title+' => '',
+	'Class:ActioniTopNotification/Attribute:message' => 'Message',
+	'Class:ActioniTopNotification/Attribute:message+' => '',
+	'Class:ActioniTopNotification/Attribute:icon' => 'Icon',
+	'Class:ActioniTopNotification/Attribute:icon+' => '',
+	'Class:ActioniTopNotification/Attribute:priority' => 'Priority',
+	'Class:ActioniTopNotification/Attribute:priority+' => '',
+	'Class:ActioniTopNotification/Attribute:priority/Value:1' => 'Critical',
+	'Class:ActioniTopNotification/Attribute:priority/Value:1+' => 'Critical',
+	'Class:ActioniTopNotification/Attribute:priority/Value:2' => 'Urgent',
+	'Class:ActioniTopNotification/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:ActioniTopNotification/Attribute:priority/Value:3' => 'Important',
+	'Class:ActioniTopNotification/Attribute:priority/Value:3+' => 'Important',
+	'Class:ActioniTopNotification/Attribute:priority/Value:4' => 'Standard',
+	'Class:ActioniTopNotification/Attribute:priority/Value:4+' => 'Standard',
+	'Class:ActioniTopNotification/Attribute:recipients' => 'Recipients',
+	'Class:ActioniTopNotification/Attribute:recipients+' => '',
+	'Class:ActioniTopNotification/Attribute:url' => 'URL',
+	'Class:ActioniTopNotification/Attribute:url+' => '',
+));
+
 //
 // Class: Trigger
 //
@@ -605,6 +685,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Trigger/Attribute:context+'     => 'Context to allow the trigger to start',
 	'Class:Trigger/Attribute:complement'   => 'Additional information',
 	'Class:Trigger/Attribute:complement+'  => 'Further information as provided in english, by this trigger',
+	'Class:Trigger/Attribute:subscription_policy'       => 'Subscription policy',
+	'Class:Trigger/Attribute:subscription_policy+'      => 'Allows users to unsubscribe from the trigger',
+	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow no channel',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Force all channels',
 ));
 
 //
@@ -1060,9 +1145,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label',
 	'Class:TagSetFieldData/Attribute:description' => 'Description',
 	'Class:TagSetFieldData/Attribute:description+' => '',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code',
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique',

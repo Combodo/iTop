@@ -19,9 +19,19 @@ $ibo-navigation-menu--notifications--item--content--padding-x: 14px !default;
 $ibo-navigation-menu--notifications--item--content--img--max-height: 100px !default;
 $ibo-navigation-menu--notifications--item--content--img--padding: 5px !default;
 
-$ibo-navigation-menu--notifications--item--new-message-indicator--width: 10px !default;
-$ibo-navigation-menu--notifications--item--new-message-indicator--height: 10px !default;
-$ibo-navigation-menu--notifications--item--new-message-indicator--background-color: $ibo-color-blue-500 !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--width: 13px !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--height: 13px !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--background-color: $ibo-color-white-100 !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--border: solid 2px $ibo-color-grey-500 !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-1--background-color: $ibo-color-red-100 !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-1--border: solid 2px $ibo-color-red-500 !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-2--background-color: $ibo-color-orange-100 !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-2--border: solid 2px $ibo-color-orange-500 !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-3--background-color: $ibo-color-blue-100 !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-3--border: solid 2px $ibo-color-blue-500 !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-4--background-color: $ibo-navigation-menu--notifications--item--new-message-indicator--background-color !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-4--border: $ibo-navigation-menu--notifications--item--new-message-indicator--border !default;
+
 $ibo-navigation-menu--notifications--item--new-message-indicator--border-radius: $ibo-border-radius-full !default;
 $ibo-navigation-menu--notifications--item--new-message-indicator--margin-top: $ibo-spacing-200 !default;
 
@@ -36,31 +46,30 @@ $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
 #ibo-navigation-menu--notifications-menu {
   flex-flow: column;
   min-width: $ibo-navigation-menu--notifications-menu--min-width;
-  .ibo-navigation-menu--notifications--messages-section{
+  .ibo-navigation-menu--notifications--messages-section {
     overflow: auto;
   }
 }
-.ibo-navigation-menu--notifications--show-all-messages, .ibo-navigation-menu--notifications-dismiss-all, .ibo-navigation-menu--notifications-show-all-multiple{
+.ibo-navigation-menu--notifications--show-all-messages, .ibo-navigation-menu--notifications-dismiss-all, .ibo-navigation-menu--notifications-show-all-multiple {
   overflow-x: inherit;
   text-align: center;
   min-height: 45px;
 }
 
-.ibo-navigation-menu--notifications--item--image{
+.ibo-navigation-menu--notifications--item--image {
   max-width: $ibo-navigation-menu--notifications--item--image--max-width;
   max-height: $ibo-navigation-menu--notifications--item--image--max-height;
   margin: $ibo-navigation-menu--notifications--item--image--margin-y $ibo-navigation-menu--notifications--item--image--margin-x;
   border-radius: $ibo-navigation-menu--notifications--item--image--border-radius;
 }
 
-img.ibo-navigation-menu--notifications--item--image[src=""]{
+.ibo-navigation-menu--notifications--item--image[src=""] {
   display: none;
 }
-img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-navigation-menu--notifications--item--image
-{
+.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ .ibo-navigation-menu--notifications--item--image {
   display: none;
 }
-.ibo-navigation-menu--notifications--item--bottom-text{
+.ibo-navigation-menu--notifications--item--bottom-text {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -68,41 +77,63 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   align-self: center;
   margin-left: $ibo-navigation-menu--notifications--item--bottom-text--margin-left;
 }
-.ibo-navigation-menu--notifications--item--content{
+.ibo-navigation-menu--notifications--item--content {
   padding: $ibo-navigation-menu--notifications--item--content--padding-y $ibo-navigation-menu--notifications--item--content--padding-x;
-  img{
+
+  img {
     max-height: $ibo-navigation-menu--notifications--item--content--img--max-height;
     padding: $ibo-navigation-menu--notifications--item--content--img--padding;
   }
 }
-.ibo-navigation-menu--notifications-item{
+.ibo-navigation-menu--notifications-item {
   display: flex;
   flex-direction: row;
+
+  .ibo-navigation-menu--notifications--item--content a {
+    @extend %ibo-hyperlink-forced-colors;
+  }
 }
-.ibo-navigation-menu--notifications--item--new-message-indicator{
+.ibo-navigation-menu--notifications--item--new-message-indicator {
   width: $ibo-navigation-menu--notifications--item--new-message-indicator--width;
   height: $ibo-navigation-menu--notifications--item--new-message-indicator--height;
   background-color: $ibo-navigation-menu--notifications--item--new-message-indicator--background-color;
+  border: $ibo-navigation-menu--notifications--item--new-message-indicator--border;
   border-radius: $ibo-navigation-menu--notifications--item--new-message-indicator--border-radius;
   margin-top: $ibo-navigation-menu--notifications--item--new-message-indicator--margin-top;
+  &.ibo-is-priority-1{
+    background-color: $ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-1--background-color;
+    border: $ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-1--border;
+  }
+  &.ibo-is-priority-2{
+    background-color: $ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-2--background-color;
+    border: $ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-2--border;
+  }
+  &.ibo-is-priority-3{
+    background-color: $ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-3--background-color;
+    border: $ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-3--border;
+  }
+  &.ibo-is-priority-4{
+    background-color: $ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-4--background-color;
+    border: $ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-4--border;
+  }
 }
 
-.ibo-navigation-menu--notifications-show-all-multiple ~ .ibo-popover-menu{
-  .ibo-navigation-menu--notifications--item--new-message-indicator{
+.ibo-navigation-menu--notifications-show-all-multiple ~ .ibo-popover-menu {
+  .ibo-navigation-menu--notifications--item--new-message-indicator {
     display: inline-block;
     margin-right: $ibo-navigation-menu--notifications-show-all-multiple--ibo-popover-menu--indicator--margin-right;
   }
-  .ibo-navigation-menu--notifications-show-all-multiple--counter{
+  .ibo-navigation-menu--notifications-show-all-multiple--counter {
     @extend %ibo-font-weight-600;
   }
 }
-.ibo-navigation-menu--notifications-dismiss-all--icon{
+.ibo-navigation-menu--notifications-dismiss-all--icon {
   margin: $ibo-navigation-menu--notifications-dismiss-all--icon--margin;
 }
-.ibo-popover-menu--item--no-message{
+.ibo-popover-menu--item--no-message {
   text-align: center;
 }
-.ibo-popover-menu--item--no-message--image>svg{
+.ibo-popover-menu--item--no-message--image > svg {
   display: flex;
   width: $ibo-popover-menu--item--no-message--image--svg--width;
   height: $ibo-popover-menu--item--no-message--image--svg--height;

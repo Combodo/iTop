@@ -23,7 +23,7 @@ use MetaModel;
 use UILinksWidget;
 use UserRights;
 use utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Class BlockIndirectLinkSetEditTable
@@ -107,10 +107,13 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 	{
 		$this->oAttributeLinkedSetIndirect = MetaModel::GetAttributeDef($this->oUILinksWidget->GetClass(), $this->oUILinksWidget->GetAttCode());
 
+		$sEditWhen = $this->oAttributeLinkedSetIndirect->GetEditWhen();
+		$bIsEditableBasedOnEditWhen = ($sEditWhen === LINKSET_EDITWHEN_ALWAYS || $sEditWhen === LINKSET_EDITWHEN_ON_HOST_EDITION);
+
 		// User rights
-		$this->bIsAllowCreate = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES;
-		$this->bIsAllowModify = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES;
-		$this->bIsAllowDelete = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES;
+		$this->bIsAllowCreate = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES && $bIsEditableBasedOnEditWhen;
+		$this->bIsAllowModify = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES && $bIsEditableBasedOnEditWhen;
+		$this->bIsAllowDelete = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES && $bIsEditableBasedOnEditWhen;
 	}
 
 	/**
@@ -128,7 +131,7 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $oValue
 	 * @param $aArgs
 	 * @param $sFormPrefix
@@ -278,7 +281,7 @@ EOF
 
 			if ($bReadOnly) {
 				$aRow['form::checkbox'] = "";
-				foreach ($this->m_aEditableFields as $sFieldCode) {
+				foreach ($this->oUILinksWidget->GetEditableFields() as $sFieldCode) {
 					$sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
 					$aRow[$sFieldCode] = $sDisplayValue;
 				}
@@ -432,7 +435,7 @@ JS
 		$oAttDef = MetaModel::GetAttributeDef($this->oUILinksWidget->GetLinkedClass(), $sFieldCode);
 
 		if ($bReadOnlyField) {
-			$sFieldForHtml = $sDisplayValue;
+			$sFieldForHtml = $oAttDef->GetAsHTML($sValue);
 		} else {
 			$sFieldForHtml = cmdbAbstractObject::GetFormElementForField(
 					$oP,

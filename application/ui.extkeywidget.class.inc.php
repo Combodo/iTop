@@ -7,6 +7,7 @@
 use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 
 require_once(APPROOT.'/application/displayblock.class.inc.php');
@@ -65,7 +66,7 @@ class UIExtKeyWidget
 	//public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sAttCode
 	 * @param string $sClass
 	 * @param string $sTitle
@@ -132,7 +133,7 @@ class UIExtKeyWidget
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param int $iMaxComboLength
 	 * @param bool $bAllowTargetCreation
 	 * @param string $sTitle
@@ -160,8 +161,8 @@ class UIExtKeyWidget
 	public function DisplaySelect(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, DBObjectset $oAllowedValues, $value, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), &$sInputType = '')
 	{
 		$sTitle = addslashes($sTitle);
-		$oPage->add_linked_script('../js/extkeywidget.js');
-		$oPage->add_linked_script('../js/forms-json-utils.js');
+		$oPage->LinkScriptFromAppRoot('js/extkeywidget.js');
+		$oPage->LinkScriptFromAppRoot('js/forms-json-utils.js');
 
 		$bCreate = (!$this->bSearchMode) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_MODIFY) && $bAllowTargetCreation);
 		$bExtensions = true;
@@ -367,7 +368,7 @@ JS
 	 */
 	public function DisplayRadio(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, DBObjectset $oAllowedValues, $value, $sFieldName, $sDisplayStyle)
 	{
-		$oPage->add_linked_script('../js/forms-json-utils.js');
+		$oPage->LinkScriptFromAppRoot('js/forms-json-utils.js');
 
 		$bCreate = (!$this->bSearchMode) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $bAllowTargetCreation);
 		$bExtensions = true;
@@ -444,7 +445,7 @@ JS
 	/**
 	 * Get the HTML fragment corresponding to the ext key editing widget
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param int $iMaxComboLength
 	 * @param boolean $bAllowTargetCreation
 	 * @param string $sTitle
@@ -476,8 +477,8 @@ JS
 			$this->bSearchMode = $bSearchMode;
 		}
 		$sTitle = addslashes($sTitle);
-		$oPage->add_linked_script('../js/extkeywidget.js');
-		$oPage->add_linked_script('../js/forms-json-utils.js');
+		$oPage->LinkScriptFromAppRoot('js/extkeywidget.js');
+		$oPage->LinkScriptFromAppRoot('js/forms-json-utils.js');
 
 		$bCreate = (!$this->bSearchMode) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $bAllowTargetCreation);
 		$bExtensions = true;
@@ -733,7 +734,7 @@ HTML
 				],
 		});
 		$('#fs_{$this->iId}').on('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);
-		$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);
+		$('#dc_{$this->iId}').on('resize', oACWidget_{$this->iId}.UpdateSizes);
 JS
 		);
 	}
@@ -975,6 +976,10 @@ HTML
 		// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
 		FormHelper::DisableAttributeBlobInputs($this->sTargetClass, $aFormExtraParams);
 
+		if(FormHelper::HasMandatoryAttributeBlobInputs($oNewObj)){
+			$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal(FormHelper::ENUM_MANDATORY_BLOB_MODE_CREATE));
+		}
+		
 		cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), $aFormExtraParams);
 		$oPage->add(<<<HTML
 	</div>

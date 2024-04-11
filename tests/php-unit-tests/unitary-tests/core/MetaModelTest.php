@@ -5,6 +5,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreException;
+use DBObjectSearch;
 use MetaModel;
 
 /**
@@ -27,7 +28,36 @@ class MetaModelTest extends ItopDataTestCase
 		$this->RequireOnceItopFile('/core/metamodel.class.php');
 	}
 
-    /**
+	protected function tearDown(): void
+	{
+		$this->InvokeNonPublicStaticMethod('PluginManager', 'ResetPlugins');
+		parent::tearDown();
+	}
+
+	/**
+	 * @covers MetaModel::GetObjectByName
+	 * @return void
+	 * @throws \CoreException
+	 */
+	public function testGetFinalClassName()
+	{
+		// Standalone classes
+		$this->assertEquals('Organization', MetaModel::GetFinalClassName('Organization', 1), 'Should work with standalone classes');
+		$this->assertEquals('SynchroDataSource', MetaModel::GetFinalClassName('SynchroDataSource', 1), 'Should work with standalone classes');
+
+		// 2 levels hierarchy
+		$this->assertEquals('Person', MetaModel::GetFinalClassName('Contact', 1));
+		$this->assertEquals('Person', MetaModel::GetFinalClassName('Person', 1));
+
+		// multi-level hierarchy
+		$oServer1 = MetaModel::GetObjectByName('Server', 'Server1');
+		$sServer1Id = $oServer1->GetKey();
+		foreach (MetaModel::EnumParentClasses('Server',ENUM_PARENT_CLASSES_ALL) as $sClass) {
+			$this->assertEquals('Server', MetaModel::GetFinalClassName($sClass, $sServer1Id), 'Should return Server for all the classes in the hierarchy');
+		}
+	}
+
+	/**
      * @group itopRequestMgmt
      * @covers       MetaModel::ApplyParams()
      * @dataProvider ApplyParamsProvider
@@ -216,8 +246,6 @@ class MetaModelTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @runInSeparateProcess
-	 *
 	 * @dataProvider enumPluginsProvider
 	 *
 	 * @param $expectedResults
@@ -265,8 +293,6 @@ class MetaModelTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @runInSeparateProcess
-	 *
 	 * @dataProvider getPluginsProvider
 	 *
 	 * @param $expectedInstanciationCalls
@@ -431,6 +457,31 @@ class MetaModelTest extends ItopDataTestCase
 			'Non existing person' => [10, false],
 		];
 	}
+
+    /**
+     * @return void
+     * @throws CoreException
+     * @throws \OQLException
+     */
+    public function testPurgeData(){
+        // Set max_chunk_size to 2 (default 1000) to test chunk deletion with only 10 items
+        $oConfig = MetaModel::GetConfig();
+        $oConfig->Set('purge_data.max_chunk_size', 2);
+        MetaModel::SetConfig($oConfig);
+
+        $aPkPerson = [];
+        for ($i=0; $i < 10; $i++) {
+            $oPerson = $this->CreatePerson($i, 1);
+            $sClass = get_class($oPerson);
+            $aPkPerson[] = $oPerson->GetKey();
+        }
+
+        $sDeleteOQL = 'SELECT '.$sClass.' WHERE id IN ('.implode(',', $aPkPerson).')';
+        $oFilter = DBObjectSearch::FromOQL($sDeleteOQL);
+
+        $iNbDelete = MetaModel::PurgeData($oFilter);
+        $this->assertEquals($iNbDelete, 10, 'MetaModel::PurgeData must delete 10 objects per batch of 2 items');
+    }
 }
 
 abstract class Wizzard

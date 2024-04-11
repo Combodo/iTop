@@ -10,11 +10,12 @@ use cmdbAbstractObject;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
 use Dict;
+use Exception;
 use IssueLog;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use MetaModel;
 use utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 class AjaxOauthClientController extends Controller
 {
@@ -32,8 +33,13 @@ class AjaxOauthClientController extends Controller
 
 		$aResult = ['status' => 'success', 'data' => []];
 
-		$sAuthorizationUrl = OAuthClientProviderFactory::GetAuthorizationUrl($oOAuthClient);
-		$aResult['data']['authorization_url'] = $sAuthorizationUrl;
+        try {
+            $sAuthorizationUrl = OAuthClientProviderFactory::GetAuthorizationUrl($oOAuthClient);
+            $aResult['data']['authorization_url'] = $sAuthorizationUrl;
+        } catch (Exception $oException) {
+            $aResult['status'] = 'error';
+            $aResult['error_description'] = $oException->getMessage();
+        }
 
 		$this->DisplayJSONPage($aResult);
 	}

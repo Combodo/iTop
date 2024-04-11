@@ -4,24 +4,27 @@ namespace Laminas\Mail\Header;
 
 use Laminas\Mail\Headers;
 
+use function array_map;
+use function explode;
+use function implode;
+use function preg_match;
+use function sprintf;
+use function strtolower;
+use function trim;
+
 /**
  * @see https://tools.ietf.org/html/rfc5322#section-3.6.4
  */
+// phpcs:ignore WebimpressCodingStandard.NamingConventions.AbstractClass.Prefix
 abstract class IdentificationField implements HeaderInterface
 {
-    /**
-     * @var string lower case field name
-     */
+    /** @var string lower case field name */
     protected static $type;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $messageIds;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $fieldName;
 
     /**
@@ -30,11 +33,11 @@ abstract class IdentificationField implements HeaderInterface
      */
     public static function fromString($headerLine)
     {
-        list($name, $value) = GenericHeader::splitHeaderLine($headerLine);
+        [$name, $value] = GenericHeader::splitHeaderLine($headerLine);
         if (strtolower($name) !== static::$type) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Invalid header line for "%s" string',
-                __CLASS__
+                self::class
             ));
         }
 
@@ -69,14 +72,11 @@ abstract class IdentificationField implements HeaderInterface
     }
 
     /**
-     * @param bool $format
-     * @return string
+     * @inheritDoc
      */
     public function getFieldValue($format = HeaderInterface::FORMAT_RAW)
     {
-        return implode(Headers::FOLDING, array_map(function ($id) {
-            return sprintf('<%s>', $id);
-        }, $this->messageIds));
+        return implode(Headers::FOLDING, array_map(static fn($id) => sprintf('<%s>', $id), $this->messageIds));
     }
 
     /**
@@ -114,7 +114,8 @@ abstract class IdentificationField implements HeaderInterface
     public function setIds($ids)
     {
         foreach ($ids as $id) {
-            if (! HeaderValue::isValid($id)
+            if (
+                ! HeaderValue::isValid($id)
                 || preg_match("/[\r\n]/", $id)
             ) {
                 throw new Exception\InvalidArgumentException('Invalid ID detected');

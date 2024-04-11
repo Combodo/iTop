@@ -22,6 +22,9 @@
 // - reconciliation is made on the column primary_key
 //
 
+use Combodo\iTop\Application\WebPage\CLILikeWebPage;
+use Combodo\iTop\Application\WebPage\CLIPage;
+
 require_once __DIR__.'/../approot.inc.php';
 require_once APPROOT.'/application/application.inc.php';
 require_once APPROOT.'/application/startup.inc.php';
@@ -464,6 +467,8 @@ try
 	$aIsBinaryToTransform = array();
 	foreach ($aInputColumns as $iFieldId => $sInputColumn)
 	{
+		$aIsBinaryToTransform[$iFieldId] = false;
+
 		if (array_key_exists($sInputColumn, $aDateColumns))
 		{
 			$aIsDateToTransform[$iFieldId] = $aDateColumns[$sInputColumn]; // either DATE or DATETIME
@@ -484,7 +489,8 @@ try
 		{
 			throw new ExchangeException("Unknown column '$sInputColumn' (class: '$sClass')");
 		}
-		$aIsBinaryToTransform[$iFieldId] = $aColumns[$sInputColumn] === 'LONGBLOB';
+
+		$aIsBinaryToTransform[$iFieldId] = ($aColumns[$sInputColumn] === 'LONGBLOB');
 	}
 	if (!isset($iPrimaryKeyCol))
 	{

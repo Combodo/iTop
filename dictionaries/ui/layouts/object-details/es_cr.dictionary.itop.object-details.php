@@ -9,4 +9,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Crear un nuevo objeto (con la misma clase que el objeto mostrado)',
 	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Guardar objeto mostrado',
 	'UI:Layout:ObjectDetails:New:Modal:Title' => 'Creation of an object~~',
+	'UI:Layout:ObjectDetails:DatamodelSchemaLink:Tooltip' => 'Class data model schema~~',
 ]);

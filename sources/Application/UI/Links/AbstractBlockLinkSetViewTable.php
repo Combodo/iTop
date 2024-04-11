@@ -21,7 +21,7 @@ use MetaModel;
 use MySQLException;
 use UserRights;
 use Utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Class AbstractBlockLinkSetViewTable
@@ -91,11 +91,11 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 * @param string $sObjectClass
 	 * @param string $sAttCode
 	 * @param AttributeLinkedSet $oAttDef
+	 * @param bool $bIsReadOnly
 	 *
-	 * @throws CoreException
-	 * @throws Exception
+	 * @throws \CoreException
 	 */
-	public function __construct(WebPage $oPage, DBObject $oDbObject, string $sObjectClass, string $sAttCode, AttributeLinkedSet $oAttDef)
+	public function __construct(WebPage $oPage, DBObject $oDbObject, string $sObjectClass, string $sAttCode, AttributeLinkedSet $oAttDef, bool $bIsReadOnly = false)
 	{
 		parent::__construct("links_view_table_$sAttCode", ["ibo-block-links-table"]);
 
@@ -105,6 +105,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 		$this->sObjectClass = $sObjectClass;
 		$this->oDbObject = $oDbObject;
 		$this->sTableId = 'rel_'.$this->sAttCode;
+		$this->bIsAttEditable = !$bIsReadOnly;
 		$this->SetDataAttributes(['role' => 'ibo-block-links-table', 'link-attcode' => $sAttCode, 'link-class' => $this->oAttDef->GetLinkedClass()]);
 		// Initialization
 		$this->Init();
@@ -122,7 +123,6 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	private function Init()
 	{
 		$this->sTargetClass = $this->GetTargetClass();
-		$this->InitIsAttEditable();
 		
 		// User rights
 		$this->bIsAllowCreate = $this->bIsAttEditable && UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES;
@@ -196,29 +196,11 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 		$oLinkSet = $oOrmLinkSet->ToDBObjectSet(utils::ShowObsoleteData());
 
 		// add list block
-		$oBlock = new DisplayBlock($oLinkSet->GetFilter(), 'listInObject', false);
+		$oBlock = new DisplayBlock($oLinkSet->GetFilter(), DisplayBlock::ENUM_STYLE_LIST_IN_OBJECT, false);
 		$this->AddSubBlock($oBlock->GetRenderContent($oPage, $this->GetExtraParam(), $this->sTableId));
 	}
-
-	/**
-	 * @return void
-	 * @throws \CoreException
-	 */
-	private function InitIsAttEditable(): void
-	{
-		$iFlags = 0;
-
-		if ($this->oDbObject->IsNew())
-		{
-			$iFlags = $this->oDbObject->GetInitialStateAttributeFlags($this->sAttCode);
-		}
-		else
-		{
-			$iFlags = $this->oDbObject->GetAttributeFlags($this->sAttCode);
-		}
-
-		$this->bIsAttEditable = !($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE | OPT_ATT_HIDDEN));
-	}
+	
+	
 	
 	/**
 	 * GetTableId.

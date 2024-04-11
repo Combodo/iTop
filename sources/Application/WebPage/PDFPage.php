@@ -17,7 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+namespace Combodo\iTop\Application\WebPage;
+
 use Combodo\iTop\Renderer\BlockRenderer;
+use ExecutionKPI;
 
 
 /**
@@ -25,14 +28,16 @@ use Combodo\iTop\Renderer\BlockRenderer;
  */
 class PDFPage extends WebPage
 {
-	/** @var \iTopPDF Instance of the TCPDF object for creating the PDF */
+	/** @var iTopPDF Instance of the TCPDF object for creating the PDF */
 	protected $oPdf;
 
 	public function __construct($s_title, $sPageFormat = 'A4', $sPageOrientation = 'L')
 	{
 		$oKpi = new ExecutionKPI();
 		parent::__construct($s_title);
-		define('K_PATH_FONTS', APPROOT.'lib/combodo/tcpdf/fonts/');
+		if (!defined('K_PATH_FONTS')){
+			define('K_PATH_FONTS', APPROOT.'lib/combodo/tcpdf/fonts/');
+		}
 		$this->oPdf = new iTopPDF($sPageOrientation, 'mm', $sPageFormat, true, self::PAGES_CHARSET, false);
 
 		// set document information
@@ -101,7 +106,7 @@ EOF
 	/**
 	 * Get access to the underlying TCPDF object
 	 *
-	 * @return \iTopPDF
+	 * @return iTopPDF
 	 */
 	public function get_tcpdf()
 	{

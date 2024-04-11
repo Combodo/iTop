@@ -6,7 +6,7 @@
 
 namespace Combodo\iTop\Controller\Base\Layout;
 
-use AjaxPage;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 use ApplicationContext;
 use ApplicationException;
 use cmdbAbstractObject;
@@ -18,19 +18,19 @@ use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectSummary;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Controller\AbstractController;
-use Combodo\iTop\Service\Router\Router;
 use Combodo\iTop\Service\Base\ObjectRepository;
+use Combodo\iTop\Service\Router\Router;
 use CoreCannotSaveObjectException;
 use DeleteException;
 use Dict;
 use Exception;
 use IssueLog;
 use iTopOwnershipLock;
-use iTopWebPage;
-use JsonPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
 use MetaModel;
 use SecurityException;
-use SummaryCardService;
+use Combodo\iTop\Service\SummaryCard\SummaryCardService;
 use UserRights;
 use utils;
 
@@ -170,6 +170,10 @@ JS;
 				// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
 				FormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
 
+				if(FormHelper::HasMandatoryAttributeBlobInputs($oObjToClone)){
+					$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal(FormHelper::ENUM_MANDATORY_BLOB_MODE_CREATE));
+				}
+				
 				$aFormExtraParams['js_handlers']['cancel_button_on_click'] =
 					<<<JS
 				function() {
@@ -206,13 +210,14 @@ JS
 		}
 		return $oPage;
 	}
-	
+
 	/**
-	 * @return \iTopWebPage|\AjaxPage Object edit form in its webpage
+	 * @return iTopWebPage|AjaxPage Object edit form in its webpage
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \SecurityException
+	 * @throws \Exception
 	 */
 	public function OperationModify()
 	{
@@ -293,6 +298,16 @@ JS;
 			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
 			FormHelper::DisableAttributeBlobInputs($sClass, $aFormExtraParams);
 
+			if(FormHelper::HasMandatoryAttributeBlobInputs($oObj)){
+				$sMandatoryBlobAttCode = FormHelper::GetMandatoryAttributeBlobInputs($oObj);
+				$sAlertFormMandatoryAttMessageMode = FormHelper::ENUM_MANDATORY_BLOB_MODE_MODIFY_EMPTY;
+				$oMandatoryBlobAttCodeValue = $oObj->Get($sMandatoryBlobAttCode);
+				// If the current value of the mandatory attribute is not empty, display a different message
+				if($oMandatoryBlobAttCodeValue instanceof \ormDocument && !$oMandatoryBlobAttCodeValue->IsEmpty()){
+					$sAlertFormMandatoryAttMessageMode = FormHelper::ENUM_MANDATORY_BLOB_MODE_MODIFY_FILLED;
+				}
+				$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal($sAlertFormMandatoryAttMessageMode));
+			}
 		} else {
 			$oPage = new iTopWebPage('', $bPrintable);
 			$oPage->DisableBreadCrumb();
@@ -300,7 +315,7 @@ JS;
 		}
 		// - JS files
 		foreach (static::EnumRequiredForModificationJsFilesRelPaths() as $sJsFileRelPath) {
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sJsFileRelPath);
+			$oPage->LinkScriptFromAppRoot($sJsFileRelPath);
 		}
 
 		// Note: Code duplicated to the case 'apply_modify' in UI.php when a data integrity issue has been found
@@ -310,7 +325,7 @@ JS;
 	}
 	
 	/**
-	 * @return \iTopWebPage|\JsonPage Object edit form in its webpage
+	 * @return iTopWebPage|JsonPage Object edit form in its webpage
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -413,6 +428,8 @@ JS;
 						'transaction_id' => $sTransactionId,
 					],
 				]);
+
+				$oObj->CheckChangedExtKeysValues();
 				$oObj->DBInsertNoReload();
 
 
@@ -485,7 +502,7 @@ JS;
 	}
 
 	/**
-	 * @return \iTopWebPage|\JsonPage
+	 * @return iTopWebPage|JsonPage
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \ConfigException
@@ -617,6 +634,8 @@ JS;
 						throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 					}
 
+					$oObj->CheckChangedExtKeysValues();
+
 					// Transactions are now handled in DBUpdate
 					$oObj->SetContextSection('temporary_objects', [
 						'finalize' => [
@@ -745,14 +764,14 @@ JS;
 	/**
 	 * Add some JS files that are required during the modification of an object
 	 *
-	 * @param \iTopWebPage $oPage
+	 * @param iTopWebPage $oPage
 	 *
 	 * @return void
 	 */
 	protected function AddRequiredForModificationJsFilesToPage(iTopWebPage &$oPage): void
 	{
 		foreach (static::EnumRequiredForModificationJsFilesRelPaths() as $sJsFileRelPath) {
-			$oPage->add_linked_script("../$sJsFileRelPath");
+			$oPage->LinkScriptFromAppRoot($sJsFileRelPath);
 		}
 	}
 
@@ -762,7 +781,6 @@ JS;
 	public static function EnumRequiredForModificationJsFilesRelPaths(): array
 	{
 		return [
-			'js/json.js',
 			'js/forms-json-utils.js',
 			'js/wizardhelper.js',
 			'js/wizard.utils.js',

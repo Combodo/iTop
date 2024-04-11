@@ -9,7 +9,6 @@ use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Psr\Container\ContainerInterface;
 
 use function class_exists;
-use function get_class;
 use function gettype;
 use function is_object;
 use function method_exists;
@@ -75,7 +74,7 @@ abstract class AbstractPluginManager extends ServiceManager implements PluginMan
                 '%s expects a ConfigInterface or ContainerInterface instance as the first argument; received %s',
                 self::class,
                 is_object($configInstanceOrParentLocator)
-                    ? get_class($configInstanceOrParentLocator)
+                    ? $configInstanceOrParentLocator::class
                     : gettype($configInstanceOrParentLocator)
             ));
         }
@@ -118,7 +117,6 @@ abstract class AbstractPluginManager extends ServiceManager implements PluginMan
     public function configure(array $config)
     {
         if (isset($config['services'])) {
-            /** @psalm-suppress MixedAssignment */
             foreach ($config['services'] as $service) {
                 $this->validate($service);
             }
@@ -147,7 +145,7 @@ abstract class AbstractPluginManager extends ServiceManager implements PluginMan
      * @param class-string<InstanceType>|string $name Service name of plugin to retrieve.
      * @param null|array<mixed> $options Options to use when creating the instance.
      * @return mixed
-     * @psalm-return ($name is class-string ? InstanceType : mixed)
+     * @psalm-return ($name is class-string<InstanceType> ? InstanceType : mixed)
      * @throws Exception\ServiceNotFoundException If the manager does not have
      *     a service definition for the instance, and the service is not
      *     auto-invokable.
@@ -178,7 +176,7 @@ abstract class AbstractPluginManager extends ServiceManager implements PluginMan
      *
      * @psalm-assert InstanceType $instance
      */
-    public function validate($instance)
+    public function validate(mixed $instance)
     {
         if (method_exists($this, 'validatePlugin')) {
             trigger_error(sprintf(
@@ -197,7 +195,7 @@ abstract class AbstractPluginManager extends ServiceManager implements PluginMan
             'Plugin manager "%s" expected an instance of type "%s", but "%s" was received',
             self::class,
             $this->instanceOf,
-            is_object($instance) ? get_class($instance) : gettype($instance)
+            is_object($instance) ? $instance::class : gettype($instance)
         ));
     }
 

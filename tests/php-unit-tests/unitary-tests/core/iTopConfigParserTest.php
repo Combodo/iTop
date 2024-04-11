@@ -47,7 +47,7 @@ class iTopConfigParserTest extends ItopTestCase
 			@chmod($this->sConfigPath, 0770);
 			$bRenameResult = rename($this->tmpSavePath, $this->sConfigPath);
 			echo "Restored config file, result={$bRenameResult}";
-			@chmod($this->sConfigPath, 0440);
+			@chmod($this->sConfigPath, 0444);
 		}
 	}
 

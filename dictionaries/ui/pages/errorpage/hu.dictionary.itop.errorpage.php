@@ -21,5 +21,5 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:ErrorPage:UnstableVersion' => 'Ön egy instabil verziót használ, amely hibákat tartalmazhat. Ha úgy gondolja, hogy ez a hiba emiatt lépett fel, kérjük, küldje el visszajelzését!',
 	'UI:ErrorPage:KittyDisclaimer' => 'Egyetlen cica sem sérült meg ennek a GIF-nek a készítése és kiadása során.
 
-- The R&amp;D Team~~',
+- The R&amp;D Team',
 ));

@@ -127,10 +127,9 @@ class Between extends AbstractValidator
     /**
      * Sets the min option
      *
-     * @param  mixed $min
      * @return $this Provides a fluent interface
      */
-    public function setMin($min)
+    public function setMin(mixed $min)
     {
         $this->options['min'] = $min;
         return $this;
@@ -149,10 +148,9 @@ class Between extends AbstractValidator
     /**
      * Sets the max option
      *
-     * @param  mixed $max
      * @return $this Provides a fluent interface
      */
-    public function setMax($max)
+    public function setMax(mixed $max)
     {
         $this->options['max'] = $max;
         return $this;

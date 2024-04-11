@@ -23,9 +23,9 @@
 // Database inconsistencies
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	// Dictionary entries go here
-	'Menu:DBToolsMenu' => 'DB Tools~~',
+	'Menu:DBToolsMenu' => 'Database integrity~~',
 	'DBTools:Class' => 'Class~~',
-	'DBTools:Title' => 'Database Maintenance Tools~~',
+	'DBTools:Title' => 'Database integrity check~~',
 	'DBTools:ErrorsFound' => 'Errors Found~~',
 	'DBTools:Indication' => 'Important: after fixing errors in the database you\'ll have to run the analysis again as new inconsistencies will be generated~~',
 	'DBTools:Disclaimer' => 'DISCLAIMER: BACKUP YOUR DATABASE BEFORE RUNNING THE FIXES~~',

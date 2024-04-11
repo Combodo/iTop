@@ -27,6 +27,9 @@
 // - not outputing xml when a wrong input is given (class, attribute names)
 //
 
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\CSVPage;
+
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
@@ -881,7 +884,7 @@ try
 			if (isset($aRowData["finalclass"]) && isset($aRowData["id"]))
 			{
 				$aRowDisp["__OBJECT_CLASS__"] = $aRowData["finalclass"];
-				$aRowDisp["__OBJECT_ID__"] = $aRowData["id"]->GetDisplayableValue();
+				$aRowDisp["__OBJECT_ID__"] = $aRowData["id"]->GetCLIValue();
 			}
 			else
 			{
@@ -900,7 +903,7 @@ try
 
 				if (is_object($value))
 				{
-					$aRowDisp["$sKey"] = $value->GetDisplayableValueAndDescription();
+					$aRowDisp["$sKey"] = $value->GetCLIValueAndDescription();
 				}
 				else
 				{

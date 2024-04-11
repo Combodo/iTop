@@ -127,7 +127,7 @@ class ImportTest extends ItopDataTestCase {
 			'"first_name","name", "email", "org_id->name", obsolescence_date',
 			sprintf('"%s", "%s", "%s", UID, toto', $sFirstName, $sLastName, $sEmail),
 			sprintf(
-				'Issue: Internal error: Exception, Wrong format for date attribute obsolescence_date, expecting "Y-m-d" and got "toto";n/a;n/a;n/a;%s;%s;%s;toto', $sFirstName, $sLastName, $sEmail
+				'Issue: Internal error: CoreUnexpectedValue, Wrong format for date attribute obsolescence_date, expecting "Y-m-d" and got "toto";n/a;n/a;n/a;%s;%s;%s;toto', $sFirstName, $sLastName, $sEmail
 			),
 			null,
 			1,
@@ -174,7 +174,7 @@ CSVFILE;
 		foreach (["ORGID" => $iOrgId, "UID" => $this->sUid] as $sSearch => $sReplace){
 			$sLastLineNeedle = str_replace($sSearch, $sReplace, $sLastLineNeedle);
 		}
-		$this->assertStringContainsString($sLastLineNeedle, $sLastline, $sLastline);
+		$this->assertStringContainsString($sLastLineNeedle, $sLastline, 'The script we launched in an external process returned a value different than the expected error message');
 
 		$sPattern = "/Person;(\d+);/";
 		if (preg_match($sPattern,$sLastline,$aMatches)){

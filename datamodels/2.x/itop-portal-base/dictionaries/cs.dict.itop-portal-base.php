@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -23,7 +23,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Page:Home' => 'Domů',
 	'Page:GoPortalHome' => 'Domů',
 	'Page:GoPreviousPage' => 'Předchozí stránka',
-	'Page:ReloadPage' => 'Reload stránky',
+	'Page:ReloadPage' => 'Znovunačtení stránky',
 	'Portal:Button:Submit' => 'Odeslat',
 	'Portal:Button:Apply' => 'Aktualizovat',
 	'Portal:Button:Cancel' => 'Zrušit',
@@ -31,15 +31,15 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Portal:Button:Add' => 'Přidat',
 	'Portal:Button:Remove' => 'Odebrat',
 	'Portal:Button:Delete' => 'Smazat',
-	'Portal:EnvironmentBanner:Title' => 'You are currently in <strong>%1$s</strong> mode~~',
-	'Portal:EnvironmentBanner:GoToProduction' => 'Go back to PRODUCTION mode~~',
-	'Error:HTTP:400' => 'Bad request~~',
-	'Error:HTTP:401' => 'Authentication~~',
+	'Portal:EnvironmentBanner:Title' => 'Pracujete v režimu <strong>%1$s</strong>',
+	'Portal:EnvironmentBanner:GoToProduction' => 'Přejít zpátky do PRUDUKČNÍHO režimu',
+	'Error:HTTP:400' => 'Špatný požadavek',
+	'Error:HTTP:401' => 'Ověřování',
 	'Error:HTTP:404' => 'Stránka nenalezena',
 	'Error:HTTP:500' => 'Jejda! Nastal problém',
 	'Error:HTTP:GetHelp' => 'Kontaktujte prosím administrátora, pokud problém přetrvá.',
 	'Error:XHR:Fail' => 'Data se nepodařilo načíst, kontaktujte prosím administrátora.',
-	'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.~~',
+	'Portal:ErrorUserLoggedOut' => 'Jste odhlášen, pro pokračování se musíte znovu přihlásit.',
 	'Portal:Datatables:Language:Processing' => 'Počkejte prosím',
 	'Portal:Datatables:Language:Search' => 'Filtr :',
 	'Portal:Datatables:Language:LengthMenu' => 'Zobrazit _MENU_ položek na stránku',
@@ -57,16 +57,16 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Portal:Datatables:Language:Sort:Descending' => 'řadit sestupně',
 	'Portal:Autocomplete:NoResult' => 'Žádná data',
 	'Portal:Attachments:DropZone:Message' => 'Přesuňte soubory myší pro vložení',
-	'Portal:File:None' => 'No file',
+	'Portal:File:None' => 'Žádný soubor nenalezen',
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
-	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
+	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Otevřít</a> / <a href="%4$s" class="file_download_link">Stáhnout</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'cs', //work with moment.js locales
 ));
 
 // Object form
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
-	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost~~',
+	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Zavřít tento vstup',
+	'Portal:Form:Close:Warning' => 'Opravdu chete opustit tento formulář? Data vložená do formuláře budou ztracena ',
 	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.~~',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.~~',
 ));
@@ -87,7 +87,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 // AggregatePageBrick
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard',
+	'Brick:Portal:AggregatePage:DefaultTitle' => 'Nástěnka',
 ));
 
 // BrowseBrick brick
@@ -110,8 +110,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Manage:Name' => 'Spravovat položky',
 	'Brick:Portal:Manage:Table:NoData' => 'Žádná položka',
-	'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
-	'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
+	'Brick:Portal:Manage:Table:ItemActions' => 'Akce',
+	'Brick:Portal:Manage:DisplayMode:list' => 'List',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Koláčový graf',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Sloupcový graf',
 	'Brick:Portal:Manage:Others' => 'Ostatní',
@@ -149,6 +149,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 // Filter brick
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
-	'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi~~',
+	'Brick:Portal:Filter:SearchInput:Placeholder' => 'např. připojení k wifi',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Vyhledat',
 ));

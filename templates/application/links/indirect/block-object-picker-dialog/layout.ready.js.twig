@@ -29,7 +29,7 @@ $('#dlg_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }}').dialog({
 
 });
 
-$('#SearchFormToAdd_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }} form').bind('submit.uilinksWizard', oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.SearchObjectsToAdd);
-$('#SearchFormToAdd_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }}').resize(oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.UpdateSizes);
+$('#SearchFormToAdd_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }} form').on('submit.uilinksWizard', oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.SearchObjectsToAdd);
+$('#SearchFormToAdd_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }}').on('resize', oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.UpdateSizes);
 
 {% endapply %}

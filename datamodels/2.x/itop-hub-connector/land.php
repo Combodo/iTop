@@ -1,4 +1,8 @@
 <?php
+
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 function DisplayStatus(WebPage $oPage)
 {
 	$oPage->set_title(Dict::S('iTopHub:Landing:Status'));
@@ -53,7 +57,7 @@ function DisplayStatus(WebPage $oPage)
 
 function DoLanding(WebPage $oPage)
 {
-	$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/css/hub.css');
+	$oPage->LinkStylesheetFromModule('itop-hub-connector/css/hub.css');
 	$oPage->add('<table class="module-selection-banner"><tr>');
 	$sBannerUrl = utils::GetAbsoluteUrlModulesRoot().'/itop-hub-connector/images/landing-extension.png';
 	$oPage->add('<td><img style="max-height:72px; margin-right: 10px;" src="'.$sBannerUrl.'"/><td>');
@@ -134,7 +138,7 @@ function DoInstall(WebPage $oPage)
 	$sUID = hash('sha256', rand());
 	file_put_contents(APPROOT.'data/hub/compile_authent', $sUID);
 
-	$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/css/hub.css');
+	$oPage->LinkStylesheetFromModule('itop-hub-connector/css/hub.css');
 	$oPage->add('<table class="module-selection-banner"><tr>');
 	$sBannerUrl = utils::GetAbsoluteUrlModulesRoot().'/itop-hub-connector/images/landing-extension.png';
 	$oPage->add('<td><img style="max-height:72px; margin-right: 10px;" src="'.$sBannerUrl.'"/><td>');
@@ -210,7 +214,7 @@ function DoInstall(WebPage $oPage)
 	$oPage->add('</div>'); // module-selection-body
 
 
-	$oPage->add_linked_stylesheet('../css/font-awesome/css/all.min.css');
+	$oPage->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
 
 
 	$oPage->add('<div id="hub_installation_widget"></div>');
@@ -259,8 +263,8 @@ try {
 	}
 
 	$oPage = new SetupPage(''); // Title will be set later, depending on $sOperation
-	$oPage->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/js/hub.js');
-	$oPage->add_linked_stylesheet('../css/font-combodo/font-combodo.css');
+	$oPage->LinkScriptFromModule('itop-hub-connector/js/hub.js');
+	$oPage->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
 
 	$oPage->add_style(<<<CSS
 div.choice { margin: 0.5em;}

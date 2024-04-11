@@ -17,6 +17,11 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\Notification\NotificationsRepository;
+use Combodo\iTop\Service\Notification\NotificationsService;
+use Combodo\iTop\Service\Router\Router;
 
 /**
  * Persistent classes (internal): user defined actions
@@ -76,6 +81,7 @@ abstract class Action extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("trigger_list",
 			array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "action_id", "ext_key_to_remote" => "trigger_id", "allowed_values" => null, "count_min" => 0, "count_max" => 0, "depends_on" => array(), "display_style" => 'property')));
+		MetaModel::Init_AddAttribute(new AttributeEnum("asynchronous", array("allowed_values" => new ValueSetEnum(['use_global_setting' => 'Use global settings','yes' => 'Yes' ,'no' => 'No']), "sql" => "asynchronous", "default_value" => 'use_global_setting', "is_null_allowed" => false, "depends_on" => array())));
 
 		// Display lists
 		// - Attributes to be displayed for the complete details
@@ -167,6 +173,100 @@ abstract class Action extends cmdbAbstractObject
 			$this->m_aCheckWarnings[] = Dict::S('Action:WarningNoTriggerLinked');
 		}
 	}
+
+	/**
+	 * @since 3.2.0 N°5472 method creation
+	 */
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	{
+		parent::DisplayBareRelations($oPage, false);
+
+		if ($oPage instanceof iTopWebPage) {
+			$this->GenerateLastExecutionsTab($oPage, $bEditMode);
+		}
+	}
+
+	/**
+	 * @since 3.2.0 N°5472 method creation
+	 */
+	protected function GenerateLastExecutionsTab(iTopWebPage $oPage, $bEditMode)
+	{
+		$oRouter = Router::GetInstance();
+		$sActionLastExecutionsPageUrl = $oRouter->GenerateUrl('notifications.action.last_executions_tab', ['action_id' => $this->GetKey()]);
+		$oPage->AddAjaxTab('action_errors', $sActionLastExecutionsPageUrl, false, Dict::S('Action:last_executions_tab'));
+	}
+
+	/**
+	 * @param \Combodo\iTop\Application\WebPage\WebPage $oPage
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \InvalidConfigParamException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 * @since 3.2.0 N°5472 method creation
+	 */
+	public function GetLastExecutionsTabContent(WebPage $oPage): void
+	{
+		$oConfig = utils::GetConfig();
+		$sLastExecutionDaysConfigParamName = 'notifications.last_executions_days';
+		$iLastExecutionDays = $oConfig->Get($sLastExecutionDaysConfigParamName);
+
+		if ($iLastExecutionDays < 0) {
+			throw new InvalidConfigParamException("Invalid value for {$sLastExecutionDaysConfigParamName} config parameter. Param desc: " . $oConfig->GetDescription($sLastExecutionDaysConfigParamName));
+		}
+
+		$sActionQueryOql = 'SELECT EventNotification WHERE action_id = :action_id';
+		$aActionQueryParams = ['action_id' => $this->GetKey()];
+		if ($iLastExecutionDays > 0) {
+			$sActionQueryOql .= ' AND date > DATE_SUB(NOW(), INTERVAL :days DAY)';
+			$aActionQueryParams['days'] = $iLastExecutionDays;
+			$sActionQueryLimit = Dict::Format('Action:last_executions_tab_limit_days', $iLastExecutionDays);
+		} else {
+			$sActionQueryLimit = Dict::S('Action:last_executions_tab_limit_none');
+		}
+
+		$oActionFilter = DBObjectSearch::FromOQL($sActionQueryOql, $aActionQueryParams);
+		$oSet = new DBObjectSet($oActionFilter, ['date' => false]);
+
+		$sPanelTitle = Dict::Format('Action:last_executions_tab_panel_title', $sActionQueryLimit);
+		$oExecutionsListBlock = DataTableUIBlockFactory::MakeForResult($oPage, 'action_executions_list', $oSet, ['panel_title' => $sPanelTitle]);
+
+		$oPage->AddUiBlock($oExecutionsListBlock);
+	}
+
+	/**
+	 * Will be overloaded by the children classes to return the value of their global asynchronous setting (eg. `email_asynchronous` for `\ActionEmail`, `prefer_asynchronous` for `\ActionWebhook`, ...)
+	 *
+	 * @return bool true if the global setting for this kind of action if to be executed asynchronously, false otherwise.
+	 * @since 3.2.0
+	 */
+	public static function GetAsynchronousGlobalSetting(): bool
+	{
+		return false;	
+	}
+
+	/**
+	 * @return bool true if that action instance should be executed asynchronously, otherwise false
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @since 3.2.0
+	 */
+	public function IsAsynchronous(): bool
+	{
+		$sAsynchronous = $this->Get('asynchronous');
+		if ($sAsynchronous === 'use_global_setting') {
+			return static::GetAsynchronousGlobalSetting();
+		}
+		return $sAsynchronous === 'yes';
+	}
 }
 
 /**
@@ -201,11 +301,38 @@ abstract class ActionNotification extends Action
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'trigger_list'));
 		// - Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'description', 'status'));
+		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+
 		// Search criteria
 		// - Criteria of the std search form
 //		MetaModel::Init_SetZListItems('standard_search', array('name'));
 		// - Default criteria of the search form
 //		MetaModel::Init_SetZListItems('default_search', array('name'));
+	}
+
+	/**
+	 * @param $sLanguage
+	 * @param $sLanguageCode
+	 *
+	 * @return array [$sPreviousLanguage, $aPreviousPluginProperties]
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @since 3.2.0
+	 */
+	public function SetNotificationLanguage($sLanguage = null, $sLanguageCode = null){
+		$sPreviousLanguage = Dict::GetUserLanguage();
+		$aPreviousPluginProperties = ApplicationContext::GetPluginProperties('QueryLocalizerPlugin');
+		$sLanguage = $sLanguage ?? $this->Get('language');
+		$sLanguageCode = $sLanguageCode ?? $sLanguage;
+		if (!utils::IsNullOrEmptyString($sLanguage)) {
+			// If a language is specified for this action, force this language
+			// when rendering all placeholders inside this message
+			Dict::SetUserLanguage($sLanguage);
+			AttributeDateTime::LoadFormatFromConfig();
+			ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', $sLanguageCode);
+		}
+		return [$sPreviousLanguage, $aPreviousPluginProperties];
 	}
 }
 
@@ -257,6 +384,7 @@ class ActionEmail extends ActionNotification
 			"db_table"            => "priv_action_email",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
+			'style' =>  new ormStyle(null, null, null, null, null, '../images/icons/icons8-mailing.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -273,7 +401,6 @@ class ActionEmail extends ActionNotification
 		MetaModel::Init_AddAttribute(new AttributeTemplateString("subject", array("allowed_values" => null, "sql" => "subject", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeTemplateHTML("body", array("allowed_values" => null, "sql" => "body", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("importance", array("allowed_values" => new ValueSetEnum('low,normal,high'), "sql" => "importance", "default_value" => 'normal', "is_null_allowed" => false, "depends_on" => array())));
-		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeBlob("html_template", array("is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
 		MetaModel::Init_AddAttribute(new AttributeEnum("ignore_notify", array("allowed_values" => new ValueSetEnum('yes,no'), "sql" => "ignore_notify", "default_value" => 'yes', "is_null_allowed" => false, "depends_on" => array())));
 		
@@ -294,6 +421,7 @@ class ActionEmail extends ActionNotification
 				),
 				'fieldset:ActionEmail:trigger' => array(
 					0 => 'trigger_list',
+					1 => 'asynchronous'
 				),
 			),
 			'col:col2' => array(
@@ -328,27 +456,33 @@ class ActionEmail extends ActionNotification
 	protected $m_aMailErrors; //array of strings explaining the issue
 
 	/**
-	 * Return a the list of emails as a string, or a detailed error description
+	 * Return the list of emails as a string, or a detailed error description
 	 *
 	 * @param string $sRecipAttCode
 	 * @param array $aArgs
 	 *
 	 * @return string
 	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	protected function FindRecipients($sRecipAttCode, $aArgs)
 	{
+		$oTrigger = $aArgs['trigger->object()'] ?? null;
 		$sOQL = $this->Get($sRecipAttCode);
-		if (strlen($sOQL) === 0) return '';
+		if (utils::IsNullOrEmptyString($sOQL)) return '';
 
 		try
 		{
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
 			if ($this->Get('ignore_notify') === 'no') {
-				// In theory it is possible to notify *any* kind of object, 
+				// In theory, it is possible to notify *any* kind of object,
 				// as long as there is an email attribute in the class
 				// So let's not assume that the selected class is a Person
 				$sFirstSelectedClass = $oSearch->GetClass();
@@ -381,15 +515,28 @@ class ActionEmail extends ActionNotification
 			return "The objects of the class '$sClass' do not have any email attribute";
 		}
 
+		if($oTrigger !== null && in_array('Contact', MetaModel::EnumParentClasses($sClass, ENUM_CHILD_CLASSES_ALL), true)) {
+			$aArgs['trigger_id'] = $oTrigger->GetKey();
+			$aArgs['action_id'] = $this->GetKey();
+
+			$sSubscribedContactsOQL = NotificationsRepository::GetInstance()->GetSearchOQLContactUnsubscribedByTriggerAndAction();
+			$sSubscribedContactsOQL->ApplyParameters($aArgs);
+			$sAlias = $oSearch->GetClassAlias();
+			$oSearch->AddConditionExpression(Expression::FromOQL("`$sAlias`.id NOT IN ($sSubscribedContactsOQL)"));
+		}
+
 		$oSet = new DBObjectSet($oSearch, array() /* order */, $aArgs);
 		$aRecipients = array();
 		while ($oObj = $oSet->Fetch())
 		{
 			$sAddress = trim($oObj->Get($sEmailAttCode));
-			if (strlen($sAddress) > 0)
+			if (utils::IsNotNullOrEmptyString($sAddress))
 			{
 				$aRecipients[] = $sAddress;
 				$this->m_iRecipients++;
+			}
+			if ($oTrigger !== null && in_array('Contact', MetaModel::EnumParentClasses($sClass, ENUM_CHILD_CLASSES_ALL), true)) {
+				NotificationsService::GetInstance()->RegisterSubscription($oTrigger, $this, $oObj);
 			}
 		}
 		return implode(', ', $aRecipients);
@@ -510,7 +657,7 @@ class ActionEmail extends ActionNotification
 			else
 			{
 				$aErrors = [];
-				$iRes = $oEmail->Send($aErrors, false, $oLog); // allow asynchronous mode
+				$iRes = $oEmail->Send($aErrors, $this->IsAsynchronous() ? Email::ENUM_SEND_FORCE_ASYNCHRONOUS : Email::ENUM_SEND_FORCE_SYNCHRONOUS, $oLog);
 				switch ($iRes)
 				{
 					case EMAIL_SEND_OK:
@@ -539,8 +686,17 @@ class ActionEmail extends ActionNotification
 	 * @param \EventNotification $oLog
 	 *
 	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
-	 * @throws \Exception
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \DictExceptionMissingString
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 * @since 3.1.0 N°918
 	 */
 	protected function PrepareMessageContent($aContextArgs, &$oLog): array
@@ -561,15 +717,7 @@ class ActionEmail extends ActionNotification
 			'attachments' => [],
 		];
 		$sPreviousUrlMaker = ApplicationContext::SetUrlMakerClass();
-		$sPreviousLanguage = Dict::GetUserLanguage();
-		$aPreviousPluginProperties = ApplicationContext::GetPluginProperties('QueryLocalizerPlugin');
-		if ($this->Get('language') !== '') {
-			// If a language is specified for this action, force this language
-			// when rendering all placeholders inside this message
-			Dict::SetUserLanguage($this->Get('language'));
-			AttributeDateTime::LoadFormatFromConfig();
-			ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', $this->Get('language'));
-		}
+		[$sPreviousLanguage, $aPreviousPluginProperties] = $this->SetNotificationLanguage();
 
 		try
 		{
@@ -601,9 +749,7 @@ class ActionEmail extends ActionNotification
 		}
 		finally {
 			ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
-			Dict::SetUserLanguage($sPreviousLanguage);
-			AttributeDateTime::LoadFormatFromConfig();
-			ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', $aPreviousPluginProperties['language_code'] ?? null);
+			$this->SetNotificationLanguage($sPreviousLanguage, $aPreviousPluginProperties['language_code'] ?? null);
 		}
 		
 		if (!is_null($oLog)) {
@@ -629,9 +775,7 @@ class ActionEmail extends ActionNotification
 				$oLog->Set('body', HTMLSanitizer::Sanitize($aMessageContent['body']));
 			}
 		}
-		$sStyles = file_get_contents(APPROOT.'css/email.css');
-		$sStyles .= MetaModel::GetConfig()->Get('email_css');
-		
+
 		if ($this->IsBeingTested()) {
 			$sTestBody = $aMessageContent['body'];
 			$sTestBody .= "<div style=\"border: dashed;\">\n";
@@ -660,10 +804,11 @@ class ActionEmail extends ActionNotification
 		if (isset($aContextArgs['attachments']))
 		{
 			$aAttachmentReport = array();
+			/** @var \ormDocument $oDocument */
 			foreach($aContextArgs['attachments'] as $oDocument)
 			{
 				$aMessageContent['attachments'][] = ['data' => $oDocument->GetData(), 'filename' => $oDocument->GetFileName(), 'mime_type' => $oDocument->GetMimeType()];
-				$aAttachmentReport[] = array($oDocument->GetFileName(), $oDocument->GetMimeType(), strlen($oDocument->GetData()));
+				$aAttachmentReport[] = array($oDocument->GetFileName(), $oDocument->GetMimeType(), strlen($oDocument->GetData() ?? ''));
 			}
 			$oLog->Set('attachments', $aAttachmentReport);
 		}
@@ -772,5 +917,14 @@ class ActionEmail extends ActionNotification
 				$this->m_aCheckWarnings[] = Dict::Format('ActionEmail:content_placeholder_missing', static::TEMPLATE_BODY_CONTENT, Dict::S('Class:ActionEmail/Attribute:body'));
 			}
 		}
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.2.0
+	 */
+	public static function GetAsynchronousGlobalSetting(): bool
+	{
+		return utils::GetConfig()->Get('email_asynchronous');
 	}
 }

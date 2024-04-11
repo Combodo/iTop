@@ -24,51 +24,51 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
  // $%3s : current tab name
  // $%4s : remote object class name
  // $%5s : remote object friendlyname
-	'UI:Links:Object:New:Modal:Title' => 'Create an object~~',
+	'UI:Links:Object:New:Modal:Title' => '创建对象',
 
 	// Create
-	'UI:Links:Create:Button' => 'Create~~',
-	'UI:Links:Create:Button+' => 'Create a %4$s~~',
-	'UI:Links:Create:Modal:Title' => 'Create a %4$s in %2$s~~',
+	'UI:Links:Create:Button' => '创建',
+	'UI:Links:Create:Button+' => '创建一个%4$s',
+	'UI:Links:Create:Modal:Title' => '创建一个%4$s至%2$s',
 
 	// Add
-	'UI:Links:Add:Button' => 'Add~~',
-	'UI:Links:Add:Button+' => 'Add a %4$s~~',
-	'UI:Links:Add:Modal:Title' => 'Add a %4$s to %2$s~~',
+	'UI:Links:Add:Button' => '添加',
+	'UI:Links:Add:Button+' => '添加一个%4$s',
+	'UI:Links:Add:Modal:Title' => '添加一个%4$s至%2$s',
 
 	// Modify link
-	'UI:Links:ModifyLink:Button' => 'Modify~~',
-	'UI:Links:ModifyLink:Button+' => 'Modify this link~~',
-	'UI:Links:ModifyLink:Modal:Title' => 'Modify the link between %2$s and %5$s~~',
+	'UI:Links:ModifyLink:Button' => '修改',
+	'UI:Links:ModifyLink:Button+' => '修改此关联',
+	'UI:Links:ModifyLink:Modal:Title' => '修改%2$s和%5$s的关联',
 
 	// Modify object
-	'UI:Links:ModifyObject:Button' => 'Modify~~',
-	'UI:Links:ModifyObject:Button+' => 'Modify this object~~',
-	'UI:Links:ModifyObject:Modal:Title' => '%5$s~~',
+	'UI:Links:ModifyObject:Button' => '修改',
+	'UI:Links:ModifyObject:Button+' => '修改此对象',
+	'UI:Links:ModifyObject:Modal:Title' => '%5$s',
 
 	// Remove
-	'UI:Links:Remove:Button' => 'Remove~~',
-	'UI:Links:Remove:Button+' => 'Remove this %4$s~~',
-	'UI:Links:Remove:Modal:Title' => 'Remove a %4$s from its %1$s~~',
-	'UI:Links:Remove:Modal:Message' => 'Do you really want to remove %5$s from %2$s?~~',
+	'UI:Links:Remove:Button' => '移除',
+	'UI:Links:Remove:Button+' => '移除此%4$s',
+	'UI:Links:Remove:Modal:Title' => '移除此%4$s由其%1$s',
+	'UI:Links:Remove:Modal:Message' => '确认移除%5$s由%2$s?',
 
 	// Delete
-	'UI:Links:Delete:Button' => 'Delete~~',
-	'UI:Links:Delete:Button+' => 'Delete this %4$s~~',
-	'UI:Links:Delete:Modal:Title' => 'Delete a %4$s~~',
-	'UI:Links:Delete:Modal:Message' => 'Do you really want to delete %5$s?~~',
+	'UI:Links:Delete:Button' => '删除',
+	'UI:Links:Delete:Button+' => '删除此%4$s',
+	'UI:Links:Delete:Modal:Title' => '删除%4$s',
+	'UI:Links:Delete:Modal:Message' => '确认删除%5$s?',
 
 	// Bulk
-	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects' => 'Add to all objects~~',
-	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => 'Remove from all objects~~',
-	'UI:Links:Bulk:LinkWillBeCreatedFor1Object' => 'Add to one object~~',
-	'UI:Links:Bulk:LinkWillBeDeletedFrom1Object' => 'Remove from one object~~',
-	'UI:Links:Bulk:LinkWillBeCreatedForXObjects' => 'Add {count} objects~~',
-	'UI:Links:Bulk:LinkWillBeDeletedFromXObjects' => 'Remove {count} objects~~',
-	'UI:Links:Bulk:LinkExistForAllObjects' => 'All objets are already linked~~',
-	'UI:Links:Bulk:LinkExistForOneObject' => 'One object is linked~~',
-	'UI:Links:Bulk:LinkExistForXObjects' => '{count} objects are linked~~',
+	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects' => '添加至所有对象',
+	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => '从所有对象移除',
+	'UI:Links:Bulk:LinkWillBeCreatedFor1Object' => '添加至一个对象',
+	'UI:Links:Bulk:LinkWillBeDeletedFrom1Object' => '从一个对象移除',
+	'UI:Links:Bulk:LinkWillBeCreatedForXObjects' => '添加 {count} 个对象',
+	'UI:Links:Bulk:LinkWillBeDeletedFromXObjects' => '移除 {count} 个对象',
+	'UI:Links:Bulk:LinkExistForAllObjects' => '所有对象关联',
+	'UI:Links:Bulk:LinkExistForOneObject' => '一个对象已关联',
+	'UI:Links:Bulk:LinkExistForXObjects' => '{count} 个对象已关联',
 
 	// New item
-	'UI:Links:NewItem' => 'New item~~',
+	'UI:Links:NewItem' => '新建条目',
 ));

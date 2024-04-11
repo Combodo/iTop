@@ -6,6 +6,7 @@
 
 use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinkSetEditTable;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 /**
@@ -143,6 +144,10 @@ JS
 
 			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
 			FormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
+			
+			if(FormHelper::HasMandatoryAttributeBlobInputs($oObj)){
+				$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal(FormHelper::ENUM_MANDATORY_BLOB_MODE_CREATE));
+			}
 
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aFormExtraParams);
 		}

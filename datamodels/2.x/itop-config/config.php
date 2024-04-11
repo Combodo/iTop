@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
 use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
 
@@ -108,10 +109,11 @@ ApplicationMenu::CheckMenuIdEnabled('ConfigEditor');
 
 $oP = new iTopWebPage(Dict::S('config-edit-title'));
 $oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
-$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/ace/ace.js');
-$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/ace/mode-php.js');
-$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/ace/theme-eclipse.js');
-$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/ace/ext-searchbox.js');
+$sAceDir = 'node_modules/ace-builds/src-min/';
+$oP->LinkScriptFromAppRoot($sAceDir.'ace.js');
+$oP->LinkScriptFromAppRoot($sAceDir.'mode-php.js');
+$oP->LinkScriptFromAppRoot($sAceDir.'theme-eclipse.js');
+$oP->LinkScriptFromAppRoot($sAceDir.'ext-searchbox.js');
 
 try {
 	$sOperation = utils::ReadParam('operation', '');

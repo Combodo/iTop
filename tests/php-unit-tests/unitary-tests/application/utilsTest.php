@@ -25,7 +25,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use utils;
 
 /**
- * @runClassInSeparateProcess
  * @covers utils
  */
 class utilsTest extends ItopTestCase
@@ -245,11 +244,13 @@ class utilsTest extends ItopTestCase
 	}
 
 	/**
-	 * @runInSeparateProcess
 	 * @dataProvider GetAbsoluteUrlAppRootPersistency
 	 */
 	public function testGetAbsoluteUrlAppRootPersistency($bBehindReverseProxy,$bForceTrustProxy1 ,$sExpectedAppRootUrl1,$bForceTrustProxy2 , $sExpectedAppRootUrl2,$bForceTrustProxy3 , $sExpectedAppRootUrl3)
 	{
+		// resetting static property for each test pass
+		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', null);
+
 		utils::GetConfig()->Set('behind_reverse_proxy', $bBehindReverseProxy);
 		utils::GetConfig()->Set('app_root_url', '');
 

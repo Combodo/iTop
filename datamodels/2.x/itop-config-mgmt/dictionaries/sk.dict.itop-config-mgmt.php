@@ -25,17 +25,18 @@
 //////////////////////////////////////////////////////////////////////
 //
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Relation:impacts/Description' => 'Prvky zasiahnuté',
-	'Relation:impacts/DownStream' => 'Impacts...~~',
-	'Relation:impacts/DownStream+' => 'Elements impacted by~~',
-	'Relation:impacts/UpStream' => 'Depends on......~~',
-	'Relation:impacts/UpStream+' => 'Elements impacting~~',
+	'Relation:impacts/Description'    => 'Prvky zasiahnuté',
+	'Relation:impacts/DownStream'     => 'Impacts...~~',
+	'Relation:impacts/DownStream+'    => 'Elements impacted by~~',
+	'Relation:impacts/UpStream'       => 'Depends on......~~',
+	'Relation:impacts/UpStream+'      => 'Elements impacting~~',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Prvky, od ktorých závisí tento prvok',
-	'Relation:depends on/DownStream' => 'Depends on...~~',
-	'Relation:depends on/UpStream' => 'Impacts...~~',
-	'Relation:impacts/LoadData' => 'Load data~~',
-	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
+	'Relation:depends on/DownStream'  => 'Depends on...~~',
+	'Relation:depends on/UpStream'    => 'Impacts...~~',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
+	'Relation:impacts/FilteredData'   => 'Filtered data~~',
 ));
 
 
@@ -1285,7 +1286,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:VLAN/Attribute:org_id' => 'Organization~~',
 	'Class:VLAN/Attribute:org_id+' => '~~',
 	'Class:VLAN/Attribute:org_name' => 'Organization name~~',
-	'Class:VLAN/Attribute:org_name+' => 'Common name~~',
+	'Class:VLAN/Attribute:org_name+' => '~~',
 	'Class:VLAN/Attribute:subnets_list' => 'Subnets~~',
 	'Class:VLAN/Attribute:subnets_list+' => '~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Physical network interfaces~~',

@@ -20,5 +20,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 	// Bulk modify
 	'UI:Bulk:modify:IncompatibleAttribute' => 'Dieses Attribut kann in einer Massenänderung nicht bearbeitet werden.',
-
+	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Excel security warning~~',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'Opening a file with untrusted data in Microsoft Excel may lead to formula injection. Ensure that your Excel settings are configured to handle files safely. <a href="%1$s">Learn more in our documentation.</a>~~',
 ));

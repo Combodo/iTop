@@ -17,5 +17,5 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Add an entry in the list~~',
+	'UI:DisplayBlock:List:AddEntry:Tooltip' => '向列表添加条目',
 ));

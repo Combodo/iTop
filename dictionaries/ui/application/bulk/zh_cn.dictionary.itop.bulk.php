@@ -19,6 +19,7 @@
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	// Bulk modify
-	'UI:Bulk:modify:IncompatibleAttribute' => 'This attribute can\'t be edited in bulk context~~',
-
+	'UI:Bulk:modify:IncompatibleAttribute' => '此属性无法在批量操作中编辑',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Excel security warning~~',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'Opening a file with untrusted data in Microsoft Excel may lead to formula injection. Ensure that your Excel settings are configured to handle files safely. <a href="%1$s">Learn more in our documentation.</a>~~',
 ));

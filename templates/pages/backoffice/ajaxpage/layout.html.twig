@@ -46,13 +46,20 @@
 	{% if aPage.aJsFiles is not empty %}
         {% block iboPageJsFiles %}
             <script type="text/javascript">
+                {% if bHasOnInitOrOnDomReadyScripts == false %}
+                // Define a dummy empty callback if there's no script to execute
+                let fOnJsFilesLoaded{{ sId }} = function (fResolve) {
+                    fResolve();
+                }
+                {% endif %}
+                
                 window['{{ sPromiseId }}'] = new Promise(function (fAllJsFilesResolve, fAllJsFilesReject) {
                     /**
-                     * @type {Array} aJsFilesToLoad Files required by the current \AjaxPage
+                     * @type {Array} aJsFilesToLoad Files required by the current AjaxPage
                      *
                      * For each file:
                      * - "id": Used as an identifier to check if file is already being handled
-                     * - "url" is the URL that will be use for loading. It should include any relevant query args, including the cache buster
+                     * - "url" is the URL that will be used for loading. It should include any relevant query args, including the cache buster
                      *
                      * ```
                      * [
@@ -63,7 +70,7 @@
                      * ```
                      */
                     
-                     // If these constants aren't defined by the main page, define them (global) ourselves
+                    // If these constants aren't defined by the main page, define them (global) ourselves
                     if (typeof aLoadedJsFilesRegister === "undefined") {
                         Object.defineProperty(window, "aLoadedJsFilesRegister", {
                             value: new Map(),
@@ -84,7 +91,7 @@
                     
                     let aJsFilesToLoad = [];
                     /**
-                     * @type {Array} aJsFilesToLoadByOtherRequests Files required by the current \AjaxPage but that are already being handled by another request (done or ongoing)
+                     * @type {Array} aJsFilesToLoadByOtherRequests Files required by the current AjaxPage but that are already being handled by another request (done or ongoing)
                      */
                     let aJsFilesToLoadByOtherRequests = [];
 
@@ -94,7 +101,7 @@
                             "url": "{{ sJsFile|add_itop_version|raw }}"
                         });
 
-                        // If file is already present in the register (see it declaration in \WebPage TWIG template), let its original requester load it
+                        // If file is already present in the register (see it declaration in WebPage TWIG template), let its original requester load it
                         if (aLoadedJsFilesRegister.has("{{ sJsFile|raw }}") === true) {
                             aJsFilesToLoadByOtherRequests.push("{{ sJsFile|raw }}");
                         }
@@ -179,11 +186,27 @@
     {% endif %}
 
     {% block iboPageCssFiles %}
-        {% for aCssFileData in aPage.aCssFiles %}
+        {% if aPage.aCssFiles is not empty %}
             <script type="text/javascript">
-                if (!$('link[href="{{ aCssFileData.link }}"]').length) $('<link href="{{ aCssFileData.link }}" rel="stylesheet">').appendTo('head');
+                // If this constant isn't defined by the main page, define it (global) ourselves
+                if (typeof aLoadedCssFilesRegister === "undefined") {
+                    Object.defineProperty(window, "aLoadedCssFilesRegister", {
+                        value: new Map(),
+                        writable: false,
+                        configurable: false,
+                        enumerable: true
+                    });
+                }
+
+                {% for aCssFileData in aPage.aCssFiles %}
+                    // Only if file is NOT already present in the register (see it declaration in WebPage TWIG template), add it to the page and register
+                    if (aLoadedCssFilesRegister.has("{{ aCssFileData['link']|raw }}") === false) {
+                        $('<link href="{{ aCssFileData['link'] }}" rel="stylesheet">').appendTo('head');
+                        aLoadedCssFilesRegister.set("{{ aCssFileData['link']|raw }}", true);
+                    }
+                {% endfor %}
             </script>
-        {% endfor %}
+        {% endif %}
     {% endblock %}
 
     {{ aPage.sCapturedOutput|raw }}

@@ -535,48 +535,6 @@
         }
         ]]></code>
         </method>
-        <method id="SetApprovalDate">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetApprovalDate($sStimulusCode)
-	{
-		$this->Set('approval_date', time());
-		return true;
-	}]]></code>
-        </method>
-        <method id="ResetRejectReason">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function ResetRejectReason($sStimulusCode)
-	{
-		$this->Set('reject_reason', '');
-		return true;
-	}]]></code>
-        </method>
-        <method id="SetClosureDate">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetClosureDate($sStimulusCode)
-	{
-		$this->Set('close_date', time());
-		return true;
-	}]]></code>
-        </method>
         <method id="OnInsert">
           <static>false</static>
           <access>protected</access>

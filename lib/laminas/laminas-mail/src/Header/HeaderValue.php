@@ -2,6 +2,10 @@
 
 namespace Laminas\Mail\Header;
 
+use function in_array;
+use function ord;
+use function strlen;
+
 final class HeaderValue
 {
     /**
@@ -15,6 +19,7 @@ final class HeaderValue
      * Filter the header value according to RFC 2822
      *
      * @see    http://www.rfc-base.org/txt/rfc-2822.txt (section 2.2)
+     *
      * @param  string $value
      * @return string
      */
@@ -44,7 +49,7 @@ final class HeaderValue
                 }
 
                 $result .= "\r\n ";
-                $i += 2;
+                $i      += 2;
                 continue;
             }
 
@@ -58,6 +63,7 @@ final class HeaderValue
      * Determine if the header value contains any invalid characters.
      *
      * @see    http://www.rfc-base.org/txt/rfc-2822.txt (section 2.2)
+     *
      * @param string $value
      * @return bool
      */

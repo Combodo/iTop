@@ -368,16 +368,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'y',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('PL PL', 'Polish', 'Polski', array(
@@ -1635,8 +1625,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Newsroom:Preferences' => 'Preferencje newsroomu',
 	'UI:Newsroom:ConfigurationLink' => 'Konfiguracja',
 	'UI:Newsroom:ResetCache' => 'Zresetuj pamięć podręczną',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Wyświetl wiadomości od %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Wyświetlaj do %1$s wiadomiości w %2$s menu.',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
 ));
 
 

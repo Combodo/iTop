@@ -39,21 +39,13 @@ final class UndisclosedPassword extends AbstractValidator
         self::NOT_A_STRING      => 'The provided password is not a string, please provide a correct password',
     ];
 
-    private ClientInterface $httpClient;
-
-    private RequestFactoryInterface $makeHttpRequest;
-
-    public function __construct(ClientInterface $httpClient, RequestFactoryInterface $makeHttpRequest)
+    // phpcs:enable
+    public function __construct(private ClientInterface $httpClient, private RequestFactoryInterface $makeHttpRequest)
     {
         parent::__construct();
-
-        $this->httpClient      = $httpClient;
-        $this->makeHttpRequest = $makeHttpRequest;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** {@inheritDoc} */
     public function isValid($value): bool
     {
         if (! is_string($value)) {
@@ -124,7 +116,7 @@ final class UndisclosedPassword extends AbstractValidator
     private function hashInResponse(string $sha1Hash, string $resultStream): bool
     {
         $data   = explode("\r\n", $resultStream);
-        $hashes = array_filter($data, static function ($value) use ($sha1Hash) {
+        $hashes = array_filter($data, static function ($value) use ($sha1Hash): bool {
             [$hash] = explode(':', $value);
 
             return strcmp($hash, substr($sha1Hash, self::HIBP_K_ANONYMITY_HASH_RANGE_LENGTH)) === 0;

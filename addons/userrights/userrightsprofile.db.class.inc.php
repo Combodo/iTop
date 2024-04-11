@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\WebPage;
+
 define('ADMIN_PROFILE_NAME', 'Administrator');
 define('PORTAL_PROFILE_NAME', 'Portal user');
 
@@ -580,10 +582,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	/**
 	 * Read and cache organizations allowed to the given user
 	 *
-	 * @param $oUser
-	 * @param $sClass (not used here but can be used in overloads)
+	 * @param User $oUser
+	 * @param string $sClass (not used here but can be used in overloads)
 	 *
-	 * @return array
+	 * @return array keys of the User allowed org
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */

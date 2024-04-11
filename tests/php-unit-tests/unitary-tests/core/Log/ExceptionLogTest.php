@@ -23,6 +23,8 @@ require_once(__DIR__.'/ExceptionLogTest/Exceptions.php');
 
 class ExceptionLogTest extends ItopDataTestCase
 {
+	const USE_TRANSACTION = false;
+
 	protected function setUp(): void
 	{
 		require_once(__DIR__.'/ExceptionLogTest/Exceptions.php');
@@ -30,8 +32,6 @@ class ExceptionLogTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @runInSeparateProcess
-	 *
 	 * @dataProvider logProvider
 	 */
 	public function testLogInFile($aLevels, $aExceptions, $sChannel, $aExpectedWriteNumber, $logLevelMin, $aExpectedDbWriteNumber, $logLevelMinWriteInDb)
@@ -91,14 +91,26 @@ class ExceptionLogTest extends ItopDataTestCase
 			$oExpectedLastEventIssue = $this->InvokeNonPublicStaticMethod('ExceptionLog', 'GetLastEventIssue', []);
 
 			if (0 == $iExpectedDbWriteNumber) {
-				$this->assertNull($oExpectedLastEventIssue);
+				if (!is_null($oExpectedLastEventIssue)) {
+					$this->fail("Level '$sLevel': unexpected EventIssue");
+				}
 			} else {
-				$this->assertInstanceOf(\EventIssue::class, $oExpectedLastEventIssue);
+				$this->assertInstanceOf(\EventIssue::class, $oExpectedLastEventIssue, "Level '$sLevel': missing EventIssue");
 				$this->assertEquals($aExpectedFileContext, $oExpectedLastEventIssue->Get('data'));
 			}
 		}
 	}
 
+	/**
+	 * @return array[]
+	 * aLevels: log levels to iterate on (AND name of the method that will be called on the underlying FileLog)
+	 * aExceptions: For each log level => Exception to generate
+	 * sChannel: Expected 2nd argument to the FileLog::{Level}
+	 * aExpectedWriteNumber: For each log level => Number of times the method FileLog::{Level} will be called
+	 * logLevelMin: Configuration / log_level_min
+	 * iExpectedDbWriteNumber: For each log level => 1 if at least ONE EventIssue has been recorded into the DB
+	 * logLevelMinWriteInDb: Configuration / log_level_min.write_in_db
+	 */
 	public function logProvider()
 	{
 		return [
@@ -112,13 +124,13 @@ class ExceptionLogTest extends ItopDataTestCase
 				'logLevelMinWriteInDb' => ['Exception' => 'Debug'],
 			],
 			'flat configuration' => [
-				'aLevels' => ['Debug'],
+				'aLevels' => ['Error'],
 				'aExceptions' => [\GrandChildException::class],
 				'sChannel' => 'GrandChildException',
 				'aExpectedWriteNumber' => [1],
-				'logLevelMin' => 'Debug',
+				'logLevelMin' => 'Error',
 				'iExpectedDbWriteNumber' => [1],
-				'logLevelMinWriteInDb' => 'Debug',
+				'logLevelMinWriteInDb' => 'Error',
 			],
 			'Default conf has expected levels' => [
 				'aLevels' => ['Debug', 'Warning'],
@@ -193,22 +205,22 @@ class ExceptionLogTest extends ItopDataTestCase
 				'logLevelMinWriteInDb'   => null,
 			],
 			'Simple Error (testing Throwable signature)' => [
-				'aLevels'                => ['Debug'],
+				'aLevels'                => ['Error'],
 				'aExceptions'            => [\Error::class],
 				'sChannel'               => 'Error',
 				'aExpectedWriteNumber'   => [1],
-				'logLevelMin'            => 'Debug',
+				'logLevelMin'            => 'Error',
 				'iExpectedDbWriteNumber' => [1],
-				'logLevelMinWriteInDb'   => 'Debug',
+				'logLevelMinWriteInDb'   => 'Error',
 			],
 			"use '' to enable all" => [
-				'aLevels' => ['Debug'],
+				'aLevels' => ['Error'],
 				'aExceptions' => [\GrandChildException::class, \Exception::class],
 				'sChannel' => 'GrandChildException',
 				'aExpectedWriteNumber' => [1, 1],
-				'logLevelMin' => ['' => 'Debug'],
+				'logLevelMin' => ['' => 'Error'],
 				'iExpectedDbWriteNumber' => [1, 1],
-				'logLevelMinWriteInDb' => ['' => 'Debug'],
+				'logLevelMinWriteInDb' => ['' => 'Error'],
 			],
 		];
 	}

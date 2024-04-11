@@ -5,16 +5,22 @@ namespace Laminas\Mail\Storage;
 use Traversable;
 use Webmozart\Assert\Assert;
 
+use function get_object_vars;
+use function gettype;
+use function is_array;
+use function is_object;
+use function iterator_to_array;
+use function sprintf;
+
 /**
  * @internal
  */
 final class ParamsNormalizer
 {
     /**
-     * @param mixed $params
      * @return array<string, mixed>
      */
-    public static function normalizeParams($params): array
+    public static function normalizeParams(mixed $params): array
     {
         if ($params instanceof Traversable) {
             $params = iterator_to_array($params);

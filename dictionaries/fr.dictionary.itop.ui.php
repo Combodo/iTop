@@ -166,6 +166,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Impossible de changer l\'état de son propre utilisateur',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Les organisations permises doivent contenir l\'organisation de l\'utilisateur',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'Les profils existants ne permettent pas de modifier les utilisateurs',
+	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'Le profil Portal power user ne donne pas suffisamment de droits à l\'utilisateur (un autre profil doit être ajouté)',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'L\'utilisateur doit avoir au moins une organisation.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organisation non autorisée.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'L\'utilisateur n\'appartient pas à vos organisations.',
@@ -356,16 +357,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '',
 	'Class:UserDashboard/Attribute:contents' => 'Contenu',
 	'Class:UserDashboard/Attribute:contents+' => '',
-));
-
-//
-// Expression to Natural language
-//
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Expression:Unit:Short:DAY' => 'j',
-	'Expression:Unit:Short:WEEK' => 's',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'a',
 ));
 
 //
@@ -675,6 +666,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:CSVImport:TreatFirstLineAsHeader' => 'La première ligne est l\'en-tête (noms des colonnes)',
 	'UI:CSVImport:Skip_N_LinesAtTheBeginning' => 'Ignorer les %1$s premières lignes du fichier',
 	'UI:CSVImport:CSVDataPreview' => 'Aperçu des données CSV',
+	'UI:CSVImport:Column' => 'Colonne %1$s',
 	'UI:CSVImport:SelectFile' => 'Sélectionnez le fichier à importer:',
 	'UI:CSVImport:Tab:LoadFromFile' => 'Import depuis un fichier',
 	'UI:CSVImport:Tab:CopyPaste' => 'Copier/Coller de données',
@@ -805,7 +797,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Query:UrlForExcel' => 'Lien à copier-coller dans Excel, pour déclarer une source de données à partir du web',
 	'UI:Query:UrlV1' => 'La liste des champs à exporter n\'a pas été spécifiée. La page <em>export-V2.php</em> ne peut pas fonctionner sans cette information. Par conséquent, le lien fourni ci-dessous pointe sur l\'ancienne page: <em>export.php</em>. Cette ancienne version de l\'export présente la limitation suivante : la liste des champs exportés varie en fonction du format de l\'export et du modèle de données. <br/>Si vous devez garantir la stabilité du format de l\'export (liste des colonnes) sur le long terme, alors vous devrez renseigner l\'attribut "Champs" et utiliser la page <em>export-V2.php</em>.',
 	'UI:Schema:Title' => 'Modèle de données '.ITOP_APPLICATION_SHORT,
-	'UI:Schema:TitleForClass' => 'Modèle de données de %1$s~~',
+	'UI:Schema:TitleForClass' => 'Modèle de données de %1$s',
 	'UI:Schema:CategoryMenuItem' => 'Catégorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relations',
 	'UI:Schema:AbstractClass' => 'Classe abstraite : les objets de cette classe ne peuvent pas être instanciés.',
@@ -938,7 +930,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'Tag:Archived' => 'Archivé',
 	'Tag:Archived+' => 'Accessible seulement dans le mode Archive',
 	'Tag:Obsolete' => 'Obsolète',
-	'Tag:Obsolete+' => 'Exclu de l\'analyse d\'impact et des résultats de recherche~~',
+	'Tag:Obsolete+' => 'Exclu de l\'analyse d\'impact et des résultats de recherche',
 	'Tag:Synchronized' => 'Synchronisé',
 	'ObjectRef:Archived' => 'Archivé',
 	'ObjectRef:Obsolete' => 'Obsolète',
@@ -1628,8 +1620,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Newsroom:Preferences' => 'Préférences du centre d\'information',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration',
 	'UI:Newsroom:ResetCache' => 'Ràz du cache',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Le cache de la newsroom a été réinitialisé avec succès',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Afficher les messages de %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Afficher au plus %1$s messages dans le menu %2$s.',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critique',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Standard',
 ));
 
 

@@ -85,6 +85,9 @@ $ibo-panel--collapsible-toggler--margin-right: $ibo-spacing-300 !default;
 $ibo-panel--collapsible-toggler--font-size: $ibo-font-size-250 !default;
 $ibo-panel--collapsible-toggler--color: $ibo-color-grey-700 !default;
 
+$ibo-panel--is-selectable--body--after--z-index: $ibo-panel--header--z-index + 1 !default;
+$ibo-panel--is-selectable--body--after--font-size: $ibo-font-size-700 !default;
+
 /* Rules */
 .ibo-panel {
   --ibo-main-color: #{map-get($ibo-panel-colors, 'neutral')}; /* --ibo-main-color is to allow overload from custom dynamic value from the DM. The overload will be done through an additional CSS class of a particular DM class or DM attribute */
@@ -127,6 +130,30 @@ $ibo-panel--collapsible-toggler--color: $ibo-color-grey-700 !default;
         }
       }
     }
+  }
+  &.ibo-is-selectable .ibo-panel--body::after {
+    @include ibo-selectable;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    height: 100%;
+    width: 100%;
+    z-index: $ibo-panel--is-selectable--body--after--z-index;
+    font-size: $ibo-panel--is-selectable--body--after--font-size;
+  }
+  &.ibo-is-selectable:hover .ibo-panel--body::after {
+    @include ibo-selectable-hover;
+    display: flex;
+  }
+  &.ibo-is-selected .ibo-panel--body::after {
+    @include ibo-selected;
+    display: flex;
+  }
+  &.ibo-is-selected:hover .ibo-panel--body::after {
+    @include ibo-selected-hover;
+    display: flex;
   }
 }
 

@@ -156,7 +156,7 @@ class DBObjectTest extends ItopDataTestCase
 		$this->assertTrue($oPerson->IsModified());
 
 		$oNewPerson = MetaModel::GetObject('Person', $oPerson->GetKey());
-		$this->assertEquals($oPerson->GetObjectUniqId(), $oNewPerson->GetObjectUniqId());
+		$this->assertNotEquals($oPerson->GetObjectUniqId(), $oNewPerson->GetObjectUniqId());
 
 		MetaModel::StopReentranceProtection($oPerson);
 	}

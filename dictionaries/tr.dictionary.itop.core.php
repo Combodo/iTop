@@ -120,7 +120,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Date format:<br/>
-	<b>%1$ss</b><br/>
+	<b>%1$s</b><br/>
 	Example: %2$s
 </p>
 <p>
@@ -462,6 +462,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'İlgili tetikleyiciler',
 	'Class:Action/Attribute:trigger_list+' => 'İşleme bağlı tetikleyici',
+	'Class:Action/Attribute:asynchronous' => 'Asynchronous~~',
+	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in background or not~~',
+	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Use global setting~~',
+	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes~~',
+	'Class:Action/Attribute:asynchronous/Value:no' => 'No~~',
 	'Class:Action/Attribute:finalclass' => 'Tip',
 	'Class:Action/Attribute:finalclass+' => '',
 	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
@@ -483,20 +488,24 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ActionEmail' => 'E-posta bildirimi',
 	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: 
+- Being tested: just the Test recipient, 
+- In production: all (To, cc and Bcc) 
+- Inactive: no-one~~',
 	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
 	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
 	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Test alıcısı',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Durumu "Test" olması durumundaki alıcı',
-	'Class:ActionEmail/Attribute:from' => 'Kimden~~',
-	'Class:ActionEmail/Attribute:from+' => 'e-posta başlığında gönderilecek~~',
+	'Class:ActionEmail/Attribute:from' => 'Kimden',
+	'Class:ActionEmail/Attribute:from+' => 'e-posta başlığında gönderilecek',
 	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
-	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
-	'Class:ActionEmail/Attribute:reply_to' => 'Yanıtla~~',
-	'Class:ActionEmail/Attribute:reply_to+' => 'e-posta başlığında gönderilecek~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Either a static label or a placeholder like $this->agent_id->friendlyname$~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Yanıtla',
+	'Class:ActionEmail/Attribute:reply_to+' => 'e-posta başlığında gönderilecek',
 	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
-	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Either a static label or a placeholder like $this->team_id->friendlyname$.
+If omitted the From (label) is used.~~',
 	'Class:ActionEmail/Attribute:to' => 'Kime',
 	'Class:ActionEmail/Attribute:to+' => 'E-posta alıcısı',
 	'Class:ActionEmail/Attribute:cc' => 'Kopya',
@@ -810,7 +819,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:SynchroReplica:PrivateDetails' => 'Özel detaylar',
 	'Core:SynchroReplica:BackToDataSource' => 'Synchro veri kaynağına geri dön: %1$s',
 	'Core:SynchroReplica:ListOfReplicas' => 'Replika listesi',
-	'Core:SynchroAttExtKey:ReconciliationById' => 'id (birincil anahtar)~~',
+	'Core:SynchroAttExtKey:ReconciliationById' => 'id (birincil anahtar)',
 	'Core:SynchroAtt:attcode' => 'Öznitelik',
 	'Core:SynchroAtt:attcode+' => 'Nesnenin alanı',
 	'Core:SynchroAtt:reconciliation' => 'Uzlaşma ?',
@@ -835,7 +844,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:SyncTooManyMissingReplicas' => 'Tüm kayıtlar bir süredir dokunulmamıştır (tüm nesneler silinebilir). Lütfen senkronizasyon tablosuna yazan işlemin hala çalıştığını kontrol edin. İşlem iptal edildi.',
 	'Core:SyncSplitModeCLIOnly' => 'Senkronizasyon parçalı olarak, yalnızca Mode CLI \'de çalıştırıldığında yapılabilir',
 	'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s Replika,%2$s Hata (lar),%3$s Uyarı (lar).',
-	'Core:SynchroReplica:TargetObject' => 'Senkronize Nesne: %1$s~~',
+	'Core:SynchroReplica:TargetObject' => 'Senkronize Nesne: %1$s',
 	'Class:AsyncSendEmail' => 'E-posta (Asenkron)',
 	'Class:AsyncSendEmail/Attribute:to' => 'Kime',
 	'Class:AsyncSendEmail/Attribute:subject' => 'Konu',
@@ -1019,7 +1028,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters, starting with a letter.~~',
 	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',

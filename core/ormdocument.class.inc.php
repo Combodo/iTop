@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
 
@@ -343,6 +344,6 @@ class ormDocument
 	 */
 	public function GetSignature(): string
 	{
-		return md5($this->GetData());
+		return md5($this->GetData() ?? '');
 	}
 }

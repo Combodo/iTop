@@ -4,7 +4,7 @@
   "type": "project",
   "license": "AGPL-3.0-only",
   "require": {
-    "php": ">=7.4.0 <8.2.0",
+    "php": ">=8.1.0 <8.4.0",
     "ext-ctype": "*",
     "ext-dom": "*",
     "ext-gd": "*",
@@ -13,40 +13,45 @@
     "ext-mysqli": "*",
     "ext-soap": "*",
     "apereo/phpcas": "~1.6.0",
-    "combodo/tcpdf": "~6.4.4",
-    "firebase/php-jwt": "~6.4.0",
+    "firebase/php-jwt": "^6.4.0",
     "guzzlehttp/guzzle": "^7.5.1",
     "laminas/laminas-mail": "^2.11",
     "laminas/laminas-servicemanager": "^3.5",
-    "league/oauth2-google": "^3.0",
-    "nikic/php-parser": "~4.14.0",
+    "league/oauth2-google": "^4.0.1",
+    "nikic/php-parser": "^4.14.0",
     "pear/archive_tar": "~1.4.14",
-    "pelago/emogrifier": "^6.0.0",
-    "scssphp/scssphp": "^1.10.3",
-    "symfony/console": "5.4.*",
-    "symfony/dotenv": "5.4.*",
-    "symfony/framework-bundle": "5.4.*",
-    "symfony/http-foundation": "5.4.*",
-    "symfony/http-kernel": "5.4.*",
-    "symfony/twig-bundle": "5.4.*",
-    "symfony/yaml": "5.4.*",
+    "pelago/emogrifier": "^7.2.0",
+    "psr/log": "^3.0.0",
+    "scssphp/scssphp": "^1.12.1",
+    "symfony/console": "~6.4.0",
+    "symfony/dotenv": "~6.4.0",
+    "symfony/framework-bundle": "~6.4.0",
+    "symfony/http-foundation": "~6.4.0",
+    "symfony/http-kernel": "~6.4.0",
+    "symfony/runtime": "~6.4.0",
+    "symfony/twig-bundle": "~6.4.0",
+    "symfony/var-dumper": "~6.4.0",
+    "symfony/yaml": "~6.4.0",
+    "tecnickcom/tcpdf": "^6.6.0",
     "thenetworg/oauth2-azure": "^2.0"
   },
   "require-dev": {
-    "symfony/stopwatch": "5.4.*",
-    "symfony/web-profiler-bundle": "5.4.*"
+    "symfony/debug-bundle": "~6.4.0",
+    "symfony/stopwatch": "~6.4.0",
+    "symfony/web-profiler-bundle": "~6.4.0"
   },
   "suggest": {
     "ext-libsodium": "Required to use the AttributeEncryptedString.",
     "ext-openssl": "Can be used as a polyfill if libsodium is not installed",
     "ext-mcrypt": "Can be used as a polyfill if either libsodium and openssl are not installed (libsodium and openssl are more secure)",
+    "ext-apcu": "For better performance and stability",
+    "ext-imap": "Required by the extension \"Mail to ticket automation\"",
     "ext-ldap": "Required to use LDAP as an identity provider",
-    "ext-posix": "Not required by the core, but some extensions uses it.",
-    "ext-imap": "Required by the extension \"Mail to ticket automation\""
+    "ext-posix": "Not required by the core, but some extensions uses it."
   },
   "config": {
     "platform": {
-      "php": "7.4.0"
+      "php": "8.1.0"
     },
     "vendor-dir": "lib",
     "preferred-install": {
@@ -54,7 +59,10 @@
     },
     "sort-packages": true,
     "classmap-authoritative": true,
-    "platform-check": true
+    "platform-check": true,
+    "allow-plugins": {
+      "symfony/runtime": true
+    }
   },
   "autoload": {
     "classmap": [
@@ -72,6 +80,9 @@
       "application/logindefault.class.inc.php",
       "application/loginexternal.class.inc.php",
       "application/loginurl.class.inc.php"
+    ],
+    "files": [
+      "sources/alias.php"
     ]
   },
   "conflict": {
@@ -81,11 +92,15 @@
     "symfony": {
       "allow-contrib": false,
       "require": "3.4.*"
+    },
+    "runtime": {
+      "dotenv_path": "resources/symfony/.env"
     }
   },
   "scripts": {
-    "post-install-cmd": ["@rmDeniedTestDir"],
-    "post-update-cmd": ["@rmDeniedTestDir"],
-    "rmDeniedTestDir":  "@php .make/composer/rmDeniedTestDir.php"
+    "post-install-cmd": ["@rmUnnecessaryFolders", "@tcpdfCustomFonts"],
+    "post-update-cmd": ["@rmUnnecessaryFolders", "@tcpdfCustomFonts"],
+    "rmUnnecessaryFolders":  "@php .make/dependencies/rmUnnecessaryFolders.php --manager composer",
+    "tcpdfCustomFonts":  "@php .make/dependencies/composer/tcpdf/tcpdfUpdateFonts.php"
   }
 }

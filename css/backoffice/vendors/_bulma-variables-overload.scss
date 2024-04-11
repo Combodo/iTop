@@ -13,6 +13,9 @@ $body-overflow-x: hidden !default;
 $body-overflow-y: auto !default;
 
 
+/*N°5786 - Avoid strong text to always be grey (default Bulma color for this var.) so strong text can keep its color. This  is mostly for text within the .ibo-is-html-content. */
+$text-strong: inherit !default;
+
 /**
  * customize Bulma content variables
  * See https://bulma.io/documentation/elements/content/

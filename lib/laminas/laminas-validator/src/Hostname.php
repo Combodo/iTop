@@ -21,8 +21,10 @@ use function ord;
 use function preg_match;
 use function prev;
 use function reset;
+use function str_contains;
+use function str_ends_with;
+use function str_starts_with;
 use function strlen;
-use function strpos;
 use function strrpos;
 use function strtolower;
 use function strtoupper;
@@ -1968,8 +1970,8 @@ class Hostname extends AbstractValidator
         $this->setValue($value);
         // Check input against IP address schema
         if (
-            ((preg_match('/^[0-9.]*$/', $value) && strpos($value, '.') !== false)
-                || (preg_match('/^[0-9a-f:.]*$/i', $value) && strpos($value, ':') !== false))
+            ((preg_match('/^[0-9.]*$/', $value) && str_contains($value, '.'))
+                || (preg_match('/^[0-9a-f:.]*$/i', $value) && str_contains($value, ':')))
             && $this->getIpValidator()->setTranslator($this->getTranslator())->isValid($value)
         ) {
             if (! ($this->getAllow() & self::ALLOW_IP)) {
@@ -1983,16 +1985,16 @@ class Hostname extends AbstractValidator
         // Handle Regex compilation failure that may happen on .biz domain with has @ character, eg: tapi4457@hsoqvf.biz
         // Technically, hostname with '@' character is invalid, so mark as invalid immediately
         // @see https://github.com/laminas/laminas-validator/issues/8
-        if (strpos($value, '@') !== false) {
+        if (str_contains($value, '@')) {
             $this->error(self::INVALID_HOSTNAME);
             return false;
         }
 
         // Local hostnames are allowed to be partial (ending '.')
         if ($this->getAllow() & self::ALLOW_LOCAL) {
-            if (substr($value, -1) === '.') {
+            if (str_ends_with($value, '.')) {
                 $value = substr($value, 0, -1);
-                if (substr($value, -1) === '.') {
+                if (str_ends_with($value, '.')) {
                     // Empty hostnames (ending '..') are not allowed
                     $this->error(self::INVALID_LOCAL_NAME);
                     return false;
@@ -2036,7 +2038,7 @@ class Hostname extends AbstractValidator
 
                     $this->tld = $matches[1];
                     // Decode Punycode TLD to IDN
-                    if (strpos($this->tld, 'xn--') === 0) {
+                    if (str_starts_with($this->tld, 'xn--')) {
                         $this->tld = $this->decodePunycode(substr($this->tld, 4));
                         if ($this->tld === false) {
                             return false;
@@ -2085,7 +2087,7 @@ class Hostname extends AbstractValidator
                     }
                     foreach ($domainParts as $domainPart) {
                         // Decode Punycode domain names to IDN
-                        if (strpos($domainPart, 'xn--') === 0) {
+                        if (str_starts_with($domainPart, 'xn--')) {
                             $domainPart = $this->decodePunycode(substr($domainPart, 4));
                             if ($domainPart === false) {
                                 return false;

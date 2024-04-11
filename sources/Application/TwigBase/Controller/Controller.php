@@ -19,24 +19,25 @@
 
 namespace Combodo\iTop\Application\TwigBase\Controller;
 
-use AjaxPage;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 use ApplicationMenu;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Controller\AbstractController;
 use Dict;
-use ErrorPage;
+use Combodo\iTop\Application\WebPage\ErrorPage;
 use Exception;
 use ExecutionKPI;
 use IssueLog;
-use iTopWebPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 use LoginWebPage;
 use MetaModel;
 use ReflectionClass;
 use SetupPage;
 use SetupUtils;
 use Twig\Error\Error;
+use Twig\Error\SyntaxError;
 use utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use ZipArchive;
 
 abstract class Controller extends AbstractController
@@ -52,7 +53,7 @@ abstract class Controller extends AbstractController
 	protected $m_sOperation;
 	/** @var string */
 	private $m_sModule;
-	/** @var iTopWebPage|\AjaxPage */
+	/** @var iTopWebPage|AjaxPage */
 	private $m_oPage;
 	/** @var bool */
 	private $m_bCheckDemoMode = false;
@@ -255,6 +256,7 @@ abstract class Controller extends AbstractController
 	}
 
 	/**
+	 * @since 3.0.0 N°3606 - Adapt TwigBase Controller for combodo-monitoring extension
 	 * @throws \Exception
 	 */
 	protected function CheckAccess()
@@ -270,12 +272,23 @@ abstract class Controller extends AbstractController
 
 		if (empty($sExecModule) || empty($sConfiguredAccessTokenValue)){
 			LoginWebPage::DoLogin($this->m_bMustBeAdmin);
-		}else {
+		} else {
 			//token mode without login required
-			$sPassedToken = utils::ReadParam($this->m_sAccessTokenConfigParamId, null);
-			if ($sPassedToken !== $sConfiguredAccessTokenValue){
+			//N°7147 - Error HTTP 500 due to access_token not URL decoded
+			$sPassedToken = utils::ReadPostedParam($this->m_sAccessTokenConfigParamId, null, false, 'raw_data');
+			if (is_null($sPassedToken)){
+				$sPassedToken = utils::ReadParam($this->m_sAccessTokenConfigParamId, null, false, 'raw_data');
+			}
+
+			$sDecodedPassedToken = urldecode($sPassedToken);
+			if ($sDecodedPassedToken !== $sConfiguredAccessTokenValue){
 				$sMsg = "Invalid token passed under '$this->m_sAccessTokenConfigParamId' http param to reach '$sExecModule' page.";
-				IssueLog::Error($sMsg);
+				IssueLog::Error($sMsg, null,
+					[
+						'sHtmlDecodedToken' => $sDecodedPassedToken,
+						'conf param ID' => $this->m_sAccessTokenConfigParamId
+					]
+				);
 				throw new Exception("Invalid token");
 			}
 		}
@@ -570,6 +583,7 @@ abstract class Controller extends AbstractController
 	 * @api
 	 *
 	 * @param string $sScript Script path to link
+	 * @since 3.2.0 $sScript must be absolute URI
 	 */
 	public function AddLinkedScript($sScript)
 	{
@@ -582,6 +596,7 @@ abstract class Controller extends AbstractController
 	 * @api
 	 *
 	 * @param string $sStylesheet Stylesheet path to link
+	 * @since 3.2.0 $sScript must be absolute URI
 	 */
 	public function AddLinkedStylesheet($sStylesheet)
 	{
@@ -662,6 +677,9 @@ abstract class Controller extends AbstractController
 		{
 			return $this->m_oTwig->render($sName.'.'.$sTemplateFileExtension.'.twig', $aParams);
 		}
+		catch (SyntaxError $e) {
+			IssueLog::Error($e->getMessage().' - file: '.$e->getFile().'('.$e->getLine().')');
+		}
 		catch (Error $e) {
 			if (strpos($e->getMessage(), 'Unable to find template') === false)
 			{
@@ -683,7 +701,7 @@ abstract class Controller extends AbstractController
 		{
 			case self::ENUM_PAGE_TYPE_HTML:
 				$this->m_oPage = new iTopWebPage($this->GetOperationTitle(), false);
-				$this->m_oPage->add_xframe_options();
+				$this->m_oPage->add_http_headers();
 
 				if ($this->m_bIsBreadCrumbEnabled) {
 					if (count($this->m_aBreadCrumbEntry) > 0) {
@@ -753,12 +771,23 @@ abstract class Controller extends AbstractController
 
 	private function AddLinkedScriptToPage($sLinkedScript)
 	{
-		$this->m_oPage->add_linked_script($sLinkedScript);
+		// iTop 3.1 and older compatibility, if not an URI we don't know if its relative to app root or module root
+		if (strpos($sLinkedScript, "://") === false) {
+			$this->m_oPage->add_linked_script($sLinkedScript);
+			return;
+		}
+
+		$this->m_oPage->LinkScriptFromURI($sLinkedScript);
 	}
 
 	private function AddLinkedStylesheetToPage($sLinkedStylesheet)
 	{
-		$this->m_oPage->add_linked_stylesheet($sLinkedStylesheet);
+		// iTop 3.1 and older compatibility, if not an URI we don't know if its relative to app root or module root
+		if (strpos($sLinkedStylesheet, "://") === false) {
+			$this->m_oPage->add_linked_stylesheet($sLinkedStylesheet);
+		}
+
+		$this->m_oPage->LinkStylesheetFromURI($sLinkedStylesheet);
 	}
 
 	private function AddStyleToPage($sStyle)

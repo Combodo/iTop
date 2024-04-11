@@ -6,6 +6,9 @@
 
 // The BOM is added at the head of exported UTF-8 CSV data, and removed (if present) from input UTF-8 data.
 // This helps MS-Excel (Version > 2007, Windows only) in changing its interpretation of a CSV file (by default Excel reads data as ISO-8859-1 -not 100% sure!)
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 define('UTF8_BOM', chr(239).chr(187).chr(191)); // 0xEF, 0xBB, 0xBF
 
 
@@ -32,10 +35,36 @@ abstract class CellChangeSpec
 		return $this->m_proposedValue;
 	}
 
-	public function GetDisplayableValue()
+	/**
+	 * @throws \Exception
+	 * @since 3.2.0
+	 */
+	public function GetCLIValue(bool $bLocalizedValues = false): string
 	{
+		if (is_object($this->m_proposedValue))	{
+			if ($this->m_proposedValue instanceof ReportValue) {
+				return $this->m_proposedValue->GetAsCSV($bLocalizedValues, ',', '"');
+			}
+			throw new Exception('Unexpected class : '. get_class($this->m_proposedValue));
+		}
 		return $this->m_proposedValue;
 	}
+
+	/**
+	 * @throws \Exception
+	 * @since 3.2.0
+	 */
+	public function GetHTMLValue(bool $bLocalizedValues = false): string
+	{
+		if (is_object($this->m_proposedValue)) {
+			if ($this->m_proposedValue instanceof ReportValue) {
+				return $this->m_proposedValue->GetAsHTML($bLocalizedValues);
+			}
+			throw new Exception('Unexpected class : '. get_class($this->m_proposedValue));
+		}
+		return utils::EscapeHtml($this->m_proposedValue);
+	}
+
 
 	/**
 	 * @since 3.1.0 N°5305
@@ -51,12 +80,12 @@ abstract class CellChangeSpec
 	}
 
 	/**
-	 * @since 3.1.0 N°5305
+	 * @since 3.2.0
 	 */
-	public function GetDisplayableValueAndDescription(): string
+	public function GetCLIValueAndDescription(): string
 	{
 		return sprintf("%s%s",
-			$this->GetDisplayableValue(),
+			$this->GetCLIValue(),
 			$this->GetDescription()
 		);
 	}
@@ -105,13 +134,25 @@ class CellStatus_Issue extends CellStatus_Modify
 		parent::__construct($proposedValue, $previousValue);
 	}
 
-	public function GetDisplayableValue()
+	public function GetCLIValue(bool $bLocalizedValues = false): string
+	{
+		if (is_null($this->m_proposedValue)) {
+			return Dict::Format('UI:CSVReport-Value-SetIssue');
+		}
+		return Dict::Format('UI:CSVReport-Value-ChangeIssue',$this->m_proposedValue);
+	}
+
+	public function GetHTMLValue(bool $bLocalizedValues = false): string
 	{
 		if (is_null($this->m_proposedValue))
 		{
 			return Dict::Format('UI:CSVReport-Value-SetIssue');
 		}
-		return Dict::Format('UI:CSVReport-Value-ChangeIssue', \utils::EscapeHtml($this->m_proposedValue));
+		if ($this->m_proposedValue instanceof ReportValue)
+		{
+			return Dict::Format('UI:CSVReport-Value-ChangeIssue', $this->m_proposedValue->GetAsHTML($bLocalizedValues));
+		}
+		return Dict::Format('UI:CSVReport-Value-ChangeIssue',utils::EscapeHtml($this->m_proposedValue));
 	}
 
 	public function GetDescription()
@@ -119,12 +160,12 @@ class CellStatus_Issue extends CellStatus_Modify
 		return $this->m_sReason;
 	}
 	/*
-	 * @since 3.1.0 N°5305
+	 * @since 3.2.0
 	 */
-	public function GetDisplayableValueAndDescription(): string
+	public function GetCLIValueAndDescription(): string
 	{
 		return sprintf("%s. %s",
-			$this->GetDisplayableValue(),
+			$this->GetCLIValue(),
 			$this->GetDescription()
 		);
 	}
@@ -160,7 +201,7 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 	 * @param null $sAllowedValues : used for additional message that provides allowed values $sAllowedValues for current class
 	 * @param string|null $sAllowedValuesSearch : used to search all allowed values
 	 */
-	public function __construct($sSerializedSearch, $sReason, $sClass=null, $sAllowedValues=null, string $sAllowedValuesSearch=null)
+	public function __construct($sSerializedSearch, $sReason, $sClass = null, $sAllowedValues = null, string $sAllowedValuesSearch = null)
 	{
 		parent::__construct(null, null, $sReason);
 		$this->sSerializedSearch = $sSerializedSearch;
@@ -169,13 +210,22 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 		$this->sAllowedValuesSearch = $sAllowedValuesSearch;
 	}
 
-	public function GetDisplayableValue()
+	public function GetCLIValue(bool $bLocalizedValues = false): string
 	{
 		if (null === $this->m_sReason) {
 			return Dict::Format('UI:CSVReport-Value-NoMatch', '');
 		}
 
 		return $this->m_sReason;
+	}
+
+	public function GetHTMLValue(bool $bLocalizedValues = false): string
+	{
+		if (null === $this->m_sReason) {
+			return Dict::Format('UI:CSVReport-Value-NoMatch', '');
+		}
+
+		return utils::EscapeHtml($this->m_sReason);
 	}
 
 	public function GetDescription()
@@ -195,7 +245,7 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 	public function GetSearchLinkUrl()
 	{
 		return sprintf("UI.php?operation=search&filter=%s",
-			rawurlencode($this->sSerializedSearch)
+			rawurlencode($this->sSerializedSearch ?? "")
 		);
 	}
 
@@ -206,7 +256,7 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 	public function GetAllowedValuesLinkUrl(): ?string
 	{
 		return sprintf("UI.php?operation=search&filter=%s",
-			rawurlencode($this->sAllowedValuesSearch)
+			rawurlencode($this->sAllowedValuesSearch ?? "")
 		);
 	}
 }
@@ -221,6 +271,33 @@ class CellStatus_NullIssue extends CellStatus_Issue
 	public function GetDescription()
 	{
 		return Dict::S('UI:CSVReport-Value-Missing');
+	}
+}
+
+/**
+ * Class to differ formatting depending on the caller
+ */
+class ReportValue
+{
+	/**
+	 * @param DBObject $oObject
+	 * @param string $sAttCode
+	 * @param bool $bOriginal
+	 */
+	public function __construct(protected DBObject $oObject, protected string $sAttCode, protected  bool $bOriginal){}
+
+	public function GetAsHTML(bool $bLocalizedValues)
+	{
+		if ($this->bOriginal) {
+			return $this->oObject->GetOriginalAsHTML($this->sAttCode, $bLocalizedValues);
+		}
+		return $this->oObject->GetAsHTML($this->sAttCode, $bLocalizedValues);
+	}
+	public function GetAsCSV (bool $bLocalizedValues, string $sCsvSep, string $sCsvDelimiter) {
+		if ($this->bOriginal) {
+			return $this->oObject->GetOriginalAsCSV($this->sAttCode, $sCsvSep, $sCsvDelimiter, $bLocalizedValues);
+		}
+		return $this->oObject->GetAsCSV($this->sAttCode, $sCsvSep, $sCsvDelimiter, $bLocalizedValues);
 	}
 }
 
@@ -262,7 +339,7 @@ class CellStatus_Ambiguous extends CellStatus_Issue
 	public function GetSearchLinkUrl()
 	{
 		return sprintf("UI.php?operation=search&filter=%s",
-			rawurlencode($this->sSerializedSearch)
+			rawurlencode($this->sSerializedSearch ?? "")
 		);
 	}
 }
@@ -410,22 +487,6 @@ class BulkChange
 		$this->m_aExtKeysMappingCache = array();
 	}
 
-	protected $m_bReportHtml = false;
-	protected $m_sReportCsvSep = ',';
-	protected $m_sReportCsvDelimiter = '"';
-
-	public function SetReportHtml()
-	{
-		$this->m_bReportHtml = true;
-	}
-
-	public function SetReportCsv($sSeparator = ',', $sDelimiter = '"')
-	{
-		$this->m_bReportHtml = false;
-		$this->m_sReportCsvSep = $sSeparator;
-		$this->m_sReportCsvDelimiter = $sDelimiter;
-	}
-
 	protected function ResolveExternalKey($aRowData, $sAttCode, &$aResults)
 	{
 		$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
@@ -443,7 +504,7 @@ class BulkChange
 				$value = $oForeignAtt->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 			}
 			$oReconFilter->AddCondition($sReconKeyAttCode, $value, '=');
-			$aResults[$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
+			$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
 		}
 
 		$oExtObjects = new CMDBObjectSet($oReconFilter);
@@ -467,7 +528,7 @@ class BulkChange
 	}
 
 	/**
-	 * @param \DBObject $oTargetObj
+	 * @param DBObject $oTargetObj
 	 * @param array $aRowData
 	 * @param array $aErrors
 	 *
@@ -530,7 +591,7 @@ class BulkChange
 					}
 					$aCacheKeys[] = $value;
 					$oReconFilter->AddCondition($sReconKeyAttCode, $value, '=');
-					$aResults[$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
+					$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
 				}
 				$sCacheKey = implode('_|_', $aCacheKeys); // Unique key for this query...
 				$iForeignKey = null;
@@ -599,7 +660,7 @@ class BulkChange
 						foreach ($aReconKeys as $sReconKeyAttCode => $iCol)
 						{
 							// Report the change on reconciliation values as well
-							$aResults[$iCol] = new CellStatus_Modify(utils::HtmlEntities($aRowData[$iCol]));
+							$aResults[$iCol] = new CellStatus_Modify($aRowData[$iCol]);
 						}
 					}
 				}
@@ -677,50 +738,32 @@ class BulkChange
 		// Reporting on fields
 		//
 		$aChangedFields = $oTargetObj->ListChanges();
-		foreach ($this->m_aAttList as $sAttCode => $iCol)
-		{
-			if ($sAttCode == 'id')
-			{
-				$aResults[$iCol]= new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
+		foreach ($this->m_aAttList as $sAttCode => $iCol) {
+			if ($sAttCode == 'id') {
+				$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
 			}
-			else
-			{
-				if ($this->m_bReportHtml)
-				{
-					$sCurValue = $oTargetObj->GetAsHTML($sAttCode, $this->m_bLocalizedValues);
-					$sOrigValue = $oTargetObj->GetOriginalAsHTML($sAttCode, $this->m_bLocalizedValues);
+			else {
+				$sCurValue = new ReportValue($oTargetObj, $sAttCode, false);
+				$sOrigValue = new ReportValue($oTargetObj, $sAttCode, true);
+				if (isset($aErrors[$sAttCode])) {
+					$aResults[$iCol]= new CellStatus_Issue($aRowData[$iCol], $sOrigValue, $aErrors[$sAttCode]);
 				}
-				else
-				{
-					$sCurValue = $oTargetObj->GetAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter, $this->m_bLocalizedValues);
-					$sOrigValue = $oTargetObj->GetOriginalAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter, $this->m_bLocalizedValues);
-				}
-				if (isset($aErrors[$sAttCode]))
-				{
-					$aResults[$iCol]= new CellStatus_Issue(utils::HtmlEntities($aRowData[$iCol]), $sOrigValue, $aErrors[$sAttCode]);
-				}
-				elseif (array_key_exists($sAttCode, $aChangedFields))
-				{
-					if ($oTargetObj->IsNew())
-					{
+				elseif (array_key_exists($sAttCode, $aChangedFields)){
+					if ($oTargetObj->IsNew())	{
 						$aResults[$iCol]= new CellStatus_Void($sCurValue);
 					}
-					else
-					{
+					else	{
 						$aResults[$iCol]= new CellStatus_Modify($sCurValue, $sOrigValue);
 					}
 				}
-				else
-				{
+				else	{
 					// By default... nothing happens
 					$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-					if ($oAttDef instanceof AttributeDateTime)
-					{
+					if ($oAttDef instanceof AttributeDateTime) {
 						$aResults[$iCol]= new CellStatus_Void($oAttDef->GetFormat()->Format($aRowData[$iCol]));
 					}
-					else
-					{
-						$aResults[$iCol]= new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
+					else	{
+						$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
 					}
 				}
 			}
@@ -785,7 +828,7 @@ class BulkChange
 			// Possibles values are displayed to UI user. we have to limit the amount of displayed values
 			$oExtObjectSetWithCurrentUserPermissions->SetLimit(4);
 			for($i = 0; $i < 3; $i++){
-				/** @var \DBObject $oVisibleObject */
+				/** @var DBObject $oVisibleObject */
 				$oVisibleObject = $oExtObjectSetWithCurrentUserPermissions->Fetch();
 				if (is_null($oVisibleObject)){
 					break;
@@ -1152,7 +1195,7 @@ class BulkChange
 							if (!preg_match($sRegExp, $sValue))
 							{
 								$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
-								$aResult[$iRow][$iCol] = new CellStatus_Issue(utils::HtmlEntities($sValue), null, $sErrorMsg);
+								$aResult[$iRow][$iCol] = new CellStatus_Issue($sValue, null, $sErrorMsg);
 
 							}
 							else
@@ -1165,6 +1208,7 @@ class BulkChange
 								}
 								else
 								{
+									// almost impossible ti reproduce since even incorrect dates with correct formats are formated and $oDate will not be false
 									// Leave the cell unchanged
 									$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
 									$aResult[$iRow][$iCol] = new CellStatus_Issue($sValue, null, $sErrorMsg);
@@ -1304,7 +1348,7 @@ class BulkChange
 			{
 				if (!array_key_exists($iCol, $aResult[$iRow]))
 				{
-					$aResult[$iRow][$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
+					$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
 				}
 			}
 			foreach($this->m_aExtKeys as $sAttCode => $aForeignAtts)
@@ -1318,7 +1362,7 @@ class BulkChange
 					if (!array_key_exists($iCol, $aResult[$iRow]))
 					{
 						// The foreign attribute is one of our reconciliation key
-						$aResult[$iRow][$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
+						$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
 					}
 				}
 			}
@@ -1443,7 +1487,7 @@ EOF
 					<<<EOF
 	function OnTruncatedHistoryToggle(bShowAll)
 	{
-		$('#csv_history_reload').html('<img src="../images/indicator.gif"/>');
+		$('#csv_history_reload').html('<img src="' + GetAbsoluteUrlAppRoot() + 'images/indicator.gif"/>');
 		$.get(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?{$sAppContext}', {operation: 'displayCSVHistory', showall: bShowAll}, function(data)
 			{
 				$('#$sAjaxDivId').html(data);

@@ -13,11 +13,15 @@ use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
 use Combodo\iTop\Service\Router\Router;
 
@@ -200,7 +204,7 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
  * Displays a form (checkboxes) to select the objects for which to apply a given action
  * Only the objects for which the action is valid can be checked. By default all valid objects are checked
  *
- * @param \WebPage $oP WebPage The page for output
+ * @param WebPage $oP WebPage The page for output
  * @param \DBSearch $oFilter DBSearch The filter that defines the list of objects
  * @param string $sNextOperation string The next operation (code) to be executed when the form is submitted
  * @param ActionChecker $oChecker ActionChecker The helper class/instance used to check for which object the action is valid
@@ -273,7 +277,6 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 	$oP->SetCurrentTab('UI:RelationshipList');
 	$oImpactedObject = UIContentBlockUIBlockFactory::MakeStandard("impacted_objects", ['ibo-is-visible']);
 	$oP->AddSubBlock($oImpactedObject);
-	$oImpactedObject->AddSubBlock(AlertUIBlockFactory::MakeForWarning(Dict::S("Relation:impacts/FilteredData"), '', "alert_filtered_list")->SetIsHidden(true));
 	$oImpactedObjectList = UIContentBlockUIBlockFactory::MakeStandard("impacted_objects_lists", ['ibo-is-visible']);
 	$oImpactedObject->AddSubBlock($oImpactedObjectList);
 	$oImpactedObjectList->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard("impacted_objects_lists_placeholder", ['ibo-is-visible']));
@@ -321,13 +324,13 @@ try
 	if ($oRouter->CanDispatchRoute($sRoute)) {
 		$mResponse = $oRouter->DispatchRoute($sRoute);
 
-		// If response isn't a \WebPage, it is most likely that the output already occured, stop the script.
+		// If response isn't a WebPage, it is most likely that the output already occured, stop the script.
 		// Note that this is done here and not directly in the Router::DispatchRoute() so custom endpoint can handle null responses their own way.
 		if (false === ($mResponse instanceof WebPage)) {
 			die();
 		}
 
-		// Response is a \WebPage, let's handle it like legacy operations
+		// Response is a WebPage, let's handle it like legacy operations
 		$oP = $mResponse;
 	}
 	// Otherwise, use legacy operation
@@ -347,7 +350,7 @@ try
 			case 'stimulus': // Form displayed when applying a stimulus (state change)
 			case 'apply_stimulus': // Form displayed when applying a stimulus (state change)
 				foreach (ObjectController::EnumRequiredForModificationJsFilesRelPaths() as $sJsFileRelPath) {
-					$oP->add_linked_script("../$sJsFileRelPath");
+					$oP->LinkScriptFromAppRoot($sJsFileRelPath);
 				}
 				break;
 		}
@@ -648,7 +651,7 @@ try
 						$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 						$oP->add("<div style=\"padding: 10px;\">\n");
 						$oP->add("<div class=\"header_message\" id=\"full_text_progress\" style=\"position: fixed; background-color: #cccccc; opacity: 0.7; padding: 1.5em;\">\n");
-						$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', utils::EscapeHtml($sFullText)).'</span>');
+						$oP->add('<img id="full_text_indicator" src="' . utils::GetAbsoluteUrlAppRoot() . 'images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', utils::EscapeHtml($sFullText)).'</span>');
 						$oP->add("</div>\n");
 						$oP->add("<div id=\"full_text_results\">\n");
 						$oP->add("<div id=\"full_text_progress_placeholder\" style=\"padding: 1.5em;\">&nbsp;</div>\n");
@@ -700,7 +703,7 @@ try
 				break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
-			
+
 			/** @deprecated 3.1.0 Use the "object.new" route instead */
 			// Kept for backward compatibility
 			case 'new': // Form to create a new object
@@ -1203,8 +1206,16 @@ try
 					$bApplyTransition = $oObj->DisplayStimulusForm($oP, $sStimulus, $aPrefillFormParam);
 				}
 				catch (ApplicationException $e) {
+					$bApplyTransition = false;
 					$sMessage = $e->getMessage();
-					$sSeverity = 'info';
+					$sSeverity = 'warning';
+					ReloadAndDisplay($oP, $oObj, 'stimulus', $sMessage, $sSeverity);
+				}
+				catch (CoreCannotSaveObjectException $e) {
+					$bApplyTransition = false;
+					$aIssues = $e->getIssues();
+					$sMessage = $e->getHtmlMessage();
+					$sSeverity = 'warning';
 					ReloadAndDisplay($oP, $oObj, 'stimulus', $sMessage, $sSeverity);
 				}
 				if ($bApplyTransition) {
@@ -1406,64 +1417,62 @@ try
 			$sDescription = MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName();
 			$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription);
 
-				if ($sRelation == 'depends on') {
-					$sRelation = 'impacts';
-					$sDirection = 'up';
-				}
-				if ($sDirection == 'up') {
-					$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
-				} else {
-					$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
-				}
+			if ($sRelation == 'depends on') {
+				$sRelation = 'impacts';
+				$sDirection = 'up';
+			}
+			if ($sDirection == 'up') {
+				$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+			} else {
+				$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+			}
 
 
-				$aResults = $oRelGraph->GetObjectsByClass();
-				$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
-				$oPanel = PanelUIBlockFactory::MakeForClass($sClass, MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName());
-				$sClassIcon = MetaModel::GetClassIcon($sClass, false);
-				if (strlen($sClassIcon) > 0){
-					$oPanel->SetIcon($sClassIcon);
-				}
+			$aResults = $oRelGraph->GetObjectsByClass();
+			$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
+			$sTitle = MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName();
+			$sClassIcon = MetaModel::GetClassIcon($sClass, false);
 
-				$oP->AddUiBlock($oPanel);
-				$oP->AddTabContainer('Navigator', '', $oPanel);
-				$oP->SetCurrentTabContainer('Navigator');
+			$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
+			$bLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
+			$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
 
-				$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
-				$bLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
-				$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
-
-				// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
-				$sClassForAttachment = null;
-				$iIdForAttachment = null;
-				if (class_exists('Attachment')) {
-					$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
-					foreach ($aAllowedClasses as $sAllowedClass) {
-						if ($oObj instanceof $sAllowedClass) {
-							$iIdForAttachment = $id;
-							$sClassForAttachment = $sClass;
-						}
+			// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
+			$sClassForAttachment = null;
+			$iIdForAttachment = null;
+			if (class_exists('Attachment')) {
+				$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
+				foreach ($aAllowedClasses as $sAllowedClass) {
+					if ($oObj instanceof $sAllowedClass) {
+						$iIdForAttachment = $id;
+						$sClassForAttachment = $sClass;
 					}
 				}
+			}
 
-				// Display the tabs
-				if ($sFirstTab == 'list')
-				{
-					DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
-					$oP->SetCurrentTab('UI:RelationshipGraph');
-					$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$bLazyLoading);
-					DisplayNavigatorGroupTab($oP);
-				}
-				else
-				{
-					$oP->SetCurrentTab('UI:RelationshipGraph');
-					$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$bLazyLoading);
-					DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
-					DisplayNavigatorGroupTab($oP);
-				}
+			$oP->AddSubBlock($oDisplayGraph->DisplayFilterBox($oP, $aResults, $bLazyLoading));
+			$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle);
+			$oPanel->SetIcon($sClassIcon);
 
-				$oP->SetCurrentTab('');
-				break;
+			$oP->AddSubBlock($oPanel);
+			$oP->AddTabContainer('Navigator', '', $oPanel);
+			$oP->SetCurrentTabContainer('Navigator');
+
+			// Display the tabs
+			if ($sFirstTab == 'list') {
+				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
+				$oP->SetCurrentTab('UI:RelationshipGraph');
+				$oDisplayGraph->DisplayGraph($oP, $sRelation, $oAppContext, [], $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj), $bLazyLoading);
+				DisplayNavigatorGroupTab($oP);
+			} else {
+				$oP->SetCurrentTab('UI:RelationshipGraph');
+				$oDisplayGraph->DisplayGraph($oP, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj), $bLazyLoading);
+				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
+				DisplayNavigatorGroupTab($oP);
+			}
+
+			$oP->SetCurrentTab('');
+			break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1547,7 +1556,7 @@ class UI
 	/**
 	 * Operation select_for_modify_all
 	 *
-	 * @param \iTopWebPage $oP
+	 * @param iTopWebPage $oP
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -1579,7 +1588,7 @@ class UI
 	/**
 	 * Operation form_for_modify_all
 	 *
-	 * @param \iTopWebPage $oP
+	 * @param iTopWebPage $oP
 	 * @param \ApplicationContext $oAppContext
 	 *
 	 * @throws \ArchivedObjectException
@@ -1605,7 +1614,7 @@ class UI
 	/**
 	 * Operation preview_or_modify_all
 	 *
-	 * @param \iTopWebPage $oP
+	 * @param iTopWebPage $oP
 	 * @param \ApplicationContext $oAppContext
 	 *
 	 * @throws \ApplicationException

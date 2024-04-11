@@ -7,6 +7,8 @@
 namespace Combodo\iTop\Application\Helper;
 
 use AttributeBlob;
+use Combodo\iTop\Application\UI\Base\Component\Alert\Alert;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use DBObject;
 use Dict;
 use MetaModel;
@@ -24,6 +26,23 @@ use utils;
 class FormHelper
 {
 	/**
+	 * @var string
+	 * @since 3.1.1 N°6861
+	 */
+	public const ENUM_MANDATORY_BLOB_MODE_CREATE = 'Create';
+	/**
+	 * @var string
+	 * @since 3.1.1 N°6861
+	 */
+	public const ENUM_MANDATORY_BLOB_MODE_MODIFY_EMPTY = 'Modify';
+	/**
+	 * @var string
+	 * @since 3.1.1 N°6861
+	 */
+	public const ENUM_MANDATORY_BLOB_MODE_MODIFY_FILLED = 'Modify:Filled';
+
+
+	/**
 	 * DisableAttributeBlobInputs.
 	 *
 	 * @see N°5863 to allow blob edition in modal context.
@@ -36,7 +55,6 @@ class FormHelper
 	 */
 	public static function DisableAttributeBlobInputs(string $sClassName, array &$aExtraParams): void
 	{
-
 		// Initialize extra params array
 		if (!array_key_exists('fieldsFlags', $aExtraParams)) {
 			$aExtraParams['fieldsFlags'] = [];
@@ -45,17 +63,74 @@ class FormHelper
 			$aExtraParams['fieldsComments'] = [];
 		}
 
-		// Iterate throw class attributes...
+		// Iterate through class attributes...
+		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
 		foreach (MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef) {
-
 			// Set attribute blobs in read only
 			if ($oAttDef instanceof AttributeBlob) {
 				$aExtraParams['fieldsFlags'][$sAttCode] = OPT_ATT_READONLY;
-				$aExtraParams['fieldsComments'][$sAttCode] = '&nbsp;<img src="../images/transp-lock.png" style="vertical-align:middle" title="'.utils::EscapeHtml(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
+				$aExtraParams['fieldsComments'][$sAttCode] = '&nbsp;<img src="' . $sAppRootUrl . 'images/transp-lock.png" style="vertical-align:middle" title="'.utils::EscapeHtml(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
 			}
 		}
 	}
 
+	/**
+	 * Returns an attribute code if the object has a mandatory attribute blob, null otherwise
+	 *
+	 * @see N°6861 - Display warning when creating/editing a mandatory blob in modal
+	 *
+	 * @param \DBObject $oObject
+	 *
+	 * @return string|null
+	 * @throws \CoreException
+	 */
+	public static function GetMandatoryAttributeBlobInputs(DBObject $oObject): ?string
+	{
+		foreach (MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef) {
+			if ($oAttDef instanceof AttributeBlob && (!$oAttDef->IsNullAllowed() || ($oObject->GetFormAttributeFlags($sAttCode) & OPT_ATT_MANDATORY))) {
+				return $sAttCode;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns true if the object has a mandatory attribute blob
+	 * 
+	 * @see N°6861 - Display warning when creating/editing a mandatory blob in modal
+	 * 
+	 * @param \DBObject $oObject
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 */
+	public static function HasMandatoryAttributeBlobInputs(DBObject $oObject): bool
+	{
+		return self::GetMandatoryAttributeBlobInputs($oObject) !== null;
+	}
+
+	/**
+	 * Returns an Alert explaining what will happen when a mandatory attribute blob is displayed in a form
+	 * 
+	 * @see N°6861 - Display warning when creating/editing a mandatory blob in modal
+	 * @see self::ENUM_MANDATORY_BLOB_MODE_XXX
+	 *
+	 * @param string $sMode
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
+	 */
+	public static function GetAlertForMandatoryAttributeBlobInputsInModal(string $sMode = self::ENUM_MANDATORY_BLOB_MODE_MODIFY_EMPTY): Alert
+	{
+		$sMessage = Dict::S('UI:Object:Modal:'.$sMode.':MandatoryAttributeBlobInputs:Warning:Text');
+		
+		// If the mandatory attribute is already filled, there's no risk to make an object incomplete so we display an information level alert
+		if($sMode === self::ENUM_MANDATORY_BLOB_MODE_MODIFY_FILLED){
+			return AlertUIBlockFactory::MakeForInformation('', $sMessage);
+		}
+
+		return 	AlertUIBlockFactory::MakeForWarning('', $sMessage);
+	}
+	
 	/**
 	 * Update flags to be sent to form with url parameters
 	 * For now only supports "readonly" param

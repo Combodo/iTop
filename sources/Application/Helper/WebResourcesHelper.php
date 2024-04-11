@@ -6,7 +6,8 @@
 
 namespace Combodo\iTop\Application\Helper;
 
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+use Exception;
 use utils;
 
 /**
@@ -52,16 +53,16 @@ class WebResourcesHelper
 	/**
 	 * Add necessary files (JS) to be able to use CKEditor in the page
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function EnableCKEditorToWebPage(WebPage &$oPage): void
 	{
 		//when ckeditor is loaded in ajax,  CKEDITOR_BASEPATH  is not well defined (this constant is used to load additional js)
 		$oPage->add_script("if (! window.CKEDITOR_BASEPATH) { var CKEDITOR_BASEPATH = '".utils::GetAbsoluteUrlAppRoot()."js/ckeditor/';}");
 		foreach (static::GetJSFilesRelPathsForCKEditor() as $sFile) {
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sFile);
+			$oPage->LinkScriptFromAppRoot($sFile);
 		}
 	}
 
@@ -85,18 +86,18 @@ class WebResourcesHelper
 	/**
 	 * Add necessary files (JS/CSS) to be able to use d3/c3.js in the page
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function EnableC3JSToWebPage(WebPage &$oPage): void
 	{
 		foreach (static::GetCSSFilesRelPathsForC3JS() as $sFile) {
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().$sFile);
+			$oPage->LinkStylesheetFromAppRoot($sFile);
 		}
 
 		foreach (static::GetJSFilesRelPathsForC3JS() as $sFile) {
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sFile);
+			$oPage->LinkScriptFromAppRoot($sFile);
 		}
 	}
 
@@ -106,7 +107,7 @@ class WebResourcesHelper
 	public static function GetCSSFilesRelPathsForC3JS(): array
 	{
 		return [
-			'css/c3.min.css',
+			'node_modules/c3/c3.min.css',
 		];
 	}
 
@@ -116,8 +117,8 @@ class WebResourcesHelper
 	public static function GetJSFilesRelPathsForC3JS(): array
 	{
 		return [
-			'js/d3.js',
-			'js/c3.js',
+			'node_modules/d3/d3.min.js',
+			'node_modules/c3/c3.min.js',
 		];
 	}
 
@@ -128,19 +129,19 @@ class WebResourcesHelper
 	/**
 	 * Add necessary files (JS/CSS) to be able to use simple_graph in the page
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function EnableSimpleGraphInWebPage(WebPage &$oPage): void
 	{
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/raphael-min.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
-		$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.mousewheel.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
+		$oPage->LinkScriptFromAppRoot('js/raphael-min.js');
+		$oPage->LinkScriptFromAppRoot('js/fraphael.js');
+		$oPage->LinkStylesheetFromAppRoot('node_modules/jquery-contextmenu/dist/jquery.contextMenu.min.css');
+		$oPage->LinkScriptFromAppRoot('node_modules/jquery-contextmenu/dist/jquery.contextMenu.min.js');
+		$oPage->LinkScriptFromAppRoot('js/jquery.positionBy.js');
+		$oPage->LinkScriptFromAppRoot('js/jquery.popupmenu.js');
+		$oPage->LinkScriptFromAppRoot('js/jquery.mousewheel.js');
+		$oPage->LinkScriptFromAppRoot('js/simple_graph.js');
 	}
 }

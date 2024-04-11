@@ -242,11 +242,16 @@ abstract class ModuleInstallerAPI
 	 * @param $sOrigColumn
 	 * @param $sDstTable
 	 * @param $sDstColumn
+	 * @param bool $bIgnoreExistingDstColumn
 	 *
-	 * @throws \MySQLException
 	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 *
+	 * @since 3.2.0 N°7130 Add parameter $bIgnoreExistingDstColumn
+	 * @since 3.2.0 No longer copy NULL data in order to avoid writing over existing data
 	 */
-	public static function MoveColumnInDB($sOrigTable, $sOrigColumn, $sDstTable, $sDstColumn)
+	public static function MoveColumnInDB($sOrigTable, $sOrigColumn, $sDstTable, $sDstColumn, bool $bIgnoreExistingDstColumn = false)
 	{
 		if (!MetaModel::DBExists(false))
 		{
@@ -259,20 +264,23 @@ abstract class ModuleInstallerAPI
 			// Original field is not present
 			return;
 		}
-
-		if (!CMDBSource::IsTable($sDstTable) || CMDBSource::IsField($sDstTable, $sDstColumn))
+		
+		$bDstTableFieldExists = CMDBSource::IsField($sDstTable, $sDstColumn);
+		if (!CMDBSource::IsTable($sDstTable) || ($bDstTableFieldExists && !$bIgnoreExistingDstColumn))
 		{
-			// Destination field is already created
+			// Destination field is already created, and we are not ignoring it
 			return;
 		}
 
-		// Create the destination field
-		$sSpec = CMDBSource::GetFieldSpec($sOrigTable, $sOrigColumn);
-		$sQueryAdd = "ALTER TABLE `{$sDstTable}` ADD `{$sDstColumn}` {$sSpec}";
-		CMDBSource::Query($sQueryAdd);
+		// Create the destination field if necessary
+		if($bDstTableFieldExists === false){
+			$sSpec = CMDBSource::GetFieldSpec($sOrigTable, $sOrigColumn);
+			$sQueryAdd = "ALTER TABLE `{$sDstTable}` ADD `{$sDstColumn}` {$sSpec}";
+			CMDBSource::Query($sQueryAdd);	
+		}
 
 		// Copy the data
-		$sQueryUpdate = "UPDATE `{$sDstTable}` AS d LEFT JOIN `{$sOrigTable}` AS o ON d.id = o.id SET d.`{$sDstColumn}` = o.`{$sOrigColumn}` WHERE 1";
+		$sQueryUpdate = "UPDATE `{$sDstTable}` AS d LEFT JOIN `{$sOrigTable}` AS o ON d.id = o.id SET d.`{$sDstColumn}` = o.`{$sOrigColumn}` WHERE o.`{$sOrigColumn}` IS NOT NULL";
 		CMDBSource::Query($sQueryUpdate);
 
 		// Drop original field

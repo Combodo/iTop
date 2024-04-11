@@ -1,0 +1,21 @@
+<div class="item ibo-input-select--notification-item" role="item" >
+
+    {# Image #}
+    <span class="ibo-input-select--autocomplete-item-image" data-template-add-class="class" data-template-condition="has_image" data-template-css-background-image="picture_url" data-template-text="initials"></span>
+
+    {# Desc #}
+    <span class="ibo-input-select--autocomplete-item-txt">
+
+        {# Friendly name #}
+		<span data-template-text="friendlyname"></span>
+
+        {# Additional content #}
+        {% block additional_content %}
+        {% endblock %}
+
+        <span class="ibo-input-select--notification-item--mixed-value" data-template-condition="mixed">
+              <span data-template-text="mixed_value"></span>
+        </span>
+	</span>
+    
+</div>

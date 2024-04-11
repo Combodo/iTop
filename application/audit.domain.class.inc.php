@@ -86,7 +86,7 @@ class lnkAuditCategoryToAuditDomain extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category"            => "application, grant_by_profile",
+			"category"            => "application,grant_by_profile",
 			"key_type"            => "autoincrement",
 			"name_attcode"        => "",
 			"state_attcode"       => "",

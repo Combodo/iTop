@@ -29,6 +29,7 @@ use Symfony\Component\Console\Formatter\OutputFormatterInterface;
  */
 class StreamOutput extends Output
 {
+    /** @var resource */
     private $stream;
 
     /**
@@ -47,9 +48,7 @@ class StreamOutput extends Output
 
         $this->stream = $stream;
 
-        if (null === $decorated) {
-            $decorated = $this->hasColorSupport();
-        }
+        $decorated ??= $this->hasColorSupport();
 
         parent::__construct($verbosity, $decorated, $formatter);
     }
@@ -65,7 +64,7 @@ class StreamOutput extends Output
     }
 
     /**
-     * {@inheritdoc}
+     * @return void
      */
     protected function doWrite(string $message, bool $newline)
     {
@@ -91,25 +90,24 @@ class StreamOutput extends Output
      *
      * @return bool true if the stream supports colorization, false otherwise
      */
-    protected function hasColorSupport()
+    protected function hasColorSupport(): bool
     {
         // Follow https://no-color.org/
         if (isset($_SERVER['NO_COLOR']) || false !== getenv('NO_COLOR')) {
             return false;
         }
 
-        if ('Hyper' === getenv('TERM_PROGRAM')) {
+        if (\DIRECTORY_SEPARATOR === '\\'
+            && \function_exists('sapi_windows_vt100_support')
+            && @sapi_windows_vt100_support($this->stream)
+        ) {
             return true;
         }
 
-        if (\DIRECTORY_SEPARATOR === '\\') {
-            return (\function_exists('sapi_windows_vt100_support')
-                && @sapi_windows_vt100_support($this->stream))
-                || false !== getenv('ANSICON')
-                || 'ON' === getenv('ConEmuANSI')
-                || 'xterm' === getenv('TERM');
-        }
-
-        return stream_isatty($this->stream);
+        return 'Hyper' === getenv('TERM_PROGRAM')
+            || false !== getenv('ANSICON')
+            || 'ON' === getenv('ConEmuANSI')
+            || str_starts_with((string) getenv('TERM'), 'xterm')
+            || stream_isatty($this->stream);
     }
 }

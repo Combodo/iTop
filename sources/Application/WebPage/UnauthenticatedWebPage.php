@@ -17,33 +17,16 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+namespace Combodo\iTop\Application\WebPage;
 
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
-
-$sPortalBaseFolderRelPath = 'env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/';
-$sPortalSourcesFolderRelPath = $sPortalBaseFolderRelPath . 'src/';
-$sPortalPublicFolderRelPath = $sPortalBaseFolderRelPath . 'public/';
-
-$sPortalBaseFolderAbsPath = APPROOT . $sPortalBaseFolderRelPath;
-$sPortalSourcesFolderAbsPath = APPROOT . $sPortalSourcesFolderRelPath;
-$sPortalPublicFolderAbsPath = APPROOT . $sPortalPublicFolderRelPath;
-
-/** @noinspection PhpUnhandledExceptionInspection */
-$sPortalPublicFolderAbsUrl = utils::GetAbsoluteUrlModulesRoot().'/itop-portal-base/portal/public/';
-
-// Constants to be used in the UnauthenticatedWebPage
-if(!defined('UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL'))
-{
-	define('UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL', $sPortalPublicFolderAbsUrl);
-}
-if(!defined('UAWP_PORTAL_PUBLIC_FOLDER_RELATIVE_PATH'))
-{
-	define('UAWP_PORTAL_PUBLIC_FOLDER_RELATIVE_PATH', $sPortalPublicFolderRelPath);
-}
-
+use Dict;
+use Exception;
+use ExecutionKPI;
+use utils;
 
 /**
  * Class UnauthenticatedWebPage
@@ -58,9 +41,24 @@ class UnauthenticatedWebPage extends NiceWebPage
 	private $sContent;
 	private $sPanelTitle;
 	private $sPanelIcon;
-	
+
 	// TODO 3.0 Find a clever way to allow theme customization for unauthenticated webpages
 	private $sCustomThemeUrl;
+
+	/** @since 3.2.0 */
+	protected string $sPortalBaseFolderRelPath;
+	/** @since 3.2.0 */
+	protected string $sPortalSourcesFolderRelPath;
+	/** @since 3.2.0 */
+	protected string $sPortalPublicFolderRelPath;
+	/** @since 3.2.0 */
+	protected string $sPortalBaseFolderAbsPath;
+	/** @since 3.2.0 */
+	protected string $sPortalSourcesFolderAbsPath;
+	/** @since 3.2.0 */
+	protected string $sPortalPublicFolderAbsPath;
+	/** @since 3.2.0 */
+	protected string $sPortalPublicFolderAbsUrl;
 
 	/**
 	 * @inheritDoc
@@ -68,6 +66,8 @@ class UnauthenticatedWebPage extends NiceWebPage
 	 */
 	public function __construct($s_title, $bPrintable = false)
 	{
+		$this->Init();
+
 		$oKpi = new ExecutionKPI();
 		parent::__construct($s_title, $bPrintable);
 
@@ -75,25 +75,53 @@ class UnauthenticatedWebPage extends NiceWebPage
 		$this->sPanelTitle = '';
 		$this->sPanelIcon = Branding::GetLoginLogoAbsoluteUrl();
 		$this->SetContentType('text/html');
-		
-		
+
 		// - bootstrap
-		$this->add_linked_script(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap/js/bootstrap.min.js');
+		$this->LinkScriptFromURI(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap/js/bootstrap.min.js');
 
 		// Note: Since 2.6.0 moment was moved from portal to iTop core
-		$sMomentURL = utils::GetAbsoluteUrlAppRoot().'/js/moment-with-locales.min.js';
-		$this->add_linked_script($sMomentURL);
+		$this->LinkScriptFromAppRoot('node_modules/moment/min/moment-with-locales.min.js');
 
-		$this->add_linked_script(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
+		$this->LinkScriptFromURI(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
 
 		// CSS files
-		$this->add_linked_stylesheet(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap/css/bootstrap.min.css');
+		$this->LinkStylesheetFromURI(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap/css/bootstrap.min.css');
 		$this->add_saas(UAWP_PORTAL_PUBLIC_FOLDER_RELATIVE_PATH . 'css/bootstrap-theme-combodo.scss');
-		$this->add_linked_stylesheet(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css');
+		$this->LinkStylesheetFromURI(UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL . 'lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css');
 
 		// Default theme
 		$this->add_saas('css/unauthenticated.scss');
 		$oKpi->ComputeStats(get_class($this).' creation', $s_title);
+	}
+
+	/**
+	 * Init.
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	private function Init(): void
+	{
+		$this->sPortalBaseFolderRelPath = 'env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/';
+		$this->sPortalSourcesFolderRelPath = $this->sPortalBaseFolderRelPath . 'src/';
+		$this->sPortalPublicFolderRelPath = $this->sPortalBaseFolderRelPath . 'public/';
+
+		$this->sPortalBaseFolderAbsPath = APPROOT . $this->sPortalBaseFolderRelPath;
+		$this->sPortalSourcesFolderAbsPath = APPROOT . $this->sPortalSourcesFolderRelPath;
+		$this->sPortalPublicFolderAbsPath = APPROOT . $this->sPortalPublicFolderRelPath;
+
+		/** @noinspection PhpUnhandledExceptionInspection */
+		$this->sPortalPublicFolderAbsUrl = utils::GetAbsoluteUrlModulesRoot().'/itop-portal-base/portal/public/';
+
+		// Constants to be used in the UnauthenticatedWebPage
+		if(!defined('UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL'))
+		{
+			define('UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL', $this->sPortalPublicFolderAbsUrl);
+		}
+		if(!defined('UAWP_PORTAL_PUBLIC_FOLDER_RELATIVE_PATH'))
+		{
+			define('UAWP_PORTAL_PUBLIC_FOLDER_RELATIVE_PATH', $this->sPortalPublicFolderRelPath);
+		}
 	}
 
 	/**
@@ -182,7 +210,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 	 *
 	 * @param string $sMessage
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function DisplaySuccessMessage($sMessage)
 	{
@@ -194,7 +222,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 	 *
 	 * @param string $sMessage
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function DisplayErrorMessage($sMessage)
 	{
@@ -216,7 +244,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 	/**
 	 * @param string $sPanelTitle
 	 *
-	 * @return \UnauthenticatedWebPage
+	 * @return UnauthenticatedWebPage
 	 */
 	public function SetPanelTitle(string $sPanelTitle): UnauthenticatedWebPage
 	{
@@ -235,7 +263,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 	/**
 	 * @param string $sPanelIcon
 	 *
-	 * @return \UnauthenticatedWebPage
+	 * @return UnauthenticatedWebPage
 	 */
 	public function SetPanelIcon(string $sPanelIcon): UnauthenticatedWebPage
 	{
@@ -250,13 +278,22 @@ class UnauthenticatedWebPage extends NiceWebPage
 	 */
 	protected function LoadTheme()
 	{
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
 		// Default theme
 		$this->add_saas('css/unauthenticated.scss');
 		// Custom theme to allow admin to override the default one.
 		if(!empty($this->sCustomThemeUrl))
 		{
-			$this->add_linked_stylesheet($this->sCustomThemeUrl);
+			$this->LinkStylesheetFromURI($this->sCustomThemeUrl);
 		}
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.2.0
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		return Branding::GetLoginFavIconAbsoluteUrl();
 	}
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 define('UR_ALLOWED_NO', 0);
 define('UR_ALLOWED_YES', 1);
@@ -161,7 +162,7 @@ abstract class UserRightsAddOnAPI
 				$oSearchSharers->AllowAllData();
 				$oSearchSharers->AddCondition_ReferencedBy($oShareSearch, 'sharing_org_id');
 				$aSharers = array();
-				foreach($oSearchSharers->ToDataArray(array('id')) as $aRow)
+				foreach($oSearchSharers->SelectAttributeToArray('id') as $aRow)
 				{
 					$aSharers[] = $aRow['id'];
 				}
@@ -186,7 +187,7 @@ abstract class UserRightsAddOnAPI
 				$oOrgField = new FieldExpression('org_id', $sShareClass);
 				$oSearchShares->AddConditionExpression(new BinaryExpression($oOrgField, 'IN', $oListExpr));
 				$aShared = array();
-				foreach($oSearchShares->ToDataArray(array($sShareAttCode)) as $aRow)
+				foreach($oSearchShares->SelectAttributeToArray($sShareAttCode) as $aRow)
 				{
 					$aShared[] = $aRow[$sShareAttCode];
 				}
@@ -248,7 +249,7 @@ abstract class User extends cmdbAbstractObject
 			"depends_on"      => array(),
 		)));
 
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list",array("linked_class" => "URP_UserProfile", "ext_key_to_me" => "userid", "ext_key_to_remote" => "profileid", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), "display_style" => 'property', "with_php_constraint" => true)));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list",array("linked_class" => "URP_UserProfile", "ext_key_to_me" => "userid", "ext_key_to_remote" => "profileid", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), "display_style" => 'property', "with_php_constraint" => true, "with_php_computation" => true)));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("allowed_org_list", array("linked_class" => "URP_UserOrg", "ext_key_to_me" => "userid", "ext_key_to_remote" => "allowed_org_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), 'with_php_constraint' => true)));
 		MetaModel::Init_AddAttribute(new AttributeCaseLog("log", array("sql" => 'log', "is_null_allowed" => true, "default_value" => '', "allowed_values" => null, "depends_on" => array(), "always_load_in_tables" => false)));
 
@@ -856,6 +857,8 @@ class UserRights
 	}
 
 	/**
+	 * Set the current user (as part of the login process)
+	 *
 	 * @param string $sLogin Login of the concerned user
 	 * @param string $sAuthentication
 	 *
@@ -865,7 +868,7 @@ class UserRights
 	 */
 	public static function Login($sLogin, $sAuthentication = 'any')
 	{
-		static::Logoff();
+		self::ResetCurrentUserData();
 
 		$oUser = self::FindUser($sLogin, $sAuthentication);
 		if (is_null($oUser))
@@ -885,6 +888,8 @@ class UserRights
 	}
 
 	/**
+	 * Reset current user and cleanup associated SESSION data
+	 *
 	 * @return void
 	 * @since 3.0.4 3.1.1 3.2.0
 	 */
@@ -1119,9 +1124,7 @@ class UserRights
 	}
 
 	/**
-	 * Return the current user login or an empty string if nobody connected.
-	 *
-	 * @return string
+	 * @return string connected {@see User} login field value, otherwise empty string
 	 */
 	public static function GetUser()
 	{
@@ -1569,9 +1572,9 @@ class UserRights
 
 	/**
 	 * @param string $sClass
-	 * @param int $iActionCode
-	 * @param \DBObjectSet $oInstanceSet
-	 * @param \User $oUser
+	 * @param int $iActionCode see UR_ACTION_* constants
+	 * @param DBObjectSet $oInstanceSet
+	 * @param User $oUser
 	 *
 	 * @return int (UR_ALLOWED_YES|UR_ALLOWED_NO|UR_ALLOWED_DEPENDS)
 	 * @throws \CoreException

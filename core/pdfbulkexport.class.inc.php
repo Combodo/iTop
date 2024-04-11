@@ -8,10 +8,13 @@ use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\PDFPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Bulk export: PDF export, based on the HTML export converted to PDF
@@ -49,7 +52,7 @@ class PDFBulkExport extends HTMLBulkExport
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sPartId
 	 *
 	 * @return UIContentBlock
@@ -68,8 +71,6 @@ class PDFBulkExport extends HTMLBulkExport
 
 				//page format
 				$oSelectFormat = SelectUIBlockFactory::MakeForSelectWithLabel("page_size", Dict::S('Core:BulkExport:PDFPageSize'));
-				$oSelectFormat->SetIsLabelBefore(false);
-				//$oSelectFormat->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetFormat->AddSubBlock($oSelectFormat);
 
 				$aPossibleFormat = ['A3', 'A4', 'Letter'];
@@ -79,10 +80,7 @@ class PDFBulkExport extends HTMLBulkExport
 				}
 				$oFieldSetFormat->AddSubBlock(new Html('</br>'));
 
-				$oSelectOrientation = SelectUIBlockFactory::MakeForSelectWithLabel("page_orientation",
-					Dict::S('Core:BulkExport:PDFPageOrientation'));
-				$oSelectOrientation->SetIsLabelBefore(false);
-				//$oSelectOrientation->AddCSSClass('ibo-input-checkbox');
+				$oSelectOrientation = SelectUIBlockFactory::MakeForSelectWithLabel("page_orientation", Dict::S('Core:BulkExport:PDFPageOrientation'));
 				$oFieldSetFormat->AddSubBlock($oSelectOrientation);
 
 				$aPossibleOrientation = ['P', 'L'];

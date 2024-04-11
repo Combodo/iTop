@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -575,7 +575,18 @@ class LogChannels
 	 */
 	public const DATATABLE = 'Datatable';
 
+	/**
+	 * @var string Everything related to the data integrity
+	 * @since 3.2.0
+	 */
+	public const DATA_INTEGRITY = 'DataIntegrity';
+
 	public const DEADLOCK = 'DeadLock';
+	/**
+	 * @var string Everything related to PHP sessions tracking
+	 * @since 3.1.1 3.2.0 N°6901
+	 */
+	public const SESSIONTRACKER = 'SessionTracker';
 
 	/**
 	 * @var string Everything related to the datamodel CRUD
@@ -1085,6 +1096,11 @@ class DeadLockLog extends LogAPI
  */
 class DeprecatedCallsLog extends LogAPI
 {
+	/**
+	 * @var string
+	 * @since 3.2.0 N°4897
+	 */
+	public const ENUM_CHANNEL_PHP_API = 'deprecated-php-api';
 	public const ENUM_CHANNEL_PHP_METHOD = 'deprecated-php-method';
 	/**
 	 * @var string
@@ -1138,9 +1154,13 @@ class DeprecatedCallsLog extends LogAPI
 		parent::Enable($sTargetFile);
 
 		if (
-			(false === defined('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME'))
+			(
+				(false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME))
+				|| (defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME) && (constant(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME) !== true))
+			)
 			&& static::IsLogLevelEnabledSafe(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD)
 		) {
+			IssueLog::Trace('Setting '.static::class.' error handler to catch DEPRECATED', static::ENUM_CHANNEL_PHP_LIBMETHOD);
 			set_error_handler([static::class, 'DeprecatedNoticesErrorHandler'], E_DEPRECATED | E_USER_DEPRECATED);
 		}
 	}
@@ -1275,6 +1295,35 @@ class DeprecatedCallsLog extends LogAPI
 	}
 
 	/**
+	 * @param string $sImplementationClass Class implementing the deprecated API
+	 * @param string $sDeprecatedApi Class name of the deprecated API
+	 * @param string $sDeprecatedMethod Method name of the deprecated API
+	 * @param string|null $sAdditionalMessage Additional message, mostly used to explain what API to use instead
+	 *
+	 * @return void
+	 * @since 3.2.0 N°4897
+	 */
+	public static function NotifyDeprecatedPhpApi(string $sImplementationClass, string $sDeprecatedApi, string $sDeprecatedMethod, ?string $sAdditionalMessage = null): void
+	{
+		try {
+			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_API)) {
+				return;
+			}
+		}
+		catch (ConfigException $oException) {
+			return;
+		}
+
+		$sMessage = "Implementation of {$sDeprecatedApi}::{$sDeprecatedMethod}() in class {$sImplementationClass}";
+
+		if (!is_null($sAdditionalMessage)) {
+			$sMessage .= " : $sAdditionalMessage";
+		}
+
+		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_API);
+	}
+
+	/**
 	 * @param string|null $sAdditionalMessage
 	 *
 	 * @link https://www.php.net/debug_backtrace
@@ -1292,25 +1341,52 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-		$iStackDeprecatedMethodLevel = 1; // level 0 = current method, level 1 = method containing the `NotifyDeprecatedPhpMethod` call
-		$sDeprecatedObject = $aStack[$iStackDeprecatedMethodLevel]['class'];
-		$sDeprecatedMethod = $aStack[$iStackDeprecatedMethodLevel]['function'];
-		$sCallerFile = $aStack[$iStackDeprecatedMethodLevel]['file'];
-		$sCallerLine = $aStack[$iStackDeprecatedMethodLevel]['line'];
-		$sMessage = "Call to {$sDeprecatedObject}::{$sDeprecatedMethod} in {$sCallerFile}#L{$sCallerLine}";
-
-		$iStackCallerMethodLevel = $iStackDeprecatedMethodLevel + 1; // level 2 = caller of the deprecated method
-		if (array_key_exists($iStackCallerMethodLevel, $aStack)) {
-			$sCallerObject = $aStack[$iStackCallerMethodLevel]['class'];
-			$sCallerMethod = $aStack[$iStackCallerMethodLevel]['function'];
-			$sMessage .= " ({$sCallerObject}::{$sCallerMethod})";
-		}
+		$sMessage = self::GetMessageFromStack($aStack);
 
 		if (!is_null($sAdditionalMessage)) {
 			$sMessage .= ' : '.$sAdditionalMessage;
 		}
 
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_METHOD);
+	}
+
+	/**
+	 * @param array $aDebugBacktrace data from {@see debug_backtrace()}
+	 *
+	 * @return string message to print to the log
+	 */
+	private static function GetMessageFromStack(array $aDebugBacktrace): string
+	{
+		// level 0 = current method
+		// level 1 = deprecated method, containing the `NotifyDeprecatedPhpMethod` call
+		$sMessage = 'Call'.self::GetMessageForCurrentStackLevel($aDebugBacktrace[1], " to ");
+
+		// level 2 = caller of the deprecated method
+		if (array_key_exists(2, $aDebugBacktrace)) {
+			$sMessage .= ' (from ';
+			$sMessage .= self::GetMessageForCurrentStackLevel($aDebugBacktrace[2]);
+			$sMessage .= ')';
+		}
+
+		return $sMessage;
+	}
+
+	private static function GetMessageForCurrentStackLevel(array $aCurrentLevelDebugTrace, ?string $sPrefix = ""): string
+	{
+		$sMessage = "";
+		if (array_key_exists('class', $aCurrentLevelDebugTrace)) {
+			$sDeprecatedObject = $aCurrentLevelDebugTrace['class'];
+			$sDeprecatedMethod = $aCurrentLevelDebugTrace['function'] ?? "";
+			$sMessage = "{$sPrefix}{$sDeprecatedObject}::{$sDeprecatedMethod} in ";
+		}
+
+		if (array_key_exists('file', $aCurrentLevelDebugTrace)) {
+			$sCallerFile = $aCurrentLevelDebugTrace['file'];
+			$sCallerLine = $aCurrentLevelDebugTrace['line'] ?? "";
+			$sMessage .= "{$sCallerFile}#L{$sCallerLine}";
+		}
+
+		return $sMessage;
 	}
 
 	/**
@@ -1671,6 +1747,8 @@ class ExceptionLog extends LogAPI
 	 */
 	private static function GetLastEventIssue()
 	{
-		return self::$oLastEventIssue;
+		$oRet = self::$oLastEventIssue;
+		self::$oLastEventIssue = null;
+		return $oRet;
 	}
 }

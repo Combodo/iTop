@@ -53,7 +53,7 @@ $(function()
 			});
 			this.element.after(this.oButton);
 			this.element.addClass( "itop-icon-select" ).button();
-			this.element.bind( "reverted.itop-icon-select", function(ev, data) {
+			this.element.on( "reverted.itop-icon-select", function(ev, data) {
 				var idx = me._find_item(data.previous_value);
 				if (idx != null)
 				{
@@ -68,7 +68,7 @@ $(function()
 				this.oButton.after(this.oUploadBtn);
 			}
 			var id = this.element.attr('id');
-			$('#event_bus').bind('tabshow.itop-icon-select'+id, function(event) {
+			$('#event_bus').on('tabshow.itop-icon-select'+id, function(event) {
 				// Compute the offsetX the first time the 'element' becomes visible...
 				var bVisible = me.element.parent().is(':visible');
 				if ((me.options.offsetX == null) && (bVisible))
@@ -143,7 +143,6 @@ $(function()
 		_destroy: function()
 		{
 			this.element.removeClass( "itop-icon-select" );
-			this.oButton.button( "destroy" );
 		},
 		
 		// _setOptions is called with a hash of all options that are changing
@@ -214,9 +213,9 @@ $(function()
 		_upload_dlg: function()
 		{
 			var me = this;
-			this.oUploadDlg = $('<div><p>'+this.options.labels['pick_icon_file']+'</p><p><input type="file" name="file" id="file"/></p></div>');
+			this.oUploadDlg = $('<div><p>'+this.options.labels['pick_icon_file']+'</p><p><input type="file" accept="image/*" name="file" id="file"/></p></div>');
 			this.element.after(this.oUploadDlg);
-			$('input[type=file]').bind('change', function() { me._do_upload(); });
+			$('input[type=file]').on('change', function() { me._do_upload(); });
 			this.oUploadDlg.dialog({
 				width: 400,
 				modal: true,
@@ -281,13 +280,13 @@ $(function()
 		},
 		_on_upload_error: function(data, status, e)
 		{
-			if(data.responseText.indexOf('login-body') !== false)
-			{
+			if (data.responseText.indexOf('login-body') !== -1) {
 				alert('Sorry, your session has expired. In order to continue, the whole page has to be loaded again.');
 				this.oUploadDlg.dialog('close');
-			}
-			else
-			{
+			} else if (data.responseText.length > 0) {
+				alert(data.responseText);
+				this.oUploadDlg.dialog('close');
+			} else {
 				alert(e);
 				this.oUploadDlg.closest('.ui-dialog').find('.ui-button').button('enable');
 			}

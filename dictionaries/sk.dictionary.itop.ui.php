@@ -13,7 +13,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:AuditCategory/Attribute:definition_set' => 'Definícia nastavená',
 	'Class:AuditCategory/Attribute:definition_set+' => '',
 	'Class:AuditCategory/Attribute:rules_list' => 'Pravidlá auditu',
-	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules for this category~~',
+	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules using the object scope of this category~~',
 	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Warning threshold~~',
 	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Percentage of invalid objects below which the result is a warning (orange)~~',
 	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error threshold~~',
@@ -357,16 +357,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
@@ -440,8 +430,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:WelcomeMenu:MyIncidents' => 'Mne priradené incidenty',
 	'UI:AllOrganizations' => ' Všetky organizácie ',
 	'UI:YourSearch' => 'Vaše vyhľadávanie',
-	'UI:LoggedAsMessage' => 'Prihlásený ako %1$s (%2$s)~~',
-	'UI:LoggedAsMessage+Admin' => 'Prihlásený ako %1$s (%2$s, Administrátor)~~',
+	'UI:LoggedAsMessage' => 'Prihlásený ako %1$s (%2$s)',
+	'UI:LoggedAsMessage+Admin' => 'Prihlásený ako %1$s (%2$s, Administrátor)',
 	'UI:Button:Logoff' => 'Odhlásenie',
 	'UI:Button:GlobalSearch' => 'Globálne Vyhľadávanie',
 	'UI:Button:Search' => ' Vyhľadávanie',
@@ -488,7 +478,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
 	'UI:InputFile:SelectFile' => 'Select a file~~',
 	'UI:SearchToggle' => 'Vyhľadávanie',
-	'UI:ClickToCreateNew' => 'Vytvoriť nové %1$s~~',
+	'UI:ClickToCreateNew' => 'Vytvoriť nové %1$s',
 	'UI:SearchFor_Class' => 'Vyhľadávanie pre %1$s objekty',
 	'UI:NoObjectToDisplay' => 'Žiadny objekt na zobrazenie.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
@@ -699,7 +689,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:Error' => 'Chyba: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Vyberte triedu na vyhľadávanie: ',
 	'UI:CSVReport-Value-Modified' => 'Upravený',
-	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-SetIssue' => 'Invalid value for attribute~~',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
@@ -783,7 +773,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
-	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%% of the object are valid~~',
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Určenie OQL Dopytu',
 	'UI:RunQuery:QueryExamples' => 'Príklad dopytu',
 	'UI:RunQuery:QueryResults' => 'Query Results~~',
@@ -862,13 +852,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:LifeCycleAttributeMustChange' => 'Musí sa zmeniť',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'Užívateľ bude vyzvaný aby si zmenil danú hodnotu',
 	'UI:Schema:LifeCycleEmptyList' => 'Prázdny zoznam',
-	'UI:Schema:ClassFilter' => 'Class:~~~~',
-	'UI:Schema:DisplayLabel' => 'Display:~~~~',
-	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code~~~~',
-	'UI:Schema:DisplaySelector/Label' => 'Label~~~~',
-	'UI:Schema:DisplaySelector/Code' => 'Code~~~~',
-	'UI:Schema:Attribute/Filter' => 'Filter~~~~',
-	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~~~',
+	'UI:Schema:ClassFilter' => 'Class:~~',
+	'UI:Schema:DisplayLabel' => 'Display:~~',
+	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code~~',
+	'UI:Schema:DisplaySelector/Label' => 'Label~~',
+	'UI:Schema:DisplaySelector/Code' => 'Code~~',
+	'UI:Schema:Attribute/Filter' => 'Filter~~',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:Schema:Events' => 'Events~~',
 	'UI:Schema:Events:Defined' => 'Defined events~~',
 	'UI:Schema:Events:NoEvent' => 'No event defined~~',
@@ -1061,7 +1051,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 </ol>
 </p>
 <p>Na vykonanie, akcie musia byť priradené spúštačom.
-Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", špecifikujúce v akej postupnosti budú akcie vykonané.</p>~~',
+Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", špecifikujúce v akej postupnosti budú akcie vykonané.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Spúštače',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Dostupné spúštače',
 	'UI:NotificationsMenu:OnCreate' => 'Keď je objekt vytvorený',
@@ -1080,8 +1070,8 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:iTopVersion:Short' => ITOP_APPLICATION_SHORT.' verzia %1$s',
 	'UI:iTopVersion:Long' => ITOP_APPLICATION_SHORT.' verzia %1$s-%2$s postavená na %3$s',
 	'UI:PropertiesTab' => 'Vlastnosti',
-	'UI:OpenDocumentInNewWindow_' => 'Otvoriť~~',
-	'UI:DownloadDocument_' => 'Stiahnuť~~',
+	'UI:OpenDocumentInNewWindow_' => 'Otvoriť',
+	'UI:DownloadDocument_' => 'Stiahnuť',
 	'UI:Document:NoPreview' => 'Žiadny náhľad nie je dostupný pre tento typ dokumentu',
 	'UI:Download-CSV' => 'Stiahnuť %1$s',
 	'UI:DeadlineMissedBy_duration' => 'Prekročené o %1$s',
@@ -1206,10 +1196,10 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Obľúbené organizácie',
 	'UI:FavoriteOrganizations+' => '',
-	'UI:FavoriteLanguage' => 'Jazyk užívateľského rozhrania~~',
+	'UI:FavoriteLanguage' => 'Jazyk užívateľského rozhrania',
 	'UI:Favorites:SelectYourLanguage' => 'Vyberte si svoj preferovaný jazyk',
 	'UI:FavoriteOtherSettings' => 'Iné nastavenia',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Štandardná dĺžka pre zoznamy:  %1$s položiek na stránku~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Štandardná dĺžka pre zoznamy:  %1$s položiek na stránku',
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data~~',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => 'Akákoľvek úprava bude zahodená.',
@@ -1627,8 +1617,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration~~',
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
 ));
 
 
@@ -1653,7 +1648,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:UserAccountsMenu' => 'Užívateľské účty',
 	'Menu:UserAccountsMenu+' => '',
 	'Menu:UserAccountsMenu:Title' => 'Užívateľské účty',
-	'Menu:UserManagement' => 'User Management~~',
+	'Menu:UserManagement' => 'User management~~',
 	'Menu:Queries' => 'Queries~~',
 	'Menu:ConfigurationTools' => 'Configuration~~'
 ));

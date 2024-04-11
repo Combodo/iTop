@@ -30,9 +30,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Dict;
 use Exception;
 
-/**
- * @runClassInSeparateProcess
- */
 class dictTest extends ItopTestCase
 {
 	private $sEnvName;
@@ -42,7 +39,9 @@ class dictTest extends ItopTestCase
 
 		$this->RequireOnceItopFile('core'.DIRECTORY_SEPARATOR.'apc-service.class.inc.php');
 
-		$this->sEnvName = time();
+		// This id will be used as path to the dictionary files
+		// It must be unique enough for the magic of Dict to operate (due to the use of require_once to load dictionaries)
+		$this->sEnvName = uniqid();
 		$sDictionaryFolder = APPROOT."env-$this->sEnvName".DIRECTORY_SEPARATOR."dictionaries";
 		@mkdir($sDictionaryFolder, 0777, true);
 
@@ -68,6 +67,9 @@ PHP;
 		file_put_contents($sDictionaryFolder.DIRECTORY_SEPARATOR."en-en.dict.php", $sContent);
 
 		$_SESSION['itop_env'] = $this->sEnvName;
+
+		// Preserve the dictionary for test that will be executed later on
+		static::BackupStaticProperties('Dict');
 	}
 
 	protected function tearDown(): void
@@ -77,6 +79,8 @@ PHP;
 		}
 		rmdir(APPROOT."env-$this->sEnvName".DIRECTORY_SEPARATOR."dictionaries");
 		rmdir(APPROOT."env-$this->sEnvName");
+
+		static::RestoreStaticProperties('Dict');
 
 		parent::tearDown();
 	}
@@ -93,6 +97,9 @@ PHP;
 
 	public function testInitLangIfNeeded_NoApc()
 	{
+		// Reset the dictionary
+		static::SetNonPublicStaticProperty('Dict', 'm_aData', []);
+
 		$oApcService = $this->createMock(\ApcService::class);
 		Dict::SetApcService($oApcService);
 		Dict::EnableCache('toto');

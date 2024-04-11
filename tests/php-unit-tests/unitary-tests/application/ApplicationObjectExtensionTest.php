@@ -4,9 +4,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-/**
- * @runTestsInSeparateProcesses
- */
 class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDataTestCase
 {
 	const CREATE_TEST_ORG = true;

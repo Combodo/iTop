@@ -43,6 +43,7 @@ use DOMXPath;
 use Exception;
 use ExceptionLog;
 use InlineImage;
+use InvalidExternalKeyValueException;
 use IssueLog;
 use LogChannels;
 use MetaModel;
@@ -50,6 +51,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
 use utils;
+use const UR_ACTION_READ;
 
 /**
  * Description of ObjectFormManager
@@ -804,7 +806,7 @@ class ObjectFormManager extends FormManager
 									if (in_array(get_class($oCustomField), array('Combodo\\iTop\\Form\\Field\\SelectObjectField')))
 									{
 										/** @var \Combodo\iTop\Form\Field\SelectObjectField $oCustomField */
-										if ($this->oFormHandlerHelper->getUrlGenerator() !== null) {
+										if ($this->oFormHandlerHelper->GetUrlGenerator() !== null) {
 
 											$sSearchEndpoint = $this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_search_generic',
 												array(
@@ -885,7 +887,7 @@ class ObjectFormManager extends FormManager
 								$iRemoteKey = $oLink->GetKey();
 							}
 
-							if (!$this->oFormHandlerHelper->getSecurityHelper()->IsActionAllowed(UR_ACTION_READ, $oField->GetTargetClass(), $iRemoteKey)) {
+							if (!$this->oFormHandlerHelper->GetSecurityHelper()->IsActionAllowed(UR_ACTION_READ, $oField->GetTargetClass(), $iRemoteKey)) {
 								$aLimitedAccessItemIDs[] = $iRemoteKey;
 							}
 						}
@@ -910,14 +912,14 @@ class ObjectFormManager extends FormManager
 					if ($this->oFormHandlerHelper !== null) {
 						// Override hardcoded URLs in ormDocument pointing to back office console
 						$oOrmDoc = $this->oObject->Get($sAttCode);
-						$sDisplayUrl = $this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_document_display', [
+						$sDisplayUrl = $this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_document_display', [
 							'sObjectClass' => get_class($this->oObject),
 							'sObjectId'    => $this->oObject->GetKey(),
 							'sObjectField' => $sAttCode,
 							'cache'        => 86400,
 							's'            => $oOrmDoc->GetSignature(),
 						]);
-						$sDownloadUrl = $this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_document_download', [
+						$sDownloadUrl = $this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_document_download', [
 							'sObjectClass' => get_class($this->oObject),
 							'sObjectId'    => $this->oObject->GetKey(),
 							'sObjectField' => $sAttCode,
@@ -1009,8 +1011,8 @@ class ObjectFormManager extends FormManager
 				// set id to a unique key - avoid collisions with another attribute that could exist with the name 'attachments'
 				$oField = new FileUploadField('attachments_plugin');
 				$oField->SetLabel(Dict::S('Portal:Attachments'))
-					->SetUploadEndpoint($this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_attachment_add'))
-					->SetDownloadEndpoint($this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_attachment_download',
+					->SetUploadEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_attachment_add'))
+					->SetDownloadEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_attachment_download',
 						array('sAttachmentId' => '-sAttachmentId-')))
 					->SetTransactionId($oForm->GetTransactionId())
 					->SetAllowDelete($this->oFormHandlerHelper->getCombodoPortalConf()['properties']['attachments']['allow_delete'])
@@ -1133,8 +1135,10 @@ class ObjectFormManager extends FormManager
 			$bWasModified = $this->oObject->IsModified();
 			$bActivateTriggers = (!$bIsNew && $bWasModified);
 
+			$oSecurityHelper = $this->oFormHandlerHelper->GetSecurityHelper();
+
 			// Forcing allowed writing on the object if necessary. This is used in some particular cases.
-			$bAllowWrite = $this->oFormHandlerHelper->getSecurityHelper()->IsActionAllowed($bIsNew ? UR_ACTION_CREATE : UR_ACTION_MODIFY, $sObjectClass, $this->oObject->GetKey());
+			$bAllowWrite = $oSecurityHelper->IsActionAllowed($bIsNew ? UR_ACTION_CREATE : UR_ACTION_MODIFY, $sObjectClass, $this->oObject->GetKey());
 			if ($bAllowWrite) {
 				$this->oObject->AllowWrite(true);
 			}
@@ -1143,11 +1147,14 @@ class ObjectFormManager extends FormManager
 			try
 			{
 				$this->oObject->DBWrite();
-			}
-			catch (CoreCannotSaveObjectException $e) {
+			} catch (CoreCannotSaveObjectException $e) {
 				throw new Exception($e->getHtmlMessage());
-			}
-			catch (Exception $e) {
+			} catch (InvalidExternalKeyValueException $e) {
+				ExceptionLog::LogException($e, $e->getContextData());
+				$bExceptionLogged = true;
+
+				throw new Exception($e->getIssue());
+			} catch (Exception $e) {
 				$aContext = [
 					'origin'    => __CLASS__.'::'.__METHOD__,
 					'obj_class' => get_class($this->oObject),
@@ -1215,9 +1222,18 @@ class ObjectFormManager extends FormManager
 				}
 			}
 		}
+		catch (CoreCannotSaveObjectException $e) {
+			$aData['valid'] = false;
+			$aData['messages']['error'] += array('_main' => array($e->getHtmlMessage()));
+			if (false === $bExceptionLogged) {
+				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : '.$e->getMessage());
+			}
+		}
 		catch (Exception $e) {
 			$aData['valid'] = false;
-			$aData['messages']['error'] += array('_main' => array($e->getMessage()));
+			$aData['messages']['error'] += [
+				'_main' => [ ($e instanceof CoreCannotSaveObjectException) ? $e->getHtmlMessage() : $e->getMessage()]
+			];
 			if (false === $bExceptionLogged) {
 				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : '.$e->getMessage());
 			}
@@ -1396,6 +1412,12 @@ class ObjectFormManager extends FormManager
 						}
 					}
 				}
+                /** @var SecurityHelper $oSecurityHelper */
+                $oSecurityHelper = $this->oFormHandlerHelper->GetSecurityHelper();
+                // N°7023 - Note that we check for ext. key now as we want the check to be done on user inputs and NOT on ext. keys set programatically, so it must be done before the DoComputeValues
+                $this->oObject->CheckChangedExtKeysValues(function ($sClass, $sId) use ($oSecurityHelper): bool {
+                    return $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sClass, $sId);
+                });
 				$this->oObject->DoComputeValues();
 			}
 
@@ -1441,6 +1463,8 @@ class ObjectFormManager extends FormManager
 				// Remove attachments that are no longer attached to the current object
 				if (in_array($oAttachment->GetKey(), $aRemovedAttachmentsIds))
 				{
+					$aData = ['attachment' => $oAttachment];
+					$this->oObject->FireEvent(EVENT_REMOVE_ATTACHMENT_FROM_OBJECT, $aData);
 					$oAttachment->DBDelete();
 					$aActions[] = self::GetAttachmentActionChangeOp($oAttachment, false);
 				}
@@ -1465,6 +1489,8 @@ class ObjectFormManager extends FormManager
 				$oAttachment->Set('temp_id', '');
 				$oAttachment->DBUpdate();
 				$aActions[] = self::GetAttachmentActionChangeOp($oAttachment, true);
+				$aData = ['attachment' => $oAttachment];
+				$this->oObject->FireEvent(EVENT_ADD_ATTACHMENT_TO_OBJECT, $aData);
 			}
 		}
 		

@@ -48,12 +48,7 @@ class UserRightsTest extends ItopDataTestCase
 	{
 		parent::setUp();
 
-		try {
-			utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');
-			self::CreateUser('admin', 1);
-		}
-		catch (CoreCannotSaveObjectException $e) {
-		}
+		utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');
 	}
 
 	public static $aClasses = [
@@ -103,9 +98,17 @@ class UserRightsTest extends ItopDataTestCase
 	public function testLogin($sLogin, $bResult)
 	{
 		$_SESSION = [];
+		if ($sLogin == 'admin') {
+			// Fixture data required in this case only
+			try {
+				self::CreateUser('admin', 1);
+			}
+			catch (CoreCannotSaveObjectException $e) {
+				// The admin account could exist, depending on where and when the test suite is executed
+			}
+		}
 		$this->assertEquals($bResult, UserRights::Login($sLogin));
 		$this->assertEquals($bResult, UserRights::IsLoggedIn());
-		UserRights::Logoff();
 	}
 
 	public function LoginProvider(): array
@@ -160,7 +163,6 @@ class UserRightsTest extends ItopDataTestCase
 		$this->CreateUniqueUserAndLogin('test1', $iProfileId);
 		$bRes = UserRights::IsActionAllowed($aClassActionResult['class'], $aClassActionResult['action']) == UR_ALLOWED_YES;
 		$this->assertEquals($aClassActionResult['res'], $bRes);
-		UserRights::Logoff();
 	}
 
 	/*
@@ -241,7 +243,6 @@ class UserRightsTest extends ItopDataTestCase
 		$sClass = $aClassActionResult['class'];
 		$bRes = UserRights::IsActionAllowedOnAttribute($sClass, self::$aClasses[$sClass]['attcode'], $aClassActionResult['action']) == UR_ALLOWED_YES;
 		$this->assertEquals($aClassActionResult['res'], $bRes);
-		UserRights::Logoff();
 	}
 
 	/*
@@ -295,10 +296,6 @@ class UserRightsTest extends ItopDataTestCase
 			$this->fail('Profile should not be added');
 		} catch (CoreCannotSaveObjectException $e) {
 		}
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	public function ProfileDenyingConsoleProvider(): array
@@ -325,10 +322,6 @@ class UserRightsTest extends ItopDataTestCase
 			$this->fail('User should not modify self');
 		} catch (CoreException $e) {
 		}
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	public function ProfileCannotModifySelfProvider(): array
@@ -355,10 +348,6 @@ class UserRightsTest extends ItopDataTestCase
 			$this->fail('Current User cannot be deleted');
 		} catch (DeleteException $e) {
 		}
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	public function DeletingSelfUserProvider(): array
@@ -390,8 +379,6 @@ class UserRightsTest extends ItopDataTestCase
 			$this->fail('Current User cannot remove his own contact');
 		} catch (CoreCannotSaveObjectException $e) {
 		}
-
-		UserRights::Logoff();
 	}
 
 	public function RemovingOwnContactProvider(): array
@@ -419,10 +406,6 @@ class UserRightsTest extends ItopDataTestCase
 		} catch (CoreCannotSaveObjectException $e) {
 		} catch (CoreException $e) {
 		}
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	/**
@@ -449,10 +432,6 @@ class UserRightsTest extends ItopDataTestCase
 			$this->fail('Should not be able to deny User modifications');
 		} catch (CoreCannotSaveObjectException $e) {
 		}
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	/**
@@ -473,10 +452,6 @@ class UserRightsTest extends ItopDataTestCase
 		$oSearch = DBObjectSearch::FromOQL('SELECT URP_Profiles JOIN URP_UserProfile ON URP_UserProfile.profileid = URP_Profiles.id WHERE URP_UserProfile.userid='.$oUser->GetKey());
 		$oSet = new DBObjectSet($oSearch);
 		$this->assertEquals(1, $oSet->Count());
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	public function NonAdminCanListOwnProfilesProvider(): array
@@ -487,8 +462,7 @@ class UserRightsTest extends ItopDataTestCase
 		];
 	}
 	/**
-	 * @runInSeparateProcess
-	 *@dataProvider NonAdminCannotListAdminProfilesProvider
+	 * @dataProvider NonAdminCannotListAdminProfilesProvider
 	 */
 	public function testNonAdminCannotListAdminProfiles($bHideAdministrators, $iExpectedCount)
 	{
@@ -505,10 +479,6 @@ class UserRightsTest extends ItopDataTestCase
 		$oSearch = DBObjectSearch::FromOQL('SELECT URP_Profiles JOIN URP_UserProfile ON URP_UserProfile.profileid = URP_Profiles.id WHERE URP_UserProfile.userid='.$oUserAdmin->GetKey());
 		$oSet = new DBObjectSet($oSearch);
 		$this->assertEquals($iExpectedCount, $oSet->Count());
-
-		// logout
-		$_SESSION = [];
-		UserRights::Logoff();
 	}
 
 	public function NonAdminCannotListAdminProfilesProvider(): array
@@ -516,31 +486,6 @@ class UserRightsTest extends ItopDataTestCase
 		return [
 			'with Admins visible'=> [false, 1],
 			'with Admins hidden' => [true, 0],
-		];
-	}
-
-	/**
-	 * @dataProvider WithConstraintParameterProvider
-	 * @param string $sClass
-	 * @param string $sAttCode
-	 * @param bool $bExpected
-	 *
-	 * @return void
-	 * @throws \Exception
-	 */
-	public function testWithConstraintParameter(string $sClass, string $sAttCode, bool $bExpected)
-	{
-		$oAttDef = \MetaModel::GetAttributeDef($sClass, $sAttCode);
-		$this->assertTrue(method_exists($oAttDef, "GetHasConstraint"));
-		$this->assertEquals($bExpected, $oAttDef->GetHasConstraint());
-	}
-
-	public function WithConstraintParameterProvider()
-	{
-		return [
-			['User', 'profile_list', true],
-			['User', 'allowed_org_list', true],
-			['Person', 'team_list', false],
 		];
 	}
 }

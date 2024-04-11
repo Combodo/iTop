@@ -9,6 +9,12 @@ use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\DownloadPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
+use Combodo\iTop\Application\WebPage\PDFPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\AjaxRenderController;
 use Combodo\iTop\Controller\Base\Layout\ActivityPanelController;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
@@ -68,7 +74,7 @@ try
 			break;
 
 		default:
-			ContextTag::AddContext(ContextTag::TAG_CONSOLE);
+			$oTag = new ContextTag(ContextTag::TAG_CONSOLE);
 	}
 
 	// First check if we can redirect the route to a dedicated controller
@@ -77,18 +83,18 @@ try
 	if ($oRouter->CanDispatchRoute($sRoute)) {
 		$mResponse = $oRouter->DispatchRoute($sRoute);
 
-		// If response isn't a \WebPage, it is most likely that the output already occured, stop the script.
+		// If response isn't a WebPage, it is most likely that the output already occured, stop the script.
 		// Note that this is done here and not directly in the Router::DispatchRoute() so custom endpoint can handle null responses their own way.
 		if (false === ($mResponse instanceof WebPage)) {
 			die();
 		}
 
-		// Response is a \WebPage, let's handle it like legacy operations
+		// Response is a WebPage, let's handle it like legacy operations
 		$oPage = $mResponse;
 	}
 	// Otherwise, use legacy operation
 	else {
-		// Default for most operations, but can be switch to a \JsonPage, \DownloadPage or else if the operation requires it
+		// Default for most operations, but can be switch to a JsonPage, DownloadPage or else if the operation requires it
 		$oPage = new AjaxPage("");
 
 		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
@@ -561,7 +567,7 @@ try
 						}
 					}
 				}
-				$oPage->add_script($oWizardHelper->GetJsForUpdateFields());
+			$oWizardHelper->AddJsForUpdateFields($oPage);
 				break;
 
 			case 'obj_creation_form':
@@ -1030,9 +1036,9 @@ EOF
 			case 'new_dashlet_id':
 				$sDashboardDivId = utils::ReadParam("dashboardid");
 				$bIsCustomized = true; // Only called at runtime when customizing a dashboard
-				$iRow = utils::ReadParam("iRow");
-				$iCol = utils::ReadParam("iCol");
-				$sDashletIdOrig = utils::ReadParam("dashletid");
+				$iRow = utils::ReadParam("iRow", 0, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
+				$iCol = utils::ReadParam("iCol", 0, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
+				$sDashletIdOrig = utils::ReadParam("dashletid", '', false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 				$sFinalDashletId = Dashboard::GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig);
 				$oPage = new AjaxPage('');
 				$oPage->SetOutputDataOnly(true);
@@ -1042,8 +1048,8 @@ EOF
 			case 'new_dashlet':
 				require_once(APPROOT.'application/forms.class.inc.php');
 				require_once(APPROOT.'application/dashlet.class.inc.php');
-				$sDashletClass = utils::ReadParam('dashlet_class', '');
-				$sDashletId = utils::ReadParam('dashlet_id', '', false, 'raw_data');
+				$sDashletClass = utils::ReadParam('dashlet_class', '', false, utils::ENUM_SANITIZATION_FILTER_PHP_CLASS);
+				$sDashletId = utils::ReadParam('dashlet_id', '', false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 				if (is_subclass_of($sDashletClass, 'Dashlet')) {
 					$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
 					$offset = $oPage->start_capture();
@@ -1065,13 +1071,14 @@ EOF
 			case 'update_dashlet_property':
 				require_once(APPROOT.'application/forms.class.inc.php');
 				require_once(APPROOT.'application/dashlet.class.inc.php');
-				$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
-				$aParams = utils::ReadParam('params', '', false, 'raw_data');
-				$sDashletClass = $aParams['attr_dashlet_class'];
-				$sDashletType = $aParams['attr_dashlet_type'];
-				$sDashletId = utils::HtmlEntities($aParams['attr_dashlet_id']);
-				$aUpdatedProperties = $aParams['updated']; // Code of the changed properties as an array: 'attr_xxx', 'attr_xxy', etc...
-				$aPreviousValues = $aParams['previous_values']; // hash array: 'attr_xxx' => 'old_value'
+				$aExtraParams = utils::ReadParam('extra_params', array(), false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+				$aParams = utils::ReadParam('params', [], false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA); // raw_data because we need different filter depending on the options
+				$sDashletClass = utils::Sanitize($aParams['attr_dashlet_class'], DashletUnknown::class, utils::ENUM_SANITIZATION_FILTER_PHP_CLASS); // Dashlet PHP class or DashletUnknown if impl isn't present in the installed extensions
+				$sDashletType = utils::Sanitize($aParams['attr_dashlet_type'], '', utils::ENUM_SANITIZATION_FILTER_PHP_CLASS); // original Dashlet PHP class, could be non-existing on the iTop instance (XML definition loading)
+				$sDashletId = utils::Sanitize($aParams['attr_dashlet_id'], '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
+				$aUpdatedProperties = utils::Sanitize($aParams['updated'], [], utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER); // Code of the changed properties as an array: 'attr_xxx', 'attr_xxy' etc
+				$aPreviousValues = utils::Sanitize($aParams['previous_values'], [], utils::ENUM_SANITIZATION_FILTER_RAW_DATA); // hash array: 'attr_xxx' => 'old_value' - no sanitization as values will be handled in the Dashlet object
+
 				if (is_subclass_of($sDashletClass, 'Dashlet')) {
 					/** @var \Dashlet $oDashlet */
 					$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
@@ -1208,12 +1215,13 @@ EOF
 						'base/layouts/navigation-menu/menu-node'
 					);
 
-					// Important: Mind the back ticks to avoid line breaks to break the JS
-					$oPage->add_script(<<<JS
+				$MenuNameEscaped = utils::HtmlEntities($aValues['name']);
+				// Important: Mind the back ticks to avoid line breaks to break the JS
+				$oPage->add_script(<<<JS
 $('body').trigger('add_shortcut_node.navigation_menu.itop', {
 	parent_menu_node_id: '{$sMenuGroupId}',
 	new_menu_node_html_rendering: `{$sHtml}`,
-	new_menu_name: `{$aValues['name']}`
+	new_menu_name: `{$MenuNameEscaped}`
 });
 JS
 					);
@@ -1367,7 +1375,7 @@ JS
 						<<<EOF
 			$('.search-class-$sClassName button').prop('disabled', true);
 
-			$('.search-class-$sClassName h2').append('&nbsp;<img id="indicator" src="../images/indicator.gif">');
+			$('.search-class-$sClassName h2').append('&nbsp;<img id="indicator" src="' + GetAbsoluteUrlAppRoot() + 'images/indicator.gif">');
 			var oParams = {operation: 'full_text_search_enlarge', class: '$sClassName', text: '$sFullTextJS'};
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
 				$('.search-class-$sClassName').html(data);
@@ -1524,6 +1532,7 @@ EOF
 			case 'xlsx_export_dialog':
 				DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 				$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+				$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
 				$oPage->SetContentType('text/html');
 				$oPage->add(
 					<<<EOF
@@ -1553,11 +1562,11 @@ EOF
 	padding-left: 16px;
 	cursor: pointer;
 	font-size: 10pt;
-	background: url(../images/minus.gif) 0 2px no-repeat;
+	background: url({$sAppRootUrl}images/minus.gif) 0 2px no-repeat;
 }				
 .statistics > div.closed {
 	padding-left: 16px;
-	background: url(../images/plus.gif) 0 2px no-repeat;
+	background: url({$sAppRootUrl}images/plus.gif) 0 2px no-repeat;
 }
 				
 .statistics .closed .stats-data {
@@ -1586,7 +1595,7 @@ EOF
 				);
 				$sJSLabels = json_encode($aLabels);
 				$sFilter = addslashes($sFilter);
-				$sJSPageUrl = addslashes(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php');
+				$sJSPageUrl = addslashes($sAppRootUrl.'pages/ajax.render.php');
 				$oPage->add_ready_script("$('#XlsxExportDlg').xlsxexporter({filter: '$sFilter', labels: $sJSLabels, ajax_page_url: '$sJSPageUrl'});");
 				break;
 
@@ -1950,7 +1959,8 @@ EOF
 
 				$sContextKey = 'itop-tickets/relation_context/'.$sClass.'/'.$sRelation.'/'.$sDirection;
 				$oAppContext = new ApplicationContext();
-				$oGraph->Display($oPage, $aResults, $sRelation, $oAppContext, $aExcludedObjects, $sClass, $iId, $sContextKey, array('this' => $oTicket));
+				$oPage->AddSubBlock($oGraph->DisplayFilterBox($oPage, $aResults));
+				$oGraph->DisplayGraph($oPage, $sRelation, $oAppContext, $aExcludedObjects, $sClass, $iId, $sContextKey, array('this' => $oTicket));
 				break;
 
 			case 'export_build':
@@ -2197,9 +2207,10 @@ EOF
 
 			case 'cke_browse':
 				$oPage = new NiceWebPage(Dict::S('UI:BrowseInlineImages'));
-				$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/magnific-popup.css');
-				$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
-				$sImgUrl = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL;
+				$oPage->LinkStylesheetFromAppRoot('node_modules/magnific-popup/dist/magnific-popup.css');
+				$oPage->LinkScriptFromAppRoot('node_modules/magnific-popup/dist/jquery.magnific-popup.min.js');
+				$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
+				$sImgUrl = $sAppRootUrl.INLINEIMAGE_DOWNLOAD_URL;
 
 				/** @noinspection SuspiciousAssignmentsInspection cke_upload_and_browse and cke_browse are chained */
 				$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
@@ -2227,7 +2238,7 @@ EOF
 					}
 				}
 
-				$sPostUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?CKEditorFuncNum='.$sCKEditorFuncNum;
+				$sPostUrl = $sAppRootUrl.'pages/ajax.render.php?CKEditorFuncNum='.$sCKEditorFuncNum;
 
 				$oPage->add_style(
 					<<<EOF
@@ -2295,7 +2306,7 @@ EOF
 				$oPage->add_ready_script(
 					<<<EOF
 $('#upload_button').on('change', function() {
-	$('#upload_status').html('<img src="../images/indicator.gif">'); 
+	$('#upload_status').html('<img src="{$sAppRootUrl}images/indicator.gif">'); 
 	$('#upload_form').submit();
 	$(this).prop('disabled', true);
 });

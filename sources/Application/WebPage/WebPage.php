@@ -4,6 +4,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Application\WebPage;
+
+use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
@@ -17,6 +20,18 @@ use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
+use DBSearch;
+use DeprecatedCallsLog;
+use Dict;
+use ExecutionKPI;
+use IssueLog;
+use LogChannels;
+use MetaModel;
+use Symfony\Component\HttpFoundation\Response;
+use UserRights;
+use utils;
+use const APPROOT;
+use const MODULESROOT;
 
 
 /**
@@ -60,6 +75,17 @@ class WebPage implements Page
 	 * @since 3.0.0
 	 */
 	public const ENUM_SESSION_MESSAGE_SEVERITY_ERROR = 'error';
+
+	/**
+	 * @var string
+	 * @since 3.2.0
+	 */
+	protected const ENUM_RESOURCE_TYPE_JS = "js";
+	/**
+	 * @var string
+	 * @since 3.2.0
+	 */
+	protected const ENUM_RESOURCE_TYPE_CSS = "css";
 
 	/**
 	 * @var string
@@ -501,9 +527,118 @@ class WebPage implements Page
 	}
 
 	/**
+	 * Internal helper to link a resource from the iTop package (e.g. `<ITOP/`)
+	 *
+	 * @param string $sFileRelPath Rel. path from iTop app. root of the resource to link (e.g. `css/login.css`)
+	 * @param string $sResourceType {@see static::ENUM_RESOURCE_TYPE_JS}, {@see static::ENUM_RESOURCE_TYPE_CSS}
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @internal
+	 * @since 3.2.0 N°7315
+	 */
+	private function LinkResourceFromAppRoot(string $sFileRelPath, string $sResourceType): void
+	{
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sFileRelPath))) {
+			return;
+		}
+
+		// Ensure file is within the app folder
+		$sFileRelPathWithoutQueryParams = explode("?", $sFileRelPath)[0];
+		if (false === utils::RealPath(APPROOT . $sFileRelPathWithoutQueryParams, APPROOT)) {
+			IssueLog::Warning("Linked resource added to page with a path from outside app directory, it will be ignored.", LogChannels::CONSOLE, [
+				"linked_resource_uri" => $sFileRelPath,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+			return;
+		}
+
+		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
+
+		// Ensure app root url ends with a slash as it is not guaranteed by the API
+		if (strcmp(substr($sAppRootUrl, -1), '/') !== 0) {
+			$sAppRootUrl .= '/';
+		}
+
+		$this->LinkResourceFromURI($sAppRootUrl . $sFileRelPath, $sResourceType);
+	}
+
+	/**
+	 * Internal helper to link a resource from any module
+	 *
+	 * @param string $sFileRelPath Rel. path from current environment (e.g. `<ITOP>/env-production/`) of the resource to link (e.g. `some-module/asset/css/some-file.css`)
+	 * @param string $sResourceType {@see static::ENUM_RESOURCE_TYPE_JS}, {@see static::ENUM_RESOURCE_TYPE_CSS}
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @internal
+	 * @since 3.2.0 N°7315
+	 */
+	private function LinkResourceFromModule(string $sFileRelPath, string $sResourceType): void
+	{
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sFileRelPath))) {
+			return;
+		}
+
+		// Ensure file is within the app folder
+		$sFileRelPathWithoutQueryParams = explode("?", $sFileRelPath)[0];
+		$sFileAbsPath = MODULESROOT . $sFileRelPathWithoutQueryParams;
+		// For modules only, we don't check real path if symlink as the file would not be in under MODULESROOT
+		if (false === is_link($sFileAbsPath) && false === utils::RealPath($sFileAbsPath, MODULESROOT)) {
+			IssueLog::Warning("Linked resource added to page with a path from outside current env. directory, it will be ignored.", LogChannels::CONSOLE, [
+				"linked_resource_url" => $sFileRelPath,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+			return;
+		}
+
+		$this->LinkResourceFromURI(utils::GetAbsoluteUrlModulesRoot() . $sFileRelPath, $sResourceType);
+	}
+
+	/**
+	 * Internal helper to link a resource from any URI, may it be on iTop server or an external one
+	 *
+	 * @param string $sFileAbsURI Abs. URI of the resource to link (e.g. `https://external.server.com/some-file.css`)
+	 * @param string $sResourceType {@see static::ENUM_RESOURCE_TYPE_JS}, {@see static::ENUM_RESOURCE_TYPE_CSS}
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @internal
+	 * @since 3.2.0 N°7315
+	 */
+	private function LinkResourceFromURI(string $sFileAbsURI, string $sResourceType): void
+	{
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sFileAbsURI))) {
+			return;
+		}
+
+		// Check if URI is absolute ("://" do allow any protocol), otherwise ignore the file
+		if (false === stripos($sFileAbsURI, "://")) {
+			IssueLog::Warning("Linked resource added to page with a non absolute URI, it will be ignored.", LogChannels::CONSOLE, [
+				"linked_resource_url" => $sFileAbsURI,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+			return;
+		}
+
+		switch ($sResourceType) {
+			case static::ENUM_RESOURCE_TYPE_JS:
+				$this->a_linked_scripts[$sFileAbsURI] = $sFileAbsURI;
+				break;
+
+			case static::ENUM_RESOURCE_TYPE_CSS:
+				$this->a_linked_stylesheets[$sFileAbsURI] = ['link' => $sFileAbsURI, 'condition' => ''];
+				break;
+		}
+	}
+
+	/**
 	 * Empty all base JS in the page's header
 	 *
-	 * @uses \WebPage::$a_a_early_scripts
+	 * @uses WebPage::$a_a_early_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -515,7 +650,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base JS in the page's header
 	 *
-	 * @uses \WebPage::$a_scripts
+	 * @uses WebPage::$a_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -528,7 +663,7 @@ class WebPage implements Page
 	 * Add some Javascript to the header of the page, therefore executed first, BEFORE the DOM interpretation.
 	 * /!\ Keep in mind that no external JS files (eg. jQuery) will be loaded yet.
 	 *
-	 * @uses \WebPage::$a_a_early_scripts
+	 * @uses WebPage::$a_a_early_scripts
 	 * @param string $s_script
 	 * @since 3.0.0
 	 */
@@ -542,7 +677,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base JS
 	 *
-	 * @uses \WebPage::$a_scripts
+	 * @uses WebPage::$a_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -554,7 +689,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base JS
 	 *
-	 * @uses \WebPage::$a_scripts
+	 * @uses WebPage::$a_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -566,7 +701,7 @@ class WebPage implements Page
 	/**
 	 * Add some Javascript to be executed immediately without waiting for the DOM to be ready
 	 *
-	 * @uses \WebPage::$a_scripts
+	 * @uses WebPage::$a_scripts
 	 * @param string $s_script
 	 * @since 3.0.0 These scripts are put at the end of the <body> tag instead of the end of the <head> tag, {@see static::add_early_script} to add script there
 	 */
@@ -580,7 +715,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base init. scripts for the page
 	 *
-	 * @uses \WebPage::$a_init_scripts
+	 * @uses WebPage::$a_init_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -592,7 +727,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base init. scripts for the page
 	 *
-	 * @uses \WebPage::$a_init_scripts
+	 * @uses WebPage::$a_init_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -604,7 +739,7 @@ class WebPage implements Page
 	/**
 	 * Adds a script to be executed when the DOM is ready (typical JQuery use), right before add_ready_script
 	 *
-	 * @uses \WebPage::$a_init_scripts
+	 * @uses WebPage::$a_init_scripts
 	 * @param string $sScript
 	 *
 	 * @return void
@@ -619,7 +754,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base ready scripts for the page
 	 *
-	 * @uses \WebPage::$a_ready_scripts
+	 * @uses WebPage::$a_ready_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -631,7 +766,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base ready scripts for the page
 	 *
-	 * @uses \WebPage::$a_reset_init_scripts
+	 * @uses WebPage::$a_reset_init_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -643,7 +778,7 @@ class WebPage implements Page
 	/**
 	 * Add some Javascript to be executed once the DOM is ready, slightly after the "init scripts"
 	 *
-	 * @uses \WebPage::$a_ready_scripts
+	 * @uses WebPage::$a_ready_scripts
 	 * @param $sScript
 	 */
 	public function add_ready_script($sScript)
@@ -699,7 +834,7 @@ class WebPage implements Page
 	 * Empty all base linked scripts for the page
 	 *
 	 * @return void
-	 * @uses \WebPage::$a_linked_scripts
+	 * @uses WebPage::$a_linked_scripts
 	 * @since 3.0.0
 	 */
 	protected function EmptyLinkedScripts(): void
@@ -710,7 +845,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base linked scripts for the page
 	 *
-	 * @uses \WebPage::$a_linked_scripts
+	 * @uses WebPage::$a_linked_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -723,15 +858,77 @@ class WebPage implements Page
 	 * Add a script (as an include, i.e. link) to the header of the page.<br>
 	 * Handles duplicates : calling twice with the same script will add the script only once
 	 *
-	 * @uses \WebPage::$a_linked_scripts
-	 * @param string $s_linked_script
+	 * @param string $sLinkedScriptAbsUrl
+	 *
 	 * @return void
+	 * @uses WebPage::$a_linked_scripts
+	 * @since 3.2.0 N°6935 $sLinkedScriptAbsUrl MUST be an absolute URL
+	 * @deprecated 3.2.0 N°7315 Use {@see static::LinkScriptFromXXX()} instead
 	 */
-	public function add_linked_script($s_linked_script)
+	public function add_linked_script($sLinkedScriptAbsUrl)
 	{
-		if (!empty(trim($s_linked_script))) {
-			$this->a_linked_scripts[$s_linked_script] = $s_linked_script;
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sLinkedScriptAbsUrl))) {
+			return;
 		}
+
+		// Check if URI is absolute ("://" do allow any protocol), otherwise warn that it's a deprecated behavior
+		if (false === stripos($sLinkedScriptAbsUrl, "://")) {
+			IssueLog::Warning("Linked script added to page via deprecated API with a non absolute URL, it may lead to it not being loaded and causing javascript errors.", null, [
+				"linked_script_url" => $sLinkedScriptAbsUrl,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+		}
+
+		$this->a_linked_scripts[$sLinkedScriptAbsUrl] = $sLinkedScriptAbsUrl;
+	}
+
+	/**
+	 * Use to link JS files from the iTop package (e.g. `<ITOP>/js/*`)
+	 *
+	 * @param string $sFileRelPath Rel. path from iTop app. root of the JS file to link (e.g. `js/utils.js`)
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkScriptFromAppRoot(string $sFileRelPath): void
+	{
+		$this->LinkResourceFromAppRoot($sFileRelPath, static::ENUM_RESOURCE_TYPE_JS);
+	}
+
+	/**
+	 * Use to link JS files from any module
+	 *
+	 * @param string $sFileRelPath Rel. path from current environment (e.g. `<ITOP>/env-production/`) of the JS file to link (e.g. `some-module/asset/js/some-file.js`)
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkScriptFromModule(string $sFileRelPath): void
+	{
+		$this->LinkResourceFromModule($sFileRelPath, static::ENUM_RESOURCE_TYPE_JS);
+	}
+
+	/**
+	 * Use to link JS files from any URI, typically an external server
+	 *
+	 * @param string $sFileAbsURI Abs. URI of the JS file to link (e.g. `https://external.server.com/some-file.js`)
+	 *                            Note: Any non-absolute URI will be ignored.
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkScriptFromURI(string $sFileAbsURI): void
+	{
+		$this->LinkResourceFromURI($sFileAbsURI, static::ENUM_RESOURCE_TYPE_JS);
 	}
 
 	/**
@@ -758,8 +955,8 @@ class WebPage implements Page
 	/**
 	 * Empty both dict. entries and dict. entries prefixes for the page
 	 *
-	 * @uses \WebPage::$a_dict_entries
-	 * @uses \WebPage::$dict_a_dict_entries_prefixes
+	 * @uses WebPage::$a_dict_entries
+	 * @uses WebPage::$dict_a_dict_entries_prefixes
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -772,8 +969,8 @@ class WebPage implements Page
 	/**
 	 * Initialize both dict. entries and dict. entries prefixes for the page
 	 *
-	 * @uses \WebPage::$a_dict_entries
-	 * @uses \WebPage::$dict_a_dict_entries_prefixes
+	 * @uses WebPage::$a_dict_entries
+	 * @uses WebPage::$dict_a_dict_entries_prefixes
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -787,8 +984,8 @@ class WebPage implements Page
 	 *
 	 * @param string $s_entryId a translation label key
 	 *
-	 * @uses \WebPage::$a_dict_entries
-	 * @see \WebPage::add_dict_entries()
+	 * @uses WebPage::$a_dict_entries
+	 * @see WebPage::add_dict_entries()
 	 * @see utils.js
 	 */
 	public function add_dict_entry($s_entryId)
@@ -801,8 +998,8 @@ class WebPage implements Page
 	 *
 	 * @param string $s_entriesPrefix translation label prefix (eg 'UI:Button:' to add all keys beginning with this)
 	 *
-	 * @see \WebPage::::$dict_a_dict_entries_prefixes
-	 * @see \WebPage::add_dict_entry()
+	 * @see WebPage::::$dict_a_dict_entries_prefixes
+	 * @see WebPage::add_dict_entry()
 	 * @see utils.js
 	 */
 	public function add_dict_entries($s_entriesPrefix)
@@ -852,7 +1049,7 @@ JS;
 	/**
 	 * Empty all inline styles for the page
 	 *
-	 * @uses \WebPage::$a_styles
+	 * @uses WebPage::$a_styles
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -864,7 +1061,7 @@ JS;
 	/**
 	 * Initialize inline styles for the page
 	 *
-	 * @uses \WebPage::$a_styles
+	 * @uses WebPage::$a_styles
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -888,7 +1085,7 @@ JS;
 	/**
 	 * Empty all linked stylesheets for the page
 	 *
-	 * @uses \WebPage::$a_linked_stylesheets
+	 * @uses WebPage::$a_linked_stylesheets
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -900,7 +1097,7 @@ JS;
 	/**
 	 * Initialize linked stylesheets for the page
 	 *
-	 * @uses \WebPage::$a_linked_stylesheets
+	 * @uses WebPage::$a_linked_stylesheets
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -913,13 +1110,76 @@ JS;
 	 * Add a CSS stylesheet (as an include, i.e. link) to the header of the page
 	 * Handles duplicates since 3.0.0 : calling twig with the same stylesheet will add the stylesheet only once
 	 *
-	 * @param string $s_linked_stylesheet
-	 * @param string $s_condition
+	 * @param string $sLinkedStylesheet
+	 * @param string $sCondition
 	 * @return void
+	 * @since 3.2.0 N°6935 $sLinkedStylesheet MUST be an absolute URL
+	 * @deprecated 3.2.0 N°7315 Use {@see static::LinkStylesheetFromXXX()} instead
 	 */
-	public function add_linked_stylesheet($s_linked_stylesheet, $s_condition = "")
+	public function add_linked_stylesheet($sLinkedStylesheet, $sCondition = "")
 	{
-		$this->a_linked_stylesheets[$s_linked_stylesheet] = array('link' => $s_linked_stylesheet, 'condition' => $s_condition);
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sLinkedStylesheet))) {
+			return;
+		}
+
+		// Check if URI is absolute ("://" do allow any protocol), otherwise warn that it's a deprecated behavior
+		if (false === stripos($sLinkedStylesheet, "://")) {
+			IssueLog::Warning("Linked stylesheet added to page via deprecated API with a non absolute URL, it may lead to it not being loaded and causing visual glitches.", null, [
+				"linked_stylesheet_url" => $sLinkedStylesheet,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+		}
+
+		$this->a_linked_stylesheets[$sLinkedStylesheet] = array('link' => $sLinkedStylesheet, 'condition' => $sCondition);
+	}
+
+	/**
+	 * Use to link CSS files from the iTop package (e.g. `<ITOP>/css/*`)
+	 *
+	 * @param string $sFileRelPath Rel. path from iTop app. root of the CSS file to link (e.g. `css/login.css`)
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkStylesheetFromAppRoot(string $sFileRelPath): void
+	{
+		$this->LinkResourceFromAppRoot($sFileRelPath, static::ENUM_RESOURCE_TYPE_CSS);
+	}
+
+	/**
+	 * Use to link CSS files from any module
+	 *
+	 * @param string $sFileRelPath Rel. path from current environment (e.g. `<ITOP>/env-production/`) of the CSS file to link (e.g. `some-module/asset/css/some-file.css`)
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkStylesheetFromModule(string $sFileRelPath): void
+	{
+		$this->LinkResourceFromModule($sFileRelPath, static::ENUM_RESOURCE_TYPE_CSS);
+	}
+
+	/**
+	 * Use to link CSS files from any URI, typically an external server
+	 *
+	 * @param string $sFileAbsURI Abs. URI of the CSS file to link (e.g. `https://external.server.com/some-file.css`)
+	 *                            Note: Any non-absolute URI will be ignored.
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkStylesheetFromURI(string $sFileAbsURI): void
+	{
+		$this->LinkResourceFromURI($sFileAbsURI, static::ENUM_RESOURCE_TYPE_CSS);
 	}
 
 	/**
@@ -989,7 +1249,7 @@ JS;
 			$sRootUrl = '../';
 		}
 		$sCSSUrl = $sRootUrl.$sCssRelPath;
-		$this->add_linked_stylesheet($sCSSUrl);
+		$this->LinkStylesheetFromURI($sCSSUrl);
 	}
 
 	/**
@@ -1003,12 +1263,24 @@ JS;
 	}
 
 	/**
-	 * @param string|null $sHeaderValue for example `SAMESITE`. If null will set the header using the config parameter value.
+	 * @param string|null $sXFrameOptionsHeaderValue passed to {@see add_xframe_options}
+	 *
+	 * @return void
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°4368 method creation, replace {@see add_xframe_options} consumers call
+	 */
+	public function add_http_headers($sXFrameOptionsHeaderValue = null)
+	{
+		$this->add_xframe_options($sXFrameOptionsHeaderValue);
+		$this->add_xcontent_type_options();
+	}
+
+	/**
+	 * @param string|null $sHeaderValue for example `SAMESITE`. If null will set the header using the `security_header_xframe` config parameter value.
 	 *
 	 * @since 2.7.3 3.0.0 N°3416
-	 * @uses security_header_xframe config parameter
 	 * @uses \utils::GetConfig()
-	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
+	 *
+	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options HTTP header MDN documentation
 	 */
 	public function add_xframe_options($sHeaderValue = null)
 	{
@@ -1017,6 +1289,38 @@ JS;
 		}
 
 		$this->add_header('X-Frame-Options: '.$sHeaderValue);
+	}
+
+	/**
+	 * Warning : this header will trigger the Cross-Origin Read Blocking (CORB) protection for some mime types (HTML, XML except SVG, JSON, text/plain)
+	 * In consequence some children pages will override this method.
+	 *
+	 * Sending header can be disabled globally using the `security.enable_header_xcontent_type_options` optional config parameter.
+	 *
+	 * @return void
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°4368 method creation
+	 *
+	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options HTTP header MDN documentation
+	 * @link https://chromium.googlesource.com/chromium/src/+/master/services/network/cross_origin_read_blocking_explainer.md#determining-whether-a-response-is-corb_protected "Determining whether a response is CORB-protected"
+	 */
+	public function add_xcontent_type_options()
+	{
+		try {
+			$oConfig = utils::GetConfig();
+		} catch (ConfigException|CoreException $e) {
+			$oConfig = null;
+		}
+		if (is_null($oConfig)) {
+			$bSendXContentTypeOptionsHttpHeader = true;
+		} else {
+			$bSendXContentTypeOptionsHttpHeader = $oConfig->Get('security.enable_header_xcontent_type_options');
+		}
+
+		if ($bSendXContentTypeOptionsHttpHeader === false) {
+			return;
+		}
+
+		$this->add_header('X-Content-Type-Options: nosniff');
 	}
 
 	/**
@@ -1273,15 +1577,69 @@ JS;
 	/**
 	 * @inheritDoc
 	 * @throws \Exception
+	 * @since 3.2.0 Prefer using {@see static::GenerateResponse()} in with a Symfony style controller and route
 	 */
 	public function output()
 	{
-		$oKpi = new ExecutionKPI();
 		// Send headers
 		foreach ($this->a_headers as $sHeader) {
 			header($sHeader);
 		}
 
+		// Render HTML content
+		$sHtml = $this->RenderContent();
+
+		// Echo global HTML
+		$oKpi = new ExecutionKPI();
+		echo $sHtml;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' KB)');
+
+		if (class_exists('DBSearch')) {
+			DBSearch::RecordQueryTrace();
+		}
+		ExecutionKPI::ReportStats();
+	}
+
+	/**
+	 * @return \Symfony\Component\HttpFoundation\Response Generate the Symfony Response object (content + code + headers) for the current page, this is equivalent (and new way) of \WebPage::output() for Symfony controllers
+	 * @since 3.2.0 N°6935
+	 */
+	public function GenerateResponse(): Response
+	{
+		// Render HTML content
+		$sHtml = $this->RenderContent();
+
+		// Prepare Symfony Response
+		$oKpi = new ExecutionKPI();
+
+		// Format headers as a key => value array to match Symfony Response format
+		$aHeadersAsAssocArray = [];
+		foreach ($this->a_headers as $sHeader) {
+			// Limit explode to only split at the first occurrence
+			list($sHeaderName, $sHeaderValue) = explode(': ', $sHeader, 2);
+			$aHeadersAsAssocArray[$sHeaderName] = $sHeaderValue;
+		}
+
+		$oResponse = new Response($sHtml, Response::HTTP_OK, $aHeadersAsAssocArray);
+		$oKpi->ComputeAndReport('Preparing response ('.round(strlen($sHtml) / 1024).' KB)');
+
+		if (class_exists('DBSearch')) {
+			DBSearch::RecordQueryTrace();
+		}
+		ExecutionKPI::ReportStats();
+
+		return $oResponse;
+	}
+
+	/**
+	 * @return string Complete HTML content of the \WebPage
+	 * @throws \CoreTemplateException
+	 * @throws \Twig\Error\LoaderError
+	 * @since 3.2.0 N°6935
+	 */
+	protected function RenderContent(): string
+	{
+		$oKpi = new ExecutionKPI();
 		$s_captured_output = $this->ob_get_clean_safe();
 
 		$aData = [];
@@ -1335,16 +1693,10 @@ JS;
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 		// Render final TWIG into global HTML
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
-		$oKpi->ComputeAndReport(get_class($this).'output');
 
-		// Echo global HTML
-		echo $sHtml;
-		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+		$oKpi->ComputeAndReport("Rendering content (".static::class.")");
 
-		if (class_exists('DBSearch')) {
-			DBSearch::RecordQueryTrace();
-		}
-		ExecutionKPI::ReportStats();
+		return $sHtml;
 	}
 
 	/**
@@ -1707,17 +2059,13 @@ EOD
 	}
 
 	/**
-	 * Return the absolute URL for the favicon
-	 *
-	 * @return string
+	 * @return string Absolute URL for the favicon
 	 * @throws \Exception
 	 * @since 3.0.0
 	 */
 	protected function GetFaviconAbsoluteUrl()
 	{
-		// TODO 3.0.0: Make it a property so it can be changed programmatically
-		// TODO 3.0.0: How to set both dark/light mode favicons
-		return utils::GetAbsoluteUrlAppRoot().'images/favicon.ico';
+		return Branding::GetMainFavIconAbsoluteUrl();
 	}
 
 	/**
@@ -1780,5 +2128,28 @@ EOD
 	public function AddPreloadedFonts(array $aFonts)
 	{
 		$this->aPreloadedFonts = array_merge($this->aPreloadedFonts, $aFonts);
+	}
+
+	/**
+	 * @return bool
+	 *
+	 * @since 3.2.0
+	 */
+	public function GetAddJSDict(): bool
+	{
+		return $this->bAddJSDict;
+	}
+
+	/**
+	 * @param bool $bAddJSDict
+	 *
+	 * @return $this
+	 *
+	 * @since 3.2.0
+	 */
+	public function SetAddJSDict(bool $bAddJSDict)
+	{
+		$this->bAddJSDict = $bAddJSDict;
+		return $this;
 	}
 }

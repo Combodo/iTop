@@ -100,6 +100,9 @@
  *
  */
 
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
+
 /**
  * Return a cleaned (i.e.
  * properly truncated) versin number from
@@ -302,9 +305,9 @@ try {
 			$sCloseUrl = utils::GetAbsoluteUrlModulesRoot().'/itop-hub-connector/images/black-close.svg';
 
 			$oPage = new HubConnectorPage(Dict::S('iTopHub:Connect'));
-			$oPage->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/js/hub.js');
-			$oPage->add_linked_stylesheet('../css/font-combodo/font-combodo.css');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/css/hub.css');
+			$oPage->LinkScriptFromModule('itop-hub-connector/js/hub.js');
+			$oPage->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
+			$oPage->LinkStylesheetFromModule('itop-hub-connector/css/hub.css');
 
 			$aDataToPost = MakeDataToPost($sTargetRoute);
 

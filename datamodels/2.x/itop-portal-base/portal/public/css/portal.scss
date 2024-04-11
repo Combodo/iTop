@@ -1803,6 +1803,35 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	text-decoration: line-through;
 }
 
+/* Tippy: Handle multi-line content */
+.tippy-content {
+	white-space: pre-line;
+}
+
+@media print {
+  /* Prevent URLs from being displayed */
+  a[href], img[src] {
+    &::after {
+      content: none !important;
+    }
+  }
+
+  /* Force modals to be displayed one after another instead of stacked */
+  .modal {
+    &.in {
+      position: relative;
+      top: unset;
+      z-index: unset;
+      overflow-y: unset;
+    }
+
+  }
+
+  #drag_overlay {
+    display: none;
+  }
+}
+
 /**********************************************************/
 /* Shameful area (things that should be refactored soon) */
 /**********************************************************/

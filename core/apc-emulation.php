@@ -60,14 +60,15 @@ function apc_store($key, $var = NULL, $ttl = 0)
  */
 function apc_fetch($key)
 {
-	if (is_array($key))
-	{
-		$aResult = array();
-		foreach($key as $sKey)
-		{
+	if (is_array($key)) {
+		$aResult = [];
+		foreach ($key as $sKey) {
 			$aResult[$sKey] = apcFile::FetchOneFile($sKey);
 		}
+
 		return $aResult;
+	} elseif (is_null($key)) {
+		return false;
 	}
 	return apcFile::FetchOneFile($key);
 }
@@ -95,6 +96,31 @@ function apc_delete($key)
 	$bRet1 = apcFile::DeleteEntry(apcFile::GetCacheFileName($key));
 	$bRet2 = apcFile::DeleteEntry(apcFile::GetCacheFileName('-'.$key));
 	return $bRet1 || $bRet2;
+}
+
+/**
+ * Checks if APCu emulation key exists
+ *
+ * @param string|string[] $keys A string, or an array of strings, that contain keys.
+ *
+ * @return bool|string[] Returns TRUE if the key exists, otherwise FALSE
+ * Or if an array was passed to keys, then an array is returned that
+ * contains all existing keys, or an empty array if none exist.
+ * @since 3.2.0 N°7068
+ */
+function apc_exists($keys)
+{
+	if (is_array($keys)) {
+		$aExistingKeys = [];
+		foreach ($keys as $sKey) {
+			if (apcFile::ExistsOneFile($sKey)) {
+				$aExistingKeys[] = $sKey;
+			}
+		}
+		return $aExistingKeys;
+	} else {
+		return apcFile::ExistsOneFile($keys);
+	}
 }
 
 class apcFile
@@ -183,6 +209,16 @@ class apcFile
 		return true;
 	}
 
+	/**
+	 * Check if cache key exists
+	 * @param $sKey
+	 * @return bool
+	 * @since 3.2.0 N°7068
+	 */
+	static public function ExistsOneFile($sKey) {
+		return is_file(self::GetCacheFileName('-' . $sKey)) || is_file(self::GetCacheFileName($sKey));
+	}
+
 	/** Get one cache entry content.
 	 * @param $sKey
 	 * @return bool|mixed
@@ -211,21 +247,16 @@ class apcFile
 	 */
 	static public function StoreOneFile($sKey, $value, $iTTL)
 	{
-		if (empty($sKey))
-		{
+		if (empty($sKey)) {
 			return false;
 		}
-
-		if (is_file(self::GetCacheFileName($sKey)))
-		{
+		if (is_file(self::GetCacheFileName($sKey))) {
 			@unlink(self::GetCacheFileName($sKey));
 		}
-		if (is_file(self::GetCacheFileName('-'.$sKey)))
-		{
+		if (is_file(self::GetCacheFileName('-'.$sKey))) {
 			@unlink(self::GetCacheFileName('-'.$sKey));
 		}
-		if ($iTTL > 0)
-		{
+		if ($iTTL > 0) {
 			// hint for ttl management
 			$sKey = '-'.$sKey;
 		}
@@ -233,15 +264,14 @@ class apcFile
 		$sFilename = self::GetCacheFileName($sKey);
 		// try to create the folder
 		$sDirname = dirname($sFilename);
-		if (!file_exists($sDirname))
-		{
-			if (!@mkdir($sDirname, 0755, true))
-			{
+		if (!is_dir($sDirname)) {
+			if (!@mkdir($sDirname, 0755, true)) {
 				return false;
 			}
 		}
 		$bRes = !(@file_put_contents($sFilename, serialize($value), LOCK_EX) === false);
 		self::AddFile($sFilename);
+
 		return $bRes;
 	}
 
@@ -325,19 +355,15 @@ class apcFile
 	 */
 	static protected function ReadCacheLocked($sFilename)
 	{
-		if (!is_file($sFilename))
-		{
-			return false;
-		}
+		$sContent = false;
 		$file = @fopen($sFilename, 'r');
-		if ($file === false)
-		{
-			return false;
+		if ($file !== false) {
+			if (flock($file, LOCK_SH)) {
+				$sContent = file_get_contents($sFilename);
+				flock($file, LOCK_UN);
+			}
+			fclose($file);
 		}
-		flock($file, LOCK_SH);
-		$sContent = @fread($file, @filesize($sFilename));
-		flock($file, LOCK_UN);
-		fclose($file);
 		return $sContent;
 	}
 

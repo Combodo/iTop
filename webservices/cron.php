@@ -17,6 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 require_once(__DIR__.'/../approot.inc.php');
 
 const EXIT_CODE_ERROR = -1;
@@ -108,7 +112,7 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 		// Time in seconds allowed to the task
 		$iCurrTimeLimit = $iTimeLimit;
 		// Compute allowed time
-		if ($oRefClass->implementsInterface('iScheduledProcess') === false) 
+		if ($oRefClass->implementsInterface('iScheduledProcess') === false)
 		{
 			// Periodic task, allow only X times ($iMaxTaskExecutionTime) its periodicity (GetPeriodicity())
 			$iMaxTaskExecutionTime = MetaModel::GetConfig()->Get('cron_task_max_execution_time');
@@ -148,7 +152,7 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 		$oTask->Set('first_run_date', $oDateStarted->format('Y-m-d H:i:s'));
 	}
 	$oTask->ComputeDurations($fDuration); // does increment the counter and compute statistics
-	
+
 	// Update the timestamp since we want to be able to re-order the tasks based on the time they finished
 	$oDateEnded = new DateTime();
 	$oTask->Set('latest_run_date', $oDateEnded->format('Y-m-d H:i:s'));
@@ -335,7 +339,7 @@ function CronExec($oP, $bVerbose, $bDebug=false)
 }
 
 /**
- * @param \WebPage $oP
+ * @param WebPage $oP
  */
 function CheckMaintenanceMode(Page $oP) {
 // Verify files instead of reloading the full config each time
@@ -404,71 +408,63 @@ function ReSyncProcesses($oP, $bVerbose, $bDebug)
 	$oNow = new DateTime();
 
 	$aProcesses = array();
-	foreach (get_declared_classes() as $sTaskClass)
+	foreach (utils::GetClassesForInterface('iProcess', '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]']) as $sTaskClass)
 	{
-		$oRefClass = new ReflectionClass($sTaskClass);
-		if ($oRefClass->isAbstract())
-		{
-			continue;
-		}
-		if ($oRefClass->implementsInterface('iProcess'))
-		{
-			$oProcess = new $sTaskClass;
-			$aProcesses[$sTaskClass] = $oProcess;
+		$oProcess = new $sTaskClass;
+		$aProcesses[$sTaskClass] = $oProcess;
 
-			// Create missing entry if needed
-			if (!array_key_exists($sTaskClass, $aTasks))
+		// Create missing entry if needed
+		if (!array_key_exists($sTaskClass, $aTasks))
+		{
+			// New entry, let's create a new BackgroundTask record, and plan the first execution
+			$oTask = new BackgroundTask();
+			$oTask->SetDebug($bDebug);
+			$oTask->Set('class_name', $sTaskClass);
+			$oTask->Set('total_exec_count', 0);
+			$oTask->Set('min_run_duration', 99999.999);
+			$oTask->Set('max_run_duration', 0);
+			$oTask->Set('average_run_duration', 0);
+			$oRefClass = new ReflectionClass($sTaskClass);
+			if ($oRefClass->implementsInterface('iScheduledProcess'))
 			{
-				// New entry, let's create a new BackgroundTask record, and plan the first execution
-				$oTask = new BackgroundTask();
-				$oTask->SetDebug($bDebug);
-				$oTask->Set('class_name', $sTaskClass);
-				$oTask->Set('total_exec_count', 0);
-				$oTask->Set('min_run_duration', 99999.999);
-				$oTask->Set('max_run_duration', 0);
-				$oTask->Set('average_run_duration', 0);
+				$oNextOcc = $oProcess->GetNextOccurrence();
+				$oTask->Set('next_run_date', $oNextOcc->format('Y-m-d H:i:s'));
+			}
+			else
+			{
+				// Background processes do start asap, i.e. "now"
+				$oTask->Set('next_run_date', $oNow->format('Y-m-d H:i:s'));
+			}
+			if ($bVerbose)
+			{
+				$oP->p('Creating record for: '.$sTaskClass);
+				$oP->p('First execution planned at: '.$oTask->Get('next_run_date'));
+			}
+			$oTask->DBInsert();
+		}
+		else
+		{
+			/** @var \BackgroundTask $oTask */
+			$oTask = $aTasks[$sTaskClass];
+			if ($oTask->Get('next_run_date') == '3000-01-01 00:00:00')
+			{
+				// check for rescheduled tasks
 				$oRefClass = new ReflectionClass($sTaskClass);
 				if ($oRefClass->implementsInterface('iScheduledProcess'))
 				{
 					$oNextOcc = $oProcess->GetNextOccurrence();
 					$oTask->Set('next_run_date', $oNextOcc->format('Y-m-d H:i:s'));
-				}
-				else
-				{
-					// Background processes do start asap, i.e. "now"
-					$oTask->Set('next_run_date', $oNow->format('Y-m-d H:i:s'));
-				}
-				if ($bVerbose)
-				{
-					$oP->p('Creating record for: '.$sTaskClass);
-					$oP->p('First execution planned at: '.$oTask->Get('next_run_date'));
-				}
-				$oTask->DBInsert();
-			}
-			else
-			{
-				/** @var \BackgroundTask $oTask */
-				$oTask = $aTasks[$sTaskClass];
-				if ($oTask->Get('next_run_date') == '3000-01-01 00:00:00')
-				{
-					// check for rescheduled tasks
-					$oRefClass = new ReflectionClass($sTaskClass);
-					if ($oRefClass->implementsInterface('iScheduledProcess'))
-					{
-						$oNextOcc = $oProcess->GetNextOccurrence();
-						$oTask->Set('next_run_date', $oNextOcc->format('Y-m-d H:i:s'));
-						$oTask->DBUpdate();
-					}
-				}
-				// Reactivate task if necessary
-				if ($oTask->Get('status') == 'removed')
-				{
-					$oTask->Set('status', 'active');
 					$oTask->DBUpdate();
 				}
-				// task having a real class to execute
-				unset($aTasks[$sTaskClass]);
 			}
+			// Reactivate task if necessary
+			if ($oTask->Get('status') == 'removed')
+			{
+				$oTask->Set('status', 'active');
+				$oTask->DBUpdate();
+			}
+			// task having a real class to execute
+			unset($aTasks[$sTaskClass]);
 		}
 	}
 

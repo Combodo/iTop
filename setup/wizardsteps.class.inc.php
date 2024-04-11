@@ -39,6 +39,8 @@
  * WizStepDone
  */
 
+use Combodo\iTop\Application\WebPage\WebPage;
+
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/parameters.class.inc.php');
 require_once(APPROOT.'setup/applicationinstaller.class.inc.php');
@@ -460,11 +462,11 @@ class WizStepDetectedInfo extends WizardStep
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
-	public function Display(\WebPage $oPage)
+	public function Display(WebPage $oPage)
 	{
 		$oPage->add_style(
 <<<EOF
@@ -2305,7 +2307,7 @@ class WizStepSummary extends WizardStep
 
 		$oPage->add('<fieldset id="installation_progress"><legend>Progress of the installation</legend>');
 		$oPage->add('<div id="progress_content">');
-		$oPage->add_linked_script('../setup/jquery.progression.js');
+		$oPage->LinkScriptFromAppRoot('setup/jquery.progression.js');
 		$oPage->add('<p class="center"><span id="setup_msg">Ready to start...</span></p><div style="display:block;margin-left: auto; margin-right:auto;" id="progress">0%</div>');
 		$oPage->add('</div>'); // progress_content
 		$oPage->add('</fieldset>');

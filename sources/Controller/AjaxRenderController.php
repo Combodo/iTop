@@ -6,7 +6,7 @@
 
 namespace Combodo\iTop\Controller;
 
-use AjaxPage;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 use ApplicationContext;
 use ApplicationMenu;
 use AttributeLinkedSet;
@@ -33,7 +33,7 @@ use FunctionExpression;
 use IssueLog;
 use iTopExtension;
 use iTopExtensionsMap;
-use JsonPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
 use LogChannels;
 use MetaModel;
 use ormSet;
@@ -139,7 +139,7 @@ class AjaxRenderController
 	}
 
 	/**
-	 * @param \JsonPage $oPage
+	 * @param JsonPage $oPage
 	 * @param bool $bTokenOnly
 	 *
 	 * @throws \Exception
@@ -240,7 +240,7 @@ class AjaxRenderController
 	 * The resulting JSON is added to the page with the format:
 	 * {"code": "done or error", "counts": {"menu_id_1": count1, "menu_id_2": count2...}}
 	 *
-	 * @param \JsonPage $oPage
+	 * @param JsonPage $oPage
 	 */
 	public function GetMenusCount(JsonPage $oPage)
 	{
@@ -278,7 +278,7 @@ class AjaxRenderController
 		}
 
 		$sTableId = utils::ReadParam('list_id', '');
-		$iLength = utils::ReadParam('end', 10);
+		$iLength = utils::ReadParam('end', 10, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
 		$sSelectMode = utils::ReadParam('select_mode', '');
 		$aClassAliases = utils::ReadParam('class_aliases', array());
@@ -499,7 +499,7 @@ class AjaxRenderController
 	 */
 	public static function DatatableSaveSettings(): bool
 	{
-		$iPageSize = utils::ReadParam('page_size', 10);
+		$iPageSize = utils::ReadParam('page_size', 10, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 		$sTableId = utils::ReadParam('table_id', null, false, 'raw_data');
 		$bSaveAsDefaults = (utils::ReadParam('defaults', 'true') == 'true');
 		$aClassAliases = utils::ReadParam('class_aliases', array(), false, 'raw_data');
@@ -770,7 +770,7 @@ class AjaxRenderController
 	}
 
 	/**
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -792,7 +792,7 @@ class AjaxRenderController
 
 	/**
 	 * Display list of licenses in "About iTop" popup
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \Exception
 	 * @since 3.0.1
@@ -826,7 +826,7 @@ JS
 
 	/**
 	 * Display about iTop for all user non admin
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \Exception
 	 */
@@ -845,7 +845,7 @@ EOF
 		);
 		$sVersionString = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
 		$oPage->add('<div id="about_box"><div class="ibo-about-box--top-part">');
-		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
+		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="' . utils::GetAbsoluteUrlAppRoot() . 'images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
 		$oPage->add('<div>'.$sVersionString.'</div>');
 		$oPage->add("</div>");
 		self::DisplayAboutLicenses($oPage);
@@ -854,7 +854,7 @@ EOF
 
 	/**
 	 * Display about iTop for admin user
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \Exception
 	 */
@@ -927,7 +927,7 @@ EOF
 		// Display
 		//
 		$oPage->add('<div id="about_box"><div class="ibo-about-box--top-part">');
-		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
+		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="' . utils::GetAbsoluteUrlAppRoot() . 'images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
 		$oPage->add('<div>'.$sVersionString.'<br/>'.'MySQL: '.$sMySQLVersion.'<br/>'.'PHP: '.$sPHPVersion.'<br/></div>');
 		$oPage->add("</div>");
 

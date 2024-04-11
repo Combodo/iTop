@@ -34,8 +34,8 @@ class_exists(TranslatorTrait::class);
  */
 final class TranslationExtension extends AbstractExtension
 {
-    private $translator;
-    private $translationNodeVisitor;
+    private ?TranslatorInterface $translator;
+    private ?TranslationNodeVisitor $translationNodeVisitor;
 
     public function __construct(TranslatorInterface $translator = null, TranslationNodeVisitor $translationNodeVisitor = null)
     {
@@ -58,29 +58,20 @@ final class TranslationExtension extends AbstractExtension
         return $this->translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('t', [$this, 'createTranslatable']),
+            new TwigFunction('t', $this->createTranslatable(...)),
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFilters(): array
     {
         return [
-            new TwigFilter('trans', [$this, 'trans']),
+            new TwigFilter('trans', $this->trans(...)),
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTokenParsers(): array
     {
         return [
@@ -92,9 +83,6 @@ final class TranslationExtension extends AbstractExtension
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodeVisitors(): array
     {
         return [$this->getTranslationNodeVisitor(), new TranslationDefaultDomainNodeVisitor()];
@@ -106,14 +94,17 @@ final class TranslationExtension extends AbstractExtension
     }
 
     /**
-     * @param string|\Stringable|TranslatableInterface|null $message
-     * @param array|string                                  $arguments Can be the locale as a string when $message is a TranslatableInterface
+     * @param array|string $arguments Can be the locale as a string when $message is a TranslatableInterface
      */
-    public function trans($message, $arguments = [], string $domain = null, string $locale = null, int $count = null): string
+    public function trans(string|\Stringable|TranslatableInterface|null $message, array|string $arguments = [], string $domain = null, string $locale = null, int $count = null): string
     {
         if ($message instanceof TranslatableInterface) {
             if ([] !== $arguments && !\is_string($arguments)) {
                 throw new \TypeError(sprintf('Argument 2 passed to "%s()" must be a locale passed as a string when the message is a "%s", "%s" given.', __METHOD__, TranslatableInterface::class, get_debug_type($arguments)));
+            }
+
+            if ($message instanceof TranslatableMessage && '' === $message->getMessage()) {
+                return '';
             }
 
             return $message->trans($this->getTranslator(), $locale ?? (\is_string($arguments) ? $arguments : null));

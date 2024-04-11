@@ -9,6 +9,8 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');
@@ -422,7 +424,7 @@ abstract class Dashboard
 	}
 
 	/**
-	 * @param \WebPage $oPage *
+	 * @param WebPage $oPage *
 	 * @param array $aExtraParams
 	 *
 	 * @throws \ReflectionException
@@ -478,7 +480,7 @@ abstract class Dashboard
 	CombodoTooltip.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
 	$("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
 	
-	$('#attr_auto_reload').change( function(ev) {
+	$('#attr_auto_reload').on('change', function(ev) {
 		$("#attr_auto_reload_sec").prop('disabled', !$(this).is(':checked'));
 	} );
 
@@ -513,7 +515,7 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
 	 * @param bool $bCanEdit
@@ -561,15 +563,15 @@ JS
 		}
 
 		if (!$bEditMode) {
-			$oPage->add_linked_script('../js/dashlet.js');
-			$oPage->add_linked_script('../js/dashboard.js');
+			$oPage->LinkScriptFromAppRoot('js/dashlet.js');
+			$oPage->LinkScriptFromAppRoot('js/dashboard.js');
 		}
 
 		return $oDashboard;
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 * @throws \ReflectionException
 	 * @throws \Exception
@@ -592,7 +594,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 */
 	public function RenderDashletsProperties(WebPage $oPage, $aExtraParams = array())
@@ -1109,15 +1111,15 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 *
 	 * @throws \Exception
 	 */
 	protected function RenderEditionTools(WebPage $oPage, DashboardLayoutUIBlock $oDashboard, $aExtraParams)
 	{
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
+		$oPage->LinkScriptFromAppRoot('node_modules/blueimp-file-upload/js/jquery.iframe-transport.js');
+		$oPage->LinkScriptFromAppRoot('node_modules/blueimp-file-upload/js/jquery.fileupload.js');
 		$sId = utils::Sanitize($this->GetId(), '', 'element_identifier');
 
 		$sMenuTogglerId = "ibo-dashboard-menu-toggler-{$sId}";
@@ -1228,7 +1230,7 @@ EOF
 
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 * @param array $aExtraParams
 	 *
@@ -1264,12 +1266,13 @@ EOF
 		$sOkButtonLabel = Dict::S('UI:Button:Save');
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		
-		$sId = addslashes($this->sId);
-		$sLayoutClass = addslashes($this->sLayoutClass);
+		$sId = utils::HtmlEntities($this->sId);
+		$sLayoutClass = utils::HtmlEntities($this->sLayoutClass);
 		$sAutoReload = $this->bAutoReload ? 'true' : 'false';
 		$sAutoReloadSec = (string) $this->iAutoReloadSec;
-		$sTitle = addslashes($this->sTitle);
-		$sFile = addslashes($this->GetDefinitionFile());
+		$sTitle = utils::HtmlEntities($this->sTitle);
+		$sFile = utils::HtmlEntities($this->GetDefinitionFile());
+		$sFileForJS = json_encode($this->GetDefinitionFile());
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
 		$sReloadURL = $this->GetReloadURL();
 
@@ -1331,9 +1334,9 @@ $('#dashboard_editor .ui-layout-center').runtimedashboard({
 	auto_reload: $sAutoReload, 
 	auto_reload_sec: $sAutoReloadSec,
 	submit_to: '$sUrl', 
-	submit_parameters: {operation: 'save_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	submit_parameters: {operation: 'save_dashboard', file: {$sFileForJS}, extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 	render_to: '$sUrl', 
-	render_parameters: {operation: 'render_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	render_parameters: {operation: 'render_dashboard', file: {$sFileForJS}, extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 	new_dashlet_parameters: {operation: 'new_dashlet'}
 });
 
@@ -1488,7 +1491,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $sOQL
 	 *
 	 * @throws \DictExceptionMissingString

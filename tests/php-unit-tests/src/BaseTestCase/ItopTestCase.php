@@ -7,12 +7,16 @@
 namespace Combodo\iTop\Test\UnitTest;
 
 use CMDBSource;
+use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use SetupUtils;
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 /**
+ * Class ItopTestCase
+ *
  * Helper class to extend for tests that DO NOT need to access the DataModel or the Database
  *
  * @since 3.0.4 3.1.1 3.2.0 N°6658 move some setUp/tearDown code to the corresponding methods *BeforeClass to speed up tests process time.
@@ -20,7 +24,14 @@ use const DEBUG_BACKTRACE_IGNORE_ARGS;
 abstract class ItopTestCase extends TestCase
 {
 	public const TEST_LOG_DIR = 'test';
+
+	/**
+	 * @var bool
+	 * @since 3.0.4 3.1.1 3.2.0 N°6976 Allow to enable/disable {@see DeprecatedCallsLog} error handler
+	 */
+	public const DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER = true;
 	public static $DEBUG_UNIT_TEST = false;
+	protected static $aBackupStaticProperties = [];
 
 	/**
 	 * @link https://docs.phpunit.de/en/9.6/annotations.html#preserveglobalstate PHPUnit `preserveGlobalState` annotation documentation
@@ -41,9 +52,10 @@ abstract class ItopTestCase extends TestCase
 
 		require_once static::GetAppRoot() . 'approot.inc.php';
 
-		if (false === defined('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME')) {
+		if ((static::DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER)
+			&& (false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME))) {
 			// setUp might be called multiple times, so protecting the define() call !
-			define('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME', true);
+			define(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
 		}
 	}
 
@@ -66,7 +78,54 @@ abstract class ItopTestCase extends TestCase
 		}
 	}
 
-	protected function setUp(): void {
+	/**
+	 * @param array $args
+	 * @param string $sExportFileName relative to log folder
+	 * @param array $aExcludedParams
+	 * Function that aims to export the values of the parameters of a function in a file
+	 * You can call the function anywhere like following :
+	 * ```
+	 * require __DIR__ . '/../../../tests/php-unit-tests/vendor/autoload.php'; // required to include phpunit autoload
+	 * ItopTestCase::ExportFunctionParameterValues(func_get_args(), "parameters.txt");
+	 * ```
+	 * Useful to generate realistic data for tests providers
+	 *
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+    public static function ExportFunctionParameterValues(array $args, string $sExportFileName, array $aExcludedParams = []): string
+    {
+		// get sclass et function dans la callstrack
+
+	    // in the callstack get the call function name
+	    $aCallStack = debug_backtrace();
+			    $sCallFunction = $aCallStack[1]['function'];
+	    // in the casll stack get the call class name
+	    $sCallClass = $aCallStack[1]['class'];
+	    $reflectionFunc = new ReflectionMethod($sCallClass, $sCallFunction);
+	    $parameters = $reflectionFunc->getParameters();
+
+	    $aParamValues = [];
+	    foreach ($parameters as $index => $param) {
+		    $aParamValues[$param->getName()] = $args[$index] ?? null;
+	    }
+
+	    $paramValues = $aParamValues;
+	    foreach ($aExcludedParams as $sExcludedParam) {
+		    unset($paramValues[$sExcludedParam]);
+	    }
+
+	    // extract oPage from the array in parameters and make a foreach on exlucded parameters
+	    foreach ($aExcludedParams as $sExcludedParam) {
+		    unset($paramValues[$sExcludedParam]);
+	    }
+
+	    $var_export = var_export($paramValues, true);
+	    file_put_contents(APPROOT.'/log/' .$sExportFileName, $var_export);
+		return $var_export;
+    }
+
+    protected function setUp(): void {
 		parent::setUp();
 
 		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
@@ -303,6 +362,42 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
+	 * Backup every static property of the class (even protected ones)
+	 * @param string $sClass
+	 *
+	 * @return void
+	 *
+	 * @since 3.2.0
+	 */
+	public static function BackupStaticProperties($sClass)
+	{
+		$class = new \ReflectionClass($sClass);
+		foreach ($class->getProperties() as $property) {
+			if (!$property->isStatic()) continue;
+			$property->setAccessible(true);
+			static::$aBackupStaticProperties[$sClass][$property->getName()] = $property->getValue();
+		}
+	}
+
+	/**
+	 * Restore every static property of the class (even protected ones)
+	 * @param string $sClass
+	 *
+	 * @return void
+	 *
+	 * @since 3.2.0
+	 */
+	public static function RestoreStaticProperties($sClass)
+	{
+		$class = new \ReflectionClass($sClass);
+		foreach ($class->getProperties() as $property) {
+			if (!$property->isStatic()) continue;
+			$property->setAccessible(true);
+			$property->setValue(null, static::$aBackupStaticProperties[$sClass][$property->getName()]);
+		}
+	}
+
+	/**
 	 * @since 2.7.10 3.1.0
 	 */
 	private function GetProperty(string $sClass, string $sProperty): \ReflectionProperty
@@ -334,17 +429,17 @@ abstract class ItopTestCase extends TestCase
 	public function SetNonPublicStaticProperty(string $sClass, string $sProperty, $value)
 	{
 		$oProperty = $this->GetProperty($sClass, $sProperty);
-		$oProperty->setValue($value);
+		$oProperty->setValue(null, $value);
 	}
 
-	public function RecurseRmdir($dir)
+	public static function RecurseRmdir($dir)
 	{
 		if (is_dir($dir)) {
 			$objects = scandir($dir);
 			foreach ($objects as $object) {
 				if ($object != "." && $object != "..") {
 					if (is_dir($dir.DIRECTORY_SEPARATOR.$object)) {
-						$this->RecurseRmdir($dir.DIRECTORY_SEPARATOR.$object);
+						static::RecurseRmdir($dir.DIRECTORY_SEPARATOR.$object);
 					} else {
 						unlink($dir.DIRECTORY_SEPARATOR.$object);
 					}
@@ -354,7 +449,7 @@ abstract class ItopTestCase extends TestCase
 		}
 	}
 
-	public function CreateTmpdir() {
+	public static function CreateTmpdir() {
 		$sTmpDir=tempnam(sys_get_temp_dir(),'');
 		if (file_exists($sTmpDir))
 		{
@@ -369,7 +464,7 @@ abstract class ItopTestCase extends TestCase
 		return sys_get_temp_dir();
 	}
 
-	public function RecurseMkdir($sDir){
+	public static function RecurseMkdir($sDir){
 		if (strpos($sDir, DIRECTORY_SEPARATOR) === 0){
 			$sPath = DIRECTORY_SEPARATOR;
 		} else {
@@ -394,13 +489,13 @@ abstract class ItopTestCase extends TestCase
 
 	}
 
-	public function RecurseCopy($src,$dst) {
+	public static function RecurseCopy($src,$dst) {
 		$dir = opendir($src);
 		@mkdir($dst);
 		while(false !== ( $file = readdir($dir)) ) {
 			if (( $file != '.' ) && ( $file != '..' )) {
 				if ( is_dir($src . '/' . $file) ) {
-					$this->RecurseCopy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
+					static::RecurseCopy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
 				}
 				else {
 					copy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);

@@ -5,6 +5,9 @@
  */
 
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/template.class.inc.php');
@@ -103,7 +106,7 @@ class ApplicationMenu
 	{
 		self::$sFavoriteSiloQuery = $sOQL;
 	}
-	
+
 	/**
 	 * Get the query used to limit the list of displayed organizations in the drop-down menu
 	 * @return string The OQL query returning a list of Organization objects
@@ -122,9 +125,7 @@ class ApplicationMenu
 	 */
 	public static function CheckMenuIdEnabled($sMenuId)
 	{
-		self::LoadAdditionalMenus();
-		$oMenuNode = self::GetMenuNode(self::GetMenuIndexById($sMenuId));
-		if (is_null($oMenuNode) || !$oMenuNode->IsEnabled())
+		if (self::IsMenuIdEnabled($sMenuId) === false)
 		{
 			require_once(APPROOT.'/setup/setuppage.class.inc.php');
 			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
@@ -133,6 +134,19 @@ class ApplicationMenu
 			$oP->output();
 			exit;
 		}
+	}
+
+	/**
+	 * @param $sMenuId
+	 *
+	 * @return bool true if the menu exists and current user is allowed to see the menu
+	 * @since 3.2.0
+	 */
+	public static function IsMenuIdEnabled($sMenuId):bool
+	{
+		self::LoadAdditionalMenus();
+		$oMenuNode = self::GetMenuNode(self::GetMenuIndexById($sMenuId));
+		return is_null($oMenuNode) === false && $oMenuNode->IsEnabled();
 	}
 
 	/**
@@ -266,9 +280,11 @@ class ApplicationMenu
 			$oMenuNode = static::GetMenuNode($sMenuGroupIdx);
 
 			if (!($oMenuNode instanceof MenuGroup)) {
-				IssueLog::Error('Menu node was not displayed as a menu group as it is actually not a menu group', LogChannels::CONSOLE, [
+				IssueLog::Error('Menu node without parent (root menu) must be of type menu group. Parent menu is missing or not visible to user.', LogChannels::CONSOLE, [
 					'menu_node_class' => get_class($oMenuNode),
+					'menu_node_id' => $oMenuNode->GetMenuID(),
 					'menu_node_label' => $oMenuNode->GetLabel(),
+					'current_user_id' => UserRights::GetUserId(),
 				]);
 				continue;
 			}
@@ -345,7 +361,7 @@ class ApplicationMenu
 
 	/**
 	 * Entry point to display the whole menu into the web page, used by iTopWebPage
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 * @throws DictExceptionMissingString
 	 *
@@ -419,7 +435,7 @@ EOF
 	/**
 	 * Handles the display of the sub-menus (called recursively if necessary)
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aMenus
 	 * @param array $aExtraParams
 	 * @param int $iActiveMenu
@@ -536,7 +552,7 @@ EOF
 
 		return -1;
 	}
-	
+
 	/**
 	 * Retrieves the currently active menu (if any, otherwise the first menu is the default)
 	 * @return string The Id of the currently active menu
@@ -544,7 +560,7 @@ EOF
 	public static function GetActiveNodeId()
 	{
 		$oAppContext = new ApplicationContext();
-		$sMenuId = $oAppContext->GetCurrentValue('menu', null);		
+		$sMenuId = $oAppContext->GetCurrentValue('menu', null);
 		if ($sMenuId  === null)
 		{
 			$sMenuId = self::GetDefaultMenuId();
@@ -654,7 +670,7 @@ abstract class MenuNode
 
 	/**
 	 * Stimulus to check: if the user can 'apply' this stimulus, then she/he can see this menu
-	 */	
+	 */
 	protected $m_aEnableStimuli;
 
 	/**
@@ -814,7 +830,7 @@ abstract class MenuNode
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Add a limiting display condition for the same menu node. The conditions will be combined with a AND
 	 * @param $oMenuNode MenuNode Another definition of the same menu node, with potentially different access restriction
@@ -987,7 +1003,7 @@ class TemplateMenuNode extends MenuNode
 	 * @var string
 	 */
 	protected $sTemplateFile;
-	
+
 	/**
 	 * Create a menu item based on a custom template and inserts it into the application's main menu
 	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
@@ -1058,7 +1074,7 @@ class OQLMenuNode extends MenuNode
 	 * @var bool|null
 	 */
 	protected $bSearchFormOpen;
-	
+
 	/**
 	 * Extra parameters to be passed to the display block to fine tune its appearence
 	 */
@@ -1091,7 +1107,7 @@ class OQLMenuNode extends MenuNode
 		// Enhancement: we could set as the "enable" condition that the user has enough rights to "read" the objects
 		// of the class specified by the OQL...
 	}
-	
+
 	/**
 	 * Set some extra parameters to be passed to the display block to fine tune its appearence
 	 * @param array $aParams paramCode => value. See DisplayBlock::GetDisplay for the meaning of the parameters
@@ -1111,7 +1127,7 @@ class OQLMenuNode extends MenuNode
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
-		ContextTag::AddContext(ContextTag::TAG_OBJECT_SEARCH);
+		$oTag = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
 		OQLMenuNode::RenderOQLSearch
 		(
@@ -1120,7 +1136,7 @@ class OQLMenuNode extends MenuNode
 			'Menu_'.$this->GetMenuId(),
 			$this->bSearch, // Search pane
 			$this->bSearchFormOpen, // Search open
-			$oPage, 
+			$oPage,
 			array_merge($this->m_aParams, $aExtraParams),
 			true
 		);
@@ -1354,10 +1370,10 @@ class NewObjectMenuNode extends MenuNode
 	{
 		// Enable this menu, only if the current user has enough rights to create such an object, or an object of
 		// any child class
-	
+
 		$aSubClasses = MetaModel::EnumChildClasses($this->sClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
 		$bActionIsAllowed = false;
-	
+
 		foreach($aSubClasses as $sCandidateClass)
 		{
 			if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
@@ -1366,7 +1382,7 @@ class NewObjectMenuNode extends MenuNode
 				break; // Enough for now
 			}
 		}
-		return $bActionIsAllowed;		
+		return $bActionIsAllowed;
 	}
 
 	/**
@@ -1508,7 +1524,7 @@ class DashboardMenuNode extends MenuNode
 			throw new Exception("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
 		}
 	}
-	
+
 }
 
 /**
@@ -1549,7 +1565,7 @@ class ShortcutContainerMenuNode extends MenuNode
 			$sName = $this->GetMenuId().'_'.$oShortcut->GetKey();
 			new ShortcutMenuNode($sName, $oShortcut, $this->GetIndex(), $fRank++);
 		}
-	
+
 		// Complete the tree
 		//
 		parent::PopulateChildMenus();

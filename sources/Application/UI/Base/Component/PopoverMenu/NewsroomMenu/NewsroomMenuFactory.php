@@ -65,8 +65,9 @@ class NewsroomMenuFactory
 		/**
 		 * @var \iNewsroomProvider[] $aProviders
 		 */
-		$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-		foreach($aProviders as $oProvider) {
+		$aProviders = utils::GetClassesForInterface('iNewsroomProvider', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+		foreach($aProviders as $cProvider) {
+			$oProvider = new $cProvider();
 			$oConfig = MetaModel::GetConfig();
 			$oProvider->SetConfig($oConfig);
 			$bProviderEnabled = appUserPreferences::GetPref('newsroom_provider_'.get_class($oProvider), true);
@@ -86,7 +87,7 @@ class NewsroomMenuFactory
 		$sPlaceholderImageUrl= 'far fa-envelope';
 		$aParams = array(
 			'image_icon' => $sImageUrl,
-			'no_message_icon' => file_get_contents(APPROOT.'images/illustrations/undraw_empty.svg'),
+			'no_message_icon' => file_get_contents(APPROOT.'images/illustrations/undraw_social_serenity.svg'),
 			'placeholder_image_icon' => $sPlaceholderImageUrl,
 			'cache_uuid' => 'itop-newsroom-'.UserRights::GetUserId().'-'.md5(APPROOT),
 			'providers' => $aProviderParams,

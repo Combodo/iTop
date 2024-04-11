@@ -47,4 +47,5 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'Scrollable~~',
 	'UI:Preferences:ChooseAPlaceholder' => 'User placeholder image~~',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Choose a placeholder image that will be displayed if the contact linked to your user doesn\'t have one~~',
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated~~',
 ));

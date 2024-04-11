@@ -106,7 +106,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Problem/Attribute:urgency' => 'Aciliyeti',
 	'Class:Problem/Attribute:urgency+' => '',
 	'Class:Problem/Attribute:urgency/Value:1' => 'Critical~~',
-	'Class:Problem/Attribute:urgency/Value:1+' => 'Critical~~',
+	'Class:Problem/Attribute:urgency/Value:1+' => '',
 	'Class:Problem/Attribute:urgency/Value:2' => 'Orta',
 	'Class:Problem/Attribute:urgency/Value:2+' => 'Orta',
 	'Class:Problem/Attribute:urgency/Value:3' => 'Yüksek',

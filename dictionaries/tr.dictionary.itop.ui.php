@@ -368,16 +368,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
@@ -450,8 +440,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:WelcomeMenu:MyIncidents' => 'Bana atanan hatalar',
 	'UI:AllOrganizations' => ' Tüm Kurumlar ',
 	'UI:YourSearch' => 'Arama',
-	'UI:LoggedAsMessage' => '%1$s (%2$s) kullanıcısı ile bağlanıldı~~',
-	'UI:LoggedAsMessage+Admin' => '%1$s (%2$s, Administrator) kullanıcısı ile bağlanıldı~~',
+	'UI:LoggedAsMessage' => '%1$s (%2$s) kullanıcısı ile bağlanıldı',
+	'UI:LoggedAsMessage+Admin' => '%1$s (%2$s, Administrator) kullanıcısı ile bağlanıldı',
 	'UI:Button:Logoff' => 'Çıkış',
 	'UI:Button:GlobalSearch' => 'Arama',
 	'UI:Button:Search' => ' Arama ',
@@ -498,7 +488,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
 	'UI:InputFile:SelectFile' => 'Select a file~~',
 	'UI:SearchToggle' => 'Ara',
-	'UI:ClickToCreateNew' => 'Yeni %1$s yarat~~',
+	'UI:ClickToCreateNew' => 'Yeni %1$s yarat',
 	'UI:SearchFor_Class' => '%1$s Arama',
 	'UI:NoObjectToDisplay' => 'Görüntülenecek nesne bulunamadı.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
@@ -709,7 +699,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:Error' => 'Hata: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Aranacak sınıfı seçiniz: ',
 	'UI:CSVReport-Value-Modified' => 'Değiştiridi',
-	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-SetIssue' => 'Invalid value for attribute~~',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
@@ -722,7 +712,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVReport-Row-Created' => 'Yaratıldı',
 	'UI:CSVReport-Row-Updated' => '%1$d sütunları güncellendi',
 	'UI:CSVReport-Row-Disappeared' => '%1$d sütunları ortadan kayboldu',
-	'UI:CSVReport-Row-Issue' => 'Sorun: %1$s~~',
+	'UI:CSVReport-Row-Issue' => 'Sorun: %1$s',
 	'UI:CSVReport-Value-Issue-Null' => 'Boş değere izin verilmez',
 	'UI:CSVReport-Value-Issue-NotFound' => 'Nesne bulunamadı',
 	'UI:CSVReport-Value-Issue-FoundMany' => '%1$d eşleşme bulundu',
@@ -749,7 +739,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVReport-Object-Created' => 'Nesne oluşturuldu',
 	'UI:CSVReport-Icon-Error' => 'Hata',
 	'UI:CSVReport-Object-Error' => 'HATA: %1$s',
-	'UI:CSVReport-Object-Ambiguous' => 'BELIRSIZ: %1$s~~',
+	'UI:CSVReport-Object-Ambiguous' => 'BELIRSIZ: %1$s',
 	'UI:CSVReport-Stats-Errors' => '%1$.0f yüklü nesnelerin %% hataları var ve göz ardı edilecek.',
 	'UI:CSVReport-Stats-Created' => 'Yüklenen nesnelerin %1$.0f %% oluşturulacaktır.',
 	'UI:CSVReport-Stats-Modified' => 'Yüklenen nesnelerin %1$.0f %% değiştirilecektir.',
@@ -793,7 +783,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
-	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%% of the object are valid~~',
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQL Sorgu değerlendirme',
 	'UI:RunQuery:QueryExamples' => 'Sorgu örnekleri',
 	'UI:RunQuery:QueryResults' => 'Query Results~~',
@@ -1069,7 +1059,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 </ol>
 </p>
 <p>İşlemin gerçekleşmesi için bir tetikleme ile ilişkilendirilmesi gerekir.
-Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçekleştirilir.</p>~~',
+Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçekleştirilir.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Tetikleyiciler',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Kullanılabilir tetikleyiciler',
 	'UI:NotificationsMenu:OnCreate' => 'Nesne yaratıldığında',
@@ -1088,8 +1078,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:iTopVersion:Short' => '%1$s versiyonu %2$s',
 	'UI:iTopVersion:Long' => '%1$s  %4$s tarihli versiyonu %2$s-%3$s',
 	'UI:PropertiesTab' => 'Özellikler',
-	'UI:OpenDocumentInNewWindow_' => 'Açmak~~',
-	'UI:DownloadDocument_' => 'Indirmek~~',
+	'UI:OpenDocumentInNewWindow_' => 'Açmak',
+	'UI:DownloadDocument_' => 'Indirmek',
 	'UI:Document:NoPreview' => 'Bu tip doküman için öngösterim mevcut değil',
 	'UI:Download-CSV' => 'İndir %1$s',
 	'UI:DeadlineMissedBy_duration' => '%1$s ile kaçırıldı',
@@ -1191,7 +1181,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:BulkModify_Count_DistinctValues' => '%1$d belirgin değerler:',
 	'UI:BulkModify:Value_Exists_N_Times' => '%1$s, %2$d Zaman (lar)',
 	'UI:BulkModify:N_MoreValues' => '%1$d Diğer değerler...',
-	'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Salt okunur alanını ayarlamaya çalışıyor: %1$s~~',
+	'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Salt okunur alanını ayarlamaya çalışıyor: %1$s',
 	'UI:FailedToApplyStimuli' => 'Eylem başarısız oldu',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: %2$d Nesnelerin %3$s',
 	'UI:CaseLogTypeYourTextHere' => 'Metninizi buraya yazın:',
@@ -1251,8 +1241,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',
 	'UI:Button:MoveUp' => 'Yukarıya taşı',
 	'UI:Button:MoveDown' => 'Aşağıya taşı',
-	'UI:OQL:UnknownClassAndFix' => 'Bilinmeyen sınıf \\"%1$s\\". Bunun yerine \\"%2$s\\" deneyebilirsiniz.',
-	'UI:OQL:UnknownClassNoFix' => 'Bilinmeyen sınıf \\"%1$s\\"~~',
+	'UI:OQL:UnknownClassAndFix' => 'Bilinmeyen sınıf "%1$s". Bunun yerine "%2$s" deneyebilirsiniz.',
+	'UI:OQL:UnknownClassNoFix' => 'Bilinmeyen sınıf "%1$s"',
 	'UI:Dashboard:EditCustom' => 'Bu sayfayı düzenleyin...',
 	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
 	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
@@ -1309,8 +1299,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => '%1$s için haftanın günü,',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (saat)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (ay)',
-	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (hafta Günü)~~',
-	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (ayın günü)~~',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (hafta Günü)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (ayın günü)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Lütfen nesnelerin birlikte gruplandırılacağı alanı seçin',
 	'UI:DashletGroupByPie:Label' => 'Pasta grafiği',
 	'UI:DashletGroupByPie:Description' => 'Pasta grafiği',
@@ -1635,14 +1625,19 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration~~',
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
 ));
 
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:DataSources' => 'Synchronization Data Sources~~',
-	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
+	'Menu:DataSources+' => 'Data synchro used for batch import of external data~~',
 	'Menu:AuditCategories' => 'Denetleme Kategorileri',
 	'Menu:AuditCategories+' => 'Denetleme Kategorileri',
 	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
@@ -1650,7 +1645,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:RunQueriesMenu' => 'Sorgu çalıştır',
 	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır',
 	'Menu:QueryMenu' => 'Query phrasebook~~',
-	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:QueryMenu+' => 'Reusable stored queries~~',
 	'Menu:UniversalSearchMenu' => 'Genel sorgu',
 	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...',
 	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi',
@@ -1661,7 +1656,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
-	'Menu:UserManagement' => 'User Management~~',
+	'Menu:UserManagement' => 'User management~~',
 	'Menu:Queries' => 'Queries~~',
 	'Menu:ConfigurationTools' => 'Configuration~~'
 ));

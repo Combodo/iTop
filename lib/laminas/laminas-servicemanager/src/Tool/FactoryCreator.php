@@ -8,6 +8,7 @@ use Laminas\ServiceManager\Exception\InvalidArgumentException;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
+use ReflectionNamedType;
 use ReflectionParameter;
 
 use function array_filter;
@@ -99,13 +100,13 @@ class FactoryCreator
 
         $constructorParameters = array_filter(
             $constructorParameters,
-            function (ReflectionParameter $argument): bool {
+            static function (ReflectionParameter $argument): bool {
                 if ($argument->isOptional()) {
                     return false;
                 }
 
                 $type  = $argument->getType();
-                $class = null !== $type && ! $type->isBuiltin() ? $type->getName() : null;
+                $class = $type instanceof ReflectionNamedType && ! $type->isBuiltin() ? $type->getName() : null;
 
                 if (null === $class) {
                     throw new InvalidArgumentException(sprintf(
@@ -123,9 +124,9 @@ class FactoryCreator
             return [];
         }
 
-        return array_map(function (ReflectionParameter $parameter): ?string {
+        return array_map(static function (ReflectionParameter $parameter): ?string {
             $type = $parameter->getType();
-            return null !== $type && ! $type->isBuiltin() ? $type->getName() : null;
+            return $type instanceof ReflectionNamedType && ! $type->isBuiltin() ? $type->getName() : null;
         }, $constructorParameters);
     }
 
@@ -135,7 +136,7 @@ class FactoryCreator
      */
     private function createArgumentString($className)
     {
-        $arguments = array_map(fn(string $dependency): string
+        $arguments = array_map(static fn(string $dependency): string
             => sprintf('$container->get(\\%s::class)', $dependency), $this->getConstructorParameters($className));
 
         switch (count($arguments)) {

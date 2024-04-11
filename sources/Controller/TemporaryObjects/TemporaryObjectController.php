@@ -8,7 +8,7 @@ namespace Combodo\iTop\Controller\TemporaryObjects;
 
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectManager;
-use JsonPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
 use utils;
 
 /**

@@ -6,6 +6,7 @@
 
 use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeUIBlockFactory;
 use Combodo\iTop\Application\UI\Links\Set\BlockLinkSetDisplayAsProperty;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Form;
@@ -72,6 +73,11 @@ define('DEL_SILENT', 2);
  */
 define('DEL_MOVEUP', 3);
 
+/**
+ * Do nothing at least automatically
+ */
+define('DEL_NONE', 4);
+
 
 /**
  * For Link sets: tracking_level
@@ -90,6 +96,12 @@ define('LINKSET_EDITMODE_ADDONLY', 1); // The only possible action is to open a 
 define('LINKSET_EDITMODE_ACTIONS', 2); // Show the usual 'Actions' popup menu
 define('LINKSET_EDITMODE_INPLACE', 3); // The "linked" objects can be created/modified/deleted in place
 define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/removed in place
+
+define('LINKSET_EDITWHEN_NEVER', 0); // The linkset cannot be edited at all from inside this object
+define('LINKSET_EDITWHEN_ON_HOST_EDITION', 1); // The only possible action is to open a new window to create a new object
+define('LINKSET_EDITWHEN_ON_HOST_DISPLAY', 2); // Show the usual 'Actions' popup menu
+define('LINKSET_EDITWHEN_ALWAYS', 3); // Show the usual 'Actions' popup menu
+
 
 define('LINKSET_DISPLAY_STYLE_PROPERTY', 'property');
 define('LINKSET_DISPLAY_STYLE_TAB', 'tab');
@@ -791,7 +803,7 @@ abstract class AttributeDefinition
 	public function HasAValue($proposedValue): bool
 	{
 		// Default implementation, we don't really know what type $proposedValue will be
-		return is_null($proposedValue);
+		return !(is_null($proposedValue));
 	}
 
 	/**
@@ -1703,6 +1715,15 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetEditMode()
 	{
 		return $this->GetOptional('edit_mode', LINKSET_EDITMODE_ACTIONS);
+	}	
+	
+	/**
+	 * @return int see LINKSET_EDITWHEN_* constants
+	 * @since 3.1.1 3.2.0 N°6385
+	 */
+	public function GetEditWhen(): int
+	{
+		return $this->GetOptional('edit_when', LINKSET_EDITWHEN_ALWAYS);
 	}
 
 	/**
@@ -1724,11 +1745,20 @@ class AttributeLinkedSet extends AttributeDefinition
 	 * @return bool true if Attribute has constraints
 	 * @since 3.1.0 N°6228
 	 */
-	public function GetHasConstraint()
+	public function HasPHPConstraint(): bool
 	{
 		return $this->GetOptional('with_php_constraint', false);
 	}
 
+	/**
+	 * @return bool true if Attribute has computation (DB_LINKS_CHANGED event propagation, `with_php_computation` attribute xml property), false otherwise
+	 * @since 3.1.1 3.2.0 N°6228
+	 */
+	public function HasPHPComputation(): bool
+	{
+		return $this->GetOptional('with_php_computation', false);
+	}
+	
 	public function GetLinkedClass()
 	{
 		return $this->Get('linked_class');
@@ -3037,6 +3067,11 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 		return ((int) $proposedValue) !== 0;
 	}
 
+    /**
+     * @inheritDoc
+     *
+     * @param int|DBObject $proposedValue Object key or valid ({@see MetaModel::IsValidObject()}) datamodel object
+     */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue))
@@ -3049,7 +3084,6 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 		}
 		if (MetaModel::IsValidObject($proposedValue))
 		{
-			/** @var \DBObject $proposedValue */
 			return $proposedValue->GetKey();
 		}
 
@@ -3167,9 +3201,19 @@ class AttributeDecimal extends AttributeDBField
 	{
 		$iNbDigits = $this->Get('digits');
 		$iPrecision = $this->Get('decimals');
-		$iNbIntegerDigits = $iNbDigits - $iPrecision - 1; // -1 because the first digit is treated separately in the pattern below
+		$iNbIntegerDigits = $iNbDigits - $iPrecision;
 
-		return "^[\-\+]?[0-9]\d{0,$iNbIntegerDigits}(\.\d{0,$iPrecision})?$";
+		return "^[\-\+]?\d{1,$iNbIntegerDigits}(\.\d{0,$iPrecision})?$";
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.2.0
+	 */
+	public function CheckFormat($value)
+	{
+		$sRegExp = $this->GetValidationPattern();
+		return preg_match("/$sRegExp/", $value);
 	}
 
 	public function GetBasicFilterOperators()
@@ -3264,7 +3308,7 @@ class AttributeDecimal extends AttributeDBField
 
 		if (!is_null($value) && ($value !== ''))
 		{
-			$value = sprintf("%01.".$this->Get('decimals')."F", $value);
+			$value = sprintf("%1.".$this->Get('decimals')."F", $value);
 		}
 		return $value; // null or string
 	}
@@ -3481,7 +3525,7 @@ class AttributeBoolean extends AttributeInteger
 		$sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null,
 		$sAttributeQualifier = null
 	) {
-		$sInput = strtolower(trim($sProposedValue));
+		$sInput = mb_strtolower(trim($sProposedValue));
 		if ($bLocalizedValue)
 		{
 			switch ($sInput)
@@ -4506,7 +4550,6 @@ class AttributeText extends AttributeString
 		$sStyle = '';
 		if (count($aStyles) > 0)
 		{
-			$aStyles[] = 'overflow:auto';
 			$sStyle = 'style="'.implode(';', $aStyles).'"';
 		}
 
@@ -6486,32 +6529,46 @@ class AttributeDateTime extends AttributeDBField
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 *
+	 * @param int|DateTime|string $proposedValue possible values :
+	 *                      - timestamp ({@see DateTime::getTimestamp())
+	 *                      - {@see \DateTime} PHP object
+	 *                      - string, following the {@see GetInternalFormat} format.
+	 *
+	 * @throws \CoreUnexpectedValue if invalid value type or the string passed cannot be converted
+	 */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue))
 		{
 			return null;
 		}
-		if (is_string($proposedValue) && ($proposedValue == "") && $this->IsNullAllowed())
-		{
-			return null;
+
+		if (is_numeric($proposedValue)) {
+			return date(static::GetInternalFormat(), $proposedValue);
 		}
-		if (!is_numeric($proposedValue))
-		{
-			// Check the format
-			try
-			{
-				$oFormat = new DateTimeFormat($this->GetInternalFormat());
+
+		if (is_object($proposedValue) && ($proposedValue instanceof DateTime)) {
+			return $proposedValue->format(static::GetInternalFormat());
+		}
+
+		if (is_string($proposedValue)) {
+			if (($proposedValue === '') && $this->IsNullAllowed()) {
+				return null;
+			}
+			try {
+				$oFormat = new DateTimeFormat(static::GetInternalFormat());
 				$oFormat->Parse($proposedValue);
-			} catch (Exception $e)
-			{
-				throw new Exception('Wrong format for date attribute '.$this->GetCode().', expecting "'.$this->GetInternalFormat().'" and got "'.$proposedValue.'"');
+			} catch (Exception $e) {
+				throw new CoreUnexpectedValue('Wrong format for date attribute '.$this->GetCode().', expecting "'.$this->GetInternalFormat().'" and got "'.$proposedValue.'"');
 			}
 
 			return $proposedValue;
 		}
 
-		return date(static::GetInternalFormat(), $proposedValue);
+		throw new CoreUnexpectedValue('Wrong format for date attribute '.$this->GetCode());
 	}
 
 	public function ScalarToSQL($value)
@@ -8275,9 +8332,9 @@ class AttributeBlob extends AttributeDefinition
 	}
 
 	/**
-	 * Users can provide the document from an URL (including an URL on iTop itself)
-	 * for CSV import. Administrators can even provide the path to a local file
-	 * {@inheritDoc}
+     * {@inheritDoc}
+     *
+     * @param string $proposedValue Can be an URL (including an URL to iTop itself), or a local path (CSV import)
 	 *
 	 * @see AttributeDefinition::MakeRealValue()
 	 */
@@ -8518,7 +8575,7 @@ class AttributeBlob extends AttributeDefinition
 		$sFingerprint = '';
 		if ($value instanceOf ormDocument)
 		{
-			$sFingerprint = md5($value->GetData());
+			$sFingerprint = $value->GetSignature();
 		}
 
 		return $sFingerprint;
@@ -8584,7 +8641,7 @@ class AttributeBlob extends AttributeDefinition
 	public function RecordAttChange(DBObject $oObject, $original, $value): void
 	{
 		// N°6502 Don't record history if only the download count has changed
-		if ($original->EqualsExceptDownloadsCount($value)) {
+		if ((null !== $original) && (null !== $value) && $original->EqualsExceptDownloadsCount($value)) {
 			return;
 		}
 
@@ -8627,6 +8684,20 @@ class AttributeImage extends AttributeBlob
 	public function __construct($sCode, $aParams)
 	{
 		parent::__construct($sCode, $aParams);
+	}
+
+	public function Get($sParamName)
+	{
+		$oParamValue = parent::Get($sParamName);
+
+		if ($sParamName === 'default_image') {
+			/** @noinspection NestedPositiveIfStatementsInspection */
+			if (!empty($oParamValue)) {
+				return utils::GetAbsoluteUrlModulesRoot() . $oParamValue;
+			}
+		}
+
+		return $oParamValue;
 	}
 
 	public function GetEditClass()
@@ -12972,7 +13043,7 @@ class AttributeRedundancySettings extends AttributeDBField
 	 * Display an option (form, or current value)
 	 *
 	 * @param string $sCurrentValue
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sFormPrefix
 	 * @param bool $bEditMode
 	 * @param string $sUserOption

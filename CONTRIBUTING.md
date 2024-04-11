@@ -159,6 +159,6 @@ We have one sticker per contribution type. You might get multiple stickers with 
 * Beta tester: Test and give feedback on beta releases
 * Extension developer: Develop and publish an extension
 
-Here is the design of each stickers for year 2022:
+Here is the design of each stickers for year 2024:
 
-![iTop stickers 2023](.doc/contributing-guide/2023.contributing-stickers-side-by-side.png)
+![iTop stickers 2024](.doc/contributing-guide/2024.contributing-stickers-side-by-side.png)

@@ -16,6 +16,8 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * The standardized result of any pass/fail check performed by the setup
@@ -94,7 +96,7 @@ class CheckResult {
 class SetupUtils
 {
 	// -- Minimum versions (requirements : forbids installation if not met)
-	const PHP_MIN_VERSION             = '7.4.0';
+	const PHP_MIN_VERSION             = '8.1.0';
 	const MYSQL_MIN_VERSION           = '5.7.0'; // 5.6 is no longer supported
 	const MYSQL_NOT_VALIDATED_VERSION = ''; // MySQL 8 is now OK (N°2010 in 2.7.0) but has no query cache so mind the perf on large volumes !
 
@@ -102,7 +104,7 @@ class SetupUtils
 	const PHP_NEXT_MIN_VERSION   = ''; // No new PHP requirement for next iTop version yet
 	const MYSQL_NEXT_MIN_VERSION = ''; // No new MySQL requirement for next iTop version yet
 	// -- First recent version that is not yet validated by Combodo (warning)
-	const PHP_NOT_VALIDATED_VERSION = '8.2.0';
+	const PHP_NOT_VALIDATED_VERSION = '8.4.0';
 
 	const MIN_MEMORY_LIMIT             = '32M';
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
@@ -410,12 +412,12 @@ class SetupUtils
 	/**
 	 * Call the platform checks. If those checks return CheckResult::ERROR, then output and log them, then exit. Otherwise just return.
 	 *
-	 * @param \CLIPage $oCliPage
+	 * @param CLIPage $oCliPage
 	 * @param int $iExitCode
 	 *
 	 * @uses CheckPhpAndExtensions
 	 * @uses \CheckResult::FilterCheckResultArray()
-	 * @uses \CLIPage::output()
+	 * @uses CLIPage::output()
 	 * @uses \IssueLog::Error()
 	 * @uses \exit()
 	 *
@@ -816,7 +818,7 @@ class SetupUtils
 		{
 			if (!is_dir($sDest))
 			{
-				mkdir($sDest, 0777, true);
+				mkdir($sDest, 0777 /* Default */, true);
 			}
 			$aFiles = scandir($sSource);
 			if(sizeof($aFiles) > 0 )
@@ -988,9 +990,18 @@ class SetupUtils
 		return $f;
 	}
 
+    /**
+     * @param float $fBytes size in raw bytes, for example 162594750464.0
+     * @return string formatted string, for example "161.62 GB"
+     *
+     * @link https://en.wiktionary.org/wiki/byte byte and not Byte
+     * @link https://en.wikipedia.org/wiki/Kilobyte kB and not KB (IEC 80000-13)
+     * @link https://en.wiktionary.org/wiki/petabyte petabyte PB
+     * @link https://en.wiktionary.org/wiki/exabyte exabyte EB
+     */
 	public static function HumanReadableSize($fBytes)
 	{
-		$aSizes = array('bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'HB');
+		$aSizes = array('bytes', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB');
 		$index = 0;
 		while (($fBytes > 1000) && ($index < count($aSizes))) {
 			$index++;
@@ -1006,7 +1017,7 @@ class SetupUtils
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param boolean $bIsItopInstall true if we are installing, false if we're upgrading
 	 * @param string $sDBServer
 	 * @param string $sDBUser
@@ -2158,6 +2169,7 @@ JS
 				'sodium' => 'Strong encryption will not be used.',
 				'openssl' => 'Strong encryption will not be used.',
 			],
+			'apcu' => 'Performances will be slightly degraded.',
 			'ldap' => 'LDAP authentication will be disabled.',
 		];
 

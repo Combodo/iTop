@@ -96,10 +96,9 @@ class GreaterThan extends AbstractValidator
     /**
      * Sets the min option
      *
-     * @param  mixed $min
      * @return $this Provides a fluent interface
      */
-    public function setMin($min)
+    public function setMin(mixed $min)
     {
         $this->min = $min;
         return $this;

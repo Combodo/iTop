@@ -4,12 +4,17 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Application\WebPage;
+
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
+use DeprecatedCallsLog;
+use ExecutionKPI;
+use utils;
 
 class AjaxPage extends WebPage implements iTabbedPage
 {
@@ -46,7 +51,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 		parent::__construct($s_title, $bPrintable);
 		//$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->no_cache();
-		$this->add_xframe_options();
+		$this->add_http_headers();
 		$this->m_oTabs = new TabManager();
 		$this->sContentType = 'text/html';
 		$this->sContentDisposition = 'inline';
@@ -55,6 +60,16 @@ class AjaxPage extends WebPage implements iTabbedPage
 
 		utils::InitArchiveMode();
 		$oKpi->ComputeStats(get_class($this).' creation', 'AjaxPage');
+	}
+
+	/**
+	 * Disabling sending the header so that resource won't be blocked by CORB. See parent method documentation.
+	 * @return void
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°4368 method creation
+	 */
+	public function add_xcontent_type_options()
+	{
+		// Nothing to do !
 	}
 
 	/**

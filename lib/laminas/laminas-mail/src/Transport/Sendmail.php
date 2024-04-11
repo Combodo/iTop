@@ -5,7 +5,31 @@ namespace Laminas\Mail\Transport;
 use Laminas\Mail;
 use Laminas\Mail\Address\AddressInterface;
 use Laminas\Mail\Header\HeaderInterface;
+use Laminas\Mail\Transport\Exception\InvalidArgumentException;
+use Laminas\Mail\Transport\Exception\RuntimeException;
 use Traversable;
+
+use function count;
+use function escapeshellarg;
+use function gettype;
+use function implode;
+use function is_array;
+use function is_callable;
+use function is_object;
+use function is_string;
+use function mail;
+use function preg_match;
+use function restore_error_handler;
+use function set_error_handler;
+use function sprintf;
+use function str_contains;
+use function str_replace;
+use function strtoupper;
+use function substr;
+use function trim;
+
+use const PHP_OS;
+use const PHP_VERSION_ID;
 
 /**
  * Class for sending email via the PHP internal mail() function
@@ -28,18 +52,15 @@ class Sendmail implements TransportInterface
 
     /**
      * error information
+     *
      * @var string
      */
     protected $errstr;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $operatingSystem;
 
     /**
-     * Constructor.
-     *
      * @param  null|string|array|Traversable $parameters OPTIONAL (Default: null)
      */
     public function __construct($parameters = null)
@@ -56,7 +77,7 @@ class Sendmail implements TransportInterface
      * Used to populate the additional_parameters argument to mail()
      *
      * @param  null|string|array|Traversable $parameters
-     * @throws \Laminas\Mail\Transport\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return Sendmail
      */
     public function setParameters($parameters)
@@ -67,10 +88,10 @@ class Sendmail implements TransportInterface
         }
 
         if (! is_array($parameters) && ! $parameters instanceof Traversable) {
-            throw new Exception\InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 '%s expects a string, array, or Traversable object of parameters; received "%s"',
                 __METHOD__,
-                (is_object($parameters) ? get_class($parameters) : gettype($parameters))
+                is_object($parameters) ? $parameters::class : gettype($parameters)
             ));
         }
 
@@ -89,16 +110,16 @@ class Sendmail implements TransportInterface
      * Primarily for testing purposes, but could be used to curry arguments.
      *
      * @param  callable $callable
-     * @throws \Laminas\Mail\Transport\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return Sendmail
      */
     public function setCallable($callable)
     {
         if (! is_callable($callable)) {
-            throw new Exception\InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 '%s expects a callable argument; received "%s"',
                 __METHOD__,
-                (is_object($callable) ? get_class($callable) : gettype($callable))
+                is_object($callable) ? $callable::class : gettype($callable)
             ));
         }
         $this->callable = $callable;
@@ -107,8 +128,6 @@ class Sendmail implements TransportInterface
 
     /**
      * Send a message
-     *
-     * @param  \Laminas\Mail\Message $message
      */
     public function send(Mail\Message $message)
     {
@@ -133,8 +152,7 @@ class Sendmail implements TransportInterface
     /**
      * Prepare recipients list
      *
-     * @param  \Laminas\Mail\Message $message
-     * @throws \Laminas\Mail\Transport\Exception\RuntimeException
+     * @throws RuntimeException
      * @return string
      */
     protected function prepareRecipients(Mail\Message $message)
@@ -143,7 +161,7 @@ class Sendmail implements TransportInterface
 
         $hasTo = $headers->has('to');
         if (! $hasTo && ! $headers->has('cc') && ! $headers->has('bcc')) {
-            throw new Exception\RuntimeException(
+            throw new RuntimeException(
                 'Invalid email; contains no at least one of "To", "Cc", and "Bcc" header'
             );
         }
@@ -156,7 +174,7 @@ class Sendmail implements TransportInterface
         $to   = $headers->get('to');
         $list = $to->getAddressList();
         if (0 == count($list)) {
-            throw new Exception\RuntimeException('Invalid "To" header; contains no addresses');
+            throw new RuntimeException('Invalid "To" header; contains no addresses');
         }
 
         // If not on Windows, return normal string
@@ -176,7 +194,6 @@ class Sendmail implements TransportInterface
     /**
      * Prepare the subject line string
      *
-     * @param  \Laminas\Mail\Message $message
      * @return string
      */
     protected function prepareSubject(Mail\Message $message)
@@ -192,7 +209,6 @@ class Sendmail implements TransportInterface
     /**
      * Prepare the body string
      *
-     * @param  \Laminas\Mail\Message $message
      * @return string
      */
     protected function prepareBody(Mail\Message $message)
@@ -211,7 +227,6 @@ class Sendmail implements TransportInterface
     /**
      * Prepare the textual representation of headers
      *
-     * @param  \Laminas\Mail\Message $message
      * @return string
      */
     protected function prepareHeaders(Mail\Message $message)
@@ -225,8 +240,8 @@ class Sendmail implements TransportInterface
         $from = $headers->get('From');
         if ($from) {
             foreach ($from->getAddressList() as $address) {
-                if (strpos($address->getEmail(), '\\"') !== false) {
-                    throw new Exception\RuntimeException('Potential code injection in From header');
+                if (str_contains($address->getEmail(), '\\"')) {
+                    throw new RuntimeException('Potential code injection in From header');
                 }
             }
         }
@@ -239,7 +254,6 @@ class Sendmail implements TransportInterface
      * Basically, overrides the MAIL FROM envelope with either the Sender or
      * From address.
      *
-     * @param  \Laminas\Mail\Message $message
      * @return string
      */
     protected function prepareParameters(Mail\Message $message)
@@ -255,16 +269,14 @@ class Sendmail implements TransportInterface
 
         $sender = $message->getSender();
         if ($sender instanceof AddressInterface) {
-            $parameters .= ' -f' . \escapeshellarg($sender->getEmail());
-            return $parameters;
+            return $parameters . ' -f' . escapeshellarg($sender->getEmail());
         }
 
         $from = $message->getFrom();
         if (count($from)) {
             $from->rewind();
-            $sender      = $from->current();
-            $parameters .= ' -f' . \escapeshellarg($sender->getEmail());
-            return $parameters;
+            $sender = $from->current();
+            return $parameters . ' -f' . escapeshellarg($sender->getEmail());
         }
 
         return $parameters;
@@ -277,8 +289,8 @@ class Sendmail implements TransportInterface
      * @param  string $subject
      * @param  string $message
      * @param  string $headers
-     * @param  $parameters
-     * @throws \Laminas\Mail\Transport\Exception\RuntimeException
+     * @param  null|string $parameters
+     * @throws RuntimeException
      */
     public function mailHandler($to, $subject, $message, $headers, $parameters)
     {
@@ -295,7 +307,7 @@ class Sendmail implements TransportInterface
             if (empty($errstr)) {
                 $errstr = 'Unknown error';
             }
-            throw new Exception\RuntimeException('Unable to send mail: ' . $errstr);
+            throw new RuntimeException('Unable to send mail: ' . $errstr);
         }
     }
 
@@ -309,7 +321,7 @@ class Sendmail implements TransportInterface
      * @param array  $errcontext
      * @return bool always true
      */
-    public function handleMailErrors($errno, $errstr, $errfile = null, $errline = null, array $errcontext = null)
+    public function handleMailErrors($errno, $errstr, $errfile = null, $errline = null, ?array $errcontext = null)
     {
         $this->errstr = $errstr;
         return true;
@@ -325,6 +337,6 @@ class Sendmail implements TransportInterface
         if (! $this->operatingSystem) {
             $this->operatingSystem = strtoupper(substr(PHP_OS, 0, 3));
         }
-        return ($this->operatingSystem == 'WIN');
+        return $this->operatingSystem == 'WIN';
     }
 }

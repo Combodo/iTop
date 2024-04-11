@@ -447,14 +447,14 @@ class Config
 			'show_in_conf_sample' => true,
 		],
 		'export_pdf_font' => [ // @since 2.7.0 PR #49 / N°1947
-			'type' => 'string',
-			'description' => 'Font used when generating a PDF file',
-			'default' => 'DejaVuSans', // DejaVuSans is a UTF-8 Unicode font, embedded in the TCPPDF lib we're using
-			// Standard PDF fonts like helvetica or times newroman are NOT Unicode
-			// A new DroidSansFallback can be used to improve CJK support (se PR #49)
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
+		                       'type'                => 'string',
+		                       'description'         => 'Font used when generating a PDF file',
+		                       'default'             => 'DejaVuSans', // DejaVuSans is a UTF-8 Unicode font, embedded in the TCPPDF lib we're using
+		                       // Standard PDF fonts like helvetica or times newroman are NOT Unicode
+		                       // A new DroidSansFallback can be used to improve CJK support (se PR #49)
+		                       'value'               => '',
+		                       'source_of_value'     => '',
+		                       'show_in_conf_sample' => false,
 		],
 		'access_mode' => [
 			'type' => 'integer',
@@ -889,6 +889,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+        'forgot_password.url' => [
+			'type'                => 'string',
+			'description'         => 'Set this value to your "forgot password" service URL if it should be handled out of '.ITOP_APPLICATION_SHORT.'. Note that it will apply to all users (iTop users, LDAP users, ...)',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'deadline_format' => [
 			'type' => 'string',
 			'description' => 'The format used for displaying "deadline" attributes: any string with the following placeholders: $date$, $difference$',
@@ -1111,6 +1119,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'purge_data.max_chunk_size' => [
+			'type' => 'integer',
+			'description' => 'Maximum number of items deleted per loop. Used in function MetaModel::PurgeData',
+			'default' => 1000,
+			'value' => 1000,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'max_history_length' => [
 			'type' => 'integer',
 			'description' => 'Maximum length of the history table (in the "History" tab on each object) before it gets truncated. Latest modifications are displayed first.',
@@ -1189,6 +1205,30 @@ class Config
 			'type' => 'integer',
 			'description' => 'Maximum number of successive levels (depth) to explore when displaying the impact/depends on relations.',
 			'default' => 20, // In iTop 2.0.3, this was the hardcoded value
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'sessions_tracking.enabled' => [
+			'type' => 'bool',
+			'description' => 'Whether or not the whole mechanism to track active sessions is enabled. See PHP session.gc_maxlifetime setting to configure session expiration.',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'sessions_tracking.gc_threshold' => [
+			'type' => 'integer',
+			'description'         => 'fallback in case cron is not active: probability in percent that session files are cleanup during any itop request (100 means always)',
+			'default'             => 1,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'sessions_tracking.gc_duration_in_seconds' => [
+			'type' => 'integer',
+			'description' => 'fallback in case cron is not active: when a cleanup is triggered cleanup duration will not exceed this duration (in seconds).',
+			'default' => 1,
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
@@ -1292,9 +1332,9 @@ class Config
 		'draft_attachments_lifetime' => [
 			'type'                => 'integer',
 			'description'         => 'Lifetime (in seconds) of drafts\' attachments and inline images: after this duration, the garbage collector will delete them.',
-			'default' => 86400,
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => 86400,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'date_and_time_format' => [
@@ -1571,6 +1611,38 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'notifications.itop.read_notification_retention' => [
+			'type' => 'integer',
+			'description' => 'Duration in days after which iTop read notifications will be deleted',
+			'default' => 182,
+			'value' => 182,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'notifications.itop.send_asynchronously' => [
+			'type' => 'bool',
+			'description' => 'If true then iTop notifications will be sent asynchronously',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'notifications.itop.newsroom_cache_time' => [
+			'type' => 'integer',
+			'description' => 'Duration in min between each fetch for notifications in newsroom',
+			'default' => 5,
+			'value' => 5,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'notifications.last_executions_days' => [
+			'type' => 'integer',
+			'description' => 'Number of days to display in the Action\'s last executions tab (0 means no limit)',
+			'default' => 30 + 31, // 2 months
+			'value' => 61,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'regenerate_session_id_enabled' => [
 			'type' => 'bool',
 			'description' => 'If true then session id will be regenerated on each login, to prevent session fixation.',
@@ -1615,6 +1687,14 @@ class Config
 			'type' => 'string',
 			'description' => 'Value of the X-Frame-Options HTTP header sent by iTop. Possible values : DENY, SAMEORIGIN, or empty string.',
 			'default' => 'SAMEORIGIN',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'security.enable_header_xcontent_type_options' => [
+			'type' => 'bool',
+			'description' => 'If set to false, iTop will stop sending the X-Content-Type-Options HTTP header. This header could trigger CORB protection on certain resources (JSON, XML, HTML, text) therefore blocking them.',
+			'default' => true,
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
@@ -1680,6 +1760,14 @@ class Config
 			'description'         => 'If true audit categories must be selected before results are computed (use this setting in case of a lot of audit categories)',
 			'default'             => true,
 			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'application.secret' => [
+			'type'                => 'string',
+			'description'         => 'Application secret, uses this value for encrypting the cookies used in the remember me functionality and for creating signed URIs when using ESI (Edge Side Includes).',
+			'default'             => '',
+			'value'               => '',
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
@@ -1810,6 +1898,7 @@ class Config
 	 * @var integer Number of seconds between two reloads of the display (standard)
 	 */
 	protected $m_iStandardReloadInterval;
+
 	/**
 	 * @var integer Number of seconds between two reloads of the display (fast)
 	 */
@@ -1863,6 +1952,15 @@ class Config
 	protected $m_iPasswordHashAlgo;
 
 	/**
+	 * Symfony uses this value for encrypting the cookies used in the remember me functionality and for creating signed URIs when using ESI (Edge Side Includes).
+	 *
+	 * @see https://symfony.com/doc/current/reference/configuration/framework.html#secret
+	 * @since 3.2.0 - N°6934 - Symfony 6.4 - upgrade Symfony bundles to 6.4
+	 * @var string
+	 */
+	protected $m_sAppSecret;
+
+	/**
 	 * Config constructor.
 	 *
 	 * @param string|null $sConfigFile
@@ -1906,6 +2004,7 @@ class Config
 		$this->m_aCharsets = array();
 		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
 		$this->m_iPasswordHashAlgo = DEFAULT_HASH_ALGO;
+		$this->m_sAppSecret = bin2hex(random_bytes(16));
 
 		//define default encryption params according to php install
 		$aEncryptParams = SimpleCrypt::GetNewDefaultParams();
@@ -2066,6 +2165,7 @@ class Config
 		$this->m_sEncryptionLibrary = isset($MySettings['encryption_library']) ? trim($MySettings['encryption_library']) : $this->m_sEncryptionLibrary;
 		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : array();
 		$this->m_iPasswordHashAlgo = isset($MySettings['password_hash_algo']) ? $MySettings['password_hash_algo'] : $this->m_iPasswordHashAlgo;
+		$this->m_sAppSecret = isset($MySettings['application.secret']) ? trim($MySettings['application.secret']) : $this->m_sAppSecret;
 	}
 
 	protected function Verify()
@@ -2201,6 +2301,11 @@ class Config
 		return $this->m_sEncryptionKey;
 	}
 
+	public function GetAppSecret()
+	{
+		return $this->m_sAppSecret;
+	}
+
 	public function GetEncryptionLibrary()
 	{
 		return $this->m_sEncryptionLibrary;
@@ -2289,6 +2394,24 @@ class Config
 		$this->m_sAllowedLoginTypes = implode('|', $aAllowedLoginTypes);
 	}
 
+	/**
+	 * @since 2.7.11 N°7085
+	 * Add login mode if not configured already
+	 * @param string $sLoginMode
+	 *
+	 * @return void
+	 */
+	public function AddAllowedLoginTypes($sLoginMode)
+	{
+		$aAllowedLoginTypes = $this->GetAllowedLoginTypes();
+		if (in_array($sLoginMode, $aAllowedLoginTypes)){
+			return;
+		}
+
+		$aAllowedLoginTypes[] = $sLoginMode;
+		$this->SetAllowedLoginTypes($aAllowedLoginTypes);
+	}
+
 	public function SetExternalAuthenticationVariable($sExtAuthVariable)
 	{
 		$this->m_sExtAuthVariable = $sExtAuthVariable;
@@ -2298,6 +2421,12 @@ class Config
 	{
 		$this->m_sEncryptionKey = $sKey;
 	}
+
+	public function SetAppSecret($sKey)
+	{
+		$this->m_sAppSecret = $sKey;
+	}
+
 
 	public function SetCSVImportCharsets($aCharsets)
 	{
@@ -2350,6 +2479,7 @@ class Config
 		$aSettings['encryption_library'] = $this->m_sEncryptionLibrary;
 		$aSettings['csv_import_charsets'] = $this->m_aCharsets;
 		$aSettings['password_hash_algo'] = $this->m_iPasswordHashAlgo;
+		$aSettings['application.secret'] = $this->m_sAppSecret;
 
 		foreach ($this->m_aModuleSettings as $sModule => $aProperties)
 		{
@@ -2440,9 +2570,9 @@ class Config
 
 			// Old fashioned integer settings
 			$aIntValues = array(
-				'fast_reload_interval' => $this->m_iFastReloadInterval,
-				'max_display_limit' => $this->m_iMaxDisplayLimit,
-				'min_display_limit' => $this->m_iMinDisplayLimit,
+				'fast_reload_interval'     => $this->m_iFastReloadInterval,
+				'max_display_limit'        => $this->m_iMaxDisplayLimit,
+				'min_display_limit'        => $this->m_iMinDisplayLimit,
 				'standard_reload_interval' => $this->m_iStandardReloadInterval,
 			);
 			foreach ($aIntValues as $sKey => $iValue)
@@ -2462,7 +2592,8 @@ class Config
 				'encryption_key' => $this->m_sEncryptionKey,
 				'encryption_library' => $this->m_sEncryptionLibrary,
 				'csv_import_charsets' => $this->m_aCharsets,
-				'password_hash_algo' => $this->m_iPasswordHashAlgo
+				'password_hash_algo' => $this->m_iPasswordHashAlgo,
+				'application.secret' => $this->m_sAppSecret,
 			);
 			foreach ($aOtherValues as $sKey => $value)
 			{

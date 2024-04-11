@@ -52,6 +52,8 @@ class Basic extends AbstractConfiguration
 			$aPortalConf = $this->ParseGlobalProperties($aPortalConf);
 			// - Rectifying portal logo url
 			$aPortalConf = $this->AppendLogoUri($aPortalConf);
+			// - Rectifying portal favicon url
+			$aPortalConf = $this->AppendFavIconUri($aPortalConf);
 		}
 		catch (Exception $oException)
 		{
@@ -71,10 +73,11 @@ class Basic extends AbstractConfiguration
 	{
 		$aPortalConf = array(
 			'properties' => array(
-				'id' => $_ENV['PORTAL_ID'],
-				'name' => 'Page:DefaultTitle',
-				'logo' => Branding::GetPortalLogoAbsoluteUrl(),
-				'themes' => array(
+				'id'              => $_ENV['PORTAL_ID'],
+				'name'            => 'Page:DefaultTitle',
+				'logo'            => Branding::GetPortalLogoAbsoluteUrl(),
+				'favicon'         => Branding::GetPortalFavIconAbsoluteUrl(),
+				'themes'          => array(
 					'bootstrap' => 'itop-portal-base/portal/public/css/bootstrap-theme-combodo.scss',
 					'portal' => 'itop-portal-base/portal/public/css/portal.scss',
 					'others' => array(),
@@ -116,11 +119,8 @@ class Basic extends AbstractConfiguration
 				case 'name':
 				case 'urlmaker_class':
 				case 'triggers_query':
-					$aPortalConf['properties'][$oPropertyNode->nodeName] = $oPropertyNode->GetText(
-						$aPortalConf['properties'][$oPropertyNode->nodeName]
-					);
-					break;
 				case 'logo':
+				case 'favicon':
 					$aPortalConf['properties'][$oPropertyNode->nodeName] = $oPropertyNode->GetText(
 						$aPortalConf['properties'][$oPropertyNode->nodeName]
 					);
@@ -263,12 +263,30 @@ class Basic extends AbstractConfiguration
 	private function AppendLogoUri(array $aPortalConf)
 	{
 		$sLogoUri = $aPortalConf['properties']['logo'];
-		if (!preg_match('/^http/', $sLogoUri))
-		{
+		if (!preg_match('/^http/', $sLogoUri)) {
 			// We prefix it with the server base url
 			$sLogoUri = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/'.$sLogoUri;
 		}
 		$aPortalConf['properties']['logo'] = $sLogoUri;
+
+		return $aPortalConf;
+	}
+
+	/**
+	 * @param array $aPortalConf
+	 *
+	 * @return array
+	 * @throws \Exception
+	 * @since 3.2.0 N°3363
+	 */
+	private function AppendFaviconUri(array $aPortalConf)
+	{
+		$sFaviconUri = $aPortalConf['properties']['favicon'];
+		if (!preg_match('/^http/', $sFaviconUri)) {
+			// We prefix it with the server base url
+			$sFaviconUri = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/'.$sFaviconUri;
+		}
+		$aPortalConf['properties']['favicon'] = $sFaviconUri;
 
 		return $aPortalConf;
 	}

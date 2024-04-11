@@ -154,6 +154,11 @@ Selectize.define("combodo_multi_values_synthesis", function (aOptions) {
 			// Listen item element click event
 			$item.on('click', function(){
 
+				// input disabled
+				if(oSelf.$input.is(':disabled')){
+					return;
+				}
+
 				// If element has operation
 				if(aOperations[sItem] === OPERATIONS.add || aOperations[sItem] === OPERATIONS.remove) {
 

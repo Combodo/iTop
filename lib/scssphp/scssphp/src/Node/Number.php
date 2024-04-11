@@ -33,7 +33,7 @@ use ScssPhp\ScssPhp\Util;
  *
  * @template-implements \ArrayAccess<int, mixed>
  */
-class Number extends Node implements \ArrayAccess
+class Number extends Node implements \ArrayAccess, \JsonSerializable
 {
     const PRECISION = 10;
 
@@ -131,7 +131,7 @@ class Number extends Node implements \ArrayAccess
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getNumeratorUnits()
     {
@@ -139,11 +139,21 @@ class Number extends Node implements \ArrayAccess
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getDenominatorUnits()
     {
         return $this->denominatorUnits;
+    }
+
+    /**
+     * @return mixed
+     */
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        // Passing a compiler instance makes the method output a Sass representation instead of a CSS one, supporting full units.
+        return $this->output(new Compiler());
     }
 
     /**
@@ -228,6 +238,16 @@ class Number extends Node implements \ArrayAccess
     }
 
     /**
+     * Returns true if the number has any units
+     *
+     * @return bool
+     */
+    public function hasUnits()
+    {
+        return !$this->unitless();
+    }
+
+    /**
      * Checks whether the number has exactly this unit
      *
      * @param string $unit
@@ -266,7 +286,27 @@ class Number extends Node implements \ArrayAccess
         try {
             return Util::checkRange('', new Range($min, $max), $this);
         } catch (RangeException $e) {
-            throw SassScriptException::forArgument(sprintf('Expected %s to be within %s%s and %s%3$s', $this, $min, $this->unitStr(), $max), $name);
+            throw SassScriptException::forArgument(sprintf('Expected %s to be within %s%s and %s%3$s.', $this, $min, $this->unitStr(), $max), $name);
+        }
+    }
+
+    /**
+     * @param float|int $min
+     * @param float|int $max
+     * @param string    $name
+     * @param string    $unit
+     *
+     * @return float|int
+     * @throws SassScriptException
+     *
+     * @internal
+     */
+    public function valueInRangeWithUnit($min, $max, $name, $unit)
+    {
+        try {
+            return Util::checkRange('', new Range($min, $max), $this);
+        } catch (RangeException $e) {
+            throw SassScriptException::forArgument(sprintf('Expected %s to be within %s%s and %s%3$s.', $this, $min, $unit, $max), $name);
         }
     }
 
@@ -524,7 +564,7 @@ class Number extends Node implements \ArrayAccess
 
         try {
             return $this->coerceUnits($other, function ($num1, $num2) {
-                return round($num1,self::PRECISION) == round($num2, self::PRECISION);
+                return round($num1, self::PRECISION) == round($num2, self::PRECISION);
             });
         } catch (SassScriptException $e) {
             return false;

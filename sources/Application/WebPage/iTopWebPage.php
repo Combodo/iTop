@@ -4,7 +4,12 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Application\WebPage;
 
+use ApplicationContext;
+use appUserPreferences;
+use AttributeDate;
+use AttributeDateTime;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
@@ -25,6 +30,18 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Application\UI\Printable\BlockPrintHeader\BlockPrintHeader;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
+use ContextTag;
+use DateTimeFormat;
+use DBSearch;
+use DeprecatedCallsLog;
+use Dict;
+use ExecutionKPI;
+use InlineImage;
+use iPageUIBlockExtension;
+use iPageUIExtension;
+use MetaModel;
+use UserRights;
+use utils;
 
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
@@ -43,8 +60,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// - TabContainer
 		'js/jquery.ba-bbq.min.js',
 		// - DashletGroupBy & other specific places
-		'js/d3.js',
-		'js/c3.js',
+		'js/d3.js', // 3.2.0 N°5261 moved to NPM
+		'js/c3.js', // 3.2.0 N°5261 moved to NPM
 		// - DisplayableGraph, impact analysis
 		'js/raphael-min.js',
 		'js/jquery.mousewheel.js',
@@ -63,7 +80,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	protected const COMPATIBILITY_MOVED_LINKED_STYLESHEETS_REL_PATH = [
 		// Moved files
 		// - DashletGroupBy & other specific places
-		'css/c3.min.css',
+		'node_modules/c3/c3.min.css',
 	];
 
 	/** @var string DEFAULT_PAGE_TEMPLATE_REL_PATH The relative path (from <ITOP>/templates/) to the default page template */
@@ -71,7 +88,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 	private $m_aMessages;
 
-	/** @var \TabManager */
+	/** @var TabManager */
 	protected $m_oTabs;
 	/**
 	 * Navigation menu layout (menu groups, user menu, ...)
@@ -137,7 +154,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
 		$this->no_cache();
-		$this->add_xframe_options();
+		$this->add_http_headers();
 		$this->PrepareLayout();
 		if ($this->IsPrintableVersion()) {
 			$oPrintHeader = $this->OutputPrintable();
@@ -155,46 +172,49 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		parent::InitializeLinkedScripts();
 
 		// Used by forms
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/leave_handler.js');
+		$this->LinkScriptFromAppRoot('js/leave_handler.js');
 
 		// Used by external keys, DM viewer
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.min.js');
+		$this->LinkScriptFromAppRoot('js/jquery.treeview.min.js');
 
 		// Used by advanced search, date(time) attributes. Coupled to the PrepareWidgets() JS function.
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon-i18n.min.js');
+		$this->LinkScriptFromAppRoot('js/jquery-ui-timepicker-addon.min.js');
+		$this->LinkScriptFromAppRoot('js/jquery-ui-timepicker-addon-i18n.min.js');
 
 		// Used by external keys and other drop down lists
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/selectize-plugin-a11y/selectize-plugin-a11y.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.multiselect.js');
+		$this->LinkScriptFromAppRoot('js/selectize.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/selectize-plugin-a11y/selectize-plugin-a11y.js');
+		$this->LinkScriptFromAppRoot('js/jquery.multiselect.js');
 
 		// Used by inline image, CKEditor and other places
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/magnific-popup/dist/jquery.magnific-popup.min.js');
 
-		// Used by date(time) attibutes, activity panel, ...
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/moment-with-locales.min.js');
+		// Used by date(time) attributes, activity panel, ...
+		$this->LinkScriptFromAppRoot('node_modules/moment/min/moment-with-locales.min.js');
 
 		// Used by the newsroom
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/showdown.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/showdown/dist/showdown.min.js');
 
 		// Tooltips
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/@popperjs/core/dist/umd/popper.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/tippy.js/dist/tippy-bundle.umd.min.js');
+		
+		// Toasts
+		$this->LinkScriptFromAppRoot('node_modules/toastify-js/src/toastify.js');
 
 		// Keyboard shortcuts
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap-record.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/keyboard-shortcuts.js');
+		$this->LinkScriptFromAppRoot('node_modules/mousetrap/mousetrap.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/mousetrap/plugins/record/mousetrap-record.min.js');
+		$this->LinkScriptFromAppRoot('js/pages/backoffice/keyboard-shortcuts.js');
 
 		// Used throughout the app.
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/toolbox.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/on-ready.js');
+		$this->LinkScriptFromAppRoot('js/pages/backoffice/toolbox.js');
+		$this->LinkScriptFromAppRoot('js/pages/backoffice/on-ready.js');
 
 		// Used by dashboard editor
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/property_field.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/icon_select.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ajaxfileupload.js');
+		$this->LinkScriptFromAppRoot('js/property_field.js');
+		$this->LinkScriptFromAppRoot('js/icon_select.js');
+		$this->LinkScriptFromAppRoot('js/ajaxfileupload.js');
 	}
 
 	/**
@@ -237,24 +257,24 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		parent::InitializeLinkedStylesheets();
 
 		// Used by advanced search, date(time) attributes. Coupled to the PrepareWidgets() JS function.
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery-ui-timepicker-addon.css');
+		$this->LinkStylesheetFromAppRoot('css/jquery-ui-timepicker-addon.css');
 
 		// Used by inline image, CKEditor and other places
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/magnific-popup.css');
+		$this->LinkStylesheetFromAppRoot('node_modules/magnific-popup/dist/magnific-popup.css');
 
 		// Tooltips
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
+		$this->LinkStylesheetFromAppRoot('node_modules/tippy.js/dist/tippy.css');
+		$this->LinkStylesheetFromAppRoot('node_modules/tippy.js/animations/shift-away-subtle.css');
 
 		// Icons
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
+		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
+		$this->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
 
 		// Note: CKEditor files can't be moved easily as we need to find a way to init the "disabler" plugin, {@see js/toolbox.js}
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
+		$this->LinkStylesheetFromAppRoot('js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
 
 		// Used by external keys and other drop down lists
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
+		$this->LinkStylesheetFromAppRoot('css/selectize.default.css');
 	}
 
 	/**
@@ -301,7 +321,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// Date picker options
 		$aPickerOptions = array(
 			'showOn' => 'button',
-			'buttonText' => '<i class="fas fa-calendar-alt"></i>',
+			'buttonText' => '', // N°6455 class will be added after JQuery UI widget
 			'dateFormat' => AttributeDate::GetFormat()->ToDatePicker(),
 			'constrainInput' => false,
 			'changeMonth' => true,
@@ -354,6 +374,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	    // Note: Trigger image is wrapped in a span so we can display it we want 
 		$(".date-pick").datepicker($sJSDatePickerOptions)
 		    .next("img").wrap("<span>");
+		$("button.ui-datepicker-trigger").addClass('fas fa-calendar-alt');
 	
 		// Hack for the date and time picker addon issue on Chrome (see #1305)
 		// The workaround is to instantiate the widget on demand
@@ -619,10 +640,11 @@ JS
 	{
 		$sBannerHtml = '';
 
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
+		$sAPIClassName = iPageUIExtension::class;
 		/** @var \iPageUIExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-		{
+		foreach (MetaModel::EnumPlugins($sAPIClassName) as $oExtensionInstance) {
+			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetBannerHtml", "use " . iPageUIBlockExtension::class . "::GetBannerBlock() instead");
 			$sBannerHtml .= $oExtensionInstance->GetBannerHtml($this);
 		}
 
@@ -642,7 +664,7 @@ JS
 	{
 		$oBanner = new UIContentBlock();
 
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
 		/** @var \iPageUIBlockExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance)
 		{
@@ -668,10 +690,11 @@ JS
 	{
 		$sHeaderHtml = '';
 
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
+		$sAPIClassName = iPageUIExtension::class;
 		/** @var \iPageUIExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-		{
+		foreach (MetaModel::EnumPlugins($sAPIClassName) as $oExtensionInstance) {
+			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetNorthPaneHtml", "use " . iPageUIBlockExtension::class . "::GetHeaderBlock() instead");
 			$sHeaderHtml .= $oExtensionInstance->GetNorthPaneHtml($this);
 		}
 
@@ -740,7 +763,7 @@ HTML;
 			$oHeader->AddSubBlock($oAppMessageAlert);
 		}
 
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
 		/** @var \iPageUIBlockExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance)
 		{
@@ -766,9 +789,11 @@ HTML;
 	{
 		$sFooterHtml = '';
 
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
+		$sAPIClassName = iPageUIExtension::class;
 		/** @var \iPageUIExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance) {
+		foreach (MetaModel::EnumPlugins($sAPIClassName) as $oExtensionInstance) {
+			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetSouthPaneHtml", "use " . iPageUIBlockExtension::class . "::GetFooterBlock() instead");
 			$sFooterHtml .= $oExtensionInstance->GetSouthPaneHtml($this);
 		}
 
@@ -788,7 +813,7 @@ HTML;
 	{
 		$oFooter = new UIContentBlock();
 
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
 		/** @var \iPageUIBlockExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance) {
 			$oBlock = $oExtensionInstance->GetFooterBlock();
@@ -806,6 +831,31 @@ HTML;
 	 */
 	public function output()
 	{
+		// Send headers
+		if ($this->GetOutputFormat() === 'html') {
+			foreach ($this->a_headers as $sHeader) {
+				header($sHeader);
+			}
+		}
+
+		// Render HTKL content
+		$sHtml = $this->RenderContent();
+
+		// Echo global HTML
+		$oKpi = new ExecutionKPI();
+		echo $sHtml;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+
+		DBSearch::RecordQueryTrace();
+		ExecutionKPI::ReportStats();
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.2.0 N°6935
+	 */
+	protected function RenderContent(): string
+	{
 		$oKpi = new ExecutionKPI();
 
 		// Data to be passed to the view
@@ -822,7 +872,7 @@ HTML;
 		/** @var \iBackofficeLinkedScriptsExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iBackofficeLinkedScriptsExtension') as $oExtensionInstance) {
 			foreach ($oExtensionInstance->GetLinkedScriptsAbsUrls() as $sScriptUrl) {
-				$this->add_linked_script($sScriptUrl);
+				$this->LinkScriptFromURI($sScriptUrl);
 			}
 		}
 		// - API: Early inline scripts
@@ -849,7 +899,7 @@ HTML;
 		/** @var \iBackofficeLinkedStylesheetsExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iBackofficeLinkedStylesheetsExtension') as $oExtensionInstance) {
 			foreach ($oExtensionInstance->GetLinkedStylesheetsAbsUrls() as $sStylesheetUrl) {
-				$this->add_linked_stylesheet($sStylesheetUrl);
+				$this->LinkStylesheetFromURI($sStylesheetUrl);
 			}
 		}
 		// - API: Inline style
@@ -909,16 +959,16 @@ HTML;
 		$aData['aDeferredBlocks']['oPageContent'] = $this->GetDeferredBlocks($this->GetContentLayout());
 		// - Prepare generic templates
 		$aData['aTemplates'] = array();
-		
+
 		// TODO 3.1 Replace hardcoded 'Please wait' with dict entries
-		
+
 		// - Modal template with loader
 		$oModalTemplateContentBlock = new UIContentBlock();
 		$oModalTemplateContentBlock->AddCSSClass('ibo-modal')
 			->AddDataAttribute('role', 'ibo-modal')
 			->AddSubBlock(SpinnerUIBlockFactory::MakeMedium(null, 'Please wait'));
 		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-modal-template', $oModalTemplateContentBlock);
-		
+
 		// - Small loader template
 		$oSmallLoaderTemplateContentBlock = new UIContentBlock();
 		$oSmallLoaderTemplateContentBlock->AddSubBlock(SpinnerUIBlockFactory::MakeSmall(null , 'Please wait'));
@@ -973,65 +1023,13 @@ HTML;
 
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 
-		// Send headers
-		if ($this->GetOutputFormat() === 'html') {
-			foreach ($this->a_headers as $sHeader) {
-				header($sHeader);
-			}
-		}
-
 		// Render final TWIG into global HTML
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
 
-		$oKpi->ComputeAndReport(get_class($this).' output');
-		
-		// Echo global HTML
-		echo $sHtml;
-		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+		$oKpi->ComputeAndReport("Rendering content (".static::class.")");
 
-		DBSearch::RecordQueryTrace();
-		ExecutionKPI::ReportStats();
-
-		return;
-
-		/////////////////////////////////////////////////////////
-		////////////////// ☢ DANGER ZONE ☢ /////////////////////
-		/////////////////////////////////////////////////////////
-		
-		// Render the tabs in the page (if any)
-//		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
-
-		// Put here the 'ready scripts' that must be executed after all others
-		$aMultiselectOptions = array(
-			'header' => true,
-			'checkAllText' => Dict::S('UI:SearchValue:CheckAll'),
-			'uncheckAllText' => Dict::S('UI:SearchValue:UncheckAll'),
-			'noneSelectedText' => Dict::S('UI:SearchValue:Any'),
-			'selectedText' => Dict::S('UI:SearchValue:NbSelected'),
-			'selectedList' => 1,
-		);
-		$sJSMultiselectOptions = json_encode($aMultiselectOptions);
-		$this->add_ready_script(
-			<<<EOF
-		// Since the event is only triggered when the hash changes, we need to trigger
-		// the event now, to handle the hash the page may have loaded with.
-		$(window).trigger( 'hashchange' );
-		
-		// Some table are sort-able, some are not, let's fix this
-		$('table.listResults').each( function() { FixTableSorter($(this)); } );
-		
-		$('.multiselect').multiselect($sJSMultiselectOptions);
-EOF
-		);
-
-		$this->outputCollapsibleSectionInit();
-
-		// TODO 3.0.0: Is this for the "Debug" popup? We should do a helper to display a popup in various cases (welcome message for example)
-		$s_captured_output = $this->ob_get_clean_safe();
-
-
+		return $sHtml;
 	}
-
 
 	/**
 	 * @inheritDoc
@@ -1269,7 +1267,7 @@ EOF
 	 * @param string $sKey
 	 * @param $value
 	 *
-	 * @return \iTopWebPage
+	 * @return iTopWebPage
 	 * @since 3.0.0
 	 */
 	public function SetBlockParam(string $sKey, $value)

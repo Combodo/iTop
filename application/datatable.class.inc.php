@@ -1,5 +1,7 @@
 <?php
 
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 /**
@@ -61,8 +63,8 @@ class DataTable
 	}
 
 	/**
-	 * @param \WebPage $oPage
-	 * @param \DataTableSettings $oSettings
+	 * @param WebPage $oPage
+	 * @param DataTableSettings $oSettings
 	 * @param $bActionsMenu
 	 * @param $sSelectMode
 	 * @param $bViewLink
@@ -141,7 +143,7 @@ class DataTable
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $iPageSize
 	 * @param $iDefaultPageSize
 	 * @param $iPageIndex
@@ -236,7 +238,7 @@ class DataTable
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $sSelectMode
 	 *
 	 * @return string
@@ -255,7 +257,7 @@ class DataTable
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $iPageSize
 	 * @param $iDefaultPageSize
 	 * @param $iPageIndex
@@ -324,6 +326,7 @@ class DataTable
 		$sPagesLinks = implode('', $aPagesToDisplay);
 		$sPagesList = '['.implode(',', array_keys($aPagesToDisplay)).']';
 
+		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
 		$sSelectionMode = ($iNbPages == 1) ? '' : 'positive';
 		$sHtml =
 <<<EOF
@@ -331,11 +334,11 @@ class DataTable
 		<div $sPagerStyle>
 		<table id="pager{$this->iListId}" class="pager"><tr>
 		<td>$sPages</td>
-		<td><img src="../images/first.png" class="first"/></td>
-		<td><img src="../images/prev.png" class="prev"/></td>
+		<td><img src="{$sAppRootUrl}images/first.png" class="first"/>AAAA</td>
+		<td><img src="{$sAppRootUrl}images/prev.png" class="prev"/></td>
 		<td><span id="index">$sPagesLinks</span></td>
-		<td><img src="../images/next.png" class="next"/></td>
-		<td><img src="../images/last.png" class="last"/></td>
+		<td><img src="{$sAppRootUrl}images/next.png" class="next"/></td>
+		<td><img src="{$sAppRootUrl}images/last.png" class="last"/></td>
 		<td>$sPageSizeCombo</td>
 		<td><span id="loading">&nbsp;</span><input type="hidden" name="selectionMode" value="$sSelectionMode"></input>
 		</td>
@@ -348,7 +351,7 @@ EOF;
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $aExtraParams
 	 *
 	 * @return string
@@ -375,7 +378,7 @@ EOF;
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $aExtraParams
 	 *
 	 * @return string
@@ -405,7 +408,7 @@ EOF;
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $aColumns
 	 * @param $bViewLink
 	 * @param $iDefaultPageSize
@@ -658,7 +661,7 @@ EOF;
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $aColumns
 	 * @param $sSelectMode
 	 * @param $iPageSize
@@ -790,7 +793,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $iDefaultPageSize
 	 * @param $iStart
 	 */
@@ -818,7 +821,7 @@ JS
 class PrintableDataTable extends DataTable
 {
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $iPageSize
 	 * @param $iDefaultPageSize
 	 * @param $iPageIndex
@@ -844,7 +847,7 @@ class PrintableDataTable extends DataTable
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $aColumns
 	 * @param $sSelectMode
 	 * @param $iPageSize

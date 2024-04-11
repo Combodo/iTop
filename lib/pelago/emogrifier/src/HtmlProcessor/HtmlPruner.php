@@ -27,7 +27,7 @@ class HtmlPruner extends AbstractHtmlProcessor
     /**
      * Removes elements that have a "display: none;" style.
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function removeElementsWithDisplayNone(): self
     {
@@ -57,7 +57,7 @@ class HtmlPruner extends AbstractHtmlProcessor
      *
      * @param array<array-key, string> $classesToKeep names of classes that should not be removed
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function removeRedundantClasses(array $classesToKeep = []): self
     {
@@ -118,7 +118,7 @@ class HtmlPruner extends AbstractHtmlProcessor
      *
      * @param CssInliner $cssInliner object instance that performed the CSS inlining
      *
-     * @return self fluent interface
+     * @return $this
      *
      * @throws \BadMethodCallException if `inlineCss` has not first been called on `$cssInliner`
      */

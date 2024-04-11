@@ -10,7 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -20,6 +20,11 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Preferences\BlockShortcuts\BlockShortcuts;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Controller\Notifications\NotificationsCenterController;
+use Combodo\iTop\Service\Router\Router;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -112,6 +117,7 @@ function DisplayPreferences($oP)
 	$oSecondColumn->AddSubBlock($oMiscOptionsFieldset);
 	$oMiscOptionsFieldset->AddSubBlock(GetObsoleteDataFieldBlock());
 	$oMiscOptionsFieldset->AddSubBlock(GetSummaryCardsFieldBlock());
+	$oMiscOptionsFieldset->AddSubBlock(GetToastsPositionFieldBlock());
 
 	$oP->add_script(
 		<<<JS
@@ -127,13 +133,24 @@ function ValidateOtherSettings()
 	}
 	else
 	{
-		$('#v_default_page_size').html('<img src="../images/validation_error.png"/>');
+		$('#v_default_page_size').html('<img src="' + GetAbsoluteUrlAppRoot() + 'images/validation_error.png"/>');
 		$('#ibo-misc-settings-submit').prop('disabled', true);
 		return false;
 	}
 }
 JS
 	);
+
+	//////////////////////////////////////////////////////////////////////////
+	//
+	// Notifications
+	//
+	//////////////////////////////////////////////////////////////////////////
+	$oNotificationsBlock = new Panel(Dict::S('UI:Preferences:Notifications'), array(), Panel::ENUM_COLOR_SCHEME_GREY, 'ibo-notifications');
+	$sNotificationsCenterUrl = Router::GetInstance()->GenerateUrl(NotificationsCenterController::ROUTE_NAMESPACE.'.display_page', [], true);
+	$oNotificationsBlock->AddSubBlock(new Html('<p>'.Dict::Format('UI:Preferences:Notifications+', $sNotificationsCenterUrl).'</p>'));
+	$oContentLayout->AddMainBlock($oNotificationsBlock);
+
 
 	//////////////////////////////////////////////////////////////////////////
 	//
@@ -237,9 +254,10 @@ JS
 	//////////////////////////////////////////////////////////////////////////
 	$iCountProviders = 0;
 	$oUser = UserRights::GetUserObject();
-	$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-	foreach($aProviders as $oProvider)
+	$aProviders = utils::GetClassesForInterface('iNewsroomProvider', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+	foreach($aProviders as $cProvider) 
 	{
+		$oProvider = new $cProvider();
 		if ($oProvider->IsApplicable($oUser))
 		{
 			$iCountProviders++;
@@ -265,8 +283,9 @@ JS
 		 * @var iNewsroomProvider[] $aProviders
 		 */
 		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
-		foreach($aProviders as $oProvider)
+		foreach($aProviders as $cProvider) 
 		{
+			$oProvider = new $cProvider();
 			if ($oProvider->IsApplicable($oUser))
 			{
 				$sUrl = $oProvider->GetPreferencesUrl();
@@ -296,7 +315,11 @@ JS
 
 		// - Reset button
 		$oNewsroomResetCacheButton = ButtonUIBlockFactory::MakeForAlternativeDestructiveAction(Dict::S('UI:Newsroom:ResetCache'));
-		$oNewsroomResetCacheButton->SetOnClickJsCode("$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')");
+		$oNewsroomResetCacheButton->SetOnClickJsCode(<<<JS
+$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')
+CombodoToast.OpenSuccessToast(Dict.S('UI:Newsroom:ResetCache:Success:Message'));
+JS
+		);
 		$oNewsroomToolbar->AddSubBlock($oNewsroomResetCacheButton);
 		// - Cancel button
 		$oNewsroomCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'));
@@ -398,11 +421,13 @@ JS
 
 	$oUserPicturePlaceHolderBlock = new Panel(Dict::S('UI:Preferences:ChooseAPlaceholder'), array(), 'grey', 'ibo-user-picture-placeholder');
 
-	$sUserPicturesFolder = '../images/user-pictures/';
+	$sUserPicturesFolderRelPath = 'images/user-pictures/';
+	$sUserPicturesFolderAbsPath = APPROOT . $sUserPicturesFolderRelPath;
+	$sUserPicturesFolderAbsUrl = utils::GetAbsoluteUrlAppRoot() . $sUserPicturesFolderRelPath;
 	$sUserDefaultPicture = appUserPreferences::GetPref('user_picture_placeholder', 'default-placeholder.png');
 	$sUserPicturePlaceHolderHtml = '';
 	$sUserPicturePlaceHolderHtml .= '<p>'.Dict::S('UI:Preferences:ChooseAPlaceholder+').'</p> <div class="ibo-preferences--user-preferences--picture-placeholder">';
-	foreach (scandir($sUserPicturesFolder) as $sUserPicture)
+	foreach (scandir($sUserPicturesFolderAbsPath) as $sUserPicture)
 	{
 		if ($sUserPicture === '.' || $sUserPicture === '..')
 		{
@@ -413,8 +438,9 @@ JS
 		{
 			$sAdditionalClass = ' ibo-is-active';
 		}
-		$sUserPicturePlaceHolderHtml .= '<a class="ibo-preferences--user-preferences--picture-placeholder--image'.$sAdditionalClass.'" data-image-name="'.$sUserPicture.'" data-role="ibo-preferences--user-preferences--picture-placeholder--image" href="#"> <img src="'.$sUserPicturesFolder.$sUserPicture.'"/> </a>';
+		$sUserPicturePlaceHolderHtml .= '<a class="ibo-preferences--user-preferences--picture-placeholder--image'.$sAdditionalClass.'" data-image-name="'.$sUserPicture.'" data-role="ibo-preferences--user-preferences--picture-placeholder--image" href="#"> <img src="'.$sUserPicturesFolderAbsUrl.$sUserPicture.'"/> </a>';
 	}
+	$sUserPictureChangedSuccessMessage = Dict::S('UI:Preferences:ChooseAPlaceholder:Success:Message');
 	$oP->add_ready_script(
 		<<<JS
 $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').on('click',function(){
@@ -439,6 +465,9 @@ $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]')
 		
 		// Update navigation menu
 		$('[data-role="ibo-navigation-menu--user-picture--image"]').attr('src', oData.data.image_url);
+		
+		// Display success message
+		CombodoToast.OpenSuccessToast('{$sUserPictureChangedSuccessMessage}');
 	});
 });
 JS
@@ -462,7 +491,6 @@ HTML
 	//
 	// Footer
 	//
-	$oP->add_ready_script("$('#fav_page_length').bind('keyup change', function(){ ValidateOtherSettings(); })");
 	$oP->SetContentLayout($oContentLayout);
 }
 
@@ -703,6 +731,25 @@ HTML;
 	return new Html($sHtml);
 }
 
+/**
+ * @return \Combodo\iTop\Application\UI\Base\iUIBlock
+ * @throws \CoreException
+ * @throws \CoreUnexpectedValue
+ * @throws \MySQLException
+ * @since 3.2.0
+ */
+function GetToastsPositionFieldBlock(): iUIBlock
+{
+	$sPosition = appUserPreferences::GetPref('toasts_vertical_position', "bottom");
+
+	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('toasts_vertical_position', Dict::S('UI:Preferences:General:Toasts'));
+	
+	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("bottom", Dict::S('UI:Preferences:General:Toasts:Bottom'), $sPosition === "bottom"));
+	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("top", Dict::S('UI:Preferences:General:Toasts:Top'), $sPosition === "top"));
+
+	return $oSelect;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Main program
@@ -800,6 +847,12 @@ try {
 				$bShowSummaryCards = (bool)utils::ReadParam('show_summary_cards', 0);
 				appUserPreferences::SetPref('show_summary_cards', $bShowSummaryCards);
 
+				// - Toast notifications
+				$sToastsVerticalPosition = utils::ReadParam('toasts_vertical_position', "bottom");
+				if(utils::IsNotNullOrEmptyString($sToastsVerticalPosition) && in_array($sToastsVerticalPosition, ["bottom", "top"], true)) {
+					appUserPreferences::SetPref('toasts_vertical_position', $sToastsVerticalPosition);
+				}
+				
 				// Redirect to force a reload/display of the page in case language has been changed
 				$oAppContext = new ApplicationContext();
 				$sURL = utils::GetAbsoluteUrlAppRoot().'pages/preferences.php?'.$oAppContext->GetForLink();
@@ -827,8 +880,9 @@ try {
 			case 'apply_newsroom_preferences':
 				$iCountProviders = 0;
 				$oUser = UserRights::GetUserObject();
-				$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-				foreach ($aProviders as $oProvider) {
+				$aProviders = utils::GetClassesForInterface('iNewsroomProvider', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+				foreach ($aProviders as $cProvider) {
+					$oProvider = new $cProvider();
 					if ($oProvider->IsApplicable($oUser)) {
 						$iCountProviders++;
 					}
@@ -849,8 +903,9 @@ try {
 					}
 				}
 				$bProvidersModified = false;
-				foreach ($aProviders as $oProvider)
+				foreach ($aProviders as $cProvider)
 				{
+					$oProvider = new $cProvider();
 					if ($oProvider->IsApplicable($oUser))
 					{
 						$sProviderClass = get_class($oProvider);
@@ -866,7 +921,12 @@ try {
 				}
 				if ($bProvidersModified)
 				{
-					$oPage->add_ready_script('$(".itop-newsroom_menu").newsroom_menu("clearCache");');
+					$oPage->add_ready_script(
+						<<<JS
+$('#ibo-navigation-menu--notifications-menu').newsroom_menu("clearCache");
+CombodoToast.OpenSuccessToast(Dict.S('UI:Newsroom:ResetCache:Success:Message'));
+JS
+					);
 				}
 				DisplayPreferences($oPage);
 				break;

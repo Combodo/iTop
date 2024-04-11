@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
+use utils;
 
 /**
  * Class UserProvider
@@ -36,16 +37,16 @@ use UserRights;
  * @package Combodo\iTop\Portal\EventListener
  * @since 2.7.0
  */
-class UserProvider implements ContainerAwareInterface
+class UserProvider
 {
 	/** @var \ModuleDesign $oModuleDesign */
 	private $oModuleDesign;
 	/** @var string $sPortalId */
 	private $sPortalId;
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $container */
-	private $oContainer;
 	/** @var \User $oUser */
 	private $oUser;
+	/** @var bool $bUserCanLogOff Whether the current user can log off or not */
+	private $bUserCanLogOff;
 	/** @var array $aAllowedPortals */
 	private $aAllowedPortals;
 
@@ -91,6 +92,9 @@ class UserProvider implements ContainerAwareInterface
 			throw new Exception('Could not load connected user.');
 		}
 
+        // User allowed to log off or not
+        $this->bUserCanLogOff = utils::CanLogOff();
+
 		// Allowed portals
 		$aAllowedPortals = UserRights::GetAllowedPortals();
 
@@ -122,6 +126,15 @@ class UserProvider implements ContainerAwareInterface
 	}
 
 	/**
+	 * @return bool {@see static::$bUserCanLogOff}
+	 * @since 3.1.2 3.2.0
+	 */
+	public function getCurrentUserCanLogOff(): bool
+	{
+		return $this->bUserCanLogOff;
+	}
+
+	/**
 	 * Get allowed portals.
 	 *
 	 * @return array allowed portals
@@ -133,11 +146,5 @@ class UserProvider implements ContainerAwareInterface
 		return $this->aAllowedPortals;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function setContainer(ContainerInterface $oContainer = null)
-	{
-		$this->oContainer = $oContainer;
-	}
+
 }

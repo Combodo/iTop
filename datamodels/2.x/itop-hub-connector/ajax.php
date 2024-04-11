@@ -23,6 +23,8 @@
  * @license http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\WebPage\AjaxPage;
+
 require_once(APPROOT.'application/utils.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');
 IssueLog::Enable(APPROOT.'log/error.log');

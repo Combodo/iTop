@@ -161,13 +161,13 @@ final class EventService
 			try {
 				$oEventData->SetCallbackData($aEventCallback['data']);
 				$oKPI = new ExecutionKPI();
+
 				call_user_func($aEventCallback['callback'], $oEventData);
-				$sArguments = "Event: $sEvent";
-				if (utils::IsNotNullOrEmptyString($aEventCallback['module'])) {
-					$sArguments .= ' ['.$aEventCallback['module'].']';
+
+				if (is_array($aEventCallback['callback']) && !$oKPI->ComputeStatsForExtension($aEventCallback['callback'][0], $aEventCallback['callback'][1], "Event: $sEvent")) {
+					$sSignature = ModuleService::GetInstance()->GetModuleMethodSignature($aEventCallback['callback'][0], $aEventCallback['callback'][1]);
+					$oKPI->ComputeStats('FireEvent', "$sEvent callback: $sSignature");
 				}
-				$sArguments .= ' '.$aEventCallback['name'].'()';
-				$oKPI->ComputeStats('Extension', $sArguments);
 			}
 			catch (EventException $e) {
 				EventServiceLog::Error("Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with blocking error: ".$e->getMessage());

@@ -369,16 +369,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 //
-// Expression to Natural language
-//
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 's',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'a',
-));
-
-//
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
@@ -710,7 +700,7 @@ Esperamos distrute de esta versión tanto como nosotros la imaginamos y creamos.
 	'UI:UniversalSearch:Error' => 'Error: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Seleccione la clase a buscar: ',
 	'UI:CSVReport-Value-Modified' => 'Modificado',
-	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-SetIssue' => 'Invalid value for attribute~~',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
@@ -1094,8 +1084,8 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:iTopVersion:Short' => '%1$s versión %2$s',
 	'UI:iTopVersion:Long' => '%1$s versión %2$s-%3$s compilada en %4$s',
 	'UI:PropertiesTab' => 'Propiedades',
-	'UI:OpenDocumentInNewWindow_' => 'Abrir~~',
-	'UI:DownloadDocument_' => 'Descargar~~',
+	'UI:OpenDocumentInNewWindow_' => 'Abrir',
+	'UI:DownloadDocument_' => 'Descargar',
 	'UI:Document:NoPreview' => 'No hay prevista disponible para este tipo de archivo',
 	'UI:Download-CSV' => 'Descargar %1$s',
 	'UI:DeadlineMissedBy_duration' => 'No se cumplió por %1$s',
@@ -1641,8 +1631,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Newsroom:Preferences' => 'Preferencia de Notificaciones',
 	'UI:Newsroom:ConfigurationLink' => 'Configuración',
 	'UI:Newsroom:ResetCache' => 'Borrar caché',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Desplegar mensajes de %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Desplegar hasta %1$s mensajes en el menú %2$s.',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
 ));
 
 

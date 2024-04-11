@@ -9,6 +9,7 @@
 
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\TwigBase\Twig\Extension;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
 use Twig\Environment;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;

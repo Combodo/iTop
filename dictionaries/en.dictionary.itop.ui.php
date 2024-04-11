@@ -182,6 +182,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)',
+	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.',
@@ -248,7 +249,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_UserOrg' => 'User organizations',
 	'Class:URP_UserOrg+' => 'Allowed organizations',
-	'Class:URP_UserOrg/Name' => 'LinkGG between %1$s and %2$s',
+	'Class:URP_UserOrg/Name' => 'Link between %1$s and %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'User',
 	'Class:URP_UserOrg/Attribute:userid+' => 'user account',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -372,16 +373,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '',
 	'Class:UserDashboard/Attribute:contents' => 'Contents',
 	'Class:UserDashboard/Attribute:contents+' => '',
-));
-
-//
-// Expression to Natural language
-//
-Dict::Add('EN US', 'English', 'English', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'y',
 ));
 
 //
@@ -701,6 +692,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:TreatFirstLineAsHeader'     => 'Treat the first line as a header (column names)',
 	'UI:CSVImport:Skip_N_LinesAtTheBeginning' => 'Skip %1$s line(s) at the beginning of the file',
 	'UI:CSVImport:CSVDataPreview'             => 'CSV Data Preview',
+	'UI:CSVImport:Column'                     => 'Column %1$s',
 	'UI:CSVImport:SelectFile'                 => 'Select the file to import:',
 	'UI:CSVImport:Tab:LoadFromFile'           => 'Load from a file',
 	'UI:CSVImport:Tab:CopyPaste'              => 'Copy and paste data',
@@ -837,7 +829,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:RunQuery:DevelopedOQLCount'    => 'Developed OQL for count',
 	'UI:RunQuery:ResultSQLCount'       => 'Resulting SQL for count',
 	'UI:RunQuery:ResultSQL'            => 'Resulting SQL',
-	'UI:RunQuery:Error'                => 'An error occured while running the query: %1$s',
+	'UI:RunQuery:Error'                => 'An error occured while running the query',
 	'UI:Query:UrlForExcel'             => 'URL to use for MS-Excel web queries',
 	'UI:Query:UrlV1'                   => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.',
 	'UI:Schema:Title'                  => ITOP_APPLICATION_SHORT.' objects schema',
@@ -900,13 +892,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:LifeCycleAttributeMustChange' => 'Must change',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'User will be prompted to change the value',
 	'UI:Schema:LifeCycleEmptyList' => 'empty list',
-	'UI:Schema:ClassFilter' => 'Class:~~',
-	'UI:Schema:DisplayLabel' => 'Display:~~',
-	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code~~',
-	'UI:Schema:DisplaySelector/Label' => 'Label~~',
-	'UI:Schema:DisplaySelector/Code' => 'Code~~',
-	'UI:Schema:Attribute/Filter' => 'Filter~~',
-	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
+	'UI:Schema:ClassFilter' => 'Class:',
+	'UI:Schema:DisplayLabel' => 'Display:',
+	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code',
+	'UI:Schema:DisplaySelector/Label' => 'Label',
+	'UI:Schema:DisplaySelector/Code' => 'Code',
+	'UI:Schema:Attribute/Filter' => 'Filter',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"',
 	'UI:Schema:Events' => 'Events',
 	'UI:Schema:Events:Defined' => 'Defined events',
 	'UI:Schema:Events:NoEvent' => 'No event defined',
@@ -1460,7 +1452,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Month-10-Short'                => 'Oct',
 	'Month-11-Short'                => 'Nov',
 	'Month-12-Short'                => 'Dec',
-	'Calendar-FirstDayOfWeek'       => 0,
+	'Calendar-FirstDayOfWeek'       => '0',
 	// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList'                                 => 'Create a Shortcut...',
@@ -1718,8 +1710,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Newsroom:Preferences' => 'Newsroom preferences',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration',
 	'UI:Newsroom:ResetCache' => 'Reset cache',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal',
 ));
 
 

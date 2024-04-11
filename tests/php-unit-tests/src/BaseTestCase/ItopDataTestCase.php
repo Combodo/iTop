@@ -37,6 +37,7 @@ use Ticket;
 use URP_UserProfile;
 use User;
 use UserRequest;
+use UserRights;
 use utils;
 use VirtualHost;
 use VirtualMachine;
@@ -65,11 +66,34 @@ abstract class ItopDataTestCase extends ItopTestCase
 	private $aEventListeners = [];
 
 	/**
+	 * @var bool When testing with silo, there are some cache we need to update on tearDown. Doing it all the time will cost too much, so it's opt-in !
+	 * @see tearDown
+	 * @see ResetMetaModelQueyCacheGetObject
+	 */
+	protected $bIsUsingSilo = false;
+
+	/**
 	 * @var string Default environment to use for test cases
 	 */
 	const DEFAULT_TEST_ENVIRONMENT = 'production';
 	const USE_TRANSACTION = true;
 	const CREATE_TEST_ORG = false;
+
+	protected static $aURP_Profiles = [
+		'Administrator'         => 1,
+		'Portal user'           => 2,
+		'Configuration Manager' => 3,
+		'Service Desk Agent'    => 4,
+		'Support Agent'         => 5,
+		'Problem Manager'       => 6,
+		'Change Implementor'    => 7,
+		'Change Supervisor'     => 8,
+		'Change Approver'       => 9,
+		'Service Manager'       => 10,
+		'Document author'       => 11,
+		'Portal power user'     => 12,
+		'REST Services User'    => 1024,
+	];
 
 	/**
 	 * This method is called before the first test of this test class is run (in the current process).
@@ -140,13 +164,28 @@ abstract class ItopDataTestCase extends ItopTestCase
 		CMDBObject::SetCurrentChange(null);
 
 		// Leave the place clean
-		\UserRights::Logoff();
+		if (UserRights::IsLoggedIn()) {
+			UserRights::Logoff();
+		}
+		$this->SetNonPublicStaticProperty(UserRights::class, 'm_aCacheUsers', []); // we could have cached rollbacked instances
+		if ($this->bIsUsingSilo) {
+			$this->ResetMetaModelQueyCacheGetObject();
+		}
 
 		foreach ($this->aEventListeners as $sListenerId) {
 			EventService::UnRegisterListener($sListenerId);
 		}
 
+		CMDBObject::SetCurrentChange(null);
+
 		parent::tearDown();
+	}
+
+	/**
+	 * Helper to reset the metamodel cache : for a class and a key it will contain the SQL query, that could include silo filter
+	 */
+	protected function ResetMetaModelQueyCacheGetObject() {
+		$this->SetNonPublicStaticProperty(MetaModel::class, 'aQueryCacheGetObject', []);
 	}
 
 	/**
@@ -747,7 +786,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 * @return array
 	 * @throws Exception
 	 */
-	protected function AddCIToTicket($oCI, $oTicket, $sImpactCode)
+	protected function AddCIToTicket($oCI, $oTicket, $sImpactCode = 'manual')
 	{
 		$oNewLink = new lnkFunctionalCIToTicket();
 		$oNewLink->Set('functionalci_id', $oCI->GetKey());

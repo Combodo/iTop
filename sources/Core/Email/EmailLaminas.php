@@ -6,10 +6,20 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Core\Email;
+
+use AsyncSendEmail;
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
+use DOMDocument;
+use DOMXPath;
+use EMail;
+use Exception;
+use ExecutionKPI;
+use InlineImage;
+use IssueLog;
 use Laminas\Mail\Header\ContentType;
 use Laminas\Mail\Message;
-use Laminas\Mail\Protocol\Smtp\Auth\Oauth;
+use Combodo\iTop\Core\Authentication\Client\Smtp\Oauth;
 use Laminas\Mail\Transport\File;
 use Laminas\Mail\Transport\FileOptions;
 use Laminas\Mail\Transport\Sendmail;
@@ -17,9 +27,11 @@ use Laminas\Mail\Transport\Smtp;
 use Laminas\Mail\Transport\SmtpOptions;
 use Laminas\Mime\Mime;
 use Laminas\Mime\Part;
+use MetaModel;
 use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
+use Symfony\Component\CssSelector\Exception\ParseException;
 
 class EMailLaminas extends Email
 {
@@ -205,7 +217,8 @@ class EMailLaminas extends Email
 			case 'LogFile':
 				$oTransport = new File();
 				$aOptions = new FileOptions([
-					'path' => APPROOT.'log/mail.log',
+					'path' => APPROOT.'log/',
+					'callback' => function() { return 'mail.log'; }
 				]);
 				$oTransport->setOptions($aOptions);
 				break;
@@ -293,22 +306,53 @@ class EMailLaminas extends Email
 		return $aImagesParts;
 	}
 
-	public function Send(&$aIssues, $bForceSynchronous = false, $oLog = null)
+	/**
+	 * Sends an e-mail.
+	 *
+	 * @param string[] $aIssues Array to add any potentially encountered issues to.
+	 * @param int|bool $iSyncAsync Specify whether the e-mail will be sent per default configuration, or whether there will be a forced (a)synchronous sending. One of Email::ENUM_SEND_* constants. To support legacy, it also allows a boolean (true = send synchronous). 
+	 * @param Object|null $oLog Log
+	 *
+	 * @details By default, the send method will respect the preference to send e-mails in an (a)synchronous way as defined in the iTop configuration by the administrator.
+	 * In some use cases, it may be necessary to override this behavior. For example, for some tests it may be best if e-mails are always sent instantly (synchronous).
+	 * Asynchronous may be preferred when sending a lot of bulk e-mails at once, to avoid hitting rate limits of e-mail providers (e.g. customer survey extension).
+	 *
+	 * @since 3.2.0 Previously, $iSyncAsync was a boolean ($bForceSynchronous) and this method only allowed to forcefully send e-mails synchronously even when the default was asynchronous.
+	 *
+	 * @return
+	 */
+	public function Send(&$aIssues, $iSyncAsync = Email::ENUM_SEND_DEFAULT, $oLog = null)
 	{
 		//select a default sender if none is provided.
 		if (empty($this->m_aData['from']['address']) && !empty($this->m_aData['to'])) {
 			$this->SetRecipientFrom($this->m_aData['to']);
 		}
 
-		if ($bForceSynchronous) {
+		// In previous iTop versions, $iSyncAsync was $bForceSynchronous. To retain backward compatibility, this check is in place.
+		if($iSyncAsync === true) {
+			// This legacy mode forces synchronous sending, ignoring whatever default was configured.
 			return $this->SendSynchronous($aIssues, $oLog);
 		} else {
-			$oConfig = $this->LoadConfig();
-			$bConfigASYNC = $oConfig->Get('email_asynchronous');
-			if ($bConfigASYNC) {
-				return $this->SendAsynchronous($aIssues, $oLog);
-			} else {
-				return $this->SendSynchronous($aIssues, $oLog);
+			
+			switch($iSyncAsync) {
+				
+				case Email::ENUM_SEND_FORCE_SYNCHRONOUS:
+					return $this->SendSynchronous($aIssues, $oLog);
+				
+				case Email::ENUM_SEND_FORCE_ASYNCHRONOUS:
+					return $this->SendAsynchronous($aIssues, $oLog);
+					
+				case Email::ENUM_SEND_DEFAULT:
+				default:
+				
+					// Default behavior.
+					$oConfig = $this->LoadConfig();
+					$bConfigASYNC = $oConfig->Get('email_asynchronous');
+					if($bConfigASYNC) {
+						return $this->SendAsynchronous($aIssues, $oLog);
+					} else {
+						return $this->SendSynchronous($aIssues, $oLog);
+					}
 			}
 		}
 	}
@@ -370,13 +414,11 @@ class EMailLaminas extends Email
 	 */
 	public function SetBody($sBody, $sMimeType = Mime::TYPE_HTML, $sCustomStyles = null)
 	{
-		$oBody = new Laminas\Mime\Message();
+		$oBody = new \Laminas\Mime\Message();
 		$aAdditionalParts = [];
 
-		if (($sMimeType === Mime::TYPE_HTML) && ($sCustomStyles !== null)) {
-			$oDomDocument = CssInliner::fromHtml($sBody)->inlineCss($sCustomStyles)->getDomDocument();
-			HtmlPruner::fromDomDocument($oDomDocument)->removeElementsWithDisplayNone();
-			$sBody = CssToAttributeConverter::fromDomDocument($oDomDocument)->convertCssToVisualAttributes()->render(); // Adds html/body tags if not already present
+		if ($sMimeType === Mime::TYPE_HTML) {
+			$sBody = static::InlineCssIntoBodyContent($sBody, $sCustomStyles);
 		}
 		$this->m_aData['body'] = array('body' => $sBody, 'mimeType' => $sMimeType);
 
@@ -389,6 +431,7 @@ class EMailLaminas extends Email
 		$oNewPart = new Part($sBody);
 		$oNewPart->encoding = Mime::ENCODING_8BIT;
 		$oNewPart->type = $sMimeType;
+		$oNewPart->charset = 'UTF-8';
 		$oBody->addPart($oNewPart);
 
 		// Add additional images as new body parts
@@ -441,7 +484,7 @@ class EMailLaminas extends Email
 			$multipart_content->setType($oBody->getParts()[0]->getType());
 			$multipart_content->setBoundary($oBody->getMime()->boundary());
 
-			$oBody = new Laminas\Mime\Message();
+			$oBody = new \Laminas\Mime\Message();
 			$oBody->addPart($multipart_content);
 		}
 
@@ -573,6 +616,27 @@ class EMailLaminas extends Email
 		} else if (!empty($sAddress)) {
 			$this->m_oMessage->setReplyTo($sAddress);
 		}
+	}
+
+	/**
+	 * @param string $sBody
+	 * @param string $sCustomStyles
+	 *
+	 * @return string
+	 * @throws \Symfony\Component\CssSelector\Exception\ParseException
+	 * @noinspection PhpUnnecessaryLocalVariableInspection
+	 */
+	protected static function InlineCssIntoBodyContent($sBody, $sCustomStyles): string
+	{
+		if (is_null($sCustomStyles)) {
+			return $sBody;
+		}
+
+		$oDomDocument = CssInliner::fromHtml($sBody)->inlineCss($sCustomStyles)->getDomDocument();
+		HtmlPruner::fromDomDocument($oDomDocument)->removeElementsWithDisplayNone();
+		$sBody = CssToAttributeConverter::fromDomDocument($oDomDocument)->convertCssToVisualAttributes()->render(); // Adds html/body tags if not already present
+
+		return $sBody;
 	}
 
 }

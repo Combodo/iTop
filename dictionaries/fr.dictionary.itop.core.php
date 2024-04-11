@@ -39,6 +39,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeTagSet' => 'Liste d\'étiquettes',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'cliquer pour ajouter',
+	'Core:Placeholder:CannotBeResolved' => '(%1$s : non remplacé)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s de la classe %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s d\'une sous-classe)',
@@ -431,6 +432,41 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
+// Class: EventiTopNotification
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:EventiTopNotification' => 'Notification '.ITOP_APPLICATION_SHORT,
+	'Class:EventiTopNotification+' => '',
+	'Class:EventiTopNotification/Attribute:title' => 'Titre',
+	'Class:EventiTopNotification/Attribute:title+' => '',
+	'Class:EventiTopNotification/Attribute:icon' => 'Icône',
+	'Class:EventiTopNotification/Attribute:icon+' => '',
+	'Class:EventiTopNotification/Attribute:priority' => 'Priorité',
+	'Class:EventiTopNotification/Attribute:priority+' => '',
+	'Class:EventiTopNotification/Attribute:priority/Value:1' => 'Critique',
+	'Class:EventiTopNotification/Attribute:priority/Value:1+' => 'Critique',
+	'Class:EventiTopNotification/Attribute:priority/Value:2' => 'Urgent',
+	'Class:EventiTopNotification/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:EventiTopNotification/Attribute:priority/Value:3' => 'Important',
+	'Class:EventiTopNotification/Attribute:priority/Value:3+' => 'Important',
+	'Class:EventiTopNotification/Attribute:priority/Value:4' => 'Standard',
+	'Class:EventiTopNotification/Attribute:priority/Value:4+' => 'Standard',
+	'Class:EventiTopNotification/Attribute:url' => 'URL',
+	'Class:EventiTopNotification/Attribute:url+' => '',
+	'Class:EventiTopNotification/Attribute:read' => 'Lu',
+	'Class:EventiTopNotification/Attribute:read+' => '',
+	'Class:EventiTopNotification/Attribute:read/Value:no' => 'Non',
+	'Class:EventiTopNotification/Attribute:read/Value:no+' => 'Non',
+	'Class:EventiTopNotification/Attribute:read/Value:yes' => 'Oui',
+	'Class:EventiTopNotification/Attribute:read/Value:yes+' => 'Oui',
+	'Class:EventiTopNotification/Attribute:read_date' => 'Date de lecture',
+	'Class:EventiTopNotification/Attribute:read_date+' => '',
+	'Class:EventiTopNotification/Attribute:contact_id' => 'Contact',
+	'Class:EventiTopNotification/Attribute:contact_id+' => '',
+));
+
+//
 // Class: Action
 //
 
@@ -452,6 +488,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Déclencheurs liés',
 	'Class:Action/Attribute:trigger_list+' => 'Déclencheurs à l\'origine de cette action',
+	'Class:Action/Attribute:asynchronous' => 'Asynchrone',
+	'Class:Action/Attribute:asynchronous+' => 'L\'action est-elle exécutée en arrière plan ?',
+	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Utiliser le paramétrage global',
+	'Class:Action/Attribute:asynchronous/Value:yes' => 'Oui',
+	'Class:Action/Attribute:asynchronous/Value:no' => 'Non',
 	'Class:Action/Attribute:finalclass' => 'Sous-classe d\'Action',
 	'Class:Action/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Action:WarningNoTriggerLinked' => 'Attention, aucun déclencheur n\'est associé à l\'action. Elle ne sera pas active tant qu\'elle n\'en aura pas au moins 1.',
@@ -540,6 +581,39 @@ En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
 	'ActionEmail:preview_warning' => 'Le mèl peut s\'afficher différement dans les clients mèl par rapport à cet aperçu dans votre navigateur.',
 	'ActionEmail:preview_more_info' => 'Pour plus d\'informations sur les fonctionnalités CSS supportées par les différents client mèl, consultez %1$s.',
 	'ActionEmail:content_placeholder_missing' => 'The mot-clé "%1$s" ne figure pas dans le modèle HTML. Le contenu du champ "%2$s" ne sera pas intégré dans les mèls générés.',
+));
+
+
+//
+// Class: ActioniTopNotification
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'ActioniTopNotification:trigger' => 'Conditions de déclenchement',
+	'ActioniTopNotification:content' => 'Message',
+	'ActioniTopNotification:settings' => 'Paramètres',
+	'Class:ActioniTopNotification' => ITOP_APPLICATION_SHORT.' Notification',
+	'Class:ActioniTopNotification+' => '',
+	'Class:ActioniTopNotification/Attribute:title' => 'Titre',
+	'Class:ActioniTopNotification/Attribute:title+' => '',
+	'Class:ActioniTopNotification/Attribute:message' => 'Message',
+	'Class:ActioniTopNotification/Attribute:message+' => '',
+	'Class:ActioniTopNotification/Attribute:icon' => 'Icône',
+	'Class:ActioniTopNotification/Attribute:icon+' => '',
+	'Class:ActioniTopNotification/Attribute:priority' => 'Priorité',
+	'Class:ActioniTopNotification/Attribute:priority+' => '',
+	'Class:ActioniTopNotification/Attribute:priority/Value:1' => 'Critique',
+	'Class:ActioniTopNotification/Attribute:priority/Value:1+' => 'Critique',
+	'Class:ActioniTopNotification/Attribute:priority/Value:2' => 'Urgent',
+	'Class:ActioniTopNotification/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:ActioniTopNotification/Attribute:priority/Value:3' => 'Important',
+	'Class:ActioniTopNotification/Attribute:priority/Value:3+' => 'Important',
+	'Class:ActioniTopNotification/Attribute:priority/Value:4' => 'Standard',
+	'Class:ActioniTopNotification/Attribute:priority/Value:4+' => 'Standard',
+	'Class:ActioniTopNotification/Attribute:recipients' => 'Destinataires',
+	'Class:ActioniTopNotification/Attribute:recipients+' => '',
+	'Class:ActioniTopNotification/Attribute:url' => 'URL',
+	'Class:ActioniTopNotification/Attribute:url+' => '',
 ));
 
 //
@@ -983,7 +1057,7 @@ Plusieurs champs peuvent ainsi être modifiés lors d\'une "mise à jour" en app
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Format par défaut (%1$s), ex. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Format spécial: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s',
-	'Core:DateTime:Placeholder_d' => 'JJ', // Day of the month: 2 digits (with leading zero)
+    'Core:DateTime:Placeholder_d' => 'JJ', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'J', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
 	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12

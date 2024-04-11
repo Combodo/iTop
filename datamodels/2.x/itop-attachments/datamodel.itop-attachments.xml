@@ -93,12 +93,12 @@
           <target_class>User</target_class>
           <allow_target_creation>false</allow_target_creation>
         </field>
-        <field id="contact_id" xsi:type="AttributeExternalField">
-          <extkey_attcode>user_id</extkey_attcode>
-          <target_attcode>contactid</target_attcode>
-          <dependencies>
-            <attribute id="user_id"/>
-          </dependencies>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <target_class>Person</target_class>
+          <allow_target_creation>false</allow_target_creation>
         </field>
       </fields>
       <methods>
@@ -110,8 +110,14 @@
     public function DBInsertNoReload()
     {
         $this->SetCurrentDateIfNull('creation_date');
-        $this->SetIfNull('user_id', CMDBChange::GetCurrentUserId());
+        $iUserId = CMDBChange::GetCurrentUserId();
+        if(utils::IsNotNullOrEmptyString($iUserId)){
+               $this->SetIfNull('user_id', $iUserId);
 
+              // Get Contact from user
+              $oUser = MetaModel::GetObject('User', $iUserId, true, true);
+              $this->SetIfNull('contact_id', $oUser->Get('contactid'));
+         }
         return parent::DBInsertNoReload();
     }
         ]]></code>
@@ -260,19 +266,19 @@
   </classes>
   <events>
     <event id="EVENT_ADD_ATTACHMENT_TO_OBJECT" _delta="define">
-      <description>An attachment has been added to an object</description>
+      <name>Attachment added</name>
+      <description><![CDATA[An attachment has been added to an object]]></description>
       <replaces>Attachment::AfterUpdate</replaces>
       <sources>
-        <source id="Attachment">Attachment</source>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
       <event_data>
         <event_datum id="object">
-          <description>The attachment updated</description>
+          <description>The object where the attachment is added</description>
           <type>DBObject</type>
         </event_datum>
-        <event_datum id="target_object">
-          <description>The object to which the attachment is linked</description>
+        <event_datum id="attachment">
+          <description>The attachment added to the objet</description>
           <type>DBObject</type>
         </event_datum>
         <event_datum id="debug_info">
@@ -282,19 +288,19 @@
       </event_data>
     </event>
     <event id="EVENT_REMOVE_ATTACHMENT_FROM_OBJECT" _delta="define">
-      <description>An attachment has been removed from an object</description>
+      <name>Attachment removed</name>
+      <description><![CDATA[An attachment has been removed from an object]]></description>
       <replaces>Attachment::AfterUpdate</replaces>
       <sources>
-        <source id="Attachment">Attachment</source>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
       <event_data>
         <event_datum id="object">
-          <description>The attachment updated</description>
+          <description>The object where the attachment is removed</description>
           <type>DBObject</type>
         </event_datum>
-        <event_datum id="target_object">
-          <description>The object to which the attachment is linked</description>
+        <event_datum id="attachment">
+          <description>The attachment removed</description>
           <type>DBObject</type>
         </event_datum>
         <event_datum id="debug_info">

@@ -32,6 +32,9 @@ $(function()
                 extra_tabs_list_toggler: '[data-role="ibo-tab-container--extra-tabs-list-toggler"]',
                 extra_tabs_list: '[data-role="ibo-tab-container--extra-tabs-list"]',
                 extra_tab_toggler: '[data-role="ibo-tab-container--extra-tab-toggler"]',
+	            global: {
+		            fullscreen_elements: '.ibo-is-fullscreen',
+	            },
             },
 
             // the constructor
@@ -141,6 +144,10 @@ $(function()
                 // Resize of the tab container
                 if(window.IntersectionObserver) {
                 	const oTabsListIntersectObs = new IntersectionObserver(function(aEntries, oTabsListIntersectObs){
+						// N°4631 - If a non-intersecting element is fullscreen, we do nothing
+						if ($(me.js_selectors.global.fullscreen_elements).length > 0) {
+							return;
+						}
                 		aEntries.forEach(oEntry => {
                 			let oTabHeaderElem = $(oEntry.target);
                 			let bIsVisible = oEntry.isIntersecting;

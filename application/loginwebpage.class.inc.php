@@ -26,6 +26,8 @@
 
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
 
@@ -80,7 +82,7 @@ class LoginWebPage extends NiceWebPage
 	}
 
 	protected static $m_sLoginFailedMessage = '';
-	
+
 	public function __construct($sTitle = null)
 	{
 		if ($sTitle === null) {
@@ -90,13 +92,22 @@ class LoginWebPage extends NiceWebPage
 		parent::__construct($sTitle);
 		$this->SetStyleSheet();
 		$this->no_cache();
-		$this->add_xframe_options();
+		$this->add_http_headers();
 	}
 	
 	public function SetStyleSheet()
 	{
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/login.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+		$this->LinkStylesheetFromAppRoot('css/login.css');
+		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.2.0
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		return Branding::GetLoginFavIconAbsoluteUrl();
 	}
 
 	public static function SetLoginFailedMessage($sMessage)
@@ -248,6 +259,7 @@ class LoginWebPage extends NiceWebPage
 				$oEmail = new Email();
 				$oEmail->SetRecipientTO($sTo);
 				$sFrom = MetaModel::GetConfig()->Get('forgot_password_from');
+				$sFrom = utils::IsNullOrEmptyString($sFrom) ? MetaModel::GetConfig()->Get('email_default_sender_address') : $sFrom;
 				$oEmail->SetRecipientFrom($sFrom);
 				$oEmail->SetSubject(Dict::S('UI:ResetPwd-EmailSubject', $oUser->Get('login')));
 				$sResetUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=reset_pwd&auth_user='.urlencode($oUser->Get('login')).'&token='.urlencode($sToken);
@@ -907,13 +919,13 @@ class LoginWebPage extends NiceWebPage
 			$aAllProfiles = array();
 			while ($oProfile = $oProfilesSet->Fetch())
 			{
-				$aAllProfiles[strtolower($oProfile->GetName())] = $oProfile->GetKey();
+				$aAllProfiles[mb_strtolower($oProfile->GetName())] = $oProfile->GetKey();
 			}
 
 			$aProfiles = array();
 			foreach ($aRequestedProfiles as $sRequestedProfile)
 			{
-				$sRequestedProfile = strtolower($sRequestedProfile);
+				$sRequestedProfile = mb_strtolower($sRequestedProfile);
 				if (isset($aAllProfiles[$sRequestedProfile]))
 				{
 					$aProfiles[] = $aAllProfiles[$sRequestedProfile];

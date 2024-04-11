@@ -21,8 +21,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachments:EmptyTabTitle' => '附件',
 	'Attachments:FieldsetTitle' => '附件',
 	'Attachments:DeleteBtn' => '删除',
-	'Attachments:History_File_Added' => '附件 %1$s 已添加.',
-	'Attachments:History_File_Removed' => '附件 %1$s 已移除.',
+	'Attachments:History_File_Added' => '附件%1$s已添加.',
+	'Attachments:History_File_Removed' => '附件%1$s已移除.',
 	'Attachments:AddAttachment' => '添加附件: ',
 	'Attachments:UploadNotAllowedOnThisSystem' => '本系统不支持文件上传.',
 	'Attachment:Max_Go' => '(最大文件尺寸: %1$s GB)',
@@ -31,7 +31,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachments:NoAttachment' => '没有附件. ',
 	'Attachments:PreviewNotAvailable' => '此附件类型不支持预览.',
 	'Attachments:Error:FileTooLarge' => '上传的文件过大. %1$s',
-	'Attachments:Error:UploadedFileEmpty' => '收到的文件为空,无法添加. 可能是因为您发送的是空文件,或者咨询 '.ITOP_APPLICATION_SHORT.' 管理员服务器磁盘是否已满. ',
+	'Attachments:Error:UploadedFileEmpty' => '收到的文件为空, 无法添加. 可能是因为您发送的是空文件,或者咨询'.ITOP_APPLICATION_SHORT.'管理员服务器磁盘是否已满.',
 	'Attachments:Render:Icons' => '显示为图标',
 	'Attachments:Render:Table' => '显示为列表',
 	'UI:Attachments:DropYourFileHint' => '将文件拖放到此区域的任意位置',
@@ -46,9 +46,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Attachment+' => '',
 	'Class:Attachment/Attribute:expire' => '过期',
 	'Class:Attachment/Attribute:expire+' => '~~',
-	'Class:Attachment/Attribute:temp_id' => '临时id',
+	'Class:Attachment/Attribute:temp_id' => '临时编号',
 	'Class:Attachment/Attribute:temp_id+' => '~~',
-	'Class:Attachment/Attribute:item_class' => '项目类',
+	'Class:Attachment/Attribute:item_class' => '项目类型',
 	'Class:Attachment/Attribute:item_class+' => '~~',
 	'Class:Attachment/Attribute:item_id' => '项目',
 	'Class:Attachment/Attribute:item_id+' => '~~',
@@ -66,7 +66,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachments:File:Uploader' => '上传者',
 	'Attachments:File:Size' => '大小',
 	'Attachments:File:MimeType' => '类型',
-	'Attachments:File:DownloadsCount' => 'Downloads~~',
+	'Attachments:File:DownloadsCount' => '下载',
 ));
 //
 // Class: Attachment
@@ -75,9 +75,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Attachment/Attribute:creation_date' => '创建日期',
 	'Class:Attachment/Attribute:creation_date+' => '~~',
-	'Class:Attachment/Attribute:user_id' => '用户id',
+	'Class:Attachment/Attribute:user_id' => '用户编号',
 	'Class:Attachment/Attribute:user_id+' => '~~',
-	'Class:Attachment/Attribute:contact_id' => '联系人id',
+	'Class:Attachment/Attribute:contact_id' => '联系人编号',
 	'Class:Attachment/Attribute:contact_id+' => '~~',
 ));
 
@@ -86,6 +86,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
-	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
+	'Class:TriggerOnAttachmentDownload' => '触发器 (于对象附件下载时)',
+	'Class:TriggerOnAttachmentDownload+' => '触发器于指定类型 [子类型] 对象附件下载时',
 ));

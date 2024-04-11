@@ -2,7 +2,7 @@
 
 namespace Combodo\iTop\Core\Email;
 
-use EMailLaminas;
+use Combodo\iTop\Core\Email\EMailLaminas;
 
 class EmailFactory
 {

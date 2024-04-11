@@ -27,17 +27,18 @@
 //////////////////////////////////////////////////////////////////////
 //
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Relation:impacts/Description' => 'Elementos Impactados por',
-	'Relation:impacts/DownStream' => 'Impacto...',
-	'Relation:impacts/DownStream+' => 'Elementos Impactados por',
-	'Relation:impacts/UpStream' => 'Depende de...',
-	'Relation:impacts/UpStream+' => 'Elementos de los cuales depende',
+	'Relation:impacts/Description'    => 'Elementos Impactados por',
+	'Relation:impacts/DownStream'     => 'Impacto...',
+	'Relation:impacts/DownStream+'    => 'Elementos Impactados por',
+	'Relation:impacts/UpStream'       => 'Depende de...',
+	'Relation:impacts/UpStream+'      => 'Elementos de los cuales depende',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Elementos de los cuales depende',
-	'Relation:depends on/DownStream' => 'Depende de...',
-	'Relation:depends on/UpStream' => 'Impactos...',
-	'Relation:impacts/LoadData' => 'Load data~~',
-	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
+	'Relation:depends on/DownStream'  => 'Depende de...',
+	'Relation:depends on/UpStream'    => 'Impactos...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
+	'Relation:impacts/FilteredData'   => 'Filtered data~~',
 ));
 
 

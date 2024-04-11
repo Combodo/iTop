@@ -4,6 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\WebPage\WebPage;
+
 define('ADMIN_PROFILE_NAME', 'Administrator');
 define('PORTAL_PROFILE_NAME', 'Portal user');
 
@@ -446,6 +448,12 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		UR_ACTION_BULK_DELETE => 'bd',
 	);
 
+    /**
+     * @var array $aUsersProfilesList Cache of users' profiles. Hash array of user ID => [profile ID => profile friendlyname, profile ID => profile friendlyname, ...]
+     * @since 2.7.10 3.0.4 3.1.1 3.2.0 N°6887
+     */
+	private $aUsersProfilesList = [];
+
 	// Installation: create the very first user
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
@@ -502,6 +510,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	}
 
 	protected $m_aUserOrgs = array(); // userid -> array of orgid
+	protected $m_aAdministrators = null; // [user id]
 
 	// Built on demand, could be optimized if necessary (doing a query for each attribute that needs to be read)
 	protected $m_aObjectActionGrants = array();
@@ -558,6 +567,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 		// Cache
 		$this->m_aObjectActionGrants = array();
+		$this->m_aAdministrators = null;
 	}
 
 	public function LoadCache()
@@ -700,12 +710,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	 */
 	private function GetAdministrators()
 	{
-		static $aAdministrators = null;
-
-		if ($aAdministrators === null)
+		if ($this->m_aAdministrators === null)
 		{
 			// Find all administrators
-			$aAdministrators = array();
+			$this->m_aAdministrators = array();
 			$oAdministratorsFilter = new DBObjectSearch('User');
 			$oLnkFilter = new DBObjectSearch('URP_UserProfile');
 			$oExpression = new FieldExpression('profileid', 'URP_UserProfile');
@@ -718,10 +726,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$oSet->OptimizeColumnLoad(array('User' => array('login')));
 			while($oUser = $oSet->Fetch())
 			{
-				$aAdministrators[] = $oUser->GetKey();
+				$this->m_aAdministrators[] = $oUser->GetKey();
 			}
 		}
-		return $aAdministrators;
+		return $this->m_aAdministrators;
 	}
 
 	/**
@@ -758,8 +766,12 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
 		$bStatus = null;
+        // Cache user's profiles
+		if(false === array_key_exists($iUser, $this->aUsersProfilesList)){
+		     $this->aUsersProfilesList[$iUser] = UserRights::ListProfiles($oUser);
+		}
 		// Call the API of UserRights because it caches the list for us
-		foreach(UserRights::ListProfiles($oUser) as $iProfile => $oProfile)
+		foreach($this->aUsersProfilesList[$iUser] as $iProfile => $oProfile)
 		{
 			$bGrant = $this->GetProfileActionGrant($iProfile, $sClass, $sAction);
 			if (!is_null($bGrant))
@@ -885,11 +897,16 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		// Note: this code is VERY close to the code of IsActionAllowed()
 		$iUser = $oUser->GetKey();
 
+        // Cache user's profiles
+		if(false === array_key_exists($iUser, $this->aUsersProfilesList)){
+			$this->aUsersProfilesList[$iUser] = UserRights::ListProfiles($oUser);
+		}
+
 		// Note: The object set is ignored because it was interesting to optimize for huge data sets
 		//       and acceptable to consider only the root class of the object set
 		$bStatus = null;
 		// Call the API of UserRights because it caches the list for us
-		foreach(UserRights::ListProfiles($oUser) as $iProfile => $oProfile)
+		foreach($this->aUsersProfilesList[$iUser] as $iProfile => $oProfile)
 		{
 			$bGrant = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
 			if (!is_null($bGrant))
@@ -918,8 +935,9 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	}
 
 	/**
-	 * Find out which attribute is corresponding the the dimension 'owner org'
-	 * returns null if no such attribute has been found (no filtering should occur)
+	 * @param string $sClass
+	 * @return string|null Find out which attribute is corresponding the dimension 'owner org'
+	 *                   returns null if no such attribute has been found (no filtering should occur)
 	 */
 	public static function GetOwnerOrganizationAttCode($sClass)
 	{

@@ -4,7 +4,13 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Application\WebPage;
+
 use Combodo\iTop\Application\Branding;
+use Dict;
+use TCPDF;
+use TCPDF_IMAGES;
+use utils;
 
 
 /**
@@ -27,7 +33,7 @@ class iTopPDF extends TCPDF
 	 * @param bool $out
 	 *
 	 * @uses \TCPDF::SetFont()
-	 * @uses \iTopPDF::GetPdfFont()
+	 * @uses iTopPDF::GetPdfFont()
 	 * @since 2.7.0
 	 */
 	public function SetFontParams($style, $size, $fontfile = '', $subset = 'default', $out = true)
