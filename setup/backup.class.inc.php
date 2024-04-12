@@ -276,7 +276,7 @@ class DBBackup
 		{
 			/** @var iBackupExtraFilesExtension $oExtensionInstance */
 			$oExtensionInstance = new $sExtensionClass();
-			$aExtraFiles = array_merge($aExtraFiles, $oExtensionInstance->GetExtraFiles());
+			$aExtraFiles = array_merge($aExtraFiles, $oExtensionInstance->GetExtraFilesRelPaths());
 		}
 
 		foreach($aExtraFiles as $sExtraFileOrDir)

@@ -2292,11 +2292,8 @@ interface iKPILoggerExtension
 interface iBackupExtraFilesExtension
 {
 	/**
-	 * Returns an array of files and directories to be included in the backup
-	 *
 	 * @api
-	 *
-	 * @return string[]
+	 * @return string[] Array of relative paths (from app root) for files and directories to be included in the backup
 	 */
-	public function GetExtraFiles(): array;
+	public function GetExtraFilesRelPaths(): array;
 }

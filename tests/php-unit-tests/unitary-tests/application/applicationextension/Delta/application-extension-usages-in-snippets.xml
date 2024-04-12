@@ -359,7 +359,7 @@ class ExampleFor_iKPILoggerExtension implements \iKPILoggerExtension
       <content><![CDATA[
 class ExampleFor_iBackupExtraFilesExtension implements \iBackupExtraFilesExtension
 {
-	public function GetExtraFiles(): array
+	public function GetExtraFilesRelPaths(): array
 	{
 		return [
 		  'foo'
