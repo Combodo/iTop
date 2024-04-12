@@ -2,16 +2,17 @@
 
 namespace Combodo\iTop\Test\UnitTest\Setup\UnattendedInstall;
 
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @group itop-clone-only
  */
-class InstallationFileServiceTest extends TestCase {
+class InstallationFileServiceTest extends ItopTestCase {
 	protected function setUp(): void {
 		parent::setUp();
 		require_once(dirname(__FILE__, 6) . '/setup/unattended-install/InstallationFileService.php');
-		$this->sFolderToCleanup = null;
 		\ModuleDiscovery::ResetCache();
 	}
 
@@ -23,10 +24,112 @@ class InstallationFileServiceTest extends TestCase {
 	}
 
 	private function GetInstallationPath() : string {
-		return realpath(__DIR__ . '/installation.xml');
+		return realpath(__DIR__ . '/resources/installation.xml');
 	}
 
-	public function GetDefaultModulesProvider() {
+	private function GetModuleData($sCategory, bool $bIsVisible, bool $bIsAutoSelect, bool $bProductionModulesInRootDir=false) : array {
+		$sRootDir = $bProductionModulesInRootDir ? APPROOT.'data/production-modules/' : '';
+
+		$aModuleData = [
+			'category' => $sCategory,
+			'visible' => $bIsVisible,
+			'root_dir' => $sRootDir,
+		];
+
+		if ($bIsAutoSelect){
+			$aModuleData['auto_select'] = true;
+		}
+
+		return $aModuleData;
+	}
+
+	public function ProcessDefaultModulesProvider() {
+		parent::setUp();
+		return [
+			'root module' => [
+				'aAllFoundModules' => [
+					'_Root_' => $this->GetModuleData('authentication', false, false, true),
+				],
+				'aExpectedSelectedModules' => [],
+				'aExpectedAutoSelectModules' => [],
+			],
+			'auto-select root module' => [
+				'aAllFoundModules' => [
+					'_Root_' => $this->GetModuleData('authentication', false, true, true),
+				],
+				'aExpectedSelectedModules' => [],
+				'aExpectedAutoSelectModules' => [],
+			],
+			'autoselect module only' => [
+				'aAllFoundModules' => [
+					'autoselect-only' => $this->GetModuleData('mycategory', true, true),
+				],
+				'aExpectedSelectedModules' => [],
+				'aExpectedAutoSelectModules' => ['autoselect-only'],
+			],
+			'autoselect/invisible module' => [
+				'aAllFoundModules' => [
+					'autoselect-only' => $this->GetModuleData('mycategory', false, true),
+				],
+				'aExpectedSelectedModules' => [],
+				'aExpectedAutoSelectModules' => ['autoselect-only'],
+			],
+			'autoselect/invisible/in-root-dir module' => [
+				'aAllFoundModules' => [
+					'autoselect-only' => $this->GetModuleData('mycategory', false, true , true),
+				],
+				'aExpectedSelectedModules' => [],
+				'aExpectedAutoSelectModules' => ['autoselect-only'],
+			],
+			'visible/authent module' => [
+				'aAllFoundModules' => [
+					'authent-module' => $this->GetModuleData('authentication', true, false , false),
+				],
+				'aExpectedSelectedModules' => ['authent-module'],
+				'aExpectedAutoSelectModules' => [],
+			],
+			'invisible module' => [
+				'aAllFoundModules' => [
+					'visible-module' => $this->GetModuleData('mycategory', false, false , false),
+				],
+				'aExpectedSelectedModules' => ['visible-module'],
+				'aExpectedAutoSelectModules' => [],
+			],
+			'in-root-dir module' => [
+				'aAllFoundModules' => [
+					'in-root-dir-module' => $this->GetModuleData('mycategory', true, false , true),
+				],
+				'aExpectedSelectedModules' => ['in-root-dir-module'],
+				'aExpectedAutoSelectModules' => [],
+			],
+		];
+	}
+	/**
+	 * @dataProvider ProcessDefaultModulesProvider
+	 */
+	public function testProcessDefaultModules(array $aAllFoundModules, array $aExpectedSelectedModules, array $aExpectedAutoSelectModules) {
+		$oInstallationFileService = new \InstallationFileService('', 'production', [], true);
+
+		$oProductionEnv = $this->createMock(\RunTimeEnvironment::class);
+		$oProductionEnv->expects($this->once())
+			->method('AnalyzeInstallation')
+			->willReturn($aAllFoundModules);
+
+		$oInstallationFileService->SetProductionEnv($oProductionEnv);
+		$oInstallationFileService->ProcessDefaultModules();
+
+		sort($aExpectedSelectedModules);
+		$aModules = array_keys($oInstallationFileService->GetSelectedModules());
+		sort($aModules);
+
+		$this->assertEquals($aExpectedSelectedModules, $aModules);
+
+		$aAutoSelectModules = array_keys($oInstallationFileService->GetAutoSelectModules());
+		sort($aAutoSelectModules);
+		$this->assertEquals($aExpectedAutoSelectModules, $aAutoSelectModules);
+	}
+
+	public function ProcessInstallationChoicesProvider() {
 		return [
 			'all checked' => [ true ],
 			'only defaut + mandatory' => [ false ],
@@ -34,12 +137,16 @@ class InstallationFileServiceTest extends TestCase {
 	}
 
 	/**
-	 * @dataProvider GetDefaultModulesProvider
+	 * @dataProvider ProcessInstallationChoicesProvider
 	 */
-	public function testProcessInstallationChoices($bInstallationOptionalChoicesChecked=false) {
+	public function testProcessInstallationChoices($bInstallationOptionalChoicesChecked) {
 		$sPath = $this->GetInstallationPath();
-		$this->assertTrue(is_file($sPath));
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', [], $bInstallationOptionalChoicesChecked);
+		$oProductionEnv = $this->createMock(\RunTimeEnvironment::class);
+		$oProductionEnv->expects($this->never())
+			->method('AnalyzeInstallation');
+		$oInstallationFileService->SetProductionEnv($oProductionEnv);
+
 		$oInstallationFileService->ProcessInstallationChoices();
 		$aExpectedModules = [
 			"itop-config-mgmt",
@@ -91,11 +198,91 @@ class InstallationFileServiceTest extends TestCase {
 	}
 
 	/**
+	 * @dataProvider ItilExtensionProvider
+	 */
+	public function testProcessInstallationChoicesWithItilChoices(array $aSelectedExtensions, bool $bKnownMgtSelected) {
+		$sPath = $this->GetInstallationPath();
+		$oInstallationFileService = new \InstallationFileService($sPath, 'production', $aSelectedExtensions, false);
+		$oProductionEnv = $this->createMock(\RunTimeEnvironment::class);
+		$oProductionEnv->expects($this->never())
+			->method('AnalyzeInstallation');
+		$oInstallationFileService->SetProductionEnv($oProductionEnv);
+
+		$oInstallationFileService->ProcessInstallationChoices();
+
+		$aExpectedInstallationModules = [
+			"itop-config-mgmt",
+			"itop-attachments",
+			"itop-profiles-itil",
+			"itop-welcome-itil",
+			"itop-tickets",
+			"itop-files-information",
+			"combodo-db-tools",
+			"itop-core-update",
+			"itop-hub-connector",
+			"itop-oauth-client",
+			"itop-datacenter-mgmt",
+			"itop-endusers-devices",
+			"itop-storage-mgmt",
+			"itop-virtualization-mgmt",
+			"itop-service-mgmt",
+			"itop-request-mgmt-itil",
+			"itop-incident-mgmt-itil",
+			"itop-portal",
+			"itop-portal-base",
+			"itop-change-mgmt-itil",
+		];
+		if ($bKnownMgtSelected){
+			$aExpectedInstallationModules []= "itop-knownerror-mgmt";
+		}
+
+		sort($aExpectedInstallationModules);
+		$aModules = array_keys($oInstallationFileService->GetSelectedModules());
+		sort($aModules);
+
+		$this->assertEquals($aExpectedInstallationModules, $aModules);
+
+		$aExpectedUnselectedModules = [
+			0 => 'itop-change-mgmt',
+		    1 => 'itop-problem-mgmt',
+		    2 => 'itop-request-mgmt',
+		    3 => 'itop-service-mgmt-provider',
+		];
+		if (!$bKnownMgtSelected){
+			$aExpectedUnselectedModules[]='itop-knownerror-mgmt';
+		}
+		$aUnselectedModules = array_keys($oInstallationFileService->GetUnSelectedModules());
+		sort($aExpectedUnselectedModules);
+		sort($aUnselectedModules);
+		$this->assertEquals($aExpectedUnselectedModules, $aUnselectedModules);
+	}
+
+	public function GetDefaultModulesProvider() {
+		return [
+			'check all possible modules' => [true],
+			'only minimum defaul/mandatory from installation.xml' => [false],
+		];
+	}
+
+	private function GetMockListOfFoundModules() : array {
+		$sJsonContent = file_get_contents(realpath(__DIR__ . '/resources/AnalyzeInstallation.json'));
+		$sJsonContent = str_replace('ROOTDIR_TOREPLACE', APPROOT, $sJsonContent);
+		return json_decode($sJsonContent, true);
+	}
+
+	/**
 	 * @dataProvider GetDefaultModulesProvider
 	 */
 	public function testGetAllSelectedModules($bInstallationOptionalChoicesChecked=false) {
 		$sPath = $this->GetInstallationPath();
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', [], $bInstallationOptionalChoicesChecked);
+
+		$oProductionEnv = $this->createMock(\RunTimeEnvironment::class);
+		$oProductionEnv->expects($this->once())
+			->method('AnalyzeInstallation')
+			->willReturn($this->GetMockListOfFoundModules());
+		$oInstallationFileService->SetProductionEnv($oProductionEnv);
+
 		$oInstallationFileService->Init();
 
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
@@ -202,6 +389,13 @@ class InstallationFileServiceTest extends TestCase {
 	public function testGetAllSelectedModules_withItilExtensions(array $aSelectedExtensions, bool $bKnownMgtSelected) {
 		$sPath = $this->GetInstallationPath();
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', $aSelectedExtensions);
+
+		$oProductionEnv = $this->createMock(\RunTimeEnvironment::class);
+		$oProductionEnv->expects($this->once())
+			->method('AnalyzeInstallation')
+			->willReturn($this->GetMockListOfFoundModules());
+		$oInstallationFileService->SetProductionEnv($oProductionEnv);
+
 		$oInstallationFileService->Init();
 
 		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
@@ -269,34 +463,6 @@ class InstallationFileServiceTest extends TestCase {
 
 		$this->assertEquals([], $aMissingModules, "$sModuleCategory modules are missing");
 
-	}
-
-	public function ProductionModulesProvider() {
-		return [
-			'module autoload as located in production-modules' => [ true ],
-			'module not loaded' => [ false ],
-		];
-	}
-
-	/**
-	 * @dataProvider ProductionModulesProvider
-	 */
-	public function testGetAllSelectedModules_ProductionModules(bool $bModuleInProductionModulesFolder) {
-		$sModuleId = "itop-problem-mgmt";
-		if ($bModuleInProductionModulesFolder){
-			if (! is_dir(APPROOT."data/production-modules")){
-				@mkdir(APPROOT."data/production-modules");
-			}
-
-			$this->RecurseMoveDir(APPROOT . "datamodels/2.x/$sModuleId", APPROOT."data/production-modules/$sModuleId");
-		}
-
-		$sPath = $this->GetInstallationPath();
-		$oInstallationFileService = new \InstallationFileService($sPath, 'production', [], false);
-		$oInstallationFileService->Init();
-
-		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
-		$this->assertEquals($bModuleInProductionModulesFolder, array_key_exists($sModuleId, $aSelectedModules));
 	}
 
 	private function RecurseMoveDir($sFromDir, $sToDir) {

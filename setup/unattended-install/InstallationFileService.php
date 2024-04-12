@@ -14,6 +14,9 @@ if (version_compare(ITOP_DESIGN_LATEST_VERSION, '2.7', '<=')) {
 }
 
 class InstallationFileService {
+	/** @var \RunTimeEnvironment $oProductionEnv */
+	private $oProductionEnv;
+
 	private $sTargetEnvironment;
 	private $sInstallationPath;
 	private $aSelectedModules;
@@ -35,6 +38,21 @@ class InstallationFileService {
 		$this->sTargetEnvironment = $sTargetEnvironment;
 		$this->aSelectedExtensions = $aSelectedExtensions;
 		$this->bInstallationOptionalChoicesChecked = $bInstallationOptionalChoicesChecked;
+	}
+
+	public function GetProductionEnv(): RunTimeEnvironment {
+		if (is_null($this->oProductionEnv)){
+			$this->oProductionEnv = new RunTimeEnvironment();
+		}
+		return $this->oProductionEnv;
+	}
+
+	public function SetProductionEnv(RunTimeEnvironment $oProductionEnv): void {
+		$this->oProductionEnv = $oProductionEnv;
+	}
+
+	public function GetAutoSelectModules(): array {
+		return $this->aAutoSelectModules;
 	}
 
 	public function GetSelectedModules(): array {
@@ -206,8 +224,7 @@ class InstallationFileService {
 	public function ProcessDefaultModules() : void {
 		$sProductionModuleDir = APPROOT.'data/' . $this->sTargetEnvironment . '-modules/';
 
-		$oProductionEnv = new RunTimeEnvironment();
-		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), $this->GetExtraDirs(), false, null);
+		$aAvailableModules = $this->GetProductionEnv()->AnalyzeInstallation(MetaModel::GetConfig(), $this->GetExtraDirs(), false, null);
 
 		$this->aAutoSelectModules = [];
 		foreach ($aAvailableModules as $sModuleId => $aModule) {
@@ -221,7 +238,6 @@ class InstallationFileService {
 					$this->aSelectedModules[$sModuleId] = true;
 					continue;
 				}
-
 				$bIsExtra = (array_key_exists('root_dir', $aModule) && (strpos($aModule['root_dir'],
 							$sProductionModuleDir) !== false)); // Some modules (root, datamodel) have no 'root_dir'
 				if ($bIsExtra) {
@@ -233,7 +249,7 @@ class InstallationFileService {
 	}
 
 	public function ProcessAutoSelectModules() : void {
-		foreach($this->aAutoSelectModules as $sModuleId => $aModule)
+		foreach($this->GetAutoSelectModules() as $sModuleId => $aModule)
 		{
 			try {
 				$bSelected = false;
