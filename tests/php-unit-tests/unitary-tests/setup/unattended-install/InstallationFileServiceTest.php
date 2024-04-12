@@ -18,9 +18,6 @@ class InstallationFileServiceTest extends ItopTestCase {
 
 	protected function tearDown(): void {
 		parent::tearDown();
-
-		$sModuleId = "itop-problem-mgmt";
-		$this->RecurseMoveDir(APPROOT."data/production-modules/$sModuleId", APPROOT . "datamodels/2.x/$sModuleId");
 	}
 
 	private function GetInstallationPath() : string {
@@ -265,10 +262,10 @@ class InstallationFileServiceTest extends ItopTestCase {
 		$this->assertEquals($aExpectedInstallationModules, $aModules);
 
 		$aExpectedUnselectedModules = [
-			0 => 'itop-change-mgmt',
-		    1 => 'itop-problem-mgmt',
-		    2 => 'itop-request-mgmt',
-		    3 => 'itop-service-mgmt-provider',
+			'itop-change-mgmt',
+			'itop-problem-mgmt',
+			'itop-request-mgmt',
+			'itop-service-mgmt-provider',
 		];
 		if (!$bKnownMgtSelected){
 			$aExpectedUnselectedModules[]='itop-knownerror-mgmt';
@@ -315,7 +312,6 @@ class InstallationFileServiceTest extends ItopTestCase {
 
 		$oInstallationFileService->Init();
 
-		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
 		$aExpectedInstallationModules = [
 			"itop-config-mgmt",
 			"itop-attachments",
@@ -336,34 +332,26 @@ class InstallationFileServiceTest extends ItopTestCase {
 			"itop-portal",
 			"itop-portal-base",
 			"itop-change-mgmt",
+			'authent-cas',
+			'authent-external',
+			'authent-ldap',
+			'authent-local',
+			'itop-backup',
+			'itop-config',
+			'itop-sla-computation',
+			'itop-bridge-virtualization-storage',
 		];
+
 		if ($bInstallationOptionalChoicesChecked){
 			$aExpectedInstallationModules []= "itop-problem-mgmt";
 			$aExpectedInstallationModules []= "itop-knownerror-mgmt";
 		}
 
-		$aExpectedAuthenticationModules = [
-			'authent-cas',
-			'authent-external',
-			'authent-ldap',
-			'authent-local',
-		];
+		sort($aExpectedInstallationModules);
 
-		$aUnvisibleModules = [
-			'itop-backup',
-			'itop-config',
-			'itop-sla-computation',
-		];
-
-		$aAutoSelectedModules = [
-			'itop-bridge-virtualization-storage',
-		];
-
-		$this->checkModuleList("installation.xml choices", $aExpectedInstallationModules, $aSelectedModules);
-		$this->checkModuleList("authentication category", $aExpectedAuthenticationModules, $aSelectedModules);
-		$this->checkModuleList("unvisible", $aUnvisibleModules, $aSelectedModules);
-		$this->checkModuleList("auto-select", $aAutoSelectedModules, $aSelectedModules);
-		$this->assertEquals([], $aSelectedModules, "there should be no more modules remaining apart from below lists");
+		$aSelectedModules = array_keys($oInstallationFileService->GetSelectedModules());
+		sort($aSelectedModules);
+		$this->assertEquals($aExpectedInstallationModules, $aSelectedModules);
 
 		$this->ValidateNonItilExtensionComputation($oInstallationFileService, $bInstallationOptionalChoicesChecked);
 	}
@@ -487,7 +475,7 @@ class InstallationFileServiceTest extends ItopTestCase {
 
 		$oInstallationFileService->Init();
 
-		$aSelectedModules = $oInstallationFileService->GetSelectedModules();
+		$aSelectedModules = array_keys($oInstallationFileService->GetSelectedModules());
 		$aExpectedInstallationModules = [
 			"itop-config-mgmt",
 			"itop-attachments",
@@ -510,71 +498,24 @@ class InstallationFileServiceTest extends ItopTestCase {
 			"itop-portal-base",
 			"itop-change-mgmt-itil",
 			"itop-full-itil",
+			'authent-cas',
+			'authent-external',
+			'authent-ldap',
+			'authent-local',
+			'itop-backup',
+			'itop-config',
+			'itop-sla-computation',
+			'itop-bridge-virtualization-storage',
 		];
 		if ($bKnownMgtSelected){
 			$aExpectedInstallationModules []= "itop-knownerror-mgmt";
 		}
 
-		$aExpectedAuthenticationModules = [
-			'authent-cas',
-			'authent-external',
-			'authent-ldap',
-			'authent-local',
-		];
-
-		$aUnvisibleModules = [
-			'itop-backup',
-			'itop-config',
-			'itop-sla-computation',
-		];
-
-		$aAutoSelectedModules = [
-			'itop-bridge-virtualization-storage',
-		];
-
-		$this->checkModuleList("installation.xml choices", $aExpectedInstallationModules, $aSelectedModules);
-		$this->checkModuleList("authentication category", $aExpectedAuthenticationModules, $aSelectedModules);
-		$this->checkModuleList("unvisible", $aUnvisibleModules, $aSelectedModules);
-		$this->checkModuleList("auto-select", $aAutoSelectedModules, $aSelectedModules);
-		$this->assertEquals([], $aSelectedModules, "there should be no more modules remaining apart from below lists");
+		sort($aExpectedInstallationModules);
+		sort($aSelectedModules);
+		$this->assertEquals($aExpectedInstallationModules, $aSelectedModules);
 
 		$this->ValidateItilExtensionComputation($oInstallationFileService, $bKnownMgtSelected, $bCoreMgtSelected);
-	}
-
-	private function checkModuleList(string $sModuleCategory, array $aExpectedModuleList, array &$aSelectedModules) {
-		$aMissingModules = [];
-
-		foreach ($aExpectedModuleList as $sModuleId){
-			if (! array_key_exists($sModuleId, $aSelectedModules)){
-				$aMissingModules[]=$sModuleId;
-			} else {
-				unset($aSelectedModules[$sModuleId]);
-			}
-		}
-
-		$this->assertEquals([], $aMissingModules, "$sModuleCategory modules are missing");
-
-	}
-
-	private function RecurseMoveDir($sFromDir, $sToDir) {
-		if (! is_dir($sFromDir)){
-			return;
-		}
-
-		if (! is_dir($sToDir)){
-			@mkdir($sToDir);
-		}
-
-		foreach (glob("$sFromDir/*") as $sPath){
-			$sToPath = $sToDir.'/'.basename($sPath);
-			if (is_file($sPath)){
-				@rename($sPath, $sToPath);
-			} else {
-				$this->RecurseMoveDir($sPath, $sToPath);
-			}
-		}
-
-		@rmdir($sFromDir);
 	}
 
 	private function CreateItopExtension(string $sSource, string $sCode, array $aModules, array $aMissingDependencies, bool $bIsVisible) : iTopExtension{
