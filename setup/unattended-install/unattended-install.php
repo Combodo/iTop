@@ -63,7 +63,8 @@ if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
 	$sInstallationBaseName = basename($sInstallationXmlPath);
 
 	$aSelectedExtensionsFromXmlSetup = $oParams->Get('selected_extensions', []);
-	if (count($aSelectedExtensionsFromXmlSetup) !== 0) {
+	$bInstallationChoicesProvided = count($aSelectedExtensionsFromXmlSetup) !== 0;
+	if ($bInstallationChoicesProvided) {
 		$sMsg = "Modules to install computed based on $sInstallationBaseName file and installation choices (listed in section `selected_extensions` of $sXmlSetupBaseName file)";
 		echo "$sMsg:\n".implode(',', $aSelectedExtensionsFromXmlSetup)."\n\n";
 		SetupLog::Info($sMsg, null, $aSelectedExtensionsFromXmlSetup);
@@ -75,11 +76,21 @@ if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
 
 	$oInstallationFileService = new InstallationFileService($sInstallationXmlPath, $sTargetEnvironment, $aSelectedExtensionsFromXmlSetup);
 	$oInstallationFileService->Init();
+
+	$aComputedExtensions = $oInstallationFileService->GetAfterComputationSelectedExtensions();
+	if (! $bInstallationChoicesProvided) {
+		$sMsg = "Computed installation choices";
+		echo "$sMsg:\n".implode(',', $aComputedExtensions)."\n\n";
+		SetupLog::Info($sMsg, null, $aComputedExtensions);
+	}
+	$aSelectedExtensions = array_keys($aComputedExtensions);
+	$oParams->Set('selected_extensions', $aSelectedExtensions);
+
 	$aComputedModules = $oInstallationFileService->GetSelectedModules();
 	$aSelectedModules = array_keys($aComputedModules);
 	$oParams->Set('selected_modules', $aSelectedModules);
 
-	$sMsg = "Modules to install computed";
+	$sMsg = "Computed modules to install";
 } else {
 	$aSelectedModules = $oParams->Get('selected_modules', []);
 	$sMsg = "Modules to install listed in $sXmlSetupBaseName (selected_modules section)";
