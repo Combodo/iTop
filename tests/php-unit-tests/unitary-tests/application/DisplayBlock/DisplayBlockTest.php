@@ -4,17 +4,18 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Test\UnitTest\Application;
 
-namespace Combodo\iTop\Application;
-
+use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxPie\BlockChartAjaxPie;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
-use DBObjectSet;
-
-
-use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use DBSearch;
+use DisplayBlock;
+use MetaModel;
+use UserRequest;
 
 class DisplayBlockTest extends ItopCustomDatamodelTestCase
 {
+	const CREATE_TEST_ORG = true;
 	public function GetDatamodelDeltaAbsPath(): string
 	{
 		return __DIR__ . '/Delta/add-enum-value-with-quote.xml';
@@ -23,7 +24,7 @@ class DisplayBlockTest extends ItopCustomDatamodelTestCase
 	public function renderChartAjaxProvider(): array
 	{
 		return [
-			'simple string : name' => [
+			'simple string : name' => [ // chart with UserRequest title (evaluating string/scalar escaping)
 				'class to display'                => 'UserRequest',
 				'class attribute to display'      => 'title',
 				'class to edit'                   => 'UserRequest',
@@ -31,7 +32,7 @@ class DisplayBlockTest extends ItopCustomDatamodelTestCase
 				'expected'                        => "New'name",
 				'nonExpected'                     => 'New&apos;name',
 			],
-			'enum : status'        => [
+			'enum : status'        => [ // chart with UserRequest status (evaluating enum escaping)
 				// not working because we need to allow a new value for the enum
 				'class to display'                => 'UserRequest',
 				'attribute to display'            => 'status',
@@ -40,7 +41,7 @@ class DisplayBlockTest extends ItopCustomDatamodelTestCase
 				'expected'                        => "New'status",
 				'nonExpected'                     => 'New&apos;status',
 			],
-			'relation : Org name'  => [
+			'relation : Org name'  => [ // chart with related organization name title (evaluating ext key escaping)
 				'class to display'                => 'UserRequest',
 				'class attribute to display'      => 'org_name',
 				'class to edit'                   => 'Organization',
@@ -52,21 +53,28 @@ class DisplayBlockTest extends ItopCustomDatamodelTestCase
 	}
 
 	/**
-	 * @covers       \Combodo\iTop\Application\UI\DisplayBlock::RenderChartAjax
 	 * @dataProvider renderChartAjaxProvider
 	 */
 	public function testRenderChartAjax(string $sClassToDisplay, string $sAttributeToDisplay, string $sRelatedClass, string $sRelatedClassAttributeToEdit, string $sExpected, string $sNonExpected): void
 	{
+		$oUserRequest = new UserRequest();
+		$oUserRequest->Set('title', 'MyTitle');
+		$oUserRequest->Set('org_id', $this->getTestOrgId());
+		$oUserRequest->Set('description', "MyDescription");
+		$oUserRequest->DBInsert();
 
-		$oFilter = \DBObjectSearch::FromOQL("SELECT $sRelatedClass");
-		$oSet = new DBObjectSet($oFilter);
-		$oUser = $oSet->Fetch();
-		$oUser->Set($sRelatedClassAttributeToEdit, $sExpected); // attribute that shouldn't be encoded
-		$oUser->DBUpdate();
+		if ($sRelatedClass !== "UserRequest") {
+			$oInstanceRelatedClass = MetaModel::GetObject($sRelatedClass, $this->getTestOrgId());
+		} else {
+			$oInstanceRelatedClass = $oUserRequest;
+		}
 
-		$oDisplayBlock = new \DisplayBlock(
-			\DBSearch::FromOQL("SELECT $sClassToDisplay"),
-			\DisplayBlock::ENUM_STYLE_CHART_AJAX
+		$oInstanceRelatedClass->Set($sRelatedClassAttributeToEdit, $sExpected); // attribute that shouldn't be encoded
+		$oInstanceRelatedClass->DBUpdate();
+
+		$oDisplayBlock = new DisplayBlock(
+			DBSearch::FromOQL("SELECT $sClassToDisplay"),
+			DisplayBlock::ENUM_STYLE_CHART_AJAX
 		);
 
 		$aExtraParams = [
@@ -76,7 +84,7 @@ class DisplayBlockTest extends ItopCustomDatamodelTestCase
 			"order_by"        => $sAttributeToDisplay,
 			"limit"           => 10,
 		];
-		/** @var \Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxPie\BlockChartAjaxPie $oBlock */
+		/** @var BlockChartAjaxPie $oBlock */
 		$oBlock = $this->InvokeNonPublicMethod(get_class($oDisplayBlock), "RenderChartAjax", $oDisplayBlock, [$aExtraParams]);
 
 		$aJSNames = json_decode($oBlock->sJSNames, true);
