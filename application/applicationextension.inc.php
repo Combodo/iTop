@@ -2282,3 +2282,21 @@ interface iKPILoggerExtension
      */
     public function LogOperation($oKpiLogData);
 }
+
+/**
+ * Implement this interface to add files to the backup
+ *
+ * @api
+ * @since 3.2.0
+ */
+interface iBackupExtraFilesExtension
+{
+	/**
+	 * Returns an array of files and directories to be included in the backup
+	 *
+	 * @api
+	 *
+	 * @return string[]
+	 */
+	public function GetExtraFiles(): array;
+}
