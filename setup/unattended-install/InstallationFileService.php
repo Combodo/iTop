@@ -6,10 +6,17 @@ require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
 require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
 
 class InstallationFileService {
+	/** @var \RunTimeEnvironment $oProductionEnv */
+	private $oProductionEnv;
+
+	/** @var \ItopExtensionsMap $oProductionEnv */
+	private $oItopExtensionsMap;
+
 	private $sTargetEnvironment;
 	private $sInstallationPath;
 	private $aSelectedModules;
 	private $aSelectedExtensions;
+	private $aAfterComputationSelectedExtensions;
 	private $aUnSelectedModules;
 	private $aAutoSelectModules;
 	private $bInstallationOptionalChoicesChecked;
@@ -18,7 +25,8 @@ class InstallationFileService {
 	 * @param string $sInstallationPath
 	 * @param string $sTargetEnvironment
 	 * @param array $aSelectedExtensions
-	 * @param bool $bInstallationOptionalChoicesChecked : this option is used only when no extensions are selected (ie empty $aSelectedExtensions)
+	 * @param bool $bInstallationOptionalChoicesChecked : this option is used only when no extensions are selected (ie empty
+	 *     $aSelectedExtensions)
 	 */
 	public function __construct(string $sInstallationPath, string $sTargetEnvironment='production', array $aSelectedExtensions = [], bool $bInstallationOptionalChoicesChecked=true) {
 		$this->sInstallationPath = $sInstallationPath;
@@ -26,7 +34,47 @@ class InstallationFileService {
 		$this->aUnSelectedModules = [];
 		$this->sTargetEnvironment = $sTargetEnvironment;
 		$this->aSelectedExtensions = $aSelectedExtensions;
+		$this->aAfterComputationSelectedExtensions = (count($aSelectedExtensions)==0) ? [] : $aSelectedExtensions;
 		$this->bInstallationOptionalChoicesChecked = $bInstallationOptionalChoicesChecked;
+	}
+
+	public function Init(): void {
+		clearstatcache();
+
+		$this->ProcessDefaultModules();
+		$this->ProcessInstallationChoices();
+		$this->ProcessExtensionModulesNotSpecifiedInChoices();
+		$this->ProcessAutoSelectModules();
+	}
+
+	public function GetProductionEnv(): RunTimeEnvironment {
+		if (is_null($this->oProductionEnv)){
+			$this->oProductionEnv = new RunTimeEnvironment();
+		}
+		return $this->oProductionEnv;
+	}
+
+	public function SetProductionEnv(RunTimeEnvironment $oProductionEnv): void {
+		$this->oProductionEnv = $oProductionEnv;
+	}
+
+	public function GetAfterComputationSelectedExtensions(): array {
+		return $this->aAfterComputationSelectedExtensions;
+	}
+
+	public function SetItopExtensionsMap(ItopExtensionsMap $oItopExtensionsMap): void {
+		$this->oItopExtensionsMap = $oItopExtensionsMap;
+	}
+
+	public function GetItopExtensionsMap(): ItopExtensionsMap {
+		if (is_null($this->oItopExtensionsMap)){
+			$this->oItopExtensionsMap = new iTopExtensionsMap($this->sTargetEnvironment, true);
+		}
+		return $this->oItopExtensionsMap;
+	}
+
+	public function GetAutoSelectModules(): array {
+		return $this->aAutoSelectModules;
 	}
 
 	public function GetSelectedModules(): array {
@@ -35,14 +83,6 @@ class InstallationFileService {
 
 	public function GetUnSelectedModules(): array {
 		return $this->aUnSelectedModules;
-	}
-
-	public function Init(): void {
-		clearstatcache();
-
-		$this->ProcessDefaultModules();
-		$this->ProcessInstallationChoices();
-		$this->ProcessAutoSelectModules();
 	}
 
 	public function ProcessInstallationChoices(): void {
@@ -120,10 +160,13 @@ class InstallationFileService {
 		$sMandatory = $aChoiceInfo["mandatory"] ?? "false";
 
 		$aCurrentModules = $aChoiceInfo["modules"] ?? [];
+		$sExtensionCode = $aChoiceInfo["extension_code"] ?? null;
 		if (0 === count($this->aSelectedExtensions)){
 			$bSelected = $bAllChecked || $sDefault === "true" || $sMandatory === "true";
+			if ($bSelected){
+				$this->aAfterComputationSelectedExtensions[]= $sExtensionCode;
+			}
 		} else {
-			$sExtensionCode = $aChoiceInfo["extension_code"] ?? null;
 			$bSelected = $sMandatory === "true" ||
 				(null !== $sExtensionCode && in_array($sExtensionCode, $this->aSelectedExtensions));
 		}
@@ -198,8 +241,7 @@ class InstallationFileService {
 	public function ProcessDefaultModules() : void {
 		$sProductionModuleDir = APPROOT.'data/' . $this->sTargetEnvironment . '-modules/';
 
-		$oProductionEnv = new RunTimeEnvironment();
-		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), $this->GetExtraDirs(), false, null);
+		$aAvailableModules = $this->GetProductionEnv()->AnalyzeInstallation(MetaModel::GetConfig(), $this->GetExtraDirs(), false, null);
 
 		$this->aAutoSelectModules = [];
 		foreach ($aAvailableModules as $sModuleId => $aModule) {
@@ -213,7 +255,6 @@ class InstallationFileService {
 					$this->aSelectedModules[$sModuleId] = true;
 					continue;
 				}
-
 				$bIsExtra = (array_key_exists('root_dir', $aModule) && (strpos($aModule['root_dir'],
 							$sProductionModuleDir) !== false)); // Some modules (root, datamodel) have no 'root_dir'
 				if ($bIsExtra) {
@@ -225,7 +266,7 @@ class InstallationFileService {
 	}
 
 	public function ProcessAutoSelectModules() : void {
-		foreach($this->aAutoSelectModules as $sModuleId => $aModule)
+		foreach($this->GetAutoSelectModules() as $sModuleId => $aModule)
 		{
 			try {
 				$bSelected = false;
@@ -238,6 +279,78 @@ class InstallationFileService {
 				}
 			}
 			catch (Exception $e) {
+			}
+		}
+	}
+
+	public function CanChooseUnpackageExtension(iTopExtension $oExtension) : bool {
+		if ($oExtension->sSource === iTopExtension::SOURCE_REMOTE){
+			SetupLog::Info("Data Extension can be selected", null, ['extension' => $oExtension->sCode]);
+			return true;
+		}
+
+		$bSelectable = $this->bInstallationOptionalChoicesChecked && ($oExtension->sSource === iTopExtension::SOURCE_MANUAL);
+		if ($bSelectable){
+			SetupLog::Info("Manual Extension can be selected", null, ['extension' => $oExtension->sCode]);
+		} else {
+			SetupLog::Debug("Manual Extension can NOT be selected", null, ['extension' => $oExtension->sCode]);
+		}
+
+		return $bSelectable;
+	}
+
+	public function ProcessExtensionModulesNotSpecifiedInChoices() {
+		/** @var \iTopExtension $oExtension */
+		foreach($this->GetItopExtensionsMap()->GetAllExtensions() as $oExtension) {
+			if (in_array($oExtension->sCode, $this->aAfterComputationSelectedExtensions)){
+				//extension already processed in installation.xml
+				SetupLog::Info("Extension already processed via installation choices", null,
+					[
+						'extension' => $oExtension->sCode,
+					])      ;
+				continue;
+			}
+			if ($this->CanChooseUnpackageExtension($oExtension)){
+				if (($oExtension->bVisible) && (count($oExtension->aMissingDependencies) === 0)) {
+					$aCurrentModules = [];
+					$aUnselectableModules = [];
+					$bIsExtensionSelectable = true;
+					foreach ($oExtension->aModules as $sModuleId) {
+						if (array_key_exists($sModuleId, $this->aSelectedModules)) {
+							//already selected
+							continue;
+						}
+
+						if (array_key_exists($sModuleId, $this->aUnSelectedModules)) {
+							$aUnselectableModules[] = $sModuleId;
+
+							//already unselected
+							$bIsExtensionSelectable = false;
+						} else {
+							$aCurrentModules[$sModuleId] = true;
+						}
+					}
+
+					if ($bIsExtensionSelectable) {
+						SetupLog::Debug("Add modules from unpackaged extension", null,
+							[
+								'extension' => $oExtension->sCode,
+								'source' => $oExtension->sSource,
+								'modules to add' => array_keys($aCurrentModules),
+							]);
+						$this->aSelectedModules = array_merge($this->aSelectedModules, $aCurrentModules);
+						$this->aAfterComputationSelectedExtensions[] = $oExtension->sCode;
+					} else {
+						SetupLog::Warning("Unpackaged extension can not be selected due to modules incompatible with installation choices",
+							null,
+							[
+								'extension' => $oExtension->sCode,
+								'source' => $oExtension->sSource,
+								'modules' => array_keys($aCurrentModules),
+								'unselectable modules' => $aUnselectableModules,
+							]);
+					}
+				}
 			}
 		}
 	}
