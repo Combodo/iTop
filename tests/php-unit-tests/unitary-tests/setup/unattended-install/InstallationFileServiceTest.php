@@ -195,12 +195,34 @@ class InstallationFileServiceTest extends ItopTestCase {
 		sort($aExpectedUnselectedModules);
 		sort($aUnselectedModules);
 		$this->assertEquals($aExpectedUnselectedModules, $aUnselectedModules);
+
+		$aGetAfterComputationSelectedExtensions = $oInstallationFileService->GetAfterComputationSelectedExtensions();
+		sort($aGetAfterComputationSelectedExtensions);
+		$aExpectedExtensions = [
+			'itop-change-mgmt-simple',
+		    'itop-config-mgmt-core',
+		    'itop-config-mgmt-datacenter',
+		    'itop-config-mgmt-end-user',
+		    'itop-config-mgmt-storage',
+		    'itop-config-mgmt-virtualization',
+		    'itop-service-mgmt-enterprise',
+		    'itop-ticket-mgmt-simple-ticket',
+			'itop-ticket-mgmt-simple-ticket-enhanced-portal',
+		];
+		if ($bInstallationOptionalChoicesChecked){
+			$aExpectedExtensions []= "itop-problem-mgmt";
+			$aExpectedExtensions []= 'itop-kown-error-mgmt';
+		}
+		sort($aExpectedExtensions);
+		$this->assertEquals($aExpectedExtensions, $aGetAfterComputationSelectedExtensions);
+
+		$this->ValidateNonItilExtensionComputation($oInstallationFileService, $bInstallationOptionalChoicesChecked);
 	}
 
 	/**
 	 * @dataProvider ItilExtensionProvider
 	 */
-	public function testProcessInstallationChoicesWithItilChoices(array $aSelectedExtensions, bool $bKnownMgtSelected) {
+	public function testProcessInstallationChoicesWithItilChoices(array $aSelectedExtensions, bool $bKnownMgtSelected, bool $bCoreMgtSelected) {
 		$sPath = $this->GetInstallationPath();
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', $aSelectedExtensions, false);
 		$oProductionEnv = $this->createMock(\RunTimeEnvironment::class);
@@ -255,6 +277,8 @@ class InstallationFileServiceTest extends ItopTestCase {
 		sort($aExpectedUnselectedModules);
 		sort($aUnselectedModules);
 		$this->assertEquals($aExpectedUnselectedModules, $aUnselectedModules);
+
+		$this->ValidateItilExtensionComputation($oInstallationFileService, $bKnownMgtSelected, $bCoreMgtSelected);
 	}
 
 	public function GetDefaultModulesProvider() {
@@ -334,6 +358,55 @@ class InstallationFileServiceTest extends ItopTestCase {
 		$this->checkModuleList("unvisible", $aUnvisibleModules, $aSelectedModules);
 		$this->checkModuleList("auto-select", $aAutoSelectedModules, $aSelectedModules);
 		$this->assertEquals([], $aSelectedModules, "there should be no more modules remaining apart from below lists");
+
+		$this->ValidateNonItilExtensionComputation($oInstallationFileService, $bInstallationOptionalChoicesChecked);
+	}
+
+	private function ValidateNonItilExtensionComputation($oInstallationFileService, bool $bInstallationOptionalChoicesChecked) {
+		$aGetAfterComputationSelectedExtensions = $oInstallationFileService->GetAfterComputationSelectedExtensions();
+		sort($aGetAfterComputationSelectedExtensions);
+		$aExpectedExtensions = [
+			'itop-change-mgmt-simple',
+			'itop-config-mgmt-core',
+			'itop-config-mgmt-datacenter',
+			'itop-config-mgmt-end-user',
+			'itop-config-mgmt-storage',
+			'itop-config-mgmt-virtualization',
+			'itop-service-mgmt-enterprise',
+			'itop-ticket-mgmt-simple-ticket',
+			'itop-ticket-mgmt-simple-ticket-enhanced-portal',
+		];
+		if ($bInstallationOptionalChoicesChecked){
+			$aExpectedExtensions []= "itop-problem-mgmt";
+			$aExpectedExtensions []= 'itop-kown-error-mgmt';
+		}
+		sort($aExpectedExtensions);
+		$this->assertEquals($aExpectedExtensions, $aGetAfterComputationSelectedExtensions);
+	}
+
+	private function ValidateItilExtensionComputation($oInstallationFileService, bool $bKnownMgtSelected, bool $bCoreMgtSelected) {
+		$aGetAfterComputationSelectedExtensions = $oInstallationFileService->GetAfterComputationSelectedExtensions();
+		sort($aGetAfterComputationSelectedExtensions);
+		$aExpectedExtensions = [
+			'itop-change-mgmt-itil',
+			'itop-config-mgmt-datacenter',
+			'itop-config-mgmt-end-user',
+			'itop-config-mgmt-storage',
+			'itop-config-mgmt-virtualization',
+			'itop-service-mgmt-enterprise',
+			'itop-ticket-mgmt-itil',
+			'itop-ticket-mgmt-itil-enhanced-portal',
+			'itop-ticket-mgmt-itil-incident',
+			'itop-ticket-mgmt-itil-user-request',
+		];
+		if ($bCoreMgtSelected){
+			$aExpectedExtensions []= 'itop-config-mgmt-core';
+		}
+		if ($bKnownMgtSelected){
+			$aExpectedExtensions []= 'itop-kown-error-mgmt';
+		}
+		sort($aExpectedExtensions);
+		$this->assertEquals($aExpectedExtensions, $aGetAfterComputationSelectedExtensions);
 	}
 
 	private function GetSelectedItilExtensions(bool $coreExtensionIncluded, bool $bKnownMgtIncluded) : array {
@@ -367,18 +440,22 @@ class InstallationFileServiceTest extends ItopTestCase {
 			'all itil extensions + INCLUDING known-error-mgt' => [
 				'aSelectedExtensions' => $this->GetSelectedItilExtensions(true, true),
 				'bKnownMgtSelected' => true,
+				'bCoreMgtSelected' => true,
 			],
 			'all itil extensions WITHOUT known-error-mgt' => [
 				'aSelectedExtensions' => $this->GetSelectedItilExtensions(true, false),
 				'bKnownMgtSelected' => false,
+				'bCoreMgtSelected' => true,
 			],
 			'all itil extensions WITHOUT core mandatory ones + INCLUDING known-error-mgt' => [
 				'aSelectedExtensions' => $this->GetSelectedItilExtensions(false, true),
 				'bKnownMgtSelected' => true,
+				'bCoreMgtSelected' => false,
 			],
 			'all itil extensions WITHOUT core mandatory ones and WITHOUT known-error-mgt' => [
 				'aSelectedExtensions' => $this->GetSelectedItilExtensions(false, false),
 				'bKnownMgtSelected' => false,
+				'bCoreMgtSelected' => false,
 			],
 		];
 	}
@@ -386,7 +463,7 @@ class InstallationFileServiceTest extends ItopTestCase {
 	/**
 	 * @dataProvider ItilExtensionProvider
 	 */
-	public function testGetAllSelectedModules_withItilExtensions(array $aSelectedExtensions, bool $bKnownMgtSelected) {
+	public function testGetAllSelectedModules_withItilExtensions(array $aSelectedExtensions, bool $bKnownMgtSelected, bool $bCoreMgtSelected) {
 		$sPath = $this->GetInstallationPath();
 		$oInstallationFileService = new \InstallationFileService($sPath, 'production', $aSelectedExtensions);
 
@@ -448,6 +525,8 @@ class InstallationFileServiceTest extends ItopTestCase {
 		$this->checkModuleList("unvisible", $aUnvisibleModules, $aSelectedModules);
 		$this->checkModuleList("auto-select", $aAutoSelectedModules, $aSelectedModules);
 		$this->assertEquals([], $aSelectedModules, "there should be no more modules remaining apart from below lists");
+
+		$this->ValidateItilExtensionComputation($oInstallationFileService, $bKnownMgtSelected, $bCoreMgtSelected);
 	}
 
 	private function checkModuleList(string $sModuleCategory, array $aExpectedModuleList, array &$aSelectedModules) {

@@ -21,6 +21,7 @@ class InstallationFileService {
 	private $sInstallationPath;
 	private $aSelectedModules;
 	private $aSelectedExtensions;
+	private $aAfterComputationSelectedExtensions;
 	private $aUnSelectedModules;
 	private $aAutoSelectModules;
 	private $bInstallationOptionalChoicesChecked;
@@ -37,6 +38,7 @@ class InstallationFileService {
 		$this->aUnSelectedModules = [];
 		$this->sTargetEnvironment = $sTargetEnvironment;
 		$this->aSelectedExtensions = $aSelectedExtensions;
+		$this->aAfterComputationSelectedExtensions = (count($aSelectedExtensions)==0) ? [] : $aSelectedExtensions;
 		$this->bInstallationOptionalChoicesChecked = $bInstallationOptionalChoicesChecked;
 	}
 
@@ -49,6 +51,10 @@ class InstallationFileService {
 
 	public function SetProductionEnv(RunTimeEnvironment $oProductionEnv): void {
 		$this->oProductionEnv = $oProductionEnv;
+	}
+
+	public function GetAfterComputationSelectedExtensions(): array {
+		return $this->aAfterComputationSelectedExtensions;
 	}
 
 	public function GetAutoSelectModules(): array {
@@ -146,10 +152,13 @@ class InstallationFileService {
 		$sMandatory = $aChoiceInfo["mandatory"] ?? "false";
 
 		$aCurrentModules = $aChoiceInfo["modules"] ?? [];
+		$sExtensionCode = $aChoiceInfo["extension_code"] ?? null;
 		if (0 === count($this->aSelectedExtensions)){
 			$bSelected = $bAllChecked || $sDefault === "true" || $sMandatory === "true";
+			if ($bSelected){
+				$this->aAfterComputationSelectedExtensions[]= $sExtensionCode;
+			}
 		} else {
-			$sExtensionCode = $aChoiceInfo["extension_code"] ?? null;
 			$bSelected = $sMandatory === "true" ||
 				(null !== $sExtensionCode && in_array($sExtensionCode, $this->aSelectedExtensions));
 		}
