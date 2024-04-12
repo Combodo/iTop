@@ -353,6 +353,21 @@ class ExampleFor_iKPILoggerExtension implements \iKPILoggerExtension
 }
       ]]></content>
     </snippet>
+    <snippet id="ExampleFor_iBackupExtraFilesExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iBackupExtraFilesExtension implements \iBackupExtraFilesExtension
+{
+	public function GetExtraFilesRelPaths(): array
+	{
+		return [
+		  'foo'
+		];
+	}
+}
+      ]]></content>
+    </snippet>
     <!-- These snippets just implements core/modulehandler.class.inc.php APIs for the ApplicationExtensionTest unit test -->
     <snippet id="ExampleFor_ModuleHandlerApiInterface" _delta="define">
       <placement>core</placement>
