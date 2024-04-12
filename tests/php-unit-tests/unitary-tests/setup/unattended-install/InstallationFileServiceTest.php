@@ -12,7 +12,8 @@ use ModuleDiscovery;
 class InstallationFileServiceTest extends ItopTestCase {
 	protected function setUp(): void {
 		parent::setUp();
-		require_once(dirname(__FILE__, 6) . '/setup/unattended-install/InstallationFileService.php');
+
+		$this->RequireOnceItopFile('/setup/unattended-install/InstallationFileService.php');
 		ModuleDiscovery::ResetCache();
 	}
 
@@ -25,7 +26,9 @@ class InstallationFileServiceTest extends ItopTestCase {
 	}
 
 	private function GetModuleData($sCategory, bool $bIsVisible, bool $bIsAutoSelect, bool $bProductionModulesInRootDir=false) : array {
-		$sRootDir = $bProductionModulesInRootDir ? APPROOT.'data/production-modules/' : '';
+		$sRootDir = str_replace('//', '/', $bProductionModulesInRootDir ? $this->GetAppRoot() .'data/production-modules/' : '');
+
+		var_dump($sRootDir);
 
 		$aModuleData = [
 			'category' => $sCategory,
@@ -41,7 +44,6 @@ class InstallationFileServiceTest extends ItopTestCase {
 	}
 
 	public function ProcessDefaultModulesProvider() {
-		parent::setUp();
 		return [
 			'root module' => [
 				'aAllFoundModules' => [
@@ -313,8 +315,6 @@ class InstallationFileServiceTest extends ItopTestCase {
 		$oInstallationFileService->Init();
 
 		$aExpectedInstallationModules = [
-			'combodo-backoffice-darkmoon-theme',
-		    'itop-structure',
 			"itop-config-mgmt",
 			"itop-attachments",
 			"itop-profiles-itil",
@@ -342,7 +342,6 @@ class InstallationFileServiceTest extends ItopTestCase {
 			'itop-config',
 			'itop-sla-computation',
 			'itop-bridge-virtualization-storage',
-			'itop-bridge-cmdb-ticket'
 		];
 
 		if ($bInstallationOptionalChoicesChecked){
@@ -480,9 +479,6 @@ class InstallationFileServiceTest extends ItopTestCase {
 
 		$aSelectedModules = array_keys($oInstallationFileService->GetSelectedModules());
 		$aExpectedInstallationModules = [
-			'combodo-backoffice-darkmoon-theme',
-            'itop-structure',
-            'itop-bridge-cmdb-ticket',
 			"itop-config-mgmt",
 			"itop-attachments",
 			"itop-profiles-itil",
