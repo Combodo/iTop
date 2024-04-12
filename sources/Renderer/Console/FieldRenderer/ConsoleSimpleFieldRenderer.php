@@ -150,7 +150,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 
 					if ($this->oField->GetReadOnly())
 					{
-						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetCurrentValue()));
+						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent(utils::HtmlEntities($this->oField->GetCurrentValue())));
 						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 					}
 					else
