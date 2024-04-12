@@ -191,7 +191,8 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 			CMDBSource::CreateDB($oTestConfig->Get('db_name'));
 			MetaModel::Startup($sConfFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sTestEnv);
             // N°7446 For some reason we need to create the DB schema before starting the MM, then only we can create the tables.
-            MetaModel::DBCreate();
+            // In 2.7, we can't call MetaModel::DBCreate() directly as the views creation will fail
+            $this->InvokeNonPublicStaticMethod(MetaModel::class, 'DBCreateTables', []);
 
 			$this->MarkEnvironmentReady();
 			$this->debug('Preparation of custom environment "'.$sTestEnv.'" done.');
