@@ -971,7 +971,7 @@ class LoginWebPage extends NiceWebPage
 		}
 		else if($ret === false)
 		{
-			throw new Exception('Nowhere to go??');
+			throw new Exception('Nowhere to go: Your combination of user Profiles denies you access to any '.ITOP_APPLICATION_SHORT.' portal. Please contact your administrator');
 		}
 		else
 		{
