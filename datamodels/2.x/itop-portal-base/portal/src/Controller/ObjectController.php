@@ -1410,7 +1410,6 @@ class ObjectController extends BrickController
 		$sObjectClass = get_class($oObject);
 		$aObjectData = [
 			'id'                  => $oObject->GetKey(),
-			'object_class'  => $sObjectClass,
 			'name'             => $oObject->GetName(),
 			'attributes'        => [],
 		];
@@ -1431,18 +1430,29 @@ class ObjectController extends BrickController
 		foreach ($aAttDefs as $oAttDef)
 		{
 			$aAttData = [
-				'att_code' => $oAttDef->GetCode(),
-				'attribute-type' => get_class($oAttDef),
+				'object_class'  => $sObjectClass,
+				'object_id'  => $oObject->GetKey(),
+				'attribute_code' => $oAttDef->GetCode(),
+				'attribute_type' => get_class($oAttDef),
 			];
 
 			// - Value raw
-			if ($oAttDef::IsScalar()) {
-				$aAttData['value-raw'] =utils::HtmlEntities( (string)$oObject->Get($oAttDef->GetCode()));
+			// For simple fields, we get the raw (stored) value as well
+			$bExcludeRawValue = false;
+			foreach (ApplicationHelper::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
+			{
+				if (is_a($oAttDef, $sAttDefClassToExclude, true))
+				{
+					$bExcludeRawValue = true;
+					break;
+				}
 			}
+			$aAttData['value_raw'] = ($bExcludeRawValue === false) ? $oObject->Get($oAttDef->GetCode()) : null;
+
 
 			if ($oAttDef->IsExternalKey())
 			{
-				$aAttData['value'] = $oObject->GetAsHTML($oAttDef->GetCode().'_friendlyname');
+				$aAttData['value_html'] = $oObject->GetAsHTML($oAttDef->GetCode().'_friendlyname');
 
 				// Checking if user can access object's external key
 				if ($this->oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $oAttDef->GetTargetClass()))
@@ -1474,14 +1484,14 @@ class ObjectController extends BrickController
 				{
 					$sUrl = $oAttDef->Get('default_image');
 				}
-				$aAttData['value'] = '<img src="'.$sUrl.'" />';
+				$aAttData['value_html'] = '<img src="'.$sUrl.'" />';
 			}
 			elseif ($oAttDef instanceof AttributeEnum) {
-				$aAttData['value'] = $oAttDef->GetAsPlainText($oObject->Get($oAttDef->GetCode()));
+				$aAttData['value_html'] = $oAttDef->GetAsPlainText($oObject->Get($oAttDef->GetCode()));
 			}
 			else
 			{
-				$aAttData['value'] = $oAttDef->GetAsHTML($oObject->Get($oAttDef->GetCode()));
+				$aAttData['value_html'] = $oAttDef->GetAsHTML($oObject->Get($oAttDef->GetCode()));
 
 				if ($oAttDef instanceof AttributeFriendlyName)
 				{

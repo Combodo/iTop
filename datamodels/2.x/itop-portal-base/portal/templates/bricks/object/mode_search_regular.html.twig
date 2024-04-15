@@ -66,32 +66,35 @@
 				"title": oColumnProperties[sKey].title,
 				"defaultContent": "",
 				"type": "html",
-				"data": "attributes."+sKey+".att_code",
-				"render": function(data, type, row){
+				"data": "attributes."+sKey+".attribute_code",
+				"render": function(attribute_code, type, row){
 					var cellElem;
+                    var metadataNames = ['object_class', 'object_id', 'attribute_code', 'attribute_type', 'value_raw'];
 
 					// Preparing the cell data
-					if(row.attributes[data].url !== undefined)
+					if(row.attributes[attribute_code].url !== undefined)
 					{
 						cellElem = $('<a></a>');
-						cellElem.attr('target', '_blank').attr('href', row.attributes[data].url);
+						cellElem.attr('target', '_blank').attr('href', row.attributes[attribute_code].url);
 					}
 					else
 					{
 						cellElem = $('<span></span>');
 					}
                     //Add markup
-					cellElem.attr('data-object-id', row.id)
-                    cellElem.attr('data-object-class', row.object_class);
-                    cellElem.attr('data-attribute-type', row.attributes[data]['attribute-type']);
-                    cellElem.attr('data-attribute-code', row.attributes[data]['att_code']);
-                    console.warn('bob');
-                    if (row.attributes[data]['value-raw']!== undefined) {
-                        cellElem.attr('data-value-raw', row.attributes[data]['value-raw']);
+                    for(var sPropName in row.attributes[attribute_code])
+                    {
+                        var propValue = row.attributes[attribute_code][sPropName];
+                        if(sPropName === 'value_html')
+                        {
+                            cellElem.html(propValue);
+                        }
+                        else if(metadataNames.indexOf(sPropName) > -1)
+                        {
+                            cellElem.attr('data-'+sPropName.replace('_', '-'), propValue)
+                        }
                     }
 
-                    cellElem.html( row.attributes[data].value );
-					
 					return cellElem.prop('outerHTML');
 				},
 			});
