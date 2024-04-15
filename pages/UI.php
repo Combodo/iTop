@@ -38,7 +38,7 @@ function DisplayWelcomePopup(WebPage $oP): void
 {
 	if (!Session::IsSet('welcome'))
 	{
-		$oWelcomePopupService = new WelcomePopupService();
+		$oWelcomePopupService = WelcomePopupService::GetInstance();
 		$aMessages = $oWelcomePopupService->GetMessages();
 		if (count($aMessages) > 0)
 		{

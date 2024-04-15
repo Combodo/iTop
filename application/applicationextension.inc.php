@@ -2304,29 +2304,33 @@ interface iBackupExtraFilesExtension
  *
  * @api
  * @private
- * @since 3.1.0
+ * @since 3.2.0
  */
 interface iWelcomePopupExtension
 {
 	// Importance for ordering messages
 	// Just two levels since less important messages have nothing to do in the welcome popup
-	public const IMPORTANCE_CRITICAL = 0;
-	public const IMPORTANCE_HIGH = 1;
+	public const ENUM_IMPORTANCE_CRITICAL = 0;
+	public const ENUM_IMPORTANCE_HIGH     = 1;
+
 	/**
 	 * @return array [
 	 *			[
-	 *				'importance' => IMPORTANCE_CRITICAL|IMPORTANCE_HIGH,
+	 *				'importance' => {@see \iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL}|{@see \iWelcomePopupExtension::ENUM_IMPORTANCE_HIGH},
 	 *				'id' => '...',
 	 *				'title' => '',
-	 * 			'html' => '',
+	 *              'description' => '',
+	 * 			    'html' => '',
 	 *				'twig' => ''
 	 *			],
 	 *			...
 	 *		]
 	 */
 	public function GetMessages(): array;
+
 	/**
-	 * The message specified by the given Id has been acknowledged by the current user
+	 * Overload this method if the provider needs to do some additional processing after the message ($sMessageId) has been acknowledged by the current user
+	 *
 	 * @param string $sMessageId
 	 */
 	public function AcknowledgeMessage(string $sMessageId): void;
@@ -2336,7 +2340,7 @@ interface iWelcomePopupExtension
  * Inherit from this class to provide messages to be displayed in the "Welcome Popup"
  *
  * @api
- * @since 3.1.0
+ * @since 3.2.0
  */
 abstract class AbstractWelcomePopupExtension implements iWelcomePopupExtension
 {
@@ -2353,6 +2357,7 @@ abstract class AbstractWelcomePopupExtension implements iWelcomePopupExtension
 	 */
 	public function AcknowledgeMessage(string $sMessageId): void
 	{
+		// No need to process the acknowledgment notice by default
 		return;
 	}
 }

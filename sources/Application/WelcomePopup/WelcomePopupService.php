@@ -1,5 +1,7 @@
 <?php
+
 namespace Combodo\iTop\Application\WelcomePopup;
+
 use AttributeDateTime;
 use DBObjectSearch;
 use DBObjectSet;
@@ -19,18 +21,58 @@ use utils;
  */
 class WelcomePopupService
 {
+	/** @var int TODO: What is it for? */
 	private const PROVIDER_KEY_LENGTH = 128;
-	/**
-	 * Array of acknowledged messages for the current user
-	 * @var string[]
-	 */
-	public static $aAcknowledgedMessage = null;
+
+	/** @var \Combodo\iTop\Application\WelcomePopup\WelcomePopupService|null Singleton instance */
+	protected static ?WelcomePopupService $oSingleton = null;
+
+	/** @var string[]|null Acknowledged messages for the current user */
+	protected static $aAcknowledgedMessages = null;
+
+	/** @var iWelcomePopup[]|null "Providers" of welcome popup messages */
+	protected $aMessagesProviders = null;
 
 	/**
-	 * Array of "providers" of welcome popup messages
-	 * @var iWelcomePopup[]
+	 * @internal
+	 * @return $this The singleton instance of the service
 	 */
-	protected $aMessagesProviders = null;
+	public static function GetInstance(): WelcomePopupService
+	{
+		if (null === static::$oSingleton) {
+			static::$oSingleton = new static();
+		}
+
+		return static::$oSingleton;
+	}
+
+	/**
+	 * Helper function for usort to compare two items based on their 'importance' field
+	 * @param string[] $aItem1
+	 * @param string[] $aItem2
+	 * @return int
+	 */
+	public static function SortOnImportance($aItem1, $aItem2): int
+	{
+		if ($aItem1['importance'] === $aItem2['importance']) {
+			return strcmp($aItem1['id'], $aItem2['id']);
+		}
+		return ($aItem1['importance'] < $aItem2['importance'])  ? -1 : 1;
+	}
+
+	/**********************/
+	/* Non-static methods */
+	/**********************/
+
+	/**
+	 * Singleton pattern, can't use the constructor. Use {@see \Combodo\iTop\Application\WelcomePopup\WelcomePopupService::GetInstance()} instead.
+	 *
+	 * @return void
+	 */
+	protected function __construct()
+	{
+		// Don't do anything, we don't want to be initialized
+	}
 
 	/**
 	 * Get the list of messages to display in the Welcome popup dialog
@@ -43,9 +85,10 @@ class WelcomePopupService
 	}
 	
 	/**
-	 * Get the messages to display from a list of iWelcomePopup instances
+	 * Get the messages to display from a list of {@see \iWelcomePopupExtension} instances
 	 * The messages are ordered by importance (CRITICAL first) then by ID
 	 * Invalid messages or acknowledged messages are removed from the list
+	 *
 	 * @return array
 	 */
 	protected function ProcessMessages(): array
@@ -56,7 +99,9 @@ class WelcomePopupService
 			$aProviderMessages = $oProvider->GetMessages();
 			if (count($aProviderMessages) === 0) {
 				IssueLog::Debug('Empty list of messages for '.get_class($oProvider), LogChannels::CONSOLE);
+				continue;
 			}
+
 			foreach($aProviderMessages as $aMessage) {
 				$aReasons = [];
 				if (!$this->IsMessageValid($aMessage, $aReasons)) {
@@ -80,21 +125,15 @@ class WelcomePopupService
 		usort($aMessages,  array(get_class($this), 'SortOnImportance'));
 		return $aMessages;
 	}
-	
+
 	/**
-	 * Helper function for usort to compare two items based on their 'importance' field
-	 * @param string[] $aItem1
-	 * @param string[] $aItem2
-	 * @return int
-	 */	
-	public static function SortOnImportance($aItem1, $aItem2): int
-	{
-		if ($aItem1['importance'] === $aItem2['importance']) {
-			return strcmp($aItem1['id'], $aItem2['id']);
-		}
-		return ($aItem1['importance'] < $aItem2['importance'])  ? -1 : 1;
-	}
-	
+	 * Acknowledge a message (from a specific provider) for the current user, then notifies the provider (in case it wants to do some extra processing)
+	 *
+	 * @param string $sMessageUUID Format <PROVIDER_FQCN>::<MESSAGE_ID>
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
 	public function AcknowledgeMessage(string $sMessageUUID): void
 	{
 		$this->LoadProviders();
@@ -106,11 +145,12 @@ class WelcomePopupService
 		try {
 			$oAcknowledge->DBInsert();
 			$oProvider = $this->GetProviderByUUID($sMessageUUID);
-			if (static::$aAcknowledgedMessage !== null) {
-				static::$aAcknowledgedMessage[] = $sMessageUUID; // Update the cache
+			if (static::$aAcknowledgedMessages !== null) {
+				static::$aAcknowledgedMessages[] = $sMessageUUID; // Update the cache
 			}
+
 			// Notify the provider of the message
-			$sMessageId = substr($sMessageUUID, strpos($sMessageUUID, '::')+2);
+			$sMessageId = substr($sMessageUUID, strpos($sMessageUUID, '::') + 2);
 			if ($oProvider !== null) {
 				$oProvider->AcknowledgeMessage($sMessageId);
 			}
@@ -142,7 +182,7 @@ class WelcomePopupService
 	protected function IsMessageAcknowledged(string $sMessageUUID): bool
 	{
 		$iUserId = UserRights::GetConnectedUserId();	
-		if (static::$aAcknowledgedMessage === null) {
+		if (static::$aAcknowledgedMessages === null) {
 			
 			$oSearch = new DBObjectSearch(WelcomePopupAcknowledge::class);
 			$oSearch->AddCondition('user_id', $iUserId);
@@ -150,7 +190,7 @@ class WelcomePopupService
 			$aAcknowledgedMessages = $oSet->GetColumnAsArray('message_uuid');
 			$this->SetAcknowledgedMessagesCache($aAcknowledgedMessages);
 		}
-		return in_array($sMessageUUID, static::$aAcknowledgedMessage); 
+		return in_array($sMessageUUID, static::$aAcknowledgedMessages);
 	}
 	
 	/**
@@ -159,7 +199,7 @@ class WelcomePopupService
 	 */
 	protected function SetAcknowledgedMessagesCache(array $aAcknowledgedMessages): void
 	{
-		static::$aAcknowledgedMessage = $aAcknowledgedMessages;
+		static::$aAcknowledgedMessages = $aAcknowledgedMessages;
 	}
 
 	/**

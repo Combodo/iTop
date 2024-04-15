@@ -32,30 +32,30 @@ class WelcomePopupTest extends ItopDataTestCase
 			],
 			'3-item array' => [
 				'to-sort' => [
-					['id' => 'aa1', 'title' => 'AA1', 'importance' => 0 /*iWelcomePopup::IMPORTANCE_CRITICAL*/],
-					['id' => 'aa2', 'title' => 'AA2', 'importance' => 1 /*iWelcomePopup::IMPORTANCE_HIGH*/],
-					['id' => 'aa3', 'title' => 'AA3', 'importance' => 0 /*iWelcomePopup::IMPORTANCE_CRITICAL*/],
+					['id' => 'aa1', 'title' => 'AA1', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
+					['id' => 'aa2', 'title' => 'AA2', 'importance' => 1 /*iWelcomePopupExtension::ENUM_IMPORTANCE_HIGH*/],
+					['id' => 'aa3', 'title' => 'AA3', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
 				],
 				'expected' => [
-					['id' => 'aa1', 'title' => 'AA1', 'importance' => 0 /*iWelcomePopup::IMPORTANCE_CRITICAL*/],
-					['id' => 'aa3', 'title' => 'AA3', 'importance' => 0 /*iWelcomePopup::IMPORTANCE_CRITICAL*/],
-					['id' => 'aa2', 'title' => 'AA2', 'importance' => 1 /*iWelcomePopup::IMPORTANCE_HIGH*/],
+					['id' => 'aa1', 'title' => 'AA1', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
+					['id' => 'aa3', 'title' => 'AA3', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
+					['id' => 'aa2', 'title' => 'AA2', 'importance' => 1 /*iWelcomePopupExtension::ENUM_IMPORTANCE_HIGH*/],
 				],
 			],
 			'5-item array' => [
 				'to-sort' => [
-					['id' => 'aa1', 'title' => 'AA1', 'importance' => 0 /*iWelcomePopup::IMPORTANCE_CRITICAL*/],
-					['id' => 'aa2', 'title' => 'AA2', 'importance' => 1 /*iWelcomePopup::IMPORTANCE_HIGH*/],
-					['id' => 'aa3', 'title' => 'AA3', 'importance' => 0 /*iWelcomePopup::IMPORTANCE_CRITICAL*/],
-					['id' => 'zz1', 'title' => 'ZZ1', 'importance' => 0 /*iWelcomePopup::IMPORTANCE_CRITICAL*/],
-					['id' => 'zz2', 'title' => 'ZZ2', 'importance' => 1 /*iWelcomePopup::IMPORTANCE_HIGH*/],
+					['id' => 'aa1', 'title' => 'AA1', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
+					['id' => 'aa2', 'title' => 'AA2', 'importance' => 1 /*iWelcomePopupExtension::ENUM_IMPORTANCE_HIGH*/],
+					['id' => 'aa3', 'title' => 'AA3', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
+					['id' => 'zz1', 'title' => 'ZZ1', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
+					['id' => 'zz2', 'title' => 'ZZ2', 'importance' => 1 /*iWelcomePopupExtension::ENUM_IMPORTANCE_HIGH*/],
 				],
 				'expected' => [
-					['id' => 'aa1', 'title' => 'AA1', 'importance' => 0 /*iWelcomePopup::IMPORTANCE_CRITICAL*/],
-					['id' => 'aa3', 'title' => 'AA3', 'importance' => 0 /*iWelcomePopup::IMPORTANCE_CRITICAL*/],
-					['id' => 'zz1', 'title' => 'ZZ1', 'importance' => 0 /*iWelcomePopup::IMPORTANCE_CRITICAL*/],
-					['id' => 'aa2', 'title' => 'AA2', 'importance' => 1 /*iWelcomePopup::IMPORTANCE_HIGH*/],
-					['id' => 'zz2', 'title' => 'ZZ2', 'importance' => 1 /*iWelcomePopup::IMPORTANCE_HIGH*/],
+					['id' => 'aa1', 'title' => 'AA1', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
+					['id' => 'aa3', 'title' => 'AA3', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
+					['id' => 'zz1', 'title' => 'ZZ1', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
+					['id' => 'aa2', 'title' => 'AA2', 'importance' => 1 /*iWelcomePopupExtension::ENUM_IMPORTANCE_HIGH*/],
+					['id' => 'zz2', 'title' => 'ZZ2', 'importance' => 1 /*iWelcomePopupExtension::ENUM_IMPORTANCE_HIGH*/],
 				],
 			],
 		];
@@ -66,7 +66,7 @@ class WelcomePopupTest extends ItopDataTestCase
 	 */
 	public function testIsMessageAcknowledged($sMessageId, $aCache, $bExpected)
 	{
-		$oService = new WelcomePopupService();
+		$oService = WelcomePopupService::GetInstance();
 		$this->InvokeNonPublicMethod(WelcomePopupService::class, 'SetAcknowledgedMessagesCache', $oService, [$aCache]);
 		
 		$this->assertEquals($bExpected, $this->InvokeNonPublicMethod(WelcomePopupService::class, 'IsMessageAcknowledged', $oService, [$sMessageId]));
@@ -92,7 +92,7 @@ class WelcomePopupTest extends ItopDataTestCase
 	 */
 	public function testIsMessageValid($aMessage, $bExpected)
 	{
-		$oService = new WelcomePopupService();
+		$oService = WelcomePopupService::GetInstance();
 		$aReasons = [];
 		$bResult = $this->InvokeNonPublicMethod(WelcomePopupService::class, 'IsMessageValid', $oService, [$aMessage, &$aReasons]);
 		if ($bResult !== $bExpected) {
@@ -133,20 +133,20 @@ class WelcomePopupTest extends ItopDataTestCase
 	public function testProcessMessages()
 	{
 		// Mock a WelcomePopup message provider, with a fixed class name
-		$oProvider1 = $this->getMockBuilder(iWelcomePopup::class)->setMockClassName('Provider1')->getMock();
+		$oProvider1 = $this->getMockBuilder(iWelcomePopupExtension::class)->setMockClassName('Provider1')->getMock();
 		$oProvider1->expects($this->once())->method('GetMessages')->willReturn([
 			['id' => '123', 'title' => 'foo', 'importance' => 0, 'html' => '<p>Hello Foo</p>'],
 			['id' => '456', 'title' => 'bar', 'importance' => 1, 'html' => '<p>Hello Bar</p>'], // Already acknowledged will be skipped
 		]);
 		
 		// Mock another WelcomePopup message provider, with a different class name
-		$oProvider2 = $this->getMockBuilder(iWelcomePopup::class)->setMockClassName('Provider2')->getMock();
+		$oProvider2 = $this->getMockBuilder(iWelcomePopupExtension::class)->setMockClassName('Provider2')->getMock();
 		$oProvider2->expects($this->once())->method('GetMessages')->willReturn([
 			['id' => '789', 'title' => 'Ga', 'importance' => 1, 'html' => '<p>Hello Ga</p>'],
 			['id' => '012', 'title' => 'Bu', 'importance' => 0, 'twig' => 'ga/bu/zo'],
 			['id' => '000', 'title' => 'Bu', 'importance' => 0], // Invalid, will be ignored
 		]);
-		$oService = new WelcomePopupService();
+		$oService = WelcomePopupService::GetInstance();
 		$this->InvokeNonPublicMethod(WelcomePopupService::class, 'SetAcknowledgedMessagesCache', $oService, [[get_class($oProvider1).'::456']]);
 		$this->InvokeNonPublicMethod(WelcomePopupService::class, 'SetMessagesProviders', $oService, [[$oProvider1, $oProvider2]]);
 		
@@ -168,17 +168,17 @@ class WelcomePopupTest extends ItopDataTestCase
 		UserRights::Login('admin-testAcknowledgeMessage');
 		
 		// Mock a WelcomePopup message provider, with a fixed class name
-		$oProvider1 = $this->getMockBuilder(iWelcomePopup::class)->setMockClassName('Provider1')->getMock();
+		$oProvider1 = $this->getMockBuilder(iWelcomePopupExtension::class)->setMockClassName('Provider1')->getMock();
 		$oProvider1->expects($this->exactly(2))->method('AcknowledgeMessage');
 			
 		// Mock another WelcomePopup message provider, with a different class name
-		$oProvider2 = $this->getMockBuilder(iWelcomePopup::class)->setMockClassName('Provider2')->getMock();
+		$oProvider2 = $this->getMockBuilder(iWelcomePopupExtension::class)->setMockClassName('Provider2')->getMock();
 		$oProvider2->expects($this->exactly(1))->method('AcknowledgeMessage');
 
 		$sMessageUUID1 = get_class($oProvider1).'::0123456';
 		$sMessageUUID2 = get_class($oProvider1).'::456789';
 		$sMessageUUID3 = get_class($oProvider2).'::456789'; // Same message id but different provider / UUID
-		$oService = new WelcomePopupService();
+		$oService = WelcomePopupService::GetInstance();
 		
 		$this->InvokeNonPublicMethod(WelcomePopupService::class, 'SetMessagesProviders', $oService, [[$oProvider1, $oProvider2]]);
 		
@@ -202,7 +202,7 @@ class WelcomePopupTest extends ItopDataTestCase
 	 */
 	public function testMakeStringFitIn($sInput, $iLimit, $sExpected)
 	{
-		$oService = new WelcomePopupService();
+		$oService = WelcomePopupService::GetInstance();
 		$sFitted = $this->InvokeNonPublicMethod(WelcomePopupService::class, 'MakeStringFitIn', $oService, [$sInput, $iLimit]);
 		$this->assertTrue(mb_strlen($sFitted) <= $iLimit);
 		$this->assertEquals($sExpected, $sFitted);

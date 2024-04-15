@@ -3,6 +3,7 @@ namespace Combodo\iTop\Application\WelcomePopup;
 
 use Dict;
 use AbstractWelcomePopupExtension;
+use iWelcomePopupExtension;
 
 /**
  * Implementation of the "default" Welcome Popup message
@@ -22,7 +23,7 @@ class DefaultWelcomePopup extends AbstractWelcomePopupExtension
 				'id' => '0001',
 				'title' => Dict::S('UI:WelcomeMenu:Title'),
 				'twig' => '/templates/pages/backoffice/welcome_popup/default_welcome_popup',
-				'importance' => \iWelcomePopup::IMPORTANCE_HIGH,
+				'importance' => iWelcomePopupExtension::ENUM_IMPORTANCE_HIGH,
 				'parameters' => [],
 			],
 		];
