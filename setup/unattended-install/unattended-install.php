@@ -82,9 +82,8 @@ if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
 		$sMsg = "Computed installation choices";
 		echo "$sMsg:\n".implode(',', $aComputedExtensions)."\n\n";
 		SetupLog::Info($sMsg, null, $aComputedExtensions);
+		$oParams->Set('selected_extensions', $aComputedExtensions);
 	}
-	$aSelectedExtensions = array_keys($aComputedExtensions);
-	$oParams->Set('selected_extensions', $aSelectedExtensions);
 
 	$aComputedModules = $oInstallationFileService->GetSelectedModules();
 	$aSelectedModules = array_keys($aComputedModules);
