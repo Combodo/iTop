@@ -80,7 +80,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkContactToFunctionalCI' => 'Lien Contact / CI Fonctionel',
+	'Class:lnkContactToFunctionalCI' => 'Lien Contact / CI Fonctionnel',
 	'Class:lnkContactToFunctionalCI+' => '',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'CI',
@@ -98,7 +98,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:FunctionalCI' => 'CI fonctionnel',
+	'Class:FunctionalCI' => 'CI Fonctionnel',
 	'Class:FunctionalCI+' => '',
 	'Class:FunctionalCI/Attribute:name' => 'Nom',
 	'Class:FunctionalCI/Attribute:name+' => '',
@@ -1214,7 +1214,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkFunctionalCIToOSPatch' => 'Lien CI Fonctionel / Patch OS',
+	'Class:lnkFunctionalCIToOSPatch' => 'Lien CI Fonctionnel / Patch OS',
 	'Class:lnkFunctionalCIToOSPatch+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'Patch OS',
@@ -1449,7 +1449,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkApplicationSolutionToFunctionalCI' => 'Lien Solution Applicative / CI Fonctionel',
+	'Class:lnkApplicationSolutionToFunctionalCI' => 'Lien Solution Applicative / CI Fonctionnel',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Solution applicative',
@@ -1559,7 +1559,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkDocumentToFunctionalCI' => 'Lien Document / CI Fonctionel',
+	'Class:lnkDocumentToFunctionalCI' => 'Lien Document / CI Fonctionnel',
 	'Class:lnkDocumentToFunctionalCI+' => '',
 	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'CI',
