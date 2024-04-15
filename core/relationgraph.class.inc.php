@@ -368,7 +368,7 @@ class RelationGraph extends SimpleGraph
 			}	
 		}
 		if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
-			$this->ApplyUserRightOnGraph();
+			$this->ApplyUserRightsOnGraph();
 		}
 	}
 
@@ -405,7 +405,7 @@ class RelationGraph extends SimpleGraph
 			}	
 		}
 		if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
-			$this->ApplyUserRightOnGraph();
+			$this->ApplyUserRightsOnGraph();
 		}
 	}
 
@@ -714,7 +714,7 @@ class RelationGraph extends SimpleGraph
 	 * @throws \OQLException
 	 * @throws \SimpleGraphException
 	 */
-	private function ApplyUserRightOnGraph()
+	private function ApplyUserRightsOnGraph()
 	{
 		//The chart is complete. Now we need to control which objects are allowed to the current user.
 		if (!UserRights::IsAdministrator()) {
