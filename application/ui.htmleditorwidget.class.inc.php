@@ -15,8 +15,11 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 /**
  * Class UIHTMLEditorWidget
@@ -73,7 +76,7 @@ class UIHTMLEditorWidget
 		// a) edit the file /js/ckeditor/config.js
 		// b) or override some of the configuration settings, using the second parameter of ckeditor()
 		$sJSDefineWidth = '';
-		$aConfig = utils::GetCkeditorPref();
+		$aConfig = CKEditorHelper::GetCkeditorPref();
 		$sWidthSpec = addslashes(trim($this->m_oAttDef->GetWidth()));
 		if ($sWidthSpec != '') {
 			/*N°6543 - the function min allow to keep text inside the column when width is defined*/
@@ -84,10 +87,20 @@ class UIHTMLEditorWidget
 		if ($sHeightSpec != '') {
 			$aConfig['height'] = $sHeightSpec;
 		}
+		// TODO 3.2.0 Add the configuration for the editor
 		$sConfigJS = json_encode($aConfig);
 
 		WebResourcesHelper::EnableCKEditorToWebPage($oPage);
-		$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
+		$oPage->add_ready_script("CombodoCKEditorHandler.CreateInstance('#$iId', $sConfigJS)");
+
+		// inject mention item renderer template
+		$oTwig = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH);
+		$sTemplate = $oTwig->render('application/object/set/option_renderer.html.twig');
+		$oPage->add(<<<HTML
+<template id="{$iId}_items_template">
+$sTemplate
+</template>
+HTML);
 
 		// Please read...
 		// ValidateCKEditField triggers a timer... calling itself indefinitely

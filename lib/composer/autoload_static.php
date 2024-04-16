@@ -88,6 +88,10 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
             'PhpParser\\' => 10,
             'Pelago\\Emogrifier\\' => 18,
         ),
+        'M' => 
+        array (
+            'Masterminds\\' => 12,
+        ),
         'L' => 
         array (
             'League\\OAuth2\\Client\\' => 21,
@@ -311,6 +315,10 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Pelago\\Emogrifier\\' => 
         array (
             0 => __DIR__ . '/..' . '/pelago/emogrifier/src',
+        ),
+        'Masterminds\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/masterminds/html5/src',
         ),
         'League\\OAuth2\\Client\\' => 
         array (
@@ -565,6 +573,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'CheckableExpression' => __DIR__ . '/../..' . '/core/oql/oqlquery.class.inc.php',
         'Combodo\\iTop\\Application\\Branding' => __DIR__ . '/../..' . '/sources/Application/Branding.php',
         'Combodo\\iTop\\Application\\EventRegister\\ApplicationEvents' => __DIR__ . '/../..' . '/sources/Application/EventRegister/ApplicationEvents.php',
+        'Combodo\\iTop\\Application\\Helper\\CKEditorHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/CKEditorHelper.php',
         'Combodo\\iTop\\Application\\Helper\\ExportHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/ExportHelper.php',
         'Combodo\\iTop\\Application\\Helper\\FormHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/FormHelper.php',
         'Combodo\\iTop\\Application\\Helper\\Session' => __DIR__ . '/../..' . '/sources/Application/Helper/Session.php',
@@ -1485,6 +1494,26 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'LoginTwigContext' => __DIR__ . '/../..' . '/application/logintwig.class.inc.php',
         'LoginTwigRenderer' => __DIR__ . '/../..' . '/application/logintwig.class.inc.php',
         'LoginWebPage' => __DIR__ . '/../..' . '/application/loginwebpage.class.inc.php',
+        'Masterminds\\HTML5' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5.php',
+        'Masterminds\\HTML5\\Elements' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Elements.php',
+        'Masterminds\\HTML5\\Entities' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Entities.php',
+        'Masterminds\\HTML5\\Exception' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Exception.php',
+        'Masterminds\\HTML5\\InstructionProcessor' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/InstructionProcessor.php',
+        'Masterminds\\HTML5\\Parser\\CharacterReference' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Parser/CharacterReference.php',
+        'Masterminds\\HTML5\\Parser\\DOMTreeBuilder' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Parser/DOMTreeBuilder.php',
+        'Masterminds\\HTML5\\Parser\\EventHandler' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Parser/EventHandler.php',
+        'Masterminds\\HTML5\\Parser\\FileInputStream' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Parser/FileInputStream.php',
+        'Masterminds\\HTML5\\Parser\\InputStream' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Parser/InputStream.php',
+        'Masterminds\\HTML5\\Parser\\ParseError' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Parser/ParseError.php',
+        'Masterminds\\HTML5\\Parser\\Scanner' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Parser/Scanner.php',
+        'Masterminds\\HTML5\\Parser\\StringInputStream' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Parser/StringInputStream.php',
+        'Masterminds\\HTML5\\Parser\\Tokenizer' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Parser/Tokenizer.php',
+        'Masterminds\\HTML5\\Parser\\TreeBuildingRules' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Parser/TreeBuildingRules.php',
+        'Masterminds\\HTML5\\Parser\\UTF8Utils' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Parser/UTF8Utils.php',
+        'Masterminds\\HTML5\\Serializer\\HTML5Entities' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Serializer/HTML5Entities.php',
+        'Masterminds\\HTML5\\Serializer\\OutputRules' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Serializer/OutputRules.php',
+        'Masterminds\\HTML5\\Serializer\\RulesInterface' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Serializer/RulesInterface.php',
+        'Masterminds\\HTML5\\Serializer\\Traverser' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Serializer/Traverser.php',
         'MatchExpression' => __DIR__ . '/../..' . '/core/oql/expression.class.inc.php',
         'MatchOqlExpression' => __DIR__ . '/../..' . '/core/oql/oqlquery.class.inc.php',
         'MenuBlock' => __DIR__ . '/../..' . '/application/displayblock.class.inc.php',
@@ -3498,6 +3527,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'iBackofficeReadyScriptExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iBackofficeScriptExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iBackofficeStyleExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
+        'iBackupExtraFilesExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iCMDBChangeOp' => __DIR__ . '/../..' . '/core/cmdbchangeop.class.inc.php',
         'iDBObjectSetIterator' => __DIR__ . '/../..' . '/core/dbobjectiterator.php',
         'iDBObjectURLMaker' => __DIR__ . '/../..' . '/application/applicationcontext.class.inc.php',

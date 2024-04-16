@@ -23,6 +23,7 @@ namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeText;
+use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Form\Field\DateField;
 use Combodo\iTop\Form\Field\DateTimeField;
 use Combodo\iTop\Form\Field\Field;
@@ -172,17 +173,20 @@ EOF
 
 				// Some additional stuff if we are displaying it with a rich editor
 					if ($bRichEditor) {
-						$aConfig = utils::GetCkeditorPref();
+						$aConfig = CKEditorHelper::GetCkeditorPref();
 						$aConfig['extraPlugins'] = 'codesnippet';
 						$sJsConfig = json_encode($aConfig);
 						
 						$oOutput->AddJs(
-<<<EOF
+<<<JS
 							$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
-							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, $sJsConfig).editor.on("change", function(){
-                                	$('#{$this->oField->GetGlobalId()}').trigger("change");
-                              });
-EOF
+							CombodoCKEditorHandler.CreateInstance('#{$this->oField->GetGlobalId()}').then((	oEditor) => {
+							oEditor.model.document.on('change:data', (event) => {
+								
+								$('#{$this->oField->GetGlobalId()}').val(oEditor.getData()).trigger("change");
+                            });
+							});
+JS
 						);
 						if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null)) {
 							$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));

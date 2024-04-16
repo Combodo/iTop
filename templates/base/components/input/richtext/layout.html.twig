@@ -1,4 +1,10 @@
 {% extends "base/components/input/layout.html.twig" %}
 {% block iboInput %}
 	<textarea id="{{ oUIBlock.GetId() }}" class="htmlEditor ibo-input-richtext-placeholder" name="{{ oUIBlock.GetName() }}">{{ oUIBlock.GetValue() }}</textarea>
+
+    {# Items template #}
+    <template id="{{ oUIBlock.GetId() }}_items_template">
+        {% include 'application/object/set/option_renderer.html.twig' %}
+    </template>
+
 {% endblock %}

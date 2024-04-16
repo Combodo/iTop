@@ -209,6 +209,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 		// Used throughout the app.
 		$this->LinkScriptFromAppRoot('js/pages/backoffice/toolbox.js');
+		$this->LinkScriptFromAppRoot('js/ckeditor.handler.js');
+		$this->LinkScriptFromAppRoot('js/ckeditor.feeds.js');
 		$this->LinkScriptFromAppRoot('js/pages/backoffice/on-ready.js');
 
 		// Used by dashboard editor
@@ -269,9 +271,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// Icons
 		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
 		$this->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
-
-		// Note: CKEditor files can't be moved easily as we need to find a way to init the "disabler" plugin, {@see js/toolbox.js}
-		$this->LinkStylesheetFromAppRoot('js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
 
 		// Used by external keys and other drop down lists
 		$this->LinkStylesheetFromAppRoot('css/selectize.default.css');

@@ -803,12 +803,15 @@ JS;
 		// Retrieve query params
 		$sObjectClass = utils::ReadParam('object_class', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
 		$sOql = utils::ReadParam('oql', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
-		$aFieldsToLoad = json_decode(utils::ReadParam('fields_to_load', '', false, utils::ENUM_SANITIZATION_FILTER_STRING));
+		$aFieldsToLoad = json_decode(utils::ReadParam('fields_to_load', '[]', false, utils::ENUM_SANITIZATION_FILTER_STRING));
 		$sSearch = utils::ReadParam('search', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
 
 		// Retrieve this reference object (for OQL)
 		$sThisObjectData = utils::ReadPostedParam('this_object_data', null, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
-		$oThisObj = ObjectRepository::GetObjectFromWizardHelperData($sThisObjectData);
+		$oThisObj = null;
+		if($sThisObjectData !== null) {
+			$oThisObj = ObjectRepository::GetObjectFromWizardHelperData($sThisObjectData);
+		}
 
 		// Retrieve data post processor
 		$aDataProcessor = utils::ReadParam('data_post_processor', null, false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);

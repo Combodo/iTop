@@ -4,7 +4,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 namespace Combodo\iTop\Application\UI\Base\Component\Input\RichText;
+use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Dict;
 use utils;
 
 /**
@@ -19,13 +21,12 @@ class RichText extends UIBlock
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
-		'js/ckeditor/ckeditor.js',
-		'js/ckeditor/adapters/jquery.js',
-		'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js',
-		'js/ckeditor.on-init.js',
+		'js/ckeditor/build/ckeditor.js',
+		'js/highlight/highlight.js',
 	];
 	public const DEFAULT_CSS_FILES_REL_PATH = [
-		'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css',
+		'js/highlight/styles/obsidian.css',
+		'css/ckeditor/contents.css',
 	];
 
 	/** @var string|null */
@@ -42,7 +43,11 @@ class RichText extends UIBlock
 	{
 		parent::__construct($sId);
 		$this->sValue = null;
-		$this->aConfig = utils::GetCkeditorPref();
+		$this->aConfig = CKEditorHelper::GetCkeditorPref();
+
+		// add CKEditor translations resource
+		$sLanguage = strtolower(explode(' ', Dict::GetUserLanguage())[0]);
+		$this->AddJsFileRelPath('js/ckeditor/build/translations/' . $sLanguage . '.js');
 	}
 
 	/**

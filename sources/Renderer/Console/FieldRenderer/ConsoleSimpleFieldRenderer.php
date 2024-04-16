@@ -22,6 +22,7 @@ namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDuration;
+use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
@@ -162,7 +163,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 						if ($bRichEditor)
 						{
 							$oText->AddCSSClass('ibo-input-richtext-placeholder');
-							$aConfig = utils::GetCkeditorPref();
+							$aConfig = CKEditorHelper::GetCkeditorPref();
 							$aConfig['extraPlugins'] = 'codesnippet';
 							$sJsConfig = json_encode($aConfig);
 

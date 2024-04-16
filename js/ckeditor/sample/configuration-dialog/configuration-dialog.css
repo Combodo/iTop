@@ -1,0 +1,183 @@
+/**
+ * @license Copyright (c) 2014-2024, CKSource Holding sp. z o.o. All rights reserved.
+ * This file is licensed under the terms of the MIT License (see LICENSE.md).
+ */
+
+:root {
+	/* We are defining variables in case of missing comments plugin.
+	 * See case 2: https://github.com/cksource/ckeditor5-online-builder/issues/80. */
+	--ck-user-avatar-background: hsl(210, 52%, 44%);
+	--ck-user-avatar-color: hsl(0, 0%, 100%);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body, html {
+	margin: 0;
+}
+
+#overlay {
+	font-family: Helvetica;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	background: #333;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 4vh 4vw;
+	overflow: auto;
+	z-index: 9999;
+}
+
+#overlay.hidden {
+	display: none;
+}
+
+#overlay .body {
+	font-size: 14px;
+	width: 100%;
+	max-width: 800px;
+	background: white;
+	padding: 40px;
+	border-radius: 3px;
+	box-shadow: 0 0 15px 5px #000;
+}
+
+#overlay h2 {
+	margin-top: 0;
+	text-align: center;
+}
+
+#overlay p {
+	text-align: center;
+	margin-bottom: 1.5em;
+	width: 100%;
+}
+
+#overlay a {
+	color: hsl(219, 100%, 50%);
+	text-decoration: none;
+}
+
+#overlay a:hover {
+	text-decoration: underline;
+}
+
+#overlay .body>div {
+	display: flex;
+	align-items: center;
+	margin: 15px 0;
+}
+
+#overlay .body>div label {
+	width: 180px;
+	font-weight: bold;
+}
+
+#overlay .body>div input {
+	width: 100%;
+	padding: 8px;
+	font-size: 1em;
+}
+
+button#start {
+	display: block;
+	width: 100%;
+	max-width: 300px;
+	margin: 20px auto 0;
+	padding: 15px;
+	background: hsl(104, 44%, 48%);
+	color: white;
+	font-weight: bold;
+	border: 0;
+	border-radius: 3px;
+	font-size: 1em;
+	cursor: pointer;
+	transition: 250ms ease background;
+}
+
+button#start:hover {
+	background: hsl(104, 44%, 41%);
+}
+
+#overlay #additional {
+	display: none;
+	flex-wrap: wrap;
+}
+
+#overlay #additional.visible {
+	display: flex;
+}
+
+#overlay.warning #additional>p {
+	color: red;
+}
+
+#overlay.warning #user-container {
+	border-color: red;
+}
+
+#overlay #user-container {
+	width: 100%;
+	border: 1px solid hsl(0, 0%, 85%);
+}
+
+#overlay #user-container div {
+	display: flex;
+	cursor: pointer;
+	align-items: center;
+	height: 48px;
+	padding: 10px;
+	background: hsl(0, 0%, 97%);
+	transition: 250ms ease background;
+}
+
+#overlay #user-container div:nth-child( odd) {
+	background: #fff;
+}
+
+#overlay #user-container div:hover {
+	background: hsl(0, 0%, 92%);
+}
+
+#overlay #user-container div.active {
+	background: hsl(133, 50%, 84%);
+}
+
+#overlay #user-container img, #overlay #user-container .pseudo-avatar {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: 2px solid var(--ck-user-avatar-background);
+	margin-right: 10px;
+	background: var(--ck-user-avatar-color);
+}
+
+#overlay #user-container .pseudo-avatar {
+	font-size: 0.9em;
+	text-align: center;
+	line-height: 30px;
+	background: var(--ck-user-avatar-background);
+	color: var(--ck-user-avatar-color);
+}
+
+#overlay #user-container .pseudo-avatar.anonymous {
+	background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%3E%0A%20%20%3Cpath%20fill%3D%22%23FFF%22%20fill-rule%3D%22nonzero%22%20d%3D%22M9.8%2020H2c0-5.7%205-5.7%206-7l.2-.8c-1.6-.8-2.7-2.7-2.7-5%200-2.8%202-5.2%204.3-5.2S14%204.4%2014%207.3c0%202.2-1%204-2.6%205l.2.6c1.2%201.3%206%201.4%206%207H9.8z%22%2F%3E%0A%3C%2Fsvg%3E)
+}
+
+.role {
+	font-size: 11px;
+	border: 1px solid #3570aa;
+	border-radius: 4px;
+	color: #3570aa;
+	padding: 2px 5px;
+	margin-left: 10px;
+	font-weight: bold;
+	margin-top: 2px;
+}

@@ -334,15 +334,15 @@ abstract class AbstractAttachmentsRenderer
 				$(this).addClass('image-in-use').find('img').wrap('<div class="image-in-use-wrapper" style="position:relative;display:inline-block;"></div>');
 			}
 		});
-		$('.htmlEditor').each(function() {
-			var oEditor = $(this).ckeditorGet();
-			var sHtml = oEditor.getData();
-			var jElement = $('<div/>').html(sHtml).contents();
-			jElement.find('img').each(function() {
-				var sSrc = $(this).attr('src');
-				$('.attachment a[href="'+sSrc+'"]').parent().addClass('image-in-use').find('img').wrap('<div class="image-in-use-wrapper" style="position:relative;display:inline-block;"></div>');
-			});
-		});
+		// $('.htmlEditor').each(function() {
+		// 	var oEditor = $(this).ckeditorGet();
+		// 	var sHtml = oEditor.getData();
+		// 	var jElement = $('<div/>').html(sHtml).contents();
+		// 	jElement.find('img').each(function() {
+		// 		var sSrc = $(this).attr('src');
+		// 		$('.attachment a[href="'+sSrc+'"]').parent().addClass('image-in-use').find('img').wrap('<div class="image-in-use-wrapper" style="position:relative;display:inline-block;"></div>');
+		// 	});
+		// });
 		$('.image-in-use-wrapper').append('<div style="position:absolute;top:0;left:0;"><img src="' + GetAbsoluteUrlModulesRoot() + 'images/transp-lock.png"></div>');
 	}, 200 );
 JS

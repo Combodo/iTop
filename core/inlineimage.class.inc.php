@@ -536,6 +536,11 @@ JS
 
 		$sAbsoluteUrlAppRoot = utils::GetAbsoluteUrlAppRoot();
 		$sToggleFullScreen = utils::EscapeHtml(Dict::S('UI:ToggleFullScreen'));
+		return <<<JS
+		$('.htmlEditor').each(function() {
+			CombodoCKEditorHandler.EnableImageUpload('#' + $(this).attr('id'), '$sAbsoluteUrlAppRoot'+'pages/ajax.render.php?operation=cke_img_upload&temp_id=$sTempId&obj_class=$sObjClass&obj_key=$iObjKey');
+		});
+JS;
 
 		return
 			<<<JS
@@ -605,6 +610,13 @@ JS
 JS
 		;
 	}
+	public static function EnableCKEditor5ImageUpload(DBObject $oObject, $sTempId){
+		return <<<JS
+		// Hook the file upload of all CKEditor instances
+JS;
+
+	}
+
 
 	/**
 	 * @inheritDoc

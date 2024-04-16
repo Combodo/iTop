@@ -189,14 +189,17 @@ class ObjectRepository
 	{
 		try {
 
-			// object class
+			// Object key
+			$aData['id'] = $oDbObject->GetKey();
+
+			// Object class
 			$aData['class_name'] = get_class($oDbObject);
 
 			// Obsolescence flag
 			$aData['obsolescence_flag'] = $oDbObject->IsObsolete();
 
 			// Additional fields
-			$sFriendlynameForHtml = utils::EscapeHtml($aData['friendlyname']);
+			$sFriendlyNameForHtml = utils::EscapeHtml($aData['friendlyname']);
 			if (count($aComplementAttributeSpec[1]) > 0) {
 				$aData['has_additional_field'] = true;
 				$aArguments = [];
@@ -205,9 +208,9 @@ class ObjectRepository
 				}
 				$aData['additional_field'] = vsprintf($aComplementAttributeSpec[0], $aArguments);
 				$sAdditionalFieldForHtml = utils::EscapeHtml($aData['additional_field']);
-				$aData['full_description'] = "{$sFriendlynameForHtml}<br><i><small>{$sAdditionalFieldForHtml}</small></i>";
+				$aData['full_description'] = "{$sFriendlyNameForHtml}<br><i><small>{$sAdditionalFieldForHtml}</small></i>";
 			} else {
-				$aData['full_description'] = $sFriendlynameForHtml;
+				$aData['full_description'] = $sFriendlyNameForHtml;
 			}
 
 			// Image
@@ -222,6 +225,9 @@ class ObjectRepository
 					$aData['initials'] = utils::FormatInitialsForMedallion(utils::ToAcronym($oDbObject->Get('friendlyname')));
 				}
 			}
+
+			// Link
+			$aData['link'] = utils::GetAbsoluteUrlAppRoot() . "pages/UI.php?operation=details&class=$sClass&id={$oDbObject->GetKey()}";
 
 			return $aData;
 		}

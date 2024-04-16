@@ -23,7 +23,6 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Module\ModuleService;
-use Combodo\iTop\Test\UnitTest\Application\utilsTest;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
 use ScssPhp\ScssPhp\ValueConverter;
@@ -2779,76 +2778,6 @@ SQL;
 	public static function GetUniqueId()
 	{
 		return static::$iNextId++;
-	}
-
-	/**
-	 * Return the CKEditor config as an array
-	 *
-	 * @return array
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @since 3.0.0
-	 */
-	public static function GetCkeditorPref()
-	{
-		$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
-
-		$aDefaultConf = array(
-			'language'=> $sLanguage,
-			'contentsLanguage' => $sLanguage,
-			'extraPlugins' => 'disabler,codesnippet,mentions,objectshortcut,font,uploadimage',
-			'uploadUrl' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php',
-			'contentsCss' => array(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/contents.css', utils::GetAbsoluteUrlAppRoot().'css/ckeditor/contents.css'),
-		);
-
-		// Mentions
-		$aMentionsAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
-		if(!empty($aMentionsAllowedClasses)) {
-			$aDefaultConf['mentions'] = [];
-
-			foreach($aMentionsAllowedClasses as $sMentionMarker => $sMentionScope) {
-				// Retrieve mention class
-				// - First test if the conf is a simple Datamodel class
-				if (MetaModel::IsValidClass($sMentionScope)) {
-					$sMentionClass = $sMentionScope;
-				}
-				// - Otherwise it must be a valid OQL
-				else {
-					$oTmpSearch = DBSearch::FromOQL($sMentionScope);
-					$sMentionClass = $oTmpSearch->GetClass();
-					unset($oTmpSearch);
-				}
-
-				// Note: Endpoints are defaults only and should be overloaded by other GUIs such as the end-users portal
-				$sMentionEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&marker='.urlencode($sMentionMarker).'&needle={encodedQuery}';
-				$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sMentionClass.'&id={id}';
-
-				$sMentionItemPictureTemplate = (empty(MetaModel::GetImageAttributeCode($sMentionClass))) ? '' : <<<HTML
-<span class="ibo-vendors-ckeditor--autocomplete-item-image" style="{picture_style}">{initials}</span>
-HTML;
-				$sMentionItemTemplate = <<<HTML
-<li class="ibo-vendors-ckeditor--autocomplete-item" data-id="{id}">{$sMentionItemPictureTemplate}<span class="ibo-vendors-ckeditor--autocomplete-item-title">{friendlyname}</span></li>
-HTML;
-				$sMentionOutputTemplate = <<<HTML
-<a href="$sMentionItemUrl" data-role="object-mention" data-object-class="{class}" data-object-id="{id}">{$sMentionMarker}{friendlyname}</a>
-HTML;
-
-				$aDefaultConf['mentions'][] = [
-					'feed' => $sMentionEndpoint,
-					'marker' => $sMentionMarker,
-					'minChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
-					'itemTemplate' => $sMentionItemTemplate,
-					'outputTemplate' => $sMentionOutputTemplate,
-					'throttle' => 500,
-				];
-			}
-		}
-
-		$aRichTextConfig = 	json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);
-
-
-		return array_merge($aDefaultConf, $aRichTextConfig);
 	}
 
 	/**
