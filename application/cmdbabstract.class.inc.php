@@ -805,7 +805,7 @@ HTML
 		if (!$this->IsNew()) {
 			// Look for any trigger that considers this object as "In Scope"
 			// If any trigger has been found then display a tab with notifications
-			//
+			// If all triggers on an object have been deleted, we consider that we no longer need the event notification information
 			$aTriggers = $this->GetRelatedTriggersIDs();
 			if (count($aTriggers) > 0) {
 				$iId = $this->GetKey();
