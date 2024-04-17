@@ -2609,6 +2609,13 @@ JS
 					$iFieldSize = $oAttDef->GetMaxSize();
 					if ($aAllowedValues !== null)
 					{
+
+						// convert AttributeBoolean value due to issue with radio style when value is false
+						// @see N°2443 - Boolean don't accept yes/no value
+						if($oAttDef instanceof AttributeBoolean){
+							$value = $value === false ? 0 : 1;
+						}
+
 						// Discrete list of values, use a SELECT or RADIO buttons depending on the config
 						$sDisplayStyle = $oAttDef->GetDisplayStyle();
 						switch ($sDisplayStyle)
