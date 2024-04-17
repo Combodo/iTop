@@ -20,7 +20,7 @@
 /**
  * Data structures (i.e. PHP classes) to build and use relation graphs
  *
- * @copyright   Copyright (C) 2015-2023 Combodo SARL
+ * @copyright   Copyright (C) 2015-2024 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * 
  */
@@ -367,6 +367,9 @@ class RelationGraph extends SimpleGraph
 				$oNode->ReachDown('is_reached', true);
 			}	
 		}
+		if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
+			$this->ApplyUserRightsOnGraph();
+		}
 	}
 
 	/**
@@ -400,6 +403,9 @@ class RelationGraph extends SimpleGraph
 				$oNode->SetProperty('context_root_causes', $aRootCauses);
 				$oNode->ReachDown('is_reached', true);
 			}	
+		}
+		if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
+			$this->ApplyUserRightsOnGraph();
 		}
 	}
 
@@ -460,6 +466,10 @@ class RelationGraph extends SimpleGraph
 					try
 					{
 						$oFlt = static::MakeSearch($sQuery);
+						if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
+							//no filter to find all impacts
+							$oFlt->AllowAllData(true);
+						}
 						$oObjSet = new DBObjectSet($oFlt, array(), $oObject->ToArgsForQuery());
 						$oRelatedObj = $oObjSet->Fetch();
 					}
@@ -474,27 +484,24 @@ class RelationGraph extends SimpleGraph
 						{
 							set_time_limit(intval($iLoopTimeLimit));
 
-							$sObjectRef = 	RelationObjectNode::MakeId($oRelatedObj);
-							$oRelatedNode = $this->GetNode($sObjectRef);
-							if (is_null($oRelatedNode))
-							{
-								$oRelatedNode = new RelationObjectNode($this, $oRelatedObj);
-							}
-							$oSourceNode = $bDown ? $oObjectNode : $oRelatedNode;
-							$oSinkNode = $bDown ? $oRelatedNode : $oObjectNode;
+								$sObjectRef = RelationObjectNode::MakeId($oRelatedObj);
+								$oRelatedNode = $this->GetNode($sObjectRef);
+								if (is_null($oRelatedNode)) {
+									$oRelatedNode = new RelationObjectNode($this, $oRelatedObj);
+								}
+								$oSourceNode = $bDown ? $oObjectNode : $oRelatedNode;
+								$oSinkNode = $bDown ? $oRelatedNode : $oObjectNode;
 							if ($bEnableRedundancy)
 							{
-								$oRedundancyNode = $this->ComputeRedundancy($sRelCode, $aQueryInfo, $oSourceNode, $oSinkNode);
-							}
-							else
-							{
-								$oRedundancyNode = null;
-							}
-							if (!$oRedundancyNode)
-							{
-								// Direct link (otherwise handled by ComputeRedundancy)
-								new RelationEdge($this, $oSourceNode, $oSinkNode);
-							}
+									$oRedundancyNode = $this->ComputeRedundancy($sRelCode, $aQueryInfo, $oSourceNode, $oSinkNode);
+								} else {
+									$oRedundancyNode = null;
+								}
+								if (!$oRedundancyNode) {
+									// Direct link (otherwise handled by ComputeRedundancy)
+									new RelationEdge($this, $oSourceNode, $oSinkNode);
+								}
+
 							// Recurse
 							$this->AddRelatedObjects($sRelCode, $bDown, $oRelatedNode, $iMaxDepth - 1, $bEnableRedundancy);
 						}
@@ -538,6 +545,10 @@ class RelationGraph extends SimpleGraph
 				try
 				{
 					$oFlt = static::MakeSearch($sQuery);
+					if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
+						//no filter to find all impacts
+						$oFlt->AllowAllData(true);
+					}
 					$oObjSet = new DBObjectSet($oFlt, array(), $oObject->ToArgsForQuery());
 					$iCount = $oObjSet->Count();
 				}
@@ -553,13 +564,12 @@ class RelationGraph extends SimpleGraph
 	
 				while ($oUpperObj = $oObjSet->Fetch())
 				{
-					$sObjectRef = 	RelationObjectNode::MakeId($oUpperObj);
-					$oUpperNode = $this->GetNode($sObjectRef);
-					if (is_null($oUpperNode))
-					{	
-						$oUpperNode = new RelationObjectNode($this, $oUpperObj);
-					}
-					new RelationEdge($this, $oUpperNode, $oRedundancyNode);
+						$sObjectRef = RelationObjectNode::MakeId($oUpperObj);
+						$oUpperNode = $this->GetNode($sObjectRef);
+						if (is_null($oUpperNode)) {
+							$oUpperNode = new RelationObjectNode($this, $oUpperObj);
+						}
+						new RelationEdge($this, $oUpperNode, $oRedundancyNode);
 				}
 			}
 		}
@@ -694,4 +704,47 @@ class RelationGraph extends SimpleGraph
 		$oSearch->SetArchiveMode(false);
 		return $oSearch;
 	}
+
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \SimpleGraphException
+	 */
+	private function ApplyUserRightsOnGraph()
+	{
+		//The chart is complete. Now we need to control which objects are allowed to the current user.
+		if (!UserRights::IsAdministrator()) {
+			//First we get all the objects presents in chart in $aArrayTest
+			$oIterator = new RelationTypeIterator($this, 'Node');
+			$aArrayTest = [];
+			foreach ($oIterator as $oNode) {
+				$oObj = $oNode->GetProperty('object');
+				if ($oObj) {
+					$aArrayTest[get_class($oObj)][$oObj->GetKey()] = $oObj->GetKey();
+				}
+			}
+			//Then for each class, we made a request to control access rights
+			// visible objects are removed from $aArrayTest
+			foreach ($aArrayTest as $sClass => $aKeys) {
+				$sOQL = "SELECT ".$sClass.' WHERE id IN ('.implode(',', $aKeys).')';
+				$oSearch = DBObjectSearch::FromOQL($sOQL);
+				$aListId = $oSearch->SelectAttributeToArray('id');
+				foreach($aListId as$aItem ) {
+					unset($aArrayTest[$sClass][$aItem['id']]);
+				}
+			}
+			//then removes from the graph all objects still present in $aArrayTest
+			foreach ($oIterator as $oNode) {
+				$oObj = $oNode->GetProperty('object');
+				if ($oObj && isset($aArrayTest[get_class($oObj)]) && in_array($oObj->GetKey(), $aArrayTest[get_class($oObj)])) {
+					$this->FilterNode($oNode);
+				}
+			}
+		}
+	}
+
 }
