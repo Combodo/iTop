@@ -2226,8 +2226,8 @@ SQL;
 			
 			$fScale = min($iMaxImageWidth / $iWidth, $iMaxImageHeight / $iHeight);
 
-			$iNewWidth = $iWidth * $fScale;
-			$iNewHeight = $iHeight * $fScale;
+			$iNewWidth = floor($iWidth * $fScale);
+			$iNewHeight = floor($iHeight * $fScale);
 			
 			$new = imagecreatetruecolor($iNewWidth, $iNewHeight);
 			

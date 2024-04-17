@@ -3572,6 +3572,19 @@ class AttributeBoolean extends AttributeInteger
 	{
 		return CMDBChangeOpSetAttributeScalar::class;
 	}
+
+	public function GetAllowedValues($aArgs = array(), $sContains = '') : array
+	{
+		return [
+			0 => $this->GetValueLabel(false),
+			1 => $this->GetValueLabel(true)
+		];
+	}
+
+	public function GetDisplayStyle()
+	{
+		return $this->GetOptional('display_style', 'select');
+	}
 }
 
 /**

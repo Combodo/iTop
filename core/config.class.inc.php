@@ -1209,6 +1209,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'relations.complete_analysis' => [
+			'type' => 'bool',
+			'description' => 'Continue the impact/depends analysis even if a step is not visible to the user',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'sessions_tracking.enabled' => [
 			'type' => 'bool',
 			'description' => 'Whether or not the whole mechanism to track active sessions is enabled. See PHP session.gc_maxlifetime setting to configure session expiration.',
