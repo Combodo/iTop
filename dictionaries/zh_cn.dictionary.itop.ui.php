@@ -408,41 +408,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'BooleanLabel:no' => '否',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.'登录',
 	'UI:WelcomeMenu:Title' => '欢迎使用'.ITOP_APPLICATION_SHORT,
-
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.'是完全开源的IT运维门户.</p>
-<ul>它包括:
-<li>完整的CMDB(配置管理数据库),用于登记和管理您的IT资产.</li>
-<li>事件管理模块用于跟踪和传递所有发生在IT系统中的事件.</li>
-<li>变更管理模块用于规划和跟踪IT环境中发生的变化.</li>
-<li>已知问题数据库可加速事件的处理.</li>
-<li>停机模块记录所有计划内的停机并通知对应的联系人.</li>
-<li>通过仪表盘快速获得您的IT概况.</li>
-</ul>
-<p>所有模块互相独立,可以单独部署.</p>',
-
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.'是面向服务供应商的, 它使得IT工程师能够更方便地管理多客户和多组织.
-<ul>'.ITOP_APPLICATION_SHORT.'提供功能丰富的业务处理流程:
-<li>提高IT管理效率</li> 
-<li>提升IT可操作能力</li> 
-<li>提高用户满意度,提升业务能力.</li>
-</ul>
-</p>
-<p>'.ITOP_APPLICATION_SHORT.'是完全开放的,可被集成到现有的IT管理架构之中.</p>
-<p>
-<ul>利用这个新一代的IT操作门户, 可以帮助您:
-<li>更好地管理越来越复杂的IT环境.</li>
-<li>逐步实现ITIL流程.</li>
-<li>管理IT中最重要的资产: 文档.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>恭喜, 您运行的是'.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>此版本全新设计了一个现代且易用的后台界面.</div>
-
-<div>我们不仅保留'.ITOP_APPLICATION.'中您所喜爱的核心功能,同时使其更具现代化.
-我们衷心地希望您喜爱此版本,正如我们在设计和实现它的时候一样.</div>
-
-<div>定制化您的'.ITOP_APPLICATION.'设置,实现个性化体验.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => '所有打开的需求: %1$d',
 	'UI:WelcomeMenu:MyCalls'         => '我办理的需求',
 	'UI:WelcomeMenu:OpenIncidents'   => '所有打开的事件: %1$d',

@@ -388,40 +388,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'BooleanLabel:no' => 'Nein',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' Login',
 	'UI:WelcomeMenu:Title' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' ist ein ein vollständiges, ITIL- und webbasiertes IT-Service-Management-Tool (ITSM)</p>
-<ul>Es umfasst...
-<li>eine vollständige CMDB (Configuration Management Database), um das IT-Portfolio zu dokumentieren und zu managen,</li>
-<li>ein Incident Management-Modul, um alle Störfälle in der IT-Landschaft zu beobachten und diese zu kommunizieren,</li>
-<li>ein Change Management-Modul, um Änderungen der IT-Landschaft zu planen und zu beobachten,</li>
-<li>eine Datenbank mit bekannten Fehlern, um Zwischenfälle schneller anhand bekannter Problemlösungen zu beseitigen,</li>
-<li>ein Ausfall-Modul, um geplante Ausfälle zu dokumentieren und die betreffenden Kontakte zu informieren,</li>
-<li>unterschiedliche Dashboards, um sich einen schnellen Überblick über Ihre IT zu verschaffen.</li>
-</ul>
-<p>Alle Module können nacheinander und vollständig unabhängig voneinander eingerichtet werden.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' ist mandantenfähig, es erlaubt IT-Technikern, auf einfache Art eine Vielzahl an Kunden und Firmen zu verwalten.
-<ul>'.ITOP_APPLICATION_SHORT.' bietet ein umfangreiches Set an Business-Prozessen, die
-<li>die Effizienz des IT-Managements steigern,</li>
-<li>die die Performance des IT-Betriebs steuern,</li>
-<li>die Kundenzufriedenheit verbessern und Führungskräften Einsicht in die Business Performance ermöglichen.</li>
-</ul>
-</p>
-<p>'.ITOP_APPLICATION_SHORT.' ist komplett offen, damit es sich bestmöglich in Ihre derzeitige IT-Management-Infrastruktur integriert.</p>
-<p>
-<ul>Die neue Generation des IT Operational Portals ermöglicht Ihnen
-<li>ein besseres Management in einer immer komplexeren IT-Landschaft,</li>
-<li>die ITIL-Prozesse gemäß dem Rhythmus Ihres Unternehmens einzuführen,</li>
-<li>und ein besseres Verwalten des wichtigsten Bestandteiles Ihrer IT: der Dokumentation.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Willkommen bei '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>Diese Version bietet ein brandneues, modernes und zugängliches Backoffice-Design.</div>
-
-<div>Wir haben die Kernfunktionen von '.ITOP_APPLICATION.' beibehalten, die Sie mögen, und sie modernisiert, damit Sie sie lieben.
-Wir hoffen, dass Ihnen diese Version genauso viel Spaß macht, wie uns die Vorstellung und die Erstellung dieser Version.</div>
-
-<div>Passen Sie Ihre '.ITOP_APPLICATION.'-Einstellungen für ein personalisiertes Benutzererlebnis an.</div>',
-	'UI:WelcomePopup:Button:Acknowledge' => 'Ok, verwerfen Sie diese Nachricht',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Offene Requests: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'An mich gestellte Benutzeranfragen',
 	'UI:WelcomeMenu:OpenIncidents' => 'Offene Incidents: %1$d',

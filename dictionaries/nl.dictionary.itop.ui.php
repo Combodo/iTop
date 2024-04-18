@@ -400,39 +400,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'BooleanLabel:no' => 'Nee',
 	'UI:Login:Title' => 'Aanmelden in '.ITOP_APPLICATION_SHORT,
 	'UI:WelcomeMenu:Title' => 'Welkom in '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' is een compleet en open source portaal voor IT-operaties.</p>
-<ul>Op maat van jouw IT-omgeving:
-<li>Complete CMDB (Configuration Management Database) voor het documenteren en beheren van de IT-inventaris.</li>
-<li>Incident Management-module voor het vinden van en communiceren over alle problemen die optreden .</li>
-<li>Change Management-module voor het plannen en opvolgen van de veranderingen.</li>
-<li>Database met gekende problemen om het oplossen van incidenten te versnellen.</li>
-<li>Storingsmodule voor het documenteren van alle geplande storingen en voor het informeren van de juiste contacten.</li>
-<li>Dashboards om snel een overzicht te krijgen.</li>
-</ul>
-<p>Alle modules kunnen volledig onafhankelijk van elkaar worden opgezet, stap voor stap.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' is gericht op serviceproviders. Het zorgt ervoor dat IT-engineers gemakkelijk meerdere klanten of organisaties kunnen beheren.
-<ul>'.ITOP_APPLICATION_SHORT.' zorgt dankzij een uitgebreide set van bedrijfsprocessen voor een reeks voordelen:
-<li>De efficientië van het IT-management versterkt.</li> 
-<li>De prestaties van IT-operaties verbetert.</li> 
-<li>De klanttevredenheid verhoogt en leidinggevenden inzicht biedt in hun bedrijfsperformantie.</li>
-</ul>
-</p>
-<p>'.ITOP_APPLICATION_SHORT.' is klaar om geïntegreerd te worden met jouw huidige infrastructuur rond IT-management.</p>
-<p>
-<ul>De adoptie van dit IT-operationele portaal zal je helpen met:
-<li>Het beter beheren van een steeds complexere IT-omgeving.</li>
-<li>Het implementeren van ITIL-processen op jouw eigen tempo.</li>
-<li>Het beheren van het belangrijkste middel: documentatie.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Proficiat, je werkt nu met '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>Deze versie heeft een volledig nieuw, modern en toegankelijk uiterlijk.</div>
-
-<div>De belangrijkste en meest vertrouwde '.ITOP_APPLICATION.' functies hebben we behouden en een modern jasje gegeven.
-We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben genoten om het te ontwerpen.</div>
-
-<div>Wijzig je '.ITOP_APPLICATION.'-voorkeuren voor een gepersonaliseerde ervaring.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Open aanvragen: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mijn aanvragen',
 	'UI:WelcomeMenu:OpenIncidents' => 'Open incidenten: %1$d',

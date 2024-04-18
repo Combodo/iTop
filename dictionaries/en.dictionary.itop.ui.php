@@ -408,42 +408,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'BooleanLabel:no' => 'no',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
 	'UI:WelcomeMenu:Title' => 'Welcome to '.ITOP_APPLICATION_SHORT,
-
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' is a complete, OpenSource, IT Operational Portal.</p>
-<ul>It includes:
-<li>A complete CMDB (Configuration management database) to document and manage the IT inventory.</li>
-<li>An Incident management module to track and communicate about all issues occurring in the IT.</li>
-<li>A change management module to plan and track the changes to the IT environment.</li>
-<li>A known error database to speed up the resolution of incidents.</li>
-<li>An outage module to document all planned outages and notify the appropriate contacts.</li>
-<li>Dashboards to quickly get an overview of your IT.</li>
-</ul>
-<p>All the modules can be setup, step by step, indepently of each other.</p>',
-
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' is service provider oriented, it allows IT engineers to manage easily multiple customers or organizations.
-<ul>'.ITOP_APPLICATION_SHORT.', delivers a feature-rich set of business processes that:
-<li>Enhances IT management effectiveness</li> 
-<li>Drives IT operations performance</li> 
-<li>Improves customer satisfaction and provides executives with insights into business performance.</li>
-</ul>
-</p>
-<p>'.ITOP_APPLICATION_SHORT.' is completely open to be integrated within your current IT Management infrastructure.</p>
-<p>
-<ul>Adopting this new generation of IT Operational portal will help you to:
-<li>Better manage a more and more complex IT environment.</li>
-<li>Implement ITIL processes at your own pace.</li>
-<li>Manage the most important asset of your IT: Documentation.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text'            => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>This version features a brand new modern and accessible backoffice design.</div>
-
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
-
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>',
-	'UI:WelcomePopup:Button:Acknowledge' => 'Ok, discard this message',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Open requests: %1$d',
 	'UI:WelcomeMenu:MyCalls'         => 'My requests',
 	'UI:WelcomeMenu:OpenIncidents'   => 'Open incidents: %1$d',

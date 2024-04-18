@@ -406,39 +406,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'BooleanLabel:no' => 'no',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
 	'UI:WelcomeMenu:Title' => 'Benveuto su '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' è un completo Portale Funzionale IT, Open Source.</p>
-<ul>Esso include:
-<li>Un completo CMDB (Configuration management database) per documentare e gestire l\'IT di inventario.</li>
-<li>Un modulo di gestione degli incidenti per monitorare e comunicare su tutte le problematiche che si verificano nel settore IT.</li>
-<li>Un modulo di gestione delle modifiche per pianificare e monitorare i cambiamenti all\'ambiente IT.</li>
-<li>Una banca dati errori noti per accelerare la risoluzione di incidenti.</li>
-<li>Un modulo di interruzione per documentare tutte le interruzioni pianificate e notificare gli opportuni contatti.</li>
-<li>Un cruscotto per ottenere rapidamente una panoramica del sistema IT.</li>
-</ul>
-<p>Tutti i moduli possono essere installati, passo dopo passo, indipendentemente l\'uno dall\'altro.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' è fornitore di servizi di orientamento, che consente ai progettisti di gestire più o organizzazioni o clienti con facilità.
-<ul>>'.ITOP_APPLICATION_SHORT.', offre un set ricco di funzionalità dei processi di business che:
-<li>Migliora l\'efficacia di gestione IT</li> 
-<li>Guida le prestazione delle operazioni IT</li> 
-<li>Migliora la soddisfazione del cliente e fornisce ai dirigenti un idea della performance del business.</li>
-</ul>
-</p>
-<p>'.ITOP_APPLICATION_SHORT.' è completamente aperto per essere integrato all\'interno della vostra infrastruttura di gestione dell\'IT.</p>
-<p>
-<ul>L\'adozione di questa nuova generazione di portale funzionale IT vi aiuterà a:
-<li>Meglio gestire un ambiente IT sempre più complesso.</li>
-<li>Implementare i processi ITIL al proprio ritmo.</li>
-<li>Gestire la risorsa più importante della tua IT: Documentazione.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Congratulazioni, sei atterrato su '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>Questa versione presenta un nuovissimo design del backoffice moderno e accessibile.</div>
-
-<div>Abbiamo mantenuto le funzioni principali di '.ITOP_APPLICATION.' che ti piacevano e le abbiamo modernizzate per farti apprezzare ancora di più.
-Speriamo che tu possa apprezzare questa versione tanto quanto noi abbiamo apprezzato immaginarla e crearla.</div>
-
-<div>Personalizza le tue '.ITOP_APPLICATION.' preferenze per un esperienza personalizzata.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Apri le richieste: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Le mie richieste',
 	'UI:WelcomeMenu:OpenIncidents' => 'Apri gli incidenti: %1$d',

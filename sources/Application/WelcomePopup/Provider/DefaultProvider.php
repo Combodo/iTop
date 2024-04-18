@@ -25,8 +25,8 @@ class DefaultProvider extends AbstractWelcomePopupExtension
 		return [
 			MessageFactory::MakeForLeftTextsRightIllustration(
 				"320_01",
-				Dict::S("UI:WelcomeMenu:Title"),
-				Dict::S("UI:WelcomeMenu:Text"),
+				Dict::S("UI:WelcomePopup:Message:320_01:Title"),
+				Dict::S("UI:WelcomePopup:Message:320_01:Description"),
 				utils::GetAbsoluteUrlAppRoot() . "images/illustrations/undraw_relaunch_day.svg"
 			),
 		];

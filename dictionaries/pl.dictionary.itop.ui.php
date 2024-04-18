@@ -400,39 +400,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'BooleanLabel:no' => 'nie',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
 	'UI:WelcomeMenu:Title' => 'Witaj w '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' to kompletny portal operacyjny OpenSource IT.</p>
-<ul>Obejmuje:
-<li>Kompletna baza danych CMDB (baza danych zarządzania konfiguracją) do dokumentowania inwentaryzacji IT i zarządzania nią.</li>
-<li>Moduł zarządzania incydentami do śledzenia i komunikowania się o wszystkich problemach występujących w IT.</li>
-<li>Moduł zarządzania zmianami do planowania i śledzenia zmian w środowisku IT.</li>
-<li>Baza danych znanych błędów przyspieszająca rozwiązywanie incydentów.</li>
-<li>Moduł przestojów do dokumentowania wszystkich planowanych przestojów i powiadamiania odpowiednich kontaktów.</li>
-<li>Pulpity nawigacyjne, aby szybko uzyskać przegląd swojego IT.</li>
-</ul>
-<p>Wszystkie moduły można ustawiać krok po kroku niezależnie od siebie.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' jest zorientowany na usługodawcę, umożliwia inżynierom IT łatwe zarządzanie wieloma klientami lub organizacjami.
-<ul>'.ITOP_APPLICATION_SHORT.', dostarcza bogaty w funkcje zestaw procesów biznesowych:
-<li>Zwiększa efektywność zarządzania IT</li> 
-<li>Napędza wydajność operacji IT</li> 
-<li>Zwiększa satysfakcję klientów i zapewnia kierownictwu wgląd w wyniki biznesowe.</li>
-</ul>
-</p>
-<p>'.ITOP_APPLICATION_SHORT.' jest całkowicie otwarty na integrację z obecną infrastrukturą zarządzania IT.</p>
-<p>
-<ul>Pomoże Ci w tym przyjęcie nowej generacji portalu operacyjnego IT:
-<li>Lepiej zarządzaj coraz bardziej złożonym środowiskiem IT.</li>
-<li>Wdrażaj procesy ITIL we własnym tempie.</li>
-<li>Zarządzaj najważniejszym zasobem swojego IT: dokumentacją.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Gratulacje, wylądowałeś na '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>Ta wersja ma zupełnie nowy, bardziej nowoczesny i dostępny projekt zaplecza.</div>
-
-<div>Urzymaliśmy podstawowe funkcje '.ITOP_APPLICATION.', które Ci się spodobały i zmodernizowaliśmy je, aby je bardziej pokochać.
-Mamy nadzieję, że spodoba ci się ta wersja tak samo, jak nam się podobało jej wymyślanie i tworzenie.</div>
-
-<div>Dostosuj swój '.ITOP_APPLICATION.' poprzez spersonalizowane preferencje.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Otwarte zgłoszenia: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Moje zgłoszenia',
 	'UI:WelcomeMenu:OpenIncidents' => 'Otwarte incydenty: %1$d',

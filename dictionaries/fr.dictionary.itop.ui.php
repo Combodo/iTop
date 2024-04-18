@@ -391,31 +391,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'BooleanLabel:no' => 'non',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
 	'UI:WelcomeMenu:Title' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' est un portail opérationnel complet et libre pour gérer votre SI.</p>
-<ul>il contient:
-<li>Une base de gestion des configurations (CMDB - Configuration management database) pour documenter et gérer votre parc informatique.</li>
-<li>Un module de gestion des incidents pour suivre les incidents d\'exploitation et gérer la communication à propos de ces incidents.</li>
-<li>Un module de gestion des changements pour planifier et suivre les modifications de votre SI.</li>
-<li>Une base des erreurs connues, pour accélérer la résolution des incidents.</li>
-<li>Un module de gestion de la maintenance pour documenter les maintenances planifiées et informer les contacts appropriés.</li>
-<li>Des tableaux de bord pour avoir rapidement une vue synthétique de votre SI.</li>
-</ul>
-<p>Tous ces modules peuvent être installés séparément, à votre rythme.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' a été conçu pour les fournisseurs de service, il permet à vos équipes IT de gérer facilement de multiples clients et organisations.
-<ul>iTop fournit un riche ensemble de processus métier&nbsp;pour:
-<li>Augmenter l\'efficacité de la gestion de votre SI</li> 
-<li>Accroitre la performance de vos équipes d\'exploitation</li> 
-<li>Améliorer la satisfaction client et fournir aux responsables des vues sur la performance interne du SI.</li>
-</ul>
-</p>
-<p>iTop est complètement ouvert pour s\'intégrer avec votre environnement informatique.</p>
-<p>
-<ul>Grâce à ce portail opérationnel de nouvelle génération:
-<li>Gérez un environnement informatique de plus en plus complexe.</li>
-<li>Mettez en place la méthodologie ITIL à votre rythme.</li>
-<li>Contrôlez l\'actif le plus important de votre SI&nbsp;: la documentation.</li>
-</ul>
-</p>',
 	'UI:WelcomeMenu:Text' => '<div>Félicitations, vous avez atterri sur '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.' !</div>
 
 <div>Cette version présente un tout nouveau design moderne et accessible pour la console de support.</div>
