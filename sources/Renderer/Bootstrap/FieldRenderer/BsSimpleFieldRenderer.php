@@ -173,14 +173,17 @@ EOF
 
 				// Some additional stuff if we are displaying it with a rich editor
 					if ($bRichEditor) {
-						$aConfig = CKEditorHelper::GetCkeditorPref();
-						$aConfig['extraPlugins'] = 'codesnippet';
+						// TODO 3.2.0 How to get a config for portal without mentions ?
+						// $aConfig = CKEditorHelper::GetCkeditorPref();
+						$aConfig = [];
+						$aConfig['detectChanges'] = ['initialValue' => $this->oField->GetCurrentValue()];
+
 						$sJsConfig = json_encode($aConfig);
 						
 						$oOutput->AddJs(
 <<<JS
 							$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
-							CombodoCKEditorHandler.CreateInstance('#{$this->oField->GetGlobalId()}').then((	oEditor) => {
+							CombodoCKEditorHandler.CreateInstance('#{$this->oField->GetGlobalId()}', $sJsConfig).then((	oEditor) => {
 							oEditor.model.document.on('change:data', (event) => {
 								
 								$('#{$this->oField->GetGlobalId()}').val(oEditor.getData()).trigger("change");

@@ -68,6 +68,9 @@ class RichText extends UIBlock
 	public function SetValue(?string $sValue)
 	{
 		$this->sValue = $sValue;
+		if(is_array($this->aConfig)) {
+			$this->aConfig['detectChanges'] = ['initialValue' => $sValue];
+		}
 
 		return $this;
 	}
