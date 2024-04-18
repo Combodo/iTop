@@ -8,7 +8,7 @@
 		<div id="login-title">
 			<h1>{{ 'UI:ResetPwd-Title'|dict_s }}</h1>
 			{% if bNoUser and sErrorMessage is null %}
-				<p>{{ 'UI:ResetPwd-Error-WrongLogin'|dict_format(sAuthUser) }}</p>
+				<p>{{ 'UI:ResetPwd-EmailSent'|dict_s }}</p>
 			{% elseif bBadToken and sErrorMessage is null %}
 				<p>{{ 'UI:ResetPwd-Error-InvalidToken'|dict_s }}</p>
 			{% else %}
