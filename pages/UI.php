@@ -37,7 +37,7 @@ use Combodo\iTop\Application\WelcomePopup\WelcomePopupService;
  */
 function DisplayWelcomePopup(WebPage $oP): void
 {
-	if (true || !Session::IsSet("welcome")) {
+	if (!Session::IsSet("welcome")) {
 		$oWelcomePopupService = WelcomePopupService::GetInstance();
 		$aProvidersMessagesData = $oWelcomePopupService->GetMessages();
 		if (count($aProvidersMessagesData) > 0) {

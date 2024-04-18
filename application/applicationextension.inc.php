@@ -2303,7 +2303,6 @@ interface iBackupExtraFilesExtension
  * Interface to provide messages to be displayed in the "Welcome Popup"
  *
  * @api
- * @private
  * @since 3.2.0
  */
 interface iWelcomePopupExtension
