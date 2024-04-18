@@ -1,12 +1,9 @@
 <?php
+
+use Combodo\iTop\Application\WelcomePopup\Message;
 use Combodo\iTop\Application\WelcomePopup\WelcomePopupService;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class WelcomePopupTest extends ItopDataTestCase
 {
 	/**
@@ -14,9 +11,20 @@ class WelcomePopupTest extends ItopDataTestCase
 	 */
 	public function testSortOnImportance($aToSort, $aExpected)
 	{
-		$bResult = usort($aToSort, [WelcomePopupService::class, 'SortOnImportance']);
+		$aProvidersMessagesData = [];
+		foreach ($aToSort as $aMessageData) {
+			$aProvidersMessagesData[] = [
+				'message' => new Message($aMessageData['id'], $aMessageData['title'], '', null, [], $aMessageData['importance']),
+			];
+		}
+
+		$bResult = usort($aProvidersMessagesData, [WelcomePopupService::class, 'SortOnImportance']);
 		$this->assertTrue($bResult);
-		$this->assertEquals($aExpected, $aToSort);
+
+		$aMessageIdsSorted = array_map(function($aItem) {
+			return $aItem['message']->GetId();
+		}, $aProvidersMessagesData);
+		$this->assertEquals($aExpected, $aMessageIdsSorted);
 	}
 	
 	/**
@@ -37,9 +45,9 @@ class WelcomePopupTest extends ItopDataTestCase
 					['id' => 'aa3', 'title' => 'AA3', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
 				],
 				'expected' => [
-					['id' => 'aa1', 'title' => 'AA1', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
-					['id' => 'aa3', 'title' => 'AA3', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
-					['id' => 'aa2', 'title' => 'AA2', 'importance' => 1 /*iWelcomePopupExtension::ENUM_IMPORTANCE_HIGH*/],
+					'aa1',
+					'aa3',
+					'aa2',
 				],
 			],
 			'5-item array' => [
@@ -51,11 +59,11 @@ class WelcomePopupTest extends ItopDataTestCase
 					['id' => 'zz2', 'title' => 'ZZ2', 'importance' => 1 /*iWelcomePopupExtension::ENUM_IMPORTANCE_HIGH*/],
 				],
 				'expected' => [
-					['id' => 'aa1', 'title' => 'AA1', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
-					['id' => 'aa3', 'title' => 'AA3', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
-					['id' => 'zz1', 'title' => 'ZZ1', 'importance' => 0 /*iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL*/],
-					['id' => 'aa2', 'title' => 'AA2', 'importance' => 1 /*iWelcomePopupExtension::ENUM_IMPORTANCE_HIGH*/],
-					['id' => 'zz2', 'title' => 'ZZ2', 'importance' => 1 /*iWelcomePopupExtension::ENUM_IMPORTANCE_HIGH*/],
+					'aa1',
+					'aa3',
+					'zz1',
+					'aa2',
+					'zz2',
 				],
 			],
 		];
@@ -86,81 +94,48 @@ class WelcomePopupTest extends ItopDataTestCase
 			],
 		];
 	}
-
-	/**
-	 * @dataProvider isMessageValidDataProvider
-	 */
-	public function testIsMessageValid($aMessage, $bExpected)
-	{
-		$oService = WelcomePopupService::GetInstance();
-		$aReasons = [];
-		$bResult = $this->InvokeNonPublicMethod(WelcomePopupService::class, 'IsMessageValid', $oService, [$aMessage, &$aReasons]);
-		if ($bResult !== $bExpected) {
-			print_r($aReasons);
-		}
-		$this->assertEquals($bExpected, $bResult);
-		if ($bResult) {
-			$this->assertEquals(0, count($aReasons));
-		} else {
-		   $this->assertNotEquals(0, count($aReasons));
-		}
-	}
-	
-	public function isMessageValidDataProvider()
-	{
-		return [
-			'not an array' => [
-				'123', false,
-			],
-			'empty array' => [
-				[], false,
-			],
-			'missing id' => [
-				['title' => 'foo', 'importance' => 0, 'html' => '<p>Hello</p>'], false,
-			],
-			'message Ok (html)' => [
-				['id' => '123', 'title' => 'foo', 'importance' => 0, 'html' => '<p>Hello</p>'], true,
-			],
-			'message Ok (twig)' => [
-				['id' => '123', 'title' => 'foo', 'importance' => 0, 'twig' => '/some/path'], true,
-			],
-			'missing html and twig' => [
-				['id' => '123', 'title' => 'foo', 'importance' => 0], false,
-			],
-		];
-	}
 	
 	public function testProcessMessages()
 	{
 		// Mock a WelcomePopup message provider, with a fixed class name
 		$oProvider1 = $this->getMockBuilder(iWelcomePopupExtension::class)->setMockClassName('Provider1')->getMock();
 		$oProvider1->expects($this->once())->method('GetMessages')->willReturn([
-			['id' => '123', 'title' => 'foo', 'importance' => 0, 'html' => '<p>Hello Foo</p>'],
-			['id' => '456', 'title' => 'bar', 'importance' => 1, 'html' => '<p>Hello Bar</p>'], // Already acknowledged will be skipped
+			new Message('123', 'foo', '<p>Hello Foo</p>', null, [], 0),
+			new Message('456', 'bar', '<p>Hello Bar</p>', null, [], 1), // Already acknowledged will be skipped
 		]);
 		
 		// Mock another WelcomePopup message provider, with a different class name
 		$oProvider2 = $this->getMockBuilder(iWelcomePopupExtension::class)->setMockClassName('Provider2')->getMock();
 		$oProvider2->expects($this->once())->method('GetMessages')->willReturn([
-			['id' => '789', 'title' => 'Ga', 'importance' => 1, 'html' => '<p>Hello Ga</p>'],
-			['id' => '012', 'title' => 'Bu', 'importance' => 0, 'twig' => 'ga/bu/zo'],
-			['id' => '000', 'title' => 'Bu', 'importance' => 0], // Invalid, will be ignored
+			new Message('789', 'Ga', '<p>Hello Ga</p>', null, [], 1),
+			new Message('012', 'Bu', '', null, [], 0, 'ga/bu/zo'),
 		]);
 		$oService = WelcomePopupService::GetInstance();
 		$this->InvokeNonPublicMethod(WelcomePopupService::class, 'SetAcknowledgedMessagesCache', $oService, [[get_class($oProvider1).'::456']]);
 		$this->InvokeNonPublicMethod(WelcomePopupService::class, 'SetMessagesProviders', $oService, [[$oProvider1, $oProvider2]]);
 		
-		$aMessages = $this->InvokeNonPublicMethod(WelcomePopupService::class, 'ProcessMessages', $oService, []);
+		$aProvidersMessagesData = $this->InvokeNonPublicMethod(WelcomePopupService::class, 'ProcessMessages', $oService, []);
 		$this->assertEquals(
 			[
-				['id' => '012', 'title' => 'Bu', 'importance' => 0, 'twig' => 'ga/bu/zo', 'uuid' => 'Provider2::012'],
-				['id' => '123', 'title' => 'foo', 'importance' => 0, 'html' => '<p>Hello Foo</p>', 'uuid' => 'Provider1::123'],
-				['id' => '789', 'title' => 'Ga', 'importance' => 1, 'html' => '<p>Hello Ga</p>', 'uuid' => 'Provider2::789'],
+				[
+					'uuid' => 'Provider2::012',
+					'message' => new Message('012', 'Bu', '', null, [], 0, 'ga/bu/zo'),
+					'provider_icon_rel_path' => '',
+				],
+				[
+					'uuid' => 'Provider1::123',
+					'message' => new Message('123', 'foo', '<p>Hello Foo</p>', null, [], 0),
+					'provider_icon_rel_path' => '',
+				],
+				[
+					'uuid' => 'Provider2::789',
+					'message' => new Message('789', 'Ga', '<p>Hello Ga</p>', null, [], 1),
+					'provider_icon_rel_path' => '',
+				],
 			],
-			$aMessages
+			$aProvidersMessagesData
 		);
 	}
-
 
 	public function testAcknowledgeMessage()
 	{

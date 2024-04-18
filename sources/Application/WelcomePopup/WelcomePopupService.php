@@ -21,16 +21,15 @@ use utils;
  */
 class WelcomePopupService
 {
-	/** @var int TODO: What is it for? */
 	private const PROVIDER_KEY_LENGTH = 128;
 
 	/** @var \Combodo\iTop\Application\WelcomePopup\WelcomePopupService|null Singleton instance */
 	protected static ?WelcomePopupService $oSingleton = null;
 
-	/** @var string[]|null Acknowledged messages for the current user */
+	/** @var \Combodo\iTop\Application\WelcomePopup\Message[]|null Acknowledged messages for the current user */
 	protected static $aAcknowledgedMessages = null;
 
-	/** @var iWelcomePopup[]|null "Providers" of welcome popup messages */
+	/** @var \iWelcomePopupExtension[]|null "Providers" of welcome popup messages */
 	protected $aMessagesProviders = null;
 
 	/**
@@ -48,16 +47,18 @@ class WelcomePopupService
 
 	/**
 	 * Helper function for usort to compare two items based on their 'importance' field
-	 * @param string[] $aItem1
-	 * @param string[] $aItem2
+	 *
+	 * @param array $aProviderMessageData1
+	 * @param array $aProviderMessageData2
+	 *
 	 * @return int
 	 */
-	public static function SortOnImportance($aItem1, $aItem2): int
+	public static function SortOnImportance(array $aProviderMessageData1, array $aProviderMessageData2): int
 	{
-		if ($aItem1['importance'] === $aItem2['importance']) {
-			return strcmp($aItem1['id'], $aItem2['id']);
+		if ($aProviderMessageData1['message']->GetImportance() === $aProviderMessageData2['message']->GetImportance()) {
+			return strcmp($aProviderMessageData1['message']->GetID(), $aProviderMessageData2['message']->GetID());
 		}
-		return ($aItem1['importance'] < $aItem2['importance'])  ? -1 : 1;
+		return ($aProviderMessageData1['message']->GetImportance() < $aProviderMessageData2['message']->GetImportance())  ? -1 : 1;
 	}
 
 	/**********************/
@@ -75,8 +76,8 @@ class WelcomePopupService
 	}
 
 	/**
-	 * Get the list of messages to display in the Welcome popup dialog
-	 * @return string[][]
+	 * Get the list of {@see \Combodo\iTop\Application\WelcomePopup\Message} to display in the Welcome popup dialog
+	 * @return \Combodo\iTop\Application\WelcomePopup\Message[]
 	 */
 	public function GetMessages(): array
 	{
@@ -85,8 +86,8 @@ class WelcomePopupService
 	}
 	
 	/**
-	 * Get the messages to display from a list of {@see \iWelcomePopupExtension} instances
-	 * The messages are ordered by importance (CRITICAL first) then by ID
+	 * Get the {@see \Combodo\iTop\Application\WelcomePopup\Message} to display from a list of {@see \iWelcomePopupExtension} instances
+	 * The messages are ordered by importance ({@see \iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL} first) then by ID
 	 * Invalid messages or acknowledged messages are removed from the list
 	 *
 	 * @return array
@@ -94,36 +95,43 @@ class WelcomePopupService
 	protected function ProcessMessages(): array
 	{
 		$this->LoadProviders();
-		$aMessages = [];
+		/** @var array $aAllProvidersMessagesData */
+		$aAllProvidersMessagesData = [];
 		foreach($this->aMessagesProviders as $oProvider) {
 			$aProviderMessages = $oProvider->GetMessages();
 			if (count($aProviderMessages) === 0) {
-				IssueLog::Debug('Empty list of messages for '.get_class($oProvider), LogChannels::CONSOLE);
+				IssueLog::Debug('Empty list of messages for '.$oProvider::class, LogChannels::CONSOLE);
 				continue;
 			}
 
-			foreach($aProviderMessages as $aMessage) {
-				$aReasons = [];
-				if (!$this->IsMessageValid($aMessage, $aReasons)) {
-					IssueLog::Error('Invalid structure returned by '.get_class($oProvider).'::GetMessages()', LogChannels::CONSOLE, $aReasons);
+			$sProviderIconRelPath = $oProvider->GetIconRelPath();
+			foreach($aProviderMessages as $oMessage) {
+				if (false === ($oMessage instanceof Message)) {
+					IssueLog::Error('Invalid message returned by iWelcomePopupExtension::GetMessages(), must be of class ' . Message::class, LogChannels::CONSOLE, [
+						'provider_class' => $oProvider::class,
+						'message' => $oMessage,
+					]);
 					continue; // Fail silently
 				}
-				$sUUID = $this->MakeStringFitIn(get_class($oProvider), static::PROVIDER_KEY_LENGTH).'::'.$aMessage['id'];
-				$aMessage['uuid'] = $sUUID;
-				$aMessages[] = $aMessage;
+
+				$aAllProvidersMessagesData[] = [
+					'uuid' => $this->MakeStringFitIn($oProvider::class, static::PROVIDER_KEY_LENGTH).'::'.$oMessage->GetID(),
+					'message' => $oMessage,
+					'provider_icon_rel_path' => $sProviderIconRelPath,
+				];
 			}
 		}
 		// Filter the acknowledged messages AFTER getting all messages
 		// This allows for "replacing" a message (from another provider for example)
 		// by automatically acknowledging it when called in GetMessages()
-		foreach($aMessages as $key => $aMessage) {
-			if ($this->IsMessageAcknowledged($aMessage['uuid'])) {
-				IssueLog::Debug('Ignoring already acknowledged message '.$aMessage['uuid'], LogChannels::CONSOLE);
-				unset($aMessages[$key]);
+		foreach($aAllProvidersMessagesData as $key => $aProviderMessageData) {
+			if ($this->IsMessageAcknowledged($aProviderMessageData['uuid'])) {
+				IssueLog::Debug('Ignoring already acknowledged message '.$aProviderMessageData['uuid'], LogChannels::CONSOLE);
+				unset($aAllProvidersMessagesData[$key]);
 			}
 		}
-		usort($aMessages,  array(get_class($this), 'SortOnImportance'));
-		return $aMessages;
+		usort($aAllProvidersMessagesData,  [static::class, 'SortOnImportance']);
+		return $aAllProvidersMessagesData;
 	}
 
 	/**
@@ -221,38 +229,11 @@ class WelcomePopupService
 		$this->LoadProviders();
 		$sProviderKey = substr($sMessageUUID, 0, strpos($sMessageUUID, '::'));
 		foreach($this->aMessagesProviders as $oProvider) {
-			if ($this->MakeStringFitIn(get_class($oProvider), static::PROVIDER_KEY_LENGTH) === $sProviderKey) {
+			if ($this->MakeStringFitIn($oProvider::class, static::PROVIDER_KEY_LENGTH) === $sProviderKey) {
 				return $oProvider;
 			}
 		}
 		return null;
-	}
-	
-	/**
-	 * Check if the structure of a given message is valid by checking
-	 * all its mandatory elements
-	 * @param string[] $aMessage
-	 * @param string[] $aReasons
-	 * @return bool
-	 */
-	protected function IsMessageValid($aMessage, array &$aReasons): bool
-	{
-		if (!is_array($aMessage)) {
-			$aReasons[] = 'GetMessage() must return an array of arrays.';
-			return false; // Stop checking immediately
-		}
-		$bRet = true;
-		foreach(['id', 'importance', 'title'] as $sKey) {
-			if (!array_key_exists($sKey, $aMessage)) {
-				$aReasons[] = "Field '$sKey' missing from the message structure.";
-				$bRet = false;
-			}
-		}
-		if (!array_key_exists('html', $aMessage) && !array_key_exists('twig', $aMessage)) {
-			$aReasons[] = "Message structure must contain either a field 'html' or a field 'twig'.";
-			$bRet = false;
-		}
-		return $bRet;
 	}
 	
 	/**
