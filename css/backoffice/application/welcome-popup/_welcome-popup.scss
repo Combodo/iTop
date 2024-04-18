@@ -17,21 +17,19 @@ $ibo-welcome-popup--stack-item--background-color: $ibo-color-white-100 !default;
 $ibo-welcome-popup--stack-item--border-width: 1px !default;
 $ibo-welcome-popup--stack-item--border-style: solid !default;
 $ibo-welcome-popup--stack-item--border-color: $ibo-color-grey-300 !default;
-$ibo-welcome-popup--stack-item--border-color--is-active: $ibo-color-grey-600 !default;
+$ibo-welcome-popup--stack-item--is-active--border-color: $ibo-color-grey-600 !default;
 $ibo-welcome-popup--stack-item--opacity: 1 !default;
-$ibo-welcome-popup--stack-item--opacity--is-acknowledge: 0.6 !default;
+$ibo-welcome-popup--stack-item--is-acknowledged--opacity: 0.6 !default;
 $ibo-welcome-popup--stack-item--sibling-spacing: $ibo-spacing-400 !default;
 
 $ibo-welcome-popup--stack-item-icon--size: $ibo-size-350 !default;
 $ibo-welcome-popup--stack-item-icon--margin-right: $ibo-spacing-400 !default;
 $ibo-welcome-popup--stack-item-icon--border-size: 1px !default;
 
-$ibo-welcome-popup--message-content-wrapper--max-height: 80vh !default;
-
 $ibo-welcome-popup--message-content--padding-x: $ibo-spacing-800 !default;
 $ibo-welcome-popup--message-content--padding-y: $ibo-spacing-700 !default;
 
-$ibo-welcome-popup--message-illustration--min-width: 230px !default;
+$ibo-welcome-popup--message-illustration--min-width: $ibo-size-650 !default;
 $ibo-welcome-popup--message-illustration--background-size: contain !default;
 $ibo-welcome-popup--message-illustration--spacing: $ibo-spacing-800 !default;
 
@@ -68,10 +66,10 @@ $ibo-welcome-popup--message-title--margin-bottom: $ibo-spacing-700 !default;
   @extend %ibo-border-radius-400;
 
   &.ibo-is-active {
-    border-color: $ibo-welcome-popup--stack-item--border-color--is-active;
+    border-color: $ibo-welcome-popup--stack-item--is-active--border-color;
   }
   &.ibo-is-acknowledged {
-    opacity: $ibo-welcome-popup--stack-item--opacity--is-acknowledge;
+    opacity: $ibo-welcome-popup--stack-item--is-acknowledged--opacity;
 
     &.ibo-is-active {
       opacity: $ibo-welcome-popup--stack-item--opacity;
@@ -96,7 +94,7 @@ $ibo-welcome-popup--message-title--margin-bottom: $ibo-spacing-700 !default;
 }
 
 .ibo-welcome-popup--message-content-wrapper {
-  max-height: $ibo-welcome-popup--message-content-wrapper--max-height;
+  overflow: auto;
 }
 
 .ibo-welcome-popup--message-content {
