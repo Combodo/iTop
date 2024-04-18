@@ -389,40 +389,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'BooleanLabel:no' => 'no~~',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
 	'UI:WelcomeMenu:Title' => 'Vitajte v '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' je kompletne voľne šíriteľný operačný IT program.</p>
-	
-<ul>Zahŕňa:
-<li>Kompletnú CMDB (Konfiguračná databáza manažmentu) pre zdokumentovanie a manažovanie IT inventáru.</li>
-<li>Modul manažmentu incidentov pre sledovanie a komunikovanie o všetkých problémoch vyskytujúcich sa v IT.</li>
-<li>Modul manažmentu zmien pre plánovanie a sledovanie zmien v IT prostredí.</li>
-<li>Databáza známych chýb pre urýchlenie riešenia incidentov.</li>
-<li>Modul výpadkov pre zdokumentovanie všetkých plánovaných výpadkov a oboznámenie vhodných kontaktov o výpadkoch.</li>
-<li>Dashboard panel pre rýchle získanie prehľadu o Vašom IT.</li>
-</ul>
-<p>Všetky moduly môžu byť nastavené, krok po kroku, nezávisle jeden od druhého.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' orientovaný na poskytovateľa služieb, dovoľuje IT technikom ľahko manažovať viacerých zákazníkov alebo organizácií.
-<ul>iTop, dodáva súbor biznis procesov bohatých na služby, ktoré:
-<li>Zdokonalujú efektivitu IT manažmentu</li> 
-<li>Poháňa výkon IT operácií</li> 
-<li>Zlepšuje spokojnosť zákazníka a poskytuje vedúcim osobám náhľad do výkonu biznisu.</li>
-</ul>
-</p>
-<p>iTop je kompletne otvorený myšlienke byť integrovaný vo Vašej súčasnej infraštruktúre IT manažmentu.</p>
-<p>
-<ul>Adoptovanie tejto novej generácie IT operačného portálu Vám pomôže:
-<li>Lepšie manažovať viac a viac zložitejšie IT prostredie.</li>
-<li>Implementovať ITIL procesy Vaším vlastným tempom.</li>
-<li>Manažovať najdôležitejšie aktíva Vášho IT: Dokumentáciu.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>This version features a brand new modern and accessible backoffice design.</div>
-
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
-
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Otvoriť žiadosť: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Moje žiadosti',
 	'UI:WelcomeMenu:OpenIncidents' => 'Otvoriť incidenty: %1$d',

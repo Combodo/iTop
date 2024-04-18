@@ -389,39 +389,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'BooleanLabel:no' => 'いいえ',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
 	'UI:WelcomeMenu:Title' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.'は、オープンソースの、完結したIT運用ポータルです。</p>
-<ul>以下を含みます。
-<li>ITインベントリを文書化し、管理するための完全なCMDB(構成管理データベース)。</li>
-<li>IT環境で発生する出来事を追跡、共有するためのインシデント管理モジュール。</li>
-<li>IT環境への変更を計画、追跡するための変更管理モジュール。</li>
-<li>インシデントの解決をスピードアップするための既知のエラーデータベース。</li>
-<li>すべての計画停止を文書化し、適切な連絡先を通知するために停止モジュール。</li>
-<li>ITの概観を素早く得るためのダッシュボード。</li>
-</ul>
-<p>すべてのモジュールはお互いに独立しており、別個にセットアップが可能です。</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.'はサービスプロバイダ志向であり、ITエンジニアが複数の顧客や組織を簡単に管理できるようになります。
-<ul>iTopは、機能豊富な下記のビジネスプロセスのセットを提供します。
-<li>IT管理の実効性の強化。</li>
-<li>IT運用効率化の推進。</li>
-<li>顧客満足度の改善と、業績への洞察を経営経営幹部へ提供。</li>
-</ul>
-</p>
-<p>iTopは完全にオープンなので、あなたが今使っているIT管理インフラとの統合が可能です。</p>
-<p>
-<ul>この新世代IT運用ポータルの採用は、下記のお手伝いをします。
-<li>ますます複雑になるIT環境のより良い管理。</li>
-<li>あなたのペースでのITILプロセス実装。</li>
-<li>ITの中でもっとも重要な財産である「文書化」の管理。</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>This version features a brand new modern and accessible backoffice design.</div>
-
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
-
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => '要求を開く: %1$d',
 	'UI:WelcomeMenu:MyCalls' => '担当中の要求',
 	'UI:WelcomeMenu:OpenIncidents' => 'インシデントを開く: %1$d',

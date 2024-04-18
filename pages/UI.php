@@ -23,7 +23,9 @@ use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
+use Combodo\iTop\Controller\WelcomePopupController;
 use Combodo\iTop\Service\Router\Router;
+use Combodo\iTop\Application\WelcomePopup\WelcomePopupService;
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -33,19 +35,19 @@ use Combodo\iTop\Service\Router\Router;
  *
  * @return void
  */
-function DisplayWelcomePopup(WebPage $oP)
+function DisplayWelcomePopup(WebPage $oP): void
 {
-	if (!Session::IsSet('welcome'))
-	{
-		// Check, only once per session, if the popup should be displayed...
-		// If the user did not already ask for hiding it forever
-		$bPopup = appUserPreferences::GetPref('welcome_popup', true);
-		if ($bPopup)
-		{
-			TwigHelper::RenderIntoPage($oP, APPROOT.'/', 'templates/pages/backoffice/welcome_popup/welcome_popup');
-			Session::Set('welcome', 'ok');
+	if (!Session::IsSet("welcome")) {
+		$oWelcomePopupService = WelcomePopupService::GetInstance();
+		$aProvidersMessagesData = $oWelcomePopupService->GetMessages();
+		if (count($aProvidersMessagesData) > 0) {
+			TwigHelper::RenderIntoPage($oP, APPROOT."/", "templates/application/welcome_popup/layout", [
+				"aProvidersMessagesData" => $aProvidersMessagesData,
+				"sEndpointAbsURIForAcknowledgeMessage" => Router::GetInstance()->GenerateUrl(WelcomePopupController::ROUTE_NAMESPACE . ".acknowledge_message"),
+			]);
 		}
-	}	
+		Session::Set("welcome", "ok"); // Try just once per session
+	}
 }
 
 /**

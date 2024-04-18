@@ -390,39 +390,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'BooleanLabel:no' => 'Nem',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' bejelentkezés',
 	'UI:WelcomeMenu:Title' => 'Üdvözli az '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' egy teljeskörű, OpenSource, IT üzemeltetés támogató portál.</p>
-<ul>A következőket tartalmazza:
-<li>Teljeskörű CMDB (Konfigurációkezelés adatbázis) az IT eszközök dokumentálására és verzió kezelésére.</li>
-<li>Incidenskezelés modul az összes IT-hez kapcsolódó kérelem életciklusának követésére.</li>
-<li>Változáskezelés modul az IT infrastruktúra változásainak nyomonkövetésére és tervezésére.</li>
-<li>Ismert hibák adatbázisa az incidens kezelés sebességének növelésére.</li>
-<li>Üzemszünet modul az összes tervezett leállás tervezésére és azzal kapcsolatos kommunikáció támogatására.</li>
-<li>Műszerfalak az IT infrastruktúra pillanatnyi állapotának gyors áttekintésére.</li>
-</ul>
-<p>Mindegyik modul önállóan telepíthető és használható.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' egy szolgáltatás orientált megoldás, amely segít az IT szakembereknek több ügyfél és szervezet egyidejű menedzselését.
-<ul>az iTop az üzleti folyamatok javításához egy hatékony eszköz, mert:
-<li>javítja az IT menedzsment hatékonyságát</li> 
-<li>növeli IT üzemeltetés teljesítményét</li> 
-<li>növeli az ügyfél elégedettséget és a vezetők számára lehetőséget ad az üzleti teljesítmény növelésére</li>
-</ul>
-</p>
-<p>Az iTop teljesn nyílt ezért, egyszerűen integrálható a jelenlegi IT infrastruktúrába</p>
-<p>
-<ul>Az üzemeltetési portál bevezetésével:
-<li>jobban menedzselhető az egyre komplexebb IT infrastruktúra</li>
-<li>az ITIL folyamatok bevezetésre kerülnek</li>
-<li>hatékonyan tudja kezelni az egyik legfontosabb IT eszközt, a dokumentációt.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Gratulálunk, megérkezett a '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.' oldalára!</div>
-
-<div>Ez a verzió egy vadonatúj, modern és könnyen hozzáférhető backoffice dizájnnal rendelkezik..</div>
-
-<div>Megtartottuk az '.ITOP_APPLICATION.' alapvető funkcióit és modernizáltuk őket, hogy megszerettessük önnel.
-Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élveztük a megtervezését és létrehozását.</div>
-
-<div>Szabja testre az '.ITOP_APPLICATION.' beállításait a kényelmesebb használathoz.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Nyitott kérelmek: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Saját kérelmek',
 	'UI:WelcomeMenu:OpenIncidents' => 'Nyitott incidensek: %1$d',

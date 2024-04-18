@@ -2297,3 +2297,75 @@ interface iBackupExtraFilesExtension
 	 */
 	public function GetExtraFilesRelPaths(): array;
 }
+
+
+/**
+ * Interface to provide messages to be displayed in the "Welcome Popup"
+ *
+ * @api
+ * @since 3.2.0
+ */
+interface iWelcomePopupExtension
+{
+	// Importance for ordering messages
+	// Just two levels since less important messages have nothing to do in the welcome popup
+	public const ENUM_IMPORTANCE_CRITICAL = 0;
+	public const ENUM_IMPORTANCE_HIGH = 1;
+	public const DEFAULT_IMPORTANCE = self::ENUM_IMPORTANCE_HIGH;
+
+	/**
+	 * Overload this method if you need to display an icon representing the provider (eg. your own company logo, module icon, ...)
+	 *
+	 * @api
+	 * @return string Relative path (from app. root) of the icon representing the provider
+	 */
+	public function GetIconRelPath(): string;
+
+	/**
+	 * @api
+	 * @return \Combodo\iTop\Application\WelcomePopup\Message[]
+	 */
+	public function GetMessages(): array;
+
+	/**
+	 * Overload this method if the provider needs to do some additional processing after the message ($sMessageId) has been acknowledged by the current user
+	 *
+	 * @param string $sMessageId
+	 * @api
+	 */
+	public function AcknowledgeMessage(string $sMessageId): void;
+}
+
+/**
+ * Inherit from this class to provide messages to be displayed in the "Welcome Popup"
+ *
+ * @api
+ * @since 3.2.0
+ */
+abstract class AbstractWelcomePopupExtension implements iWelcomePopupExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function GetIconRelPath(): string
+	{
+		return \Combodo\iTop\Application\Branding::$aLogoPaths[\Combodo\iTop\Application\Branding::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT]['default'];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetMessages(): array
+	{
+		return [];
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function AcknowledgeMessage(string $sMessageId): void
+	{
+		// No need to process the acknowledgment notice by default
+		return;
+	}
+}

@@ -400,39 +400,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'BooleanLabel:no' => 'ne',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
 	'UI:WelcomeMenu:Title' => 'Vítejte v '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' je komplexní „opensource” provozní IT portál.</p>
-<ul>Obsahuje:
-<li>Kompletní CMDB (databázi pro správu konfigurací) sloužící pro dokumentování a správu evidovaného IT.</li>
-<li>Modul pro řízení rizik umožňující sledovat veškeré problémy, které se vyskytly v souvislosti s provozem IT.</li>
-<li>Modul pro řízení změn, který slouží k plánování a sledování změn v IT prostředí.</li>
-<li>Databázi známých chyb, díky které lze urychlit řešení incidentů.</li>
-<li>Modul pro správu výpadků umožňující nejen dokumentovat plánované výpadky, ale také informovat příslušné adresáty.</li>
-<li>Úvodní obrazovku poskytující rychlý a aktuální přehled o Vašem IT.</li>
-</ul>
-<p>Každý modul může být nastaven "krok za krokem" nezávisle na ostatních modulech.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' je servisně orientovaný produkt, který umožňuje správcům IT velmi jednoduše spravovat více zákazníků nebo organizací.
-<ul>iTop přináší mnoho dalších výhod umožňujících "optimální" nastavení podnikových procesů které:
-<li>Zvyšují účinnost řízení IT.</li>
-<li>Efektivně řídí operace prováděné nad IT infrastrukturou.</li>
-<li>Zvyšují spokojenost zákazníků a poskytují vedoucím pracovníkům ucelený pohled na výkonnost organizace.</li>
-</ul>
-</p>
-<p>iTop je zcela otevřený a umožňuje bezproblémovou integraci s Vaším současným IT systémem pro správu infrastruktury.</p>
-<p>
-<ul>Zavedení nové generace provozního IT portálu Vám pomůže:
-<li>Lépe řídit stále více a více komplexní IT prostředí.</li>
-<li>Implementovat ITIL procesy svým vlastním tempem.</li>
-<li>Spravovat Vaše nejdůležitější IT aktivum - Dokumentaci.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>This version features a brand new modern and accessible backoffice design.</div>
-
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
-
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Otevřené požadavky: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mé požadavky',
 	'UI:WelcomeMenu:OpenIncidents' => 'Otevřené incidenty: %1$d',
