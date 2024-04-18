@@ -13,7 +13,7 @@ use Combodo\iTop\Application\WelcomePopup\MessageFactory;
 
 /**
  * Implementation of the "default" Welcome Popup message
- * @since 3.1.0
+ * @since 3.2.0
  */
 class DefaultProvider extends AbstractWelcomePopupExtension
 {
