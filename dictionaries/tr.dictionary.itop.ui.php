@@ -400,39 +400,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'BooleanLabel:no' => 'hayır',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
 	'UI:WelcomeMenu:Title' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
-	'UI:WelcomeMenu:LeftBlock' => '<p>iTop açık kaynak Bilişim İşlem Potalıdır.</p>
-<ul>Kapsamı:
-<li>Bilişim altyapısının tanımlandığı ve dokümante edildiği Konfigürasyon Yönetimi CMDB (Configuration management database)modülü.</li>
-<li>Bilişim altyapısı ile ilgili tüm olayların takibi.</li>
-<li>Bilişim altyapısının değişim yönetimi.</li>
-<li>Bilinen hatalar bilgi kütüphanesi.</li>
-<li>Planlı kesintilerin kayıt altına alınması ve ilgililerin uyarılması.</li>
-<li>Özet gösterge ekranları</li>
-</ul>
-<p>Tüm modüller bağımsız olarak, adım adım kurulabilir.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>iTop servis sağlayıcı maktığı ile hazırlanmış olup, birden fazla müşteri ve kuruma kolaylıkla hizmet vermeye imkan sağlar.
-<ul>iTop, zengin iş süreçleri tanımlama imkanıyla:
-<li>Bilişim yönetim etkinliğini</li>
-<li>Operasyon performansını</li>
-<li>Müşteri memnuniyetini ve yönetimin iş performansı hakkında bilgi sahibi olmasını sağlar.</li>
-</ul>
-</p>
-<p>iTop mevcut Bilşim altyapınızla entegre edilmeye açıktır.</p>
-<p>
-<ul>Yeni nesil operasyonel Bilişim portalı :
-<li>Bilişim ortamının daha iyi yönetilmesini.</li>
-<li>ITIL süreçlerinin kendi başınıza uygulanmaya.</li>
-<li>İşletmenin en önemli kaynağı olan dokümantasyonu yönetmesine imkan sağlar.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>This version features a brand new modern and accessible backoffice design.</div>
-
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
-
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Açık istekler: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'İsteklerim',
 	'UI:WelcomeMenu:OpenIncidents' => 'Açık Arızalar: %1$d',

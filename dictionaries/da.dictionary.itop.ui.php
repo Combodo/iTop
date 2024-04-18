@@ -389,39 +389,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'BooleanLabel:no' => 'no~~',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
 	'UI:WelcomeMenu:Title' => 'Velkommen til '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' er en komplet, OpenSource, webbaseret IT-Service-Management-Værktøj.</p>
-<ul>Den inkluderer:
-<li>En komplet CMDB (Configuration management database) til at dokumentere og styre IT-portfolioen.</li>
-<li>Et Incident management modul til brug for sporing og kommunikation omkring alle spørgsmål vedrørende IT.</li>
-<li>Et change management modul til planlægning og sporing af ændringer i IT miljøet.</li>
-<li>En "known error database" til brug for at mindske tiden for løsning af hændelser.</li>
-<li>Et outage modul til dokumentation for planlagt nedetid og advisering af relevante kontakter.</li>
-<li>Dashboards for hurtigt overblik over IT.</li>
-</ul>
-<p>Alle moduler kan installeres, step by step, uafhængigt af hinanden.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' er service udbyder orienteret, det tillader let IT teknikere at administrere flere kunder eller organisationer.
-<ul>iTop, leverer et feature-rich sæt af forretnings processer som:
-<li>Forøger IT administrationens effektivitet</li> 
-<li>Drives IT operations performance</li> 
-<li>Improves customer satisfaction and provides executives with insights into business performance.</li>
-</ul>
-</p>
-<p>'.ITOP_APPLICATION_SHORT.' is completely open to be integrated within your current IT Management infrastructure.</p>
-<p>
-<ul>Adopting this new generation of IT Operational portal will help you to:
-<li>Better manage a more and more complex IT environment.</li>
-<li>Implement ITIL processes at your own pace.</li>
-<li>Manage the most important asset of your IT: Documentation.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>This version features a brand new modern and accessible backoffice design.</div>
-
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
-
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Åbne anmodninger: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mine brugerhenvendelser',
 	'UI:WelcomeMenu:OpenIncidents' => 'Åbne Incidents: %1$d',

@@ -401,39 +401,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'BooleanLabel:no' => 'No',
 	'UI:Login:Title' => 'Inicio de Sesión',
 	'UI:WelcomeMenu:Title' => 'Bienvenido a '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' es un completo portal de administración de servicios de TI basado en código abierto.</p>
-<p>Incluye:</p>
-<ul><li>Una CMDB completa (Base de datos de Configuraciones) para documentar y manejar el inventario de TI.</li>
-<li>Un módulo de Administración de Incidentes, para llevar el seguimiento y comunicar los eventos que están afectando a los servicios TI.</li>
-<li>Un módulo de Administración de Cambios para planear y llevar el seguimiento de cambios hechos al ambiente de TI.</li>
-<li>Una base de Conocimiento para acelerar la correción de Incidentes.</li>
-<li>Un módulo de Cortes/Caídas para documentar todas las caídas planeadas o no y notificar a los contactos del caso.</li>
-<li>Tableros de Control para rápidamente tener visión general del ambiente de TI.</li>
-</ul>
-<p>Todos los módulos pueden ser configurados, paso a paso, individual e independientemente de los otros.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' está orientado a los proveedores de servicios, le permite al personal de TI administrar fácilmente múltiples Organizaciones.
-<p>'.ITOP_APPLICATION_SHORT.', provee un conjunto de funciones de procesos de negocio que: </p>
-<ul><li>Mejora la efectividad de la adminitración de TI</li> 
-<li>Dirige el desempeño de la operaciones de TI</li> 
-<li>Incrementa la satisfacción del cliente y provee a los ejecutivos con detalles del desempeño del negocio.</li>
-</ul>
-</p>
-<p>'.ITOP_APPLICATION_SHORT.' es completamente abierto para ser integrado con su actual infraestructura de administración de TI.</p>
-<p>
-<p>Adoptar esta nueva generación de portales de operaciones de TI le ayudará a:</p>
-<ul><li>Mejorar la administración de entornos de TI más y más complejos.</li>
-<li>Implementar los procesos de ITIL a su propio ritmo.</li>
-<li>Administrar el bien más importante de su infraestructura de TI: La Documentación.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Felicidades, se encuentra en '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>Esta versión cuenta con un moderno diseño accesible y receptivo.</div>
-
-<div>Mantuvimos en '.ITOP_APPLICATION.' las funciones básicas que le gustan y se modernizaron.
-Esperamos distrute de esta versión tanto como nosotros la imaginamos y creamos.</div>
-
-<div>Configure las preferencias de '.ITOP_APPLICATION.' para una experiencia personalizada.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Requerimientos Abiertos: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mis Requerimientos',
 	'UI:WelcomeMenu:OpenIncidents' => 'Incidentes Abiertos: %1$d',

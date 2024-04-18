@@ -2326,6 +2326,7 @@ JS
 					// b) or override some of the configuration settings, using the second parameter of ckeditor()
 					$aConfig = CKEditorHelper::GetCkeditorPref();
 					$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
+					$aConfig['detectChanges'] = ['initialValue' => $sOriginalValue];
 
 					// - Final config
 					$sConfigJS = json_encode($aConfig);

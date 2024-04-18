@@ -1,0 +1,93 @@
+const oWelcomePopupDialogElem = $('#ibo-welcome-popup--dialog');
+
+// Dialog is hidden by default to avoid a flash of unstyled content
+oWelcomePopupDialogElem.removeClass('ibo-is-hidden');
+
+// Prepare dialog
+oWelcomePopupDialogElem.dialog({
+	modal: true,
+	width: '70%',
+    maxHeight: $(window).innerHeight() * 0.8,
+	autoOpen: true,
+	title: oWelcomePopupDialogElem.attr('data-title'),
+    open: function () {
+        // Focus on acknowledge button
+        oWelcomePopupDialogElem.closest('[role="dialog"]').find('.ui-dialog-buttonset .ibo-is-primary:first').trigger('focus');
+    },
+	close: function() {
+        oWelcomePopupDialogElem.remove();
+    },
+    buttons: [
+        {
+            text: "Remind me later",
+            class: 'ibo-is-alternative',
+            click: function() {
+                oWelcomePopupDialogElem.dialog( "close" );
+            }
+        },
+        {
+            text: "Got it",
+            class: 'ibo-is-regular ibo-is-primary',
+            click: function() {
+                oWelcomePopupDialogElem.trigger('acknowledge_message.itop.welcome_popup');
+            }
+        }
+    ]
+ });
+
+// Bind events
+oWelcomePopupDialogElem
+        // - On stack item click, display active message
+        .on('click', '[data-role="ibo-welcome-popup--stack-item"]', function () {
+            const sUUID = $(this).attr('data-uuid');
+            const sUUIDEscapedForSelector = sUUID.replace(/\\/g, '\\\\');
+
+            // Display active stack item
+            oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"]').removeClass('ibo-is-active');
+            oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"][data-uuid="' + sUUIDEscapedForSelector + '"]').addClass('ibo-is-active');
+
+            // Display active content
+            oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--message-content"]').removeClass('ibo-is-active');
+            oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--message-content"][data-uuid="' + sUUIDEscapedForSelector + '"]').addClass('ibo-is-active');
+        })
+        .on('acknowledge_message.itop.welcome_popup', function (oEvent, oData) {
+            const sUUID = oData?.uuid ?? oWelcomePopupDialogElem.find('.ibo-is-active[data-role="ibo-welcome-popup--message-content"]').attr('data-uuid');
+            const sUUIDEscapedForSelector = sUUID.replace(/\\/g, '\\\\');
+
+            // Acknowledge message on server
+            $.post(
+                '{{ sEndpointAbsURIForAcknowledgeMessage }}',
+                {
+                    message_uuid: sUUID
+                },
+                'json'
+            )
+            .done(function(oResponse) {
+                if (oResponse.success) {
+                    // Mark message as acknowledged
+                    oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"][data-uuid="' + sUUIDEscapedForSelector + '"]').addClass('ibo-is-acknowledged');
+
+                    // Display next message if any
+                    const oNextStackItemelem = oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"]:not(.ibo-is-acknowledged):first');
+                    if (oNextStackItemelem.length > 0) {
+                        oNextStackItemelem.trigger('click');
+                    } else {
+                        // Close dialog
+                        oWelcomePopupDialogElem.dialog('close');
+                    }
+                } else {
+                    // Display error message
+                    CombodoModal.OpenErrorModal(oResponse.error_message);
+                }
+            })
+            .fail(function(oXHR, sTextStatus, sErrorThrown) {
+                // Display error message
+                CombodoModal.OpenErrorModal(sErrorThrown);
+            });
+        });
+
+// - Close the dialog when clicking outside of it
+$('.ui-widget-overlay').on('click', function() { oWelcomePopupDialogElem.dialog('close'); } );
+
+
+

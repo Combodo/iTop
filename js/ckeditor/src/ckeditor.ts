@@ -57,6 +57,7 @@ import MentionsMarkup from "./plugins/mentions-markup/mentions-markup.plugin";
 import TriggerUpdateOnReady from "./plugins/trigger_update_on_ready/trigger_update_on_ready.plugin";
 import Maximize from './plugins/maximize/maximize.plugin';
 import ObjectShortcut from './plugins/object-shortcut/object-shortcut.plugin';
+import DetectChanges from "./plugins/detect-change/detect-change.plugin";
 
 // You can read more about extending the build with additional plugins in the "Installing plugins" guide.
 // See https://ckeditor.com/docs/ckeditor5/latest/installation/plugins/installing-plugins.html for details.
@@ -116,7 +117,8 @@ class Editor extends ClassicEditor {
         TriggerUpdateOnReady,
         Maximize,
         ObjectShortcut,
-        InsertHtml
+        InsertHtml,
+        DetectChanges
 	];
 
     // default configuration editor

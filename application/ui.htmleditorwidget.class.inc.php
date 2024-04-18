@@ -87,7 +87,7 @@ class UIHTMLEditorWidget
 		if ($sHeightSpec != '') {
 			$aConfig['height'] = $sHeightSpec;
 		}
-		// TODO 3.2.0 Add the configuration for the editor
+		$aConfig['detectChanges'] = ['initialValue' => $sValue];
 		$sConfigJS = json_encode($aConfig);
 
 		WebResourcesHelper::EnableCKEditorToWebPage($oPage);
