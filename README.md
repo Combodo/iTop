@@ -1,4 +1,4 @@
-![image](https://github.com/Combodo/iTop/assets/5130468/cfc7c8f7-beca-4e9d-bde3-4ebf81a8b74c)<p align="center"><a href="https://www.combodo.com/itop-193" target="_blank">
+<p align="center"><a href="https://www.combodo.com/itop-193" target="_blank">
     <img src="https://www.combodo.com/logos/logo-itop-baseline.svg" width=350>
 </a></p>
 
