@@ -61,9 +61,9 @@ abstract class FormManager
 
 		$sFormRendererClass = $aJson['formrenderer_class'];
         // N°7455 - Ensure form renderer class extends FormRenderer
-        if (false === is_a($sFormRendererClass, self::class, true))
+        if (false === is_a($sFormRendererClass, FormRenderer::class, true))
         {
-            throw new CoreException('Form renderer class must extend '.self::class);
+            throw new CoreException('Form renderer class must extend '.FormRenderer::class);
         }
 
 		/** @var \Combodo\iTop\Renderer\FormRenderer $oFormRenderer */
