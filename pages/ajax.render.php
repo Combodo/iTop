@@ -1107,18 +1107,15 @@ EOF
 					if ($oDashlet->IsRedrawNeeded()) {
 						$oBlock = $oDashlet->DoRender($oPage, true, false, $aExtraParams);
 						$sHtml = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
-						$sHtml = str_replace("\n", '', $sHtml);
-						$sHtml = str_replace("\r", '', $sHtml);
-						$sHtml = str_replace("'", "\'", $sHtml);
-						$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml');");
+						$sHtml= json_encode($sHtml);
+						$oPage->add_script("$('#dashlet_$sDashletId').html({$sHtml});");
 					}
 					if ($oDashlet->IsFormRedrawNeeded()) {
 						$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
 						$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
 						$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true, '.itop-dashboard'));
-						$sHtml = str_replace("\n", '', $sHtml);
-						$sHtml = str_replace("\r", '', $sHtml);
-						$oPage->add_script("$('#dashlet_properties_$sDashletId').html('$sHtml')");
+						$sHtml= json_encode($sHtml);
+						$oPage->add_script("$('#dashlet_$sDashletId').html({$sHtml});");
 					}
 				}
 				break;
