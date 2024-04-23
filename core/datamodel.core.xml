@@ -444,6 +444,25 @@
           </item>
         </items>
         </summary>
+        <list>
+          <items>
+            <item id="date">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="message">
+              <rank>30</rank>
+            </item>
+            <item id="read">
+              <rank>40</rank>
+            </item>
+            <item id="read_date">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
       </presentation>
       <methods/>
     </class>
