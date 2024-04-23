@@ -280,6 +280,7 @@ try
 	require_once ('hubconnectorpage.class.inc.php');
 	
 	require_once (APPROOT.'/application/startup.inc.php');
+    require_once('TokenValidation.php');
 	
 	$sTargetRoute = utils::ReadParam('target', ''); // ||browse_extensions|deploy_extensions|
 	
@@ -299,11 +300,20 @@ try
 		case 'inform_after_setup':
 		// Hidden IFRAME at the end of the setup
 		require_once (APPROOT.'/application/ajaxwebpage.class.inc.php');
-		$oPage = new NiceWebPage('');
-		$aDataToPost = MakeDataToPost($sTargetRoute);
-		$oPage->add('<form id="hub_launch_form" action="'.$sHubUrlStateless.'" method="post">');
-		$oPage->add('<input type="hidden" name="json" value="'.htmlentities(json_encode($aDataToPost), ENT_QUOTES, 'UTF-8').'">');
-		$oPage->add_ready_script('$("#hub_launch_form").submit();');
+
+            $sParamToken = utils::ReadParam('setup_token');
+            $oTokenValidation = new TokenValidation();
+            $bIsTokenValid = $oTokenValidation->isSetupTokenValid($sParamToken);
+            if (UserRights::IsAdministrator() || $bIsTokenValid) {
+                $oPage = new NiceWebPage('');
+                $aDataToPost = MakeDataToPost($sTargetRoute);
+                $oPage->add('<form id="hub_launch_form" action="' . $sHubUrlStateless . '" method="post">');
+                $oPage->add('<input type="hidden" name="json" value="' . htmlentities(json_encode($aDataToPost), ENT_QUOTES, 'UTF-8') . '">');
+                $oPage->add_ready_script('$("#hub_launch_form").submit();');
+            } else {
+                IssueLog::Error('TokenValidation failed on inform_after_setup page');
+                throw new Exception("Not allowed");
+            }
 		break;
 		
 		default:

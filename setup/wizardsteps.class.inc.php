@@ -2607,6 +2607,11 @@ class WizStepDone extends WizardStep
 		$oProductionEnv->InitDataModel($oConfig, true);
 		$sIframeUrl = $oConfig->GetModuleSetting('itop-hub-connector', 'setup_url', '');
 
+        $sSetupTokenFile = APPROOT.'data/.setup';
+        $sSetupToken = bin2hex(random_bytes(12));
+        file_put_contents($sSetupTokenFile, $sSetupToken);
+        $sIframeUrl.= "&setup_token=$sSetupToken";
+
 		if ($sIframeUrl != '')
 		{
 			$oPage->add('<iframe id="fresh_content" style="border:0; width:100%; display:none;" src="'.$sIframeUrl.'"></iframe>');
