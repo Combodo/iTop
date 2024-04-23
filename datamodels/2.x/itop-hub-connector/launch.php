@@ -257,13 +257,15 @@ function MakeDataToPost($sTargetRoute)
 	return $aDataToPost;
 }
 
-try {
-	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
-	require_once(APPROOT.'/setup/extensionsmap.class.inc.php');
-	require_once('hubconnectorpage.class.inc.php');
-
-	require_once(APPROOT.'/application/startup.inc.php');
+try
+{
+	require_once (APPROOT.'/application/application.inc.php');
+	require_once (APPROOT.'/application/itopwebpage.class.inc.php');
+	require_once (APPROOT.'/setup/extensionsmap.class.inc.php');
+	require_once ('hubconnectorpage.class.inc.php');
+	
+	require_once (APPROOT.'/application/startup.inc.php');
+    require_once('TokenValidation.php');
 
 	$sTargetRoute = utils::ReadParam('target', ''); // ||browse_extensions|deploy_extensions|
 
@@ -279,15 +281,24 @@ try {
 
 	switch ($sTargetRoute) {
 		case 'inform_after_setup':
-			// Hidden IFRAME at the end of the setup
-			require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
-			$oPage = new NiceWebPage('');
-			$aDataToPost = MakeDataToPost($sTargetRoute);
-			$oPage->add('<form id="hub_launch_form" action="'.$sHubUrlStateless.'" method="post">');
-			$oPage->add('<input type="hidden" name="json" value="'.htmlentities(json_encode($aDataToPost), ENT_QUOTES, 'UTF-8').'">');
-			$oPage->add_ready_script('$("#hub_launch_form").submit();');
-			break;
+		// Hidden IFRAME at the end of the setup
+		require_once (APPROOT.'/application/ajaxwebpage.class.inc.php');
 
+        $sParamToken = utils::ReadParam('setup_token');
+        $oTokenValidation = new TokenValidation();
+        $bIsTokenValid = $oTokenValidation->isSetupTokenValid($sParamToken);
+        if (UserRights::IsAdministrator() || $bIsTokenValid) {
+            $oPage = new NiceWebPage('');
+            $aDataToPost = MakeDataToPost($sTargetRoute);
+            $oPage->add('<form id="hub_launch_form" action="' . $sHubUrlStateless . '" method="post">');
+            $oPage->add('<input type="hidden" name="json" value="' . htmlentities(json_encode($aDataToPost), ENT_QUOTES, 'UTF-8') . '">');
+            $oPage->add_ready_script('$("#hub_launch_form").submit();');
+        } else {
+            IssueLog::Error('TokenValidation failed on inform_after_setup page');
+            throw new Exception("Not allowed");
+        }
+		break;
+		
 		default:
 			// All other cases, special "Hub like" web page
 			if ($sTargetRoute == 'view_dashboard') {
