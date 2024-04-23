@@ -108,6 +108,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="finalclass"/>
+            <attribute id="description"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-notification.svg</icon>
