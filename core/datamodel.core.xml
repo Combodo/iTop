@@ -337,6 +337,11 @@
             <attribute id="title"/>
           </attributes>
         </naming>
+        <order>
+          <columns>
+            <column id="date" ascending="false" />
+          </columns>
+        </order>
       </properties>
       <fields>
         <field id="title" xsi:type="AttributeString">
