@@ -292,6 +292,7 @@ class ExampleFor_iQueryModifier implements \iQueryModifier
 	public function GetFieldExpression(QueryBuilderContext &$oBuild, $sClass, $sAttCode, $sColId, Expression $oFieldSQLExp, SQLQuery &$oSelect)
 	{
 	  // Do nothing, we just need the class to exists for the unit test
+	  return $oFieldSQLExp;
 	}
 }
       ]]></content>
