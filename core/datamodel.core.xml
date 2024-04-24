@@ -463,6 +463,22 @@
             </item>
           </items>
         </list>
+        <default_search>
+          <items>
+            <item id="action_id">
+              <rank>10</rank>
+            </item>
+            <item id="trigger_id">
+              <rank>20</rank>
+            </item>
+            <item id="date">
+              <rank>30</rank>
+            </item>
+            <item id="contact_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
       </presentation>
       <methods/>
     </class>
