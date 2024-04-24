@@ -1022,11 +1022,12 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 <ol>
 	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
 	Specjalna strona: <a href="../setup/email.test.php" target="_blank">email.test.php</a> jest dostępna do testowania i rozwiązywania problemów z konfiguracją poczty PHP.</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
 </ol>
 </p>
 <p>Aby zostały wykonane, działania muszą być powiązane z wyzwalaczami.
-W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porządkowy", określający, w jakiej kolejności mają być wykonywane.</p>',
+W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porządkowy", określający, w jakiej kolejności mają być wykonywane.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Wyzwalacze',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Dostępne wyzwalacze',
 	'UI:NotificationsMenu:OnCreate' => 'Kiedy obiekt jest tworzony',

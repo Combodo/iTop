@@ -1022,11 +1022,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 <ol>
 	<li>Envio de uma mensagem de e-mail: Tais ações também definem o modelo a ser usado para enviar o e-mail, bem como os demais parâmetros da mensagem, como destinatário(s), prioridade, etc.<br />
 	Uma página especial: <a href="../setup/email.test.php" target="_blank">email.test.php</a> está disponível para testar e solucionar problemas de configuração de e-mail PHP.</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Webhooks de saída: permite a integração com um aplicativo de terceiros enviando dados estruturados para um URL definido.</li>
 </ol>
 </p>
 <p>Para serem executadas, as ações devem estar associadas a gatilhos.
-Quando associada a um gatilho, cada ação recebe um número de "ordem", especificando em qual ordem as ações devem ser executadas.</p>',
+Quando associada a um gatilho, cada ação recebe um número de "ordem", especificando em qual ordem as ações devem ser executadas.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Gatilhos',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Gatilhos disponíveis',
 	'UI:NotificationsMenu:OnCreate' => 'Quando um objeto é criado',

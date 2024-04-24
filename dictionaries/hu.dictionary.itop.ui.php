@@ -1011,12 +1011,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 <i><b>A műveletek</b></i> meghatározzák a kiváltó programok végrehajtásakor végrehajtandó műveleteket. Egyelőre csak kétféle művelet létezik:
 <ol>
     <li>Email üzenet küldése: Az ilyen műveletek meghatározzák az email küldéséhez használandó sablont, valamint az üzenet egyéb paramétereit, mint például a címzettek, fontosság stb.<br />
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
     Egy speciális oldalon: <a href="../setup/email.test.php" target="_blank">email.test.php</a> oldalon keresztül a PHP mail konfiguráció tesztelhető.</li>
     <li>Kimenő webhook-ok: Lehetővé teszik a harmadik fél alkalmazásával való integrációt strukturált adatok küldésével egy meghatározott URL-címen keresztül.</li>
 </ol>
 </p>
 <p>Művelet végrehjatásához azt egy eseményindítóhoz kell rendelni.
-A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatározza a műveletek végrehajtási sorrendjét.</p>',
+A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatározza a műveletek végrehajtási sorrendjét.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Eseményindítók',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Elérhető eseményindítók',
 	'UI:NotificationsMenu:OnCreate' => 'Objektum létrehozás',

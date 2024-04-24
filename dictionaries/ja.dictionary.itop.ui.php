@@ -1011,11 +1011,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 <ol>
 	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
 	特別なページ: <a href="../setup/email.test.php" target="_blank">email.test.php</a> は、PHPのメール設定をテストしたりトラブルシュートするのに利用可能であす。</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
 </ol>
 </p>
 <p>実行するには、アクションがトリガーに関連づけられている必要があります。
-トリガーに関連づけられると、各々のアクションは順番が与えられ、どの順序でアクションが実行されるかが指定されます。</p>',
+トリガーに関連づけられると、各々のアクションは順番が与えられ、どの順序でアクションが実行されるかが指定されます。</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'トリガー',
 	'UI:NotificationsMenu:AvailableTriggers' => '利用可能トリガー',
 	'UI:NotificationsMenu:OnCreate' => 'オブジェクトが作成された時',

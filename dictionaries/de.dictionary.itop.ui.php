@@ -1009,11 +1009,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 <ol>
 	<li>Senden einer E-Mail: Solche Aktionen definieren die verwendete Vorlage sowie andere Parameter der Nachricht wie Empfänger, Wichtigkeit, usw.<br />
 	Eine spezielle Seite: <a href="../setup/email.test.php" target="_blank">email.test.php</a> steht zum Testen und zur Fehlerbehebung Ihrer PHP-Mailkonfiguration bereit.</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Ausgehende webhooks: Erlaubt die Integration mit einer externen Anwendung indem strukturierte Daten an eine definierte URL gesendet werden.</li>
 </ol>
 </p>
 <p>Um Aktionen auszuführen, müssen diese mit Trigger verknüpft sein.
-Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnummer, die die Reihenfolge der auszuführenden Aktionen festlegt.</p>',
+Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnummer, die die Reihenfolge der auszuführenden Aktionen festlegt.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Trigger',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Verfügbare Trigger',
 	'UI:NotificationsMenu:OnCreate' => 'Wenn ein Objekt erstellt wird',
