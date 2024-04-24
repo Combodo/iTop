@@ -1028,6 +1028,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	<ol>
 	<li>Enviar un mensaje de correo: Dichas acciones también definen la plantilla que se utilizará para enviar el correo electrónico, así como los demás parámetros del mensaje, como los destinatarios, la importancia, etc.<br />
 	Una página especial: <a href="../setup/email.test.php" target="_blank">email.test.php</a> está disponible para probar y diagnosticar su configuración de correo de PHP.</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Webhooks de Salida: permite la integración con una aplicación de terceros mediante el envío de datos estructurados a una URL definida.</li>
 </ol>
 </p>

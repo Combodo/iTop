@@ -1025,6 +1025,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 <ol>
 	<li>Stuur een e-mail: Bij deze acties definieer je een sjabloon voor het bericht en ook parameters zoals ontvanger(s), prioriteit, enz.<br />
 	Een <a href="../setup/email.test.php" target="_blank">speciale testpagina (email.test.php)</a> is beschikbaar voor het testen en oplossen van eventuele problemen met jouw PHP e-mailconfiguratie.</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Webhooks: Staat toe om te integreren met toepassingen van derde partijen, door gestructureerde data te sturen naar een URL.</li>
 </ol>
 </p>

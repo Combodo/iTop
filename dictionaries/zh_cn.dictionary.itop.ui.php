@@ -1060,6 +1060,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 <ol>
 	<li>发送电子邮件: 此动作同时需要指定发送的邮件所使用的模板, 以及一些其他参数, 例如收件人, 优先级, 等.<br />
 	这里有一个专用的页面: <a href="../setup/email.test.php" target="_blank">email.test.php</a>可用于测试和调试PHP的邮件配置.</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>外部webhook: 允许通过发送结构化数据到指定URL来与第三方应用集成.</li>
 </ol>
 </p>

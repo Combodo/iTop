@@ -3698,6 +3698,27 @@ abstract class MetaModel
 	}
 
 	/**
+	 * Get the HTML class to apply to the object in the datatables
+	 *
+	 * @param string $sClass requested for the list (can be abstract)
+	 * @param \DBObject $oObject the object to display
+	 *
+	 * @return string   the class to apply to the object
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 *
+	 * @since 3.2.0
+	 */
+	final public static function GetHilightClass(string $sClass, DBObject $oObject): string
+	{
+		if (self::IsAbstract($sClass) && self::GetConfig()->Get('list.highlight_abstract_class') === false) {
+			return '';
+		}
+
+		return $oObject->GetHilightClass();
+	}
+
+	/**
 	 * @param string $sTargetClass
 	 *
 	 * @return array

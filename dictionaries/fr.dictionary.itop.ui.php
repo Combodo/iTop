@@ -1024,6 +1024,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 <ol>
     <li>L\'envoi de mél : Les actions de type mél définissent le modèle du message ainsi que les autres paramètres (destinataires, importance, etc.).<br />
     Une page spéciale : <a href="../setup/email.test.php" target="_blank">email.test.php</a> permet de tester votre configuration mail PHP.</li>
+	<li>L\'envoi de message newsroom : Les actions de type newsroom permettent d\'afficher une news à l\'utilisateur directement dans l\'application à travers la newsroom (icône de cloche dans le menu de gauche)</li>
     <li>Les webhooks sortants : Les actions de type webhooks permettent l\'intégration avec une application tierce en transmettant des données structurées à une URL définie.</li>
 </ol>
 </p>

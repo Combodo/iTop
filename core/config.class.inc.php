@@ -560,6 +560,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
+		'list.highlight_abstract_class' => [
+			'type'                => 'bool',
+			'description'         => 'Compute highlight row colors for lists of abstract objects. Mind that setting this to true has a negative impact on performances.',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'tag_set_item_separator' => [
 			'type' => 'string',
 			'description' => 'Tag set from string: tag label separator',

@@ -1022,6 +1022,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 <ol>
 	<li>Envio de uma mensagem de e-mail: Tais ações também definem o modelo a ser usado para enviar o e-mail, bem como os demais parâmetros da mensagem, como destinatário(s), prioridade, etc.<br />
 	Uma página especial: <a href="../setup/email.test.php" target="_blank">email.test.php</a> está disponível para testar e solucionar problemas de configuração de e-mail PHP.</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Webhooks de saída: permite a integração com um aplicativo de terceiros enviando dados estruturados para um URL definido.</li>
 </ol>
 </p>

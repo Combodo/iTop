@@ -108,6 +108,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="finalclass"/>
+            <attribute id="description"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-notification.svg</icon>
@@ -333,6 +337,11 @@
             <attribute id="title"/>
           </attributes>
         </naming>
+        <order>
+          <columns>
+            <column id="date" ascending="false" />
+          </columns>
+        </order>
       </properties>
       <fields>
         <field id="title" xsi:type="AttributeString">
@@ -435,6 +444,41 @@
           </item>
         </items>
         </summary>
+        <list>
+          <items>
+            <item id="date">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="message">
+              <rank>30</rank>
+            </item>
+            <item id="read">
+              <rank>40</rank>
+            </item>
+            <item id="read_date">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+        <default_search>
+          <items>
+            <item id="action_id">
+              <rank>10</rank>
+            </item>
+            <item id="trigger_id">
+              <rank>20</rank>
+            </item>
+            <item id="date">
+              <rank>30</rank>
+            </item>
+            <item id="contact_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
       </presentation>
       <methods/>
     </class>
