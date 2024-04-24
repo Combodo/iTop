@@ -9,9 +9,11 @@ namespace Combodo\iTop\Test\UnitTest\Service;
 
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use IssueLog;
+use LogChannels;
 use MFCoreModule;
 use ReflectionClass;
 use RunTimeEnvironment;
+use utils;
 
 
 /**
@@ -33,12 +35,15 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 
 		/** @var string[] $aDeltaFiles Referential of loaded deltas. Mostly to avoid duplicates. */
 		$aDeltaFiles = [];
-		foreach (get_declared_classes() as $sClass) {
-			// Filter on classes derived from this \Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCaseItopCustomDatamodelTestCase
-			if (false === is_a($sClass, ItopCustomDatamodelTestCase::class, true)) {
-				continue;
-			}
-
+		$aRelatedClasses = $this->GetClassesExtending(
+			ItopCustomDatamodelTestCase::class,
+			array(
+				'[\\\\/]tests[\\\\/]php-unit-tests[\\\\/]vendor[\\\\/]',
+				'[\\\\/]tests[\\\\/]php-unit-tests[\\\\/]unitary-tests[\\\\/]datamodels[\\\\/]2.x[\\\\/]authent-local',
+			));
+		//Combodo\iTop\Test\UnitTest\Application\ApplicationExtensionTest
+		//Combodo\iTop\Test\UnitTest\Application\ApplicationExtensionTest
+		foreach ($aRelatedClasses as $sClass) {
 			$oReflectionClass = new ReflectionClass($sClass);
 			$oReflectionMethod = $oReflectionClass->getMethod('GetDatamodelDeltaAbsPath');
 
@@ -82,5 +87,51 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 
 		return $aRet;
 	}
+
+	protected function GetClassesExtending (string $sExtendedClass, array $aExcludedPath = [])  : array {
+		$aMatchingClasses = [];
+
+		$aAutoloadClassMaps =[__DIR__."/../../vendor/composer/autoload_classmap.php"];
+
+		$aClassMap = [];
+		$aAutoloaderErrors = [];
+		foreach ($aAutoloadClassMaps as $sAutoloadFile) {
+			$aTmpClassMap = include $sAutoloadFile;
+			/** @noinspection SlowArrayOperationsInLoopInspection we are getting an associative array so the documented workarounds cannot be used */
+			$aClassMap = array_merge($aClassMap, $aTmpClassMap);
+		}
+		foreach ($aClassMap as $sPHPClass => $sPHPFile) {
+			$bSkipped = false;
+			if (utils::IsNotNullOrEmptyString($sPHPFile)) {
+				$sPHPFile = utils::LocalPath($sPHPFile);
+				if ($sPHPFile !== false) {
+					$sPHPFile = '/'.$sPHPFile; // for regex
+					foreach ($aExcludedPath as $sExcludedPath) {
+						// Note: We use '#' as delimiters as usual '/' is often used in paths.
+						if ($sExcludedPath !== '' && preg_match('#'.$sExcludedPath.'#', $sPHPFile) === 1) {
+							$bSkipped = true;
+							break;
+						}
+					}
+				} else {
+					$bSkipped = true; // file not found
+				}
+			}
+
+			if (!$bSkipped) {
+				try {
+					$oRefClass = new ReflectionClass($sPHPClass);
+					if ($oRefClass->isSubclassOf($sExtendedClass) &&
+						!$oRefClass->isInterface() && !$oRefClass->isAbstract() && !$oRefClass->isTrait()) {
+						$aMatchingClasses[] = $sPHPClass;
+					}
+				}
+				catch (Exception $e) {
+				}
+			}
+		}
+		return $aMatchingClasses;
+	}
+
 
 }
