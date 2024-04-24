@@ -284,7 +284,7 @@
     
 		while ($oRecipient = $oRecipientsSet->Fetch()) {
 		  // Skip recipients that have no users
-		  if (get_class($oRecipient) === Person::class && UserRights::GetUserFromPerson($oRecipient) === null) {
+		  if ($oRecipient instanceof Person && UserRights::GetUserFromPerson($oRecipient, false) === null) {
 				continue;
 			}
 		  if (!\Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->IsSubscribed($oTrigger, $this, $oRecipient)) {
