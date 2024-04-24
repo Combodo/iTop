@@ -566,7 +566,7 @@ EOF;
 			{
 				if (is_object($aObjects[$sAlias]))
 				{
-					$sHilightClass = $aObjects[$sAlias]->GetHilightClass();
+					$sHilightClass = MetaModel::GetHilightClass($sClassName, $aObjects[$sAlias]);
 					if ($sHilightClass != '')
 					{
 						$aRow['@class'] = $sHilightClass;	

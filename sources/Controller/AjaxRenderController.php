@@ -117,7 +117,7 @@ class AjaxRenderController
 							}
 						}
 					}
-					$sObjHighlightClass = $aObject[$sAlias]->GetHilightClass();
+					$sObjHighlightClass = MetaModel::GetHilightClass($sClass, $aObject[$sAlias]);
 					if (!empty($sObjHighlightClass)) {
 						$aObj['@class'] = 'ibo-is-'.$sObjHighlightClass;
 					}

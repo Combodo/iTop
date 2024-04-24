@@ -129,6 +129,7 @@ class HTMLBulkExport extends TabularBulkExport
 		$this->OptimizeColumnLoad($oSet);
 
 		$sFirstAlias = $this->oSearch->GetClassAlias();
+		$sClass = $this->oSearch->GetClass();
 
 		$iCount = 0;
 		$sData = '';
@@ -141,7 +142,7 @@ class HTMLBulkExport extends TabularBulkExport
 			$sHilightClass = '';
 			if ($oMainObj)
 			{
-				$sHilightClass = $aRow[$sFirstAlias]->GetHilightClass();
+				$sHilightClass = MetaModel::GetHilightClass($sClass, $aRow[$sFirstAlias]);
 			}
 			if ($sHilightClass != '')
 			{
