@@ -4,6 +4,7 @@
  */
 
 $ibo-vendors-selectize-input--color: $ibo-color-grey-900 !default;
+$ibo-vendors-selectize-input--background-color: $ibo-color-white-100 !default;
 $ibo-vendors-selectize-control--plugin-add-button--add-option--right: $ibo-spacing-0 !default;
 $ibo-vendors-selectize-control--plugin-add-button--add-option--height: 100% !default;
 $ibo-vendors-selectize-control--plugin-add-button--add-option--width: $ibo-size-350 !default;
@@ -23,7 +24,7 @@ $ibo-vendors-selectize--input-error--border: 1px solid $ibo-color-red-600 !defau
 
 .selectize-control.single .selectize-input {
   box-shadow: unset;
-  background-color: unset;
+  background-color: $ibo-vendors-selectize-input--background-color;
   background-image: unset;
   background-repeat: unset;
 }
@@ -31,6 +32,7 @@ $ibo-vendors-selectize--input-error--border: 1px solid $ibo-color-red-600 !defau
 .selectize-input,
 .selectize-control.single .selectize-input.input-active {
   background: unset;
+  background-color: $ibo-vendors-selectize-input--background-color;
   cursor: text;
   display: inline-flex;
 }
