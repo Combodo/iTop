@@ -385,6 +385,12 @@ abstract class User extends cmdbAbstractObject
 			/** @var \DBObjectSet $oSet */
 			$oSet = $this->Get('profile_list');
 			if ($oSet->Count() == 0) {
+				if (ContextTag::Check(ContextTag::TAG_SETUP)) {
+					// During setup, if a profile is no more part of iTop, it will be deleted
+					// But if it is the only profile assigned to a user, we don't want this to stop the setup
+					SetupLog::Warning("The user with id: ".$this->GetKey()." is no more usable as its last profile was removed during setup");
+					return;
+				}
 				$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AtLeastOneProfileIsNeeded');
 			}
 
