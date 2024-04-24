@@ -1027,7 +1027,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 </ol>
 </p>
 <p>Aby zostały wykonane, działania muszą być powiązane z wyzwalaczami.
-W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porządkowy", określający, w jakiej kolejności mają być wykonywane.</p>~~',
+W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porządkowy", określający, w jakiej kolejności mają być wykonywane.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Wyzwalacze',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Dostępne wyzwalacze',
 	'UI:NotificationsMenu:OnCreate' => 'Kiedy obiekt jest tworzony',

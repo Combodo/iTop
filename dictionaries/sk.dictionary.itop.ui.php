@@ -1018,7 +1018,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 </ol>
 </p>
 <p>Na vykonanie, akcie musia byť priradené spúštačom.
-Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", špecifikujúce v akej postupnosti budú akcie vykonané.</p>~~',
+Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", špecifikujúce v akej postupnosti budú akcie vykonané.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Spúštače',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Dostupné spúštače',
 	'UI:NotificationsMenu:OnCreate' => 'Keď je objekt vytvorený',

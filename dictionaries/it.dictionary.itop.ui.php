@@ -1033,7 +1033,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 </ol>
 </p>
 <p>Per essere eseguite, le azioni devono essere associate ai trigger.
-Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine", che specifica in quale ordine le azioni devono essere eseguite.</p>~~',
+Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine", che specifica in quale ordine le azioni devono essere eseguite.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Triggers',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Triggers Disponibili',
 	'UI:NotificationsMenu:OnCreate' => 'When an object is created~~',

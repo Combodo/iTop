@@ -1016,7 +1016,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 </ol>
 </p>
 <p>For udførelse, handlinger skal være knyttet til triggers.
-Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge" nummer, der specificerer i hvilken rækkefølge handlingerne udføres.</p>~~',
+Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge" nummer, der specificerer i hvilken rækkefølge handlingerne udføres.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Triggers',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Tilgængelige triggers',
 	'UI:NotificationsMenu:OnCreate' => 'Når et objekt oprettes',

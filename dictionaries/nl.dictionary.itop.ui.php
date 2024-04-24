@@ -1030,7 +1030,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 </ol>
 </p>
 <p>Acties moeten gekoppeld zijn aan triggers.
-Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt in welke volgorde de acties moeten worden uitgevoerd.</p>~~',
+Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt in welke volgorde de acties moeten worden uitgevoerd.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Triggers',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Beschikbare triggers',
 	'UI:NotificationsMenu:OnCreate' => 'Wanneer een object is aangemaakt',

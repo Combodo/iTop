@@ -1027,7 +1027,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 </ol>
 </p>
 <p>Para serem executadas, as ações devem estar associadas a gatilhos.
-Quando associada a um gatilho, cada ação recebe um número de "ordem", especificando em qual ordem as ações devem ser executadas.</p>~~',
+Quando associada a um gatilho, cada ação recebe um número de "ordem", especificando em qual ordem as ações devem ser executadas.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Gatilhos',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Gatilhos disponíveis',
 	'UI:NotificationsMenu:OnCreate' => 'Quando um objeto é criado',

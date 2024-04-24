@@ -1027,7 +1027,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 </ol>
 </p>
 <p>İşlemin gerçekleşmesi için bir tetikleme ile ilişkilendirilmesi gerekir.
-Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçekleştirilir.</p>~~',
+Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçekleştirilir.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Tetikleyiciler',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Kullanılabilir tetikleyiciler',
 	'UI:NotificationsMenu:OnCreate' => 'Nesne yaratıldığında',

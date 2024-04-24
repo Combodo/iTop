@@ -1016,7 +1016,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 </ol>
 </p>
 <p>実行するには、アクションがトリガーに関連づけられている必要があります。
-トリガーに関連づけられると、各々のアクションは順番が与えられ、どの順序でアクションが実行されるかが指定されます。</p>~~',
+トリガーに関連づけられると、各々のアクションは順番が与えられ、どの順序でアクションが実行されるかが指定されます。</p>',
 	'UI:NotificationsMenu:Triggers' => 'トリガー',
 	'UI:NotificationsMenu:AvailableTriggers' => '利用可能トリガー',
 	'UI:NotificationsMenu:OnCreate' => 'オブジェクトが作成された時',

@@ -1017,7 +1017,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 </ol>
 </p>
 <p>Művelet végrehjatásához azt egy eseményindítóhoz kell rendelni.
-A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatározza a műveletek végrehajtási sorrendjét.</p>~~',
+A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatározza a műveletek végrehajtási sorrendjét.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Eseményindítók',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Elérhető eseményindítók',
 	'UI:NotificationsMenu:OnCreate' => 'Objektum létrehozás',
