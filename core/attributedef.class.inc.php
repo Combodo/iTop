@@ -11560,6 +11560,11 @@ class AttributeClassAttCodeSet extends AttributeSet
 		}
 		return '<span class="'.implode(' ', $this->aCSSClasses).'">'.$value.'</span>';
 	}
+
+	public function IsNull($proposedValue)
+	{
+		return (empty($proposedValue));
+	}
 }
 
 class AttributeQueryAttCodeSet extends AttributeSet
