@@ -6221,3 +6221,27 @@ table.dataTable{
     @extend .label;
     @extend .label-default;
 }
+
+.ck.ck-editor:not(.cke-maximized) .ck-content{
+  min-height: 200px;
+  max-height: 300px;
+}
+
+.ck.ck-editor.cke-maximized{
+  position: fixed;
+  left: 0px;
+  top:0px;
+  right: 0px;
+  bottom: 0px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+}
+
+.ck.ck-editor.cke-maximized .ck.ck-editor__main{
+  flex-grow: 1;
+}
+
+.ck.ck-editor.cke-maximized .ck-editor__editable_inline:not(.ck-comment__input *){
+  height: 100%;
+}

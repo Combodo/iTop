@@ -25,7 +25,7 @@ export default class ObjectShortcutUI extends Plugin {
 
         editor.ui.componentFactory.add( 'object-shortcut', () => {
             const oButton = new ButtonView();
-            oButton.label = 'Insert Object Shortcut';
+            oButton.label = editor.config.get('objectShortcut.buttonLabel') as string ?? 'Insert Object Shortcut';
             oButton.tooltip = true;
             oButton.icon = sPluginIconSVG;
 

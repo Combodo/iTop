@@ -310,6 +310,11 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 
 	let oCKEditor = CombodoCKEditorHandler.GetInstanceSynchronous('#'+sFieldId);
 
+	// update text area value with the CKEditor content (ckeditor update on form submit)
+	if(oCKEditor !== undefined){
+		oField.val(oCKEditor.getData());
+	}
+
 	var bValid;
 	var sExplain = '';
 	if (oField.prop('disabled')) {

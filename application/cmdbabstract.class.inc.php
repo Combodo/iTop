@@ -2320,19 +2320,10 @@ JS
 
 					$oPage->add_ready_script("$('#$iId').on('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );"); // Custom validation function
 
-					// Replace the text area with CKEditor
-					// To change the default settings of the editor,
-					// a) edit the file /js/ckeditor/config.js
-					// b) or override some of the configuration settings, using the second parameter of ckeditor()
-					$aConfig = CKEditorHelper::GetCkeditorPref();
-					$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
-					$aConfig['detectChanges'] = ['initialValue' => $sOriginalValue];
-
-					// - Final config
-					$sConfigJS = json_encode($aConfig);
-
-					WebResourcesHelper::EnableCKEditorToWebPage($oPage);
-					$oPage->add_ready_script("CombodoCKEditorHandler.CreateInstance('#$iId')");
+					// configure CKEditor
+					WebResourcesHelper::ConfigureCKEditorForWebPageComponent($oPage, $iId, '', true, [
+						'placeholder' => Dict::S('UI:CaseLogTypeYourTextHere')
+					]);
 
 					$oPage->add_ready_script(
 <<<EOF

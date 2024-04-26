@@ -6,7 +6,10 @@
 
 namespace Combodo\iTop\Application\Helper;
 
+use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\RenderingOutput;
 use Exception;
 use utils;
 
@@ -51,6 +54,99 @@ class WebResourcesHelper
 	//---------------------------------
 
 	/**
+	 * ConfigureCKEditorForWebPageComponent.
+	 *
+	 * @param \Combodo\iTop\Application\WebPage\WebPage $oPage
+	 * @param string|null $sComponentId
+	 * @param string $sComponentValue
+	 * @param bool $bWithMentions
+	 * @param array $aConfiguration
+	 *
+	 * @return void
+	 */
+	public static function ConfigureCKEditorForWebPageComponent(WebPage $oPage, string $sComponentId = null, string $sComponentValue = '', bool $bWithMentions = false, array $aConfiguration = []): void
+	{
+		// link CKEditor JS files
+		foreach (static::GetJSFilesRelPathsForCKEditor() as $sFile) {
+			try{
+				$oPage->LinkScriptFromAppRoot($sFile);
+			}
+			catch(Exception $e){
+				\ExceptionLog::LogException($e);
+			}
+		}
+
+		// if an id is provided, we enable CKEditor on the element
+		if($sComponentId !== null){
+
+			// default configuration
+			$aDefaultConfig = [];
+			try{
+				$aDefaultConfig = CKEditorHelper::GetCkeditorPref($bWithMentions, $sComponentValue);
+				$aDefaultConfig = array_merge($aDefaultConfig, $aConfiguration);
+			}
+			catch(Exception $e){
+				\ExceptionLog::LogException($e);
+			}
+
+			// add CKEditor initialization script
+			$sConfigJS = json_encode($aDefaultConfig);
+			$oPage->add_ready_script("CombodoCKEditorHandler.CreateInstance('#$sComponentId', $sConfigJS)");
+
+			// mentions template
+			if($bWithMentions){
+				$oPage->add(self::GetMentionsTemplate($sComponentId));
+			}
+		}
+
+	}
+
+	/**
+	 * ConfigureCKEditorForRenderingOutputComponent.
+	 *
+	 * @param \Combodo\iTop\Renderer\RenderingOutput $oOutput
+	 * @param string|null $sComponentId
+	 * @param string $sComponentValue
+	 * @param bool $bWithMentions
+	 * @param bool $bAddJSFiles
+	 * @param array $aConfiguration
+	 *
+	 * @return void
+	 */
+	public static function ConfigureCKEditorForRenderingOutputComponent(RenderingOutput $oOutput, string $sComponentId = null, string $sComponentValue = '', bool $bWithMentions = false, bool $bAddJSFiles = true, array $aConfiguration = []): void
+	{
+		// link CKEditor JS files
+		if($bAddJSFiles){
+			foreach (static::GetJSFilesRelPathsForCKEditor() as $sFile) {
+				try{
+					$oOutput->AddJsFile($sFile);
+				}
+				catch(Exception $e){
+					\ExceptionLog::LogException($e);
+				}
+			}
+		}
+
+		$aDefaultConfig = [];
+		try{
+			$aDefaultConfig = CKEditorHelper::GetCkeditorPref($bWithMentions, $sComponentValue);
+			$aDefaultConfig = array_merge($aDefaultConfig, $aConfiguration);
+		}
+		catch(Exception $e){
+			\ExceptionLog::LogException($e);
+		}
+
+		// add CKEditor initialization script
+		$sConfigJS = json_encode($aDefaultConfig);
+		$oOutput->AddJs("CombodoCKEditorHandler.CreateInstance('#$sComponentId', $sConfigJS)");
+
+		// mentions template
+		if($bWithMentions){
+			$oOutput->add(self::GetMentionsTemplate($sComponentId));
+		}
+	}
+
+	/**
 	 * Add necessary files (JS) to be able to use CKEditor in the page
 	 *
 	 * @param WebPage $oPage
@@ -59,11 +155,31 @@ class WebResourcesHelper
 	 */
 	public static function EnableCKEditorToWebPage(WebPage &$oPage): void
 	{
-		//when ckeditor is loaded in ajax,  CKEDITOR_BASEPATH  is not well defined (this constant is used to load additional js)
-		$oPage->add_script("if (! window.CKEDITOR_BASEPATH) { var CKEDITOR_BASEPATH = '".utils::GetAbsoluteUrlAppRoot()."js/ckeditor/';}");
 		foreach (static::GetJSFilesRelPathsForCKEditor() as $sFile) {
 			$oPage->LinkScriptFromAppRoot($sFile);
 		}
+	}
+
+	/**
+	 * GetMentionsTemplate.
+	 *
+	 * @param string $sComponentId
+	 *
+	 * @return string
+	 */
+	public static function GetMentionsTemplate(string $sComponentId): string
+	{
+		// twig environment
+		$oTwig = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH);
+
+		// mention template
+		$sMentionsTemplate = $oTwig->render('application/object/set/option_renderer.html.twig');
+
+		return <<<HTML
+<template id="{$sComponentId}_items_template">
+$sMentionsTemplate
+</template>
+HTML;
 	}
 
 	/**
@@ -71,10 +187,32 @@ class WebResourcesHelper
 	 */
 	public static function GetJSFilesRelPathsForCKEditor(): array
 	{
-		return [
+		// all js file needed by ckeditor
+		$aJSRelPaths = [
 			'js/ckeditor/build/ckeditor.js',
 			'js/highlight/highlight.js',
+			'js/ckeditor.handler.js',
+			'js/ckeditor.feeds.js'
 		];
+
+		// add CKEditor translations resource
+		$sUserLanguage = \Dict::GetUserLanguage();
+		$sLanguage = strtolower(explode(' ', $sUserLanguage)[0]);
+		$sCountry = strtolower(explode(' ', $sUserLanguage)[1]);
+
+		// add corresponding ckeditor language file
+		$sLanguageFileRelPath = 'js/ckeditor/build/translations/' . $sLanguage . '-' . $sCountry . '.js';
+		if(file_exists(APPROOT . $sLanguageFileRelPath)){
+			$aJSRelPaths[] = $sLanguageFileRelPath;
+		}
+		else {
+			$sLanguageFileRelPath = 'js/ckeditor/build/translations/' . $sLanguage . '.js';
+			if(file_exists(APPROOT . $sLanguageFileRelPath)){
+				$aJSRelPaths[] = $sLanguageFileRelPath;
+			}
+		}
+
+		return $aJSRelPaths;
 	}
 
 	//---------------------------------

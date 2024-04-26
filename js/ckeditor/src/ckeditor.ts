@@ -132,7 +132,7 @@ class Editor extends ClassicEditor {
                 '|',
                 'fontSize',
                 'fontColor',
-                'highlight:yellowMarker',
+                'highlight',
 				'bold',
 				'italic',
                 'underline',
@@ -206,6 +206,17 @@ class Editor extends ClassicEditor {
         },
         link: {
             defaultProtocol: 'http://'
+        },
+        highlight: {
+            options: [
+                {
+                    model: 'yellowMarker',
+                    class: 'marker-yellow',
+                    title: 'Yellow marker',
+                    color: 'var(--ck-highlight-marker-yellow)',
+                    type: 'marker'
+                },
+            ]
         }
 	};
 }

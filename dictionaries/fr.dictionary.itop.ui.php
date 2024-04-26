@@ -1363,6 +1363,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ShortcutRenameDlg:Title' => 'Renommer le raccourci',
 	'UI:ShortcutListDlg:Title' => 'Créer un raccourci pour la liste',
 	'UI:ShortcutDelete:Confirm' => 'Veuillez confirmer la suppression du ou des raccourci(s)',
+	'UI:ObjectShortcutInsert' => 'Insérer un raccourcis vers un objet',
 	'Class:Shortcut' => 'Raccourci',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => 'Nom',

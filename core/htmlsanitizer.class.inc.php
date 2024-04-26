@@ -282,7 +282,7 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		'p' => array('style'),
 		'blockquote' => array('style'),
 		'br' => array(),
-		'span' => array('style'),
+		'span' => array('style', 'class'),
 		'div' => array('style'),
 		'b' => array(),
 		'i' => array(),

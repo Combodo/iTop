@@ -71,35 +71,8 @@ class UIHTMLEditorWidget
 
 		$sHtmlValue = "<div class=\"field_input_zone field_input_html ibo-input-wrapper\"><textarea class=\"htmlEditor ibo-input-richtext-placeholder\" title=\"$sHelpText\" name=\"attr_{$this->m_sFieldPrefix}{$sCode}\" id=\"$iId\">$sValue</textarea></div>$sValidationField";
 
-		// Replace the text area with CKEditor
-		// To change the default settings of the editor,
-		// a) edit the file /js/ckeditor/config.js
-		// b) or override some of the configuration settings, using the second parameter of ckeditor()
-		$sJSDefineWidth = '';
-		$aConfig = CKEditorHelper::GetCkeditorPref();
-		$sWidthSpec = addslashes(trim($this->m_oAttDef->GetWidth()));
-		if ($sWidthSpec != '') {
-			/*N°6543 - the function min allow to keep text inside the column when width is defined*/
-			$aConfig['width'] = "min($sWidthSpec,100%)";
-		}
-		$sHeightSpec = addslashes(trim($this->m_oAttDef->GetHeight()));
-		if ($sHeightSpec != '') {
-			$aConfig['height'] = $sHeightSpec;
-		}
-		$aConfig['detectChanges'] = ['initialValue' => $sValue];
-		$sConfigJS = json_encode($aConfig);
-
-		WebResourcesHelper::EnableCKEditorToWebPage($oPage);
-		$oPage->add_ready_script("CombodoCKEditorHandler.CreateInstance('#$iId', $sConfigJS)");
-
-		// inject mention item renderer template
-		$oTwig = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH);
-		$sTemplate = $oTwig->render('application/object/set/option_renderer.html.twig');
-		$oPage->add(<<<HTML
-<template id="{$iId}_items_template">
-$sTemplate
-</template>
-HTML);
+		// Enable CKEditor
+		WebResourcesHelper::ConfigureCKEditorForWebPageComponent($oPage, $iId, $sValue, true);
 
 		// Please read...
 		// ValidateCKEditField triggers a timer... calling itself indefinitely
@@ -124,7 +97,6 @@ $('#$iId').on('update', function(evt){
 		else
 		{
 			oMe.data('ckeditorInstance').setReadOnly(oMe.prop('disabled'));
-			$sJSDefineWidth
 		}
 	};
 	setTimeout(delayedSetReadOnly, 50);

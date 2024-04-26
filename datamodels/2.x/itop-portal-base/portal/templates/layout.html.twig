@@ -125,11 +125,7 @@
         {# Export for Datatables #}
         <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/export.js'|add_itop_version }}"></script>
         {# CKEditor files for HTML WYSIWYG #}
-        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/build/ckeditor.js'|add_itop_version }}"></script>
-        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/highlight/highlight.js'|add_itop_version }}"></script>
-        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/adapters/jquery.js'|add_itop_version }}"></script>
-        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor.handler.js'|add_itop_version }}"></script>
-        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor.feeds.js'|add_itop_version }}"></script>
+        {{ inject_ckeditor_resources()|raw }}
         {# - Hilighter for code snippets created with CKEditor #}
         <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js'|add_itop_version }}"></script>
         {# Date-time picker for Bootstrap #}

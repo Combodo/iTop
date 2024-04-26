@@ -8,58 +8,25 @@ use DBSearch;
 use utils;
 use appUserPreferences;
 
-/***
+/**
+ * Class CKEditorHelper
  *
- * (34) [
- * 'blockQuote',
- * 'bold',
- * 'link',
- * 'ckfinder',
- * 'codeBlock',
- * 'selectAll',
- * 'undo',
- * 'redo',
- * 'heading',
- * 'horizontalLine',
- * 'imageTextAlternative',
- * 'toggleImageCaption',
- * 'imageStyle:inline',
- * 'imageStyle:alignLeft',
- * 'imageStyle:alignRight',
- * 'imageStyle:alignCenter',
- * 'imageStyle:alignBlockLeft',
- * 'imageStyle:alignBlockRight',
- * 'imageStyle:block',
- * 'imageStyle:side',
- * 'imageStyle:wrapText',
- * 'imageStyle:breakText',
- * 'uploadImage',
- * 'imageUpload',
- * 'indent',
- * 'outdent',
- * 'italic',
- * 'numberedList',
- * 'bulletedList',
- * 'mediaEmbed',
- * 'insertTable',
- * 'tableColumn',
- * 'tableRow',
- * 'mergeTableCells']
+ * Utilities for CKEditor
  *
+ * @package Combodo\iTop\Application\Helper
+ * @since 3.2.0
  */
-
 class CKEditorHelper
 {
 	/**
-	 * Return the CKEditor config as an array
+	 * Get the CKEditor configuration
+	 *
+	 * @param bool $bWithMentions
+	 * @param string|null $sInitialValue
 	 *
 	 * @return array
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @since 3.0.0
 	 */
-	static public function GetCkeditorPref()
+	static public function GetCkeditorPref(bool $bWithMentions, ?string $sInitialValue) : array
 	{
 		// Extract language from user preferences
 		$sLanguageCountry = trim(UserRights::GetUserLanguage());
@@ -70,10 +37,20 @@ class CKEditorHelper
 		);
 
 		// Mentions
-		$aDefaultConf['mention'] = self::GetMentionConfiguration();
+		if($bWithMentions){
+			$aDefaultConf['mention'] = self::GetMentionConfiguration();
+		}
 
 		// Rich text config
 		$aRichTextConfig = 	json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);
+
+		// detect changes
+		$aDefaultConf['detectChanges'] = ['initialValue' => $sInitialValue];
+
+		// object shortcut
+		$aDefaultConf['objectShortcut'] = [
+			'buttonLabel' => \Dict::S('UI:ObjectShortcutInsert')
+        ];
 
 		return array_merge($aDefaultConf, $aRichTextConfig);
 	}
