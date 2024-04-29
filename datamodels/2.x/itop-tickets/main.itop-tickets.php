@@ -134,7 +134,7 @@ class _Ticket extends cmdbAbstractObject
 {
 
 	/**
-	 * @param $iMaxDepth maximum depth of impact analysis
+	 * @param int $iMaxDepth maximum depth of impact analysis
 	 *
 	 * @return void
 	 * @throws \ArchivedObjectException
