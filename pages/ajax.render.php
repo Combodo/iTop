@@ -1122,7 +1122,7 @@ EOF
 					$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
 					$sHtml = $oForm->RenderAsPropertySheet($oPage, true, '.itop-dashboard');
 					$sHtml= json_encode($sHtml);
-					$oPage->add_script("$('#dashlet_$sDashletId').html({$sHtml});");
+					$oPage->add_script("$('#dashlet_properties_$sDashletId').html({$sHtml});");
 				}
 			}
 			break;
