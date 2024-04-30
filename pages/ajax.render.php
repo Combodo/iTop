@@ -1104,28 +1104,28 @@ EOF
 						$aUpdatedDecoded[] = $sDecodedProp;
 					}
 
-					$oDashlet->FromParams($aCurrentValues);
-					$sPrevClass = get_class($oDashlet);
-					$oDashlet = $oDashlet->Update($aValues, $aUpdatedDecoded);
-					$sNewClass = get_class($oDashlet);
-					if ($sNewClass != $sPrevClass) {
-						$oPage->add_ready_script("$('#dashlet_$sDashletId').dashlet('option', {dashlet_class: '$sNewClass'});");
-					}
-					if ($oDashlet->IsRedrawNeeded()) {
-						$oBlock = $oDashlet->DoRender($oPage, true, false, $aExtraParams);
-						$sHtml = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
-						$sHtml= json_encode($sHtml);
-						$oPage->add_script("$('#dashlet_$sDashletId').html({$sHtml});");
-					}
-					if ($oDashlet->IsFormRedrawNeeded()) {
-						$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
-						$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
-						$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true, '.itop-dashboard'));
-						$sHtml= json_encode($sHtml);
-						$oPage->add_script("$('#dashlet_$sDashletId').html({$sHtml});");
-					}
+				$oDashlet->FromParams($aCurrentValues);
+				$sPrevClass = get_class($oDashlet);
+				$oDashlet = $oDashlet->Update($aValues, $aUpdatedDecoded);
+				$sNewClass = get_class($oDashlet);
+				if ($sNewClass != $sPrevClass) {
+					$oPage->add_ready_script("$('#dashlet_$sDashletId').dashlet('option', {dashlet_class: '$sNewClass'});");
 				}
-				break;
+				if ($oDashlet->IsRedrawNeeded()) {
+					$oBlock = $oDashlet->DoRender($oPage, true, false, $aExtraParams);
+					$sHtml = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
+					$sHtml= json_encode($sHtml);
+					$oPage->add_script("$('#dashlet_$sDashletId').html({$sHtml});");
+				}
+				if ($oDashlet->IsFormRedrawNeeded()) {
+					$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
+					$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
+					$sHtml = $oForm->RenderAsPropertySheet($oPage, true, '.itop-dashboard');
+					$sHtml= json_encode($sHtml);
+					$oPage->add_script("$('#dashlet_$sDashletId').html({$sHtml});");
+				}
+			}
+			break;
 
 			case 'dashlet_creation_dlg':
 				$sOQL = utils::ReadParam('oql', '', false, 'raw_data');
