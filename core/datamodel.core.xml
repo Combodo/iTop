@@ -284,9 +284,32 @@
     
 		while ($oRecipient = $oRecipientsSet->Fetch()) {
 		  // Skip recipients that have no users
-		  if (get_class($oRecipient) === Person::class && UserRights::GetUserFromPerson($oRecipient) === null) {
+		  if ($oRecipient instanceof Person && UserRights::GetUserFromPerson($oRecipient, false) === null) {
 				continue;
 			}
+
+			// Skip recipient that have no user with access to the backoffice
+			$oRecipientUsersSearch = DBObjectSearch::FromOQL("SELECT User WHERE contactid = " . $oRecipient->GetKey() . " AND status = 'enabled'");
+			$oRecipientUsersSearch->AllowAllData();
+			$oRecipientUsersSet = new DBObjectSet($oRecipientUsersSearch);
+			$oPortalDispatcher = new PortalDispatcher('backoffice');
+    	// - Check if the user has access to the backoffice
+			$bHasAccessToBackoffice = false;
+			while ($oRecipientUser = $oRecipientUsersSet->Fetch()) {
+			  // Skip recipients with user that don't have access to the backoffice
+			  if (false === $oPortalDispatcher->IsUserAllowed($oRecipientUser)) {
+			            continue;
+			  }
+
+			  $bHasAccessToBackoffice = true;
+			  break;
+			}
+			// - Skip it if necessary
+			if (false === $bHasAccessToBackoffice) {
+        continue;
+      }
+
+			// Skip recipients that have unsubscribed
 		  if (!\Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->IsSubscribed($oTrigger, $this, $oRecipient)) {
 				continue;
 			}

@@ -9,11 +9,17 @@ class PortalDispatcher
 		$this->sPortalid = $sPortalId;
 		$this->aData = PortalDispatcherData::GetData($sPortalId);
 	}
-	
-	public function IsUserAllowed()
+
+	/**
+	 * @param \User|null $oUser
+	 *
+	 * @return bool
+	 * @since 3.2.0 N°2039 Add $oUser parameter
+	 */
+	public function IsUserAllowed(?User $oUser = null)
 	{
 		$bRet = true;
-		$aProfiles = UserRights::ListProfiles();
+		$aProfiles = UserRights::ListProfiles($oUser);
 		
 		foreach($this->aData['deny'] as $sDeniedProfile)
 		{
