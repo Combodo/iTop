@@ -1113,6 +1113,7 @@ EOF
 				if ($oDashlet->IsFormRedrawNeeded()) {
 					$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
 					$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
+					$sHtml = $oForm->RenderAsPropertySheet($oPage, true, '.itop-dashboard');
 					$sHtml= json_encode($sHtml);
 					$oPage->add_script("$('#dashlet_$sDashletId').html({$sHtml});");
 				}
