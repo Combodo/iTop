@@ -1684,16 +1684,19 @@ JS
 			$aRes = CMDBSource::QueryToArray($sSql);
 			$oContext = new ApplicationContext();
 			$sContextParam = $oContext->GetForLink();
+			/** @var AttributeDefinition $oGroupByAttDef */
+			$oGroupByAttDef = $aGroupBy["grouped_by_1"]->GetAttDef();
 
 			$iTotalCount = 0;
 			$aURLs = array();
 
 			foreach ($aRes as $iRow => $aRow) {
 				$sValue = $aRow['grouped_by_1'];
-				$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
+				$sPlainTextValue = $oGroupByAttDef->GetValueLabel($sValue);
+				$sHtmlValue = utils::EscapeHtml($sPlainTextValue);
 				$iTotalCount += $aRow['_itop_count_'];
 				$aValues[] = array(
-					'label' => $sValue,
+					'label' => $sPlainTextValue,
 					'label_html' => $sHtmlValue,
 					'value' => (float)$aRow[$sFctVar],
 				);
