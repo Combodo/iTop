@@ -28,20 +28,8 @@ abstract class ItopTestCase extends TestCase
 
 	protected static $aBackupStaticProperties = [];
 
-	/** @noinspection UsingInclusionOnceReturnValueInspection avoid errors for approot includes */
 	protected function setUp(): void
 	{
-		$sAppRootRelPath = 'approot.inc.php';
-		$sDepthSeparator = '../';
-		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
-			if (file_exists($sAppRootRelPath)) {
-				require_once $sAppRootRelPath;
-				break;
-			}
-
-			$sAppRootRelPath = $sDepthSeparator.$sAppRootRelPath;
-		}
-
 		$this->LoadRequiredItopFiles();
 		$this->LoadRequiredTestFiles();
 	}
@@ -68,8 +56,9 @@ abstract class ItopTestCase extends TestCase
 	 */
 	protected function LoadRequiredItopFiles(): void
 	{
-		// Empty until we actually need to require some files in the class
-	}
+		// At least make sure that the autoloader will be loaded, and that the APPROOT constant is defined
+        require_once __DIR__.'/../../../../approot.inc.php';
+    }
 
 	/**
 	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceUnitTestFile()}

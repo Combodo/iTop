@@ -19,10 +19,6 @@
         printerClass="Sempro\PHPUnitPrettyPrinter\PrettyPrinter"
 >
 
-  <extensions>
-    <extension class="Combodo\iTop\Test\UnitTest\Hook\TestsRunStartHook" />
-  </extensions>
-
   <php>
     <ini name="error_reporting" value="E_ALL"/>
     <ini name="display_errors" value="On"/>
