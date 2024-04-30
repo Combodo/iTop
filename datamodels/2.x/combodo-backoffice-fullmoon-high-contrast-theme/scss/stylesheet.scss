@@ -143,3 +143,7 @@ $ibo-toast--icon--left: $ibo-spacing-400 !default;
 .ibo-popover-menu--item:not(:last-child){
   border-bottom: $ibo-high-contrast--thin-border;
 }
+
+.ibo-welcome-popup--stack-item.ibo-is-active {
+  border-width: 2px;
+}
