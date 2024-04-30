@@ -580,6 +580,7 @@ class ValueSetEnumPadded extends ValueSetEnum
 			$aPaddedValues[$sKey] = $sVal;
 		}
 		$this->m_values = $aPaddedValues;
+		$this->m_bIsLoaded = true;
 	}
 }
 

@@ -808,6 +808,29 @@
         </fields>
       </class>
     </classes>
+    <attribute_definitions _delta="define">
+      <attribute_definition id="AttributeContextTagSet">
+        <properties>
+          <property id="sql"/>
+          <property id="is_null_allowed"/>
+          <property id="max_items"/>
+          <property id="default_value"/>
+          <property id="context_type">
+            <php_param>context_type</php_param>
+            <mandatory>true</mandatory>
+            <type>string</type>
+          </property>
+          <property id="denied_contexts">
+            <php_param>denied_contexts</php_param>
+            <mandatory>false</mandatory>
+            <type>collection</type>
+            <collection_element_name>denied_context</collection_element_name>
+            <collection_type>id</collection_type>
+            <default/>
+          </property>
+        </properties>
+      </attribute_definition>
+    </attribute_definitions>
     <attribute_properties_definition _delta="define">
       <properties>
         <property id="sql">
@@ -827,11 +850,6 @@
         </property>
         <property id="ext_key_to_remote">
           <php_param>ext_key_to_remote</php_param>
-          <mandatory>true</mandatory>
-          <type>string</type>
-        </property>
-        <property id="sql">
-          <php_param>sql</php_param>
           <mandatory>true</mandatory>
           <type>string</type>
         </property>

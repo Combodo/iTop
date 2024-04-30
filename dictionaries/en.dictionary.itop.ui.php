@@ -175,6 +175,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:User/Attribute:status+'               => 'Whether the user account is enabled or disabled.',
 	'Class:User/Attribute:status/Value:enabled' => 'Enabled',
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled',
+	'Class:User/Attribute:allowed_contexts'      => 'Allowed authentication contexts',
+	'Class:User/Attribute:allowed_contexts+'     => 'List of authentication contexts that the user is allowed to access',
 
 	'Class:User/Error:LoginMustBeUnique' => 'Login must be unique - "%1$s" is already being used.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'At least one profile must be assigned to this user.',

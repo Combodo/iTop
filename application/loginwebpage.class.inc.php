@@ -1044,6 +1044,33 @@ class LoginWebPage extends NiceWebPage
 					exit;
 				}
 			}
+
+			// Check allowed context for the selected user
+			// If the user has no context -> allow to connect
+			// If the entry point has no context -> allow only users with no context specified
+			// If the entry point has one or more contexts -> allow only users with one of the entry point context specified
+			$oUser = UserRights::GetUserObject();
+			$aContexts = $oUser->Get('allowed_contexts')->GetValues();
+			if (count($aContexts) > 0) {
+				if (ContextTag::Check($aContexts) === false) {
+					IssueLog::Error(sprintf(
+						'User "%s" cannot connect: the current context (%s) does not match current allowed contexts: %s',
+						UserRights::GetUser(),
+						implode(',', \ContextTag::GetStack()),
+						implode(',', $aContexts)));
+					if ($iOnExit == self::EXIT_RETURN) {
+						return self::EXIT_CODE_NOTAUTHORIZED;
+					} else {
+						require_once(APPROOT.'/setup/setuppage.class.inc.php');
+						$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
+						$oP->add('<h1>'.Dict::S('UI:Login:Error:AccessRestricted')."</h1>\n");
+						$oP->p("<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu').'</a>');
+						$oP->output();
+						exit;
+					}
+				}
+			}
+
 			$iRet = call_user_func(array(self::$sHandlerClass, 'ChangeLocation'), $sRequestedPortalId, $iOnExit);
 		}
 		if ($iOnExit == self::EXIT_RETURN)

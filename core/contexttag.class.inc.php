@@ -58,12 +58,15 @@ class ContextTag
 	public const TAG_SETUP   = 'Setup';
 	public const TAG_SYNCHRO = 'Synchro';
 	public const TAG_REST    = 'REST/JSON';
-
+	/**
+	 * @since 3.2.0 N°7423
+	 */
+	public const TAG_GUI     = 'GUI';
 	/**
 	 * @since 3.1.0 N°6047
 	 */
 	public const TAG_IMPORT    = 'Import';
-		/**
+	/**
 	 * @since 3.1.0 N°6047
 	 */
 	public const TAG_EXPORT    = 'Export';
@@ -101,11 +104,18 @@ class ContextTag
 
 	/**
 	 * Check if a given tag is present in the stack
-	 * @param string $sTag
+	 * or check if one of the tags in the array is present
+	 *
+	 * @param array|string $sTag
+	 *
 	 * @return bool
 	 */
-	public static function Check($sTag)
+	public static function Check(array|string $sTag): bool
 	{
+		if (is_array($sTag)) {
+			return  (count(array_intersect($sTag, static::$aStack)) > 0);
+		}
+
 		return in_array($sTag, static::$aStack);
 	}
 
@@ -118,6 +128,25 @@ class ContextTag
 		return static::$aStack;
 	}
 
+	public static function GetTagsForConnection(): array
+	{
+		$aRawTags = array(
+			ContextTag::TAG_GUI,
+			ContextTag::TAG_REST,
+			ContextTag::TAG_SYNCHRO,
+			ContextTag::TAG_IMPORT,
+			ContextTag::TAG_EXPORT);
+
+		$aTags = array();
+
+		foreach ($aRawTags as $sRawTag)
+		{
+			$aTags[$sRawTag] = Dict::S("Core:Context={$sRawTag}");
+		}
+
+		return $aTags;
+	}
+
 	/**
 	 * Get all the predefined context tags
 	 * @return array
@@ -125,11 +154,14 @@ class ContextTag
 	public static function GetTags()
 	{
 		$aRawTags = array(
+			ContextTag::TAG_GUI,
 			ContextTag::TAG_REST,
 			ContextTag::TAG_SYNCHRO,
 			ContextTag::TAG_SETUP,
 			ContextTag::TAG_CONSOLE,
 			ContextTag::TAG_CRON,
+			ContextTag::TAG_IMPORT,
+			ContextTag::TAG_EXPORT,
 			ContextTag::TAG_PORTAL);
 
 		$aTags = array();

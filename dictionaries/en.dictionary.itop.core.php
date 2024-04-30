@@ -209,12 +209,15 @@ Operators:<br/>
 	'Core:AttributeTag' => 'Tags',
 	'Core:AttributeTag+' => '',
 
-	'Core:Context=REST/JSON' => 'REST',
+	'Core:Context=REST/JSON' => 'Webservice',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
 	'Core:Context=GUI:Console' => 'Console',
-	'Core:Context=CRON' => 'cron',
+	'Core:Context=CRON' => 'Background tasks',
 	'Core:Context=GUI:Portal' => 'Portal',
+	'Core:Context=GUI' => 'GUI',
+	'Core:Context=Import' => 'Import',
+	'Core:Context=Export' => 'Export',
 ));
 
 

@@ -314,6 +314,8 @@ try
 
 	$oKPI = new ExecutionKPI();
 
+	$oContextGUI = new ContextTag(ContextTag::TAG_GUI);
+
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	$sLoginMessage = LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	$oAppContext = new ApplicationContext();

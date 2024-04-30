@@ -252,6 +252,8 @@ abstract class User extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list",array("linked_class" => "URP_UserProfile", "ext_key_to_me" => "userid", "ext_key_to_remote" => "profileid", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), "display_style" => 'property', "with_php_constraint" => true, "with_php_computation" => true)));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("allowed_org_list", array("linked_class" => "URP_UserOrg", "ext_key_to_me" => "userid", "ext_key_to_remote" => "allowed_org_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), 'with_php_constraint' => true)));
 		MetaModel::Init_AddAttribute(new AttributeCaseLog("log", array("sql" => 'log', "is_null_allowed" => true, "default_value" => '', "allowed_values" => null, "depends_on" => array(), "always_load_in_tables" => false)));
+		$aTags = ContextTag::GetTagsForConnection();
+		MetaModel::Init_AddAttribute(new AttributeEnumSet('allowed_contexts', array('allowed_values' => null, 'possible_values' => new ValueSetEnumPadded($aTags, true), 'sql' => 'allowed_contexts', 'depends_on' => array(), 'is_null_allowed' => true, 'max_items' => 12)));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'language', 'status', 'profile_list', 'allowed_org_list', 'log')); // Unused as it's an abstract class !

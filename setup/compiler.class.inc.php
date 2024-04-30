@@ -2421,14 +2421,14 @@ EOF
 	/**
 	 * @param string $sPropertyName
 	 * @param array $aProperty
-	 * @param \DOMElement $oField
+	 * @param DesignElement $oField
 	 * @param array $aParameters
 	 *
 	 * @return array
 	 * @throws \DOMFormatException
 	 * @since 3.1.0 N°6040
 	 */
-	protected function CompileDynamicProperty(string $sPropertyName, array $aProperty, DOMElement $oField, array $aParameters): array
+	protected function CompileDynamicProperty(string $sPropertyName, array $aProperty, DesignElement $oField, array $aParameters): array
 	{
 		$sPHPParam = $aProperty['php_param'] ?? $sPropertyName;
 		$bMandatory = $aProperty['mandatory'] ?? false;
@@ -2467,6 +2467,34 @@ EOF
 				if ($sOql = $oField->GetChildText($sPropertyName)) {
 					$sEscapedOql = self::QuoteForPHP($sOql);
 					$aParameters[$sPHPParam] = "$sEscapedOql";
+				} else {
+					$aParameters[$sPHPParam] = 'null';
+				}
+				break;
+			case 'collection':
+				$sCollectionElementName = $aProperty['collection_element_name'] ?? null;
+				$sCollectionType = $aProperty['collection_type'] ?? null;
+				if (is_null($sCollectionElementName) || is_null($sCollectionType)) {
+					throw new DOMFormatException("Missing 'collection_element_name' or 'collection_type' in collection definition in meta", null, null, $oField);
+				}
+				$oValues = $oField->GetOptionalElement($sPropertyName);
+				if ($oValues) {
+					$oValuesNodes = $oValues->getElementsByTagName($sCollectionElementName);
+					$aValues = [];
+					/** @var \MFElement $oValueNode */
+					foreach ($oValuesNodes as $oValueNode) {
+						switch ($sCollectionType) {
+							case 'id':
+								$aValues[] = $oValueNode->GetAttribute('id');
+								break;
+							case 'text':
+								$aValues[] = $oValueNode->textContent;
+								break;
+						}
+					}
+					$aParameters[$sPHPParam] = var_export($aValues, true);
+				} elseif ($bMandatory) {
+					$aParameters[$sPHPParam] = var_export([$sDefault], true);
 				} else {
 					$aParameters[$sPHPParam] = 'null';
 				}
@@ -3994,6 +4022,10 @@ PHP;
 			} else {
 				$aDefinition['default'] = $oNode->GetText();
 			}
+		}
+		if (($aDefinition['type'] ?? null) === 'collection') {
+			$aDefinition['collection_element_name'] = $oProperty->GetChildText('collection_element_name');
+			$aDefinition['collection_type'] = $oProperty->GetChildText('collection_type');
 		}
 
 		return $aDefinition;

@@ -11084,7 +11084,7 @@ class AttributeEnumSet extends AttributeSet
 		return max(255, $iMaxSize);
 	}
 
-	private function GetRawPossibleValues($aArgs = array(), $sContains = '')
+	protected function GetRawPossibleValues($aArgs = array(), $sContains = '')
 	{
 		/** @var ValueSetEnumPadded $oValSetDef */
 		$oValSetDef = $this->Get('possible_values');
@@ -11317,6 +11317,65 @@ class AttributeEnumSet extends AttributeSet
 	}
 }
 
+/**
+ * @since 3.2.0 N°7423
+ */
+class AttributeContextTagSet extends AttributeEnumSet
+{
+	public static function ListExpectedParams()
+	{
+		// allowed_values and possible_values are replaced by context_type and excluded_contexts
+		return array_diff(
+			array_merge(parent::ListExpectedParams(), ['is_null_allowed', 'max_items', 'context_type', 'denied_contexts']),
+			['allowed_values', 'possible_values']);
+	}
+
+	protected function GetRawPossibleValues($aArgs = array(), $sContains = ''): array
+	{
+		$sType = $this->Get('context_type');
+		$aExcludedContexts = $this->Get('denied_contexts');
+		$aContexts = [];
+		switch ($sType) {
+			case 'authentication':
+				$aContexts = ContextTag::GetTagsForConnection();
+				break;
+
+			case 'all':
+				$aContexts = ContextTag::GetTags();
+				break;
+		}
+
+		$aContexts = array_diff($aContexts, $aExcludedContexts);
+		$oValSetDef = new ValueSetEnumPadded($aContexts);
+
+		return $oValSetDef->GetValues([], $sContains);
+	}
+
+	public function GetPossibleValues($aArgs = array(), $sContains = '')
+	{
+		return $this->GetRawPossibleValues($aArgs, $sContains);
+	}
+
+	public function GetValueLabel($sValue)
+	{
+		if ($sValue instanceof ormSet) {
+			$sValue = implode(', ', $sValue->GetValues());
+		}
+
+		$aValues = $this->GetRawPossibleValues();
+		$sLabel = Dict::S('Enum:Undefined');
+		if (is_string($sValue) && isset($aValues[$sValue])) {
+			$sLabel = $aValues[$sValue];
+		}
+
+		return $sLabel;
+	}
+
+	public function GetValueDescription($sValue)
+	{
+		return '';
+	}
+}
 
 class AttributeClassAttCodeSet extends AttributeSet
 {
