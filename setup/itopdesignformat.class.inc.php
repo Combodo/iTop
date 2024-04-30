@@ -1114,6 +1114,12 @@ class iTopDesignFormat
 		$this->RemoveNodeFromXPath('/itop_design/branding/main_favicon');
 		$this->RemoveNodeFromXPath('/itop_design/branding/portal_favicon');
 		$this->RemoveNodeFromXPath('/itop_design/branding/login_favicon');
+
+
+		// N°7423 - remove attributes Context Tag Set
+		$sPath = "/itop_design/classes/class/class/fields/field[@xsi:type='AttributeContextTagSet']";
+		$this->RemoveNodeFromXPath($sPath);
+
 	}
 
 	/**
