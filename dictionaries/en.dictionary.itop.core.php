@@ -370,7 +370,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:EventNotification' => 'Notification event',
+	'Class:EventNotification' => 'Notification sent',
 	'Class:EventNotification+' => 'Trace of a notification that has been sent',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
 	'Class:EventNotification/Attribute:trigger_id+' => '',
@@ -385,7 +385,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:EventNotificationEmail' => 'Email emission event',
+	'Class:EventNotificationEmail' => 'Email sent',
 	'Class:EventNotificationEmail+' => 'Trace of an email that has been sent',
 	'Class:EventNotificationEmail/Attribute:to' => 'TO',
 	'Class:EventNotificationEmail/Attribute:to+' => '',
@@ -484,7 +484,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:EventiTopNotification' => ITOP_APPLICATION_SHORT.' Notification',
+	'Class:EventiTopNotification' => 'News sent',
 	'Class:EventiTopNotification+' => '',
 	'Class:EventiTopNotification/Attribute:title' => 'Title',
 	'Class:EventiTopNotification/Attribute:title+' => '',
@@ -519,7 +519,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:Action'                                  => 'Custom Action',
+	'Class:Action'                                  => 'Action',
 	'Class:Action+'                                 => 'User defined action',
 	'Class:Action/ComplementaryName'                => '%1$s: %2$s',
 	'Class:Action/Attribute:name'                   => 'Name',
@@ -555,8 +555,8 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ActionNotification' => 'Notification',
-	'Class:ActionNotification+' => 'Notification (abstract)',
+	'Class:ActionNotification' => 'Notification Action',
+	'Class:ActionNotification+' => 'Notification Action (abstract)',
 ));
 
 //
@@ -564,7 +564,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ActionEmail'                                    => 'Email notification',
+	'Class:ActionEmail'                                    => 'Notification by Email',
 	'Class:ActionEmail+'                                   => '',
 	'Class:ActionEmail/Attribute:status+'                  => 'This status drives who will be notified: 
 - Being tested: just the Test recipient, 
@@ -641,7 +641,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'ActioniTopNotification:trigger' => 'Trigger',
 	'ActioniTopNotification:content' => 'Message',
 	'ActioniTopNotification:settings' => 'Settings',
-	'Class:ActioniTopNotification' => ITOP_APPLICATION_SHORT.' Notification',
+	'Class:ActioniTopNotification' => 'Notification by Newsroom',
 	'Class:ActioniTopNotification+' => '',
 	'Class:ActioniTopNotification/Attribute:language' => 'Language',
 	'Class:ActioniTopNotification/Attribute:language+' => '',

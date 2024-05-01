@@ -483,7 +483,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:EventiTopNotification' => ITOP_APPLICATION_SHORT.' 通知',
+	'Class:EventiTopNotification' => 'News sent~~',
 	'Class:EventiTopNotification+' => '',
 	'Class:EventiTopNotification/Attribute:title' => '标题',
 	'Class:EventiTopNotification/Attribute:title+' => '',

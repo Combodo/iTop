@@ -322,7 +322,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:EventNotification' => 'Notification',
+	'Class:EventNotification' => 'Notification envoyée',
 	'Class:EventNotification+' => '',
 	'Class:EventNotification/Attribute:trigger_id' => 'Déclencheur',
 	'Class:EventNotification/Attribute:trigger_id+' => '',
@@ -337,7 +337,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:EventNotificationEmail' => 'Envoi d\'Email',
+	'Class:EventNotificationEmail' => 'Mél envoyé',
 	'Class:EventNotificationEmail+' => '',
 	'Class:EventNotificationEmail/Attribute:to' => 'A',
 	'Class:EventNotificationEmail/Attribute:to+' => '',
@@ -436,7 +436,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:EventiTopNotification' => 'Notification '.ITOP_APPLICATION_SHORT,
+	'Class:EventiTopNotification' => 'News envoyée',
 	'Class:EventiTopNotification+' => '',
 	'Class:EventiTopNotification/Attribute:title' => 'Titre',
 	'Class:EventiTopNotification/Attribute:title+' => '',
@@ -503,7 +503,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ActionNotification' => 'notification',
+	'Class:ActionNotification' => 'Action de notification',
 	'Class:ActionNotification+' => '',
 ));
 
@@ -592,7 +592,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'ActioniTopNotification:trigger' => 'Conditions de déclenchement',
 	'ActioniTopNotification:content' => 'Message',
 	'ActioniTopNotification:settings' => 'Paramètres',
-	'Class:ActioniTopNotification' => ITOP_APPLICATION_SHORT.' Notification',
+	'Class:ActioniTopNotification' => 'Notification par news',
 	'Class:ActioniTopNotification+' => '',
 	'Class:ActioniTopNotification/Attribute:title' => 'Titre',
 	'Class:ActioniTopNotification/Attribute:title+' => '',
