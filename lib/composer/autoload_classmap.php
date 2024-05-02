@@ -27,7 +27,7 @@ return array(
     'Archive_Tar' => $vendorDir . '/pear/archive_tar/Archive/Tar.php',
     'ArchivedObjectException' => $baseDir . '/application/exceptions/ArchivedObjectException.php',
     'AsyncSendEmail' => $baseDir . '/core/asynctask.class.inc.php',
-    'AsyncSendiTopNotifications' => $baseDir . '/core/asynctask.class.inc.php',
+    'AsyncSendNewsroom' => $baseDir . '/core/asynctask.class.inc.php',
     'AsyncTask' => $baseDir . '/core/asynctask.class.inc.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'AttributeApplicationLanguage' => $baseDir . '/core/attributedef.class.inc.php',

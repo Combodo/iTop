@@ -410,7 +410,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Archive_Tar' => __DIR__ . '/..' . '/pear/archive_tar/Archive/Tar.php',
         'ArchivedObjectException' => __DIR__ . '/../..' . '/application/exceptions/ArchivedObjectException.php',
         'AsyncSendEmail' => __DIR__ . '/../..' . '/core/asynctask.class.inc.php',
-        'AsyncSendiTopNotifications' => __DIR__ . '/../..' . '/core/asynctask.class.inc.php',
+        'AsyncSendNewsroom' => __DIR__ . '/../..' . '/core/asynctask.class.inc.php',
         'AsyncTask' => __DIR__ . '/../..' . '/core/asynctask.class.inc.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'AttributeApplicationLanguage' => __DIR__ . '/../..' . '/core/attributedef.class.inc.php',
