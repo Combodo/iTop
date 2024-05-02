@@ -92,7 +92,7 @@
       </presentation>
       <methods/>
     </class>
-    <class id="ActioniTopNotification"  _delta="define">
+    <class id="ActionNewsroom"  _delta="define">
       <php_parent>
         <name>ActionNotification</name>
       </php_parent>
@@ -101,7 +101,7 @@
         <category>grant_by_profile,core/cmdb,application</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
-        <db_table>priv_action_itop_notif</db_table>
+        <db_table>priv_action_newsroom</db_table>
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
@@ -173,7 +173,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ActioniTopNotification:content">
+                <item id="fieldset:ActionNewsroom:content">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -192,7 +192,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:ActioniTopNotification:trigger">
+                <item id="fieldset:ActionNewsroom:trigger">
                   <items>
                     <item id="trigger_list">
                       <rank>10</rank>
@@ -206,7 +206,7 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ActioniTopNotification:settings">
+                <item id="fieldset:ActionNewsroom:settings">
                   <items>
                     <item id="priority">
                       <rank>10</rank>

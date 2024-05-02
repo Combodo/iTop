@@ -628,36 +628,36 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 ));
 
 //
-// Class: ActioniTopNotification
+// Class: ActionNewsroom
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'ActioniTopNotification:content' => '内容',
-	'ActioniTopNotification:settings' => '设置',
-	'Class:ActioniTopNotification' => ITOP_APPLICATION_SHORT.'通知',
-	'Class:ActioniTopNotification+' => '',
-	'Class:ActioniTopNotification/Attribute:language' => '语言',
-	'Class:ActioniTopNotification/Attribute:language+' => '',
-	'Class:ActioniTopNotification/Attribute:title' => '标题',
-	'Class:ActioniTopNotification/Attribute:title+' => '',
-	'Class:ActioniTopNotification/Attribute:message' => '信息',
-	'Class:ActioniTopNotification/Attribute:message+' => '',
-	'Class:ActioniTopNotification/Attribute:icon' => '图标',
-	'Class:ActioniTopNotification/Attribute:icon+' => '',
-	'Class:ActioniTopNotification/Attribute:priority' => '优先级',
-	'Class:ActioniTopNotification/Attribute:priority+' => '',
-	'Class:ActioniTopNotification/Attribute:priority/Value:1' => '关键',
-	'Class:ActioniTopNotification/Attribute:priority/Value:1+' => '关键',
-	'Class:ActioniTopNotification/Attribute:priority/Value:2' => '紧急',
-	'Class:ActioniTopNotification/Attribute:priority/Value:2+' => '紧急',
-	'Class:ActioniTopNotification/Attribute:priority/Value:3' => '重要',
-	'Class:ActioniTopNotification/Attribute:priority/Value:3+' => '重要',
-	'Class:ActioniTopNotification/Attribute:priority/Value:4' => '标准',
-	'Class:ActioniTopNotification/Attribute:priority/Value:4+' => '标准',
-	'Class:ActioniTopNotification/Attribute:recipients' => '收件人',
-	'Class:ActioniTopNotification/Attribute:recipients+' => '',
-	'Class:ActioniTopNotification/Attribute:url' => 'URL',
-	'Class:ActioniTopNotification/Attribute:url+' => '',
+	'ActionNewsroom:content' => '内容',
+	'ActionNewsroom:settings' => '设置',
+	'Class:ActionNewsroom' => ITOP_APPLICATION_SHORT.'通知',
+	'Class:ActionNewsroom+' => '',
+	'Class:ActionNewsroom/Attribute:language' => '语言',
+	'Class:ActionNewsroom/Attribute:language+' => '',
+	'Class:ActionNewsroom/Attribute:title' => '标题',
+	'Class:ActionNewsroom/Attribute:title+' => '',
+	'Class:ActionNewsroom/Attribute:message' => '信息',
+	'Class:ActionNewsroom/Attribute:message+' => '',
+	'Class:ActionNewsroom/Attribute:icon' => '图标',
+	'Class:ActionNewsroom/Attribute:icon+' => '',
+	'Class:ActionNewsroom/Attribute:priority' => '优先级',
+	'Class:ActionNewsroom/Attribute:priority+' => '',
+	'Class:ActionNewsroom/Attribute:priority/Value:1' => '关键',
+	'Class:ActionNewsroom/Attribute:priority/Value:1+' => '关键',
+	'Class:ActionNewsroom/Attribute:priority/Value:2' => '紧急',
+	'Class:ActionNewsroom/Attribute:priority/Value:2+' => '紧急',
+	'Class:ActionNewsroom/Attribute:priority/Value:3' => '重要',
+	'Class:ActionNewsroom/Attribute:priority/Value:3+' => '重要',
+	'Class:ActionNewsroom/Attribute:priority/Value:4' => '标准',
+	'Class:ActionNewsroom/Attribute:priority/Value:4+' => '标准',
+	'Class:ActionNewsroom/Attribute:recipients' => '收件人',
+	'Class:ActionNewsroom/Attribute:recipients+' => '',
+	'Class:ActionNewsroom/Attribute:url' => 'URL',
+	'Class:ActionNewsroom/Attribute:url+' => '',
 ));
 
 //
