@@ -4491,6 +4491,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <style>
           <icon/>
         </style>
@@ -4509,6 +4512,13 @@
         </uniqueness_rules>
       </properties>
       <fields>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="physicaldevices_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalDevice</linked_class>
           <ext_key_to_me>brand_id</ext_key_to_me>
@@ -4525,8 +4535,11 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="physicaldevices_list">
+            <item id="logo">
               <rank>20</rank>
+            </item>
+            <item id="physicaldevices_list">
+              <rank>30</rank>
             </item>
           </items>
         </details>
@@ -4544,6 +4557,13 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="Model" _delta="define">
@@ -4564,6 +4584,9 @@
             <attribute id="type"/>
           </complementary_attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>picture</image_attribute>
+        </fields_semantic>
         <style>
           <icon/>
         </style>
@@ -4595,6 +4618,13 @@
         <field id="brand_name" xsi:type="AttributeExternalField">
           <extkey_attcode>brand_id</extkey_attcode>
           <target_attcode>name</target_attcode>
+        </field>
+        <field id="picture" xsi:type="AttributeImage">
+          <display_max_width>256</display_max_width>
+          <display_max_height>256</display_max_height>
+          <storage_max_width>512</storage_max_width>
+          <storage_max_height>512</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="type" xsi:type="AttributeEnum">
           <sort_type>label</sort_type>
@@ -4678,11 +4708,14 @@
             <item id="brand_id">
               <rank>20</rank>
             </item>
-            <item id="type">
+            <item id="picture">
               <rank>30</rank>
             </item>
-            <item id="physicaldevices_list">
+            <item id="type">
               <rank>40</rank>
+            </item>
+            <item id="physicaldevices_list">
+              <rank>50</rank>
             </item>
           </items>
         </details>
