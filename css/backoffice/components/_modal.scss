@@ -80,6 +80,7 @@ $ibo-modal--is-informative--is-success--highlight--background-color: $ibo-color-
 
 .ibo-modal.ibo-is-informative{
   display: flex;
+  flex-direction: column;
   align-items: center;
   min-width: $ibo-modal--is-informative--min-width;
   min-height: $ibo-modal--is-informative--min-height !important; // !important in order to overload jQueryUI CSS rule that's put directly on the element
