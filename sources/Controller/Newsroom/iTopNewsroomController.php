@@ -358,7 +358,7 @@ JS
 		$oPage->AddUiBlock($oBulkActionsBlock);
 		
 		// Search for all notifications for the current user
-		$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification');
+		$oSearch = DBObjectSearch::FromOQL('SELECT EventNotificationNewsroom');
 		$oSearch->AddCondition('contact_id', UserRights::GetContactId(), '=');
 		$oSet = new DBObjectSet($oSearch, array('read' => true, 'date' => false), array());
 		
@@ -528,7 +528,7 @@ JS
 		$iContactId = UserRights::GetContactId();
 
 		if (utils::IsNotNullOrEmptyString($iContactId)) {
-			$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification WHERE contact_id = :contact_id AND read = "no"');
+			$oSearch = DBObjectSearch::FromOQL('SELECT EventNotificationNewsroom WHERE contact_id = :contact_id AND read = "no"');
 			$oSet = new DBObjectSet($oSearch, array(), array('contact_id' => $iContactId));
 
 			while ($oMessage = $oSet->Fetch()) {
@@ -542,7 +542,7 @@ $sMessage
 HTML;
 
 				$sIcon = $oMessage->Get('icon') !== null ?
-					$oMessage->Get('icon')->GetDisplayURL('EventiTopNotification', $oMessage->GetKey(), 'icon') :
+					$oMessage->Get('icon')->GetDisplayURL('EventNotificationNewsroom', $oMessage->GetKey(), 'icon') :
 					Branding::GetCompactMainLogoAbsoluteUrl();
 				$aMessages[] = array(
 					'id'         => $oMessage->GetKey(),
@@ -579,7 +579,7 @@ HTML;
 
 
 		if (utils::IsNotNullOrEmptyString($iContactId)) {
-			$oSearch = DBObjectSearch::FromOQL('SELECT EventiTopNotification WHERE contact_id = :contact_id AND read = "no"');
+			$oSearch = DBObjectSearch::FromOQL('SELECT EventNotificationNewsroom WHERE contact_id = :contact_id AND read = "no"');
 			$oSet = new DBObjectSet($oSearch, array(), array('contact_id' => $iContactId));
 
 			while ($oEvent = $oSet->Fetch()) {
@@ -609,7 +609,7 @@ HTML;
 		$sEventId = utils::ReadParam('event_id', 0);
 		if ($sEventId > 0) {
 			try {
-				$oEvent = MetaModel::GetObject('EventiTopNotification', $sEventId);
+				$oEvent = MetaModel::GetObject('EventNotificationNewsroom', $sEventId);
 				if ($oEvent !== null && $oEvent->Get('contact_id') === UserRights::GetContactId()) {
 					$oEvent->Set('read', 'yes');
 					$oEvent->SetCurrentDate('read_date');

@@ -244,7 +244,7 @@
         <method id="DoExecute">
           <comment>	/**
             *
-            *  Create EventiTopNotification for each recipient
+            *  Create EventNotificationNewsroom for each recipient
             * @param $oTrigger
             * @param $aContextArgs
             *
@@ -317,7 +317,7 @@
       if($bIsAsync === true) {
         $aRecipients[] = $oRecipient->GetKey();      
       } else { 
-        $oEvent = Combodo\iTop\Service\Notification\Event\EventiTopNotificationService::MakeEventFromAction($this, $oRecipient->GetKey(), $oTrigger->GetKey(), $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
+        $oEvent = Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService::MakeEventFromAction($this, $oRecipient->GetKey(), $oTrigger->GetKey(), $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
         $oEvent->DBInsertNoReload();
       }
 
@@ -343,7 +343,7 @@
         </method>
       </methods>
     </class>
-    <class id="EventiTopNotification"  _delta="define">
+    <class id="EventNotificationNewsroom"  _delta="define">
       <php_parent>
         <name>EventNotification</name>
       </php_parent>
@@ -352,7 +352,7 @@
         <category>core/cmdb,view_in_gui</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
-        <db_table>priv_event_itop_notif</db_table>
+        <db_table>priv_event_newsroom</db_table>
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>

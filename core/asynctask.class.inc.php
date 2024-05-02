@@ -15,7 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-use Combodo\iTop\Service\Notification\Event\EventiTopNotificationService;
+use Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService;
 
 
 /**
@@ -535,7 +535,7 @@ class AsyncSendiTopNotifications extends AsyncTask {
 		
 		foreach ($aRecipients as $iRecipientId)
 		{
-			$oEvent = EventiTopNotificationService::MakeEventFromAction($oAction, $iRecipientId, $iTriggerId, $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass, $sDate);
+			$oEvent = EventNotificationNewsroomService::MakeEventFromAction($oAction, $iRecipientId, $iTriggerId, $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass, $sDate);
 			$oEvent->DBInsertNoReload();
 		}
 		

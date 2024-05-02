@@ -2,22 +2,22 @@
 namespace  Combodo\iTop\Service\Notification\Event;
 
 
-
 use Action;
 use Combodo\iTop\Application\Branding;
-use EventiTopNotification;
+use EventNotificationNewsroom;
 use MetaModel;
 use utils;
+
 /**
- * Class EventiTopNotificationService
+ * Class EventNotificationNewsroomService
  *
- * Service to create EventiTopNotification objects from various sources.
+ * Service to create EventNotificationNewsroom objects from various sources.
  *
  * @package Combodo\iTop\Service\Notification\Event
  * @since 3.2.0
  * @api
 */
-class EventiTopNotificationService {
+class EventNotificationNewsroomService {
 	/**
 	 * @param \Action $oAction
 	 * @param int $iContactId
@@ -29,15 +29,15 @@ class EventiTopNotificationService {
 	 * @param string|null $sObjectClass
 	 * @param string|null $sDate
 	 *
-	 * @return \EventiTopNotification
+	 * @return \EventNotificationNewsroom
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public static function MakeEventFromAction(Action $oAction, int $iContactId, int $iTriggerId, string $sMessage, string $sTitle, string $sUrl, int $iObjectId, ?string $sObjectClass, string|null $sDate = null): EventiTopNotification
+	public static function MakeEventFromAction(Action $oAction, int $iContactId, int $iTriggerId, string $sMessage, string $sTitle, string $sUrl, int $iObjectId, ?string $sObjectClass, string|null $sDate = null): EventNotificationNewsroom
 	{
 		
-		$oEvent = new EventiTopNotification();
+		$oEvent = new EventNotificationNewsroom();
 		$oEvent->Set('title', $sTitle);
 		$oEvent->Set('message', $sMessage);
 		// Compute icon
@@ -47,11 +47,11 @@ class EventiTopNotificationService {
 		}
 		// - Then, check if the action is for a DM object and if its class has an icon
 		elseif ($iObjectId > 0 && utils::IsNotNullOrEmptyString(MetaModel::GetClassIcon($sObjectClass, false))) {
-			$oIcon = MetaModel::GetAttributeDef(EventiTopNotification::class, 'icon')->MakeRealValue(MetaModel::GetClassIcon($sObjectClass, false), $oEvent);
+			$oIcon = MetaModel::GetAttributeDef(EventNotificationNewsroom::class, 'icon')->MakeRealValue(MetaModel::GetClassIcon($sObjectClass, false), $oEvent);
 		}
 		// - Otherwise, fallback on the compact logo of the application
 		else {
-			$oIcon = MetaModel::GetAttributeDef(EventiTopNotification::class, 'icon')->MakeRealValue(Branding::GetCompactMainLogoAbsoluteUrl(), $oEvent);
+			$oIcon = MetaModel::GetAttributeDef(EventNotificationNewsroom::class, 'icon')->MakeRealValue(Branding::GetCompactMainLogoAbsoluteUrl(), $oEvent);
 		}
 		$oEvent->Set('icon', $oIcon);
 
