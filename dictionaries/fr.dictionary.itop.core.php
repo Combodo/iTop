@@ -610,6 +610,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ActionNewsroom/Attribute:priority/Value:3+' => 'Important',
 	'Class:ActionNewsroom/Attribute:priority/Value:4' => 'Standard',
 	'Class:ActionNewsroom/Attribute:priority/Value:4+' => 'Standard',
+	'Class:ActionNewsroom/Attribute:test_recipient_id' => 'Destinataire de test',
+	'Class:ActionNewsroom/Attribute:test_recipient_id+' => 'Personne utilisée en remplacement des Destinataires, lorsque la notification est \'En test\'',
 	'Class:ActionNewsroom/Attribute:recipients' => 'Destinataires',
 	'Class:ActionNewsroom/Attribute:recipients+' => '',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',

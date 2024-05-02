@@ -157,6 +157,13 @@
           <default_value>4</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
+        <field id="test_recipient_id" xsi:type="AttributeExternalKey">
+          <sql>test_recipient_id</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Person</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
         <field id="recipients" xsi:type="AttributeOQL">
           <sql>recipients</sql>
           <default_value/>
@@ -214,11 +221,14 @@
                     <item id="icon">
                       <rank>20</rank>
                     </item>
-                    <item id="recipients">
+                    <item id="test_recipient_id">
                       <rank>30</rank>
                     </item>
-                    <item id="url">
+                    <item id="recipients">
                       <rank>40</rank>
+                    </item>
+                    <item id="url">
+                      <rank>50</rank>
                     </item>
                   </items>
                 </item>
@@ -262,16 +272,14 @@
           <code><![CDATA[
 	public function DoExecute($oTrigger, $aContextArgs)
 	{
-		$oRecipientsSearch = DBObjectSearch::FromOQL($this->Get('recipients'));
-		$oRecipientsSearch->AllowAllData();
-		$oRecipientsSet = new DBObjectSet($oRecipientsSearch, array(), $aContextArgs);
+		$aRecipientsIds = [];
+		$oPotentialRecipientsSearch = DBObjectSearch::FromOQL($this->Get('recipients'));
+		$oPotentialRecipientsSearch->AllowAllData();
+		$oPotentialRecipientsSet = new DBObjectSet($oPotentialRecipientsSearch, array(), $aContextArgs);
+
 		$bIsAsync = $this->IsAsynchronous();
 		[$sPreviousLanguage, $aPreviousPluginProperties] = $this->SetNotificationLanguage();
-		
-		if($bIsAsync === true){
-		$aRecipients = [];
-		}
-		
+
 		$sMessage = MetaModel::ApplyParams($this->Get('message'), $aContextArgs);
 		$sTitle = MetaModel::ApplyParams($this->Get('title'), $aContextArgs);
 		$sUrl = MetaModel::ApplyParams($this->Get('url'), $aContextArgs);
@@ -281,51 +289,63 @@
 				$iObjectId = $aContextArgs['this->object()']->GetKey();
 				$sObjectClass = get_class($aContextArgs['this->object()']);
     }
-    
-		while ($oRecipient = $oRecipientsSet->Fetch()) {
-		  // Skip recipients that have no users
-		  if ($oRecipient instanceof Person && UserRights::GetUserFromPerson($oRecipient, false) === null) {
-				continue;
-			}
 
-			// Skip recipient that have no user with access to the backoffice
-			$oRecipientUsersSearch = DBObjectSearch::FromOQL("SELECT User WHERE contactid = " . $oRecipient->GetKey() . " AND status = 'enabled'");
-			$oRecipientUsersSearch->AllowAllData();
-			$oRecipientUsersSet = new DBObjectSet($oRecipientUsersSearch);
-			$oPortalDispatcher = new PortalDispatcher('backoffice');
-    	// - Check if the user has access to the backoffice
-			$bHasAccessToBackoffice = false;
-			while ($oRecipientUser = $oRecipientUsersSet->Fetch()) {
-			  // Skip recipients with user that don't have access to the backoffice
-			  if (false === $oPortalDispatcher->IsUserAllowed($oRecipientUser)) {
-			            continue;
-			  }
-
-			  $bHasAccessToBackoffice = true;
-			  break;
-			}
-			// - Skip it if necessary
-			if (false === $bHasAccessToBackoffice) {
-        continue;
+    if ($this->IsBeingTested()) {
+      // If action is being tested, send notification to the test recipient only, no matter what (unsubscribed, disabled, no access to the backoffice, ...)
+      $iTestRecipientId = $this->Get('test_recipient_id');
+      if ($iTestRecipientId > 0) {
+        $aRecipientsIds[] = $iTestRecipientId;
       }
+    } else {
+      // Otherwise, find the recipients to which we can actually send the notification among all the potential ones
+      while ($oPotentialRecipient = $oPotentialRecipientsSet->Fetch()) {
+        // Skip recipients that have no users
+        if ($oPotentialRecipient instanceof Person && UserRights::GetUserFromPerson($oPotentialRecipient, false) === null) {
+          continue;
+        }
 
-			// Skip recipients that have unsubscribed
-		  if (!\Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->IsSubscribed($oTrigger, $this, $oRecipient)) {
-				continue;
-			}
-			
-      if($bIsAsync === true) {
-        $aRecipients[] = $oRecipient->GetKey();      
-      } else { 
-        $oEvent = Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService::MakeEventFromAction($this, $oRecipient->GetKey(), $oTrigger->GetKey(), $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
-        $oEvent->DBInsertNoReload();
+        // Skip potential recipient that have no user with access to the backoffice
+        $oPotentialRecipientUsersSearch = DBObjectSearch::FromOQL("SELECT User WHERE contactid = " . $oPotentialRecipient->GetKey() . " AND status = 'enabled'");
+        $oPotentialRecipientUsersSearch->AllowAllData();
+        $oPotentialRecipientUsersSet = new DBObjectSet($oPotentialRecipientUsersSearch);
+        $oPortalDispatcher = new PortalDispatcher('backoffice');
+        // - Check if the user has access to the backoffice
+        $bHasAccessToBackoffice = false;
+        while ($oPotentialRecipientUser = $oPotentialRecipientUsersSet->Fetch()) {
+          // Skip potential recipients with user that don't have access to the backoffice
+          if (false === $oPortalDispatcher->IsUserAllowed($oPotentialRecipientUser)) {
+                    continue;
+          }
+
+          $bHasAccessToBackoffice = true;
+          break;
+        }
+        // - Skip it if necessary
+        if (false === $bHasAccessToBackoffice) {
+          continue;
+        }
+
+        // Skip potential recipients that have unsubscribed
+        if (!\Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->IsSubscribed($oTrigger, $this, $oPotentialRecipient)) {
+          continue;
+        }
+
+        $aRecipientsIds[] = $oPotentialRecipient->GetKey();
+
+        // Register subscription even though the notification is not sent yet
+        \Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->RegisterSubscription($oTrigger, $this, $oPotentialRecipient);
       }
-
-			\Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->RegisterSubscription($oTrigger, $this, $oRecipient);
-		}
-		if ($bIsAsync === true) {
-		    AsyncSendiTopNotifications::AddToQueue($this->GetKey(), $oTrigger->GetKey(), $aRecipients, $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
     }
+
+		if ($bIsAsync === true) {
+		    AsyncSendNewsroom::AddToQueue($this->GetKey(), $oTrigger->GetKey(), $aRecipientsIds, $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
+    } else {
+      foreach ($aRecipientsIds as $iRecipientId) {
+        $oEvent = Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService::MakeEventFromAction($this, $iRecipientId, $oTrigger->GetKey(), $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
+          $oEvent->DBInsertNoReload();
+      }
+    }
+
 		$this->SetNotificationLanguage($sPreviousLanguage, $aPreviousPluginProperties['language_code'] ?? null);
 	}
 ]]></code>

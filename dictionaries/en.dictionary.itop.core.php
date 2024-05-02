@@ -661,6 +661,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ActionNewsroom/Attribute:priority/Value:3+' => 'Important',
 	'Class:ActionNewsroom/Attribute:priority/Value:4' => 'Standard',
 	'Class:ActionNewsroom/Attribute:priority/Value:4+' => 'Standard',
+	'Class:ActionNewsroom/Attribute:test_recipient_id' => 'Test recipient',
+	'Class:ActionNewsroom/Attribute:test_recipient_id+' => 'Person used instead of Recipients when notification is being tested',
 	'Class:ActionNewsroom/Attribute:recipients' => 'Recipients',
 	'Class:ActionNewsroom/Attribute:recipients+' => '',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',
