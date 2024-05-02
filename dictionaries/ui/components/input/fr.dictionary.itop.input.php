@@ -18,5 +18,7 @@
  */
 // Input
 Dict::Add('FR FR', 'French', 'Français', array(
-	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match~~',
+	'UI:Component:Input:ChangeNotAllowed' => 'Cette modification n\'est pas autorisée',
+	'UI:Component:Input:Password:DoesNotMatch' => 'Les mots de passe ne correspondent pas',
+	'UI:Component:Input:Set:MinimumItems' => 'Minimum %1$s élément(s) requis',
 ));

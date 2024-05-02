@@ -54,7 +54,8 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
         {% if oUIBlock.GetMinItems() is not empty %}
         'combodo_min_items' : {
             minItems: {{ oUIBlock.GetMinItems() }},
-            errorMessage: '{{ 'UI:Component:Input:Set:MinimumItems'|dict_format(oUIBlock.GetMinItems()) }}'
+            errorTitle: '{{ 'UI:Component:Input:ChangeNotAllowed'|dict_s()|escape('js') }}',
+            errorMessage: '{{ 'UI:Component:Input:Set:MinimumItems'|dict_format(oUIBlock.GetMinItems())|escape('js') }}'
         },
         {% endif %}
     },
