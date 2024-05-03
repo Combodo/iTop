@@ -1165,6 +1165,7 @@ EOF
 	 */	 	
 	protected function QuoteForPHP($sStr, $bSimpleQuotes = false)
 	{
+		$sStr = $sStr ?? '';
 		if ($bSimpleQuotes)
 		{
 			$sEscaped = str_replace(array('\\', "'"), array('\\\\', "\\'"), $sStr);
@@ -3260,7 +3261,7 @@ EOF;
 		file_put_contents($sLanguagesFile, $sLanguagesFileContent);
 	}
 
-	protected static function FilterDictString($s)
+	protected static function FilterDictString(string $s): string
 	{
 		if (strpos($s, '~') !== false)
 		{
