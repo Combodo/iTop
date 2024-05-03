@@ -287,8 +287,8 @@ class InstallationFileServiceTest extends ItopTestCase {
 
 	private function GetMockListOfFoundModules() : array {
 		$sJsonContent = file_get_contents(realpath(__DIR__ . '/resources/AnalyzeInstallation.json'));
-		$sJsonContent = str_replace('ROOTDIR_TOREPLACE', APPROOT, $sJsonContent);
-		return json_decode($sJsonContent, true);
+		$sJsonContent = str_replace('ROOTDIR_TOREPLACE', addslashes(APPROOT), $sJsonContent);
+        return json_decode($sJsonContent, true);
 	}
 
 	/**

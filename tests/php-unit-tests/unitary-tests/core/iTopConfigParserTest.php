@@ -21,7 +21,7 @@ class iTopConfigParserTest extends ItopTestCase
 
 		clearstatcache();
 		$this->sConfigPath = utils::GetConfigFilePath();
-		$this->tmpSavePath = tempnam('/tmp/', 'config-itop');
+		$this->tmpSavePath = tempnam(sys_get_temp_dir(), 'config-itop');
 
 		$this->conf_exists = is_file($this->sConfigPath);
 		if ($this->conf_exists)
@@ -156,8 +156,8 @@ class iTopConfigParserTest extends ItopTestCase
 	 */
 	public function testConfigWriteToFile()
 	{
-		$tmpConfigFileBeforePath = tempnam( '/tmp/', 'config-itop');
-		$tmpConfigFileAfterPath = tempnam( '/tmp/', 'config-itop');
+		$tmpConfigFileBeforePath = tempnam( sys_get_temp_dir(), 'config-itop');
+		$tmpConfigFileAfterPath = tempnam( sys_get_temp_dir(), 'config-itop');
 
 		//create new config file
 		$sConfigFile = utils::GetConfig()->GetLoadedFile();
