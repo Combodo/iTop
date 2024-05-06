@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -31,7 +31,7 @@ use ScssPhp\ScssPhp\ValueConverter;
 /**
  * Static class utils
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 define('ITOP_CONFIG_FILE', 'config-itop.php');

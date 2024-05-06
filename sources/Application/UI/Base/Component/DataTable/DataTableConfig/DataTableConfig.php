@@ -6,7 +6,7 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTable;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class DataTableConfig extends UIContentBlock

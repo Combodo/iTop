@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
  * Helper class to build interactive forms to be used either in stand-alone
  * modal dialog or in "property-sheet" panes.
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class DesignerForm

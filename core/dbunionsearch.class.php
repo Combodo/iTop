@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -11,7 +11,7 @@
  * For clarity purpose, since only the constructor vary between DBObjectSearch and DBUnionSearch, all the API is documented on the common ancestor: DBSearch
  * Please refer to DBSearch's documentation
  *
- * @copyright   Copyright (C) 2015-2023 Combodo SARL
+ * @copyright   Copyright (C) 2015-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  *
  *

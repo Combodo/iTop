@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
 * @author       Benjamin Planque <benjamin.planque@combodo.com>
-* @copyright   Copyright (C) 2010-2023 Combodo SARL
+* @copyright   Copyright (C) 2010-2024 Combodo SAS
 * @license     http://opensource.org/licenses/AGPL-3.0
 */
 //////////////////////////////////////////////////////////////////////
