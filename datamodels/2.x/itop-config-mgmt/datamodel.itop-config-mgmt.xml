@@ -4750,6 +4750,9 @@
             <item id="type">
               <rank>20</rank>
             </item>
+            <item id="picture">
+              <rank>30</rank>
+            </item>
           </items>
         </summary>
       </presentation>
