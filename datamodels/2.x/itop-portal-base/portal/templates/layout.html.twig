@@ -64,12 +64,12 @@
         {% endif %}
 		{# Custom CSS that is supposed to do adjustments to the portal #}
 		{% if app['combodo.portal.instance.conf'].properties.themes.custom is defined %}
-			<link href="{{ app['combodo.portal.instance.conf'].properties.themes.custom|add_itop_version }}" rel="stylesheet">
+			<link href="{{ app['combodo.absolute_url'] ~ app['combodo.portal.instance.conf'].properties.themes.custom|add_itop_version }}" rel="stylesheet">
 		{% endif %}
 		{# Others CSS that will come after the theme/portal/custom, in an undefined order #}
 		{% if app['combodo.portal.instance.conf'].properties.themes.others is defined %}
 			{% for theme in app['combodo.portal.instance.conf'].properties.themes.others %}
-				<link href="{{ theme|add_itop_version }}" rel="stylesheet">
+				<link href="{{ app['combodo.absolute_url'] ~ theme|add_itop_version }}" rel="stylesheet">
 			{% endfor %}
 		{% endif %}
 	{% endblock %}
