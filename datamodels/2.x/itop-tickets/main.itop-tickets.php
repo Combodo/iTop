@@ -141,7 +141,7 @@ class _Ticket extends cmdbAbstractObject
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public function UpdateImpactedItems($iMaxDepth=10)
+	public function UpdateImpactedItems(int $iMaxDepth = 10)
 	{
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
 		/** @var ormLinkSet $oContactsSet */
