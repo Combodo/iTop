@@ -855,7 +855,7 @@ JS
 					$aAttProperties['value_html'] = $oItem->Get($sAttCode.'_friendlyname');
 
 					// Checking if user can access object's external key
-					$sObjectUrl = ApplicationContext::MakeObjectUrl($sClass, $oItem->Get($sAttCode));
+					$sObjectUrl = ApplicationContext::MakeObjectUrl($oAttDef->GetTargetClass(), $oItem->Get($sAttCode));
 					if (!empty($sObjectUrl)) {
 						$aAttProperties['url'] = $sObjectUrl;
 					}
