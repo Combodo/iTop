@@ -221,7 +221,7 @@ EOF
 							"className": {$sIsEditable} && aColumnProperties.mandatory ? 'mandatory' : '',
 							"render": function(data, type, row){
 								var cellElem;
-                                                                
+                                      
 								// Preparing the cell data
 								if(data.url !== undefined)
 								{
@@ -232,7 +232,7 @@ EOF
 								{
 									cellElem = $('<span></span>');
 								}
-								cellElem.html('<span>' + data.value + '</span>');
+								cellElem.html('<span>' + data.value_html + '</span>');
                                 
 								return cellElem.prop('outerHTML');
 							},
@@ -266,7 +266,7 @@ EOF
 								{
 									cellElem = $('<span></span>');
 								}
-								cellElem.html('<span>' + data.value + '</span>');
+								cellElem.html('<span>' + data.value_html + '</span>');
                                 
 								return cellElem.prop('outerHTML');
 							},
@@ -799,7 +799,6 @@ JS
 				static::TransferFieldRendererGlobalOutput($oFieldOutput, $oOutput);
 			}
 		}
-
 	}
 
 	/**
@@ -847,13 +846,13 @@ JS
 						$oFieldOutput = $oFieldRenderer->Render();
 						$aAttProperties['js_inline'] = $oFieldOutput->GetJs();
 						$aAttProperties['css_inline'] = $oFieldOutput->GetCss();
-						$aAttProperties['value'] = $oFieldOutput->GetHtml();
+						$aAttProperties['value_html'] = $oFieldOutput->GetHtml();
 					}
 
 				} else if ($oAttDef->IsExternalKey()) {
 
 					/** @var \AttributeExternalKey $oAttDef */
-					$aAttProperties['value'] = $oItem->Get($sAttCode.'_friendlyname');
+					$aAttProperties['value_html'] = $oItem->Get($sAttCode.'_friendlyname');
 
 					// Checking if user can access object's external key
 					$sObjectUrl = ApplicationContext::MakeObjectUrl($sClass, $oItem->Get($sAttCode));
@@ -863,7 +862,7 @@ JS
 
 				} else { // Others attributes
 
-					$aAttProperties['value'] = $oAttDef->GetAsHTML($oItem->Get($sAttCode));
+					$aAttProperties['value_html'] = $oAttDef->GetAsHTML($oItem->Get($sAttCode));
 
 					if ($oAttDef instanceof AttributeFriendlyName) {
 						// Checking if user can access object
