@@ -496,6 +496,7 @@
           <sql>solution</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
+          <format>html</format>
         </field>
         <field id="pending_reason" xsi:type="AttributeText">
           <sql>pending_reason</sql>
