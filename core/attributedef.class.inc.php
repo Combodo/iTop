@@ -4568,10 +4568,6 @@ class AttributeText extends AttributeString
 				}
 			}
 		}
-		else
-		{
-			$sValue = str_replace('&', '&amp;', $sValue);
-		}
 
 		return $sValue;
 	}
