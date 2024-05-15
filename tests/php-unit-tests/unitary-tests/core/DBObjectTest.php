@@ -1325,13 +1325,13 @@ class DBObjectTest extends ItopDataTestCase
 			'title 256 chars' => ['title', 256],
 			'title 300 chars' => ['title', 300],
 
-			// UserRequest.solution is an AttributeText (maxsize=65535) with format=text
-			'solution 250 chars' => ['solution', 250],
-			'solution 60000 chars' => ['solution', 60000],
-			'solution 65534 chars' => ['solution', 65534],
-			'solution 65535 chars' => ['solution', 65535],
-			'solution 65536 chars' => ['solution', 65536],
-			'solution 70000 chars' => ['solution', 70000],
+			// UserRequest.pending_reason is an AttributeText (maxsize=65535) with format=text
+			'pending_reason 250 chars' => ['pending_reason', 250],
+			'pending_reason 60000 chars' => ['pending_reason', 60000],
+			'pending_reason 65534 chars' => ['pending_reason', 65534],
+			'pending_reason 65535 chars' => ['pending_reason', 65535],
+			'pending_reason 65536 chars' => ['pending_reason', 65536],
+			'pending_reason 70000 chars' => ['pending_reason', 70000],
 		];
 	}
 
