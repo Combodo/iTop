@@ -172,7 +172,7 @@ class DatabaseAnalyzer
 				}
 				elseif ($oAttDef->IsDirectField() && !($oAttDef instanceof AttributeTagSet))
 				{
-					$this->CheckEnums($sClass, $sAttCode, $oAttDef, $sTable, $sKeyField, $aErrorsAndFixes);
+					$this->CheckAllowedValues($sClass, $sAttCode, $oAttDef, $sTable, $sKeyField, $aErrorsAndFixes);
 				}
 			}
 		}
@@ -451,7 +451,7 @@ class DatabaseAnalyzer
 	 * @throws \MySQLException
 	 * @throws \Exception
 	 */
-	private function CheckEnums($sClass, $sAttCode, AttributeDefinition $oAttDef, $sTable, $sKeyField, &$aErrorsAndFixes)
+	private function CheckAllowedValues($sClass, $sAttCode, AttributeDefinition $oAttDef, $sTable, $sKeyField, &$aErrorsAndFixes)
 	{
 		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode);
 		if (!is_null($aAllowedValues) && count($aAllowedValues) > 0)
@@ -460,6 +460,9 @@ class DatabaseAnalyzer
 			$sExpectedValues = implode(",", CMDBSource::Quote($aAllowedValues, true));
 
 			$aCols = $oAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
+			if (empty($aCols)) {
+				return;
+			}
 			$sMyAttributeField = current($aCols); // get the first column for the moment
 			$sFilter = "FROM `$sTable` WHERE `$sTable`.`$sMyAttributeField` NOT IN ($sExpectedValues)";
 			if ($oAttDef->IsNullAllowed()) {
