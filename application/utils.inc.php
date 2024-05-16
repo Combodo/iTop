@@ -200,7 +200,13 @@ class utils
 	public static function IsModeCLI()
 	{
 		$sCleanName = strtolower(trim(PHP_SAPI));
-		return ($sCleanName === 'cli');
+		$bRes = $sCleanName === 'cli';
+		IssueLog::Error("IsModeCLI", null, [
+			'sCleanName' => $sCleanName,
+			'bRes' => $bRes,
+		]);
+
+		return $bRes;
 	}
 
 	protected static $bPageMode = null;

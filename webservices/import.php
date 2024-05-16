@@ -218,9 +218,6 @@ else
 	$oP = new CSVPage("iTop - Bulk import");
 }
 
-$sCleanName = strtolower(trim(PHP_SAPI));
-$bIsCli = ($sCleanName === 'cli');
-$oP->p("bIsCli: $bIsCli sCleanName: $sCleanName");
 
 
 try
@@ -236,6 +233,10 @@ catch(Exception $e)
 
 if (utils::IsModeCLI())
 {
+	$sCleanName = strtolower(trim(PHP_SAPI));
+	$bIsCli = ($sCleanName === 'cli');
+	$oP->p("mode CLI bIsCli: $bIsCli sCleanName: $sCleanName");
+
 	// Next steps:
 	//   specific arguments: 'csvfile'
 	//
@@ -264,6 +265,10 @@ if (utils::IsModeCLI())
 }
 else
 {
+	$sCleanName = strtolower(trim(PHP_SAPI));
+	$bIsCli = ($sCleanName === 'cli');
+	$oP->p("mode WEB bIsCli: $bIsCli sCleanName: $sCleanName");
+
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
     LoginWebPage::ResetSession(true);
 	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
