@@ -1,5 +1,5 @@
 
-{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 {# SET WIDGET #}
@@ -54,7 +54,8 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
         {% if oUIBlock.GetMinItems() is not empty %}
         'combodo_min_items' : {
             minItems: {{ oUIBlock.GetMinItems() }},
-            errorMessage: '{{ 'UI:Component:Input:Set:MinimumItems'|dict_format(oUIBlock.GetMinItems()) }}'
+            errorTitle: '{{ 'UI:Component:Input:ChangeNotAllowed'|dict_s()|escape('js') }}',
+            errorMessage: '{{ 'UI:Component:Input:Set:MinimumItems'|dict_format(oUIBlock.GetMinItems())|escape('js') }}'
         },
         {% endif %}
     },
@@ -131,7 +132,9 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
                 // Add merged values
                 callback(options);
                 // Restore input value
-                me.addItems(aSelectedItems, true);
+                aSelectedItems.forEach(function(item) {
+                    me.addItem(item, true);
+                });
             }
         });
     },

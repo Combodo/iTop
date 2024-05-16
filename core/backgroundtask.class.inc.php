@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2023 Combodo SARL
+// Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Class BackgroundTask
  * A class to record information about the execution of background processes ({@link iProcess} impl)
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class BackgroundTask extends DBObject

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -50,7 +50,7 @@ abstract class ItopTestCase extends TestCase
 
 		static::$DEBUG_UNIT_TEST = getenv('DEBUG_UNIT_TEST');
 
-		require_once static::GetAppRoot() . 'approot.inc.php';
+		require_once __DIR__.'/../../../../approot.inc.php';
 
 		if ((static::DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER)
 			&& (false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME))) {
@@ -78,6 +78,7 @@ abstract class ItopTestCase extends TestCase
 		}
 	}
 
+
 	/**
 	 * @param array $args
 	 * @param string $sExportFileName relative to log folder
@@ -93,42 +94,40 @@ abstract class ItopTestCase extends TestCase
 	 * @return string
 	 * @throws \ReflectionException
 	 */
-    public static function ExportFunctionParameterValues(array $args, string $sExportFileName, array $aExcludedParams = []): string
-    {
+	public static function ExportFunctionParameterValues(array $args, string $sExportFileName, array $aExcludedParams = []): string
+	{
 		// get sclass et function dans la callstrack
 
-	    // in the callstack get the call function name
-	    $aCallStack = debug_backtrace();
-			    $sCallFunction = $aCallStack[1]['function'];
-	    // in the casll stack get the call class name
-	    $sCallClass = $aCallStack[1]['class'];
-	    $reflectionFunc = new ReflectionMethod($sCallClass, $sCallFunction);
-	    $parameters = $reflectionFunc->getParameters();
+		// in the callstack get the call function name
+		$aCallStack = debug_backtrace();
+		$sCallFunction = $aCallStack[1]['function'];
+		// in the casll stack get the call class name
+		$sCallClass = $aCallStack[1]['class'];
+		$reflectionFunc = new ReflectionMethod($sCallClass, $sCallFunction);
+		$parameters = $reflectionFunc->getParameters();
 
-	    $aParamValues = [];
-	    foreach ($parameters as $index => $param) {
-		    $aParamValues[$param->getName()] = $args[$index] ?? null;
-	    }
+		$aParamValues = [];
+		foreach ($parameters as $index => $param) {
+			$aParamValues[$param->getName()] = $args[$index] ?? null;
+		}
 
-	    $paramValues = $aParamValues;
-	    foreach ($aExcludedParams as $sExcludedParam) {
-		    unset($paramValues[$sExcludedParam]);
-	    }
+		$paramValues = $aParamValues;
+		foreach ($aExcludedParams as $sExcludedParam) {
+			unset($paramValues[$sExcludedParam]);
+		}
 
-	    // extract oPage from the array in parameters and make a foreach on exlucded parameters
-	    foreach ($aExcludedParams as $sExcludedParam) {
-		    unset($paramValues[$sExcludedParam]);
-	    }
+		// extract oPage from the array in parameters and make a foreach on exlucded parameters
+		foreach ($aExcludedParams as $sExcludedParam) {
+			unset($paramValues[$sExcludedParam]);
+		}
 
-	    $var_export = var_export($paramValues, true);
-	    file_put_contents(APPROOT.'/log/' .$sExportFileName, $var_export);
+		$var_export = var_export($paramValues, true);
+		file_put_contents(APPROOT.'/log/' .$sExportFileName, $var_export);
 		return $var_export;
-    }
+	}
 
-    protected function setUp(): void {
+	protected function setUp(): void {
 		parent::setUp();
-
-		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
 
 		$this->LoadRequiredItopFiles();
 		$this->LoadRequiredTestFiles();
@@ -178,8 +177,9 @@ abstract class ItopTestCase extends TestCase
 	 */
 	protected function LoadRequiredItopFiles(): void
 	{
-		// Empty until we actually need to require some files in the class
-	}
+		// At least make sure that the autoloader will be loaded, and that the APPROOT constant is defined
+        require_once __DIR__.'/../../../../approot.inc.php';
+    }
 
 	/**
 	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceUnitTestFile()}

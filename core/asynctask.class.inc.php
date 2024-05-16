@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -15,13 +15,13 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-use Combodo\iTop\Service\Notification\Event\EventiTopNotificationService;
+use Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService;
 
 
 /**
  * Persistent classes (internal): user defined actions
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -460,10 +460,10 @@ class AsyncSendEmail extends AsyncTask
 }
 
 /**
- * An async notification to be sent to iTop users
+ * An async notification to be sent to iTop users through the newsroom
  * @since 3.2.0
  */
-class AsyncSendiTopNotifications extends AsyncTask {
+class AsyncSendNewsroom extends AsyncTask {
 
 	public static function Init()
 	{
@@ -474,7 +474,7 @@ class AsyncSendiTopNotifications extends AsyncTask {
 			"name_attcode" => "created",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
-			"db_table" => "priv_async_send_itop_notifications",
+			"db_table" => "priv_async_send_newsroom",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
 		);
@@ -535,7 +535,7 @@ class AsyncSendiTopNotifications extends AsyncTask {
 		
 		foreach ($aRecipients as $iRecipientId)
 		{
-			$oEvent = EventiTopNotificationService::MakeEventFromAction($oAction, $iRecipientId, $iTriggerId, $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass, $sDate);
+			$oEvent = EventNotificationNewsroomService::MakeEventFromAction($oAction, $iRecipientId, $iTriggerId, $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass, $sDate);
 			$oEvent->DBInsertNoReload();
 		}
 		

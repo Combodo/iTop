@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('FR FR', 'French', 'Français', array(
@@ -322,7 +322,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:EventNotification' => 'Notification',
+	'Class:EventNotification' => 'Notification envoyée',
 	'Class:EventNotification+' => '',
 	'Class:EventNotification/Attribute:trigger_id' => 'Déclencheur',
 	'Class:EventNotification/Attribute:trigger_id+' => '',
@@ -337,7 +337,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:EventNotificationEmail' => 'Envoi d\'Email',
+	'Class:EventNotificationEmail' => 'Mél envoyé',
 	'Class:EventNotificationEmail+' => '',
 	'Class:EventNotificationEmail/Attribute:to' => 'A',
 	'Class:EventNotificationEmail/Attribute:to+' => '',
@@ -432,38 +432,38 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Class: EventiTopNotification
+// Class: EventNotificationNewsroom
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:EventiTopNotification' => 'Notification '.ITOP_APPLICATION_SHORT,
-	'Class:EventiTopNotification+' => '',
-	'Class:EventiTopNotification/Attribute:title' => 'Titre',
-	'Class:EventiTopNotification/Attribute:title+' => '',
-	'Class:EventiTopNotification/Attribute:icon' => 'Icône',
-	'Class:EventiTopNotification/Attribute:icon+' => '',
-	'Class:EventiTopNotification/Attribute:priority' => 'Priorité',
-	'Class:EventiTopNotification/Attribute:priority+' => '',
-	'Class:EventiTopNotification/Attribute:priority/Value:1' => 'Critique',
-	'Class:EventiTopNotification/Attribute:priority/Value:1+' => 'Critique',
-	'Class:EventiTopNotification/Attribute:priority/Value:2' => 'Urgent',
-	'Class:EventiTopNotification/Attribute:priority/Value:2+' => 'Urgent',
-	'Class:EventiTopNotification/Attribute:priority/Value:3' => 'Important',
-	'Class:EventiTopNotification/Attribute:priority/Value:3+' => 'Important',
-	'Class:EventiTopNotification/Attribute:priority/Value:4' => 'Standard',
-	'Class:EventiTopNotification/Attribute:priority/Value:4+' => 'Standard',
-	'Class:EventiTopNotification/Attribute:url' => 'URL',
-	'Class:EventiTopNotification/Attribute:url+' => '',
-	'Class:EventiTopNotification/Attribute:read' => 'Lu',
-	'Class:EventiTopNotification/Attribute:read+' => '',
-	'Class:EventiTopNotification/Attribute:read/Value:no' => 'Non',
-	'Class:EventiTopNotification/Attribute:read/Value:no+' => 'Non',
-	'Class:EventiTopNotification/Attribute:read/Value:yes' => 'Oui',
-	'Class:EventiTopNotification/Attribute:read/Value:yes+' => 'Oui',
-	'Class:EventiTopNotification/Attribute:read_date' => 'Date de lecture',
-	'Class:EventiTopNotification/Attribute:read_date+' => '',
-	'Class:EventiTopNotification/Attribute:contact_id' => 'Contact',
-	'Class:EventiTopNotification/Attribute:contact_id+' => '',
+	'Class:EventNotificationNewsroom' => 'News envoyée',
+	'Class:EventNotificationNewsroom+' => '',
+	'Class:EventNotificationNewsroom/Attribute:title' => 'Titre',
+	'Class:EventNotificationNewsroom/Attribute:title+' => '',
+	'Class:EventNotificationNewsroom/Attribute:icon' => 'Icône',
+	'Class:EventNotificationNewsroom/Attribute:icon+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority' => 'Priorité',
+	'Class:EventNotificationNewsroom/Attribute:priority+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1' => 'Critique',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1+' => 'Critique',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2' => 'Urgent',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3' => 'Important',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3+' => 'Important',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4' => 'Standard',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4+' => 'Standard',
+	'Class:EventNotificationNewsroom/Attribute:url' => 'URL',
+	'Class:EventNotificationNewsroom/Attribute:url+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read' => 'Lu',
+	'Class:EventNotificationNewsroom/Attribute:read+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no' => 'Non',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no+' => 'Non',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes' => 'Oui',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes+' => 'Oui',
+	'Class:EventNotificationNewsroom/Attribute:read_date' => 'Date de lecture',
+	'Class:EventNotificationNewsroom/Attribute:read_date+' => '',
+	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact',
+	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '',
 ));
 
 //
@@ -503,7 +503,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ActionNotification' => 'notification',
+	'Class:ActionNotification' => 'Action de notification',
 	'Class:ActionNotification+' => '',
 ));
 
@@ -585,35 +585,37 @@ En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
 
 
 //
-// Class: ActioniTopNotification
+// Class: ActionNewsroom
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'ActioniTopNotification:trigger' => 'Conditions de déclenchement',
-	'ActioniTopNotification:content' => 'Message',
-	'ActioniTopNotification:settings' => 'Paramètres',
-	'Class:ActioniTopNotification' => ITOP_APPLICATION_SHORT.' Notification',
-	'Class:ActioniTopNotification+' => '',
-	'Class:ActioniTopNotification/Attribute:title' => 'Titre',
-	'Class:ActioniTopNotification/Attribute:title+' => '',
-	'Class:ActioniTopNotification/Attribute:message' => 'Message',
-	'Class:ActioniTopNotification/Attribute:message+' => '',
-	'Class:ActioniTopNotification/Attribute:icon' => 'Icône',
-	'Class:ActioniTopNotification/Attribute:icon+' => '',
-	'Class:ActioniTopNotification/Attribute:priority' => 'Priorité',
-	'Class:ActioniTopNotification/Attribute:priority+' => '',
-	'Class:ActioniTopNotification/Attribute:priority/Value:1' => 'Critique',
-	'Class:ActioniTopNotification/Attribute:priority/Value:1+' => 'Critique',
-	'Class:ActioniTopNotification/Attribute:priority/Value:2' => 'Urgent',
-	'Class:ActioniTopNotification/Attribute:priority/Value:2+' => 'Urgent',
-	'Class:ActioniTopNotification/Attribute:priority/Value:3' => 'Important',
-	'Class:ActioniTopNotification/Attribute:priority/Value:3+' => 'Important',
-	'Class:ActioniTopNotification/Attribute:priority/Value:4' => 'Standard',
-	'Class:ActioniTopNotification/Attribute:priority/Value:4+' => 'Standard',
-	'Class:ActioniTopNotification/Attribute:recipients' => 'Destinataires',
-	'Class:ActioniTopNotification/Attribute:recipients+' => '',
-	'Class:ActioniTopNotification/Attribute:url' => 'URL',
-	'Class:ActioniTopNotification/Attribute:url+' => '',
+	'ActionNewsroom:trigger' => 'Conditions de déclenchement',
+	'ActionNewsroom:content' => 'Message',
+	'ActionNewsroom:settings' => 'Paramètres',
+	'Class:ActionNewsroom' => 'Notification par news',
+	'Class:ActionNewsroom+' => '',
+	'Class:ActionNewsroom/Attribute:title' => 'Titre',
+	'Class:ActionNewsroom/Attribute:title+' => '',
+	'Class:ActionNewsroom/Attribute:message' => 'Message',
+	'Class:ActionNewsroom/Attribute:message+' => '',
+	'Class:ActionNewsroom/Attribute:icon' => 'Icône',
+	'Class:ActionNewsroom/Attribute:icon+' => '',
+	'Class:ActionNewsroom/Attribute:priority' => 'Priorité',
+	'Class:ActionNewsroom/Attribute:priority+' => '',
+	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critique',
+	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Critique',
+	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgent',
+	'Class:ActionNewsroom/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:ActionNewsroom/Attribute:priority/Value:3' => 'Important',
+	'Class:ActionNewsroom/Attribute:priority/Value:3+' => 'Important',
+	'Class:ActionNewsroom/Attribute:priority/Value:4' => 'Standard',
+	'Class:ActionNewsroom/Attribute:priority/Value:4+' => 'Standard',
+	'Class:ActionNewsroom/Attribute:test_recipient_id' => 'Destinataire de test',
+	'Class:ActionNewsroom/Attribute:test_recipient_id+' => 'Personne utilisée en remplacement des Destinataires, lorsque la notification est \'En test\'',
+	'Class:ActionNewsroom/Attribute:recipients' => 'Destinataires',
+	'Class:ActionNewsroom/Attribute:recipients+' => '',
+	'Class:ActionNewsroom/Attribute:url' => 'URL',
+	'Class:ActionNewsroom/Attribute:url+' => '',
 ));
 
 //

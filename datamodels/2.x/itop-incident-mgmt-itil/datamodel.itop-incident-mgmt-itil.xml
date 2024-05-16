@@ -7,7 +7,7 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,requestmgmt</category>
@@ -414,6 +414,7 @@
           <sql>solution</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
+          <format>html</format>
         </field>
         <field id="pending_reason" xsi:type="AttributeText">
           <sql>pending_reason</sql>
