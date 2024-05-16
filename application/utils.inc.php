@@ -199,16 +199,8 @@ class utils
 
 	public static function IsModeCLI()
 	{
-		$sSAPIName = php_sapi_name();
-		$sCleanName = strtolower(trim($sSAPIName));
-		if ($sCleanName == 'cli')
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		$sCleanName = strtolower(trim(PHP_SAPI));
+		return ($sCleanName === 'cli');
 	}
 
 	protected static $bPageMode = null;
@@ -316,13 +308,13 @@ class utils
 		}
 		return self::Sanitize($retValue, $defaultValue, $sSanitizationFilter);
 	}
-	
+
 	public static function ReadPostedParam($sName, $defaultValue = '', $sSanitizationFilter = 'parameter')
 	{
 		$retValue = isset($_POST[$sName]) ? $_POST[$sName] : $defaultValue;
 		return self::Sanitize($retValue, $defaultValue, $sSanitizationFilter);
 	}
-	
+
 	public static function Sanitize($value, $defaultValue, $sSanitizationFilter)
 	{
 		if ($value === $defaultValue)
@@ -338,7 +330,7 @@ class utils
 				$retValue = $defaultValue;
 			}
 		}
-		return $retValue;		
+		return $retValue;
 	}
 
 	/**
@@ -481,11 +473,11 @@ class utils
 					$sMimeType = self::GetFileMimeType($sTmpName);
 					$oDocument = new ormDocument($doc_content, $sMimeType, $sName);
 				break;
-				
+
 				case UPLOAD_ERR_NO_FILE:
 				// no file to load, it's a normal case, just return an empty document
 				break;
-				
+
 				case UPLOAD_ERR_FORM_SIZE:
 				case UPLOAD_ERR_INI_SIZE:
 				throw new FileUploadException(Dict::Format('UI:Error:UploadedFileTooBig', ini_get('upload_max_filesize')));
@@ -494,7 +486,7 @@ class utils
 				case UPLOAD_ERR_PARTIAL:
 				throw new FileUploadException(Dict::S('UI:Error:UploadedFileTruncated.'));
 				break;
-				
+
 				case UPLOAD_ERR_NO_TMP_DIR:
 				throw new FileUploadException(Dict::S('UI:Error:NoTmpDir'));
 				break;
@@ -507,7 +499,7 @@ class utils
 				$sName = is_null($sIndex) ? $aFileInfo['name'] : $aFileInfo['name'][$sIndex];
 				throw new FileUploadException(Dict::Format('UI:Error:UploadStoppedByExtension_FileName', $sName));
 				break;
-				
+
 				default:
 				throw new FileUploadException(Dict::Format('UI:Error:UploadFailedUnknownCause_Code', $sError));
 				break;
@@ -615,17 +607,17 @@ class utils
 
 		return $aSelectedObj;
 	}
-	
+
 	public static function GetNewTransactionId()
 	{
 		return privUITransaction::GetNewTransactionId();
 	}
-	
+
 	public static function IsTransactionValid($sId, $bRemoveTransaction = true)
 	{
 		return privUITransaction::IsTransactionValid($sId, $bRemoveTransaction);
 	}
-	
+
 	public static function RemoveTransaction($sId)
 	{
 		return privUITransaction::RemoveTransaction($sId);
@@ -810,9 +802,9 @@ class utils
 			$aDateTokens = array_keys($aSpec);
 			$aDateRegexps = array_values($aSpec);
 		}
-	   
+
 	   $sDateRegexp = str_replace($aDateTokens, $aDateRegexps, $sFormat);
-	   
+
 	   if (preg_match('!^(?<head>)'.$sDateRegexp.'(?<tail>)$!', $sDate, $aMatches))
 	   {
 			$sYear = isset($aMatches['year']) ? $aMatches['year'] : 0;
@@ -829,7 +821,7 @@ class utils
 	   }
 	   // http://www.spaweditor.com/scripts/regex/index.php
 	}
-	
+
 	/**
 	 * Convert an old date/time format specification (using % placeholders)
 	 * to a format compatible with DateTime::createFromFormat
@@ -1248,7 +1240,7 @@ class utils
 		{
 			$aArguments['param_file'] = $sParamFile;
 		}
-		
+
 		$aArgs = array();
 		foreach($aArguments as $sName => $value)
 		{
@@ -1257,7 +1249,7 @@ class utils
 			$aArgs[] = "--$sName=".escapeshellarg($value);
 		}
 		$sArgs = implode(' ', $aArgs);
-		
+
 		$sScript = realpath(APPROOT.$sScriptName);
 		if (!file_exists($sScript))
 		{
@@ -1348,7 +1340,7 @@ class utils
 	public static function GetPopupMenuItems($oPage, $iMenuId, $param, &$aActions, $sTableId = null, $sDataTableId = null)
 	{
 		// 1st - add standard built-in menu items
-		// 
+		//
 		switch($iMenuId)
 		{
 			case iPopupMenuExtension::MENU_OBJLIST_TOOLKIT:
@@ -1373,7 +1365,7 @@ class utils
 						"mailto:?body=".urlencode($sUrl).' ' // Add an extra space to make it work in Outlook
 				);
 			}
-			
+
 			if (UserRights::IsActionAllowed($param->GetFilter()->GetClass(), UR_ACTION_BULK_READ, $param) != UR_ALLOWED_NO)
 			{
 				// Bulk export actions
@@ -1387,7 +1379,7 @@ class utils
 			}
 			$aResult[] = new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL', '$sContext')");
 			$aResult[] = new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sDataTableId', '$sContext')");
-				
+
 			break;
 
 			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
@@ -1401,7 +1393,7 @@ class utils
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
 			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
-			
+
 			$aResult = array(
 				new SeparatorPopupMenuItem(),
 				// Static menus: Email this page & CSV Export
@@ -1465,7 +1457,7 @@ class utils
 				if (is_object($oMenuItem))
 				{
 					$aActions[$oMenuItem->GetUID()] = $oMenuItem->GetMenuItem();
-					
+
 					foreach($oMenuItem->GetLinkedScripts() as $sLinkedScript)
 					{
 						$oPage->add_linked_script($sLinkedScript);
@@ -1602,7 +1594,7 @@ class utils
 			return $sProposed;
 		}
 	}
-	
+
 	/**
 	 * Some characters cause troubles with jQuery when used inside DOM IDs, so let's replace them by the safe _ (underscore)
 	 * @param string $sId The ID to sanitize
@@ -1612,13 +1604,13 @@ class utils
 	{
 		return str_replace(array(':', '[', ']', '+', '-'), '_', $sId);
 	}
-	
+
 	/**
 	 * Helper to execute an HTTP POST request
 	 * Source: http://netevil.org/blog/2006/nov/http-post-from-php-without-curl
 	 *         originaly named after do_post_request
 	 * Does not require cUrl but requires openssl for performing https POSTs.
-	 * 
+	 *
 	 * @param string $sUrl The URL to POST the data to
 	 * @param array $aData The data to POST as an array('param_name' => value)
 	 * @param string $sOptionnalHeaders Additional HTTP headers as a string with newlines between headers
@@ -1629,11 +1621,11 @@ class utils
 	 *
 	 * @return string The result of the POST request
 	 * @throws Exception with a specific error message depending on the cause
-	 */ 
+	 */
 	public static function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHeaders = null, $aCurlOptions = array())
 	{
 		// $sOptionnalHeaders is a string containing additional HTTP headers that you would like to send in your request.
-	
+
 		if (function_exists('curl_init'))
 		{
 			// If cURL is available, let's use it, since it provides a greater control over the various HTTP/SSL options
@@ -1667,7 +1659,7 @@ class utils
 				CURLOPT_POSTFIELDS		=> http_build_query($aData),
 				CURLOPT_HTTPHEADER		=> $aHTTPHeaders,
 			);
-			
+
 			$aAllOptions = $aCurlOptions + $aOptions;
 			$ch = curl_init($sUrl);
 			curl_setopt_array($ch, $aAllOptions);
@@ -1693,7 +1685,7 @@ class utils
 		else
 		{
 			// cURL is not available let's try with streams and fopen...
-			
+
 			$sData = http_build_query($aData);
 			$aParams = array('http' => array(
 									'method' => 'POST',
@@ -1705,7 +1697,7 @@ class utils
 				$aParams['http']['header'] .= $sOptionnalHeaders;
 			}
 			$ctx = stream_context_create($aParams);
-		
+
 			$fp = @fopen($sUrl, 'rb', false, $ctx);
 			if (!$fp)
 			{
@@ -1746,7 +1738,7 @@ class utils
 
 	/**
 	 * Get a standard list of character sets
-	 *	 
+	 *
  	 * @param array $aAdditionalEncodings Additional values
 	 * @return array of iconv code => english label, sorted by label
 	 */
@@ -1776,8 +1768,8 @@ class utils
 	public static function HtmlEntities($sValue)
 	{
 		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
-	}	
-	
+	}
+
 	/**
 	 * Helper to encapsulation iTop's html_entity_decode
 	 * @param string $sValue
@@ -1806,7 +1798,7 @@ class utils
 			return $e->getMessage();
 		}
 	}
-	
+
 	/**
 	 * Convert (?) plain text to some HTML markup by replacing newlines by <br/> tags
 	 * and escaping HTML entities
@@ -1819,7 +1811,7 @@ class utils
 		$sText = str_replace("\r", "\n", $sText);
 		return str_replace("\n", '<br/>', htmlentities($sText, ENT_QUOTES, 'UTF-8'));
 	}
-	
+
 	/**
 	 * Eventually compiles the SASS (.scss) file into the CSS (.css) file
 	 *
@@ -1882,7 +1874,7 @@ class utils
 
 		return $sCss;
 	}
-	
+
 	public static function GetImageSize($sImageData)
 	{
 		if (function_exists('getimagesizefromstring')) // PHP 5.4.0 or higher
@@ -1939,7 +1931,7 @@ class utils
 			case 'image/png':
 			$img = @imagecreatefromstring($oImage->GetData());
 			break;
-			
+
 			default:
 			// Unsupported image type, return the image as-is
 			//throw new Exception("Unsupported image type: '".$oImage->GetMimeType()."'. Cannot resize the image, original image will be used.");
@@ -1953,14 +1945,14 @@ class utils
 		else
 		{
 			// Let's scale the image, preserving the transparency for GIFs and PNGs
-			
+
 			$fScale = min($iMaxImageWidth / $iWidth, $iMaxImageHeight / $iHeight);
 
 			$iNewWidth = $iWidth * $fScale;
 			$iNewHeight = $iHeight * $fScale;
-			
+
 			$new = imagecreatetruecolor($iNewWidth, $iNewHeight);
-			
+
 			// Preserve transparency
 			if(($oImage->GetMimeType() == "image/gif") || ($oImage->GetMimeType() == "image/png"))
 			{
@@ -1968,38 +1960,38 @@ class utils
 				imagealphablending($new, false);
 				imagesavealpha($new, true);
 			}
-			
+
 			imagecopyresampled($new, $img, 0, 0, 0, 0, $iNewWidth, $iNewHeight, $iWidth, $iHeight);
-			
+
 			ob_start();
 			switch ($oImage->GetMimeType())
 			{
 				case 'image/gif':
 				imagegif($new); // send image to output buffer
 				break;
-				
+
 				case 'image/jpeg':
 				imagejpeg($new, null, 80); // null = send image to output buffer, 80 = good quality
 				break;
-				 
+
 				case 'image/png':
 				imagepng($new, null, 5); // null = send image to output buffer, 5 = medium compression
 				break;
 			}
 			$oResampledImage = new ormDocument(ob_get_contents(), $oImage->GetMimeType(), $oImage->GetFileName());
 			@ob_end_clean();
-			
+
 			imagedestroy($img);
 			imagedestroy($new);
-							
+
 			return $oResampledImage;
 		}
-				
+
 	}
-	
+
 	/**
 	 * Create a 128 bit UUID in the format: {########-####-####-####-############}
-	 * 
+	 *
 	 * Note: this method can be run from the command line as well as from the web server.
 	 * Note2: this method is not cryptographically secure! If you need a cryptographically secure value
 	 * consider using open_ssl or PHP 7 methods.
@@ -2037,7 +2029,7 @@ class utils
 	{
         return ModuleService::GetInstance()->GetCurrentModuleName($iCallDepth + 1);
 	}
-	
+
 	/**
 	 * **Warning** : returned result can be invalid as we're using backtrace to find the module dir name
 	 *
@@ -2068,7 +2060,7 @@ class utils
 	{
 		return ModuleService::GetInstance()->GetCurrentModuleUrl(1);
 	}
-	
+
 	/**
 	 * @param string $sProperty The name of the property to retrieve
 	 * @param mixed $defaultvalue
@@ -2078,7 +2070,7 @@ class utils
 	{
         return ModuleService::GetInstance()->GetCurrentModuleSetting($sProperty, $defaultvalue);
 	}
-	
+
 	/**
 	 * @param string $sModuleName
 	 * @return string|NULL compiled version of a given module, as it was seen by the compiler
@@ -2087,7 +2079,7 @@ class utils
 	{
         return ModuleService::GetInstance()->GetCompiledModuleVersion($sModuleName);
 	}
-	
+
 	/**
 	 * Check if the given path/url is an http(s) URL
 	 * @param string $sPath
@@ -2102,7 +2094,7 @@ class utils
 		}
 		return $bRet;
 	}
-	
+
 	/**
 	 * Check if the given URL is a link to download a document/image on the CURRENT iTop
 	 * In such a case we can read the content of the file directly in the database (if the users rights allow) and return the ormDocument
@@ -2151,7 +2143,7 @@ class utils
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Read the content of a file (and retrieve its MIME type) from either:
 	 * - an URL pointing to a blob (image/document) on the current iTop server
@@ -2195,7 +2187,7 @@ class utils
 			'html' => 'text/html',
 			'exe' => 'application/octet-stream',
 		);
-	
+
 		$sData = null;
 		$sMimeType = 'text/plain'; // Default MIME Type: treat the file as a bunch a characters...
 		$sFileName = 'uploaded-file'; // Default name for downloaded-files
@@ -2251,7 +2243,7 @@ class utils
 			}
 			$sExtension = strtolower(pathinfo($sPath, PATHINFO_EXTENSION));
 			$sFileName = basename($sPath);
-				
+
 			if (array_key_exists($sExtension, $aKnownExtensions))
 			{
 				$sMimeType = $aKnownExtensions[$sExtension];
@@ -2265,7 +2257,7 @@ class utils
 		}
 		return $oUploadedDoc;
 	}
-	
+
 	protected static function ParseHeaders($aHeaders)
 	{
 		$aCleanHeaders = array();
@@ -2290,7 +2282,7 @@ class utils
 		}
 		return $aCleanHeaders;
 	}
-	
+
 	/**
 	 * @return string a string based on compilation time or (if not available because the datamodel has not been loaded)
 	 * the version of iTop. This string is useful to prevent browser side caching of content that may vary at each
@@ -2445,7 +2437,7 @@ class utils
 		{
 			return false;
 		}
-		
+
 		return substr_compare($haystack, $needle, -strlen($needle)) === 0;
 	}
 

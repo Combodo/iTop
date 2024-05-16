@@ -27,7 +27,7 @@ $iTopFolder = __DIR__."/../../../";
 require_once("$iTopFolder/approot.inc.php");
 require_once(APPROOT."/application/utils.inc.php");
 
-if (php_sapi_name() !== 'cli')
+if (PHP_SAPI !== 'cli')
 {
 	throw new \Exception('This script can only run from CLI');
 }
