@@ -51,7 +51,7 @@ abstract class ItopTestCase extends TestCase
 
 		static::$DEBUG_UNIT_TEST = getenv('DEBUG_UNIT_TEST');
 
-		require_once static::GetAppRoot() . 'approot.inc.php';
+		require_once __DIR__.'/../../../../approot.inc.php';
 
 		if ((static::DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER)
 			&& (false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME))) {
@@ -78,12 +78,8 @@ abstract class ItopTestCase extends TestCase
 			\Dict::SetUserLanguage();
 		}
 	}
-
-	protected function setUp(): void {
-		parent::setUp();
-
-		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
-
+	protected function setUp(): void
+	{
 		$this->LoadRequiredItopFiles();
 		$this->LoadRequiredTestFiles();
 	}
@@ -132,8 +128,9 @@ abstract class ItopTestCase extends TestCase
 	 */
 	protected function LoadRequiredItopFiles(): void
 	{
-		// Empty until we actually need to require some files in the class
-	}
+		// At least make sure that the autoloader will be loaded, and that the APPROOT constant is defined
+        require_once __DIR__.'/../../../../approot.inc.php';
+    }
 
 	/**
 	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceUnitTestFile()}

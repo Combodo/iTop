@@ -69,6 +69,12 @@ class UnattendedInstallTest extends ItopDataTestCase
 		$sOutput = implode('\n', $aOutput);
 		var_dump($sOutput);
 		$this->assertStringContainsString("Missing mandatory argument `--param-file`", $sOutput);
-		$this->assertEquals(255, $iCode);
+        if (DIRECTORY_SEPARATOR === '\\') {
+            // Windows
+            $this->assertEquals(-1, $iCode);
+        } else {
+            // Linux
+            $this->assertEquals(255, $iCode);
+        }
 	}
 }
