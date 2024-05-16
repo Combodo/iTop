@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
   <branding>
     <themes>
       <theme id="light-grey" _delta="define">
         <variables>
         </variables>
         <imports>
-          <import id="css-variables">itop-themes-compat/assets/css/css-variables.scss</import>
+          <import id="css-variables" xsi:type="variables">itop-themes-compat/assets/css/css-variables.scss</import>
         </imports>
         <stylesheets>
           <stylesheet id="jqueryui">itop-themes-compat/assets/css/compat.scss</stylesheet>
@@ -21,7 +21,7 @@
           <variable id="backoffice-environment-banner-text-content" _delta="define">"THIS IS A TEST INSTANCE"</variable>
         </variables>
         <imports>
-          <import id="css-variables" _delta="define">itop-themes-compat/assets/css/css-variables.scss</import>
+          <import id="css-variables" xsi:type="variables" _delta="define">itop-themes-compat/assets/css/css-variables.scss</import>
         </imports>
         <stylesheets>
           <stylesheet id="jqueryui" _delta="define">itop-themes-compat/assets/css/compat.scss</stylesheet>
