@@ -132,7 +132,9 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
                 // Add merged values
                 callback(options);
                 // Restore input value
-                me.addItems(aSelectedItems, true);
+                aSelectedItems.forEach(function(item) {
+                    me.addItem(item, true);
+                });
             }
         });
     },
