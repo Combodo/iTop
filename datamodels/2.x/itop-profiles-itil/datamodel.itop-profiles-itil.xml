@@ -146,6 +146,7 @@
           <class id="SynchroDataSource"/>
           <class id="SynchroAttribute"/>
           <class id="SynchroReplica"/>
+          <class id="SynchroLog"/>
         </classes>
       </group>
       <group id="History" _delta="define">
@@ -179,6 +180,7 @@
           <class id="SynchroDataSource"/>
           <class id="SynchroAttribute"/>
           <class id="SynchroReplica"/>
+          <class id="SynchroLog"/>
         </classes>
       </group>
     </groups>

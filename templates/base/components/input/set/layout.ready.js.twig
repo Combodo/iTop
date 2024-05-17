@@ -4,6 +4,7 @@
 
 {# SET WIDGET #}
 {% set oDataProvider = oUIBlock.GetDataProvider() %}
+let optionsBeforeFilter;
 let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
 
     {# Global options #}
@@ -117,6 +118,7 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
                 // Filter old options data to keep selected values
                 // (options with force flag will be kept event if they doesn't be part of the current value)
                 let options = Object.values(me.options);
+                optionsBeforeFilter = options;
                 options = options.filter(item => (typeof(item.force) !== "undefined" && item.force === true) || aSelectedItems.includes(item['{{ oDataProvider.GetDataValueField() }}']));
                 // Merge kept and new values
                 options = $.merge(options, res.data.search_data);
@@ -233,6 +235,11 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
         {% if oUIBlock.GetOnOptionAddJs() is not null %}
             {{ oUIBlock.GetOnOptionAddJs()|raw }}
         {% endif %}
+    },
+
+    onBlur: function(){
+        this.clearOptionGroups()
+        this.addOption(optionsBeforeFilter)
     },
 
     {# plugin combodo_add_button #}
