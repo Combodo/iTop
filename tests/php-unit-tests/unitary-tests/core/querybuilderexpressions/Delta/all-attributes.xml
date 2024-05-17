@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <classes>
+    <class id="TestAbstract" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>true</abstract>
+        <db_table>testabstract</db_table>
+        <reconciliation>
+          <attributes>
+            <attribute id="finalclass"/>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="meta_enum" xsi:type="AttributeMetaEnum">
+          <values>
+            <value id="open">open</value>
+            <value id="terminated">terminated</value>
+          </values>
+          <sql>meta_enum</sql>
+          <default_value>open</default_value>
+          <tracking_level>all</tracking_level>
+          <mappings>
+            <mapping id="TestObject">
+              <attcode>status</attcode>
+              <metavalues>
+                <metavalue id="terminated">
+                  <values>
+                    <value id="cancel"/>
+                    <value id="done"/>
+                  </values>
+                </metavalue>
+              </metavalues>
+            </mapping>
+          </mappings>
+        </field>
+      </fields>
+      <presentation/>
+      <methods/>
+    </class>
+    <class id="TestObject" _delta="define">
+      <parent>TestAbstract</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>testobject</db_table>
+        <uniqueness_rules>
+          <rule id="unique_name">
+            <attributes>
+              <attribute id="name"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>false</is_blocking>
+          </rule>
+        </uniqueness_rules>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+          </attributes>
+        </reconciliation>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <indexes _delta="define">
+          <index id="caselog" _delta="define">
+            <attributes>
+              <attribute id="caselog"/>
+            </attributes>
+          </index>
+          <index id="enumset" _delta="define">
+            <attributes>
+              <attribute id="enumset"/>
+            </attributes>
+          </index>
+          <index id="tagset" _delta="define">
+            <attributes>
+              <attribute id="tagset"/>
+            </attributes>
+          </index>
+          <index id="parent_id" _delta="define">
+            <attributes>
+              <attribute id="parent_id"/>
+            </attributes>
+          </index>
+          <index id="email" _delta="define">
+            <attributes>
+              <attribute id="email"/>
+            </attributes>
+          </index>
+          <index id="html" _delta="define">
+            <attributes>
+              <attribute id="html"/>
+            </attributes>
+          </index>
+          <index id="integer" _delta="define">
+            <attributes>
+              <attribute id="integer"/>
+            </attributes>
+          </index>
+          <index id="percentage" _delta="define">
+            <attributes>
+              <attribute id="percentage"/>
+            </attributes>
+          </index>
+          <index id="decimal" _delta="define">
+            <attributes>
+              <attribute id="decimal"/>
+            </attributes>
+          </index>
+          <index id="ip_address" _delta="define">
+            <attributes>
+              <attribute id="ip_address"/>
+            </attributes>
+          </index>
+          <index id="url" _delta="define">
+            <attributes>
+              <attribute id="url"/>
+            </attributes>
+          </index>
+          <index id="encrypted" _delta="define">
+            <attributes>
+              <attribute id="encrypted"/>
+            </attributes>
+          </index>
+          <index id="deadline" _delta="define">
+            <attributes>
+              <attribute id="deadline"/>
+            </attributes>
+          </index>
+          <index id="long_text" _delta="define">
+            <attributes>
+              <attribute id="long_text"/>
+            </attributes>
+          </index>
+          <index id="duration" _delta="define">
+            <attributes>
+              <attribute id="duration"/>
+            </attributes>
+          </index>
+          <index id="enum" _delta="define">
+            <attributes>
+              <attribute id="enum"/>
+            </attributes>
+          </index>
+          <index id="date_time" _delta="define">
+            <attributes>
+              <attribute id="date_time"/>
+            </attributes>
+          </index>
+          <index id="oql" _delta="define">
+            <attributes>
+              <attribute id="oql"/>
+            </attributes>
+          </index>
+          <index id="boolean" _delta="define">
+            <attributes>
+              <attribute id="boolean"/>
+            </attributes>
+          </index>
+        </indexes>
+      </properties>
+      <fields>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>Organization</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="parent_id" xsi:type="AttributeHierarchicalKey">
+          <sql>parent_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="caselog" xsi:type="AttributeCaseLog">
+          <sql>caselog</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="date" xsi:type="AttributeDate">
+          <sql>date</sql>
+          <default_value>2010-05-26</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="date_time" xsi:type="AttributeDateTime">
+          <sql>date_time</sql>
+          <default_value>2000-01-01 00:00:00</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="deadline" xsi:type="AttributeDeadline">
+          <sql>deadline</sql>
+          <default_value>2028-05-26 00:00:00</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="decimal" xsi:type="AttributeDecimal">
+          <sql>decimal</sql>
+          <default_value>1.01</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <digits>8</digits>
+          <decimals>2</decimals>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="duration" xsi:type="AttributeDuration">
+          <sql>duration</sql>
+          <default_value>180</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="email" xsi:type="AttributeEmailAddress">
+          <sql>email</sql>
+          <default_value>test@combodo.com</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="encrypted" xsi:type="AttributeEncryptedString">
+          <sql>encrypted</sql>
+          <default_value>1234pwd</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="password" xsi:type="AttributePassword">
+          <sql>password</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+        </field>
+        <field id="onewaypassword" xsi:type="AttributeOneWayPassword">
+          <sql>onewaypassword</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+        </field>
+        <field id="enum" xsi:type="AttributeEnum">
+          <sql>enum</sql>
+          <values>
+            <value id="yes">yes</value>
+            <value id="no">no</value>
+          </values>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="enumset" xsi:type="AttributeEnumSet">
+          <sql>enumset</sql>
+          <values>
+            <value id="low">
+              <code>low</code>
+            </value>
+            <value id="high">
+              <code>high</code>
+            </value>
+            <value id="large">
+              <code>large</code>
+            </value>
+            <value id="tall">
+              <code>tall</code>
+            </value>
+            <value id="thin">
+              <code>thin</code>
+            </value>
+            <value id="long">
+              <code>long</code>
+            </value>
+            <value id="short">
+              <code>short</code>
+            </value>
+            <value id="small">
+              <code>small</code>
+            </value>
+            <value id="big">
+              <code>big</code>
+            </value>
+          </values>
+          <is_null_allowed>true</is_null_allowed>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="file" xsi:type="AttributeBlob">
+          <sql>file</sql>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="html" xsi:type="AttributeHTML">
+          <sql>html</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <width/>
+          <height>200</height>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="image" xsi:type="AttributeImage">
+          <default_image/>
+          <is_null_allowed>true</is_null_allowed>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <display_max_width>128</display_max_width>
+          <display_max_height>128</display_max_height>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="integer" xsi:type="AttributeInteger">
+          <sql>integer</sql>
+          <default_value>7</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="ip_address" xsi:type="AttributeIPAddress">
+          <sql>ip_address</sql>
+          <default_value>15.28.255.1</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="percentage" xsi:type="AttributePercentage">
+          <sql>percentage</sql>
+          <default_value>50</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="phone" xsi:type="AttributePhoneNumber">
+          <sql>phone</sql>
+          <default_value>+33 666333000</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <sql>status</sql>
+          <values>
+            <value id="new">new</value>
+            <value id="investigation">investigation</value>
+            <value id="cancel">cancel</value>
+            <value id="done">done</value>
+          </values>
+          <default_value>new</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="stopwatch" xsi:type="AttributeStopWatch">
+          <states>
+            <state id="investigation">investigation</state>
+          </states>
+          <working_time/>
+          <thresholds/>
+          <always_load_in_tables>true</always_load_in_tables>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="stopwatch_started" xsi:type="AttributeSubItem">
+          <target_attcode>stopwatch</target_attcode>
+          <item_code>started</item_code>
+        </field>
+        <field id="tagset" xsi:type="AttributeTagSet">
+          <sql>tagset</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <max_items/>
+          <tag_code_max_len/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="text" xsi:type="AttributeText">
+          <sql>text</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <width/>
+          <height>30</height>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="long_text" xsi:type="AttributeLongText">
+          <sql>long_text</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <width/>
+          <height>50</height>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="url" xsi:type="AttributeURL">
+          <sql>url</sql>
+          <default_value>http://www.combodo.com</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <target>_blank</target>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="oql" xsi:type="AttributeOQL">
+          <sql>oql</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="boolean" xsi:type="AttributeBoolean">
+          <sql>boolean</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <presentation/>
+      <methods/>
+    </class>
+    <class id="SubObject" _delta="define">
+      <parent>TestAbstract</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>subobject</db_table>
+        <naming>
+          <attributes>
+            <attribute id="testobject_id_friendlyname"/>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="testobject_id"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="unique_name">
+            <attributes>
+              <attribute id="name"/>
+              <attribute id="testobject_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="testobject_id" xsi:type="AttributeExternalKey">
+          <sql>testobject_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>TestObject</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+          <label>Test Object</label>
+        </field>
+        <field id="_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="_meta_enum" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>meta_enum</target_attcode>
+        </field>
+        <field id="_org_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="_parent_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>parent_id</target_attcode>
+        </field>
+        <field id="_caselog" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>caselog</target_attcode>
+        </field>
+        <field id="_date" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>date</target_attcode>
+        </field>
+        <field id="_date_time" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>date_time</target_attcode>
+        </field>
+        <field id="_deadline" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>deadline</target_attcode>
+        </field>
+        <field id="_decimal" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>decimal</target_attcode>
+        </field>
+        <field id="_duration" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>duration</target_attcode>
+        </field>
+        <field id="_email" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>email</target_attcode>
+        </field>
+        <field id="_encrypted" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>encrypted</target_attcode>
+        </field>
+        <field id="_password" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>password</target_attcode>
+        </field>
+        <field id="_onewaypassword" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>onewaypassword</target_attcode>
+        </field>
+        <field id="_enum" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>enum</target_attcode>
+        </field>
+        <field id="_enumset" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>enumset</target_attcode>
+        </field>
+        <field id="_file" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>file</target_attcode>
+        </field>
+        <field id="_html" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>html</target_attcode>
+        </field>
+        <field id="_image" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>image</target_attcode>
+        </field>
+        <field id="_integer" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>integer</target_attcode>
+        </field>
+        <field id="_ip_address" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>ip_address</target_attcode>
+        </field>
+        <field id="_percentage" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>percentage</target_attcode>
+        </field>
+        <field id="_phone" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>phone</target_attcode>
+        </field>
+        <field id="_status" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>status</target_attcode>
+        </field>
+        <field id="_stopwatch" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>stopwatch</target_attcode>
+        </field>
+        <field id="_stopwatch_started" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>stopwatch_started</target_attcode>
+        </field>
+        <field id="_tagset" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>tagset</target_attcode>
+        </field>
+        <field id="_text" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>text</target_attcode>
+        </field>
+        <field id="_long_text" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>long_text</target_attcode>
+        </field>
+        <field id="_url" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>url</target_attcode>
+        </field>
+        <field id="_oql" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>oql</target_attcode>
+        </field>
+        <field id="_boolean" xsi:type="AttributeExternalField">
+          <extkey_attcode>testobject_id</extkey_attcode>
+          <target_attcode>boolean</target_attcode>
+        </field>
+      </fields>
+      <presentation/>
+      <methods/>
+    </class>
+  </classes>
+</itop_design>

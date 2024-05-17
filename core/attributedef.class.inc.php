@@ -11315,6 +11315,10 @@ class AttributeEnumSet extends AttributeSet
 		}
 		return $aValues;
 	}
+	public function Equals($val1, $val2)
+	{
+		return $val1->Equals($val2);
+	}
 }
 
 

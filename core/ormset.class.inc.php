@@ -385,7 +385,7 @@ class ormSet
 	 */
 	public function Equals(ormSet $other)
 	{
-		return implode(', ', $this->GetValue()) === implode(', ', $other->GetValue());
+		return implode(', ', $this->GetValues()) === implode(', ', $other->GetValues());
 	}
 
 	/**
