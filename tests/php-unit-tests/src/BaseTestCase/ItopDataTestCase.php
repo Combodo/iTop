@@ -129,6 +129,13 @@ abstract class ItopDataTestCase extends ItopTestCase
 		{
 			$this->CreateTestOrganization();
 		}
+
+		$oConfig = MetaModel::GetConfig();
+		if ($oConfig->GetEncryptionLibrary() != DEFAULT_ENCRYPTION_LIB
+			&& $oConfig->GetEncryptionKey() == DEFAULT_ENCRYPTION_KEY) {
+			// Config file is corrupted, let's fix it
+			$oConfig->SetEncryptionKey("6eb9d9afa3ee0fbcebe622a33bf57aaeafb7c37998fd24c403c2522c2d60117f");
+		}
 	}
 
 	/**

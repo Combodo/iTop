@@ -4272,43 +4272,6 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static $sKey = null; // Encryption key used for all encrypted fields
-	static $sLibrary = null; // Encryption library used for all encrypted fields
-
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-		if (self::$sKey == null)
-		{
-			self::$sKey = MetaModel::GetConfig()->GetEncryptionKey();
-		}
-		if (self::$sLibrary == null)
-		{
-			self::$sLibrary = MetaModel::GetConfig()->GetEncryptionLibrary();
-		}
-	}
-
-	/**
-	 * When the attribute definitions are stored in APC cache:
-	 * 1) The static class variable $sKey is NOT serialized
-	 * 2) The object's constructor is NOT called upon wakeup
-	 * 3) mcrypt may crash the server if passed an empty key !!
-	 *
-	 * So let's restore the key (if needed) when waking up
-	 **/
-	public function __wakeup()
-	{
-		if (self::$sKey == null)
-		{
-			self::$sKey = MetaModel::GetConfig()->GetEncryptionKey();
-		}
-		if (self::$sLibrary == null)
-		{
-			self::$sLibrary = MetaModel::GetConfig()->GetEncryptionLibrary();
-		}
-	}
-
-
 	protected function GetSQLCol($bFullSpec = false)
 	{
 		return "TINYBLOB";
@@ -4347,8 +4310,8 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 	 */
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		$oSimpleCrypt = new SimpleCrypt(self::$sLibrary);
-		$sValue = $oSimpleCrypt->Decrypt(self::$sKey, $aCols[$sPrefix]);
+		$oSimpleCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
+		$sValue = $oSimpleCrypt->Decrypt(MetaModel::GetConfig()->GetEncryptionKey(), $aCols[$sPrefix]);
 
 		return $sValue;
 	}
@@ -4363,8 +4326,8 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 	 */
 	public function GetSQLValues($value)
 	{
-		$oSimpleCrypt = new SimpleCrypt(self::$sLibrary);
-		$encryptedValue = $oSimpleCrypt->Encrypt(self::$sKey, $value);
+		$oSimpleCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
+		$encryptedValue = $oSimpleCrypt->Encrypt(MetaModel::GetConfig()->GetEncryptionKey(), $value);
 
 		$aValues = array();
 		$aValues[$this->Get("sql")] = $encryptedValue;
