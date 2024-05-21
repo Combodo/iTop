@@ -25,7 +25,9 @@ EOF;
     exit(-1);
 }
 /////////////////////////////////////////////////
-if (! utils::IsModeCLI())
+
+$sCleanName = strtolower(trim(PHP_SAPI));
+if ($sCleanName !== 'cli')
 {
 	echo "Mode CLI only";
 	exit(-1);
