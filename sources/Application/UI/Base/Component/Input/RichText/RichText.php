@@ -22,11 +22,10 @@ class RichText extends UIBlock
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/ckeditor/build/ckeditor.js',
-		'js/highlight/highlight.js',
+		'js/highlight/highlight.min.js',
 	];
 	public const DEFAULT_CSS_FILES_REL_PATH = [
-		'js/highlight/styles/obsidian.css',
-		'css/ckeditor/contents.css',
+		'js/highlight/styles/obsidian.min.css',
 	];
 
 	/** @var string|null */
