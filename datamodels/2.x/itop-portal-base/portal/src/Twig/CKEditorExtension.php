@@ -19,24 +19,39 @@
 
 namespace Combodo\iTop\Portal\Twig;
 
-use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Twig\Extension\AbstractExtension;
 
 use Twig\TwigFunction;
 
+/**
+ * Class CKEditorExtension
+ *
+ * Twig functions for CKEditor.
+ *
+ * @package Combodo\iTop\Portal\Twig
+ * @since 3.2.0
+ */
 class CKEditorExtension extends AbstractExtension
 {
-	public function getFunctions()
+	/** @inheritdoc  */
+	public function getFunctions() : array
 	{
 		return [
 			new TwigFunction('inject_ckeditor_resources', [$this, 'injectCKEditorResources']),
 		];
 	}
 
-	public function injectCKEditorResources()
+	/**
+	 * Inject CKEditor resources.
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function injectCKEditorResources() : string
 	{
 		$sScriptTemplate = '';
-		$aJSFilesRelPaths = WebResourcesHelper::GetJSFilesRelPathsForCKEditor();
+		$aJSFilesRelPaths = CKEditorHelper::GetJSFilesRelPathsForCKEditor();
 
 		foreach ($aJSFilesRelPaths as $sJSFileRelPath){
 			$sUrl = \utils::GetAbsoluteUrlAppRoot() . $sJSFileRelPath;

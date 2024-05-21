@@ -72,37 +72,11 @@ class UIHTMLEditorWidget
 		$sHtmlValue = "<div class=\"field_input_zone field_input_html ibo-input-wrapper\"><textarea class=\"htmlEditor ibo-input-richtext-placeholder\" title=\"$sHelpText\" name=\"attr_{$this->m_sFieldPrefix}{$sCode}\" id=\"$iId\">$sValue</textarea></div>$sValidationField";
 
 		// Enable CKEditor
-		WebResourcesHelper::ConfigureCKEditorForWebPageComponent($oPage, $iId, $sValue, true);
-
-		// Please read...
-		// ValidateCKEditField triggers a timer... calling itself indefinitely
-		// This design was the quickest way to achieve the field validation (only checking if the field is blank)
-		// because the ckeditor does not fire events like "change" or "keyup", etc.
-		// See http://dev.ckeditor.com/ticket/900 => won't fix
-		// The most relevant solution would be to implement a plugin to CKEdit, and handle the internal events like: setData, insertHtml, insertElement, loadSnapshot, key, afterUndo, afterRedo
+		CKEditorHelper::ConfigureCKEditorElementForWebPage($oPage, $iId, $sValue, true);
 
 		// Could also be bound to 'instanceReady.ckeditor'
 		$oPage->add_ready_script("$('#$iId').on('validate', function(evt, sFormId) { return ValidateCKEditField('$iId', '', {$this->m_sMandatory}, sFormId, '') } );\n");
-		$oPage->add_ready_script(
-				<<<EOF
-$('#$iId').on('update', function(evt){
-	BlockField('cke_$iId', $('#$iId').prop('disabled'));
-	//Delayed execution - ckeditor must be properly initialized before setting readonly
-	var retryCount = 0;
-	var oMe = $('#$iId');
-	var delayedSetReadOnly = function () {
-		if (oMe.data('ckeditorInstance').editable() == undefined && retryCount++ < 10) {
-			setTimeout(delayedSetReadOnly, retryCount * 100); //Wait a while longer each iteration
-		}
-		else
-		{
-			oMe.data('ckeditorInstance').setReadOnly(oMe.prop('disabled'));
-		}
-	};
-	setTimeout(delayedSetReadOnly, 50);
-});
-EOF
-		);
+
 		return $sHtmlValue;
 	}
 }

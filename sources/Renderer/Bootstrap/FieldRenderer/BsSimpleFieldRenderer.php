@@ -23,7 +23,7 @@ namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeText;
-use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Form\Field\DateField;
 use Combodo\iTop\Form\Field\DateTimeField;
 use Combodo\iTop\Form\Field\Field;
@@ -160,7 +160,7 @@ EOF
 				$oOutput->AddHtml('<div class="help-block"></div>');
 				// First the edition area
 				$oOutput->AddHtml('<div>');
-				$oOutput->AddHtml('<textarea id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" class="form-control" rows="8"  '.$sInputTags.'>'.$this->oField->GetCurrentValue().'</textarea>');
+				$oOutput->AddHtml('<textarea id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" class="htmlEditor form-control" rows="8"  '.$sInputTags.'>'.$this->oField->GetCurrentValue().'</textarea>');
 				$oOutput->AddHtml('</div>');
 				// Then the previous entries if necessary
 				if ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\CaseLogField') {
@@ -175,7 +175,7 @@ EOF
 					if ($bRichEditor) {
 
 						// Enable CKEditor
-						WebResourcesHelper::ConfigureCKEditorForRenderingOutputComponent($oOutput, $this->oField->GetGlobalId(), $this->oField->GetCurrentValue(), false, false);
+						CKEditorHelper::ConfigureCKEditorElementForRenderingOutput($oOutput, $this->oField->GetGlobalId(), $this->oField->GetCurrentValue(), false, false);
 
 						if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null)) {
 							$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));

@@ -49,9 +49,9 @@ class RichText extends UIBlock
 		parent::__construct($sId);
 		$this->sName = $sName;
 		$this->sValue = null;
-		$this->aConfig = CKEditorHelper::GetCkeditorPref(true, $this->sValue);
+		$this->aConfig = CKEditorHelper::GetCkeditorConfiguration(true, $this->sValue);
 
-		foreach (WebResourcesHelper::GetJSFilesRelPathsForCKEditor() as $sJSFile) {
+		foreach (CKEditorHelper::GetJSFilesRelPathsForCKEditor() as $sJSFile) {
 			$this->AddJsFileRelPath($sJSFile);
 		}
 	}

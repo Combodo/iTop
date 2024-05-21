@@ -1061,11 +1061,6 @@ HTML
 			}
 		}
 
-		// Fields with CKEditor need to have the highlight.js lib loaded even if they are in read-only, as it is needed to format code snippets
-		if ($bHasFieldsWithRichTextEditor) {
-			WebResourcesHelper::EnableCKEditorToWebPage($oPage);
-		}
-
 		return $aFieldsMap;
 	}
 
@@ -2321,30 +2316,9 @@ JS
 					$oPage->add_ready_script("$('#$iId').on('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );"); // Custom validation function
 
 					// configure CKEditor
-					WebResourcesHelper::ConfigureCKEditorForWebPageComponent($oPage, $iId, '', true, [
-						'placeholder' => Dict::S('UI:CaseLogTypeYourTextHere')
+					CKEditorHelper::ConfigureCKEditorElementForWebPage($oPage, $iId, '', true, [
+						'placeholder' => Dict::S('UI:CaseLogTypeYourTextHere'),
 					]);
-
-					$oPage->add_ready_script(
-<<<EOF
-$('#$iId').on('update', function(evt){
-	BlockField('cke_$iId', $('#$iId').attr('disabled'));
-	//Delayed execution - ckeditor must be properly initialized before setting readonly
-	var retryCount = 0;
-	var oMe = $('#$iId');
-	var delayedSetReadOnly = function () {
-		if (oMe.data('ckeditorInstance').editable() == undefined && retryCount++ < 10) {
-			setTimeout(delayedSetReadOnly, retryCount * 100); //Wait a while longer each iteration
-		}
-		else
-		{
-			oMe.data('ckeditorInstance').setReadOnly(oMe.prop('disabled'));
-		}
-	};
-	setTimeout(delayedSetReadOnly, 50);
-});
-EOF
-					);
 					break;
 
 				case 'HTML':

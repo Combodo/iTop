@@ -103,11 +103,6 @@ function DisplayPreferences($oP)
 	$oTabsFieldset->AddSubBlock(GetTabsLayoutFieldBlock());
 	$oTabsFieldset->AddSubBlock(GetTabsNavigationFieldBlock());
 
-	// Rich text editor
-	$oRichTextFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:Preferences:RichText:Title'), 'ibo-fieldset-for-rich-text-preferences');
-	$oSecondColumn->AddSubBlock($oRichTextFieldset);
-	$oRichTextFieldset->AddSubBlock(GetRichTextToolbarExpandedFieldBlock());
-
 	// Activity panel
 	$oActivityPanelfieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:Preferences:ActivityPanel:Title'), 'ibo-fieldset-for-activity-panel');
 	$oSecondColumn->AddSubBlock($oActivityPanelfieldset);
@@ -612,34 +607,6 @@ function GetTabsNavigationFieldBlock(): iUIBlock
 		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
 			$sValue,
 			Dict::S('UI:Preferences:Tabs:Scrollable:'.$sDictEntrySuffix),
-			$sValue === $sCurrentValueAsString)
-		);
-	}
-
-	return $oSelect;
-}
-
-/**
- * @return \Combodo\iTop\Application\UI\Base\iUIBlock
- * @throws \CoreException
- * @throws \CoreUnexpectedValue
- * @throws \MySQLException
- * @since 3.0.0
- */
-function GetRichTextToolbarExpandedFieldBlock(): iUIBlock
-{
-	$bCurrentValue = false;
-	$sCurrentValueAsString = $bCurrentValue ? 'true' : 'false';
-
-	$aOptionsValues = [
-		'true' => 'Expanded',
-		'false' => 'Collapsed',
-	];
-	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('toolbarexpanded', Dict::S('UI:Preferences:RichText:ToolbarState'));
-	foreach ($aOptionsValues as $sValue => $sDictEntrySuffix) {
-		$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption(
-			$sValue,
-			Dict::S('UI:Preferences:RichText:ToolbarState:'.$sDictEntrySuffix),
 			$sValue === $sCurrentValueAsString)
 		);
 	}

@@ -165,7 +165,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 							$oText->AddCSSClass('ibo-input-richtext-placeholder');
 
 							// Enable CKEditor
-							WebResourcesHelper::ConfigureCKEditorForRenderingOutputComponent($oOutput, $this->oField->GetGlobalId(), $this->oField->GetCurrentValue());
+							CKEditorHelper::ConfigureCKEditorElementForRenderingOutput($oOutput, $this->oField->GetGlobalId(), $this->oField->GetCurrentValue());
 
 							if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null)){
 								$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));
