@@ -537,7 +537,7 @@ EOF
 		}
 		else
 		{
-			throw new Exception('graphviz not found (executable path: '.$sDotExecutable.')');
+            throw new Exception('graphviz not found');
 		}
 		return $sHtml;
 	}
@@ -592,7 +592,7 @@ EOF
 		}
 		else
 		{
-			throw new Exception('graphviz not found (executable path: '.$sDotExecutable.')');
+            throw new Exception('graphviz not found');
 		}
 		return $sHtml;
 	}
