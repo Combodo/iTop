@@ -1309,6 +1309,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 .caselog-thread--block-entry-content{
 	display: block;
 	overflow-x: auto;
+	overflow-y: hidden;
 
 	> p:last-of-type{
 		margin-bottom: 0px;
@@ -1729,66 +1730,46 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	}
 }
 
-/* CKEditor : Adding BS error feedback */
+/* CKEditor: Variables overload */
+.ck {
+  --ck-color-focus-border: #{$brand-primary};
+}
+/* CKEditor: Adding BS error feedback */
 .form_field .cke{
 	border: 1px solid $gray-lighter;
 }
-.form_field.has-error .cke{
+.form_field.has-error .ck-editor{
 	border: 1px solid $state-danger-text;
 	border-radius: $border-radius-base;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
 }
-/* CKEditor : Styling notifications based on BS alerts */
-.cke_notification{
-	position: relative;
-	padding: 15px;
-	margin-bottom: 18px;
-	border: 1px solid transparent;
-	border-radius: 4px;
-	background-color: $white
-}
-.cke_notification_close{
-	position: absolute;
-	top: 2px;
-	right: 5px;
-}
-.cke_notification_message{
-	margin-bottom: 0px;
-	line-height: 1em;
-	font-size: 1em;
-}
-.cke_notification_success{
-	display: none;
-	background-color: $alert-success-bg;
-	border-color: $alert-success-border;
-	color: $alert-success-text;
-}
-.cke_notification_warning{
-	background-color: $alert-warning-bg;
-	border-color: $alert-warning-border;
-	color: $alert-warning-text;
-}
-/* CKEditor : Misc */
-.cke_toolbox_collapser,
-.cke_toolbox_collapser .cke_arrow{
-	cursor: pointer !important;
-}
-.cke_toolbox_collapser.cke_toolbox_collapser_min ~ .editor-fullscreen-button {
-  display: block;
-  width: 12px;
-  height: 11px;
-  border: 1px solid $gray-lighter;
-  cursor: pointer;
+/* CKEditor: Fullscreen */
+.ck {
+  &.cke-maximized {
+    position: fixed !important; /* !important to overload the inline style */
+    z-index: 1060; /* Above modals z-index (1050), see bootstrap theme */
+    top: 0;
+    left: 0;
+    width: 100% !important; /* !important to overload the inline style */
+    height: 100% !important; /* !important to overload the inline style */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 
-  /* !important so it overrides the .cke_reset_all style */
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
-  background-size: 100% !important;
-  background-image: url('../../../../../images/full-screen.png') !important;
+    /* Force text content to take all space available (and scroll when content overflows) */
+    .ck-editor__main {
+      flex-grow: 1;
+      overflow-y: auto;
 
-  &:hover {
-    background-color: #E5E5E5;
+      .ck-content {
+        height: 100%; /* To force content to occupy whole height, otherwise it fits its content */
+      }
+    }
   }
+}
+/* - Avoid page scrollbar on fullscreen */
+body.cke-maximized {
+  overflow: hidden;
 }
 
 /* DataTables : Selection inputs */
