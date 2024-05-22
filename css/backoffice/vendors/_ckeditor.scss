@@ -54,17 +54,19 @@ $ibo-vendors-ckeditor--ck-text-huge-font-size: $ibo-font-size-350;
   position: fixed;
   left: 0px;
   top:0px;
-  right: 0px;
-  bottom: 0px;
+  width: 100%;
+  height: 100%;
   z-index: 999;
   display: flex;
   flex-direction: column;
 
   .ck.ck-editor__main{
     flex-grow: 1;
+    overflow: auto;
   }
   .ck-editor__editable_inline:not(.ck-comment__input *){
-    height: 100%;
+    height: 100% !important; /* !important to overload inline style from configuration.height */
+    width: 100% !important; /* !important to overload inline style from configuration.width */
   }
 }
 
