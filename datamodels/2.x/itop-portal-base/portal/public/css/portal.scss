@@ -1733,6 +1733,9 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 /* CKEditor: Variables overload */
 .ck {
   --ck-color-focus-border: #{$brand-primary};
+  --ck-spacing-small: 4px;
+  --ck-ui-component-min-height: 18px;
+  --ck-icon-size: 18px;
 }
 /* CKEditor: Adding BS error feedback */
 .form_field .cke{
