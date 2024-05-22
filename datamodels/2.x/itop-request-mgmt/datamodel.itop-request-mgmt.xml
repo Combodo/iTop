@@ -1430,7 +1430,7 @@
                   $this->Set('team_id', $oParentTicket->Get('team_id'));
                   $this->Set('agent_id', $oParentTicket->Get('agent_id'));
            }
-			$sParent = '[['.get_class($oParentTicket).':'.$oParentTicket->Get('ref').']]';
+			$sParent = '[['.get_class($oParentTicket).':'.$oParentTicket->GetKey().'|'.$oParentTicket->Get('ref').']]';
 			$this->Set('solution', Dict::Format('Tickets:ResolvedFrom', $sParent, MetaModel::GetName(get_class($oParentTicket))));
 			$this->ApplyStimulus('ev_autoresolve');
 			$this->DBUpdate();
