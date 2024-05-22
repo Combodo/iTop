@@ -49,6 +49,16 @@ const CombodoCKEditorHandler = {
 		return this.instances_promise[sElem] = new Promise((resolve, reject) => {
 			ClassicEditor.create($(sElem)[0], aConfiguration)
 			.then(editor => {
+				// Adjust size if passed in configuration
+				// - Width
+				if (aConfiguration.width !== undefined) {
+					editor.editing.view.change( writer => { writer.setStyle( 'width', aConfiguration.width, editor.editing.view.document.getRoot() ); } );
+				}
+				// - Height
+				if (aConfiguration.height !== undefined) {
+					editor.editing.view.change( writer => { writer.setStyle( 'height', aConfiguration.height, editor.editing.view.document.getRoot() ); } );
+				}
+
 				this.instances[sElem] = editor;
 				resolve(editor);
 			})
