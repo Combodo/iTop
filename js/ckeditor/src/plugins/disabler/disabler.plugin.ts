@@ -40,7 +40,10 @@ export default class Disabler extends Plugin {
     static processDisabling(oEditor:ClassicEditor, oInputElement:HTMLInputElement){
 
         // @ts-ignore
-        BlockFieldElement($(oEditor.ui.element), oInputElement.disabled);
+        const oElement = $(oEditor.ui.element);
+        if(typeof oElement.block === 'function') {
+            BlockFieldElement(oElement, oInputElement.disabled);
+        }
 
         // handle ckeditor read only mode
         if(oInputElement.disabled){

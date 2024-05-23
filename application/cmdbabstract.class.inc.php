@@ -2316,7 +2316,7 @@ JS
 					$oPage->add_ready_script("$('#$iId').on('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );"); // Custom validation function
 
 					// configure CKEditor
-					CKEditorHelper::ConfigureCKEditorElementForWebPage($oPage, $iId, '', true, [
+					CKEditorHelper::ConfigureCKEditorElementForWebPage($oPage, $iId, $sOriginalValue, true, [
 						'placeholder' => Dict::S('UI:CaseLogTypeYourTextHere'),
 					]);
 					break;

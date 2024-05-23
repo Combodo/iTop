@@ -64,15 +64,6 @@ class CKEditorHelper
 			}
 		}
 
-		// merge with user preferences
-		try{
-			$aRichTextConfig = 	json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);
-			$aConfiguration = array_merge($aConfiguration, $aRichTextConfig);
-		}
-		catch(Exception $e){
-			ExceptionLog::LogException($e);
-		}
-
 		// merge with overloaded configuration
 		return array_merge($aConfiguration, $aOverloadConfiguration);
 	}

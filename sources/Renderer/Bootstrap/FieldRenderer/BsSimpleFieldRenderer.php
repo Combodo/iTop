@@ -160,7 +160,8 @@ EOF
 				$oOutput->AddHtml('<div class="help-block"></div>');
 				// First the edition area
 				$oOutput->AddHtml('<div>');
-				$oOutput->AddHtml('<textarea id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" class="htmlEditor form-control" rows="8"  '.$sInputTags.'>'.$this->oField->GetCurrentValue().'</textarea>');
+				$sEditorClasses = $bRichEditor ? 'htmlEditor' : '';
+				$oOutput->AddHtml('<textarea id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" class="' . $sEditorClasses . ' form-control" rows="8"  '.$sInputTags.'>'.$this->oField->GetCurrentValue().'</textarea>');
 				$oOutput->AddHtml('</div>');
 				// Then the previous entries if necessary
 				if ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\CaseLogField') {
