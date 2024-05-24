@@ -81,7 +81,6 @@ class UIHTMLEditorWidget
 		if ($sWidthSpec != '') {
 			/*N°6543 - the function min allow to keep text inside the column when width is defined*/
 			$aConfig['width'] = "min($sWidthSpec,100%)";
-			$sJSDefineWidth = '$("#cke_'.$iId.' iframe").contents().find("body").css("width", "'.$sWidthSpec.'")';
 		}
 		$sHeightSpec = addslashes(trim($this->m_oAttDef->GetHeight()));
 		if ($sHeightSpec != '') {

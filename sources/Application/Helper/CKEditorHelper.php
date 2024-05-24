@@ -61,18 +61,18 @@ class CKEditorHelper
 	 */
 	static public function GetCkeditorPref()
 	{
-		// extract language from user preferences
+		// Extract language from user preferences
 		$sLanguageCountry = trim(UserRights::GetUserLanguage());
 		$sLanguage = strtolower(explode(' ', $sLanguageCountry)[0]);
 
 		$aDefaultConf = array(
-			'language'=> $sLanguage,
+			'language' => $sLanguage,
 		);
 
-		// mentions
+		// Mentions
 		$aDefaultConf['mention'] = self::GetMentionConfiguration();
 
-		// rich text config
+		// Rich text config
 		$aRichTextConfig = 	json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);
 
 		return array_merge($aDefaultConf, $aRichTextConfig);

@@ -22,6 +22,12 @@ class QueryBuilderExpressionsTest extends \Combodo\iTop\Test\UnitTest\ItopCustom
 			'description' => 'Tag known as "A"'
 		]);
 		$oTagA->DBInsert();
+		$oTagB = \MetaModel::NewObject(\TagSetFieldData::GetTagDataClassName('TestObject', 'tagset'), [
+			'code'        => 'tagB',
+			'label'       => 'Tag B',
+			'description' => 'Tag known as "B"'
+		]);
+		$oTagB->DBInsert();
 
 		$sTargetClass = 'TestObject';
 		$aValues = [
@@ -82,7 +88,7 @@ class QueryBuilderExpressionsTest extends \Combodo\iTop\Test\UnitTest\ItopCustom
 				'type'  => 'php:string',
 			],
 			'enumset'        => [
-				'value' => 'low|high',
+				'value' => 'low,high',
 				'type'  => 'php:string',
 			],
 			'file'           => [
@@ -122,7 +128,7 @@ class QueryBuilderExpressionsTest extends \Combodo\iTop\Test\UnitTest\ItopCustom
 				'type'  => 'ormStopWatch',
 			],
 			'tagset'         => [
-				'value' => 'tagA',
+				'value' => 'tagA tagB',
 				'type'  => 'php:string',
 			],
 			'text'           => [
@@ -149,15 +155,15 @@ class QueryBuilderExpressionsTest extends \Combodo\iTop\Test\UnitTest\ItopCustom
 
 		$aValuesToSet = [];
 		foreach ($aValues as $sAttCode => $aValueData) {
+			$oAttDef = \MetaModel::GetAttributeDef($sTargetClass, $sAttCode);
 			if (substr($aValueData['type'], 0, 4) == 'php:') {
 				$aValuesToSet[$sAttCode] = $aValueData['value'];
 			} else {
-				$oAttDef = \MetaModel::GetAttributeDef($sTargetClass, $sAttCode);
 				$oJSONObject = is_null($aValueData['value']) ? null : json_decode($aValueData['value'], false);
 				$aValuesToSet[$sAttCode] = $oAttDef->FromJSONToValue($oJSONObject);
 			}
+			static::assertTrue((bool) $oAttDef->CheckFormat($aValuesToSet[$sAttCode]), "Given test value of attribute '$sAttCode' is not valid: {$aValueData['value']}");
 		}
-
 
 		// Test that I can write without any error (such as malformed SQL query, that would throw an exception)
 		$oObject = \MetaModel::NewObject($sTargetClass, $aValuesToSet);

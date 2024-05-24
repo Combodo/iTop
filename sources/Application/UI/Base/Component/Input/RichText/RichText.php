@@ -22,13 +22,17 @@ class RichText extends UIBlock
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/ckeditor/build/ckeditor.js',
-		'js/highlight/highlight.js',
+		'js/highlight/highlight.min.js',
 	];
 	public const DEFAULT_CSS_FILES_REL_PATH = [
-		'js/highlight/styles/obsidian.css',
-		'css/ckeditor/contents.css',
+		'js/highlight/styles/obsidian.min.css',
 	];
 
+	/**
+	 * @var string|null
+	 * @since 3.2.0
+	 */
+	protected $sName;
 	/** @var string|null */
 	protected $sValue;
 	/** @var array Configuration parameters for the CKEditor instance used with Richtext block */
@@ -38,16 +42,28 @@ class RichText extends UIBlock
 	 * RichText constructor.
 	 *
 	 * @param string|null $sId
+	 * @param string|null $sName
 	 */
-	public function __construct(?string $sId = null)
+	public function __construct(?string $sId = null, ?string $sName = null)
 	{
 		parent::__construct($sId);
+		$this->sName = $sName;
 		$this->sValue = null;
 		$this->aConfig = CKEditorHelper::GetCkeditorPref();
 
-		// add CKEditor translations resource
+		// Add CKEditor translations resource
 		$sLanguage = strtolower(explode(' ', Dict::GetUserLanguage())[0]);
 		$this->AddJsFileRelPath('js/ckeditor/build/translations/' . $sLanguage . '.js');
+	}
+
+	/**
+	 * @see static::$sName
+	 * @return string|null
+	 * @since 3.2.0
+	 */
+	public function GetName(): ?string
+	{
+		return $this->sName;
 	}
 
 	/**
