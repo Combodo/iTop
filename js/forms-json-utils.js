@@ -358,8 +358,7 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 		}
 		
 		// Put and event to check the field when the content changes, remove the event right after as we'll call this same function again, and we don't want to call the event more than once (especially not ^2 times on each call)
-		oCKEditor.model.document.on('change:data', (event) => {
-			oCKEditor.model.document.off('change:data');
+		oCKEditor.model.document.once('change:data', (event) => {
 			ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);
 		});
 	}

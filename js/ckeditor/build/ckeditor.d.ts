@@ -20,11 +20,10 @@ import { List, ListProperties } from '@ckeditor/ckeditor5-list';
 import { Mention } from '@ckeditor/ckeditor5-mention';
 import { Table, TableCaption, TableCellProperties, TableColumnResize, TableProperties, TableToolbar } from '@ckeditor/ckeditor5-table';
 import { Undo } from '@ckeditor/ckeditor5-undo';
-import InsertHtml from './plugins/insert-html/insert-html.plugin';
-import ObjectShortcut from './plugins/object-shortcut/object-shortcut.plugin';
+import AppendITopClasses from "./plugins/append-itop-classes/append-itop-classes.plugin";
 import './resources/console-theme.css';
 declare class Editor extends ClassicEditor {
-    static builtinPlugins: (typeof InsertHtml | typeof Alignment | typeof Superscript | typeof Subscript | typeof Bold | typeof Italic | typeof Strikethrough | typeof Underline | typeof BlockQuote | typeof CodeBlock | typeof Undo | typeof Essentials | typeof FontBackgroundColor | typeof FontColor | typeof FontFamily | typeof FontSize | typeof Heading | typeof Highlight | typeof HorizontalLine | typeof Image | typeof ImageCaption | typeof ImageResize | typeof ImageStyle | typeof ImageToolbar | typeof ImageUpload | typeof Indent | typeof Link | typeof LinkImage | typeof List | typeof ListProperties | typeof Mention | typeof Table | typeof TableCaption | typeof TableCellProperties | typeof TableColumnResize | typeof TableProperties | typeof TableToolbar | typeof ObjectShortcut | typeof PictureEditing)[];
+    static builtinPlugins: (typeof AppendITopClasses | typeof Alignment | typeof Superscript | typeof Subscript | typeof Bold | typeof Italic | typeof Strikethrough | typeof Underline | typeof BlockQuote | typeof CodeBlock | typeof Undo | typeof Essentials | typeof FontBackgroundColor | typeof FontColor | typeof FontFamily | typeof FontSize | typeof Heading | typeof Highlight | typeof HorizontalLine | typeof Image | typeof ImageCaption | typeof ImageResize | typeof ImageStyle | typeof ImageToolbar | typeof ImageUpload | typeof Indent | typeof Link | typeof LinkImage | typeof List | typeof ListProperties | typeof Mention | typeof Table | typeof TableCaption | typeof TableCellProperties | typeof TableColumnResize | typeof TableProperties | typeof TableToolbar | typeof PictureEditing)[];
     static defaultConfig: EditorConfig;
 }
 export default Editor;

@@ -47,23 +47,25 @@ import {
 } from '@ckeditor/ckeditor5-table';
 import { TextTransformation } from '@ckeditor/ckeditor5-typing';
 import { Undo } from '@ckeditor/ckeditor5-undo';
-import InsertHtml from './plugins/insert-html/insert-html.plugin';
-
 
 // combodo plugins
 import AppendITopClasses from "./plugins/append-itop-classes/append-itop-classes.plugin";
 import KeyboardShortcut from "./plugins/keyboard-shortcut/keyboard-shortcut.plugin";
 import MentionsMarkup from "./plugins/mentions-markup/mentions-markup.plugin";
-import TriggerUpdateOnReady from "./plugins/trigger_update_on_ready/trigger_update_on_ready.plugin";
+import TriggerUpdateOnReady from "./plugins/trigger-update-on-ready/trigger-update-on-ready.plugin";
 import Maximize from './plugins/maximize/maximize.plugin';
 import ObjectShortcut from './plugins/object-shortcut/object-shortcut.plugin';
 import DetectChanges from "./plugins/detect-change/detect-change.plugin";
+import UpdateInputOnChange from "./plugins/update-input-on-change/update-input-on-change.plugin";
+import Disabler from "./plugins/disabler/disabler.plugin";
+import InsertHtml from './plugins/insert-html/insert-html.plugin';
 
 // You can read more about extending the build with additional plugins in the "Installing plugins" guide.
 // See https://ckeditor.com/docs/ckeditor5/latest/installation/plugins/installing-plugins.html for details.
 
 // iTop console theme
 import './resources/console-theme.css';
+
 
 class Editor extends ClassicEditor {
 	public static override builtinPlugins = [
@@ -116,9 +118,11 @@ class Editor extends ClassicEditor {
         MentionsMarkup,
         TriggerUpdateOnReady,
         Maximize,
-        ObjectShortcut,
+        // ObjectShortcut, // wait a clean implementation before adding it (mentions plugin allow this feature)
         InsertHtml,
-        DetectChanges
+        DetectChanges,
+        UpdateInputOnChange,
+        Disabler
 	];
 
     // default configuration editor
@@ -130,12 +134,12 @@ class Editor extends ClassicEditor {
                 'undo',
                 'redo',
                 '|',
+                'bold',
+                'italic',
+                'underline',
                 'fontSize',
                 'fontColor',
-                'highlight:yellowMarker',
-				'bold',
-				'italic',
-                'underline',
+                'highlight',
                 {
                     label: 'More styles',
                     items: ['strikethrough', 'superscript', 'subscript' ]
@@ -155,17 +159,15 @@ class Editor extends ClassicEditor {
 		language: 'en',
 		image: {
 			toolbar: [
-				'imageTextAlternative',
-				'toggleImageCaption',
-                '|',
-				'imageStyle:inline',
-				'imageStyle:block',
-				'imageStyle:side',
-				'linkImage',
-                '|',
+                'resizeImage:25',
                 'resizeImage:50',
-                'resizeImage:75',
                 'resizeImage:original',
+                '|',
+                'imageStyle:alignLeft',
+                'imageStyle:alignCenter',
+                'imageStyle:alignRight',
+                '|',
+                'toggleImageCaption',
 			],
             resizeOptions: [
                 {
@@ -174,15 +176,15 @@ class Editor extends ClassicEditor {
                     icon: 'original'
                 },
                 {
+                    name: 'resizeImage:25',
+                    value: '25',
+                    icon: 'small'
+                },
+                {
                     name: 'resizeImage:50',
                     value: '50',
                     icon: 'medium'
                 },
-                {
-                    name: 'resizeImage:75',
-                    value: '75',
-                    icon: 'large'
-                }
             ],
 		},
 		table: {
@@ -190,8 +192,11 @@ class Editor extends ClassicEditor {
 				'tableColumn',
 				'tableRow',
 				'mergeTableCells',
+                '|',
 				'tableCellProperties',
-				'tableProperties'
+				'tableProperties',
+                '|',
+                'toggleTableCaption'
 			]
 		},
         htmlSupport: {
@@ -206,6 +211,17 @@ class Editor extends ClassicEditor {
         },
         link: {
             defaultProtocol: 'http://'
+        },
+        highlight: {
+            options: [
+                {
+                    model: 'yellowMarker',
+                    class: 'marker-yellow',
+                    title: 'Yellow marker',
+                    color: 'var(--ck-highlight-marker-yellow)',
+                    type: 'marker'
+                },
+            ]
         }
 	};
 }

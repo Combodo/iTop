@@ -160,7 +160,8 @@ EOF
 				$oOutput->AddHtml('<div class="help-block"></div>');
 				// First the edition area
 				$oOutput->AddHtml('<div>');
-				$oOutput->AddHtml('<textarea id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" class="form-control" rows="8"  '.$sInputTags.'>'.$this->oField->GetCurrentValue().'</textarea>');
+				$sEditorClasses = $bRichEditor ? 'htmlEditor' : '';
+				$oOutput->AddHtml('<textarea id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" class="' . $sEditorClasses . ' form-control" rows="8"  '.$sInputTags.'>'.$this->oField->GetCurrentValue().'</textarea>');
 				$oOutput->AddHtml('</div>');
 				// Then the previous entries if necessary
 				if ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\CaseLogField') {
@@ -173,24 +174,10 @@ EOF
 
 				// Some additional stuff if we are displaying it with a rich editor
 					if ($bRichEditor) {
-						// TODO 3.2.0 How to get a config for portal without mentions ?
-						// $aConfig = CKEditorHelper::GetCkeditorPref();
-						$aConfig = [];
-						$aConfig['detectChanges'] = ['initialValue' => $this->oField->GetCurrentValue()];
 
-						$sJsConfig = json_encode($aConfig);
-						
-						$oOutput->AddJs(
-<<<JS
-							$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
-							CombodoCKEditorHandler.CreateInstance('#{$this->oField->GetGlobalId()}', $sJsConfig).then((	oEditor) => {
-							oEditor.model.document.on('change:data', (event) => {
-								
-								$('#{$this->oField->GetGlobalId()}').val(oEditor.getData()).trigger("change");
-                            });
-							});
-JS
-						);
+						// Enable CKEditor
+						CKEditorHelper::ConfigureCKEditorElementForRenderingOutput($oOutput, $this->oField->GetGlobalId(), $this->oField->GetCurrentValue(), false, false);
+
 						if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null)) {
 							$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));
 						}

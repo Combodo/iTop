@@ -1061,11 +1061,6 @@ HTML
 			}
 		}
 
-		// Fields with CKEditor need to have the highlight.js lib loaded even if they are in read-only, as it is needed to format code snippets
-		if ($bHasFieldsWithRichTextEditor) {
-			WebResourcesHelper::EnableCKEditorToWebPage($oPage);
-		}
-
 		return $aFieldsMap;
 	}
 
@@ -2320,40 +2315,10 @@ JS
 
 					$oPage->add_ready_script("$('#$iId').on('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );"); // Custom validation function
 
-					// Replace the text area with CKEditor
-					// To change the default settings of the editor,
-					// a) edit the file /js/ckeditor/config.js
-					// b) or override some of the configuration settings, using the second parameter of ckeditor()
-					$aConfig = CKEditorHelper::GetCkeditorPref();
-					$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
-					$aConfig['detectChanges'] = ['initialValue' => $sOriginalValue];
-
-					// - Final config
-					$sConfigJS = json_encode($aConfig);
-
-					WebResourcesHelper::EnableCKEditorToWebPage($oPage);
-					$oPage->add_ready_script("CombodoCKEditorHandler.CreateInstance('#$iId')");
-
-					$oPage->add_ready_script(
-<<<EOF
-$('#$iId').on('update', function(evt){
-	BlockField('cke_$iId', $('#$iId').attr('disabled'));
-	//Delayed execution - ckeditor must be properly initialized before setting readonly
-	var retryCount = 0;
-	var oMe = $('#$iId');
-	var delayedSetReadOnly = function () {
-		if (oMe.data('ckeditorInstance').editable() == undefined && retryCount++ < 10) {
-			setTimeout(delayedSetReadOnly, retryCount * 100); //Wait a while longer each iteration
-		}
-		else
-		{
-			oMe.data('ckeditorInstance').setReadOnly(oMe.prop('disabled'));
-		}
-	};
-	setTimeout(delayedSetReadOnly, 50);
-});
-EOF
-					);
+					// configure CKEditor
+					CKEditorHelper::ConfigureCKEditorElementForWebPage($oPage, $iId, $sOriginalValue, true, [
+						'placeholder' => Dict::S('UI:CaseLogTypeYourTextHere'),
+					]);
 					break;
 
 				case 'HTML':
