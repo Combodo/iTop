@@ -36,15 +36,9 @@ export default class iTopDataProcessor extends HtmlDataProcessor {
     
     override toData( viewFragment: ViewDocumentFragment ): string {
         const html = this._htmlDP.toData( viewFragment );
-        // TODO 3.2.0: How to use CombodoJSConsole here ?
-        console.debug('DataProcessor toData', html);
         if( html === this._transformedInitialValue ) {
-            // TODO 3.2.0: How to use CombodoJSConsole here ?
-            console.debug('iTopDataProcessor: initialData detected, returning initial value');
             return this._initialValue;
         }
-        // TODO 3.2.0: How to use CombodoJSConsole here ?
-        console.debug('iTopDataProcessor: initialData not detected, returning transformed value');
         return html;
     }
 }

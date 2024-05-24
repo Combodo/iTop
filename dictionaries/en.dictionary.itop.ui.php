@@ -1426,6 +1426,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ShortcutRenameDlg:Title'                           => 'Rename the shortcut',
 	'UI:ShortcutListDlg:Title'                             => 'Create a shortcut for the list',
 	'UI:ShortcutDelete:Confirm'                            => 'Please confirm that wou wish to delete the shortcut(s).',
+	'UI:ObjectShortcutInsert'                               => 'Insert Object Shortcut',
 	'Class:Shortcut'                                       => 'Shortcut',
 	'Class:Shortcut+'                                      => '',
 	'Class:Shortcut/Attribute:name'                        => 'Name',

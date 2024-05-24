@@ -282,7 +282,7 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		'p' => array('style'),
 		'blockquote' => array('style'),
 		'br' => array(),
-		'span' => array('style'),
+		'span' => array('style', 'class'),
 		'div' => array('style'),
 		'b' => array(),
 		'i' => array(),
@@ -323,7 +323,8 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		'hr' => array('style'),
 		'pre' => array(),
 		'center' => array(),
-		'figure' => array('class'), // Ckeditor 5 puts images in figures
+		'figure' => array('class', 'style'), // Ckeditor 5 puts images in figures
+		'figcaption' => array('class'),
 		'mark' => array('class')
 	);
 

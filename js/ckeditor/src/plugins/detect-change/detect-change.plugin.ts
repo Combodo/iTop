@@ -10,19 +10,16 @@ export default class DetectChanges extends Plugin {
     constructor( editor: Editor ) {
         super( editor );
         const sInitialValue:string = editor.config.get('detectChanges.initialValue') as string;
-        // TODO 3.2.0: How to use CombodoJSConsole here ?
-        console.debug('DetectChanges initial value', sInitialValue);
         // If the initial value is not set or empty, we don't need to do anything
         if( !sInitialValue || sInitialValue === '') {
             return;
         }
         // Initialize our own data processor
-        editor.data.processor= new iTopDataProcessor( editor.data.viewDocument,  sInitialValue,  editor.getData() ) as  iTopDataProcessor;
+        const oProcessor  = new iTopDataProcessor( editor.data.viewDocument,  sInitialValue,  editor.getData() ) as  iTopDataProcessor;
+        editor.data.processor = oProcessor;
         // Listen for the dataReady event only once
         editor.model.document.once('change:data', () => {
-            // Ignore linter as processor can be any kind of DataProcessor but we're sure that we have an iTopDataProcessor
-            // @ts-ignore
-            editor.data.processor.setTransformedInitialValue( editor.getData());
+            oProcessor.setTransformedInitialValue( editor.getData());
         });
     }
     init() {

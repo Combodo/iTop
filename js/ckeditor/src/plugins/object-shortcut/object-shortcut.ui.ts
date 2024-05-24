@@ -1,5 +1,5 @@
 import { Plugin } from '@ckeditor/ckeditor5-core';
-import { ButtonView, ContextualBalloon, clickOutsideHandler } from '@ckeditor/ckeditor5-ui';
+import {ButtonView, ContextualBalloon, clickOutsideHandler} from '@ckeditor/ckeditor5-ui';
 import FormView from './object-shortcut.form-view';
 import './styles.css';
 
@@ -25,7 +25,7 @@ export default class ObjectShortcutUI extends Plugin {
 
         editor.ui.componentFactory.add( 'object-shortcut', () => {
             const oButton = new ButtonView();
-            oButton.label = 'Insert Object Shortcut';
+            oButton.label = editor.config.get('objectShortcut.buttonLabel') as string ?? 'Insert Object Shortcut';
             oButton.tooltip = true;
             oButton.icon = sPluginIconSVG;
 
@@ -116,12 +116,6 @@ export default class ObjectShortcutUI extends Plugin {
 
     _hideUI() {
         if( this.oFormView !== undefined && this.oBalloon !== undefined){
-            // @ts-ignore
-            this.oFormView.oLabelInputView.set({value: null});
-            // @ts-ignore
-            this.oFormView.oClassInputView.set({value: null});
-            // @ts-ignore
-            this.oFormView.oReferenceInputView.set({value: null});
 
             if( this.oFormView.element !== null){
                 (<HTMLFormElement>this.oFormView.element).reset();
