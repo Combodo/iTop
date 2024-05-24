@@ -5934,7 +5934,7 @@ JS
 	final protected function FireEventAfterWrite(array $aChanges, bool $bIsNew): void
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
-		$this->FireEventDbLinksChangedForCurrentObject();
+		$this->RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
 		$this->FireEvent(EVENT_DB_AFTER_WRITE, ['is_new' => $bIsNew, 'changes' => $aChanges]);
 	}
 
@@ -6048,31 +6048,6 @@ JS
 	}
 
 	/**
-	 * Fire the EVENT_DB_LINKS_CHANGED event if current object is registered
-	 *
-	 * @return void
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 *
-	 * @since 3.1.0 N°5906
-	 */
-	final protected function FireEventDbLinksChangedForCurrentObject(): void
-	{
-		if (true === static::IsEventDBLinksChangedBlocked()) {
-			return;
-		}
-
-		$sClass = get_class($this);
-		$sId = $this->GetKey();
-		$bIsObjectAwaitingEventDbLinksChanged = self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
-		if (false === $bIsObjectAwaitingEventDbLinksChanged) {
-			return;
-		}
-		self::FireEventDbLinksChangedForObject($this);
-		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
-	}
-
-	/**
 	 * Fire the EVENT_DB_LINKS_CHANGED event if given object is registered, and unregister it
 	 *
 	 * @param string $sClass
@@ -6110,9 +6085,9 @@ JS
 		self::SetEventDBLinksChangedBlocked(true);
 		// N°6408 The object can have been deleted
 		if (!is_null($oObject)) {
-			MetaModel::StartReentranceProtection($oObject);
 			$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
-			MetaModel::StopReentranceProtection($oObject);
+
+			// Update the object if needed
 			if (count($oObject->ListChanges()) !== 0) {
 				$oObject->DBUpdate();
 			}

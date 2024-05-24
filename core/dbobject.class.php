@@ -3332,6 +3332,9 @@ abstract class DBObject implements iDisplay
 	 */
 	public function DBInsertNoReload()
 	{
+		// Prevent DBUpdate at this point (reentrancy protection with temp id)
+		MetaModel::StartReentranceProtection($this);
+
 		$sClass = get_class($this);
 
 		$this->AddCurrentObjectInCrudStack('INSERT');
@@ -3378,6 +3381,8 @@ abstract class DBObject implements iDisplay
 			}
 
 			$this->ComputeStopWatchesDeadline(true);
+			// With temp id
+			MetaModel::StopReentranceProtection($this);
 
 			$iTransactionRetry = 1;
 			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
@@ -3570,6 +3575,12 @@ abstract class DBObject implements iDisplay
 	 */
 	public function DBUpdate()
 	{
+		if (!MetaModel::StartReentranceProtection($this)) {
+			$this->LogCRUDExit(__METHOD__, 'Rejected (reentrance)');
+
+			return false;
+		}
+
 		$this->LogCRUDEnter(__METHOD__);
 		if (!$this->m_bIsInDB)
 		{
@@ -3579,12 +3590,6 @@ abstract class DBObject implements iDisplay
 
 		$this->AddCurrentObjectInCrudStack('UPDATE');
 
-		if (!MetaModel::StartReentranceProtection($this)) {
-			$this->RemoveCurrentObjectInCrudStack();
-			$this->LogCRUDExit(__METHOD__, 'Rejected (reentrance)');
-
-			return false;
-		}
 		try {
 			// Protect against infinite loop
 			$this->iUpdateLoopCount++;

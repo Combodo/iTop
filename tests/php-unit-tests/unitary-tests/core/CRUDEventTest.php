@@ -11,9 +11,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ContactType;
 use CoreException;
 use DBObject;
-use DBObject\MockDBObjectWithCRUDEventListener;
 use DBObjectSet;
-use DBSearch;
 use IssueLog;
 use lnkFunctionalCIToTicket;
 use lnkPersonToTeam;
@@ -40,8 +38,8 @@ class CRUDEventTest extends ItopDataTestCase
 	const CREATE_TEST_ORG = true;
 
 	// Count the events by name
-	private static array $aEventCalls = [];
-	private static int $iEventCalls = 0;
+	private static array $aEventCallsCount = [];
+	private static int $iEventCallsTotalCount = 0;
 	private static string $sLogFile = 'log/test_error_CRUDEventTest.log';
 
 	protected function setUp(): void
@@ -55,7 +53,7 @@ class CRUDEventTest extends ItopDataTestCase
 			@unlink(APPROOT.static::$sLogFile);
 			IssueLog::Enable(APPROOT.static::$sLogFile);
 			$oConfig = utils::GetConfig();
-			$oConfig->Set('log_level_min', ['DMCRUD' => 'Trace']);
+			$oConfig->Set('log_level_min', ['DMCRUD' => 'Trace', 'EventService' => 'Trace']);
 		}
 	}
 
@@ -72,107 +70,166 @@ class CRUDEventTest extends ItopDataTestCase
 
 	public static function IncrementCallCount(string $sEvent)
 	{
-		self::$aEventCalls[$sEvent] = (self::$aEventCalls[$sEvent] ?? 0) + 1;
-		self::$iEventCalls++;
+		self::$aEventCallsCount[$sEvent] = (self::$aEventCallsCount[$sEvent] ?? 0) + 1;
+		self::$iEventCallsTotalCount++;
 	}
 
 	public static function CleanCallCount()
 	{
-		self::$aEventCalls = [];
-
-		self::$iEventCalls = 0;
+		self::$aEventCallsCount = [];
+		self::$iEventCallsTotalCount = 0;
 	}
 
 	/**
-	 * Check that the 3 events EVENT_DB_COMPUTE_VALUES, EVENT_DB_CHECK_TO_WRITE and EVENT_DB_AFTER_WRITE are called on insert
-	 *
-	 * @return void
-	 * @throws \Exception
+	 * Check that the events are called on insert
 	 */
-	public function testDBInsert()
+	public function testDBInsertEvents()
 	{
 		$oEventReceiver = new CRUDEventReceiver($this);
-		$oEventReceiver->RegisterCRUDListeners();
+		$oEventReceiver->RegisterCRUDEventListeners();
 
-		$oOrg = $this->CreateOrganization('Organization1');
-		$this->assertIsObject($oOrg);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
-		$this->assertEquals(4, self::$iEventCalls);
+		$oPerson = MetaModel::NewObject(Person::class, [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
+		$oPerson->DBInsert();
+
+		$this->assertEquals(
+			[EVENT_DB_COMPUTE_VALUES, EVENT_DB_BEFORE_WRITE, EVENT_DB_CHECK_TO_WRITE, EVENT_DB_AFTER_WRITE],
+			array_keys(self::$aEventCallsCount),
+			'CRUD events must be fired in the following order: EVENT_DB_COMPUTE_VALUES, EVENT_DB_BEFORE_WRITE, EVENT_DB_CHECK_TO_WRITE, EVENT_DB_AFTER_WRITE'
+		);
+
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_COMPUTE_VALUES]);
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_BEFORE_WRITE]);
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_CHECK_TO_WRITE]);
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE]);
+		$this->assertEquals(4, self::$iEventCallsTotalCount);
 	}
 
 	/**
 	 * Check that the 3 events EVENT_DB_COMPUTE_VALUES, EVENT_DB_CHECK_TO_WRITE and EVENT_DB_AFTER_WRITE are called on update
-	 *
-	 * @return void
-	 * @throws \Exception
 	 */
-	public function testDBUpdate()
+	public function testDBUpdateEvents()
 	{
-		$oOrg = $this->CreateOrganization('Organization1');
-		$this->assertIsObject($oOrg);
+		$oPerson = 	$this->createObject('Person', [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
 
+		// ----- Test Starts Here
 		$oEventReceiver = new CRUDEventReceiver($this);
-		$oEventReceiver->RegisterCRUDListeners();
+		$oEventReceiver->RegisterCRUDEventListeners();
 
-		$oOrg->Set('name', 'test');
-		$oOrg->DBUpdate();
+		$oPerson->Set('first_name', 'TestToTouch');
+		$oPerson->DBUpdate();
 
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
-		$this->assertEquals(4, self::$iEventCalls);
+		$this->assertEquals(
+			[EVENT_DB_COMPUTE_VALUES, EVENT_DB_BEFORE_WRITE, EVENT_DB_CHECK_TO_WRITE, EVENT_DB_AFTER_WRITE],
+			array_keys(self::$aEventCallsCount),
+			'CRUD events must be fired in the following order: EVENT_DB_COMPUTE_VALUES, EVENT_DB_BEFORE_WRITE, EVENT_DB_CHECK_TO_WRITE, EVENT_DB_AFTER_WRITE'
+		);
+
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_COMPUTE_VALUES]);
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_CHECK_TO_WRITE]);
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_BEFORE_WRITE]);
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE]);
+		$this->assertEquals(4, self::$iEventCallsTotalCount);
 	}
 
 	/**
 	 * Check that only 1 event EVENT_DB_COMPUTE_VALUES is called on update when nothing is modified
-	 *
-	 * @return void
-	 * @throws \Exception
 	 */
-	public function testDBUpdateNothing()
+	public function testDBUpdateNothingNoEvent()
 	{
-		$oOrg = $this->CreateOrganization('Organization1');
-		$this->assertIsObject($oOrg);
+		$oPerson = 	$this->createObject('Person', [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
 
 		$oEventReceiver = new CRUDEventReceiver($this);
-		$oEventReceiver->RegisterCRUDListeners();
+		$oEventReceiver->RegisterCRUDEventListeners();
 
-		$oOrg->DBUpdate();
+		$oPerson->DBUpdate();
 
-		$this->assertEquals(0, self::$iEventCalls);
+		$this->assertEquals(0, self::$iEventCallsTotalCount);
 	}
 
 	/**
 	 * Check that an object can be modified during EVENT_DB_COMPUTE_VALUES
 	 * and the modifications are saved to the DB
-	 *
-	 * @return void
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \OQLException
 	 */
 	public function testComputeValuesOnInsert()
 	{
 		$oEventReceiver = new CRUDEventReceiver($this);
 		// Set the person's first name during Compute Values
-		$oEventReceiver->AddCallback(EVENT_DB_COMPUTE_VALUES, Person::class, 'SetPersonFirstName');
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_COMPUTE_VALUES);
+		$oEventReceiver->AddCallback(EVENT_DB_COMPUTE_VALUES, Person::class, 'SetRandomPersonFirstNameStartingWithCRUD');
+		$oEventReceiver->RegisterCRUDEventListeners(EVENT_DB_COMPUTE_VALUES);
 
-		$oPerson = $this->CreatePerson(1);
-		$this->assertIsObject($oPerson);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(1, self::$iEventCalls);
+		$oPerson = MetaModel::NewObject(Person::class, [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
+		$oPerson->DBInsert();
 
-		// Read the object explicitly from the DB to check that the first name has been set
-		$oSet = new DBObjectSet(DBSearch::FromOQL('SELECT Person WHERE id=:id'), [], ['id' => $oPerson->GetKey()]);
-		$oPersonResult = $oSet->Fetch();
-		$this->assertTrue(utils::StartsWith($oPersonResult->Get('first_name'), 'CRUD'));
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_COMPUTE_VALUES]);
+
+		$oPerson = MetaModel::GetObject(\Person::class, $oPerson->GetKey());
+		$this->assertStringStartsWith('CRUD', $oPerson->Get('first_name'), 'The object should have been modified and recorded in DB by EVENT_DB_COMPUTE_VALUES handler');
+	}
+
+	/**
+	 * Check that an object can be modified during EVENT_DB_COMPUTE_VALUES
+	 * and the modifications are saved to the DB
+	 */
+	public function testComputeValuesOnUpdate()
+	{
+		$oPerson = 	$this->createObject('Person', [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
+
+		$oEventReceiver = new CRUDEventReceiver($this);
+		// Set the person's first name during Compute Values
+		$oEventReceiver->AddCallback(EVENT_DB_COMPUTE_VALUES, Person::class, 'SetRandomPersonFirstNameStartingWithCRUD');
+		$oEventReceiver->RegisterCRUDEventListeners(EVENT_DB_COMPUTE_VALUES);
+
+		$oPerson->Set('first_name', 'TestToTouch');
+		$oPerson->DBUpdate();
+
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_COMPUTE_VALUES]);
+
+		$oPerson = MetaModel::GetObject(\Person::class, $oPerson->GetKey());
+		$this->assertStringStartsWith('CRUD', $oPerson->Get('first_name'), 'The object should have been modified and recorded in DB by EVENT_DB_COMPUTE_VALUES handler');
+	}
+
+	/**
+	 * Check that an object can be modified during EVENT_DB_COMPUTE_VALUES
+	 * and the modifications are saved to the DB
+	 */
+	public function testBeforeWriteOnInsert()
+	{
+		$oEventReceiver = new CRUDEventReceiver($this);
+		// Set the person's first name during Compute Values
+		$oEventReceiver->AddCallback(EVENT_DB_BEFORE_WRITE, Person::class, 'SetRandomPersonFirstNameStartingWithCRUD');
+		$oEventReceiver->RegisterCRUDEventListeners(EVENT_DB_BEFORE_WRITE);
+
+		$oPerson = MetaModel::NewObject(Person::class, [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
+		$oPerson->DBInsert();
+
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_BEFORE_WRITE]);
+
+		$oPerson = MetaModel::GetObject(\Person::class, $oPerson->GetKey());
+		$this->assertStringStartsWith('CRUD', $oPerson->Get('first_name'), 'The object should have been modified and recorded in DB by EVENT_DB_BEFORE_WRITE handler');
 	}
 
 	/**
@@ -187,26 +244,26 @@ class CRUDEventTest extends ItopDataTestCase
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function testComputeValuesOnUpdate()
+	public function testBeforeWriteOnUpdate()
 	{
-		$oPerson = $this->CreatePerson(1);
-		$this->assertIsObject($oPerson);
+		$oPerson = 	$this->createObject('Person', [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
 
 		$oEventReceiver = new CRUDEventReceiver($this);
 		// Set the person's first name during Compute Values
-		$oEventReceiver->AddCallback(EVENT_DB_COMPUTE_VALUES, Person::class, 'SetPersonFirstName');
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_COMPUTE_VALUES);
+		$oEventReceiver->AddCallback(EVENT_DB_BEFORE_WRITE, Person::class, 'SetRandomPersonFirstNameStartingWithCRUD');
+		$oEventReceiver->RegisterCRUDEventListeners(EVENT_DB_BEFORE_WRITE);
 
-		$oPerson->Set('function', 'MyFunction_'.rand());
+		$oPerson->Set('first_name', 'TestToTouch');
 		$oPerson->DBUpdate();
 
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(1, self::$iEventCalls);
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_BEFORE_WRITE]);
 
-		// Read the object explicitly from the DB to check that the first name has been set
-		$oSet = new DBObjectSet(DBSearch::FromOQL('SELECT Person WHERE id=:id'), [], ['id' => $oPerson->GetKey()]);
-		$oPersonResult = $oSet->Fetch();
-		$this->assertTrue(utils::StartsWith($oPersonResult->Get('first_name'), 'CRUD'));
+		$oPerson = MetaModel::GetObject(\Person::class, $oPerson->GetKey());
+		$this->assertStringStartsWith('CRUD', $oPerson->Get('first_name'), 'The object should have been modified and recorded in DB by EVENT_DB_BEFORE_WRITE handler');
 	}
 
 	/**
@@ -215,15 +272,20 @@ class CRUDEventTest extends ItopDataTestCase
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testCheckToWriteProtectedOnInsert()
+	public function testObjectModificationIsNotAllowedDuringCheckToWriteOnInsert()
 	{
 		$oEventReceiver = new CRUDEventReceiver($this);
 		// Modify the person's function
-		$oEventReceiver->AddCallback(EVENT_DB_CHECK_TO_WRITE, Person::class, 'SetPersonFunction');
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_CHECK_TO_WRITE);
+		$oEventReceiver->AddCallback(EVENT_DB_CHECK_TO_WRITE, Person::class, 'SetRandomPersonFirstNameStartingWithCRUD');
+		$oEventReceiver->RegisterCRUDEventListeners(EVENT_DB_CHECK_TO_WRITE);
 
 		$this->expectException(CoreException::class);
-		$this->CreatePerson(1);
+		$oPerson = MetaModel::NewObject(Person::class, [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
+		$oPerson->DBInsert();
 	}
 
 	/**
@@ -232,17 +294,20 @@ class CRUDEventTest extends ItopDataTestCase
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testCheckToWriteProtectedOnUpdate()
+	public function testObjectModificationIsNotAllowedDuringCheckToWriteOnUpdate()
 	{
-		$oPerson = $this->CreatePerson(1);
-		$this->assertIsObject($oPerson);
+		$oPerson = 	$this->createObject('Person', [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
 
 		// Modify the person's function
 		$oEventReceiver = new CRUDEventReceiver($this);
-		$oEventReceiver->AddCallback(EVENT_DB_CHECK_TO_WRITE, Person::class, 'SetPersonFunction');
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_CHECK_TO_WRITE);
+		$oEventReceiver->AddCallback(EVENT_DB_CHECK_TO_WRITE, Person::class, 'SetRandomPersonFirstNameStartingWithCRUD');
+		$oEventReceiver->RegisterCRUDEventListeners(EVENT_DB_CHECK_TO_WRITE);
 
-		$oPerson->Set('function', 'test');
+		$oPerson->Set('first_name', 'TestToTouch');
 
 		$this->expectException(CoreException::class);
 		$oPerson->DBUpdate();
@@ -256,26 +321,26 @@ class CRUDEventTest extends ItopDataTestCase
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testModificationsDuringCreateDone()
+	public function testAfterWriteOnInsert()
 	{
 		$oEventReceiver = new CRUDEventReceiver($this);
 		// Set the person's first name during Compute Values
-		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetPersonFirstName');
-		$oEventReceiver->RegisterCRUDListeners();
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetRandomPersonFirstNameStartingWithCRUD');
+		$oEventReceiver->RegisterCRUDEventListeners();
 
-		$oPerson = $this->CreatePerson(1);
-		$this->assertIsObject($oPerson);
+		$oPerson = MetaModel::NewObject(Person::class, [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
+		$oPerson->DBInsert();
 
-		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
-		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
-		$this->assertEquals(8, self::$iEventCalls);
+		// 1 for insert and 1 for update
+		$this->assertEquals(2, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE], 'EVENT_DB_AFTER_WRITE is called once on DBInsert and once to persist the modifications done by the event handler');
+		$this->assertEquals(8, self::$iEventCallsTotalCount, 'Each events is called twice due to the modifications done by the EVENT_DB_AFTER_WRITE handler');
 
-		// Read the object explicitly from the DB to check that the first name has been set
-		$oSet = new DBObjectSet(DBSearch::FromOQL('SELECT Person WHERE id=:id'), [], ['id' => $oPerson->GetKey()]);
-		$oPersonResult = $oSet->Fetch();
-		$this->assertTrue(utils::StartsWith($oPersonResult->Get('first_name'), 'CRUD'));
+		$oPerson = MetaModel::GetObject(\Person::class, $oPerson->GetKey());
+		$this->assertStringStartsWith('CRUD', $oPerson->Get('first_name'), 'The object should have been modified and recorded in DB by EVENT_DB_AFTER_WRITE handler');
 	}
 
 	/**
@@ -286,29 +351,27 @@ class CRUDEventTest extends ItopDataTestCase
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testModificationsDuringUpdateDone()
+	public function testAfterWriteOnUpdate()
 	{
-		$oPerson = $this->CreatePerson(1);
-		$this->assertIsObject($oPerson);
+		$oPerson = 	$this->createObject('Person', [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
 
 		$oEventReceiver = new CRUDEventReceiver($this);
 		// Set the person's first name during Compute Values
-		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetPersonFirstName');
-		$oEventReceiver->RegisterCRUDListeners();
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetRandomPersonFirstNameStartingWithCRUD');
+		$oEventReceiver->RegisterCRUDEventListeners();
 
-		$oPerson->Set('function', 'test'.rand());
+		$oPerson->Set('first_name', 'TestToTouch');
 		$oPerson->DBUpdate();
 
-		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
-		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
-		$this->assertEquals(8, self::$iEventCalls);
+		$this->assertEquals(2, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE], 'EVENT_DB_AFTER_WRITE is called once on DBUpdate and once to persist the modifications done by the event handler');
+		$this->assertEquals(8, self::$iEventCallsTotalCount, 'Each events is called twice due to the modifications done by the EVENT_DB_AFTER_WRITE handler');
 
-		// Read the object explicitly from the DB to check that the first name has been set
-		$oSet = new DBObjectSet(DBSearch::FromOQL('SELECT Person WHERE id=:id'), [], ['id' => $oPerson->GetKey()]);
-		$oPersonResult = $oSet->Fetch();
-		$this->assertTrue(utils::StartsWith($oPersonResult->Get('first_name'), 'CRUD'));
+		$oPerson = MetaModel::GetObject(\Person::class, $oPerson->GetKey());
+		$this->assertStringStartsWith('CRUD', $oPerson->Get('first_name'), 'The object should have been modified and recorded in DB by EVENT_DB_AFTER_WRITE handler');
 	}
 
 	/**
@@ -319,81 +382,57 @@ class CRUDEventTest extends ItopDataTestCase
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testInfiniteUpdateDoneLoop()
+	public function testProtectionAgainstInfiniteAfterWriteModificationsLoop()
 	{
-		$oPerson = $this->CreatePerson(1);
-		$this->assertIsObject($oPerson);
+		$oPerson = 	$this->createObject('Person', [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
 
 		$oEventReceiver = new CRUDEventReceiver($this);
 		// Set the person's first name during Compute Values
-		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetPersonFirstName', 100);
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_AFTER_WRITE);
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetRandomPersonFirstNameStartingWithCRUD', 2 * DBObject::MAX_UPDATE_LOOP_COUNT);
+		$oEventReceiver->RegisterCRUDEventListeners(EVENT_DB_AFTER_WRITE);
 
-		$oPerson->Set('function', 'test'.rand());
+		$oPerson->Set('first_name', 'test'.rand());
 		$oPerson->DBUpdate();
 
-		$this->assertLessThan(100, self::$iEventCalls);
+		$this->assertEquals(DBObject::MAX_UPDATE_LOOP_COUNT, self::$iEventCallsTotalCount);
 	}
 
-	/**
-	 * Check that events are sent for links on insert (team of 3 persons)
-	 *
-	 * @return void
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
-	public function testDBInsertTeam()
+	public function testDBLinksChangedNotFiredOnDBUpdateWhenLinksAreModifiedAsLinkSetAttribute()
 	{
-		// Prepare the link set
-		$sLinkedClass = lnkPersonToTeam::class;
-		$aLinkedObjectsArray = [];
-		$oSet = DBObjectSet::FromArray($sLinkedClass, $aLinkedObjectsArray);
-		$oLinkSet = new ormLinkSet(Team::class, 'persons_list', $oSet);
+		$oUserRequest = $this->CreateUserRequest(1);
 
-		// Create the 3 persons
-		for ($i = 0; $i < 3; $i++) {
-			$oPerson = $this->CreatePerson($i);
-			$this->assertIsObject($oPerson);
-			// Add the person to the link
-			$oLink = MetaModel::NewObject(lnkPersonToTeam::class, ['person_id' => $oPerson->GetKey()]);
-			$oLinkSet->AddItem($oLink);
-		}
-
-		$this->debug("\n-------------> Test Starts HERE\n");
-
-		$oEventReceiver = new CRUDEventReceiver($this);
-		$oEventReceiver->RegisterCRUDListeners();
-
-		$oTeam = MetaModel::NewObject(Team::class, ['name' => 'TestTeam1', 'persons_list' => $oLinkSet, 'org_id' => $this->getTestOrgId()]);
-		$oTeam->DBInsert();
-		$this->assertIsObject($oTeam);
-
-		// 1 insert for Team, 3 insert for lnkPersonToTeam
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
-		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCalls, 'no relation with the with_php_compute attribute !');
-		$this->assertEquals(16, self::$iEventCalls);
-	}
-
-	public function testDBDeleteUR()
-	{
-		// Prepare the link set
-		$sLinkedClass = lnkFunctionalCIToTicket::class;
-		$aLinkedObjectsArray = [];
-		$oSet = DBObjectSet::FromArray($sLinkedClass, $aLinkedObjectsArray);
-		$oLinkSet = new ormLinkSet(UserRequest::class, 'functionalcis_list', $oSet);
+		// Prepare the empty link set
+		$oLinkSet = new ormLinkSet(UserRequest::class, 'functionalcis_list', DBObjectSet::FromScratch(lnkFunctionalCIToTicket::class));
 
 		// Create the 3 servers
 		for ($i = 0; $i < 3; $i++) {
 			$oServer = $this->CreateServer($i);
-			$this->assertIsObject($oServer);
+			// Add the person to the link
+			$oLink = MetaModel::NewObject(lnkFunctionalCIToTicket::class, ['functionalci_id' => $oServer->GetKey()]);
+			$oLinkSet->AddItem($oLink);
+		}
+
+		$oEventReceiver = new CRUDEventReceiver($this);
+		$oEventReceiver->RegisterCRUDEventListeners();
+
+		$oUserRequest->Set('functionalcis_list', $oLinkSet);
+		$oUserRequest->DBUpdate();
+
+		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCallsCount, 'Event EVENT_DB_LINKS_CHANGED must not be fired on host object update');
+	}
+
+	public function testAllEventsForDBInsertAndDBDeleteForObjectWithLinkSet()
+	{
+		// Prepare the empty link set
+		$oLinkSet = new ormLinkSet(UserRequest::class, 'functionalcis_list', DBObjectSet::FromScratch(lnkFunctionalCIToTicket::class));
+
+		// Create the 3 servers
+		for ($i = 0; $i < 3; $i++) {
+			$oServer = $this->CreateServer($i);
 			// Add the person to the link
 			$oLink = MetaModel::NewObject(lnkFunctionalCIToTicket::class, ['functionalci_id' => $oServer->GetKey()]);
 			$oLinkSet->AddItem($oLink);
@@ -402,32 +441,30 @@ class CRUDEventTest extends ItopDataTestCase
 		$this->debug("\n-------------> Insert Starts HERE\n");
 
 		$oEventReceiver = new CRUDEventReceiver($this);
-		$oEventReceiver->RegisterCRUDListeners();
+		$oEventReceiver->RegisterCRUDEventListeners();
 
 		$oUserRequest = MetaModel::NewObject(UserRequest::class, array_merge($this->GetUserRequestParams(0), ['functionalcis_list' => $oLinkSet]));
 		$oUserRequest->DBInsert();
-		$this->assertIsObject($oUserRequest);
 
 		// 1 insert for UserRequest, 3 insert for lnkFunctionalCIToTicket
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
-		$this->assertEquals(17, self::$iEventCalls);
+		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_COMPUTE_VALUES]);
+		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_CHECK_TO_WRITE]);
+		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_BEFORE_WRITE]);
+		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE]);
+		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCallsCount, 'Event must not be fired if host object is created with links');
+		$this->assertEquals(16, self::$iEventCallsTotalCount);
 
 		$this->debug("\n-------------> Delete Starts HERE\n");
 
-		$oEventReceiver->CleanCallbacks();
 		self::CleanCallCount();
 		$oUserRequest->DBDelete();
 
 		// 1 delete for UserRequest, 3 delete for lnkFunctionalCIToTicket
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_CHECK_TO_DELETE]);
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_ABOUT_TO_DELETE]);
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_DELETE]);
-		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCalls, 'Event not to be sent on delete');
-		$this->assertEquals(12, self::$iEventCalls);
+		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_CHECK_TO_DELETE]);
+		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_ABOUT_TO_DELETE]);
+		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_AFTER_DELETE]);
+		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCallsCount, 'Event not to be sent on delete');
+		$this->assertEquals(12, self::$iEventCallsTotalCount);
 
 	}
 
@@ -436,53 +473,36 @@ class CRUDEventTest extends ItopDataTestCase
 	 * During the insert of the lnkPersonToTeam a modification is done on the link,
 	 * check that all the events are sent,
 	 * check that the link is saved correctly.
-	 *
-	 * @return void
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
 	 */
-	public function testDBInsertTeamWithModificationsDuringInsert()
+	public function testDBInsertTeamWithModificationsOnLinkDuringInsert()
 	{
 		// Create the person
 		$oPerson = $this->CreatePerson(1);
-		$this->assertIsObject($oPerson);
 
 		// Prepare the link for the insertion with the team
-		$sLinkedClass = lnkPersonToTeam::class;
-		$aLinkedObjectsArray = [];
-		$oSet = DBObjectSet::FromArray($sLinkedClass, $aLinkedObjectsArray);
-		$oLinkSet = new ormLinkSet(Team::class, 'persons_list', $oSet);
+		$oLinkSet = new ormLinkSet(Team::class, 'persons_list', DBObjectSet::FromScratch(lnkPersonToTeam::class));
 		$oLink = MetaModel::NewObject(lnkPersonToTeam::class, ['person_id' => $oPerson->GetKey()]);
 		$oLinkSet->AddItem($oLink);
 
-		$this->debug("\n-------------> Test Starts HERE\n");
 		$oEventReceiver = new CRUDEventReceiver($this);
 		// Create a new role and add it to the newly created lnkPersonToTeam
 		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, lnkPersonToTeam::class, 'AddRoleToLink');
-		$oEventReceiver->RegisterCRUDListeners();
+		$oEventReceiver->RegisterCRUDEventListeners();
 
 		// Create the team
 		$oTeam = MetaModel::NewObject(Team::class, ['name' => 'TestTeam1', 'persons_list' => $oLinkSet, 'org_id' => $this->getTestOrgId()]);
 		$oTeam->DBInsert();
-		$this->assertIsObject($oTeam);
 
 		// 1 for Team, 1 for lnkPersonToTeam, 1 for ContactType and 1 for the update of lnkPersonToTeam
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
-		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCalls, 'no relation with the with_php_compute attribute !');
-		$this->assertEquals(16, self::$iEventCalls);
+		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_COMPUTE_VALUES]);
+		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_CHECK_TO_WRITE]);
+		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_BEFORE_WRITE]);
+		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE]);
+		$this->assertEquals(16, self::$iEventCallsTotalCount);
 
 		// Read the object explicitly from the DB to check that the role has been set
-		$oSet = new DBObjectSet(DBSearch::FromOQL('SELECT Team WHERE id=:id'), [], ['id' => $oTeam->GetKey()]);
-		$oTeamResult = $oSet->Fetch();
-		$oLinkSet = $oTeamResult->Get('persons_list');
+		$oTeam = MetaModel::GetObject(Team::class, $oTeam->GetKey());
+		$oLinkSet = $oTeam->Get('persons_list');
 		$oLinkSet->rewind();
 		$oLink = $oLinkSet->current();
 		// Check that role has been set
@@ -490,32 +510,220 @@ class CRUDEventTest extends ItopDataTestCase
 	}
 
 	/**
-	 * Check that updates during EVENT_DB_AFTER_WRITE are postponed to the end of all events and only one update is done
+	 * Check that DBUpdates() during all the events are ignored
 	 *
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function testPostponedUpdates()
+	public function testReentrancyProtectionOnInsert()
 	{
 		$oEventReceiver = new CRUDEventReceiver($this);
-		// Set the person's function after the creation
-		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetPersonFunction');
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_AFTER_WRITE);
+		$oEventReceiver->RegisterCRUDEventListeners();
 
-		// Intentionally register twice so 2 modifications will be done
-		$oEventReceiver = new CRUDEventReceiver($this);
-		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetPersonFirstName');
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_AFTER_WRITE);
+		// Set the person's function
+		$oEventReceiver->AddCallback(EVENT_DB_COMPUTE_VALUES, Person::class, 'SetRandomPersonFunctionAndVerifyThatUpdateIsIgnored');
+		$oEventReceiver->AddCallback(EVENT_DB_BEFORE_WRITE, Person::class, 'SetRandomPersonFunctionAndVerifyThatUpdateIsIgnored');
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetRandomPersonFunctionAndVerifyThatUpdateIsIgnored');
 
-		self::$iEventCalls = 0;
-		$oPerson = $this->CreatePerson(1);
-		$this->assertIsObject($oPerson);
-		// 2 for insert => 2 modifications generate ONE update
-		// 2 for update (if 2 updates were done then 4 events would have been counted)
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
-		$this->assertEquals(4, self::$iEventCalls);
+		$oPerson = MetaModel::NewObject(Person::class, [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'function' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
+		$oPerson->DBInsert();
+
+		$this->assertEquals(false, $oEventReceiver->bDBUpdateCalledSuccessfullyDuringEvent, 'DBUpdate must not be performed during the events (reentrancy protection)');
 	}
 
+	/**
+	 * Check that DBUpdates() during all the events are ignored
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function testReentrancyProtectionOnUpdates()
+	{
+		$oPerson = 	$this->createObject('Person', [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'function' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
+
+		$oEventReceiver = new CRUDEventReceiver($this);
+		$oEventReceiver->RegisterCRUDEventListeners();
+
+		// Set the person's function
+		$oEventReceiver->AddCallback(EVENT_DB_COMPUTE_VALUES, Person::class, 'SetRandomPersonFunctionAndVerifyThatUpdateIsIgnored');
+		$oEventReceiver->AddCallback(EVENT_DB_BEFORE_WRITE, Person::class, 'SetRandomPersonFunctionAndVerifyThatUpdateIsIgnored');
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetRandomPersonFunctionAndVerifyThatUpdateIsIgnored');
+
+		$oPerson->Set('function', 'TestToTouch');
+		$oPerson->DBUpdate();
+
+		$this->assertEquals(false, $oEventReceiver->bDBUpdateCalledSuccessfullyDuringEvent, 'DBUpdate must not be performed during the events (reentrancy protection)');
+	}
+
+	/**
+	 * Check that updates during EVENT_DB_AFTER_WRITE are postponed to the end of all events and only one update is done
+	 */
+	public function testGroupUpdatesWhenMultipleModificationsAreDoneAfterWriteOnInsert()
+	{
+		$oEventReceiver1 = new CRUDEventReceiver($this);
+		// Set the person's function after the creation
+		$oEventReceiver1->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetRandomPersonFunction');
+		$oEventReceiver1->RegisterCRUDEventListeners(EVENT_DB_AFTER_WRITE);
+
+		// Intentionally register twice so 2 modifications will be done
+		$oEventReceiver2 = new CRUDEventReceiver($this);
+		$oEventReceiver2->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetRandomPersonFirstNameStartingWithCRUD');
+		$oEventReceiver2->RegisterCRUDEventListeners(EVENT_DB_AFTER_WRITE);
+
+		$oPerson = MetaModel::NewObject(Person::class, [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'function' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
+		$oPerson->DBInsert();
+
+		// 2 for insert => 2 modifications generate ONE update
+		// 2 for update (if 2 updates were done then 4 events would have been counted)
+		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE], 'DBUpdate must be postponed to the end of all EVENT_DB_AFTER_WRITE calls');
+		$this->assertEquals(4, self::$iEventCallsTotalCount, 'Updates must be postponed to the end of all EVENT_DB_AFTER_WRITE events');
+	}
+
+	/**
+	 * Check that updates during EVENT_DB_AFTER_WRITE are postponed to the end of all events and only one update is done
+	 */
+	public function testGroupUpdatesWhenMultipleModificationsAreDoneAfterWriteOnUpdate()
+	{
+		$oPerson = 	$this->createObject('Person', [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'function' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
+
+		$oEventReceiver1 = new CRUDEventReceiver($this);
+		// Set the person's function after the creation
+		$oEventReceiver1->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetRandomPersonFunction');
+		$oEventReceiver1->RegisterCRUDEventListeners(EVENT_DB_AFTER_WRITE);
+
+		// Intentionally register twice so 2 modifications will be done
+		$oEventReceiver2 = new CRUDEventReceiver($this);
+		$oEventReceiver2->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetRandomPersonFunction');
+		$oEventReceiver2->RegisterCRUDEventListeners(EVENT_DB_AFTER_WRITE);
+
+		$oPerson->Set('function', 'TestToTouch');
+		$oPerson->DBUpdate();
+
+		// Each DBUpdate fires 2 times the EVENT_DB_AFTER_WRITE
+		// Each callback modifies the object but only one DBUpdate is called again, firing again 2 times the EVENT_DB_AFTER_WRITE
+		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE], 'Updates must be postponed to the end of all events');
+		$this->assertEquals(4, self::$iEventCallsTotalCount, 'Updates must be postponed to the end of all events');
+	}
+
+	public function testDBLinksChangedNotFiredWhenLinksAreManipulatedOutsideAnObjectWithoutFlag()
+	{
+		// Create a Person
+		$oPerson = $this->CreatePerson(1);
+
+		// Create a Team
+		$oTeam = MetaModel::NewObject(Team::class, ['name' => 'TestTeamWithLinkToAPerson', 'org_id' => $this->getTestOrgId()]);
+		$oTeam->DBInsert();
+
+		// Start receiving events
+		$oEventReceiver = new CRUDEventReceiver($this);
+		$oEventReceiver->RegisterCRUDEventListeners();
+
+		// Create a link between Person and Team
+		$oLnk = MetaModel::NewObject(lnkPersonToTeam::class, ['person_id' => $oPerson->GetKey(), 'team_id' => $oTeam->GetKey()]);
+		$oLnk->DBInsert();
+
+		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCallsCount, 'LinkSet without with_php_computation attribute should not receive EVENT_DB_LINKS_CHANGED');
+
+		// Modify link
+		$oContactType = MetaModel::NewObject(ContactType::class, ['name' => 'test_'.$oLnk->GetKey()]);
+		$oContactType->DBInsert();
+		$oLnk->Set('role_id', $oContactType->GetKey());
+		$oLnk->DBUpdate();
+
+		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCallsCount, 'LinkSet without with_php_computation attribute should not receive EVENT_DB_LINKS_CHANGED');
+
+		// Delete link
+		$oLnk->DBDelete();
+
+		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCallsCount, 'LinkSet without with_php_computation attribute should not receive EVENT_DB_LINKS_CHANGED');
+	}
+
+	public function testDBLinksChangedFiredWhenLinksAreManipulatedOutsideAnObjectWithFlag()
+	{
+		$oUserRequest = $this->CreateUserRequest(1);
+
+		$oEventReceiver = new CRUDEventReceiver($this);
+		$oEventReceiver->RegisterCRUDEventListeners(null, \UserRequest::class);
+
+		// Create the server and corresponding lnkFunctionalCIToTicket
+		$oServer = $this->CreateServer(1);
+		$oLink = MetaModel::NewObject(lnkFunctionalCIToTicket::class, ['functionalci_id' => $oServer->GetKey(), 'ticket_id' => $oUserRequest->GetKey()]);
+		$oLink->DBInsert();
+
+		// one link where added outside the object
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_LINKS_CHANGED], 'LinkSet with with_php_computation attribute should receive EVENT_DB_LINKS_CHANGED');
+		$this->assertEquals(1, self::$iEventCallsTotalCount, 'Only EVENT_DB_LINKS_CHANGED event must be fired on host class during link modification');
+
+		self::CleanCallCount();
+		// Update the link with a new server
+		$oServer2 = $this->CreateServer(2);
+		$oLink->Set('functionalci_id', $oServer2->GetKey());
+		$oLink->DBUpdate();
+
+		// one link where modified outside the object
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_LINKS_CHANGED], 'LinkSet with with_php_computation attribute should receive EVENT_DB_LINKS_CHANGED');
+		$this->assertEquals(1, self::$iEventCallsTotalCount, 'Only EVENT_DB_LINKS_CHANGED event must be fired on host class during link modification');
+
+		self::CleanCallCount();
+		// Delete link
+		$oLink->DBDelete();
+
+		// one link where deleted outside the object
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_LINKS_CHANGED], 'LinkSet with with_php_computation attribute should receive EVENT_DB_LINKS_CHANGED');
+		$this->assertEquals(1, self::$iEventCallsTotalCount, 'Only EVENT_DB_LINKS_CHANGED event must be fired on host class during link modification');
+	}
+
+	public function testDenyTransitionsWithEventEnumTransitions()
+	{
+		$oEventReceiver = new CRUDEventReceiver($this);
+		$oEventReceiver->RegisterCRUDEventListeners();
+
+		// Object with no lifecycle
+		/** @var DBObject $oPerson */
+		$oPerson = $this->CreatePerson(1);
+		$oEventReceiver->AddCallback(EVENT_ENUM_TRANSITIONS, Person::class, 'DenyAllTransitions');
+		self::CleanCallCount();
+		$oPerson->EnumTransitions();
+		$this->assertEquals(0, self::$iEventCallsTotalCount, 'EVENT_ENUM_TRANSITIONS should not be fired for objects without lifecycle');
+
+		// Object with lifecycle
+		$oTicket = $this->CreateTicket(1);
+		$aRefTransitions = array_keys($oTicket->EnumTransitions());
+		$oEventReceiver->AddCallback(EVENT_ENUM_TRANSITIONS, UserRequest::class, 'DenyAllTransitions');
+		self::CleanCallCount();
+		$aTransitions = $oTicket->EnumTransitions();
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_ENUM_TRANSITIONS], 'EVENT_ENUM_TRANSITIONS should be fired for objects with lifecycle');
+		$this->assertEquals(1, self::$iEventCallsTotalCount, 'EVENT_ENUM_TRANSITIONS is the only event fired by DBObject::EnumTransitions()');
+		$this->assertCount(0, $aTransitions, 'All transitions should have been denied');
+
+		$oEventReceiver->AddCallback(EVENT_ENUM_TRANSITIONS, UserRequest::class, 'DenyAssignTransition');
+		self::CleanCallCount();
+		$aTransitions = $oTicket->EnumTransitions();
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_ENUM_TRANSITIONS], 'EVENT_ENUM_TRANSITIONS should be fired for objects with lifecycle');
+		$this->assertEquals(1, self::$iEventCallsTotalCount, 'EVENT_ENUM_TRANSITIONS is the only event fired by DBObject::EnumTransitions()');
+		$this->assertArrayNotHasKey('ev_assign', $aTransitions, 'Assign transition should have been removed by EVENT_ENUM_TRANSITIONS handler');
+		$this->assertEquals(1, count($aRefTransitions) - count($aTransitions), 'Only one transition should have been removed');
+	}
 
 	public static function DebugStatic($sMsg)
 	{
@@ -526,127 +734,6 @@ class CRUDEventTest extends ItopDataTestCase
 				print_r($sMsg);
 			}
 		}
-	}
-
-	public function testCrudStack()
-	{
-		$oEventReceiver = new CRUDEventReceiver($this);
-		// Modify the person's function
-		$oEventReceiver->AddCallback(EVENT_DB_COMPUTE_VALUES, Person::class, 'CheckCrudStack');
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_COMPUTE_VALUES);
-		$oPerson1 = $this->CreatePerson(1);
-		$this->assertTrue(CRUDEventReceiver::$bIsObjectInCrudStack);
-		$oEventReceiver->CleanCallbacks();
-
-		$oEventReceiver->AddCallback(EVENT_DB_CHECK_TO_WRITE, Person::class, 'CheckCrudStack');
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_CHECK_TO_WRITE);
-		$this->CreatePerson(2);
-		$this->assertTrue(CRUDEventReceiver::$bIsObjectInCrudStack);
-		$oEventReceiver->CleanCallbacks();
-
-		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'CheckCrudStack');
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_AFTER_WRITE);
-		$this->CreatePerson(3);
-		$this->assertTrue(CRUDEventReceiver::$bIsObjectInCrudStack);
-		$oEventReceiver->CleanCallbacks();
-
-		// Insert a Team with new lnkPersonToTeam - in the lnkPersonToTeam event we check that Team CRUD operation is ongoing
-		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'CheckUpdateInLnk');
-		$sLinkedClass = lnkPersonToTeam::class;
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_AFTER_WRITE, $sLinkedClass);
-		// Prepare the link for the insertion with the team
-		$aLinkedObjectsArray = [];
-		$oSet = DBObjectSet::FromArray($sLinkedClass, $aLinkedObjectsArray);
-		$oLinkSet = new ormLinkSet(Team::class, 'persons_list', $oSet);
-		$oLink = MetaModel::NewObject(lnkPersonToTeam::class, ['person_id' => $oPerson1->GetKey()]);
-		$oLinkSet->AddItem($oLink);
-		// Create the team
-		$oTeam = MetaModel::NewObject(Team::class, ['name' => 'TestTeamWithLinkToAPerson', 'persons_list' => $oLinkSet, 'org_id' => $this->getTestOrgId()]);
-		$oTeam->DBInsert();
-		$this->assertTrue(CRUDEventReceiver::$bIsObjectInCrudStack);
-	}
-
-	public function testLinksAdded()
-	{
-		// Create a Person
-		$oPerson = $this->CreatePerson(1);
-
-		// Create a Team
-		$oTeam = MetaModel::NewObject(Team::class, ['name' => 'TestTeamWithLinkToAPerson', 'org_id' => $this->getTestOrgId()]);
-		$oTeam->DBInsert();
-
-		// Start receiving events
-		$oEventReceiver = new CRUDEventReceiver($this);
-		$oEventReceiver->RegisterCRUDListeners();
-
-		// Create a link between Person and Team => generate 2 EVENT_DB_LINKS_CHANGED
-		$oLnk = MetaModel::NewObject(lnkPersonToTeam::class, ['person_id' => $oPerson->GetKey(), 'team_id' => $oTeam->GetKey()]);
-		$oLnk->DBInsert();
-
-		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCalls, 'no relation with the with_php_compute attribute !');
-	}
-
-	public function testLinksDeleted()
-	{
-		// Create a Person
-		$oPerson = $this->CreatePerson(1);
-
-		// Create a Team
-		$oTeam = MetaModel::NewObject(Team::class, ['name' => 'TestTeamWithLinkToAPerson', 'org_id' => $this->getTestOrgId()]);
-		$oTeam->DBInsert();
-
-		// Create a link between Person and Team => generate 2 EVENT_DB_LINKS_CHANGED
-		$oLnk = MetaModel::NewObject(lnkPersonToTeam::class, ['person_id' => $oPerson->GetKey(), 'team_id' => $oTeam->GetKey()]);
-		$oLnk->DBInsert();
-
-		// Start receiving events
-		$oEventReceiver = new CRUDEventReceiver($this);
-		$oEventReceiver->RegisterCRUDListeners();
-
-		$oLnk->DBDelete();
-
-		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCalls, 'no relation with the with_php_compute attribute !');
-	}
-
-	// Tests with MockDBObject
-	public function testFireCRUDEvent()
-	{
-		$this->RequireOnceUnitTestFile('DBObject/MockDBObjectWithCRUDEventListener.php');
-
-		// For Metamodel list of classes
-		MockDBObjectWithCRUDEventListener::Init();
-		$oDBObject = new MockDBObjectWithCRUDEventListener();
-		$oDBObject2 = new MockDBObjectWithCRUDEventListener();
-
-		$oDBObject->FireEvent(MockDBObjectWithCRUDEventListener::TEST_EVENT);
-		
-		$this->assertNotNull($oDBObject->oEventDataReceived);
-		$this->assertNull($oDBObject2->oEventDataReceived);
-
-		//echo($oDBObject->oEventDataReceived->Get('debug_info'));
-	}
-
-	public function testEnumTransitions()
-	{
-		$oEventReceiver = new CRUDEventReceiver($this);
-		$oEventReceiver->RegisterCRUDListeners();
-
-		// Object with no lifecycle
-		/** @var DBObject $oPerson */
-		$oPerson = $this->CreatePerson(1);
-		$oEventReceiver->AddCallback(EVENT_ENUM_TRANSITIONS, Person::class, 'EnumTransitions');
-		self::CleanCallCount();
-		$oPerson->EnumTransitions();
-		$this->assertEquals(0, self::$iEventCalls);
-
-		// Object with lifecycle
-		$oTicket = $this->CreateTicket(1);
-		$oEventReceiver->AddCallback(EVENT_ENUM_TRANSITIONS, UserRequest::class, 'EnumTransitions');
-		self::CleanCallCount();
-		$aTransitions = $oTicket->EnumTransitions();
-		$this->assertEquals(1, self::$aEventCalls[EVENT_ENUM_TRANSITIONS]);
-		$this->assertEquals(1, self::$iEventCalls);
-		$this->assertCount(0, $aTransitions);
 	}
 }
 
@@ -680,10 +767,10 @@ class ClassesWithDebug
  */
 class CRUDEventReceiver extends ClassesWithDebug
 {
+	public bool $bDBUpdateCalledSuccessfullyDuringEvent = false;
+
 	private $oTestCase;
 	private $aCallbacks = [];
-
-	public static $bIsObjectInCrudStack;
 
 	public function __construct(ItopDataTestCase $oTestCase)
 	{
@@ -713,6 +800,7 @@ class CRUDEventReceiver extends ClassesWithDebug
 	public function CleanCallbacks()
 	{
 		$this->aCallbacks = [];
+		$this->bDBUpdateCalledSuccessfullyDuringEvent = false;
 	}
 
 
@@ -742,19 +830,19 @@ class CRUDEventReceiver extends ClassesWithDebug
 		}
 	}
 
-	public function RegisterCRUDListeners(string $sEvent = null, $mEventSource = null)
+	public function RegisterCRUDEventListeners(string $sEvent = null, $mEventSource = null)
 	{
 		$this->Debug('Registering Test event listeners');
 		if (is_null($sEvent)) {
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_COMPUTE_VALUES, [$this, 'OnEvent']);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_CHECK_TO_WRITE, [$this, 'OnEvent']);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_CHECK_TO_DELETE, [$this, 'OnEvent']);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_BEFORE_WRITE, [$this, 'OnEvent']);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_AFTER_WRITE, [$this, 'OnEvent']);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_ABOUT_TO_DELETE, [$this, 'OnEvent']);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_AFTER_DELETE, [$this, 'OnEvent']);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_LINKS_CHANGED, [$this, 'OnEvent']);
-			$this->oTestCase->EventService_RegisterListener(EVENT_ENUM_TRANSITIONS, [$this, 'OnEvent']);
+			$this->oTestCase->EventService_RegisterListener(EVENT_DB_COMPUTE_VALUES, [$this, 'OnEvent'], $mEventSource);
+			$this->oTestCase->EventService_RegisterListener(EVENT_DB_CHECK_TO_WRITE, [$this, 'OnEvent'], $mEventSource);
+			$this->oTestCase->EventService_RegisterListener(EVENT_DB_CHECK_TO_DELETE, [$this, 'OnEvent'], $mEventSource);
+			$this->oTestCase->EventService_RegisterListener(EVENT_DB_BEFORE_WRITE, [$this, 'OnEvent'], $mEventSource);
+			$this->oTestCase->EventService_RegisterListener(EVENT_DB_AFTER_WRITE, [$this, 'OnEvent'], $mEventSource);
+			$this->oTestCase->EventService_RegisterListener(EVENT_DB_ABOUT_TO_DELETE, [$this, 'OnEvent'], $mEventSource);
+			$this->oTestCase->EventService_RegisterListener(EVENT_DB_AFTER_DELETE, [$this, 'OnEvent'], $mEventSource);
+			$this->oTestCase->EventService_RegisterListener(EVENT_DB_LINKS_CHANGED, [$this, 'OnEvent'], $mEventSource);
+			$this->oTestCase->EventService_RegisterListener(EVENT_ENUM_TRANSITIONS, [$this, 'OnEvent'], $mEventSource);
 
 			return;
 		}
@@ -776,7 +864,7 @@ class CRUDEventReceiver extends ClassesWithDebug
 	/**
 	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
 	 */
-	private function SetPersonFunction(EventData $oData): void
+	private function SetRandomPersonFunction(EventData $oData): void
 	{
 		$this->Debug(__METHOD__);
 		$oObject = $oData->Get('object');
@@ -786,7 +874,7 @@ class CRUDEventReceiver extends ClassesWithDebug
 	/**
 	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
 	 */
-	private function SetPersonFirstName(EventData $oData): void
+	private function SetRandomPersonFirstNameStartingWithCRUD(EventData $oData): void
 	{
 		$this->Debug(__METHOD__);
 		$oObject = $oData->Get('object');
@@ -796,14 +884,21 @@ class CRUDEventReceiver extends ClassesWithDebug
 	/**
 	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
 	 */
-	private function CheckCrudStack(EventData $oData): void
+	private function SetRandomPersonFunctionAndVerifyThatUpdateIsIgnored(EventData $oData): void
 	{
 		$this->Debug(__METHOD__);
 		$oObject = $oData->Get('object');
-		self::$bIsObjectInCrudStack = DBObject::IsObjectCurrentlyInCrud(get_class($oObject), $oObject->GetKey());
+		$oObject->Set('function', 'CRUD_function_'.rand());
+		$oObject->DBUpdate(); // Should be ignored
+		if (empty($oObject->ListChanges())) {
+			$this->bDBUpdateCalledSuccessfullyDuringEvent = true;
+		}
 	}
 
-	private function EnumTransitions(EventData $oData): void
+	/**
+	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
+	 */
+	private function DenyAllTransitions(EventData $oData): void
 	{
 		$this->Debug(__METHOD__);
 		/** @var \DBObject $oObject */
@@ -816,4 +911,14 @@ class CRUDEventReceiver extends ClassesWithDebug
 		}
 	}
 
+	/**
+	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
+	 */
+	private function DenyAssignTransition(EventData $oData): void
+	{
+		$this->Debug(__METHOD__);
+		/** @var \DBObject $oObject */
+		$oObject = $oData->Get('object');
+		$oObject->DenyTransition('ev_assign');
+	}
 }

@@ -227,6 +227,11 @@
           <callback>OnLinksChangedTicket</callback>
           <rank>0</rank>
         </event_listener>
+        <event_listener id="UpdateImpactAnalysisLocal">
+          <event>EVENT_DB_BEFORE_WRITE</event>
+          <callback>OnBeforeWriteTicket</callback>
+          <rank>0</rank>
+        </event_listener>
       </event_listeners>
       <methods>
         <method id="OnLinksChangedTicket">
@@ -237,6 +242,20 @@
     public function OnLinksChangedTicket(Combodo\iTop\Service\Events\EventData $oEventData)
     {
         $this->UpdateImpactedItems();
+    }
+        ]]></code>
+        </method>
+        <method id="OnBeforeWriteTicket">
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[
+    public function OnBeforeWriteTicket(Combodo\iTop\Service\Events\EventData $oEventData)
+    {
+        $aChanges = $this->ListChanges();
+        if ($this->IsNew() || array_key_exists('functionalcis_list', $aChanges) || array_key_exists('contacts_list', $aChanges)) {
+            $this->UpdateImpactedItems();
+        }
     }
         ]]></code>
         </method>
