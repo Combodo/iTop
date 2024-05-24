@@ -55,42 +55,18 @@ $(function()
 		},
 		validate: function(oEvent, oData)
 		{
-			var oResult = { is_valid: true, error_messages: [] };
+			const oResult = { is_valid: true, error_messages: [] };
 			
 			// Doing data validation
 			if(this.options.validators !== null)
 			{
-				var bMandatory = (this.options.validators.mandatory !== undefined);
-				
-				// Extracting value for the field (without the tags)
-				// Note : The following code comes from /js/forms-json-utils.js / ValidateCKEditField()
-				var sTextContent = '';
-				var oFormattedContents = this.element.find('.cke iframe');
-				if (oFormattedContents.length == 0)
-				{
-					var oSourceContents = this.element.find('.cke textarea.cke_source');
-					sTextContent = oSourceContents.val();
-				}
-				else
-				{
-					sTextContent = oFormattedContents.contents().find("body").text();
+				const bMandatory = (this.options.validators['mandatory'] !== undefined);
+				const oTextArea = this.element.find('textarea')[0];
 
-					if (sTextContent == '')
-					{
-						// No plain text, maybe there is just an image...
-						var oImg = oFormattedContents.contents().find('body img');
-						if (oImg.length != 0)
-						{
-							sTextContent = 'image';
-						}
-					}
-				}
-				
 				// Checks are very basic for now
-				if( (sTextContent == '') && bMandatory )
-				{
+				if(oTextArea.value === '' && bMandatory ){
 					oResult.is_valid = false;
-					oResult.error_messages.push(this.options.validators.mandatory.message);
+					oResult.error_messages.push(this.options.validators['mandatory'].message);
 				}
 			}
 			
