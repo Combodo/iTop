@@ -1,0 +1,31 @@
+/* mention list ui customization */
+:root {
+	--ck-color-list-button-on-background: #EFF0EF;
+	--ck-color-list-button-on-background-focus: #EFF0EF;
+	--ck-color-list-button-hover-background: #EFF0EF;
+	--ck-color-list-button-on-text: black;
+
+	--ck-z-default: 9999;
+	
+	/* Custom variables overloaded by backoffice or portals */
+	 --ck-text-tiny-font-size: 0.7rem;
+	 --ck-text-small-font-size: 0.85rem;
+	--ck-text-big-font-size: 1.4rem;
+	--ck-text-huge-font-size: 1.8rem;
+}
+
+.text-tiny {
+	font-size: var(--ck-text-tiny-font-size);
+}
+
+.text-small {
+	font-size: var(--ck-text-small-font-size);
+}
+
+.text-big {
+	font-size: var(--ck-text-big-font-size);
+}
+
+.text-huge {
+	font-size: var(--ck-text-huge-font-size);
+}

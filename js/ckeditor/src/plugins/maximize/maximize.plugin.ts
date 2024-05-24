@@ -37,12 +37,14 @@ export default class Maximize extends Plugin {
                     if(oButton.isOn){
                         oInitialParentElement.append(oEditor.ui.element);
                         oEditor.ui.element.classList.remove('cke-maximized');
+                        document.body.classList.remove('cke-maximized');
                         oButton.icon = sMaximizeIconSVG;
                     }
                     else{
                         oInitialParentElement = oEditor.ui.element.parentElement ?? oInitialParentElement;
                         oEditor.ui.element.remove();
                         document.body.append(oEditor.ui.element);
+                        document.body.classList.add('cke-maximized'); // Add class to body to prevent scrollbars
                         oEditor.ui.element.classList.add('cke-maximized');
                         oButton.icon = sMinimizeIconSVG;
                     }
