@@ -8,6 +8,7 @@ namespace Combodo\iTop\Application\WelcomePopup\Provider;
 
 use Dict;
 use AbstractWelcomePopupExtension;
+use UserRights;
 use utils;
 use Combodo\iTop\Application\WelcomePopup\MessageFactory;
 
@@ -22,13 +23,45 @@ class DefaultProvider extends AbstractWelcomePopupExtension
 	 */
 	public function GetMessages(): array
 	{
-		return [
+		// Messages for everyone
+		$aMessages = [
 			MessageFactory::MakeForLeftTextsRightIllustration(
-				"320_01",
-				Dict::S("UI:WelcomePopup:Message:320_01:Title"),
-				Dict::S("UI:WelcomePopup:Message:320_01:Description"),
+				"320_01_Welcome",
+				Dict::S("UI:WelcomePopup:Message:320_01_Welcome:Title"),
+				Dict::S("UI:WelcomePopup:Message:320_01_Welcome:Description"),
+				utils::GetAbsoluteUrlAppRoot() . "images/illustrations/undraw_relaunch_day.svg"
+			),
+			MessageFactory::MakeForLeftTextsRightIllustration(
+				"320_02_Newsroom",
+				Dict::S("UI:WelcomePopup:Message:320_02_Newsroom:Title"),
+				Dict::S("UI:WelcomePopup:Message:320_02_Newsroom:Description"),
+				utils::GetAbsoluteUrlAppRoot() . "images/illustrations/undraw_relaunch_day.svg"
+			),
+			MessageFactory::MakeForLeftTextsRightIllustration(
+				"320_03_NotificationsCenter",
+				Dict::S("UI:WelcomePopup:Message:320_03_NotificationsCenter:Title"),
+				Dict::S("UI:WelcomePopup:Message:320_03_NotificationsCenter:Description"),
+				utils::GetAbsoluteUrlAppRoot() . "images/illustrations/undraw_relaunch_day.svg"
+			),
+			MessageFactory::MakeForLeftTextsRightIllustration(
+				"320_05_A11yThemes",
+				Dict::S("UI:WelcomePopup:Message:320_05_A11yThemes:Title"),
+				Dict::S("UI:WelcomePopup:Message:320_05_A11yThemes:Description"),
 				utils::GetAbsoluteUrlAppRoot() . "images/illustrations/undraw_relaunch_day.svg"
 			),
 		];
+
+		// For users that can configure notifications
+		if (UserRights::IsActionAllowed(\Trigger::class, \UR_ACTION_MODIFY))
+		{
+			$aMessages[] = MessageFactory::MakeForLeftTextsRightIllustration(
+				"320_04_PowerfulNotifications_AdminOnly",
+				Dict::S("UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Title"),
+				Dict::S("UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Description"),
+				utils::GetAbsoluteUrlAppRoot() . "images/illustrations/undraw_relaunch_day.svg"
+			);
+		}
+
+		return $aMessages;
 	}
 }
