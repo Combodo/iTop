@@ -6,7 +6,7 @@ oWelcomePopupDialogElem.removeClass('ibo-is-hidden');
 // Prepare dialog
 oWelcomePopupDialogElem.dialog({
 	modal: true,
-	width: '70%',
+	width: $(window).innerWidth() * 0.7,
     maxHeight: $(window).innerHeight() * 0.8,
 	autoOpen: true,
 	title: oWelcomePopupDialogElem.attr('data-title'),
