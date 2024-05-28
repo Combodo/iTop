@@ -42,6 +42,7 @@ $ibo-welcome-popup--message-title--margin-bottom: $ibo-spacing-700 !default;
   &.ui-dialog-content {
     padding: $ibo-welcome-popup--dialog--padding-y $ibo-welcome-popup--dialog--padding-x; /* Overload default modal style */
     height: auto !important; /* Overload default modal inline style to avoid "content" overflowing while "stack" size remains smaller */
+    max-height: 80vh !important; /* Overload default modal inline style to avoid modal remaining "collapsed" */
   }
 }
 

@@ -2,6 +2,7 @@
 
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\Events\EventData;
 
 define('UR_ALLOWED_NO', 0);
 define('UR_ALLOWED_YES', 1);
@@ -261,10 +262,22 @@ abstract class User extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('default_search', array('login', 'contactid', 'status', 'org_id')); // Default criteria of the search banner
 	}
 
+	protected function RegisterEventListeners()
+	{
+		if ($this->IsCurrentUser() && !UserRights::IsAdministrator()) {
+			$this->RegisterCRUDListener(EVENT_DB_SET_ATTRIBUTES_FLAGS, 'SetAllowedOrgListReadOnly');
+		}
+	}
+
 	abstract public function CheckCredentials($sPassword);
 	abstract public function TrustWebServerContext();
 	abstract public function CanChangePassword();
 	abstract public function ChangePassword($sOldPassword, $sNewPassword);
+
+	protected function SetAllowedOrgListReadOnly(EventData $oEventData)
+	{
+		$this->AddAttributeFlags('allowed_org_list', OPT_ATT_READONLY);
+	}
 
 	/*
 	* Compute a name in best effort mode
