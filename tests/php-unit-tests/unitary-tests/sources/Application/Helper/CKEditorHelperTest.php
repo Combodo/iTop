@@ -6,13 +6,13 @@
 
 namespace Combodo\iTop\Test\UnitTest\Application\Helper;
 
-use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
  * @covers WebPage
  */
-class WebResourcesHelperTest extends ItopTestCase
+class CKEditorHelperTest extends ItopTestCase
 {
 	/**
 	 * @dataProvider CheckFilesExistProvider
@@ -20,7 +20,7 @@ class WebResourcesHelperTest extends ItopTestCase
 	 */
 	public function testCheckFilesExist($sMethodName)
 	{
-		$aFilesRelPaths = WebResourcesHelper::$sMethodName();
+		$aFilesRelPaths = CKEditorHelper::$sMethodName();
 		foreach ($aFilesRelPaths as $sFileRelPath) {
 			$this->assertTrue(file_exists(APPROOT.$sFileRelPath), $sMethodName.' method returns a non existing file: '.$sFileRelPath);
 		}
@@ -29,8 +29,7 @@ class WebResourcesHelperTest extends ItopTestCase
 	public function CheckFilesExistProvider(): array
 	{
 		return [
-			'GetCSSFilesRelPathsForC3JS' => ['GetCSSFilesRelPathsForC3JS'],
-			'GetJSFilesRelPathsForC3JS' => ['GetJSFilesRelPathsForC3JS'],
+			'GetJSFilesRelPathsForCKEditor' => ['GetJSFilesRelPathsForCKEditor'],
 		];
 	}
 }
