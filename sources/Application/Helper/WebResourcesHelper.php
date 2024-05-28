@@ -46,6 +46,34 @@ class WebResourcesHelper
 		];
 	}
 
+	//---------------------------------
+	// CKEditor
+	//---------------------------------
+
+	/**
+	 * Add necessary files (JS) to be able to use CKEditor in the page
+	 *
+	 * @param WebPage $oPage
+	 *
+	 * @throws Exception
+	 */
+	public static function EnableCKEditorToWebPage(WebPage &$oPage): void
+	{
+		//when ckeditor is loaded in ajax,  CKEDITOR_BASEPATH  is not well defined (this constant is used to load additional js)
+		$oPage->add_script("if (! window.CKEDITOR_BASEPATH) { var CKEDITOR_BASEPATH = '".utils::GetAbsoluteUrlAppRoot()."js/ckeditor/';}");
+		foreach (CKEditorHelper::GetJSFilesRelPathsForCKEditor() as $sFile) {
+			$oPage->LinkScriptFromAppRoot($sFile);
+		}
+	}
+
+	/**
+	 * @return string[] Relative URLs to the JS files necessary for CKEditor
+	 */
+	public static function GetJSFilesRelPathsForCKEditor(): array
+	{
+		return CKEditorHelper::GetJSFilesRelPathsForCKEditor();
+	}
+
 
 	//---------------------------------
 	// D3/C3.js

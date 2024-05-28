@@ -43,9 +43,14 @@ $(function()
 		{
 			var me = this;
 
+			// Check if popover menu is already initialized
+			if ($(this.js_selectors.menu_toggler).hasClass('ibo-is-loaded') === true) {
+				return;
+			}
+
 			// Important: For now, the popover menu is manually instantiated even though the PHP NewsroomMenu class inherits PopoverMenu because the jQuery widget doesn't. We might refactor this in the future.
 			$(me.element).popover_menu({'toggler': this.js_selectors.menu_toggler});
-			$(this.js_selectors.menu_toggler).off('click').on('click', function (oEvent) {
+			$(this.js_selectors.menu_toggler).on('click', function (oEvent) {
 				var oEventTarget = $(oEvent.target);
 				var aEventTargetPos = oEventTarget.position();
 				var aEventTargetOffset = oEventTarget.offset();
