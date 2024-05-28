@@ -57,6 +57,19 @@ abstract class ItopTestCase extends TestCase
 			// setUp might be called multiple times, so protecting the define() call !
 			define(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
 		}
+
+		// This is mostly for interactive usage, to warn the developer that the tests will be slow and point her to the php.ini file
+		static $bCheckedXDebug = false;
+		if (!$bCheckedXDebug) {
+			$bCheckedXDebug = true;
+			if (extension_loaded('xdebug') && ini_get('xdebug.mode') != '') {
+				echo "Xdebug is enabled (xdebug.mode='".ini_get('xdebug.mode')."'), this will slow down the tests.\n";
+				$sIniFile = php_ini_loaded_file();
+				if ($sIniFile) {
+					echo "This can be tuned in $sIniFile\n";
+				}
+			}
+		}
 	}
 
 	/**
