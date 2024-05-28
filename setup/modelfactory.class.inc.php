@@ -1210,6 +1210,7 @@ class ModelFactory
 						$oXmlEntries = $oXmlDict->GetUniqueElement('entries');
 					}
 
+					$i = 0;
 					foreach ($aDictDefinition['entries'] as $sCode => $sLabel)
 					{
 
@@ -1217,27 +1218,20 @@ class ModelFactory
 						$oXmlEntry->setAttribute('id', $sCode);
 						$oXmlValue = $this->oDOMDocument->CreateCDATASection($sLabel);
 						$oXmlEntry->appendChild($oXmlValue);
-						if (array_key_exists($sLanguageCode, $this->aDictKeys) && array_key_exists($sCode,
-								$this->aDictKeys[$sLanguageCode]))
+						if (array_key_exists($sLanguageCode, $this->aDictKeys) && array_key_exists($sCode, $this->aDictKeys[$sLanguageCode]))
 						{
-							$oMe = $this->aDictKeys[$sLanguageCode][$sCode];
-							$sFlag = $oMe->GetAlteration();
-							$oMe->parentNode->replaceChild($oXmlEntry, $oMe);
-							$sNewFlag = $sFlag;
-							if ($sFlag == '')
-							{
-								$sNewFlag = 'replaced';
-							}
-							$oXmlEntry->SetAlteration($sNewFlag);
-
+								echo "doublon : Langue : $sLanguageCode, code dico : $sCode\n";
+								$i++;
+								$oXmlEntries->RedefineChildNode($oXmlEntry);
+								$oXmlEntry->RemoveAlteration();
 						}
 						else
 						{
-							$oXmlEntry->SetAlteration('added');
 							$oXmlEntries->appendChild($oXmlEntry);
 						}
-						$this->aDictKeys[$sLanguageCode][$sCode] = $oXmlEntry;
+						$this->aDictKeys[$sLanguageCode][$sCode] = true;
 					}
+					if ($i > 0) echo ("Pour la langue ".$sLanguageCode." et le module ".$oModule->GetName()." : il y a  $i doublons \n");
 				}
 			} catch (Exception|Error $e) // Error can occurs on eval() calls
 			{
