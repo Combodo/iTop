@@ -4,7 +4,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
@@ -551,7 +550,7 @@ function GetThemeFieldBlock(): iUIBlock
  */
 function GetListPageSizeFieldBlock(): iUIBlock
 {
-	$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
+	$iDefaultPageSize = (int)appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
 
 	$sInputHtml = '<input id="default_page_size" name="default_page_size" type="text" size="3" value="'.$iDefaultPageSize.'"/><span id="v_default_page_size"></span>';
 	$sHtml = '<p>'.Dict::Format('UI:Favorites:Default_X_ItemsPerPage', $sInputHtml).'</p>';
