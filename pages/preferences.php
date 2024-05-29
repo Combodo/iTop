@@ -81,7 +81,7 @@ function DisplayPreferences($oP)
 	$oP->add('<fieldset><legend>'.Dict::S('UI:FavoriteOtherSettings').'</legend>');
 	$oP->add('<form method="post" onsubmit="return ValidateOtherSettings()">');
 
-	$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
+	$iDefaultPageSize = (int)appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
 	$oP->add('<p>'.Dict::Format('UI:Favorites:Default_X_ItemsPerPage', '<input id="default_page_size" name="default_page_size" type="text" size="3" value="'.$iDefaultPageSize.'"/><span id="v_default_page_size"></span>').'</p>');
 
 	$bShow = utils::IsArchiveMode() || appUserPreferences::GetPref('show_obsolete_data', MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'));
