@@ -81,7 +81,7 @@ try
 	// First check if we can redirect the route to a dedicated controller
 	$sRoute = utils::ReadParam('route', '', false, utils::ENUM_SANITIZATION_FILTER_ROUTE);
 	$oRouter = Router::GetInstance();
-	if ($oRouter->CanDispatchRoute($sRoute)) {
+	if ($operation === '' && $oRouter->CanDispatchRoute($sRoute)) {
 		$mResponse = $oRouter->DispatchRoute($sRoute);
 
 		// If response isn't a WebPage, it is most likely that the output already occured, stop the script.
