@@ -6011,6 +6011,10 @@ label {
     border-color: #dddddd;
 }
 
+div.ck .ck-content{
+  min-height: 180px;
+}
+
 /*
  * Specific to the combodo theme. Not standard BS classes
 */
@@ -6129,7 +6133,7 @@ table.dataTable{
             }
         }
         /* CKEditor */
-        div.cke .cke_contents{
+        div.ck .ck-content{
             height: 180px !important;
         }
     }
@@ -6152,7 +6156,7 @@ table.dataTable{
         }
 
         /* CKEditor */
-        div.cke .cke_contents{
+        div.ck .ck-content{
             height: 120px !important;
         }
     }
