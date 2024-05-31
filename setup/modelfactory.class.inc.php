@@ -1220,8 +1220,6 @@ class ModelFactory
 						$oXmlEntry->appendChild($oXmlValue);
 						if (array_key_exists($sLanguageCode, $this->aDictKeys) && array_key_exists($sCode, $this->aDictKeys[$sLanguageCode]))
 						{
-								echo "doublon : Langue : $sLanguageCode, code dico : $sCode\n";
-								$i++;
 								$oXmlEntries->RedefineChildNode($oXmlEntry);
 								$oXmlEntry->RemoveAlteration();
 						}
@@ -1231,7 +1229,6 @@ class ModelFactory
 						}
 						$this->aDictKeys[$sLanguageCode][$sCode] = true;
 					}
-					if ($i > 0) echo ("Pour la langue ".$sLanguageCode." et le module ".$oModule->GetName()." : il y a  $i doublons \n");
 				}
 			} catch (Exception|Error $e) // Error can occurs on eval() calls
 			{
