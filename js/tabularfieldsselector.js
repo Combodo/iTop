@@ -252,7 +252,7 @@ $(function () {
 					for (var k in this.aSelected) {
 						var sField = this.aSelected[k];
 						if ($.inArray(sField, this.aSelected) != -1) {
-							var sRemoveBtn = '<span class="export-field-close ibo-table-preview--remove-column" data-attcode="'+sField+'"><span class="fas fa-times"></span></span>';
+								var sRemoveBtn = '<span class="export-field-close ibo-table-preview--remove-column" data-attcode="'+sField+'"><span class="fas fa-times"></span></span>';
 							sHtml += '<th data-attcode="'+sField+'"><span class="drag-handle">'+this.aFieldsByCode[sField].unique_label+'</span>'+sRemoveBtn+'</th>';
 						}
 					}
@@ -345,12 +345,13 @@ $(function () {
 			},
 			// events bound via _bind are removed automatically
 			// revert other modifications here
-			destroy: function () {
+			_destroy: function () {
 				this.element
 					.removeClass('itop-tabularfieldsselector');
 
-				this.element.parent().off('activate');
 				this.element.parent().off('validate');
+				this.element.parent().off('form-part-activate');
+				$('body').off('click change', '.tfs_checkbox');
 			},
 			// _setOptions is called with a hash of all options that are changing
 			_setOptions: function () {
