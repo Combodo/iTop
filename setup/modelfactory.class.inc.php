@@ -1225,6 +1225,7 @@ class ModelFactory
 						}
 						else
 						{
+							// To avoid memory peak during execution of ApplyChanges, just set the node without alteration flag
 							$oXmlEntries->appendChild($oXmlEntry);
 						}
 						$this->aDictKeys[$sLanguageCode][$sCode] = true;
