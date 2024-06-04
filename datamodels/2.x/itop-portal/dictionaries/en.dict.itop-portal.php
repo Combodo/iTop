@@ -40,4 +40,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Open',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resolved',
 	'Brick:Portal:ClosedRequests:Title' => 'Closed requests',
+	'Brick:Portal:ListAllRequests:Title' => 'All requests',
+	'Brick:Portal:ListAllRequests:Title+' => '<p>View all requests regardless of their status.</p>',
+	'Brick:Portal:ListAllRequests:Tab' => 'On-going and closed',
+	'Brick:Portal:SearchInAllRequests:Title' => 'Search in all requests',
+	'Brick:Portal:SearchInAllRequests:Title+' => '<p>Regardless of their status.</p>',
 ));
