@@ -240,7 +240,7 @@
           <rank>
             <default>40</default>
           </rank>
-          <width>12</width>
+          <width>6</width>
           <title>
             <navigation_menu>Brick:Portal:FAQ:Menu</navigation_menu>
             <home>Brick:Portal:FAQ:Title</home>

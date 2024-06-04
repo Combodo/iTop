@@ -38,4 +38,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Ouvertes',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Résolues',
 	'Brick:Portal:ClosedRequests:Title' => 'Demandes fermées',
+	'Brick:Portal:ListAllRequests:Title' => 'Toutes les demandes',
+    'Brick:Portal:ListAllRequests:Title+' => '<p>Consultez toutes vos demandes en cours ou fermées.</p>',
+    'Brick:Portal:ListAllRequests:Tab' => 'En cours et fermées',
+    'Brick:Portal:SearchInAllRequests:Title' => 'Rechercher une demande',
+    'Brick:Portal:SearchInAllRequests:Title+' => '<p>Quelque soit son état</p>',
 ));

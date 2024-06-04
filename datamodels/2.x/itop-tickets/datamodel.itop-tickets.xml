@@ -1169,6 +1169,92 @@
             <export_default_fields>true</export_default_fields>
           </export>
         </brick>
+        <brick id="manage-all-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick" _delta="define">
+          <active>true</active>
+          <rank>
+            <default>120</default>
+          </rank>
+          <visible>
+            <home>false</home>
+            <navigation_menu>false</navigation_menu>
+          </visible>
+          <width>6</width>
+          <title>
+            <default>Brick:Portal:ListAllRequests:Title</default>
+          </title>
+          <!-- Optional tag to define which display modes can be used in the brick's page and the brick's tile -->
+          <!--<display_modes>-->
+          <!-- Optional tag that must contain at least 1 <mode> tag. -->
+          <!--<availables>-->
+          <!--<mode id="list"/>-->
+          <!--<mode id="pie-chart"/>-->
+          <!--<mode id="bar-chart"/>-->
+          <!--</availables>-->
+          <!-- Optional tag to define which display mode will be used by default when opening the brick -->
+          <!--<default>list</default>-->
+          <!-- Optional tag to define which display mode will be used to render the brick's tile -->
+          <!--<tile>text</tile>-->
+          <!--</display_modes>-->
+          <description>Brick:Portal:ListAllRequests:Title+</description>
+          <decoration_class>
+            <default>fc fc-ongoing-request fc-2x</default>
+          </decoration_class>
+          <oql><![CDATA[SELECT Ticket]]></oql>
+          <!-- Optional tag to define if the action should be done in a modal window ("modal"), a new window ("new") or the current window ("self") -->
+          <!--<opening_target>modal</opening_target>-->
+          <!-- Optional tag to define the how the objects should be opened. Values can be edit|view. Note that even if this is set to edit, objects not allowed in edition mode for the user (cf. scopes and security layers) will open in view mode -->
+          <!-- <opening_mode>edit</opening_mode> -->
+          <!-- Can be either a class tag with the class name or an oql tag with the query -->
+          <!-- <class>Ticket</class> -->
+          <fields>
+            <field id="title"/>
+            <field id="description"/>
+            <field id="status"/>
+          </fields>
+          <!-- Optional tag to add attributes to the table by their code -->
+          <grouping>
+            <!-- Mandatory -->
+            <tabs>
+              <!-- Optional. Show object count for each tabs. Available values are true|false. Default is false. -->
+              <show_tab_counts>true</show_tab_counts>
+              <!-- Mandatory. Grouping by tabs -->
+              <groups>
+                <group id="all">
+                  <rank>1</rank>
+                  <title>Brick:Portal:ListAllRequests:Tab</title>
+                  <condition><![CDATA[SELECT Ticket]]></condition>
+                </group>
+              </groups>
+            </tabs>
+            <!-- Implicit grouping on y axis by finalclass -->
+          </grouping>
+          <!-- Optional. Set the default number of item lists will display. -->
+          <!-- <default_list_length>20</default_list_length> -->
+          <data_loading>auto</data_loading>
+          <export>
+            <export_default_fields>true</export_default_fields>
+          </export>
+        </brick>
+        <brick id="search-within-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\FilterBrick" _delta="define">
+          <active>true</active>
+          <rank>
+            <default>30</default>
+          </rank>
+          <visible>
+            <home>true</home>
+            <navigation_menu>false</navigation_menu>
+          </visible>
+          <width>6</width>
+          <title>
+            <default>Brick:Portal:SearchInAllRequests:Title</default>
+          </title>
+          <description>Brick:Portal:SearchInAllRequests:Title+</description>
+          <!-- <search_submit_class/> -->
+          <target_brick>
+            <id>manage-all-tickets-for-portal-user</id>
+            <type>Combodo\iTop\Portal\Brick\ManageBrick</type>
+          </target_brick>
+        </brick>
       </bricks>
       <forms>
         <form id="service-view" _delta="define">
