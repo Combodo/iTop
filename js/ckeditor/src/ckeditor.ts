@@ -146,7 +146,7 @@ class Editor extends ClassicEditor {
 				},
 				'-',
 				'link',
-				'object-shortcut',
+				// 'object-shortcut',
 				'imageUpload',
 				'blockQuote',
 				'codeBlock',
