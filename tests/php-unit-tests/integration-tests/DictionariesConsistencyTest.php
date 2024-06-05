@@ -404,7 +404,7 @@ EOF
 	 * @return void
 	 */
 	public function testDictKeyDefinedOnceForWholeProject(string $sLang): void {
-		//$this->markTestSkipped("Skip because duplicates exists in modules, while once is installed at setup. Possible solution : centralize common string in another dictionnary, and then enable this test.");
+		$this->markTestSkipped("Skip because duplicates exists in modules, while once is installed at setup. Possible solution : centralize common string in another dictionnary, and then enable this test.");
 
 		Dict::EnableLoadEntries(true);
 		$aDictKeysDefinedMultipleTimes = [];
