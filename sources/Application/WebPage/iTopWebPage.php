@@ -214,7 +214,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// Used by dashboard editor
 		$this->LinkScriptFromAppRoot('js/property_field.js');
 		$this->LinkScriptFromAppRoot('js/icon_select.js');
-		$this->LinkScriptFromAppRoot('js/ajaxfileupload.js');
 	}
 
 	/**
