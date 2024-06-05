@@ -242,8 +242,8 @@ The object can be modified.]]></description>
     <event id="EVENT_DB_CHECK_TO_WRITE" _delta="define">
       <name>Check to write</name>
       <description><![CDATA[Check an object before it is written into the database (no change possible).
-Call $this->AddCheckIssue($sErrorMessage) to report a blocking issue
-Call $this->AddCheckWarning($sWarningMessage) to display a warning
+Call $this->AddCheckIssue($sErrorMessage) to report a blocking issue.
+Call $this->AddCheckWarning($sWarningMessage) to display a warning.
       ]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
@@ -349,7 +349,7 @@ Call $this->AddDeleteIssue($sIssueMessage) to signal an issue.]]></description>
     <event id="EVENT_ENUM_TRANSITIONS" _delta="define">
       <name>Enum transitions</name>
       <description><![CDATA[Manage the allowed transitions in current object state.
-The only action allowed is to deny transitions with $this->DenyTransition()]]></description>
+The only action allowed is to deny transitions with $this->DenyTransition($sTransitionCode)]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
