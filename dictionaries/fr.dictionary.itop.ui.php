@@ -171,6 +171,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Error:OrganizationNotAllowed' => 'Organisation non autorisée.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'L\'utilisateur n\'appartient pas à vos organisations.',
 	'Class:User/Error:PersonIsMandatory' => 'Le Contact est obligatoire.',
+	'Class:User/Warning:NoOrganizationMeansFullAccess' => 'Aucune "Organisations permises" définie pour cet utilisateur, il aura accès à toutes les organisations sans restriction',
+	'Class:User/Warning:NoContactHasImpact' => 'Attention: il n\'y a pas de Personne liée à cet utilisateur, il ne pourra pas se connecter à un portail, ni recevoir de News, ni changer sa langue.',
 	'Class:UserInternal' => 'Utilisateur interne',
 	'Class:UserInternal+' => 'Utilisateur défini dans '.ITOP_APPLICATION_SHORT,
 ));

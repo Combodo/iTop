@@ -455,8 +455,12 @@ abstract class User extends cmdbAbstractObject
 			&& empty($this->Get('contactid'))) {
 			$this->m_aCheckIssues[] = Dict::S('Class:User/Error:PersonIsMandatory');
 		}
+		// Warning if the user has no associated contact
+		elseif (empty($this->Get('contactid'))) {
+		    $this->AddCheckWarning(Dict::S('Class:User/Warning:NoContactHasImpact'));
+		}
 
-		// Allowed orgs must contains the user org (if any)
+		// Allowed orgs must contain the user org (if any)
 		if (!empty($this->Get('org_id')) && !UserRights::IsAdministrator($this)) {
 			// Get the user org and all its parent orgs
 			$aUserOrgs = [$this->Get('org_id')];
@@ -483,6 +487,11 @@ abstract class User extends cmdbAbstractObject
 					$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AllowedOrgsMustContainUserOrg');
 				}
 			}
+		}
+
+		// Modified User is not administrator and has no allowed orgs, warn about the consequences
+		if (!UserRights::IsAdministrator($this) && ($this->get('allowed_org_list')->Count() == 0)) {
+			$this->AddCheckWarning(Dict::S('Class:User/Warning:NoOrganizationMeansFullAccess'));
 		}
 
 		if (!UserRights::IsAdministrator()) {
