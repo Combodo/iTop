@@ -636,6 +636,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Trigger/Attribute:context+' => 'Contexte de déclenchement',
 	'Class:Trigger/Attribute:complement' => 'Information complémentaire',
 	'Class:Trigger/Attribute:complement+' => 'Détails en anglais, fourni par ce type de déclencheur',
+	'Class:Trigger/Attribute:subscription_policy'       => 'Politique d\'abonnement',
+    'Class:Trigger/Attribute:subscription_policy+'      => 'Allows users to unsubscribe from the trigger',
+    'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Autoriser la désinscription de tous les canaux',
+    'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Forcer la conservation d\'un canal (News ou Email)',
+    'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Interdire la désinscription',
 ));
 
 //
