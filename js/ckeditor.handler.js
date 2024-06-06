@@ -115,6 +115,9 @@ const CombodoCKEditorHandler = {
 								fetch(uploadUrl, {
 									method: 'POST',
 									body: formData,
+									headers: {
+										'X-Combodo-Ajax': true
+									},
 								})
 									.then(response => response.json())
 									.then(responseData => {
