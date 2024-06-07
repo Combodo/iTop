@@ -45,7 +45,6 @@ import {
 	TableProperties,
 	TableToolbar
 } from '@ckeditor/ckeditor5-table';
-import { TextTransformation } from '@ckeditor/ckeditor5-typing';
 import { Undo } from '@ckeditor/ckeditor5-undo';
 import { RemoveFormat } from '@ckeditor/ckeditor5-remove-format';
 import { SourceEditing } from '@ckeditor/ckeditor5-source-editing';
@@ -114,7 +113,6 @@ class Editor extends ClassicEditor {
 		TableColumnResize,
 		TableProperties,
 		TableToolbar,
-		TextTransformation,
 		Underline,
 		Undo,
         RemoveFormat,
@@ -279,15 +277,6 @@ class Editor extends ClassicEditor {
 				{language: 'yaml', label: 'YAML'}
 			]
 		},
-        typing: {
-            transformations: {
-                include: [
-                    'symbols',
-                    'typography',
-                    'quotes'
-                ]
-            }
-        }
 	};
 }
 
