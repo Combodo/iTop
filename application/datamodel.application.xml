@@ -242,7 +242,9 @@ The object can be modified.]]></description>
     <event id="EVENT_DB_CHECK_TO_WRITE" _delta="define">
       <name>Check to write</name>
       <description><![CDATA[Check an object before it is written into the database (no change possible).
-Call $this->AddCheckIssue() to signal an issue.]]></description>
+Call $this->AddCheckIssue($sErrorMessage) to report a blocking issue.
+Call $this->AddCheckWarning($sWarningMessage) to display a warning.
+      ]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -292,7 +294,7 @@ The modifications can be propagated to other objects.]]></description>
     <event id="EVENT_DB_CHECK_TO_DELETE" _delta="define">
       <name>Check to delete</name>
       <description><![CDATA[Check an object before it is deleted from the database.
-Call $this->AddDeleteIssue() to signal an issue.]]></description>
+Call $this->AddDeleteIssue($sIssueMessage) to signal an issue.]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -347,7 +349,7 @@ Call $this->AddDeleteIssue() to signal an issue.]]></description>
     <event id="EVENT_ENUM_TRANSITIONS" _delta="define">
       <name>Enum transitions</name>
       <description><![CDATA[Manage the allowed transitions in current object state.
-The only action allowed is to deny transitions with $this->DenyTransition()]]></description>
+The only action allowed is to deny transitions with $this->DenyTransition($sTransitionCode)]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -456,7 +458,7 @@ The only action allowed is to deny transitions with $this->DenyTransition()]]></
     <event id="EVENT_DB_SET_ATTRIBUTES_FLAGS" _delta="define">
       <name>Set attributes flags</name>
       <description><![CDATA[Set object attributes flags.
-Call $this->AddAttributeFlags() for all the attributes to be set for this target state.]]></description>
+Call $this->AddAttributeFlags($sAttCode, $iFlags) for all the attributes to be set for this target state.]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -478,7 +480,7 @@ Call $this->AddAttributeFlags() for all the attributes to be set for this target
     <event id="EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS" _delta="define">
       <name>Set initial attributes flags</name>
       <description><![CDATA[Set object initial attributes flags.
-Call $this->AddInitialAttributeFlags() for all the initial attributes to be set initially.]]></description>
+Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial attributes to be set initially.]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>

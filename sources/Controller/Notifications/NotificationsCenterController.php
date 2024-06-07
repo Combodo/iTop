@@ -19,6 +19,8 @@ use Dict;
 use Exception;
 use MetaModel;
 use utils;
+use UserRights;
+use appUserPreferences;
 
 
 /**
@@ -58,7 +60,14 @@ class NotificationsCenterController extends Controller
 		// Create a panel that will contain the table
 		$oNotificationsPanel = new Panel(Dict::S('UI:NotificationsCenter:Panel:Title'), array(), 'grey', 'ibo-notifications-center');
 		$oNotificationsPanel->AddCSSClass('ibo-datatable-panel');
-		$oSubtitleBlock = new UIContentBlock(null, ['ibo-notifications-center--sub-title']);
+
+		$oNotificationsPanel->AddSubTitleBlock(new Html(Dict::S('UI:NotificationsCenter:Panel:SubTitle')));
+		$sPictureUrl = UserRights::GetUserPictureAbsUrl();
+		if (empty($sPictureUrl)) {
+			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/'.appUserPreferences::GetPref('user_picture_placeholder', 'user-profile-default-256px.png');
+		}
+		$oNotificationsPanel->SetIcon($sPictureUrl,Panel::ENUM_ICON_COVER_METHOD_CONTAIN, true);
+
 		$oNotificationsCenterTableColumns = [
 			'trigger'  => array('label' => MetaModel::GetName('Trigger')),
 			'trigger_class' => array('label' => MetaModel::GetAttributeDef('Trigger', 'finalclass')->GetLabel()),

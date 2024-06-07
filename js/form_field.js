@@ -75,9 +75,9 @@ $(function()
 		getCurrentValue: function()
 		{
 			var value = null;
-			
+
 			this.element.find(':input:not(:button)').each(function(iIndex, oElem){
-				if($(oElem).is(':hidden:not(.ck-hidden)') || $(oElem).is(':text') || $(oElem).is(':password') || $(oElem).is('textarea'))
+				if($(oElem).is(':hidden:not(.ck-hidden,.ck-input-text)') || $(oElem).is(':text:not(.ck-input-text)') || $(oElem).is(':password') || $(oElem).is('textarea'))
 				{
 					value = $(oElem).val();
 				}

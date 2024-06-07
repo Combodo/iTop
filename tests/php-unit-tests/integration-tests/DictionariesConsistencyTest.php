@@ -77,6 +77,11 @@ class Dict
 			static::$m_aData[$sLanguageCode][$sDictKey] = $sDictLabel;
 		}
 	}
+
+	public static function ResetFileDuplicate()
+	{
+		self::$aKeysDuplicate = [];
+	}
 }
 
 
@@ -98,27 +103,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 	{
 		// In iTop the language available list is dynamically made during setup, depending on the dict files found
 		// Here we are using a fixed list
-		$aPrefixToLanguageData = array(
-			'cs' => array('CS CZ', 'Czech', 'Čeština'),
-			'da' => array('DA DA', 'Danish', 'Dansk'),
-			'de' => array('DE DE', 'German', 'Deutsch'),
-			'en' => array('EN US', 'English', 'English'),
-			'es_cr' => array('ES CR', 'Spanish', array(
-				'Español, Castellaño', // old value
-				'Español, Castellano', // new value since N°3635
-			)),
-			'fr' => array('FR FR', 'French', 'Français'),
-			'hu' => array('HU HU', 'Hungarian', 'Magyar'),
-			'it' => array('IT IT', 'Italian', 'Italiano'),
-			'ja' => array('JA JP', 'Japanese', '日本語'),
-			'nl' => array('NL NL', 'Dutch', 'Nederlands'),
-			'pl' => array('PL PL', 'Polish', 'Polski'),
-			'pt_br' => array('PT BR', 'Brazilian', 'Brazilian'),
-			'ru' => array('RU RU', 'Russian', 'Русский'),
-			'sk' => array('SK SK', 'Slovak', 'Slovenčina'),
-			'tr' => array('TR TR', 'Turkish', 'Türkçe'),
-			'zh_cn' => array('ZH CN', 'Chinese', '简体中文'),
-		);
+		$aPrefixToLanguageData = $this->GetLanguagesData(false);
 
 		if (!preg_match('/^(.*)\\.dict/', basename($sDictFile), $aMatches)) {
 			static::fail("Dictionary file '$sDictFile' not matching the naming convention");
@@ -190,7 +175,10 @@ class DictionariesConsistencyTest extends ItopTestCase
 
 		$aTestCases = array();
 		foreach ($aDictFiles as $sDictFile) {
-			$aTestCases[$sDictFile] = array('sDictFile' => $sDictFile);
+			preg_match('/^(.*)\\.dict/', basename($sDictFile), $aMatches);
+			$sDictFileLangPrefix = $aMatches[1];
+
+				$aTestCases[$sDictFile] = array('sDictFile' => $sDictFile, 'sLanguagePrefix' => $sDictFileLangPrefix);
 		}
 
 		return $aTestCases;
@@ -409,6 +397,47 @@ EOF
 	}
 
 	/**
+	 * @dataProvider GetLanguagesData
+	 *
+	 * @param string $sLang
+	 *
+	 * @return void
+	 */
+	public function testDictKeyDefinedOnceForWholeProject(string $sLang): void {
+		$this->markTestSkipped("Skip because duplicates exists in modules, while once is installed at setup. Possible solution : centralize common string in another dictionnary, and then enable this test.");
+
+		Dict::EnableLoadEntries(true);
+		$aDictKeysDefinedMultipleTimes = [];
+
+
+		foreach ($this->DictionaryFileProvider() as $aDictFile) {
+
+			if($aDictFile['sLanguagePrefix'] !== $sLang) continue;
+
+
+			Dict::ResetFileDuplicate();
+			$sDictFileToTestFullPath = $aDictFile['sDictFile'];
+
+			$sDictFileToTestPhp = $this->GetPhpCodeFromDictFile($sDictFileToTestFullPath);
+			eval($sDictFileToTestPhp);
+
+			foreach (Dict::$aKeysDuplicate as $sDictKey => $iNumberOfDuplicates) {
+				if (array_key_exists($sDictKey, $aDictKeysDefinedMultipleTimes)) {
+					$aDictKeysDefinedMultipleTimes[$sDictKey]+= $iNumberOfDuplicates;
+				} else {
+					$aDictKeysDefinedMultipleTimes[$sDictKey] = $iNumberOfDuplicates;
+				}
+			}
+		}
+		$aDictKeysDefinedMoreThanOnce = array_filter($aDictKeysDefinedMultipleTimes, static function($iNumberOfDuplicates) {
+			return $iNumberOfDuplicates > 0;
+		});
+		$this->assertEmpty($aDictKeysDefinedMoreThanOnce, "Some keys (". sizeof($aDictKeysDefinedMoreThanOnce).") are defined multiple times in the whole projectin lang $sLang: ".var_export($aDictKeysDefinedMoreThanOnce, true));
+
+	}
+
+
+		/**
 	 * @dataProvider DictionaryFileProvider
 	 */
 	public function testNoRemainingTildesInTranslatedKeys(string $sDictFileToTestFullPath): void
@@ -523,5 +552,48 @@ EOF
 		}
 
 		return 1;
+	}
+
+	/**
+	 * @param bool $bPrefixOnly
+	 *
+	 * @return array
+	 */
+	public function GetLanguagesData(bool $bPrefixOnly = true): array
+	{
+		$aLanguages = [
+			'cs'    => ['CS CZ', 'Czech', 'Čeština'],
+			'da'    => ['DA DA', 'Danish', 'Dansk'],
+			'de'    => ['DE DE', 'German', 'Deutsch'],
+			'en'    => ['EN US', 'English', 'English'],
+			'es_cr' => [
+				'ES CR',
+				'Spanish',
+				[
+					'Español, Castellaño', // old value
+					'Español, Castellano', // new value since N°3635
+				]
+			],
+			'fr'    => ['FR FR', 'French', 'Français'],
+			'hu'    => ['HU HU', 'Hungarian', 'Magyar'],
+			'it'    => ['IT IT', 'Italian', 'Italiano'],
+			'ja'    => ['JA JP', 'Japanese', '日本語'],
+			'nl'    => ['NL NL', 'Dutch', 'Nederlands'],
+			'pl'    => ['PL PL', 'Polish', 'Polski'],
+			'pt_br' => ['PT BR', 'Brazilian', 'Brazilian'],
+			'ru'    => ['RU RU', 'Russian', 'Русский'],
+			'sk'    => ['SK SK', 'Slovak', 'Slovenčina'],
+			'tr'    => ['TR TR', 'Turkish', 'Türkçe'],
+			'zh_cn' => ['ZH CN', 'Chinese', '简体中文'],
+		];
+
+		if ($bPrefixOnly) {
+			$aPrefixLang = [];
+			foreach ($aLanguages as $key => $value) {
+				$aPrefixLang[$value[1]] = ['lang' => $key];
+			}
+			return $aPrefixLang;
+		}
+		return $aLanguages;
 	}
 }

@@ -47,7 +47,8 @@ import {
 } from '@ckeditor/ckeditor5-table';
 import { TextTransformation } from '@ckeditor/ckeditor5-typing';
 import { Undo } from '@ckeditor/ckeditor5-undo';
-
+import { RemoveFormat } from '@ckeditor/ckeditor5-remove-format';
+import { SourceEditing } from '@ckeditor/ckeditor5-source-editing';
 
 // Combodo plugins
 import AppendITopClasses from "./plugins/append-itop-classes/append-itop-classes.plugin";
@@ -66,6 +67,11 @@ import InsertHtml from './plugins/insert-html/insert-html.plugin';
 
 // iTop default theme
 import './resources/styles/default-theme.css';
+
+const transformationsConfig = {
+    // Remove the 'ellipsis' transformation loaded by the 'typography' group.
+    remove: [ 'ellipsis' ]
+}
 
 class Editor extends ClassicEditor {
 	public static override builtinPlugins = [
@@ -111,6 +117,8 @@ class Editor extends ClassicEditor {
 		TextTransformation,
 		Underline,
 		Undo,
+        RemoveFormat,
+        SourceEditing,
 
 		// combodo plugins
 		AppendITopClasses,
@@ -133,26 +141,35 @@ class Editor extends ClassicEditor {
 				'|',
 				'undo',
 				'redo',
+                '|',
+                'heading',
+                '|',
+                'alignment',
+                '|',
+                {
+                    label: 'Fonts',
+                    icon: 'text',
+                    items: ['fontfamily', 'fontSize', 'fontColor']
+                },
+                '|',
+                'bold',
+                'italic',
+                'underline',
+                'highlight'  ,
+                {
+                    label: 'More styles',
+                    items: ['strikethrough', 'RemoveFormat']
+                },
 				'|',
-				'bold',
-				'italic',
-				'underline',
-                'fontSize',
-                'fontColor',
-                'highlight',
-				{
-					label: 'More styles',
-					items: ['strikethrough', 'superscript', 'subscript' ]
-				},
-				'-',
+                'horizontalLine',
 				'link',
-				// 'object-shortcut',
 				'imageUpload',
-				'blockQuote',
 				'codeBlock',
 				'bulletedList',
 				'numberedList',
-				'insertTable'
+				'insertTable',
+                '|',
+                'SourceEditing',
 			],
 			shouldNotGroupWhenFull: true
 		},
@@ -214,13 +231,10 @@ class Editor extends ClassicEditor {
 		},
 		highlight: {
 			options: [
-				{
-					model: 'yellowMarker',
-					class: 'marker-yellow',
-					title: 'Yellow marker',
-					color: 'var(--ck-highlight-marker-yellow)',
-					type: 'marker'
-				},
+                { model: 'yellowMarker', class: 'marker-yellow', title: 'Yellow Marker', color: 'var(--ck-highlight-marker-yellow)', type: 'marker' },
+                { model: 'greenMarker', class: 'marker-green', title: 'Green marker', color: 'var(--ck-highlight-marker-green)', type: 'marker' },
+                { model: 'pinkMarker', class: 'marker-pink', title: 'Pink marker', color: 'var(--ck-highlight-marker-pink)', type: 'marker' },
+                { model: 'blueMarker', class: 'marker-blue', title: 'Blue marker', color: 'var(--ck-highlight-marker-blue)', type: 'marker' },
 			]
 		},
 		codeBlock: {
@@ -264,7 +278,16 @@ class Editor extends ClassicEditor {
 				{language: 'xml', label: 'XML'},
 				{language: 'yaml', label: 'YAML'}
 			]
-		}
+		},
+        typing: {
+            transformations: {
+                include: [
+                    'symbols',
+                    'typography',
+                    'quotes'
+                ]
+            }
+        }
 	};
 }
 

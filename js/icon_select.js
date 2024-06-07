@@ -215,7 +215,7 @@ $(function()
 			var me = this;
 			this.oUploadDlg = $('<div><p>'+this.options.labels['pick_icon_file']+'</p><p><input type="file" accept="image/*" name="file" id="file"/></p></div>');
 			this.element.after(this.oUploadDlg);
-			$('input[type=file]').on('change', function() { me._do_upload(); });
+			$('input[type=file]').on('change', function(event) { me._do_upload(event); });
 			this.oUploadDlg.dialog({
 				width: 400,
 				modal: true,
@@ -234,7 +234,7 @@ $(function()
 			this.oUploadDlg.remove();
 			this.oUploadDlg = null;
 		},
-		_do_upload: function()
+		_do_upload: function(event)
 		{
 			var me = this;
 			var $element = this.oUploadDlg.find('#file');
@@ -243,23 +243,34 @@ $(function()
 			{
 				ReplaceWithAnimation($element);				
 			}
-			$.ajaxFileUpload
-			(
-				{
-					url: this.options.post_upload_to, 
-					secureuri:false,
-					fileElementId:'file',
-					dataType: 'json',
-					success: function (data, status)
-					{
-						me._on_upload_complete(data);
-					},
-					error: function (data, status, e)
-					{
-						me._on_upload_error(data, status, e);
+
+			var file = event.target.files[0];
+			var formData = new FormData();
+			formData.append('file', file);
+
+			fetch(this.options.post_upload_to, {
+				method: 'POST',
+				headers: {
+					'X-Combodo-Ajax': true
+				},
+				body: formData
+			})
+				.then(response => {
+					if (response.ok) {
+						return response.json();
 					}
-				}
-			);			
+					return response.text().then(text => Promise.reject({text, response}));
+				})
+				.then(data => {
+					// Handle the response data here
+					me._on_upload_complete(data);
+				})
+				.catch(error => {
+					let error_details = error.text === '' ? '' : ' (' + error.text + ')';
+					// Handle the error here
+					me._on_upload_error('Error: ' + error.response.status + ' ' + error.response.statusText + error_details);
+				});
+
 		},
 		_on_upload_complete: function(data)
 		{
@@ -278,18 +289,10 @@ $(function()
 			this.element.trigger('change');
 			this.oUploadDlg.dialog('close');
 		},
-		_on_upload_error: function(data, status, e)
+		_on_upload_error: function(e)
 		{
-			if (data.responseText.indexOf('login-body') !== -1) {
-				alert('Sorry, your session has expired. In order to continue, the whole page has to be loaded again.');
-				this.oUploadDlg.dialog('close');
-			} else if (data.responseText.length > 0) {
-				alert(data.responseText);
-				this.oUploadDlg.dialog('close');
-			} else {
-				alert(e);
-				this.oUploadDlg.closest('.ui-dialog').find('.ui-button').button('enable');
-			}
+			alert(e);
+			this.oUploadDlg.closest('.ui-dialog').find('.ui-button').button('enable');
 		}
 	});
 });

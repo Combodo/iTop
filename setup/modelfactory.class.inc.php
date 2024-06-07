@@ -661,7 +661,7 @@ class ModelFactory
 	 * @param DesignElement $oSourceNode
 	 * @param \MFDocument|\MFElement $oTargetParentNode
 	 *
-	 * @throws \MFException
+	 * @throws MFException
 	 * @throws \DOMFormatException
 	 * @throws \Exception
 	 */
@@ -732,7 +732,7 @@ class ModelFactory
 	 * @param DesignElement $oSubClassNode
 	 *
 	 * @return void
-	 * @throws \MFException
+	 * @throws MFException
 	 */
 	public function SpecifyDeltaSpecsOnSubClass(DesignElement $oSubClassNode): void
 	{
@@ -763,7 +763,7 @@ class ModelFactory
 	 *
 	 * @return void
 	 * @throws \DOMFormatException
-	 * @throws \MFException
+	 * @throws MFException
 	 * @throws \Exception
 	 */
 	private function LoadFlattenDelta(DesignElement $oSourceNode, MFDocument $oTargetDocument, $oTargetParentNode, string $sMode)
@@ -1181,7 +1181,6 @@ class ModelFactory
 					$sDictFileContents = str_replace('Dict::Add', '$this->AddToTempDictionary', $sDictFileContents);
 					eval($sDictFileContents);
 				}
-				$oDictionaries = $this->oRoot->getElementsByTagName('dictionaries')->item(0);
 				foreach ($this->aDict as $sLanguageCode => $aDictDefinition)
 				{
 					if ((count($aLanguages) > 0) && !in_array($sLanguageCode, $aLanguages))
@@ -1189,55 +1188,7 @@ class ModelFactory
 						// skip some languages if the parameter says so
 						continue;
 					}
-
-					$oNodes = $this->GetNodeById('dictionary', $sLanguageCode, $oDictionaries);
-					if ($oNodes->length == 0)
-					{
-						$oXmlDict = $this->oDOMDocument->CreateElement('dictionary');
-						$oXmlDict->setAttribute('id', $sLanguageCode);
-						$oDictionaries->AddChildNode($oXmlDict);
-						$oXmlEntries = $this->oDOMDocument->CreateElement('english_description', $aDictDefinition['english_description']);
-						$oXmlDict->appendChild($oXmlEntries);
-						$oXmlEntries = $this->oDOMDocument->CreateElement('localized_description',
-							$aDictDefinition['localized_description']);
-						$oXmlDict->appendChild($oXmlEntries);
-						$oXmlEntries = $this->oDOMDocument->CreateElement('entries');
-						$oXmlDict->appendChild($oXmlEntries);
-					}
-					else
-					{
-						$oXmlDict = $oNodes->item(0);
-						$oXmlEntries = $oXmlDict->GetUniqueElement('entries');
-					}
-
-					foreach ($aDictDefinition['entries'] as $sCode => $sLabel)
-					{
-
-						$oXmlEntry = $this->oDOMDocument->CreateElement('entry');
-						$oXmlEntry->setAttribute('id', $sCode);
-						$oXmlValue = $this->oDOMDocument->CreateCDATASection($sLabel);
-						$oXmlEntry->appendChild($oXmlValue);
-						if (array_key_exists($sLanguageCode, $this->aDictKeys) && array_key_exists($sCode,
-								$this->aDictKeys[$sLanguageCode]))
-						{
-							$oMe = $this->aDictKeys[$sLanguageCode][$sCode];
-							$sFlag = $oMe->GetAlteration();
-							$oMe->parentNode->replaceChild($oXmlEntry, $oMe);
-							$sNewFlag = $sFlag;
-							if ($sFlag == '')
-							{
-								$sNewFlag = 'replaced';
-							}
-							$oXmlEntry->SetAlteration($sNewFlag);
-
-						}
-						else
-						{
-							$oXmlEntry->SetAlteration('added');
-							$oXmlEntries->appendChild($oXmlEntry);
-						}
-						$this->aDictKeys[$sLanguageCode][$sCode] = $oXmlEntry;
-					}
+					$this->IntegrateDictEntriesIntoXML($sLanguageCode, $aDictDefinition);
 				}
 			} catch (Exception|Error $e) // Error can occurs on eval() calls
 			{
@@ -1246,7 +1197,6 @@ class ModelFactory
                         'exception_msg' => $e->getMessage(),
                 ]);
             }
-
 		}
 		catch (Exception $e) {
 			$aLoadedModuleNames = array();
@@ -1255,6 +1205,50 @@ class ModelFactory
 			}
 			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(', ',
 					$aLoadedModuleNames));
+		}
+	}
+
+	/**
+	 * @param string $sLanguageCode
+	 * @param array $aDictDefinition
+	 *
+	 * @return void
+	 * @throws MFException
+	 */
+	public function IntegrateDictEntriesIntoXML(string $sLanguageCode, array $aDictDefinition): void
+	{
+		$oDictionaries = $this->oRoot->getElementsByTagName('dictionaries')->item(0);
+		$oNodes = $this->GetNodeById('dictionary', $sLanguageCode, $oDictionaries);
+		if ($oNodes->length == 0) {
+			$oXmlDict = $this->oDOMDocument->CreateElement('dictionary');
+			$oXmlDict->setAttribute('id', $sLanguageCode);
+			$oDictionaries->AddChildNode($oXmlDict);
+			$oXmlEntries = $this->oDOMDocument->CreateElement('english_description', $aDictDefinition['english_description']);
+			$oXmlDict->appendChild($oXmlEntries);
+			$oXmlEntries = $this->oDOMDocument->CreateElement('localized_description',
+				$aDictDefinition['localized_description']);
+			$oXmlDict->appendChild($oXmlEntries);
+			$oXmlEntries = $this->oDOMDocument->CreateElement('entries');
+			$oXmlDict->appendChild($oXmlEntries);
+		} else {
+			$oXmlDict = $oNodes->item(0);
+			$oXmlEntries = $oXmlDict->GetUniqueElement('entries');
+		}
+
+		foreach ($aDictDefinition['entries'] as $sCode => $sLabel) {
+
+			$oXmlEntry = $this->oDOMDocument->CreateElement('entry');
+			$oXmlEntry->setAttribute('id', $sCode);
+			$oXmlValue = $this->oDOMDocument->CreateCDATASection($sLabel);
+			$oXmlEntry->appendChild($oXmlValue);
+			if (array_key_exists($sLanguageCode, $this->aDictKeys) && array_key_exists($sCode, $this->aDictKeys[$sLanguageCode])) {
+				$oXmlEntries->RedefineChildNode($oXmlEntry);
+				$oXmlEntry->RemoveAlteration();
+			} else {
+				// To avoid memory peak during execution of ApplyChanges, just set the node without alteration flag
+				$oXmlEntries->appendChild($oXmlEntry);
+			}
+			$this->aDictKeys[$sLanguageCode][$sCode] = true;
 		}
 	}
 
@@ -2194,7 +2188,7 @@ class MFElement extends Combodo\iTop\DesignElement
 	 *
 	 * @param MFElement $oNode The node (including all subnodes) to add
 	 *
-	 * @throws \MFException
+	 * @throws MFException
 	 * @throws \Exception
 	 */
 	public function AddChildNode(MFElement $oNode)
@@ -2238,7 +2232,7 @@ EOF;
 	 *
 	 * @return void
 	 *
-	 * @throws \MFException
+	 * @throws MFException
 	 * @throws \Exception
 	 */
 	public function RedefineChildNode(MFElement $oNode, $sSearchId = null)

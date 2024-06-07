@@ -3671,4 +3671,39 @@ XML
 			],
 		];
 	}
+
+	public function testDictEntryIsIntegratedIntoMF() {
+		$oFactory = new ModelFactory([]);
+		$sLanguageCode = 'RU URSS';
+		$oFactory->IntegrateDictEntriesIntoXML($sLanguageCode,
+			[
+				'english_description'   => 'Russian',
+				'localized_description' => 'URSS',
+				'entries'               => [
+					'key1'   => 'Label 1',
+				],
+			]
+		);
+		$this->assertDictEntryUniqueAndEquals($oFactory, $sLanguageCode, 'key1', 'Label 1', 'New entry in new language should be present in XML');
+
+		$oFactory->IntegrateDictEntriesIntoXML($sLanguageCode,
+			[
+				'english_description'   => 'Russian',
+				'localized_description' => 'URSS',
+				'entries'               => [
+					'key1'   => 'Label new',
+					'key2'   => 'Label 😍',
+				],
+			]
+		);
+		$this->assertDictEntryUniqueAndEquals($oFactory, $sLanguageCode, 'key1', 'Label new', 'Existing entry should be overwritten by latest loaded dictionary');
+		$this->assertDictEntryUniqueAndEquals($oFactory, $sLanguageCode, 'key2', 'Label 😍', 'New entry in existing dictionary should be present in XML');
+	}
+
+	private function assertDictEntryUniqueAndEquals(ModelFactory $oFactory, string $sLanguageCode, string $sKey, string $sValue, string $sIndicationMessage)
+	{
+		$oNodes = $oFactory->GetNodes("/itop_design/dictionaries/dictionary[@id='$sLanguageCode']/entries/entry[@id='$sKey']");
+		$this->assertCount(1, $oNodes, "The dictionary entry $sKey should be found and unique");
+		$this->assertEquals($sValue, $oNodes[0]->textContent, $sIndicationMessage);
+	}
 }
