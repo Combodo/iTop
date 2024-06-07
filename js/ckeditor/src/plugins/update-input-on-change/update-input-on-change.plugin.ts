@@ -21,8 +21,8 @@ export default class UpdateInputOnChange extends Plugin {
                 // only when input and textarea are different
                 if(oInputElement.value !== oEditor.getData()) {
                     oInputElement.value = oEditor.getData();
-                    const oEvent = new Event('change');
-                    oInputElement.dispatchEvent(oEvent);
+                    // const oEvent = new Event('change');
+                    // oInputElement.dispatchEvent(oEvent);
                 }
             });
 
