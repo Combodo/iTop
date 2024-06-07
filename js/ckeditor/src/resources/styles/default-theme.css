@@ -19,6 +19,8 @@
 	--ck-text-huge-font-size: 1.8rem;
 }
 
+/** text size classes */
+
 .text-tiny {
 	font-size: var(--ck-text-tiny-font-size);
 }
@@ -33,4 +35,22 @@
 
 .text-huge {
 	font-size: var(--ck-text-huge-font-size);
+}
+
+/** marker classes */
+
+.marker-yellow {
+	background-color: var(--ck-highlight-marker-yellow);
+}
+
+.marker-green {
+	background-color: var(--ck-highlight-marker-green);
+}
+
+.marker-pink {
+	background-color: var(--ck-highlight-marker-pink);
+}
+
+.marker-blue {
+	background-color: var(--ck-highlight-marker-blue);
 }

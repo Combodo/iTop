@@ -27,6 +27,8 @@
     "@ckeditor/ckeditor5-mention": "~41.4",
     "@ckeditor/ckeditor5-paragraph": "~41.4",
     "@ckeditor/ckeditor5-paste-from-office": "~41.4",
+    "@ckeditor/ckeditor5-remove-format": "~41.4",
+    "@ckeditor/ckeditor5-source-editing": "~41.4",
     "@ckeditor/ckeditor5-table": "~41.4",
     "@ckeditor/ckeditor5-typing": "~41.4",
     "@ckeditor/ckeditor5-ui": "~41.4",
