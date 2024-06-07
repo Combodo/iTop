@@ -1297,6 +1297,23 @@ const CombodoInlineImage = {
 };
 
 /**
+ * Abstract Fetch API wrapper to manage AJAX requests in iTop.
+ */
+const CombodoHTTP = {
+	/**
+	 * @param {string} sUrl URL to fetch
+	 * @param {Object} oOptions Fetch options
+	 * @return {Promise<Response>}
+	 */
+	Fetch: function(sUrl, oOptions) {
+		oOptions = oOptions || {};
+		oOptions.headers = oOptions.headers || {};
+		oOptions.headers['X-Combodo-Ajax'] = true;
+		return fetch(sUrl, oOptions);
+	}
+}
+
+/**
  * Abstract wrapper to manage modal dialogs in iTop.
  * Implementations for the various GUIs may vary but APIs are the same.
  *
