@@ -34,17 +34,21 @@ export default class Maximize extends Plugin {
 
             this.listenTo( oButton, 'execute', () => {
                 if(oEditor.ui.element !== null){
+                    let CKEditorPoweredButton = document.getElementsByClassName('ck-powered-by-balloon');
                     if(oButton.isOn){
                         oInitialParentElement.append(oEditor.ui.element);
                         oEditor.ui.element.classList.remove('cke-maximized');
                         document.body.classList.remove('cke-maximized');
                         oButton.icon = sMaximizeIconSVG;
+                        CKEditorPoweredButton.item(0)?.setAttribute('style', 'display: block');
                     }
                     else{
                         oInitialParentElement = oEditor.ui.element.parentElement ?? oInitialParentElement;
                         oEditor.ui.element.remove();
                         document.body.append(oEditor.ui.element);
                         document.body.classList.add('cke-maximized'); // Add class to body to prevent scrollbars
+                        // Same behaviour between Chrome and Firefox (Firefox has a bug with the balloon remaning visible in the middle of the screen when the editor is maximized)
+                        CKEditorPoweredButton.item(0)?.setAttribute('style', 'display: none');
                         oEditor.ui.element.classList.add('cke-maximized');
                         oButton.icon = sMinimizeIconSVG;
                     }
