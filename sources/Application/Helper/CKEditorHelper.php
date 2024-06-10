@@ -119,12 +119,15 @@ class CKEditorHelper
 	 * Encode value when using CKEditor with a TextArea.
 	 * @see https://ckeditor.com/docs/ckeditor5/latest/installation/getting-started/getting-and-setting-data.html#automatic-integration-with-html-forms
 	 *
-	 * @param string $sValue
+	 * @param string|null $sValue
 	 *
-	 * @return string
+	 * @return string|null
 	 */
-	public static function PrepareCKEditorValueTextEncodingForTextarea(string $sValue) : string
+	public static function PrepareCKEditorValueTextEncodingForTextarea(string $sValue = null) : ?string
 	{
+		if($sValue === null){
+			return null;
+		}
 		return str_replace( '&', '&amp;', $sValue );
 	}
 
