@@ -53,6 +53,7 @@
   "scripts": {
     "styles": "cp -r src/resources/styles/ build/styles",
     "build": "webpack --mode production && npm run styles",
+    "dev": "webpack --mode development --watch && npm run styles",
     "postbuild": "tsc --declaration --declarationDir build --stripInternal --emitDeclarationOnly"
   }
 }
