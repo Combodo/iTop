@@ -161,7 +161,7 @@ EOF
 				// First the edition area
 				$oOutput->AddHtml('<div>');
 				$sEditorClasses = $bRichEditor ? 'htmlEditor' : '';
-				$oOutput->AddHtml('<textarea id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" class="' . $sEditorClasses . ' form-control" rows="8"  '.$sInputTags.'>'.$this->oField->GetCurrentValue().'</textarea>');
+				$oOutput->AddHtml('<textarea id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" class="' . $sEditorClasses . ' form-control" rows="8"  '.$sInputTags.'>'. CKEditorHelper::PrepareCKEditorValueTextEncodingForTextarea($this->oField->GetCurrentValue()) .'</textarea>');
 				$oOutput->AddHtml('</div>');
 				// Then the previous entries if necessary
 				if ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\CaseLogField') {

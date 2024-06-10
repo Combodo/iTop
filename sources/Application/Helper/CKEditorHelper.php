@@ -116,6 +116,19 @@ class CKEditorHelper
 	}
 
 	/**
+	 * Encode value when using CKEditor with a TextArea.
+	 * @see https://ckeditor.com/docs/ckeditor5/latest/installation/getting-started/getting-and-setting-data.html#automatic-integration-with-html-forms
+	 *
+	 * @param string $sValue
+	 *
+	 * @return string
+	 */
+	public static function PrepareCKEditorValueTextEncodingForTextarea(string $sValue) : string
+	{
+		return str_replace( '&', '&amp;', $sValue );
+	}
+
+	/**
 	 * Configure CKEditor element (WebPage).
 	 *
 	 * @param \Combodo\iTop\Application\WebPage\WebPage $oPage
