@@ -57,11 +57,13 @@ class UIHTMLEditorWidget
 	
 	/**
 	 * Get the HTML fragment corresponding to the HTML editor widget
-	 * @param WebPage $oP The web page used for all the output
-	 * @param Hash $aArgs Extra context arguments
+	 *
+	 * @param WebPage $oPage The web page used for all the output
+	 * @param array $aArgs Extra context arguments
+	 *
 	 * @return string The HTML fragment to be inserted into the page
 	 */
-	public function Display(WebPage $oPage, $aArgs = array())
+	public function Display(WebPage $oPage, array $aArgs = array()) : string
 	{
 		$iId = $this->m_iId;
 		$sCode = $this->m_sAttCode.$this->m_sNameSuffix;
@@ -69,7 +71,8 @@ class UIHTMLEditorWidget
 		$sHelpText = $this->m_sHelpText;
 		$sValidationField = $this->m_sValidationField;
 
-		$sHtmlValue = "<div class=\"field_input_zone field_input_html ibo-input-wrapper\"><textarea class=\"htmlEditor ibo-input-richtext-placeholder\" title=\"$sHelpText\" name=\"attr_{$this->m_sFieldPrefix}{$sCode}\" id=\"$iId\">$sValue</textarea></div>$sValidationField";
+		$sEncodedValue = CKEditorHelper::PrepareCKEditorValueTextEncodingForTextarea($sValue);
+		$sHtmlValue = "<div class=\"field_input_zone field_input_html ibo-input-wrapper\"><textarea class=\"htmlEditor ibo-input-richtext-placeholder\" title=\"$sHelpText\" name=\"attr_{$this->m_sFieldPrefix}{$sCode}\" id=\"$iId\">$sEncodedValue</textarea></div>$sValidationField";
 
 		// Enable CKEditor
 		CKEditorHelper::ConfigureCKEditorElementForWebPage($oPage, $iId, $sValue, true);

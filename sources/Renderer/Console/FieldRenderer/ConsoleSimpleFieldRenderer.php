@@ -156,7 +156,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					}
 					else
 					{
-						$oText = new TextArea("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId(),40,8);
+						$oText = new TextArea("", CKEditorHelper::PrepareCKEditorValueTextEncodingForTextarea($this->oField->GetCurrentValue()),$this->oField->GetGlobalId(),40,8);
 						$oText->AddCSSClasses(['ibo-input-field-wrapper', 'ibo-input']);
 						$oValue->AddSubBlock($oText);
 						// Some additional stuff if we are displaying it with a rich editor

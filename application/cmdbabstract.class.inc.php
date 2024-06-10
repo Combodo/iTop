@@ -2303,7 +2303,7 @@ JS
 					$sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
 
 					$sHTMLValue = "$sHeader<div class=\"ibo-caselog-entry-form--text-input\" $sStyle data-role=\"ibo-caselog-entry-form--text-input\">";
-					$sHTMLValue .= "<textarea class=\"htmlEditor ibo-input-richtext-placeholder\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".utils::EscapeHtml($sEditValue)."</textarea>";
+					$sHTMLValue .= "<textarea class=\"htmlEditor ibo-input-richtext-placeholder\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".CKEditorHelper::PrepareCKEditorValueTextEncodingForTextarea($sEditValue)."</textarea>";
 					$sHTMLValue .= "$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
 
 					// Note: This should be refactored for all types of attribute (see at the end of this function) but as we are doing this for a maintenance release, we are scheduling it for the next main release in to order to avoid regressions as much as possible.
