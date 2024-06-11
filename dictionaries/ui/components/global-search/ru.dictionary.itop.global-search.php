@@ -1,27 +1,19 @@
 <?php
 /**
- * Copyright (C) 2013-2024 Combodo SAS
+ * Localized data
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// Global search
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'UI:Component:GlobalSearch:Tooltip' => 'Глобальный поиск',
-	'UI:Component:GlobalSearch:Input:Placeholder' => 'Поиск...',
-	'UI:Component:GlobalSearch:Recents:Title' => 'Недавние',
-	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Поиск ещё не выполнялся',
+/**
+ *
+ */
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Component:GlobalSearch:HistoryDisabled' => 'История отключена',
+	'UI:Component:GlobalSearch:Input:Placeholder' => 'Поиск...',
 	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Открыть глобальный поиск',
-));
+	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Поиск ещё не выполнялся',
+	'UI:Component:GlobalSearch:Recents:Title' => 'Недавние',
+	'UI:Component:GlobalSearch:Tooltip' => 'Глобальный поиск',
+]);

@@ -3,40 +3,29 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
- * @license	http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+/**
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ *
+ */
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:ConfigEditor' => 'Configuración',
-	'config-edit-title' => 'Editor de Archivo de Configuración',
-	'config-edit-intro' => 'Sea muy cuidadoso cuando edite el archivo de configuración. En particular, sólo los elementos superiores (ejem.: the global configuration y modules settings) deberian ser editados.',
 	'config-apply' => 'Aplicar',
 	'config-apply-title' => 'Aplicar (Ctrl+S)',
 	'config-cancel' => 'Restablecer',
-	'config-saved' => 'Exitosamente registrado.',
 	'config-confirm-cancel' => 'Sus cambiso se perderán.',
-	'config-no-change' => 'Sin cambio: el archivo permanece sin cambios.',
-	'config-reverted' => 'La configuración ha sido revertida.',
-	'config-parse-error' => 'Línea %2$d: %1$s.<br/>El archivo NO ha sido actualizado.',
 	'config-current-line' => 'Editando línea: %1$s',
-	'config-saved-warning-db-password' => 'Registrado correctamente, pero el respaldo NO funcionará debido a caracteres no admitidos en la contraseña de la base de datos.',
-	'config-error-transaction' => 'Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.~~',
+	'config-edit-intro' => 'Sea muy cuidadoso cuando edite el archivo de configuración. En particular, sólo los elementos superiores (ejem.: the global configuration y modules settings) deberian ser editados.',
+	'config-edit-title' => 'Editor de Archivo de Configuración',
 	'config-error-file-changed' => 'Error: The Configuration file has changed since you opened it and cannot be saved. Refresh and apply your changes again.~~',
-	'config-not-allowed-in-demo' => 'Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the configuration file cannot be edited.~~',
+	'config-error-transaction' => 'Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.~~',
 	'config-interactive-not-allowed' => ITOP_APPLICATION_SHORT.' interactive edition of the configuration as been disabled. See <code>\'config_editor\' => \'disabled\'</code> in the configuration file.~~',
-));
+	'config-no-change' => 'Sin cambio: el archivo permanece sin cambios.',
+	'config-not-allowed-in-demo' => 'Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the configuration file cannot be edited.~~',
+	'config-parse-error' => 'Línea %2$d: %1$s.<br/>El archivo NO ha sido actualizado.',
+	'config-reverted' => 'La configuración ha sido revertida.',
+	'config-saved' => 'Exitosamente registrado.',
+	'config-saved-warning-db-password' => 'Registrado correctamente, pero el respaldo NO funcionará debido a caracteres no admitidos en la contraseña de la base de datos.',
+]);

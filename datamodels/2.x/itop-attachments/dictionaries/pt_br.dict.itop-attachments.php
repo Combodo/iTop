@@ -1,98 +1,62 @@
 <?php
-// Copyright (C) 2010-2024 Combodo SAS
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2024 Combodo SAS
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Attachments:TabTitle_Count' => 'Anexos (%1$d)',
-	'Attachments:EmptyTabTitle' => 'Anexos',
-	'Attachments:FieldsetTitle' => 'Anexos',
-	'Attachments:DeleteBtn' => 'Excluir',
-	'Attachments:History_File_Added' => 'Anexo %1$s adicionado',
-	'Attachments:History_File_Removed' => 'Anexo %1$s excluído',
-	'Attachments:AddAttachment' => 'Adicionar anexo: ',
-	'Attachments:UploadNotAllowedOnThisSystem' => 'Arquivo carregado NÃO PERMITIDO pelo sistema',
+/**
+ *
+ */
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Attachment:Max_Go' => '(Tamanho máximo de arquivo: %1$s Gb)',
-	'Attachment:Max_Mo' => '(Tamanho máximo de arquivo: %1$s Mb)',
 	'Attachment:Max_Ko' => '(Tamanho máximo de arquivo: %1$s Kb)',
-	'Attachments:NoAttachment' => 'Nenhum anexo',
-	'Attachments:PreviewNotAvailable' => 'A pré-visualização não está disponível para este tipo de anexo',
+	'Attachment:Max_Mo' => '(Tamanho máximo de arquivo: %1$s Mb)',
+	'Attachments:AddAttachment' => 'Adicionar anexo: ',
+	'Attachments:DeleteBtn' => 'Excluir',
+	'Attachments:EmptyTabTitle' => 'Anexos',
 	'Attachments:Error:FileTooLarge' => 'Arquivo muito grande para ser anexado. %1$s',
 	'Attachments:Error:UploadedFileEmpty' => 'O arquivo recebido está vazio e não pode ser anexado
 Ou você anexou um arquivo vazio,
 ou entre em contato com o seu administrador do '.ITOP_APPLICATION_SHORT.' pois o servidor pode estar sem espaço de armazenamento',
+	'Attachments:FieldsetTitle' => 'Anexos',
+	'Attachments:File:Date' => 'Data de envio',
+	'Attachments:File:DownloadsCount' => 'Downloads~~',
+	'Attachments:File:MimeType' => 'Tipo',
+	'Attachments:File:Name' => 'Nome do arquivo',
+	'Attachments:File:Size' => 'Tamanho',
+	'Attachments:File:Thumbnail' => 'Ícone',
+	'Attachments:File:Uploader' => 'Enviado por',
+	'Attachments:History_File_Added' => 'Anexo %1$s adicionado',
+	'Attachments:History_File_Removed' => 'Anexo %1$s excluído',
+	'Attachments:NoAttachment' => 'Nenhum anexo',
+	'Attachments:PreviewNotAvailable' => 'A pré-visualização não está disponível para este tipo de anexo',
 	'Attachments:Render:Icons' => 'Exibir como ícones',
 	'Attachments:Render:Table' => 'Exibir como lista',
-	'UI:Attachments:DropYourFileHint' => 'Solte arquivos em qualquer lugar nesta área',
-));
-
-//
-// Class: Attachment
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Attachments:TabTitle_Count' => 'Anexos (%1$d)',
+	'Attachments:UploadNotAllowedOnThisSystem' => 'Arquivo carregado NÃO PERMITIDO pelo sistema',
 	'Class:Attachment' => 'Anexo',
 	'Class:Attachment+' => '',
+	'Class:Attachment/Attribute:contact_id' => 'Identificador do contato',
+	'Class:Attachment/Attribute:contact_id+' => '',
+	'Class:Attachment/Attribute:contents' => 'Conteúdo',
+	'Class:Attachment/Attribute:contents+' => '',
+	'Class:Attachment/Attribute:creation_date' => 'Data de criação',
+	'Class:Attachment/Attribute:creation_date+' => '',
 	'Class:Attachment/Attribute:expire' => 'Expira',
 	'Class:Attachment/Attribute:expire+' => '',
-	'Class:Attachment/Attribute:temp_id' => 'ID temporário',
-	'Class:Attachment/Attribute:temp_id+' => '',
 	'Class:Attachment/Attribute:item_class' => 'Classe do item',
 	'Class:Attachment/Attribute:item_class+' => '',
 	'Class:Attachment/Attribute:item_id' => 'Item',
 	'Class:Attachment/Attribute:item_id+' => '',
 	'Class:Attachment/Attribute:item_org_id' => 'Organização do item',
 	'Class:Attachment/Attribute:item_org_id+' => '',
-	'Class:Attachment/Attribute:contents' => 'Conteúdo',
-	'Class:Attachment/Attribute:contents+' => '',
-));
-
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Attachments:File:Thumbnail' => 'Ícone',
-	'Attachments:File:Name' => 'Nome do arquivo',
-	'Attachments:File:Date' => 'Data de envio',
-	'Attachments:File:Uploader' => 'Enviado por',
-	'Attachments:File:Size' => 'Tamanho',
-	'Attachments:File:MimeType' => 'Tipo',
-	'Attachments:File:DownloadsCount' => 'Downloads~~',
-));
-//
-// Class: Attachment
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:Attachment/Attribute:creation_date' => 'Data de criação',
-	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:temp_id' => 'ID temporário',
+	'Class:Attachment/Attribute:temp_id+' => '',
 	'Class:Attachment/Attribute:user_id' => 'Identificador do usuário',
 	'Class:Attachment/Attribute:user_id+' => '',
-	'Class:Attachment/Attribute:contact_id' => 'Identificador do contato',
-	'Class:Attachment/Attribute:contact_id+' => '',
-));
-
-//
-// Class: TriggerOnAttachmentDownload
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
-));
+	'UI:Attachments:DropYourFileHint' => 'Solte arquivos em qualquer lugar nesta área',
+]);

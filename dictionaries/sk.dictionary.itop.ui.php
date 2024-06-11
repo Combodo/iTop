@@ -1460,4 +1460,6 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI_CountOfObjectsShort' => '%1$d objekt/y/ov.',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office User Interface~~',
 	'portal:legacy_portal' => 'End-User Portal~~',
+	'Class:User/Warning:NoOrganizationMeansFullAccess' => 'No "Allowed Organizations" defined for this user, this means they have access to all organizations~~',
+	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 ]);
