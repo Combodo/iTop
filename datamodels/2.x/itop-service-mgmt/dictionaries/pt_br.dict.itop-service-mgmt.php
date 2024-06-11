@@ -91,6 +91,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ProviderContract/Attribute:coverage+' => 'Horário de cobertura do serviço',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'ICs',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Todos os itens de configuração associados a este contrato',
+	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
+	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => '',
 	'Class:SLA' => 'SLA',
@@ -350,6 +352,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratos por nível de serviço',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos finalizando em menos de 30 dias',
-	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
-	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 ]);

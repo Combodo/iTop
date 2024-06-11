@@ -92,6 +92,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ProviderContract/Attribute:coverage+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Content Items',
+	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
+	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement',
 	'Class:SLA' => 'SLA',
@@ -351,6 +353,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Kontrakt(er) efter Service Level',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Kontrakter efter status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Kontrakt(er), der udløber om mindre end 30 dage',
-	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
-	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 ]);

@@ -92,6 +92,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ProviderContract/Attribute:coverage+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'КЕ',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Конфигурационные единицы, охватываемые договором',
+	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
+	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Соглашение об уровне услуги (Service Level Agreement)',
 	'Class:SLA' => 'SLA',
@@ -351,6 +353,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Договоры по уровню услуг',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Договоры по статусу',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Договоры, оканчивающиеся в течение 30-ти дней',
-	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
-	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 ]);

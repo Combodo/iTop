@@ -91,6 +91,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ProviderContract/Attribute:coverage+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => '配置项',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => '此供应商合同包含的所有配置项',
+	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
+	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => '服务等级协议',
 	'Class:SLA' => 'SLA',
@@ -350,6 +352,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => '合同 (按服务等级)',
 	'UI-ServiceManagementMenu-ContractsByStatus' => '合同 (按状态)',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '未来30天内截止的合同',
-	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
-	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 ]);

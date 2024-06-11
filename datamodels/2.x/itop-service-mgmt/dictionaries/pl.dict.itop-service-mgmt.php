@@ -91,6 +91,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ProviderContract/Attribute:coverage+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'Konfiguracje',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Wszystkie elementy konfiguracji objęte niniejszą umową z dostawcą',
+	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
+	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'Umowa SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Umowa dotycząca poziomu usług',
 	'Class:SLA' => 'Umowa SLA',
@@ -350,6 +352,4 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Umowy według poziomu usług',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Umowy według statusu',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Umowy kończące się za mniej niż 30 dni',
-	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
-	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 ]);

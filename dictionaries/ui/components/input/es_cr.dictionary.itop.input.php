@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
-	'UI:Component:Input:Password:DoesNotMatch' => 'No coincide la contraseña',
 	'UI:Component:Input:ChangeNotAllowed' => 'This change is not allowed~~',
+	'UI:Component:Input:Password:DoesNotMatch' => 'No coincide la contraseña',
 	'UI:Component:Input:Set:MinimumItems' => 'Minimum %1$s item(s) required~~',
 ]);

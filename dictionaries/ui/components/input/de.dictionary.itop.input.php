@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'UI:Component:Input:Password:DoesNotMatch' => 'Passwörter stimmen nicht überein',
 	'UI:Component:Input:ChangeNotAllowed' => 'This change is not allowed~~',
+	'UI:Component:Input:Password:DoesNotMatch' => 'Passwörter stimmen nicht überein',
 	'UI:Component:Input:Set:MinimumItems' => 'Minimum %1$s item(s) required~~',
 ]);

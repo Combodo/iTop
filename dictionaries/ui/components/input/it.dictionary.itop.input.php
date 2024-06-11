@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'UI:Component:Input:Password:DoesNotMatch' => 'Le password non corrispondono',
 	'UI:Component:Input:ChangeNotAllowed' => 'This change is not allowed~~',
+	'UI:Component:Input:Password:DoesNotMatch' => 'Le password non corrispondono',
 	'UI:Component:Input:Set:MinimumItems' => 'Minimum %1$s item(s) required~~',
 ]);

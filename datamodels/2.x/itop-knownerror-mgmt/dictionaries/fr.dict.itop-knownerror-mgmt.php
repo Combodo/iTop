@@ -1,50 +1,23 @@
 <?php
-// Copyright (C) 2010-2024 Combodo SAS
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2024 Combodo SAS
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-//
-// Class: KnownError
-//
-Dict::Add('FR FR', 'French', 'Français', array(
+/**
+ *
+ */
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:KnownError' => 'Erreur Connue',
 	'Class:KnownError+' => 'Erreur documenté pour un problème connu',
-	'Class:KnownError/Attribute:name' => 'Nom',
-	'Class:KnownError/Attribute:name+' => '',
-	'Class:KnownError/Attribute:org_id' => 'Client',
-	'Class:KnownError/Attribute:org_id+' => '',
+	'Class:KnownError/Attribute:ci_list' => 'CIs',
+	'Class:KnownError/Attribute:ci_list+' => 'Tous les éléments de configuration liés à cette erreur connue',
 	'Class:KnownError/Attribute:cust_name' => 'Nom du client',
 	'Class:KnownError/Attribute:cust_name+' => '',
-	'Class:KnownError/Attribute:problem_id' => 'Problème lié',
-	'Class:KnownError/Attribute:problem_id+' => '',
-	'Class:KnownError/Attribute:problem_ref' => 'Rérérence problème lié',
-	'Class:KnownError/Attribute:problem_ref+' => '',
-	'Class:KnownError/Attribute:symptom' => 'Symptome',
-	'Class:KnownError/Attribute:symptom+' => '',
-	'Class:KnownError/Attribute:root_cause' => 'Cause première',
-	'Class:KnownError/Attribute:root_cause+' => '',
-	'Class:KnownError/Attribute:workaround' => 'Contournement',
-	'Class:KnownError/Attribute:workaround+' => '',
-	'Class:KnownError/Attribute:solution' => 'Solution',
-	'Class:KnownError/Attribute:solution+' => '',
-	'Class:KnownError/Attribute:error_code' => 'Code d\'erreur',
-	'Class:KnownError/Attribute:error_code+' => '',
+	'Class:KnownError/Attribute:document_list' => 'Documents',
+	'Class:KnownError/Attribute:document_list+' => 'Tous les documents liés à cette erreur connue',
 	'Class:KnownError/Attribute:domain' => 'Domaine',
 	'Class:KnownError/Attribute:domain+' => '',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Application',
@@ -55,46 +28,32 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:KnownError/Attribute:domain/Value:Network+' => 'Réseau',
 	'Class:KnownError/Attribute:domain/Value:Server' => 'Serveur',
 	'Class:KnownError/Attribute:domain/Value:Server+' => 'Serveur',
-	'Class:KnownError/Attribute:vendor' => 'Vendeur',
-	'Class:KnownError/Attribute:vendor+' => '',
+	'Class:KnownError/Attribute:error_code' => 'Code d\'erreur',
+	'Class:KnownError/Attribute:error_code+' => '',
 	'Class:KnownError/Attribute:model' => 'Modèle',
 	'Class:KnownError/Attribute:model+' => '',
+	'Class:KnownError/Attribute:name' => 'Nom',
+	'Class:KnownError/Attribute:name+' => '',
+	'Class:KnownError/Attribute:org_id' => 'Client',
+	'Class:KnownError/Attribute:org_id+' => '',
+	'Class:KnownError/Attribute:problem_id' => 'Problème lié',
+	'Class:KnownError/Attribute:problem_id+' => '',
+	'Class:KnownError/Attribute:problem_ref' => 'Rérérence problème lié',
+	'Class:KnownError/Attribute:problem_ref+' => '',
+	'Class:KnownError/Attribute:root_cause' => 'Cause première',
+	'Class:KnownError/Attribute:root_cause+' => '',
+	'Class:KnownError/Attribute:solution' => 'Solution',
+	'Class:KnownError/Attribute:solution+' => '',
+	'Class:KnownError/Attribute:symptom' => 'Symptome',
+	'Class:KnownError/Attribute:symptom+' => '',
+	'Class:KnownError/Attribute:vendor' => 'Vendeur',
+	'Class:KnownError/Attribute:vendor+' => '',
 	'Class:KnownError/Attribute:version' => 'Version',
 	'Class:KnownError/Attribute:version+' => '',
-	'Class:KnownError/Attribute:ci_list' => 'CIs',
-	'Class:KnownError/Attribute:ci_list+' => 'Tous les éléments de configuration liés à cette erreur connue',
-	'Class:KnownError/Attribute:document_list' => 'Documents',
-	'Class:KnownError/Attribute:document_list+' => 'Tous les documents liés à cette erreur connue',
-));
-
-//
-// Class: lnkErrorToFunctionalCI
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkErrorToFunctionalCI' => 'Lien Erreur / CI',
-	'Class:lnkErrorToFunctionalCI+' => 'Lien entre une erreur et un ci',
-	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Erreur',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Nom erreur',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reason',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-));
-
-//
-// Class: lnkDocumentToError
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:KnownError/Attribute:workaround' => 'Contournement',
+	'Class:KnownError/Attribute:workaround+' => '',
 	'Class:lnkDocumentToError' => 'Lien Documents / Errors',
 	'Class:lnkDocumentToError+' => 'Lien entre un document et une erreur',
-	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Nom Document',
@@ -105,16 +64,27 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-));
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Menu:ProblemManagement' => 'Gestion des problèmes',
-	'Menu:ProblemManagement+' => 'Gestion des problèmes',
-	'Menu:Problem:Shortcuts' => 'Raccourcis',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
+	'Class:lnkErrorToFunctionalCI' => 'Lien Erreur / CI',
+	'Class:lnkErrorToFunctionalCI+' => 'Lien entre une erreur et un ci',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Erreur',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Nom erreur',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reason',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
 	'Menu:NewError' => 'Nouvelle erreur connue',
 	'Menu:NewError+' => 'Créer une erreur connue',
-	'Menu:SearchError' => 'Rechercher une erreur connue',
-	'Menu:SearchError+' => 'Rechercher une erreur connue',
 	'Menu:Problem:KnownErrors' => 'Toutes les erreurs connues',
 	'Menu:Problem:KnownErrors+' => 'Toutes les erreurs connues',
-));
+	'Menu:Problem:Shortcuts' => 'Raccourcis',
+	'Menu:ProblemManagement' => 'Gestion des problèmes',
+	'Menu:ProblemManagement+' => 'Gestion des problèmes',
+	'Menu:SearchError' => 'Rechercher une erreur connue',
+	'Menu:SearchError+' => 'Rechercher une erreur connue',
+]);

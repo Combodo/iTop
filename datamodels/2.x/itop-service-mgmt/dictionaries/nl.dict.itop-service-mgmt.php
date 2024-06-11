@@ -93,6 +93,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ProviderContract/Attribute:coverage+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CI\'s',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Alle configuratie-items die gedekt zijn door dit leverancierscontract',
+	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
+	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement',
 	'Class:SLA' => 'SLA',
@@ -352,6 +354,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracten per servicelevel',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracten per status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracten die in minder dan 30 dagen verlopen',
-	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
-	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 ]);

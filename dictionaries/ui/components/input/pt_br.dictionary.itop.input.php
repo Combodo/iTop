@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'UI:Component:Input:Password:DoesNotMatch' => 'Senhas não correspondem',
 	'UI:Component:Input:ChangeNotAllowed' => 'This change is not allowed~~',
+	'UI:Component:Input:Password:DoesNotMatch' => 'Senhas não correspondem',
 	'UI:Component:Input:Set:MinimumItems' => 'Minimum %1$s item(s) required~~',
 ]);

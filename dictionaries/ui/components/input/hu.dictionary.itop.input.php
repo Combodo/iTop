@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'UI:Component:Input:Password:DoesNotMatch' => 'A jelszavak nem egyeznek',
 	'UI:Component:Input:ChangeNotAllowed' => 'This change is not allowed~~',
+	'UI:Component:Input:Password:DoesNotMatch' => 'A jelszavak nem egyeznek',
 	'UI:Component:Input:Set:MinimumItems' => 'Minimum %1$s item(s) required~~',
 ]);

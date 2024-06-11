@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'UI:Component:Input:Password:DoesNotMatch' => 'Wachtwoorden komen niet overeen',
 	'UI:Component:Input:ChangeNotAllowed' => 'This change is not allowed~~',
+	'UI:Component:Input:Password:DoesNotMatch' => 'Wachtwoorden komen niet overeen',
 	'UI:Component:Input:Set:MinimumItems' => 'Minimum %1$s item(s) required~~',
 ]);

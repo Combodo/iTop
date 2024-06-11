@@ -93,6 +93,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ProviderContract/Attribute:coverage+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'Konfigurační položky',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Všechny konfigurační položky pokryté touto smlouvou s poskytovatelem',
+	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
+	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Dohoda o úrovni služeb',
 	'Class:SLA' => 'SLA',
@@ -352,6 +354,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Smlouvy podle úrovně služeb',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Smlouvy podle stavu',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Smlouvy končící během 30 dní',
-	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
-	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 ]);

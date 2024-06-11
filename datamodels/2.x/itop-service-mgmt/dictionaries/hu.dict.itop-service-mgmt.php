@@ -91,6 +91,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ProviderContract/Attribute:coverage+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CI-k',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Konfigurációs elemek, melyeket lefed ez a szolgáltatói szerződés',
+	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
+	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Szolgáltatásszint megállapodás',
 	'Class:SLA' => 'SLA',
@@ -350,6 +352,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Szerződések szolgáltatásszintek szerint',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Szerződések állapotuk szerint',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30 napon belül lejáró szerződések',
-	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
-	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 ]);

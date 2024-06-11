@@ -92,6 +92,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:ProviderContract/Attribute:coverage+' => 'Horario de Servicio',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'ECs',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Elememtos de Configuración',
+	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
+	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Acuerdo de Nivel de Servicio',
 	'Class:SLA' => 'SLA - Acuerdo de Nivel de Servicio',
@@ -351,6 +353,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratos por Nivel de Servicio',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por Estatus',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos Finalizando en menos de 30 días',
-	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
-	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 ]);

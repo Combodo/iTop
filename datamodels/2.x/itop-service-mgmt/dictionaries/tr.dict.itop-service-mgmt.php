@@ -92,6 +92,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ProviderContract/Attribute:coverage+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CI\'lar',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Bu sağlayıcı sözleşmesi tarafından kapsanan tüm yapılandırma öğeleri',
+	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
+	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement~~',
 	'Class:SLA' => 'SLA',
@@ -351,6 +353,4 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Hizmet seviyesine göre sözleşmeler',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Durumuna göre sözleşmeler',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30 gün çinde biten sözleşmeler',
-	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
-	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 ]);

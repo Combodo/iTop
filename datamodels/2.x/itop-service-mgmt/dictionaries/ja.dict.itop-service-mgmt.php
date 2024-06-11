@@ -91,6 +91,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ProviderContract/Attribute:coverage+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CI',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this provider contract~~',
+	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
+	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'サービスレベルアグリーメント',
 	'Class:SLA' => 'SLA',
@@ -350,6 +352,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'サービスレベル別契約',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'ステータス別契約',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30日以内に終了する契約',
-	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
-	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
 ]);
