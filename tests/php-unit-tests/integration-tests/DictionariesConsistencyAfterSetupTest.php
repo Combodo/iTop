@@ -208,6 +208,34 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		$this->assertEquals([], $aMismatchedKeys, $sErrorMsg);
 	}
 
+	public function testEveryEnglishEntryShouldHaveItsFrenchCounterpart() {
+		$this->markTestSkipped('Not mandatory at the moment');
+		$sReferenceLangCode = 'EN US';
+		$aReferenceLangDictEntries = $this->ReadDictKeys($sReferenceLangCode);
+
+		$sFrenchLangCode = 'FR FR';
+		$aFrenchDictEntries = $this->ReadDictKeys($sFrenchLangCode);
+
+		$aMissingEntries = array_diff(array_keys($aReferenceLangDictEntries), array_keys($aFrenchDictEntries));
+		$this->assertCount(0, $aMissingEntries, "The following entries are missing in french dictionaries : \n - ".implode("\n - ", $aMissingEntries));
+	}
+
+	public function testEveryFrenchEntryShouldBeTranslated() {
+		$this->markTestSkipped('Not mandatory at the moment');
+
+		$sFrenchLangCode = 'FR FR';
+		$aFrenchDictEntries = $this->ReadDictKeys($sFrenchLangCode);
+
+		$aUntranslatedEntries = [];
+		foreach ($aFrenchDictEntries as $sKey => $sValue){
+			if(mb_substr($sValue,-2) === '~~'){
+				$aUntranslatedEntries[] = $sKey.' => '.var_export($sValue, true);
+			}
+		}
+
+		$this->assertCount(0, $aUntranslatedEntries, "The following french entries require translation : \n - ".implode("\n - ", $aUntranslatedEntries));
+	}
+
 	public function VsprintfProvider(){
 		return [
 			'not enough args' => [
