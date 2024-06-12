@@ -1301,6 +1301,12 @@ EOF
 				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_connections is set to $iMaxConnections.");
 			}
 
+            $iClusters = $oDBSource->GetClusterNb();
+            if ($iClusters > 0) {
+                SetupLog::Warning('Warning - Galera can lead to malfunctions and data corruption. Combodo does not support this type of infrastructure.');
+                $aResult['checks'][] = new CheckResult(CheckResult::WARNING, 'Galera can lead to malfunctions and data corruption. Combodo does not support this type of infrastructure.');
+            }
+
 			try {
 				$aResult['databases'] = $oDBSource->ListDB();
 			}
@@ -1416,6 +1422,8 @@ EOF
 
 	public static function AsyncCheckDB($oPage, $aParameters)
 	{
+        SetupPage::log('Info - CheckDB');
+
 		$sDBServer = $aParameters['db_server'];
 		$sDBUser = $aParameters['db_user'];
 		$sDBPwd = $aParameters['db_pwd'];
