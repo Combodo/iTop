@@ -43,6 +43,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Preferences:Tabs:Title' => 'Onglets',
 	'UI:Preferences:Title' => 'Préférences',
 	'UI:Preferences:UserInterface:Title' => 'Interface utilisateur',
-	'UI:Preferences:Notifications' => 'Notifications~~',
-	'UI:Preferences:Notifications+' => 'Configure the notifications you want to receive <a href="%1$s">on this page</a>.~~',
+	'UI:Preferences:Notifications' => 'Notifications',
+	'UI:Preferences:Notifications+' => 'Désabonnez-vous des notifications qui vous importunent (emails et news) en suivant <a href="%1$s">ce lien</a>.',
 ]);

@@ -101,6 +101,6 @@ Pour recalculer la valeur par défaut, il faut effacer le champ',
 	'itop-oauth-client:MissingOAuthClient' => 'Il n\'y a pas de client OAuth pour l\'utilisateur %1$s',
 	'itop-oauth-client:TestSMTP' => 'Tester l\'envoi de mail',
 	'itop-oauth-client:UsedForSMTP' => 'Ce client Oauth est utilisé pour SMTP',
-	'Class:OAuthClientAzure/Attribute:tenant' => 'Tenant~~',
-	'Class:OAuthClientAzure/Attribute:tenant+' => 'Tenant ID of the configured application. For multi-tenant application, use "common".~~',
+	'Class:OAuthClientAzure/Attribute:tenant' => 'Locataire',
+	'Class:OAuthClientAzure/Attribute:tenant+' => 'Locataire (Tenant ID) de l\'application configurée. Pour des applications à locataires multiples, veuillez saisir "common".',
 ]);

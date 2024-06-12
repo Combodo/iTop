@@ -22,6 +22,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Datatables:Language:Sort:Ascending' => 'tri croissant',
 	'UI:Datatables:Language:Sort:Descending' => 'tri décroissant',
 	'UI:Datatables:Language:ZeroRecords' => 'Pas de résultat',
-	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation~~',
-	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action ?~~',
+	'UI:Datatables:RowActions:ConfirmationDialog' => 'Confirmation',
+	'UI:Datatables:RowActions:ConfirmationMessage' => 'Confirmez-vous cette action ?',
 ]);
