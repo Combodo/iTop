@@ -10,5 +10,5 @@
  *
  */
 Dict::Add('FR FR', 'French', 'Français', [
-	'theme:darkmoon' => 'Dark moon~~',
+	'theme:darkmoon' => 'Dark moon',
 ]);
