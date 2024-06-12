@@ -95,7 +95,7 @@ class MySQLHasGoneAwayException extends MySQLException
 	{
 		return array(
 			2006,
-			2013
+			2013,
 		);
 	}
 
@@ -1296,8 +1296,8 @@ class CMDBSource
 	 */
 	public static function IsSameFieldTypes($sItopGeneratedFieldType, $sDbFieldType)
 	{
-		list($sItopFieldDataType, $sItopFieldTypeOptions, $sItopFieldOtherOptions) = static::GetFieldDataTypeAndOptions($sItopGeneratedFieldType);
-		list($sDbFieldDataType, $sDbFieldTypeOptions, $sDbFieldOtherOptions) = static::GetFieldDataTypeAndOptions($sDbFieldType);
+		[$sItopFieldDataType, $sItopFieldTypeOptions, $sItopFieldOtherOptions] = static::GetFieldDataTypeAndOptions($sItopGeneratedFieldType);
+		[$sDbFieldDataType, $sDbFieldTypeOptions, $sDbFieldOtherOptions] = static::GetFieldDataTypeAndOptions($sDbFieldType);
 
 		if (strcasecmp($sItopFieldDataType, $sDbFieldDataType) !== 0)
 		{
@@ -1734,8 +1734,20 @@ class CMDBSource
 		return false;
 	}
 
-	/**
-	 * @return string query to upgrade database charset and collation if needed, null if not
+    public static function GetClusterNb()
+    {
+        $result = 0;
+        $sSql = "SHOW STATUS LIKE 'wsrep_cluster_size';";
+        $aRows = self::QueryToArray($sSql);
+        if (count($aRows) > 0)
+        {
+            $result = $aRows[0]['Value'];
+        }
+        return intval($result);
+    }
+
+    /**
+     * @return string query to upgrade database charset and collation if needed, null if not
 	 * @throws \MySQLException
 	 *
 	 * @since 2.5.0 N°1001 switch to utf8mb4
