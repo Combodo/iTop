@@ -176,7 +176,9 @@ EOF
 					if ($bRichEditor) {
 
 						// Enable CKEditor
-						CKEditorHelper::ConfigureCKEditorElementForRenderingOutput($oOutput, $this->oField->GetGlobalId(), $this->oField->GetCurrentValue(), false, false);
+						CKEditorHelper::ConfigureCKEditorElementForRenderingOutput($oOutput, $this->oField->GetGlobalId(), $this->oField->GetCurrentValue(), false, false, 			['maximize' => [
+							'fullscreen' => 'native'
+						]]);
 
 						if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null)) {
 							$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));
