@@ -209,7 +209,6 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 	}
 
 	public function testEveryEnglishEntryShouldHaveItsFrenchCounterpart() {
-		$this->markTestSkipped('Not mandatory at the moment');
 		$sReferenceLangCode = 'EN US';
 		$aReferenceLangDictEntries = $this->ReadDictKeys($sReferenceLangCode);
 
@@ -221,8 +220,6 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 	}
 
 	public function testEveryFrenchEntryShouldBeTranslated() {
-		$this->markTestSkipped('Not mandatory at the moment');
-
 		$sFrenchLangCode = 'FR FR';
 		$aFrenchDictEntries = $this->ReadDictKeys($sFrenchLangCode);
 
