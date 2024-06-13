@@ -41,7 +41,7 @@ $ibo-vendors-ckeditor--ck-text-huge-font-size: $ibo-font-size-350;
 }
 
 .ck-editor__editable_inline:not(.ck-comment__input *) {
-  min-height: 200px;
+  height: 200px;
 }
 
 /* Fullscreen button (Combodo custom plugin) */
