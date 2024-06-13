@@ -1,75 +1,24 @@
 <?php
-// Copyright (C) 2010-2024 Combodo SAS
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * Spanish Localized data
+ * Localized data
  *
- * @copyright   Copyright (C) 2010-2024 Combodo SAS
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//
-// Class: KnownError
-//
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+/**
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ *
+ */
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:KnownError' => 'Error Conocido',
 	'Class:KnownError+' => 'Documentación para un error conocido',
-	'Class:KnownError/Attribute:name' => 'Nombre',
-	'Class:KnownError/Attribute:name+' => 'Nombre del Error Conocido',
-	'Class:KnownError/Attribute:org_id' => 'Organización',
-	'Class:KnownError/Attribute:org_id+' => 'Organización',
+	'Class:KnownError/Attribute:ci_list' => 'ECs',
+	'Class:KnownError/Attribute:ci_list+' => 'ECs',
 	'Class:KnownError/Attribute:cust_name' => 'Nombre',
 	'Class:KnownError/Attribute:cust_name+' => 'Nombre',
-	'Class:KnownError/Attribute:problem_id' => 'Problema Relacionado',
-	'Class:KnownError/Attribute:problem_id+' => 'Problema',
-	'Class:KnownError/Attribute:problem_ref' => 'Referencia',
-	'Class:KnownError/Attribute:problem_ref+' => 'Refencia',
-	'Class:KnownError/Attribute:symptom' => 'Síntoma',
-	'Class:KnownError/Attribute:symptom+' => 'Síntoma',
-	'Class:KnownError/Attribute:root_cause' => 'Causa Raíz',
-	'Class:KnownError/Attribute:root_cause+' => 'Causa Raíz',
-	'Class:KnownError/Attribute:workaround' => 'Solución Temporal',
-	'Class:KnownError/Attribute:workaround+' => 'Solución Temporal',
-	'Class:KnownError/Attribute:solution' => 'Solución Final',
-	'Class:KnownError/Attribute:solution+' => 'Solución Final',
-	'Class:KnownError/Attribute:error_code' => 'Código de Error',
-	'Class:KnownError/Attribute:error_code+' => 'Código de Error',
+	'Class:KnownError/Attribute:document_list' => 'Documentos',
+	'Class:KnownError/Attribute:document_list+' => 'Documentos',
 	'Class:KnownError/Attribute:domain' => 'Dominio',
 	'Class:KnownError/Attribute:domain+' => 'Dominio',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Aplicación',
@@ -80,46 +29,32 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:KnownError/Attribute:domain/Value:Network+' => 'Red',
 	'Class:KnownError/Attribute:domain/Value:Server' => 'Servidor',
 	'Class:KnownError/Attribute:domain/Value:Server+' => 'Servidor',
-	'Class:KnownError/Attribute:vendor' => 'Proveedor',
-	'Class:KnownError/Attribute:vendor+' => 'Proveedor',
+	'Class:KnownError/Attribute:error_code' => 'Código de Error',
+	'Class:KnownError/Attribute:error_code+' => 'Código de Error',
 	'Class:KnownError/Attribute:model' => 'Modelo',
 	'Class:KnownError/Attribute:model+' => 'Modelo',
+	'Class:KnownError/Attribute:name' => 'Nombre',
+	'Class:KnownError/Attribute:name+' => 'Nombre del Error Conocido',
+	'Class:KnownError/Attribute:org_id' => 'Organización',
+	'Class:KnownError/Attribute:org_id+' => 'Organización',
+	'Class:KnownError/Attribute:problem_id' => 'Problema Relacionado',
+	'Class:KnownError/Attribute:problem_id+' => 'Problema',
+	'Class:KnownError/Attribute:problem_ref' => 'Referencia',
+	'Class:KnownError/Attribute:problem_ref+' => 'Refencia',
+	'Class:KnownError/Attribute:root_cause' => 'Causa Raíz',
+	'Class:KnownError/Attribute:root_cause+' => 'Causa Raíz',
+	'Class:KnownError/Attribute:solution' => 'Solución Final',
+	'Class:KnownError/Attribute:solution+' => 'Solución Final',
+	'Class:KnownError/Attribute:symptom' => 'Síntoma',
+	'Class:KnownError/Attribute:symptom+' => 'Síntoma',
+	'Class:KnownError/Attribute:vendor' => 'Proveedor',
+	'Class:KnownError/Attribute:vendor+' => 'Proveedor',
 	'Class:KnownError/Attribute:version' => 'Versión',
 	'Class:KnownError/Attribute:version+' => 'Versión',
-	'Class:KnownError/Attribute:ci_list' => 'ECs',
-	'Class:KnownError/Attribute:ci_list+' => 'ECs',
-	'Class:KnownError/Attribute:document_list' => 'Documentos',
-	'Class:KnownError/Attribute:document_list+' => 'Documentos',
-));
-
-//
-// Class: lnkErrorToFunctionalCI
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:lnkErrorToFunctionalCI' => 'Relación Error Conocido y EC Funcional',
-	'Class:lnkErrorToFunctionalCI+' => 'Relación Error Conocido y EC Funcional',
-	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'EC',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => 'Elemento de Configuración',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => 'Elemento de Configuración',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Error Conocido',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => 'Error Conocido',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Error Conocido',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => 'Error Conocido',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Motivo',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => 'Motivo',
-));
-
-//
-// Class: lnkDocumentToError
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:KnownError/Attribute:workaround' => 'Solución Temporal',
+	'Class:KnownError/Attribute:workaround+' => 'Solución Temporal',
 	'Class:lnkDocumentToError' => 'Relación Documento y Error Conocido',
 	'Class:lnkDocumentToError+' => 'Relación Documento y Error Conocido',
-	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Documento',
 	'Class:lnkDocumentToError/Attribute:document_id+' => 'Documento',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Documento',
@@ -130,16 +65,27 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => 'Error Conocido',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Tipo',
 	'Class:lnkDocumentToError/Attribute:link_type+' => 'Tipo',
-));
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Menu:ProblemManagement' => 'Administración de problemas',
-	'Menu:ProblemManagement+' => 'GestAdministraciónión de problemas',
-	'Menu:Problem:Shortcuts' => 'Acceso Rápido',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
+	'Class:lnkErrorToFunctionalCI' => 'Relación Error Conocido y EC Funcional',
+	'Class:lnkErrorToFunctionalCI+' => 'Relación Error Conocido y EC Funcional',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Error Conocido',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => 'Error Conocido',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Error Conocido',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => 'Error Conocido',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'EC',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => 'Elemento de Configuración',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => 'Elemento de Configuración',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Motivo',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => 'Motivo',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Menu:NewError' => 'Nuevo Error Conocido',
 	'Menu:NewError+' => 'Nuevo Error Conocido',
-	'Menu:SearchError' => 'Búsqueda de Errores Conocidos',
-	'Menu:SearchError+' => 'Búsqueda de Errores Conocidos',
 	'Menu:Problem:KnownErrors' => 'Errores Conocidos',
 	'Menu:Problem:KnownErrors+' => 'Errores Conocidos',
-));
+	'Menu:Problem:Shortcuts' => 'Acceso Rápido',
+	'Menu:ProblemManagement' => 'Administración de problemas',
+	'Menu:ProblemManagement+' => 'GestAdministraciónión de problemas',
+	'Menu:SearchError' => 'Búsqueda de Errores Conocidos',
+	'Menu:SearchError+' => 'Búsqueda de Errores Conocidos',
+]);

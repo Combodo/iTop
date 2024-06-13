@@ -1,35 +1,27 @@
 <?php
 /**
- * Copyright (C) 2013-2024 Combodo SAS
+ * Localized data
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// Display DataTable
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'UI:Datatables:Language:Processing' => 'Bitte warten...',
-	'UI:Datatables:Language:LengthMenu' => '_MENU_ pro Seite',
-	'UI:Datatables:Language:ZeroRecords' => 'Kein Ergebnis',
-	'UI:Datatables:Language:Info' => '_TOTAL_ Objekte',
-	'UI:Datatables:Language:InfoEmpty' => 'Keine Information',
+/**
+ *
+ */
+Dict::Add('DE DE', 'German', 'Deutsch', [
+	'UI:Datatables:Column:RowActions:Description' => '',
+	'UI:Datatables:Column:RowActions:Label' => '',
+	'UI:Datatables:Language:DisplayLength:All' => 'Alle',
 	'UI:Datatables:Language:EmptyTable' => 'Keine Daten in dieser Tabelle verfügbar',
 	'UI:Datatables:Language:Error' => 'Bei der Ausführung des Query ist ein Fehler aufgetreten',
-	'UI:Datatables:Language:DisplayLength:All' => 'Alle',
+	'UI:Datatables:Language:Info' => '_TOTAL_ Objekte',
+	'UI:Datatables:Language:InfoEmpty' => 'Keine Information',
+	'UI:Datatables:Language:LengthMenu' => '_MENU_ pro Seite',
+	'UI:Datatables:Language:Processing' => 'Bitte warten...',
 	'UI:Datatables:Language:Sort:Ascending' => 'Aktivieren für aufsteigende Sortierung',
 	'UI:Datatables:Language:Sort:Descending' => 'Aktivieren für absteigende Sortierung',
-	'UI:Datatables:Column:RowActions:Label' => '',
-	'UI:Datatables:Column:RowActions:Description' => '',
+	'UI:Datatables:Language:ZeroRecords' => 'Kein Ergebnis',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Aktion bestätigen',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Möchten Sie diese Aktion ausführen?',
-));
+]);

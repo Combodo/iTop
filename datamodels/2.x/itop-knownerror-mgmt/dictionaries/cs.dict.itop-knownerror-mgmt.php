@@ -1,76 +1,25 @@
 <?php
-// Copyright (C) 2010-2024 Combodo SAS
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * Localized data.
+ * Localized data
  *
- * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
- * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2024 Combodo SAS
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//
-// Class: KnownError
-//
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+/**
+ * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
+ * @author Daniel Rokos <daniel.rokos@itopportal.cz>
+ *
+ */
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:KnownError' => 'Známá chyba',
 	'Class:KnownError+' => 'Pro známou příčinu zdokumentovaná chyba',
-	'Class:KnownError/Attribute:name' => 'Název',
-	'Class:KnownError/Attribute:name+' => '',
-	'Class:KnownError/Attribute:org_id' => 'Zákazník',
-	'Class:KnownError/Attribute:org_id+' => '',
+	'Class:KnownError/Attribute:ci_list' => 'Konfigurační položky',
+	'Class:KnownError/Attribute:ci_list+' => 'Všechny konfigurační položky vztahující se k této známé chybě',
 	'Class:KnownError/Attribute:cust_name' => 'Název zákazníka',
 	'Class:KnownError/Attribute:cust_name+' => '',
-	'Class:KnownError/Attribute:problem_id' => 'Související problém',
-	'Class:KnownError/Attribute:problem_id+' => '',
-	'Class:KnownError/Attribute:problem_ref' => 'ID Souvisejícího problému',
-	'Class:KnownError/Attribute:problem_ref+' => '',
-	'Class:KnownError/Attribute:symptom' => 'Příznak',
-	'Class:KnownError/Attribute:symptom+' => '',
-	'Class:KnownError/Attribute:root_cause' => 'Primární příčina',
-	'Class:KnownError/Attribute:root_cause+' => '',
-	'Class:KnownError/Attribute:workaround' => 'Náhradní řešení (workaround)',
-	'Class:KnownError/Attribute:workaround+' => '',
-	'Class:KnownError/Attribute:solution' => 'Řešení',
-	'Class:KnownError/Attribute:solution+' => '',
-	'Class:KnownError/Attribute:error_code' => 'Kód chyby',
-	'Class:KnownError/Attribute:error_code+' => '',
+	'Class:KnownError/Attribute:document_list' => 'Dokumenty',
+	'Class:KnownError/Attribute:document_list+' => 'Všechny dokumenty spojené s touto známou chybou',
 	'Class:KnownError/Attribute:domain' => 'Oblast',
 	'Class:KnownError/Attribute:domain+' => '',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Aplikace',
@@ -81,46 +30,32 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:KnownError/Attribute:domain/Value:Network+' => '',
 	'Class:KnownError/Attribute:domain/Value:Server' => 'Server',
 	'Class:KnownError/Attribute:domain/Value:Server+' => '',
-	'Class:KnownError/Attribute:vendor' => 'Dodavatel',
-	'Class:KnownError/Attribute:vendor+' => '',
+	'Class:KnownError/Attribute:error_code' => 'Kód chyby',
+	'Class:KnownError/Attribute:error_code+' => '',
 	'Class:KnownError/Attribute:model' => 'Model',
 	'Class:KnownError/Attribute:model+' => '',
+	'Class:KnownError/Attribute:name' => 'Název',
+	'Class:KnownError/Attribute:name+' => '',
+	'Class:KnownError/Attribute:org_id' => 'Zákazník',
+	'Class:KnownError/Attribute:org_id+' => '',
+	'Class:KnownError/Attribute:problem_id' => 'Související problém',
+	'Class:KnownError/Attribute:problem_id+' => '',
+	'Class:KnownError/Attribute:problem_ref' => 'ID Souvisejícího problému',
+	'Class:KnownError/Attribute:problem_ref+' => '',
+	'Class:KnownError/Attribute:root_cause' => 'Primární příčina',
+	'Class:KnownError/Attribute:root_cause+' => '',
+	'Class:KnownError/Attribute:solution' => 'Řešení',
+	'Class:KnownError/Attribute:solution+' => '',
+	'Class:KnownError/Attribute:symptom' => 'Příznak',
+	'Class:KnownError/Attribute:symptom+' => '',
+	'Class:KnownError/Attribute:vendor' => 'Dodavatel',
+	'Class:KnownError/Attribute:vendor+' => '',
 	'Class:KnownError/Attribute:version' => 'Verze',
 	'Class:KnownError/Attribute:version+' => '',
-	'Class:KnownError/Attribute:ci_list' => 'Konfigurační položky',
-	'Class:KnownError/Attribute:ci_list+' => 'Všechny konfigurační položky vztahující se k této známé chybě',
-	'Class:KnownError/Attribute:document_list' => 'Dokumenty',
-	'Class:KnownError/Attribute:document_list+' => 'Všechny dokumenty spojené s touto známou chybou',
-));
-
-//
-// Class: lnkErrorToFunctionalCI
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Class:lnkErrorToFunctionalCI' => 'Spojení (Chyba / Funkční konfigurační položka)',
-	'Class:lnkErrorToFunctionalCI+' => 'Konfigurační položky vztahující se k chybě',
-	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'Konfigurační položka',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Název konfigurační položky',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Chyba',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Název chyby',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Důvod',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-));
-
-//
-// Class: lnkDocumentToError
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:KnownError/Attribute:workaround' => 'Náhradní řešení (workaround)',
+	'Class:KnownError/Attribute:workaround+' => '',
 	'Class:lnkDocumentToError' => 'Spojení (Dokument / Chyba)',
 	'Class:lnkDocumentToError+' => 'Spojení mezi dokumentem a známou chybou',
-	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Dokument',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Název dokumentu',
@@ -131,16 +66,27 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-));
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Menu:ProblemManagement' => 'Správa problémů',
-	'Menu:ProblemManagement+' => 'Správa problémů',
-	'Menu:Problem:Shortcuts' => 'Odkazy',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
+	'Class:lnkErrorToFunctionalCI' => 'Spojení (Chyba / Funkční konfigurační položka)',
+	'Class:lnkErrorToFunctionalCI+' => 'Konfigurační položky vztahující se k chybě',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Chyba',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Název chyby',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'Konfigurační položka',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Název konfigurační položky',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Důvod',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Menu:NewError' => 'Nová známá chyba',
 	'Menu:NewError+' => 'Vytvoření nové známé chyby',
-	'Menu:SearchError' => 'Hledat známé chyby',
-	'Menu:SearchError+' => 'Hledat známé chyby',
 	'Menu:Problem:KnownErrors' => 'Všechny známé chyby',
 	'Menu:Problem:KnownErrors+' => 'Všechny známé chyby',
-));
+	'Menu:Problem:Shortcuts' => 'Odkazy',
+	'Menu:ProblemManagement' => 'Správa problémů',
+	'Menu:ProblemManagement+' => 'Správa problémů',
+	'Menu:SearchError' => 'Hledat známé chyby',
+	'Menu:SearchError+' => 'Hledat známé chyby',
+]);
