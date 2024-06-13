@@ -1,0 +1,5 @@
+tests/*.output
+*.sublime-project
+*.sublime-workspace
+vendor/
+**/*.DS_Store
