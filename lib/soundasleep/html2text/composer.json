@@ -1,0 +1,32 @@
+{
+  "name": "soundasleep/html2text",
+  "description": "A PHP script to convert HTML into a plain text format",
+  "type": "library",
+  "keywords": [ "php", "html", "text", "email" ],
+  "homepage": "https://github.com/soundasleep/html2text",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jevon Wright",
+      "homepage": "https://jevon.org",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Soundasleep\\": "src"
+    }
+  },
+  "support": {
+    "email": "support@jevon.org"
+  },
+  "require": {
+    "php": ">=7.0",
+    "ext-dom": "*",
+    "ext-libxml": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~7.0",
+    "soundasleep/component-tests": "~0.2"
+  }
+}
