@@ -34,21 +34,36 @@ export default class Maximize extends Plugin {
 
             this.listenTo( oButton, 'execute', () => {
                 if(oEditor.ui.element !== null){
+                    let CKEditorPoweredButton:HTMLCollectionOf<Element> = document.getElementsByClassName('ck-powered-by-balloon');
+                    const sFullScreenMethod:string = oEditor.config.get('maximize.fullscreen') as string;
                     if(oButton.isOn){
-                        oInitialParentElement.append(oEditor.ui.element);
-                        oEditor.ui.element.classList.remove('cke-maximized');
-                        document.body.classList.remove('cke-maximized');
+                        if (sFullScreenMethod === 'native') { // portal
+                            document.exitFullscreen();
+                            oEditor.ui.element.classList.remove('fullscreen-mode');
+                        }
+                        else{ // console
+                            oInitialParentElement.append(oEditor.ui.element);
+                            oEditor.ui.element.classList.remove('cke-maximized');
+                            document.body.classList.remove('cke-maximized');
+                            CKEditorPoweredButton.item(0)?.setAttribute('style', 'display: block');
+                        }
                         oButton.icon = sMaximizeIconSVG;
                     }
                     else{
-                        oInitialParentElement = oEditor.ui.element.parentElement ?? oInitialParentElement;
-                        oEditor.ui.element.remove();
-                        document.body.append(oEditor.ui.element);
-                        document.body.classList.add('cke-maximized'); // Add class to body to prevent scrollbars
-                        oEditor.ui.element.classList.add('cke-maximized');
+                        if (sFullScreenMethod === 'native') { // portal
+                            oEditor.ui.element.requestFullscreen()
+                            oEditor.ui.element.classList.add('fullscreen-mode');
+                        }
+                        else { // console
+                            oInitialParentElement = oEditor.ui.element.parentElement ?? oInitialParentElement;
+                            oEditor.ui.element.remove();
+                            document.body.append(oEditor.ui.element);
+                            document.body.classList.add('cke-maximized'); // Add class to body to prevent scrollbars
+                            oEditor.ui.element.classList.add('cke-maximized');
+                            CKEditorPoweredButton.item(0)?.setAttribute('style', 'display: none');
+                        }
                         oButton.icon = sMinimizeIconSVG;
                     }
-
                     oButton.isOn = !oButton.isOn;
                 }
             });
