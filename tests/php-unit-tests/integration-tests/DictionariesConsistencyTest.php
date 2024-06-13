@@ -376,6 +376,9 @@ EOF
 			'precanned-replies-pro',
 			'precanned-replies',
 			'templates-base',
+			'combodo-backoffice-compact-themes',
+			'itop-assign-to-me',
+			'itop-icalendar-action',
 		];
 	}
 
