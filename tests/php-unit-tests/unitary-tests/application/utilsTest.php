@@ -29,6 +29,19 @@ use utils;
  */
 class utilsTest extends ItopTestCase
 {
+	protected function setUp(): void
+	{
+		parent::setUp();
+		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', 'https://localhost/itop/');
+	}
+
+	protected function tearDown(): void
+	{
+		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', null);
+		parent::tearDown();
+	}
+
+
 	public function testEndsWith()
 	{
 		$this->assertFalse(utils::EndsWith('a', 'bbbb'));
@@ -640,6 +653,7 @@ class utilsTest extends ItopTestCase
 	public function testGetMentionedObjectsFromText($sInput, $sFormat, $aExceptedMentionedObjects)
 	{
 		// Emulate the "Case provider mechanism" (reason: the data provider requires utils constants not available before the application startup)
+		echo "testGetMentionedObjectsFromText: input = $sInput\n";
 		$aTestedMentionedObjects = utils::GetMentionedObjectsFromText($sInput, $sFormat);
 
 		$sExpectedAsString = print_r($aExceptedMentionedObjects, true);
