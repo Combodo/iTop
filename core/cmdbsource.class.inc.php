@@ -29,100 +29,6 @@ use Combodo\iTop\Core\DbConnectionWrapper;
 require_once('MyHelpers.class.inc.php');
 require_once(APPROOT.'core/kpi.class.inc.php');
 
-class MySQLException extends CoreException
-{
-	/**
-	 * MySQLException constructor.
-	 *
-	 * @param string $sIssue
-	 * @param array $aContext
-	 * @param \Exception $oException
-	 * @param \mysqli $oMysqli to use when working with a custom mysqli instance
-	 */
-	public function __construct($sIssue, $aContext, $oException = null, $oMysqli = null)
-	{
-
-		if ($oException != null)
-		{
-			$aContext['mysql_errno'] = $oException->getCode();
-			$this->code = $oException->getCode();
-			$aContext['mysql_error'] = $oException->getMessage();
-		}
-		else if ($oMysqli != null)
-		{
-			$aContext['mysql_errno'] = $oMysqli->errno;
-			$this->code = $oMysqli->errno;
-			$aContext['mysql_error'] = $oMysqli->error;
-		}
-		else
-		{
-			$aContext['mysql_errno'] = CMDBSource::GetErrNo();
-			$this->code = CMDBSource::GetErrNo();
-			$aContext['mysql_error'] = CMDBSource::GetError();
-		}
-		parent::__construct($sIssue, $aContext);
-		//if is connection error, don't log the default message with password in
-		if (mysqli_connect_errno()) {
-			error_log($this->message);
-			error_reporting(0);
-		}
-	}
-}
-
-/**
- * Class MySQLQueryHasNoResultException
- *
- * @since 2.5.0
- */
-class MySQLQueryHasNoResultException extends MySQLException
-{
-
-}
-
-/**
- * Class MySQLHasGoneAwayException
- *
- * @since 2.5.0
- * @see itop bug 1195
- * @see https://dev.mysql.com/doc/refman/5.7/en/gone-away.html
- */
-class MySQLHasGoneAwayException extends MySQLException
-{
-	/**
-	 * can not be a constant before PHP 5.6 (http://php.net/manual/fr/language.oop5.constants.php)
-	 *
-	 * @return int[]
-	 */
-	public static function getErrorCodes()
-	{
-		return array(
-			2006,
-			2013,
-		);
-	}
-
-	public function __construct($sIssue, $aContext)
-	{
-		parent::__construct($sIssue, $aContext, null);
-	}
-}
-
-/**
- * @since 2.7.0 N°679
- */
-class MySQLNoTransactionException extends MySQLException
-{
-
-}
-
-/**
- * @since 2.7.8 3.0.3 3.1.0 N°5538
- */
-class MySQLTransactionNotClosedException extends MySQLException
-{
-
-}
-
 
 /**
  * CMDBSource
@@ -1263,8 +1169,8 @@ class CMDBSource
 	 */
 	public static function IsSameFieldTypes($sItopGeneratedFieldType, $sDbFieldType)
 	{
-		[$sItopFieldDataType, $sItopFieldTypeOptions, $sItopFieldOtherOptions] = static::GetFieldDataTypeAndOptions($sItopGeneratedFieldType);
-		[$sDbFieldDataType, $sDbFieldTypeOptions, $sDbFieldOtherOptions] = static::GetFieldDataTypeAndOptions($sDbFieldType);
+		list($sItopFieldDataType, $sItopFieldTypeOptions, $sItopFieldOtherOptions) = static::GetFieldDataTypeAndOptions($sItopGeneratedFieldType);
+		list($sDbFieldDataType, $sDbFieldTypeOptions, $sDbFieldOtherOptions) = static::GetFieldDataTypeAndOptions($sDbFieldType);
 
 		if (strcasecmp($sItopFieldDataType, $sDbFieldDataType) !== 0)
 		{
@@ -1697,19 +1603,7 @@ class CMDBSource
 		return false;
 	}
 
-    public static function GetClusterNb()
-    {
-        $result = 0;
-        $sSql = "SHOW STATUS LIKE 'wsrep_cluster_size';";
-        $aRows = self::QueryToArray($sSql);
-        if (count($aRows) > 0)
-        {
-            $result = $aRows[0]['Value'];
-        }
-        return intval($result);
-    }
-
-    /**
+	/**
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-database.html
 	 * @return string query to upgrade database charset and collation if needed, null if not
 	 * @throws \MySQLException
