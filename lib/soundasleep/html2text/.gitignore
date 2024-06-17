@@ -3,3 +3,5 @@ tests/*.output
 *.sublime-workspace
 vendor/
 **/*.DS_Store
+.phpunit.result.cache
+composer.lock

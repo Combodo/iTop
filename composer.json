@@ -35,7 +35,7 @@
     "tecnickcom/tcpdf": "^6.6.0",
     "thenetworg/oauth2-azure": "^2.0",
     "masterminds/html5": "^2.8.0",
-    "soundasleep/html2text": "~1.1"
+    "soundasleep/html2text": "~2.1"
   },
   "require-dev": {
     "symfony/debug-bundle": "~6.4.0",
