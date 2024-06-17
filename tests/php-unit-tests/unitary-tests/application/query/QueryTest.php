@@ -187,6 +187,11 @@ class QueryTest extends ItopDataTestCase
 		if (curl_errno($curl)) {
 			$info = curl_getinfo($curl);
 			var_export($info);
+			var_dump([
+				'url' => $url,
+				'app_root_url:' => MetaModel::GetConfig()->Get('app_root_url'),
+				'GetAbsoluteUrlAppRoot:' => \utils::GetAbsoluteUrlAppRoot(),
+			]);
 		}
 		// close curl
 		curl_close($curl);
