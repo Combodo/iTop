@@ -184,7 +184,10 @@ class QueryTest extends ItopDataTestCase
 
 		// execute curl
 		$result = curl_exec($curl);
-
+		if (curl_errno($curl)) {
+			$info = curl_getinfo($curl);
+			var_export($info);
+		}
 		// close curl
 		curl_close($curl);
 
