@@ -403,7 +403,7 @@ if (!class_exists('StructureInstaller'))
 			}
 
 			//N°824 - Fill object_class in EventNotification from the Triggers target_class
-			if (version_compare($sPreviousVersion, '3.3.0', '<')) {
+			if (version_compare($sPreviousVersion, '3.2.0', '<')) {
 				SetupLog::Info("Filling object_class in EventNotification from the Triggers target_class");
 				$iNbProcessed = 0;
 
@@ -422,12 +422,12 @@ if (!class_exists('StructureInstaller'))
 
 				$oSearch = DBObjectSearch::FromOQL('SELECT TriggerOnObject');
 				$oSet = new DBObjectSet($oSearch);
-				$aData = [];
+				$aTriggerIdToTargetClass = [];
 				while ($oTrigger = $oSet->Fetch()) {
-					$aData[$oTrigger->GetKey()] =  $oTrigger->Get('target_class');
+					$aTriggerIdToTargetClass[$oTrigger->GetKey()] =  $oTrigger->Get('target_class');
 				}
 
-				foreach ($aData as $sKey => $sTargetClass) {
+				foreach ($aTriggerIdToTargetClass as $sKey => $sTargetClass) {
 
 					if (MetaModel::HasChildrenClasses($sTargetClass)) {
 						//in this case, we have toget the name of the final class
