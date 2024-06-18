@@ -25,6 +25,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 use Query;
 use QueryOQL;
+use utils;
 
 /**
  * This test creates call export on requests and check request usage counter.
@@ -48,6 +49,7 @@ class QueryTest extends ItopDataTestCase
 	public function setUp(): void
 	{
 		parent::setUp();
+		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', null);
 
 		// create export user
 		$this->CreateExportUser();
