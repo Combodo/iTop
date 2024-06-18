@@ -35,7 +35,8 @@ $(function()
 					me.element.addClass('has-error');
 					for(var i in oResult.error_messages)
 					{
-						me.element.find('.help-block').append($('<p>' + oResult.error_messages[i] + '</p>'));
+						// transform error message in pure text to avoid XSS
+						me.element.find('.help-block').append($('<p>').text(oResult.error_messages[i]));
 					}
 				}
 			}	

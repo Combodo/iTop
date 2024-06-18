@@ -53,7 +53,6 @@ class MultipleChoicesValidator extends AbstractValidator
     private function CheckValueAgainstChoices(string $sValue, array &$aErrorMessages): void
     {
         if (false === array_key_exists($sValue, $this->aChoices)) {
-	        $sValue = utils::HtmlEntities($sValue);
 	        $aErrorMessages[] = "Value ({$sValue}) is not part of the field possible values list";
         }
     }

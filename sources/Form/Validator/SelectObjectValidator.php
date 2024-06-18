@@ -37,7 +37,6 @@ class SelectObjectValidator extends AbstractValidator
         $iObjectsCount = $oSetForExistingCurrentValue->CountWithLimit(1);
 
         if ($iObjectsCount === 0) {
-			$value = utils::HtmlEntities($value);
             return ["Value $value does not match the corresponding filter set"];
         }
 
