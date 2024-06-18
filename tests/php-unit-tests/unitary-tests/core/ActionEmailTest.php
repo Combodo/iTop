@@ -4,10 +4,10 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use ActionEmail;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Dict;
 use Exception;
 use MetaModel;
 use utils;
-use Dict;
 
 /**
  * @covers \ActionEmail
@@ -34,8 +34,6 @@ class ActionEmailTest extends ItopDataTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-
-		$this->RequireOnceItopFile('application/Html2Text.php');
 
 		static::$oActionEmail = MetaModel::NewObject('ActionEmail', [
 			'name' => 'Test action',
