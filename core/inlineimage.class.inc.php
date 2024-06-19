@@ -445,8 +445,8 @@ JS
 				
 			$fScale = min($iMaxImageSize / $iWidth, $iMaxImageSize / $iHeight);
 	
-			$iNewWidth = $iWidth * $fScale;
-			$iNewHeight = $iHeight * $fScale;
+			$iNewWidth = (int) ($iWidth * $fScale);
+			$iNewHeight = (int) ($iHeight * $fScale);
 			
 			$aDimensions['width'] = $iNewWidth;
 			$aDimensions['height'] = $iNewHeight;

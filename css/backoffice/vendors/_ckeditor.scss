@@ -40,6 +40,16 @@ $ibo-vendors-ckeditor--ck-text-huge-font-size: $ibo-font-size-350;
   --ck-text-huge-font-size: #{$ibo-vendors-ckeditor--ck-text-huge-font-size};
 }
 
+/* Base style */
+.ck-editor {
+  width: 100% !important; /* Force editor to always take its container full width (not less, not more) */
+  display: inline-grid; /* Force editor to always take its container full width (not less, not more) */
+
+  .ck-editor__main {
+    overflow: auto;
+  }
+}
+
 .ck-editor__editable_inline:not(.ck-comment__input *) {
   height: 200px;
 }
@@ -55,9 +65,8 @@ $ibo-vendors-ckeditor--ck-text-huge-font-size: $ibo-font-size-350;
   display: flex;
   flex-direction: column;
 
-  .ck.ck-editor__main{
+  .ck-editor__main{
     flex-grow: 1;
-    overflow: auto;
   }
   .ck-editor__editable_inline:not(.ck-comment__input *){
     height: 100% !important; /* !important to overload inline style from configuration.height */
