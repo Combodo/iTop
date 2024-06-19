@@ -2068,7 +2068,7 @@ SQL;
 	{
 		try {
 			//return '<?xml encoding="UTF-8">'.$sHtml;
-			return Html2Text::convert('<?xml encoding="UTF-8">'.$sHtml);
+			return Html2Text::convert('<?xml encoding="UTF-8">'.$sHtml, ['ignore_errors' => true]);
 		}
 		catch (Exception $e) {
 			return $e->getMessage();
