@@ -1418,8 +1418,6 @@ EOF
 
 	public static function AsyncCheckDB($oPage, $aParameters)
 	{
-        SetupPage::log('Info - CheckDB');
-
 		$sDBServer = $aParameters['db_server'];
 		$sDBUser = $aParameters['db_user'];
 		$sDBPwd = $aParameters['db_pwd'];
