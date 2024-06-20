@@ -41,16 +41,11 @@ if (!defined('MODULESROOT'))
 	require_once APPROOT.'/application/startup.inc.php';
 }
 
-// Load cached env vars if the .env.local.php file exists
-// Run "composer dump-env prod" to create it (requires symfony/flex >=1.2)
-if (file_exists(dirname(__DIR__).'/.env.local.php')) {
-	if (is_array($sEnv = @include dirname(__DIR__).'/.env.local.php')) {
-		$_ENV += $sEnv;
-	}
-} elseif (!class_exists(Dotenv::class)) {
+// Load cached env vars if the .env.local file exists
+if (!class_exists(Dotenv::class)) {
 	throw new RuntimeException('Please run "composer require symfony/dotenv" to load the ".env" files configuring the application.');
 } else {
-	$sPath = dirname(__DIR__).'/.env';
+	$sPath = file_exists(dirname(__DIR__).'/.env.local') ? dirname(__DIR__).'/.env.local' : dirname(__DIR__).'/.env';
 	$oDotenv = new Dotenv();
 	$oDotenv->usePutenv();
 
