@@ -13,6 +13,7 @@ use CorePortalInvalidActionRuleException;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
+use DBProperty;
 use DBSearch;
 use DeprecatedCallsLog;
 use DOMFormatException;
@@ -20,8 +21,10 @@ use DOMNodeList;
 use Exception;
 use FieldExpression;
 use IssueLog;
+use MetaModel;
 use ModuleDesign;
 use ScalarExpression;
+use SimpleCrypt;
 use Symfony\Component\Routing\RouterInterface;
 use TrueExpression;
 use UserRights;
@@ -48,6 +51,8 @@ class ContextManipulatorHelper
 	const ENUM_RULE_CALLBACK_OPEN_EDIT = 'edit';
 	/** @var string DEFAULT_RULE_CALLBACK_OPEN */
 	const DEFAULT_RULE_CALLBACK_OPEN = self::ENUM_RULE_CALLBACK_OPEN_VIEW;
+
+	const PRIVATE_KEY = 'portal-priv-key';
 
 	/** @var array $aRules */
 	protected $aRules;
@@ -524,8 +529,12 @@ class ContextManipulatorHelper
 	 */
 	public static function EncodeRulesToken($aTokenRules)
 	{
-		// Returning tokenised data
-		return base64_encode(json_encode($aTokenRules));
+		$aTokenRules['user_id'] = UserRights::GetUserId();
+		$aTokenRules['salt'] = base64_encode(random_bytes(8));
+
+		$sPPrivateKey = self::GetPrivateKey();
+		$oCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
+		return base64_encode($oCrypt->Encrypt($sPPrivateKey, json_encode($aTokenRules)));
 	}
 
 	/**
@@ -549,9 +558,47 @@ class ContextManipulatorHelper
 	 * @param string $sToken
 	 *
 	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public static function DecodeRulesToken($sToken)
 	{
-		return json_decode(base64_decode($sToken), true);
+		$sPrivateKey = self::GetPrivateKey();
+		$oCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
+		$sDecryptedToken = $oCrypt->Decrypt($sPrivateKey, base64_decode($sToken));
+
+		$aTokenRules = json_decode($sDecryptedToken, true);
+		if (!is_array($aTokenRules))
+		{
+			throw new Exception('DecodeRulesToken not a proper json structure.');
+		}
+
+		// Verify user id
+		if ($aTokenRules['user_id'] !== UserRights::GetUserId())
+		{
+			throw new Exception('DecodeRulesToken user id does not match.');
+		}
+
+		return $aTokenRules;
+	}
+
+
+	/**
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	private static function GetPrivateKey()
+	{
+		$sPrivateKey = DBProperty::GetProperty(self::PRIVATE_KEY);
+		if (is_null($sPrivateKey)) {
+			$sPrivateKey = bin2hex(random_bytes(32));
+			DBProperty::SetProperty(self::PRIVATE_KEY, $sPrivateKey);
+		}
+
+		return $sPrivateKey;
 	}
 }
