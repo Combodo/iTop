@@ -314,6 +314,14 @@ function BlockField(field_id, bBlocked) {
 	}
 }
 
+function BlockFieldElement(element, bBlocked) {
+	if (bBlocked) {
+		element.block({message: '', enableValidation : true, baseZ: 9999, overlayCSS:  { backgroundColor: '#ccd6e066'}});
+	} else {
+		element.unblock();
+	}
+}
+
 /**
  * Updates (enables/disables) a "duration" field
  */

@@ -1,6 +1,12 @@
 import { Plugin } from '@ckeditor/ckeditor5-core';
 import {ClassicEditor} from "@ckeditor/ckeditor5-editor-classic";
 
+interface BlockFieldInterface{
+    (element:HTMLElement, isBlocked: boolean):any;
+}
+
+declare var BlockFieldElement: BlockFieldInterface;
+
 export default class Disabler extends Plugin {
 
     static get pluginName() {
@@ -36,11 +42,7 @@ export default class Disabler extends Plugin {
         // @ts-ignore
         const oElement = $(oEditor.ui.element);
         if(typeof oElement.block === 'function') {
-            if (oInputElement.disabled) {
-                oElement.block({message: '', blockMsgClass: '', enableValidation : true, baseZ: 9999, overlayCSS:  { backgroundColor: '#ccd6e066'}});
-            } else {
-                oElement.unblock();
-            }
+            BlockFieldElement(oElement, oInputElement.disabled);
         }
 
         // handle ckeditor read only mode
