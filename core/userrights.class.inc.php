@@ -1264,17 +1264,11 @@ class UserRights
 	{
 		$sUserPicturesFolder = 'images/user-pictures/';
 		$sUserPicturePlaceholderPrefKey = 'user_picture_placeholder';
+		$sPictureUrl = null;
 
 		// First, check cache
 		if (array_key_exists($sLogin, static::$m_aCacheContactPictureAbsUrl)) {
 			return static::$m_aCacheContactPictureAbsUrl[$sLogin];
-		}
-
-		// Then, the default picture
-		if ($bAllowDefaultPicture === true) {
-			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.'user-profile-default-256px.png';
-		} else {
-			$sPictureUrl = null;
 		}
 
 		// Then check if the user has a contact attached and if it has an picture defined
@@ -1322,6 +1316,11 @@ class UserRights
 			}
 		}
 		// Else, no contact and no login, then it's for an unknown origin (system, extension, ...)
+
+		// Then, the default picture
+		if (utils::IsNullOrEmptyString($sPictureUrl) && $bAllowDefaultPicture === true) {
+			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.'user-profile-default-256px.png';
+		}
 
 		// Update cache
 		static::$m_aCacheContactPictureAbsUrl[$sLogin] = $sPictureUrl;

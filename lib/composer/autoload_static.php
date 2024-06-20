@@ -74,6 +74,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
             'Symfony\\Bundle\\FrameworkBundle\\' => 31,
             'Symfony\\Bundle\\DebugBundle\\' => 27,
             'Symfony\\Bridge\\Twig\\' => 20,
+            'Soundasleep\\' => 12,
             'ScssPhp\\ScssPhp\\' => 16,
             'Sabberworm\\CSS\\' => 15,
         ),
@@ -274,6 +275,10 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Symfony\\Bridge\\Twig\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/twig-bridge',
+        ),
+        'Soundasleep\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/soundasleep/html2text/src',
         ),
         'ScssPhp\\ScssPhp\\' => 
         array (
@@ -1129,8 +1134,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'HTMLDOMSanitizer' => __DIR__ . '/../..' . '/core/htmlsanitizer.class.inc.php',
         'HTMLNullSanitizer' => __DIR__ . '/../..' . '/core/htmlsanitizer.class.inc.php',
         'HTMLSanitizer' => __DIR__ . '/../..' . '/core/htmlsanitizer.class.inc.php',
-        'Html2Text\\Html2Text' => __DIR__ . '/../..' . '/application/Html2Text.php',
-        'Html2Text\\Html2TextException' => __DIR__ . '/../..' . '/application/Html2TextException.php',
         'ITopArchiveTar' => __DIR__ . '/../..' . '/core/tar-itop.class.inc.php',
         'InlineImage' => __DIR__ . '/../..' . '/core/inlineimage.class.inc.php',
         'InlineImageGC' => __DIR__ . '/../..' . '/core/inlineimage.class.inc.php',
@@ -2029,6 +2032,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'SimpleCryptSodiumEngine' => __DIR__ . '/../..' . '/core/simplecrypt.class.inc.php',
         'SimpleGraph' => __DIR__ . '/../..' . '/core/simplegraph.class.inc.php',
         'SimpleGraphException' => __DIR__ . '/../..' . '/core/simplegraph.class.inc.php',
+        'Soundasleep\\Html2Text' => __DIR__ . '/..' . '/soundasleep/html2text/src/Html2Text.php',
+        'Soundasleep\\Html2TextException' => __DIR__ . '/..' . '/soundasleep/html2text/src/Html2TextException.php',
         'SpreadsheetBulkExport' => __DIR__ . '/../..' . '/core/spreadsheetbulkexport.class.inc.php',
         'StimulusChecker' => __DIR__ . '/../..' . '/core/userrights.class.inc.php',
         'StimulusInternal' => __DIR__ . '/../..' . '/core/stimulus.class.inc.php',

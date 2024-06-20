@@ -252,7 +252,8 @@ $(function()
 										}
 										else
 										{
-											oHelpBlock.append($('<p>' + sMessageContent + '</p>'));
+											// transform error message in pure text (to avoid XSS)
+											oHelpBlock.append($('<p>').text(sMessageContent));
 										}
 									}
 								}

@@ -64,6 +64,9 @@ class iTopComposer extends AbstractFolderAnalyzer
 
 			'psr/log/Psr/Log/Test',
 
+			'soundasleep/html2text/.github',
+			'soundasleep/html2text/tests',
+
 			'symfony/cache/Tests',
 			'symfony/cache/Tests/DoctrineProviderTest.php',
 			'symfony/class-loader/Tests',

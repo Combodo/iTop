@@ -70,12 +70,24 @@ class UIHTMLEditorWidget
 		$sValue = $this->m_sValue;
 		$sHelpText = $this->m_sHelpText;
 		$sValidationField = $this->m_sValidationField;
+		$aConfig = [];
 
 		$sEncodedValue = CKEditorHelper::PrepareCKEditorValueTextEncodingForTextarea($sValue);
 		$sHtmlValue = "<div class=\"field_input_zone field_input_html ibo-input-wrapper\"><textarea class=\"htmlEditor ibo-input-richtext-placeholder\" title=\"$sHelpText\" name=\"attr_{$this->m_sFieldPrefix}{$sCode}\" id=\"$iId\">$sEncodedValue</textarea></div>$sValidationField";
 
+		// Prepare CKEditor size
+		$sWidthSpec = addslashes(trim($this->m_oAttDef->GetWidth()));
+		if ($sWidthSpec != '') {
+			/* N°6543 - the function min allow to keep text inside the column when width is defined*/
+			$aConfig['width'] = "min($sWidthSpec,100%)";
+		}
+		$sHeightSpec = addslashes(trim($this->m_oAttDef->GetHeight()));
+		if ($sHeightSpec != '') {
+			$aConfig['height'] = $sHeightSpec;
+		}
+
 		// Enable CKEditor
-		CKEditorHelper::ConfigureCKEditorElementForWebPage($oPage, $iId, $sValue, true);
+		CKEditorHelper::ConfigureCKEditorElementForWebPage($oPage, $iId, $sValue, true, $aConfig);
 
 		// Could also be bound to 'instanceReady.ckeditor'
 		$oPage->add_ready_script("$('#$iId').on('validate', function(evt, sFormId) { return ValidateCKEditField('$iId', '', {$this->m_sMandatory}, sFormId, '') } );\n");
