@@ -529,7 +529,6 @@ class ContextManipulatorHelper
 	 */
 	public static function EncodeRulesToken($aTokenRules)
 	{
-		$aTokenRules['user_id'] = UserRights::GetUserId();
 		$aTokenRules['salt'] = base64_encode(random_bytes(8));
 
 		$sPPrivateKey = self::GetPrivateKey();
@@ -573,12 +572,6 @@ class ContextManipulatorHelper
 		if (!is_array($aTokenRules))
 		{
 			throw new Exception('DecodeRulesToken not a proper json structure.');
-		}
-
-		// Verify user id
-		if ($aTokenRules['user_id'] !== UserRights::GetUserId())
-		{
-			throw new Exception('DecodeRulesToken user id does not match.');
 		}
 
 		return $aTokenRules;
