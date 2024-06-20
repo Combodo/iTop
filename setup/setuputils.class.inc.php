@@ -1299,7 +1299,7 @@ EOF
 
             $iClusters = $oDBSource->GetClusterNb();
             if ($iClusters > 0) {
-                SetupLog::Warning('Warning - Galera can lead to malfunctions and data corruption. Combodo does not support this type of infrastructure.');
+                SetupLog::Warning('Warning - Using Galera will cause malfunctions and data corruptions. Combodo does not support this type of infrastructure.');
                 $aResult['checks'][] = new CheckResult(CheckResult::WARNING, 'Galera can lead to malfunctions and data corruption. Combodo does not support this type of infrastructure.');
             }
 
