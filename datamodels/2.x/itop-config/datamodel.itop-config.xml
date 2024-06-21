@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
   <menus>
-    <menu id="ConfigEditor" xsi:type="WebPageMenuNode" _delta="define">
+    <menu id="ConfigFileEditor" xsi:type="WebPageMenuNode" _delta="define">
       <rank>10</rank>
-      <parent>ConfigurationTools</parent>
+      <parent>ConfigEditor</parent>
       <url>config.php</url>
       <enable_admin_only>1</enable_admin_only>
     </menu>

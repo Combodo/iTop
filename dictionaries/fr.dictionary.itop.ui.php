@@ -315,6 +315,8 @@ Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audi
 	'Menu:CSVImportMenu' => 'Import CSV',
 	'Menu:CSVImportMenu+' => 'Import ou mise à jour en masse',
 	'Menu:ConfigurationTools' => 'Configuration',
+	'Menu:ConfigEditor'       => 'Configuration générale',
+	'Menu:ConfigEditor+'      => 'Édition du fichier de configuration',
 	'Menu:DataAdministration' => 'Administration des données',
 	'Menu:DataAdministration+' => 'Administration des données',
 	'Menu:DataModelMenu' => 'Modèle de données',
