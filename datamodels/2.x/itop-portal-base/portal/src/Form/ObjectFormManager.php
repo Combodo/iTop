@@ -1148,7 +1148,7 @@ class ObjectFormManager extends FormManager
 			{
 				$this->oObject->DBWrite();
 			} catch (CoreCannotSaveObjectException $e) {
-				throw new Exception($e->getHtmlMessage());
+				throw new Exception($e->getTextMessage());
 			} catch (InvalidExternalKeyValueException $e) {
 				ExceptionLog::LogException($e, $e->getContextData());
 				$bExceptionLogged = true;
