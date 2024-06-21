@@ -1148,7 +1148,7 @@ class ObjectFormManager extends FormManager
 			{
 				$this->oObject->DBWrite();
 			} catch (CoreCannotSaveObjectException $e) {
-				throw new Exception($e->getHtmlMessage());
+				throw new Exception($e->getTextMessage());
 			} catch (InvalidExternalKeyValueException $e) {
 				ExceptionLog::LogException($e, $e->getContextData());
 				$bExceptionLogged = true;
@@ -1224,7 +1224,7 @@ class ObjectFormManager extends FormManager
 		}
 		catch (CoreCannotSaveObjectException $e) {
 			$aData['valid'] = false;
-			$aData['messages']['error'] += array('_main' => array($e->getHtmlMessage()));
+			$aData['messages']['error'] += array('_main' => array($e->getTextMessage()));
 			if (false === $bExceptionLogged) {
 				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : '.$e->getMessage());
 			}
@@ -1232,7 +1232,7 @@ class ObjectFormManager extends FormManager
 		catch (Exception $e) {
 			$aData['valid'] = false;
 			$aData['messages']['error'] += [
-				'_main' => [ ($e instanceof CoreCannotSaveObjectException) ? $e->getHtmlMessage() : $e->getMessage()]
+				'_main' => [ ($e instanceof CoreCannotSaveObjectException) ? $e->getTextMessage() : $e->getMessage()]
 			];
 			if (false === $bExceptionLogged) {
 				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : '.$e->getMessage());
