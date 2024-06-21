@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('FR FR', 'French', 'Français', [
-	'Menu:ConfigFileEditor' => 'Éditeur de configuration',
+	'Menu:ConfigFileEditor' => 'Éditeur de texte brut',
 	'config-apply' => 'Enregistrer',
 	'config-apply-title' => 'Enregistrer (Ctrl+S)',
 	'config-cancel' => 'Annuler (restaurer)',

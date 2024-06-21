@@ -1713,6 +1713,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Queries'                => 'Queries',
 	'Menu:ConfigurationTools'     => 'Configuration',
 	'Menu:ConfigEditor'           => 'General configuration',
-	'Menu:ConfigEditor+'          => 'File based configuration editors',
+	'Menu:ConfigEditor+'          => 'Configuration File editors',
 
 ));
