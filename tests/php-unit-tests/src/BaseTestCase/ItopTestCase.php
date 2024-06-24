@@ -86,23 +86,6 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
-	 * Helper to load a module file. The caller test must be in that module !
-	 * Will browse dir up to find a module.*.php
-	 *
-	 * @param string $sFileRelPath for example 'portal/src/Helper/ApplicationHelper.php'
-	 * @since 2.7.10 3.1.1 3.2.0 N°6709 method creation
-	 */
-	protected function RequireOnceCurrentModuleFile(string $sFileRelPath): void
-	{
-		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
-		$sCallerFileFullPath = $aStack[0]['file'];
-		$sCallerDir = dirname($sCallerFileFullPath);
-
-		$sModuleRootPath = static::GetFirstDirUpContainingFile($sCallerDir, 'module.*.php');
-		require_once $sModuleRootPath . $sFileRelPath;
-	}
-
-	/**
 	 * Require once a unit test file (eg. a mock class) from its relative path from the *current* dir.
 	 * This ensure that required files don't crash when unit tests dir is moved in the iTop structure (see N°5608)
 	 *
@@ -119,26 +102,6 @@ abstract class ItopTestCase extends TestCase
 		require_once $sCallerDirAbsPath . DIRECTORY_SEPARATOR . $sFileRelPath;
 	}
 
-	private static function GetFirstDirUpContainingFile(string $sSearchPath, string $sFileToFindGlobPattern): ?string
-	{
-		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
-			$aGlobFiles = glob($sSearchPath . '/' . $sFileToFindGlobPattern);
-			if (is_array($aGlobFiles) && (count($aGlobFiles) > 0)) {
-				return $sSearchPath . '/';
-			}
-			$iOffsetSep = strrpos($sSearchPath, '/');
-			if ($iOffsetSep === false) {
-				$iOffsetSep = strrpos($sSearchPath, '\\');
-				if ($iOffsetSep === false) {
-					// Do not throw an exception here as PHPUnit will not show it clearly when determing the list of test to perform
-					return 'Could not find the approot file in ' . $sSearchPath;
-				}
-			}
-			$sSearchPath = substr($sSearchPath, 0, $iOffsetSep);
-		}
-		return null;
-	}
-
 	protected function debug($sMsg)
 	{
 		if (DEBUG_UNIT_TEST) {
@@ -153,7 +116,7 @@ abstract class ItopTestCase extends TestCase
 
 	public function GetMicroTime()
 	{
-		list($uSec, $sec) = explode(" ", microtime());
+		[$uSec, $sec] = explode(" ", microtime());
 		return ((float)$uSec + (float)$sec);
 	}
 
@@ -195,7 +158,7 @@ abstract class ItopTestCase extends TestCase
 	/**
 	 * @param string $sObjectClass for example DBObject::class
 	 * @param string $sMethodName
-	 * @param object $oObject
+	 * @param object|null $oObject
 	 * @param array $aArgs
 	 *
 	 * @return mixed method result
@@ -238,7 +201,7 @@ abstract class ItopTestCase extends TestCase
 	 * @throws \ReflectionException
 	 * @since 2.7.8 3.0.3 3.1.0
 	 */
-	public function GetNonPublicProperty(object $oObject, string $sProperty)
+	public function GetNonPublicProperty($oObject, string $sProperty)
 	{
 		$oProperty = $this->GetProperty(get_class($oObject), $sProperty);
 
@@ -307,7 +270,7 @@ abstract class ItopTestCase extends TestCase
 	 * @throws \ReflectionException
 	 * @since 2.7.8 3.0.3 3.1.0
 	 */
-	public function SetNonPublicProperty(object $oObject, string $sProperty, $value)
+	public function SetNonPublicProperty($oObject, string $sProperty, $value)
 	{
 		$oProperty = $this->GetProperty(get_class($oObject), $sProperty);
 		$oProperty->setValue($oObject, $value);
