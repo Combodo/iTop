@@ -95,7 +95,14 @@ $(function()
 						value = $(oElem).val();
 					}
 				}
-				else if($(oElem).is(':checkbox') || $(oElem).is(':radio'))
+				else if( $(oElem).is(':radio'))
+				{
+					if($(oElem).is(':checked'))
+					{
+						value =$(oElem).val();
+					}
+				}
+				else if($(oElem).is(':checkbox'))
 				{
 					if(value === null)
 					{
