@@ -374,6 +374,27 @@ class CRUDEventTest extends ItopDataTestCase
 		$this->assertStringStartsWith('CRUD', $oPerson->Get('first_name'), 'The object should have been modified and recorded in DB by EVENT_DB_AFTER_WRITE handler');
 	}
 
+	public function testAfterDeleteObjectAttributesExceptLinkedSetAreUsable()
+	{
+		$oPerson = 	$this->createObject('Person', [
+			'name' => 'Person_1',
+			'first_name' => 'Test',
+			'org_id' => $this->getTestOrgId(),
+		]);
+
+		$oFetchPerson = MetaModel::GetObject('Person', $oPerson->GetKey());
+
+		$oEventReceiver = new CRUDEventReceiver($this);
+		// Set the person's first name during Compute Values
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_DELETE, Person::class, 'GetObjectAttributesValues');
+		$oEventReceiver->RegisterCRUDEventListeners(EVENT_DB_AFTER_DELETE);
+		$oEventReceiver->RegisterCRUDEventListeners(EVENT_DB_OBJECT_RELOAD);
+
+		$oFetchPerson->DBDelete();
+
+		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_AFTER_DELETE], 'EVENT_DB_AFTER_DELETE must be called when deleting an object and the object attributes must remain accessible');
+	}
+
 	/**
 	 * Modify one object during EVENT_DB_AFTER_WRITE
 	 * Check that the CRUD is protected against infinite loops (when modifying an object in its EVENT_DB_AFTER_WRITE)
@@ -879,6 +900,20 @@ class CRUDEventReceiver extends ClassesWithDebug
 		$this->Debug(__METHOD__);
 		$oObject = $oData->Get('object');
 		$oObject->Set('first_name', 'CRUD_first_name_'.rand());
+	}
+
+	/**
+	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
+	 */
+	private function GetObjectAttributesValues(EventData $oData): void
+	{
+		$this->Debug(__METHOD__);
+		$oObject = $oData->Get('object');
+		foreach (MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef) {
+			if (!$oAttDef->IsLinkSet()) {
+				$oObject->Get($sAttCode);
+			}
+		}
 	}
 
 	/**
