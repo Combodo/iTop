@@ -1712,5 +1712,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:UserManagement'         => 'User management',
 	'Menu:Queries'                => 'Queries',
 	'Menu:ConfigurationTools'     => 'Configuration',
+	'Menu:ConfigEditor'           => 'General configuration',
+	'Menu:ConfigEditor+'          => 'Configuration File editors',
 
 ));

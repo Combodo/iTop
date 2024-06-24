@@ -64,9 +64,6 @@ class iTopNewsroomController extends Controller
 		$oBulkActionsBlock = PanelUIBlockFactory::MakeForInformation(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Title'));
 		$oBulkActionsBlock->AddSubTitleBlock(new Html(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:SubTitle')));
 		$sPictureUrl = UserRights::GetUserPictureAbsUrl();
-		if (empty($sPictureUrl)) {
-			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/'.appUserPreferences::GetPref('user_picture_placeholder', 'user-profile-default-256px.png');
-		}
 		$oBulkActionsBlock->SetIcon($sPictureUrl,Panel::ENUM_ICON_COVER_METHOD_CONTAIN, true);
 
 		$oNotificationsCenterButton = ButtonUIBlockFactory::MakeIconLink(

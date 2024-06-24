@@ -63,9 +63,6 @@ class NotificationsCenterController extends Controller
 
 		$oNotificationsPanel->AddSubTitleBlock(new Html(Dict::S('UI:NotificationsCenter:Panel:SubTitle')));
 		$sPictureUrl = UserRights::GetUserPictureAbsUrl();
-		if (empty($sPictureUrl)) {
-			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/'.appUserPreferences::GetPref('user_picture_placeholder', 'user-profile-default-256px.png');
-		}
 		$oNotificationsPanel->SetIcon($sPictureUrl,Panel::ENUM_ICON_COVER_METHOD_CONTAIN, true);
 
 		$oNotificationsCenterTableColumns = [

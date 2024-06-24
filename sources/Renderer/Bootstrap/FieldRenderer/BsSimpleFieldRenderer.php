@@ -676,7 +676,7 @@ HTML
 	    <div class="caselog-thread--block-medallion" style="{$sEntryMedallionStyle}" data-tooltip-content="{$sEntryMedallionTooltip}" data-placement="{$sEntryMedallionTooltipPlacement}">
 	        $sEntryMedallionContent
 	    </div>
-	    <div class="caselog-thread--block-user">{$sEntryUserLogin}</div>
+	    <div class="caselog-thread--block-user">{$sEntryMedallionTooltip}</div>
 HTML
 					);
 
