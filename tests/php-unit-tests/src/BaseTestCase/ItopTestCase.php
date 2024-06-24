@@ -169,6 +169,27 @@ abstract class ItopTestCase extends TestCase
 		return $sAppRootPath . '/';
 	}
 
+	private static function GetFirstDirUpContainingFile(string $sSearchPath, string $sFileToFindGlobPattern): ?string
+	{
+		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
+			$aGlobFiles = glob($sSearchPath . '/' . $sFileToFindGlobPattern);
+			if (is_array($aGlobFiles) && (count($aGlobFiles) > 0)) {
+				return $sSearchPath . '/';
+			}
+			$iOffsetSep = strrpos($sSearchPath, '/');
+			if ($iOffsetSep === false) {
+				$iOffsetSep = strrpos($sSearchPath, '\\');
+				if ($iOffsetSep === false) {
+					// Do not throw an exception here as PHPUnit will not show it clearly when determing the list of test to perform
+					return 'Could not find the approot file in ' . $sSearchPath;
+				}
+			}
+			$sSearchPath = substr($sSearchPath, 0, $iOffsetSep);
+		}
+		return null;
+	}
+
+
 	/**
 	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceItopFile()}
 	 *
