@@ -4,9 +4,7 @@
 
 {% UIContentBlock Standard {'aContainerClasses':['ibo-update-core']} %}
 
-    {% UITitle ForPage {'sTitle':'iTopUpdate:UI:PageTitle'|dict_s} %}{% EndUITitle %}
-
-    <div class="ibo-v-spacer">&nbsp;</div>
+    {% UIPanel Neutral {sTitle:'iTopUpdate:UI:PageTitle'|dict_s} %}
 
     {% UIContentBlock Standard {'aContainerClasses': ['display_block', 'display-files']} %}
         {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Status'|dict_s} %}
@@ -100,6 +98,8 @@
         {% EndUIFieldSet %}
 
     {% EndUIContentBlock %}
+
+    {% EndUIPanel %}
 
 {% EndUIContentBlock %}
 {% endapply %}
