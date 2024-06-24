@@ -6852,6 +6852,9 @@ abstract class MetaModel
 	/**
 	 * Instantiate an object already persisted to the Database.
 	 *
+	 * Note that LinkedSet attributes are not loaded.
+	 * DBObject::Reload() will be called when getting a LinkedSet attribute
+	 *
 	 * @api
 	 * @see MetaModel::GetObjectWithArchive to get object even if it's archived
 	 * @see utils::PushArchiveMode() to enable search on archived objects
