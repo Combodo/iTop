@@ -178,10 +178,6 @@ class Editor extends ClassicEditor {
                 'resizeImage:50',
                 'resizeImage:original',
 				'|',
-                'imageStyle:alignLeft',
-                'imageStyle:alignCenter',
-                'imageStyle:alignRight',
-				'|',
                 'toggleImageCaption',
 			],
 			resizeOptions: [
