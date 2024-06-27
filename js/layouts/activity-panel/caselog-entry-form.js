@@ -80,7 +80,7 @@ $(function() {
 			},
 			_bindEvents: async function () {
 				let me = this;
-				let CKEditorInstance = await this._GetCKEditorInstance();
+				let CKEditorInstance = this._GetCKEditorInstance();
 				// Handlers for the CKEditor itself
 				// Handle only the current CKEditor instance
 				// if (oEvent.editor.name !== me.options.text_input_id) {
@@ -91,7 +91,7 @@ $(function() {
 				// Note: That when images are uploaded, the "change" event is triggered before the image upload is complete, meaning that we don't have the <img> tag yet.
 				CKEditorInstance.model.document.on('change:data', async function () {
 					const bWasDraftBefore = me.is_draft;
-					const bIsDraftNow = !(await me._IsInputEmpty());
+					const bIsDraftNow = !(me._IsInputEmpty());
 					if (bWasDraftBefore !== bIsDraftNow) {
 						me.is_draft = bIsDraftNow;
 						me._UpdateEditingVisualHint();
@@ -198,12 +198,8 @@ $(function() {
 				this.element.trigger('requested_submission.caselog_entry_form.itop', oData);
 			},
 			// - Form
-			_GetCKEditorInstance: async function () {
-				// if(this.element.find('#' + this.options.text_input_id + ' ~ .ck .ck-editor__editable')[0] === undefined){
-				// 	return undefined;
-				// }
-				return await CombodoCKEditorHandler.GetInstance('#'+this.options.text_input_id);
-				//return this.element.find('#' + this.options.text_input_id + ' ~ .ck .ck-editor__editable')[0].ckeditorInstance;
+			_GetCKEditorInstance: function () {
+				return CombodoCKEditorHandler.GetInstanceSynchronous('#'+this.options.text_input_id);
 			},
 			_ShowEntryForm: function () {
 				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.form).removeClass(this.css_classes.is_closed);
@@ -219,13 +215,13 @@ $(function() {
 			_EnableSubmission: function () {
 				this.element.find(this.js_selectors.save_button+', '+this.js_selectors.save_choices_picker).prop('disabled', false);
 			},
-			_EnterPendingSubmissionState: async function () {
-				(await this._GetCKEditorInstance()).enableReadOnlyMode('hi');
+			_EnterPendingSubmissionState: function () {
+				this._GetCKEditorInstance().enableReadOnlyMode('hi');
 				this.element.find(this.js_selectors.cancel_button).prop('disabled', true);
 				this._DisableSubmission();
 			},
-			_LeavePendingSubmissionState: async function () {
-				(await this._GetCKEditorInstance()).disableReadOnlyMode('hi');
+			_LeavePendingSubmissionState: function () {
+				this._GetCKEditorInstance().disableReadOnlyMode('hi');
 				this.element.find(this.js_selectors.cancel_button).prop('disabled', false);
 				this._EnableSubmission();
 			},
@@ -276,29 +272,27 @@ $(function() {
 			 * @returns {void}
 			 * @private
 			 */
-			_UpdateBridgeInput: async function () {
+			_UpdateBridgeInput: function () {
 				const sCaseLogAttCode = this.element.closest(this.js_selectors.activity_panel_toolbar).attr('data-caselog-attribute-code');
 				let oBridgeInputElem = this._GetGeneralFormElement().find('input[name="attr_'+sCaseLogAttCode+'"]');
 
-				oBridgeInputElem.val(await this._GetInputData());
+				oBridgeInputElem.val(this._GetInputData());
 			},
 			// - Input zone
 			_EmptyInput: function() {
-				this._GetCKEditorInstance().then((oEditor) => {
-					oEditor.setData('');
-					this._UpdateEditingVisualHint();
-				});
+				this._GetCKEditorInstance().setData('');
+				this._UpdateEditingVisualHint();
 			},
 			/**
 			 * @returns {boolean} True if the input has no text
 			 * @private
 			 */
-			_IsInputEmpty: async function () {
-				let sCKEditorValue = await this._GetInputData();
+			_IsInputEmpty: function () {
+				let sCKEditorValue = this._GetInputData();
 				return sCKEditorValue === '';
 			},
-			_GetInputData: async function () {
-				let oCKEditorInstance = await this._GetCKEditorInstance()
+			_GetInputData: function () {
+				let oCKEditorInstance = this._GetCKEditorInstance()
 				return (oCKEditorInstance === undefined) ? '' : oCKEditorInstance.getData();
 			},
 			_GetExtraInputs: function() {
@@ -334,20 +328,15 @@ $(function() {
 				this._UpdateSubmitButtonState();
 			},
 			_UpdateSubmitButtonState: function() {
-				this._IsInputEmpty().then((bIsEmpty) => {
-					if (bIsEmpty) {
-						this._DisableSubmission();
-					} else {
-						this._EnableSubmission();
-					}
-				});
+				if (this._IsInputEmpty()) {
+					this._DisableSubmission();
+				} else {
+					this._EnableSubmission();
+				}
 			},
 			_UpdateEditingVisualHint: function () {
-				this._IsInputEmpty().then((bIsEmpty) => {
-						const sEvent = bIsEmpty ? 'emptied' : 'draft';
-						this.element.trigger(sEvent+'.caselog_entry_form.itop', {attribute_code: this.options.attribute_code});
-					}
-				)
+				const sEvent = this._IsInputEmpty() ? 'emptied' : 'draft';
+				this.element.trigger(sEvent+'.caselog_entry_form.itop', {attribute_code: this.options.attribute_code});
 			}
 		});
 });
