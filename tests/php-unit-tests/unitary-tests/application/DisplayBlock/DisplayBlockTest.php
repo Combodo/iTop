@@ -57,6 +57,8 @@ class DisplayBlockTest extends ItopCustomDatamodelTestCase
 	 */
 	public function testRenderChartAjax(string $sClassToDisplay, string $sAttributeToDisplay, string $sRelatedClass, string $sRelatedClassAttributeToEdit, string $sExpected, string $sNonExpected): void
 	{
+		$this->markTestSkipped("Waiting for N°7313 to be fixed, this test was made during the first attempt to resolve N°7313, but as it broke N°7592, N°7594, N°7600 & N°7605, we reverted the change until we make a proper fix in Expression::MakeValueLabel()");
+
 		$oUserRequest = new UserRequest();
 		$oUserRequest->Set('title', 'MyTitle');
 		$oUserRequest->Set('org_id', $this->getTestOrgId());
