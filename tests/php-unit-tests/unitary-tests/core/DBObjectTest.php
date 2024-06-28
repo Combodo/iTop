@@ -522,7 +522,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oPersonOfMyCompanyOrg = MetaModel::GetObjectByName(Person::class, 'My first name My last name');
 
 		$sConfigurationManagerProfileId = 3; // Access to Person objects
-		$oUserWithAllowedOrgs = $this->CreateDemoOrgUser($oDemoOrg, $sConfigurationManagerProfileId);
+		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($oDemoOrg->GetKey(), $sConfigurationManagerProfileId);
 
 		$oAdminUser = MetaModel::GetObjectByName(User::class, 'admin', false);
 		if (is_null($oAdminUser)) {
@@ -533,7 +533,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oPersonObject = $this->CreatePerson(0, $oMyCompanyOrg->GetKey());
 
 		//--- Now we can do some tests !
-		UserRights::Login($oUserWithAllowedOrgs->Get('login'));
+		UserRights::Login($sLogin);
 		$this->ResetMetaModelQueyCacheGetObject();
 
 		try {
@@ -594,10 +594,10 @@ class DBObjectTest extends ItopDataTestCase
 		$oPersonOnDemoOrg = MetaModel::GetObjectByName(Person::class, 'Claude Monet');
 
 		$sConfigManagerProfileId = 3; // access to Team and Contact objects
-		$oUserWithAllowedOrgs = $this->CreateDemoOrgUser($oDemoOrg, $sConfigManagerProfileId);
+		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($oDemoOrg->GetKey(), $sConfigManagerProfileId);
 
 		//--- Now we can do some tests !
-		UserRights::Login($oUserWithAllowedOrgs->Get('login'));
+		UserRights::Login($sLogin);
 		$this->ResetMetaModelQueyCacheGetObject();
 
 		$oTeam = MetaModel::NewObject(Team::class, [
@@ -699,10 +699,10 @@ class DBObjectTest extends ItopDataTestCase
 		$oPersonOnDemoOrg = MetaModel::GetObjectByName(Person::class, 'Claude Monet');
 
 		$sConfigManagerProfileId = 3; // access to Team and Contact objects
-		$oUserWithAllowedOrgs = $this->CreateDemoOrgUser($oDemoOrg, $sConfigManagerProfileId);
+		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($oDemoOrg->GetKey(), $sConfigManagerProfileId);
 
 		//--- Now we can do some tests !
-		UserRights::Login($oUserWithAllowedOrgs->Get('login'));
+		UserRights::Login($sLogin);
 		$this->ResetMetaModelQueyCacheGetObject();
 
 		$oAttachment = MetaModel::NewObject(Attachment::class, [
@@ -727,20 +727,6 @@ class DBObjectTest extends ItopDataTestCase
 			$this->assertEquals('item_id', $e->GetAttCode(), 'Should report the object key attribute');
 			$this->assertEquals($oPersonOnItDepartmentOrg->GetKey(), $e->GetAttValue(), 'Should report the object key value');
 		}
-	}
-
-	private function CreateDemoOrgUser(Organization $oDemoOrg, string $sProfileId): User
-	{
-		utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');
-		$oUserWithAllowedOrgs = $this->CreateContactlessUser('demo_test_' . uniqid(__CLASS__, true), $sProfileId);
-		/** @var \URP_UserOrg $oUserOrg */
-		$oUserOrg = \MetaModel::NewObject('URP_UserOrg', ['allowed_org_id' => $oDemoOrg->GetKey(),]);
-		$oAllowedOrgList = $oUserWithAllowedOrgs->Get('allowed_org_list');
-		$oAllowedOrgList->AddItem($oUserOrg);
-		$oUserWithAllowedOrgs->Set('allowed_org_list', $oAllowedOrgList);
-		$oUserWithAllowedOrgs->DBWrite();
-
-		return $oUserWithAllowedOrgs;
 	}
 
 	/**
