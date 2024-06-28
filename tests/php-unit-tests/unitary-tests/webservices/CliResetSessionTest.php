@@ -15,9 +15,9 @@ class CliResetSessionTest extends ItopDataTestCase
 	private $sCookieFile = "";
 	private $sUrl;
 	private $sLogin;
-	private $sUserId;
 	private $sPassword = "Iuytrez9876543ç_è-(";
 	protected $sConfigTmpBackupFile;
+
 
 	/**
      * @throws Exception
@@ -41,12 +41,12 @@ class CliResetSessionTest extends ItopDataTestCase
 
 	    if (is_object($oRestProfile) && is_object($oAdminProfile)) {
 		    $oUser = $this->CreateUser($this->sLogin, $oRestProfile->GetKey(), $this->sPassword);
-		    $this->sUserId = $oUser->GetKey();
 		    $this->AddProfileToUser($oUser, $oAdminProfile->GetKey());
 	    }
     }
 
-	protected function tearDown(): void {
+	protected function tearDown(): void
+	{
 		parent::tearDown();
 
 		if (! is_null($this->sConfigTmpBackupFile) && is_file($this->sConfigTmpBackupFile)){
@@ -64,47 +64,50 @@ class CliResetSessionTest extends ItopDataTestCase
 		}
 	}
 
-	protected function AddLoginMode($sLoginMode){
-		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0770);
-		$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
-		if (! in_array($sLoginMode, $aAllowedLoginTypes)){
-			$aAllowedLoginTypes[] = $sLoginMode;
-			MetaModel::GetConfig()->SetAllowedLoginTypes($aAllowedLoginTypes);
-			MetaModel::GetConfig()->WriteToFile();
-		}
-		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0444);
-	}
-
-	protected function SetLoginModes($aAllowedLoginTypes){
+	protected function GivenConfigFileAllowedLoginTypes($aAllowedLoginTypes): void
+	{
 		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0770);
 		MetaModel::GetConfig()->SetAllowedLoginTypes($aAllowedLoginTypes);
 		MetaModel::GetConfig()->WriteToFile();
 		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0444);
 	}
 
-	public function RestProvider(){
+	public function GivenAFirstQueryHasBeenSentWithCookiesEnabled(): void
+	{
+		$aPostFields = [
+			'version'   => '1.2',
+			'auth_user' => $this->sLogin,
+			'auth_pwd'  => $this->sPassword,
+			'json_data' => '{"operation": "core/get", "class": "User", "key": 99999, "output_fields": "id"}',
+		];
+		$sOutput = $this->SendHTTPRequestWithCookies('webservices/rest.php', $aPostFields);
+		$this->assertStringStartsWith('{"code":0,"message":"Found: 0"', $sOutput, "Failed to establish the given: the first call should be successful (and set the session)");
+	}
+
+	public function LoginModesProvider()
+	{
 		return [
-			'nominal / no login_mode forced' => [
+			'no login_mode specified' => [
 				'sConfiguredLoginModes' => 'form|external|basic',
 				'sForcedLoginMode' => null,
 			],
-			'nominal / form forced' => [
+			'form' => [
 				'sConfiguredLoginModes' => 'form|external|basic',
 				'sForcedLoginMode' => 'form',
 			],
-			'nominal / external forced' => [
+			'external' => [
 				'sConfiguredLoginModes' => 'form|external|basic',
 				'sForcedLoginMode' => 'external',
 			],
-			'nominal / basic forced' => [
+			'basic' => [
 				'sConfiguredLoginModes' => 'form|external|basic',
 				'sForcedLoginMode' => 'basic',
 			],
-			'nominal / url forced' => [
+			'url' => [
 				'sConfiguredLoginModes' => 'form|external|basic|url',
 				'sForcedLoginMode' => 'url',
 			],
-			'nominal / cas forced' => [
+			'cas' => [
 				'sConfiguredLoginModes' => 'form|external|basic|cas',
 				'sForcedLoginMode' => 'cas',
 			],
@@ -112,53 +115,20 @@ class CliResetSessionTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @dataProvider RestProvider
-	 * @param $aLoginModes
-	 * @param $sForcedLoginMode
-	 *
-	 * @return void
+	 * @dataProvider LoginModesProvider
 	 */
-	public function testRest($sConfiguredLoginModes=null, $sForcedLoginMode=null, $sExpectedFailHttpCode="200"){
-		if (! is_null($sConfiguredLoginModes)){
-			$this->SetLoginModes(explode('|', $sConfiguredLoginModes));
-		}
-
-		$sJsonGetContent = <<<JSON
-{
-   "operation": "core/get",
-   "class": "User",
-   "key": $this->sUserId,
-   "output_fields": "id"
-}
-JSON;
-		$aPostFields = [
-			'version' => '1.2',
-			'auth_user' => $this->sLogin,
-			'auth_pwd' => $this->sPassword,
-			'json_data' => $sJsonGetContent,
-		];
-		list($iHttpCode, $sJson) = $this->CallRestApi($aPostFields);
-		$this->assertEquals(200, $iHttpCode);
-
-		$aJson = json_decode($sJson, true);
-		$this->assertTrue(is_array($aJson), $sJson);
-		$this->assertEquals("0", $aJson['code'], $sJson);
+	public function testVariousLoginModes($sAllowedLoginTypes, $sRequestedLoginMode)
+	{
+		$this->GivenConfigFileAllowedLoginTypes(explode('|', $sAllowedLoginTypes));
+		$this->GivenAFirstQueryHasBeenSentWithCookiesEnabled();
 
 		//2nd call to REST API made with previous session cookie
-		//no need to pass auth_user/auth_pwd
-		$aPostFields = [
-			'version' => '1.2',
-			'json_data' => $sJsonGetContent,
-		];
-		list($iHttpCode, $sJson) = $this->CallRestApi($aPostFields, $sForcedLoginMode);
-		$this->debug($sJson);
-		$this->assertEquals($sExpectedFailHttpCode, $iHttpCode);
-		if ($iHttpCode === "200") {
-			$this->assertEquals('{"code":1,"message":"Error: Invalid login"}', $sJson);
-		}
+		$sOutput = $this->SendHTTPRequestWithCookies('webservices/rest.php', [], $sRequestedLoginMode);
+		$this->assertStringContainsString('Invalid login', $sOutput, "Omitting auth_user/auth_pwd should not be allowed");
 	}
 
-	public function OtherCliProvider(){
+	public function OtherWebServicesProvider()
+	{
 		return [
 			'import' => [ 'webservices/import.php' ],
 			'synchro_exec' => [ 'synchro/synchro_exec.php' ],
@@ -167,48 +137,21 @@ JSON;
 	}
 
 	/**
-	 * @dataProvider OtherCliProvider
+	 * @dataProvider OtherWebServicesProvider
 	 */
-	public function testImport($sUri){
-		$sJsonGetContent = <<<JSON
-{
-   "operation": "core/get",
-   "class": "User",
-   "key": $this->sUserId,
-   "output_fields": "id"
-}
-JSON;
-		$aPostFields = [
-			'version' => '1.2',
-			'auth_user' => $this->sLogin,
-			'auth_pwd' => $this->sPassword,
-			'json_data' => $sJsonGetContent,
-		];
-		list($iHttpCode, $sOutput) = $this->CallRestApi($aPostFields);
-		$this->assertEquals(200, $iHttpCode);
+	public function testVariousWebServices($sUri)
+	{
+		$this->GivenAFirstQueryHasBeenSentWithCookiesEnabled();
 
-		$aJson = json_decode($sOutput, true);
-		$this->assertTrue(is_array($aJson), $sOutput);
-		$this->assertEquals("0", $aJson['code'], $sOutput);
-
-		//2nd call to REST API made with previous session cookie
-		//no need to pass auth_user/auth_pwd
-		$aPostFields = [
-			'version' => '1.2',
-			'json_data' => $sJsonGetContent,
-		];
-		list($iHttpCode, $sOutput) = $this->CallRestApi($aPostFields, null, $sUri);
-		$this->debug($sOutput);
-		$this->assertEquals("200", $iHttpCode);
-		$this->assertTrue(str_contains($sOutput, 'Invalid login'));
+		$sOutput = $this->SendHTTPRequestWithCookies($sUri, []);
+		$this->assertStringContainsString('Invalid login', $sOutput, "Omitting auth_user/auth_pwd should not be allowed");
 	}
 
 	/**
-	 * @param $aPostFields
-	 *
 	 * @return array($iHttpCode, $sBody)
 	 */
-	private function CallRestApi($aPostFields, $sForcedLoginMode=null, $sUri='webservices/rest.php'): array {
+	private function SendHTTPRequestWithCookies($sUri, $aPostFields, $sForcedLoginMode = null): string
+	{
 		$ch = curl_init();
 
 		curl_setopt ($ch, CURLOPT_COOKIEJAR, $this->sCookieFile);
@@ -247,6 +190,7 @@ JSON;
 		}
 		curl_close ($ch);
 
-		return array($sHttpCode, $sBody);
+		$this->assertEquals(200, $sHttpCode, "The test logic assumes that the HTTP request is correctly handled");
+		return $sBody;
 	}
 }
