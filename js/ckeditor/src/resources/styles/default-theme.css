@@ -1,9 +1,17 @@
-/* mention list ui customization */
+/**
+ * This file contains CKEditor 5 default theme styles.
+ * "Default theme" means common styles for all GUIs (backoffice, portal, ...)
+ *
+ * Any style specific for the backoffice should be in the backoffice theme (e.g. "css/backoffice/vendors/_ckeditor.scss)
+ * Any style specific for the portal should be in the portal theme (e.g. "datamodels/2.x/itop-portal-base/portal/public/css/portal.scss")
+ */
+
 :root {
 	--ck-color-list-button-on-background: #EFF0EF;
 	--ck-color-list-button-on-background-focus: #EFF0EF;
 	--ck-color-list-button-hover-background: #EFF0EF;
 	--ck-color-list-button-on-text: black;
+	--ck-color-image-caption-background: transparent;
 
 	/* Toolbar buttons / components  downsize for better integration with UIs */
 	--ck-spacing-small: 0.35rem;
@@ -19,8 +27,7 @@
 	--ck-text-huge-font-size: 1.8rem;
 }
 
-/** text size classes */
-
+/* Text size classes */
 .text-tiny {
 	font-size: var(--ck-text-tiny-font-size);
 }
@@ -37,8 +44,7 @@
 	font-size: var(--ck-text-huge-font-size);
 }
 
-/** marker classes */
-
+/* Marker classes */
 .marker-yellow {
 	background-color: var(--ck-highlight-marker-yellow);
 }
@@ -53,4 +59,30 @@
 
 .marker-blue {
 	background-color: var(--ck-highlight-marker-blue);
+}
+
+/* Editor base style */
+/* - Fix editor base z-index to avoid its children (images, drop down buttons, ...) passing on top of other elements */
+.ck-editor {
+	z-index: 0;
+}
+
+
+/* Figures / images */
+/* - Avoid text being typed next to the image, only below */
+.ck-content .image img {
+	min-width: inherit;
+}
+.ck-content .image-style-align-left,
+.ck-content .image-style-align-right {
+	display: block;
+	float: unset;
+}
+.ck-content .image-style-align-left {
+	text-align: left;
+	margin-right: 0;
+}
+.ck-content .image-style-align-right {
+	text-align: right;
+	margin-left: 0;
 }

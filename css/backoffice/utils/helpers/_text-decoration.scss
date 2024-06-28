@@ -19,6 +19,9 @@ $ibo-hyperlink-text-decoration--on-hover: $ibo-hyperlink-text-decoration !defaul
 $ibo-hyperlink-color--on-active: $ibo-color-primary-900 !default;
 $ibo-hyperlink-text-decoration--on-active: $ibo-hyperlink-text-decoration !default;
 
+$ibo-figure--spacing-x: 2em !default; /* Mind that this matches Bulma rule for figure */
+$ibo-figure--spacing-y: 2em !default;
+
 /* CSS variables */
 :root{
   --ibo-hyperlink-color: #{$ibo-hyperlink-color};
@@ -131,5 +134,23 @@ $ibo-hyperlink-text-decoration--on-active: $ibo-hyperlink-text-decoration !defau
   & > code,
   code:not(.hljs)  {
     color: inherit;
+  }
+
+  p {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+
+  figure {
+    display: inline-block; /* So the figure doesn't take all width and can be aligned on the left */
+    margin-left: $ibo-figure--spacing-x !important; /* !important to overload the CKE inline style */
+    margin-right: $ibo-figure--spacing-x !important; /* !important to overload the CKE inline style */
+
+    &:not(:last-child) {
+      margin-bottom: $ibo-figure--spacing-y !important; /* !important to overload the CKE inline style */
+    }
+    &:not(:first-child) {
+      margin-top: $ibo-figure--spacing-y !important; /* !important to overload the CKE inline style */
+    }
   }
 }
