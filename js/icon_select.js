@@ -247,12 +247,8 @@ $(function()
 			var file = event.target.files[0];
 			var formData = new FormData();
 			formData.append('file', file);
-
-			fetch(this.options.post_upload_to, {
+			CombodoHTTP.Fetch(this.options.post_upload_to, {
 				method: 'POST',
-				headers: {
-					'X-Combodo-Ajax': true
-				},
 				body: formData
 			})
 				.then(response => {

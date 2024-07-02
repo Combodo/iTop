@@ -87,6 +87,7 @@
 
 	{% block pPageScripts %}
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/jquery/dist/jquery.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ajax_hook.js'|add_itop_version }}"></script>
 		{% if is_development_environment() %}
 				<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/jquery-migrate/dist/jquery-migrate.js'|add_itop_version }}"></script>
 		{% else %}
