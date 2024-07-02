@@ -47,6 +47,17 @@ use const MODULESROOT;
  *    $oPage->p("Hello World !");
  *    $oPage->output();
  * ```
+ * </p>
+ * <p>
+ * JS scripts can be added. They will be executed in sequence depending on the API used to inject them:
+ * <ol>
+ *    <li>add_early_script()</li>
+ *    <li>LinkScriptFromAppRoot(), LinkScriptFromURI(), LinkScriptFromModule()</li>
+ *    <li>add_script()</li>
+ *    <li>add_init_script() - DOMContentLoaded</li>
+ *    <li>add_ready_script() - DOMContentLoaded + 50 ms</li>
+ * </ol>
+ * </p>
  */
 class WebPage implements Page
 {
@@ -660,12 +671,21 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add some Javascript to the header of the page, therefore executed first, BEFORE the DOM interpretation.
+	 * Add some Javascript to the header of the page
+	 *
+	 * The provided JS code will be executed at step 1 of the JS execution chain:
+	 * [early script] ==> linked script ==> script ==> init script ==> ready script
+	 *
 	 * /!\ Keep in mind that no external JS files (eg. jQuery) will be loaded yet.
 	 *
-	 * @uses WebPage::$a_a_early_scripts
+	 * @api-advanced
+	 * @see static::add_script, static::add_init_script, static::add_ready_script
+	 * @see static::LinkScriptFromAppRoot, static::LinkScriptFromModule, static::LinkScriptFromURI
+	 *
 	 * @param string $s_script
+	 *
 	 * @since 3.0.0
+	 * @uses WebPage::$a_early_scripts
 	 */
 	public function add_early_script($s_script)
 	{
@@ -701,8 +721,16 @@ class WebPage implements Page
 	/**
 	 * Add some Javascript to be executed immediately without waiting for the DOM to be ready
 	 *
-	 * @uses WebPage::$a_scripts
+	 * The provided JS code will be executed at step 3 of the JS execution chain:
+	 * early script ==> linked script ==> [script] ==> init script ==> ready script
+	 *
+	 * @api-advanced
+	 * @see static::add_early_script, static::add_init_script, static::add_ready_script
+	 * @see static::LinkScriptFromAppRoot, static::LinkScriptFromURI, static::LinkScriptFromModule
+	 *
 	 * @param string $s_script
+	 *
+	 * @uses WebPage::$a_scripts
 	 * @since 3.0.0 These scripts are put at the end of the <body> tag instead of the end of the <head> tag, {@see static::add_early_script} to add script there
 	 */
 	public function add_script($s_script)
@@ -737,12 +765,19 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Adds a script to be executed when the DOM is ready (typical JQuery use), right before add_ready_script
+	 * Add a script to be executed when the DOM is ready (typical JQuery use)
 	 *
-	 * @uses WebPage::$a_init_scripts
+	 * The provided JS code will be executed at step 4 of the JS execution chain:
+	 * early script ==> linked script ==> script ==> [init script] ==> ready script
+	 *
+	 * @api-advanced
+	 * @see static::add_early_script, static::add_script, static::add_ready_script
+	 * @see static::LinkScriptFromAppRoot, static::LinkScriptFromURI, static::LinkScriptFromModule
+	 *
 	 * @param string $sScript
 	 *
 	 * @return void
+	 *@uses WebPage::$a_init_scripts
 	 */
 	public function add_init_script($sScript)
 	{
@@ -776,10 +811,18 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add some Javascript to be executed once the DOM is ready, slightly after the "init scripts"
+	 * Add some Javascript to be executed once the DOM is ready, slightly (50 ms) after the "init scripts"
+	 *
+	 * The provided JS code will be executed at step 5 of the JS execution chain:
+	 * early script ==> linked script ==> script ==> init script ==> [ready script]
+	 *
+	 * @api-advanced
+	 * @see static::add_early_script, static::add_script, static::add_init_script
+	 * @see static::LinkScriptFromAppRoot, static::LinkScriptFromURI, static::LinkScriptFromModule
+	 *
+	 * @param $sScript
 	 *
 	 * @uses WebPage::$a_ready_scripts
-	 * @param $sScript
 	 */
 	public function add_ready_script($sScript)
 	{
@@ -886,14 +929,20 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Use to link JS files from the iTop package (e.g. `<ITOP>/js/*`)
+	 * Use to include JS files from the iTop package (e.g. `<ITOP>/js/*`)
+	 *
+	 * The provided JS code will be executed at step 2 of the JS execution chain:
+	 * early script ==> [linked script] ==> script ==> init script ==> ready script
+	 *
+	 * @api-advanced
+	 * @see static::add_early_script, static::add_script, static::add_init_script, static::add_ready_script
+	 * @see static::LinkScriptFromURI, static::LinkScriptFromModule
 	 *
 	 * @param string $sFileRelPath Rel. path from iTop app. root of the JS file to link (e.g. `js/utils.js`)
 	 *
 	 * @return void
 	 * @throws \Exception
 	 * @since 3.2.0 N°7315
-	 * @api
 	 */
 	public function LinkScriptFromAppRoot(string $sFileRelPath): void
 	{
@@ -901,14 +950,20 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Use to link JS files from any module
+	 * Use to include JS files from any module
+	 *
+	 * The provided JS code will be executed at step 2 of the JS execution chain:
+	 * early script ==> [linked script] ==> script ==> init script ==> ready script
+	 *
+	 * @api-advanced
+	 * @see static::add_early_script, static::add_script, static::add_init_script, static::add_ready_script
+	 * @see static::LinkScriptFromAppRoot, static::LinkScriptFromURI
 	 *
 	 * @param string $sFileRelPath Rel. path from current environment (e.g. `<ITOP>/env-production/`) of the JS file to link (e.g. `some-module/asset/js/some-file.js`)
 	 *
 	 * @return void
 	 * @throws \Exception
 	 * @since 3.2.0 N°7315
-	 * @api
 	 */
 	public function LinkScriptFromModule(string $sFileRelPath): void
 	{
@@ -916,7 +971,14 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Use to link JS files from any URI, typically an external server
+	 * Use to include JS files from any URI, typically an external server
+	 *
+	 * The provided JS code will be executed at step 2 of the JS execution chain:
+	 * early script ==> [linked script] ==> script ==> init script ==> ready script
+	 *
+	 * @api-advanced
+	 * @see static::add_early_script, static::add_script, static::add_init_script, static::add_ready_script
+	 * @see static::LinkScriptFromAppRoot, static::LinkScriptFromModule
 	 *
 	 * @param string $sFileAbsURI Abs. URI of the JS file to link (e.g. `https://external.server.com/some-file.js`)
 	 *                            Note: Any non-absolute URI will be ignored.
@@ -924,7 +986,6 @@ class WebPage implements Page
 	 * @return void
 	 * @throws \Exception
 	 * @since 3.2.0 N°7315
-	 * @api
 	 */
 	public function LinkScriptFromURI(string $sFileAbsURI): void
 	{
