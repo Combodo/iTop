@@ -4583,6 +4583,8 @@ HTML;
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBInsert()");
             $oKPI = new ExecutionKPI();
 			$oExtensionInstance->OnDBInsert($oNewObj, self::GetCurrentChange());
             $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBInsert');
@@ -4664,7 +4666,22 @@ HTML;
 		return $oDeletionPlan;
 	}
 
-	protected function PostDeleteActions(): void
+	final protected function PreDeleteActions(): void
+	{
+		/** @var \iApplicationObjectExtension $oExtensionInstance */
+		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		{
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBDelete()");
+			$oKPI = new ExecutionKPI();
+			$oExtensionInstance->OnDBDelete($this, self::GetCurrentChange());
+			$oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBDelete');
+		}
+
+		parent::PreDeleteActions();
+	}
+
+	final protected function PostDeleteActions(): void
 	{
 		parent::PostDeleteActions();
 	}
@@ -4678,6 +4695,8 @@ HTML;
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBDelete()");
             $oKPI = new ExecutionKPI();
 			$oExtensionInstance->OnDBDelete($this, self::GetCurrentChange());
             $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBDelete');
@@ -4699,6 +4718,7 @@ HTML;
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnIsModified()");
 			$oKPI = new ExecutionKPI();
 			$bIsModified = $oExtensionInstance->OnIsModified($this);
 			$oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnIsModified');
@@ -4758,6 +4778,8 @@ HTML;
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnCheckToWrite()");
             $oKPI = new ExecutionKPI();
 			$aNewIssues = $oExtensionInstance->OnCheckToWrite($this);
             $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnCheckToWrite');
@@ -4808,6 +4830,8 @@ HTML;
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnCheckToDelete()");
             $oKPI = new ExecutionKPI();
 			$aNewIssues = $oExtensionInstance->OnCheckToDelete($this);
             $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnCheckToDelete');
