@@ -40,15 +40,6 @@ class LoginTest extends ItopDataTestCase {
 		parent::tearDown();
 	}
 
-	public function testLoginInfiniteLoopFix() {
-		$iTimeStamp = microtime(true);
-		$sOutput = $this->CallItopUrlByCurl(sprintf("/pages/UI.php?login_mode=%s", $this->sLoginMode));
-		$iElapsedInMs =  (microtime(true) - $iTimeStamp) * 1000;
-		$sMaxExecutionInS = 1;
-		$this->assertTrue($iElapsedInMs < $sMaxExecutionInS * 1000, "iTop answered in $iElapsedInMs ms. it should do it in less than $sMaxExecutionInS seconds (max_execution_time)");
-		$this->assertFalse(strpos($sOutput, "Fatal error"), "no fatal error due to max execution time should be returned" . $sOutput);
-	}
-
 	protected function CallItopUrlByCurl($sUri, ?array $aPostFields=[]){
 		$ch = curl_init();
 

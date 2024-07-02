@@ -111,7 +111,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 			]
 		);
 
-		list($oOrg2, $oUser) = $this->createAnotherUserInAnotherOrg();
+		[$oOrg2, $oUser] = $this->createAnotherUserInAnotherOrg();
 		\UserRights::Login($oUser->Get('login'));
 
 		$this->performBulkChangeTest(
@@ -127,7 +127,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	 */
 	public function testExternalFieldIssueImportFail_SomeObjectVisibleByCurrentUser($bIsRackReconKey){
 		$this->deleteAllRacks();
-		list($oOrg2, $oUser) = $this->createAnotherUserInAnotherOrg();
+		[$oOrg2, $oUser] = $this->createAnotherUserInAnotherOrg();
 		$this->createRackObjects(
 			[
 				$this->getTestOrgId() => ['RackTest1', 'RackTest2'],
