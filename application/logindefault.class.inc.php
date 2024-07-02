@@ -55,7 +55,9 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 			LoginWebPage::SetLoginModeAndReload($sProposedLoginMode);
 		} else if (empty($sProposedLoginMode)) {
 			$sRawLoginMode = utils::ReadParam('login_mode', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
-			IssueLog::Error("Authentication issue due to login_mode parameter sanitization ($sRawLoginMode). Please avoid special characters");
+			if (! empty($sRawLoginMode)) {
+				IssueLog::Error("Authentication issue due to login_mode parameter sanitization ($sRawLoginMode). Please avoid special characters");
+			}
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
