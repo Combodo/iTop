@@ -8,11 +8,6 @@
  */
 
 $(document).ready(function () {
-	// AJAX calls handling
-	// - Custom headers
-	$(document).ajaxSend(function (event, jqxhr, options) {
-		jqxhr.setRequestHeader('X-Combodo-Ajax', 'true');
-	});
 	// - Error messages regarding the error code
 	$(document).ajaxError(function (event, jqxhr, options) {
 		// User is not logged in

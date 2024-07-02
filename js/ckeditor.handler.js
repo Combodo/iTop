@@ -112,12 +112,9 @@ const CombodoCKEditorHandler = {
 								const formData = new FormData();
 								formData.append('upload', file);
 
-								fetch(uploadUrl, {
+								CombodoHTTP.Fetch(uploadUrl, {
 									method: 'POST',
-									body: formData,
-									headers: {
-										'X-Combodo-Ajax': true
-									},
+									body: formData
 								})
 									.then(response => response.json())
 									.then(responseData => {

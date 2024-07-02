@@ -16,11 +16,7 @@ const CombodoCKEditorFeeds = {
 		return async function(queryText) {
 			return new Promise( resolve => {
 				setTimeout( () => {
-					fetch(options.url + queryText, {
-						headers: {
-							'X-Combodo-Ajax': true
-						}
-					})
+					CombodoHTTP.Fetch(options.url + queryText)
 						.then(response => {
 							return response.json();
 						})
