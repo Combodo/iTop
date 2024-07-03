@@ -8,6 +8,7 @@
  */
 
 $(document).ready(function () {
+	// AJAX calls handling
 	// - Error messages regarding the error code
 	$(document).ajaxError(function (event, jqxhr, options) {
 		// User is not logged in
