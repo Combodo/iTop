@@ -78,7 +78,7 @@ $ibo-vendors-ckeditor--ck-color-image-caption-text: $ibo-color-grey-900 !default
   .ck-editor__main{
     flex-grow: 1;
   }
-  .ck-editor__editable_inline:not(.ck-comment__input *){
+  .ck-editor__editable_inline:not(.ck-comment__input *), .ck-source-editing-area{
     height: 100% !important; /* !important to overload inline style from configuration.height */
     width: 100% !important; /* !important to overload inline style from configuration.width */
   }
