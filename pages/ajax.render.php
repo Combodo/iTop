@@ -27,27 +27,20 @@ use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectManager;
 
 require_once('../approot.inc.php');
 
-
-// check if header contains X-Combodo-Ajax for POST request (CSRF protection for ajax calls)
-if (!isset($_SERVER['HTTP_X_COMBODO_AJAX']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-	$sReferer = utils::HtmlEntities($_SERVER['HTTP_REFERER']);
-	IssueLog::Error("Unprotected ajax call from: $sReferer", 'SECURITY');
-	header('HTTP/1.1 401 Unauthorized');
-	die('Unauthorized access. Please see https://www.itophub.io/wiki/page?id=3_2_0:release:developer#checking_for_the_presence_of_specific_header_in_the_post_to_enhance_protection_against_csrf_attacks');
-}
-
-
-function LogErrorMessage($sMsgPrefix, $aContextInfo) {
-	$sCurrentUserLogin = UserRights::GetUser();
-	$sContextInfo = urldecode(http_build_query($aContextInfo, '', ', '));
-	$sErrorMessage = "$sMsgPrefix - User='$sCurrentUserLogin', $sContextInfo";
-	IssueLog::Error($sErrorMessage);
-}
-
 try
 {
 	require_once(APPROOT.'/application/startup.inc.php');
 	require_once(APPROOT.'/application/user.preferences.class.inc.php');
+
+	// check if header contains X-Combodo-Ajax for POST request (CSRF protection for ajax calls)
+	if (!isset($_SERVER['HTTP_X_COMBODO_AJAX']) && $_SERVER['REQUEST_METHOD'] !== 'GET') {
+		$sReferer = $_SERVER['HTTP_REFERER'];
+		$sErrorMsg = 'Unauthorized access. Please see https://www.itophub.io/wiki/page?id=3_2_0:release:developer#checking_for_the_presence_of_specific_header_in_the_post_to_enhance_protection_against_csrf_attacks';
+		IssueLog::Error("Unprotected ajax call from: $sReferer. $sErrorMsg");
+		header('HTTP/1.1 401 Unauthorized');
+		die($sErrorMsg);
+	}
+
 	IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 	$oKPI = new ExecutionKPI();
 	$oKPI->ComputeAndReport('Data model loaded');
@@ -2609,3 +2602,11 @@ EOF
 	echo utils::EscapeHtml($e->GetMessage());
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
+
+function LogErrorMessage($sMsgPrefix, $aContextInfo) {
+	$sCurrentUserLogin = UserRights::GetUser();
+	$sContextInfo = urldecode(http_build_query($aContextInfo, '', ', '));
+	$sErrorMessage = "$sMsgPrefix - User='$sCurrentUserLogin', $sContextInfo";
+	IssueLog::Error($sErrorMessage);
+}
+
