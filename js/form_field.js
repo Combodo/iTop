@@ -97,9 +97,15 @@ $(function()
 				}
 				else if( $(oElem).is(':radio'))
 				{
-					if($(oElem).is(':checked'))
+					let nameRadioButton= $(oElem).prop('name');
+					let radioCheckProp = $('[name='+nameRadioButton+']:checked');
+					if(radioCheckProp.length === 1)
 					{
-						value =$(oElem).val();
+						value = radioCheckProp.val();
+					}
+					else
+					{
+						value = "";
 					}
 				}
 				else if($(oElem).is(':checkbox'))
