@@ -879,7 +879,7 @@ HTML;
 		// - API: Inline scripts
 		/** @var \iBackofficeScriptExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iBackofficeScriptExtension') as $oExtensionInstance) {
-			$this->add_early_script($oExtensionInstance->GetScript());
+			$this->add_script($oExtensionInstance->GetScript());
 		}
 		// - API: Init. scripts
 		/** @var \iBackofficeInitScriptExtension $oExtensionInstance */
