@@ -795,10 +795,12 @@ JS;
 	 * Search objects via an oql and a friendly name search string
 	 *
 	 * @return JsonPage
+	 * @used-by LinkedSet attribute when in tag display
 	 */
 	public function OperationSearch(): JsonPage
 	{
 		$oPage = new JsonPage();
+		$oPage->SetOutputDataOnly(true);
 
 		// Retrieve query params
 		$sObjectClass = utils::ReadParam('object_class', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);

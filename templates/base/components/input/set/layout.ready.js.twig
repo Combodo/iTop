@@ -108,8 +108,8 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
 
                 // Handle errors
                 if(!me.settings.hasError){
-                    me.toggleErrorClass(!res.data.success);
-                    if(!res.data.success) return;
+                    me.toggleErrorClass(!res.success);
+                    if(!res.success) return;
                 }
 
                 // Retrieve current input value
@@ -120,7 +120,7 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
                 me.optionsBeforeFilter = options;
                 options = options.filter(item => (typeof(item.force) !== "undefined" && item.force === true) || aSelectedItems.includes(item['{{ oDataProvider.GetDataValueField() }}']));
                 // Merge kept and new values
-                options = $.merge(options, res.data.search_data);
+                options = $.merge(options, res.search_data);
                 // Compute groups
                 $.each(options, function(index, value) {
                     me.addOptionGroup(value['{{ oDataProvider.GetGroupField() }}'], {
