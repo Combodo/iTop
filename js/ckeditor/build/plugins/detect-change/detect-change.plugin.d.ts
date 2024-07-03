@@ -1,9 +1,4 @@
-/*
- * @copyright   Copyright (C) 2010-2024 Combodo SAS
- * @license     http://opensource.org/licenses/AGPL-3.0
- */
-
-import { Plugin, type Editor } from '@ckeditor/ckeditor5-core';
+import { Plugin, type Editor } from 'ckeditor5/src/core.js';
 /**
  * DetectChanges Plugin.
  *
