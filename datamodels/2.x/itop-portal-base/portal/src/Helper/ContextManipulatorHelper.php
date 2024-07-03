@@ -533,7 +533,7 @@ class ContextManipulatorHelper
 
 		$sPPrivateKey = self::GetPrivateKey();
 		$oCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
-		return base64_encode($oCrypt->Encrypt($sPPrivateKey, json_encode($aTokenRules)));
+		return self::base64url_encode($oCrypt->Encrypt($sPPrivateKey, json_encode($aTokenRules)));
 	}
 
 	/**
@@ -566,7 +566,7 @@ class ContextManipulatorHelper
 	{
 		$sPrivateKey = self::GetPrivateKey();
 		$oCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
-		$sDecryptedToken = $oCrypt->Decrypt($sPrivateKey, base64_decode($sToken));
+		$sDecryptedToken = $oCrypt->Decrypt($sPrivateKey, self::base64url_decode($sToken));
 
 		$aTokenRules = json_decode($sDecryptedToken, true);
 		if (!is_array($aTokenRules))
@@ -577,6 +577,13 @@ class ContextManipulatorHelper
 		return $aTokenRules;
 	}
 
+	private static function base64url_encode($sData) {
+		return rtrim(strtr(base64_encode($sData), '+/', '-_'), '=');
+	}
+
+	private static function base64url_decode($sData) {
+		return base64_decode(str_pad(strtr($sData, '-_', '+/'), strlen($sData) % 4, '=', STR_PAD_RIGHT));
+	}
 
 	/**
 	 * @return string
