@@ -2490,6 +2490,15 @@ SQL;
 				$sData = @file_get_contents($sPath);
 				if ($sData === false)
 				{
+					IssueLog::Error(<<<TXT
+Failed to load the file from URL. This can happen for multiple reasons:
+- Invalid URL
+- URL using HTTPS with an untrusted certificate on the remote server
+- ...
+TXT
+					, LogChannels::CORE, [
+						'URL' => $sPath,
+					]);
 					throw new Exception("Failed to load the file from the URL '$sPath'.");
 				}
 				else
