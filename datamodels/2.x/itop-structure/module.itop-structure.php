@@ -242,9 +242,10 @@ if (!class_exists('StructureInstaller'))
 				$oAction->Set('name', 'Notification to persons mentioned in logs');
 				$oAction->Set('status', 'enabled');
 				$oAction->Set('language', 'EN US');
+				$oAction->Set('priority', 3); // Important priority as a mention is probably more important than a simple notification
 				$oAction->Set('recipients', 'SELECT Person WHERE id = :mentioned->id');
-				$oAction->Set('title', 'You have been mentioned in $this->friendlyname$');
-				$oAction->Set('message', 'You have been mentioned by $current_contact->friendlyname$ in **$this->friendlyname$**');
+				$oAction->Set('title', '$this->friendlyname$');
+				$oAction->Set('message', 'You have been mentioned by $current_contact->friendlyname$');
 				$oAction->DBWrite();
 
 				SetupLog::Info("|- Created newsroom action \"{$oAction->Get('name')}\".");
