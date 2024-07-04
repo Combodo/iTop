@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Newsroom\iTopNewsroomProvider;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
@@ -298,8 +299,12 @@ JS
 					}
 					$sPreferencesLink = ' - <a class=".newsroom-configuration-link" href="'.$sUrl.'"'.$sTarget.'>'.Dict::S('UI:Newsroom:ConfigurationLink').'</a>';
 				}
-				$sChecked = appUserPreferences::GetPref('newsroom_provider_'.$sProviderClass, true) ? ' checked="" ' : '';
-				$sNewsroomHtml .= '<div><input type="checkbox" id="newsroom_provider_'.$sProviderClass.'" value="on"'.$sChecked.'name="newsroom_provider_'.$sProviderClass.'"><label for="newsroom_provider_'.$sProviderClass.'">'.Dict::Format('UI:Newsroom:DisplayMessagesFor_Provider',
+
+				$sCheckedForHtml = appUserPreferences::GetPref('newsroom_provider_'.$sProviderClass, true) ? 'checked' : '';
+				// Forbid disabling internal newsroom provider
+				$sDisabledForHtml = $sProviderClass === iTopNewsroomProvider::class ? 'disabled' : '';
+
+				$sNewsroomHtml .= '<div><input type="checkbox" id="newsroom_provider_'.$sProviderClass.'" value="on" '.$sCheckedForHtml.' '.$sDisabledForHtml.' name="newsroom_provider_'.$sProviderClass.'"><label for="newsroom_provider_'.$sProviderClass.'">'.Dict::Format('UI:Newsroom:DisplayMessagesFor_Provider',
 						$oProvider->GetLabel()).'</label> '.$sPreferencesLink.'</div>';
 			}
 		}
@@ -872,6 +877,11 @@ try {
 				$bProvidersModified = false;
 				foreach ($aProviders as $cProvider)
 				{
+					// Forbid disabling internal newsroom provider
+					if ($cProvider === iTopNewsroomProvider::class) {
+						continue;
+					}
+
 					$oProvider = new $cProvider();
 					if ($oProvider->IsApplicable($oUser))
 					{

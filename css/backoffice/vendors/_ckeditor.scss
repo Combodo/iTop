@@ -58,6 +58,10 @@ $ibo-vendors-ckeditor--ck-color-image-caption-text: $ibo-color-grey-900 !default
 
 .ck.ck-content {
   color: $ibo-vendors-ckeditor--ck-content--text-color;
+  /* Needed to let table grow inside their resizer as `.ibo-is-html-content table` rule unset ckeditor default 100% width */
+  .table table {
+    width: 100% !important;
+  }
 }
 
 .ck-editor__editable_inline:not(.ck-comment__input *) {

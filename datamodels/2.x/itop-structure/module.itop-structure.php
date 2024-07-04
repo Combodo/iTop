@@ -123,7 +123,7 @@ if (!class_exists('StructureInstaller'))
 				SetupLog::Info("|  | ".$iNbProcessed." triggers processed.");
 			}
 
-			// Add default configuration, so Persons are notified if mentioned on any Caselog
+			// Add default configuration, so Persons are notified by email if mentioned on any log
 			if (version_compare($sPreviousVersion, '3.0.0', '<')) {
 				SetupLog::Info("Adding default triggers/action for Person objects mentions. All DM classes with at least 1 log attribute will be concerned...");
 
@@ -137,7 +137,7 @@ if (!class_exists('StructureInstaller'))
 					foreach (MetaModel::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL, true) as $sClass) {
 						$aLogAttCodes = MetaModel::GetAttributesList($sClass, ['AttributeCaseLog']);
 
-						// Skip class with log attribute
+						// Skip class with no log attribute
 						if (count($aLogAttCodes) === 0) {
 							continue;
 						}
@@ -202,6 +202,7 @@ if (!class_exists('StructureInstaller'))
 					$oAction = MetaModel::NewObject('ActionEmail');
 					$oAction->Set('name', 'Notification to persons mentioned in logs');
 					$oAction->Set('status', 'enabled');
+					$oAction->Set('language', 'EN US');
 					$oAction->Set('from', '$current_contact->email$');
 					$oAction->Set('to', 'SELECT Person WHERE id = :mentioned->id');
 					$oAction->Set('subject', 'You have been mentioned in "$this->friendlyname$"');
@@ -226,6 +227,61 @@ if (!class_exists('StructureInstaller'))
 					SetupLog::Info("... no trigger/action created as there is no DM class with a log attribute.");
 				} else {
 					SetupLog::Info("... default triggers/action successfully created for $iClassesWithLogCount classes.");
+				}
+			}
+
+			// Add default configuration, so Persons are notified by newsroom if mentioned on any log
+			if (version_compare($sPreviousVersion, '3.2.0', '<')) {
+				SetupLog::Info("Adding default newsroom actions for Person objects mentions. All existing TriggerOnObjectMention for the Person class will be concerned...");
+
+				$sPersonClass = Person::class;
+				$iExistingTriggersCount = 0;
+
+				// Start by creating the default action no matter what (even if there is no relevant trigger, it will be there for future use)
+				$oAction = MetaModel::NewObject(ActionNewsroom::class);
+				$oAction->Set('name', 'Notification to persons mentioned in logs');
+				$oAction->Set('status', 'enabled');
+				$oAction->Set('language', 'EN US');
+				$oAction->Set('priority', 3); // Important priority as a mention is probably more important than a simple notification
+				$oAction->Set('recipients', 'SELECT Person WHERE id = :mentioned->id');
+				$oAction->Set('title', '$this->friendlyname$');
+				$oAction->Set('message', 'You have been mentioned by $current_contact->friendlyname$');
+				$oAction->DBWrite();
+
+				SetupLog::Info("|- Created newsroom action \"{$oAction->Get('name')}\".");
+
+				// Retrieve all triggers and find those with a mentioned_filter on the Person class
+				$oTriggersSearch = DBObjectSearch::FromOQL("SELECT " . TriggerOnObjectMention::class);
+				$oTriggersSearch->AllowAllData();
+
+				$oTriggersSet = new DBObjectSet($oTriggersSearch);
+				while ($oTrigger = $oTriggersSet->Fetch()) {
+					$oMentionedFilter = DBSearch::FromOQL($oTrigger->Get('mentioned_filter'));
+					$sMentionedClass = $oMentionedFilter->GetClass();
+
+					// If mentioned class is not a Person, ignore
+					if (is_a($sMentionedClass, $sPersonClass, true) === false) {
+						continue;
+					}
+
+					// Link the trigger to the action
+					/** @var \ormLinkSet $oOrm */
+					$oOrm = $oTrigger->Get('action_list');
+					$oLink = new lnkTriggerAction();
+					$oLink->Set('action_id', $oAction->GetKey());
+					$oOrm->AddItem($oLink);
+
+					$oTrigger->Set('action_list', $oOrm);
+					$oTrigger->DBUpdate();
+					$iExistingTriggersCount++;
+
+					SetupLog::Info("|- Linked newsroom action \"{$oAction->GetName()}\" to existing trigger \"{$oTrigger->GetName()}\".");
+				}
+
+				if ($iExistingTriggersCount === 0) {
+					SetupLog::Info("... no action created as there is no existing trigger on mention for the $sPersonClass class.");
+				} else {
+					SetupLog::Info("... default newsroom action successfully created and linked to $iExistingTriggersCount triggers on mention.");
 				}
 			}
 		}

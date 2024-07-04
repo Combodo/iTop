@@ -72,26 +72,14 @@ function DisplayActionsTab(iTopWebPage &$oP, string $sClassToDisplay, array $aCl
 	}
 
 	$oP->SetCurrentTab('UI:NotificationsMenu:Actions:'.$sClassToDisplay);
-	$sNbOfActionClassesTitle = '';
-	if (count($aActionClasses) == 1)
-	{
-		// Preserve old style
-		$sNbOfActionClassesTitle = Dict::S('UI:NotificationsMenu:AvailableActions');
-	}
 
 	$iBlock = 0;
 	foreach($aActionClasses as $sActionClass)
 	{
-		if (count($aActionClasses) > 1)
-		{
-			// New style
-			$sNbOfActionClassesTitle = MetaModel::GetName($sActionClass);
-		}
-
 		$oFilter = new DBObjectSearch($sActionClass);
 		$oFilter->AddCondition('finalclass', $sActionClass); // derived classes will be further processed
 
-		$aParams = array('panel_title' => $sNbOfActionClassesTitle);
+		$aParams = array('panel_title' => MetaModel::GetName($sActionClass));
 
 		$sBlockId = 'block_'.utils::Sanitize($sClassToDisplay, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER).'_'.$iBlock;
 		$oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
