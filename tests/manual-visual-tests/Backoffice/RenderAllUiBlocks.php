@@ -41,6 +41,7 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockWithJSRefreshCallback;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use LoginWebPage;
@@ -354,6 +355,22 @@ $oDashletFieldset1->AddSubBlock($oDashletInput3);
 $oDashletFieldset2->AddSubBlock($oDashletField4);
 $oDashletFieldset2->AddSubBlock($oDashletField5);
 $oDashletFieldset2->AddSubBlock($oDashletField6);
+
+/////////
+// Code
+/////////
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Code examples (MakeForCode)', 2 ));
+$oCode1 = UIContentBlockUIBlockFactory::MakeForCode('function mean(int $a, int $b) {
+	return ($a + $b)/2
+}');
+$oPage->AddUiBlock($oCode1);
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Code examples (MakeForPreformatted)', 2 ));
+$oCode2 = UIContentBlockUIBlockFactory::MakeForPreformatted('function mean(int $a, int $b) {
+	return ($a + $b)/2
+}');
+$oPage->AddUiBlock($oCode2);
 
 /////////
 // Pill
