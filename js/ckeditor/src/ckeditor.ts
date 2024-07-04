@@ -37,6 +37,7 @@ import { AutoLink, Link, LinkImage } from '@ckeditor/ckeditor5-link';
 import { List, ListProperties } from '@ckeditor/ckeditor5-list';
 import { Mention } from '@ckeditor/ckeditor5-mention';
 import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
+import {PasteFromOffice} from "@ckeditor/ckeditor5-paste-from-office";
 import {
 	Table,
 	TableCaption,
@@ -104,6 +105,7 @@ class Editor extends ClassicEditor {
 		ListProperties,
 		Mention,
 		Paragraph,
+        PasteFromOffice,
 		PictureEditing,
 		Strikethrough,
 		Subscript,
