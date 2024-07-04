@@ -51,7 +51,7 @@ class BlockList extends UIContentBlock
 	{
 		return '$("#'.$this->sId.'").block();
 			$.post("ajax.render.php?operation=refreshDashletList",
-			{ style: "list", filter: "'.$this->sFilter.'", extra_params: '.json_encode($this->aExtraParams).' },
+			{ style: "list", filter: '.json_encode($this->sFilter).', extra_params: '.json_encode($this->aExtraParams).' },
 			function(data){
 				$("#'.$this->sId.'")
 				.empty()
