@@ -272,7 +272,7 @@ $(function()
 			{
 				var oMessage = aAllMessages[k];
 				aUnreadMessagesByProvider[oMessage.provider]++;
-				if (iCount < this.options.display_limit + 4) {
+				if (iCount < this.options.display_limit) {
 					var sMessageItem = this._buildMessageItems(oMessage.id, oMessage.text, oMessage.image, oMessage.start_date, oMessage.provider, oMessage.url, oMessage.target, oMessage.priority, oConverter)
 					sMessageSection += sMessageItem;
 				}
