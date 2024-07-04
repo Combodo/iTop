@@ -2334,121 +2334,13 @@ EOF
 				$oPage->add("</fieldset></div>");
 				break;
 
-			// TODO 3.0.0: Move this to new ajax render controller?
+			/**
+			 * @internal
+			 * @deprecated 3.2.0 N°7552 Use object.search_for_mentions route instead
+			 */
 			case 'cke_mentions':
-				$oPage->SetContentType('application/json');
-				$sMarker = utils::ReadParam('marker', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
-				$sNeedle = utils::ReadParam('needle', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
-				$sHostClass = utils::ReadParam('host_class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
-				$iHostId = (int)utils::ReadParam('host_id', 0, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
-
-				// Check parameters
-				if ($sMarker === '') {
-					throw new Exception('Invalid parameters, marker must be specified.');
-				}
-
-				$aMentionsAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
-				if (isset($aMentionsAllowedClasses[$sMarker]) === false) {
-					throw new Exception('Invalid marker "'.$sMarker.'"');
-				}
-
-				$aMatches = array();
-				if ($sNeedle !== '') {
-					// Retrieve mentioned class from marker
-					$sMentionedClass = $aMentionsAllowedClasses[$sMarker];
-					if (MetaModel::IsValidClass($sMentionedClass) === false) {
-						throw new Exception('Invalid class "'.$sMentionedClass.'" for marker "'.$sMarker.'"');
-					}
-
-					// Base search used when no trigger configured
-					$oSearch = DBSearch::FromOQL("SELECT $sMentionedClass");
-					$aSearchParams = ['needle' => "%$sNeedle%"];
-
-					// Retrieve restricting scopes from triggers if any
-					if ((strlen($sHostClass) > 0) && ($iHostId > 0)) {
-						$oHostObj = MetaModel::GetObject($sHostClass, $iHostId);
-						$aSearchParams['this'] = $oHostObj;
-
-						$aTriggerMentionedSearches = [];
-
-						$aTriggerSetParams = array('class_list' => MetaModel::EnumParentClasses($sHostClass, ENUM_PARENT_CLASSES_ALL));
-						$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"), array(), $aTriggerSetParams);
-						/** @var \TriggerOnObjectMention $oTrigger */
-						while ($oTrigger = $oTriggerSet->Fetch()) {
-							$sTriggerMentionedOQL = $oTrigger->Get('mentioned_filter');
-
-							// No filter on mentioned objects, don't restrict the scope at all, it can be any object of $sMentionedClass
-							if (strlen($sTriggerMentionedOQL) === 0) {
-								$aTriggerMentionedSearches = [$oSearch];
-								break;
-							}
-
-							$oTriggerMentionedSearch = DBSearch::FromOQL($sTriggerMentionedOQL);
-							$sTriggerMentionedClass = $oTriggerMentionedSearch->GetClass();
-
-							// Filter is not about the mentioned class, don't mind it
-							if (is_a($sMentionedClass, $sTriggerMentionedClass, true) === false) {
-								continue;
-							}
-
-							$aTriggerMentionedSearches[] = $oTriggerMentionedSearch;
-						}
-
-						if (count($aTriggerMentionedSearches) > 0) {
-							$oSearch = new DBUnionSearch($aTriggerMentionedSearches);
-						}
-					}
-
-					$sSearchMainClassName = $oSearch->GetClass();
-					$sSearchMainClassAlias = $oSearch->GetClassAlias();
-
-					$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sSearchMainClassName);
-
-					// Add condition to filter on the friendlyname
-					$oSearch->AddConditionExpression(
-						new BinaryExpression(new FieldExpression('friendlyname', $sSearchMainClassAlias), 'LIKE', new VariableExpression('needle'))
-					);
-
-					$oSet = new DBObjectSet($oSearch, [], $aSearchParams);
-					// Optimize fields to load
-					$aObjectAttCodesToLoad = [];
-					if (MetaModel::IsValidAttCode($sSearchMainClassName, $sObjectImageAttCode)) {
-						$aObjectAttCodesToLoad[] = $sObjectImageAttCode;
-					}
-					$oSet->OptimizeColumnLoad([$oSearch->GetClassAlias() => $aObjectAttCodesToLoad]);
-					$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
-					// Note: We have to this manually because of a bug in DBSearch not checking the user prefs. by default.
-					$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
-
-					while ($oObject = $oSet->Fetch()) {
-						// Note $oObject finalclass might be different than $sMentionedClass
-						$sObjectClass = get_class($oObject);
-						$iObjectId = $oObject->GetKey();
-						$aMatch = [
-							'class'        => $sObjectClass,
-							'id'           => $iObjectId,
-							'friendlyname' => $oObject->Get('friendlyname'),
-						];
-
-						// Try to retrieve image for contact
-						if (!empty($sObjectImageAttCode)) {
-							/** @var \ormDocument $oImage */
-							$oImage = $oObject->Get($sObjectImageAttCode);
-							if (!$oImage->IsEmpty()) {
-								$aMatch['picture_style'] = "background-image: url('".$oImage->GetDisplayURL($sObjectClass, $iObjectId, $sObjectImageAttCode)."')";
-								$aMatch['initials'] = '';
-							} else {
-								// If no image found, fallback on initials
-								$aMatch['picture_style'] = '';
-								$aMatch['initials'] = utils::FormatInitialsForMedallion(utils::ToAcronym($oObject->Get('friendlyname')));
-							}
-						}
-
-						$aMatches[] = $aMatch;
-					}
-				}
-
-				$oPage->add(json_encode($aMatches));
+				$oController = new ObjectController();
+				$oPage = $oController->OperationSearchForMentions();
 				break;
 
 			case 'custom_fields_update':

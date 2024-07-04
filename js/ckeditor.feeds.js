@@ -22,12 +22,12 @@ const CombodoCKEditorFeeds = {
 						})
 						.then(json => {
 							// ckeditor mandatory data
-							json.data['search_data'].forEach(e => {
+							json.search_data.forEach(e => {
 								e['name'] = e['friendlyname'];
 								e['id'] = options['marker']+e['friendlyname'];
 							});
 							// return searched data
-							resolve( json.data['search_data']);
+							resolve( json.search_data);
 						});
 
 				}, options.throttle);

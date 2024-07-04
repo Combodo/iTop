@@ -79,10 +79,12 @@ class ObjectRepository
 	 * @param string $sOql Oql expression
 	 * @param string $sSearch Friendly name search string
 	 * @param DBObject|null $oThisObject This object reference for oql
+	 * @param int $iLimit Limit results to the $iLimit first elements
 	 *
 	 * @return array|null
+	 * @since 3.2.0 Add $iLimit parameter
 	 */
-	public static function SearchFromOql(string $sObjectClass, array $aFieldsToLoad, string $sOql, string $sSearch, DBObject $oThisObject = null): ?array
+	public static function SearchFromOql(string $sObjectClass, array $aFieldsToLoad, string $sOql, string $sSearch, DBObject $oThisObject = null, int $iLimit = 0): ?array
 	{
 		try {
 
@@ -93,6 +95,11 @@ class ObjectRepository
 
 			// Create db set from db search
 			$oDbObjectSet = new DBObjectSet($oDbObjectSearch, [], ['this' => $oThisObject]);
+
+			// Limit results
+			if ($iLimit > 0) {
+				$oDbObjectSet->SetLimit($iLimit);
+			}
 
 			// return object array
 			return ObjectRepository::DBSetToObjectArray($oDbObjectSet, $sObjectClass, $aFieldsToLoad);
