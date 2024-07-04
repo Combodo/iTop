@@ -39,6 +39,8 @@ $ibo-quick-create--compartment-title--line-spacing: $ibo-spacing-300 !default;
 
 $ibo-quick-create--compartment-content--text-color: $ibo-color-grey-900 !default;
 
+$ibo-quick-create--compartment-results--element--max-height: unset !default;
+
 $ibo-quick-create--compartment-element--padding-x: $ibo-spacing-300 !default;
 $ibo-quick-create--compartment-element--padding-y: $ibo-spacing-200 !default;
 $ibo-quick-create--compartment-element--margin-x: -1 * $ibo-quick-create--compartment-element--padding-x !default;
@@ -49,6 +51,7 @@ $ibo-quick-create--compartment-element-image--margin-right: $ibo-spacing-300 !de
 $ibo-quick-create--compartment-element-image--width: 20px !default;
 
 $ibo-quick-create--compartment-results--container--width: 100% !important !default;
+$ibo-quick-create--compartment-results--container--background-color: transparent !default;
 
 $ibo-quick-create--compartment--placeholder-image--margin-top: $ibo-spacing-600 !default;
 $ibo-quick-create--compartment--placeholder-image--margin-bottom: $ibo-spacing-500 !default;
@@ -219,28 +222,38 @@ $ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-70
 }
 
 .ibo-quick-create--compartment-results--container{
+  position: static;
 	width: $ibo-quick-create--compartment-results--container--width;
+  background: $ibo-quick-create--compartment-results--container--background-color;
+  border: none;
+  box-shadow: none;
 }
-.ibo-quick-create--compartment-results--element > .option{
-	padding: $ibo-quick-create--compartment-element--padding-y $ibo-quick-create--compartment-element--padding-x;
-	margin-left: $ibo-quick-create--compartment-element--margin-x;
-	margin-right: $ibo-quick-create--compartment-element--margin-x;
-	color: inherit;
+.ibo-quick-create--compartment-results--element {
+  overflow: unset;
+  max-height: $ibo-quick-create--compartment-results--element--max-height;
+  
+  &> .option {
+    padding: $ibo-quick-create--compartment-element--padding-y $ibo-quick-create--compartment-element--padding-x;
+    margin-left: $ibo-quick-create--compartment-element--margin-x;
+    margin-right: $ibo-quick-create--compartment-element--margin-x;
+    color: inherit;
 
-	@extend %ibo-text-truncated-with-ellipsis;
+    @extend %ibo-text-truncated-with-ellipsis;
 
-	&.active{
-		background-color: $ibo-quick-create--compartment-element--background-color--is-active;
-		border-radius: $ibo-quick-create--compartment-element--border-radius--is-active;
-	}
-	&:hover{
-		cursor: pointer;
-		@extend a;
-	}
+    &.active {
+      background-color: $ibo-quick-create--compartment-element--background-color--is-active;
+      border-radius: $ibo-quick-create--compartment-element--border-radius--is-active;
+    }
 
-	.highlight{
-		font-weight: bold;
-	}
+    &:hover {
+      cursor: pointer;
+      @extend a;
+    }
+
+    .highlight {
+      font-weight: bold;
+    }
+  }
 }
 
 .ibo-quick-create--compartment--placeholder{

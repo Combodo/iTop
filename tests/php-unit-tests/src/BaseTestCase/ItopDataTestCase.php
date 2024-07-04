@@ -127,7 +127,10 @@ abstract class ItopDataTestCase extends ItopTestCase
 		}
 		if (static::CREATE_TEST_ORG)
 		{
-			$this->GivenTestOrganization();
+			// Create a specific organization for the tests
+			$this->iTestOrgId = $this->GivenObjectInDB('Organization', [
+			    'name' => 'UnitTestOrganization',
+			]);
 		}
 
 		$oConfig = MetaModel::GetConfig();
@@ -1173,29 +1176,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 		}
 
 		return $iKey;
-	}
-
-	/**
-	 * Create an Organization in database
-	 *
-	 * @param string $sName
-	 *
-	 * @throws Exception
-	 */
-	protected function GivenOrganization($sName): string
-	{
-		$sId = $this->GivenObjectInDB('Organization', [
-			'name' => $sName,
-		]);
-		$this->debug("Created Organization $sName");
-
-		return $sId;
-	}
-
-	protected function GivenTestOrganization(): void
-	{
-		// Create a specific organization for the tests
-		$this->iTestOrgId = $this->GivenOrganization('UnitTestOrganization');
 	}
 
 	/**

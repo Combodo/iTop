@@ -46,17 +46,21 @@ class GivenObjectInDBTest extends ItopDataTestCase
 			'first_name' => 'John',
 		]);
 
+		$iRole = $this->GivenObjectInDB('ContactType', [
+			'name' => 'The Boss',
+		]);
+
 		$iTeam = $this->GivenObjectInDB('Team', [
 			'name' => 'The A Team',
 			'persons_list' => [
-				"person_id:$iPerson;role_id:1"
+				"person_id:$iPerson;role_id:$iRole"
 			],
 		]);
 
 		$oSet = new \DBObjectSet(\DBObjectSearch::FromOQL("SELECT lnkPersonToTeam AS lnk WHERE lnk.team_id = $iTeam AND lnk.person_id = $iPerson"));
 		$this->assertEquals(1, $oSet->Count(), "The link between the team and the person should be there");
 		$oLnk = $oSet->Fetch();
-		$this->assertEquals(1, $oLnk->Get('role_id'), "The role should be correctly set");
+		$this->assertEquals($iRole, $oLnk->Get('role_id'), "The role should be correctly set");
 	}
 
 	public function testItShouldFailExplicitlyWhenAnAttributeCodeIsUnknown()
