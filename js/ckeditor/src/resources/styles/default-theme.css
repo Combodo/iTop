@@ -19,6 +19,8 @@
 	--ck-icon-size: 1.3rem;
 
 	--ck-z-default: 9999;
+	--ck-z-panel: calc( var(--ck-z-default) + 999 );
+	--ck-z-dialog: calc( var(--ck-z-panel) + 9999 );
 
 	/* Custom variables overloaded by backoffice or portals */
 	--ck-text-tiny-font-size: 0.7rem;
