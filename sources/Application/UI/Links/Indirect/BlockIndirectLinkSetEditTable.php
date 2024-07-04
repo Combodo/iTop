@@ -37,6 +37,7 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 	// Overloaded constants
 	public const BLOCK_CODE                   = 'ibo-block-indirect-linkset-edit-table';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/indirect/block-indirect-linkset-edit-table/layout';
+	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'application/links/indirect/block-indirect-linkset-edit-table/layout';
 	public const DEFAULT_JS_FILES_REL_PATH    = [
 		'js/links/links_widget.js',
 	];
@@ -327,20 +328,20 @@ EOF
 			if ($iUniqueId > 0) {
 				// Rows created with ajax call need OnLinkAdded call.
 				//
-				$oP->add_ready_script(
-					<<<EOF
+					$oP->add_ready_script(
+						<<<EOF
 PrepareWidgets();
 oWidget{$this->oUILinksWidget->GetInputId()}.OnLinkAdded($iUniqueId, $iRemoteObjKey);
 EOF
-				);
+					);
 			} else {
 				// Rows added before loading the form don't have to call OnLinkAdded.
 				// Listeners are already present and DOM is not recreated
 				$iPositiveUniqueId = -$iUniqueId;
-				$oP->add_ready_script(<<<EOF
+					$oP->add_ready_script(<<<EOF
 oWidget{$this->oUILinksWidget->GetInputId()}.AddLink($iPositiveUniqueId, $iRemoteObjKey);
 EOF
-				);
+					);
 			}
 
 			foreach ($this->oUILinksWidget->GetEditableFields() as $sFieldCode) {
@@ -352,11 +353,11 @@ EOF
 				$aFieldsMap[$sFieldCode] = $sSafeFieldId;
 
 				$sValue = $oNewLinkObj->Get($sFieldCode);
-				$oP->add_ready_script(
-					<<<JS
+					$oP->add_ready_script(
+						<<<JS
 oWidget{$this->oUILinksWidget->GetInputId()}.OnValueChange($iKey, $iUniqueId, '$sFieldCode', '$sValue');
 JS
-				);
+					);
 			}
 
 			$sState = '';
