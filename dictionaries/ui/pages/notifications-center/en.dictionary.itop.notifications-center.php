@@ -21,6 +21,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:NotificationsCenter:Page:Title' => 'Notifications center',
 	'UI:NotificationsCenter:Panel:Title' => 'Notifications center',
 	'UI:NotificationsCenter:Panel:SubTitle' => 'Manage Notifications that you have received : unsubscribe or limit them to a single channel',
+	'UI:NotificationsCenter:Panel:Toolbar:ViewAllNews:Title' => 'View all my news',
 	'UI:NotificationsCenter:Panel:Table:Channels' => 'Channels',
 	'UI:NotificationsCenter:Unsubscribe:Success' => 'You have been successfully unsubscribed from the selected notifications.',
 	'UI:NotificationsCenter:Unsubscribe:Error' => 'An error occurred while unsubscribing from the selected notifications.',

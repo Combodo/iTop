@@ -3,6 +3,7 @@ namespace Combodo\iTop\Controller\Notifications;
 
 use ActionNotification;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
@@ -11,6 +12,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Set\SetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Controller\Newsroom\iTopNewsroomController;
 use Combodo\iTop\Core\Trigger\Enum\SubscriptionPolicy;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Service\Notification\NotificationsRepository;
@@ -64,6 +66,13 @@ class NotificationsCenterController extends Controller
 		$oNotificationsPanel->AddSubTitleBlock(new Html(Dict::S('UI:NotificationsCenter:Panel:SubTitle')));
 		$sPictureUrl = UserRights::GetUserPictureAbsUrl();
 		$oNotificationsPanel->SetIcon($sPictureUrl,Panel::ENUM_ICON_COVER_METHOD_CONTAIN, true);
+
+		$oAllNewsPageButton = ButtonUIBlockFactory::MakeIconLink(
+			'fas fa-bell',
+			Dict::S('UI:NotificationsCenter:Panel:Toolbar:ViewAllNews:Title'),
+			Router::GetInstance()->GenerateUrl(iTopNewsroomController::ROUTE_NAMESPACE.'.view_all'),
+		);
+		$oNotificationsPanel->SetToolBlocks([$oAllNewsPageButton]);
 
 		$oNotificationsCenterTableColumns = [
 			'trigger'  => array('label' => MetaModel::GetName('Trigger')),
