@@ -557,6 +557,8 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:ActionNotification' => 'Notification Action',
 	'Class:ActionNotification+' => 'Notification Action (abstract)',
+	'Class:ActionNotification/Attribute:language' => 'Language',
+	'Class:ActionNotification/Attribute:language+' => '',
 ));
 
 //
