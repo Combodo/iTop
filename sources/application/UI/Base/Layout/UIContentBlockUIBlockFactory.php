@@ -45,33 +45,45 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	 * The \n are replaced by <br>
 	 *
 	 * @api
-	 * @param string $sCode
+	 * @param string $sCode plain text code
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 */
 	public static function MakeForCode(string $sCode, string $sId = null)
 	{
-		$oCode = new UIContentBlock($sId, ['ibo-is-code']);
-		$sCode = str_replace("\n", '<br>', $sCode);
-		$oCode->AddSubBlock(new Html($sCode));
+		$sCode = str_replace("\n", '<br>', \utils::HtmlEntities($sCode));
 
-		return $oCode;
+		return self::MakeFromHTMLCode($sId, $sCode);
 	}
 
 	/**
 	 * Used to display a block of preformatted text in a <pre> tag.
 	 *
 	 * @api
-	 * @param string $sCode
+	 * @param string $sCode plain text code
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 */
 	public static function MakeForPreformatted(string $sCode, string $sId = null)
 	{
-		$sCode = '<pre>'.$sCode.'</pre>';
+		$sCode = '<pre>'.\utils::HtmlEntities($sCode).'</pre>';
 
-		return static::MakeForCode($sCode, $sId);
+		return self::MakeFromHTMLCode($sId, $sCode);
+	}
+
+	/**
+	 * @param string|null $sId
+	 * @param string $sCode
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
+	 */
+	private static function MakeFromHTMLCode(?string $sId, string $sCode): UIContentBlock
+	{
+		$oCode = new UIContentBlock($sId, ['ibo-is-code']);
+		$oCode->AddSubBlock(new Html($sCode));
+
+		return $oCode;
 	}
 }
