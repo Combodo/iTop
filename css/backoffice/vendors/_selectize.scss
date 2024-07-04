@@ -23,6 +23,17 @@ $ibo-vendors-selectize--item--ignore-partial--background-color: $ibo-color-grey-
 
 $ibo-vendors-selectize--input-error--border: 1px solid $ibo-color-red-600 !default;
 
+$ibo-vendors-selectize--input--border-color: $ibo-color-grey-500 !default;
+
+$ibo-vendors-selectize--element--active--background: $ibo-color-white-100 !default;
+$ibo-vendors-selectize--element--active--color: $ibo-color-grey-500 !default;
+
+$ibo-vendors-selectize--dropdown--background-color: $ibo-vendors-selectize-input--background-color !default;
+$ibo-vendors-selectize--dropdown--color:  $ibo-vendors-selectize-input--color!default;
+
+$ibo-vendors-selectize--header--padding-x: 8px !default;
+$ibo-vendors-selectize--header--padding-y: 5px !default;
+
 .selectize-control.single .selectize-input {
   box-shadow: unset;
   background-color: $ibo-vendors-selectize-input--background-color;
@@ -55,20 +66,22 @@ $ibo-vendors-selectize--input-error--border: 1px solid $ibo-color-red-600 !defau
 }
 
 .selectize-control.single .selectize-input, .selectize-dropdown.single {
-  border-color: $ibo-color-grey-500;
+  border-color: $ibo-vendors-selectize--input--border-color;
 }
 
 .selectize-dropdown {
+  background-color: $ibo-vendors-selectize--dropdown--background-color;
+  color: $ibo-vendors-selectize--dropdown--color;
   .selected,
   .active,
   .active:not(.selected){
-    background: #f5fafd;
-    color: #495c68;
+    background: $ibo-vendors-selectize--element--active--background;
+    color: $ibo-vendors-selectize--element--active--color;
   }
 
   [data-selectable],
   .optgroup-header {
-    padding: 5px 8px;
+    padding: $ibo-vendors-selectize--header--padding-y $ibo-vendors-selectize--header--padding-x;
   }
 
   .option {
