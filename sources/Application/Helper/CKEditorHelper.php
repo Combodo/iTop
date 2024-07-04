@@ -107,7 +107,7 @@ class CKEditorHelper
 					'minimumCharacters' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
 					'feed_type' => 'ajax',
 					'feed_ajax_options' => [
-						'url' => utils::GetAbsoluteUrlAppRoot(). "pages/ajax.render.php?route=object.search&object_class=$sMentionClass&oql=SELECT $sMentionClass&search=",
+						'url' => utils::GetAbsoluteUrlAppRoot(). "pages/ajax.render.php?route=object.search_for_mentions&marker=".urlencode($sMentionMarker)."&needle=",
 						'throttle' => 500,
 						'marker' => $sMentionMarker,
 					],

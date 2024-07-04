@@ -217,12 +217,23 @@ class CaseLogEntryForm extends UIContentBlock
 		$this->oTextInput = new RichText();
 
 		// Add the "host_class" to the mention endpoints so it can filter objects regarding the triggers
+		// Mind that `&needle=` must be ending the endpoint URL in order for the JS plugin to append the needle string
 		$aConfig = $this->oTextInput->GetConfig();
-		if (isset($aConfig['mentions'])) {
-			foreach ($aConfig['mentions'] as $iIdx => $aData) {
-				$sFeed = $aConfig['mentions'][$iIdx]['feed'];
+		if (isset($aConfig['mention']['feeds'])) {
+			foreach ($aConfig['mention']['feeds'] as $iIdx => $aData) {
+				$sFeed = $aConfig['mention']['feeds'][$iIdx]['feed_ajax_options']['url'];
+
+				// Remove existing "needle" parameter
+				$sFeed = str_replace('&needle=', '', $sFeed);
+
+				// Add new parameters
 				$sFeed = utils::AddParameterToUrl($sFeed, 'host_class', $this->GetObjectClass());
-				$aConfig['mentions'][$iIdx]['feed'] = utils::AddParameterToUrl($sFeed, 'host_id', $this->GetObjectId());
+				$sFeed = utils::AddParameterToUrl($sFeed, 'host_id', $this->GetObjectId());
+
+				// Re-append "needle" parameter
+				$sFeed = utils::AddParameterToUrl($sFeed, 'needle', '');
+
+				$aConfig['mention']['feeds'][$iIdx]['feed_ajax_options']['url'] = $sFeed;
 			}
 		}
 		$this->oTextInput->SetConfig($aConfig);

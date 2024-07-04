@@ -21,6 +21,10 @@ use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Service\Base\ObjectRepository;
 use Combodo\iTop\Service\Router\Router;
 use CoreCannotSaveObjectException;
+use DBObjectSearch;
+use DBObjectSet;
+use DBSearch;
+use DBUnionSearch;
 use DeleteException;
 use Dict;
 use Exception;
@@ -826,6 +830,95 @@ JS;
 		if ($aResult !== null && $aDataProcessor !== null) {
 			$aResult = call_user_func(array($aDataProcessor['class_name'], 'Execute'), $aResult, $aDataProcessor['settings']);
 		}
+
+		return $oPage->SetData([
+			'search_data' => $aResult,
+			'success'     => $aResult !== null,
+		]);
+	}
+
+	public function OperationSearchForMentions(): JsonPage
+	{
+		$oPage = new JsonPage();
+		$oPage->SetOutputDataOnly(true);
+
+		$sMarker = utils::ReadParam('marker', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$sNeedle = utils::ReadParam('needle', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$sHostClass = utils::ReadParam('host_class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
+		$iHostId = (int) utils::ReadParam('host_id', 0, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
+
+		// Check parameters
+		if (utils::IsNullOrEmptyString($sMarker)) {
+			throw new ApplicationException('Invalid parameters, marker must be specified.');
+		}
+		if (utils::IsNullOrEmptyString($sNeedle)) {
+			throw new ApplicationException('Invalid parameters, needle must be specified.');
+		}
+
+		$aMentionsAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
+		if (isset($aMentionsAllowedClasses[$sMarker]) === false) {
+			throw new ApplicationException('Invalid marker "'.$sMarker.'"');
+		}
+
+		$aMatches = array();
+		// Retrieve mentioned class from marker
+		$sMentionedClass = $aMentionsAllowedClasses[$sMarker];
+		if (MetaModel::IsValidClass($sMentionedClass) === false) {
+			throw new ApplicationException('Invalid class "'.$sMentionedClass.'" for marker "'.$sMarker.'"');
+		}
+
+		// Base search used when no trigger configured
+		$oSearch = DBSearch::FromOQL("SELECT $sMentionedClass");
+		$aSearchParams = ['needle' => "%$sNeedle%"];
+
+		// Retrieve restricting scopes from triggers if any
+		if (utils::IsNotNullOrEmptyString($sHostClass) && ($iHostId > 0)) {
+			$oHostObj = MetaModel::GetObject($sHostClass, $iHostId);
+			$aSearchParams['this'] = $oHostObj;
+
+			$aTriggerMentionedSearches = [];
+
+			$aTriggerSetParams = array('class_list' => MetaModel::EnumParentClasses($sHostClass, ENUM_PARENT_CLASSES_ALL));
+			$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"), array(), $aTriggerSetParams);
+			/** @var \TriggerOnObjectMention $oTrigger */
+			while ($oTrigger = $oTriggerSet->Fetch()) {
+				$sTriggerMentionedOQL = $oTrigger->Get('mentioned_filter');
+
+				// No filter on mentioned objects, don't restrict the scope at all, it can be any object of $sMentionedClass
+				if (utils::IsNullOrEmptyString($sTriggerMentionedOQL)) {
+					$aTriggerMentionedSearches = [$oSearch];
+					break;
+				}
+
+				$oTriggerMentionedSearch = DBSearch::FromOQL($sTriggerMentionedOQL);
+				$sTriggerMentionedClass = $oTriggerMentionedSearch->GetClass();
+
+				// Filter is not about the mentioned class, don't mind it
+				if (is_a($sMentionedClass, $sTriggerMentionedClass, true) === false) {
+					continue;
+				}
+
+				$aTriggerMentionedSearches[] = $oTriggerMentionedSearch;
+			}
+
+			if (count($aTriggerMentionedSearches) > 0) {
+				$oSearch = new DBUnionSearch($aTriggerMentionedSearches);
+			}
+		}
+
+		$sSearchMainClassName = $oSearch->GetClass();
+		$sSearchMainClassAlias = $oSearch->GetClassAlias();
+
+		$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sSearchMainClassName);
+
+
+		// Optimize fields to load
+		$aObjectAttCodesToLoad = [];
+		if (MetaModel::IsValidAttCode($sSearchMainClassName, $sObjectImageAttCode)) {
+			$aObjectAttCodesToLoad[] = $sObjectImageAttCode;
+		}
+
+		$aResult = ObjectRepository::SearchFromOql($sSearchMainClassName, $aObjectAttCodesToLoad, $oSearch->ToOQL(), $sNeedle, $oHostObj, MetaModel::GetConfig()->Get('max_autocomplete_results'));
 
 		return $oPage->SetData([
 			'search_data' => $aResult,
