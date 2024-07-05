@@ -13,6 +13,7 @@ $ibo-navigation-menu--notifications--item--image--max-height: 20px !default;
 $ibo-navigation-menu--notifications--item--image--border-radius: $ibo-border-radius-full !default;
 
 $ibo-navigation-menu--notifications--item--bottom-text--margin-left: auto !default;
+$ibo-navigation-menu--notifications--item--bottom-text--margin-right: auto !default;
 
 $ibo-navigation-menu--notifications--item--content--padding-y: $ibo-spacing-0 !default;
 $ibo-navigation-menu--notifications--item--content--padding-x: 14px !default;
@@ -76,6 +77,7 @@ $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
   float: right;
   align-self: center;
   margin-left: $ibo-navigation-menu--notifications--item--bottom-text--margin-left;
+  margin-right: $ibo-navigation-menu--notifications--item--bottom-text--margin-right;
 }
 .ibo-navigation-menu--notifications--item--content {
   padding: $ibo-navigation-menu--notifications--item--content--padding-y $ibo-navigation-menu--notifications--item--content--padding-x;

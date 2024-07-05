@@ -542,32 +542,32 @@ class FileLog
  */
 class LogChannels
 {
-	public const APC = 'apc';
+	public const APC = 'Apc';
 
 	/**
 	 * @var string Everything related to the backup / restore
 	 * @since 3.1.0
 	 */
-	public const BACKUP = 'backup';
+	public const BACKUP = 'Backup';
 
 	/**
 	 * @since 3.0.0
 	 */
-	public const CLI = 'CLI';
+	public const CLI = 'Cli';
 
 	/**
 	 * @var string
 	 * @since 2.7.7 N°4558 use this new channel when logging DB transactions
 	 * @since 3.0.0 logs info in CMDBSource (see commit a117906f)
 	 */
-	public const CMDB_SOURCE = 'cmdbsource';
+	public const CMDB_SOURCE = 'CmdbSource';
 
 	/**
 	 * @since 3.0.0
 	 */
-	public const CONSOLE = 'console';
+	public const CONSOLE = 'Console';
 
-	public const CORE = 'core';
+	public const CORE = 'Core';
 
 	/**
 	 * @var string Everything related to the datatable component
@@ -592,10 +592,10 @@ class LogChannels
 	 * @var string Everything related to the datamodel CRUD
 	 * @since 3.1.0
 	 */
-	public const DM_CRUD = 'DMCRUD';
+	public const DM_CRUD = 'DMCrud';
 
 	/**
-	 * @var string Everything related to the datamodel CRUD
+	 * @var string Everything related to webrequests
 	 * @since 3.1.0
 	 */
 	public const WEB_REQUEST = 'WebRequest';
@@ -610,7 +610,7 @@ class LogChannels
 	 * @var string
 	 * @since 2.7.9 3.0.3 3.1.0 N°5588
 	 */
-	public const EXPORT = 'export';
+	public const EXPORT = 'Export';
 
 	public const INLINE_IMAGE = 'InlineImage';
 
@@ -619,9 +619,9 @@ class LogChannels
 	 * @since 3.0.1 N°4849
 	 * @since 2.7.7 N°4635
 	 */
-	public const NOTIFICATIONS = 'notifications';
+	public const NOTIFICATIONS = 'Notifications';
 
-	public const PORTAL       = 'portal';
+	public const PORTAL       = 'Portal';
 
 	public const TEMPORARY_OBJECTS = 'TemporaryObjects';
 
@@ -629,7 +629,13 @@ class LogChannels
 	 * @var string
 	 * @since 3.1.0
 	 */
-	public const ROUTER = 'router';
+	public const ROUTER   = 'Router';
+
+	/**
+	 * @var string
+	 * @since 3.2.0
+	 */
+	public const SECURITY = 'Security';
 }
 
 
