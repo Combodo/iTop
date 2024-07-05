@@ -768,6 +768,15 @@ JS
 	 */
 	protected function InjectRendererFileAssets(string $sClass, array $aAttributesCodesToDisplay, $oOutput)
 	{
+		// handle abstract class
+		while(MetaModel::IsAbstract($sClass)){
+			$aChildClasses = MetaModel::EnumChildClasses($sClass);
+			if(count($aChildClasses) > 0){
+				$sClass = $aChildClasses[0];
+			}
+		}
+
+		// create a fake object to pass to renderers for retrieving global assets
 		$oItem = MetaModel::NewObject($sClass);
 
 		// Iterate throw attributes...
@@ -776,10 +785,13 @@ JS
 			// Retrieve attribute definition
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 
+			// make form field from attribute
 			$oField = $oAttDef->MakeFormField($oItem);
 
+			// retrieve the form field renderer
 			$sFieldRendererClass = static::GetFieldRendererClass($oField);
 
+			// retrieve renderer global assets
 			if ($sFieldRendererClass !== null) {
 				/** @var FieldRenderer $oFieldRenderer */
 				$oFieldRenderer = new $sFieldRendererClass($oField);
