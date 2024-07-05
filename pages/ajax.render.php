@@ -36,7 +36,7 @@ try
 	if (!isset($_SERVER['HTTP_X_COMBODO_AJAX']) && $_SERVER['REQUEST_METHOD'] !== 'GET') {
 		$sReferer = $_SERVER['HTTP_REFERER'];
 		$sErrorMsg = 'Unauthorized access. Please see https://www.itophub.io/wiki/page?id=3_2_0:release:developer#checking_for_the_presence_of_specific_header_in_the_post_to_enhance_protection_against_csrf_attacks';
-		IssueLog::Error("Unprotected ajax call from: $sReferer. $sErrorMsg");
+		IssueLog::Error("Unprotected ajax call : $sErrorMsg", LogChannels::SECURITY, ['referer' => $sReferer]);
 		header('HTTP/1.1 401 Unauthorized');
 		die($sErrorMsg);
 	}
