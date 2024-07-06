@@ -16,6 +16,8 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
+
 require_once(APPROOT.'core/tar-itop.class.inc.php');
 
 interface BackupArchive
@@ -272,7 +274,7 @@ class DBBackup
 			$aExtraFiles = MetaModel::GetModuleSetting('itop-backup', 'extra_files', []);
 		}
 
-		foreach (utils::GetClassesForInterface('iBackupExtraFilesExtension', '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]']) as $sExtensionClass)
+		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iBackupExtraFilesExtension::class) as $sExtensionClass)
 		{
 			/** @var iBackupExtraFilesExtension $oExtensionInstance */
 			$oExtensionInstance = new $sExtensionClass();

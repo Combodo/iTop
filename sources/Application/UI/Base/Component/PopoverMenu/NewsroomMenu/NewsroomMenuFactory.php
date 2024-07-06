@@ -20,6 +20,8 @@
 namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu\NewsroomMenu;
 
 use appUserPreferences;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
+use iNewsroomProvider;
 use MetaModel;
 use UserRights;
 use utils;
@@ -62,10 +64,8 @@ class NewsroomMenuFactory
 	{
 		$aProviderParams=[];
 		$oUser = UserRights::GetUserObject();
-		/**
-		 * @var \iNewsroomProvider[] $aProviders
-		 */
-		$aProviders = utils::GetClassesForInterface('iNewsroomProvider', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+		/** @var iNewsroomProvider[] $aProviders */
+		$aProviders = InterfaceDiscovery::GetInstance()->FindItopClasses(iNewsroomProvider::class);
 		foreach($aProviders as $cProvider) {
 			$oProvider = new $cProvider();
 			$oConfig = MetaModel::GetConfig();

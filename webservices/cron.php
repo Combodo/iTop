@@ -20,6 +20,7 @@
 use Combodo\iTop\Application\WebPage\CLIPage;
 use Combodo\iTop\Application\WebPage\Page;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 
 require_once(__DIR__.'/../approot.inc.php');
 
@@ -408,7 +409,7 @@ function ReSyncProcesses($oP, $bVerbose, $bDebug)
 	$oNow = new DateTime();
 
 	$aProcesses = array();
-	foreach (utils::GetClassesForInterface('iProcess', '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]']) as $sTaskClass)
+	foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iProcess::class) as $sTaskClass)
 	{
 		$oProcess = new $sTaskClass;
 		$aProcesses[$sTaskClass] = $oProcess;

@@ -25,6 +25,7 @@ use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\Notifications\NotificationsCenterController;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Service\Router\Router;
 
 require_once('../approot.inc.php');
@@ -250,7 +251,8 @@ JS
 	//////////////////////////////////////////////////////////////////////////
 	$iCountProviders = 0;
 	$oUser = UserRights::GetUserObject();
-	$aProviders = utils::GetClassesForInterface('iNewsroomProvider', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+	/** @var iNewsroomProvider[] $aProviders */
+	$aProviders = InterfaceDiscovery::GetInstance()->FindItopClasses(iNewsroomProvider::class);
 	foreach($aProviders as $cProvider) 
 	{
 		$oProvider = new $cProvider();
@@ -831,8 +833,8 @@ try {
 				$oPage->add_header('Location: '.$sURL);
 				break;
 			case 'apply_keyboard_shortcuts':
-				// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
-				$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+				/** @var iKeyboardShortcut[] $aShortcutClasses */
+				$aShortcutClasses = InterfaceDiscovery::GetInstance()->FindItopClasses(iKeyboardShortcut::class);
 				$aShortcutPrefs = [];
 				foreach ($aShortcutClasses as $cShortcutPlugin) {
 					foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {
@@ -852,7 +854,8 @@ try {
 			case 'apply_newsroom_preferences':
 				$iCountProviders = 0;
 				$oUser = UserRights::GetUserObject();
-				$aProviders = utils::GetClassesForInterface('iNewsroomProvider', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+				/** @var iNewsroomProvider[] $aProviders */
+				$aProviders = InterfaceDiscovery::GetInstance()->FindItopClasses(iNewsroomProvider::class);
 				foreach ($aProviders as $cProvider) {
 					$oProvider = new $cProvider();
 					if ($oProvider->IsApplicable($oUser)) {

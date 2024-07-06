@@ -501,4 +501,26 @@ abstract class ItopTestCase extends TestCase
 		}
 		closedir($dir);
 	}
+
+	/**
+	 * An alternative to assertEquals in case the order of the elements in the array is not important
+	 *
+	 * @since 3.2.0
+	 */
+	protected function AssertArraysHaveSameItems(array $aExpectedClasses, array $aClasses, string $sMessage = ''): void
+	{
+		sort($aClasses);
+		sort($aExpectedClasses);
+
+		$sExpected = implode("\n", $aExpectedClasses);
+		$sActual = implode("\n", $aClasses);
+		if ($sExpected === $sActual) {
+			$this->assertTrue(true);
+			return;
+		}
+		$sMessage .= "\nExpected:\n$sExpected\nActual:\n$sActual";
+		var_export($aClasses);
+
+		$this->fail($sMessage);
+	}
 }
