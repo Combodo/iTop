@@ -32,7 +32,8 @@
     "@ckeditor/ckeditor5-table": "~41.4",
     "@ckeditor/ckeditor5-typing": "~41.4",
     "@ckeditor/ckeditor5-ui": "~41.4",
-    "@ckeditor/ckeditor5-undo": "~41.4"
+    "@ckeditor/ckeditor5-undo": "~41.4",
+    "ws": ">=7.5.10"
   },
   "devDependencies": {
     "@ckeditor/ckeditor5-core": "~41.4",
