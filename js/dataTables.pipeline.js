@@ -55,7 +55,7 @@ $.fn.dataTable.pipeline = function (opts, initJson) {
 			// API requested that the cache be cleared
 			ajax = true;
 			settings.clearCache = false;
-		} else if (cacheLower < 0 || requestStart < cacheLower || requestEnd > cacheUpper) {
+		} else if (cacheLower < 0 || requestStart < cacheLower || (requestEnd > cacheUpper && cacheUpper <  settings._iRecordsTotal)) {
 			// outside cached data - need to make a request
 			ajax = true;
 		} else if (JSON.stringify(request.order) !== JSON.stringify(cacheLastRequest.order) ||
