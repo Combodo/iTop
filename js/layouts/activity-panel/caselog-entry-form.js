@@ -57,6 +57,7 @@ $(function() {
 			
 			// the constructor
 			_create: function () {
+				const me = this;
 				const aMandatoryOptions = ['object_class', 'object_id', 'attribute_code'];
 				for (let sOption of aMandatoryOptions) {
 					if (null === this.options[sOption]) {
@@ -66,19 +67,22 @@ $(function() {
 					}
 				}
 
-				this._UpdateState();
-				if (this._IsSubmitAutonomous()) {
-					this._ShowMainActions();
-				} else {
-					this._AddBridgeInput();
-					this._HideMainActions();
-				}
+				// Ensure the CKEditor instance is ready before proceding
+				this._GetCKEditorInstance(true).then((oCKEditorInstance) => {
+					me._UpdateState();
+					if (me._IsSubmitAutonomous()) {
+						me._ShowMainActions();
+					} else {
+						me._AddBridgeInput();
+						me._HideMainActions();
+					}
 
-				this._bindEvents();
+					me._bindEvents();
 
-				this.element.trigger('ready.caselog_entry_form.itop');
+					me.element.trigger('ready.caselog_entry_form.itop');
+				});
 			},
-			_bindEvents: async function () {
+			_bindEvents: function () {
 				let me = this;
 				let CKEditorInstance = this._GetCKEditorInstance();
 				// Handlers for the CKEditor itself
@@ -198,8 +202,8 @@ $(function() {
 				this.element.trigger('requested_submission.caselog_entry_form.itop', oData);
 			},
 			// - Form
-			_GetCKEditorInstance: function () {
-				return CombodoCKEditorHandler.GetInstanceSynchronous('#'+this.options.text_input_id);
+			_GetCKEditorInstance: function (bAsync = false) {
+				return bAsync ? CombodoCKEditorHandler.GetInstance('#'+this.options.text_input_id) : CombodoCKEditorHandler.GetInstanceSynchronous('#'+this.options.text_input_id);
 			},
 			_ShowEntryForm: function () {
 				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.form).removeClass(this.css_classes.is_closed);
