@@ -39,7 +39,8 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 		this._super(this.options);
 
 		// Initialize the vertical scroll offset
-		this.scroll_offset_y = this.element.find('#' + this.tabs.eq(0).attr('data-tab-id')).offset().top;
+		let oFirstPanel = this.element.find('#' + this.tabs.eq(0).attr('data-tab-id'));
+		this.scroll_offset_y = oFirstPanel.length > 0 ? oFirstPanel.offset().top : this.element.find(this.js_selectors.tab_container_list).offset().top;
 		
 		// Add every other tab to the controller 
 		$(this.js_selectors.tab_toggler).each(function(){
@@ -53,14 +54,17 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 		// Set active tab, tab-container gives us a tab based on url hash or 0
 		this.setTab(this._findActive(this.options.active));
 		// If not on the first tab, we scroll directly to it
-		// Note: We don't want to scroll if we are on the first one, otherwise it will looks buggy because the page will be a bit scrolled and it doesn't feel right
+		// Note: We don't want to scroll if we are on the first one, otherwise it will look buggy because the page will be a bit scrolled and it doesn't feel right
 		if(this.options.active > 0) {
 			const oActiveTab = this.tabs.eq(this.options.active);
 			const oActivePanel = this.element.find('#' + oActiveTab.attr('data-tab-id'));
 
 			// Remove from scroll length the initial space between the top of the first panel and the top of the screen; this is to avoid scrolling too far
-			// That being said, as lists are fetched / updated asynchroniously, once they got their responses, the layout will change/shift and the current tab won't be the good one anymore 😕
-			this.controller.scrollTo(oActivePanel.offset().top - this.scroll_offset_y);
+			// That being said, as lists are fetched / updated asynchronously, once they got their responses, the layout will change/shift and the current tab won't be the good one anymore 😕
+			// We check if the active panel is loaded as we may try to scroll to it before it is loaded, and it doesn't exist yet
+			if(oActivePanel.length > 0) {
+				this.controller.scrollTo(oActivePanel.offset().top-this.scroll_offset_y);
+			}
 		}
 	},
 	// Create a new scene to be added to the controller
