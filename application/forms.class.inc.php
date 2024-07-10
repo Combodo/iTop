@@ -1330,7 +1330,8 @@ class DesignerComboField extends DesignerFormField
 		{
 			if ($this->bMultipleSelection)
 			{
-				$sHtml = "<span><select $sCSSClasses multiple size=\"8\"id=\"$sId\" name=\"$sName\">";
+				$iSize = max(1, min(8, count($this->aAllowedValues)));
+				$sHtml = "<span><select $sCSSClasses multiple size=\"$iSize\" id=\"$sId\" name=\"$sName\">";
 			}
 			else
 			{
