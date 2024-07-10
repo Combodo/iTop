@@ -1243,8 +1243,8 @@ class BulkChange
 		try {
 			foreach ($this->m_aData as $iRow => $aRowData) {
 				set_time_limit(intval($iLoopTimeLimit));
-				//stop if not enough cols in $aRowData
-				if(count($aRowData) < $iNBFields){
+					//stop if not the good number of cols in $aRowData
+				if(count($aRowData) != $iNBFields){
 					$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::Format('UI:CSVReport-Row-Issue-NbField',count($aRowData),$iNBFields) );
 					continue;
 				}
