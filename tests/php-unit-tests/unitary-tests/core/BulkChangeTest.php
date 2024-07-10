@@ -221,30 +221,33 @@ class BulkChangeTest extends ItopDataTestCase
 	 * @param $aExtKeys
 	 * @param $aReconcilKeys
 	 */
-	public function testBulkChangeWithExistingData($aInitData, $aCsvData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult, $aResultHTML= null) {
+	public function testBulkChangeWithExistingData($aInitData, $aCsvData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult, $aResultHTML= null, $bSetId = true  ) {
 		//change value during the test
 		$db_core_transactions_enabled=MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 		MetaModel::GetConfig()->Set('db_core_transactions_enabled',false);
 
-		if (is_array($aInitData) && sizeof($aInitData) != 0) {
-			/** @var Server $oServer */
-			$oServer = $this->createObject('Server', array(
-				'name' => $aInitData[1],
-				'status' => $aInitData[2],
-				'org_id' => $aInitData[0],
-				'purchase_date' => $aInitData[3],
-			));
-			$aCsvData[0][2]=$oServer->GetKey();
-			$aResult[2]=$oServer->GetKey();
-			if ($aResult["id"]==="{Id of the server created by the test}") {
-				$aResult["id"]=$oServer->GetKey();
-				if ($aResultHTML!==null){
-					$aResultHTML[2]=$oServer->GetKey();
-					$aResultHTML["id"]=$oServer->GetKey();
+		if($bSetId) {
+			if (is_array($aInitData) && sizeof($aInitData) != 0) {
+				/** @var Server $oServer */
+				$oServer = $this->createObject('Server', array(
+					'name'          => $aInitData[1],
+					'status'        => $aInitData[2],
+					'org_id'        => $aInitData[0],
+					'purchase_date' => $aInitData[3],
+				));
+				$aCsvData[0][2] = $oServer->GetKey();
+				$aResult[2] = $oServer->GetKey();
+				if ($aResult["id"] === "{Id of the server created by the test}") {
+					$aResult["id"] = $oServer->GetKey();
+					if ($aResultHTML !== null) {
+						$aResultHTML[2] = $oServer->GetKey();
+						$aResultHTML["id"] = $oServer->GetKey();
+					}
 				}
+				$this->debug("oServer->GetKey():".$oServer->GetKey());
 			}
-			$this->debug("oServer->GetKey():".$oServer->GetKey());
 		}
+
 		$oBulk = new BulkChange(
 			"Server",
 			$aCsvData,
@@ -300,23 +303,21 @@ class BulkChangeTest extends ItopDataTestCase
 					"reconcilKeys"=>
 						 ["name"],
 					"expectedResult"=>
-						 [
-							 0 => ">Demo",
-							 "org_id" => "n/a",
-							 1 => "Server1",
-							"id" => "Invalid value for attribute",
-							 "__STATUS__" => "Issue: ambiguous reconciliation",
-							 "__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
-						 ],
+						[
+							0 => ">Demo",
+							"org_id" => "No match for value '>Demo'",
+							1 => "Server1",
+							"name" => "Invalid value for attribute",
+							"__STATUS__" => "Issue: Unexpected attribute value(s)",
+							"__ERRORS__" => "Object not found",
+						],
 					"expectedResultHTML"=>
 						[
 							0 => "&gt;Demo",
-							"org_id" => "n/a",
+							"org_id" => "No match for value &apos;&gt;Demo&apos;",
 							1 => "Server1",
-							"id" => "Invalid value for attribute",
-							"__STATUS__" => "Issue: ambiguous reconciliation",
-							"__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
 						],
+					"setId" => false
 			],
 			"Case 6 - 1 : Unexpected value (update)" => [
 			    "initData"=>
@@ -625,7 +626,6 @@ class BulkChangeTest extends ItopDataTestCase
 	}
 
 
-
 	/**
 	 * test $oBulk->Process with new server and new organization datas
 	 *
@@ -637,7 +637,7 @@ class BulkChangeTest extends ItopDataTestCase
 	 * @param $aExtKeys
 	 * @param $aReconcilKeys
 	 */
-	public function testBulkChangeWithExistingDataAndSpecificOrg($aInitData, $aCsvData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult, $aResultHTML = null) {
+	public function testBulkChangeWithExistingDataAndSpecificOrg($aInitData, $aCsvData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult, $aResultHTML = null, $bSetId = true) {
 		//change value during the test
 		$db_core_transactions_enabled=MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 		MetaModel::GetConfig()->Set('db_core_transactions_enabled',false);
@@ -659,7 +659,9 @@ class BulkChangeTest extends ItopDataTestCase
 				'org_id' => $oOrganisation->GetKey(),
 				'purchase_date' => $aInitData["serverPurchaseDate"],
 			));
-			$aCsvData[0][2]=$oServer->GetKey();
+			if($bSetId) {
+				$aCsvData[0][2] = $oServer->GetKey();
+			}
 			$aResult[2]=$oServer->GetKey();
 			if ($aResult["id"]==="{Id of the server created by the test}") {
 				$aResult["id"]=$oServer->GetKey();
@@ -739,6 +741,7 @@ class BulkChangeTest extends ItopDataTestCase
 						"__STATUS__" => "Issue: failed to reconcile",
 						"__ERRORS__" => "Allowed 'status' value(s): stock,implemfentation,production,obsolete",
 					],
+				"setId" => false
 			],
 			"Case 3 : unchanged name" => [
 				"initData"=>
