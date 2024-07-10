@@ -1167,6 +1167,7 @@ EOF
 	 */	 	
 	protected function QuoteForPHP($sStr, $bSimpleQuotes = false)
 	{
+		$sStr = $sStr ?? '';
 		if ($bSimpleQuotes)
 		{
 			$sEscaped = str_replace(array('\\', "'"), array('\\\\', "\\'"), $sStr);
@@ -3230,10 +3231,11 @@ EOF;
 
 			$aEntriesPHP = array();
 			$oEntries = $oDictionaryNode->GetUniqueElement('entries');
+			/** @var MFElement $oEntry */
 			foreach ($oEntries->getElementsByTagName('entry') as $oEntry)
 			{
 				$sStringCode = $oEntry->getAttribute('id');
-				$sValue = $oEntry->GetText();
+				$sValue = $oEntry->GetText('');
 				$aEntriesPHP[] = "\t'$sStringCode' => ".self::QuoteForPHP(self::FilterDictString($sValue), true).",";
 			}
 			$sEntriesPHP = implode("\n", $aEntriesPHP);
@@ -3268,7 +3270,7 @@ EOF;
 		file_put_contents($sLanguagesFile, $sLanguagesFileContent);
 	}
 
-	protected static function FilterDictString($s)
+	protected static function FilterDictString(string $s): string
 	{
 		if (strpos($s, '~') !== false)
 		{
