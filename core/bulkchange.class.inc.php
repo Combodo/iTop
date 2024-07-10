@@ -1181,6 +1181,9 @@ class BulkChange
 					foreach($this->m_aData as $iRow => $aRowData)
 					{
 						$sFormat = $sDateTimeFormat;
+						if(!isset($this->m_aData[$iRow][$iCol])){
+							continue;
+						}
 						$sValue = $this->m_aData[$iRow][$iCol];
 						if (!empty($sValue))
 						{
@@ -1241,7 +1244,7 @@ class BulkChange
 			foreach ($this->m_aData as $iRow => $aRowData) {
 				set_time_limit(intval($iLoopTimeLimit));
 				//stop if not enough cols in $aRowData
-				if(count($aRowData) != $iNBFields){
+				if(count($aRowData) < $iNBFields){
 					$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::Format('UI:CSVReport-Row-Issue-NbField',count($aRowData),$iNBFields) );
 					continue;
 				}

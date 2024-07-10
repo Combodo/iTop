@@ -293,21 +293,21 @@ class BulkChangeTest extends ItopDataTestCase
 						["1", "Server1", "production", ""],
 					"csvData" =>
 						[[">Demo", "Server1"]],
-						 "attributes"=>
-							 ["name" => 1],
-						 "extKeys"=>
-							 ["org_id" => ["name" => 0]],
-						 "reconcilKeys"=>
-							 ["name"],
-						 "expectedResult"=>
-							 [
-								 0 => ">Demo",
-								 "org_id" => "n/a",
-								 1 => "Server1",
-								"id" => "Invalid value for attribute",
-								 "__STATUS__" => "Issue: ambiguous reconciliation",
-								 "__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
-							 ],
+					"attributes"=>
+						 ["name" => 1],
+					"extKeys"=>
+						 ["org_id" => ["name" => 0]],
+					"reconcilKeys"=>
+						 ["name"],
+					"expectedResult"=>
+						 [
+							 0 => ">Demo",
+							 "org_id" => "n/a",
+							 1 => "Server1",
+							"id" => "Invalid value for attribute",
+							 "__STATUS__" => "Issue: ambiguous reconciliation",
+							 "__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
+						 ],
 					"expectedResultHTML"=>
 						[
 							0 => "&gt;Demo",
@@ -321,9 +321,9 @@ class BulkChangeTest extends ItopDataTestCase
 			"Case 6 - 1 : Unexpected value (update)" => [
 			    "initData"=>
 					["1", ">ServerTest", "production", ""],
-			     "csvData"=>
+			    "csvData"=>
 					[["Demo", ">ServerTest", "key - will be automatically overwritten by test", ">BadValue", ""]],
-			     "attributes"=>
+			    "attributes"=>
 					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
 				"extKeys"=>
 					["org_id" => ["name" => 0]],
@@ -578,6 +578,48 @@ class BulkChangeTest extends ItopDataTestCase
 				"expectedResult"=>
 					[						"id" => "{Id of the server created by the test}",
 					                         0 => "Demo", "org_id" => "n/a", 1 => ">ServerTest", 2 => "1", 3 => "production", 4 => "'2020-20-03' is an invalid value", "id" => 1, "__STATUS__" => "Issue: wrong date format"],
+			],
+			"Case 11 : Missing AttributeDateTime cell should issue an error" => [
+				"initData"=>
+					["1", "ServerTest", "production", "2020-02-01"],
+				"csvData"=>
+					[["Demo", "ServerTest", "1", "production"]],
+				"attributes"=>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys"=>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys"=>
+					["id"],
+				"expectedResult"=>
+					[ 0 => "Demo", "org_id" => "n/a", 1 => "ServerTest", 2 => "1", 3 => "production", 4 => "'' is an invalid value", "id" => 1, "__STATUS__" => 'Issue: Not the expected number of fields (current : 4 fields, expected :5)'],
+			],
+			"Case 12 : Missing AttributeEnum cell should issue an error" => [
+				"initData"=>
+					["1", "ServerTest", "production", "2020-02-01"],
+				"csvData"=>
+					[["Demo", "ServerTest", "1", "2020-02-01"]], // missing status
+				"attributes"=>
+					["name" => 1, "id" => 2, "purchase_date" => 3, "status" => 4],
+				"extKeys"=>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys"=>
+					["id"],
+				"expectedResult"=>
+					[ 0 => "Demo", "org_id" => "n/a", 1 => "ServerTest", 2 => "1", 3 => "2020-02-01", 4 => "'' is an invalid value", "id" => 1, "__STATUS__" => "Issue: Not the expected number of fields (current : 4 fields, expected :5)"],
+			],
+			"Case 13 : Missing AttributeExternalKey cell should issue an error" => [
+				"initData"=>
+					["1", "ServerTest", "production", "2020-02-01"],
+				"csvData"=>
+					[["ServerTest", "1", "production", "2020-02-01"]], // missing org_id
+				"attributes"=>
+					["name" => 0, "id" => 1, "status" => 2, "purchase_date" => 3],
+				"extKeys"=>
+					["org_id" => ["name" => 4]],
+				"reconcilKeys"=>
+					["id"],
+				"expectedResult"=>
+					[ 0 => "ServerTest", "org_id" => "n/a", 1 => "1", 2 => "1", 3 => "2020-02-01", 4 => "'' is an invalid value", "id" => 1, "__STATUS__" => "Issue: Not the expected number of fields (current : 4 fields, expected :5)"],
 			],
 		];
 	}
