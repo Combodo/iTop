@@ -16,6 +16,9 @@ use Combodo\iTop\Renderer\BlockRenderer;
 use Dict;
 use Exception;
 use Twig\Environment;
+use Twig\Extension\CoreExtension;
+use Twig\Loader\FilesystemLoader;
+use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use utils;
@@ -200,6 +203,31 @@ class Extension
 				return $oRenderer->RenderHtml();
 			},
 			['is_safe' => ['html']]
+		);
+
+
+		/** @since 3.2.0 */
+		$aFunctions[] = new TwigFunction('source_abs', function (Environment $oEnv, $sUrlAbsName) {
+			// Extract the source path from the absolute url and replace it with approot
+			$sAppRootAbsName = str_replace(utils::GetAbsoluteUrlAppRoot(), APPROOT, $sUrlAbsName);
+			$oLoader = $oEnv->getLoader();
+			// Check if the file is in any of the twig paths
+			if($oLoader instanceof  FilesystemLoader) {
+				$aPaths = $oLoader->getPaths();
+				foreach ($aPaths as $sPath) {
+					$sTwigPathRelativeName = substr($sAppRootAbsName, strlen($sPath) + 1);
+					// If we find our path in the absolute url and the file actually exist, return it
+					if (str_contains($sAppRootAbsName, $sPath) && $oLoader->exists($sTwigPathRelativeName)) {
+						return $oLoader->getSourceContext($sTwigPathRelativeName)->getCode();
+					}
+				}
+			}
+			// Otherwise return empty content
+			$oEmptySource = new Source('', $sUrlAbsName, '');
+			return $oEmptySource->getCode();
+		}, 
+		['needs_environment' => true,
+		 'is_safe' => ['all']]
 		);
 
 		return $aFunctions;

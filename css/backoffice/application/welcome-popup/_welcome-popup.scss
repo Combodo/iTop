@@ -131,7 +131,12 @@ $ibo-welcome-popup--message-title--margin-bottom: $ibo-spacing-700 !default;
 }
 
 .ibo-welcome-popup--message-illustration {
+  display: flex;
   min-width: $ibo-welcome-popup--message-illustration--min-width;
   aspect-ratio: 1;
   background-size: $ibo-welcome-popup--message-illustration--background-size;
+  /* Raw svg needs their height overridden in case its defined in one of their attributes */
+  > svg {
+    height: auto;
+  }
 }
