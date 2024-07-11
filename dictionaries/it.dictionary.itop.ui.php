@@ -93,12 +93,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Tariffa personalizzata',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Disabilitato',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Intervallo di aggiornamento automatico (secondi)',
-	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'The minimum allowed is %1$d seconds~~',
+	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'Il minimo consentito è %1$d secondi',
 	'Class:ShortcutOQL/Attribute:oql' => 'Query',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL che definisce l\'elenco di oggetti da cercare',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Classe del tag',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Codice del campo',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Classe dell\'oggetto',
 	'Class:URP_ActionGrant' => 'azione_autorizzazione',
 	'Class:URP_ActionGrant+' => 'permesso su classi',
 	'Class:URP_ActionGrant/Attribute:action' => 'Azione',
@@ -214,7 +214,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:User/Attribute:email' => 'Email',
 	'Class:User/Attribute:email+' => 'Email del contatto corrispondente',
 	'Class:User/Attribute:finalclass' => 'Tipo di account',
-	'Class:User/Attribute:finalclass+' => 'Name of the final class~~',
+	'Class:User/Attribute:finalclass+' => 'Nome della classe finale',
 	'Class:User/Attribute:first_name' => 'Nome',
 	'Class:User/Attribute:first_name+' => 'Nome del contatto corrispondente',
 	'Class:User/Attribute:language' => 'Lingua',
@@ -242,12 +242,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:User/Error:LoginMustBeUnique' => 'Il Login deve essere unico - "%1s" già in uso',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organizzazione non consentita.',
 	'Class:User/Error:PersonIsMandatory' => 'Il contatto è obbligatorio.',
-	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
+	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'Il profilo utente con poteri del portale non concede diritti di accesso sufficienti (deve essere aggiunto un altro profilo)',
 	'Class:User/Error:ProfileNotAllowed' => 'Il profilo "%1$s" non può essere aggiunto poiché nega l\'accesso al back office.',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'La modifica dello stato non è consentita per il proprio utente.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'L\'account utente non appartiene alle organizzazioni consentite.',
-	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
-	'Class:User/Warning:NoOrganizationMeansFullAccess' => 'No "Allowed Organizations" defined for this user, this means they have access to all organizations~~',
+	'Class:User/Warning:NoContactHasImpact' => 'Attenzione: non è definita alcuna Persona per questo Utente, ciò impedisce l\'accesso ai portali, le notifiche di notizie e altri effetti collaterali nel back-office',
+	'Class:User/Warning:NoOrganizationMeansFullAccess' => 'Nessuna "Organizzazione consentita" definita per questo utente, ciò significa che ha accesso a tutte le organizzazioni',
 	'Class:UserDashboard' => 'Dashboard Utente',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Contenuti',
@@ -335,8 +335,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:RunQueriesMenu' => 'Esegui query',
 	'Menu:RunQueriesMenu+' => '',
 	'Menu:SystemTools' => 'Sistema',
-	'Menu:TagAdminMenu' => 'Tags configuration~~',
-	'Menu:TagAdminMenu+' => 'Tags values management~~',
+	'Menu:TagAdminMenu' => 'Configurazione dei tag',
+	'Menu:TagAdminMenu+' => 'Gestione dei valori dei tag',
 	'Menu:UniversalSearchMenu' => 'Ricerca universale',
 	'Menu:UniversalSearchMenu+' => '',
 	'Menu:UserAccountsMenu' => 'Account utente',
@@ -497,7 +497,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:Audit:Interactive:Selection:SubTitle' => 'Seleziona un dominio per ottenere i risultati limitati a questo dominio o seleziona "Tutte le categorie" per ottenere un audit completo (può richiedere tempo o addirittura fallire se ci sono troppe informazioni da auditare)',
 	'UI:Audit:Interactive:Selection:Title' => 'Selezione di un audit',
 	'UI:Audit:InteractiveAudit' => 'Audit interattivo',
-	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:OqlError' => 'Errore OQL',
 	'UI:Audit:PercentageOk' => '% Ok',
 	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - Audit CMDB',
 	'UI:Audit:ViewRules' => 'Controlla le regole',
@@ -579,29 +579,29 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:CSVImport:AdvancedMode' => 'Modalità avanzata',
 	'UI:CSVImport:AdvancedMode+' => '',
 	'UI:CSVImport:AlertIncompleteMapping' => 'Per favore seleziona una mappatura per ogni campo.',
-	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.~~',
+	'UI:CSVImport:AlertMultipleMapping' => 'Assicurati che un campo di destinazione sia mappato una sola volta.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Per favore seleziona almeno un criterio di ricerca',
 	'UI:CSVImport:CSVDataPreview' => 'CSV Anteprima dei dati',
 	'UI:CSVImport:ClassesSelectOne' => '-- seleziona uno --',
-	'UI:CSVImport:Column' => 'Column %1$s~~',
+	'UI:CSVImport:Column' => 'Colonna %1$s',
 	'UI:CSVImport:CommentsAndHeader' => 'Commenti e intestazione',
 	'UI:CSVImport:CustomDateTimeFormat' => 'Formato personalizzato: %1$s',
-	'UI:CSVImport:CustomDateTimeFormatTooltip' => 'Available placeholders:<table>
-<tr><td>Y</td><td>year (4 digits, e.g. 2016)</td></tr>
-<tr><td>y</td><td>year (2 digits, e.g. 16 for 2016)</td></tr>
-<tr><td>m</td><td>month (2 digits, e.g. 01..12)</td></tr>
-<tr><td>n</td><td>month (1 or 2 digits no leading zero, e.g. 1..12)</td></tr>
-<tr><td>d</td><td>day (2 digits, e.g. 01..31)</td></tr>
-<tr><td>j</td><td>day (1 or 2 digits no leading zero, e.g. 1..31)</td></tr>
-<tr><td>H</td><td>hour (24 hour, 2 digits, e.g. 00..23)</td></tr>
-<tr><td>h</td><td>hour (12 hour, 2 digits, e.g. 01..12)</td></tr>
-<tr><td>G</td><td>hour (24 hour, 1 or 2 digits no leading zero, e.g. 0..23)</td></tr>
-<tr><td>g</td><td>hour (12 hour, 1 or 2 digits no leading zero, e.g. 1..12)</td></tr>
-<tr><td>a</td><td>hour, am or pm (lowercase)</td></tr>
-<tr><td>A</td><td>hour, AM or PM (uppercase)</td></tr>
-<tr><td>i</td><td>minutes (2 digits, e.g. 00..59)</td></tr>
-<tr><td>s</td><td>seconds (2 digits, e.g. 00..59)</td></tr>
-</table>',
+	'UI:CSVImport:CustomDateTimeFormatTooltip' => 'Segnaposto disponibili:<table>
+	<tr><td>Y</td><td>anno (4 cifre, es. 2016)</td></tr>
+	<tr><td>y</td><td>anno (2 cifre, es. 16 per 2016)</td></tr>
+	<tr><td>m</td><td>mese (2 cifre, es. 01..12)</td></tr>
+	<tr><td>n</td><td>mese (1 o 2 cifre senza zero iniziale, es. 1..12)</td></tr>
+	<tr><td>d</td><td>giorno (2 cifre, es. 01..31)</td></tr>
+	<tr><td>j</td><td>giorno (1 o 2 cifre senza zero iniziale, es. 1..31)</td></tr>
+	<tr><td>H</td><td>ora (24 ore, 2 cifre, es. 00..23)</td></tr>
+	<tr><td>h</td><td>ora (12 ore, 2 cifre, es. 01..12)</td></tr>
+	<tr><td>G</td><td>ora (24 ore, 1 o 2 cifre senza zero iniziale, es. 0..23)</td></tr>
+	<tr><td>g</td><td>ora (12 ore, 1 o 2 cifre senza zero iniziale, es. 1..12)</td></tr>
+	<tr><td>a</td><td>ora, am o pm (minuscolo)</td></tr>
+	<tr><td>A</td><td>ora, AM o PM (maiuscolo)</td></tr>
+	<tr><td>i</td><td>minuti (2 cifre, es. 00..59)</td></tr>
+	<tr><td>s</td><td>secondi (2 cifre, es. 00..59)</td></tr>
+	</table>',
 	'UI:CSVImport:DataLine1' => 'Dati Linea 1',
 	'UI:CSVImport:DataLine2' => 'Dati Linea 2',
 	'UI:CSVImport:DateAndTimeFormats' => 'Formato data e ora',
@@ -629,7 +629,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:CSVImport:PasteData' => 'Incolla i dati da importare:',
 	'UI:CSVImport:PickClassForTemplate' => 'Scegli il modello da scaricare: ',
 	'UI:CSVImport:QualifierDoubleQuote+' => '',
-	'UI:CSVImport:QualifierOther' => 'other:~~',
+	'UI:CSVImport:QualifierOther' => 'altro:',
 	'UI:CSVImport:QualifierSimpleQuote+' => '',
 	'UI:CSVImport:SelectAClassFirst' => 'Per configurare il mapping, selezionare prima una classe.',
 	'UI:CSVImport:SelectClass' => 'Selezionare la classe da importare:',
@@ -645,8 +645,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:CSVImport:Tab:Templates' => 'Modelli',
 	'UI:CSVImport:TextQualifierCharacter' => 'Testo di qualificazione carattere',
 	'UI:CSVImport:TreatFirstLineAsHeader' => 'Tratta la prima riga come intestazione (nomi di colonna)',
-	'UI:CSVImport:ViewAllAmbiguousValues' => 'View all ambiguous values~~',
-	'UI:CSVImport:ViewAllPossibleValues' => 'View all possible values~~',
+	'UI:CSVImport:ViewAllAmbiguousValues' => 'Visualizza tutti i valori ambigui',
+	'UI:CSVImport:ViewAllPossibleValues' => 'Visualizza tutti i valori possibili',
 	'UI:CSVImport:idField' => 'id (Chiave Primaria)',
 	'UI:CSVImportConfirmMessage' => 'Sei sicuro di volerlo fare?',
 	'UI:CSVImportConfirmTitle' => 'Conferma l\'operazione',
@@ -983,7 +983,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:LogOffMenu' => 'Log off',
 	'UI:LoggedAsMessage' => 'Loggato come %1$s (%2$s)',
 	'UI:LoggedAsMessage+Admin' => 'Loggato come %1$s (%2$s, Amministratore)',
-	'UI:Login:About' => ITOP_APPLICATION.' Powered by Combodo~~',
+	'UI:Login:About' => ITOP_APPLICATION.' Sviluppato da Combodo',
 	'UI:Login:ChangeYourPassword' => 'Cambia la tua password',
 	'UI:Login:Error:AccessAdmin' => 'Accesso limitato alle persone che hanno privilegi di amministratore. Si prega di contattare un amministratore '.ITOP_APPLICATION_SHORT.'.',
 	'UI:Login:Error:AccessRestricted' => 'L\'accesso a '.ITOP_APPLICATION_SHORT.' è limitato. Si prega di contattare un amministratore '.ITOP_APPLICATION_SHORT.'.',
@@ -1015,10 +1015,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:Menu:Add' => 'Aggiungi...',
 	'UI:Menu:AddToDashboard' => 'Aggiungi alla Dashboard...',
 	'UI:Menu:BulkDelete' => 'Cancella...',
-	'UI:Menu:BulkDelete_Class' => 'Delete %1$s objects...~~',
-	'UI:Menu:BulkDelete_Link' => 'Delete %1$s...~~',
-	'UI:Menu:BulkDelete_Remote' => 'Delete %1$s...~~',
-	'UI:Menu:CSVExport' => 'CSV Export...',
+	'UI:Menu:BulkDelete_Class' => 'Elimina %1$s oggetti...',
+	'UI:Menu:BulkDelete_Link' => 'Elimina %1$s...',
+	'UI:Menu:BulkDelete_Remote' => 'Elimina %1$s...',
+	'UI:Menu:CSVExport' => 'Esporta CSV...',
 	'UI:Menu:Delete' => 'Cancella...',
 	'UI:Menu:EMail' => 'eMail',
 	'UI:Menu:ExportPDF' => 'Esporta come PDF...',
@@ -1032,11 +1032,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:Menu:ModifyAll_Remote' => 'Modifica %1$s...',
 	'UI:Menu:New' => 'Nuovo...',
 	'UI:Menu:OtherActions' => 'Altre Azioni',
-	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Altre transizioni',
 	'UI:Menu:PrintableVersion' => 'Versione stampabile',
-	'UI:Menu:ShortcutList' => 'Crea una Scorciatoia...',
-	'UI:Menu:Transitions' => 'Transitions~~',
-	'UI:Menu:View' => 'View this object~~',
+	'UI:Menu:ShortcutList' => 'Crea una scorciatoia...',
+	'UI:Menu:Transitions' => 'Transizioni',
+	'UI:Menu:View' => 'Visualizza questo oggetto',
 	'UI:Message:EmptyList:UseAdd' => 'La lista è vuota, utilizzare il pulsante "Aggiungi ..." per aggiungere elementi.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Utilizza il modulo di ricerca qui sopra per cercare oggetti da aggiungere.',
 	'UI:ModificationPageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - %1$s - Modifica %2$s',
@@ -1053,44 +1053,44 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:Newsroom:MarkAllAsRead' => 'Segna tutti come letti',
 	'UI:Newsroom:NoNewMessage' => 'Nessun nuovo messaggio',
 	'UI:Newsroom:Preferences' => 'Preferenze Newsroom',
-	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
-	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
-	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
-	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critico',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgente',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Importante',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normale',
 	'UI:Newsroom:ResetCache' => 'Resetta la cache',
-	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
+	'UI:Newsroom:ResetCache:Success:Message' => 'La cache della tua newsroom è stata resettata con successo',
 	'UI:Newsroom:ViewAllMessages' => 'Visualizza tutti i messaggi',
 	'UI:Newsroom:XNewMessage' => '%1$s nuovo/i messaggio/i',
 	'UI:NoInlineImage' => 'Non ci sono immagini disponibili sul server. Utilizza il pulsante "Sfoglia" sopra per selezionare un\'immagine dal tuo computer e caricarla sul server.',
 	'UI:NoObjectToDisplay' => 'Nessun oggetto da mostrare.',
-	'UI:NoObject_Class_ToDisplay' => 'No %1$s da visualizzare',
+	'UI:NoObject_Class_ToDisplay' => 'Nessun %1$s da visualizzare',
 	'UI:NotificationsMenu:Actions' => 'Azioni',
-	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
-	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
-	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Altre azioni',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Azioni email',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Azioni webhook (integrazioni in uscita)',
 	'UI:NotificationsMenu:AvailableActions' => 'Azioni disponibili',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Triggers Disponibili',
 	'UI:NotificationsMenu:Help' => 'Aiuto',
-	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' le notifiche sono completamente personalizzabili. Essi si basano su due serie di oggetti: <i>trigger e azioni</i>.</p>
-<p><i>I <b>trigger</b></i> definiscono quando verrà eseguita una notifica. Ci sono diversi trigger come parte del nucleo di '.ITOP_APPLICATION_SHORT.', ma altri possono essere portati da estensioni:
+'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' le notifiche sono completamente personalizzabili. Esse si basano su due serie di oggetti: <i>trigger e azioni</i>.</p>
+<p><i>I <b>trigger</b></i> definiscono quando verrà eseguita una notifica. Ci sono diversi trigger come parte del nucleo di '.ITOP_APPLICATION_SHORT.', ma altri possono essere forniti da estensioni:
 <ol>
-	 <li>Alcuni trigger sono eseguiti quando un oggetto della classe specificata viene <b>creato</b>, <b>aggiornato</b> o <b>cancellato</b>.</li>
-	 <li>Alcuni trigger sono eseguiti quando un oggetto di una data classe <b>entra</b> o <b>lascia</b> uno <b>stato specificato</b>.</li>
-	 <li>Alcuni trigger sono eseguiti quando una <b>soglia</b> su <b>TTO</b> o <b>TTR</b> è stata <b>raggiunta</b>.</li>
+	 <li>Alcuni trigger vengono eseguiti quando un oggetto della classe specificata viene <b>creato</b>, <b>aggiornato</b> o <b>cancellato</b>.</li>
+	 <li>Alcuni trigger vengono eseguiti quando un oggetto di una data classe <b>entra</b> o <b>lascia</b> uno <b>stato specificato</b>.</li>
+	 <li>Alcuni trigger vengono eseguiti quando una <b>soglia</b> su <b>TTO</b> o <b>TTR</b> è stata <b>raggiunta</b>.</li>
 </ol>
 </p>
 <p>
-<i><b>Azioni</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<i><b>Azioni</b></i> definiscono le azioni da eseguire quando i trigger vengono attivati. Per ora ci sono solo due tipi di azioni:
 <ol>
-	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
-	Una Pagina speciale: <a href="../setup/email.test.php" target="_blank">email.test.php</a> è disponibile per il testing e la risoluzione dei problemi di configurazione PHP mail.</li>
-	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
-	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+	<li>Invio di un messaggio email: Tali azioni definiscono anche il modello da utilizzare per l\'invio dell\'email, nonché gli altri parametri del messaggio come i destinatari, l\'importanza, ecc.<br />
+	Una pagina speciale: <a href="../setup/email.test.php" target="_blank">email.test.php</a> è disponibile per il test e la risoluzione dei problemi di configurazione della posta PHP.</li>
+	<li>Invio di un messaggio newsroom: Visualizzare una notizia agli utenti direttamente nell\'applicazione tramite la newsroom (icona della campanella nel menu a sinistra)</li>
+	<li>Webhook in uscita: Consentire l\'integrazione con un\'applicazione di terze parti inviando dati strutturati a un URL definito.</li>
 </ol>
 </p>
 <p>Per essere eseguite, le azioni devono essere associate ai trigger.
-Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine", che specifica in quale ordine le azioni devono essere eseguite.</p>',
-	'UI:NotificationsMenu:OnCreate' => 'When an object is created~~',
+Quando è associata a un trigger, a ogni azione è assegnato un numero "ordine", che specifica in quale ordine le azioni devono essere eseguite.</p>',
+'UI:NotificationsMenu:OnCreate' => 'Quando un oggetto viene creato',
 	'UI:NotificationsMenu:OnStateEnter' => 'Quando un oggetto viene creato',
 	'UI:NotificationsMenu:OnStateLeave' => 'Quando un oggetto lascia un determinato stato',
 	'UI:NotificationsMenu:Title' => 'Configurazione delle Notifiche',
@@ -1103,7 +1103,7 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'UI:ObjectArchived' => 'Questo oggetto è stato archiviato. Si prega di abilitare la modalità archivio o contattare l\'amministratore.',
 	'UI:ObjectCouldNotBeWritten' => 'L\'oggetto non può essere scritto: %1$s',
 	'UI:ObjectDoesNotExist' => 'Spiacenti, questo oggetto non esiste (o non si è autorizzati per vederlo).',
-	'UI:ObjectShortcutInsert' => 'Insert Object Shortcut~~',
+	'UI:ObjectShortcutInsert' => 'Inserisci scorciatoia oggetto',
 	'UI:OnlyForThisList' => 'Solo per questa lista',
 	'UI:OpenDocumentInNewWindow_' => 'Aprire',
 	'UI:OperationCancelled' => 'Operazione Annullata',
@@ -1379,15 +1379,15 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'UI:ShortcutListDlg:Title' => 'Crea una scorciatoia per l\'elenco',
 	'UI:ShortcutRenameDlg:Title' => 'Rinomina la scorciatoia',
 	'UI:SimpleSearchTab' => 'Ricerca semplice',
-	'UI:SplitDateTime-Date' => 'date~~',
-	'UI:SplitDateTime-Time' => 'time~~',
+	'UI:SplitDateTime-Date' => 'data',
+	'UI:SplitDateTime-Time' => 'ora',
 	'UI:StateChanged' => 'Stato cambiato',
 	'UI:StayOnThePage' => 'Resta su questa pagina',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Modifica %2$d oggetti della classe %3$s',
 	'UI:SystemIntrusion' => 'Accesso negato. Hai cercato di eseguire un\'operazione che non ti è consentita.',
-	'UI:TagAdminMenu:NoTags' => 'No Tag field configured~~',
-	'UI:TagAdminMenu:Title' => 'Tags configuration~~',
-	'UI:TagSetFieldData:Error' => 'Error: %1$s~~',
+	'UI:TagAdminMenu:NoTags' => 'Nessun campo Tag configurato',
+	'UI:TagAdminMenu:Title' => 'Configurazione dei tag',
+	'UI:TagSetFieldData:Error' => 'Errore: %1$s',
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Cancellazione collettiva di %1$d oggetti della classe %2$s',
 	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - importazione collettiva',
 	'UI:Title:BulkImport+' => '',
