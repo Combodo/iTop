@@ -23,7 +23,6 @@ use AttributeDate;
 use AttributeDateTime;
 use AttributeDuration;
 use Combodo\iTop\Application\Helper\CKEditorHelper;
-use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
@@ -151,7 +150,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 
 					if ($this->oField->GetReadOnly())
 					{
-						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetCurrentValue()));
+						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetDisplayValue()));
 						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 					}
 					else

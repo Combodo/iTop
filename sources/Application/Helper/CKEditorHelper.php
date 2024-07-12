@@ -45,9 +45,7 @@ class CKEditorHelper
 		// configuration
 		$aConfiguration = array(
 			'language' => $sLanguage,
-			'maximize' => [
-				'fullscreen' => 'javascript'
-			],
+			'maximize' => [],
 			'detectChanges' => [
 				'initialValue' => $sInitialValue
 			],

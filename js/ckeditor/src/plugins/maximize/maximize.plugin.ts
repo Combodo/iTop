@@ -1,4 +1,3 @@
-
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 
@@ -19,58 +18,93 @@ export default class Maximize extends Plugin {
         // retrieve editor instance
         const oEditor = this.editor;
 
-        // initial editor parent element
-        let oInitialParentElement: HTMLElement;
-
         // add maximize button
-        oEditor.ui.componentFactory.add( 'maximize', () => {
+        oEditor.ui.componentFactory.add('maximize', () => {
 
             // button
             const oButton = new ButtonView();
-            oButton.set( {
+            oButton.set({
                 icon: sMaximizeIconSVG,
                 isToggleable: true
-            } );
+            });
 
-            this.listenTo( oButton, 'execute', () => {
-                if(oEditor.ui.element !== null){
-                    let CKEditorPoweredButton:HTMLCollectionOf<Element> = document.getElementsByClassName('ck-powered-by-balloon');
-                    const sFullScreenMethod:string = oEditor.config.get('maximize.fullscreen') as string;
-                    if(oButton.isOn){
-                        if (sFullScreenMethod === 'native') { // portal
-                            document.exitFullscreen();
-                            oEditor.ui.element.classList.remove('fullscreen-mode');
+            this.listenTo(oButton, 'execute', () => {
+                if (oEditor.ui.element !== null) {
+                    if (oButton.isOn) {
+                        // remove classes
+                        document.documentElement.classList.remove('html_editor_full_screen')
+                        document.body.classList.remove('body_editor_full_screen')
+                        let oParentElement: HTMLElement = oEditor.ui.element;
+                        while (oParentElement.parentElement !== null) {
+                            oParentElement = oParentElement.parentElement;
+                            oParentElement.classList.remove('parent_editor_screen');
                         }
-                        else{ // console
-                            oInitialParentElement.append(oEditor.ui.element);
-                            oEditor.ui.element.classList.remove('cke-maximized');
-                            document.body.classList.remove('cke-maximized');
-                            CKEditorPoweredButton.item(0)?.setAttribute('style', 'display: block');
-                        }
+                        oEditor.ui.element.classList.remove('editor_full_screen');
+                        oEditor.ui.element.children[2].classList.remove('editor__main_full_screen');
                         oButton.icon = sMaximizeIconSVG;
-                    }
-                    else{
-                        if (sFullScreenMethod === 'native') { // portal
-                            oEditor.ui.element.requestFullscreen()
-                            oEditor.ui.element.classList.add('fullscreen-mode');
+                    } else {
+                        // add classes to make editor full screen
+                        document.documentElement.classList.add('html_editor_full_screen')
+                        document.body.classList.add('body_editor_full_screen')
+                        let oParentElement: HTMLElement = oEditor.ui.element;
+                        while (oParentElement.parentElement !== null) {
+                            oParentElement = oParentElement.parentElement;
+                            oParentElement.classList.add('parent_editor_screen');
                         }
-                        else { // console
-                            oInitialParentElement = oEditor.ui.element.parentElement ?? oInitialParentElement;
-                            oEditor.ui.element.remove();
-                            document.body.append(oEditor.ui.element);
-                            document.body.classList.add('cke-maximized'); // Add class to body to prevent scrollbars
-                            oEditor.ui.element.classList.add('cke-maximized');
-                            CKEditorPoweredButton.item(0)?.setAttribute('style', 'display: none');
-                        }
+                        oEditor.ui.element.classList.add('editor_full_screen');
+                        oEditor.ui.element.children[2].classList.add('editor__main_full_screen');
+                        let oStyle = document.createElement('style');
+                        // CSS rules definitions for each classes
+                        oStyle.innerHTML = `
+.editor__main_full_screen > * {
+    height: 100% !important;
+    width: 100% !important;
+}
+.editor__main_full_screen {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+.parent_editor_screen {
+    position: fixed !important;
+    overflow: visible !important;
+    z-index: 1050 !important;
+    margin: 0 !important;
+}
+.body_editor_full_screen {
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+.html_editor_full_screen {
+    position: fixed !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+.editor_full_screen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: auto !important;
+    z-index: 1050 !important;
+    display: flex;
+    flex-direction: column;
+}`;
+
+                        document.head.appendChild(oStyle);
                         oButton.icon = sMinimizeIconSVG;
                     }
+                    // setfocus on editor (else focus remains on the button)
+                    oEditor.editing.view.focus()
+
                     oButton.isOn = !oButton.isOn;
                 }
             });
-
-
             return oButton;
-        } );
+        });
     }
 }
-
