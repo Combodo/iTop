@@ -24,19 +24,16 @@
  */
 
 // N°2166: Fix a bootstrap/CKeditor incompatibility with their respective modals (source: https://stackoverflow.com/a/31679096)
-$.fn.modal.Constructor.prototype.enforceFocus = function() {
-	$( document )
-		.off( 'focusin.bs.modal' ) // guard against infinite focus loop
-		.on( 'focusin.bs.modal', $.proxy( function( e ) {
-			if (
-				this.$element[ 0 ] !== e.target && !this.$element.has( e.target ).length
-				// CKEditor compatibility fix start.
-				&& !$( e.target ).closest( '.cke_dialog, .cke' ).length
-			// CKEditor compatibility fix end.
-			) {
-				this.$element.trigger( 'focus' );
-			}
-		}, this ) );
+//  N°7552  Update the ugly hacky hack to make it work with CKEditor 5. Only trigger the focus when the parent is not a CKEditor input (source: https://stackoverflow.com/questions/53556541/ckeditor-5-popup-controls-not-working-in-bootstrap-3-2018)
+$.fn.modal.Constructor.prototype.enforceFocus = function () {
+	var $modalElement = this.$element;
+	$(document).on('focusin.modal', function (e) {
+		var $parent = $(e.target.parentNode);
+		if ($modalElement[0] !== e.target && !$modalElement.has(e.target).length &&
+			!$parent.hasClass('ck-input')) {
+			e.target.focus()
+		}
+	})
 };
 
 // Hack to enable multiple modals by making sure the .modal-open class is set to the <body> when there is at least one modal open left
