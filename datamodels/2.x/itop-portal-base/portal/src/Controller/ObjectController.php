@@ -1409,9 +1409,9 @@ class ObjectController extends BrickController
 	{
 		$sObjectClass = get_class($oObject);
 		$aObjectData = [
-			'id'                  => $oObject->GetKey(),
-			'name'             => $oObject->GetName(),
-			'attributes'        => [],
+			'id'         => $oObject->GetKey(),
+			'name'       => $oObject->GetName(),
+			'attributes' => [],
 		];
 
 		// Retrieving attributes definitions
