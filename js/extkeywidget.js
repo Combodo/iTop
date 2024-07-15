@@ -169,7 +169,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			copyClassesToDropdown: false,
 			inputClass: 'ibo-input ibo-input-select ibo-input-selectize',
 			// To avoid dropdown to be cut by the container's overflow hidden rule
-			// dropdownParent: 'body', QUICKFIX!! N°7630 - Fix wrong enum/ext. key value selected when clicking on drop down list in modal
+			dropdownParent: 'body',
 			onDropdownOpen: function (oDropdownElem) {
 				me.UpdateDropdownPosition(this.$control, oDropdownElem);
 			},
