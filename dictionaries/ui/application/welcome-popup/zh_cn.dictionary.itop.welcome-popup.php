@@ -10,9 +10,9 @@
  *
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-    'UI:WelcomePopup:Button:Acknowledge' => '已知晓',
-    'UI:WelcomePopup:Button:RemindLater' => '稍后提醒',
-    'UI:WelcomePopup:Message:320_01:Description' => '<div>恭喜, 您运行的是' . ITOP_APPLICATION . ' ' . ITOP_VERSION_NAME . '!</div>
+	'UI:WelcomePopup:Button:Acknowledge' => '已知晓',
+	'UI:WelcomePopup:Button:RemindLater' => '稍后提醒',
+	'UI:WelcomePopup:Message:320_01:Description' => '<div>恭喜, 您运行的是' . ITOP_APPLICATION . ' ' . ITOP_VERSION_NAME . '!</div>
 <br>
 <div>此版本全新设计了一个现代且易用的后台界面.</div>
 <br>
