@@ -1465,4 +1465,8 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'UI_CountOfObjectsShort' => '%1$d オブジェクト。',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office User Interface~~',
 	'portal:legacy_portal' => 'End-User Portal~~',
+	'Menu:ConfigEditor'           => 'General configuration~~',
+	'Menu:ConfigEditor+'          => 'Configuration File editor~~',
+	'Menu:Integrations'           => 'Integrations~~',
+	'Menu:Integrations+'          => '~~',
 ]);

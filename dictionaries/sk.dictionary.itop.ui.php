@@ -1462,4 +1462,8 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI_CountOfObjectsShort' => '%1$d objekt/y/ov.',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office User Interface~~',
 	'portal:legacy_portal' => 'End-User Portal~~',
+	'Menu:ConfigEditor'           => 'General configuration~~',
+	'Menu:ConfigEditor+'          => 'Configuration File editor~~',
+	'Menu:Integrations'           => 'Integrations~~',
+	'Menu:Integrations+'          => '~~',
 ]);

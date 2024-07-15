@@ -1463,4 +1463,8 @@ Domény nejčastěji odpovídají skupinám řešitelů, které následně oprav
 	'UI_CountOfObjectsShort' => '%1$d objektů.',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office',
 	'portal:legacy_portal' => 'Uživatelský portál',
+	'Menu:ConfigEditor'           => 'General configuration~~',
+	'Menu:ConfigEditor+'          => 'Configuration File editor~~',
+	'Menu:Integrations'           => 'Integrations~~',
+	'Menu:Integrations+'          => '~~',
 ]);

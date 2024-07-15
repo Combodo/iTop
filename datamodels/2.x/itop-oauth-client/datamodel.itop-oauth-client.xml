@@ -936,7 +936,7 @@ HTML
   <menus>
     <menu id="OAuthClient" xsi:type="OQLMenuNode" _delta="define">
       <rank>100</rank>
-      <parent>ConfigurationTools</parent>
+      <parent>Integrations</parent>
       <oql><![CDATA[SELECT OAuthClient]]></oql>
       <do_search>1</do_search>
       <enable_admin_only>0</enable_admin_only>

@@ -1471,4 +1471,8 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI_CountOfObjectsShort' => '%1$d Elemento(s)',
 	'portal:backoffice' => 'Portal de Soporte',
 	'portal:legacy_portal' => 'Portal de Clientes',
+	'Menu:ConfigEditor'           => 'General configuration~~',
+	'Menu:ConfigEditor+'          => 'Configuration File editor~~',
+	'Menu:Integrations' => 'Integraciones',
+	'Menu:Integrations+'          => '~~',
 ]);
