@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'UI:Layout:ObjectDetails:DatamodelSchemaLink:Tooltip' => 'Class data model schema~~',
+	'UI:Layout:ObjectDetails:DatamodelSchemaLink:Tooltip' => '类数据模型架构',
 	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => '删除当前对象',
 	'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject' => '编辑当前对象',
 	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => '创建新对象 (与当前对象相同)',
