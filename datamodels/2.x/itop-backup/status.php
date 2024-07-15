@@ -131,7 +131,7 @@ try {
 	// Destination directory
 	//
 	// Make sure the target directory exists and is writeable
-	$sBackupDir = realpath(APPROOT.'data/backups/');
+	$sBackupDir = realpath(utils::GetDataPath().'backups/');
 	SetupUtils::builddir($sBackupDir);
 	if (!is_dir($sBackupDir)) {
 		$oBlockForChecks->AddSubBlock(

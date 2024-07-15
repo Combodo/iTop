@@ -1596,7 +1596,7 @@ JS
 		if (is_dir($oWizard->GetParameter('copy_extensions_from'))) {
 			$aDirsToScan[] = $oWizard->GetParameter('copy_extensions_from');
 		}
-		$sExtraDir = APPROOT.'data/production-modules/';
+		$sExtraDir = utils::GetDataPath().'production-modules/';
 		if (is_dir($sExtraDir))
 		{
 			$aDirsToScan[] = $sExtraDir;
@@ -1950,7 +1950,7 @@ JS
 		if (empty($sEnv)) {
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'datamodels/*/*/license.*.xml'));
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/{*,*/*}/license.*.xml', GLOB_BRACE));
-			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'data/*-modules/{*,*/*}/license.*.xml', GLOB_BRACE));
+			$aLicenceFiles = array_merge($aLicenceFiles, glob(utils::GetDataPath().'*-modules/{*,*/*}/license.*.xml', GLOB_BRACE));
 		}
 		else
 		{
@@ -2082,11 +2082,11 @@ JS
 		if (!is_dir(APPROOT.'data')) {
 			mkdir(APPROOT.'data');
 		}
-		if (!is_dir(APPROOT.'data/setup')) {
-			mkdir(APPROOT.'data/setup');
+		if (!is_dir(utils::GetDataPath().'setup')) {
+			mkdir(utils::GetDataPath().'setup');
 		}
 		$sUID = hash('sha256', rand());
-		file_put_contents(APPROOT.'data/setup/authent', $sUID);
+		file_put_contents(utils::GetDataPath().'setup/authent', $sUID);
 		Session::Set('setup_token', $sUID);
 		return $sUID;
 	}
@@ -2102,7 +2102,7 @@ JS
 	final public static function CheckSetupToken($bRemoveToken = false)
 	{
 		$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
-		$sTokenFile = APPROOT.'data/setup/authent';
+		$sTokenFile = utils::GetDataPath().'setup/authent';
 		if (!file_exists($sTokenFile) || $sAuthent !== file_get_contents($sTokenFile)) {
 			throw new SecurityException('Setup operations are not allowed outside of the setup');
 		}
@@ -2121,7 +2121,7 @@ JS
 	{
 		if (Session::IsSet('setup_token')) {
 			$sAuth = Session::Get('setup_token');
-			$sTokenFile = APPROOT.'data/setup/authent';
+			$sTokenFile = utils::GetDataPath().'setup/authent';
 			if (file_exists($sTokenFile) && $sAuth === file_get_contents($sTokenFile)) {
 				return true;
 			}
@@ -2135,7 +2135,7 @@ JS
 	 */
 	public static function EraseSetupToken()
 	{
-		$sTokenFile = APPROOT.'data/setup/authent';
+		$sTokenFile = utils::GetDataPath().'setup/authent';
 		if (is_file($sTokenFile)) {
 			unlink($sTokenFile);
 		}

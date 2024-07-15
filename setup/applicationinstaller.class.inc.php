@@ -626,14 +626,14 @@ class ApplicationInstaller
 			}
 		}
 		// Dump the "reference" model, just before loading any actual delta
-		$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$sEnvironment.'.xml');
+		$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$sEnvironment.'.xml');
 
-		$sDeltaFile = APPROOT.'data/'.$sEnvironment.'.delta.xml';
+		$sDeltaFile = utils::GetDataPath().$sEnvironment.'.delta.xml';
 		if (file_exists($sDeltaFile))
 		{
 			$oDelta = new MFDeltaModule($sDeltaFile);
 			$oFactory->LoadModule($oDelta);
-			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$sEnvironment.'-with-delta.xml');
+			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$sEnvironment.'-with-delta.xml');
 		}
 
 		$oMFCompiler = new MFCompiler($oFactory, $sEnvironment);
@@ -658,8 +658,8 @@ class ApplicationInstaller
 		}
 
 		// Set an "Instance UUID" identifying this machine based on a file located in the data directory
-		$sInstanceUUIDFile = APPROOT.'data/instance.txt';
-		SetupUtils::builddir(APPROOT.'data');
+		$sInstanceUUIDFile = utils::GetDataPath().'instance.txt';
+		SetupUtils::builddir(utils::GetDataPath());
 		if (!file_exists($sInstanceUUIDFile))
 		{
 			$sIntanceUUID = utils::CreateUUID('filesystem');

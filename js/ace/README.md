@@ -1,1 +1,0 @@
-@deprecated 3.2.0 N°5621 added to NPM, those old files will be removed in a future version.

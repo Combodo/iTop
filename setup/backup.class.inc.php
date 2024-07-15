@@ -201,7 +201,7 @@ class DBBackup
 
 		$oArchive = new ITopArchiveTar($sTargetFile.'.tar.gz');
 
-		$sTmpFolder = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
+		$sTmpFolder = utils::GetDataPath().'tmp-backup-'.rand(10000, getrandmax());
 		$aFiles = $this->PrepareFilesToBackup($sSourceConfigFile, $sTmpFolder);
 
 		$sFilesList = var_export($aFiles, true);
@@ -248,7 +248,7 @@ class DBBackup
 			$aRet[] = $sFile;
 		}
 
-		$sDeltaFile = APPROOT.'data/'.utils::GetCurrentEnvironment().'.delta.xml';
+		$sDeltaFile = utils::GetDataPath().utils::GetCurrentEnvironment().'.delta.xml';
 		if (file_exists($sDeltaFile))
 		{
 			$sFile = $sTmpFolder.'/delta.xml';
@@ -256,7 +256,7 @@ class DBBackup
 			copy($sDeltaFile, $sFile);
 			$aRet[] = $sFile;
 		}
-		$sExtraDir = APPROOT.'data/'.utils::GetCurrentEnvironment().'-modules/';
+		$sExtraDir = utils::GetDataPath().utils::GetCurrentEnvironment().'-modules/';
 		if (is_dir($sExtraDir))
 		{
 			$sModules = utils::GetCurrentEnvironment().'-modules';

@@ -80,11 +80,11 @@ gitGraph
     checkout support/3.1
     commit id: "2023-12-20" tag: "3.1.1"
     checkout support/2.7
-    commit id: "2024-01-17" tag: "2.7.10"
-    checkout develop
-    commit id: "2024-06-25" tag: "3.2.0-beta1" type: HIGHLIGHT
-    branch support/3.2 order: 830
+    commit id: "2024-01-17a" tag: "2.7.10"
+    checkout support/3.0
+    commit id: "2024-01-17b" tag: "3.0.4"
     checkout support/3.2
+    commit id: "2024-06-25" tag: "3.2.0-beta1"
 ```
 
 To learn more, check the [iTop community versions history on the official wiki](https://www.itophub.io/wiki/page?id=latest:release:start).

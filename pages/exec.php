@@ -81,8 +81,8 @@ if (is_link($sPageEnvFullPath)) {
 	$aPossibleBasePaths = [
 		APPROOT.$sSourceDir,
 		APPROOT.'extensions',
-		APPROOT.'data/'.$sEnvironment.'-modules',
-		APPROOT.'data/downloaded-extensions', // Hub connector
+		utils::GetDataPath().$sEnvironment.'-modules',
+		utils::GetDataPath().'downloaded-extensions', // Hub connector
 	];
 } else {
 	$aPossibleBasePaths = [$sEnvFullPath];
