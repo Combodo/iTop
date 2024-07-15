@@ -54,7 +54,8 @@ $ibo-vendors-selectize--header--padding-y: 5px !default;
   border-width: unset;
   border-color: unset;
 }
-.selectize-control.single .selectize-input:after {
+.selectize-control.single .selectize-input:after,
+.selectize-control.single .selectize-input:not(.no-arrow):after {
   content: unset;
 }
 .selectize-input::after {
