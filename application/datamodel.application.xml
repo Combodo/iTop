@@ -186,7 +186,7 @@
       </style>
     </menu>
     <menu id="Integrations" xsi:type="TemplateMenuNode" _delta="define">
-      <rank>15</rank>
+      <rank>50</rank>
       <parent>ConfigurationTools</parent>
       <template_file/>
     </menu>
