@@ -185,8 +185,8 @@
         <decoration_classes>fas fa-cog</decoration_classes>
       </style>
     </menu>
-    <menu id="ConfigEditor" xsi:type="TemplateMenuNode" _delta="define">
-      <rank>10</rank>
+    <menu id="Integrations" xsi:type="TemplateMenuNode" _delta="define">
+      <rank>15</rank>
       <parent>ConfigurationTools</parent>
       <template_file/>
     </menu>

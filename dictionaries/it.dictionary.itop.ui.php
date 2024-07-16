@@ -1467,4 +1467,8 @@ Quando è associata a un trigger, a ogni azione è assegnato un numero "ordine",
 	'UI_CountOfObjectsShort' => '%1$d oggetti.',
 	'portal:backoffice' => 'Interfaccia utente di '.ITOP_APPLICATION_SHORT.' Back-Office',
 	'portal:legacy_portal' => 'Portale per gli utenti finali',
+	'Menu:ConfigEditor'           => 'General configuration~~',
+	'Menu:ConfigEditor+'          => 'Configuration File editor~~',
+	'Menu:Integrations'           => 'Integrations~~',
+	'Menu:Integrations+'          => '~~',
 ]);

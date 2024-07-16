@@ -317,6 +317,8 @@ Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audi
 	'Menu:ConfigurationTools' => 'Configuration',
 	'Menu:ConfigEditor'       => 'Configuration générale',
 	'Menu:ConfigEditor+'      => 'Édition du fichier de configuration',
+	'Menu:Integrations' => 'Intégrations',
+	'Menu:Integrations+'          => '',
 	'Menu:DataAdministration' => 'Administration des données',
 	'Menu:DataAdministration+' => 'Administration des données',
 	'Menu:DataModelMenu' => 'Modèle de données',

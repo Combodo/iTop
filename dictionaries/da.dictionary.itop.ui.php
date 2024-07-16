@@ -1465,4 +1465,8 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI_CountOfObjectsShort' => '%1$d objekter.',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office User Interface~~',
 	'portal:legacy_portal' => 'End-User Portal~~',
+	'Menu:ConfigEditor'           => 'General configuration~~',
+	'Menu:ConfigEditor+'          => 'Configuration File editor~~',
+	'Menu:Integrations'           => 'Integrations~~',
+	'Menu:Integrations+'          => '~~',
 ]);

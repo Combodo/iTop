@@ -1468,4 +1468,8 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI_CountOfObjectsShort' => '%1$d objecten.',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office User Interface',
 	'portal:legacy_portal' => 'Portaal voor eindgebruikers',
+	'Menu:ConfigEditor'           => 'General configuration~~',
+	'Menu:ConfigEditor+'          => 'Configuration File editor~~',
+	'Menu:Integrations' => 'Integraties',
+	'Menu:Integrations+'          => '~~',
 ]);

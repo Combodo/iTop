@@ -25,8 +25,8 @@ $ibo-vendors-selectize--input-error--border: 1px solid $ibo-color-red-600 !defau
 
 $ibo-vendors-selectize--input--border-color: $ibo-color-grey-500 !default;
 
-$ibo-vendors-selectize--element--active--background: $ibo-color-white-100 !default;
-$ibo-vendors-selectize--element--active--color: $ibo-color-grey-500 !default;
+$ibo-vendors-selectize--element--active--background: $ibo-color-blue-100 !default;
+$ibo-vendors-selectize--element--active--color: $ibo-color-grey-900 !default;
 
 $ibo-vendors-selectize--dropdown--background-color: $ibo-vendors-selectize-input--background-color !default;
 $ibo-vendors-selectize--dropdown--color:  $ibo-vendors-selectize-input--color!default;
@@ -54,7 +54,8 @@ $ibo-vendors-selectize--header--padding-y: 5px !default;
   border-width: unset;
   border-color: unset;
 }
-.selectize-control.single .selectize-input:after {
+.selectize-control.single .selectize-input:after,
+.selectize-control.single .selectize-input:not(.no-arrow):after {
   content: unset;
 }
 .selectize-input::after {

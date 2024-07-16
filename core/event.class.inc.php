@@ -231,7 +231,7 @@ class EventIssue extends Event
 
 		if (array_key_exists('_GET', $GLOBALS) && is_array($GLOBALS['_GET']))
 		{
-			$this->Set('arguments_get', $GLOBALS['_GET']);
+			$this->Set('arguments_get', $this->SanitizeRequestParams($GLOBALS['_GET']));
 		}
 		else
 		{
@@ -240,22 +240,7 @@ class EventIssue extends Event
 
 		if (array_key_exists('_POST', $GLOBALS) && is_array($GLOBALS['_POST']))
 		{
-			$aPost = array();
-			foreach($GLOBALS['_POST'] as $sKey => $sValue)
-			{
-				if (is_string($sValue))
-				{
-					if (mb_strlen($sValue) < 256) {
-						$aPost[$sKey] = $sValue;
-					} else {
-						$aPost[$sKey] = "!long string: ".mb_strlen($sValue)." chars";
-					}
-				} else {
-					// Not a string (avoid warnings in case the value cannot be easily casted into a string)
-					$aPost[$sKey] = @(string)$sValue;
-				}
-			}
-			$this->Set('arguments_post', $aPost);
+			$this->Set('arguments_post', $this->SanitizeRequestParams($GLOBALS['_POST']));
 		} else {
 			$this->Set('arguments_post', array());
 		}
@@ -273,6 +258,29 @@ class EventIssue extends Event
 		if ($sLength > 255) {
 			$this->Set('page', mb_substr($this->Get('page'), 0, 210)." -truncated ($sLength chars)");
 		}
+	}
+
+	protected function SanitizeRequestParams(array $aParams): array
+	{
+		$aSanitizedParams = [];
+
+		foreach ($aParams as $sKey => $sValue) {
+			if (is_string($sValue)) {
+				if (stristr($sKey, 'pwd') !== false || stristr($sKey, 'passwd') !== false || stristr($sKey, 'password') !== false) {
+					$aSanitizedParams[$sKey] = '****';
+				} elseif (mb_strlen($sValue) < 256) {
+					$aSanitizedParams[$sKey] = $sValue;
+				} else {
+					$aSanitizedParams[$sKey] = '!long string: '.mb_strlen($sValue).' chars';
+				}
+			} else {
+				// Not a string (avoid warnings in case the value cannot be easily cast into a string)
+				$aSanitizedParams[$sKey] = @(string)$sValue;
+			}
+		}
+
+
+		return $aSanitizedParams;
 	}
 }
 

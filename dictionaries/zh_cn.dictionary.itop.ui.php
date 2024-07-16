@@ -1465,4 +1465,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI_CountOfObjectsShort' => '%1$d个对象.',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.'后台用户界面',
 	'portal:legacy_portal' => '终端用户门户',
+	'Menu:ConfigEditor'           => 'General configuration~~',
+	'Menu:ConfigEditor+'          => 'Configuration File editor~~',
+	'Menu:Integrations' => '集成',
+	'Menu:Integrations+'          => '~~',
 ]);

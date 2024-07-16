@@ -1466,4 +1466,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI_CountOfObjectsShort' => '%1$d nesne.',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.'Arka Ofis Kullanıcı Arayüzü',
 	'portal:legacy_portal' => 'Son Kullanıcı Arayüzü',
+	'Menu:ConfigEditor'           => 'General configuration~~',
+	'Menu:ConfigEditor+'          => 'Configuration File editor~~',
+	'Menu:Integrations'           => 'Integrations~~',
+	'Menu:Integrations+'          => '~~',
 ]);

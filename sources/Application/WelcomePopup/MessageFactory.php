@@ -65,6 +65,32 @@ class MessageFactory {
 		);
 	}
 
+	public static function MakeForLeftIllustrationAsSVGMarkupRightTexts(string $sId, string $sTitle, string $sDescription, null|string $sIllustrationAbsURI = null, int $iImportance = iWelcomePopupExtension::DEFAULT_IMPORTANCE): Message
+	{
+		return new Message(
+			$sId,
+			$sTitle,
+			$sDescription,
+			$sIllustrationAbsURI,
+			[],
+			$iImportance,
+			"templates/application/welcome_popup/templates/left-illustration-as-svg-markup-right-title-description.html.twig"
+		);
+	}
+
+	public static function MakeForLeftTextsRightIllustrationAsSVGMarkup(string $sId, string $sTitle, string $sDescription, null|string $sIllustrationAbsURI = null, int $iImportance = iWelcomePopupExtension::DEFAULT_IMPORTANCE): Message
+	{
+		return new Message(
+			$sId,
+			$sTitle,
+			$sDescription,
+			$sIllustrationAbsURI,
+			[],
+			$iImportance,
+			"templates/application/welcome_popup/templates/left-title-description-right-illustration-as-svg-markup.html.twig"
+		);
+	}
+
 	/**
 	 * @param string $sId Unique ID of the message within its provider
 	 * @param string $sTitle Title of the message in plain text

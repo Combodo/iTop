@@ -28,7 +28,9 @@
         {% endblock %}
         {% block wpMessageIllustrationOuter %}
             {% if oMessage.HasIllustration() %}
-                <div class="ibo-welcome-popup--message-illustration" style="background-image: url('{{ oMessage.GetIllustrationAbsURI() }}')"></div>
+                {%  block wpMessagIllustrationInner %}
+                    <div class="ibo-welcome-popup--message-illustration" style="background-image: url('{{ oMessage.GetIllustrationAbsURI() }}')"></div>
+                {% endblock %}
             {% endif %}
         {% endblock %}
     {% endblock %}

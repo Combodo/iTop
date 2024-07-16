@@ -1465,4 +1465,8 @@ Quando associada a um gatilho, cada ação recebe um número de "ordem", especif
 	'UI_CountOfObjectsShort' => '%1$d objeto(s)',
 	'portal:backoffice' => 'Interface de usuário back-office do '.ITOP_APPLICATION_SHORT,
 	'portal:legacy_portal' => 'Portal do usuário (legado) do '.ITOP_APPLICATION_SHORT,
+	'Menu:ConfigEditor'           => 'General configuration~~',
+	'Menu:ConfigEditor+'          => 'Configuration File editor~~',
+	'Menu:Integrations'           => 'Integrations~~',
+	'Menu:Integrations+'          => '~~',
 ]);

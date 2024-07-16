@@ -1466,4 +1466,8 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI_CountOfObjectsShort' => '%1$d objektum.',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Adminisztrációs felület',
 	'portal:legacy_portal' => 'Végfelhasználói Portál',
+	'Menu:ConfigEditor'           => 'General configuration~~',
+	'Menu:ConfigEditor+'          => 'Configuration File editor~~',
+	'Menu:Integrations' => 'Integrációk',
+	'Menu:Integrations+'          => '~~',
 ]);

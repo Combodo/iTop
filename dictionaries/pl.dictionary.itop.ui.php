@@ -1477,4 +1477,8 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'core/Operation:Wizard/Title' => 'Konfiguracja OAuth 2.0',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Interfejs użytkownika biurowego',
 	'portal:legacy_portal' => 'Portal użytkownika',
+	'Menu:ConfigEditor'           => 'General configuration~~',
+	'Menu:ConfigEditor+'          => 'Configuration File editor~~',
+	'Menu:Integrations'           => 'Integrations~~',
+	'Menu:Integrations+'          => '~~',
 ]);
