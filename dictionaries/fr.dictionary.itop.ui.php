@@ -468,7 +468,7 @@ Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audi
 	'UI:Archive_User_OnBehalfOf_User' => '%1$s pour %2$s',
 	'UI:AttemptingToChangeASlaveAttribute_Name' => 'Le champ %1$s ne peut pas être modifié car il est géré par une synchronisation avec une source de données. Valeur inchangée.',
 	'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Tentative de modification du champ en lecture seule: %1$s',
-	'UI:AttemptingToSetASlaveAttribute_Name' => 'Le champ %1$s ne peut pas être modifié car il est géré par une synchronisation avec une source de données. Valeur ignorée.',
+	'UI:AttemptingToSetASlaveAttribute_Name' => 'Le champ %1$s (%2$s) ne peut pas être modifié car il est géré par une synchronisation avec une source de données. Valeur ignorée.',
 	'UI:Audit:AuditCategory:Subtitle' => '%1$s en erreur sur %2$s - %3$s%% des objets sont valides',
 	'UI:Audit:AuditErrors' => 'Audit Errors~~',
 	'UI:Audit:Dashboard:ObjectsAudited' => 'Objets audités',
