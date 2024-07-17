@@ -124,7 +124,7 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
       justify-content: end;
     }
     /* N°6543 - We need the rule to keep text inside the column when width is defined */
-    > [data-attribute-type="AttributeHtml"],
+    > [data-attribute-type="AttributeHTML"],
     > [data-attribute-type="AttributeText"] {
           max-width: 100%;
           overflow: auto;
