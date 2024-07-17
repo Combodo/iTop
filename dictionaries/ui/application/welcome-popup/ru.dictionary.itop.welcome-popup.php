@@ -35,7 +35,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:WelcomePopup:Message:320_05_A11yThemes:Title' => 'Accessibility for ' . ITOP_APPLICATION_SHORT . '\'s UI~~',
 	'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>To ensure ' . ITOP_APPLICATION_SHORT . '\'s accessibility, our team has been working on new back-office themes. WCAG compliants, those UI focus on making it easier for users with visual impairments to use the solution:
 <ul>
-	<li><b>Color-blind theme:</b>Designed to help users with colorblindness, this theme actually breaks down in two sub-themes to adapt to specific cases: </li>
+	<li><b>Color-blind theme:</b> Designed to help users with colorblindness, this theme actually breaks down in two sub-themes to adapt to specific cases: </li>
 		<ul>
 			<li>One adapted to protanopia and deuteranopia</li>	
 			<li>And another one for tritanopia</li>	
