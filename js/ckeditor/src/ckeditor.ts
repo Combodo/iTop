@@ -212,7 +212,25 @@ class Editor extends ClassicEditor {
 				'tableProperties',
                 '|',
                 'toggleTableCaption'
-			]
+			],
+            tableProperties: {
+                // The default styles for tables in the editor.
+                // They should be synchronized with the content styles.
+                defaultProperties: {
+                    borderStyle: 'dashed',
+                    borderColor: 'hsl(90, 75%, 60%)',
+                    borderWidth: '1px',
+                },
+            },
+                // The default styles for table cells in the editor.
+                // They should be synchronized with the content styles.
+                tableCellProperties: {
+                    defaultProperties: {
+                        borderStyle: 'dashed',
+                        borderColor: 'hsl(90, 75%, 60%)',
+                        borderWidth: '1px',
+                    }
+            }
 		},
 		htmlSupport: {
 			allow: [
