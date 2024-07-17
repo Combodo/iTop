@@ -80,6 +80,7 @@ $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
   margin-right: $ibo-navigation-menu--notifications--item--bottom-text--margin-right;
 }
 .ibo-navigation-menu--notifications--item--content {
+  flex-grow: 1;
   padding: $ibo-navigation-menu--notifications--item--content--padding-y $ibo-navigation-menu--notifications--item--content--padding-x;
 
   img {
