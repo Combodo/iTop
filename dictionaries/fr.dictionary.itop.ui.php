@@ -713,7 +713,7 @@ Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audi
 	'UI:ChangeMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Changements',
 	'UI:ChangePwdMenu' => 'Changer de mot de passe...',
 	'UI:ChangesLogTitle' => 'Liste de modifications (%1$d):',
-	'UI:Class_Object_NotUpdated' => 'Aucun changement détecté, %2$s (type : %2$s) n\'a <strong>pas</strong> été modifié.',
+	'UI:Class_Object_NotUpdated' => 'Aucun changement détecté, %1$s (type : %2$s) n\'a <strong>pas</strong> été modifié.',
 	'UI:Class_Object_Updated' => '%1$s (%2$s) - informations mises à jour.',
 	'UI:ClickToCreateNew' => 'Créer un(e) %1$s',
 	'UI:ClonePageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - %2$s - Duplication de %1$s',

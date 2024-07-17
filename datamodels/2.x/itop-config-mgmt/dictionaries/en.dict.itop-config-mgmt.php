@@ -290,10 +290,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
 	'Class:DatacenterDevice/Attribute:san_list+' => 'All the SAN switches connected to this device',
 	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancy',
-	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device is up if at least one power connection (A or B) is up',
+	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device %2$s is up if at least one power connection (A or B) is up',
 	// Unused yet
-	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device is up if all its power connections are up',
-	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device is up if at least %1$s %% of its power connections are up',
+	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device %2$s is up if all its power connections are up',
+	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device %2$s is up if at least %1$s %% of its power connections are up',
 ));
 
 //

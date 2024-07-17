@@ -43,7 +43,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Brick:Portal:Manage:fct:min' => 'Min',
 	'Brick:Portal:Manage:fct:sum' => 'Suma',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Zkopírováno',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Zkopíruj odkaz na objekt',
 	'Brick:Portal:Object:Form:Create:Title' => 'Nový %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => 'Aktualizace %2$s (%1$s)',

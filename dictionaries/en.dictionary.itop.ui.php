@@ -1574,7 +1574,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	//   - Numeric widget
 	//   None yet
 	//   - DateTime widget
-	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s',
 	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
