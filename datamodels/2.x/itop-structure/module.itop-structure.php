@@ -381,11 +381,11 @@ if (!class_exists('StructureInstaller'))
 				$aActionsData = [
 					'EN US' => [
 						'name' => 'Notification to agent when ticket assigned',
-						'message' => '$this->friendlyname$ has been assigned to you',
+						'message' => 'Ticket has been assigned to you',
 					],
 					'FR FR' => [
 						'name' => 'Notification à l\'agent à l\'assignation du ticket',
-						'message' => '$this->friendlyname$ vous a été assigné',
+						'message' => 'Le ticket vous a été assigné',
 					]
 				];
 
