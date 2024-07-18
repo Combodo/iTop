@@ -38,7 +38,7 @@ class MessageFactory {
 			$sIllustrationAbsURI,
 			[],
 			$iImportance,
-			"templates/application/welcome_popup/templates/left-title-description-right-illustration.html.twig"
+			"templates/application/welcome-popup/templates/left-title-description-right-illustration.html.twig"
 		);
 	}
 
@@ -61,7 +61,7 @@ class MessageFactory {
 			$sIllustrationAbsURI,
 			[],
 			$iImportance,
-			"templates/application/welcome_popup/templates/left-illustration-right-title-description.html.twig"
+			"templates/application/welcome-popup/templates/left-illustration-right-title-description.html.twig"
 		);
 	}
 
@@ -74,7 +74,7 @@ class MessageFactory {
 			$sIllustrationAbsURI,
 			[],
 			$iImportance,
-			"templates/application/welcome_popup/templates/left-illustration-as-svg-markup-right-title-description.html.twig"
+			"templates/application/welcome-popup/templates/left-illustration-as-svg-markup-right-title-description.html.twig"
 		);
 	}
 
@@ -87,7 +87,7 @@ class MessageFactory {
 			$sIllustrationAbsURI,
 			[],
 			$iImportance,
-			"templates/application/welcome_popup/templates/left-title-description-right-illustration-as-svg-markup.html.twig"
+			"templates/application/welcome-popup/templates/left-title-description-right-illustration-as-svg-markup.html.twig"
 		);
 	}
 

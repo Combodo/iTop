@@ -41,7 +41,7 @@ function DisplayWelcomePopup(WebPage $oP): void
 		$oWelcomePopupService = WelcomePopupService::GetInstance();
 		$aProvidersMessagesData = $oWelcomePopupService->GetMessages();
 		if (count($aProvidersMessagesData) > 0) {
-			TwigHelper::RenderIntoPage($oP, APPROOT."/", "templates/application/welcome_popup/layout", [
+			TwigHelper::RenderIntoPage($oP, APPROOT."/", "templates/application/welcome-popup/layout", [
 				"aProvidersMessagesData" => $aProvidersMessagesData,
 				"sEndpointAbsURIForAcknowledgeMessage" => Router::GetInstance()->GenerateUrl(WelcomePopupController::ROUTE_NAMESPACE . ".acknowledge_message"),
 			]);
