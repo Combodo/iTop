@@ -4,7 +4,8 @@
  */
 
 /* SCSS variables */
-$ibo-navigation-menu--notifications-menu--min-width: 250px;
+$ibo-navigation-menu--notifications-menu--min-width: 550px;
+$ibo-navigation-menu--notifications-menu--max-width: 90vw;
 
 $ibo-navigation-menu--notifications--item--image--margin-x: 6px !default;
 $ibo-navigation-menu--notifications--item--image--margin-y: $ibo-spacing-0 !default;
@@ -17,6 +18,7 @@ $ibo-navigation-menu--notifications--item--bottom-text--margin-right: auto !defa
 
 $ibo-navigation-menu--notifications--item--content--padding-y: $ibo-spacing-0 !default;
 $ibo-navigation-menu--notifications--item--content--padding-x: 14px !default;
+$ibo-navigation-menu--notifications--item--content--max-height: 128px !default;
 $ibo-navigation-menu--notifications--item--content--img--max-height: 100px !default;
 $ibo-navigation-menu--notifications--item--content--img--padding: 5px !default;
 
@@ -46,7 +48,9 @@ $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
 
 #ibo-navigation-menu--notifications-menu {
   flex-flow: column;
-  min-width: $ibo-navigation-menu--notifications-menu--min-width;
+  min-width: min(#{$ibo-navigation-menu--notifications-menu--min-width}, 90vw);
+  max-width: $ibo-navigation-menu--notifications-menu--max-width;
+
   .ibo-navigation-menu--notifications--messages-section {
     overflow: auto;
   }
@@ -82,6 +86,9 @@ $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
 .ibo-navigation-menu--notifications--item--content {
   flex-grow: 1;
   padding: $ibo-navigation-menu--notifications--item--content--padding-y $ibo-navigation-menu--notifications--item--content--padding-x;
+  max-height: $ibo-navigation-menu--notifications--item--content--max-height;
+  overflow-y: auto;
+  white-space: normal; /* Overload rule from popupover menu item so that content wraps instead of being on a gigantic line */
 
   img {
     max-height: $ibo-navigation-menu--notifications--item--content--img--max-height;
@@ -91,6 +98,7 @@ $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
 .ibo-navigation-menu--notifications-item {
   display: flex;
   flex-direction: row;
+  cursor: pointer;
 
   .ibo-navigation-menu--notifications--item--content a {
     @extend %ibo-hyperlink-forced-colors;
@@ -103,6 +111,8 @@ $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
   border: $ibo-navigation-menu--notifications--item--new-message-indicator--border;
   border-radius: $ibo-navigation-menu--notifications--item--new-message-indicator--border-radius;
   margin-top: $ibo-navigation-menu--notifications--item--new-message-indicator--margin-top;
+  flex-shrink: 0; /* Avoid indicator to be shrinked into a non round shape */
+
   &.ibo-is-priority-1{
     background-color: $ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-1--background-color;
     border: $ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-1--border;
