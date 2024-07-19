@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'UI:Layout:ObjectDetails:DatamodelSchemaLink:Tooltip' => 'Class data model schema~~',
+	'UI:Layout:ObjectDetails:DatamodelSchemaLink:Tooltip' => 'Klassenschema des Datenmodells',
 	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => 'Lösche das angezeigte Objekt',
 	'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject' => 'Ändere das angezeigte Objekt',
 	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Erzeuge eine neues Objekt (der gleichen Klasse, wie das angezeigte Objekt)',
