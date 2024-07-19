@@ -36,7 +36,7 @@ class iTopComposer extends AbstractFolderAnalyzer
 	/**
 	 * @inheritDoc
 	 */
-	public function ListAllowedFoldersRelPaths(): array
+	public function ListAllowedFilesRelPaths(): array
 	{
 		return [
 			'twig/twig/src/Node/Expression/Test',
@@ -46,7 +46,7 @@ class iTopComposer extends AbstractFolderAnalyzer
 	/**
 	 * @inheritDoc
 	 */
-	public function ListDeniedFoldersRelPaths(): array
+	public function ListDeniedFilesRelPaths(): array
 	{
 		return [
 			'doctrine/lexer/tests',
@@ -61,6 +61,9 @@ class iTopComposer extends AbstractFolderAnalyzer
 			'pear/archive_tar/tests',
 			'pear/console_getopt/tests',
 			'pear/pear_exception/tests',
+			'pear/archive_tar/docs',
+			'pear/archive_tar/scripts',
+			'pear/archive_tar/sync-php4',
 
 			'psr/log/Psr/Log/Test',
 

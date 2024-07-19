@@ -53,12 +53,12 @@ switch ($sDependenciesHandlerCode) {
 
 // Start handler
 $oDependenciesHandler = new $sDependenciesHandlerFQCN();
-$aDeniedButStillPresent = $oDependenciesHandler->ListDeniedButStillPresentFoldersAbsPaths();
+$aDeniedButStillPresent = $oDependenciesHandler->ListDeniedButStillPresentFilesAbsPaths();
 
 echo "\n";
 foreach ($aDeniedButStillPresent as $sDir)
 {
-	if (false === $oDependenciesHandler::IsQuestionnableFolder($sDir))
+	if (false === $oDependenciesHandler::IsQuestionnableFile($sDir))
 	{
 		echo "ERROR found INVALID denied test dir: '$sDir'\n";
 		throw new \RuntimeException("$sDir is in the denied list but doesn't comply with the rule (see IsQuestionnableFolder method)");
@@ -70,7 +70,12 @@ foreach ($aDeniedButStillPresent as $sDir)
 	}
 
 	try {
-		SetupUtils::rrmdir($sDir);
+		if(is_dir($sDir)){
+			SetupUtils::rrmdir($sDir);
+		}
+		else{
+			unlink($sDir);
+		}
 		echo "✔️ Remove denied test dir: '$sDir'\n";
 	}
 	catch (\Exception $e) {
@@ -80,10 +85,10 @@ foreach ($aDeniedButStillPresent as $sDir)
 
 
 $aAllowedAndDeniedDirs = array_merge(
-	$oDependenciesHandler->ListAllowedFoldersAbsPaths(),
-	$oDependenciesHandler->ListDeniedFoldersAbsPaths()
+	$oDependenciesHandler->ListAllowedFilesAbsPaths(),
+	$oDependenciesHandler->ListDeniedFilesAbsPaths()
 );
-$aExistingDirs = $oDependenciesHandler->ListAllFoldersAbsPaths();
+$aExistingDirs = $oDependenciesHandler->ListAllFilesAbsPaths();
 $aMissing = array_diff($aExistingDirs, $aAllowedAndDeniedDirs);
 if (false === empty($aMissing)) {
 	echo "Some new tests dirs exists !\n"

@@ -26,7 +26,7 @@ use Combodo\iTop\Dependencies\AbstractFolderAnalyzer;
 class iTopNPM extends AbstractFolderAnalyzer
 {
 	/** @inheritDoc */
-	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|website|external|libs?|src|.github|.idea)$/i';
+	public const QUESTIONNABLE_FILES_REGEXP = '/^(tests?|examples?|htdocs?|demos?|website|external|libs?|src|.github|.idea)$/i';
 
 	/**
 	 * @inheritDoc
@@ -39,7 +39,7 @@ class iTopNPM extends AbstractFolderAnalyzer
 	/**
 	 * @inheritDoc
 	 */
-	public function ListAllowedFoldersRelPaths(): array
+	public function ListAllowedFilesRelPaths(): array
 	{
 		return [
 			'ace-builds/textarea/src',      // Unknown usage
@@ -54,7 +54,7 @@ class iTopNPM extends AbstractFolderAnalyzer
 	/**
 	 * @inheritDoc
 	 */
-	public function ListDeniedFoldersRelPaths(): array
+	public function ListDeniedFilesRelPaths(): array
 	{
 		return [
 			'@popperjs/core/dist/cjs',
