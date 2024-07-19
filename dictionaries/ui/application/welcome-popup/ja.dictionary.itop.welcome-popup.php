@@ -7,7 +7,8 @@
 // UI elements
 Dict::Add('JA JP', 'Japanese', '日本語', [
 	'UI:WelcomePopup:Button:RemindLater' => 'Remind me later~~',
-	'UI:WelcomePopup:Button:Acknowledge' => 'Got it~~',
+	'UI:WelcomePopup:Button:AcknowledgeAndNext' => 'Next~~',
+	'UI:WelcomePopup:Button:AcknowledgeAndClose' => 'Close~~',
 ]);
 
 // Message

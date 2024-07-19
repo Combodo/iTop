@@ -7,7 +7,8 @@
 // UI elements
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:WelcomePopup:Button:RemindLater' => 'Remind me later~~',
-	'UI:WelcomePopup:Button:Acknowledge' => 'Verstanden',
+	'UI:WelcomePopup:Button:AcknowledgeAndNext' => 'Nächste',
+	'UI:WelcomePopup:Button:AcknowledgeAndClose' => 'Schließen',
 ]);
 
 // Message

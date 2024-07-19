@@ -12,21 +12,28 @@ oWelcomePopupDialogElem.dialog({
 	title: oWelcomePopupDialogElem.attr('data-title'),
     open: function () {
         // Focus on acknowledge button
-        oWelcomePopupDialogElem.closest('[role="dialog"]').find('.ui-dialog-buttonset .ibo-is-primary:first').trigger('focus');
+        const oAckButton = oWelcomePopupDialogElem.closest('[role="dialog"]').find('.ui-dialog-buttonset .ibo-is-primary:first');
+        oAckButton.trigger('focus');
+
+        // Count stack items and change button label to close if there is only one
+        // Note: "<=" so it works when stack isn't displayed as well as when it contains only one item
+        if (oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"]').length <= 1) {
+            oAckButton.text({{ 'UI:WelcomePopup:Button:AcknowledgeAndClose'|dict_s|json_encode|raw }});
+        }
     },
 	close: function() {
         oWelcomePopupDialogElem.remove();
     },
     buttons: [
         {
-            text: "Remind me later",
+            text: {{ 'UI:WelcomePopup:Button:RemindLater'|dict_s|json_encode|raw }},
             class: 'ibo-is-alternative',
             click: function() {
                 oWelcomePopupDialogElem.dialog( "close" );
             }
         },
         {
-            text: "Got it",
+            text: {{ 'UI:WelcomePopup:Button:AcknowledgeAndNext'|dict_s|json_encode|raw }},
             class: 'ibo-is-regular ibo-is-primary',
             click: function() {
                 oWelcomePopupDialogElem.trigger('acknowledge_message.itop.welcome_popup');
@@ -68,9 +75,15 @@ oWelcomePopupDialogElem
                     oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"][data-uuid="' + sUUIDEscapedForSelector + '"]').addClass('ibo-is-acknowledged');
 
                     // Display next message if any
-                    const oNextStackItemelem = oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"]:not(.ibo-is-acknowledged):first');
-                    if (oNextStackItemelem.length > 0) {
-                        oNextStackItemelem.trigger('click');
+                    const oNextStackItemElem = oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"]:not(.ibo-is-acknowledged):first');
+                    if (oNextStackItemElem.length > 0) {
+                        oNextStackItemElem.trigger('click');
+
+                        // Count non acknowledged stack items and change button label to close if there is only one
+                        if (oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"]:not(.ibo-is-acknowledged)').length === 1) {
+                            const oAckButton = oWelcomePopupDialogElem.closest('[role="dialog"]').find('.ui-dialog-buttonset .ibo-is-primary:first');
+                            oAckButton.text({{ 'UI:WelcomePopup:Button:AcknowledgeAndClose'|dict_s|json_encode|raw }});
+                        }
                     } else {
                         // Close dialog
                         oWelcomePopupDialogElem.dialog('close');

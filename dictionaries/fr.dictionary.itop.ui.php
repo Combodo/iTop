@@ -1466,7 +1466,6 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 
 <div>Configurez vos préférences '.ITOP_APPLICATION.' pour une expérience personnalisée.</div>',
 	'UI:WelcomeMenu:Title' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomePopup:Button:Acknowledge' => 'Ok, supprimer ce message',
 	'UI:WelcomeToITop' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,
 	'UI:Wizard:FinalStepTitle' => 'Dernière étape: confirmation',
 	'UI:YourSearch' => 'Votre recherche',
