@@ -736,8 +736,8 @@
         $oSearch->AllowAllData();
         $oUserSet = new DBObjectSet($oSearch);
 
-        // The organization's person was changed and it has associated Users
-        if (array_key_exists('org_id', $aChanges) && ($oUserSet->Count() > 0)) {
+        // Change was not made by a DataSynchro and the organization's person was changed and there are associated Users
+        if (!ContextTag::Check(ContextTag::TAG_SYNCHRO) && array_key_exists('org_id', $aChanges) && ($oUserSet->Count() > 0)) {
             while($oUser = $oUserSet->Fetch())
             {
                 $oAddon = UserRights::GetModuleInstance();
@@ -746,7 +746,7 @@
                 $aProfiles = $oSet->GetColumnAsArray('profile');
 
                 // User is not allowed on the new Organization and has 'Portal user' Profile and is enabled
-                if ((count($aOrgs) > 0) && !in_array($this->Get('org_id'), $aOrgs) &&  in_array('Portal user',$aProfiles) && ($oUser->Get('status') === 'enabled') && !ContextTag::Check(ContextTag::TAG_SYNCHRO))
+                if ((count($aOrgs) > 0) && !in_array($this->Get('org_id'), $aOrgs) &&  in_array('Portal user',$aProfiles) && ($oUser->Get('status') === 'enabled'))
                 {   // Let's block the Person modification,
                     // replace by $this->AddCheckWarning(...) if you don't want to block the modification
                     $this->AddCheckIssue(Dict::Format('Class:Person/Error:ChangingOrgDenied', $this->Get('org_id_friendlyname')));
