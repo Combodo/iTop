@@ -32,56 +32,56 @@ export default class Maximize extends Plugin {
                 if (oEditor.ui.element !== null) {
                     if (oButton.isOn) {
                         // remove classes
-                        document.documentElement.classList.remove('html_editor_full_screen')
-                        document.body.classList.remove('body_editor_full_screen')
+                        document.documentElement.classList.remove('ck-maximize_html_editor')
+                        document.body.classList.remove('ck-maximize_body_editor')
                         let oParentElement: HTMLElement = oEditor.ui.element;
                         while (oParentElement.parentElement !== null) {
                             oParentElement = oParentElement.parentElement;
-                            oParentElement.classList.remove('parent_editor_screen');
+                            oParentElement.classList.remove('ck-maximize_parent_editor');
                         }
-                        oEditor.ui.element.classList.remove('editor_full_screen');
-                        oEditor.ui.element.children[2].classList.remove('editor__main_full_screen');
+                        oEditor.ui.element.classList.remove('ck-maximize_editor');
+                        oEditor.ui.element.children[2].classList.remove('ck-maximize_editor_main');
                         oButton.icon = sMaximizeIconSVG;
                     } else {
                         // add classes to make editor full screen
-                        document.documentElement.classList.add('html_editor_full_screen')
-                        document.body.classList.add('body_editor_full_screen')
+                        document.documentElement.classList.add('ck-maximize_html_editor')
+                        document.body.classList.add('ck-maximize_body_editor')
                         let oParentElement: HTMLElement = oEditor.ui.element;
                         while (oParentElement.parentElement !== null) {
                             oParentElement = oParentElement.parentElement;
-                            oParentElement.classList.add('parent_editor_screen');
+                            oParentElement.classList.add('ck-maximize_parent_editor');
                         }
-                        oEditor.ui.element.classList.add('editor_full_screen');
-                        oEditor.ui.element.children[2].classList.add('editor__main_full_screen');
+                        oEditor.ui.element.classList.add('ck-maximize_editor');
+                        oEditor.ui.element.children[2].classList.add('ck-maximize_editor_main');
                         let oStyle = document.createElement('style');
                         // CSS rules definitions for each classes
                         oStyle.innerHTML = `
-.editor__main_full_screen > * {
+.ck-maximize_editor_main > * {
     height: 100% !important;
     width: 100% !important;
 }
-.editor__main_full_screen {
+.ck-maximize_editor_main {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
-.parent_editor_screen {
+.ck-maximize_parent_editor {
     position: fixed !important;
     overflow: visible !important;
     z-index: 1050 !important;
     margin: 0 !important;
 }
-.body_editor_full_screen {
+.ck-maximize_body_editor {
     width: 0 !important;
     height: 0 !important;
     overflow: hidden !important;
 }
-.html_editor_full_screen {
+.ck-maximize_html_editor {
     position: fixed !important;
     width: 0 !important;
     height: 0 !important;
 }
-.editor_full_screen {
+.ck-maximize_editor {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;

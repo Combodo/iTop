@@ -101,6 +101,11 @@ $ibo-vendors-ckeditor--ck-color-image-caption-text: $ibo-color-grey-900 !default
   }
 }
 
+// N°7552 Allow source editing area to be scrollable in full screen
+.ck-maximize_editor_main .ck-source-editing-area textarea{
+  overflow: auto !important;
+}
+
 /* Highlight JS */
 .hljs {
 	padding: $ibo-vendors-highlightjs--padding !important;
