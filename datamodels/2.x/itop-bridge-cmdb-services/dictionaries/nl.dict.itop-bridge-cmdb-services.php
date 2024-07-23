@@ -29,7 +29,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Naam leverancierscontract',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToService' => 'Link Functioneel CI / Service',
 	'Class:lnkFunctionalCIToService+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'CI',
@@ -40,5 +40,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Naam service',
 	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s~~',
+	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s',
 ]);

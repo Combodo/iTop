@@ -6,9 +6,10 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+
 /**
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
- *
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ConfigEditor' => 'Configuratie',
@@ -19,11 +20,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'config-current-line' => 'Huidige regel: %1$s',
 	'config-edit-intro' => 'Wees uiterst voorzichtig bij het aanpassen van de configuratie.',
 	'config-edit-title' => 'Aanpassen configuratie',
-	'config-error-file-changed' => 'Error: The Configuration file has changed since you opened it and cannot be saved. Refresh and apply your changes again.~~',
-	'config-error-transaction' => 'Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.~~',
-	'config-interactive-not-allowed' => ITOP_APPLICATION_SHORT.' interactive edition of the configuration as been disabled. See <code>\'config_editor\' => \'disabled\'</code> in the configuration file.~~',
+	'config-error-file-changed' => 'Fout: Het configuratiebestand is gewijzigd sinds je het geopend hebt en kan niet opgeslagen worden. Herlaad en pas je wijzigingen opnieuw toe.',
+	'config-error-transaction' => 'Fout: ongeldige Transactie ID. De configuratie is <b>NIET</b> aangepast.',
+	'config-interactive-not-allowed' => 'Interactieve aanpassing van de '.ITOP_APPLICATION_SHORT.' configuratie is uitgeschackeld. Zie <code>\'config_editor\' => \'disabled\'</code> in het configuratiebestand.',
 	'config-no-change' => 'Er zijn geen wijzigingen vastgesteld.',
-	'config-not-allowed-in-demo' => 'Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the configuration file cannot be edited.~~',
+	'config-not-allowed-in-demo' => 'Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demo mode</b>: Het configuratiebestand kan niet aangepast worden.',
 	'config-parse-error' => 'Regel %2$d: %1$s.<br/>Het bestand werd <b>NIET</b> opgeslagen.',
 	'config-reverted' => 'De wijzigingen zijn ongedaan gemaakt.',
 	'config-saved' => 'Wijzigingen zijn opgeslagen.',

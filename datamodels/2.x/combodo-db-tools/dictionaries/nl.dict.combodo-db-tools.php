@@ -6,9 +6,10 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+
 /**
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
- *
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'DBAnalyzer-Fetch-Count-Error' => 'Opvraag-fout in "%1$s", %2$d records opgevraagd / %3$d geteld',
@@ -25,7 +26,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'DBTools:Class' => 'Klasse',
 	'DBTools:Count' => 'Aantal',
 	'DBTools:DatabaseInfo' => 'Database-informatie',
-	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors~~',
+	'DBTools:DetailedErrorLimit' => 'Lijst beperkt tot %1$s fouten',
 	'DBTools:DetailedErrorTitle' => '%2$s fout(en) in klasse %1$s: %3$s',
 	'DBTools:Details' => 'Toon details',
 	'DBTools:Disclaimer' => 'Disclaimer: neem een back-up van de database vooraleer de fixes uit te voeren.',

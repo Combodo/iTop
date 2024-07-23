@@ -6,10 +6,10 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+
 /**
- * @author Hipska (2019)
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
- *
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:BackupStatus' => 'Geplande backups',
@@ -26,7 +26,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'bkp-mysqldump-ok' => 'mysqldump is geïnstalleerd: %1$s',
 	'bkp-name-sample' => 'Backupbestanden krijgen een naam gebaseerd op de identificatiegegevens van het databaseschema, datum en tijd. Voorbeeld: %1$s',
 	'bkp-next-backup' => 'De volgende backup wordt gemaakt op <b>%1$s</b> (%2$s) om %3$s',
-	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
+	'bkp-next-backup-unknown' => 'De volgende backup is nog <b>niet gepland</b>.',
 	'bkp-next-to-delete' => 'Zal verwijderd worden bij de volgende backuptaak (volgens de instelling "retention_count")',
 	'bkp-restore-running' => 'Er wordt een herstel uitgevoerd. Even geduld...',
 	'bkp-retention' => 'Maximaal <b>%1$d backup-bestanden blijven bewaard</b> in de doelmap.',
