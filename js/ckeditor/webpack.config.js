@@ -12,6 +12,7 @@ const webpack = require( 'webpack' );
 const { bundler, styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 const { CKEditorTranslationsPlugin } = require( '@ckeditor/ckeditor5-dev-translations' );
 const TerserWebpackPlugin = require( 'terser-webpack-plugin' );
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
 	devtool: 'source-map',
@@ -51,6 +52,10 @@ module.exports = {
 			language: 'en',
 			additionalLanguages: 'all'
 		} ),
+		new MiniCssExtractPlugin({
+			filename: 'compiled-theme.scss', // Compiled as SCSS so we can import it in other SCSS files, but it's already compiled in CSS
+			chunkFilename: 'compiled-theme-id.css', // We don't know what this is for
+		}),
 		new webpack.BannerPlugin( {
 			banner: bundler.getLicenseBanner(),
 			raw: true
@@ -70,15 +75,8 @@ module.exports = {
 			use: 'ts-loader'
 		}, {
 			test: /\.css$/,
-			use: [ {
-				loader: 'style-loader',
-				options: {
-					injectType: 'singletonStyleTag',
-					attributes: {
-						'data-cke': true
-					}
-				}
-			}, {
+			use: [ MiniCssExtractPlugin.loader,
+			{
 				loader: 'css-loader'
 			}, {
 				loader: 'postcss-loader',
