@@ -628,7 +628,7 @@ class ActionEmail extends ActionNotification
 	 */
 	protected function _DoExecute($oTrigger, $aContextArgs, &$oLog)
 	{
-		$sStyles = file_get_contents(APPROOT.'css/email.css');
+		$sStyles = file_get_contents(APPROOT . utils::GetCSSFromSASS("css/email.scss"));
 		$sStyles .= MetaModel::GetConfig()->Get('email_css');
 		
 		$oEmail = new EMail();
@@ -867,7 +867,13 @@ class ActionEmail extends ActionNotification
 	 */
 	protected function BuildMessageBody(bool $bHighlightPlaceholders = false): string
 	{
-		$sBody = $this->Get('body');
+		// Wrap content with a specific class in order to apply styles of HTML fields through the emogrifier (see `css/email.scss`)
+		$sBody = <<<HTML
+<div class="email-is-html-content">
+	{$this->Get('body')}
+</div>
+HTML;
+
 		/**  @var ormDocument $oHtmlTemplate */
 		$oHtmlTemplate = $this->Get('html_template');
 		if ($oHtmlTemplate && !$oHtmlTemplate->IsEmpty()) {

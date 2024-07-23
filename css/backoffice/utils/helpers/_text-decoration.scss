@@ -103,7 +103,8 @@ $ibo-figure--spacing-y: 2em !default;
  * See https://bulma.io/documentation/elements/content/
  */
 .ibo-is-html-content {
-  @extend .content;
+  @extend .content; /* Bulma styles */
+  @extend .ck-content; /* CKEditor styles */
 
   /* For table to render like in CKEditor, works with bulma lib. overload see:
    * - ../../vendors/_bulma-variables-overload.scss)
