@@ -230,25 +230,57 @@ EOF
 				case 'Combodo\\iTop\\Form\\Field\\UrlField':
 				case 'Combodo\\iTop\\Form\\Field\\EmailField':
 				case 'Combodo\\iTop\\Form\\Field\\PhoneField':
-				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
-				case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
 				case 'Combodo\\iTop\\Form\\Field\\SelectField':
 				case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
 				case 'Combodo\\iTop\\Form\\Field\\HiddenField':
-					$oOutput->AddJs(
-						<<<EOF
-                        					$("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
-						var me = this;
-
-						$(this).closest(".field_set").trigger("field_change", {
-							id: $(me).attr("id"),
-							name: $(me).closest(".form_field").attr("data-field-id"),
-							value: $(me).val()
-						});
-					}).on("mouseup", function(){this.focus();});
-EOF
+					$oOutput->AddJs(<<<JS
+	                    $("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+							var me = this;
+	
+							$(this).closest(".field_set").trigger("field_change", {
+								id: $(me).attr("id"),
+								name: $(me).closest(".form_field").attr("data-field-id"),
+								value: $(me).val()
+							});
+						}).on("mouseup", function(){this.focus();});
+JS
 					);
 					break;
+
+				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+				case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
+					if ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML) {
+						$oOutput->AddJs(<<<JS
+							CombodoCKEditorHandler.GetInstance("#{$this->oField->GetGlobalId()}")
+								.then((oCKEditor) => {
+									oCKEditor.model.document.on("change:data", () => {
+										console.log("desc changed!");
+										const oFieldElem = $("#{$this->oField->GetGlobalId()}");
+										oFieldElem.closest(".field_set").trigger("field_change", {
+											id: oFieldElem.attr("id"),
+											name: oFieldElem.closest(".form_field").attr("data-field-id"),
+											value: oCKEditor.getData()
+										});
+									});
+								});
+JS
+						);
+					} else {
+						$oOutput->AddJs(<<<JS
+                            $("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+								var me = this;
+		
+								$(this).closest(".field_set").trigger("field_change", {
+									id: $(me).attr("id"),
+									name: $(me).closest(".form_field").attr("data-field-id"),
+									value: $(me).val()
+								});
+							}).on("mouseup", function(){this.focus();});
+JS
+						);
+					}
+					break;
+
 				case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
 					// We need the focusout event has the datepicker widget seems to override the change event
 					$oOutput->AddJs(
