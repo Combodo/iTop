@@ -301,6 +301,8 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		'section' => array('style', 'class'),
 		'code' => array('style', 'class'),
 		'table' => array('style', 'class', 'width', 'summary', 'align', 'border', 'cellpadding', 'cellspacing'),
+		'colgroup' => array(),
+		'col' => array('style'),
 		'thead' => array('style', 'class'),
 		'tbody' => array('style', 'class'),
 		'tr' => array('style', 'class', 'colspan', 'rowspan'),

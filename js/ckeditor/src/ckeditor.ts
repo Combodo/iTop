@@ -74,6 +74,70 @@ const transformationsConfig = {
     remove: [ 'ellipsis' ]
 }
 
+// Colors to be used in the different palettes (font color, table cell background color, table cell border color, ...)
+const colorsPalette = [
+    {
+        color: '#000000',
+        label: 'Black'
+    },
+    {
+        color: '#4D4D4D',
+        label: 'Dim grey'
+    },
+    {
+        color: '#999999',
+        label: 'Grey'
+    },
+    {
+        color: '#E6E6E6',
+        label: 'Light grey'
+    },
+    {
+        color: '#FFFFFF',
+        label: 'White'
+    },
+    {
+        color: '#E64D4D',
+        label: 'Red'
+    },
+    {
+        color: '#E6994D',
+        label: 'Orange'
+    },
+    {
+        color: '#E6E64D',
+        label: 'Yellow'
+    },
+    {
+        color: '#99E64D',
+        label: 'Light green'
+    },
+    {
+        color: '#4DE64D',
+        label: 'Green'
+    },
+    {
+        color: '#4DE699',
+        label: 'Aquamarine'
+    },
+    {
+        color: '#4DE6E6',
+        label: 'Turquoise'
+    },
+    {
+        color: '#4D99E6',
+        label: 'Light blue'
+    },
+    {
+        color: '#4D4DE6',
+        label: 'Blue'
+    },
+    {
+        color: '#994DE6',
+        label: 'Purple'
+    },
+];
+
 class Editor extends ClassicEditor {
 	public static override builtinPlugins = [
 		Alignment,
@@ -171,6 +235,10 @@ class Editor extends ClassicEditor {
 			shouldNotGroupWhenFull: true
 		},
 		language: 'en',
+        fontColor: {
+            // Colors are redefined to be in HEX instead of RGB in order to be supported by mail clients
+            colors: colorsPalette,
+        },
 		image: {
 			toolbar: [
                 'resizeImage:25',
@@ -208,6 +276,10 @@ class Editor extends ClassicEditor {
                 '|',
                 'toggleTableCaption'
 			],
+            tableCellProperties: {
+                borderColors: colorsPalette,
+                backgroundColors: colorsPalette,
+            },
 		},
 		htmlSupport: {
 			allow: [
@@ -224,10 +296,10 @@ class Editor extends ClassicEditor {
 		},
 		highlight: {
 			options: [
-                { model: 'yellowMarker', class: 'marker-yellow', title: 'Yellow Marker', color: 'var(--ck-highlight-marker-yellow)', type: 'marker' },
-                { model: 'greenMarker', class: 'marker-green', title: 'Green marker', color: 'var(--ck-highlight-marker-green)', type: 'marker' },
-                { model: 'pinkMarker', class: 'marker-pink', title: 'Pink marker', color: 'var(--ck-highlight-marker-pink)', type: 'marker' },
-                { model: 'blueMarker', class: 'marker-blue', title: 'Blue marker', color: 'var(--ck-highlight-marker-blue)', type: 'marker' },
+                { model: 'yellowMarker', class: 'marker-yellow', title: 'Yellow marker', color: '#FDFD77', type: 'marker' },
+                { model: 'greenMarker', class: 'marker-green', title: 'Green marker', color: '#62f962', type: 'marker' },
+                { model: 'pinkMarker', class: 'marker-pink', title: 'Pink marker', color: '#FC7899', type: 'marker' },
+                { model: 'blueMarker', class: 'marker-blue', title: 'Blue marker', color: '#72CCFD', type: 'marker' },
 			]
 		},
 		codeBlock: {
