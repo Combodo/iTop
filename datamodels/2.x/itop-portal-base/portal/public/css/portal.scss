@@ -1752,34 +1752,6 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	border-radius: $border-radius-base;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
 }
-///* CKEditor: Fullscreen */
-//.ck {
-//  &.cke-maximized {
-//    position: fixed !important; /* !important to overload the inline style */
-//    z-index: 1060; /* Above modals z-index (1050), see bootstrap theme */
-//    top: 0;
-//    left: 0;
-//    width: 100% !important; /* !important to overload the inline style */
-//    height: 100% !important; /* !important to overload the inline style */
-//    display: flex;
-//    flex-direction: column;
-//    justify-content: flex-start;
-//
-//    /* Force text content to take all space available (and scroll when content overflows) */
-//    .ck-editor__main {
-//      flex-grow: 1;
-//      overflow-y: auto;
-//
-//      .ck-content {
-//        height: 100%; /* To force content to occupy whole height, otherwise it fits its content */
-//      }
-//    }
-//  }
-//}
-///* - Avoid page scrollbar on fullscreen */
-//body.cke-maximized {
-//  overflow: hidden;
-//}
 
 /* DataTables : Selection inputs */
 .dataTable.table th span.row_input,
