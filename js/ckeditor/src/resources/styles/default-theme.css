@@ -70,6 +70,10 @@
 	text-align: right;
 	margin-left: 0;
 }
+/* - Avoid tables in figure being align centered */
+.ck-content figure table {
+	text-align: initial;
+}
 
 /* Tables */
 /* - Force header background to an HEX color so it works with emails */
