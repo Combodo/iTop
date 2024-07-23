@@ -17,6 +17,7 @@ require_once(APPROOT.'application/displayblock.class.inc.php');
 class UILinksWidget
 {
 	protected $m_sClass;
+	protected $m_sClassLabel;
 	protected $m_sAttCode;
 	protected $m_sNameSuffix;
 	protected $m_sInputId;
@@ -24,6 +25,7 @@ class UILinksWidget
 	protected $m_sExtKeyToRemote;
 	protected $m_sExtKeyToMe;
 	protected $m_sLinkedClass;
+	protected $m_sLinkedClassLabel;
 	protected $m_sRemoteClass;
 	protected $m_bDuplicatesAllowed;
 	/** @var string[] list of editables attcodes */
@@ -46,6 +48,7 @@ class UILinksWidget
 	public function __construct($sClass, $sAttCode, $sInputId, $sNameSuffix = '', $bDuplicatesAllowed = false)
 	{
 		$this->m_sClass = $sClass;
+		$this->m_sClassLabel = MetaModel::GetName($this->m_sClass);
 		$this->m_sAttCode = $sAttCode;
 		$this->m_sInputId = $sInputId;
 		$this->m_sNameSuffix = $sNameSuffix;
@@ -56,6 +59,7 @@ class UILinksWidget
 		/** @var AttributeLinkedSetIndirect $oAttDef */
 		$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sAttCode);
 		$this->m_sLinkedClass = $oAttDef->GetLinkedClass();
+		$this->m_sLinkedClassLabel = MetaModel::GetName($this->m_sLinkedClass);
 		$this->m_sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
 		$this->m_sExtKeyToMe = $oAttDef->GetExtKeyToMe();
 
@@ -365,9 +369,19 @@ class UILinksWidget
 		return $this->m_sClass;
 	}
 
+	public function GetClassLabel(): string
+	{
+		return $this->m_sClassLabel;
+	}
+
 	public function GetLinkedClass(): string
 	{
 		return $this->m_sLinkedClass;
+	}
+
+	public function GetLinkedClassLabel(): string
+	{
+		return $this->m_sLinkedClassLabel;
 	}
 
 	public function GetAttCode(): string
