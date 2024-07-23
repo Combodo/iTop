@@ -344,7 +344,7 @@ EOF
 
 							// Value
 							$oOutput->AddHtml('<div class="form_field_control">');
-							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), false)->AddHtml('</div>');
+							$oOutput->AddHtml('<div class="form-control-static ipb-is-html-content">')->AddHtml($this->oField->GetDisplayValue(), false)->AddHtml('</div>');
 							$oOutput->AddHtml('</div>');
 						}
 
@@ -564,7 +564,7 @@ JS
 
 			// Opening thread
 			$oOutput->AddHtml(<<<HTML
-<div class="caselog-thread">
+<div class="caselog-thread ipb-is-html-content">
 HTML
 			);
 			// - Header

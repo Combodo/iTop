@@ -17,6 +17,7 @@
  */
 
 @import 'variables.scss';
+@import '../../../../../js/ckeditor/build/compiled-theme';
 
 /*!
  * Combodo portal template v1.0.0
@@ -1113,6 +1114,11 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 /*********/
 /* Forms */
 /*********/
+/* - Ensure HTML contents are displayed like in CKEditor */
+.ipb-is-html-content {
+  @extend .ck-content;
+}
+
 .form_field_label > .control-label[data-tooltip-instantiated="true"] {
 	&::after {
 		content: "?";
@@ -1746,34 +1752,34 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	border-radius: $border-radius-base;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
 }
-/* CKEditor: Fullscreen */
-.ck {
-  &.cke-maximized {
-    position: fixed !important; /* !important to overload the inline style */
-    z-index: 1060; /* Above modals z-index (1050), see bootstrap theme */
-    top: 0;
-    left: 0;
-    width: 100% !important; /* !important to overload the inline style */
-    height: 100% !important; /* !important to overload the inline style */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-
-    /* Force text content to take all space available (and scroll when content overflows) */
-    .ck-editor__main {
-      flex-grow: 1;
-      overflow-y: auto;
-
-      .ck-content {
-        height: 100%; /* To force content to occupy whole height, otherwise it fits its content */
-      }
-    }
-  }
-}
-/* - Avoid page scrollbar on fullscreen */
-body.cke-maximized {
-  overflow: hidden;
-}
+///* CKEditor: Fullscreen */
+//.ck {
+//  &.cke-maximized {
+//    position: fixed !important; /* !important to overload the inline style */
+//    z-index: 1060; /* Above modals z-index (1050), see bootstrap theme */
+//    top: 0;
+//    left: 0;
+//    width: 100% !important; /* !important to overload the inline style */
+//    height: 100% !important; /* !important to overload the inline style */
+//    display: flex;
+//    flex-direction: column;
+//    justify-content: flex-start;
+//
+//    /* Force text content to take all space available (and scroll when content overflows) */
+//    .ck-editor__main {
+//      flex-grow: 1;
+//      overflow-y: auto;
+//
+//      .ck-content {
+//        height: 100%; /* To force content to occupy whole height, otherwise it fits its content */
+//      }
+//    }
+//  }
+//}
+///* - Avoid page scrollbar on fullscreen */
+//body.cke-maximized {
+//  overflow: hidden;
+//}
 
 /* DataTables : Selection inputs */
 .dataTable.table th span.row_input,
@@ -1848,24 +1854,4 @@ body.cke-maximized {
   border-color: darken($state-danger-border, 10);
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px lighten($state-danger-border, 10);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px lighten($state-danger-border, 10);
-}
-
-.ck.fullscreen-mode .ck.ck-content.ck-editor__editable,
-.ck.fullscreen-mode .ck.ck-editor__main {
-  height: 100% !important;
-  resize: none !important;
-}
-.ck.ck-editor.fullscreen-mode {
-  display: flex !important;
-  flex-direction: column !important;
-}
-.ck.ck-editor.fullscreen-style-activated {
-  position: fixed !important;
-  top: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  z-index: 99999 !important;
-  width: 100vw !important;
-  height: 100vh !important
 }

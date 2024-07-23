@@ -53,9 +53,10 @@
 }
 
 /* Figures / images */
-/* - Avoid text being typed next to the image, only below */
 .ck-content .image img {
-	min-width: inherit;
+	min-width: inherit; /* Avoid text being typed next to the image, only below */
+	margin-left: 0; /* Avoid image to be centered */
+	margin-right: 0; /* Avoid image to be centered */
 }
 .ck-content .image-style-align-left,
 .ck-content .image-style-align-right {
@@ -70,12 +71,22 @@
 	text-align: right;
 	margin-left: 0;
 }
+/* - Avoid figures to be centered */
+.ck-content figure {
+	margin-left: 0;
+	margin-right: 0;
+}
 /* - Avoid tables in figure being align centered */
 .ck-content figure table {
 	text-align: initial;
 }
 
 /* Tables */
+/* - Avoid tables to be centered */
+.ck-content .table {
+	margin-left: 0;
+	margin-right: 0;
+}
 /* - Force header background to an HEX color so it works with emails */
 .ck-content .table table th {
 	background-color: #F4F4F4;
