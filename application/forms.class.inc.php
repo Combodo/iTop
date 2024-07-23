@@ -209,7 +209,7 @@ class DesignerForm
 	public function RenderAsPropertySheet($oP, $bReturnHTML = false, $sNotifyParentSelector = null)
 	{
 		$sReturn = '';
-		$sActionUrl = addslashes($this->sSubmitTo);
+		$sActionUrl = addslashes($this->sSubmitTo ?? '');
 		$sJSSubmitParams = json_encode($this->aSubmitParams);
 		$sFormId = $this->GetFormId();
 		if ($this->oParentForm == null) {
