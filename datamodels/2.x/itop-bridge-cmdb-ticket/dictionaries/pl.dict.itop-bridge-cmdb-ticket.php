@@ -31,5 +31,5 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Tytuł zgłoszenia',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
-	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
+	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s',
 ]);
