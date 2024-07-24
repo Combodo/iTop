@@ -36,7 +36,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI:WelcomePopup:Message:320_05_A11yThemes:Title' => 'Dostępność ' . ITOP_APPLICATION_SHORT,
 	'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>Aby zapewnić dostępność' . ITOP_APPLICATION_SHORT . ', nasz zespół pracował nad nowymi motywami zaplecza. Zgodny z WCAG, interfejs użytkownika skupia się na ułatwieniu użytkownikom z wadami wzroku korzystania z rozwiązania:
 <ul>
-	<li><b>Temat dla daltonistów:</b>Zaprojektowany, aby pomóc użytkownikom z daltonizmem, motyw ten dzieli się na dwa podtematy, aby dostosować się do konkretnych przypadków: </li>
+	<li><b>Temat dla daltonistów:</b> Zaprojektowany, aby pomóc użytkownikom z daltonizmem, motyw ten dzieli się na dwa podtematy, aby dostosować się do konkretnych przypadków: </li>
 		<ul>
 			<li>Jeden przystosowany do protanopii i deuteranopii</li>	
 			<li>I jeszcze jeden na tritanopię</li>	
