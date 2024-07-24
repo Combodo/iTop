@@ -324,11 +324,11 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 			return;
 		}
 		let sTextContent;
-		// Get the contents without the tags
 		let sFormattedContent = oCKEditor.getData();
-		// Get the contents without the tags
 
-		sTextContent = $(sFormattedContent).text();
+		// Get the contents without the tags
+		// Check if we have a formatted content that is HTML, otherwise we just have plain text, and we can use it directly
+		sTextContent = $(sFormattedContent).length > 0 ? $(sFormattedContent).text() : sFormattedContent;
 
 		if (sTextContent === '') {
 			// No plain text, maybe there is just an image
