@@ -253,7 +253,7 @@ HTML;
 	{
 		// all js file needed by ckeditor
 		$aJSRelPaths = [
-			'js/ckeditor/build/ckeditor.js',
+			'node_modules/ckeditor5-itop-build/build/ckeditor.js',
 			'js/highlight/highlight.js',
 			'js/ckeditor.handler.js',
 			'js/ckeditor.feeds.js'
@@ -267,12 +267,12 @@ HTML;
 		// add corresponding ckeditor language file
 		// P1 language + country
 		// P2 language
-		$sLanguageFileRelPath = 'js/ckeditor/build/translations/' . $sLanguage . '-' . $sCountry . '.js';
+		$sLanguageFileRelPath = 'node_modules/ckeditor5-itop-build/build/translations/' . $sLanguage . '-' . $sCountry . '.js';
 		if(file_exists(APPROOT . $sLanguageFileRelPath)){
 			$aJSRelPaths[] = $sLanguageFileRelPath;
 		}
 		else {
-			$sLanguageFileRelPath = 'js/ckeditor/build/translations/' . $sLanguage . '.js';
+			$sLanguageFileRelPath = 'node_modules/ckeditor5-itop-build/build/translations/' . $sLanguage . '.js';
 			if(file_exists(APPROOT . $sLanguageFileRelPath)){
 				$aJSRelPaths[] = $sLanguageFileRelPath;
 			}

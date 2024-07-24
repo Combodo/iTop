@@ -3,5 +3,5 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-@import "../../../../js/ckeditor/build/compiled-theme"; /* CKEditor content styles (tables, lists, ...) */
+@import "../../../../node_modules/ckeditor5-itop-build/build/styles/compiled-theme"; /* CKEditor content styles (tables, lists, ...) */
 @import "overloads"; /* Overloads of CKEditor styles for the backoffice */
