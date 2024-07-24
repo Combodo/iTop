@@ -1463,4 +1463,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI_CountOfObjectsShort' => '%1$d Objekte.',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Backend',
 	'portal:legacy_portal' => 'Endbenutzer-Portal',
+	'Menu:ConfigEditor' => 'Konfiguration',
+	'Menu:ConfigEditor+' => 'Konfigurationsdatei-Editor',
+	'Menu:Integrations' => 'Integrationen',
+	'Menu:Integrations+' => '',
 ]);

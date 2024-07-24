@@ -7,21 +7,7 @@
  * @author Stephan Rosenke <stephan.rosenke@itomig.de>
  * @author Martin Raenker <martin.raenker@itomig.de>
  * @author Attila Baroti <attila.baroti@itomig.de>
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ * 
  */
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
@@ -128,11 +114,18 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ActionNewsroom' => 'Benachrichtigung durch Newsroom',
 	'Class:ActionNewsroom+' => '',
 	'Class:ActionNewsroom/Attribute:icon' => 'Icon',
-	'Class:ActionNewsroom/Attribute:icon+' => '',
-	'Class:ActionNewsroom/Attribute:language' => 'Sprache',
-	'Class:ActionNewsroom/Attribute:language+' => '',
+	'Class:ActionNewsroom/Attribute:icon+' => 'Icon, das neben den Nachrichten im Newsroom angezeigt wird.
+- Wenn ausgefüllt, wird das benutzerdefinierte Icon verwendet
+- Andernfalls wird, wenn das auslösende Objekt ein Icon hat (z.B. Bild eines Person-Objekts), dieses verwendet
+- Andernfalls wird, wenn das auslösende Objekt ein Klassen-Icon im Datenmodell definiert hat, dieses verwendet
+- Andernfalls wird das kompakte Anwendung-Logo verwendet',
 	'Class:ActionNewsroom/Attribute:message' => 'Nachricht',
-	'Class:ActionNewsroom/Attribute:message+' => '',
+	'Class:ActionNewsroom/Attribute:message+' => 'Inhalt der Nachrichten, im Markdown-Format, nicht HTML. Kann Platzhalter enthalten wie:
+- $this->attribute_code$ jedes Attribut des Objekts, das die Benachrichtigung auslöst,
+- $this->hyperlink()$ Hyperlink im Backoffice zum Objekt, das die Benachrichtigung auslöst,
+- $this->hyperlink(portal)$ Hyperlink im Portal zum Objekt, das die Benachrichtigung auslöst,
+- $this->attribute_external_key->attribute$ rekursive Syntax für jedes entfernte Attribut,
+- $current_contact->attribute$ Attribut der Person, die die Benachrichtigung ausgelöst hat',
 	'Class:ActionNewsroom/Attribute:priority' => 'Priorität',
 	'Class:ActionNewsroom/Attribute:priority+' => '',
 	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Kritisch',
@@ -144,13 +137,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ActionNewsroom/Attribute:priority/Value:4' => 'Standard',
 	'Class:ActionNewsroom/Attribute:priority/Value:4+' => 'Standard',
 	'Class:ActionNewsroom/Attribute:recipients' => 'Empfänger',
-	'Class:ActionNewsroom/Attribute:recipients+' => '',
+	'Class:ActionNewsroom/Attribute:recipients+' => 'Eine OQL-Abfrage, die Kontakt-Objekte zurückgibt',
 	'Class:ActionNewsroom/Attribute:test_recipient_id' => 'Testempfänger',
 	'Class:ActionNewsroom/Attribute:test_recipient_id+' => 'Person für Testbenachrichtigungen (statt regulärer Empfänger)',
 	'Class:ActionNewsroom/Attribute:title' => 'Titel',
-	'Class:ActionNewsroom/Attribute:title+' => '',
+	 'Class:ActionNewsroom/Attribute:title+' => 'Titel der Nachricht. Kann Platzhalter wie $this->attribute_code$ enthalten',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',
-	'Class:ActionNewsroom/Attribute:url+' => '',
+	'Class:ActionNewsroom/Attribute:url+' => 'Wenn leer, verweist die URL auf das Objekt, das die Benachrichtigung ausgelöst hat. Sie können jedoch auch eine benutzerdefinierte URL angeben.',
 	'Class:ActionNotification' => 'Benachrichtigung',
 	'Class:ActionNotification+' => 'Benachrichtigung (Kurzbeschreibung)',
 	'Class:AsyncSendEmail' => 'E-Mail (asynchron)',
