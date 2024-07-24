@@ -526,7 +526,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Trigger/Attribute:action_list' => 'Acciones',
 	'Class:Trigger/Attribute:action_list+' => 'Acciones realizadas cuando se activó el disparador',
 	'Class:Trigger/Attribute:complement' => 'Additional information~~',
-	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
+	'Class:Trigger/Attribute:complement+' => 'Computed automatically in english for triggers derived from TriggerOnObject~~',
 	'Class:Trigger/Attribute:context' => 'Contexto',
 	'Class:Trigger/Attribute:context+' => 'Contexto para permitir el inicio del disparador',
 	'Class:Trigger/Attribute:description' => 'Descripción',

@@ -84,7 +84,8 @@ While editing, click on the magnifier to get pertinent examples~~',
 - $current_contact->attribute$ attribute of the Person who triggered the notification~~',
 	'Class:ActionEmail/Attribute:cc' => 'Kópia',
 	'Class:ActionEmail/Attribute:cc+' => 'Carbon Copy: an OQL query returning objects having an email field.
-While editing, click on the magnifier to get pertinent examples~~',
+While editing, click on the magnifier to get pertinent examples.
+You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.~~',
 	'Class:ActionEmail/Attribute:from' => 'Od',
 	'Class:ActionEmail/Attribute:from+' => 'Either a static email address or a placeholder like $this->agent_id->email$.
 The latest may not be accepted by some email servers.~~',
@@ -125,7 +126,8 @@ If omitted the From (label) is used.~~',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Destination email address used instead of To, Cc and Bcc when notification is being tested~~',
 	'Class:ActionEmail/Attribute:to' => 'Komu',
 	'Class:ActionEmail/Attribute:to+' => 'To: an OQL query returning objects having an email field.
-While editing, click on the magnifier to get pertinent examples~~',
+While editing, click on the magnifier to get pertinent examples.
+You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.~~',
 	'Class:ActionNewsroom' => 'Notification by Newsroom~~',
 	'Class:ActionNewsroom+' => '~~',
 	'Class:ActionNewsroom/Attribute:icon' => 'Icon~~',
@@ -546,11 +548,11 @@ This icon is shown in the tooltip of the “Lock” symbol on '.ITOP_APPLICATION
 	'Class:Trigger/Attribute:action_list' => 'Spúšťané akcie',
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated~~',
 	'Class:Trigger/Attribute:complement' => 'Additional information~~',
-	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
+	'Class:Trigger/Attribute:complement+' => 'Computed automatically in english for triggers derived from TriggerOnObject~~',
 	'Class:Trigger/Attribute:context' => 'Context~~',
 	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 	'Class:Trigger/Attribute:description' => 'Popis',
-	'Class:Trigger/Attribute:description+' => 'one line description~~',
+	'Class:Trigger/Attribute:description+' => 'Be precise as your users will base their potential unsubscription on this information~~',
 	'Class:Trigger/Attribute:finalclass' => 'Typ',
 	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Trigger/Attribute:subscription_policy' => 'Subscription policy~~',

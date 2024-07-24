@@ -528,7 +528,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Trigger/Attribute:action_list' => 'Getriggerde acties',
 	'Class:Trigger/Attribute:action_list+' => 'Acties uitgevoerd nadat de trigger is geactiveerd',
 	'Class:Trigger/Attribute:complement' => 'Additional information~~',
-	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
+	'Class:Trigger/Attribute:complement+' => 'Computed automatically in english for triggers derived from TriggerOnObject~~',
 	'Class:Trigger/Attribute:context' => 'Context',
 	'Class:Trigger/Attribute:context+' => 'In welke context de trigger uitgevoerd kan worden',
 	'Class:Trigger/Attribute:description' => 'Beschrijving',

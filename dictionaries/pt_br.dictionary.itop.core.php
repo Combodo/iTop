@@ -525,7 +525,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Trigger/Attribute:action_list' => 'Ações desencadeadas',
 	'Class:Trigger/Attribute:action_list+' => 'Ações executadas quando o gatilho é acionado',
 	'Class:Trigger/Attribute:complement' => 'Additional information~~',
-	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
+	'Class:Trigger/Attribute:complement+' => 'Computed automatically in english for triggers derived from TriggerOnObject~~',
 	'Class:Trigger/Attribute:context' => 'Contexto',
 	'Class:Trigger/Attribute:context+' => 'Contexto para permitir o acionamento do gatilho',
 	'Class:Trigger/Attribute:description' => 'Descrição',

@@ -525,7 +525,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Trigger/Attribute:action_list' => 'Elindított műveletek',
 	'Class:Trigger/Attribute:action_list+' => 'Az eseményindító aktiválásakor végrehajtott műveletek',
 	'Class:Trigger/Attribute:complement' => 'Additional information~~',
-	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
+	'Class:Trigger/Attribute:complement+' => 'Computed automatically in english for triggers derived from TriggerOnObject~~',
 	'Class:Trigger/Attribute:context' => 'Kontextus',
 	'Class:Trigger/Attribute:context+' => 'Kontextus, amely lehetővé teszi az eseményindító elindítását',
 	'Class:Trigger/Attribute:description' => 'Leírás',
