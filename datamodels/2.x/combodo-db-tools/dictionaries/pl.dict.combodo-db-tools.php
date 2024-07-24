@@ -24,7 +24,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'DBTools:Class' => 'Klasa',
 	'DBTools:Count' => 'Liczba',
 	'DBTools:DatabaseInfo' => 'Informacje o bazie danych',
-	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors~~',
+	'DBTools:DetailedErrorLimit' => 'Lista ograniczona do %1$s błędów',
 	'DBTools:DetailedErrorTitle' => '%2$s błąd(y) w klasie %1$s: %3$s',
 	'DBTools:Details' => 'Pokaż szczegóły',
 	'DBTools:Disclaimer' => 'OŚWIADCZENIE: PRZED URUCHOMIENIEM POPRAWEK NALEŻY WYKONAĆ KOPIĘ ZAPASOWĄ BAZY DANYCH',
