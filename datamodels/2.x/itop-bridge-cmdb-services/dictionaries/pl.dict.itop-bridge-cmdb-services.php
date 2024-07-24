@@ -29,7 +29,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Nazwa umowy z dostawcą',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToService' => 'Połączenie Konfiguracja / Usługa',
 	'Class:lnkFunctionalCIToService+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'Konfiguracja',
@@ -40,5 +40,5 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Nazwa usługi',
 	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s~~',
+	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s',
 ]);
