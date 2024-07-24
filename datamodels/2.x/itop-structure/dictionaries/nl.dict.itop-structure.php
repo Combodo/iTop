@@ -6,12 +6,12 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  * @author LinProfs <info@linprofs.com>
- * @author Hipska (2018, 2019)
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
- *
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Contact' => 'Contact',
@@ -44,7 +44,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Contact/Attribute:status/Value:active+' => 'Actief',
 	'Class:Contact/Attribute:status/Value:inactive' => 'Inactief',
 	'Class:Contact/Attribute:status/Value:inactive+' => 'Inactief',
-	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:ContactType' => 'Soort Contact',
 	'Class:ContactType+' => '',
 	'Class:Document' => 'Document',
@@ -75,7 +75,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:version' => 'Versie',
 	'Class:Document/Attribute:version+' => '',
-	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:DocumentFile' => 'Document: Bestand',
 	'Class:DocumentFile+' => '',
 	'Class:DocumentFile/Attribute:file' => 'Bestand',
@@ -165,9 +165,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Person/Attribute:team_list+' => 'Alle teams waarvan deze persoon lid is',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
 	'Class:Person/Attribute:tickets_list+' => 'Alle tickets waarvan deze persoon de aanvrager is',
-	'Class:Person/Attribute:user_list' => 'Users~~',
-	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
-	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:Person/Attribute:user_list' => 'Gebruikers',
+	'Class:Person/Attribute:user_list+' => 'Alle gebruikersaccounts van deze persoon',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
 	'Class:Person/UniquenessRule:employee_number' => 'Er is al een persoon in de organisatie \'$this->org_name$\' met hetzelfde identificatienummer',
 	'Class:Person/UniquenessRule:employee_number+' => 'Het identificatienummer moet uniek zijn binnen de organisatie',
@@ -179,7 +179,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Team/Attribute:persons_list+' => 'Alle personen die lid zijn van dit team',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
 	'Class:Team/Attribute:tickets_list+' => 'Alle tickets die toegewezen zijn aan dit team',
-	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Typology' => 'Typologie',
 	'Class:Typology+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Subklasse typologie',
@@ -200,8 +200,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Naam team',
 	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
-	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
-	'Class:lnkPersonToTeam/Name+' => '~~',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
+	'Class:lnkPersonToTeam/Name+' => '',
 	'Menu:Audit' => 'Audit',
 	'Menu:Audit+' => 'Audit',
 	'Menu:CSVImport' => 'CSV-import',
@@ -246,7 +246,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Person:personal_info' => 'Persoonlijke informatie',
 	'UI_WelcomeMenu_AllConfigItems' => 'Samenvatting',
 	'User:info' => 'Globale informatie',
-	'User:profiles' => 'Profiles (minimum one)~~',
+	'User:profiles' => 'Profielen (minimaal één)',
 	'theme:fullmoon' => 'Full moon',
-	'theme:test-red' => 'Test instance (Red)',
+	'theme:test-red' => 'Test instance (Rood)',
 ]);

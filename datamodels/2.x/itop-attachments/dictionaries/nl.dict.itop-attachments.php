@@ -6,10 +6,11 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+
 /**
  * @author LinProfs <info@linprofs.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
- *
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Attachment:Max_Go' => '(Maximale bestandsgrootte: %1$s GB)',
@@ -24,7 +25,7 @@ Mogelijk heb je een leeg bestand geüpload,
 of vraag de iTop administrator om de opslagruimte van de iTop-server na te kijken',
 	'Attachments:FieldsetTitle' => 'Bijlagen',
 	'Attachments:File:Date' => 'Geüpload op',
-	'Attachments:File:DownloadsCount' => 'Downloads~~',
+	'Attachments:File:DownloadsCount' => 'Downloads',
 	'Attachments:File:MimeType' => 'Type',
 	'Attachments:File:Name' => 'Bestandsnaam',
 	'Attachments:File:Size' => 'Grootte',
@@ -58,7 +59,7 @@ of vraag de iTop administrator om de opslagruimte van de iTop-server na te kijke
 	'Class:Attachment/Attribute:temp_id+' => '',
 	'Class:Attachment/Attribute:user_id' => 'ID Gebruiker',
 	'Class:Attachment/Attribute:user_id+' => '',
-	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
-	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (Bij het downloaden van een bijlage)',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger bij het downloaden van een bijlage van een object van de opgegeven klasse (of subklasse ervan)',
 	'UI:Attachments:DropYourFileHint' => 'Sleep bestanden in dit gebied',
 ]);

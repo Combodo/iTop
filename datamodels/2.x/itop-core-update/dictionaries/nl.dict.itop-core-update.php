@@ -6,9 +6,10 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+
 /**
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
- *
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ModuleInstallation/Attribute:comment' => 'Opmerkingen',
@@ -37,10 +38,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Controle van het bestandssysteem is mislukt',
 	'iTopUpdate:UI:CanCoreUpdate:Loading' => 'Controle van het bestandssysteem',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Updaten van de toepassing is niet mogelijk: %1$s',
-	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
+	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Waarschuwing: updaten van de toepassing kan mislukken: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Updaten van toepassing is mogelijk',
 	'iTopUpdate:UI:Cancel' => 'Annuleer',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Some modified files were detected</b>, a partial update cannot be executed.</br>Follow the <a target="_blank" href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Aangepaste bestanden gedetecteerd</b>, gedeeltelijke update kan niet uitgevoerd worden.</br>Volg de <a target="_blank" href="%2$s">procedure</a> om '.ITOP_APPLICATION_SHORT.' manueel te updaten. Je moet de <a href="%1$s">setup</a> gebruiken om de applicatie te updaten.',
 	'iTopUpdate:UI:CheckInProgress' => 'Even geduld terwijl de integriteitscontrole loopt',
 	'iTopUpdate:UI:CheckUpdate' => 'Verifieer upgrade-bestand',
 	'iTopUpdate:UI:ConfirmInstallFile' => 'Er zal een upgrade uitgevoerd worden met %1$s',
@@ -65,9 +66,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'iTopUpdate:UI:RunSetup' => 'Setup uitvoeren',
 	'iTopUpdate:UI:SelectUpdateFile' => 'Selecteer een upgrade-bestand om te uploaden',
 	'iTopUpdate:UI:ServerFile' => 'Het pad van dit archief bestaat al op de server',
-	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup~~',
-	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup~~',
-	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?~~',
+	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' setup',
+	'iTopUpdate:UI:SetupLaunch' => 'Start de '.ITOP_APPLICATION_SHORT.' setup',
+	'iTopUpdate:UI:SetupLaunchConfirm' => 'Dit zal de '.ITOP_APPLICATION_SHORT.' setup uitvoeren, ben je zeker?',
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Maken van backup database',
 	'iTopUpdate:UI:SetupMessage:CheckCompile' => 'Controleren van de upgrade van de toepassing',
 	'iTopUpdate:UI:SetupMessage:Compile' => 'Upgraden van toepassing en database',

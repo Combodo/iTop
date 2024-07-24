@@ -6,10 +6,11 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+
 /**
- *
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Core:ormValue:ormDocument:DownloadsCount' => '%1s~~',
-	'Core:ormValue:ormDocument:DownloadsCount+' => 'Downloaded %1$s time(s)~~',
+	'Core:ormValue:ormDocument:DownloadsCount' => '%1s',
+	'Core:ormValue:ormDocument:DownloadsCount+' => '%1$s keer gedownload',
 ]);

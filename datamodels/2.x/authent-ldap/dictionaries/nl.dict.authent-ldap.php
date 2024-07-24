@@ -6,13 +6,13 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+
 /**
- * @author Hipska (2019)
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
- *
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:UserLDAP' => 'LDAP-gebruiker',
 	'Class:UserLDAP+' => 'Gebruiker die aanmeldt via LDAP',
-	'UserLDAP:server' => 'LDAP specifics~~',
+	'UserLDAP:server' => 'LDAP informatie',
 ]);

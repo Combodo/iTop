@@ -31,5 +31,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Titel ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
-	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
+	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s',
 ]);
