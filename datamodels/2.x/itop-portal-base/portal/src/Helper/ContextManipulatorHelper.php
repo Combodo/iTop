@@ -63,6 +63,9 @@ class ContextManipulatorHelper
 	/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper */
 	private $oScopeValidator;
 
+	/** @var string $sPrivateKey private key for encoding rules */
+	private static $sPrivateKey;
+
 	/**
 	 * ContextManipulatorHelper constructor.
 	 *
@@ -593,12 +596,13 @@ class ContextManipulatorHelper
 	 */
 	private static function GetPrivateKey()
 	{
-		$sPrivateKey = DBProperty::GetProperty(self::PRIVATE_KEY);
-		if (is_null($sPrivateKey)) {
-			$sPrivateKey = bin2hex(random_bytes(32));
-			DBProperty::SetProperty(self::PRIVATE_KEY, $sPrivateKey);
+		if(self::$sPrivateKey === null) {
+			self::$sPrivateKey = DBProperty::GetProperty(self::PRIVATE_KEY);
+			if (is_null(self::$sPrivateKey)) {
+				self::$sPrivateKey = bin2hex(random_bytes(32));
+				DBProperty::SetProperty(self::PRIVATE_KEY, self::$sPrivateKey);
+			}
 		}
-
-		return $sPrivateKey;
+		return self::$sPrivateKey;
 	}
 }
