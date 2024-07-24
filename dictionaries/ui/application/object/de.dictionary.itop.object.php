@@ -10,8 +10,8 @@
  *
  */
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'UI:Object:Modal:Create:MandatoryAttributeBlobInputs:Warning:Text' => 'This form contains a mandatory file attribute which cannot be set in modal mode. The creation of this object will be incomplete, edit it in a full-page form to complete it.~~',
-	'UI:Object:Modal:Modify:Filled:MandatoryAttributeBlobInputs:Warning:Text' => 'This form contains mandatory file attribute which cannot be modified in modal mode.~~',
-	'UI:Object:Modal:Modify:MandatoryAttributeBlobInputs:Warning:Text' => 'This form contains a mandatory file attribute which cannot be set in modal mode. This object is incomplete, edit it in a full-page form to complete it.~~',
+	'UI:Object:Modal:Create:MandatoryAttributeBlobInputs:Warning:Text' => 'Dieses Formular enthält ein Pflichtdateiattribut, das im Modalmodus nicht festgelegt werden kann. Die Erstellung dieses Objekts ist unvollständig; bearbeiten Sie es in einem Vollbildformular, um es abzuschließen.',
+	'UI:Object:Modal:Modify:Filled:MandatoryAttributeBlobInputs:Warning:Text' => 'Dieses Formular enthält ein Pflichtdateiattribut, das im Modalmodus nicht geändert werden kann.',
+	'UI:Object:Modal:Modify:MandatoryAttributeBlobInputs:Warning:Text' => 'Dieses Formular enthält ein Pflichtdateiattribut, das im Modalmodus nicht festgelegt werden kann. Dieses Objekt ist unvollständig; bearbeiten Sie es in einem Vollbildformular, um es abzuschließen.',
 	'UI:Object:Modal:Title' => 'Ein Objekt erstellen',
 ]);
