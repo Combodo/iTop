@@ -24,6 +24,7 @@ use ApplicationContext;
 use AttributeFriendlyName;
 use Combodo\iTop\Form\Field\DateTimeField;
 use Combodo\iTop\Form\Field\Field;
+use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Renderer\Bootstrap\BsFieldRendererMappings;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
@@ -192,7 +193,7 @@ EOF
 								"render": function(data, type, row)
 								{
 									var oCheckboxElem = $('{$sSelectionInputHtml}');
-									if(row.limited_access)
+                                    if(row.limited_access)
 									{
 										oCheckboxElem.html('-');
 									}
@@ -221,7 +222,8 @@ EOF
 							"className": {$sIsEditable} && aColumnProperties.mandatory ? 'mandatory' : '',
 							"render": function(data, type, row){
 								var cellElem;
-                                                                
+                                var metadataNames = ['object_class', 'object_id', 'attribute_code', 'attribute_type', 'value_raw'];
+									
 								// Preparing the cell data
 								if(data.url !== undefined)
 								{
@@ -232,8 +234,19 @@ EOF
 								{
 									cellElem = $('<span></span>');
 								}
-								cellElem.html('<span>' + data.value + '</span>');
-                                
+								for(var sPropName in row.attributes[data.prefix+data.attribute_code])
+			                    {
+			                        var propValue = row.attributes[data.prefix+data.attribute_code][sPropName];
+			                        if(sPropName === 'value_html')
+			                        {
+			                            cellElem.html(propValue);
+			                        }
+			                        else if(metadataNames.indexOf(sPropName) > -1)
+			                        {
+			                            cellElem.attr('data-'+sPropName.replace('_', '-'), propValue)
+			                        }
+			                    }
+                                                                
 								return cellElem.prop('outerHTML');
 							},
 						});
@@ -242,7 +255,6 @@ EOF
                     for(sKey in oColumnProperties_{$this->oField->GetGlobalId()})
 					{
                         aColumnProperties = oColumnProperties_{$this->oField->GetGlobalId()}[sKey];
-                        
 						// Level main column
 						aColumnsDefinition.push({
 							"width": "auto",
@@ -254,7 +266,8 @@ EOF
 							"data": "attributes." + sKey,
 							"className": aColumnProperties.mandatory ? 'mandatory' : '',
 							"render": function(data, type, row){
-								var cellElem;
+								var cellElem;                                
+                                var metadataNames = ['object_class', 'object_id', 'attribute_code', 'attribute_type', 'value_raw'];
                                 
 								// Preparing the cell data
 								if(data.url !== undefined)
@@ -266,7 +279,19 @@ EOF
 								{
 									cellElem = $('<span></span>');
 								}
-								cellElem.html('<span>' + data.value + '</span>');
+								
+								for(var sPropName in row.attributes[data.attribute_code])
+			                    {
+			                     	var propValue = row.attributes[data.attribute_code][sPropName];
+			                        if(sPropName === 'value_html')
+			                        {
+			                            cellElem.html(propValue);
+			                        }
+			                        else if(metadataNames.indexOf(sPropName) > -1)
+			                        {
+			                            cellElem.attr('data-'+sPropName.replace('_', '-'), propValue)
+			                        }
+			                    }
                                 
 								return cellElem.prop('outerHTML');
 							},
@@ -799,7 +824,6 @@ JS
 				static::TransferFieldRendererGlobalOutput($oFieldOutput, $oOutput);
 			}
 		}
-
 	}
 
 	/**
@@ -821,13 +845,29 @@ JS
 
 			if ($sAttCode !== 'id') {
 
-				// Prepare attribute properties
-				$aAttProperties = array(
-					'att_code' => $sAttCode,
-				);
-
 				// Retrieve attribute definition
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+
+				// Prepare attribute properties
+				$aAttProperties = [
+						'prefix'=> $sAttribueKeyPrefix,
+						'object_class'  => $sClass,
+						'object_id'  => $oItem->GetKey(),
+						'attribute_code' => $sAttCode,
+						'attribute_type' => get_class($oAttDef),
+				];
+				// - Value raw
+				// For simple fields, we get the raw (stored) value as well
+				$bExcludeRawValue = false;
+				foreach (ApplicationHelper::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
+				{
+					if (is_a($oAttDef, $sAttDefClassToExclude, true))
+					{
+						$bExcludeRawValue = true;
+						break;
+					}
+				}
+				$aAttProperties['value_raw'] = ($bExcludeRawValue === false) ? $oItem->Get($sAttCode) : null;
 
 				// External key specific
 				if ($bIsEditable) {
@@ -847,23 +887,23 @@ JS
 						$oFieldOutput = $oFieldRenderer->Render();
 						$aAttProperties['js_inline'] = $oFieldOutput->GetJs();
 						$aAttProperties['css_inline'] = $oFieldOutput->GetCss();
-						$aAttProperties['value'] = $oFieldOutput->GetHtml();
+						$aAttProperties['value_html'] = $oFieldOutput->GetHtml();
 					}
 
 				} else if ($oAttDef->IsExternalKey()) {
 
 					/** @var \AttributeExternalKey $oAttDef */
-					$aAttProperties['value'] = $oItem->Get($sAttCode.'_friendlyname');
+					$aAttProperties['value_html'] = $oItem->Get($sAttCode.'_friendlyname');
 
 					// Checking if user can access object's external key
-					$sObjectUrl = ApplicationContext::MakeObjectUrl($sClass, $oItem->Get($sAttCode));
+					$sObjectUrl = ApplicationContext::MakeObjectUrl($oAttDef->GetTargetClass(), $oItem->Get($sAttCode));
 					if (!empty($sObjectUrl)) {
 						$aAttProperties['url'] = $sObjectUrl;
 					}
 
 				} else { // Others attributes
 
-					$aAttProperties['value'] = $oAttDef->GetAsHTML($oItem->Get($sAttCode));
+					$aAttProperties['value_html'] = $oAttDef->GetAsHTML($oItem->Get($sAttCode));
 
 					if ($oAttDef instanceof AttributeFriendlyName) {
 						// Checking if user can access object
