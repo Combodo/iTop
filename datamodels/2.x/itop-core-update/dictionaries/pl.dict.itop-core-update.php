@@ -65,7 +65,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'iTopUpdate:UI:RunSetup' => 'Uruchom instalację',
 	'iTopUpdate:UI:SelectUpdateFile' => 'Wybierz plik aktualizacji do przesłania',
 	'iTopUpdate:UI:ServerFile' => 'Ścieżka pakietu znajdującego się na serwerze',
-	'iTopUpdate:UI:Setup' => 'Konfiguracja 'ITOP_APPLICATION_SHORT,
+	'iTopUpdate:UI:Setup' => 'Konfiguracja '.ITOP_APPLICATION_SHORT,
 	'iTopUpdate:UI:SetupLaunch' => 'Uruchom konfigurację '.ITOP_APPLICATION_SHORT,
 	'iTopUpdate:UI:SetupLaunchConfirm' => 'Zostanie uruchomiona '.ITOP_APPLICATION_SHORT.' konfiguracja, jesteś pewien?',
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Kopia zapasowa bazy danych',
