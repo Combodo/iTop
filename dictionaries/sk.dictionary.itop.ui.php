@@ -1300,7 +1300,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
 	'UI:Search:Criteria:Remove' => 'Remove~~',
-	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s~~',
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s~~',
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Between' => '%1$s between [%2$s]~~',
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Any~~',

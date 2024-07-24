@@ -81,8 +81,8 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
     }
   }
 
-  /*N°6543 - We need the rule to keep text inside the column when width is defined*/
-  &[data-attribute-type="AttributeHtml"],
+  /*N°6543 - We need the rule to keep text inside the column when width is defined */
+  &[data-attribute-type="AttributeHTML"],
   &[data-attribute-type="AttributeText"] {
     &[data-attribute-flag-read-only="true"] {
       display: grid;

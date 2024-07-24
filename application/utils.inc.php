@@ -22,6 +22,7 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Service\Module\ModuleService;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
@@ -2792,95 +2793,12 @@ TXT
 	 *
 	 * @return array classes are returned in the same order as the module dependency tree, so core classes on top
 	 * @since 3.0.0
+	 * @deprecated 3.2.0 Use {@see InterfaceDiscovery::FindItopClasses()} instead
 	 */
 	public static function GetClassesForInterface(string $sInterface, string $sClassNameFilter = '', $aExcludedPath = []): array
 	{
-		$aMatchingClasses = [];
-
-		if (!utils::IsDevelopmentEnvironment()) {
-			// Try to read from cache
-			$aFilePath = explode("\\", $sInterface);
-			$sInterfaceName = end($aFilePath);
-			$sCacheFileName = utils::GetCachePath()."ImplementingInterfaces/$sInterfaceName.php";
-			if (is_file($sCacheFileName)) {
-				$aMatchingClasses = include $sCacheFileName;
-			}
-		}
-
-		if (empty($aMatchingClasses)) {
-			$aAutoloadClassMaps = [APPROOT.'lib/composer/autoload_classmap.php'];
-			// guess all the autoload class maps from the extensions
-			$aAutoloadClassMaps = array_merge($aAutoloadClassMaps, glob(APPROOT.'env-'.utils::GetCurrentEnvironment().'/*/vendor/composer/autoload_classmap.php'));
-
-			$aClassMap = [];
-			$aAutoloaderErrors = [];
-			foreach ($aAutoloadClassMaps as $sAutoloadFile) {
-				if (false === static::RealPath($sAutoloadFile, APPROOT)) {
-					// can happen when we still have the autoloader symlink in env-*, but it points to a file that no longer exists
-					$aAutoloaderErrors[] = $sAutoloadFile;
-					continue;
-				}
-				$aTmpClassMap = include $sAutoloadFile;
-				/** @noinspection SlowArrayOperationsInLoopInspection we are getting an associative array so the documented workarounds cannot be used */
-				$aClassMap = array_merge($aClassMap, $aTmpClassMap);
-			}
-			if (count($aAutoloaderErrors) > 0) {
-				IssueLog::Debug(
-					"\utils::GetClassesForInterface cannot load some of the autoloader files",
-					LogChannels::CORE,
-					['autoloader_errors' => $aAutoloaderErrors]
-				);
-			}
-
-			// Add already loaded classes
-			$aCurrentClasses = array_fill_keys(get_declared_classes(), '');
-			$aClassMap = array_merge($aCurrentClasses, $aClassMap);
-
-			foreach ($aClassMap as $sPHPClass => $sPHPFile) {
-				$bSkipped = false;
-
-				// Check if our class matches name filter, or is in an excluded path
-				if ($sClassNameFilter !== '' && strpos($sPHPClass, $sClassNameFilter) === false) {
-					$bSkipped = true;
-				}
-				// For some PHP classes we don't have their file path as they are already in memory, so we never filter on their paths
-				elseif (utils::IsNotNullOrEmptyString($sPHPFile)) {
-					$sPHPFile = self::LocalPath($sPHPFile);
-					if ($sPHPFile !== false) {
-						$sPHPFile = '/'.$sPHPFile; // for regex
-						foreach ($aExcludedPath as $sExcludedPath) {
-							// Note: We use '#' as delimiters as usual '/' is often used in paths.
-							if ($sExcludedPath !== '' && preg_match('#'.$sExcludedPath.'#', $sPHPFile) === 1) {
-								$bSkipped = true;
-								break;
-							}
-						}
-					} else {
-						$bSkipped = true; // file not found
-					}
-				}
-
-				if(!$bSkipped){
-					try {
-						$oRefClass = new ReflectionClass($sPHPClass);
-						if ($oRefClass->implementsInterface($sInterface) &&
-							!$oRefClass->isInterface() && !$oRefClass->isAbstract() && !$oRefClass->isTrait()) {
-							$aMatchingClasses[] = $sPHPClass;
-						}
-					} catch (Exception $e) {
-					}
-				}
-			}
-
-			if (!utils::IsDevelopmentEnvironment()) {
-				// Save to cache
-				$sCacheContent = "<?php\n\nreturn ".var_export($aMatchingClasses, true).";";
-				SetupUtils::builddir(dirname($sCacheFileName));
-				file_put_contents($sCacheFileName, $sCacheContent);
-			}
-		}
-
-		return $aMatchingClasses;
+		$oInterfaceDiscoveryService = InterfaceDiscovery::GetInstance();
+		return $oInterfaceDiscoveryService->FindItopClasses($sInterface);
 	}
 
 	/**
@@ -2894,9 +2812,9 @@ TXT
 	{
 		$aResultPref = [];
 		$aShortcutPrefs = appUserPreferences::GetPref('keyboard_shortcuts', []);
-		// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
-		$aShortcutClasses = utils::GetClassesForInterface(iKeyboardShortcut::class, '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
 
+		/** @var iKeyboardShortcut[] $aShortcutClasses */
+		$aShortcutClasses = InterfaceDiscovery::GetInstance()->FindItopClasses(iKeyboardShortcut::class);
 		foreach ($aShortcutClasses as $cShortcutPlugin) {
 			$sTriggeredElement = $cShortcutPlugin::GetShortcutTriggeredElementSelector();
 			foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {

@@ -185,17 +185,20 @@
                     <item id="name">
                       <rank>10</rank>
                     </item>
-                    <item id="status">
+                    <item id="description">
                       <rank>20</rank>
                     </item>
-                    <item id="language">
+                    <item id="status">
                       <rank>30</rank>
                     </item>
-                    <item id="title">
+                    <item id="language">
                       <rank>40</rank>
                     </item>
-                    <item id="message">
+                    <item id="title">
                       <rank>50</rank>
+                    </item>
+                    <item id="message">
+                      <rank>60</rank>
                     </item>
                   </items>
                 </item>
@@ -241,11 +244,14 @@
             <item id="title">
               <rank>10</rank>
             </item>
-            <item id="status">
+            <item id="description">
               <rank>20</rank>
             </item>
-            <item id="language">
+            <item id="status">
               <rank>30</rank>
+            </item>
+            <item id="language">
+              <rank>40</rank>
             </item>
           </items>
         </list>

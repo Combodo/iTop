@@ -736,8 +736,8 @@
         $oSearch->AllowAllData();
         $oUserSet = new DBObjectSet($oSearch);
 
-        // The organization's person was changed and it has associated Users
-        if (array_key_exists('org_id', $aChanges) && ($oUserSet->Count() > 0)) {
+        // Change was not made by a DataSynchro and the organization's person was changed and there are associated Users
+        if (!ContextTag::Check(ContextTag::TAG_SYNCHRO) && array_key_exists('org_id', $aChanges) && ($oUserSet->Count() > 0)) {
             while($oUser = $oUserSet->Fetch())
             {
                 $oAddon = UserRights::GetModuleInstance();

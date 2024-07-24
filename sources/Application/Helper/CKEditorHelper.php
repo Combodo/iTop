@@ -7,6 +7,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
 use Dict;
+use DOMSanitizer;
 use Exception;
 use ExceptionLog;
 use UserRights;
@@ -36,11 +37,12 @@ class CKEditorHelper
 	 *
 	 * @return array
 	 */
-	static public function GetCkeditorConfiguration(bool $bWithMentions, ?string $sInitialValue, array $aOverloadConfiguration = []) : array
+	public static function GetCkeditorConfiguration(bool $bWithMentions, ?string $sInitialValue, array $aOverloadConfiguration = []) : array
 	{
 		// Extract language from user preferences
 		$sLanguageCountry = trim(UserRights::GetUserLanguage());
 		$sLanguage = strtolower(explode(' ', $sLanguageCountry)[0]);
+		$aSanitizerConfiguration = self::GetDOMSanitizerForCKEditor();
 
 		// configuration
 		$aConfiguration = array(
@@ -52,6 +54,7 @@ class CKEditorHelper
 			'objectShortcut' => [
 				'buttonLabel' => Dict::S('UI:ObjectShortcutInsert')
 			],
+			'htmlSupport' => $aSanitizerConfiguration,
 		);
 
 		// Mentions
@@ -75,7 +78,7 @@ class CKEditorHelper
 	 * @return array|array[]
 	 * @throws \Exception
 	 */
-	static private function GetMentionConfiguration() : array
+	private static function GetMentionConfiguration() : array
 	{
 		// initialize feeds
 		$aMentionConfiguration = ['feeds' => []];
@@ -276,5 +279,76 @@ HTML;
 		}
 
 		return $aJSRelPaths;
+	}
+
+	/**
+	 * @param \DOMSanitizer|null $oSanitizer
+	 *
+	 * @return array|array[]
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
+	public static function GetDOMSanitizerForCKEditor(DOMSanitizer $oSanitizer = null) : array
+	{
+		if($oSanitizer === null) {
+			/* @var $oSanitizer DOMSanitizer */
+			$sSanitizerClass = utils::GetConfig()->Get('html_sanitizer');
+			$oSanitizer = new $sSanitizerClass();
+		}
+		
+		$aWhitelist = [
+			'allow' => [],
+			'disallow' => []
+		];
+		
+		// Build the allow list
+		foreach ($oSanitizer->GetTagsWhiteList() as $sTag => $aAttributes) {
+			$aAllowedItem = [
+				'name' => $sTag,
+				'attributes' => [],
+				'classes' => false,
+				'styles' => false
+			];
+
+			foreach ($aAttributes as $aAttr) {
+				if ($aAttr === 'style') {
+					$aAllowedItem['styles'] = array_fill_keys($oSanitizer->GetStylesWhiteList(), true);
+				} elseif ($aAttr === 'class') {
+					$aAllowedItem['classes'] = true;
+				} elseif (isset($oSanitizer->GetAttrsWhiteList()[$aAttr])) {
+					$aAllowedItem['attributes'][$aAttr] = [
+						'pattern' => $oSanitizer->GetAttrsWhiteList()[$aAttr]
+					];
+				} else {
+					$aAllowedItem['attributes'][$aAttr] = true;
+				}
+			}
+
+			if (empty($aAllowedItem['attributes'])) {
+				$aAllowedItem['attributes'] = false;
+			}
+
+			$aWhitelist['allow'][] = $aAllowedItem;
+		}
+
+		// Build the disallow list
+		foreach ($oSanitizer->GetTagsBlackList() as $sTag) {
+			$aDisallowedItem = [
+				'name' => $sTag,
+				'attributes' => [],
+			];
+
+			foreach ($oSanitizer->GetAttrsBlackList() as $aAttr) {
+					$aDisallowedItem['attributes'][$aAttr] = true;
+			}
+
+			if (empty($aDisallowedItem['attributes'])) {
+				$aDisallowedItem['attributes'] = true;
+			}
+
+			$aWhitelist['disallow'][] = $aDisallowedItem;
+		}
+		
+		return $aWhitelist;
 	}
 }

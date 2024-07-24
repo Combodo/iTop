@@ -6,10 +6,11 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+
 /**
  * @author LinProfs <info@linprofs.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
- *
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Problem:KnownProblemList' => 'Gekende fouten',
@@ -209,7 +210,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Wacht op goedkeuring',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest:KnownErrorList' => 'Gekende fouten',
-	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
+	'Class:UserRequest:KnownErrorList+' => 'Gekende fouten gerelateerd aan configuratie-items gekoppeld aan het huidige verzoek',
 	'Menu:NewUserRequest' => 'Nieuw gebruikersverzoek',
 	'Menu:NewUserRequest+' => 'Maak een nieuw gebruikersverzoek aan',
 	'Menu:RequestManagement' => 'Helpdesk',

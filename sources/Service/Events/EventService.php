@@ -8,6 +8,7 @@ namespace Combodo\iTop\Service\Events;
 
 use Closure;
 use Combodo\iTop\Service\Events\Description\EventDescription;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Service\Module\ModuleService;
 use ContextTag;
 use CoreException;
@@ -43,9 +44,9 @@ final class EventService
 	 */
 	public static function InitService()
 	{
-		$aEventServiceSetup = utils::GetClassesForInterface(iEventServiceSetup::class, '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']);
+		$aEventServiceSetup = InterfaceDiscovery::GetInstance()->FindItopClasses(iEventServiceSetup::class);
 		foreach ($aEventServiceSetup as $sEventServiceSetupClass) {
-			/** @var \Combodo\iTop\Service\Events\iEventServiceSetup $oEventServiceSetup */
+			/** @var iEventServiceSetup $oEventServiceSetup */
 			$oEventServiceSetup = new $sEventServiceSetupClass();
 			$oEventServiceSetup->RegisterEventsAndListeners();
 		}

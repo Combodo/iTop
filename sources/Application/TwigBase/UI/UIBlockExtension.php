@@ -9,8 +9,8 @@ namespace Combodo\iTop\Application\TwigBase\UI;
 
 
 use Combodo\iTop\Application\UI\Base\iUIBlockFactory;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Twig\Extension\AbstractExtension;
-use utils;
 
 /**
  * Class UIBlockExtension
@@ -28,9 +28,7 @@ class UIBlockExtension extends AbstractExtension
 	{
 		$aParsers = [];
 
-		$sInterface = iUIBlockFactory::class;
-		$aFactoryClasses = utils::GetClassesForInterface($sInterface, 'UIBlockFactory');
-
+		$aFactoryClasses = InterfaceDiscovery::GetInstance()->FindItopClasses(iUIBlockFactory::class);
 		foreach ($aFactoryClasses as $sFactoryClass) {
 			$aParsers[] = new UIBlockParser($sFactoryClass);
 		}

@@ -6,6 +6,8 @@
 
 namespace Combodo\iTop\Test\UnitTest\Application;
 
+use Combodo\iTop\Application\UI\Base\iUIBlockFactory;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use MetaModel;
 use utils;
@@ -44,7 +46,7 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 			if ($sCallMethod === static::ENUM_API_CALL_METHOD_ENUMPLUGINS) {
 				$iExtendingClassesCount = count(MetaModel::EnumPlugins($sAPIFQCN));
 			} else {
-				$iExtendingClassesCount = count(utils::GetClassesForInterface($sAPIFQCN, '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]']));
+				$iExtendingClassesCount = count(InterfaceDiscovery::GetInstance()->FindItopClasses($sAPIFQCN));
 			}
 			$this->assertGreaterThan(0, $iExtendingClassesCount, "Found no class extending the $sAPIFQCN API");
 		}

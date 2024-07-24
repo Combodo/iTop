@@ -20,7 +20,7 @@ use utils;
  */
 class Message {
 	/** @var string Default TWIG template */
-	protected const DEFAULT_TWIG_TEMPLATE_REL_PATH = 'templates/application/welcome_popup/templates/left-title-description-right-illustration.html.twig';
+	protected const DEFAULT_TWIG_TEMPLATE_REL_PATH = 'templates/application/welcome-popup/templates/left-title-description-right-illustration.html.twig';
 
 	/** @var string Unique ID of the message within its provider */
 	protected readonly string $sId;

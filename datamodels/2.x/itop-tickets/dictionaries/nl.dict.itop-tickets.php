@@ -6,10 +6,11 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+
 /**
  * @author LinProfs <info@linprofs.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
- *
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ResponseTicketTTO/Interface:iMetricComputer' => 'Time To Own',
@@ -176,8 +177,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Contact',
 	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
-	'Class:lnkContactToTicket/Attribute:contact_name' => 'Contact name~~',
-	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
+	'Class:lnkContactToTicket/Attribute:contact_name' => 'Contact naam',
+	'Class:lnkContactToTicket/Attribute:contact_name+' => '',
 	'Class:lnkContactToTicket/Attribute:role' => 'Rol',
 	'Class:lnkContactToTicket/Attribute:role+' => '',
 	'Class:lnkContactToTicket/Attribute:role_code' => 'Rol',
@@ -188,7 +189,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Ref',
 	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
-	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
+	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
 	'Ticket:ImpactAnalysis' => 'Impactanalyse',
 	'Ticket:SLA' => 'Rapportage SLA',
 	'Ticket:Type' => 'Kwalificaties',

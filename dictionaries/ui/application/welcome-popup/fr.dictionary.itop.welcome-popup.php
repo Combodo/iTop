@@ -10,7 +10,8 @@
  *
  */
 Dict::Add('FR FR', 'French', 'Français', [
-	'UI:WelcomePopup:Button:Acknowledge' => 'Compris',
+	'UI:WelcomePopup:Button:AcknowledgeAndNext' => 'Suivant',
+	'UI:WelcomePopup:Button:AcknowledgeAndClose' => 'Fermer',
 	'UI:WelcomePopup:Button:RemindLater' => 'Me le rappeler plus tard',
 	'UI:WelcomePopup:Message:320_01_Welcome:Title' => 'Bienvenue sur ' . ITOP_APPLICATION_SHORT . ' 3.2',
 	'UI:WelcomePopup:Message:320_01_Welcome:Description' => '<div>Félicitations, vous avez atterri sur '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.' !</div>

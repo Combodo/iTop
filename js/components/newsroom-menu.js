@@ -239,15 +239,13 @@ $(function()
 		},
 		_buildMultipleShowAllMessagesItem: function(aUnreadMessagesByProvider)
 		{
-			var sNewMessageIndicator = '<div class="ibo-navigation-menu--notifications--item--new-message-indicator"></div>';
-
 			var sUnreadMessages = ''
 			for(k in this.options.providers) {
 				var sExtraMessages = '';
 				if (aUnreadMessagesByProvider[k] > 0) {
 					sExtraMessages = ' <span class="ibo-navigation-menu--notifications-show-all-multiple--counter">(' + aUnreadMessagesByProvider[k] + ')</span>'
 				}
-				sUnreadMessages += '<a class="ibo-popover-menu--item" data-provider-id="' + k + '" href="' + this.options.providers[k].view_all_url + '" target="' + this.options.providers[k].target + '">' + sNewMessageIndicator + this.options.providers[k].label + sExtraMessages + '</a>';
+				sUnreadMessages += '<a class="ibo-popover-menu--item" data-provider-id="' + k + '" href="' + this.options.providers[k].view_all_url + '" target="' + this.options.providers[k].target + '">' + this.options.providers[k].label + sExtraMessages + '</a>';
 			}
 			return '<a class="ibo-popover-menu--item ibo-navigation-menu--notifications-show-all-multiple" data-role="ibo-navigation-menu--notifications-show-all-multiple" href="#">'+Dict.S(this.options.labels.view_all)+'<i class="fas fas-caret-down"></i></a>' +
 				'<div class="ibo-popover-menu" data-role="ibo-popover-menu"><div class="ibo-popover-menu--section" data-role="ibo-popover-menu--section">'+sUnreadMessages+'</div></div>';

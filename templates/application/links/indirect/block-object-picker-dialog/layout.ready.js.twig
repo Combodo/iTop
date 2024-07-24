@@ -5,7 +5,7 @@
 $('#dlg_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }}').dialog({
     width: $(window).width()*0.8,
     height: $(window).height()*0.8,
-    title:"{{ 'UI:AddObjectsOf_Class_LinkedWith_Class'|dict_format(oUIBlock.oUILinksWidget.GetLinkedClass(), oUIBlock.oUILinksWidget.GetClass()) }}" ,
+    title:"{{ 'UI:AddObjectsOf_Class_LinkedWith_Class'|dict_format(oUIBlock.oUILinksWidget.GetLinkedClassLabel(), oUIBlock.oUILinksWidget.GetClassLabel()) }}" ,
     autoOpen: false,
     modal: true,
     resizeStop: oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.UpdateSizes,

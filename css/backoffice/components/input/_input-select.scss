@@ -41,8 +41,8 @@ $ibo-input-select--select-wrapper--action-button--margin-right: 20px !default;
 $ibo-input-select--action-button--padding-left: 6px !default;
 $ibo-input-select--action-button--padding-right: $ibo-spacing-100 !default;
 
-$ibo-input-select--autocomplete-item-image--size: 25px !default;
-$ibo-input-select--autocomplete-item-image--margin-right: 0.5rem !default;
+$ibo-input-select--autocomplete-item-image--size: 30px !default;
+$ibo-input-select--autocomplete-item-image--margin-right: 0.7rem !default;
 $ibo-input-select--autocomplete-item-image--background-color: $ibo-color-blue-100 !default;
 $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-600 !default;
 
@@ -233,6 +233,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 }
 
 .ibo-input-select--autocomplete-item-txt {
+  @extend %ibo-font-ral-nor-100;
   @extend %ibo-text-truncated-with-ellipsis;
 }
 

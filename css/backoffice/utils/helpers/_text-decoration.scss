@@ -103,13 +103,8 @@ $ibo-figure--spacing-y: 2em !default;
  * See https://bulma.io/documentation/elements/content/
  */
 .ibo-is-html-content {
-  @extend .content;
-
-  /* Force user-generated tables to fit within the container as they often have an hard-coded width */
-  table {
-    width: unset !important;
-    max-width: max-content;
-  }
+  @extend .content; /* Bulma styles */
+  @extend .ck-content; /* CKEditor styles */
 
   /* For table to render like in CKEditor, works with bulma lib. overload see:
    * - ../../vendors/_bulma-variables-overload.scss)
@@ -118,16 +113,6 @@ $ibo-figure--spacing-y: 2em !default;
   table {
     border-collapse: separate;
     border-spacing: 2px;
-  }
-
-  /*
-   * N°5317 - Handle overlapping tables when table cells have fixed widths
-   * Force table cell NOT to have a fixed width and to wrap when necessary
-   */
-  td {
-    width: unset !important;
-    word-break: break-word !important;
-    white-space: unset !important;
   }
 
   /* Preserve original text color in code blocks, except for the Highlight.js blocks which have their own colors */

@@ -697,7 +697,7 @@ Domény nejčastěji odpovídají skupinám řešitelů, které následně oprav
 	'UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser' => 'Aktuální profil neobsahuje \'%1$s\' objekty',
 	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
 	'UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser' => 'Aktuální profil má skryty některé \'%1$s\' objekty',
-	'UI:CSVReport-Value-SetIssue' => 'Nemůže být změněno - důvod: %1$s',
+	'UI:CSVReport-Value-SetIssue' => 'Neplatná hodnota pro atribut',
 	'UI:CancelConfirmationMessage' => 'Přijdete o všechny změny. Přejete si přesto pokračovat?',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => 'Počáteční hodnota:',

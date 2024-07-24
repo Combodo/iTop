@@ -3,6 +3,7 @@
 namespace Combodo\iTop\Application\WelcomePopup;
 
 use AttributeDateTime;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use DBObjectSearch;
 use DBObjectSet;
 use Exception;
@@ -12,7 +13,6 @@ use MetaModel;
 use UserRights;
 use WelcomePopupAcknowledge;
 use iWelcomePopupExtension;
-use utils;
 
 /**
  * Handling of the messages displayed in the "Welcome Popup"
@@ -175,7 +175,7 @@ class WelcomePopupService
 		if ($this->aMessagesProviders !== null) return;
 
 		$aProviders = [];
-		$aProviderClasses = utils::GetClassesForInterface(iWelcomePopupExtension::class, '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+		$aProviderClasses = InterfaceDiscovery::GetInstance()->FindItopClasses(iWelcomePopupExtension::class);
 		foreach($aProviderClasses as $sProviderClass) {
 			$aProviders[] = new $sProviderClass();
 		}

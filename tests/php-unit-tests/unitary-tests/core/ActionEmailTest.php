@@ -219,14 +219,18 @@ HTML
 			'simple-body-with-placeholder' => [
 				'EN US',
 				['body' => '<p>Ticket "$this->title$" created.</p>'],
-				['body' => '<p>Ticket "Test UserRequest" created.</p>'],
+				['body' => '<div class="email-is-html-content">
+	<p>Ticket "Test UserRequest" created.</p>
+</div>'],
 			],
 			'simple-body-with-placeholder-TEST-mode' => [
 				'EN US',
 				['body' => '<p>Ticket "$this->title$" created.</p>', 'status' => 'test'],
 				['body' => 
 <<<HTML
-<p>Ticket "Test UserRequest" created.</p><div style="border: dashed;">
+<div class="email-is-html-content">
+	<p>Ticket "Test UserRequest" created.</p>
+</div><div style="border: dashed;">
 <h1>Testing email notification <span class="object-ref "  title="****"><a class="object-ref-link" href="****">Test action</a></span></h1>
 <p>The email should be sent with the following properties
 <ul>
@@ -260,7 +264,9 @@ HTML
 <body>
 	<table data-something-that-would-be-removed-by-the-sanitizer-through-ckeditor-but-that-will-stay-with-the-template="bar">
 		<tr><td>Formatted eMail</td></tr>
-		<tr><td><p>Ticket "Test UserRequest" created.</p></td></tr>
+		<tr><td><div class="email-is-html-content">
+	<p>Ticket "Test UserRequest" created.</p>
+</div></td></tr>
 </body>
 HTML
 				],

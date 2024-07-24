@@ -41,6 +41,7 @@
     "@ckeditor/ckeditor5-dev-utils": "~32.1",
     "@ckeditor/ckeditor5-theme-lark": "~41.4",
     "css-loader": "~5.2",
+    "mini-css-extract-plugin": "^2.9.0",
     "postcss": "~8.4",
     "postcss-loader": "~4.3",
     "raw-loader": "~4.0",

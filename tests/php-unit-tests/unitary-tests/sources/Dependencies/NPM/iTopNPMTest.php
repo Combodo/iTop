@@ -40,11 +40,11 @@ class iTopNPMTest extends ItopTestCase
 	{
 		$oDependenciesHandler = new iTopNPM();
 		$aAllowedAndDeniedDirs = array_merge(
-			$oDependenciesHandler->ListAllowedFoldersAbsPaths(),
-			$oDependenciesHandler->ListDeniedFoldersAbsPaths()
+			$oDependenciesHandler->ListAllowedFilesAbsPaths(),
+			$oDependenciesHandler->ListDeniedFilesAbsPaths()
 		);
 
-		$aExistingDirs = $oDependenciesHandler->ListAllFoldersAbsPaths();
+		$aExistingDirs = $oDependenciesHandler->ListAllFilesAbsPaths();
 
 		$aMissing = array_diff($aExistingDirs, $aAllowedAndDeniedDirs);
 		$aExtra = array_diff($aAllowedAndDeniedDirs, $aExistingDirs);

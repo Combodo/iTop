@@ -70,7 +70,7 @@ class Dict
 
 	public static function GetUserLanguage()
 	{
-		if (self::$m_sCurrentLanguage == null) // May happen when no user is logged in (i.e login screen, non authentifed page)
+		if (self::$m_sCurrentLanguage == null) // May happen when no user is logged in (i.e. login screen, non-authenticated page)
 		{
 			// In which case let's use the default language
 			return self::$m_sDefaultLanguage;
@@ -122,7 +122,7 @@ class Dict
 	}
 
 	/**
-	 * Returns a localised string from the dictonary with its associated lang code
+	 * Returns a localised string from the dictionary with its associated lang code
 	 *
 	 * @param string $sStringCode The code identifying the dictionary entry
 	 * @param string $sDefault Default value if there is no match in the dictionary
@@ -201,7 +201,7 @@ class Dict
 
 		if ($sLocalizedFormat == $sFormatCode)
 		{
-			// Make sure the information will be displayed (ex: an error occuring before the dictionary gets loaded)
+			// Make sure the information will be displayed (ex: an error occurring before the dictionary gets loaded)
 			return $sFormatCode.' - '.implode(', ', $aArguments);
 		}
 
@@ -214,9 +214,9 @@ class Dict
 	}
 
 	/**
-	 * Initialize a the entries for a given language (replaces the former Add() method)
+	 * Initialize the entries for a given language (replaces the former Add() method)
 	 * @param string $sLanguageCode Code identifying the language i.e. 'FR-FR', 'EN-US'
-	 * @param array $aEntries Hash array of dictionnary entries
+	 * @param array $aEntries Hash array of dictionary entries
 	 */
 	public static function SetEntries($sLanguageCode, $aEntries)
 	{
@@ -271,9 +271,9 @@ class Dict
 			if (self::$m_aData[$sLangCode] === false) {
 				unset(self::$m_aData[$sLangCode]);
 			} else if (! is_array(self::$m_aData[$sLangCode])) {
-				// N°4125: we dont fix dictionnary corrupted cache (on iTop side).
+				// N°4125: we don't fix dictionary corrupted cache (on iTop side).
 				// but we log an error in a dedicated channel to let itop administrator be aware of a potential APCu issue to fix.
-				IssueLog::Error("APCu corrupted data (with $sLangCode dictionnary). APCu configuration and running version should be troubleshooted...", LogChannels::APC);
+				IssueLog::Error("APCu corrupted data (with $sLangCode dictionary). APCu configuration and running version should be troubleshooted...", LogChannels::APC);
 				$bResult = true;
 			} else {
 				$bResult = true;
@@ -296,7 +296,7 @@ class Dict
 
 	/**
 	 * Enable caching (cached using APC)
-	 * @param string $sApplicationPrefix The prefix for uniquely identiying this iTop instance
+	 * @param string $sApplicationPrefix The prefix for uniquely identifying this iTop instance
 	 */
 	public static function EnableCache($sApplicationPrefix)
 	{
@@ -305,7 +305,7 @@ class Dict
 
 	/**
 	 * Reset the cached entries (cached using APC)
-	 * @param string $sApplicationPrefix The prefix for uniquely identiying this iTop instance
+	 * @param string $sApplicationPrefix The prefix for uniquely identifying this iTop instance
 	 */
 	public static function ResetCache($sApplicationPrefix)
 	{
@@ -385,7 +385,7 @@ class Dict
 	// sLanguageCode: Code identifying the language i.e. FR-FR
 	// sEnglishLanguageDesc: Description of the language code, in English. i.e. French (France)
 	// sLocalizedLanguageDesc: Description of the language code, in its own language. i.e. Français (France)
-	// aEntries: Hash array of dictionnary entries
+	// aEntries: Hash array of dictionary entries
 	// ~~ or ~* can be used to indicate entries still to be translated.
 	public static function Add($sLanguageCode, $sEnglishLanguageDesc, $sLocalizedLanguageDesc, $aEntries)
 	{

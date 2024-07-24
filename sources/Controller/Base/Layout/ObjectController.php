@@ -872,6 +872,7 @@ JS;
 		$aSearchParams = ['needle' => "%$sNeedle%"];
 
 		// Retrieve restricting scopes from triggers if any
+		$oHostObj = null;
 		if (utils::IsNotNullOrEmptyString($sHostClass) && ($iHostId > 0)) {
 			$oHostObj = MetaModel::GetObject($sHostClass, $iHostId);
 			$aSearchParams['this'] = $oHostObj;

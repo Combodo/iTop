@@ -33,18 +33,18 @@ abstract class AbstractFolderAnalyzer
 	 * @since 3.2.0 N°7175 update regexp to also remove `examples` folder
 	 * @link https://www.regular-expressions.info/alternation.html RegExp alternation reference
 	 */
-	public const QUESTIONNABLE_FOLDER_REGEXP = '/^(tests?|examples?|htdocs?|demos?|.github|.idea)$/i';
+	public const QUESTIONNABLE_FILES_REGEXP = '/^(tests?|examples?|htdocs?|demos?|.github|.idea)$/i';
 
 	/**
-	 * @param string $sFolderName
+	 * @param string $sFileName
 	 *
 	 * @return false|int as {@see \preg_match()}
-	 * @uses static::QUESTIONNABLE_FOLDER_REGEXP
+	 * @uses static::QUESTIONNABLE_FILES_REGEXP
 	 * @uses \preg_match()
 	 */
-	public static function IsQuestionnableFolder(string $sFolderName): false|int
+	public static function IsQuestionnableFile(string $sFileName): false|int
 	{
-		return preg_match(static::QUESTIONNABLE_FOLDER_REGEXP, $sFolderName);
+		return preg_match(static::QUESTIONNABLE_FILES_REGEXP, $sFileName);
 	}
 
 	/**
@@ -70,12 +70,12 @@ abstract class AbstractFolderAnalyzer
 	}
 
 	/**
-	 * @param bool $bCheckQuestionableFoldersOnly If true, only questionnable folders {@see \Combodo\iTop\Dependencies\AbstractFolderAnalyzer::IsQuestionnableFolder()} will be listed
+	 * @param bool $bCheckQuestionableFilesOnly If true, only questionnable folders {@see \Combodo\iTop\Dependencies\AbstractFolderAnalyzer::IsQuestionnableFile()} will be listed
 	 *
-	 * @return array List of all subdirs of the dependencies folder that are {@see IsQuestionnableFolder}.
+	 * @return array List of all subdirs of the dependencies folder that are {@see IsQuestionnableFile}.
 	 *              Warning : each path contains slashes (meaning on Windows you'll get eg `C:/Dev/wamp64/www/itop-27/lib/goaop/framework/tests`)
 	 */
-	public function ListAllFoldersAbsPaths(bool $bCheckQuestionableFoldersOnly = true): array
+	public function ListAllFilesAbsPaths(bool $bCheckQuestionableFilesOnly = true): array
 	{
 		$aAllTestDirs = array();
 		$sPath = realpath($this->GetDependenciesRootFolderAbsPath());
@@ -87,11 +87,8 @@ abstract class AbstractFolderAnalyzer
 
 		/** @var DirectoryIterator $file */
 		foreach($iterator as $file) {
-			if(!$file->isDir()) {
-				continue;
-			}
 			$sDirName = $file->getFilename();
-			if ($bCheckQuestionableFoldersOnly && !static::IsQuestionnableFolder($sDirName)) {
+			if ($bCheckQuestionableFilesOnly && !static::IsQuestionnableFile($sDirName)) {
 				continue;
 			}
 
@@ -106,36 +103,36 @@ abstract class AbstractFolderAnalyzer
 	/**
 	 * @return array Array of absolute paths to allowed questionnable folders
 	 */
-	abstract public function ListAllowedFoldersRelPaths(): array;
+	abstract public function ListAllowedFilesRelPaths(): array;
 
 	/**
 	 * @return array Array of absolute paths to allowed folders
 	 */
-	public function ListAllowedFoldersAbsPaths(): array
+	public function ListAllowedFilesAbsPaths(): array
 	{
-		return array_map(fn ($sRelPath): string => $this->GetDependenciesRootFolderAbsPath() . $sRelPath, $this->ListAllowedFoldersRelPaths());
+		return array_map(fn ($sRelPath): string => $this->GetDependenciesRootFolderAbsPath() . $sRelPath, $this->ListAllowedFilesRelPaths());
 	}
 
 	/**
 	 * @return array Array of relative paths (from dependencies root folder {@see static::GetDependenciesRootFolderAbsPath()}) to denied folders
 	 */
-	abstract public function ListDeniedFoldersRelPaths(): array;
+	abstract public function ListDeniedFilesRelPaths(): array;
 
 	/**
 	 * @return array Array of absolute paths to denied folders
 	 */
-	public function ListDeniedFoldersAbsPaths(): array
+	public function ListDeniedFilesAbsPaths(): array
 	{
-		return array_map(fn ($sRelPath): string => $this->GetDependenciesRootFolderAbsPath() . $sRelPath, $this->ListDeniedFoldersRelPaths());
+		return array_map(fn ($sRelPath): string => $this->GetDependenciesRootFolderAbsPath() . $sRelPath, $this->ListDeniedFilesRelPaths());
 	}
 
 	/**
 	 * @return array Array of absolute paths to questionnable denied test folders that need to be marked as allowed or denied
 	 */
-	public function ListDeniedButStillPresentFoldersAbsPaths(): array
+	public function ListDeniedButStillPresentFilesAbsPaths(): array
 	{
-		$aDeniedTestDir = $this->ListDeniedFoldersAbsPaths();
-		$aAllTestDir = $this->ListAllFoldersAbsPaths(false);
+		$aDeniedTestDir = $this->ListDeniedFilesAbsPaths();
+		$aAllTestDir = $this->ListAllFilesAbsPaths(false);
 		return array_intersect($aDeniedTestDir, $aAllTestDir);
 	}
 }

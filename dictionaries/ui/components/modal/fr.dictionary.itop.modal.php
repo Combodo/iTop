@@ -11,7 +11,6 @@
  */
 Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Modal:Confirmation:DefaultTitle' => 'Confirmation',
-	'UI:Modal:DefaultConfirmationTitle' => 'Confirmation',
 	'UI:Modal:Informative:Title' => 'Modale d\'information',
 	'UI:Modal:InformativeError:Title' => 'Erreur',
 	'UI:Modal:InformativeInformation:Title' => 'Information',
