@@ -10,5 +10,5 @@
  *
  */
 Dict::Add('PL PL', 'Polish', 'Polski', [
-	'theme:darkmoon' => 'Dark moon~~',
+	'theme:darkmoon' => 'Ciemny Księżyc',
 ]);
