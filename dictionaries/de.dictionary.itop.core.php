@@ -127,7 +127,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 - $this->attribute_external_key->attribute$ rekursive Syntax für jedes entfernte Attribut,
 - $current_contact->attribute$ Attribut der Person, die die Benachrichtigung ausgelöst hat',
 	'Class:ActionNewsroom/Attribute:priority' => 'Priorität',
-	'Class:ActionNewsroom/Attribute:priority+' => '',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by descreasing priority, when displayed in the Newsroom popup~~',
 	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Kritisch',
 	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Kritisch',
 	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Dringend',

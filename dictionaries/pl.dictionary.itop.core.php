@@ -126,7 +126,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 - $this->attribute_external_key->attribute$ składnia rekurencyjna dla dowolnego atrybutu zdalnego,
 - $current_contact->attribute$ atrybut Osoby, która wywołała powiadomienie',
 	'Class:ActionNewsroom/Attribute:priority' => 'Priorytet',
-	'Class:ActionNewsroom/Attribute:priority+' => '',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by descreasing priority, when displayed in the Newsroom popup~~',
 	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Krytyczny',
 	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Krytyczny',
 	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Pilny',
