@@ -254,7 +254,7 @@ HTML;
 		// all js file needed by ckeditor
 		$aJSRelPaths = [
 			'node_modules/ckeditor5-itop-build/build/ckeditor.js',
-			'js/highlight/highlight.js',
+			'js/highlight/highlight.min.js',
 			'js/ckeditor.handler.js',
 			'js/ckeditor.feeds.js'
 		];
