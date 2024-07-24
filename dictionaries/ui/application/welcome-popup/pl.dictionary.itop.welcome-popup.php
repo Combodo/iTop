@@ -7,7 +7,8 @@
 // UI elements
 Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI:WelcomePopup:Button:RemindLater' => 'Przypomnij później',
-	'UI:WelcomePopup:Button:Acknowledge' => 'Rozumiem',
+	'UI:WelcomePopup:Button:AcknowledgeAndNext' => 'Następny',
+	'UI:WelcomePopup:Button:AcknowledgeAndClose' => 'Zamknij',
 ]);
 
 // Message
