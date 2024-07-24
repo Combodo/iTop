@@ -1,0 +1,120 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$common-vendors-highlightjs--padding: 0.9rem !default;
+$common-vendors-highlightjs--box-shadow: 0 0px 3px 2px inset rgba(0, 0, 0, 0.4) !default;
+$common-vendors-highlightjs--border-radius: 4px !default;
+$common-vendors-highlightjs--code--padding-x: 5px !default;
+$common-vendors-highlightjs--code--padding-y: 3px !default;
+
+$common-vendors-highlightjs--background-color: #282b2e !default;
+$common-vendors-highlightjs--color: #e0e2e4 !default;
+$common-vendors-highlightjs--keyword--color: #93c763 !default;
+$common-vendors-highlightjs--number--color: #ffcd22 !default;
+$common-vendors-highlightjs--attribute--color: #668bb0 !default;
+$common-vendors-highlightjs--regexp--color: #d39745 !default;
+$common-vendors-highlightjs--meta--color: #557182 !default;
+$common-vendors-highlightjs--tag--color: #8cbbad !default;
+$common-vendors-highlightjs--string--color: #ec7600 !default;
+$common-vendors-highlightjs--comment--color: #818e96 !default;
+$common-vendors-highlightjs--selector-class--color: #A082BD !default;
+$common-vendors-highlightjs--code--color: white !default;
+
+
+// Highlight.js stylesheets
+/* Highlight JS */
+.hljs {
+
+}
+
+.common-hljs-container{
+  padding: 0 !important;
+  border: none !important;
+}
+
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: $common-vendors-highlightjs--padding !important;
+}
+
+code.hljs {
+  padding: $common-vendors-highlightjs--code--padding-y $common-vendors-highlightjs--code--padding-x !important;
+}
+/**
+ * Obsidian style
+ * ported by Alexander Marenin (http://github.com/ioncreature)
+ */
+.hljs {
+  box-shadow: $common-vendors-highlightjs--box-shadow !important;
+  border-radius: $common-vendors-highlightjs--border-radius !important;
+  white-space: pre-wrap;
+  border: none !important;
+  color: $common-vendors-highlightjs--color !important;
+  background: $common-vendors-highlightjs--background-color !important;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-selector-id {
+  color: $common-vendors-highlightjs--keyword--color !important;
+}
+.hljs-number {
+  color: $common-vendors-highlightjs--number--color !important;
+}
+.hljs-attribute {
+  color: $common-vendors-highlightjs--attribute--color
+}
+.hljs-regexp,
+.hljs-link {
+  color: $common-vendors-highlightjs--regexp--color !important;
+}
+.hljs-meta {
+  color: $common-vendors-highlightjs--meta--color !important;
+}
+.hljs-tag,
+.hljs-name,
+.hljs-bullet,
+.hljs-subst,
+.hljs-emphasis,
+.hljs-type,
+.hljs-built_in,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-tag,
+.hljs-template-variable {
+  color: $common-vendors-highlightjs--tag--color !important;
+}
+.hljs-string,
+.hljs-symbol {
+  color: $common-vendors-highlightjs--string--color !important;
+}
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion {
+  color: $common-vendors-highlightjs--comment--color !important;
+}
+.hljs-selector-class {
+  color: $common-vendors-highlightjs--selector-class--color !important;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-doctag,
+.hljs-title,
+.hljs-section,
+.hljs-type,
+.hljs-name,
+.hljs-strong {
+  font-weight: bold
+}
+.hljs-code,
+.hljs-title.class_,
+.hljs-class .hljs-title,
+.hljs-section {
+  color: $common-vendors-highlightjs--code--color !important;
+}

@@ -25,7 +25,6 @@ class RichText extends UIBlock
 		'js/highlight/highlight.min.js',
 	];
 	public const DEFAULT_CSS_FILES_REL_PATH = [
-		'js/highlight/styles/obsidian.min.css',
 	];
 
 	/**

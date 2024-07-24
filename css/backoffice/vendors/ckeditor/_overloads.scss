@@ -4,24 +4,12 @@
  */
 
 /* SCSS variables */
-$ibo-vendors-highlightjs--padding: 0.9rem !default;
-$ibo-vendors-highlightjs--border-radius: $ibo-border-radius-300 !default;
-
-//$ibo-vendors-ckeditor--autocomplete-panel--border: none !default;
-//$ibo-vendors-ckeditor--autocomplete-panel--border-radius: $ibo-border-radius-300 !default;
-//$ibo-vendors-ckeditor--autocomplete-panel--background-color: $ibo-color-white-100 !default;
-//
-//$ibo-vendors-ckeditor--autocomplete-item-image--size: 25px !default;
-//$ibo-vendors-ckeditor--autocomplete-item-image--margin-right: 0.5rem !default;
-//$ibo-vendors-ckeditor--autocomplete-item-image--background-color: $ibo-color-blue-100 !default;
-//$ibo-vendors-ckeditor--autocomplete-item-image--border: 1px solid $ibo-color-grey-600 !default;
-//
-//$ibo-vendors-ckeditor--autocomplete-item-title--text-color: #3A3A3A !default;
 $ibo-vendors-ckeditor--ck-content--text-color: $ibo-color-grey-900 !default;
 $ibo-vendors-ckeditor--ck-content-pre-language--padding: 0 !default;
 $ibo-vendors-ckeditor--ck-content-pre-language--code--background-color: $ibo-color-grey-900 !default;
 $ibo-vendors-ckeditor--ck-content-pre-language--code--color: $ibo-color-white-100 !default;
 $ibo-vendors-ckeditor--ck-content-pre-language--code--padding: $ibo-vendors-highlightjs--padding !default;
+
 /* - Following SCSS variables are only there to overlaod the CSS3 variables of CKEditor (see `src/resources/styles/default-theme.css` in CKEditor) */
 $ibo-vendors-ckeditor--ck-color-list-button-on-background: $ibo-color-grey-200 !default;
 $ibo-vendors-ckeditor--ck-color-list-button-on-background-focus: $ibo-color-grey-200 !default;
@@ -97,16 +85,4 @@ $ibo-vendors-ckeditor--ck-mentions--item--padding-y: $ibo-spacing-200 !default;
     line-height: $ibo-vendors-ckeditor--ck-mentions--item--line-height;
     padding: $ibo-vendors-ckeditor--ck-mentions--item--padding-y $ibo-vendors-ckeditor--ck-mentions--item--padding-x !important; /* Important in order to overload the CKE native rule */
   }
-}
-
-/* Highlight JS */
-.hljs {
-	padding: $ibo-vendors-highlightjs--padding !important;
-	box-shadow: 0 0px 3px 2px inset rgba(0, 0, 0, 0.4);
-	border-radius: $ibo-vendors-highlightjs--border-radius;
-	white-space: pre-wrap;
-}
-
-.ibo-hljs-container{
-  padding: 0 !important;
 }
