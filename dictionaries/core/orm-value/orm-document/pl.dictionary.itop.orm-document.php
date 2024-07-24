@@ -10,6 +10,6 @@
  *
  */
 Dict::Add('PL PL', 'Polish', 'Polski', [
-	'Core:ormValue:ormDocument:DownloadsCount' => '%1s~~',
-	'Core:ormValue:ormDocument:DownloadsCount+' => 'Downloaded %1$s time(s)~~',
+	'Core:ormValue:ormDocument:DownloadsCount' => '%1s',
+	'Core:ormValue:ormDocument:DownloadsCount+' => 'Pobrano %1$s razy',
 ]);

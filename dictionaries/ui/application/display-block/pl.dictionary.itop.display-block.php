@@ -10,5 +10,5 @@
  *
  */
 Dict::Add('PL PL', 'Polish', 'Polski', [
-	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Add an entry in the list~~',
+	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Dodaj wpis do listy',
 ]);
