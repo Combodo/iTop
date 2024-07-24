@@ -489,7 +489,7 @@ Het domein komt meestal overeen met wie er verantwoordelijk is om de fouten te c
 	'UI:Audit:Interactive:Categories:Title' => 'Audit resultaten voor categorie: %1$s',
 	'UI:Audit:Interactive:Domain:BreadCrumb' => '%1$s',
 	'UI:Audit:Interactive:Domain:BreadCrumb+' => 'Audit voor domein: %1$s',
-	'UI:Audit:Interactive:Domain:SubTitle' => 'Audit resultaten voor alle regels behorend bij een categorie gerelateerd aan het domein: %1$~',
+	'UI:Audit:Interactive:Domain:SubTitle' => 'Audit resultaten voor alle regels behorend bij een categorie gerelateerd aan het domein: %1$',
 	'UI:Audit:Interactive:Domain:Title' => 'Audit resultaten voor domein: %1$s',
 	'UI:Audit:Interactive:Selection:BadgeAll' => 'Alle categorieën',
 	'UI:Audit:Interactive:Selection:BreadCrumb' => 'Selection~~',
