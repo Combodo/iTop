@@ -291,4 +291,47 @@ abstract class ModuleInstallerAPI
 		CMDBSource::CacheReset($sDstTable);
 	}
 
+	/**
+	 * Rename a table providing:
+	 * - The original name exists
+	 * - The destination name does not exist
+	 *
+	 * @param string $sOrigTable
+	 * @param string $sDstTable
+	 *
+	 * @return void
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 * @throws MySQLException
+	 */
+	public static function RenameTableInDB(string $sOrigTable, string $sDstTable)
+	{
+		if ($sOrigTable == $sDstTable)
+		{
+			throw new CoreUnexpectedValue("Origin table and destination table are the same");
+		}
+
+		if (!MetaModel::DBExists(false))
+		{
+			// Install from scratch, no migration
+			return;
+		}
+
+		if (!CMDBSource::IsTable($sOrigTable))
+		{
+			SetupLog::Warning(sprintf('Rename table in DB - Origin table %s doesn\'t exist', $sOrigTable));
+			return;
+		}
+
+		if (CMDBSource::IsTable($sDstTable))
+		{
+			SetupLog::Warning(sprintf('Rename table in DB - Destination table %s already exists', $sDstTable));
+			return;
+		}
+
+		$sQueryRename = sprintf(/** @lang MariaDB */ "RENAME TABLE `%s` TO `%s`;", $sOrigTable, $sDstTable);
+		CMDBSource::Query($sQueryRename);
+
+		CMDBSource::CacheReset($sOrigTable);
+	}
 }
