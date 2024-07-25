@@ -125,7 +125,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 - $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
 - $current_contact->attribute$ attribute of the Person who triggered the notification~~',
 	'Class:ActionNewsroom/Attribute:priority' => 'Priority~~',
-	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by descreasing priority, when displayed in the Newsroom popup~~',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by decreasing priority, when displayed in the Newsroom popup~~',
 	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critical~~',
 	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Critical~~',
 	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgent~~',
