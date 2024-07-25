@@ -12,7 +12,7 @@
 }
 
 /* N°7611 - Ensure to embed HTML fields styles */
-@import "../js/ckeditor/build/compiled-theme";
+@import "../node_modules/ckeditor5-itop-build/build/styles/compiled-theme";
 .email-is-html-content {
   @extend .ck-content;
 }

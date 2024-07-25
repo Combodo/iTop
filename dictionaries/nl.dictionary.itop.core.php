@@ -118,18 +118,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ActionNewsroom/Attribute:icon' => 'Pictogram',
 	'Class:ActionNewsroom/Attribute:icon+' => 'Icon to appear next to the news in the newsroom.
 - If filled, the custom icon will be used
-- Otherwise, if the triggering object has an icon (e.g. picture of a Person object), it will be used
-- Otherwise, if the triggering object has a class icon defined in the datamodel, it will be used
+- Else the icon of the triggering object if there is one (e.g. picture of a Person),
+- Else the icon of the triggering object class,
 - Otherwise, the application compact logo will be used~~',
 	'Class:ActionNewsroom/Attribute:message' => 'Message~~',
 	'Class:ActionNewsroom/Attribute:message+' => 'Contents of the news, in Markdown format not HTML. Can contain placeholders like:
 - $this->attribute_code$ any attribute of the object triggering the notification,
-- $this->hyperlink()$ hyperlink in the backoffice to the object triggering the notification,
-- $this->hyperlink(portal)$ hyperlink in the portal to the object triggering the notification,
 - $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
 - $current_contact->attribute$ attribute of the Person who triggered the notification~~',
 	'Class:ActionNewsroom/Attribute:priority' => 'Prioriteit',
-	'Class:ActionNewsroom/Attribute:priority+' => '',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by descreasing priority, when displayed in the Newsroom popup~~',
 	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critical~~',
 	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Critical~~',
 	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgent~~',
@@ -145,7 +143,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ActionNewsroom/Attribute:title' => 'Titel',
 	'Class:ActionNewsroom/Attribute:title+' => 'Title of the news. Can contain placeholders like $this->attribute_code$~~',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',
-	'Class:ActionNewsroom/Attribute:url+' => 'If empty, the URL will point to the object triggering the notification. But you can also specify a custom URL.~~',
+	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
 	'Class:ActionNotification' => 'Melding',
 	'Class:ActionNotification+' => 'Melding (abstract)',
 	'Class:AsyncSendEmail' => 'E-mail (niet synchroon)',
@@ -528,7 +526,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Trigger/Attribute:action_list' => 'Getriggerde acties',
 	'Class:Trigger/Attribute:action_list+' => 'Acties uitgevoerd nadat de trigger is geactiveerd',
 	'Class:Trigger/Attribute:complement' => 'Additional information~~',
-	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
+	'Class:Trigger/Attribute:complement+' => 'Computed automatically in english for triggers derived from TriggerOnObject~~',
 	'Class:Trigger/Attribute:context' => 'Context',
 	'Class:Trigger/Attribute:context+' => 'In welke context de trigger uitgevoerd kan worden',
 	'Class:Trigger/Attribute:description' => 'Beschrijving',

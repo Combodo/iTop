@@ -523,9 +523,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Action+'                                 => 'User defined action',
 	'Class:Action/ComplementaryName'                => '%1$s: %2$s',
 	'Class:Action/Attribute:name'                   => 'Name',
-	'Class:Action/Attribute:name+'                  => '',
+	'Class:Action/Attribute:name+'                  => 'Any value that is meaningful to distinguish this action from the others',
 	'Class:Action/Attribute:description'            => 'Description',
-	'Class:Action/Attribute:description+'           => '',
+	'Class:Action/Attribute:description+'           => 'A longer explanation about the purpose of this action. For information only.',
 	'Class:Action/Attribute:status'                 => 'Status',
 	'Class:Action/Attribute:status+'                => 'This status drives the action behavior',
 	'Class:Action/Attribute:status/Value:test'      => 'Being tested',
@@ -590,10 +590,12 @@ If omitted the From (email) is used.',
 If omitted the From (label) is used.',
 	'Class:ActionEmail/Attribute:to'                       => 'To',
 	'Class:ActionEmail/Attribute:to+'                      => 'To: an OQL query returning objects having an email field.
-While editing, click on the magnifier to get pertinent examples',
+While editing, click on the magnifier to get pertinent examples.
+You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.',
 	'Class:ActionEmail/Attribute:cc'                       => 'Cc',
 	'Class:ActionEmail/Attribute:cc+'                      => 'Carbon Copy: an OQL query returning objects having an email field.
-While editing, click on the magnifier to get pertinent examples',
+While editing, click on the magnifier to get pertinent examples.
+You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.',
 	'Class:ActionEmail/Attribute:bcc'                      => 'Bcc',
 	'Class:ActionEmail/Attribute:bcc+'                     => 'Blind Carbon Copy: an OQL query returning objects having an email field. 
 While editing, click on the magnifier to get pertinent examples',
@@ -650,18 +652,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ActionNewsroom/Attribute:message' => 'Message',
 	'Class:ActionNewsroom/Attribute:message+' => 'Contents of the news, in Markdown format not HTML. Can contain placeholders like:
 - $this->attribute_code$ any attribute of the object triggering the notification,
-- $this->hyperlink()$ hyperlink in the backoffice to the object triggering the notification,
-- $this->hyperlink(portal)$ hyperlink in the portal to the object triggering the notification,
 - $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
 - $current_contact->attribute$ attribute of the Person who triggered the notification',
 	'Class:ActionNewsroom/Attribute:icon' => 'Icon',
 	'Class:ActionNewsroom/Attribute:icon+' => 'Icon to appear next to the news in the newsroom.
 - If filled, the custom icon will be used
-- Otherwise, if the triggering object has an icon (e.g. picture of a Person object), it will be used
-- Otherwise, if the triggering object has a class icon defined in the datamodel, it will be used
+- Else the icon of the triggering object if there is one (e.g. picture of a Person),
+- Else the icon of the triggering object class,
 - Otherwise, the application compact logo will be used',
 	'Class:ActionNewsroom/Attribute:priority' => 'Priority',
-	'Class:ActionNewsroom/Attribute:priority+' => '',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by descreasing priority, when displayed in the Newsroom popup',
 	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critical',
 	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Critical',
 	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgent',
@@ -675,7 +675,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ActionNewsroom/Attribute:recipients' => 'Recipients',
 	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',
-	'Class:ActionNewsroom/Attribute:url+' => 'If empty, the URL will point to the object triggering the notification. But you can also specify a custom URL.',
+	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.',
 ));
 
 //
@@ -687,7 +687,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Trigger+'                       => 'Custom event handler',
 	'Class:Trigger/ComplementaryName'      => '%1$s, %2$s',
 	'Class:Trigger/Attribute:description'  => 'Description',
-	'Class:Trigger/Attribute:description+' => 'one line description',
+	'Class:Trigger/Attribute:description+' => 'Be precise as your users will base their potential unsubscription on this information',
 	'Class:Trigger/Attribute:action_list'  => 'Triggered actions',
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
 	'Class:Trigger/Attribute:finalclass'   => 'Trigger sub-class',
@@ -695,7 +695,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Trigger/Attribute:context'      => 'Context',
 	'Class:Trigger/Attribute:context+'     => 'Context to allow the trigger to start',
 	'Class:Trigger/Attribute:complement'   => 'Additional information',
-	'Class:Trigger/Attribute:complement+'  => 'Further information as provided in english, by this trigger',
+	'Class:Trigger/Attribute:complement+'  => 'Computed automatically in english for triggers derived from TriggerOnObject',
 	'Class:Trigger/Attribute:subscription_policy'       => 'Subscription policy',
 	'Class:Trigger/Attribute:subscription_policy+'      => 'Allows users to unsubscribe from the trigger',
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription',

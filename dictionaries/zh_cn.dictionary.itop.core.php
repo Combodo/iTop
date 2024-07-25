@@ -131,18 +131,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ActionNewsroom/Attribute:icon' => '图标',
 	'Class:ActionNewsroom/Attribute:icon+' => 'Icon to appear next to the news in the newsroom.
 - If filled, the custom icon will be used
-- Otherwise, if the triggering object has an icon (e.g. picture of a Person object), it will be used
-- Otherwise, if the triggering object has a class icon defined in the datamodel, it will be used
+- Else the icon of the triggering object if there is one (e.g. picture of a Person),
+- Else the icon of the triggering object class,
 - Otherwise, the application compact logo will be used~~',
 	'Class:ActionNewsroom/Attribute:message' => '信息',
 	'Class:ActionNewsroom/Attribute:message+' => 'Contents of the news, in Markdown format not HTML. Can contain placeholders like:
 - $this->attribute_code$ any attribute of the object triggering the notification,
-- $this->hyperlink()$ hyperlink in the backoffice to the object triggering the notification,
-- $this->hyperlink(portal)$ hyperlink in the portal to the object triggering the notification,
 - $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
 - $current_contact->attribute$ attribute of the Person who triggered the notification~~',
 	'Class:ActionNewsroom/Attribute:priority' => '优先级',
-	'Class:ActionNewsroom/Attribute:priority+' => '',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by descreasing priority, when displayed in the Newsroom popup~~',
 	'Class:ActionNewsroom/Attribute:priority/Value:1' => '关键',
 	'Class:ActionNewsroom/Attribute:priority/Value:1+' => '关键',
 	'Class:ActionNewsroom/Attribute:priority/Value:2' => '紧急',
@@ -158,7 +156,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ActionNewsroom/Attribute:title' => '标题',
 	'Class:ActionNewsroom/Attribute:title+' => 'Title of the news. Can contain placeholders like $this->attribute_code$~~',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',
-	'Class:ActionNewsroom/Attribute:url+' => 'If empty, the URL will point to the object triggering the notification. But you can also specify a custom URL.~~',
+	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
 	'Class:ActionNotification' => '通知',
 	'Class:ActionNotification+' => '通知 (抽象)',
 	'Class:AsyncSendEmail' => '邮箱 (异步的)',

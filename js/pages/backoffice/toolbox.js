@@ -155,7 +155,7 @@ const CombodoBackofficeToolbox = {
 			} else {
 				oCodeElements.each(function (iIdx, oElem) {
 					hljs.highlightBlock(oElem);
-					$(oElem).parent().addClass('ibo-hljs-container');
+					$(oElem).parent().addClass('common-hljs-container');
 				});
 			}
 		}
@@ -168,7 +168,7 @@ const CombodoBackofficeToolbox = {
 			} else {
 				oCodeElements.each(function (iIdx, oElem) {
 					hljs.highlightBlock(oElem);
-					$(oElem).parent().addClass('ibo-hljs-container');
+					$(oElem).parent().addClass('common-hljs-container');
 				});
 			}
 		}

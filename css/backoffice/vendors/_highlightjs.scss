@@ -1,0 +1,45 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+@import "../../common/vendors/_highlightjs";
+
+// Backoffice specific variables
+$ibo-vendors-highlightjs--padding: 0.9rem !default;
+$ibo-vendors-highlightjs--box-shadow: 0 0px 3px 2px inset rgba(0, 0, 0, 0.4) !default;
+$ibo-vendors-highlightjs--border-radius: $ibo-border-radius-300 !default;
+$ibo-vendors-highlightjs--code--padding-x: 5px !default;
+$ibo-vendors-highlightjs--code--padding-y: 3px !default;
+
+$ibo-vendors-highlightjs--background-color: #282b2e !default; 
+$ibo-vendors-highlightjs--color: #e0e2e4 !default; 
+$ibo-vendors-highlightjs--keyword--color: #93c763 !default; 
+$ibo-vendors-highlightjs--number--color: #ffcd22 !default; 
+$ibo-vendors-highlightjs--attribute--color: #668bb0 !default; 
+$ibo-vendors-highlightjs--regexp--color: #d39745 !default; 
+$ibo-vendors-highlightjs--meta--color: #557182 !default; 
+$ibo-vendors-highlightjs--tag--color: #8cbbad !default; 
+$ibo-vendors-highlightjs--string--color: #ec7600 !default; 
+$ibo-vendors-highlightjs--comment--color: #818e96 !default; 
+$ibo-vendors-highlightjs--selector-class--color: #A082BD !default; 
+$ibo-vendors-highlightjs--code--color: white !default;
+
+// Override common variables
+$common-vendors-highlightjs--padding: $ibo-vendors-highlightjs--padding;
+$common-vendors-highlightjs--box-shadow: $ibo-vendors-highlightjs--box-shadow;
+$common-vendors-highlightjs--border-radius: $ibo-vendors-highlightjs--border-radius;
+$common-vendors-highlightjs--code--padding-x: $ibo-vendors-highlightjs--code--padding-x;
+$common-vendors-highlightjs--code--padding-y: $ibo-vendors-highlightjs--code--padding-y;
+
+$common-vendors-highlightjs--background-color: $ibo-vendors-highlightjs--background-color;
+$common-vendors-highlightjs--color: $ibo-vendors-highlightjs--color;
+$common-vendors-highlightjs--keyword--color: $ibo-vendors-highlightjs--keyword--color;
+$common-vendors-highlightjs--number--color: $ibo-vendors-highlightjs--number--color;
+$common-vendors-highlightjs--attribute--color: $ibo-vendors-highlightjs--attribute--color;
+$common-vendors-highlightjs--regexp--color: $ibo-vendors-highlightjs--regexp--color;
+$common-vendors-highlightjs--meta--color: $ibo-vendors-highlightjs--meta--color;
+$common-vendors-highlightjs--tag--color: $ibo-vendors-highlightjs--tag--color;
+$common-vendors-highlightjs--string--color: $ibo-vendors-highlightjs--string--color;
+$common-vendors-highlightjs--comment--color: $ibo-vendors-highlightjs--comment--color;
+$common-vendors-highlightjs--selector-class--color: $ibo-vendors-highlightjs--selector-class--color;
+$common-vendors-highlightjs--code--color: $ibo-vendors-highlightjs--code--color;

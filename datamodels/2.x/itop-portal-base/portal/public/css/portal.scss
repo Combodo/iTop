@@ -17,7 +17,9 @@
  */
 
 @import 'variables.scss';
-@import '../../../../../js/ckeditor/build/compiled-theme';
+@import '../../../../../node_modules/ckeditor5-itop-build/build/styles/compiled-theme';
+@import '../../../../../css/common/vendors/_highlightjs.scss';
+
 
 /*!
  * Combodo portal template v1.0.0
@@ -1827,3 +1829,27 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px lighten($state-danger-border, 10);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px lighten($state-danger-border, 10);
 }
+
+
+/*****************************************************/
+/* Redefine highlightjs variables */
+/******************************************************/
+
+$common-vendors-highlightjs--padding: $ipb-vendors-highlightjs--padding;
+$common-vendors-highlightjs--box-shadow: $ipb-vendors-highlightjs--box-shadow;
+$common-vendors-highlightjs--border-radius: $ipb-vendors-highlightjs--border-radius;
+$common-vendors-highlightjs--code--padding-x: $ipb-vendors-highlightjs--code--padding-x;
+$common-vendors-highlightjs--code--padding-y: $ipb-vendors-highlightjs--code--padding-y;
+
+$common-vendors-highlightjs--background-color: $ipb-vendors-highlightjs--background-color;
+$common-vendors-highlightjs--color: $ipb-vendors-highlightjs--color;
+$common-vendors-highlightjs--keyword--color: $ipb-vendors-highlightjs--keyword--color;
+$common-vendors-highlightjs--number--color: $ipb-vendors-highlightjs--number--color;
+$common-vendors-highlightjs--attribute--color: $ipb-vendors-highlightjs--attribute--color;
+$common-vendors-highlightjs--regexp--color: $ipb-vendors-highlightjs--regexp--color;
+$common-vendors-highlightjs--meta--color: $ipb-vendors-highlightjs--meta--color;
+$common-vendors-highlightjs--tag--color: $ipb-vendors-highlightjs--tag--color;
+$common-vendors-highlightjs--string--color: $ipb-vendors-highlightjs--string--color;
+$common-vendors-highlightjs--comment--color: $ipb-vendors-highlightjs--comment--color;
+$common-vendors-highlightjs--selector-class--color: $ipb-vendors-highlightjs--selector-class--color;
+$common-vendors-highlightjs--code--color: $ipb-vendors-highlightjs--code--color;

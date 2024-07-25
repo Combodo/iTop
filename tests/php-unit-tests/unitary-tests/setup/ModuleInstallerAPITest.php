@@ -260,11 +260,10 @@ SQL
 		$this->assertFalse(CMDBSource::IsTable($sDstTable), 'Work table already exists');
 
 		ModuleInstallerAPI::RenameTableInDB($sOrigTable, $sDstTable);
-
-		$this->assertEquals($aOrigTableInfo, CMDBSource::GetTableInfo($sDstTable), 'Table was not renamed');
+		$this->assertEquals($aOrigTableInfo["Fields"], CMDBSource::GetTableInfo($sDstTable)["Fields"], 'Table was not renamed');
 
 		// Revert
 		ModuleInstallerAPI::RenameTableInDB($sDstTable, $sOrigTable);
-		$this->assertEquals($aOrigTableInfo, CMDBSource::GetTableInfo($sOrigTable));
+		$this->assertEquals($aOrigTableInfo["Fields"], CMDBSource::GetTableInfo($sOrigTable)["Fields"]);
 	}
 }

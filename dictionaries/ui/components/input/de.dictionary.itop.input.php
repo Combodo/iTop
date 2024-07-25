@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'UI:Component:Input:ChangeNotAllowed' => 'This change is not allowed~~',
+	'UI:Component:Input:ChangeNotAllowed' => 'Diese Änderung ist nicht erlaubt',
 	'UI:Component:Input:Password:DoesNotMatch' => 'Passwörter stimmen nicht überein',
-	'UI:Component:Input:Set:MinimumItems' => 'Minimum %1$s item(s) required~~',
+	'UI:Component:Input:Set:MinimumItems' => 'Mindestens %1$s Element(e) benötigt',
 ]);

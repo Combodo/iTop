@@ -10,8 +10,8 @@
  *
  */
 Dict::Add('PL PL', 'Polish', 'Polski', [
-	'UI:Datatables:Column:RowActions:Description' => '~~',
-	'UI:Datatables:Column:RowActions:Label' => '~~',
+	'UI:Datatables:Column:RowActions:Description' => '',
+	'UI:Datatables:Column:RowActions:Label' => '',
 	'UI:Datatables:Language:DisplayLength:All' => 'Wszystkie',
 	'UI:Datatables:Language:EmptyTable' => 'Brak danych w tej tabeli',
 	'UI:Datatables:Language:Error' => 'Wystąpił błąd podczas uruchamiania zapytania',
@@ -22,6 +22,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI:Datatables:Language:Sort:Ascending' => 'włącz sortowanie rosnąco',
 	'UI:Datatables:Language:Sort:Descending' => 'włącz sortowanie malejąco',
 	'UI:Datatables:Language:ZeroRecords' => 'Brak wyników',
-	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation~~',
-	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action ?~~',
+	'UI:Datatables:RowActions:ConfirmationDialog' => 'Potwierdzenie działania',
+	'UI:Datatables:RowActions:ConfirmationMessage' => 'Czy potwierdzasz działanie?',
 ]);

@@ -12,5 +12,5 @@
 Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:UserLDAP' => 'Użytkownik LDAP',
 	'Class:UserLDAP+' => 'Użytkownik uwierzytelniony przez LDAP',
-	'UserLDAP:server' => 'LDAP specifics~~',
+	'UserLDAP:server' => 'Serwer LDAP',
 ]);
