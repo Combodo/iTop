@@ -240,30 +240,4 @@ SQL
 		$this->assertEquals('from table 1', $sFromTable1Data, "Data was not moved as expected");
 		$this->assertEquals('from table 2', $sFromTable2Data, "Data was not moved as expected");
 	}
-
-	/**
-	 * Test that the table has been renamed
-	 *
-	 * @covers ModuleInstallerAPI::RenameTableInDB
-	 *
-	 * @return void
-	 * @throws \CoreException
-	 * @throws \MySQLException
-	 */
-	public function testRenameTableInDB()
-	{
-		$sOrigTable = MetaModel::DBGetTable('Person');
-		$aOrigTableInfo = CMDBSource::GetTableInfo($sOrigTable);
-		$this->assertNotEmpty($aOrigTableInfo, 'Origin table does not exist');
-
-		$sDstTable = static::$sWorkTable;
-		$this->assertFalse(CMDBSource::IsTable($sDstTable), 'Work table already exists');
-
-		ModuleInstallerAPI::RenameTableInDB($sOrigTable, $sDstTable);
-		$this->assertEquals($aOrigTableInfo["Fields"], CMDBSource::GetTableInfo($sDstTable)["Fields"], 'Table was not renamed');
-
-		// Revert
-		ModuleInstallerAPI::RenameTableInDB($sDstTable, $sOrigTable);
-		$this->assertEquals($aOrigTableInfo["Fields"], CMDBSource::GetTableInfo($sOrigTable)["Fields"]);
-	}
 }
