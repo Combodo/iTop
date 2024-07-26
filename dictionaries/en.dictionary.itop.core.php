@@ -661,7 +661,7 @@ Dict::Add('EN US', 'English', 'English', array(
 - Else the icon of the triggering object class,
 - Otherwise, the application compact logo will be used',
 	'Class:ActionNewsroom/Attribute:priority' => 'Priority',
-	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by descreasing priority, when displayed in the Newsroom popup',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by decreasing priority, when displayed in the Newsroom popup',
 	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critical',
 	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Critical',
 	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgent',

@@ -16,6 +16,13 @@
             <attribute id="contact_id"/>
           </attributes>
         </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="action_id"/>
+            <attribute id="contact_id"/>
+            <attribute id="trigger_id"/>
+          </attributes>
+        </reconciliation>
         <uniqueness_rules>
           <rule>
             <attributes>
@@ -116,6 +123,11 @@
         <style>
           <icon>../../images/icons/icons8-notification.svg</icon>
         </style>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
       </properties>
       <fields>
         <field id="title" xsi:type="AttributeString">
@@ -386,6 +398,11 @@
             <attribute id="title"/>
           </attributes>
         </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="title"/>
+          </attributes>
+        </reconciliation>
         <order>
           <columns>
             <column id="date" ascending="false" />
