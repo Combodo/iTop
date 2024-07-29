@@ -124,7 +124,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	- $this->attribute_external_key->attribute$ sintassi ricorsiva per qualsiasi attributo remoto,
 	- $current_contact->attribute$ attributo della Persona che ha attivato la notifica',
 	'Class:ActionNewsroom/Attribute:priority' => 'Priorità',
-	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by descreasing priority, when displayed in the Newsroom popup~~',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by decreasing priority, when displayed in the Newsroom popup~~',
 	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critica',
 	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Critica',
 	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgente',
