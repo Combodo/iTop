@@ -85,6 +85,8 @@ gitGraph
     commit id: "2024-01-17b" tag: "3.0.4"
     checkout support/3.2
     commit id: "2024-06-25" tag: "3.2.0-beta1"
+    commit id: "2024-07-24" tag: "3.2.0-rc1"
+    commit id: "2024-07-25" tag: "3.2.0-rc2"
 ```
 
 To learn more, check the [iTop community versions history on the official wiki](https://www.itophub.io/wiki/page?id=latest:release:start).
