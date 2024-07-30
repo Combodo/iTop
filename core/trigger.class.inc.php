@@ -200,7 +200,7 @@ abstract class TriggerOnObject extends Trigger
 	{
 		parent::DoCheckToWrite();
 
-		$sFilter = trim($this->Get('filter'));
+		$sFilter = trim($this->Get('filter') ?? '');
 		if (strlen($sFilter) > 0)
 		{
 			try
