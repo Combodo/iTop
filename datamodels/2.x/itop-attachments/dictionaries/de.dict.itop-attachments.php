@@ -59,5 +59,9 @@ oder melden Sie dem '.ITOP_APPLICATION_SHORT.' Administrator diesen Fehler, weil
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (beim Herunterladen eines Attachment eines Objekts)',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger für das Herunterladen des Attachments der angegebenen Klasse oder einer Unterklasse',
+	'Class:TriggerOnAttachmentAdded' => 'Trigger (beim Hinzufügen eines Attachments)',
+	'Class:TriggerOnAttachmentAdded+' => 'Trigger für das Hinzufügen des Attachments an einem Objekt der angegebenen Klasse oder einer Unterklasse',
+	'Class:TriggerOnAttachmentRemoved' => 'Trigger (beim Entfernen eines Attachments)',
+	'Class:TriggerOnAttachmentRemoved+' => 'Trigger für das Entfernen des Attachments an einem Objekt der angegebenen Klasse oder einer Unterklasse',
 	'UI:Attachments:DropYourFileHint' => 'Dateien in diesem Bereich ablegen...',
 ]);
