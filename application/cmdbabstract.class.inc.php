@@ -698,11 +698,16 @@ HTML
 			$sLinkedClass = $oAttDef->GetLinkedClass();
 
 			// Filter out links pointing to obsolete objects (if relevant)
-			//$oOrmLinkSet = $this->Get($sAttCode);
-			$oOrmLinkSet = $this->GetValues()[$sAttCode];
-			$oLinkSet = $oOrmLinkSet->ToDBObjectSet(utils::ShowObsoleteData());
+            if(array_key_exists($sAttCode, $this->GetValues()))
+            {
+                $oOrmLinkSet = $this->GetValues()[$sAttCode];
+            } else {
+                $oOrmLinkSet = $this->Get($sAttCode);
+            }
+            $oOrmLinkSet->Rewind();
+            $oLinkSet = $oOrmLinkSet->ToDBObjectSet(utils::ShowObsoleteData());
+            $iCount = $oLinkSet->Count();
 
-			$iCount = $oLinkSet->Count();
 			if ($this->IsNew()) {
 				$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
 			} else {
