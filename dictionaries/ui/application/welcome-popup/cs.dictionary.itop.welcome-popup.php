@@ -32,7 +32,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Description' => '<div>As we know your information intake is already at its max, you can now easily choose how you receive your notifications - via email, chat, or even the Newsroom feature</div>
 <div>You don\'t want to receive a certain type of alerts? Nothing easier with these advanced customization capabilities giving you the flexibility to tailor your experience to your needs. </div>
 <br>
-<div>Access your notifications center through the newsroom or your through your preferences and avoid information overload on all your communication channels!</div>~~',
+<div>Access your notifications center through the newsroom or through your preferences and avoid information overload on all your communication channels!</div>~~',
 	'UI:WelcomePopup:Message:320_05_A11yThemes:Title' => 'Accessibility for ' . ITOP_APPLICATION_SHORT . '\'s UI~~',
 	'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>To ensure ' . ITOP_APPLICATION_SHORT . '\'s accessibility, our team has been working on new back-office themes. WCAG compliants, those UI focus on making it easier for users with visual impairments to use the solution:
 <ul>
