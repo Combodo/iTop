@@ -86,7 +86,7 @@ class MFException extends Exception
 	 */
 	public function GetSourceLineNumber()
 	{
-		return $this->iSourceLineNumber - $this->iSourceLineOffset;
+		return intval($this->iSourceLineNumber) - $this->iSourceLineOffset;
 	}
 
 	/**
