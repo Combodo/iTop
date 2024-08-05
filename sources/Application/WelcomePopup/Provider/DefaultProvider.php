@@ -6,6 +6,9 @@
 
 namespace Combodo\iTop\Application\WelcomePopup\Provider;
 
+use Combodo\iTop\Controller\Newsroom\iTopNewsroomController;
+use Combodo\iTop\Controller\Notifications\NotificationsCenterController;
+use Combodo\iTop\Service\Router\Router;
 use Dict;
 use AbstractWelcomePopupExtension;
 use UserRights;
@@ -34,19 +37,19 @@ class DefaultProvider extends AbstractWelcomePopupExtension
 			MessageFactory::MakeForLeftIllustrationAsSVGMarkupRightTexts(
 				"320_02_Newsroom",
 				Dict::S("UI:WelcomePopup:Message:320_02_Newsroom:Title"),
-				Dict::S("UI:WelcomePopup:Message:320_02_Newsroom:Description"),
+				Dict::Format("UI:WelcomePopup:Message:320_02_Newsroom:Description", Router::GetInstance()->GenerateUrl(iTopNewsroomController::ROUTE_NAMESPACE . ".view_all")),
 				utils::GetAbsoluteUrlAppRoot() . "images/illustrations/undraw_newspaper.svg"
 			),
 			MessageFactory::MakeForLeftIllustrationAsSVGMarkupRightTexts(
 				"320_03_NotificationsCenter",
 				Dict::S("UI:WelcomePopup:Message:320_03_NotificationsCenter:Title"),
-				Dict::S("UI:WelcomePopup:Message:320_03_NotificationsCenter:Description"),
+				Dict::Format("UI:WelcomePopup:Message:320_03_NotificationsCenter:Description", Router::GetInstance()->GenerateUrl(NotificationsCenterController::ROUTE_NAMESPACE . ".display_page")),
 				utils::GetAbsoluteUrlAppRoot() . "images/illustrations/undraw_preferences_popup.svg"
 			),
 			MessageFactory::MakeForLeftTextsRightIllustrationAsSVGMarkup(
 				"320_05_A11yThemes",
 				Dict::S("UI:WelcomePopup:Message:320_05_A11yThemes:Title"),
-				Dict::S("UI:WelcomePopup:Message:320_05_A11yThemes:Description"),
+				Dict::Format("UI:WelcomePopup:Message:320_05_A11yThemes:Description", utils::GetAbsoluteUrlAppRoot() . "pages/preferences.php"),
 				utils::GetAbsoluteUrlAppRoot() . "images/illustrations/undraw_designer_mindset.svg"
 			),
 		];
@@ -57,7 +60,7 @@ class DefaultProvider extends AbstractWelcomePopupExtension
 			$aMessages[] = MessageFactory::MakeForLeftTextsRightIllustrationAsSVGMarkup(
 				"320_04_PowerfulNotifications_AdminOnly",
 				Dict::S("UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Title"),
-				Dict::S("UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Description"),
+				Dict::Format("UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Description", utils::GetAbsoluteUrlAppRoot() . "pages/notifications.php"),
 				utils::GetAbsoluteUrlAppRoot() . "images/illustrations/undraw_new_notifications.svg"
 			);
 		}

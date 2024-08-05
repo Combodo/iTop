@@ -24,7 +24,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 <br>
 <div>Customize your '.ITOP_APPLICATION_SHORT.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomePopup:Message:320_02_Newsroom:Title' => 'Say "Hello" to the newsroom~~',
-	'UI:WelcomePopup:Message:320_02_Newsroom:Description' => '<div>Say goodbye to cluttered inboxes and hello to personalized alerts with <b>'.ITOP_APPLICATION_SHORT.'\'s Newsroom</b>!</div>
+	'UI:WelcomePopup:Message:320_02_Newsroom:Description' => '<div>Say goodbye to cluttered inboxes and hello to personalized alerts with <a href="%1$s" target="_blank">'.ITOP_APPLICATION_SHORT.'\'s Newsroom</a>!</div>
 <div>Newsroom allows you to easily manage notifications within the platform, so you can stay on top of important updates without constantly checking your email. With the ability to mark messages as read or unread, and automatically delete old notifications, you have complete control over your notifications. </div>
 <br>
 <div>Try it out today and streamline your ' . ITOP_APPLICATION_SHORT . '\'s communication experience!</div>~~',
@@ -32,9 +32,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Description' => '<div>As we know your information intake is already at its max, you can now easily choose how you receive your notifications - via email, chat, or even the Newsroom feature</div>
 <div>You don\'t want to receive a certain type of alerts? Nothing easier with these advanced customization capabilities giving you the flexibility to tailor your experience to your needs. </div>
 <br>
-<div>Access your notifications center through the newsroom or through your preferences and avoid information overload on all your communication channels!</div>~~',
+<div>Access your <a href="%1$s" target="_blank">notifications center</a> through the newsroom or through your preferences and avoid information overload on all your communication channels!</div>~~',
 	'UI:WelcomePopup:Message:320_05_A11yThemes:Title' => 'Accessibility for ' . ITOP_APPLICATION_SHORT . '\'s UI~~',
-	'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>To ensure ' . ITOP_APPLICATION_SHORT . '\'s accessibility, our team has been working on new back-office themes. WCAG compliants, those UI focus on making it easier for users with visual impairments to use the solution:
+	'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>To ensure ' . ITOP_APPLICATION_SHORT . '\'s accessibility, our team has been working on <a href="%1$s" target="_blank">new back-office themes</a>. WCAG compliants, those UI focus on making it easier for users with visual impairments to use the solution:
 <ul>
 	<li><b>Color-blind theme:</b> Designed to help users with colorblindness, this theme actually breaks down in two sub-themes to adapt to specific cases: </li>
 		<ul>
@@ -46,7 +46,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 </ul>
 </div>~~',
 	'UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Title' => 'Powerful notifications~~',
-	'UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Description' => '<div>'.ITOP_APPLICATION_SHORT.'\'s Newsroom gives you a new way to <b>automate</b> your alerts based on events with recurrence, so you can easily set up rules that work for you. </div>
+	'UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Description' => '<div>'.ITOP_APPLICATION_SHORT.'\'s Newsroom gives you a new way to <a href="%1$s" target="_blank"><b>automate</b> your alerts based on events</a> with recurrence, so you can easily set up rules that work for you. </div>
 <div>Our <b>priority-based notifications sorting</b> ensures that important messages are displayed first, while our URL customization options allow you to direct recipients to the right place. </div>
 <br>
 <div>With support for <b>multiple languages</b>, you have now complete control over your notifications display.</div>
