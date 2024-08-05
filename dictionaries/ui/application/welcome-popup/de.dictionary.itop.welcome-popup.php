@@ -24,16 +24,16 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 <div>Passen Sie Ihre ' . ITOP_APPLICATION_SHORT . ' Präferenzen an, um ein personalisiertes Erlebnis zu erhalten.</div>',
     'UI:WelcomePopup:Message:320_02_Newsroom:Title' => 'Sagen Sie "Hallo" zum Newsroom',
     'UI:WelcomePopup:Message:320_02_Newsroom:Description' => '<div>Sagen Sie Auf Wiedersehen zu überfüllten Posteingängen und Hallo zu personalisierten Benachrichtigungen mit dem <b>Newsroom von '.ITOP_APPLICATION_SHORT.'</b>!</div>
-<div>Der Newsroom ermöglicht es Ihnen, Benachrichtigungen innerhalb der Plattform einfach zu verwalten, sodass Sie über wichtige Updates informiert bleiben, ohne ständig Ihre E-Mails überprüfen zu müssen. Mit der Fähigkeit, Nachrichten als gelesen oder ungelesen zu markieren und alte Benachrichtigungen automatisch zu löschen, haben Sie die volle Kontrolle über Ihre Benachrichtigungen.</div>
+<div><a href="%1$s" target="_blank">Der Newsroom</a> ermöglicht es Ihnen, Benachrichtigungen innerhalb der Plattform einfach zu verwalten, sodass Sie über wichtige Updates informiert bleiben, ohne ständig Ihre E-Mails überprüfen zu müssen. Mit der Fähigkeit, Nachrichten als gelesen oder ungelesen zu markieren und alte Benachrichtigungen automatisch zu löschen, haben Sie die volle Kontrolle über Ihre Benachrichtigungen.</div>
 <br>
 <div>Probieren Sie es noch heute aus und optimieren Sie die Benachrichtigungserfahrung von ' . ITOP_APPLICATION_SHORT . '!</div>',
     'UI:WelcomePopup:Message:320_03_NotificationsCenter:Title' => 'Benachrichtigungszentrum',
     'UI:WelcomePopup:Message:320_03_NotificationsCenter:Description' => '<div>Da wir wissen, dass Ihre Informationsaufnahme bereits am Limit ist, können Sie nun leicht wählen, wie Sie Ihre Benachrichtigungen erhalten - per E-Mail, Chat oder sogar über die Newsroom-Funktion.</div>
 <div>Sie möchten eine bestimmte Art von Benachrichtigungen nicht erhalten? Nichts leichter als das mit diesen erweiterten Anpassungsmöglichkeiten, die Ihnen die Flexibilität geben, Ihr Erlebnis an Ihre Bedürfnisse anzupassen.</div>
 <br>
-<div>Zugriff auf Ihr Benachrichtigungszentrum über den Newsroom oder über Ihre Präferenzen und vermeiden Sie Informationsüberflutung auf allen Ihren Kommunikationskanälen!</div>',
+<div>Zugriff auf Ihr <a href="%1$s" target="_blank">Benachrichtigungszentrum</a> über den Newsroom oder über Ihre Präferenzen und vermeiden Sie Informationsüberflutung auf allen Ihren Kommunikationskanälen!</div>',
     'UI:WelcomePopup:Message:320_05_A11yThemes:Title' => 'Barrierefreiheit für die Benutzeroberfläche von ' . ITOP_APPLICATION_SHORT . '',
-    'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>Um die Barrierefreiheit von ' . ITOP_APPLICATION_SHORT . ' zu gewährleisten, hat unser Team an neuen Back-Office-Themen gearbeitet. WCAG-konform konzentrieren sich diese Benutzeroberflächen darauf, es Benutzern mit Sehbehinderungen zu erleichtern, die Lösung zu verwenden:
+    'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>Um die Barrierefreiheit von ' . ITOP_APPLICATION_SHORT . ' zu gewährleisten, hat unser Team an <a href="%1$s" target="_blank">neuen Back-Office-Themen</a> gearbeitet. WCAG-konform konzentrieren sich diese Benutzeroberflächen darauf, es Benutzern mit Sehbehinderungen zu erleichtern, die Lösung zu verwenden:
 <ul>
     <li><b>Farbenblindes Thema:</b> Entwickelt, um Benutzern mit Farbenblindheit zu helfen, teilt sich dieses Thema tatsächlich in zwei Unterthemen auf, um sich an spezifische Fälle anzupassen:</li>
         <ul>

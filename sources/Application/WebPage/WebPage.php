@@ -919,7 +919,7 @@ class WebPage implements Page
 
 		// Check if URI is absolute ("://" do allow any protocol), otherwise warn that it's a deprecated behavior
 		if (false === stripos($sLinkedScriptAbsUrl, "://")) {
-			IssueLog::Warning("Linked script added to page via deprecated API with a non absolute URL, it may lead to it not being loaded and causing javascript errors.", null, [
+			IssueLog::Debug("Linked script added to page with a non absolute URL, it may lead to it not being loaded and causing javascript errors. See alternatives WebPage::LinkScriptFromXXX", null, [
 				"linked_script_url" => $sLinkedScriptAbsUrl,
 				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
 			]);
@@ -1188,7 +1188,7 @@ JS;
 
 		// Check if URI is absolute ("://" do allow any protocol), otherwise warn that it's a deprecated behavior
 		if (false === stripos($sLinkedStylesheet, "://")) {
-			IssueLog::Warning("Linked stylesheet added to page via deprecated API with a non absolute URL, it may lead to it not being loaded and causing visual glitches.", null, [
+			IssueLog::Debug("Linked stylesheet added to page with a non absolute URL, it may lead to it not being loaded and causing visual glitches. See alternatives WebPage::LinkStylesheetFromXXX", null, [
 				"linked_stylesheet_url" => $sLinkedStylesheet,
 				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
 			]);

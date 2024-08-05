@@ -42,7 +42,7 @@ $ibo-navigation-menu--notifications-show-all-multiple--ibo-popover-menu--indicat
 
 $ibo-navigation-menu--notifications-dismiss-all--icon--margin: $ibo-spacing-0 10px $ibo-spacing-0 $ibo-spacing-0 !default;
 
-$ibo-popover-menu--item--no-message--image--svg--width : 100% !default;
+$ibo-popover-menu--item--no-message--image--svg--width : 220px !default;
 $ibo-popover-menu--item--no-message--image--svg--height : inherit !default;
 $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
 
@@ -147,8 +147,7 @@ $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
   text-align: center;
 }
 .ibo-popover-menu--item--no-message--image > svg {
-  display: flex;
-  width: $ibo-popover-menu--item--no-message--image--svg--width;
+  max-width: $ibo-popover-menu--item--no-message--image--svg--width;
   height: $ibo-popover-menu--item--no-message--image--svg--height;
   padding: $ibo-popover-menu--item--no-message--image--svg--padding;
 }
