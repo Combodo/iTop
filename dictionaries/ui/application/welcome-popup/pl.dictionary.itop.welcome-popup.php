@@ -24,7 +24,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 <br>
 <div>Dostosuj swoją aplikację '.ITOP_APPLICATION_SHORT.' w preferencjach dotyczących spersonalizowanych doświadczeń.</div>',
 	'UI:WelcomePopup:Message:320_02_Newsroom:Title' => 'Przywitaj się z newsroomem',
-	'UI:WelcomePopup:Message:320_02_Newsroom:Description' => '<div>Pożegnaj zaśmiecone skrzynki odbiorcze i przywitaj się ze spersonalizowanymi alertami <b>'.ITOP_APPLICATION_SHORT.'\'s Newsroom</b>!</div>
+	'UI:WelcomePopup:Message:320_02_Newsroom:Description' => '<div>Pożegnaj zaśmiecone skrzynki odbiorcze i przywitaj się ze spersonalizowanymi alertami <a href="%1$s" target="_blank">'.ITOP_APPLICATION_SHORT.'\'s Newsroom</a>!</div>
 <div>Newsroom umożliwia łatwe zarządzanie powiadomieniami w ramach platformy, dzięki czemu możesz być na bieżąco z ważnymi aktualizacjami bez ciągłego sprawdzania poczty. Dzięki możliwości oznaczania wiadomości jako przeczytanych lub nieprzeczytanych oraz automatycznego usuwania starych powiadomień, masz pełną kontrolę nad swoimi powiadomieniami. </div>
 <br>
 <div>Wypróbuj już dziś i usprawnij swoje doświadczenie komunikacji w ' . ITOP_APPLICATION_SHORT . '!</div>',

@@ -25,7 +25,7 @@ Nous espérons que vous apprécierez cette version autant que nous avons pris pl
 <br>
 <div>Paramétrez vos préférences iTop pour une expérience personnalisée.</div>',
 	'UI:WelcomePopup:Message:320_02_Newsroom:Title' => 'Decouvrez la newsroom',
-	'UI:WelcomePopup:Message:320_02_Newsroom:Description' => '<div>Dites adieu aux boîtes de réception encombrées et bonjour aux alertes personnalisées grâce à la <b>Newsroom d\''.ITOP_APPLICATION_SHORT.'</b> !</div>
+	'UI:WelcomePopup:Message:320_02_Newsroom:Description' => '<div>Dites adieu aux boîtes de réception encombrées et bonjour aux alertes personnalisées grâce à la <a href="%1$s" target="_blank">Newsroom d\''.ITOP_APPLICATION_SHORT.'</a> !</div>
 <br>
 <div>La Newsroom vous permet de gérer facilement les notifications au sein de la plateforme, afin que vous puissiez rester au courant des mises à jour importantes sans avoir à vérifier constamment vos méls. Avec la possibilité de marquer les messages comme lus ou non lus, et de supprimer automatiquement les anciennes notifications, vous avez un contrôle total sur vos notifications</div>
 <br>
@@ -34,9 +34,9 @@ Nous espérons que vous apprécierez cette version autant que nous avons pris pl
 	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Description' => '<div>Comme nous savons que vous êtes déjà saturé d\'informations, vous pouvez désormais choisir facilement la manière dont vous recevez vos notifications - par mél, par chat ou même par la fonction Newsroom.</div>
 <div>Vous ne voulez pas recevoir un certain type d\'alerte ? Rien de plus facile avec ces fonctionnalités de personnalisation avancées qui permettent d\'adapter votre expérience utilisateur à vos besoins.</div>
 <br>
-<div>Accédez à votre centre de notifications via la newsroom ou vos préférences et évitez la surcharge d\'information sur vos canaux de communication !</div>',
+<div>Accédez à votre <a href="%1$s" target="_blank">centre de notifications</a> via la newsroom ou vos préférences et évitez la surcharge d\'information sur vos canaux de communication !</div>',
 	'UI:WelcomePopup:Message:320_05_A11yThemes:Title' => 'Accessibilité de l\'interface utilisateur d\'' . ITOP_APPLICATION_SHORT,
-	'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>Afin d\'assurer l\'accessibilité d\'' . ITOP_APPLICATION_SHORT . ', notre équipe a travaillé sur de nouveaux thèmes pour le backoffice. Conformes aux normes WCAG, ces interfaces utilisateur visent à faciliter l\'utilisation de la solution par les utilisateurs souffrant de déficiences visuelles :
+	'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>Afin d\'assurer l\'accessibilité d\'' . ITOP_APPLICATION_SHORT . ', notre équipe a travaillé sur de <a href="%1$s" target="_blank">nouveaux thèmes pour la console</a>. Conformes aux normes WCAG, ces interfaces utilisateur visent à faciliter l\'utilisation de la solution par les utilisateurs souffrant de déficiences visuelles :
 <ul>
 	<li><b>Thème daltonien :</b> Conçu pour aider les utilisateurs daltoniens, ce thème se décompose en deux sous-thèmes pour s\'adapter à des cas spécifiques : </li>
 		<ul>
@@ -48,8 +48,8 @@ Nous espérons que vous apprécierez cette version autant que nous avons pris pl
 </li>
 </ul>
 </div>',
-	'UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Title' => 'Des notifications efficaces',
-	'UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Description' => '<div>La Newsroom d\''.ITOP_APPLICATION_SHORT.' vous offre une nouvelle façon d\'<b>automatiser</b> vos alertes en fonction d\'événements récurrents, ce qui vous permet de définir facilement des règles qui vous conviennent.</div>
+	'UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Title' => 'Des notifications évoluées',
+	'UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Description' => '<div>La Newsroom d\''.ITOP_APPLICATION_SHORT.' vous offre une nouvelle façon <a href="%1$s" target="_blank">d\'<b>automatiser</b> vos alertes en fonction d\'événements récurrents</a>, ce qui vous permet de définir facilement des règles qui vous conviennent.</div>
 <div>Notre <b>tri des notifications basé sur la priorité</b> garantit que les messages importants sont affichés en premier, tandis que nos options de personnalisation des URL vous permettent de diriger les destinataires au bon endroit.</div>
 <br>
 <div>Grâce à la prise en charge de <b>plusieurs langues</b>, vous avez désormais un contrôle total sur l\'affichage de vos notifications.</div>
