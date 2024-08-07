@@ -332,7 +332,7 @@ EOF
 			
 				$(oInput).datetimepicker({
 							showOn: 'button',
-							buttonText: "<i class=\"fas fa-calendar-alt\"><\/i>",
+							buttonText: "",
 							dateFormat: $sJSDateFormat,
 							constrainInput: false,
 							changeMonth: true,
