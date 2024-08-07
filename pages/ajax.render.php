@@ -32,15 +32,6 @@ try
 	require_once(APPROOT.'/application/startup.inc.php');
 	require_once(APPROOT.'/application/user.preferences.class.inc.php');
 
-	// check if header contains X-Combodo-Ajax for POST request (CSRF protection for ajax calls)
-	if (!isset($_SERVER['HTTP_X_COMBODO_AJAX']) && $_SERVER['REQUEST_METHOD'] !== 'GET') {
-		$sReferer = $_SERVER['HTTP_REFERER'];
-		$sErrorMsg = 'Unauthorized access. Please see https://www.itophub.io/wiki/page?id=3_2_0:release:developer#checking_for_the_presence_of_specific_header_in_the_post_to_enhance_protection_against_csrf_attacks';
-		IssueLog::Error("Unprotected ajax call : $sErrorMsg", LogChannels::SECURITY, ['referer' => $sReferer]);
-		header('HTTP/1.1 401 Unauthorized');
-		die($sErrorMsg);
-	}
-
 	IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 	$oKPI = new ExecutionKPI();
 	$oKPI->ComputeAndReport('Data model loaded');
@@ -67,6 +58,20 @@ try
 			break;
 	}
 	LoginWebPage::DoLoginEx($sRequestedPortalId, false);
+
+	// check if header contains X-Combodo-Ajax for POST request (CSRF protection for ajax calls)
+	// check must be performed after DoLoginEx to be logged in and to be able to check the token (based on the transaction id)
+	if (!isset($_SERVER['HTTP_X_COMBODO_AJAX']) && $_SERVER['REQUEST_METHOD'] !== 'GET') {
+		$sTransactionId = utils::ReadPostedParam("transaction_id");
+		if (!utils::IsTransactionValid($sTransactionId, false)) { // if a form is submitted without header but contains a token... should be exceptional
+			$sReferer = $_SERVER['HTTP_REFERER'];
+			$sErrorMsg = 'Unauthorized access. Please see https://www.itophub.io/wiki/page?id=3_2_0:release:developer#checking_for_the_presence_of_specific_header_in_the_post_to_enhance_protection_against_csrf_attacks';
+			IssueLog::Error("Unprotected ajax call : $sErrorMsg", LogChannels::SECURITY, ['referer' => $sReferer]);
+			header('HTTP/1.1 401 Unauthorized');
+			die($sErrorMsg);
+		}
+	}
+
 	$oKPI->ComputeAndReport('User login');
 
 	// N°2780 Fix ContextTag for console

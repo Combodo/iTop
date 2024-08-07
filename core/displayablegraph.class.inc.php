@@ -1496,6 +1496,7 @@ class DisplayableGraph extends SimpleGraph
 				'excluded'             => $aExcludedByClass,
 				'grouping_threshold'   => $iGroupingThreshold,
 				'export_as_pdf'        => array('url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')),
+				'transaction_id'        => utils::GetNewTransactionId(),
 				'export_as_attachment' => array('url' => $sExportAsDocumentURL, 'label' => Dict::S('UI:Relation:ExportAsAttachment'), 'obj_class' => $sObjClass, 'obj_key' => $iObjKey),
 				'drill_down'           => array('url' => $sDrillDownURL, 'label' => Dict::S('UI:Relation:DrillDown')),
 				'labels'               => array(

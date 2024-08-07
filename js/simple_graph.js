@@ -19,6 +19,7 @@ $(function()
 					sources: {},
 					excluded: {},
 					export_as_pdf: null,
+					transaction_id: null,
 					page_format: { label: 'Page Format:', values: { A3: 'A3', A4: 'A4', Letter: 'Letter' }, 'default': 'A4'},
 					page_orientation: { label: 'Page Orientation:', values: { P: 'Portait', L: 'Landscape' }, 'default': 'L' },
 					labels: {
@@ -590,6 +591,7 @@ $(function()
 				var sHtmlForm = '<div id="GraphExportDlg'+this.element.attr('id')+'"><form id="graph_'+this.element.attr('id')+'_export_dlg" target="_blank" action="'+sSubmitUrl+'" method="post">';
 				sHtmlForm += '<input type="hidden" name="g" value="'+this.options.grouping_threshold+'">';
 				sHtmlForm += '<input type="hidden" name="context_key" value="'+this.options.context_key+'">';
+				sHtmlForm += '<input type="hidden" name="transaction_id" value="'+this.options.transaction_id+'">';
 				$('#'+sId+'_contexts').multiselect('getChecked').each(function() {
 					sHtmlForm += '<input type="hidden" name="contexts['+$(this).val()+']" value="'+me.options.additional_contexts[$(this).val()].oql+'">';
 				});
