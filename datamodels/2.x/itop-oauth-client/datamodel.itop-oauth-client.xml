@@ -338,6 +338,9 @@ HTML
             <value id="IMAP">
               <code>IMAP</code>
             </value>
+            <value id="WEBHOOK">
+              <code>WEBHOOK</code>
+            </value>
           </values>
           <sql>scope</sql>
           <default_value>SMTP,IMAP</default_value>
@@ -659,6 +662,9 @@ HTML
             </value>
             <value id="IMAP">
               <code>IMAP</code>
+            </value>
+            <value id="WEBHOOK">
+              <code>WEBHOOK</code>
             </value>
           </values>
           <sql>scope</sql>
