@@ -1057,8 +1057,13 @@ class ObjectFormManager extends FormManager
 		// Adding attachment field
 		if ($bClassAllowed)
 		{
+			// only one instance allowed
+			if(array_key_exists(AttachmentPlugIn::class, $this->aPlugins)){
+				throw new Exception("Unable to process field `$sId`, AttachmentPlugIn has already been initialized with field `" . $this->aPlugins[AttachmentPlugIn::class]['field']->GetId() . '`');
+			}
+
 			// set id to a unique key - avoid collisions with another attribute that could exist with the name 'attachments'
-			$oField = new FileUploadField('attachments_plugin');
+			$oField = new FileUploadField($sId);
 			$oField->SetLabel(Dict::S('Portal:Attachments'))
 				->SetUploadEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_attachment_add'))
 				->SetDownloadEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_attachment_download',
