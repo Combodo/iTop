@@ -2259,7 +2259,7 @@ EOF
 			$this->CompileCommonProperty('is_null_allowed', $oField, $aParameters, $sModuleRelativeDir, false);
 			$this->CompileCommonProperty('default_value', $oField, $aParameters, $sModuleRelativeDir, '');
 			$this->CompileCommonProperty('allowed_values', $oField, $aParameters, $sModuleRelativeDir);
-			$aParameters['class_category'] = $this->GetPropString($oField, 'class_category');
+			$aParameters['class_category'] = $this->GetPropString($oField, 'class_category', '');
 			$aParameters['more_values'] = $this->GetPropString($oField, 'more_values', '');
 			$aParameters['depends_on'] = $sDependencies;
 		}else {
