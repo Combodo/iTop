@@ -30,7 +30,10 @@ class FileUploadField extends AbstractSimpleField
 {
 	/** @var bool DEFAULT_ALLOW_DELETE */
 	const DEFAULT_ALLOW_DELETE = true;
-	/** @var bool DEFAULT_DISPLAY_OPENED */
+	/**
+	  * @var bool DEFAULT_DISPLAY_OPENED
+	  * @since 3.2.1 N°7534
+	  */
 	const DEFAULT_DISPLAY_OPENED = false;
 
 	/** @var string|null $sTransactionId */
@@ -41,11 +44,17 @@ class FileUploadField extends AbstractSimpleField
 	protected $sUploadEndpoint;
 	/** @var string|null $sDownloadEndpoint */
 	protected $sDownloadEndpoint;
-	/** @var string|null $sViewEndpoint */
+	/**
+	  * @var string|null $sViewEndpoint
+	  * @since 3.2.1 N°7534
+	  */
 	protected ?string $sDisplayEndpoint;
 	/** @var bool $bAllowDelete */
 	protected $bAllowDelete;
-	/** @var bool $bDisplayOpened */
+	/**
+	  * @var bool $bDisplayOpened
+	  * @since 3.2.1 N°7534
+	  */
 	protected bool $bDisplayOpened;
 
 	/**
@@ -144,6 +153,7 @@ class FileUploadField extends AbstractSimpleField
 
 	/**
 	 * @return string|null
+	 * @since 3.2.1 N°7534
 	 */
 	public function GetDisplayEndpoint(): ?string
 	{
@@ -198,6 +208,7 @@ class FileUploadField extends AbstractSimpleField
 	 * Returns if the field should be displayed opened on initialization
 	 *
 	 * @return boolean
+	 * @since 3.2.1 N°7534
 	 */
 	public function GetDisplayOpened() : bool
 	{

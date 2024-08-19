@@ -68,6 +68,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 	 * @param cmdbAbstractObject $oObject
 	 *
 	 * @return bool
+	 * @since 3.2.1 N°7534
 	 */
 	public static function IsAttachmentAllowedForObject(cmdbAbstractObject $oObject) : bool
 	{
