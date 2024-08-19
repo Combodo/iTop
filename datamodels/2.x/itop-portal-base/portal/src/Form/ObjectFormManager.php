@@ -1012,7 +1012,8 @@ class ObjectFormManager extends FormManager
 
 		// fallback Checking if the instance has attachments
 		// (in case attachment is not explicitly declared in layout)
-		if (!$this->IsPluginInitialized(AttachmentPlugIn::class)
+		if (class_exists('Attachment') && class_exists('AttachmentPlugIn')
+		&& !$this->IsPluginInitialized(AttachmentPlugIn::class)
 		&& AttachmentPlugIn::IsAttachmentAllowedForObject($this->oObject)){
 			$this->AddAttachmentField($oForm, 'attachments_plugin', $aFieldsExtraData);
 		}
