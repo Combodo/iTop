@@ -771,7 +771,7 @@ try
 				$sAction = utils::ReadParam('action', '');
 				$sSelectionMode = utils::ReadParam('selection_mode');
 				$sResultListOuterSelector = utils::ReadParam('result_list_outer_selector', null,false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER); // actually an Id not a selector
-				$scssCount = utils::ReadParam('css_count', null,false,utils::ENUM_SANITIZATION_FILTER_ELEMENT_ID_SELECTOR);
+				$scssCount = utils::ReadParam('css_count', null,false,utils::ENUM_SANITIZATION_FILTER_ELEMENT_SELECTOR);
 				$sTableInnerId = utils::ReadParam('table_inner_id', null,false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 
 				$oFilter = new DBObjectSearch($sClass);
