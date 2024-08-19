@@ -114,10 +114,10 @@ class utils
 	 */
 	public const ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER = 'element_identifier';
 	/**
-	 * @var string For XML / HTML node id selector
+	 * @var string For XML / HTML node id/class selector
 	 * @since 3.1.2 3.2.1
 	 */
-	public const ENUM_SANITIZATION_FILTER_ELEMENT_ID_SELECTOR = 'element_id_selector';
+	public const ENUM_SANITIZATION_FILTER_ELEMENT_SELECTOR = 'element_selector';
 	/**
 	 * @var string For variables names
 	 * @since 3.0.0
@@ -510,7 +510,7 @@ class utils
 				break;
 
 			// For XML / HTML node id selector
-			case static::ENUM_SANITIZATION_FILTER_ELEMENT_ID_SELECTOR:
+			case static::ENUM_SANITIZATION_FILTER_ELEMENT_SELECTOR:
 				$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
 					['options' => ['regexp' => '/^[#\.][A-Za-z0-9][A-Za-z0-9_-]*$/']]);
 				break;
