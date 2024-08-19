@@ -660,13 +660,13 @@ class ObjectFormManager extends FormManager
 		{
 			// handle plugins fields
 			if(array_key_exists('plugin', $aFieldsExtraData[$sAttCode])){
-				$aPluginName = $aFieldsExtraData[$sAttCode]['plugin'];
-				switch($aPluginName){
+				$sPluginName = $aFieldsExtraData[$sAttCode]['plugin'];
+				switch($sPluginName){
 					case AttachmentPlugIn::class:
 						$this->AddAttachmentField($oForm, $sAttCode, $aFieldsExtraData);
 						break;
 					default:
-						throw new Exception('Unknown plugin ' . $aPluginName);
+						throw new Exception('Unknown plugin ' . $sPluginName);
 				}
 				continue;
 			}
