@@ -80,11 +80,17 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		$sFieldWrapperId = 'form_upload_wrapper_' . $this->oField->GetGlobalId();
 		$sFieldDescriptionForHTMLTag = ($this->oField->HasDescription()) ? 'data-tooltip-content="'.utils::HtmlEntities($this->oField->GetDescription()).'"' : '';
 
-		// If collapsed
-		$sCollapseTogglerClass .= ' collapsed';
-		$sCollapseTogglerExpanded = 'false';
-		$sCollapseTogglerIconClass = $sCollapseTogglerIconHiddenClass;
-		$sCollapseJSInitState = 'false';
+		// Preparing collapsed state
+		if ($this->oField->GetDisplayOpened()) {
+			$sCollapseTogglerExpanded = 'true';
+			$sCollapseTogglerIconClass = $sCollapseTogglerIconVisibleClass;
+			$sCollapseJSInitState = 'true';
+		} else {
+			$sCollapseTogglerClass .= ' collapsed';
+			$sCollapseTogglerExpanded = 'false';
+			$sCollapseTogglerIconClass = $sCollapseTogglerIconHiddenClass;
+			$sCollapseJSInitState = 'false';
+		}
 
 		// Label
 		$oOutput->AddHtml('<div class="form_field_label">');
@@ -183,6 +189,7 @@ JS
 			'{{iAttId}}',
 			'{{sLineStyle}}',
 			'{{sDocDownloadUrl}}',
+			'{{sDocDisplayUrl}}',
 		     true,
 			'{{sAttachmentThumbUrl}}',
 			'{{sFileName}}',
@@ -234,6 +241,7 @@ JS
 						var \$oAttachmentTBody = $(this).closest('.fileupload_field_content').find('.attachments_container table#$sAttachmentTableId>tbody'),
 							iAttId = data.result.att_id,
 							sDownloadLink = '{$this->oField->GetDownloadEndpoint()}'.replace(/-sAttachmentId-/, iAttId),
+							sDisplayLink = '{$this->oField->GetDisplayEndpoint()}'.replace(/-sAttachmentId-/, iAttId),
 							sAttachmentMeta = '<input id="attachment_'+iAttId+'" type="hidden" name="attachments[]" value="'+iAttId+'"/>';
 
 						// hide "no attachment" line if present
@@ -247,6 +255,7 @@ JS
 							{search: "{{iAttId}}", replace:iAttId },
 							{search: "{{lineStyle}}", replace:'' },
 							{search: "{{sDocDownloadUrl}}", replace:sDownloadLink },
+							{search: "{{sDocDisplayUrl}}", replace:sDisplayLink },
 							{search: "{{sAttachmentThumbUrl}}", replace:data.result.icon },
 							{search: "{{sFileName}}", replace: data.result.msg },
 							{search: "{{sAttachmentMeta}}", replace:sAttachmentMeta },
@@ -402,6 +411,7 @@ HTML
 				$sFileName = utils::EscapeHtml($oDoc->GetFileName());
 
 				$sDocDownloadUrl = str_replace('-sAttachmentId-', $iAttId, $this->oField->GetDownloadEndpoint());
+				$sDocDisplayUrl = str_replace('-sAttachmentId-', $iAttId, $this->oField->GetDisplayEndpoint());
 
 				$sAttachmentThumbUrl = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 				$bHasPreview = false;
@@ -431,6 +441,7 @@ HTML
 					$iAttId,
 					$sLineStyle,
 					$sDocDownloadUrl,
+					$sDocDisplayUrl,
 					$bHasPreview,
 					$sAttachmentThumbUrl,
 					$sFileName,
@@ -485,6 +496,7 @@ HTML;
 	 * @param int $iAttId
 	 * @param string $sLineStyle
 	 * @param string $sDocDownloadUrl
+	 * @param string $sDocDisplayUrl
 	 * @param bool $bHasPreview replace string $sIconClass since 3.0.1
 	 * @param string $sAttachmentThumbUrl
 	 * @param string $sFileName
@@ -499,7 +511,7 @@ HTML;
 	 * @since 2.7.0
 	 */
 	protected static function GetAttachmentTableRow(
-		$iAttId, $sLineStyle, $sDocDownloadUrl, $bHasPreview, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
+		$iAttId, $sLineStyle, $sDocDownloadUrl, $sDocDisplayUrl, $bHasPreview, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
 		$iFileSizeRaw, $iFileDownloadsCount, $sAttachmentDate, $iAttachmentDateRaw, $bIsDeleteAllowed
 	) {
 		$sDeleteCell = '';
@@ -511,16 +523,16 @@ HTML;
 		$sHtml =  "<tr id=\"display_attachment_{$iAttId}\" class=\"attachment\" $sLineStyle>";
 
 		if($bHasPreview) {
-			$sHtml .= "<td role=\"icon\"><a href=\"$sDocDownloadUrl\" target=\"_blank\" data-tooltip-content=\"<img class='attachment-tooltip' src='{$sDocDownloadUrl}'>\" data-tooltip-html-enabled=true><img src=\"$sAttachmentThumbUrl\" ></a></td>";
+			$sHtml .= "<td role=\"icon\"><a href=\"$sDocDisplayUrl\" target=\"_blank\" data-tooltip-content=\"<img class='attachment-tooltip' src='{$sDocDownloadUrl}'>\" data-tooltip-html-enabled=true><img src=\"$sAttachmentThumbUrl\" ></a></td>";
 		} else {
-			$sHtml .= "<td role=\"icon\"><a href=\"$sDocDownloadUrl\" target=\"_blank\"><img src=\"$sAttachmentThumbUrl\" ></a></td>";
+			$sHtml .= "<td role=\"icon\"><a href=\"$sDocDisplayUrl\" target=\"_blank\"><img src=\"$sAttachmentThumbUrl\" ></a></td>";
 		}
 
 		$sHtml .=  <<<HTML
-		<td role="filename"><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
+		<td role="filename"><a href="$sDocDisplayUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
 	    <td role="formatted-size" data-order="$iFileSizeRaw">$sFileSize</td>
 	    <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDate</td>
-	    <td role="downloads-count">$iFileDownloadsCount</td>
+	    <td role="downloads-count"><a href="$sDocDownloadUrl" target="_blank"><span class="fas fa-download fa-lg" style="float: right;"></span></a>$iFileDownloadsCount</td>
 	    $sDeleteCell
 	</tr>
 HTML;

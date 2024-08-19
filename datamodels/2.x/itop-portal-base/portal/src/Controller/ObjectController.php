@@ -1241,6 +1241,19 @@ class ObjectController extends BrickController
 
 				break;
 
+			case 'display':
+				// Preparing redirection
+				// - Route
+				$aRouteParams = array(
+					'sObjectClass' => 'Attachment',
+					'sObjectId' => $this->oRequestManipulatorHelper->ReadParam('sAttachmentId', null),
+					'sObjectField' => 'contents',
+				);
+
+				$oResponse = $this->ForwardToRoute('p_object_document_display', $aRouteParams, $oRequest->query->all());
+
+				break;
+
 			default:
 				throw new HttpException(Response::HTTP_FORBIDDEN, Dict::S('Error:HTTP:400'));
 				break;

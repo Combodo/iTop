@@ -65,6 +65,25 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 	}
 
 	/**
+	 * @param cmdbAbstractObject $oObject
+	 *
+	 * @return bool
+	 * @since 3.2.1 N°7534
+	 */
+	public static function IsAttachmentAllowedForObject(cmdbAbstractObject $oObject) : bool
+	{
+		$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
+		foreach ($aAllowedClasses as $sAllowedClass)
+		{
+			if ($oObject instanceof $sAllowedClass)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Returns the max. file upload size allowed as a dictionary entry
 	 *
 	 * @return string
