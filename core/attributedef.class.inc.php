@@ -2069,7 +2069,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetImportColumns()
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'TEXT'.CMDBSource::GetSqlStringColumnDefinition();
+		$aColumns[$this->GetCode()] = 'MEDIUMTEXT'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
