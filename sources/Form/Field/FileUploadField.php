@@ -163,7 +163,8 @@ class FileUploadField extends AbstractSimpleField
 	/**
 	 * @param string $sDisplayEndpoint
 	 *
-	 * @return $this
+	 * @return FileUploadField
+	 * @since 3.2.1 N°7534
 	 */
 	public function SetDisplayEndpoint(string $sDisplayEndpoint): FileUploadField
 	{
@@ -196,6 +197,7 @@ class FileUploadField extends AbstractSimpleField
 	 * @param bool $bDisplayOpened
 	 *
 	 * @return FileUploadField
+	 * @since 3.2.1 N°7534
 	 */
 	public function SetDisplayOpened(bool $bDisplayOpened) : FileUploadField
 	{
