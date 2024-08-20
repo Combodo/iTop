@@ -162,11 +162,11 @@ $ibo-button--label--margin-left: $ibo-spacing-200 !default;
 ```scss
 // SCSS variables:
 // Same rule as before, but with a `--is-` or `--on--` suffix
-$ibo-quick-create--input--padding: 0 default;
+$ibo-quick-create--input--padding: $ibo-spacing-0 default;
 $ibo-quick-create--input--padding-x--is-opened: $ibo-spacing-300 !default;
 $ibo-quick-create--input--padding-y--is-opened: $ibo-spacing-300 !default;
 
-$ibo-quick-create--input--width: 0 !default;
+$ibo-quick-create--input--width: $ibo-size-0 !default;
 $ibo-quick-create--input--width--is-opened: 245px !default;
 
 $ibo-quick-create--input--background-color: $ibo-color-white-100 !default;
