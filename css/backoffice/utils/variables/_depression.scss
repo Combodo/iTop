@@ -6,5 +6,5 @@
 $ibo-depression-100: inset 0 1px 1px 0 rgba(0, 0, 0, 0.15) !default;
 
 :root{
-	--ibo-elevation-100: #{$ibo-depression-100};
+	--ibo-depression-100: #{$ibo-depression-100};
 }
