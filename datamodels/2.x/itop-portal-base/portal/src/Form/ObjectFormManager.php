@@ -659,7 +659,8 @@ class ObjectFormManager extends FormManager
 		foreach ($aFieldsAtts as $sAttCode => $iFieldFlags)
 		{
 			// handle plugins fields
-			if(array_key_exists('plugin', $aFieldsExtraData[$sAttCode])){
+			if(array_key_exists($sAttCode, $aFieldsExtraData)
+			&& array_key_exists('plugin', $aFieldsExtraData[$sAttCode])){
 				$sPluginName = $aFieldsExtraData[$sAttCode]['plugin'];
 				switch($sPluginName){
 					case AttachmentPlugIn::class:
