@@ -1,8 +1,13 @@
-## Description
-This is a brief description of the SASS 7-1 system and how to use it.
-- [File structure](#file-structure)
-- [Usage](#usage)
+# Description
+This is a brief description of the how the backoffice theme is structured using both BEM and SASS 7-1 systems and how to use them.
+  * [7-1 pattern](#7-1-pattern)
+    * [File structure](#file-structure)
+    * [Usage](#usage)
+  * [BEM methodology](#bem-methodology)
+    * [Principles](#principles)
+    * [Examples](#examples)
 
+# 7-1 pattern
 ## File structure
 SCSS files are structured following the [7-1 pattern](https://sass-guidelin.es/#the-7-1-pattern). \
 @rveitch made a great summary with the following, which can also be found [here](https://gist.github.com/rveitch/84cea9650092119527bc).
@@ -117,3 +122,53 @@ To avoid common errors, files should be imported in the final file in the follow
 - \*Block integrations
 - Themes
 - Shame file
+
+# BEM methodology
+## Principles
+[BEM is a methodology](https://getbem.com/) that helps you to create reusable components and code sharing in front‑end development. \
+The main idea is to use discriminant classes instead of nested basic selectors for 2 main reasons:
+  * It's easier to understand the purpose of a specific class when seeing it in the HTML markup of the SCSS file
+  * It's easier to override a specific class when needed as you don't need to use a selector at least as precise/complex as the one you want to override
+
+In our implementation, we start with the code of the UI block, followed by the sub-element, then the property or modifier. Separation is made of `--` instead of `__`.
+
+## Examples
+### Classes and CSS properties example
+```scss
+// SCSS variables:
+// - For CSS properties: CSS class, followed by CSS property
+$ibo-button--padding-y: 6px !default;
+$ibo-button--padding-x: 9px !default;
+$ibo-button--border: 0 !default;
+$ibo-button--border-radius: $ibo-border-radius-400 !default;
+$ibo-button--box-shadow-bottom: 0px 2px 0px !default;
+$ibo-button--box-shadow-top: inset 0px 2px 0px !default;
+
+$ibo-button--label--margin-left: $ibo-spacing-200 !default;
+
+// CSS classes:
+.ibo-button {
+    padding: $ibo-button--padding-y $ibo-button--padding-x;
+    border: $ibo-button--border;
+    border-radius: $ibo-button--border-radius;
+}
+
+.ibo-button--label {
+    margin-left: $ibo-button--label--margin-left;
+}
+```
+
+### States example
+```scss
+// SCSS variables:
+// Same rule as before, but with a `--is-` or `--on--` suffix
+$ibo-quick-create--input--padding: 0 default;
+$ibo-quick-create--input--padding-x--is-opened: $ibo-spacing-300 !default;
+$ibo-quick-create--input--padding-y--is-opened: $ibo-spacing-300 !default;
+
+$ibo-quick-create--input--width: 0 !default;
+$ibo-quick-create--input--width--is-opened: 245px !default;
+
+$ibo-quick-create--input--background-color: $ibo-color-white-100 !default;
+$ibo-quick-create--input--background-color--on-hover: $ibo-color-grey-200 !default;
+```
