@@ -31,7 +31,7 @@ $.fn.modal.Constructor.prototype.enforceFocus = function () {
 		var $parent = $(e.target.parentNode);
 		if ($modalElement[0] !== e.target && !$modalElement.has(e.target).length &&
 			!$parent.hasClass('ck-input')) {
-			e.target.focus()
+			$(e.target.activeElement).focus();
 		}
 	})
 };

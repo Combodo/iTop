@@ -97,6 +97,12 @@ p_object_attachment_add:
   defaults:
     _controller: 'Combodo\iTop\Portal\Controller\ObjectController::AttachmentAction'
 
+p_object_attachment_display:
+  path: '/object/attachment/display/{sAttachmentId}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::AttachmentAction'
+    sOperation: 'display'
+
 p_object_attachment_download:
   path: '/object/attachment/download/{sAttachmentId}'
   defaults:

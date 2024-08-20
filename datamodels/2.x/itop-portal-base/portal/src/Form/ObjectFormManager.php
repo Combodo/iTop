@@ -94,6 +94,8 @@ class ObjectFormManager extends FormManager
 	 */
 	private $oFormHandlerHelper;
 
+	/** @var array $aPlugins plugins data */
+	private array $aPlugins = array();
 
 	/**
 	 * @param string|array $formManagerData value of the formmanager_data portal parameter, either JSON or object
@@ -502,6 +504,11 @@ class ObjectFormManager extends FormManager
 				{
 					$aFieldsExtraData[$sFieldId]['opened'] = true;
 				}
+				// Checking if the field is handled by a plugin
+				if ($oFieldNode->hasAttribute('data-field-plugin'))
+				{
+					$aFieldsExtraData[$sFieldId]['plugin'] = $oFieldNode->getAttribute('data-field-plugin');
+				}
 				// Checking if field allows to ignore scope (For linked set)
 				if ($oFieldNode->hasAttribute('data-field-ignore-scopes') && ($oFieldNode->getAttribute('data-field-ignore-scopes') === 'true'))
 				{
@@ -651,6 +658,20 @@ class ObjectFormManager extends FormManager
 		// Building the form
 		foreach ($aFieldsAtts as $sAttCode => $iFieldFlags)
 		{
+			// handle plugins fields
+			if(array_key_exists($sAttCode, $aFieldsExtraData)
+			&& array_key_exists('plugin', $aFieldsExtraData[$sAttCode])){
+				$sPluginName = $aFieldsExtraData[$sAttCode]['plugin'];
+				switch($sPluginName){
+					case AttachmentPlugIn::class:
+						$this->AddAttachmentField($oForm, $sAttCode, $aFieldsExtraData);
+						break;
+					default:
+						throw new Exception('Unknown plugin ' . $sPluginName);
+				}
+				continue;
+			}
+
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sAttCode);
 
 			/** @var Field $oField */
@@ -990,54 +1011,89 @@ class ObjectFormManager extends FormManager
 			}
 		}
 
-		// Checking if the instance has attachments
-		if (class_exists('Attachment') && class_exists('AttachmentPlugIn'))
-		{
-			// Checking if the object is allowed for attachments
-			$bClassAllowed = false;
-			$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
-			foreach ($aAllowedClasses as $sAllowedClass)
-			{
-				if ($this->oObject instanceof $sAllowedClass)
-				{
-					$bClassAllowed = true;
-					break;
-				}
-			}
-
-			// Adding attachment field
-			if ($bClassAllowed)
-			{
-				// set id to a unique key - avoid collisions with another attribute that could exist with the name 'attachments'
-				$oField = new FileUploadField('attachments_plugin');
-				$oField->SetLabel(Dict::S('Portal:Attachments'))
-					->SetUploadEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_attachment_add'))
-					->SetDownloadEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_attachment_download',
-						array('sAttachmentId' => '-sAttachmentId-')))
-					->SetTransactionId($oForm->GetTransactionId())
-					->SetAllowDelete($this->oFormHandlerHelper->getCombodoPortalConf()['properties']['attachments']['allow_delete'])
-					->SetObject($this->oObject);
-
-				// Checking if we can edit attachments in the current state
-				if (($this->sMode === static::ENUM_MODE_VIEW)
-					|| AttachmentPlugIn::IsReadonlyState($this->oObject, $this->oObject->GetState(),
-						AttachmentPlugIn::ENUM_GUI_PORTALS) === true
-					|| $oForm->GetEditableFieldCount(true) === 0)
-				{
-					$oField->SetReadOnly(true);
-				}
-
-				// Adding attachements field in transition only if it is editable
-				if (!$this->IsTransitionForm() || ($this->IsTransitionForm() && !$oField->GetReadOnly()))
-				{
-					$oForm->AddField($oField);
-				}
-			}
+		// fallback Checking if the instance has attachments
+		// (in case attachment is not explicitly declared in layout)
+		if (class_exists('Attachment') && class_exists('AttachmentPlugIn')
+		&& !$this->IsPluginInitialized(AttachmentPlugIn::class)
+		&& AttachmentPlugIn::IsAttachmentAllowedForObject($this->oObject)){
+			$this->AddAttachmentField($oForm, 'attachments_plugin', $aFieldsExtraData);
 		}
 
 		$oForm->Finalize();
 		$this->oForm = $oForm;
 		$this->oRenderer->SetForm($this->oForm);
+	}
+
+	/**
+	 * IsPluginInitialized.
+	 *
+	 * @param string $sPluginName
+	 *
+	 * @return bool
+	 */
+	private function IsPluginInitialized(string $sPluginName) : bool
+	{
+		return array_key_exists($sPluginName, $this->aPlugins);
+	}
+
+	/**
+	 * AddAttachmentField.
+	 *
+	 * @param $oForm
+	 * @param $sId
+	 * @param $aFieldsExtraData
+	 *
+	 * @throws \Exception
+	 */
+	private function AddAttachmentField($oForm, $sId, $aFieldsExtraData) : void
+	{
+		// only one instance allowed
+		if($this->IsPluginInitialized(AttachmentPlugIn::class)){
+			throw new Exception("Unable to process field `$sId`, AttachmentPlugIn has already been initialized with field `" . $this->aPlugins[AttachmentPlugIn::class]['field']->GetId() . '`');
+		}
+
+		// not allowed for object class
+		if(!AttachmentPlugIn::IsAttachmentAllowedForObject($this->oObject)){
+			throw new Exception("Unable to process field `$sId`, AttachmentPlugIn is not allowed for class `" . $this->oObject::class . '`');
+		}
+
+		// set id to a unique key - avoid collisions with another attribute that could exist with the name 'attachments'
+		$oField = new FileUploadField($sId);
+		$oField->SetLabel(Dict::S('Portal:Attachments'))
+			->SetUploadEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_attachment_add'))
+			->SetDownloadEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_attachment_download',
+				array('sAttachmentId' => '-sAttachmentId-')))
+			->SetDisplayEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_attachment_display',
+				array('sAttachmentId' => '-sAttachmentId-')))
+			->SetTransactionId($oForm->GetTransactionId())
+			->SetAllowDelete($this->oFormHandlerHelper->getCombodoPortalConf()['properties']['attachments']['allow_delete'])
+			->SetObject($this->oObject);
+
+		// Checking if we can edit attachments in the current state
+		$oObjectFormManager = $this;
+		$oField->SetOnFinalizeCallback(function() use ($oObjectFormManager, $oForm, $oField){
+			if (($oObjectFormManager->sMode === static::ENUM_MODE_VIEW)
+				|| AttachmentPlugIn::IsReadonlyState($oObjectFormManager->oObject, $oObjectFormManager->oObject->GetState(),
+					AttachmentPlugIn::ENUM_GUI_PORTALS) === true
+				|| $oForm->GetEditableFieldCount(true) === 0)
+			{
+				$oField->SetReadOnly(true);
+			}
+		});
+
+		if (array_key_exists($sId, $aFieldsExtraData) && array_key_exists('opened', $aFieldsExtraData[$sId])){
+			$oField->SetDisplayOpened(true);
+		}
+
+		// Adding attachments field in transition only if it is editable
+		if (!$this->IsTransitionForm() || !$oField->GetReadOnly()){
+			$oForm->AddField($oField);
+		}
+
+		// save plugin data
+		$this->aPlugins[AttachmentPlugIn::class] = [
+			'field' => $oField,
+		];
 	}
 
 	/**

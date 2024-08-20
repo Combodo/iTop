@@ -254,7 +254,6 @@ JS
 							CombodoCKEditorHandler.GetInstance("#{$this->oField->GetGlobalId()}")
 								.then((oCKEditor) => {
 									oCKEditor.model.document.on("change:data", () => {
-										console.log("desc changed!");
 										const oFieldElem = $("#{$this->oField->GetGlobalId()}");
 										oFieldElem.closest(".field_set").trigger("field_change", {
 											id: oFieldElem.attr("id"),
