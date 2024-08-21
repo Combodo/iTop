@@ -6,29 +6,29 @@
 
 // UI elements
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'UI:WelcomePopup:Button:RemindLater' => 'Remind me later~~',
-	'UI:WelcomePopup:Button:AcknowledgeAndNext' => 'Next~~',
-	'UI:WelcomePopup:Button:AcknowledgeAndClose' => 'Close~~',
+	'UI:WelcomePopup:Button:RemindLater' => 'Připomenout později',
+	'UI:WelcomePopup:Button:AcknowledgeAndNext' => 'Další',
+	'UI:WelcomePopup:Button:AcknowledgeAndClose' => 'Zavřít',
 ]);
 
 // Message
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'UI:WelcomePopup:Message:320_01_Welcome:Title' => 'Welcome to ' . ITOP_APPLICATION_SHORT . ' 3.2~~',
-	'UI:WelcomePopup:Message:320_01_Welcome:Description' => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+	'UI:WelcomePopup:Message:320_01_Welcome:Title' => 'Vítejte v ' . ITOP_APPLICATION_SHORT . ' 3.2',
+	'UI:WelcomePopup:Message:320_01_Welcome:Description' => '<div>Gratulujeme, přistáli jste do '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 <br>
-<div>We\'re excited to announce this new release. </div>
-<div>In addition to introducing new features such as Newsroom, ' . ITOP_APPLICATION_SHORT . ' 3.2 includes critical security patches, enhanced accessibility and other significant improvements focused on providing you with stability and security.</div>
+<div>Jsme rádi, že vám můžeme představit tuto novou verzi. </div>
+<div>Kromě nových funkcionalit, jako je např. Newsroom, ' . ITOP_APPLICATION_SHORT . ' obsahuje verze 3.2 bezpečnostní opravy, lepší přístupnost a další významná vylepšení zaměřená na zajištění stability a bezpečnosti.</div>
 <br>
-<div>Discover all of '.ITOP_APPLICATION_SHORT.'\'s exciting new features and stay up-to-date with important notifications with our new welcome pop-up!</div>
-<div>We hope you\'ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+<div>Objevte všechny '.ITOP_APPLICATION_SHORT.' vzrušující nové funkce a zůstaňte informováni o důležitých oznámeních a aktualizacích prostřednictvím nového vyskakovacího okna na uvítanou!</div>
+<div>Doufáme, že se vám tato verze bude líbit stejně, jako se nám líbila její tvorba.</div>
 <br>
-<div>Customize your '.ITOP_APPLICATION_SHORT.' preferences for a personalized experience.</div>~~',
+<div>Přizpůsobte si svoje předvolby '.ITOP_APPLICATION_SHORT.' a získejte tak individuální zážitek.</div>',
 	'UI:WelcomePopup:Message:320_02_Newsroom:Title' => 'Say "Hello" to the newsroom~~',
 	'UI:WelcomePopup:Message:320_02_Newsroom:Description' => '<div>Say goodbye to cluttered inboxes and hello to personalized alerts with <a href="%1$s" target="_blank">'.ITOP_APPLICATION_SHORT.'\'s Newsroom</a>!</div>
 <div>Newsroom allows you to easily manage notifications within the platform, so you can stay on top of important updates without constantly checking your email. With the ability to mark messages as read or unread, and automatically delete old notifications, you have complete control over your notifications. </div>
 <br>
 <div>Try it out today and streamline your ' . ITOP_APPLICATION_SHORT . '\'s communication experience!</div>~~',
-	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Title' => 'Notifications center~~',
+	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Title' => 'Centrum notifikací',
 	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Description' => '<div>As we know your information intake is already at its max, you can now easily choose how you receive your notifications - via email, chat, or even the Newsroom feature</div>
 <div>You don\'t want to receive a certain type of alerts? Nothing easier with these advanced customization capabilities giving you the flexibility to tailor your experience to your needs. </div>
 <br>

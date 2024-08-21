@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'CAS:Error:UserNotAllowed' => 'User not allowed~~',
-	'CAS:Login:SignIn' => 'Sign in with CAS~~',
-	'CAS:Login:SignInTooltip' => 'Click here to authenticate yourself with the CAS server~~',
+	'CAS:Error:UserNotAllowed' => 'Uživatel není oprávněn',
+	'CAS:Login:SignIn' => 'Přihlásit se prostřednictvím CAS',
+	'CAS:Login:SignInTooltip' => 'Klikni zde pro příhlášení prostřednictvím CAS serveru',
 ]);

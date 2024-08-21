@@ -10,8 +10,8 @@
  *
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'UI:ErrorPage:KittyDisclaimer' => 'No kitty were injured during the making of this GIF and release.
+	'UI:ErrorPage:KittyDisclaimer' => 'Při tvorbě tohoto GIFu a vydání nebyla zraněna žádná kočička.
 
 - The R&amp;D Team~~',
-	'UI:ErrorPage:UnstableVersion' => 'You are using an unstable version that may include bugs. If you think this error occurred because of this please send us your feedback!~~',
+	'UI:ErrorPage:UnstableVersion' => 'Používáte nestabilní verzi, která může obsahovat chyby. Pokud si myslíte, že k chybě došlo z tohoto důvodu, pošlete nám prosím zpětnou vazbu!',
 ]);

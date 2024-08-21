@@ -12,7 +12,7 @@
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tikety',
-	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'Všechny tikety této konfigurační položky',
 	'Class:lnkFunctionalCIToTicket' => 'Spojení (Funkční konfigurační položka / Tiket)',
 	'Class:lnkFunctionalCIToTicket+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'Konfigurační položka',
@@ -29,7 +29,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'ID',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Název tiketu',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
 	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
 ]);
