@@ -1301,6 +1301,8 @@ try
 					if (count($aErrors) == 0)
 					{
 						$sIssues = '';
+						/** @var CoreCannotSaveObjectException|null $oException */
+						$oException = null;
 						$bApplyStimulus = true;
 						list($bRes, $aIssues) = $oObj->CheckToWrite(); // Check before trying to write the object
 						if ($bRes)
@@ -1315,6 +1317,11 @@ try
 								$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey());
 								$oObj->UpdateObjectFromPostedForm('', array_keys($aExpectedAttributes), $aExpectedAttributes);
 								$sIssues = $e->getMessage();
+								
+								if($e instanceof CoreCannotSaveObjectException) {
+									$oException = $e;
+								}
+
 							}
 						}
 						else
@@ -1355,7 +1362,7 @@ try
 								$sMessage = $e->getMessage();
 								$sSeverity = 'info';
 							}
-							$sIssueDesc = Dict::Format('UI:ObjectCouldNotBeWritten',$sIssues);
+							$sIssueDesc = ($oException !== null ? '<div style="display: block;"><style scoped> ul { list-style-type: disc; } </style>'.$oException->getHtmlMessage().'</div>' : Dict::Format('UI:ObjectCouldNotBeWritten', $sIssues));
 							$oP->add_ready_script("CombodoModal.OpenErrorModal('".addslashes($sIssueDesc)."');");
 						}
 						else
