@@ -782,12 +782,12 @@ try
 				$sClass = utils::ReadParam('className', '', false, 'class');
 				$sRootClass = utils::ReadParam('baseClass', '', false, 'class');
 				$currentId = utils::ReadParam('currentId', '');
-				$sTableId = utils::ReadParam('_table_id_', null, false, 'raw_data');
+				$sTableId = utils::ReadParam('_table_id_', null, false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 				$sAction = utils::ReadParam('action', '');
-				$sSelectionMode = utils::ReadParam('selection_mode', null, false, 'raw_data');
-				$sResultListOuterSelector = utils::ReadParam('result_list_outer_selector', null, false, 'raw_data');
-				$scssCount = utils::ReadParam('css_count', null, false, 'raw_data');
-				$sTableInnerId = utils::ReadParam('table_inner_id', $sTableId, false, 'raw_data');
+				$sSelectionMode = utils::ReadParam('selection_mode');
+				$sResultListOuterSelector = utils::ReadParam('result_list_outer_selector', null,false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER); // actually an Id not a selector
+				$scssCount = utils::ReadParam('css_count', null,false,utils::ENUM_SANITIZATION_FILTER_ELEMENT_SELECTOR);
+				$sTableInnerId = utils::ReadParam('table_inner_id', null,false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 
 				$oFilter = new DBObjectSearch($sClass);
 				$oSet = new CMDBObjectSet($oFilter);

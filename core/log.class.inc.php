@@ -1173,7 +1173,7 @@ class DeprecatedCallsLog extends LogAPI
 
 	/**
 	 * This will catch a message for all E_DEPRECATED and E_USER_DEPRECATED errors.
-	 * This handler is set in DeprecatedCallsLog::Enable
+	 * This handler is set in {@see DeprecatedCallsLog::Enable}
 	 *
 	 * @param int $errno
 	 * @param string $errstr
@@ -1193,52 +1193,22 @@ class DeprecatedCallsLog extends LogAPI
 			return false;
 		}
 
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
+		if (isset($aStack[2]['function']) && ($aStack[2]['function'] == 'ForwardToTriggerError')) {
+			// Let the notice bubble up
+			return false;
+		}
+
 		if (false === static::IsLogLevelEnabledSafe(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD)) {
-			// returns true so that nothing is throwned !
+			// returns true so that nothing is thrown!
 			return true;
 		}
 
-		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
-		$iStackDeprecatedMethodLevel = 2; // level 0 = current method, level 1 = @trigger_error, level 2 = method containing the `trigger_error` call (can be either 'trigger_deprecation' or the faulty method), level 3 = In some cases, method containing the 'trigger_deprecation' call
-		// In case current level is actually a 'trigger_deprecation' call, try to go one level further to get the real deprecated method
-		if (array_key_exists($iStackDeprecatedMethodLevel, $aStack) && ($aStack[$iStackDeprecatedMethodLevel]['function'] === 'trigger_deprecation') && array_key_exists($iStackDeprecatedMethodLevel + 1, $aStack)) {
-			$iStackDeprecatedMethodLevel++;
-		}
-
-		$sDeprecatedObject = $aStack[$iStackDeprecatedMethodLevel]['class'];
-		$sDeprecatedMethod = $aStack[$iStackDeprecatedMethodLevel]['function'];
-		if (($sDeprecatedObject === __CLASS__) && ($sDeprecatedMethod === 'Log')) {
-			// We are generating a trigger_error ourselves, we don't want to trace them !
-			return false;
-		}
-		$sCallerFile = $aStack[$iStackDeprecatedMethodLevel]['file'];
-		$sCallerLine = $aStack[$iStackDeprecatedMethodLevel]['line'];
-		$sMessage = "Call to {$sDeprecatedObject}::{$sDeprecatedMethod} in {$sCallerFile}#L{$sCallerLine}";
-
-		$iStackCallerMethodLevel = $iStackDeprecatedMethodLevel + 1; // level 3 = caller of the deprecated method
-		if (array_key_exists($iStackCallerMethodLevel, $aStack)) {
-			$sCallerObject = $aStack[$iStackCallerMethodLevel]['class'] ?? null;
-			$sCallerMethod = $aStack[$iStackCallerMethodLevel]['function'] ?? null;
-			$sMessage .= ' (';
-			if (!is_null($sCallerObject)) {
-				$sMessage .= "{$sCallerObject}::{$sCallerMethod}";
-			} else {
-				$sCallerMethodFile = $aStack[$iStackCallerMethodLevel]['file'];
-				$sCallerMethodLine = $aStack[$iStackCallerMethodLevel]['line'];
-				if (!is_null($sCallerMethod)) {
-					$sMessage .= "call to {$sCallerMethod}() in {$sCallerMethodFile}#L{$sCallerMethodLine}";
-				} else {
-					$sMessage .= "{$sCallerMethodFile}#L{$sCallerMethodLine}";
-				}
-			}
-			$sMessage .= ')';
-		}
-
-		if (!empty($errstr)) {
-			$sMessage .= ' : '.$errstr;
-		}
+		$aStack = static::StripCallStack($aStack);
+		$sMessage = "$errstr, called from ".static::SummarizeCallStack($aStack);
 
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_LIBMETHOD);
+		static::ForwardToTriggerError($sMessage);
 
 		return true;
 	}
@@ -1264,6 +1234,8 @@ class DeprecatedCallsLog extends LogAPI
 	}
 
 	/**
+	 * Call this helper at the beginning of a deprecated file (in its global scope)
+	 *
 	 * @since 3.0.1 3.1.0 N°4725 silently handles ConfigException
 	 * @since 3.0.4 3.1.0 N°4725 remove forgotten throw PHPDoc annotation
 	 *
@@ -1298,9 +1270,12 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		static::Warning($sMessage, static::ENUM_CHANNEL_FILE);
+		static::ForwardToTriggerError($sMessage);
 	}
 
 	/**
+	 * Call this helper when calling a deprecated extension method
+	 *
 	 * @param string $sImplementationClass Class implementing the deprecated API
 	 * @param string $sDeprecatedApi Class name of the deprecated API
 	 * @param string $sDeprecatedMethod Method name of the deprecated API
@@ -1327,9 +1302,12 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_API);
+		static::ForwardToTriggerError($sMessage);
 	}
 
 	/**
+	 * Call this helper within deprecated methods
+	 *
 	 * @param string|null $sAdditionalMessage
 	 *
 	 * @link https://www.php.net/debug_backtrace
@@ -1347,52 +1325,24 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-		$sMessage = self::GetMessageFromStack($aStack);
 
-		if (!is_null($sAdditionalMessage)) {
-			$sMessage .= ' : '.$sAdditionalMessage;
+		if (isset($aStack[1]['class'])) {
+			$sFunctionDesc = $aStack[1]['class'].$aStack[1]['type'].$aStack[1]['function'];
 		}
+		else {
+			$sFunctionDesc = $aStack[1]['function'];
+		}
+
+		$sMessage = "Function $sFunctionDesc() is deprecated";
+		if (!is_null($sAdditionalMessage)) {
+			$sMessage .= ': '.$sAdditionalMessage;
+		}
+
+		$sMessage .= '. Caller: '.self::SummarizeCallStack(array_slice($aStack, 1));
+
 
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_METHOD);
-	}
-
-	/**
-	 * @param array $aDebugBacktrace data from {@see debug_backtrace()}
-	 *
-	 * @return string message to print to the log
-	 */
-	private static function GetMessageFromStack(array $aDebugBacktrace): string
-	{
-		// level 0 = current method
-		// level 1 = deprecated method, containing the `NotifyDeprecatedPhpMethod` call
-		$sMessage = 'Call'.self::GetMessageForCurrentStackLevel($aDebugBacktrace[1], " to ");
-
-		// level 2 = caller of the deprecated method
-		if (array_key_exists(2, $aDebugBacktrace)) {
-			$sMessage .= ' (from ';
-			$sMessage .= self::GetMessageForCurrentStackLevel($aDebugBacktrace[2]);
-			$sMessage .= ')';
-		}
-
-		return $sMessage;
-	}
-
-	private static function GetMessageForCurrentStackLevel(array $aCurrentLevelDebugTrace, ?string $sPrefix = ""): string
-	{
-		$sMessage = "";
-		if (array_key_exists('class', $aCurrentLevelDebugTrace)) {
-			$sDeprecatedObject = $aCurrentLevelDebugTrace['class'];
-			$sDeprecatedMethod = $aCurrentLevelDebugTrace['function'] ?? "";
-			$sMessage = "{$sPrefix}{$sDeprecatedObject}::{$sDeprecatedMethod} in ";
-		}
-
-		if (array_key_exists('file', $aCurrentLevelDebugTrace)) {
-			$sCallerFile = $aCurrentLevelDebugTrace['file'];
-			$sCallerLine = $aCurrentLevelDebugTrace['line'] ?? "";
-			$sMessage .= "{$sCallerFile}#L{$sCallerLine}";
-		}
-
-		return $sMessage;
+		static::ForwardToTriggerError($sMessage);
 	}
 
 	/**
@@ -1422,19 +1372,71 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_ENDPOINT);
+		static::ForwardToTriggerError($sMessage);
 	}
 
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void
 	{
-		if (true === utils::IsDevelopmentEnvironment()) {
-			trigger_error($sMessage, E_USER_DEPRECATED);
-		}
-
 		try {
 			parent::Log($sLevel, $sMessage, $sChannel, $aContext);
 		}
 		catch (ConfigException $e) {
 			// nothing much we can do... and we don't want to crash the caller !
+		}
+	}
+
+	/**
+	 * Strips some elements from the top of the call stack to skip calls that are not relevant to report the deprecated call
+	 * @param array $aCallStack Call stack as returned by {@see debug_backtrace()}
+	 */
+	protected static function StripCallStack($aCallStack): array
+	{
+		if (!isset($aCallStack[0]['line'])) {
+			$aCallStack = array_slice($aCallStack, 1);
+		}
+		if (isset($aCallStack[1]['function']) && $aCallStack[1]['function'] === 'trigger_deprecation') {
+			$aCallStack = array_slice($aCallStack, 1);
+		}
+
+		return $aCallStack;
+	}
+
+	protected static function SummarizeCallStack($aCallStack, $bRecurse = true)
+	{
+		if (count($aCallStack) == 0) {
+			return null;
+		}
+		$sFileLine = $aCallStack[0]['file'].'#'.$aCallStack[0]['line'];
+		$sSummary = $sFileLine;
+
+		// If possible and meaningful, add the class and method
+		if (isset($aCallStack[1]['class'])) {
+			$sSummary = $aCallStack[1]['class'].$aCallStack[1]['type'].$aCallStack[1]['function']." ($sFileLine)";
+		}
+		elseif (isset($aCallStack[1]['function'])) {
+			if (in_array($aCallStack[1]['function'], ['include', 'require', 'include_once', 'require_once'])) {
+				// No need to show the generic mechanism of inclusion
+				$bRecurse = false;
+			}
+			else {
+				$sSummary = $aCallStack[1]['function']." ($sFileLine)";
+			}
+		}
+
+		if ($bRecurse) {
+			$sUpperSummary = static::SummarizeCallStack(array_slice($aCallStack, 1), false);
+			if (!is_null($sUpperSummary)) {
+				$sSummary .= ', itself called from '.$sUpperSummary;
+			}
+		}
+
+		return $sSummary;
+	}
+
+	private static function ForwardToTriggerError(string $sMessage): void
+	{
+		if (true === utils::IsDevelopmentEnvironment()) {
+			trigger_error($sMessage, E_USER_DEPRECATED);
 		}
 	}
 }
