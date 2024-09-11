@@ -1,6 +1,6 @@
 <?php
 class HubRunTimeEnvironment extends RunTimeEnvironment
-{	
+{
 	/**
 	 * Constructor
 	 * @param string $sEnvironment
@@ -9,7 +9,7 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 	public function __construct($sEnvironment = 'production', $bAutoCommit = true)
 	{
 		parent::__construct($sEnvironment, $bAutoCommit);
-		
+
 		if ($sEnvironment != $this->sTargetEnv)
 		{
 		    if (is_dir(APPROOT.'/env-'.$this->sTargetEnv))
@@ -23,7 +23,7 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 			SetupUtils::copydir(APPROOT.'/data/'.$sEnvironment.'-modules', APPROOT.'/data/'.$this->sTargetEnv.'-modules');
 		}
 	}
-	
+
 	/**
 	 * Update the includes for the target environment
 	 * @param Config $oConfig
@@ -32,7 +32,7 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 	{
 		$oConfig->UpdateIncludes('env-'.$this->sTargetEnv); // TargetEnv != FinalEnv
 	}
-	
+
 	/**
 	 * Move an extension (path to folder of this extension) to the target environment
 	 * @param string $sExtensionDirectory The folder of the extension
@@ -45,7 +45,7 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 			if (!mkdir(APPROOT.'/data/'.$this->sTargetEnv.'-modules')) throw new Exception("ERROR: failed to create directory:'".(APPROOT.'/data/'.$this->sTargetEnv.'-modules')."'");
 		}
 		$sDestinationPath = APPROOT.'/data/'.$this->sTargetEnv.'-modules/';
-		
+
 		// Make sure that the destination directory of the extension does not already exist
 		if (is_dir($sDestinationPath.basename($sExtensionDirectory)))
 		{
@@ -54,7 +54,7 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 		}
 		if (!rename($sExtensionDirectory, $sDestinationPath.basename($sExtensionDirectory))) throw new Exception("ERROR: failed move directory:'$sExtensionDirectory' to '".$sDestinationPath.basename($sExtensionDirectory)."'");
 	}
-	
+
 	/**
 	 * Move the selected extensions located in the given directory in data/<target-env>-modules
 	 * @param string $sDownloadedExtensionsDir The directory to scan

@@ -36,6 +36,7 @@ require_once(APPROOT.'core/dict.class.inc.php');
 require_once(APPROOT.'setup/xmldataloader.class.inc.php');
 require_once(__DIR__.'/hubruntimeenvironment.class.inc.php');
 
+
 /**
  * Overload of DBBackup to handle logging
  */
@@ -79,11 +80,11 @@ function DoBackup($sTargetFile)
 	// Make sure the target directory exists
 	$sBackupDir = dirname($sTargetFile);
 	SetupUtils::builddir($sBackupDir);
-	
+
 	$oBackup = new DBBackupWithErrorReporting();
 	$oBackup->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
 	$sSourceConfigFile = APPCONF.utils::GetCurrentEnvironment().'/'.ITOP_CONFIG_FILE;
-	
+
 	$oMutex = new iTopMutex('backup.'.utils::GetCurrentEnvironment());
 	$oMutex->Lock();
 	try
@@ -101,7 +102,7 @@ function DoBackup($sTargetFile)
 
 /**
  * Outputs the status of the current ajax execution (as a JSON structure)
- * 
+ *
  * @param string $sMessage
  * @param bool $bSuccess
  * @param number $iErrorCode
@@ -123,7 +124,7 @@ function ReportStatus($sMessage, $bSuccess, $iErrorCode = 0, $aMoreFields = arra
 
 /**
  * Helper to output the status of a successful execution
- * 
+ *
  * @param string $sMessage
  * @param array $aMoreFields
  *        	Extra fields to pass to the caller, if needed
@@ -135,7 +136,7 @@ function ReportSuccess($sMessage, $aMoreFields = array())
 
 /**
  * Helper to output the status of a failed execution
- * 
+ *
  * @param string $sMessage
  * @param number $iErrorCode
  * @param array $aMoreFields
@@ -156,21 +157,21 @@ try
 	SetupUtils::ExitMaintenanceMode(false); // Reset maintenance mode in case of problem
 
 	utils::PushArchiveMode(false);
-	
+
 	ini_set('max_execution_time', max(3600, ini_get('max_execution_time'))); // Under Windows SQL/backup operations are part of the PHP timeout and require extra time
 	ini_set('display_errors', 1); // Make sure that fatal errors remain visible from the end-user
-	                              
+
 	// Most of the ajax calls are done without the MetaModel being loaded
 	                              // Therefore, the language must be passed as an argument,
 	                              // and the dictionnaries be loaded here
 	$sLanguage = utils::ReadParam('language', '');
 	if ($sLanguage!='')
 	{
-		foreach (glob(APPROOT.'env-production/dictionaries/*.dict.php') as $sFilePath)
+		foreach (glob(APPROOT.'env-'. utils::GetCurrentEnvironment(). '/dictionaries/*.dict.php') as $sFilePath)
 		{
 			require_once ($sFilePath);
 		}
-		
+
 		$aLanguages = Dict::GetLanguages();
 		if (array_key_exists($sLanguage, $aLanguages))
 		{
@@ -211,7 +212,7 @@ try
 				}
 			}
 		break;
-		
+
 		case 'do_backup':
 			require_once (APPROOT.'/application/startup.inc.php');
 			require_once (APPROOT.'/application/loginwebpage.class.inc.php');
@@ -254,8 +255,9 @@ try
 				ReportError($e->getMessage(), $e->getCode());
 			}
 		break;
-		
+
 		case 'compile':
+
 			SetupLog::Info('Deployment starts...');
 			$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
 			if (!file_exists(APPROOT.'data/hub/compile_authent') || $sAuthent !== file_get_contents(APPROOT.'data/hub/compile_authent'))
@@ -266,13 +268,13 @@ try
 			$aSelectedExtensionCodes = utils::ReadParam('extension_codes', array());
 			$aSelectedExtensionDirs = utils::ReadParam('extension_dirs', array());
 
-			$oRuntimeEnv = new HubRunTimeEnvironment('production', false); // use a temp environment: production-build
+			$oRuntimeEnv = new HubRunTimeEnvironment(utils::GetCurrentEnvironment(), false); // use a temp environment: production-build
 			$oRuntimeEnv->MoveSelectedExtensions(APPROOT.'/data/downloaded-extensions/', $aSelectedExtensionDirs);
 
-			$oConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
+			$oConfig = new Config(APPCONF.utils::GetCurrentEnvironment().'/'.ITOP_CONFIG_FILE);
 			if ($oConfig->Get('demo_mode')) throw new Exception('Sorry the installation of extensions is not allowed in demo mode');
 
-			$aSelectModules = $oRuntimeEnv->CompileFrom('production', false); // WARNING symlinks does not seem to be compatible with manual Commit
+			$aSelectModules = $oRuntimeEnv->CompileFrom(utils::GetCurrentEnvironment(), false); // WARNING symlinks does not seem to be compatible with manual Commit
 
 			$oRuntimeEnv->UpdateIncludes($oConfig);
 
@@ -291,11 +293,11 @@ try
 				SetupLog::Info('Compilation completed...');
 			ReportSuccess('Ok'); // No access to Dict::S here
 		break;
-		
+
 		case 'move_to_production':
 			// Second step: update the schema and the data
 			// Everything happening below is based on env-production
-			$oRuntimeEnv = new RunTimeEnvironment('production', true);
+			$oRuntimeEnv = new RunTimeEnvironment(utils::GetCurrentEnvironment(), true);
 
 			try
 			{
@@ -307,7 +309,7 @@ try
 				}
 				unlink(APPROOT.'data/hub/compile_authent');
 				// Load the "production" config file to clone & update it
-				$oConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
+				$oConfig = new Config(APPCONF.utils::GetCurrentEnvironment().'/'.ITOP_CONFIG_FILE);
 				SetupUtils::EnterReadOnlyMode($oConfig);
 
 				$oRuntimeEnv->InitDataModel($oConfig, true /* model only */);
@@ -375,7 +377,7 @@ try
 					unlink(APPROOT.'data/hub/compile_authent');
 				}
 				// Note: at this point, the dictionnary is not necessarily loaded
-				SetupLog::Error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted')."\n".$e->getMessage());
+				SetupLog::Error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted'), null, [$e->getMessage(), $e->getTraceAsString()]);
 				SetupLog::Error('Debug trace: '.$e->getTraceAsString());
 				ReportError($e->getMessage(), $e->getCode());
 			}
@@ -384,17 +386,17 @@ try
 				SetupUtils::ExitReadOnlyMode();
 			}
 		break;
-		
+
 		default:
 			ReportError("Invalid operation: '$sOperation'", -1);
 	}
 }
 catch (Exception $e)
 {
-	SetupLog::Error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted')."\n".$e->getMessage());
+	SetupLog::Error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted'), null, [$e->getMessage(), $e->getTraceAsString()]);
 	SetupLog::Error('Debug trace: '.$e->getTraceAsString());
-	
+
 	utils::PopArchiveMode();
-	
+
 	ReportError($e->getMessage(), $e->getCode());
 }
