@@ -27,7 +27,11 @@ require_once(APPROOT.'core/metamodel.class.php');
 IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 utils::InitTimeZone();
-
+set_error_handler(function ($errno, $errstr) {
+	$e = new \Exception("");
+	\SetupLog::Error("Catching", null, [$e->getMessage(), $e->getTraceAsString()]);
+	echo $e->getMessage() . '<BR>' .$e->getTraceAsString();
+}, E_WARNING);
 
 /**
  * @param string $sPagePath full path (if symlink, it will be resolved)
