@@ -23,7 +23,7 @@
  * @license http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
 
 require_once(APPROOT.'application/utils.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');
@@ -110,14 +110,15 @@ function DoBackup($sTargetFile)
  */
 function ReportStatus($sMessage, $bSuccess, $iErrorCode = 0, $aMoreFields = array())
 {
-	$oPage = new AjaxPage("");
-	$oPage->SetContentType('application/json');
+	// Do not use AjaxPage during setup phases, because it uses InterfaceDiscovery in Twig compilation
+	$oPage = new JsonPage();
 	$aResult = array(
 		'code' => $iErrorCode,
 		'message' => $sMessage,
 		'fields' => $aMoreFields
 	);
-	$oPage->add(json_encode($aResult));
+	$oPage->SetData($aResult);
+	$oPage->SetOutputDataOnly(true);
 	$oPage->output();
 }
 
