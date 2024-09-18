@@ -26,7 +26,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'bkp-mysqldump-ok' => 'mysqldump nalezen: %1$s',
 	'bkp-name-sample' => 'Soubory zálohy jsou pojmenovány dle DB, data a času. Příklad: %1$s',
 	'bkp-next-backup' => 'Další záloha bude provedena dne <b>%1$s</b> (%2$s) v %3$s',
-	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
+	'bkp-next-backup-unknown' => 'Další záloha <b>není naplánována.</b>',
 	'bkp-next-to-delete' => 'Bude odstraněna při další záloze (nastavení "retention_count")',
 	'bkp-restore-running' => 'Probíhá obnova ze zálohy. Vyčkejte prosím...',
 	'bkp-retention' => 'V cílové složce <b>bude uchováno maximálně %1$d souborů záloh</b>.',

@@ -10,5 +10,5 @@
  *
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Previous pages~~',
+	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Předchozí stránky',
 ]);

@@ -10,10 +10,10 @@
  *
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'UI:Modal:Confirmation:DefaultTitle' => 'Confirmation~~',
-	'UI:Modal:Informative:Title' => 'Informative Modal~~',
-	'UI:Modal:InformativeError:Title' => 'Error~~',
-	'UI:Modal:InformativeInformation:Title' => 'Information~~',
-	'UI:Modal:InformativeSuccess:Title' => 'Success~~',
-	'UI:Modal:InformativeWarning:Title' => 'Warning~~',
+	'UI:Modal:Confirmation:DefaultTitle' => 'Potvrzení',
+	'UI:Modal:Informative:Title' => 'Informativní modální dialog',
+	'UI:Modal:InformativeError:Title' => 'Chyba',
+	'UI:Modal:InformativeInformation:Title' => 'Informace',
+	'UI:Modal:InformativeSuccess:Title' => 'Úspěch',
+	'UI:Modal:InformativeWarning:Title' => 'Varování',
 ]);

@@ -23,7 +23,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:FAQ/Attribute:category_name+' => '',
 	'Class:FAQ/Attribute:description' => 'Popis',
 	'Class:FAQ/Attribute:description+' => '',
-	'Class:FAQ/Attribute:domains' => 'Domains~~',
+	'Class:FAQ/Attribute:domains' => 'Domény',
 	'Class:FAQ/Attribute:error_code' => 'Kód chyby',
 	'Class:FAQ/Attribute:error_code+' => '',
 	'Class:FAQ/Attribute:key_words' => 'Klíčová slova',

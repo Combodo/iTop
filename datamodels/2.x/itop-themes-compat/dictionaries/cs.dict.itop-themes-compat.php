@@ -10,5 +10,5 @@
  *
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'theme:light-grey' => 'Light Grey (deprecated)~~',
+	'theme:light-grey' => 'Světle šedá (zastaralé)',
 ]);

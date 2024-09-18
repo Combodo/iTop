@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'UI:Component:Input:ChangeNotAllowed' => 'This change is not allowed~~',
-	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match~~',
-	'UI:Component:Input:Set:MinimumItems' => 'Minimum %1$s item(s) required~~',
+	'UI:Component:Input:ChangeNotAllowed' => 'Tato změna není povolena',
+	'UI:Component:Input:Password:DoesNotMatch' => 'Hesla se neshodují',
+	'UI:Component:Input:Set:MinimumItems' => 'Vyžaduje minimálně %1$s položku (položky)',
 ]);
