@@ -486,7 +486,7 @@ try
 	$iColCount = count($aRawFieldList);
 
 	// Translate into internal names
-	$aFieldList = ['id'=>'id'];
+	$aFieldList = [];
 	foreach($aRawFieldList as $iFieldId => $sFieldName)
 	{
 		$sFieldName = trim($sFieldName);
