@@ -209,15 +209,6 @@
           <with_php_computation>true</with_php_computation>
           <duplicates/>
         </field>
-        <field id="functionalcis_list" xsi:type="AttributeLinkedSetIndirect">
-          <linked_class>lnkFunctionalCIToTicket</linked_class>
-          <ext_key_to_me>ticket_id</ext_key_to_me>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-          <ext_key_to_remote>functionalci_id</ext_key_to_remote>
-          <with_php_computation>true</with_php_computation>
-          <duplicates/>
-        </field>
         <field id="workorders_list" xsi:type="AttributeLinkedSet">
           <linked_class>WorkOrder</linked_class>
           <ext_key_to_me>ticket_id</ext_key_to_me>

@@ -142,6 +142,19 @@
         </field>
       </fields>
     </class>
+    <class id="Ticket" _delta="must_exist">
+      <fields>
+        <field id="functionalcis_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+          <linked_class>lnkFunctionalCIToTicket</linked_class>
+          <ext_key_to_me>ticket_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>functionalci_id</ext_key_to_remote>
+          <with_php_computation>true</with_php_computation>
+          <duplicates/>
+        </field>
+      </fields>
+    </class>
   </classes>
   <menus>
   </menus>
