@@ -419,7 +419,7 @@ try
 	// Note: it may happen that an external field has the same label as the external key
 	//       in that case, we consider that the external key has precedence
 	//
-	$aKnownColumnNames = array();
+	$aKnownColumnNames = ['id'=>['id']];
 	foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 	{
 		if ($bLocalize)
@@ -486,7 +486,7 @@ try
 	$iColCount = count($aRawFieldList);
 
 	// Translate into internal names
-	$aFieldList = array();
+	$aFieldList = [];
 	foreach($aRawFieldList as $iFieldId => $sFieldName)
 	{
 		$sFieldName = trim($sFieldName);
@@ -669,29 +669,29 @@ try
 		}
 		else
 		{
-			if (!MetaModel::IsValidAttCode($sClass, $sReconcKey))
+			if (!MetaModel::IsValidAttCode($sClass, $sReconcKey) && $sReconcKey != 'id')
 			{
 				// Safety net - should not happen now that column names are checked against known names
 				throw new BulkLoadException("Unknown reconciliation attribute '$sReconcKey' (class: '$sClass')");
 			}
-			$oAtt = MetaModel::GetAttributeDef($sClass, $sReconcKey);
-			if ($oAtt->IsExternalKey())
-			{
-				$aFinalReconcilKeys[] = $sReconcKey;
-				$aReconcilKeysReport[$sReconcKey][] = 'id';
-			}
-			elseif ($oAtt->IsExternalField())
-			{
-				$sReconcAttCode = $oAtt->GetKeyAttCode();
-				$sReconcKeyReport = "$sReconcAttCode ($sReconcKey)";
-
-				$aFinalReconcilKeys[] = $sReconcAttCode;
-				$aReconcilKeysReport[$sReconcAttCode][] = $sReconcKeyReport;
-			}
-			else
-			{
+			if ($sReconcKey == 'id') {
 				$aFinalReconcilKeys[] = $sReconcKey;
 				$aReconcilKeysReport[$sReconcKey] = array();
+			} else {
+				$oAtt = MetaModel::GetAttributeDef($sClass, $sReconcKey);
+				if ($oAtt->IsExternalKey()) {
+					$aFinalReconcilKeys[] = $sReconcKey;
+					$aReconcilKeysReport[$sReconcKey][] = 'id';
+				} elseif ($oAtt->IsExternalField()) {
+					$sReconcAttCode = $oAtt->GetKeyAttCode();
+					$sReconcKeyReport = "$sReconcAttCode ($sReconcKey)";
+
+					$aFinalReconcilKeys[] = $sReconcAttCode;
+					$aReconcilKeysReport[$sReconcAttCode][] = $sReconcKeyReport;
+				} else {
+					$aFinalReconcilKeys[] = $sReconcKey;
+					$aReconcilKeysReport[$sReconcKey] = array();
+				}
 			}
 		}
 	}
