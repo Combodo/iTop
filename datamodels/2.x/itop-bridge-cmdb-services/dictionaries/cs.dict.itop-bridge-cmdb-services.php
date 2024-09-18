@@ -12,9 +12,9 @@
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Document/Attribute:contracts_list' => 'Smlouvy',
-	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
+	'Class:Document/Attribute:contracts_list+' => 'Všechny smlouvy spojené s tímto dokumentem',
 	'Class:Document/Attribute:services_list' => 'Služby',
-	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
+	'Class:Document/Attribute:services_list+' => 'Všechny služby spojené s tímto dokumentem',
 	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Smlouvy s poskytovateli',
 	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
 	'Class:FunctionalCI/Attribute:services_list' => 'Služby',

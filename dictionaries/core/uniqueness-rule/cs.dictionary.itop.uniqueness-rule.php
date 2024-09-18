@@ -10,5 +10,5 @@
  *
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s is already linked to %3$s: %4$s, duplicates are not allowed on this relation.~~',
+	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s je již propojeno s %3$s: %4$s, duplicity nejsou pro toto spojení povoleny.',
 ]);

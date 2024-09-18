@@ -10,5 +10,5 @@
  *
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Unknown values~~',
+	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Neznámé hodnoty',
 ]);

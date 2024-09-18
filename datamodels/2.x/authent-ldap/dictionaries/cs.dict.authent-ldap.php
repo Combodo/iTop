@@ -14,5 +14,5 @@
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:UserLDAP' => 'LDAP uživatel',
 	'Class:UserLDAP+' => 'Uživatel ověřen přes LDAP',
-	'UserLDAP:server' => 'LDAP specifics~~',
+	'UserLDAP:server' => 'Specifika LDAP',
 ]);

@@ -10,8 +10,8 @@
  *
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'FilesInformation:Error:CantWriteToFile' => 'Can not write to file %1$s~~',
-	'FilesInformation:Error:CorruptedFile' => 'File %1$s is corrupted~~',
-	'FilesInformation:Error:ListCorruptedFile' => 'File(s) corrupted: %1$s ~~',
-	'FilesInformation:Error:MissingFile' => 'Missing file: %1$s~~',
+	'FilesInformation:Error:CantWriteToFile' => 'Nelze zapisovat do souboru %1$s',
+	'FilesInformation:Error:CorruptedFile' => 'Soubor %1$s je poškozený',
+	'FilesInformation:Error:ListCorruptedFile' => 'Poškozené soubory: %1$s',
+	'FilesInformation:Error:MissingFile' => 'Chybějící soubor: %1$s',
 ]);
