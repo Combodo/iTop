@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
@@ -310,6 +310,8 @@ If omitted the From (label) is used.~~',
 	'Class:EventNotification/Attribute:object_id+' => 'オブジェクトID(トリガーでクラスが定義済み?)',
 	'Class:EventNotification/Attribute:trigger_id' => 'トリガー',
 	'Class:EventNotification/Attribute:trigger_id+' => 'ユーザアカウント',
+    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'メール送出イベント',
 	'Class:EventNotificationEmail+' => '送出されたメールのトレース',
 	'Class:EventNotificationEmail/Attribute:attachments' => '添付',

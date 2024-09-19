@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
@@ -311,6 +311,8 @@ If omitted the From (label) is used.~~',
 	'Class:EventNotification/Attribute:object_id+' => '',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
 	'Class:EventNotification/Attribute:trigger_id+' => '',
+    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'Email emission hændelse',
 	'Class:EventNotificationEmail+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Vedhæftning(er)',

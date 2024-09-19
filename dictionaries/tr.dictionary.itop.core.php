@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Izzet Sirin <izzet.sirin@htr.com.tr>
@@ -311,6 +311,8 @@ If omitted the From (label) is used.~~',
 	'Class:EventNotification/Attribute:object_id+' => 'nesne belirleyicisi (olayı tetikleyen nesne ?)',
 	'Class:EventNotification/Attribute:trigger_id' => 'Uyarı tetikçisi',
 	'Class:EventNotification/Attribute:trigger_id+' => 'kullanıcı hesabı',
+    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'E-posta gönderim işlemi',
 	'Class:EventNotificationEmail+' => 'Gönderilen E-posta tarihçesi',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Eklentiler',

@@ -377,7 +377,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventNotification/Attribute:action_id' => 'Action',
 	'Class:EventNotification/Attribute:action_id+' => '',
 	'Class:EventNotification/Attribute:object_id' => 'Object id',
-	'Class:EventNotification/Attribute:object_id+' => 'object id (class defined by the trigger ?)',
+	'Class:EventNotification/Attribute:object_id+' => '',
+    'Class:EventNotification/Attribute:object_class' => 'Object class',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)',
 ));
 
 //

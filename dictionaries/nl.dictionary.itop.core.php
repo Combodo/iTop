@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 
 /**
@@ -309,6 +309,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:EventNotification/Attribute:object_id+' => 'ID object (klasse gedefineerd door de trigger)',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
 	'Class:EventNotification/Attribute:trigger_id+' => 'De trigger die de melding veroorzaakte',
+    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'Gebeurtenis - versturen van e-mail',
 	'Class:EventNotificationEmail+' => 'Historiek van de e-mail die verstuurd is',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Bijlagen',

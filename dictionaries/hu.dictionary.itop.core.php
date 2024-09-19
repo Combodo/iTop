@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
@@ -306,6 +306,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:EventNotification/Attribute:object_id+' => 'Objektum azonosítója (eseményindító határozza meg az osztályt ?)',
 	'Class:EventNotification/Attribute:trigger_id' => 'Eseményindító',
 	'Class:EventNotification/Attribute:trigger_id+' => '',
+    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'Email küldés esemény',
 	'Class:EventNotificationEmail+' => 'A kiküldött email-ek nyomonkövetése',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Mellékletek',

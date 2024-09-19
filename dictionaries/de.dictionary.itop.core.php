@@ -7,7 +7,7 @@
  * @author Stephan Rosenke <stephan.rosenke@itomig.de>
  * @author Martin Raenker <martin.raenker@itomig.de>
  * @author Attila Baroti <attila.baroti@itomig.de>
- * 
+ *
  */
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
@@ -317,6 +317,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventNotificationEmail/Attribute:bcc+' => '',
 	'Class:EventNotificationEmail/Attribute:body' => 'Inhalt der Nachricht',
 	'Class:EventNotificationEmail/Attribute:body+' => '',
+    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
+	'Class:EventNotificationEmail' => 'E-Mail Emission Event',
+	'Class:EventNotificationEmail+' => 'Verfolgung einer E-Mail, die gesendet wurde',
+	'Class:EventNotificationEmail/Attribute:to' => 'An',
+	'Class:EventNotificationEmail/Attribute:to+' => '',
 	'Class:EventNotificationEmail/Attribute:cc' => 'Kopie an',
 	'Class:EventNotificationEmail/Attribute:cc+' => '',
 	'Class:EventNotificationEmail/Attribute:from' => 'Von',

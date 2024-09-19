@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
@@ -307,6 +307,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:EventNotification/Attribute:object_id+' => 'Id de objeto (¿clase definida por el disparador?)',
 	'Class:EventNotification/Attribute:trigger_id' => 'Disparador',
 	'Class:EventNotification/Attribute:trigger_id+' => 'Disparador',
+    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'Correo Electrónico de Notificación de Evento',
 	'Class:EventNotificationEmail+' => 'Correo Electrónico de Notificación de Evento',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Anexos',

@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
@@ -322,11 +322,14 @@ Les mots-clés sous la forme :this->attcode spécifiant un champ de l\'objet aya
 	'Class:EventNotification+' => '',
 	'Class:EventNotification/Attribute:action_id' => 'Action',
 	'Class:EventNotification/Attribute:action_id+' => '',
-	'Class:EventNotification/Attribute:object_id' => 'Objet',
+	'Class:EventNotification/Attribute:object_id' => 'Identifiant de l\'objet',
 	'Class:EventNotification/Attribute:object_id+' => '',
 	'Class:EventNotification/Attribute:trigger_id' => 'Déclencheur',
 	'Class:EventNotification/Attribute:trigger_id+' => '',
 	'Class:EventNotificationEmail' => 'Mél envoyé',
+    'Class:EventNotification/Attribute:object_class' => 'Classe de l\'objet',
+    'Class:EventNotification/Attribute:object_class+' => 'Classe de l\'objet (la même que celle du déclencheur)',
+	'Class:EventNotificationEmail' => 'Envoi d\'Email',
 	'Class:EventNotificationEmail+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Pièces jointes',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',

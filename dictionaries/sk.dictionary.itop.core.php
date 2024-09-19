@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
@@ -324,6 +324,9 @@ You can use in the OQL :this->attribute_code with an attribute code of the objec
 	'Class:EventNotification/Attribute:object_id+' => 'object id (class defined by the trigger ?)~~',
 	'Class:EventNotification/Attribute:trigger_id' => 'Spúštač',
 	'Class:EventNotification/Attribute:trigger_id+' => '~~',
+	'Class:EventNotification/Attribute:object_id+' => '',
+    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'Udalosť emitovania emailu',
 	'Class:EventNotificationEmail+' => 'Trace of an email that has been sent~~',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Prílohy',
