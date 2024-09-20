@@ -6,14 +6,12 @@
 
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
@@ -22,10 +20,10 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Application\WelcomePopup\WelcomePopupService;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
 use Combodo\iTop\Controller\WelcomePopupController;
 use Combodo\iTop\Service\Router\Router;
-use Combodo\iTop\Application\WelcomePopup\WelcomePopupService;
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -660,7 +658,7 @@ try
 						$oP->add("<h2>".Dict::Format('UI:FullTextSearchTitle_Text', utils::EscapeHtml($sFullText))."</h2>");
 						$oP->add("</div>\n");
 						$oP->add("</div>\n");
-						$sJSClass = addslashes($sClassName);
+						$sJSClass = addslashes($sClassName ?? '');
 						$sJSNeedles = json_encode($aFullTextNeedles);
 						$oP->add_ready_script(
 							<<<EOF
