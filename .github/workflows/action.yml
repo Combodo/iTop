@@ -13,4 +13,4 @@ jobs:
       - uses: actions/add-to-project@v1.0.2
         with:
           project-url: https://github.com/orgs/Combodo/projects/5
-          github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
+          github-token: ${{ secrets.PR_AUTOMATICALLY_ADD_TO_PROJECT }}
