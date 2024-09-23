@@ -32,7 +32,10 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [Software requirements](https://wiki.openitop.org/doku.php?id=latest:install:upgrading_itop)
  - [iTop documentation](https://www.itophub.io/wiki/page) for iTop and official extensions
  - [iTop extensions](https://store.itophub.io/en_US/) for discovering ans installing extensions
-   
+
+
+
+ # BDA
  
 
 
