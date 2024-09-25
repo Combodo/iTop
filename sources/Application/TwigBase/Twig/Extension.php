@@ -14,6 +14,7 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Dict;
 use Exception;
+use IssueLog;
 use Twig\Environment;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -144,11 +145,25 @@ class Extension
 		// Overwrite native twig filter: disable use of 'system' filter
 		$aFilters[] = new TwigFilter('filter', function (Environment $oTwigEnv, $array, $arrow) {
 			if ($arrow == 'system') {
+				IssueLog::Error('Twig "filter" filter is deactivated when used with system $arrow function');
 				return json_encode($array);
 			}
-
 			return twig_array_filter($oTwigEnv, $array, $arrow);
 		}, ['needs_environment' => true]);
+		// Since 2.7.8 deactivate map
+		$aFilters[] = new TwigFilter('map', function ($array, $arrow) {
+			IssueLog::Error('Twig "map" filter is deactivated');
+			return json_encode($array);
+		});
+		// Since 2.7.8 deactivate reduce
+		$aFilters[] = new TwigFilter('reduce', function ($array, $arrow, $initial = null) {
+			IssueLog::Error('Twig "reduce" filter is deactivated');
+			return json_encode($array);
+		});
+		$aFilters[] = new TwigFilter('sort', function ($array, $arrow, $initial = null) {
+			IssueLog::Error('Twig "sort" filter is deactivated');
+			return json_encode($array);
+		});
 
 		return $aFilters;
 	}
