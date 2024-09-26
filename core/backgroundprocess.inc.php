@@ -230,7 +230,7 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			$iFirstDayOfWeek = $aDays[0];
 			$iDayMove = $oNow->format('N') - $iFirstDayOfWeek;
 			$oRet = clone $oNow;
-			$oRet->modify('-'.$iDayMove.' days');
+			$oRet->modify(-$iDayMove.' days');
 			$oRet->modify('+1 weeks');
 		}
 		else
@@ -238,7 +238,7 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			$iNextDayOfWeek = $aDays[$iNextPos];
 			$iMove = $iNextDayOfWeek - $oNow->format('N');
 			$oRet = clone $oNow;
-			$oRet->modify('+'.$iMove.' days');
+			$oRet->modify($iMove.' days');
 		}
 		list($sHours, $sMinutes) = explode(':', $sProcessTime);
 		$oRet->setTime((int)$sHours, (int)$sMinutes);

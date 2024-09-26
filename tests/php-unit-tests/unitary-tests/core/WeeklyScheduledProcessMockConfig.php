@@ -9,14 +9,14 @@
  */
 class WeeklyScheduledProcessMockConfig extends AbstractWeeklyScheduledProcess
 {
-	const MODULE_NAME = 'TEST_SCHEDULED_PROCESS';
+	const MODULE_NAME = 'itop-zabu-gomeu';
 
-	public function __construct($bEnabledValue, $sTimeValue)
+	public function __construct($bEnabledValue, $sTimeValue, $sWeekDays)
 	{
 		$this->oConfig = new Config();
 		$this->oConfig->SetModuleSetting(self::MODULE_NAME, self::MODULE_SETTING_ENABLED, $bEnabledValue);
 		$this->oConfig->SetModuleSetting(self::MODULE_NAME, self::MODULE_SETTING_TIME, $sTimeValue);
-		$this->oConfig->SetModuleSetting(self::MODULE_NAME, self::MODULE_SETTING_WEEKDAYS, 'monday, tuesday, wednesday, thursday, friday');
+		$this->oConfig->SetModuleSetting(self::MODULE_NAME, self::MODULE_SETTING_WEEKDAYS, $sWeekDays);
 		utils::InitTimeZone($this->oConfig);
 	}
 
