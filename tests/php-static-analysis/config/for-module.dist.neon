@@ -1,0 +1,15 @@
+includes:
+    - base.dist.neon
+
+parameters:
+    paths:
+        # We just want to analyse the module folder(s), either:
+        # - Create your own `for-module.neon` file, include this one and override this parameter (see https://phpstan.org/config-reference#multiple-files)
+        # - Pass the module folder(s) in the commande line (see https://phpstan.org/config-reference#analysed-files)
+    scanDirectories:
+        # Unlike for `for-package.dist.neon`, here we need to scan all the folders to discover symbols, but we only want to analyse the module folder.
+        # We initially thought of doing it through the `excludePaths` param. by excluding everything but the module folder, but it doesn't seem to be possible, because it uses the `fnmatch()` function.
+        # As a workaround, we list here all the folders to scan.
+        #
+        # Scan the whole project and rely on the `excludePaths` param. to filter the unnecessary
+        - ../../..

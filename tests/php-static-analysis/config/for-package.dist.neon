@@ -1,0 +1,7 @@
+includes:
+    - base.dist.neon
+
+parameters:
+    paths:
+        # We want to analyse almost the whole project, so we do a negative selection between the `paths` and `excludePaths` (see base.dist.neon) parameters
+        - ../../../
