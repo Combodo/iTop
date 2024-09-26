@@ -67,8 +67,8 @@ $(function()
 		// revert other modifications here
 		_destroy: function()
 		{
-			this.element
-			.removeClass('portal_form_handler');
+			this._unregisterBlockers();
+			this.element.removeClass('portal_form_handler');
 		},
 		// _setOptions is called with a hash of all options that are changing
 		// always refresh when changing options

@@ -68,7 +68,7 @@ class iTopNewsroomController extends Controller
 
 		$oNotificationsCenterButton = ButtonUIBlockFactory::MakeIconLink(
 			'fas fa-cogs',
-			Dict::S('UI:NotificationsCenter:Panel:Title'),
+			Dict::S('UI:NotificationsCenter:Panel:SubTitle'),
 			Router::GetInstance()->GenerateUrl(NotificationsCenterController::ROUTE_NAMESPACE.'.display_page'),
 		);
 		$oBulkActionsBlock->SetToolBlocks([$oNotificationsCenterButton]);

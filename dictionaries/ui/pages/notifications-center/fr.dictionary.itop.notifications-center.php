@@ -13,7 +13,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:NotificationsCenter:Advanced:Input:Label' => '%1$s: %2$s',
 	'UI:NotificationsCenter:Channel:OutOf:Text' => '%1$s sur %2$s',
 	'UI:NotificationsCenter:Page:Title' => 'Notifications',
-	'UI:NotificationsCenter:Panel:SubTitle' => 'Gérer les Notifications dont vous êtes destinataire : désinscrivez-vous ou limitez les à un seul canal',
+	'UI:NotificationsCenter:Panel:SubTitle' => 'Gérer les Notifications dont vous êtes destinataire : désabonnez-vous des news, des méls ou des deux',
 	'UI:NotificationsCenter:Panel:Toolbar:ViewAllNews:Title' => 'Voir toutes mes news',
 	'UI:NotificationsCenter:Panel:Table:Channels' => 'Canaux',
 	'UI:NotificationsCenter:Panel:Title' => 'Notifications',
