@@ -104,6 +104,12 @@ class WeeklyScheduledProcessTest extends ItopTestCase
 		$oWeeklyImpl->InterpretWeekDays();
 	}
 
+	public function testTimeConfigShouldBeTrimmed()
+	{
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '  22:33  ', 'monday');
+		$this->assertEquals(new DateTime('2020-05-11 22:33:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-11 21:00'));
+	}
+
 	public function testTimeConfigSecondsShouldBeIgnored()
 	{
 		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '22:33:44.123', 'monday');
