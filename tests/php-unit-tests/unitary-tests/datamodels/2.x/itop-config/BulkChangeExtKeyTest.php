@@ -188,12 +188,6 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		);
 	}
 
-	/*public function ReconciliationKeyProvider(){
-		return [
-			'rack_id NOT a reconcilication key' => [ false ],
-			'rack_id reconcilication key' => [ true ],
-		];
-	}*/
 	/**
 	 * @dataProvider ReconciliationKeyProvider
 	 */
