@@ -1,0 +1,18 @@
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% macro BlockExtension(aPluginFormData, sBlockName, sText = '') %}
+	{% set bHaveBlock = 'false' %}
+	{% for oLoginData in aPluginFormData %}
+        {% if (oLoginData is defined and oLoginData.GetBlockExtension(sBlockName)) %}
+		{% set bHaveBlock = 'true' %}
+		{% set oBlockExtension = oLoginData.GetBlockExtension(sBlockName) %}
+		{% set sTwig = oBlockExtension.GetTwig() %}
+		{% set aData = oBlockExtension.GetData() %}
+		{% include sTwig ignore missing %}
+        {% endif %}
+	{% endfor %}
+	{% if bHaveBlock == 'true' %}
+		{{ sText|raw }}
+	{% endif %}
+{% endmacro %}

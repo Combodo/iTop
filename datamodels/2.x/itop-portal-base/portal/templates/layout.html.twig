@@ -75,14 +75,14 @@
 		{% endif %}
 	{% endblock %}
 
+    <style>
 	{% block pStyleinline %}
         {# UI Extensions inline CSS #}
         {% if app['ui_extensions_helper'].css_inline is not null %}
-			<style>
 				{{ app['ui_extensions_helper'].css_inline|raw }}
-			</style>
         {% endif %}
 	{% endblock %}
+    </style>
 
 	{% block pPageScripts %}
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/jquery/dist/jquery.min.js'|add_itop_version }}"></script>
