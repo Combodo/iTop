@@ -168,7 +168,7 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 		// Background processes do repeat periodically
 		$oPlannedStart = clone $oDatePlanned;
 		// Let's schedule from the previous planned date of execution to avoid shift
-		$oPlannedStart->modify('+'.$oProcess->GetPeriodicity().' seconds');
+		$oPlannedStart->modify($oProcess->GetPeriodicity().' seconds');
 		$oEnd = new DateTime();
 		while ($oPlannedStart->format('U') < $oEnd->format('U'))
 		{

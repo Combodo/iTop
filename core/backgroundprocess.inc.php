@@ -201,6 +201,7 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			static::MODULE_SETTING_TIME,
 			static::GetDefaultModuleSettingTime()
 		);
+		$sProcessTime = trim($sProcessTime);
 		if (!preg_match('/[0-2]\d:[0-5]\d/', $sProcessTime))
 		{
 			throw new ProcessInvalidConfigException($this->GetModuleName().": wrong format for setting '".static::MODULE_SETTING_TIME."' (found '$sProcessTime')");
@@ -230,7 +231,7 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			$iFirstDayOfWeek = $aDays[0];
 			$iDayMove = $oNow->format('N') - $iFirstDayOfWeek;
 			$oRet = clone $oNow;
-			$oRet->modify('-'.$iDayMove.' days');
+			$oRet->modify(-$iDayMove.' days');
 			$oRet->modify('+1 weeks');
 		}
 		else
@@ -238,7 +239,7 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			$iNextDayOfWeek = $aDays[$iNextPos];
 			$iMove = $iNextDayOfWeek - $oNow->format('N');
 			$oRet = clone $oNow;
-			$oRet->modify('+'.$iMove.' days');
+			$oRet->modify($iMove.' days');
 		}
 		list($sHours, $sMinutes) = explode(':', $sProcessTime);
 		$oRet->setTime((int)$sHours, (int)$sMinutes);

@@ -108,7 +108,7 @@ class DefaultWorkingTimeComputer implements iWorkingTimeComputer
 		// Default implementation: 24x7, no holidays: to compute the deadline, just add
 		// the specified duration to the given date/time
 		$oResult = clone $oStartDate;
-		$oResult->modify('+'.$iDuration.' seconds');
+		$oResult->modify($iDuration.' seconds');
 		if (class_exists('WorkingTimeRecorder'))
 		{
 			WorkingTimeRecorder::SetValues($oStartDate->format('U'), $oResult->format('U'), $iDuration, WorkingTimeRecorder::COMPUTED_END);

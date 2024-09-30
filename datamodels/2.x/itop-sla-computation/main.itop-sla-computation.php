@@ -166,7 +166,7 @@ class SLAComputationAddOnAPI
 		// Default implementation: 24x7, no holidays: to compute the deadline, just add
 		// the specified duration to the given date/time
 		$oResult = clone $oStartDate;
-		$oResult->modify('+'.$iDuration.' seconds');
+		$oResult->modify($iDuration.' seconds');
 
 		return $oResult;
 	}
