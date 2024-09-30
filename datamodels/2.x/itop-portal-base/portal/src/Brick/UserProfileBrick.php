@@ -277,10 +277,12 @@ class UserProfileBrick extends PortalBrick
 			return $a->GetSectionRank() - $b->GetSectionRank();
 		});
 
+		$this->aData['aPluginFormData']=[];
 		foreach ($aTabSectionExtensions as $oPortalTabSectionExtension)	{
 			$oPortalContext = $oPortalTabSectionExtension->GetPortalTwigContext();
 			$this->aData['aPluginFormData'][] = $oPortalContext;
 		}
+
 
 		return $this;
 	}
