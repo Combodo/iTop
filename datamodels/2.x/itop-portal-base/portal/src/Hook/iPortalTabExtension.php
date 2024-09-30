@@ -4,13 +4,13 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Hook\Display;
+namespace Combodo\iTop\Portal\Hook;
 
 /**
  * Interface iMyAccountAjaxTabExtension
  * Define extensibility point to MyAccount screen
  */
-interface iTabExtension
+interface iPortalTabExtension
 {
 	/**
 	 * Get the target reference of the page to display this tab
@@ -40,13 +40,6 @@ interface iTabExtension
 	 * @return string
 	 */
 	public function GetTabCode(): string;
-
-	/**
-	 * True if the tab is cached or false if the tab must be reloaded each time the user click on it
-	 *
-	 * @return bool
-	 */
-	public function GetTabIsCached(): bool;
 
 	/**
 	 * Label of the tab

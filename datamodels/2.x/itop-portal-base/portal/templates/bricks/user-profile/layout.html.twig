@@ -2,6 +2,11 @@
 {# User profile brick base layout #}
 {% extends 'itop-portal-base/portal/templates/bricks/layout.html.twig' %}
 
+{% set aData = oBrick.GetData() %}
+{% set oContactForm = forms.contact %}
+{% set oPreferencesForm = forms.preferences %}
+{% set oPasswordForm = forms.password %}
+
 {% block pPageBodyClass %}{{ parent() }} page_user-profile_brick{% endblock %}
 
 {% block pMainHeaderTitle %}
@@ -16,35 +21,50 @@
 		</div>
 	{% endif %}
 
-    {% if aTabsValues|length > 1 %}
-        <ul class="nav nav-pills _tabs">
-            {% for aTab in aTabsValues %}
-                <li{% if sTab is defined and sTab == aTab.value %} class="active"{% endif %} data-id="{{ aTab.value }}" data-label="{{ aTab.label }}" data-item-count="{{ aTab.count }}">
-                    <a href="{{ app.url_generator.generate('p_manage_brick_display_as', {'sBrickId': sBrickId, 'sDisplayMode': sDisplayMode, 'sTab': aTab.value}) }}"
-                       id="btn_tab_for_{{ aTab.value }}">
+<ul class="nav nav-pills _tabs">
+    <li{% if sTab is defined and sTab == aTab.code %} class="active"{% endif %} data-id="user-info" data-label="{{ 'MyAccount:UserInfo:Tab:Title'|dict_s }}">
+        <a href="{{ app.url_generator.generate('p_user_profile_brick', {'sBrickId': oBrick.GetId(), 'sDisplayMode': '_self', 'sTab': "user-info"}) }}"
+           id="btn_tab_for_user-info">
+            {{ 'MyAccount:UserInfo:Tab:Title'|dict_s }}
+        </a>
+    </li>
+    {% if aData.aTabsValues|length > 0 %}
+            {% for aTab in aData.aTabsValues %}
+                <li{% if sTab is defined and sTab == aTab.code %} class="active"{% endif %} data-id="{{ aTab.code }}" data-label="{{ aTab.label }}">
+                    <a href="{{ app.url_generator.generate('p_user_profile_brick', {'sBrickId': oBrick.GetId(), 'sDisplayMode': '_self', 'sTab': aTab.code}) }}"
+                       id="btn_tab_for_{{ aTab.code }}">
                         {{ aTab.label|raw }}
                     </a>
                 </li>
             {% endfor %}
-        </ul>
+    {% endif %}
+    </ul>
+
+    {% if sTab is not defined or sTab == "user-info" %}
+        {% include 'itop-portal-base/portal/templates/bricks/user-profile/user_info.html.twig' %}
+    {% else %}
+        {% import "itop-portal-base/portal/templates/bricks/user-profile/macros.twig" as Macro %}
+        {{ Macro.BlockExtension(aData.aPluginFormData, 'html') }}
     {% endif %}
 
 {% endblock %}
 
 {% block pPageReadyScripts %}
 	{{ parent() }}
-    {% import "macros.twig" as Macro %}
-    {{ Macro.BlockExtension(aPluginFormData, 'ready_script') }}
+    {% import "itop-portal-base/portal/templates/bricks/user-profile/macros.twig" as Macro %}
+    {{ Macro.BlockExtension(aData.aPluginFormData, 'ready_script') }}
+
+    {% include 'itop-portal-base/portal/templates/bricks/user-profile/user_info.ready.js.twig' %}
 {% endblock %}
 
 {% block pPageLiveScriptHelpers %}
     {{ parent() }}
-    {% import "macros.twig" as Macro %}
-    {{ Macro.BlockExtension(aPluginFormData, 'script') }}
+    {% import "itop-portal-base/portal/templates/bricks/user-profile/macros.twig" as Macro %}
+    {{ Macro.BlockExtension(aData.aPluginFormData, 'script') }}
 {% endblock %}
 
 {% block pStyleinline %}
     {{ parent() }}
-    {% import "macros.twig" as Macro %}
-    {{ Macro.BlockExtension(aPluginFormData, 'css') }}
-{% endblock css %}
+    {% import "itop-portal-base/portal/templates/bricks/user-profile/macros.twig" as Macro %}
+    {{ Macro.BlockExtension(aData.aPluginFormData, 'css') }}
+{% endblock %}
