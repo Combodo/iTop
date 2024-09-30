@@ -1787,6 +1787,13 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'http.request.user_agent' => [
+			'type'                => 'string',
+			'description'         => 'HTTP request user agent, use this to set a custom agent on external requests.',
+			'default'             => ITOP_APPLICATION.'/'.ITOP_VERSION,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		]
 	];
 
 	public function IsProperty($sPropCode)
