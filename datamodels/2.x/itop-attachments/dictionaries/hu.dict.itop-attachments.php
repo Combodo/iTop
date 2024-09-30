@@ -61,4 +61,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
-));
+]);

@@ -63,4 +63,4 @@ or ask your '.ITOP_APPLICATION_SHORT.' administrator if the '.ITOP_APPLICATION_S
 	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
-));
+]);

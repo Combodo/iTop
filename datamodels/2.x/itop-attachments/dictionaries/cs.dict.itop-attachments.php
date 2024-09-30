@@ -65,4 +65,4 @@ nebe se zeptejte'.ITOP_APPLICATION_SHORT.' správce '.ITOP_APPLICATION_SHORT.' z
 	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
-));
+]);
