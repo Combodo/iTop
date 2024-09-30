@@ -64,4 +64,4 @@ oder melden Sie dem '.ITOP_APPLICATION_SHORT.' Administrator diesen Fehler, weil
 	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
-));
+]);

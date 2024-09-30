@@ -63,4 +63,4 @@ Soit demandez à votre administrateur système s\'il reste de la place disque di
 	'Class:TriggerOnAttachmentCreate+'                        => '',
 	'Class:TriggerOnAttachmentDelete'                         => 'Déclencheur sur la suppression d\'une pièce jointe',
 	'Class:TriggerOnAttachmentDelete+'                        => '',
-));
+]);

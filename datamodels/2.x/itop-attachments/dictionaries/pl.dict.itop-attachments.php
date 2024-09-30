@@ -63,4 +63,4 @@ lub zapytaj administratora '.ITOP_APPLICATION_SHORT.', czy dysk serwera '.ITOP_A
     'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
-));
+]);

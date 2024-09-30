@@ -332,18 +332,6 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 					$oObject->FireEvent(EVENT_REMOVE_ATTACHMENT_FROM_OBJECT, $aData);
 					$oAttachment->DBDelete();
 					$aActions[] = self::GetActionChangeOp($oAttachment, false /* false => deletion */);
-					//Execute Trigger
-					$aParams = ['class_list' => MetaModel::EnumParentClasses(get_class($oObject), ENUM_PARENT_CLASSES_ALL)];
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnAttachmentDelete AS t WHERE t.target_class IN (:class_list)'), [], $aParams);
-					while ($oTrigger = $oSet->Fetch()) {
-						try {
-							$oTrigger->DoActivate($oAttachment->ToArgs('this'));
-						}
-						catch (Exception $e) {
-							$oTrigger->LogException($e, $oAttachment->ToArgs('this'));
-							utils::EnrichRaisedException($oTrigger, $e);
-						}
-					}
 				}
 			}
 
@@ -780,39 +768,6 @@ class CMDBChangeOpAttachmentRemoved extends CMDBChangeOp
 		return $sResult;
 	}
 }
-
-/**
- * Class TriggerOnAttachmentDownload
- *
- * @since 3.1.0
- */
-class TriggerOnAttachmentDownload extends TriggerOnAttributeBlobDownload
-{
-	/**
-	 * @inheritDoc
-	 * @throws \CoreException
-	 * @throws \Exception
-	 */
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "grant_by_profile,core/cmdb,application",
-			"key_type" => "autoincrement",
-			"name_attcode" => "description",
-			"complementary_name_attcode" => ['finalclass', 'complement'],
-			"state_attcode" => "",
-			"reconc_keys" => ['description'],
-			"db_table" => "priv_trigger_onattdownload",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		MetaModel::Init_InheritAttributes();
-	}
-}
-
 
 class AttachmentsHelper
 {

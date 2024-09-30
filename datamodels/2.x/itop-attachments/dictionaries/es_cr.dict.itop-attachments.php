@@ -64,4 +64,4 @@ o pregunte al administador de iTop si el servidor que ha quedado sin espacio en 
 	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
-));
+]);
