@@ -50,6 +50,9 @@ if (Session::IsSet('auth_user'))
 	UserRights::Login($sAuthUser); // Set the user's language
 }
 
+// This is the only instance where itop_env should not be reset yet, which it will be when calling LoginWebPage::ResetSession().
+// Call and reset. Clean up at the very end.
+$sEnv = Session::Get('itop_env', null);
 LoginWebPage::ResetSession();
 
 $bLoginDebug = MetaModel::GetConfig()->Get('login_debug');
@@ -105,4 +108,11 @@ if ($bLoginDebug) {
 }
 
 $oPage = LoginWebPage::NewLoginWebPage();
+
+// Temporarily set the iTop enviromnent variable again.
+Session::Set('itop_env', $sEnv);
 $oPage->DisplayLogoutPage($bPortal);
+
+// Finally, unset the iTop environment variable.
+Session::Unset('itop_env');
+
