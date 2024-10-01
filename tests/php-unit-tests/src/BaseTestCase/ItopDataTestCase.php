@@ -1199,6 +1199,27 @@ abstract class ItopDataTestCase extends ItopTestCase
 		return $sId;
 	}
 
+	/**
+	 * Create an Application Solution in database
+	 *
+	 * @param int $iNum
+	 * @param string $sRedundancy
+	 *
+	 * @throws Exception
+	 */
+	protected function GivenApplicationSolutionInDB($iNum, $sRedundancy = '1'): string
+	{
+		$sName = 'ApplicationSolution_'.$iNum;
+		$sId = $this->GivenObjectInDB('ApplicationSolution', [
+			'name'       => $sName,
+			'org_id'     => $this->getTestOrgId(),
+			'redundancy' => $sRedundancy,
+		]);
+		$this->debug("Created $sName ($sId) redundancy $sRedundancy");
+
+		return $sId;
+	}
+
 	protected function GivenServerInDB($iNum, $iRackUnit = null): string
 	{
 		$sName = 'Server_'.$iNum;
@@ -1251,6 +1272,18 @@ abstract class ItopDataTestCase extends ItopTestCase
 			'functionalci_id' => $sCIId,
 		]);
 		$this->debug("Created $sClass::$sId linking contact $sContactId and CI $sCIId");
+
+		return $sId;
+	}
+
+	protected function GivenLnkApplicationSolutionToFunctionalCIInDB($sApplicationSolutionId, $sCIId): string
+	{
+		$sClass = 'lnkApplicationSolutionToFunctionalCI';
+		$sId = $this->GivenObjectInDB($sClass, [
+			'applicationsolution_id' => $sApplicationSolutionId,
+			'functionalci_id' => $sCIId,
+		]);
+		$this->debug("Created $sClass::$sId linking ApplicationSolution $sApplicationSolutionId and CI $sCIId");
 
 		return $sId;
 	}

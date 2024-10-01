@@ -75,6 +75,8 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		]);
 	}
 
+
+
 	public function testImpactShouldBePropagatedInOneWayOnly()
 	{
 		/**
@@ -117,6 +119,47 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 			'Hypervisor_1' => 'computed',
 			'Farm_1' => 'computed',
 			'Test Person_1' => 'computed'
+		]);
+	}
+
+	public function testImpactShouldBePropagatedRecursivelyUpToMaxDepth()
+	{
+		/**
+		 * ApplicationSolution_0 +----> ApplicationSolution_1 +----> ApplicationSolution_2 +----->  ..... +----> ApplicationSolution_12
+		 */
+		$this->GivenCITreeInDB(<<<EOF
+			ApplicationSolution_0 <-> ApplicationSolution_1
+			ApplicationSolution_1 <-> ApplicationSolution_2
+			ApplicationSolution_2 <-> ApplicationSolution_3
+			ApplicationSolution_3 <-> ApplicationSolution_4
+			ApplicationSolution_4 <-> ApplicationSolution_5
+			ApplicationSolution_5 <-> ApplicationSolution_6
+			ApplicationSolution_6 <-> ApplicationSolution_7
+			ApplicationSolution_7 <-> ApplicationSolution_8
+			ApplicationSolution_8 <-> ApplicationSolution_9
+			ApplicationSolution_9 <-> ApplicationSolution_10
+			ApplicationSolution_10 <-> ApplicationSolution_11
+			ApplicationSolution_11 <-> ApplicationSolution_12
+			ApplicationSolution_12 <-> ApplicationSolution_13
+		EOF);
+		$oTicket = $this->GivenTicketWithCIsOrPersons([
+			'ApplicationSolution_0' => 'manual'
+		]);
+
+		$oTicket->UpdateImpactedItems(); // impact analysis
+
+		$this->assertCIsOrPersonsListEquals($oTicket, [
+			'ApplicationSolution_0' => 'manual',
+			'ApplicationSolution_1' => 'computed',
+			'ApplicationSolution_2' => 'computed',
+			'ApplicationSolution_3' => 'computed',
+			'ApplicationSolution_4' => 'computed',
+			'ApplicationSolution_5' => 'computed',
+			'ApplicationSolution_6' => 'computed',
+			'ApplicationSolution_7' => 'computed',
+			'ApplicationSolution_8' => 'computed',
+			'ApplicationSolution_9' => 'computed',
+			'ApplicationSolution_10' => 'computed',
 		]);
 	}
 
@@ -448,7 +491,12 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 			list($sCI, $sPerson) = explode('<->', $sLine);
 			$sPersonId = $this->GivenCIOrPersonInDB(trim($sPerson));
 			$sCIId = $this->GivenCIOrPersonInDB(trim($sCI));
-			$this->GivenLnkContactToFunctionalCIInDB($sPersonId, $sCIId);
+			if (str_starts_with(trim($sPerson),'ApplicationSolution'))
+			{
+				$this->GivenLnkApplicationSolutionToFunctionalCIInDB($sPersonId, $sCIId);
+			} else {
+				$this->GivenLnkContactToFunctionalCIInDB($sPersonId, $sCIId);
+			}
 			return;
 		}
 		list($sCIParent, $sChildren) = explode('->', $sLine);
@@ -484,6 +532,9 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 				break;
 			case 'VirtualMachine':
 				$sCIId = $this->GivenVirtualMachineInDB($sRef, $aChildrenIdsByClass['Farm']);
+				break;
+			case 'ApplicationSolution':
+				$sCIId = $this->GivenApplicationSolutionInDB($sRef);
 				break;
 			default:
 				throw new Exception("Unhandled class $sClass");
@@ -528,3 +579,4 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		$this->ResetMetaModelQueyCacheGetObject();
 	}
 }
+
