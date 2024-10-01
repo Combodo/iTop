@@ -50,7 +50,7 @@
         <div id="user-profile-wrapper">
             <div class="row">
                 {% import "itop-portal-base/portal/templates/helpers/macros.twig" as Macro %}
-                {{ Macro.BlockExtension(aData.aPluginFormData, 'html') }}
+                {{ Macro.BlockExtension(aData.aPluginFormData, 'html', oBrick) }}
             </div>
         </div>
     {% endif %}
@@ -60,7 +60,7 @@
 {% block pPageReadyScripts %}
 	{{ parent() }}
     {% import "itop-portal-base/portal/templates/helpers/macros.twig" as Macro %}
-    {{ Macro.BlockExtension(aData.aPluginFormData, 'ready_script') }}
+    {{ Macro.BlockExtension(aData.aPluginFormData, 'ready_script', oBrick) }}
 
     {% include 'itop-portal-base/portal/templates/bricks/user-profile/user_info.ready.js.twig' %}
 {% endblock %}
@@ -68,11 +68,11 @@
 {% block pPageLiveScriptHelpers %}
     {{ parent() }}
     {% import "itop-portal-base/portal/templates/helpers/macros.twig" as Macro %}
-    {{ Macro.BlockExtension(aData.aPluginFormData, 'script') }}
+    {{ Macro.BlockExtension(aData.aPluginFormData, 'script', oBrick) }}
 {% endblock %}
 
 {% block pStyleinline %}
     {{ parent() }}
     {% import "itop-portal-base/portal/templates/helpers/macros.twig" as Macro %}
-    {{ Macro.BlockExtension(aData.aPluginFormData, 'css') }}
+    {{ Macro.BlockExtension(aData.aPluginFormData, 'css', oBrick) }}
 {% endblock %}
