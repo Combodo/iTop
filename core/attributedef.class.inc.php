@@ -3793,7 +3793,7 @@ class AttributeClass extends AttributeString
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('class_category', 'more_values', 'class_exclusion_list'));
+		return array_merge(parent::ListExpectedParams(), array('class_category', 'more_values'));
 	}
 
 	public function __construct($sCode, $aParams)
@@ -3835,7 +3835,7 @@ class AttributeClass extends AttributeString
 
 		$aListClass = $oValSetDef->GetValues($aArgs, $sContains);
 
-		$sClassExclusionList = $this->Get('class_exclusion_list');
+		$sClassExclusionList = $this->GetOptional('class_exclusion_list',null);
 		if (!empty($sClassExclusionList)) {
 			foreach (explode(',', $sClassExclusionList) as $sClassName) {
 				unset($aListClass[trim($sClassName)]);
