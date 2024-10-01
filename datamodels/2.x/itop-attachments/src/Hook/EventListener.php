@@ -10,6 +10,7 @@ namespace Combodo\iTop\Attachments\Hook;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Service\Events\iEventServiceSetup;
+use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
 use Exception;
@@ -18,6 +19,8 @@ use LogChannels;
 use MetaModel;
 use ormDocument;
 use TriggerOnAttachmentDownload;
+use TriggerOnAttachmentCreate;
+use TriggerOnAttachmentDelete;
 
 /**
  * Class EventListener
