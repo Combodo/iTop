@@ -272,17 +272,17 @@ class UserProfileBrick extends PortalBrick
 			}
 			$aTabSectionExtensions[] = $oPortalTabSectionExtension;
 		}
+		$this->aData['sTab'] = $sTab;
 
 		usort($aTabSectionExtensions, function (iPortalTabSectionExtension $a, iPortalTabSectionExtension $b) {
 			return $a->GetSectionRank() - $b->GetSectionRank();
 		});
 
-		$this->aData['aPluginFormData']=[];
-		foreach ($aTabSectionExtensions as $oPortalTabSectionExtension)	{
+		$this->aData['aPluginFormData'] = [];
+		foreach ($aTabSectionExtensions as $oPortalTabSectionExtension) {
 			$oPortalContext = $oPortalTabSectionExtension->GetPortalTwigContext();
 			$this->aData['aPluginFormData'][] = $oPortalContext;
 		}
-
 
 		return $this;
 	}

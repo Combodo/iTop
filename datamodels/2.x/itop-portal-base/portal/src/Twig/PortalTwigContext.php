@@ -23,7 +23,7 @@ class PortalTwigContext
 	 * @param string $sBlockName
 	 * @param PortalBlockExtension $oBlockExtension
 	 */
-	public function AddBlockExtension($sBlockName, $oBlockExtension)
+	public function AddBlockExtension(string $sBlockName, PortalBlockExtension $oBlockExtension): void
 	{
 		$this->aBlockExtension[$sBlockName] = $oBlockExtension;
 	}
@@ -33,10 +33,10 @@ class PortalTwigContext
 	 *
 	 * @return PortalBlockExtension
 	 */
-	public function GetBlockExtension($sBlockName)
+	public function GetBlockExtension(string $sBlockName): ?PortalBlockExtension
 	{
 		/** @var PortalBlockExtension $oBlockExtension */
-		$oBlockExtension = isset($this->aBlockExtension[$sBlockName]) ? $this->aBlockExtension[$sBlockName] : null;
+		$oBlockExtension = $this->aBlockExtension[$sBlockName] ?? null;
 		return $oBlockExtension;
 	}
 }

@@ -3,6 +3,10 @@
 {% extends 'itop-portal-base/portal/templates/bricks/layout.html.twig' %}
 
 {% set aData = oBrick.GetData() %}
+{% set sTab = aData.sTab %}
+{% if sTab == "" %}
+    {% set sTab = "user-info" %}
+{% endif %}
 {% set oContactForm = forms.contact %}
 {% set oPreferencesForm = forms.preferences %}
 {% set oPasswordForm = forms.password %}
@@ -21,30 +25,34 @@
 		</div>
 	{% endif %}
 
-<ul class="nav nav-pills _tabs">
-    <li{% if sTab is defined and sTab == aTab.code %} class="active"{% endif %} data-id="user-info" data-label="{{ 'MyAccount:UserInfo:Tab:Title'|dict_s }}">
-        <a href="{{ app.url_generator.generate('p_user_profile_brick', {'sBrickId': oBrick.GetId(), 'sDisplayMode': '_self', 'sTab': "user-info"}) }}"
-           id="btn_tab_for_user-info">
-            {{ 'MyAccount:UserInfo:Tab:Title'|dict_s }}
-        </a>
-    </li>
-    {% if aData.aTabsValues|length > 0 %}
+    <ul class="nav nav-pills _tabs">
+        <li{% if sTab == "user-info" %} class="active"{% endif %} data-id="user-info" data-label="{{ 'MyAccount:UserInfo:Tab:Title'|dict_s }}">
+            <a href="{{ app.url_generator.generate('p_user_profile_brick', {'sBrickId': oBrick.GetId(), 'sDisplayMode': '_self', 'sTab': "user-info"}) }}"
+               id="btn_tab_for_user-info">
+                {{ 'MyAccount:UserInfo:Tab:Title'|dict_s }}
+            </a>
+        </li>
+        {% if aData.aTabsValues|length > 0 %}
             {% for aTab in aData.aTabsValues %}
-                <li{% if sTab is defined and sTab == aTab.code %} class="active"{% endif %} data-id="{{ aTab.code }}" data-label="{{ aTab.label }}">
+                <li{% if sTab == aTab.code %} class="active"{% endif %} data-id="{{ aTab.code }}" data-label="{{ aTab.label }}">
                     <a href="{{ app.url_generator.generate('p_user_profile_brick', {'sBrickId': oBrick.GetId(), 'sDisplayMode': '_self', 'sTab': aTab.code}) }}"
                        id="btn_tab_for_{{ aTab.code }}">
                         {{ aTab.label|raw }}
                     </a>
                 </li>
             {% endfor %}
-    {% endif %}
+        {% endif %}
     </ul>
 
-    {% if sTab is not defined or sTab == "user-info" %}
+    {% if sTab == "user-info" %}
         {% include 'itop-portal-base/portal/templates/bricks/user-profile/user_info.html.twig' %}
     {% else %}
-        {% import "itop-portal-base/portal/templates/bricks/user-profile/macros.twig" as Macro %}
-        {{ Macro.BlockExtension(aData.aPluginFormData, 'html') }}
+        <div id="user-profile-wrapper">
+            <div class="row">
+                {% import "itop-portal-base/portal/templates/bricks/user-profile/macros.twig" as Macro %}
+                {{ Macro.BlockExtension(aData.aPluginFormData, 'html') }}
+            </div>
+        </div>
     {% endif %}
 
 {% endblock %}
