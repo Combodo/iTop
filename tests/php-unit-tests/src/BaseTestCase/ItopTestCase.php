@@ -9,19 +9,21 @@ namespace Combodo\iTop\Test\UnitTest;
 use CMDBSource;
 use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
-use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 use SetupUtils;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpKernel\KernelInterface;
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 /**
  * Class ItopTestCase
  *
- * Helper class to extend for tests that DO NOT need to access the DataModel or the Database
+ * Helper class to extend for tests that DO NOT need to access the DataModel or the Database,
+ * but still need to access the iTop core classes and optionally boot the Symfony kernel (to access the services container).
  *
  * @since 3.0.4 3.1.1 3.2.0 N°6658 move some setUp/tearDown code to the corresponding methods *BeforeClass to speed up tests process time.
  */
-abstract class ItopTestCase extends TestCase
+abstract class ItopTestCase extends KernelTestCase
 {
 	public const TEST_LOG_DIR = 'test';
 
@@ -70,6 +72,9 @@ abstract class ItopTestCase extends TestCase
 				}
 			}
 		}
+
+		// Required to boot the portal symfony Kernel
+		$_ENV['PORTAL_ID'] = 'itop-portal';
 	}
 
 	/**
@@ -142,6 +147,9 @@ abstract class ItopTestCase extends TestCase
 	protected function setUp(): void {
 		parent::setUp();
 
+		// Hack - Required the first time the Portal kernel is booted on a newly installed iTop
+		$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'] = __DIR__ . '/../../../../../env-production/itop-portal-base/portal/public/';
+
 		$this->LoadRequiredItopFiles();
 		$this->LoadRequiredTestFiles();
 	}
@@ -212,7 +220,7 @@ abstract class ItopTestCase extends TestCase
 	protected function LoadRequiredItopFiles(): void
 	{
 		// At least make sure that the autoloader will be loaded, and that the APPROOT constant is defined
-        require_once __DIR__.'/../../../../approot.inc.php';
+		require_once __DIR__.'/../../../../approot.inc.php';
     }
 
 	/**
@@ -540,5 +548,28 @@ abstract class ItopTestCase extends TestCase
 		}
 
 		$this->AssertArraysHaveSameItems($aExpected, $aFiles, $sMessage);
+	}
+
+	/**
+	 * Control which Kernel will be loaded when invoking the bootKernel method
+	 *
+	 * @see static::bootKernel(), static::getContainer()
+	 * @see  \Combodo\iTop\Kernel, \Combodo\iTop\Portal\Kernel
+     *
+	 * @param string $sKernelClass
+	 *
+	 * @since 3.2.1
+	 */
+	static protected function SetKernelClass(string $sKernelClass): void
+	{
+		$_SERVER['KERNEL_CLASS'] = $sKernelClass;
+	}
+
+	static protected function bootKernel(array $options = []): KernelInterface
+	{
+		if (!array_key_exists('KERNEL_CLASS', $_SERVER)) {
+			throw new \LogicException('static::SetKernelClass() must be called before booting the kernel.');
+		}
+		return parent::bootKernel($options);
 	}
 }

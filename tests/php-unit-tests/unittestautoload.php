@@ -2,6 +2,8 @@
 
 // Main autoload, this is the one to use in the PHPUnit configuration
 //
-// It was previously used to include both the vendor autoloader and our custom base test case classes, but these are now autoloaded from ./src/BasetestCase
-// This file should then no longer be necessary, but we have to keep it until projects / branches / modules have been corrected.
+// This file was previously mentioned as deprecated, and now it HAS to be used (see phpunit.xml/bootstrap attribute)
 require_once 'vendor/autoload.php';
+
+// Required to benefit from symfony/framework-bundle's KernelTestCase, which is in a package which is a mix of runtime and test tools
+require_once  __DIR__.'/../../lib/autoload.php';

@@ -40,6 +40,7 @@ class iTopComposer extends AbstractFolderAnalyzer
 	{
 		return [
 			'twig/twig/src/Node/Expression/Test',
+			'symfony/framework-bundle/Test', // Tools for testing Symfony applications
 		];
 	}
 
@@ -87,7 +88,6 @@ class iTopComposer extends AbstractFolderAnalyzer
 			'symfony/http-foundation/Test',
 			'symfony/http-kernel/Tests',
 			'symfony/service-contracts/Test',
-			'symfony/framework-bundle/Test',
 			'symfony/mime/Test',
 			'symfony/routing/Tests',
 			'symfony/stopwatch/Tests',
