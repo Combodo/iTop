@@ -106,56 +106,58 @@ class UserProfileBrickController extends BrickController
 			$oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
 		}
 
-		$aData = array();
+		$aData = [];
 
 		// Setting form mode regarding the demo mode parameter
 		$bDemoMode = MetaModel::GetConfig()->Get('demo_mode');
 		$sFormMode = ($bDemoMode) ? ObjectFormHandlerHelper::ENUM_MODE_VIEW : ObjectFormHandlerHelper::ENUM_MODE_EDIT;
 
+		$sTab = $this->oRequestManipulatorHelper->ReadParam('sTab', 'user-info', FILTER_UNSAFE_RAW, FILTER_FLAG_EMPTY_STRING_NULL);
+
 		// If this is ajax call, we are just submitting preferences or password forms
 		if ($oRequest->isXmlHttpRequest())
 		{
-			$aCurrentValues = $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
-			$sFormType = $aCurrentValues['form_type'];
-			if ($sFormType === PreferencesFormManager::FORM_TYPE)
-			{
-				$aData['form'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
+			if ($sTab === "user-info") {
+				$aCurrentValues = $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW,
+					FILTER_REQUIRE_ARRAY);
+				$sFormType = $aCurrentValues['form_type'];
+				if ($sFormType === PreferencesFormManager::FORM_TYPE) {
+					$aData['form'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
+				} elseif ($sFormType === PasswordFormManager::FORM_TYPE) {
+					$aData['form'] = $this->HandlePasswordForm($oRequest, $sFormMode);
+				} elseif ($sFormType === static::ENUM_FORM_TYPE_PICTURE) {
+					$aData['form'] = $this->HandlePictureForm($oRequest);
+				} else {
+					throw new Exception('Unknown form type.');
+				}
 			}
-			elseif ($sFormType === PasswordFormManager::FORM_TYPE)
-			{
-				$aData['form'] = $this->HandlePasswordForm($oRequest, $sFormMode);
-			}
-			elseif ($sFormType === static::ENUM_FORM_TYPE_PICTURE)
-			{
-				$aData['form'] = $this->HandlePictureForm($oRequest);
-			}
-			else
-			{
-				throw new Exception('Unknown form type.');
-			}
+
 			$oResponse = new JsonResponse($aData);
 		}
 		// Else, we are displaying page for first time
 		else
 		{
-			// Retrieving current contact
-			/** @var \DBObject $oCurContact */
-			$oCurContact = UserRights::GetContactObject();
-			$sCurContactClass = get_class($oCurContact);
-			$sCurContactId = $oCurContact->GetKey();
+			if ($sTab === "user-info") {
+				// Retrieving current contact
+				/** @var \DBObject $oCurContact */
+				$oCurContact = UserRights::GetContactObject();
+				$sCurContactClass = get_class($oCurContact);
+				$sCurContactId = $oCurContact->GetKey();
 
-			// Preparing forms
-			$aData['forms']['contact'] = $this->ObjectFormHandlerHelper->HandleForm($oRequest, $sFormMode, $sCurContactClass, $sCurContactId,
-				$oBrick->GetForm());
-			$aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
-			// - If user can change password, we display the form
-			$aData['forms']['password'] = (UserRights::CanChangePassword()) ? $this->HandlePasswordForm($oRequest, $sFormMode) : null;
+				// Preparing forms
+				$aData['forms']['contact'] = $this->ObjectFormHandlerHelper->HandleForm($oRequest, $sFormMode, $sCurContactClass,
+					$sCurContactId,
+					$oBrick->GetForm());
+				$aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
+				// - If user can change password, we display the form
+				$aData['forms']['password'] = (UserRights::CanChangePassword()) ? $this->HandlePasswordForm($oRequest, $sFormMode) : null;
+			}
 
-			$aData = $aData + array(
+			$aData = $aData + [
 					'oBrick' => $oBrick,
 					'sFormMode' => $sFormMode,
 					'bDemoMode' => $bDemoMode,
-				);
+				];
 
 			$oResponse = $this->render($oBrick->GetPageTemplatePath(), $aData);
 		}

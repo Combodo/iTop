@@ -7,9 +7,6 @@
 {% if sTab == "" %}
     {% set sTab = "user-info" %}
 {% endif %}
-{% set oContactForm = forms.contact %}
-{% set oPreferencesForm = forms.preferences %}
-{% set oPasswordForm = forms.password %}
 
 {% block pPageBodyClass %}{{ parent() }} page_user-profile_brick{% endblock %}
 
@@ -45,6 +42,9 @@
     </ul>
 
     {% if sTab == "user-info" %}
+	    {% set oContactForm = forms.contact %}
+	    {% set oPreferencesForm = forms.preferences %}
+	    {% set oPasswordForm = forms.password %}
         {% include 'itop-portal-base/portal/templates/bricks/user-profile/user_info.html.twig' %}
     {% else %}
         <div id="user-profile-wrapper">
@@ -62,7 +62,18 @@
     {% import "itop-portal-base/portal/templates/helpers/macros.twig" as Macro %}
     {{ Macro.BlockExtension(aData.aPluginFormData, 'ready_script', oBrick) }}
 
-    {% include 'itop-portal-base/portal/templates/bricks/user-profile/user_info.ready.js.twig' %}
+	{% set aData = oBrick.GetData() %}
+	{% set sTab = aData.sTab %}
+	{% if sTab == "" %}
+		{% set sTab = "user-info" %}
+	{% endif %}
+
+	{% if sTab == "user-info" %}
+		{% set oContactForm = forms.contact %}
+		{% set oPreferencesForm = forms.preferences %}
+		{% set oPasswordForm = forms.password %}
+        {% include 'itop-portal-base/portal/templates/bricks/user-profile/user_info.ready.js.twig' %}
+	{% endif %}
 {% endblock %}
 
 {% block pPageLiveScriptHelpers %}
