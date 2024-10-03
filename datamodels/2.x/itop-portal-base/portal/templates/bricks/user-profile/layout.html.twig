@@ -22,10 +22,15 @@
 
     <div class="form_alerts">
         {% if sMessage is defined %}
-            <div class="alert alert-success" role="alert">{{ sMessage }}</div>
+            <div id="success-message-content" class="alert alert-success" role="alert">{{ sMessage }}</div>
+        {% else %}
+	        <div id="success-message-content" style="display:none;" class="alert alert-success" role="alert"></div>
         {% endif %}
+
         {% if sError is defined %}
-            <div class="alert alert-error alert-danger" role="alert">{{ sError }}</div>
+            <div id="error-message-content" class="alert alert-error alert-danger" role="alert">{{ sError }}</div>
+        {% else %}
+	        <div id="error-message-content" style="display:none;" class="alert alert-error alert-danger" role="alert"></div>
         {% endif %}
     </div>
 
