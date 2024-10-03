@@ -24,8 +24,10 @@ use Combodo\iTop\Portal\Brick\BrickCollection;
 use Combodo\iTop\Portal\Brick\UserProfileBrick;
 use Combodo\iTop\Portal\Form\PasswordFormManager;
 use Combodo\iTop\Portal\Form\PreferencesFormManager;
+use Combodo\iTop\Portal\Helper\ExtensibilityHelper;
 use Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper;
 use Combodo\iTop\Portal\Helper\RequestManipulatorHelper;
+use Combodo\iTop\Portal\Hook\iPortalTabExtension;
 use Combodo\iTop\Portal\Routing\UrlGenerator;
 use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 use Exception;
@@ -159,11 +161,40 @@ class UserProfileBrickController extends BrickController
 					'bDemoMode' => $bDemoMode,
 				];
 
+			$this->ManageUserProfileBrickExtensibility($sTab, $aData);
+
 			$oResponse = $this->render($oBrick->GetPageTemplatePath(), $aData);
 		}
 
 		return $oResponse;
 	}
+
+
+	private function ManageUserProfileBrickExtensibility(string $sTab, array &$aData): void
+	{
+		$aData['sTab'] = $sTab;
+
+		// Read the tabs From iPortalTabExtension
+		$aTabExtensions = ExtensibilityHelper::GetInstance()->GetPortalTabExtension('p_user_profile_brick');
+
+		/** @var iPortalTabExtension $oPortalTabExtension */
+		foreach ($aTabExtensions as $oPortalTabExtension) {
+			$aData['aTabsValues'][] = [
+				'code'  => $oPortalTabExtension->GetTabCode(),
+				'label' => $oPortalTabExtension->GetTabLabel(),
+			];
+		}
+
+		// Read the current tab content From iPortalTabSectionExtension
+		$aTabSectionExtensions = ExtensibilityHelper::GetInstance()->GetPortalTabContentExtensions('p_user_profile_brick', $sTab);
+
+		$aData['aPluginFormData'] = [];
+		foreach ($aTabSectionExtensions as $oPortalTabSectionExtension) {
+			$oPortalContext = $oPortalTabSectionExtension->GetPortalTwigContext();
+			$aData['aPluginFormData'][] = $oPortalContext;
+		}
+	}
+
 
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
@@ -175,8 +206,6 @@ class UserProfileBrickController extends BrickController
 	 */
 	public function HandlePreferencesForm(Request $oRequest, $sFormMode)
 	{
-
-
 		$aFormData = array();
 
 		// Handling form
@@ -395,5 +424,4 @@ class UserProfileBrickController extends BrickController
 
 		return $aFormData;
 	}
-
 }

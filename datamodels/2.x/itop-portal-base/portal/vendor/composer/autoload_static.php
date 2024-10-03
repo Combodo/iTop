@@ -63,6 +63,7 @@ class ComposerStaticInitdf408f3f8ea034d298269cdf7647358b
         'Combodo\\iTop\\Portal\\Helper\\BrickControllerHelper' => __DIR__ . '/../..' . '/src/Helper/BrickControllerHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\BrowseBrickHelper' => __DIR__ . '/../..' . '/src/Helper/BrowseBrickHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\ContextManipulatorHelper' => __DIR__ . '/../..' . '/src/Helper/ContextManipulatorHelper.php',
+        'Combodo\\iTop\\Portal\\Helper\\ExtensibilityHelper' => __DIR__ . '/../..' . '/src/Helper/ExtensibilityHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\LifecycleValidatorHelper' => __DIR__ . '/../..' . '/src/Helper/LifecycleValidatorHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\NavigationRuleHelper' => __DIR__ . '/../..' . '/src/Helper/NavigationRuleHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\ObjectFormHandlerHelper' => __DIR__ . '/../..' . '/src/Helper/ObjectFormHandlerHelper.php',

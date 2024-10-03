@@ -20,11 +20,7 @@
 namespace Combodo\iTop\Portal\Brick;
 
 use Combodo\iTop\DesignElement;
-use Combodo\iTop\Portal\Hook\iPortalTabExtension;
-use Combodo\iTop\Portal\Hook\iPortalTabSectionExtension;
-use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use DOMFormatException;
-use utils;
 
 /**
  * Description of UserProfileBrick
@@ -56,8 +52,6 @@ class UserProfileBrick extends PortalBrick
 
 	/** @var array $aForm */
 	protected $aForm;
-
-	protected array $aData;
 	/** @var bool $bShowPictureForm */
 	protected $bShowPictureForm;
 	/** @var bool $bShowPreferencesForm */
@@ -239,57 +233,6 @@ class UserProfileBrick extends PortalBrick
 			}
 		}
 
-		// Read the tab From iPortalTabExtension
-		$aTabExtensions = [];
-		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iPortalTabExtension::class) as $sPortalTabExtension) {
-			$oPortalTabExtension = new $sPortalTabExtension();
-			if ($oPortalTabExtension->IsTabPresent() && $oPortalTabExtension->GetTarget() === 'p_user_profile_brick') {
-				$aTabExtensions[] = $oPortalTabExtension;
-			}
-		}
-		usort($aTabExtensions, function (iPortalTabExtension $a, iPortalTabExtension $b) {
-			return $a->GetTabRank() - $b->GetTabRank();
-		});
-
-		/** @var iPortalTabExtension $oPortalTabExtension */
-		foreach ($aTabExtensions as $oPortalTabExtension) {
-			$this->aData['aTabsValues'][] = [
-				'code'  => $oPortalTabExtension->GetTabCode(),
-				'label' => $oPortalTabExtension->GetTabLabel(),
-			];
-		}
-
-		$sTab = utils::ReadParam('sTab', '', utils::ENUM_SANITIZATION_FILTER_STRING);
-		$aTabSectionExtensions = [];
-		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iPortalTabSectionExtension::class) as $sPortalTabSectionExtension) {
-			$oPortalTabSectionExtension = new $sPortalTabSectionExtension();
-			if (!$oPortalTabSectionExtension->IsActive() || $oPortalTabSectionExtension->GetTarget() !== 'p_user_profile_brick') {
-				continue;
-			}
-
-			if ($oPortalTabSectionExtension->GetTabCode() !== $sTab) {
-				continue;
-			}
-			$aTabSectionExtensions[] = $oPortalTabSectionExtension;
-		}
-		$this->aData['sTab'] = $sTab;
-
-		usort($aTabSectionExtensions, function (iPortalTabSectionExtension $a, iPortalTabSectionExtension $b) {
-			return $a->GetSectionRank() - $b->GetSectionRank();
-		});
-
-		$this->aData['aPluginFormData'] = [];
-		foreach ($aTabSectionExtensions as $oPortalTabSectionExtension) {
-			$oPortalContext = $oPortalTabSectionExtension->GetPortalTwigContext();
-			$this->aData['aPluginFormData'][] = $oPortalContext;
-		}
-
 		return $this;
-	}
-
-
-	public function GetData(): array
-	{
-		return $this->aData;
 	}
 }

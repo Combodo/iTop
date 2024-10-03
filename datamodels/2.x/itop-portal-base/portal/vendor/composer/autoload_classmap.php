@@ -43,6 +43,7 @@ return array(
     'Combodo\\iTop\\Portal\\Helper\\BrickControllerHelper' => $baseDir . '/src/Helper/BrickControllerHelper.php',
     'Combodo\\iTop\\Portal\\Helper\\BrowseBrickHelper' => $baseDir . '/src/Helper/BrowseBrickHelper.php',
     'Combodo\\iTop\\Portal\\Helper\\ContextManipulatorHelper' => $baseDir . '/src/Helper/ContextManipulatorHelper.php',
+    'Combodo\\iTop\\Portal\\Helper\\ExtensibilityHelper' => $baseDir . '/src/Helper/ExtensibilityHelper.php',
     'Combodo\\iTop\\Portal\\Helper\\LifecycleValidatorHelper' => $baseDir . '/src/Helper/LifecycleValidatorHelper.php',
     'Combodo\\iTop\\Portal\\Helper\\NavigationRuleHelper' => $baseDir . '/src/Helper/NavigationRuleHelper.php',
     'Combodo\\iTop\\Portal\\Helper\\ObjectFormHandlerHelper' => $baseDir . '/src/Helper/ObjectFormHandlerHelper.php',

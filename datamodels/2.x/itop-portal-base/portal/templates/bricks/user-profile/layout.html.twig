@@ -2,8 +2,6 @@
 {# User profile brick base layout #}
 {% extends 'itop-portal-base/portal/templates/bricks/layout.html.twig' %}
 
-{% set aData = oBrick.GetData() %}
-{% set sTab = aData.sTab %}
 {% if sTab == "" %}
     {% set sTab = "user-info" %}
 {% endif %}
@@ -29,8 +27,8 @@
                 {{ 'MyAccount:UserInfo:Tab:Title'|dict_s }}
             </a>
         </li>
-        {% if aData.aTabsValues|length > 0 %}
-            {% for aTab in aData.aTabsValues %}
+        {% if aTabsValues|length > 0 %}
+            {% for aTab in aTabsValues %}
                 <li{% if sTab == aTab.code %} class="active"{% endif %} data-id="{{ aTab.code }}" data-label="{{ aTab.label }}">
                     <a href="{{ app.url_generator.generate('p_user_profile_brick', {'sBrickId': oBrick.GetId(), 'sDisplayMode': '_self', 'sTab': aTab.code}) }}"
                        id="btn_tab_for_{{ aTab.code }}">
@@ -50,7 +48,7 @@
         <div id="user-profile-wrapper">
             <div class="row">
                 {% import "itop-portal-base/portal/templates/helpers/macros.twig" as Macro %}
-                {{ Macro.BlockExtension(aData.aPluginFormData, 'html', oBrick) }}
+                {{ Macro.BlockExtension(aPluginFormData, 'html', oBrick) }}
             </div>
         </div>
     {% endif %}
@@ -60,10 +58,8 @@
 {% block pPageReadyScripts %}
 	{{ parent() }}
     {% import "itop-portal-base/portal/templates/helpers/macros.twig" as Macro %}
-    {{ Macro.BlockExtension(aData.aPluginFormData, 'ready_script', oBrick) }}
+    {{ Macro.BlockExtension(aPluginFormData, 'ready_script', oBrick) }}
 
-	{% set aData = oBrick.GetData() %}
-	{% set sTab = aData.sTab %}
 	{% if sTab == "" %}
 		{% set sTab = "user-info" %}
 	{% endif %}
@@ -79,11 +75,11 @@
 {% block pPageLiveScriptHelpers %}
     {{ parent() }}
     {% import "itop-portal-base/portal/templates/helpers/macros.twig" as Macro %}
-    {{ Macro.BlockExtension(aData.aPluginFormData, 'script', oBrick) }}
+    {{ Macro.BlockExtension(aPluginFormData, 'script', oBrick) }}
 {% endblock %}
 
 {% block pStyleinline %}
     {{ parent() }}
     {% import "itop-portal-base/portal/templates/helpers/macros.twig" as Macro %}
-    {{ Macro.BlockExtension(aData.aPluginFormData, 'css', oBrick) }}
+    {{ Macro.BlockExtension(aPluginFormData, 'css', oBrick) }}
 {% endblock %}
