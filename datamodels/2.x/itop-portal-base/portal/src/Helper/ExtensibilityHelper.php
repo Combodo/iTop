@@ -6,8 +6,8 @@
 
 namespace Combodo\iTop\Portal\Helper;
 
+use Combodo\iTop\Portal\Hook\iPortalTabContentExtension;
 use Combodo\iTop\Portal\Hook\iPortalTabExtension;
-use Combodo\iTop\Portal\Hook\iPortalTabSectionExtension;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 
 class ExtensibilityHelper
@@ -43,10 +43,16 @@ class ExtensibilityHelper
 		return $aTabExtensions;
 	}
 
+	/**
+	 * @param string $sTargetName
+	 * @param string $sTab
+	 *
+	 * @return array[iPortalTabContentExtension]
+	 */
 	public function GetPortalTabContentExtensions(string $sTargetName, string $sTab): array
 	{
 		$aTabSectionExtensions = [];
-		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iPortalTabSectionExtension::class) as $sPortalTabSectionExtension) {
+		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iPortalTabContentExtension::class) as $sPortalTabSectionExtension) {
 			$oPortalTabSectionExtension = new $sPortalTabSectionExtension();
 			if (!$oPortalTabSectionExtension->IsActive() || $oPortalTabSectionExtension->GetTarget() !== $sTargetName) {
 				continue;
@@ -58,7 +64,7 @@ class ExtensibilityHelper
 			$aTabSectionExtensions[] = $oPortalTabSectionExtension;
 		}
 
-		usort($aTabSectionExtensions, function (iPortalTabSectionExtension $a, iPortalTabSectionExtension $b) {
+		usort($aTabSectionExtensions, function (iPortalTabContentExtension $a, iPortalTabContentExtension $b) {
 			return $a->GetSectionRank() - $b->GetSectionRank();
 		});
 

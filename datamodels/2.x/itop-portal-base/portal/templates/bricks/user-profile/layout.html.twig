@@ -20,6 +20,15 @@
 		</div>
 	{% endif %}
 
+    <div class="form_alerts">
+        {% if sMessage is defined %}
+            <div class="alert alert-success" role="alert">{{ sMessage }}</div>
+        {% endif %}
+        {% if sError is defined %}
+            <div class="alert alert-error alert-danger" role="alert">{{ sError }}</div>
+        {% endif %}
+    </div>
+
     <ul class="nav nav-pills _tabs">
         <li{% if sTab == "user-info" %} class="active"{% endif %} data-id="user-info" data-label="{{ 'MyAccount:UserInfo:Tab:Title'|dict_s }}">
             <a href="{{ app.url_generator.generate('p_user_profile_brick', {'sBrickId': oBrick.GetId(), 'sDisplayMode': '_self', 'sTab': "user-info"}) }}"

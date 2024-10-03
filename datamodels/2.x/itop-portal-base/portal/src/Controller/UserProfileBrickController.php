@@ -27,6 +27,7 @@ use Combodo\iTop\Portal\Form\PreferencesFormManager;
 use Combodo\iTop\Portal\Helper\ExtensibilityHelper;
 use Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper;
 use Combodo\iTop\Portal\Helper\RequestManipulatorHelper;
+use Combodo\iTop\Portal\Hook\iPortalTabContentExtension;
 use Combodo\iTop\Portal\Hook\iPortalTabExtension;
 use Combodo\iTop\Portal\Routing\UrlGenerator;
 use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
@@ -188,10 +189,14 @@ class UserProfileBrickController extends BrickController
 		// Read the current tab content From iPortalTabSectionExtension
 		$aTabSectionExtensions = ExtensibilityHelper::GetInstance()->GetPortalTabContentExtensions('p_user_profile_brick', $sTab);
 
+		/** @var iPortalTabContentExtension $oPortalTabSectionExtension */
+		foreach ($aTabSectionExtensions as $oPortalTabSectionExtension) {
+			$oPortalTabSectionExtension->HandlePortalForm($aData);
+		}
+
 		$aData['aPluginFormData'] = [];
 		foreach ($aTabSectionExtensions as $oPortalTabSectionExtension) {
-			$oPortalContext = $oPortalTabSectionExtension->GetPortalTwigContext();
-			$aData['aPluginFormData'][] = $oPortalContext;
+			$aData['aPluginFormData'][] =  $oPortalTabSectionExtension->GetPortalTabContentTwigs();
 		}
 	}
 

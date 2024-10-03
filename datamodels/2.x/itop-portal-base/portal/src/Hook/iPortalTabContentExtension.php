@@ -8,7 +8,7 @@ namespace Combodo\iTop\Portal\Hook;
 
 use Combodo\iTop\Portal\Twig\PortalTwigContext;
 
-interface iPortalTabSectionExtension
+interface iPortalTabContentExtension
 {
 	/**
 	 * Get the target reference of the page to display this tab
@@ -31,10 +31,16 @@ interface iPortalTabSectionExtension
 	public function GetTabCode(): string;
 
 	/**
+	 * Handle actions based on posted vars
+	 */
+	public function HandlePortalForm(array &$aData): void;
+
+	/**
+	 * List twigs and variables for the tab content per block
 	 *
 	 * @return PortalTwigContext
 	 */
-	public function GetPortalTwigContext(): PortalTwigContext;
+	public function GetPortalTabContentTwigs(): PortalTwigContext;
 
 	/**
 	 * Get the section rank in the tab
