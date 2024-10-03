@@ -6,6 +6,8 @@
 
 namespace Combodo\iTop\Portal\Twig;
 
+use utils;
+
 class PortalBlockExtension
 {
 	private string $sTwig;
@@ -35,6 +37,7 @@ class PortalBlockExtension
 
 	public function GetData(): array
 	{
+		$this->aData['sTransactionId'] = utils::GetNewTransactionId();
 		return $this->aData;
 	}
 }
