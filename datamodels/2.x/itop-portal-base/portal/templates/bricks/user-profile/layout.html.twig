@@ -35,13 +35,13 @@
     </div>
 
     <ul class="nav nav-pills _tabs">
-        <li{% if sTab == "user-info" %} class="active"{% endif %} data-id="user-info" data-label="{{ 'MyAccount:UserInfo:Tab:Title'|dict_s }}">
-            <a href="{{ app.url_generator.generate('p_user_profile_brick', {'sBrickId': oBrick.GetId(), 'sDisplayMode': '_self', 'sTab': "user-info"}) }}"
-               id="btn_tab_for_user-info">
-                {{ 'MyAccount:UserInfo:Tab:Title'|dict_s }}
-            </a>
-        </li>
-        {% if aTabsValues|length > 0 %}
+        {% if aTabsValues is defined and aTabsValues|length > 0 %}
+            <li{% if sTab == "user-info" %} class="active"{% endif %} data-id="user-info" data-label="{{ 'MyAccount:UserInfo:Tab:Title'|dict_s }}">
+                <a href="{{ app.url_generator.generate('p_user_profile_brick', {'sBrickId': oBrick.GetId(), 'sDisplayMode': '_self', 'sTab': "user-info"}) }}"
+                   id="btn_tab_for_user-info">
+                    {{ 'MyAccount:UserInfo:Tab:Title'|dict_s }}
+                </a>
+            </li>
             {% for aTab in aTabsValues %}
                 <li{% if sTab == aTab.code %} class="active"{% endif %} data-id="{{ aTab.code }}" data-label="{{ aTab.label }}">
                     <a href="{{ app.url_generator.generate('p_user_profile_brick', {'sBrickId': oBrick.GetId(), 'sDisplayMode': '_self', 'sTab': aTab.code}) }}"
