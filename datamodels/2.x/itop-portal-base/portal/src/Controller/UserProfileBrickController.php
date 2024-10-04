@@ -190,7 +190,8 @@ class UserProfileBrickController extends BrickController
 		$aTabSectionExtensions = ExtensibilityHelper::GetInstance()->GetPortalTabContentExtensions('p_user_profile_brick', $sTab);
 		if (count($aTabSectionExtensions) != 0 && ! empty($_POST)){
 			$sTransactionId = utils::ReadPostedParam('transaction_id', null, utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
-			if (empty($sTransactionId) || !utils::IsTransactionValid($sTransactionId, true)) {
+			IssueLog::Debug(__FUNCTION__.": transaction [$sTransactionId]");
+			if (empty($sTransactionId) || !utils::IsTransactionValid($sTransactionId, false)) {
 				throw new Exception(\Dict::S('iTopUpdate:Error:InvalidToken'));
 			}
 		}
