@@ -766,6 +766,7 @@ EOF
 		$oAttribute->Set('reconcile', 0);
 		$oAttribute->Set('update', 0);
 		$oAttribute->Set('update_policy', 'master_locked');
+		$oAttribute->Set('import_columns', implode(',', array_keys($oAttDef->GetImportColumns())));
 
 		return $oAttribute;
 	}
@@ -1452,6 +1453,13 @@ class SynchroAttribute extends cmdbAbstractObject
 			'allowed_values' => new ValueSetEnum('master_locked,master_unlocked,write_if_empty'),
 			'sql' => 'update_policy',
 			'default_value' => 'master_locked',
+			'is_null_allowed' => false,
+			'depends_on' => array(),
+		)));
+		MetaModel::Init_AddAttribute(new AttributeString('import_columns', array(
+			'allowed_values' => null,
+			'sql' => 'import_columns',
+			'default_value' => null,
 			'is_null_allowed' => false,
 			'depends_on' => array(),
 		)));
