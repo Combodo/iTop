@@ -21,7 +21,7 @@ class TwigTest extends ItopDataTestCase
 		$this->RequireOnceItopFile('core/config.class.inc.php');
 
 		// Creating sandbox twig env. to load and test the custom form template
-		$this->oTwig = new Environment(new FilesystemLoader(__DIR__.'/data/'));
+		$this->oTwig = new Environment(new FilesystemLoader(__DIR__));
 
 		// Manually registering filters and functions as we didn't find how to do it automatically
 		$oAppExtension = new AppExtension();
@@ -36,52 +36,40 @@ class TwigTest extends ItopDataTestCase
 			$this->oTwig->addFunction($oFunction);
 		}
 	}
-
-	/**
-	 * Test the fix for ticket
-	 * N°7810 - [SECU] Portal code injection - Code Execution possible on iTop server
-	 *
-	 * Twig filters have been deactivated to ensure no injection is possible in portal.
-	 * This test ensures that the filters are not available in the portal.
-	 *
-	 * @dataProvider FiltersSecurityTemplateProvider
-	 *
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
-	 */
-	public function testFiltersSecurity(string $sName)
+	private function RenderTwig(string $sTwigContent): string
 	{
-		// render twig template
-		$sOutput = $this->oTwig->render($sName . '.html.twig');
-
-		// get expected result
-		$sExpected = file_get_contents(__DIR__.'/data/' . $sName . '.html');
-
-		// assert equals
-		$this->assertEquals($sExpected, $sOutput, $sName . ' filter is not working as expected');
+		return $this->oTwig->createTemplate($sTwigContent)->render([]);
 	}
 
-	/**
-	 * FiltersSecurityTemplateProvider.
-	 *
-	 * @return array[]
-	 */
-	public static function FiltersSecurityTemplateProvider()
+	public function test_reduce_FilterShouldBeDiscarded()
 	{
-		return [
-			'filter' => [
-				'name' => 'filter'
-			],
-			'map' => [
-				'name' => 'map'
-			],
-			'reduce' => [
-				'name' => 'reduce'
-			],
-			'sort' => [
-				'name' => 'sort'
-			],
-		];
+		$this->assertEquals('[1,2,3]', $this->RenderTwig("{{ [1, 2, 3]|reduce('system') }}"));
+		$this->assertEquals('[1,2,3]', $this->RenderTwig("{{ [1, 2, 3]|reduce('anyCallBack') }}"));
+		$this->assertEquals('[1,2,3]', $this->RenderTwig("{{ [1, 2, 3]|reduce((carry, val, key) => carry + val) }}"));
+	}
+
+	public function test_sort_FilterShouldBeDiscarded()
+	{
+		$this->assertEquals('[3,1,2]', $this->RenderTwig("{{ [3, 1, 2]|sort('system') }}"));
+		$this->assertEquals('[3,1,2]', $this->RenderTwig("{{ [3, 1, 2]|sort('anyCallBack') }}"));
+		$this->assertEquals('[3,1,2]', $this->RenderTwig("{{ [3, 1, 2]|sort((a, b) => a > b) }}"));
+
+		$this->ExpectExceptionMessage('Too few arguments to function Combodo\iTop\Application\TwigBase\Twig\Extension::Combodo\iTop\Application\TwigBase\Twig\{closure}()');
+		$this->RenderTwig("{{ [3, 1, 2]|sort|join(', ') }}");
+	}
+
+	public function test_map_FilterShouldBeDiscarded()
+	{
+		$this->assertEquals('[1,2,3]', $this->RenderTwig("{{ [1, 2, 3]|map('system') }}"));
+		$this->assertEquals('[1,2,3]', $this->RenderTwig("{{ [1, 2, 3]|map('anyCallBack') }}"));
+		$this->assertEquals('[1,2,3]', $this->RenderTwig("{{ [1, 2, 3]|map(p => p + 10) }}"));
+	}
+
+	public function test_filter_FilterShouldNotAllowTheSystemFunction()
+	{
+		$this->assertEquals('["ls"]', $this->RenderTwig("{{ ['ls']|filter('system')|raw }}"), 'system() should not be allowed as callback for filter');
+
+		$this->assertEquals('Iterator', $this->RenderTwig("{{ ['Iterator', 'Zabugomeu']|filter('interface_exists')|join(', ') }}"), 'Other functions should be allowed as callback for filter');
+		$this->assertEquals('4, 5', $this->RenderTwig("{{ [1, 2, 3, 4, 5]|filter(v => v > 3)|join(', ') }}"), 'Arrow functions should be allowed as callback');
 	}
 }
