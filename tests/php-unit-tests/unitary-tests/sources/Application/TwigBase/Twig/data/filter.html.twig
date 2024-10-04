@@ -1,8 +1,0 @@
-{# filter : with system as arrow function #}
-{{ ['id']|filter('system')|raw }}
-{# output json encode > ["id"] #}
-
-{# filter : with standard comparaison function #}
-{% set sizes = [34, 36, 38, 40, 42] %}
-{{ sizes|filter(v => v > 38)|join(', ') }}
-{# output > 40, 42 #}
