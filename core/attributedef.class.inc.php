@@ -4561,8 +4561,7 @@ class AttributeText extends AttributeString
 					$sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
 					if (MetaModel::IsValidClass($sClass)) {
-						$sClassLabel = MetaModel::GetName($sClass);
-						$sReplacement = "[[$sClassLabel:$sName".(!empty($sLabel) ? " | $sLabel" : "")."]]";
+						$sReplacement = "[[$sClass:$sName".(!empty($sLabel) ? " | $sLabel" : "")."]]";
 						$sValue = str_replace($aMatches[0], $sReplacement, $sValue);
 					}
 				}
