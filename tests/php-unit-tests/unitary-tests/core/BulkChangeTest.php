@@ -322,7 +322,7 @@ class BulkChangeTest extends ItopDataTestCase
 							"name" => "Invalid value for attribute",
 							"__STATUS__" => "Issue: ambiguous reconciliation",
 							"__ERRORS__" => "Object not found",
-						]
+						],
 			],
 			"Case 6 - 1 : Unexpected value (update)" => [
 			    "initData"=>
@@ -359,7 +359,6 @@ class BulkChangeTest extends ItopDataTestCase
 					    "__STATUS__" => "Issue: Unexpected attribute value(s)",
 					    "__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
 				    ],
-
 			],
 			"Case 6 - 2 : Unexpected value (update)" => [
 				"initData"=>
@@ -743,7 +742,7 @@ class BulkChangeTest extends ItopDataTestCase
 						"id" => "Invalid value for attribute",
 						"__STATUS__" => "Issue: failed to reconcile",
 						"__ERRORS__" => "Allowed 'status' value(s): stock,implemfentation,production,obsolete",
-					]
+					],
 			],
 			"Case 3 : unchanged name" => [
 				"initData"=>
