@@ -7,7 +7,13 @@ use Combodo\iTop\Portal\Twig\AppExtension;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-class TwigTest extends ItopDataTestCase
+/**
+ * Prevent Twig from executing harmful commands (e.g. system('rm -rf')) in the Twig templates
+ * Filter function for which an argument is an "arrow function" should be secured:
+ * - either specifying a function by its name (e.g. filter('passthru'))
+ * - or using an arrow function with a safe callback (e.g. filter(v => passtrhu('ls'))
+ */
+class TwigSanitizationTest extends ItopDataTestCase
 {
 	/**
 	 * @var \Twig\Environment
@@ -71,5 +77,8 @@ class TwigTest extends ItopDataTestCase
 
 		$this->assertEquals('Iterator', $this->RenderTwig("{{ ['Iterator', 'Zabugomeu']|filter('interface_exists')|join(', ') }}"), 'Other functions should be allowed as callback for filter');
 		$this->assertEquals('4, 5', $this->RenderTwig("{{ [1, 2, 3, 4, 5]|filter(v => v > 3)|join(', ') }}"), 'Arrow functions should be allowed as callback');
+
+		$this->ExpectExceptionMessage('Unknown "system" function', 'system() should not be allowed in arrow functions');
+		$this->RenderTwig("{{ [1, 2, 3, 4, 5]|filter(v => v > system('ls >ls.txt'))|join(', ') }}");
 	}
 }
