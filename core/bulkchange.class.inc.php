@@ -1360,7 +1360,7 @@ class BulkChange
 				if (!array_key_exists($iCol, $aResult[$iRow]))
 				{
 					if(isset($aRowData[$iCol])) {
-						$aResult[$iRow][$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
+						$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
 					} else {
 						$aResult[$iRow][$iCol] = new CellStatus_Issue('', null, Dict::S('UI:CSVReport-Value-Issue-NoValue'));
 					}
@@ -1378,7 +1378,7 @@ class BulkChange
 					{
 						// The foreign attribute is one of our reconciliation key
 						if(isset($aRowData[$iCol])) {
-							$aResult[$iRow][$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
+							$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
 						} else {
 							$aResult[$iRow][$iCol] = new CellStatus_Issue('', null, 'UI:CSVReport-Value-Issue-NoValue');
 						}
