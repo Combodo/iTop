@@ -641,7 +641,7 @@ class BulkChangeTest extends ItopDataTestCase
 	 * @param $aExtKeys
 	 * @param $aReconcilKeys
 	 */
-	public function testBulkChangeWithExistingDataAndSpecificOrg($aInitData, $aCsvData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult, $aResultHTML = null, $bSetId = true) {
+	public function testBulkChangeWithExistingDataAndSpecificOrg($aInitData, $aCsvData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult, $aResultHTML = null) {
 		//change value during the test
 		$db_core_transactions_enabled=MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 		MetaModel::GetConfig()->Set('db_core_transactions_enabled',false);
@@ -663,9 +663,7 @@ class BulkChangeTest extends ItopDataTestCase
 				'org_id' => $oOrganisation->GetKey(),
 				'purchase_date' => $aInitData["serverPurchaseDate"],
 			));
-			if($bSetId) {
-				$aCsvData[0][2] = $oServer->GetKey();
-			}
+			$aCsvData[0][2] = $oServer->GetKey();
 			$aResult[2]=$oServer->GetKey();
 			if ($aResult["id"]==="{Id of the server created by the test}") {
 				$aResult["id"]=$oServer->GetKey();
@@ -695,7 +693,7 @@ class BulkChangeTest extends ItopDataTestCase
 					$this->debug('GetCLIValue:'.$oCell->GetCLIValue());
 					$this->debug("aResult:".$aResult[$i]);
 					$this->assertEquals($aResult[$i], $oCell->GetCLIValue(), "$i cell is incorrect");
-					if (null !== $aResultHTML) {
+					if (null !== $aResultHTML && array_key_exists($i, $aResultHTML)) {
 						$this->assertEquals($aResultHTML[$i], $oCell->GetHTMLValue());
 					}
 				} elseif ($i === "__STATUS__") {
@@ -722,7 +720,7 @@ class BulkChangeTest extends ItopDataTestCase
 				"csvData" =>
 					[["Demo", ">Server1"]],
 				"attributes"=>
-					["name" => 1],
+					["name" => 1,"status" => 2],
 				"extKeys"=>
 					["org_id" => ["name" => 0]],
 				"reconcilKeys"=>
@@ -744,8 +742,7 @@ class BulkChangeTest extends ItopDataTestCase
 						"id" => "Invalid value for attribute",
 						"__STATUS__" => "Issue: failed to reconcile",
 						"__ERRORS__" => "Allowed 'status' value(s): stock,implemfentation,production,obsolete",
-					],
-				"setId" => false
+					]
 			],
 			"Case 3 : unchanged name" => [
 				"initData"=>
