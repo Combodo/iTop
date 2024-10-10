@@ -23,16 +23,16 @@ class DataModelDependantCache
 	{
 		if (!isset(self::$oInstance))
 		{
-			self::$oInstance = new DataModelDependantCache(utils::GetCachePath());
+			self::$oInstance = new DataModelDependantCache();
 		}
 		return self::$oInstance;
 	}
 
 	private ?string $sStorageRootDir; // Nullable for test purposes
 
-	private function __construct($sStorageRootDir)
+	private function __construct()
 	{
-		$this->sStorageRootDir = $sStorageRootDir;
+		$this->sStorageRootDir = null;
 	}
 
 	/**
@@ -146,10 +146,25 @@ class DataModelDependantCache
 		return $this->GetStorageRootDir()."/$sPool/";
 	}
 
-	/** Overridable for testing purposes */
+
+	/**
+	 * for test purpose
+	 *
+	 * @return string
+	 */
 	protected function GetStorageRootDir(): string
 	{
 		// Could be forced by tests
 		return $this->sStorageRootDir ?? utils::GetCachePath();
+	}
+
+	/**
+	 * for test purpose
+	 *
+	 * @param string $sStorageRootDir
+	 */
+	public function SetStorageRootDir(?string $sStorageRootDir): void
+	{
+		$this->sStorageRootDir = $sStorageRootDir;
 	}
 }

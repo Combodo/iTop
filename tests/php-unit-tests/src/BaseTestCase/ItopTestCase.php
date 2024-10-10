@@ -507,20 +507,38 @@ abstract class ItopTestCase extends TestCase
 	 *
 	 * @since 3.2.0
 	 */
-	protected function AssertArraysHaveSameItems(array $aExpectedClasses, array $aClasses, string $sMessage = ''): void
+	protected function AssertArraysHaveSameItems(array $aExpected, array $aActual, string $sMessage = ''): void
 	{
-		sort($aClasses);
-		sort($aExpectedClasses);
+		sort($aActual);
+		sort($aExpected);
 
-		$sExpected = implode("\n", $aExpectedClasses);
-		$sActual = implode("\n", $aClasses);
+		$sExpected = implode("\n", $aExpected);
+		$sActual = implode("\n", $aActual);
 		if ($sExpected === $sActual) {
 			$this->assertTrue(true);
 			return;
 		}
 		$sMessage .= "\nExpected:\n$sExpected\nActual:\n$sActual";
-		var_export($aClasses);
+		var_export($aActual);
 
 		$this->fail($sMessage);
+	}
+
+	/**
+	 * The order of the files is not important
+	 *
+	 * @since 3.2.1
+	 */
+	public function AssertDirectoryListingEquals(array $aExpected, string $sDir, string $sMessage = ''): void
+	{
+		$aFiles = [];
+
+		foreach (scandir($sDir) as $sFile) {
+			if ($sFile !== '.' && $sFile !== '..') {
+				$aFiles[] = basename($sFile);
+			}
+		}
+
+		$this->AssertArraysHaveSameItems($aExpected, $aFiles, $sMessage);
 	}
 }

@@ -4,7 +4,6 @@ namespace Combodo\iTop\Test\UnitTest\Service\Cache;
 
 use Combodo\iTop\Service\Cache\DataModelDependantCache;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use Exception;
 
 class DataModelDependantCacheTest extends ItopTestCase
 {
@@ -19,12 +18,12 @@ class DataModelDependantCacheTest extends ItopTestCase
 		$this->sCacheRootDir = self::CreateTmpdir();
 
 		$this->oCacheService = DataModelDependantCache::GetInstance();
-		$this->SetNonPublicProperty($this->oCacheService, 'sStorageRootDir', $this->sCacheRootDir);
+		$this->oCacheService->SetStorageRootDir($this->sCacheRootDir);
 	}
 
 	protected function tearDown(): void
 	{
-		$this->SetNonPublicProperty($this->oCacheService, 'sStorageRootDir', null);
+		$this->oCacheService->SetStorageRootDir(null);
 		self::RecurseRmdir($this->sCacheRootDir);
 
 		parent::tearDown();
@@ -50,7 +49,7 @@ class DataModelDependantCacheTest extends ItopTestCase
 	public function testShouldStoreInADirectoryRebuiltOnCompilation(): void
 	{
 		// Given the storage is reset to the default
-		$this->SetNonPublicProperty($this->oCacheService, 'sStorageRootDir', null);
+		$this->oCacheService->SetStorageRootDir(null);
 
 		// Then
 		$sFilePath = $this->InvokeNonPublicMethod(DataModelDependantCache::class, 'MakeCacheFileName', $this->oCacheService, ['pool-A', 'key']);
