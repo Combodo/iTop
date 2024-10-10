@@ -94,6 +94,8 @@
 
 {% block pStyleinline %}
     {{ parent() }}
+    <style>
     {% import "itop-portal-base/portal/templates/helpers/macros.twig" as Macro %}
     {{ Macro.BlockExtension(aPluginFormData, 'css', oBrick) }}
+    </style>
 {% endblock %}
