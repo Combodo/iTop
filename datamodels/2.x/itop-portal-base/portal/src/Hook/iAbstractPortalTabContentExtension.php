@@ -8,15 +8,8 @@ namespace Combodo\iTop\Portal\Hook;
 
 use Combodo\iTop\Portal\Twig\PortalTwigContext;
 
-interface iPortalTabContentExtension
+interface iAbstractPortalTabContentExtension
 {
-	/**
-	 * Get the target reference of the page to display this tab
-	 *
-	 * @return string
-	 */
-	public function GetTarget(): string;
-
 	/**
 	 * Indicates if the extension is active or not
 	 * @return bool

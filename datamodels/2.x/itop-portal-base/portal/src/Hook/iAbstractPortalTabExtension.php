@@ -6,19 +6,8 @@
 
 namespace Combodo\iTop\Portal\Hook;
 
-/**
- * Interface iMyAccountAjaxTabExtension
- * Define extensibility point to MyAccount screen
- */
-interface iPortalTabExtension
+interface iAbstractPortalTabExtension
 {
-	/**
-	 * Get the target reference of the page to display this tab
-	 *
-	 * @return string
-	 */
-	public function GetTarget(): string;
-
 	/**
 	 * True if the tab must be displayed or false if the tab must be hidden.
 	 * When the tab is not displayed the other methods are not called.

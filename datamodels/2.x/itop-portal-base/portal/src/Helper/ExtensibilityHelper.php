@@ -6,8 +6,8 @@
 
 namespace Combodo\iTop\Portal\Helper;
 
-use Combodo\iTop\Portal\Hook\iPortalTabContentExtension;
-use Combodo\iTop\Portal\Hook\iPortalTabExtension;
+use Combodo\iTop\Portal\Hook\iAbstractPortalTabContentExtension;
+use Combodo\iTop\Portal\Hook\iAbstractPortalTabExtension;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 
 class ExtensibilityHelper
@@ -27,16 +27,16 @@ class ExtensibilityHelper
 		return static::$oInstance;
 	}
 
-	public function GetPortalTabExtension(string $sTargetName): array
+	public function GetPortalTabExtensions(string $sPortalTabExtensionInterface): array
 	{
 		$aTabExtensions = [];
-		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iPortalTabExtension::class) as $sPortalTabExtension) {
+		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses($sPortalTabExtensionInterface) as $sPortalTabExtension) {
 			$oPortalTabExtension = new $sPortalTabExtension();
-			if ($oPortalTabExtension->IsTabPresent() && $oPortalTabExtension->GetTarget() === $sTargetName) {
+			if ($oPortalTabExtension->IsTabPresent()) {
 				$aTabExtensions[] = $oPortalTabExtension;
 			}
 		}
-		usort($aTabExtensions, function (iPortalTabExtension $a, iPortalTabExtension $b) {
+		usort($aTabExtensions, function (iAbstractPortalTabExtension $a, iAbstractPortalTabExtension $b) {
 			return $a->GetTabRank() - $b->GetTabRank();
 		});
 
@@ -49,12 +49,12 @@ class ExtensibilityHelper
 	 *
 	 * @return array[iPortalTabContentExtension]
 	 */
-	public function GetPortalTabContentExtensions(string $sTargetName, string $sTab): array
+	public function GetPortalTabContentExtensions(string $sPortalTabSectionExtensionInterface, string $sTab): array
 	{
 		$aTabSectionExtensions = [];
-		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iPortalTabContentExtension::class) as $sPortalTabSectionExtension) {
+		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses($sPortalTabSectionExtensionInterface) as $sPortalTabSectionExtension) {
 			$oPortalTabSectionExtension = new $sPortalTabSectionExtension();
-			if (!$oPortalTabSectionExtension->IsActive() || $oPortalTabSectionExtension->GetTarget() !== $sTargetName) {
+			if (!$oPortalTabSectionExtension->IsActive()) {
 				continue;
 			}
 
@@ -64,7 +64,7 @@ class ExtensibilityHelper
 			$aTabSectionExtensions[] = $oPortalTabSectionExtension;
 		}
 
-		usort($aTabSectionExtensions, function (iPortalTabContentExtension $a, iPortalTabContentExtension $b) {
+		usort($aTabSectionExtensions, function (iAbstractPortalTabContentExtension $a, iAbstractPortalTabContentExtension $b) {
 			return $a->GetSectionRank() - $b->GetSectionRank();
 		});
 

@@ -27,8 +27,10 @@ use Combodo\iTop\Portal\Form\PreferencesFormManager;
 use Combodo\iTop\Portal\Helper\ExtensibilityHelper;
 use Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper;
 use Combodo\iTop\Portal\Helper\RequestManipulatorHelper;
-use Combodo\iTop\Portal\Hook\iPortalTabContentExtension;
-use Combodo\iTop\Portal\Hook\iPortalTabExtension;
+use Combodo\iTop\Portal\Hook\iAbstractPortalTabContentExtension;
+use Combodo\iTop\Portal\Hook\iAbstractPortalTabExtension;
+use Combodo\iTop\Portal\Hook\iUserProfileTabContentExtension;
+use Combodo\iTop\Portal\Hook\iUserProfileTabExtension;
 use Combodo\iTop\Portal\Routing\UrlGenerator;
 use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 use Exception;
@@ -176,9 +178,9 @@ class UserProfileBrickController extends BrickController
 		$aData['sTab'] = $sTab;
 
 		// Read the tabs From iPortalTabExtension
-		$aTabExtensions = ExtensibilityHelper::GetInstance()->GetPortalTabExtension('p_user_profile_brick');
+		$aTabExtensions = ExtensibilityHelper::GetInstance()->GetPortalTabExtensions(iUserProfileTabExtension::class);
 
-		/** @var iPortalTabExtension $oPortalTabExtension */
+		/** @var iAbstractPortalTabExtension $oPortalTabExtension */
 		foreach ($aTabExtensions as $oPortalTabExtension) {
 			$aData['aTabsValues'][] = [
 				'code'  => $oPortalTabExtension->GetTabCode(),
@@ -187,7 +189,7 @@ class UserProfileBrickController extends BrickController
 		}
 
 		// Read the current tab content From iPortalTabSectionExtension
-		$aTabSectionExtensions = ExtensibilityHelper::GetInstance()->GetPortalTabContentExtensions('p_user_profile_brick', $sTab);
+		$aTabSectionExtensions = ExtensibilityHelper::GetInstance()->GetPortalTabContentExtensions(iUserProfileTabContentExtension::class, $sTab);
 		if (count($aTabSectionExtensions) != 0 && ! empty($_POST)){
 			$sTransactionId = utils::ReadPostedParam('transaction_id', null, utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
 			IssueLog::Debug(__FUNCTION__.": transaction [$sTransactionId]");
@@ -198,7 +200,7 @@ class UserProfileBrickController extends BrickController
 
 		$aData['sTransactionId'] = utils::GetNewTransactionId();
 
-		/** @var iPortalTabContentExtension $oPortalTabSectionExtension */
+		/** @var iAbstractPortalTabContentExtension $oPortalTabSectionExtension */
 		foreach ($aTabSectionExtensions as $oPortalTabSectionExtension) {
 			$oPortalTabSectionExtension->HandlePortalForm($aData);
 		}
