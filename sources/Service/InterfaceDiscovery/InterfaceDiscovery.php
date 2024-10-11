@@ -290,7 +290,7 @@ class InterfaceDiscovery
 			return self::CACHE_STATIC;
 		}
 
-		if (MetaModel::GetConfig()->Get('developer_mode.interface_cache.enabled')) {
+		if (!is_null(MetaModel::GetConfig()) && MetaModel::GetConfig()->Get('developer_mode.interface_cache.enabled')) {
 			return self::CACHE_DYNAMIC;
 		}
 
