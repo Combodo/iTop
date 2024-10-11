@@ -10,6 +10,13 @@ use MetaModel;
 use ReflectionClass;
 use utils;
 
+/**
+ * Enumerate classes implementing given interfaces
+ *
+ * @api
+ *
+ * @since 3.2.0
+ */
 class InterfaceDiscovery
 {
 	private static InterfaceDiscovery $oInstance;
@@ -17,8 +24,8 @@ class InterfaceDiscovery
 	private ?array $aForcedClassMap = null; // For testing purposes
 
 	const CACHE_NONE = 'CACHE_NONE';
-	const CACHE_DYNAMIC = 'CACHE_DYNAMIC';
-	const CACHE_STATIC = 'CACHE_STATIC';
+	const CACHE_DYNAMIC = 'CACHE_DYNAMIC';  // rebuild cache when files changes
+	const CACHE_STATIC = 'CACHE_STATIC';    // Built once at setup
 
 	private function __construct()
 	{
@@ -38,20 +45,20 @@ class InterfaceDiscovery
 	 * Find the ITOP classes implementing a given interface. The returned classes have the following properties:
 	 * - They can be instantiated
 	 * - They are not aliases
+	 * - Their path relative to iTop does not contain /lib/, /node_modules/, /test/ or /tests/
 	 *
 	 * @param string $sInterface Fully qualified interface name
-	 * @param array|null $aAdditionalExcludedPaths Optional list of paths to exclude from the search (partial names allowed, case sensitive, use / as separator)
 	 *
 	 * @return array of fully qualified class names
 	 * @throws \ReflectionException when $sInterface is not an interface
+	 *
+	 * @api
+	 *
+	 * @since 3.2.0
 	 */
-	public function FindItopClasses(string $sInterface, ?array $aAdditionalExcludedPaths = null): array
+	public function FindItopClasses(string $sInterface): array
 	{
-		if (is_null($aAdditionalExcludedPaths)) {
-			return $this->FindClasses($sInterface, ['/lib/', '/node_modules/', '/test/', '/tests/']);
-		}
-
-		$aExcludedPaths = array_merge(['/lib/', '/node_modules/', '/test/', '/tests/'], $aAdditionalExcludedPaths);
+		$aExcludedPaths = ['/lib/', '/node_modules/', '/test/', '/tests/'];
 
 		return $this->FindClasses($sInterface, $aExcludedPaths);
 	}

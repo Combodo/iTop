@@ -49,19 +49,6 @@ class InterfaceDiscoveryTest extends ItopDataTestCase
 		);
 	}
 
-	public function testShouldExcludeSpecifiedDirectories()
-	{
-
-		$this->GivenClassMap([
-			'Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory' => APPROOT . '/sources/Application/UI/Base/Component/Alert/AlertUIBlockFactory.php',
-			'Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory' => APPROOT . '/sources/Application/UI/Base/Component/ButtonGroup/ButtonGroupUIBlockFactory.php',
-		]);
-
-		$this->AssertArraysHaveSameItems(
-			[],
-			$this->oInterfaceDiscovery->FindItopClasses(iUIBlockFactory::class, ['Component/ButtonGroup', '/Alert/'])
-		);
-	}
 	public function testShouldExcludeAliases()
 	{
 		$this->GivenClassMap([

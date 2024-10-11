@@ -161,7 +161,7 @@ class DataModelDependantCache
 	/**
 	 * for test purpose
 	 *
-	 * @param string $sStorageRootDir
+	 * @param string|null $sStorageRootDir if null the current cache path is used
 	 */
 	public function SetStorageRootDir(?string $sStorageRootDir): void
 	{
