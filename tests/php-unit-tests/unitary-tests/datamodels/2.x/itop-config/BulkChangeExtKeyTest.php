@@ -183,10 +183,10 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 			null,
 			null,
 			null,
+			null,
 			'Found 2 matches'
 		);
 	}
-
 
 	/**
 	 * @dataProvider ReconciliationKeyProvider
@@ -209,6 +209,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 			null,
 			$bIsRackReconKey,
 			$aCsvData,
+			['description'=>3],
 			$aExtKeys,
 			$sSearchLinkUrl
 		);
@@ -224,7 +225,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	}
 
 	public function performBulkChangeTest($sExpectedDisplayableValue, $sExpectedDescription, $oOrg, $bIsRackReconKey,
-		$aAdditionalCsvData=null, $aExtKeys=null, $sSearchLinkUrl=null, $sError="Object not found") {
+		$aAdditionalCsvData=null, $aAdditionalAttributes=null, $aExtKeys=null, $sSearchLinkUrl=null, $sError="Object not found") {
 		if ($sSearchLinkUrl===null){
 			$sSearchLinkUrl = 'UI.php?operation=search&filter='.rawurlencode('%5B%22SELECT+%60Rack%60+FROM+Rack+AS+%60Rack%60+WHERE+%28%60Rack%60.%60name%60+%3D+%3Aname%29%22%2C%7B%22name%22%3A%22UnexistingRack%22%7D%2C%5B%5D%5D');
 		}
@@ -247,6 +248,9 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 			}
 		}
 		$aAttributes = ["name" => 2];
+		if ($aAdditionalAttributes !== null){
+			$aAttributes = array_merge($aAttributes, $aAdditionalAttributes);
+		}
 		if ($aExtKeys == null){
 			$aExtKeys = ["org_id" => ["name" => 0], "rack_id" => ["name" => 1]];
 		}
