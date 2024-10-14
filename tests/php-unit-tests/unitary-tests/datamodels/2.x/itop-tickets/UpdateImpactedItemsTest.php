@@ -148,6 +148,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 
 		$oTicket->UpdateImpactedItems(); // impact analysis
 
+		// By default Max depth is 10. Can be changed by overriding _Ticket::GetImpactAnalysisMaxDepth
 		$this->assertCIsOrPersonsListEquals($oTicket, [
 			'ApplicationSolution_0' => 'manual',
 			'ApplicationSolution_1' => 'computed',
