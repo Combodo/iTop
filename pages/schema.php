@@ -343,6 +343,8 @@ function DisplayEvents(WebPage $oPage, $sClass)
 				}
 			}
 			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
+		} else if (is_array($aListener['callback'])) {
+			$sListener = $aListener['callback'][0].'::'.$aListener['callback'][1];
 		} else {
 			$sListener = $aListener['callback'].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
 		}
