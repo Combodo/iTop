@@ -7477,6 +7477,8 @@ abstract class MetaModel
 	 * @param string|null $sFilterInstanceOf [optional] if given, only instance of this string will be returned
 	 *
 	 * @return array classes=>instance implementing the given interface
+	 *
+	 * @see \Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery::FindItopClasses() to add extensibility to modules
 	 */
 	public static function EnumPlugins($sInterface, $sFilterInstanceOf = null)
 	{

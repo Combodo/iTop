@@ -1747,6 +1747,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'developer_mode.interface_cache.enabled' => [
+			'type'                => 'bool',
+			'description'         => 'If true then InterfaceDiscovery uses dynamic cache (in developer_mode)',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'theme.enable_precompilation' => [
 			'type' => 'bool',
 			'description' => 'If false, theme compilation will not use any precompiled file setup optimization.)',
