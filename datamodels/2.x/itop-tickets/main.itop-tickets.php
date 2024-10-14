@@ -132,7 +132,23 @@ class ResponseTicketTTR extends ResponseTicketSLT implements iMetricComputer
 
 class _Ticket extends cmdbAbstractObject
 {
+	/**
+	 * used to limit the depth of analysis in the UpdateImpactedItems function
+	 * @return int
+	 */
+	public function GetImpactAnalysisMaxDepth()
+	{
+		return 10;
+	}
 
+	/**
+	 * @param int $iMaxDepth maximum depth of impact analysis
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
 	public function UpdateImpactedItems()
 	{
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
@@ -188,7 +204,7 @@ class _Ticket extends cmdbAbstractObject
 		}
 		// Merge the directly impacted items with the "new" ones added by the "context" queries
         $aGraphObjects = array();
-        $oRawGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, 10, true /* bEnableRedundancy */, $aExcluded);
+        $oRawGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, $this->GetImpactAnalysisMaxDepth(), true /* bEnableRedundancy */, $aExcluded);
         $oIterator = new RelationTypeIterator($oRawGraph, 'Node');
         foreach ($oIterator as $oNode)
         {
@@ -200,7 +216,7 @@ class _Ticket extends cmdbAbstractObject
         }
         if (count($aDefaultContexts) > 0)
 		{
-			$oAnnotatedGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, 10, true /* bEnableRedundancy */, $aExcluded, $aDefaultContexts);
+			$oAnnotatedGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, $this->GetImpactAnalysisMaxDepth(), true /* bEnableRedundancy */, $aExcluded, $aDefaultContexts);
 			$oIterator = new RelationTypeIterator($oAnnotatedGraph, 'Node');
 			foreach ($oIterator as $oNode)
 			{
