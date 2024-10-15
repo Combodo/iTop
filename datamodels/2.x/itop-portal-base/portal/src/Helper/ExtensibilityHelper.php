@@ -10,6 +10,15 @@ use Combodo\iTop\Portal\Hook\iAbstractPortalTabContentExtension;
 use Combodo\iTop\Portal\Hook\iAbstractPortalTabExtension;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 
+/**
+ * This helper is used by the bricks to manage the tab extensibility by retrieving
+ * the classes implementing the corresponding interfaces
+ *
+ * @api
+ * @see \Combodo\iTop\Portal\Hook\iAbstractPortalTabExtension
+ * @see \Combodo\iTop\Portal\Hook\iAbstractPortalTabContentExtension
+ * @since iTop 3.2.1
+ */
 class ExtensibilityHelper
 {
 	private static ExtensibilityHelper $oInstance;
@@ -27,6 +36,18 @@ class ExtensibilityHelper
 		return static::$oInstance;
 	}
 
+	/**
+	 * Instantiate all the classes implementing the given interface
+	 *
+	 * @api
+	 * @see \Combodo\iTop\Portal\Hook\iAbstractPortalTabExtension
+	 *
+	 * @param string $sPortalTabExtensionInterface Extensibility interface to search for (derived from iAbstractPortalTabExtension)
+	 *
+	 * @return array[iAbstractPortalTabExtension] array of objects implementing the given interface
+	 *
+	 * @since iTop 3.2.1
+	 */
 	public function GetPortalTabExtensions(string $sPortalTabExtensionInterface): array
 	{
 		$aTabExtensions = [];
@@ -44,10 +65,12 @@ class ExtensibilityHelper
 	}
 
 	/**
-	 * @param string $sTargetName
-	 * @param string $sTab
+	 * Instantiate all the classes implementing the given interface for the given tab
 	 *
-	 * @return array[iPortalTabContentExtension]
+	 * @param string $sPortalTabSectionExtensionInterface Extensibility interface to search for (derived from iAbstractPortalTabContentExtension)
+	 * @param string $sTab Tab code
+	 *
+	 * @return array[iPortalTabContentExtension] array of objects implementing the given interface
 	 */
 	public function GetPortalTabContentExtensions(string $sPortalTabSectionExtensionInterface, string $sTab): array
 	{
@@ -70,5 +93,4 @@ class ExtensibilityHelper
 
 		return $aTabSectionExtensions;
 	}
-
 }

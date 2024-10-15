@@ -6,6 +6,12 @@
 
 namespace Combodo\iTop\Portal\Hook;
 
+/**
+ * This interface is used to add content to the user profile brick.
+ *
+ * @api
+ * @since iTop 3.2.1
+ */
 interface iUserProfileTabContentExtension extends iAbstractPortalTabContentExtension
 {
 
