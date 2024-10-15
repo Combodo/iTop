@@ -503,8 +503,8 @@ class CoreServices implements iRestServiceProvider
 		case 'core/get':
 			$sClass = RestUtils::GetClass($aParams, 'class');
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
+			$sShowFields = RestUtils::GetOptionalParam($aParams, 'output_fields', '*');
 			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
-			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
 			$iLimit = (int)RestUtils::GetOptionalParam($aParams, 'limit', 0);
 			$iPage = (int)RestUtils::GetOptionalParam($aParams, 'page', 1);
 
@@ -528,7 +528,8 @@ class CoreServices implements iRestServiceProvider
             }
 			else
 			{
-                                if (!$bExtendedOutput && RestUtils::GetOptionalParam($aParams, 'output_fields', '*') != '*') 
+
+                                if (!RestUtils::HasRequestedAllOutputFields($sShowFields))
                                 {
                                         $aFields = $aShowFields[$sClass];
                                         //Id is not a valid attribute to optimize
@@ -542,7 +543,7 @@ class CoreServices implements iRestServiceProvider
                                 
 				while ($oObject = $oObjectSet->Fetch())
 				{
-					$oResult->AddObject(0, '', $oObject, $aShowFields, $bExtendedOutput);
+					$oResult->AddObject(0, '', $oObject, $aShowFields, RestUtils::HasRequestedExtendedOutput($sShowFields));
 				}
 				$oResult->message = "Found: ".$oObjectSet->Count();
 			}
