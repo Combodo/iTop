@@ -24,8 +24,13 @@ use Combodo\iTop\Portal\Brick\BrickCollection;
 use Combodo\iTop\Portal\Brick\UserProfileBrick;
 use Combodo\iTop\Portal\Form\PasswordFormManager;
 use Combodo\iTop\Portal\Form\PreferencesFormManager;
+use Combodo\iTop\Portal\Helper\ExtensibilityHelper;
 use Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper;
 use Combodo\iTop\Portal\Helper\RequestManipulatorHelper;
+use Combodo\iTop\Portal\Hook\iAbstractPortalTabContentExtension;
+use Combodo\iTop\Portal\Hook\iAbstractPortalTabExtension;
+use Combodo\iTop\Portal\Hook\iUserProfileTabContentExtension;
+use Combodo\iTop\Portal\Hook\iUserProfileTabExtension;
 use Combodo\iTop\Portal\Routing\UrlGenerator;
 use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 use Exception;
@@ -106,62 +111,106 @@ class UserProfileBrickController extends BrickController
 			$oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
 		}
 
-		$aData = array();
+		$aData = [];
 
 		// Setting form mode regarding the demo mode parameter
 		$bDemoMode = MetaModel::GetConfig()->Get('demo_mode');
 		$sFormMode = ($bDemoMode) ? ObjectFormHandlerHelper::ENUM_MODE_VIEW : ObjectFormHandlerHelper::ENUM_MODE_EDIT;
 
+		$sTab = $this->oRequestManipulatorHelper->ReadParam('sTab', 'user-info', FILTER_UNSAFE_RAW, FILTER_FLAG_EMPTY_STRING_NULL);
+
 		// If this is ajax call, we are just submitting preferences or password forms
 		if ($oRequest->isXmlHttpRequest())
 		{
-			$aCurrentValues = $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
-			$sFormType = $aCurrentValues['form_type'];
-			if ($sFormType === PreferencesFormManager::FORM_TYPE)
-			{
-				$aData['form'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
+			if ($sTab === "user-info") {
+				$aCurrentValues = $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW,
+					FILTER_REQUIRE_ARRAY);
+				$sFormType = $aCurrentValues['form_type'];
+				if ($sFormType === PreferencesFormManager::FORM_TYPE) {
+					$aData['form'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
+				} elseif ($sFormType === PasswordFormManager::FORM_TYPE) {
+					$aData['form'] = $this->HandlePasswordForm($oRequest, $sFormMode);
+				} elseif ($sFormType === static::ENUM_FORM_TYPE_PICTURE) {
+					$aData['form'] = $this->HandlePictureForm($oRequest);
+				} else {
+					throw new Exception('Unknown form type.');
+				}
 			}
-			elseif ($sFormType === PasswordFormManager::FORM_TYPE)
-			{
-				$aData['form'] = $this->HandlePasswordForm($oRequest, $sFormMode);
-			}
-			elseif ($sFormType === static::ENUM_FORM_TYPE_PICTURE)
-			{
-				$aData['form'] = $this->HandlePictureForm($oRequest);
-			}
-			else
-			{
-				throw new Exception('Unknown form type.');
-			}
+
 			$oResponse = new JsonResponse($aData);
 		}
 		// Else, we are displaying page for first time
 		else
 		{
-			// Retrieving current contact
-			/** @var \DBObject $oCurContact */
-			$oCurContact = UserRights::GetContactObject();
-			$sCurContactClass = get_class($oCurContact);
-			$sCurContactId = $oCurContact->GetKey();
+			if ($sTab === "user-info") {
+				// Retrieving current contact
+				/** @var \DBObject $oCurContact */
+				$oCurContact = UserRights::GetContactObject();
+				$sCurContactClass = get_class($oCurContact);
+				$sCurContactId = $oCurContact->GetKey();
 
-			// Preparing forms
-			$aData['forms']['contact'] = $this->ObjectFormHandlerHelper->HandleForm($oRequest, $sFormMode, $sCurContactClass, $sCurContactId,
-				$oBrick->GetForm());
-			$aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
-			// - If user can change password, we display the form
-			$aData['forms']['password'] = (UserRights::CanChangePassword()) ? $this->HandlePasswordForm($oRequest, $sFormMode) : null;
+				// Preparing forms
+				$aData['forms']['contact'] = $this->ObjectFormHandlerHelper->HandleForm($oRequest, $sFormMode, $sCurContactClass,
+					$sCurContactId,
+					$oBrick->GetForm());
+				$aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
+				// - If user can change password, we display the form
+				$aData['forms']['password'] = (UserRights::CanChangePassword()) ? $this->HandlePasswordForm($oRequest, $sFormMode) : null;
+			}
 
-			$aData = $aData + array(
+			$aData = $aData + [
 					'oBrick' => $oBrick,
 					'sFormMode' => $sFormMode,
 					'bDemoMode' => $bDemoMode,
-				);
+				];
+
+			$this->ManageUserProfileBrickExtensibility($sTab, $aData);
 
 			$oResponse = $this->render($oBrick->GetPageTemplatePath(), $aData);
 		}
 
 		return $oResponse;
 	}
+
+
+	private function ManageUserProfileBrickExtensibility(string $sTab, array &$aData): void
+	{
+		$aData['sTab'] = $sTab;
+
+		// Read the tabs From iPortalTabExtension
+		$aTabExtensions = ExtensibilityHelper::GetInstance()->GetPortalTabExtensions(iUserProfileTabExtension::class);
+
+		/** @var iAbstractPortalTabExtension $oPortalTabExtension */
+		foreach ($aTabExtensions as $oPortalTabExtension) {
+			$aData['aTabsValues'][] = [
+				'code'  => $oPortalTabExtension->GetTabCode(),
+				'label' => $oPortalTabExtension->GetTabLabel(),
+			];
+		}
+
+		// Read the current tab content From iPortalTabSectionExtension
+		$aTabSectionExtensions = ExtensibilityHelper::GetInstance()->GetPortalTabContentExtensions(iUserProfileTabContentExtension::class, $sTab);
+		if (count($aTabSectionExtensions) !== 0 && count($_POST) !== 0){
+			$sTransactionId = utils::ReadPostedParam('transaction_id', null, utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
+			IssueLog::Debug(__FUNCTION__.": transaction [$sTransactionId]");
+			if (utils::IsNullOrEmptyString($sTransactionId) || !utils::IsTransactionValid($sTransactionId, false)) {
+				throw new Exception(\Dict::S('iTopUpdate:Error:InvalidToken'));
+			}
+		}
+
+		$aData['sTransactionId'] = utils::GetNewTransactionId();
+
+		/** @var iAbstractPortalTabContentExtension $oPortalTabSectionExtension */
+		foreach ($aTabSectionExtensions as $oPortalTabSectionExtension) {
+			$oPortalTabSectionExtension->HandlePortalForm($aData);
+		}
+
+		$aData['aPluginFormData'] = [];
+		foreach ($aTabSectionExtensions as $oPortalTabSectionExtension) {
+			$aData['aPluginFormData'][] =  $oPortalTabSectionExtension->GetPortalTabContentTwigs();
+		}
+	}
+
 
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
@@ -173,8 +222,6 @@ class UserProfileBrickController extends BrickController
 	 */
 	public function HandlePreferencesForm(Request $oRequest, $sFormMode)
 	{
-
-
 		$aFormData = array();
 
 		// Handling form
@@ -393,5 +440,4 @@ class UserProfileBrickController extends BrickController
 
 		return $aFormData;
 	}
-
 }
