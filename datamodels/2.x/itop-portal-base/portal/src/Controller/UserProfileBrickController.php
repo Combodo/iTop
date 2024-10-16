@@ -190,10 +190,10 @@ class UserProfileBrickController extends BrickController
 
 		// Read the current tab content From iPortalTabSectionExtension
 		$aTabSectionExtensions = ExtensibilityHelper::GetInstance()->GetPortalTabContentExtensions(iUserProfileTabContentExtension::class, $sTab);
-		if (count($aTabSectionExtensions) != 0 && ! empty($_POST)){
+		if (count($aTabSectionExtensions) !== 0 && count($_POST) !== 0){
 			$sTransactionId = utils::ReadPostedParam('transaction_id', null, utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
 			IssueLog::Debug(__FUNCTION__.": transaction [$sTransactionId]");
-			if (empty($sTransactionId) || !utils::IsTransactionValid($sTransactionId, false)) {
+			if (utils::IsNullOrEmptyString($sTransactionId) || !utils::IsTransactionValid($sTransactionId, false)) {
 				throw new Exception(\Dict::S('iTopUpdate:Error:InvalidToken'));
 			}
 		}
