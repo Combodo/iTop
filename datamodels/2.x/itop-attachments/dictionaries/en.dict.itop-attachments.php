@@ -92,3 +92,21 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class',
 ));
+
+//
+// Class: TriggerOnAttachmentAdded
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TriggerOnAttachmentAdded' => 'Trigger (on object\'s attachment added)',
+	'Class:TriggerOnAttachmentAdded+' => 'Trigger on object\'s attachment added of [a child class of] the given class',
+));
+
+//
+// Class: TriggerOnAttachmentRemoved
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TriggerOnAttachmentRemoved' => 'Trigger (on object\'s attachment removed)',
+	'Class:TriggerOnAttachmentRemoved+' => 'Trigger on object\'s attachment removed of [a child class of] the given class',
+));
