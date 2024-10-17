@@ -251,7 +251,7 @@ class appUserPreferences extends DBObject
 			"key_type" => "autoincrement",
 			"name_attcode" => "userid",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array("userid"),
 			"db_table" => "priv_app_preferences",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -260,6 +260,8 @@ class appUserPreferences extends DBObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributePropertySet("preferences", array("allowed_values"=>null, "sql"=>"preferences", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_SetZListItems('list', array('preferences',));
+		MetaModel::Init_SetZListItems('default_search', array('userid'));
 	}
 
 	/**
