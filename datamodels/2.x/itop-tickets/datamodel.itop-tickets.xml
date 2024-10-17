@@ -1072,7 +1072,7 @@
           <decoration_class>
             <default>fc fc-ongoing-request fc-2x</default>
           </decoration_class>
-          <oql><![CDATA[SELECT Ticket]]></oql>
+          <oql><![CDATA[SELECT Ticket AS T WHERE T.finalclass IN ('UserRequest', 'Incident')]]></oql>
           <!-- Optional tag to define if the action should be done in a modal window ("modal"), a new window ("new") or the current window ("self") -->
           <!--<opening_target>modal</opening_target>-->
           <!-- Optional tag to define the how the objects should be opened. Values can be edit|view. Note that even if this is set to edit, objects not allowed in edition mode for the user (cf. scopes and security layers) will open in view mode -->
@@ -1138,7 +1138,7 @@
           <decoration_class>
             <default>fc fc-closed-request fc-2x</default>
           </decoration_class>
-          <oql><![CDATA[SELECT Ticket WHERE operational_status = 'closed']]></oql>
+          <oql><![CDATA[SELECT Ticket WHERE operational_status = 'closed' AND T.finalclass IN ('UserRequest', 'Incident')]]></oql>
           <!-- Can be either a class tag with the class name or an oql tag with the query -->
           <!-- <class>Ticket</class> -->
           <fields>
