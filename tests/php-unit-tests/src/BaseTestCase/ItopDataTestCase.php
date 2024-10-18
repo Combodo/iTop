@@ -1368,4 +1368,28 @@ abstract class ItopDataTestCase extends ItopTestCase
 		]);
 		return $sLogin;
 	}
+
+	/**
+	 * @param string $sPassword
+	 * @param array $aProfiles Profile names Example: ['Administrator']
+	 *
+	 * @return string The unique login
+	 * @throws \Exception
+	 */
+	protected function GivenUserInDB(string $sPassword, array $aProfiles): string
+	{
+		$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
+
+		$aProfileList = array_map(function($sProfileId) {
+			return 'profileid:'.self::$aURP_Profiles[$sProfileId];
+		}, $aProfiles);
+
+		$iUser = $this->GivenObjectInDB('UserLocal', [
+			'login' => $sLogin,
+			'password' => $sPassword,
+			'language' => 'EN US',
+			'profile_list' => $aProfileList,
+		]);
+		return $sLogin;
+	}
 }
