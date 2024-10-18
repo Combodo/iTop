@@ -1010,6 +1010,7 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked'       => 'Locked',
 	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked'     => 'Unlocked',
 	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty'      => 'Initialize if empty',
+	'Class:SynchroAttribute/Attribute:import_columns'                          => 'Import Columns',
 	'Class:SynchroAttribute/Attribute:finalclass'                              => 'Class',
 	'Class:SynchroAttExtKey'                                                   => 'Synchro Attribute (ExtKey)',
 	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode'                  => 'Reconciliation Attribute',
