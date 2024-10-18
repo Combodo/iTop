@@ -170,19 +170,20 @@ abstract class TriggerOnObject extends Trigger
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "description",
+			"category"            => "grant_by_profile,core/cmdb",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "description",
 			"complementary_name_attcode" => ['finalclass', 'complement'],
-			"state_attcode" => "",
+			"state_attcode"       => "",
 			"reconc_keys" => ['description'],
-			"db_table" => "priv_trigger_onobject",
-			"db_key_field" => "id",
+			"db_table"            => "priv_trigger_onobject",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeClass("target_class", array("class_category" => "bizmodel", "more_values" => "User,UserExternal,UserInternal,UserLDAP,UserLocal", "sql" => "target_class", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("target_class",
+			array("class_category" => "bizmodel", "more_values" => "User,UserExternal,UserInternal,UserLDAP,UserLocal", "sql" => "target_class", "default_value" => null, "is_null_allowed" => false, "depends_on" => array(), "class_exclusion_list" => "Attachment")));
 		MetaModel::Init_AddAttribute(new AttributeOQL("filter", array("allowed_values" => null, "sql" => "filter", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
@@ -529,6 +530,7 @@ class TriggerOnObjectCreate extends TriggerOnObject
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
 		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
+
 }
 
 /**

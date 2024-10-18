@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
@@ -57,4 +57,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnAttachmentDownload' => '触发器 (于对象附件下载时)',
 	'Class:TriggerOnAttachmentDownload+' => '触发器于指定类型 [子类型] 对象附件下载时',
 	'UI:Attachments:DropYourFileHint' => '将文件拖放到此区域的任意位置',
+    'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
+    'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
+	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
 ]);

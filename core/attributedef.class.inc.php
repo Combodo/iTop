@@ -3793,7 +3793,7 @@ class AttributeClass extends AttributeString
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("class_category", "more_values"));
+		return array_merge(parent::ListExpectedParams(), array('class_category', 'more_values'));
 	}
 
 	public function __construct($sCode, $aParams)
@@ -3819,10 +3819,35 @@ class AttributeClass extends AttributeString
 		return $sDefault;
 	}
 
+	/**
+	 * @param array $aArgs
+	 * @param string $sContains
+	 *
+	 * @return array|null
+	 * @throws \CoreException
+	 */
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	{
+		$oValSetDef = $this->GetValuesDef();
+		if (!$oValSetDef) {
+			return null;
+		}
+
+		$aListClass = $oValSetDef->GetValues($aArgs, $sContains);
+
+		$sClassExclusionList = $this->GetOptional('class_exclusion_list',null);
+		if (!empty($sClassExclusionList)) {
+			foreach (explode(',', $sClassExclusionList) as $sClassName) {
+				unset($aListClass[trim($sClassName)]);
+			}
+		}
+
+		return $aListClass;
+	}
+
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (empty($sValue))
-		{
+		if (empty($sValue)) {
 			return '';
 		}
 
