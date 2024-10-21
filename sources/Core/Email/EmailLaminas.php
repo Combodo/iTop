@@ -331,11 +331,11 @@ class EMailLaminas extends Email
 	{
 		$this->m_aData['message_id'] = $sId;
 
-		// Note: Swift will add the angle brackets for you
+		// Note: The email library will add the angle brackets for you
 		// so let's remove the angle brackets if present, for historical reasons
 		$sId = str_replace(array('<', '>'), '', $sId);
 
-		$this->m_oMessage->getHeaders()->addHeaderLine('Message-ID', $sId);
+		$this->m_oMessage->getHeaders()->addHeader((new Laminas\Mail\Header\MessageId())->setId($sId));
 	}
 
 	public function SetReferences($sReferences)
