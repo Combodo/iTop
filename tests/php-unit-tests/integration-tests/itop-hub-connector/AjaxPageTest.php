@@ -12,6 +12,7 @@ class AjaxPageTest extends ItopDataTestCase {
 	public function testCompileOperation()
 	{
 		// Given
+		static::RecurseMkdir(APPROOT.'data/hub');
 		file_put_contents(APPROOT.'data/hub/compile_authent', self::AUTHENTICATION_TOKEN);
 		$sLogin = $this->GivenUserInDB(self::AUTHENTICATION_PASSWORD, ['Administrator']);
 
