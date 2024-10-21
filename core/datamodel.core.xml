@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="lnkActionNotificationToContact" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -99,7 +99,7 @@
       </presentation>
       <methods/>
     </class>
-    <class id="ActionNewsroom"  _delta="define">
+    <class id="ActionNewsroom" _delta="define">
       <php_parent>
         <name>ActionNotification</name>
       </php_parent>
@@ -148,7 +148,7 @@
           <display_max_height>96</display_max_height>
           <storage_max_width>256</storage_max_width>
           <storage_max_height>256</storage_max_height>
-          <default_image />
+          <default_image/>
         </field>
         <field id="priority" xsi:type="AttributeEnum">
           <sql>priority</sql>
@@ -183,7 +183,7 @@
         </field>
         <field id="url" xsi:type="AttributeString">
           <sql>url</sql>
-          <default_value>$this->url()$</default_value>
+          <default_value>$this-&gt;url()$</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
       </fields>
@@ -369,7 +369,7 @@
 ]]></code>
         </method>
         <method id="GetAsynchronousGlobalSetting">
-          <comment></comment>
+          <comment/>
           <static>true</static>
           <access>public</access>
           <code><![CDATA[
@@ -381,7 +381,7 @@
         </method>
       </methods>
     </class>
-    <class id="EventNotificationNewsroom"  _delta="define">
+    <class id="EventNotificationNewsroom" _delta="define">
       <php_parent>
         <name>EventNotification</name>
       </php_parent>
@@ -405,7 +405,7 @@
         </reconciliation>
         <order>
           <columns>
-            <column id="date" ascending="false" />
+            <column id="date" ascending="false"/>
           </columns>
         </order>
       </properties>
@@ -419,7 +419,7 @@
           <sql>icon</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
-          <default_image />
+          <default_image/>
         </field>
         <field id="priority" xsi:type="AttributeEnum">
           <sql>priority</sql>
@@ -501,14 +501,14 @@
           </items>
         </details>
         <summary>
-        <items>
-          <item id="date">
-            <rank>10</rank>
-          </item>
-          <item id="message">
-            <rank>20</rank>
-          </item>
-        </items>
+          <items>
+            <item id="date">
+              <rank>10</rank>
+            </item>
+            <item id="message">
+              <rank>20</rank>
+            </item>
+          </items>
         </summary>
         <list>
           <items>

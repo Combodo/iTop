@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="AbstractResource" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -45,7 +45,7 @@
       <properties>
         <comment>/** Acknowledge welcome popup messages */</comment>
         <abstract>false</abstract>
-        <category></category>
+        <category/>
         <key_type>autoincrement</key_type>
         <db_table>priv_welcome_popup_acknowledge</db_table>
       </properties>

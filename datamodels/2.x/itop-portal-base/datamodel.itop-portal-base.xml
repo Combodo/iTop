@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design version="3.2">
+<itop_design version="3.3">
   <events>
     <event id="EVENT_DISPLAY_OBJECT_DETAILS" _delta="define">
       <name>Portal object displayed</name>
