@@ -115,6 +115,12 @@ class iTopDesignFormat
 		'3.2' => array(
 			'previous' => '3.1',
 			'go_to_previous' => 'From32To31',
+			'next' => '3.3',
+			'go_to_next' => 'From32To33',
+		),
+		'3.3' => array(
+			'previous' => '3.2',
+			'go_to_previous' => 'From33To32',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -1114,6 +1120,26 @@ class iTopDesignFormat
 		$this->RemoveNodeFromXPath('/itop_design/branding/main_favicon');
 		$this->RemoveNodeFromXPath('/itop_design/branding/portal_favicon');
 		$this->RemoveNodeFromXPath('/itop_design/branding/login_favicon');
+	}
+
+	/**
+	 * Upgrade the format from version 3.2 to 3.3
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From32To33($oFactory)
+	{
+		// Nothing for now...
+	}
+
+	/**
+	 * Downgrade the format from version 3.3 to 3.2
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From33To32($oFactory)
+	{
+		// Nothing for now...
 	}
 
 	/**
