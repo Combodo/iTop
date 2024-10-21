@@ -3236,7 +3236,7 @@ XML
 				'aClasses'                 => [
 					['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
 				],
-				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -3266,7 +3266,7 @@ XML
 					['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
 					['name' => 'B', 'module' => 'M2', 'parent' => 'cmdbAbstractObject'],
 				],
-				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -3303,7 +3303,7 @@ XML
 					['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
 					['name' => 'B', 'module' => 'M2', 'parent' => 'A'],
 				],
-				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -3342,7 +3342,7 @@ XML
 					['name' => 'C', 'module' => 'M3', 'parent' => 'cmdbAbstractObject'],
 					['name' => 'D', 'module' => 'M3', 'parent' => 'B'],
 				],
-				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
