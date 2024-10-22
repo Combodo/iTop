@@ -70,8 +70,14 @@ class AjaxRenderController
 			$bShowObsoleteData = utils::ShowObsoleteData();
 		}
 		$oSet->SetShowObsoleteData($bShowObsoleteData);
+		$iCount = 0;
+		if(isset($aExtraParams['iCount'])){
+			$iCount = $aExtraParams['iCount'];
+		} else {
+			$iCount = $oSet->Count();
+		}
 		$aResult["draw"] = $iDrawNumber;
-		$aResult["recordsTotal"] = $oSet->Count();
+		$aResult["recordsTotal"] = $iCount;
 		$aResult["recordsFiltered"] = $aResult["recordsTotal"] ;
 		$aResult["data"] = [];
 		while ($aObject = $oSet->FetchAssoc()) {
