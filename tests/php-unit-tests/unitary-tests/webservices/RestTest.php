@@ -142,6 +142,58 @@ JSON;
 		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $sJSONOutput);
 	}
 
+	public function testCoreApiGetWithUnionAndDifferentOutputFields(){
+		// Create ticket
+		$description = date('dmY H:i:s');
+		$oUserRequest = $this->CreateSampleTicket($description);
+		$oChange = $this->CreateSampleTicket($description, 'Change');
+		$iUserRequestId = $oUserRequest->GetKey();
+		$sUserRequestRef = $oUserRequest->Get('ref');
+		$iChangeId = $oChange->GetKey();
+		$sChangeRef = $oChange->Get('ref');
+
+		$sJSONOutput = $this->CallCoreRestApi_Internally(<<<JSON
+{
+   "operation": "core/get",
+   "class": "Ticket",
+   "key": "SELECT UserRequest WHERE id=$iUserRequestId UNION SELECT Change WHERE id=$iChangeId",
+   "output_fields": "Ticket:ref;UserRequest:ref,status,origin;Change:ref,status,outage"
+}
+JSON);
+
+		$sExpectedJsonOuput = <<<JSON
+{
+    "code": 0,
+    "message": "Found: 2",
+    "objects": {
+    	"Change::$iChangeId": {
+            "class": "Change",
+            "code": 0,
+            "fields": {
+            	"outage": "no",
+                "ref": "$sChangeRef",
+                "status": "new"
+            },
+            "key": "$iChangeId",
+            "message": ""
+        },
+        "UserRequest::$iUserRequestId": {
+            "class": "UserRequest",
+            "code": 0,
+            "fields": {
+            	"origin": "phone",
+                "ref": "$sUserRequestRef",
+                "status": "new"
+            },
+            "key": "$iUserRequestId",
+            "message": ""
+        }
+    }
+}
+JSON;
+		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $sJSONOutput);
+	}
+
 	public function testCoreApiCreate()
 	{
 		// Create ticket
@@ -253,9 +305,9 @@ JSON;
 	//
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private function CreateSampleTicket($description)
+	private function CreateSampleTicket($description, $sType = 'UserRequest')
 	{
-		$oTicket = $this->createObject('UserRequest', [
+		$oTicket = $this->createObject($sType, [
 			'org_id' => $this->getTestOrgId(),
 			"title" => "Houston, got a problem",
 			"description" => $description

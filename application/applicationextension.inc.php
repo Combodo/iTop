@@ -1914,38 +1914,72 @@ class RestUtils
 	public static function GetFieldList($sClass, $oData, $sParamName)
 	{
 		$sFields = self::GetOptionalParam($oData, $sParamName, '*');
-		$aShowFields = array();
-		if ($sFields == '*')
-		{
-			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
-				$aShowFields[$sClass][] = $sAttCode;
-			}
+		return match($sFields) {
+			'*' => self::GetFieldListForClass($sClass),
+			'*+' => self::GetFieldListForParentClass($sClass),
+			default => self::GetLimitedFieldListForClass($sClass, $sFields, $sParamName),
+		};
+	}
+
+	public static function HasRequestedExtendedOutput(string $sFields): bool
+	{
+		return match($sFields) {
+			'*' => false,
+			'*+' => true,
+			default => substr_count($sFields, ':') > 1,
+		};
+	}
+
+	public static function HasRequestedAllOutputFields(string $sFields): bool
+	{
+		return match($sFields) {
+			'*', '*+' => true,
+			default => false,
+		};
+	}
+
+	protected static function GetFieldListForClass(string $sClass): array
+	{
+		return [$sClass => array_keys(MetaModel::ListAttributeDefs($sClass))];
+	}
+
+	protected static function GetFieldListForParentClass(string $sClass): array
+	{
+		$aFieldList = array();
+		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sRefClass) {
+			$aFieldList = array_merge($aFieldList, self::GetFieldListForClass($sRefClass));
 		}
-		elseif ($sFields == '*+')
+		return $aFieldList;
+	}
+
+	protected static function GetLimitedFieldListForSingleClass(string $sClass, string $sFields, string $sParamName): array
+	{
+		$aFieldList = [$sClass => []];
+		foreach (explode(',', $sFields) as $sAttCode)
 		{
-			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sRefClass)
+			$sAttCode = trim($sAttCode);
+			if (($sAttCode != 'id') && (!MetaModel::IsValidAttCode($sClass, $sAttCode)))
 			{
-				foreach (MetaModel::ListAttributeDefs($sRefClass) as $sAttCode => $oAttDef)
-				{
-					$aShowFields[$sRefClass][] = $sAttCode;
-				}
+				throw new Exception("$sParamName: invalid attribute code '$sAttCode'");
 			}
+			$aFieldList[$sClass][] = $sAttCode;
 		}
-		else
-		{
-			foreach (explode(',', $sFields) as $sAttCode)
-			{
-				$sAttCode = trim($sAttCode);
-				if (($sAttCode != 'id') && (!MetaModel::IsValidAttCode($sClass, $sAttCode)))
-				{
-					throw new Exception("$sParamName: invalid attribute code '$sAttCode'");
-				}
-				$aShowFields[$sClass][] = $sAttCode;
-			}
+		return $aFieldList;
+	}
+
+	protected static function GetLimitedFieldListForClass(string $sClass, string $sFields, string $sParamName): array
+	{
+		if (!str_contains($sFields, ':')) {
+			return self::GetLimitedFieldListForSingleClass($sClass, $sFields, $sParamName);
 		}
 
-		return $aShowFields;
+		$aFieldList = [];
+		$aFieldListParts = explode(';', $sFields);
+		foreach ($aFieldListParts as $sClassFields) {
+			list($sSubClass, $sSubClassFields) = explode(':', $sClassFields);
+			$aFieldList = array_merge($aFieldList, self::GetLimitedFieldListForSingleClass(trim($sSubClass), trim($sSubClassFields), $sParamName));
+		}
+		return $aFieldList;
 	}
 
 	/**
