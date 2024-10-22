@@ -1786,15 +1786,11 @@ class UserRights
     {
         $aAllowedPortals = array();
         $aPortalsConf = PortalDispatcherData::GetData();
-        $aDispatchers = array();
         foreach ($aPortalsConf as $sPortalId => $aConf)
         {
+            /** @var \PortalDispatcher $oDispatcher */
             $sHandlerClass = $aConf['handler'];
-            $aDispatchers[$sPortalId] = new $sHandlerClass($sPortalId);
-        }
-
-        foreach ($aDispatchers as $sPortalId => $oDispatcher)
-        {
+            $oDispatcher = new $sHandlerClass($sPortalId);
             if ($oDispatcher->IsUserAllowed())
             {
                 $aAllowedPortals[] = array(
