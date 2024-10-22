@@ -100,6 +100,9 @@ class ModelFactoryTest extends ItopTestCase
 	 */
 	protected function AssertEqualModels(string $sExpectedXML, ModelFactory $oFactory, $sMessage = '')
 	{
+		// constants aren't accessible in the data provider :(
+		$sExpectedXML = str_replace('##ITOP_DESIGN_LATEST_VERSION##', ITOP_DESIGN_LATEST_VERSION, $sExpectedXML);
+
 		$this->AssertEqualiTopXML($sExpectedXML, $oFactory->Dump(null, true), $sMessage);
 	}
 
@@ -3236,7 +3239,7 @@ XML
 				'aClasses'                 => [
 					['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
 				],
-				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="##ITOP_DESIGN_LATEST_VERSION##">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -3266,7 +3269,7 @@ XML
 					['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
 					['name' => 'B', 'module' => 'M2', 'parent' => 'cmdbAbstractObject'],
 				],
-				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="##ITOP_DESIGN_LATEST_VERSION##">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -3303,7 +3306,7 @@ XML
 					['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
 					['name' => 'B', 'module' => 'M2', 'parent' => 'A'],
 				],
-				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="##ITOP_DESIGN_LATEST_VERSION##">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -3342,7 +3345,7 @@ XML
 					['name' => 'C', 'module' => 'M3', 'parent' => 'cmdbAbstractObject'],
 					['name' => 'D', 'module' => 'M3', 'parent' => 'B'],
 				],
-				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="##ITOP_DESIGN_LATEST_VERSION##">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
