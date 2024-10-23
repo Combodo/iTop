@@ -1392,4 +1392,18 @@ abstract class ItopDataTestCase extends ItopTestCase
 		]);
 		return $sLogin;
 	}
+
+	/**
+	 * Can be invoked in setUp or any test method to skip the test if the module is not present
+	 *
+	 * @param string $sModule e.g: itop-hub-connector
+	 *
+	 * @return void
+	 */
+	protected function SkipIfModuleNotPresent(string $sModule): void
+	{
+		if (!file_exists(\utils::GetAbsoluteModulePath($sModule))) {
+			self::markTestSkipped("Test skipped: module '$sModule' is not present");
+		}
+	}
 }

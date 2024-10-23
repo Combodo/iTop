@@ -3,11 +3,18 @@ namespace Combodo\iTop\Test\UnitTest\HubConnector;
 
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use PHPUnit\Framework\SkippedTestCase;
 
 class AjaxPageTest extends ItopDataTestCase {
 	const USE_TRANSACTION      = false;
 	const AUTHENTICATION_TOKEN = '14b5da9d092f84044187421419a0347e7317bc8cd2b486fdda631be06b959269';
 	const AUTHENTICATION_PASSWORD    = "tagada-Secret,007";
+
+	protected function setUp(): void
+	{
+		$this->SkipIfModuleNotPresent('itop-hub-connector');
+		parent::setUp();
+	}
 
 	public function testCompileOperation()
 	{
