@@ -720,7 +720,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:CSVReport-Row-Issue-Ambiguous'          => 'ambiguous reconciliation',
 	'UI:CSVReport-Row-Issue-Internal'           => 'Internal error: %1$s, %2$s',
 	'UI:CSVReport-Value-Issue-NoValue'          => 'No value',
-	'UI:CSVReport-Row-Issue-NbField'            => 'Not the expected number of fields (current : %1$s fields, expected :%2$s)',
+	'UI:CSVReport-Row-Issue-NbField'            => 'Not the expected number of columns (found: %1$s, expected: %2$s)',
 
 	'UI:CSVReport-Icon-Unchanged'         => 'Unchanged',
 	'UI:CSVReport-Icon-Modified'          => 'Modified',

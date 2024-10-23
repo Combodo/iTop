@@ -679,7 +679,7 @@ Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audi
 	'UI:CSVReport-Row-Issue-Inconsistent' => 'Incohérence entre attributs: %1$s',
 	'UI:CSVReport-Row-Issue-Internal' => 'Erreur interne: %1$s, %2$s',
 	'UI:CSVReport-Value-Issue-NoValue' => 'Pas de valeur',
-	'UI:CSVReport-Row-Issue-NbField' => 'Le nombre de champs ne correspond pas à ce qui est attendu (courant : %1$s champs, %2$s champs attendus )',
+	'UI:CSVReport-Row-Issue-NbField' => 'Le nombre de colonnes ne correspond pas à ce qui est attendu (constaté : %1$s, attendu : %2$s)',
 	'UI:CSVReport-Row-Issue-MissingExtKey' => 'Ne peut pas être créé car il manque des clés externes : %1$s',
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'Echec de réconciliation',
 	'UI:CSVReport-Row-Unchanged' => 'inchangé',
