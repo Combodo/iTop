@@ -235,13 +235,16 @@ class BulkChangeTest extends ItopDataTestCase
 				'org_id'        => $aInitData[0],
 				'purchase_date' => $aInitData[3],
 			));
-			$aCsvData[0][2] = $oServer->GetKey();
-			$aResult[2] = $oServer->GetKey();
-			if ($aResult["id"] === "{Id of the server created by the test}") {
-				$aResult["id"] = $oServer->GetKey();
-				if ($aResultHTML !== null) {
-					$aResultHTML[2] = $oServer->GetKey();
-					$aResultHTML["id"] = $oServer->GetKey();
+			if(array_key_exists('id', $aAttributes)) {
+				$iColumnForId = $aAttributes['id'];
+				$aCsvData[0][$iColumnForId] = $oServer->GetKey();
+				$aResult[$iColumnForId] = $oServer->GetKey();
+				if ($aResult["id"] === "{Id of the server created by the test}") {
+					$aResult["id"] = $oServer->GetKey();
+					if ($aResultHTML !== null) {
+						$aResultHTML[$iColumnForId] = $oServer->GetKey();
+						$aResultHTML["id"] = $oServer->GetKey();
+					}
 				}
 			}
 			$this->debug("oServer->GetKey():".$oServer->GetKey());
@@ -297,7 +300,7 @@ class BulkChangeTest extends ItopDataTestCase
 					"csvData" =>
 						[[">Demo", "Server1"]],
 					"attributes"=>
-						 ["name" => 1,"status" => 2],
+						 ["name" => 1],
 					"extKeys"=>
 						 ["org_id" => ["name" => 0]],
 					"reconcilKeys"=>
@@ -399,9 +402,9 @@ class BulkChangeTest extends ItopDataTestCase
 				"initData"=>
 					[],
 				"csvData"=>
-					[["Demo", ">ServerTest", "<svg onclick\"alert(1)\">", ""]],
+					[["Demo", ">ServerTest", "<svg onclick\"alert(1)\">", 1]],
 				"attributes"=>
-					["name" => 1, "status" => 2, "purchase_date" => 3],
+					["name" => 1, "status" => 2, 'id'=> 3],
 				"extKeys"=>
 					["org_id" => ["name" => 0]],
 				"reconcilKeys"=>
@@ -413,7 +416,7 @@ class BulkChangeTest extends ItopDataTestCase
 						"org_id" => "3",
 						1 => "\">ServerTest\"",
 						2 => '\'<svg onclick"alert(1)">\' is an invalid value',
-						3 => "",
+						3 => "1",
 						"__STATUS__" => "Issue: Unexpected attribute value(s)",
 						"__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
 					],
@@ -424,7 +427,7 @@ class BulkChangeTest extends ItopDataTestCase
 						"org_id" => "3",
 						1 => "&gt;ServerTest",
 						2 => "'&lt;svg onclick&quot;alert(1)&quot;&gt;' is an invalid value",
-						3 => "",
+						3 => "1",
 						"__STATUS__" => "Issue: Unexpected attribute value(s)",
 						"__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
 					],
@@ -587,15 +590,15 @@ class BulkChangeTest extends ItopDataTestCase
 				"initData"=>
 					["1", "ServerTest", "production", "2020-02-01"],
 				"csvData"=>
-					[["Demo", "ServerTest", "1", "production"]],
+					[["1"]],
 				"attributes"=>
-					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+					["id" => 0,"purchase_date" => 1],
 				"extKeys"=>
-					["org_id" => ["name" => 0]],
+					[],
 				"reconcilKeys"=>
 					["id"],
 				"expectedResult"=>
-					[ 0 => "Demo", "org_id" => "n/a", 1 => "ServerTest", 2 => "1", 3 => "production", 4 => "'' is an invalid value", "id" => 1, "__STATUS__" => 'Issue: Not the expected number of fields (current : 4 fields, expected :5)'],
+					[  1 => "'' is an invalid value", "id" => 1, "__STATUS__" => 'Issue: Not the expected number of fields (current : 1 fields, expected :2)'],
 			],
 			"Case 12 : Missing AttributeEnum cell should issue an error" => [
 				"initData"=>
@@ -623,7 +626,7 @@ class BulkChangeTest extends ItopDataTestCase
 				"reconcilKeys"=>
 					["id"],
 				"expectedResult"=>
-					[ 0 => "ServerTest", "org_id" => "n/a", 1 => "1", 2 => "1", 3 => "2020-02-01", 4 => "'' is an invalid value", "id" => 1, "__STATUS__" => "Issue: Not the expected number of fields (current : 4 fields, expected :5)"],
+					[ 0 => "ServerTest", "org_id" => "n/a", 1 => "1", 2 => "production", 3 => "2020-02-01", 4 => "'' is an invalid value", "id" => 1, "__STATUS__" => "Issue: Not the expected number of fields (current : 4 fields, expected :5)"],
 			],
 		];
 	}
@@ -719,7 +722,7 @@ class BulkChangeTest extends ItopDataTestCase
 				"csvData" =>
 					[["Demo", ">Server1"]],
 				"attributes"=>
-					["name" => 1,"status" => 2],
+					["name" => 1,"id" => 2],
 				"extKeys"=>
 					["org_id" => ["name" => 0]],
 				"reconcilKeys"=>
