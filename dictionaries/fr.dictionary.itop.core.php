@@ -144,7 +144,7 @@ Les mots-clés sous la forme :this->attcode spécifiant un champ de l\'objet aya
 - Sinon, si l\'objet déclencheur a une icône de classe définie dans le datamodel, elle sera utilisée
 - Sinon, le logo compact de l\'application sera utilisé',
 	'Class:ActionNewsroom/Attribute:priority' => 'Priorité',
-	'Class:ActionNewsroom/Attribute:priority+' => 'Les news sont affichés par priorité décroissante.',
+	'Class:ActionNewsroom/Attribute:priority+' => 'Les news sont affichées par priorité décroissante.',
 	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critique',
 	'Class:ActionNewsroom/Attribute:priority/Value:1+' => '',
 	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgent',

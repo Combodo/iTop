@@ -79,21 +79,18 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 	{
 		/**
 		 * Server1 +----> Hypervisor1
-		 * Server2 +----> Hypervisor1
 		 */
 		$this->GivenCITreeInDB(<<<EOF
 			Hypervisor_1 -> Server_1
-			Hypervisor_1 -> Server_2
 		EOF);
 		$oTicket = $this->GivenTicketWithCIsOrPersons([
-			'Server_1' => 'manual'
+			'Hypervisor_1' => 'manual'
 		]);
 
 		$oTicket->UpdateImpactedItems(); // impact analysis
 
 		$this->assertCIsOrPersonsListEquals($oTicket, [
-			'Server_1' => 'manual',
-			'Hypervisor_1' => 'computed'
+			'Hypervisor_1' => 'manual',
 		]);
 	}
 

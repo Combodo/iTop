@@ -1061,7 +1061,7 @@ Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audi
 	'UI:Newsroom:ResetCache' => 'Ràz du cache',
 	'UI:Newsroom:ResetCache:Success:Message' => 'Le cache de la newsroom a été réinitialisé avec succès',
 	'UI:Newsroom:ViewAllMessages' => 'Voir tous les messages',
-	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
+	'UI:Newsroom:XNewMessage' => '%1$s nouveau(x) message(s)',
 	'UI:NoInlineImage' => 'Il n\'y a aucune image de disponible sur le serveur. Utilisez le bouton "Parcourir" (ci-dessus) pour sélectionner une image sur votre ordinateur et la télécharger sur le serveur.',
 	'UI:NoObjectToDisplay' => 'Aucun objet à afficher.',
 	'UI:NoObject_Class_ToDisplay' => 'Aucun objet %1$s à afficher',

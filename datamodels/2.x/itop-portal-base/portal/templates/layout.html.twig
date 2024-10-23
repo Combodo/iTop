@@ -78,9 +78,9 @@
 	{% block pStyleinline %}
         {# UI Extensions inline CSS #}
         {% if app['ui_extensions_helper'].css_inline is not null %}
-			<style>
-				{{ app['ui_extensions_helper'].css_inline|raw }}
-			</style>
+            <style>
+                {{ app['ui_extensions_helper'].css_inline|raw }}
+            </style>
         {% endif %}
 	{% endblock %}
 

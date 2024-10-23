@@ -1368,4 +1368,42 @@ abstract class ItopDataTestCase extends ItopTestCase
 		]);
 		return $sLogin;
 	}
+
+	/**
+	 * @param string $sPassword
+	 * @param array $aProfiles Profile names Example: ['Administrator']
+	 *
+	 * @return string The unique login
+	 * @throws \Exception
+	 */
+	protected function GivenUserInDB(string $sPassword, array $aProfiles): string
+	{
+		$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
+
+		$aProfileList = array_map(function($sProfileId) {
+			return 'profileid:'.self::$aURP_Profiles[$sProfileId];
+		}, $aProfiles);
+
+		$iUser = $this->GivenObjectInDB('UserLocal', [
+			'login' => $sLogin,
+			'password' => $sPassword,
+			'language' => 'EN US',
+			'profile_list' => $aProfileList,
+		]);
+		return $sLogin;
+	}
+
+	/**
+	 * Can be invoked in setUp or any test method to skip the test if the module is not present
+	 *
+	 * @param string $sModule e.g: itop-hub-connector
+	 *
+	 * @return void
+	 */
+	protected function SkipIfModuleNotPresent(string $sModule): void
+	{
+		if (!file_exists(\utils::GetAbsoluteModulePath($sModule))) {
+			self::markTestSkipped("Test skipped: module '$sModule' is not present");
+		}
+	}
 }
