@@ -50,7 +50,7 @@ class AttributeEncryptedPasswordTest extends ItopCustomDatamodelTestCase {
 	}
 
 	private function CreateRemoteiTopConnectionToken2(): RemoteiTopConnectionToken2 {
-		$oRemoteApplicationType = $this->createObject(\RemoteApplicationType::class, ['name'=> 'toto']);
+		//$oRemoteApplicationType = $this->createObject(\RemoteApplicationType::class, ['name'=> 'toto']);
 
 		/** @var RemoteiTopConnectionToken2 $oRemoteiTopConnectionToken2 */
 		$oRemoteiTopConnectionToken2 =  $this->createObject(RemoteiTopConnectionToken2::class,
