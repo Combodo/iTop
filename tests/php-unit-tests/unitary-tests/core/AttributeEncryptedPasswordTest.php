@@ -3,12 +3,12 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use AttributeEncryptedPassword;
-use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use MetaModel;
 use hiddenUsablePassword;
-use RemoteiTopConnectionToken;
+use RemoteiTopConnectionToken2;
 
-class AttributeEncryptedPasswordTest extends ItopDataTestCase {
+class AttributeEncryptedPasswordTest extends ItopCustomDatamodelTestCase {
 	const CREATE_TEST_ORG = true;
 	const USE_TRANSACTION = false;
 
@@ -17,9 +17,14 @@ class AttributeEncryptedPasswordTest extends ItopDataTestCase {
 		require_once(APPROOT.'core/attributedef.class.inc.php');
 	}
 
+	public function GetDatamodelDeltaAbsPath(): string
+	{
+		return __DIR__ . '/resources/add-attribute-encrypted-pwd.xml';
+	}
+
 	public function testHasAValue_Default()
 	{
-		$oObject = MetaModel::NewObject(\RemoteiTopConnectionToken::class);
+		$oObject = MetaModel::NewObject(\RemoteiTopConnectionToken2::class);
 
 		// Test attribute without a value yet
 		$this->assertEquals(false, $oObject->HasAValue('token'));
@@ -39,30 +44,30 @@ class AttributeEncryptedPasswordTest extends ItopDataTestCase {
 	 */
 	public function testHasAValue_hiddenUsablePassword($sValue, bool $bExpected)
 	{
-		$oObject = MetaModel::NewObject(RemoteiTopConnectionToken::class);
+		$oObject = MetaModel::NewObject(RemoteiTopConnectionToken2::class);
 		$oObject->Set('token', $sValue);
 		$this->assertEquals($bExpected, $oObject->HasAValue('token'));
 	}
 
-	private function CreateRemoteiTopConnectionToken(): RemoteiTopConnectionToken {
+	private function CreateRemoteiTopConnectionToken2(): RemoteiTopConnectionToken2 {
 		$oRemoteApplicationType = $this->createObject(\RemoteApplicationType::class, ['name'=> 'toto']);
 
-		/** @var RemoteiTopConnectionToken $oRemoteiTopConnectionToken */
-		$oRemoteiTopConnectionToken =  $this->createObject(RemoteiTopConnectionToken::class,
+		/** @var RemoteiTopConnectionToken2 $oRemoteiTopConnectionToken2 */
+		$oRemoteiTopConnectionToken2 =  $this->createObject(RemoteiTopConnectionToken2::class,
 			[
 				'token' => new hiddenUsablePassword('gabuzomeu'),
-				'remoteapplicationtype_id' => $oRemoteApplicationType->GetKey(),
-				'url' => 'http://blabla.fr',
+				//'remoteapplicationtype_id' => $oRemoteApplicationType->GetKey(),
+				//'url' => 'http://blabla.fr',
 				'name' => 'blabla.fr',
 			]
 		);
-		return $oRemoteiTopConnectionToken;
+		return $oRemoteiTopConnectionToken2;
 	}
 
 	public function testObjectCreation(){
-		$oRemoteiTopConnectionToken = $this->CreateRemoteiTopConnectionToken();
+		$oRemoteiTopConnectionToken2 = $this->CreateRemoteiTopConnectionToken2();
 
-		$oToken = $oRemoteiTopConnectionToken->Get('token');
+		$oToken = $oRemoteiTopConnectionToken2->Get('token');
 		$this->assertEquals(hiddenUsablePassword::class, get_class($oToken));
 
 		$sMaskedPwd = '******';
@@ -74,16 +79,16 @@ class AttributeEncryptedPasswordTest extends ItopDataTestCase {
 	}
 
 	public function testObjectUpdate(){
-		$oRemoteiTopConnectionToken = $this->CreateRemoteiTopConnectionToken();
-		$oRemoteiTopConnectionToken =  $this->updateObject(RemoteiTopConnectionToken::class, $oRemoteiTopConnectionToken->GetKey(),
+		$oRemoteiTopConnectionToken2 = $this->CreateRemoteiTopConnectionToken2();
+		$oRemoteiTopConnectionToken2 =  $this->updateObject(RemoteiTopConnectionToken2::class, $oRemoteiTopConnectionToken2->GetKey(),
 			[
 				'token' => new hiddenUsablePassword('gabuzomeu2'),
 			]
 		);
 
-		$oToken = $oRemoteiTopConnectionToken->Get('token');
+		$oToken = $oRemoteiTopConnectionToken2->Get('token');
 		$this->assertEquals('gabuzomeu2', $oToken->GetValueForUsage());
 
-		$oRemoteiTopConnectionToken->Reload();
+		$oRemoteiTopConnectionToken2->Reload();
 	}
 }

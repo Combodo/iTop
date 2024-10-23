@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+  <classes>
+		<class id="RemoteiTopConnectionToken2" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<properties>
+				<category>grant_by_profile,bizmodel,searchable</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>remoteapplicationconnection2</db_table>
+				<db_key_field>id</db_key_field>
+				<db_final_class_field/>
+				<naming>
+					<attributes>
+						<attribute id="name"/>
+					</attributes>
+				</naming>
+				<display_template/>
+				<icon>asset/img/icon-remote-application-connection-48px.png</icon>
+				<reconciliation>
+					<attributes>
+						<attribute id="name"/>
+					</attributes>
+				</reconciliation>
+			</properties>
+			<fields>
+				<field id="name" xsi:type="AttributeString">
+					<sql>name</sql>
+					<is_null_allowed>false</is_null_allowed>
+				</field>
+				<field id="token" xsi:type="AttributeEncryptedPassword">
+					<sql>token</sql>
+					<is_null_allowed>false</is_null_allowed>
+        </field>
+			</fields>
+			<methods></methods>
+			<presentation></presentation>
+    </class>
+  </classes>
+</itop_design>
+
