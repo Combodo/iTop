@@ -750,10 +750,10 @@ HTML
 			$oPage->SetCurrentTab($sTabCode, $oAttDef->GetLabel().$sCount, $sTabDescription);
 
 			$aArgs = array('this' => $this);
-			
+
 			$sEditWhen = $oAttDef->GetEditWhen();
 			// Calculate if edit_when allows to edit based on current $bEditMode
-			$bIsEditableBasedOnEditWhen =  ($sEditWhen === LINKSET_EDITWHEN_ALWAYS) || 
+			$bIsEditableBasedOnEditWhen =  ($sEditWhen === LINKSET_EDITWHEN_ALWAYS) ||
 				($bEditMode ? $sEditWhen === LINKSET_EDITWHEN_ON_HOST_EDITION : $sEditWhen === LINKSET_EDITWHEN_ON_HOST_DISPLAY);
 
 			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) || !$bIsEditableBasedOnEditWhen;
@@ -1715,7 +1715,7 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \Exception
-	 * 
+	 *
 	 * @internal Only to be used by `/webservices/export.php` : this is a legacy method that produces wrong HTML (no TR on table body rows)
 	 */
 	public static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
@@ -2666,7 +2666,7 @@ HTML;
 					}
 					break;
 			}
-			$sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';			
+			$sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';
 			if (!empty($aEventsList))
 			{
 				if (!is_numeric($sNullValue))
@@ -3825,7 +3825,7 @@ HTML;
 	public function GetHilightClass()
 	{
 		// Possible return values are:
-		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE	
+		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE
 		$current = parent::GetHilightClass(); // Default computation
 
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
@@ -5910,6 +5910,7 @@ JS
 			'AttributeText',
 			'AttributePassword',
 			'AttributeOneWayPassword',
+			'AttributeEncryptedPassword'
 		);
 	}
 

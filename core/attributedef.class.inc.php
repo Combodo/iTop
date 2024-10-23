@@ -1715,8 +1715,8 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetEditMode()
 	{
 		return $this->GetOptional('edit_mode', LINKSET_EDITMODE_ACTIONS);
-	}	
-	
+	}
+
 	/**
 	 * @return int see LINKSET_EDITWHEN_* constants
 	 * @since 3.1.1 3.2.0 N°6385
@@ -1758,7 +1758,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		return $this->GetOptional('with_php_computation', false);
 	}
-	
+
 	public function GetLinkedClass()
 	{
 		return $this->Get('linked_class');
@@ -4349,6 +4349,202 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 	}
 
 
+}
+
+class AttributeEncryptedPassword extends AttributeString implements iAttributeNoGroupBy
+{
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
+	{
+		return parent::ListExpectedParams();
+		//return array_merge(parent::ListExpectedParams(), array());
+	}
+
+	public function GetEditClass()
+	{
+		return "EncryptedPassword";
+	}
+
+	protected function GetSQLCol($bFullSpec = false)
+	{
+		return "VARCHAR(4096)"
+			.CMDBSource::GetSqlStringColumnDefinition()
+			.($bFullSpec ? $this->GetSQLColSpec() : '');
+	}
+
+	public static function IsScalar()
+	{
+		return true;
+	}
+
+	public function IsWritable()
+	{
+		return true;
+	}
+
+	public function GetDefaultValue(DBObject $oHostObject = null)
+	{
+		return "";
+	}
+
+	public function IsNullAllowed()
+	{
+		return $this->GetOptional("is_null_allowed", false);
+	}
+
+	public function GetMaxSize()
+	{
+		return 4096;
+	}
+
+	public function GetFilterDefinitions()
+	{
+		// Note: due to this, you will get an error if a an encrypted field is declared as a search criteria (see ZLists)
+		// not allowed to search on encrypted fields !
+		return array();
+	}
+
+	public function MakeRealValue($proposedValue, $oHostObj)
+	{
+		$oPassword = $proposedValue;
+		if (is_object($oPassword))
+		{
+			$oPassword = clone $proposedValue;
+		}
+		else
+		{
+			$oPassword = new hiddenUsablePassword($proposedValue);
+		}
+
+		return $oPassword;
+	}
+
+	/**
+	 * Decrypt the value when reading from the database
+	 *
+	 * @param array $aCols
+	 * @param string $sPrefix
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+		$oSimpleCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
+		$sValue = $oSimpleCrypt->Decrypt(MetaModel::GetConfig()->GetEncryptionKey(), $aCols[$sPrefix]);
+
+		$oPwd = new hiddenUsablePassword($sValue);
+		return $oPwd;
+	}
+
+	/**
+	 * Encrypt the value before storing it in the database
+	 *
+	 * @param $value
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function GetSQLValues($value)
+	{
+		$sPwdValue='';
+		if ($value instanceOf hiddenUsablePassword)
+		{
+			$sPwdValue = $value->GetValueForUsage();
+		}
+
+		$oSimpleCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
+		$encryptedValue = $oSimpleCrypt->Encrypt(MetaModel::GetConfig()->GetEncryptionKey(), $sPwdValue);
+
+		$aValues = [];
+		$aValues[$this->Get("sql")] = $encryptedValue;
+
+		return $aValues;
+	}
+
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		if (is_null($original)) {
+			$original = '';
+		}
+		$oMyChangeOp->Set("prevstring", $original);
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeEncrypted::class;
+	}
+
+	public function GetImportColumns()
+	{
+		$aColumns = array();
+		$aColumns[$this->GetCode()] = 'VARCHAR(4096)'.CMDBSource::GetSqlStringColumnDefinition();
+
+		return $aColumns;
+	}
+
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
+	{
+		if (is_object($value))
+		{
+			return $value->GetAsHTML();
+		}
+
+		return '';
+	}
+
+	public function GetAsCSV(
+		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$bConvertToPlainText = false
+	) {
+		return ''; // Not exportable in CSV
+	}
+
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
+	{
+		return ''; // Not exportable in XML
+	}
+
+	public function GetValueLabel($sValue, $oHostObj = null)
+	{
+		// Don't display anything in "group by" reports
+		return '*****';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Protection against wrong value type
+		if ($proposedValue instanceof hiddenUsablePassword) {
+			return $proposedValue->IsEmpty() === false;
+		}
+
+		if (is_string($proposedValue)) {
+			return utils::IsNotNullOrEmptyString($proposedValue);
+		}
+
+		return parent::HasAValue($proposedValue);
+	}
 }
 
 
