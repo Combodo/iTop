@@ -345,7 +345,7 @@ try
 				$oPanel->AddSubBlock($oTable);
 
 				$oPage->AddSubBlock($oPanel);
-				if (empty($sInitSearchField)) {
+				if (empty($sInitSearchField) || empty($aInitFieldMapping)) {
 					// Propose a reconciliation scheme
 					//
 					$aReconciliationKeys = MetaModel::GetReconcKeys($sClassName);
