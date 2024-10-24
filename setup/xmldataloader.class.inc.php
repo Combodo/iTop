@@ -278,9 +278,27 @@ class XMLDataLoader
 						$oDoc = new ormDocument($data, $sMimeType, $sFileName);
 						$oTargetObj->Set($sAttCode, $oDoc);
 					}
-					elseif ($oAttDef instanceof AttributeTagSet)
+					elseif ($oAttDef instanceof AttributeSet)
 					{
-						// TODO
+						$value = (string)$oSubNode;
+
+						if ($value == '')
+						{
+							$value = $oAttDef->GetNullValue();
+						}
+						else
+						{
+							$value = $oAttDef->MakeRealValue($value, $oTargetObj);
+						}
+						$res = $oTargetObj->CheckValue($sAttCode, $value);
+						if ($res !== true)
+						{
+							// $res contains the error description
+							$sMsg = "Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oSubNode."' ; $res";
+							SetupLog::Error($sMsg);
+							$this->m_aErrors[] = $sMsg;
+						}
+						$oTargetObj->Set($sAttCode, $value);
                     }
 					else
 					{
