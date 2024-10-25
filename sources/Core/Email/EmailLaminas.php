@@ -8,6 +8,7 @@
 
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
 use Laminas\Mail\Header\ContentType;
+use Laminas\Mail\Header\MessageId;
 use Laminas\Mail\Message;
 use Laminas\Mail\Protocol\Smtp\Auth\Oauth;
 use Laminas\Mail\Transport\File;
@@ -335,7 +336,7 @@ class EMailLaminas extends Email
 		// so let's remove the angle brackets if present, for historical reasons
 		$sId = str_replace(array('<', '>'), '', $sId);
 
-		$this->m_oMessage->getHeaders()->addHeader((new Laminas\Mail\Header\MessageId())->setId($sId));
+		$this->m_oMessage->getHeaders()->addHeader((new MessageId())->setId($sId));
 	}
 
 	public function SetReferences($sReferences)
