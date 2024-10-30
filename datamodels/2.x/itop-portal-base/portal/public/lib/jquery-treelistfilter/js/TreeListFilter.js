@@ -41,6 +41,7 @@ jQuery.fn.treeListFilter = function(list, timeout, callback) {
                     // Modified the search so it looks  for each parts of the search and not the entire sentance
                     // Modified the text to remove accents (latinise())
                     var text = liObject.find('.tree-item-wrapper').text();
+	                text+= liObject.find('.tree-item-wrapper').attr('data-tree-additional-search');
                     var textLC = text.toLowerCase().latinise();
                     var filterValues = filterValue.split(' ');
                     var display = true;
