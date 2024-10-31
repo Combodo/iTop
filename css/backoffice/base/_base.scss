@@ -3,18 +3,18 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-scrollbar--scrollbar-width: 8px !default;
+$ibo-scrollbar--scrollbar-width: $common-scrollbar--scrollbar-width !default;
 $ibo-scrollbar--scrollbar-height: $ibo-scrollbar--scrollbar-width !default; /* For horizontal scrollbars */
-$ibo-scrollbar--scrollbar-track-background-color: $ibo-color-transparent !default;
-$ibo-scrollbar--scrollbar-track-border-radius: $ibo-border-radius-500 !default;
-$ibo-scrollbar--scrollbar-thumb-background-color: $ibo-color-grey-300 !default;
+$ibo-scrollbar--scrollbar-track-background-color: $common-scrollbar--scrollbar-track-background-color !default;
+$ibo-scrollbar--scrollbar-track-border-radius: $common-scrollbar--scrollbar-track-border-radius !default;
+$ibo-scrollbar--scrollbar-thumb-background-color: $common-scrollbar--scrollbar-thumb-background-color !default;
 $ibo-scrollbar--scrollbar-thumb-border: none !default;
-$ibo-scrollbar--scrollbar-thumb-border-radius: $ibo-border-radius-500 !default;
+$ibo-scrollbar--scrollbar-thumb-border-radius: $common-scrollbar--scrollbar-thumb-border-radius !default;
 
-$ibo-svg-illustration--fill: $ibo-color-primary-500 !default;
+$ibo-svg-illustration--fill: $common-svg-illustration--fill !default;
 
-$ibo-content-block--background-color: $ibo-color-white-100 !default;
-$ibo-content-block--border: 1px solid $ibo-color-grey-400 !default;
+$ibo-content-block--background-color: $common-content-block--background-color !default;
+$ibo-content-block--border: $common-content-block--border !default;
 
 /* CSS variables */
 :root{

@@ -5,8 +5,8 @@
 
 /* Base helpers for colors */
 /* - These lightness vars are used to force a certain lightness on HSLA colors */
-$ibo-color-base-lightness-100: 93% !default;
-$ibo-color-base-lightness-900: 15% !default;
+$ibo-color-base-lightness-100: $common-color-base-lightness-100 !default;
+$ibo-color-base-lightness-900: $common-color-base-lightness-900 !default;
 
-$ibo-color-base-opacity-for-lightness-100: 1 !default;
-$ibo-color-base-opacity-for-lightness-900: 1 !default;
+$ibo-color-base-opacity-for-lightness-100: $common-color-base-opacity-for-lightness-100 !default;
+$ibo-color-base-opacity-for-lightness-900: $common-color-base-opacity-for-lightness-900 !default;

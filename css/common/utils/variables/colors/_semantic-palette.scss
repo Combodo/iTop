@@ -1,0 +1,100 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* Semantic palettes */
+/* - Primary color of the brand */
+$common-color-primary-100: $common-color-blue-100 !default;
+$common-color-primary-200: $common-color-blue-200 !default;
+$common-color-primary-300: $common-color-blue-300 !default;
+$common-color-primary-400: $common-color-blue-400 !default;
+$common-color-primary-500: $common-color-blue-500 !default;
+$common-color-primary-600: $common-color-blue-600 !default;
+$common-color-primary-700: $common-color-blue-700 !default;
+$common-color-primary-800: $common-color-blue-800 !default;
+$common-color-primary-900: $common-color-blue-900 !default;
+$common-color-primary-950: $common-color-blue-950 !default;
+
+/* - Secondary color of the brand */
+$common-color-secondary-100: $common-color-grey-100 !default;
+$common-color-secondary-200: $common-color-grey-200 !default;
+$common-color-secondary-300: $common-color-grey-300 !default;
+$common-color-secondary-400: $common-color-grey-400 !default;
+$common-color-secondary-500: $common-color-grey-500 !default;
+$common-color-secondary-600: $common-color-grey-600 !default;
+$common-color-secondary-700: $common-color-grey-700 !default;
+$common-color-secondary-800: $common-color-grey-800 !default;
+$common-color-secondary-900: $common-color-grey-900 !default;
+$common-color-secondary-950: $common-color-grey-950 !default;
+
+/* - Information: messages / actions that should neither seem as success, warning or failure  */
+$common-color-information-100: $common-color-blue-100 !default;
+$common-color-information-200: $common-color-blue-200 !default;
+$common-color-information-300: $common-color-blue-300 !default;
+$common-color-information-400: $common-color-blue-400 !default;
+$common-color-information-500: $common-color-blue-500 !default;
+$common-color-information-600: $common-color-blue-600 !default;
+$common-color-information-700: $common-color-blue-700 !default;
+$common-color-information-800: $common-color-blue-800 !default;
+$common-color-information-900: $common-color-blue-900 !default;
+$common-color-information-950: $common-color-blue-950 !default;
+
+/* Success: messages of success, safe actions, ... */
+$common-color-success-100: $common-color-green-100 !default;
+$common-color-success-200: $common-color-green-200 !default;
+$common-color-success-300: $common-color-green-300 !default;
+$common-color-success-400: $common-color-green-400 !default;
+$common-color-success-500: $common-color-green-500 !default;
+$common-color-success-600: $common-color-green-600 !default;
+$common-color-success-700: $common-color-green-700 !default;
+$common-color-success-800: $common-color-green-800 !default;
+$common-color-success-900: $common-color-green-900 !default;
+$common-color-success-950: $common-color-green-950 !default;
+
+/* Warning: messages of warning, actions that would be done carefully, ... */
+$common-color-warning-100: $common-color-orange-100 !default;
+$common-color-warning-200: $common-color-orange-200 !default;
+$common-color-warning-300: $common-color-orange-300 !default;
+$common-color-warning-400: $common-color-orange-400 !default;
+$common-color-warning-500: $common-color-orange-500 !default;
+$common-color-warning-600: $common-color-orange-600 !default;
+$common-color-warning-700: $common-color-orange-700 !default;
+$common-color-warning-800: $common-color-orange-800 !default;
+$common-color-warning-900: $common-color-orange-900 !default;
+$common-color-warning-950: $common-color-orange-950 !default;
+
+/* Danger: messages of failure, error, ... */
+$common-color-error-100: $common-color-red-100 !default;
+$common-color-error-200: $common-color-red-200 !default;
+$common-color-error-300: $common-color-red-300 !default;
+$common-color-error-400: $common-color-red-400 !default;
+$common-color-error-500: $common-color-red-500 !default;
+$common-color-error-600: $common-color-red-600 !default;
+$common-color-error-700: $common-color-red-700 !default;
+$common-color-error-800: $common-color-red-800 !default;
+$common-color-error-900: $common-color-red-900 !default;
+$common-color-error-950: $common-color-red-950 !default;
+
+/* Danger: messages of danger, actions that cannot be undone, ... */
+$common-color-danger-100: $common-color-red-100 !default;
+$common-color-danger-200: $common-color-red-200 !default;
+$common-color-danger-300: $common-color-red-300 !default;
+$common-color-danger-400: $common-color-red-400 !default;
+$common-color-danger-500: $common-color-red-500 !default;
+$common-color-danger-600: $common-color-red-600 !default;
+$common-color-danger-700: $common-color-red-700 !default;
+$common-color-danger-800: $common-color-red-800 !default;
+$common-color-danger-900: $common-color-red-900 !default;
+$common-color-danger-950: $common-color-red-950 !default;
+
+$common-semantic-colors: ('primary', 'secondary', 'information', 'success', 'warning', 'danger');
+
+$common-caselog-highlight-color-1: $common-color-green-700 !default;
+$common-caselog-highlight-color-2: $common-color-pink-700 !default;
+$common-caselog-highlight-color-3: $common-color-orange-400 !default;
+$common-caselog-highlight-color-4: $common-color-blue-600 !default;
+$common-caselog-highlight-color-5: $common-color-cyan-200 !default;
+$common-caselog-highlight-color-6: $common-color-green-200 !default;
+$common-caselog-highlight-color-7: $common-color-pink-300 !default;
+$common-caselog-highlight-colors: ($common-caselog-highlight-color-1, $common-caselog-highlight-color-2, $common-caselog-highlight-color-3, $common-caselog-highlight-color-4, $common-caselog-highlight-color-5, $common-caselog-highlight-color-6, $common-caselog-highlight-color-7) !default;

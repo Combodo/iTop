@@ -4,13 +4,13 @@
  */
 
 /* SCSS variables */
-$ibo-has-description--content: "?" !default;
-$ibo-has-description--padding-left: $ibo-spacing-200 !default;
-$ibo-has-description--color: $ibo-color-grey-600 !default;
-$ibo-has-description--font-size: 0.7em !default; /* Font size is em on purpose as we want it to be proportional to its context */
+$ibo-has-description--content: $common-has-description--content !default;
+$ibo-has-description--padding-left: $common-has-description--padding-left !default;
+$ibo-has-description--color: $common-has-description--color !default;
+$ibo-has-description--font-size: $common-has-description--font-size !default; /* Font size is em on purpose as we want it to be proportional to its context */
 
-$ibo-is-code--background-color: $ibo-color-white-200 !default;
-$ibo-is-code--padding: 1.25rem 1.5rem !default;
+$ibo-is-code--background-color: $common-is-code--background-color !default;
+$ibo-is-code--padding: $common-is-code--padding !default;
 
 $ibo-hyperlink-color: $ibo-color-primary-700 !default;
 $ibo-hyperlink-text-decoration: none !default;
@@ -19,8 +19,8 @@ $ibo-hyperlink-text-decoration--on-hover: $ibo-hyperlink-text-decoration !defaul
 $ibo-hyperlink-color--on-active: $ibo-color-primary-900 !default;
 $ibo-hyperlink-text-decoration--on-active: $ibo-hyperlink-text-decoration !default;
 
-$ibo-figure--spacing-x: 2em !default; /* Mind that this matches Bulma rule for figure */
-$ibo-figure--spacing-y: 2em !default;
+$ibo-figure--spacing-x: $common-figure--spacing-x !default; /* Mind that this matches Bulma rule for figure */
+$ibo-figure--spacing-y: $common-figure--spacing-y !default;
 
 /* CSS variables */
 :root{

@@ -3,9 +3,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-class-icon--small--size: 32px !default;
-$ibo-class-icon--medium--size: 48px !default;
-$ibo-class-icon--large--size: 64px !default;
+$ibo-class-icon--small--size: $common-class-icon--small--size !default;
+$ibo-class-icon--medium--size: $common-class-icon--medium--size !default;
+$ibo-class-icon--large--size: $common-class-icon--large--size !default;
 
 .ibo-class-icon{
   &.ibo-is-small{

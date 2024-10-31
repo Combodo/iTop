@@ -3,18 +3,19 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-selectable--background-color: transparent !default;
+$ibo-selectable--background-color: $common-selectable--background-color !default;
 
-$ibo-selectable--hover--color: $ibo-color-grey-100 !default;
-$ibo-selectable--hover--background-color: $ibo-color-grey-600 !default;
-$ibo-selectable--hover--background-opacity: 0.6 !default;
+$ibo-selectable--hover--color: $common-selectable--hover--color !default;
+$ibo-selectable--hover--background-color: $common-selectable--hover--background-color !default;
+$ibo-selectable--hover--background-opacity: $common-selectable--hover--background-opacity !default;
 
-$ibo-selected--color: $ibo-color-grey-100 !default;
-$ibo-selected--background-color: $ibo-color-grey-900 !default;
-$ibo-selected--background-opacity: 0.5 !default;
+$ibo-selected--color: $common-selected--color !default;
+$ibo-selected--background-color: $common-selected--background-color !default;
+$ibo-selected--background-opacity: $common-selected--background-opacity !default;
 
-$ibo-selected--hover--background-color: $ibo-color-grey-700 !default;
-$ibo-selected--hover--background-opacity: 0.5 !default;
+$ibo-selected--hover--background-color: $common-selected--hover--background-color !default;
+$ibo-selected--hover--background-opacity: $common-selected--hover--background-opacity !default;
+
 @mixin ibo-selectable {
   content: ' ';
   @extend %fa-solid-base;

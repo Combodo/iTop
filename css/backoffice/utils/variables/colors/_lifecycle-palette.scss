@@ -5,24 +5,24 @@
 
 /* Lifecycle palette */
 /* - For workflow */
-$ibo-lifecycle-new-state-primary-color: $ibo-color-blue-800 !default;
-$ibo-lifecycle-new-state-secondary-color: $ibo-color-white-100 !default;
-$ibo-lifecycle-neutral-state-primary-color: $ibo-color-blue-800 !default;
-$ibo-lifecycle-neutral-state-secondary-color: $ibo-color-white-100 !default;
-$ibo-lifecycle-waiting-state-primary-color: $ibo-color-orange-400 !default;
-$ibo-lifecycle-waiting-state-secondary-color: $ibo-color-white-100 !default;
-$ibo-lifecycle-success-state-primary-color: $ibo-color-green-700 !default;
-$ibo-lifecycle-success-state-secondary-color: $ibo-color-white-100 !default;
-$ibo-lifecycle-failure-state-primary-color: $ibo-color-pink-700 !default;
-$ibo-lifecycle-failure-state-secondary-color: $ibo-color-white-100 !default;
-$ibo-lifecycle-frozen-state-primary-color: $ibo-color-grey-200 !default;
-$ibo-lifecycle-frozen-state-secondary-color: $ibo-color-grey-700 !default;
+$ibo-lifecycle-new-state-primary-color: $common-lifecycle-new-state-primary-color !default;
+$ibo-lifecycle-new-state-secondary-color: $common-lifecycle-new-state-secondary-color !default;
+$ibo-lifecycle-neutral-state-primary-color: $common-lifecycle-neutral-state-primary-color !default;
+$ibo-lifecycle-neutral-state-secondary-color: $common-lifecycle-neutral-state-secondary-color !default;
+$ibo-lifecycle-waiting-state-primary-color: $common-lifecycle-waiting-state-primary-color !default;
+$ibo-lifecycle-waiting-state-secondary-color: $common-lifecycle-waiting-state-secondary-color !default;
+$ibo-lifecycle-success-state-primary-color: $common-lifecycle-success-state-primary-color !default;
+$ibo-lifecycle-success-state-secondary-color: $common-lifecycle-success-state-secondary-color !default;
+$ibo-lifecycle-failure-state-primary-color: $common-lifecycle-failure-state-primary-color !default;
+$ibo-lifecycle-failure-state-secondary-color: $common-lifecycle-failure-state-secondary-color !default;
+$ibo-lifecycle-frozen-state-primary-color: $common-lifecycle-frozen-state-primary-color !default;
+$ibo-lifecycle-frozen-state-secondary-color: $common-lifecycle-frozen-state-secondary-color !default;
 
 /* - For basic lifecycle */
-$ibo-lifecycle-active-state-primary-color: $ibo-color-green-700 !default;
-$ibo-lifecycle-active-state-secondary-color: $ibo-color-white-100 !default;
-$ibo-lifecycle-inactive-state-primary-color: $ibo-color-orange-400 !default;
-$ibo-lifecycle-inactive-state-secondary-color: $ibo-color-white-100 !default;
+$ibo-lifecycle-active-state-primary-color: $common-lifecycle-active-state-primary-color !default;
+$ibo-lifecycle-active-state-secondary-color: $common-lifecycle-active-state-secondary-color !default;
+$ibo-lifecycle-inactive-state-primary-color: $common-lifecycle-inactive-state-primary-color !default;
+$ibo-lifecycle-inactive-state-secondary-color: $common-lifecycle-inactive-state-secondary-color !default;
 
 $ibo-lifecycle-states-colors: (
 		'new': (

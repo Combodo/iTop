@@ -3,24 +3,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-text-colors: (
-        'primary': $ibo-color-primary-800,
-        'secondary': $ibo-color-secondary-800,
-        'neutral': $ibo-color-secondary-800,
-        'information': $ibo-color-information-800,
-        'success': $ibo-color-success-800,
-        'failure': $ibo-color-danger-800,
-        'warning': $ibo-color-warning-800,
-        'danger': $ibo-color-danger-800,
-        'grey' : $ibo-color-grey-800,
-        'blue-grey': $ibo-color-blue-grey-800,
-        'blue': $ibo-color-blue-800,
-        'cyan': $ibo-color-cyan-800,
-        'green': $ibo-color-green-800,
-        'orange': $ibo-color-orange-800,
-        'red': $ibo-color-red-800,
-        'pink': $ibo-color-pink-800,
-) !default;
+$ibo-text-colors: $common-text-colors !default;
 
 @each $sColor, $sColorValue in $ibo-text-colors {
   .ibo-text.ibo-is-#{$sColor} {

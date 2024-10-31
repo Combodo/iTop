@@ -3,8 +3,5 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-depression-100: $common-depression-100 !default;
-
-:root{
-	--ibo-depression-100: #{$ibo-depression-100};
-}
+@import "base";
+@import "typography";

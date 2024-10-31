@@ -1,0 +1,17 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$common-vertical-highlight--width: $common-size-100;
+$common-vertical-highlight--height: 100%;
+
+@mixin common-vertical-highlight {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+  width: $common-vertical-highlight--width;
+  height: $common-vertical-highlight--height;
+}

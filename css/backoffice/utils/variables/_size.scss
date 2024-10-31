@@ -3,25 +3,25 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-size-0: 0 !default;
-$ibo-size-50: 2px !default;
-$ibo-size-100: 4px !default;
-$ibo-size-150: 8px !default;
-$ibo-size-200: 12px !default;
-$ibo-size-250: 16px !default;
-$ibo-size-300: 24px !default;
-$ibo-size-350: 32px !default;
-$ibo-size-400: 48px !default;
-$ibo-size-450: 64px !default;
-$ibo-size-500: 96px !default;
-$ibo-size-550: 128px !default;
-$ibo-size-600: 192px !default;
-$ibo-size-650: 256px !default;
-$ibo-size-700: 384px !default;
-$ibo-size-750: 512px !default;
-$ibo-size-800: 640px !default;
-$ibo-size-850: 768px !default;
-$ibo-size-900: 896px !default;
+$ibo-size-0: $common-size-0 !default;
+$ibo-size-50: $common-size-50 !default;
+$ibo-size-100: $common-size-100 !default;
+$ibo-size-150: $common-size-150 !default;
+$ibo-size-200: $common-size-200 !default;
+$ibo-size-250: $common-size-250 !default;
+$ibo-size-300: $common-size-300 !default;
+$ibo-size-350: $common-size-350 !default;
+$ibo-size-400: $common-size-400 !default;
+$ibo-size-450: $common-size-450 !default;
+$ibo-size-500: $common-size-500 !default;
+$ibo-size-550: $common-size-550 !default;
+$ibo-size-600: $common-size-600 !default;
+$ibo-size-650: $common-size-650 !default;
+$ibo-size-700: $common-size-700 !default;
+$ibo-size-750: $common-size-750 !default;
+$ibo-size-800: $common-size-800 !default;
+$ibo-size-850: $common-size-850 !default;
+$ibo-size-900: $common-size-900 !default;
 
 :root{
   --ibo-size-0: #{$ibo-size-0};

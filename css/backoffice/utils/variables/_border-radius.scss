@@ -3,13 +3,13 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-border-radius-100: 1px !default;
-$ibo-border-radius-300: 3px !default;
-$ibo-border-radius-400: 4px !default;
-$ibo-border-radius-500: 5px !default;
-$ibo-border-radius-700: 10px !default;
-$ibo-border-radius-900: 16px !default;
-$ibo-border-radius-full: 100% !default;
+$ibo-border-radius-100: $common-border-radius-100 !default;
+$ibo-border-radius-300: $common-border-radius-300 !default;
+$ibo-border-radius-400: $common-border-radius-400!default;
+$ibo-border-radius-500: $common-border-radius-500 !default;
+$ibo-border-radius-700: $common-border-radius-700 !default;
+$ibo-border-radius-900: $common-border-radius-900 !default;
+$ibo-border-radius-full: $common-border-radius-full !default;
 
 :root{
 	--ibo-border-radius-100: #{$ibo-border-radius-100};

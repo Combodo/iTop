@@ -1,0 +1,23 @@
+/*!
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$common-has-description--content: "?" !default;
+$common-has-description--padding-left: $common-spacing-200 !default;
+$common-has-description--color: $common-color-grey-600 !default;
+$common-has-description--font-size: 0.7em !default; /* Font size is em on purpose as we want it to be proportional to its context */
+
+$common-is-code--background-color: $common-color-white-200 !default;
+$common-is-code--padding: 1.25rem 1.5rem !default;
+
+$common-hyperlink-color: $common-color-primary-700 !default;
+$common-hyperlink-text-decoration: none !default;
+$common-hyperlink-color--on-hover: $common-color-primary-800 !default;
+$common-hyperlink-text-decoration--on-hover: $common-hyperlink-text-decoration !default;
+$common-hyperlink-color--on-active: $common-color-primary-900 !default;
+$common-hyperlink-text-decoration--on-active: $common-hyperlink-text-decoration !default;
+
+$common-figure--spacing-x: 2em !default; /* Mind that this matches Bulma rule for figure */
+$common-figure--spacing-y: 2em !default;

@@ -3,8 +3,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-vertical-highlight--width: $ibo-size-100;
-$ibo-vertical-highlight--height: 100%;
+$ibo-vertical-highlight--width: $common-vertical-highlight--width;
+$ibo-vertical-highlight--height: $common-vertical-highlight--height;
 
 @mixin ibo-vertical-highlight {
   display: block;

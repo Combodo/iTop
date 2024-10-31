@@ -1,0 +1,12 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* Base helpers for colors */
+/* - These lightness vars are used to force a certain lightness on HSLA colors */
+$common-color-base-lightness-100: 93% !default;
+$common-color-base-lightness-900: 15% !default;
+
+$common-color-base-opacity-for-lightness-100: 1 !default;
+$common-color-base-opacity-for-lightness-900: 1 !default;

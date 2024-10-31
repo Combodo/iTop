@@ -1,0 +1,745 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/*
+ * SCSS helpers for font sizes (use in SCSS files)
+ *
+ * Use them to only redefine the font size instead of the global font defnition, this way if the container's font changes
+ * the other properties will be propagated (weight, style)
+ *
+ * Usage: @extend %common-font-size-XXX;
+ */
+%common-font-size-50 {
+  font-size: $common-font-size-50;
+}
+%common-font-size-100 {
+  font-size: $common-font-size-100;
+}
+%common-font-size-150 {
+  font-size: $common-font-size-150;
+}
+%common-font-size-200 {
+  font-size: $common-font-size-200;
+}
+%common-font-size-250 {
+  font-size: $common-font-size-250;
+}
+%common-font-size-300 {
+  font-size: $common-font-size-300;
+}
+%common-font-size-350 {
+  font-size: $common-font-size-350;
+}
+%common-font-size-400 {
+  font-size: $common-font-size-400;
+}
+%common-font-size-450 {
+  font-size: $common-font-size-450;
+}
+%common-font-size-500 {
+  font-size: $common-font-size-500;
+}
+%common-font-size-550 {
+  font-size: $common-font-size-550;
+}
+
+/*
+ * SCSS helpers for font weights (use in SCSS files)
+ *
+ * Use them to only redefine the font weight instead of the global font defnition, this way if the container's font changes
+ * the other properties will be propagated (size, style)
+ *
+ * Usage: @extend %common-font-weight-XXX;
+ */
+%common-font-weight-100 {
+  font-weight: $common-font-weight-100;
+}
+%common-font-weight-200 {
+  font-weight: $common-font-weight-200;
+}
+%common-font-weight-300 {
+  font-weight: $common-font-weight-300;
+}
+%common-font-weight-400 {
+  font-weight: $common-font-weight-400;
+}
+%common-font-weight-500 {
+  font-weight: $common-font-weight-500;
+}
+%common-font-weight-600 {
+  font-weight: $common-font-weight-600;
+}
+%common-font-weight-700 {
+  font-weight: $common-font-weight-700;
+}
+%common-font-weight-800 {
+  font-weight: $common-font-weight-800;
+}
+%common-font-weight-900 {
+  font-weight: $common-font-weight-900;
+}
+%common-font-weight-950 {
+  font-weight: $common-font-weight-950;
+}
+
+/*
+ * SCSS helpers for global font definition (use in SCSS files)
+ *
+ * Use this only when you want to completely redefine the font, otherwise use the other helpers above
+ *
+ * Usage: @extend %common-font-XXX-YYY;
+ */
+%common-font-ral-nor-50 {
+  font-size: $common-font-size-50;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-nor-100 {
+  font-size: $common-font-size-100;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-nor-150 {
+  font-size: $common-font-size-150;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-nor-200 {
+  font-size: $common-font-size-200;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-nor-250 {
+  font-size: $common-font-size-250;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-nor-300 {
+  font-size: $common-font-size-300;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-nor-350 {
+  font-size: $common-font-size-350;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-nor-400 {
+  font-size: $common-font-size-400;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-nor-450 {
+  font-size: $common-font-size-450;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-nor-500 {
+  font-size: $common-font-size-500;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-nor-550 {
+  font-size: $common-font-size-550;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-med-50 {
+  font-size: $common-font-size-50;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-med-100 {
+  font-size: $common-font-size-100;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-med-150 {
+  font-size: $common-font-size-150;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-med-200 {
+  font-size: $common-font-size-200;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-med-250 {
+  font-size: $common-font-size-250;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-med-300 {
+  font-size: $common-font-size-300;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-med-350 {
+  font-size: $common-font-size-350;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-med-400 {
+  font-size: $common-font-size-400;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-med-450 {
+  font-size: $common-font-size-450;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-med-500 {
+  font-size: $common-font-size-500;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-med-550 {
+  font-size: $common-font-size-550;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-bol-50 {
+  font-size: $common-font-size-50;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-bol-100 {
+  font-size: $common-font-size-100;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-bol-150 {
+  font-size: $common-font-size-150;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-bol-200 {
+  font-size: $common-font-size-200;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-bol-250 {
+  font-size: $common-font-size-250;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-bol-300 {
+  font-size: $common-font-size-300;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-bol-350 {
+  font-size: $common-font-size-350;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-bol-400 {
+  font-size: $common-font-size-400;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-bol-450 {
+  font-size: $common-font-size-450;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-bol-500 {
+  font-size: $common-font-size-500;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-bol-550 {
+  font-size: $common-font-size-550;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-sembol-50 {
+  font-size: $common-font-size-50;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-600;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-sembol-100 {
+  font-size: $common-font-size-100;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-600;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-sembol-150 {
+  font-size: $common-font-size-150;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-600;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-sembol-200 {
+  font-size: $common-font-size-200;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-600;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-sembol-250 {
+  font-size: $common-font-size-250;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-600;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-sembol-300 {
+  font-size: $common-font-size-300;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-600;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-sembol-350 {
+  font-size: $common-font-size-350;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-600;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-sembol-400 {
+  font-size: $common-font-size-400;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-600;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-sembol-450 {
+  font-size: $common-font-size-450;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-600;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-sembol-500 {
+  font-size: $common-font-size-500;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-600;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-sembol-550 {
+  font-size: $common-font-size-550;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-600;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-ita-50 {
+  font-size: $common-font-size-50;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  font-style: italic;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-ita-100 {
+  font-size: $common-font-size-100;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  font-style: italic;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-ita-150 {
+  font-size: $common-font-size-150;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  font-style: italic;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-ita-200 {
+  font-size: $common-font-size-200;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  font-style: italic;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-ita-250 {
+  font-size: $common-font-size-250;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  font-style: italic;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-ita-300 {
+  font-size: $common-font-size-300;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  font-style: italic;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-ita-350 {
+  font-size: $common-font-size-350;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  font-style: italic;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-ita-400 {
+  font-size: $common-font-size-400;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  font-style: italic;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-ita-450 {
+  font-size: $common-font-size-450;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  font-style: italic;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+%common-font-ral-ita-500 {
+  font-size: $common-font-size-500;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  font-style: italic;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+
+%common-font-ral-ita-550 {
+  font-size: $common-font-size-550;
+  font-family: $common-font-family-base, $common-font-family-fallbacks;
+  font-weight: $common-font-weight-400;
+  font-style: italic;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+
+%common-font-code-50 {
+  font-size: $common-font-size-50;
+  font-family: $common-font-family-code;
+  font-weight: $common-font-weight-400;
+}
+
+%common-font-code-100 {
+  font-size: $common-font-size-100;
+  font-family: $common-font-family-code;
+  font-weight: $common-font-weight-400;
+}
+
+%common-font-code-150 {
+  font-size: $common-font-size-150;
+  font-family: $common-font-family-code;
+  font-weight: $common-font-weight-400;
+}
+
+%common-font-code-200 {
+  font-size: $common-font-size-200;
+  font-family: $common-font-family-code;
+  font-weight: $common-font-weight-400;
+}
+
+%common-font-code-250 {
+  font-size: $common-font-size-250;
+  font-family: $common-font-family-code;
+  font-weight: $common-font-weight-400;
+}
+
+%common-font-code-300 {
+  font-size: $common-font-size-300;
+  font-family: $common-font-family-code;
+  font-weight: $common-font-weight-400;
+}
+
+%common-font-code-350 {
+  font-size: $common-font-size-350;
+  font-family: $common-font-family-code;
+  font-weight: $common-font-weight-400;
+}
+
+%common-font-code-400 {
+  font-size: $common-font-size-400;
+  font-family: $common-font-family-code;
+  font-weight: $common-font-weight-400;
+}
+
+%common-font-code-450 {
+  font-size: $common-font-size-450;
+  font-family: $common-font-family-code;
+  font-weight: $common-font-weight-400;
+}
+
+%common-font-code-500 {
+  font-size: $common-font-size-500;
+  font-family: $common-font-family-code;
+  font-weight: $common-font-weight-400;
+}
+
+%common-font-code-550 {
+  font-size: $common-font-size-550;
+  font-family: $common-font-family-code;
+  font-weight: $common-font-weight-400;
+}
+
+/*
+ * CSS classes for font sizes (use in HTML markup, JS scripts)
+ *
+ * Use them to only redefine the font size instead of the global font defnition, this way if the container's font changes
+ * the other properties will be propagated (weight, style)
+ *
+ * Usage: .common-font-size-XXX;
+ */
+$common-font-sizes: (
+  'common-font-size-50',
+  'common-font-size-100',
+  'common-font-size-150',
+  'common-font-size-200',
+  'common-font-size-250',
+  'common-font-size-300',
+  'common-font-size-350',
+  'common-font-size-400',
+  'common-font-size-450',
+  'common-font-size-500',
+  'common-font-size-550'
+);
+@each $sFontSize in $common-font-sizes {
+  .#{$sFontSize} {
+    @extend %#{$sFontSize};
+  }
+}
+
+/*
+ * CSS classes for font weights (use in HTML markup, JS scripts)
+ *
+ * Use them to only redefine the font weight instead of the global font defnition, this way if the container's font changes
+ * the other properties will be propagated (size, style)
+ *
+ * Usage: .common-font-weight-XXX;
+ */
+$common-font-weights: (
+  'common-font-weight-100',
+  'common-font-weight-200',
+  'common-font-weight-300',
+  'common-font-weight-400',
+  'common-font-weight-500',
+  'common-font-weight-600',
+  'common-font-weight-700',
+  'common-font-weight-800',
+  'common-font-weight-900',
+  'common-font-weight-950'
+);
+@each $sFontWeight in $common-font-weights {
+  .#{$sFontWeight} {
+    @extend %#{$sFontWeight};
+  }
+}
+
+/*
+ * CSS classes for global font wrappers (use in HTML markup, JS scripts)
+ *
+ * Use this only when you want to completely redefine the font, otherwise use the other helpers
+ *
+ * Usage: .common-font-XXX-YYY;
+ */
+$common-fonts-all: (
+        'common-font-ral-nor-50',
+        'common-font-ral-nor-100',
+        'common-font-ral-nor-150',
+        'common-font-ral-nor-200',
+        'common-font-ral-nor-250',
+        'common-font-ral-nor-300',
+        'common-font-ral-nor-350',
+        'common-font-ral-nor-400',
+        'common-font-ral-nor-450',
+        'common-font-ral-nor-500',
+        'common-font-ral-nor-550',
+        'common-font-ral-med-50',
+        'common-font-ral-med-100',
+        'common-font-ral-med-150',
+        'common-font-ral-med-200',
+        'common-font-ral-med-250',
+        'common-font-ral-med-300',
+        'common-font-ral-med-350',
+        'common-font-ral-med-400',
+        'common-font-ral-med-450',
+        'common-font-ral-med-500',
+        'common-font-ral-med-550',
+        'common-font-ral-bol-50',
+        'common-font-ral-bol-100',
+        'common-font-ral-bol-150',
+        'common-font-ral-bol-200',
+        'common-font-ral-bol-250',
+        'common-font-ral-bol-300',
+        'common-font-ral-bol-350',
+        'common-font-ral-bol-400',
+        'common-font-ral-bol-450',
+        'common-font-ral-bol-500',
+        'common-font-ral-bol-550',
+        'common-font-ral-sembol-50',
+        'common-font-ral-sembol-100',
+        'common-font-ral-sembol-150',
+        'common-font-ral-sembol-200',
+        'common-font-ral-sembol-250',
+        'common-font-ral-sembol-300',
+        'common-font-ral-sembol-350',
+        'common-font-ral-sembol-400',
+        'common-font-ral-sembol-450',
+        'common-font-ral-sembol-500',
+        'common-font-ral-sembol-550',
+        'common-font-ral-ita-50',
+        'common-font-ral-ita-100',
+        'common-font-ral-ita-150',
+        'common-font-ral-ita-200',
+        'common-font-ral-ita-250',
+        'common-font-ral-ita-300',
+        'common-font-ral-ita-350',
+        'common-font-ral-ita-400',
+        'common-font-ral-ita-450',
+        'common-font-ral-ita-500',
+        'common-font-ral-ita-550',
+        'common-font-code-50',
+        'common-font-code-100',
+        'common-font-code-150',
+        'common-font-code-200',
+        'common-font-code-250',
+        'common-font-code-300',
+        'common-font-code-350',
+        'common-font-code-400',
+        'common-font-code-450',
+        'common-font-code-500',
+        'common-font-code-550'
+);
+@each $sFont in $common-fonts-all {
+  .#{$sFont} {
+    @extend %#{$sFont};
+  }
+}

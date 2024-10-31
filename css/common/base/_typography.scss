@@ -1,0 +1,150 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* This is an overload of the default lib. stylesheet to use local fonts instead of the CDN */
+@font-face {
+	font-family: Raleway;
+	font-weight: 100;
+	font-style: normal;
+  font-display: swap;
+	src: local('Raleway Thin'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-100-normal.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 100;
+	font-style: italic;
+  font-display: swap;
+	src: local('Raleway Thin'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-100-italic.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 200;
+	font-style: normal;
+  font-display: swap;
+	src: local('Raleway ExtraLight'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-200-normal.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 200;
+	font-style: italic;
+  font-display: swap;
+	src: local('Raleway ExtraLight'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-200-italic.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 300;
+	font-style: normal;
+  font-display: swap;
+	src: local('Raleway Light'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-300-normal.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 300;
+	font-style: italic;
+  font-display: swap;
+	src: local('Raleway Light'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-300-italic.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 400;
+	font-style: normal;
+  font-display: swap;
+	src: local('Raleway'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-400-normal.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 400;
+	font-style: italic;
+  font-display: swap;
+	src: local('Raleway'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-400-italic.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 500;
+	font-style: normal;
+  font-display: swap;
+	src: local('Raleway Medium'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-500-normal.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 500;
+	font-style: italic;
+  font-display: swap;
+	src: local('Raleway Medium'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-500-italic.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 600;
+	font-style: normal;
+  font-display: swap;
+	src: local('Raleway SemiBold'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-600-normal.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 600;
+	font-style: italic;
+  font-display: swap;
+	src: local('Raleway SemiBold'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-600-italic.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 700;
+	font-style: normal;
+  font-display: swap;
+	src: local('Raleway'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-700-normal.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 700;
+	font-style: italic;
+  font-display: swap;
+	src: local('Raleway'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-700-italic.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 800;
+	font-style: normal;
+  font-display: swap;
+	src: local('Raleway ExtraBold'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-800-normal.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 800;
+	font-style: italic;
+  font-display: swap;
+	src: local('Raleway ExtraBold'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-800-italic.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 900;
+	font-style: normal;
+  font-display: swap;
+	src: local('Raleway Black'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-900-normal.woff') format('woff'),
+}
+@font-face {
+	font-family: Raleway;
+	font-weight: 900;
+	font-style: italic;
+  font-display: swap;
+	src: local('Raleway Black'),
+	url($approot-relative + 'node_modules/@fontsource/raleway/files/raleway-all-900-italic.woff') format('woff'),
+}

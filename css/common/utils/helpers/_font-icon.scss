@@ -1,0 +1,43 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/******************************************************************************************************************************/
+/* NOTE: Those helpers allow to easily use an icon from libs. like FontAwesome or FontCombodo within a CSS rule (eg. ::after) */
+/* To use it, simply "@extend %fa-regular-base" in a rule and put the desired icon "content: '\f054'"                         */
+/******************************************************************************************************************************/
+
+%fa-regular-base{
+	font-family: "Font Awesome 5 Free";
+	font-weight: 400;
+
+	-webkit-font-smoothing: antialiased;
+	display: inline-block;
+	font-style: normal;
+	font-variant: normal;
+	text-rendering: auto;
+	line-height: 1;
+}
+%fa-solid-base{
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+
+	-webkit-font-smoothing: antialiased;
+	display: inline-block;
+	font-style: normal;
+	font-variant: normal;
+	text-rendering: auto;
+	line-height: 1;
+}
+%fc-regular-base{
+	display: inline-block;
+	font-family: CombodoRegular;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	text-rendering: auto;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}

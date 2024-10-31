@@ -10,12 +10,12 @@
 /***********************************************************************/
 
 /* SCSS variables */
-$ibo-sticky-sentinel--left: 0 !default;
-$ibo-sticky-sentinel--right: 0 !default;
-$ibo-sticky-sentinel--height: 0 !default;
-$ibo-sticky-sentinel-top--top: 0 !default;
+$ibo-sticky-sentinel--left: $common-sticky-sentinel--left !default;
+$ibo-sticky-sentinel--right: $common-sticky-sentinel--right !default;
+$ibo-sticky-sentinel--height: $common-sticky-sentinel--height !default;
+$ibo-sticky-sentinel-top--top: $common-sticky-sentinel-top--top !default;
 $ibo-sticky-sentinel-top--height: $ibo-sticky-sentinel--height !default;
-$ibo-sticky-sentinel-bottom--bottom: 0 !default;
+$ibo-sticky-sentinel-bottom--bottom: $common-sticky-sentinel-bottom--bottom !default;
 $ibo-sticky-sentinel-bottom--height: $ibo-sticky-sentinel--height !default;
 
 /* Rules */

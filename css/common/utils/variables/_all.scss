@@ -1,0 +1,15 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+@import "colors/all";
+@import "border-radius";
+@import "depression";
+@import "elevation";
+@import "path";
+@import "size";
+@import "spacing";
+@import "typography";
+// Important: Keep this partial last as it includes variables from the previous partials
+@import "base";
