@@ -7,6 +7,8 @@
  */
 
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
+use Laminas\Mail\Header\InReplyTo;
+use Laminas\Mail\Header\MessageId;
 use Laminas\Mail\Message;
 use Laminas\Mail\Protocol\Smtp\Auth\Oauth;
 use Laminas\Mail\Transport\File;
@@ -330,11 +332,11 @@ class EMailLaminas extends Email
 	{
 		$this->m_aData['message_id'] = $sId;
 
-		// Note: Swift will add the angle brackets for you
+		// Note: The email library will add the angle brackets for you
 		// so let's remove the angle brackets if present, for historical reasons
 		$sId = str_replace(array('<', '>'), '', $sId);
 
-		$this->m_oMessage->getHeaders()->addHeaderLine('Message-ID', $sId);
+		$this->m_oMessage->getHeaders()->addHeader((new MessageId())->setId($sId));
 	}
 
 	public function SetReferences($sReferences)
@@ -353,7 +355,11 @@ class EMailLaminas extends Email
 	 */
 	public function SetInReplyTo(string $sMessageId)
 	{
-		$this->AddToHeader('In-Reply-To', $sMessageId);
+		// Note: Laminas will add the angle brackets for you
+		// so let's remove the angle brackets if present, for historical reasons
+		$sId = str_replace(array('<', '>'), '', $sMessageId);
+
+		$this->m_oMessage->getHeaders()->addHeader((new InReplyTo())->setIds([$sId]));
 	}
 
 	/**
