@@ -516,7 +516,7 @@ class BrowseBrickHelper
 				'name' => $aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]]['name_att']),
 				'class' => get_class($aCurrentRowValues[0]),
 				'subitems' => array(),
-				'filter_data' => $this->GetFilterData($aLevelsProperties[$aCurrentRowKeys[0]], $aCurrentRowKeys[0], $aCurrentRowValues[0], '&nbsp;&nbsp●&nbsp&nbsp'),
+				'filter_data' => $this->GetFilterData($aLevelsProperties[$aCurrentRowKeys[0]], $aCurrentRowKeys[0], $aCurrentRowValues[0]),
 				'action_rules_token' => $this->PrepareActionRulesForItems($aCurrentRowObjects, $aCurrentRowKeys[0], $aLevelsProperties),
 			);
 
@@ -574,14 +574,13 @@ class BrowseBrickHelper
 	 * @param array $aLevelProperties tree level properties
 	 * @param string $sRowKey row key
 	 * @param \DBObject $oRowValue row value
-	 * @param string $sValuesAndCodesSeparator separator between values codes pairs
 	 *
 	 * @return string[]
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	private function GetFilterData(array $aLevelProperties, string $sRowKey, DBObject $oRowValue, string $sValuesAndCodesSeparator = ' | ') : array
+	private function GetFilterData(array $aLevelProperties, string $sRowKey, DBObject $oRowValue) : array
 	{
 		// result
 		$sValues = "";
@@ -599,18 +598,12 @@ class BrowseBrickHelper
 			// get field value (HTML representation)
 			$sValue = $oAttDef->GetAsHTML($oRowValue->Get($aField['code']));
 
-			// dot not print empty fields
+			// do not print empty fields
 			if(!utils::IsNullOrEmptyString($sValue)){
-
-				// handling separators
-				if($sValues !== ''){
-					$sValues .= ' ';
-					$sValuesAndCodes .= $sValuesAndCodesSeparator;
-				}
 
 				// append to result
 				$sValues .= $sValue;
-				$sValuesAndCodes .= '<b>' . $aField['label'] . ':</b> ' . $sValue;
+				$sValuesAndCodes .= '<span><span class="tree-item-filter-data-label">' . $aField['label'] . ':</span> ' . $sValue . '</span>';
 			}
 		}
 

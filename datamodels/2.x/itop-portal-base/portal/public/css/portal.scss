@@ -827,6 +827,16 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
   color: $gray;
   font-size: .9em;
 }
+/* tree list filter data span items */
+.list-group-item .tree-item-wrapper .tree-item-filter-data span:not(:last-child):after{
+  content: '●';
+  margin: 0 5px;
+}
+/* tree list filter data label span items */
+.list-group-item .tree-item-wrapper .tree-item-filter-data .tree-item-filter-data-label{
+  font-weight: bold;
+}
+
 
 /****************************************************************/
 /* - Mosaic mode                                                */
