@@ -10,12 +10,7 @@
  * @return Modified color value in HSLA format
  */
 @function ibo-adjust-lightness($sColor, $fTargetLightness) {
-  $iHue: hue($sColor);
-  $fSaturation: saturation($sColor);
-  $fLightness: lightness($sColor);
-  $fAlpha: alpha($sColor);
-
-  @return hsla($iHue, $fSaturation, $fTargetLightness, $fAlpha);
+  @return common-adjust-lightness($sColor, $fTargetLightness);
 }
 
 /**
@@ -25,10 +20,5 @@
  * @return Modified color value in HSLA format
  */
 @function ibo-adjust-alpha($sColor, $fTargetAlpha) {
-  $iHue: hue($sColor);
-  $fSaturation: saturation($sColor);
-  $fLightness: lightness($sColor);
-  $fAlpha: alpha($sColor);
-
-  @return hsla($iHue, $fSaturation, $fLightness, $fTargetAlpha);
+  @return common-adjust-alpha($sColor, $fTargetAlpha);
 }
