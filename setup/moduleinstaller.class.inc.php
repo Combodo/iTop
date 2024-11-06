@@ -273,7 +273,7 @@ abstract class ModuleInstallerAPI
 		}
 
 		// Simple rename
-		if ($sOrigTable === $sDstTable)
+		if ($sOrigTable === $sDstTable && !$bDstTableFieldExists)
 		{
 			$sQueryRename = /** @lang MySQL */ "ALTER TABLE `{$sOrigTable}` RENAME COLUMN `{$sOrigColumn}` TO `{$sDstColumn}`;";
 			CMDBSource::Query($sQueryRename);
