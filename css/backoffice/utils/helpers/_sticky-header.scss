@@ -14,9 +14,9 @@ $ibo-sticky-sentinel--left: $common-sticky-sentinel--left !default;
 $ibo-sticky-sentinel--right: $common-sticky-sentinel--right !default;
 $ibo-sticky-sentinel--height: $common-sticky-sentinel--height !default;
 $ibo-sticky-sentinel-top--top: $common-sticky-sentinel-top--top !default;
-$ibo-sticky-sentinel-top--height: $ibo-sticky-sentinel--height !default;
+$ibo-sticky-sentinel-top--height: $common-sticky-sentinel-top--height !default;
 $ibo-sticky-sentinel-bottom--bottom: $common-sticky-sentinel-bottom--bottom !default;
-$ibo-sticky-sentinel-bottom--height: $ibo-sticky-sentinel--height !default;
+$ibo-sticky-sentinel-bottom--height: $common-sticky-sentinel-bottom--height !default;
 
 /* Rules */
 .ibo-sticky-sentinel {

@@ -12,12 +12,12 @@ $ibo-has-description--font-size: $common-has-description--font-size !default; /*
 $ibo-is-code--background-color: $common-is-code--background-color !default;
 $ibo-is-code--padding: $common-is-code--padding !default;
 
-$ibo-hyperlink-color: $ibo-color-primary-700 !default;
-$ibo-hyperlink-text-decoration: none !default;
-$ibo-hyperlink-color--on-hover: $ibo-color-primary-800 !default;
-$ibo-hyperlink-text-decoration--on-hover: $ibo-hyperlink-text-decoration !default;
-$ibo-hyperlink-color--on-active: $ibo-color-primary-900 !default;
-$ibo-hyperlink-text-decoration--on-active: $ibo-hyperlink-text-decoration !default;
+$ibo-hyperlink-color: $common-hyperlink-color !default;
+$ibo-hyperlink-text-decoration: $common-hyperlink-text-decoration !default;
+$ibo-hyperlink-color--on-hover: $common-hyperlink-color--on-hover !default;
+$ibo-hyperlink-text-decoration--on-hover: $common-hyperlink-text-decoration--on-hover !default;
+$ibo-hyperlink-color--on-active: $common-hyperlink-color--on-active !default;
+$ibo-hyperlink-text-decoration--on-active: $common-hyperlink-text-decoration--on-active !default;
 
 $ibo-figure--spacing-x: $common-figure--spacing-x !default; /* Mind that this matches Bulma rule for figure */
 $ibo-figure--spacing-y: $common-figure--spacing-y !default;

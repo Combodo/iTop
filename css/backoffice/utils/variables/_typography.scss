@@ -35,7 +35,7 @@ $ibo-font-weight-950: $common-font-weight-950 !default; /* 950 Extra Black (Ultr
 $ibo-font-family-base: $common-font-family-base !default;
 $ibo-font-family-fallbacks: $common-font-family-fallbacks !default;
 $ibo-font-family-monospace: $common-font-family-monospace !default;
-$ibo-font-family-code: $ibo-font-family-monospace !default;
+$ibo-font-family-code: $common-font-family-code !default;
 
 :root {
   --ibo-font-size-50: #{$ibo-font-size-50};

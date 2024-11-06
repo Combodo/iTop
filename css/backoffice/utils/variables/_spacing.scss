@@ -3,27 +3,28 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-spacing-0: $ibo-size-0 !default;
-$ibo-spacing-100: $ibo-size-50 !default;
-$ibo-spacing-200: $ibo-size-100 !default;
-$ibo-spacing-300: $ibo-size-150 !default;
-$ibo-spacing-400: $ibo-size-200 !default;
-$ibo-spacing-500: $ibo-size-250 !default;
-$ibo-spacing-600: $ibo-size-300 !default;
-$ibo-spacing-700: $ibo-size-350 !default;
-$ibo-spacing-800: $ibo-size-400 !default;
-$ibo-spacing-900: $ibo-size-450 !default;
-$ibo-spacing-950: $ibo-size-500 !default;
+$ibo-spacing-0: $common-spacing-0 !default;
+$ibo-spacing-100: $common-spacing-100 !default;
+$ibo-spacing-200: $common-spacing-200 !default;
+$ibo-spacing-300: $common-spacing-300 !default;
+$ibo-spacing-400: $common-spacing-400 !default;
+$ibo-spacing-500: $common-spacing-500 !default;
+$ibo-spacing-600: $common-spacing-600 !default;
+$ibo-spacing-700: $common-spacing-700 !default;
+$ibo-spacing-800: $common-spacing-800 !default;
+$ibo-spacing-900: $common-spacing-900 !default;
+$ibo-spacing-950: $common-spacing-950 !default;
 
 :root{
-  --ibo-spacing-0: #{$ibo-size-0};
-  --ibo-spacing-100: #{$ibo-size-50};
-  --ibo-spacing-200: #{$ibo-size-100};
-  --ibo-spacing-300: #{$ibo-size-150};
-  --ibo-spacing-400: #{$ibo-size-200};
-  --ibo-spacing-500: #{$ibo-size-250};
-  --ibo-spacing-600: #{$ibo-size-300};
-  --ibo-spacing-700: #{$ibo-size-350};
-  --ibo-spacing-800: #{$ibo-size-400};
-  --ibo-spacing-900: #{$ibo-size-450};
+  --ibo-spacing-0: #{$ibo-spacing-0};
+  --ibo-spacing-100: #{$ibo-spacing-100};
+  --ibo-spacing-200: #{$ibo-spacing-200};
+  --ibo-spacing-300: #{$ibo-spacing-300};
+  --ibo-spacing-400: #{$ibo-spacing-400};
+  --ibo-spacing-500: #{$ibo-spacing-500};
+  --ibo-spacing-600: #{$ibo-spacing-600};
+  --ibo-spacing-700: #{$ibo-spacing-700};
+  --ibo-spacing-800: #{$ibo-spacing-800};
+  --ibo-spacing-900: #{$ibo-spacing-900};
+  --ibo-spacing-950: #{$ibo-spacing-950};
 }

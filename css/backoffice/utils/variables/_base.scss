@@ -5,5 +5,5 @@
 
 // These are the base variables used throughout the backoffice, if you don't know what to use, these are probably good :)
 
-$ibo-base-variable--text-color: $ibo-color-grey-900 !default;
-$ibo-base-variable--border-radius: $ibo-border-radius-300 !default;;
+$ibo-base-variable--text-color: $common-base-variable--text-color !default;
+$ibo-base-variable--border-radius: $common-base-variable--border-radius !default;;
