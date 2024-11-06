@@ -21,6 +21,29 @@ $ibo-color-red-600: $nord11;
 $ibo-color-red-700: darken($nord11, 7%);
 $ibo-color-red-800: darken($nord11, 15%);
 $ibo-color-red-900: darken($nord11, 22%);
+$ibo-color-red-950: darken($nord11, 25%);
+
+$ibo-color-error-100: $ibo-color-red-100;
+$ibo-color-error-200: $ibo-color-red-200;
+$ibo-color-error-300: $ibo-color-red-300;
+$ibo-color-error-400: $ibo-color-red-400;
+$ibo-color-error-500: $ibo-color-red-500;
+$ibo-color-error-600: $ibo-color-red-600;
+$ibo-color-error-700: $ibo-color-red-700;
+$ibo-color-error-800: $ibo-color-red-800;
+$ibo-color-error-900: $ibo-color-red-900;
+$ibo-color-error-950: $ibo-color-red-950;
+
+$ibo-color-danger-100: $ibo-color-red-100;
+$ibo-color-danger-200: $ibo-color-red-200;
+$ibo-color-danger-300: $ibo-color-red-300;
+$ibo-color-danger-400: $ibo-color-red-400;
+$ibo-color-danger-500: $ibo-color-red-500;
+$ibo-color-danger-600: $ibo-color-red-600;
+$ibo-color-danger-700: $ibo-color-red-700;
+$ibo-color-danger-800: $ibo-color-red-800;
+$ibo-color-danger-900: $ibo-color-red-900;
+$ibo-color-danger-950: $ibo-color-red-950;
 
 $ibo-color-primary-100: lighten($nord8, 15%);
 $ibo-color-primary-200: darken($ibo-color-primary-100, 7%);
