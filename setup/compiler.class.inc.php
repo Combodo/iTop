@@ -2612,7 +2612,7 @@ EOF
 		}
 
 		// Retrieve colors (mandatory/optional depending on the element type)
-		// Note: For now we can't use CSS variables (only SCSS variables) in the style XML definition as the ibo-adjust-alpha() / ibo-adjust-lightness() used a few steps below do not support them,
+		// Note: For now we can't use CSS variables (only SCSS variables) in the style XML definition as the common-adjust-alpha() / common-adjust-lightness() used a few steps below do not support them,
 		//       if this ever should be considered, the following article might help: https://codyhouse.co/blog/post/how-to-combine-sass-color-functions-and-css-variables#other-color-functions
 		if ($sElementType === self::ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS) {
 			$sMainColorForCss = $this->GetPropString($oNode, 'main_color', null, false);
@@ -2672,8 +2672,8 @@ EOF
 
 				$sCssRegularClassMainColorDeclaration = "--ibo-main-color:  #{{$sMainColorScssVariableName}};";
 				// Note: We have to manually force the alpha channel in case the given color is transparent
-				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: #{ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100), \$ibo-color-base-opacity-for-lightness-100)};";
-				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: #{ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900), \$ibo-color-base-opacity-for-lightness-900)};";
+				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: #{common-adjust-alpha(common-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100), \$ibo-color-base-opacity-for-lightness-100)};";
+				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: #{common-adjust-alpha(common-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900), \$ibo-color-base-opacity-for-lightness-900)};";
 
 				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: #{{$sMainColorScssVariableName}};";
 			} else {

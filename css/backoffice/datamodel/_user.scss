@@ -14,8 +14,8 @@ $ibo-dm-class--User--complementary-color: $ibo-color-white-100 !default;
 
 .ibo-dm-class--User {
   --ibo-main-color:  #{$ibo-dm-class--User--main-color};
-  --ibo-main-color--100: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-class--User--main-color, $ibo-color-base-lightness-100), $ibo-color-base-opacity-for-lightness-100)};
-  --ibo-main-color--900: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-class--User--main-color, $ibo-color-base-lightness-900), $ibo-color-base-opacity-for-lightness-900)};
+  --ibo-main-color--100: #{common-adjust-alpha(common-adjust-lightness($ibo-dm-class--User--main-color, $ibo-color-base-lightness-100), $ibo-color-base-opacity-for-lightness-100)};
+  --ibo-main-color--900: #{common-adjust-alpha(common-adjust-lightness($ibo-dm-class--User--main-color, $ibo-color-base-lightness-900), $ibo-color-base-opacity-for-lightness-900)};
   --ibo-complementary-color:  #{$ibo-dm-class--User--complementary-color};
 }
 .ibo-dm-class-alt--User {
@@ -34,8 +34,8 @@ $ibo-dm-enum--User-status-enabled--complementary-color: $ibo-lifecycle-active-st
 
 .ibo-dm-enum--User-status-enabled {
   --ibo-main-color:  #{$ibo-dm-enum--User-status-enabled--main-color};
-  --ibo-main-color--100: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-enum--User-status-enabled--main-color, $ibo-color-base-lightness-100), $ibo-color-base-opacity-for-lightness-100)};
-  --ibo-main-color--900: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-enum--User-status-enabled--main-color, $ibo-color-base-lightness-900), $ibo-color-base-opacity-for-lightness-900)};
+  --ibo-main-color--100: #{common-adjust-alpha(common-adjust-lightness($ibo-dm-enum--User-status-enabled--main-color, $ibo-color-base-lightness-100), $ibo-color-base-opacity-for-lightness-100)};
+  --ibo-main-color--900: #{common-adjust-alpha(common-adjust-lightness($ibo-dm-enum--User-status-enabled--main-color, $ibo-color-base-lightness-900), $ibo-color-base-opacity-for-lightness-900)};
   --ibo-complementary-color:  #{$ibo-dm-enum--User-status-enabled--complementary-color};
 }
 .ibo-dm-enum-alt--User-status-enabled {
@@ -54,8 +54,8 @@ $ibo-dm-enum--User-status-disabled--complementary-color: $ibo-lifecycle-inactive
 
 .ibo-dm-enum--User-status-disabled {
   --ibo-main-color:  #{$ibo-dm-enum--User-status-disabled--main-color};
-  --ibo-main-color--100: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-enum--User-status-disabled--main-color, $ibo-color-base-lightness-100), $ibo-color-base-opacity-for-lightness-100)};
-  --ibo-main-color--900: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-enum--User-status-disabled--main-color, $ibo-color-base-lightness-900), $ibo-color-base-opacity-for-lightness-900)};
+  --ibo-main-color--100: #{common-adjust-alpha(common-adjust-lightness($ibo-dm-enum--User-status-disabled--main-color, $ibo-color-base-lightness-100), $ibo-color-base-opacity-for-lightness-100)};
+  --ibo-main-color--900: #{common-adjust-alpha(common-adjust-lightness($ibo-dm-enum--User-status-disabled--main-color, $ibo-color-base-lightness-900), $ibo-color-base-opacity-for-lightness-900)};
   --ibo-complementary-color:  #{$ibo-dm-enum--User-status-disabled--complementary-color};
 }
 .ibo-dm-enum-alt--User-status-disabled {
