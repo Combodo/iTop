@@ -108,9 +108,9 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:FunctionalCI/Attribute:name+' => '',
 	'Class:FunctionalCI/Attribute:description' => 'Description',
 	'Class:FunctionalCI/Attribute:description+' => '',
-	'Class:FunctionalCI/Attribute:org_id' => 'Organization',
+	'Class:FunctionalCI/Attribute:org_id' => 'Organisation',
 	'Class:FunctionalCI/Attribute:org_id+' => '',
-	'Class:FunctionalCI/Attribute:organization_name' => 'Organization name',
+	'Class:FunctionalCI/Attribute:organization_name' => 'Organisation name',
 	'Class:FunctionalCI/Attribute:organization_name+' => 'Common name',
 	'Class:FunctionalCI/Attribute:business_criticity' => 'Business criticality',
 	'Class:FunctionalCI/Attribute:business_criticity+' => '',
@@ -129,7 +129,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Application solutions',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'All the application solutions depending on this configuration item',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Softwares',
-	'Class:FunctionalCI/Attribute:softwares_list+' => 'All the softwares installed on this configuration item',
+	'Class:FunctionalCI/Attribute:softwares_list+' => 'All the software installed on this configuration item',
 	'Class:FunctionalCI/Attribute:finalclass' => 'CI sub-class',
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets',
@@ -262,7 +262,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 //
 
 Dict::Add('EN GB', 'British English', 'British English', array(
-	'Class:DatacenterDevice' => 'Datacenter Device',
+	'Class:DatacenterDevice' => 'Datacentre Device',
 	'Class:DatacenterDevice+' => '',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
@@ -286,7 +286,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:DatacenterDevice/Attribute:powerB_name' => 'PowerB source name',
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC ports',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'All the fiber channel interfaces for this device',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'All the fibre channel interfaces for this device',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
 	'Class:DatacenterDevice/Attribute:san_list+' => 'All the SAN switches connected to this device',
 	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancy',
@@ -334,9 +334,9 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Server/Attribute:osversion_id+' => '',
 	'Class:Server/Attribute:osversion_name' => 'OS version name',
 	'Class:Server/Attribute:osversion_name+' => '',
-	'Class:Server/Attribute:oslicence_id' => 'OS license',
+	'Class:Server/Attribute:oslicence_id' => 'OS licence',
 	'Class:Server/Attribute:oslicence_id+' => '',
-	'Class:Server/Attribute:oslicence_name' => 'OS license name',
+	'Class:Server/Attribute:oslicence_name' => 'OS licence name',
 	'Class:Server/Attribute:oslicence_name+' => '',
 	'Class:Server/Attribute:cpu' => 'CPU',
 	'Class:Server/Attribute:cpu+' => '',
@@ -555,9 +555,9 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:SoftwareInstance/Attribute:software_id+' => '',
 	'Class:SoftwareInstance/Attribute:software_name' => 'Software name',
 	'Class:SoftwareInstance/Attribute:software_name+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Software license',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Software licence',
 	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Software license name',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Software licence name',
 	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '',
 	'Class:SoftwareInstance/Attribute:path' => 'Path',
 	'Class:SoftwareInstance/Attribute:path+' => '',
@@ -749,9 +749,9 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:VirtualMachine/Attribute:osversion_id+' => '',
 	'Class:VirtualMachine/Attribute:osversion_name' => 'OS version name',
 	'Class:VirtualMachine/Attribute:osversion_name+' => '',
-	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS license',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS licence',
 	'Class:VirtualMachine/Attribute:oslicence_id+' => '',
-	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS license name',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS licence name',
 	'Class:VirtualMachine/Attribute:oslicence_name+' => '',
 	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
 	'Class:VirtualMachine/Attribute:cpu+' => '',
@@ -835,7 +835,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 //
 
 Dict::Add('EN GB', 'British English', 'British English', array(
-	'Class:lnkSanToDatacenterDevice' => 'Link SAN / Datacenter Device',
+	'Class:lnkSanToDatacenterDevice' => 'Link SAN / Datacentre Device',
 	'Class:lnkSanToDatacenterDevice+' => '',
 	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN switch',
@@ -923,9 +923,9 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Software/Attribute:softwareinstance_list' => 'Software Instances',
 	'Class:Software/Attribute:softwareinstance_list+' => 'All the software instances for this software',
 	'Class:Software/Attribute:softwarepatch_list' => 'Software Patches',
-	'Class:Software/Attribute:softwarepatch_list+' => 'All the patchs for this software',
-	'Class:Software/Attribute:softwarelicence_list' => 'Software Licenses',
-	'Class:Software/Attribute:softwarelicence_list+' => 'All the licenses for this software',
+	'Class:Software/Attribute:softwarepatch_list+' => 'All the patches for this software',
+	'Class:Software/Attribute:softwarelicence_list' => 'Software Licences',
+	'Class:Software/Attribute:softwarelicence_list+' => 'All the licences for this software',
 ));
 
 //
@@ -980,16 +980,16 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 //
 
 Dict::Add('EN GB', 'British English', 'British English', array(
-	'Class:Licence' => 'License',
+	'Class:Licence' => 'Licence',
 	'Class:Licence+' => '',
 
 	'Class:Licence/Attribute:name' => 'Name',
 	'Class:Licence/Attribute:name+' => '',
 	'Class:Licence/Attribute:documents_list' => 'Documents',
-	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this license',
-	'Class:Licence/Attribute:org_id' => 'Organization',
+	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this licence',
+	'Class:Licence/Attribute:org_id' => 'Organisation',
 	'Class:Licence/Attribute:org_id+' => '',
-	'Class:Licence/Attribute:organization_name' => 'Organization name',
+	'Class:Licence/Attribute:organization_name' => 'Organisation name',
 	'Class:Licence/Attribute:organization_name+' => 'Common name',
 	'Class:Licence/Attribute:usage_limit' => 'Usage limit',
 	'Class:Licence/Attribute:usage_limit+' => '',
@@ -1007,7 +1007,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Licence/Attribute:perpetual/Value:no+' => 'no',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'yes',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'yes',
-	'Class:Licence/Attribute:finalclass' => 'License sub-class',
+	'Class:Licence/Attribute:finalclass' => 'Licence sub-class',
 	'Class:Licence/Attribute:finalclass+' => 'Name of the final class',
 ));
 
@@ -1016,7 +1016,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 //
 
 Dict::Add('EN GB', 'British English', 'British English', array(
-	'Class:OSLicence' => 'OS License',
+	'Class:OSLicence' => 'OS Licence',
 	'Class:OSLicence+' => '',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS version',
@@ -1024,9 +1024,9 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:OSLicence/Attribute:osversion_name' => 'OS version name',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtual machines',
-	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this license is used',
+	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this licence is used',
 	'Class:OSLicence/Attribute:servers_list' => 'Servers',
-	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this license is used',
+	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this licence is used',
 ));
 
 //
@@ -1034,7 +1034,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 //
 
 Dict::Add('EN GB', 'British English', 'British English', array(
-	'Class:SoftwareLicence' => 'Software License',
+	'Class:SoftwareLicence' => 'Software Licence',
 	'Class:SoftwareLicence+' => '',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Software',
@@ -1042,7 +1042,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:SoftwareLicence/Attribute:software_name' => 'Software name',
 	'Class:SoftwareLicence/Attribute:software_name+' => '',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Software instances',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this license is used',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this licence is used',
 ));
 
 //
@@ -1050,12 +1050,12 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 //
 
 Dict::Add('EN GB', 'British English', 'British English', array(
-	'Class:lnkDocumentToLicence' => 'Link Document / License',
+	'Class:lnkDocumentToLicence' => 'Link Document / Licence',
 	'Class:lnkDocumentToLicence+' => '',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s',
-	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'License',
+	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
-	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'License name',
+	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Licence name',
 	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
 	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
@@ -1267,9 +1267,9 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Subnet/Attribute:description+' => '',
 	'Class:Subnet/Attribute:subnet_name' => 'Subnet name',
 	'Class:Subnet/Attribute:subnet_name+' => '',
-	'Class:Subnet/Attribute:org_id' => 'Owner organization',
+	'Class:Subnet/Attribute:org_id' => 'Owner organisation',
 	'Class:Subnet/Attribute:org_id+' => '',
-	'Class:Subnet/Attribute:org_name' => 'Organization name',
+	'Class:Subnet/Attribute:org_name' => 'Organisation name',
 	'Class:Subnet/Attribute:org_name+' => '',
 	'Class:Subnet/Attribute:ip' => 'IP',
 	'Class:Subnet/Attribute:ip+' => '',
@@ -1290,9 +1290,9 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:VLAN/Attribute:vlan_tag+' => '',
 	'Class:VLAN/Attribute:description' => 'Description',
 	'Class:VLAN/Attribute:description+' => '',
-	'Class:VLAN/Attribute:org_id' => 'Organization',
+	'Class:VLAN/Attribute:org_id' => 'Organisation',
 	'Class:VLAN/Attribute:org_id+' => '',
-	'Class:VLAN/Attribute:org_name' => 'Organization name',
+	'Class:VLAN/Attribute:org_name' => 'Organisation name',
 	'Class:VLAN/Attribute:org_name+' => '',
 	'Class:VLAN/Attribute:subnets_list' => 'Subnets',
 	'Class:VLAN/Attribute:subnets_list+' => '',
@@ -1413,7 +1413,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 //
 
 Dict::Add('EN GB', 'British English', 'British English', array(
-	'Class:FiberChannelInterface' => 'Fiber Channel Interface',
+	'Class:FiberChannelInterface' => 'Fibre Channel Interface',
 	'Class:FiberChannelInterface+' => '',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Speed',
 	'Class:FiberChannelInterface/Attribute:speed+' => '',
@@ -1509,7 +1509,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Group/Attribute:status/Value:obsolete+' => 'Obsolete',
 	'Class:Group/Attribute:status/Value:production' => 'Production',
 	'Class:Group/Attribute:status/Value:production+' => 'Production',
-	'Class:Group/Attribute:org_id' => 'Organization',
+	'Class:Group/Attribute:org_id' => 'Organisation',
 	'Class:Group/Attribute:org_id+' => '',
 	'Class:Group/Attribute:owner_name' => 'Name',
 	'Class:Group/Attribute:owner_name+' => 'Common name',
@@ -1557,7 +1557,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Server:otherinfo' => 'Other information',
 	'Server:power' => 'Power supply',
 	'Class:Subnet/Tab:IPUsage' => 'IP Usage',
-	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet are used or not',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not',
 	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',
 	'Class:Subnet/Tab:FreeIPs' => 'Free IPs',
 	'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
@@ -1598,8 +1598,8 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Menu:ApplicationSolution' => 'Application solutions',
 	'Menu:ApplicationSolution+' => 'All application solutions',
 	'Menu:ConfigManagementSoftware' => 'Application management',
-	'Menu:Licence' => 'Licenses',
-	'Menu:Licence+' => 'All licenses',
+	'Menu:Licence' => 'Licences',
+	'Menu:Licence+' => 'All licences',
 	'Menu:Patch' => 'Patches',
 	'Menu:Patch+' => 'All patches',
 	'Menu:ApplicationInstance' => 'Installed software',
@@ -1623,7 +1623,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Menu:SearchCIs+' => 'Search for CIs',
 	'Menu:ConfigManagement:Devices' => 'Devices',
 	'Menu:ConfigManagement:AllDevices' => 'Infrastructure',
-	'Menu:ConfigManagement:virtualization' => 'Virtualization',
+	'Menu:ConfigManagement:virtualization' => 'Virtualisation',
 	'Menu:ConfigManagement:EndUsers' => 'End user devices',
 	'Menu:ConfigManagement:SWAndApps' => 'Software and applications',
 	'Menu:ConfigManagement:Misc' => 'Miscellaneous',
@@ -1631,7 +1631,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Menu:Group+' => 'Groups of CIs',
 	'Menu:OSVersion' => 'OS versions',
 	'Menu:OSVersion+' => '',
-	'Menu:Software' => 'Software catalog',
-	'Menu:Software+' => 'Software catalog',
+	'Menu:Software' => 'Software catalogue',
+	'Menu:Software+' => 'Software catalogue',
 ));
 ?>

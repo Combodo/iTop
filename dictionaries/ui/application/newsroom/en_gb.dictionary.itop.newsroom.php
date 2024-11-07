@@ -36,7 +36,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	// Actions
 	// - Unitary buttons
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label' => 'Delete this news',
-	'UI:Newsroom:iTopNotification:ViewAllPage:Action:ViewObject:Label' => 'Go to the news url',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Action:ViewObject:Label' => 'Go to the news URL',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Label' => 'Mark as read',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Label' => 'Mark as unread',
 	// - Bulk buttons

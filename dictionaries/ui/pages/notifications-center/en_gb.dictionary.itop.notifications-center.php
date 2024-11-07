@@ -18,8 +18,8 @@
  */
 
 Dict::Add('EN GB', 'British English', 'British English', array(
-	'UI:NotificationsCenter:Page:Title' => 'Notifications center',
-	'UI:NotificationsCenter:Panel:Title' => 'Notifications center',
+	'UI:NotificationsCenter:Page:Title' => 'Notifications centre',
+	'UI:NotificationsCenter:Panel:Title' => 'Notifications centre',
 	'UI:NotificationsCenter:Panel:SubTitle' => 'Manage Notifications that you have received : unsubscribe or limit them to a single channel',
 	'UI:NotificationsCenter:Panel:Toolbar:ViewAllNews:Title' => 'View all my news',
 	'UI:NotificationsCenter:Panel:Table:Channels' => 'Channels',

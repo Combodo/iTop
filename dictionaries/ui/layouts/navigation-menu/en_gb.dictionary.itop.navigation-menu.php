@@ -20,7 +20,7 @@
 // Navigation menu
 Dict::Add('EN GB', 'British English', 'British English', array(
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Company logo',
-	'UI:Layout:NavigationMenu:Silo:Label' => 'Select organization to filter on',
+	'UI:Layout:NavigationMenu:Silo:Label' => 'Select organisation to filter on',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Expand / Collapse',
 	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Expand / Collapse (Filtered on %1$s)',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...',

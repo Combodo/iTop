@@ -37,7 +37,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Error:HTTP:400' => 'Bad request',
 	'Error:HTTP:401' => 'Authentication',
 	'Error:HTTP:404' => 'Page not found',
-	'Error:HTTP:500' => 'Oops! An error has occured.',
+	'Error:HTTP:500' => 'Oops! An error has occurred.',
 	'Error:HTTP:GetHelp' => 'Please contact your %1$s administrator if the problem keeps happening.',
 	'Error:XHR:Fail' => 'Could not load data, please contact your %1$s administrator',
 	'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.',
@@ -61,22 +61,22 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Portal:File:None' => 'No file',
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
-	'Portal:Calendar-FirstDayOfWeek' => 'en-us',
+	'Portal:Calendar-FirstDayOfWeek' => 'en-gb',
 ));
 
 // Object form
 Dict::Add('EN GB', 'British English', 'British English', array(
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry',
-	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost',
-	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.',
-	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.',
+	'Portal:Form:Close:Warning' => 'Do you want to leave this form? Data entered may be lost',
+	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting this form again.',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting this form again.',
 ));
 
 // UserProfile brick
 Dict::Add('EN GB', 'British English', 'British English', array(
 	'Brick:Portal:UserProfile:Name' => 'User profile',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'My profile',
-	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Logoff',
+	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Log off',
 	'Brick:Portal:UserProfile:Password:Title' => 'Password',
 	'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Choose password',
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Confirm password',
@@ -93,7 +93,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 
 // BrowseBrick brick
 Dict::Add('EN GB', 'British English', 'British English', array(
-	'Brick:Portal:Browse:Name' => 'Browse throught items',
+	'Brick:Portal:Browse:Name' => 'Browse through items',
 	'Brick:Portal:Browse:Mode:List' => 'List',
 	'Brick:Portal:Browse:Mode:Tree' => 'Tree',
 	'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic',

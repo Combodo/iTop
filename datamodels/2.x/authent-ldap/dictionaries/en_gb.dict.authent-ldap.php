@@ -37,6 +37,6 @@
 
 Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:UserLDAP' => 'LDAP user',
-	'Class:UserLDAP+' => 'User authentified by LDAP',
+	'Class:UserLDAP+' => 'User authenticated by LDAP',
 	'UserLDAP:server' => 'LDAP specifics',
 ));

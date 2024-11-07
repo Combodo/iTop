@@ -67,7 +67,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'UI:Links:Bulk:LinkWillBeDeletedFrom1Object' => 'Remove from one object',
 	'UI:Links:Bulk:LinkWillBeCreatedForXObjects' => 'Add {count} objects',
 	'UI:Links:Bulk:LinkWillBeDeletedFromXObjects' => 'Remove {count} objects',
-	'UI:Links:Bulk:LinkExistForAllObjects' => 'All objets are already linked',
+	'UI:Links:Bulk:LinkExistForAllObjects' => 'All objects are already linked',
 	'UI:Links:Bulk:LinkExistForOneObject' => 'One object is linked',
 	'UI:Links:Bulk:LinkExistForXObjects' => '{count} objects are linked',
 

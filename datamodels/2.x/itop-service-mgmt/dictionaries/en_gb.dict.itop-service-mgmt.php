@@ -40,7 +40,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Menu:Service:Overview+' => '',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracts by service level',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracts by status',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less then 30 days',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less than 30 days',
 	'Menu:ProviderContract' => 'Provider contracts',
 	'Menu:ProviderContract+' => 'Provider contracts',
 	'Menu:CustomerContract' => 'Customer contracts',
@@ -59,8 +59,8 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Menu:DeliveryModel+' => 'Delivery models',
 	'Menu:ServiceFamily' => 'Service families',
 	'Menu:ServiceFamily+' => 'Service families',
-	'Menu:Procedure' => 'Procedures catalog',
-	'Menu:Procedure+' => 'All procedures catalog',
+	'Menu:Procedure' => 'Procedures catalogue',
+	'Menu:Procedure+' => 'All procedures catalogue',
 
 	'Contract:baseinfo' => 'General information',
 	'Contract:moreinfo' => 'Contractual information',
@@ -73,7 +73,8 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 
 Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery model',
-	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_id+' => 'This is required for Tickets handling.
+The delivery model specifies the teams to which tickets can be assigned.',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery model name',
 ));
 
@@ -477,10 +478,10 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:DeliveryModel' => 'Delivery Model',
 	'Class:DeliveryModel+' => '',
 	'Class:DeliveryModel/Attribute:name' => 'Name',
-	'Class:DeliveryModel/Attribute:name+' => '',
-	'Class:DeliveryModel/Attribute:org_id' => 'Organization',
-	'Class:DeliveryModel/Attribute:org_id+' => '',
-	'Class:DeliveryModel/Attribute:organization_name' => 'Organization Name',
+	'Class:DeliveryModel/Attribute:name+' => 'Don\'t forget to add teams to this delivery model',
+	'Class:DeliveryModel/Attribute:org_id' => 'Organisation',
+	'Class:DeliveryModel/Attribute:org_id+' => 'Usually the organisation that provides the services',
+	'Class:DeliveryModel/Attribute:organization_name' => 'Organisation Name',
 	'Class:DeliveryModel/Attribute:organization_name+' => 'Common name',
 	'Class:DeliveryModel/Attribute:description' => 'Description',
 	'Class:DeliveryModel/Attribute:description+' => '',

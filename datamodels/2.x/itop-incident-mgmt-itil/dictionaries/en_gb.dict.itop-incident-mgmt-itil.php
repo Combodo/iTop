@@ -120,7 +120,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'Monitoring',
 	'Class:Incident/Attribute:origin/Value:monitoring+' => 'Incident created on a monitoring alert',
 	'Class:Incident/Attribute:origin/Value:phone' => 'Phone',
-	'Class:Incident/Attribute:origin/Value:phone+' => 'Incident created following a phone call',
+	'Class:Incident/Attribute:origin/Value:phone+' => 'Incident created following a telephone call',
 	'Class:Incident/Attribute:origin/Value:portal' => 'Portal',
 	'Class:Incident/Attribute:origin/Value:portal+' => 'Incident created on the user portal',
 	'Class:Incident/Attribute:service_id' => 'Service',
@@ -207,9 +207,9 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Incident/Attribute:user_satisfaction+' => '',
 	'Class:Incident/Attribute:user_satisfaction/Value:1' => 'Very satisfied',
 	'Class:Incident/Attribute:user_satisfaction/Value:1+' => '',
-	'Class:Incident/Attribute:user_satisfaction/Value:2' => 'Fairly statisfied',
+	'Class:Incident/Attribute:user_satisfaction/Value:2' => 'Fairly satisfied',
 	'Class:Incident/Attribute:user_satisfaction/Value:2+' => '',
-	'Class:Incident/Attribute:user_satisfaction/Value:3' => 'Rather Dissatified',
+	'Class:Incident/Attribute:user_satisfaction/Value:3' => 'Rather Dissatisfied',
 	'Class:Incident/Attribute:user_satisfaction/Value:3+' => '',
 	'Class:Incident/Attribute:user_satisfaction/Value:4' => 'Very Dissatisfied',
 	'Class:Incident/Attribute:user_satisfaction/Value:4+' => '',
@@ -238,6 +238,6 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Cannot assign the Parent incident to the incident itself',
 
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
-	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info',
+	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info.',
 	'Tickets:Related:OpenIncidents' => 'Open incidents',
 ));

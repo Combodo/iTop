@@ -25,7 +25,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'itop-core-update:UI:SelectUpdateFile' => 'Application Upgrade',
 	'itop-core-update:UI:ConfirmUpdate' => 'Confirm Application Upgrade',
 	'itop-core-update:UI:UpdateCoreFiles' => 'Application Upgrading',
-	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance in read-only mode. You have to run a setup to return in normal mode.',
+	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance in read-only mode. You have to run a setup to return to normal mode.',
 	'itop-core-update:UI:UpdateDone' => 'Application Upgrade',
 
 	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Application Upgrade',
@@ -108,7 +108,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'iTopUpdate:Error:FileNotFound' => 'File not found',
 	'iTopUpdate:Error:NoFile' => 'No file provided',
 	'iTopUpdate:Error:InvalidToken' => 'Invalid token',
-	'iTopUpdate:Error:UpdateFailed' => 'Upgrade failed ',
+	'iTopUpdate:Error:UpdateFailed' => 'Upgrade failed',
 	'iTopUpdate:Error:FileUploadMaxSizeTooSmall' => 'The upload max size seems too small for update. Please change the PHP configuration.',
 
 	'iTopUpdate:UI:RestoreArchive' => 'You can restore your application from the archive \'%1$s\'',

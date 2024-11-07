@@ -29,7 +29,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Attachment:Max_Go' => '(Maximum file size: %1$s GB)',
 	'Attachment:Max_Mo' => '(Maximum file size: %1$s MB)',
 	'Attachment:Max_Ko' => '(Maximum file size: %1$s KB)',
-	'Attachments:NoAttachment' => 'No attachment. ',
+	'Attachments:NoAttachment' => 'No attachment.',
 	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.',
 	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s',
 	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty and cannot be attached.
@@ -55,7 +55,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Attachment/Attribute:item_class+' => '',
 	'Class:Attachment/Attribute:item_id' => 'Item',
 	'Class:Attachment/Attribute:item_id+' => '',
-	'Class:Attachment/Attribute:item_org_id' => 'Item organization',
+	'Class:Attachment/Attribute:item_org_id' => 'Item organisation',
 	'Class:Attachment/Attribute:item_org_id+' => '',
 	'Class:Attachment/Attribute:contents' => 'Contents',
 	'Class:Attachment/Attribute:contents+' => '',

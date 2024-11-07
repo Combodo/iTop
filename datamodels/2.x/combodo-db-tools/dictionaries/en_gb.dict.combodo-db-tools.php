@@ -43,7 +43,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'DBTools:FetchCheck' => 'Fetch Check (long)',
 	'DBTools:SelectAnalysisType' => 'Select analysis type',
 
-	'DBTools:Analyze' => 'Analyze',
+	'DBTools:Analyze' => 'Analyse',
 	'DBTools:Details' => 'Show Details',
 	'DBTools:ShowAll' => 'Show All Errors',
 
@@ -59,7 +59,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'DBAnalyzer-Integrity-HKInvalid' => 'Broken hierarchical key `%1$s`',
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted',
 	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value as `%3$s`.`%1$s`',
-	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contains a valid class',
+	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contain a valid class',
 ));
 
 // Database Info
@@ -72,16 +72,16 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 // Lost attachments
 Dict::Add('EN GB', 'British English', 'British English', array(
 	'DBTools:LostAttachments' => 'Lost attachments',
-	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, is does not retrieve deleted data.',
+	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, it does not retrieve deleted data.',
 
-	'DBTools:LostAttachments:Button:Analyze' => 'Analyze',
+	'DBTools:LostAttachments:Button:Analyze' => 'Analyse',
 	'DBTools:LostAttachments:Button:Restore' => 'Restore',
 	'DBTools:LostAttachments:Button:Restore:Confirm' => 'This action cannot be undone, please confirm that you want to restore the selected files.',
 	'DBTools:LostAttachments:Button:Busy' => 'Please wait...',
 
-	'DBTools:LostAttachments:Step:Analyze' => 'First, search for lost/misplaced attachments by analyzing the database.',
+	'DBTools:LostAttachments:Step:Analyze' => 'First, search for lost/misplaced attachments by analysing the database.',
 
-	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Analyze results:',
+	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Analyse results:',
 	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Great! Every thing seems to be at the right place.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Some attachments (%1$d) seem to be misplaced. Take a look at the following list and check the ones you would like to move.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Filename',

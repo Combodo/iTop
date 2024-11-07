@@ -34,7 +34,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'bkp-mysqldump-issue' => 'mysqldump could not be executed (retcode=%1$d): Please make sure it is installed and in the path, or edit the configuration file to tune mysql_bindir',
 	'bkp-missing-dir' => 'The target directory <code>%1$s</code> could not be found',
 	'bkp-free-disk-space' => '<b>%1$s free</b> in <code>%2$s</code>',
-	'bkp-dir-not-writeable' => '%1$s is not writeable',
+	'bkp-dir-not-writeable' => '%1$s is not writable',
 	'bkp-wrong-format-spec' => 'The current specification to format the file names is wrong (%1$s). A default specification will apply: %2$s',
 	'bkp-name-sample' => 'Backup files are named depending on DB identifiers, date and time. Example: %1$s',
 	'bkp-week-days' => 'Backups will occur <b>every %1$s at %2$s</b>',

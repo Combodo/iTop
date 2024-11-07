@@ -32,5 +32,5 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'UI:Datatables:Column:RowActions:Label' => '',
 	'UI:Datatables:Column:RowActions:Description' => '',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation',
-	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action ?',
+	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action?',
 ));

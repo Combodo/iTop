@@ -9,7 +9,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Menu:RequestManagement+' => '',
 	'Menu:RequestManagementProvider' => 'Helpdesk provider',
 	'Menu:RequestManagementProvider+' => '',
-	'Menu:UserRequest:Provider' => 'Open request transfered to provider',
+	'Menu:UserRequest:Provider' => 'Open request transferred to provider',
 	'Menu:UserRequest:Provider+' => '',
 	'Menu:UserRequest:Overview' => 'Overview',
 	'Menu:UserRequest:Overview+' => '',
@@ -215,9 +215,9 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:UserRequest/Attribute:user_satisfaction/Value:1+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:2' => 'Fairly satisfied',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:2+' => '',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:3' => 'Rather dissatified',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:3' => 'Rather dissatisfied',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:3+' => '',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:4' => 'Very dissatified',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:4' => 'Very dissatisfied',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '',
 	'Class:UserRequest/Attribute:user_comment' => 'User comment',
 	'Class:UserRequest/Attribute:user_comment+' => '',
@@ -250,12 +250,12 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself',
 
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
-	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info.',
 ));
 
 
 Dict::Add('EN GB', 'British English', 'British English', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization',
-	'Organization:Overview:Tickets' => 'Tickets for this organization',
+	'Organization:Overview:UserRequests' => 'User Requests from this organisation',
+	'Organization:Overview:MyUserRequests' => 'My User Requests for this organisation',
+	'Organization:Overview:Tickets' => 'Tickets for this organisation',
 ));

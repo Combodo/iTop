@@ -34,7 +34,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Page:DefaultTitle' => '%1$s - User portal',
 	'Brick:Portal:UserProfile:Title' => 'My profile',
 	'Brick:Portal:NewRequest:Title' => 'New request',
-	'Brick:Portal:NewRequest:Title+' => '<p>Need help?</p><p>Pick from the services catalog and submit your request to our support teams.</p>',
+	'Brick:Portal:NewRequest:Title+' => '<p>Need help?</p><p>Pick from the services catalogue and submit your request to our support teams.</p>',
 	'Brick:Portal:OngoingRequests:Title' => 'Ongoing requests',
 	'Brick:Portal:OngoingRequests:Title+' => '<p>Follow up with your ongoing requests.</p><p>Check the progress, add comments, attach documents, acknowledge the solution.</p>',
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Open',

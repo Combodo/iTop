@@ -28,7 +28,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 <div>Newsroom allows you to easily manage notifications within the platform, so you can stay on top of important updates without constantly checking your email. With the ability to mark messages as read or unread, and automatically delete old notifications, you have complete control over your notifications. </div>
 <br>
 <div>Try it out today and streamline your ' . ITOP_APPLICATION_SHORT . '\'s communication experience!</div>',
-	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Title' => 'Notifications center',
+	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Title' => 'Notifications centre',
 	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Description' => '<div>As we know your information intake is already at its max, you can now easily choose how you receive your notifications - via email, chat, or even the Newsroom feature</div>
 <div>You don\'t want to receive a certain type of alerts? Nothing easier with these advanced customization capabilities giving you the flexibility to tailor your experience to your needs. </div>
 <br>
