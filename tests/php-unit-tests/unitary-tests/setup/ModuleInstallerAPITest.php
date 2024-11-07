@@ -241,4 +241,49 @@ SQL
 		$this->assertEquals('from table 2', $sFromTable2Data, "Data was not moved as expected");
 	}
 
+
+	/**
+	 * Test that moving columns from/to the same table works
+	 *
+	 * @covers       \ModuleInstallerAPI::MoveColumnInDB
+	 *
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \MySQLQueryHasNoResultException
+	 */
+	public function testMoveColumnInDB_SameTable(): void
+	{
+		// Info from the original table
+		$sOrigClass = "Person";
+		$sOrigAttCode = "first_name";
+		[$sOrigTable, $sOrigColName] = $this->GetInfoFromTable($sOrigClass, $sOrigAttCode);
+
+		// Info for the destination column
+		$sDstNonExistingColName = "non_existing_column";
+
+		// Save value from original table as a reference
+		$oPerson = MetaModel::GetObject($sOrigClass, 1);
+		$sOrigValue = $oPerson->Get($sOrigAttCode);
+
+		// Try to move data
+		ModuleInstallerAPI::MoveColumnInDB($sOrigTable, $sOrigColName, $sOrigTable, $sDstNonExistingColName);
+
+		// Check if data was actually moved
+		// - Either way, the column should exist
+		$sDstValue = CMDBSource::QueryToScalar(
+			<<<SQL
+SELECT `{$sDstNonExistingColName}` FROM `{$sOrigTable}` WHERE `id` = 1
+LIMIT 1
+SQL
+		);
+
+		// Put data back in the original table
+		ModuleInstallerAPI::MoveColumnInDB($sOrigTable, $sDstNonExistingColName, $sOrigTable, $sOrigColName);
+
+		$this->assertEquals($sOrigValue, $sDstValue, "Data was not moved as expected");
+	}
 }
