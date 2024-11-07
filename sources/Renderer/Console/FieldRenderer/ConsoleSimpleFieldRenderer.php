@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -22,7 +22,7 @@ namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDuration;
-use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
@@ -150,34 +150,23 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 
 					if ($this->oField->GetReadOnly())
 					{
-						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetCurrentValue()));
+						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetDisplayValue()));
 						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 					}
 					else
 					{
-						$oText = new TextArea("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId(),40,8);
+						$oText = new TextArea("", CKEditorHelper::PrepareCKEditorValueTextEncodingForTextarea($this->oField->GetCurrentValue()),$this->oField->GetGlobalId(),40,8);
 						$oText->AddCSSClasses(['ibo-input-field-wrapper', 'ibo-input']);
 						$oValue->AddSubBlock($oText);
 						// Some additional stuff if we are displaying it with a rich editor
 						if ($bRichEditor)
 						{
 							$oText->AddCSSClass('ibo-input-richtext-placeholder');
-							$aConfig = utils::GetCkeditorPref();
-							$aConfig['extraPlugins'] = 'codesnippet';
-							$sJsConfig = json_encode($aConfig);
 
-							foreach (WebResourcesHelper::GetJSFilesRelPathsForCKEditor() as $sJSFile) {
-								$oOutput->AddJsFile($sJSFile);
-							}
+							// Enable CKEditor
+							CKEditorHelper::ConfigureCKEditorElementForRenderingOutput($oOutput, $this->oField->GetGlobalId(), $this->oField->GetCurrentValue());
 
-							$oOutput->AddJs(
-<<<EOF
-								$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
-								$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, $sJsConfig);
-EOF
-							);
-							if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null))
-							{
+							if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null)){
 								$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));
 							}
 						}
@@ -320,7 +309,7 @@ EOF
 			
 			$(oInput).datepicker({
 								"showOn":"button",
-								"buttonText":"<i class=\"fas fa-calendar-alt\"><\/i>",
+								"buttonText":"",
 								"dateFormat": $sJSDateFormat,
 								"constrainInput":false,
 								"changeMonth":true,
@@ -343,7 +332,7 @@ EOF
 			
 				$(oInput).datetimepicker({
 							showOn: 'button',
-							buttonText: "<i class=\"fas fa-calendar-alt\"><\/i>",
+							buttonText: "",
 							dateFormat: $sJSDateFormat,
 							constrainInput: false,
 							changeMonth: true,

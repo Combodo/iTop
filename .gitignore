@@ -50,6 +50,9 @@ tests/*/vendor/*
 # NPM: `jquery-ui` package is just there for vulnerability scans, so we don't want to version its files (only `jquery-ui-dist` is used within the code base)
 /node_modules/jquery-ui/**
 
+# Symfony: Local env file
+/resources/symfony/.env.local
+
 # PHPUnit: Cache file, local XML working copies
 /tests/php-unit-tests/.phpunit.result.cache
 /tests/php-unit-tests/phpunit.xml

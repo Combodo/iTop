@@ -1,0 +1,149 @@
+$ibo-high-contrast--thin-border: solid 1px $ibo-color-grey-900 !default;
+$ibo-high-contrast--medium-border: solid 2px $ibo-color-grey-900 !default;
+
+$ibo-alert--icon--font-size: 3rem !default;
+$ibo-alert--icon--top: calc(50% - #{$ibo-alert--icon--font-size} / 2) !default;
+$ibo-alert--icon--left: $ibo-spacing-500 !default;
+$ibo-alert--icon--opacity: 0.8 !default;
+$ibo-alert--icons: (
+        'success': '\f00c',
+        'information': '\f129',
+        'warning': '\f12a',
+        'danger': '\f071',
+        'failure': '\f071',
+        'error': '\f071',
+) !default;
+
+$ibo-toast--icon--font-size: 2rem !default;
+$ibo-toast--icon--top: calc(50% - #{$ibo-toast--icon--font-size} / 2) !default;
+$ibo-toast--icon--left: $ibo-spacing-400 !default;
+
+
+@each $sName, $sIcon in $ibo-alert--icons {
+  %ibo-alert-#{$sName}, .ibo-alert.ibo-is-#{$sName} {
+    &::after {
+      content: $sIcon;
+      @extend %fa-solid-base;
+      position: absolute;
+      top: $ibo-alert--icon--top;
+      left: $ibo-alert--icon--left;
+      opacity: $ibo-alert--icon--opacity;
+      font-size: $ibo-alert--icon--font-size;
+      width: $ibo-alert--icon--font-size;
+      text-align: center;
+    }
+
+    .ibo-alert--body, .ibo-alert--title {
+      padding-left: calc(#{$ibo-alert--icon--left} + #{$ibo-alert--icon--font-size});
+    }
+  }
+
+  .ibo-toast.ibo-is-#{$sName} {
+    &::after{
+      font-size: $ibo-toast--icon--font-size !important;
+      top: $ibo-toast--icon--top !important;
+      left: $ibo-toast--icon--left !important;
+      width: $ibo-toast--icon--font-size !important;
+    }
+    padding-left: calc(#{$ibo-toast--padding-left} / 2 + #{$ibo-toast--icon--left} + #{$ibo-toast--icon--font-size});
+  }
+}
+
+.ibo-navigation-menu--notifications--item--new-message-indicator{
+  border: none !important;
+  background-color: transparent !important;
+  &.ibo-is-priority-1::before{
+    content: "\f12a \f12a \f12a";
+    @extend %fa-solid-base;
+    color: $ibo-color-danger-900;
+  }
+  &.ibo-is-priority-2::before{
+    content: "\f12a \f12a";
+    @extend %fa-solid-base;
+    color: $ibo-color-warning-900;
+  }
+  &.ibo-is-priority-3::before{
+    content: "\f12a";
+    @extend %fa-solid-base;
+    color: $ibo-color-success-900;
+  }
+  &.ibo-is-priority-4::before{
+    content: "\f129";
+    @extend %fa-solid-base;
+    color: $ibo-color-information-900;
+  }
+}
+
+.ibo-navigation-menu--menu-nodes ul li > a:hover, .ibo-navigation-menu--menu-node-counter{
+  border: $ibo-high-contrast--thin-border;
+}
+
+.ibo-top-bar{
+  box-shadow: none;
+  border-bottom: $ibo-high-contrast--medium-border;
+}
+.ibo-breadcrumbs--item-icon > span, .ibo-breadcrumbs--item-icon > img{
+  opacity: 1 !important;
+}
+.ibo-tab-container--tabs-list{
+  border-bottom: $ibo-high-contrast--thin-border;
+}
+.ibo-tab-container--extra-tabs-list{
+  border: $ibo-high-contrast--thin-border;  
+}
+.ibo-datatable tbody > tr {
+  border-bottom: $ibo-high-contrast--thin-border;
+}
+
+.ibo-activity-panel--tab-toolbar{
+  border-bottom: $ibo-high-contrast--thin-border;
+  border-top: $ibo-high-contrast--thin-border;
+}
+.ibo-activity-entry--main-information{
+  border: $ibo-high-contrast--thin-border;
+}
+.ibo-activity-entry--medallion.ibo-has-image{
+  box-shadow: none;
+  border: $ibo-high-contrast--thin-border;
+}
+.ibo-activity-panel--tab-toggler.ibo-is-active .ibo-activity-panel--tab-title{
+  border-left: $ibo-high-contrast--thin-border;
+  border-right: $ibo-high-contrast--thin-border;
+  font-weight: 800;
+}
+.ibo-button{
+  border: $ibo-high-contrast--thin-border;
+}
+@each $sColor, $aColorValues in $ibo-alert-colors {
+  $highlight-color: nth($aColorValues, 2);
+  %ibo-alert-#{$sColor}, .ibo-alert.ibo-is-#{$sColor} {
+    border: 1px solid $highlight-color;
+  }
+}
+
+.ibo-pill{
+  border: 1px solid var(--ibo-main-color--900);
+}
+
+@each $sType, $aColors in $ibo-pill-states-colors {
+  .ibo-pill.ibo-is-#{$sType} {
+    border: 1px solid map-get($aColors, 'secondary-color');
+  }
+}
+
+.ibo-quick-create, .ibo-global-search{
+  border-left: $ibo-high-contrast--thin-border;
+  border-right: $ibo-high-contrast--thin-border;
+}
+
+.ibo-popover-menu{
+  border: $ibo-high-contrast--thin-border;
+}
+
+.ibo-popover-menu--item:not(:last-child){
+  border-bottom: $ibo-high-contrast--thin-border;
+}
+
+.ibo-welcome-popup--stack-item.ibo-is-active {
+  border-width: 2px;
+}

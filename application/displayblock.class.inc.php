@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -706,7 +706,7 @@ class DisplayBlock
 				if ($bDoSearch)
 				{
 					// Keep the table_id identifying this table if we're performing a search
-					$sTableId = utils::ReadParam('_table_id_', null, false, 'raw_data');
+					$sTableId = utils::ReadParam('_table_id_', null, false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 					if ($sTableId != null)
 					{
 						$aExtraParams['table_id'] = $sTableId;

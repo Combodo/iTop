@@ -1,23 +1,26 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
 namespace Combodo\iTop\CoreUpdate\Controller;
 
+require_once APPROOT.'setup/runtimeenv.class.inc.php';
 
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\CoreUpdate\Service\CoreUpdater;
 use Combodo\iTop\DBTools\Service\DBToolsUtils;
 use Combodo\iTop\FilesInformation\Service\FileNotExistException;
 use Combodo\iTop\FilesInformation\Service\FilesInformation;
+use Config;
 use ContextTag;
 use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
+use RunTimeEnvironment;
 use SecurityException;
 use SetupUtils;
 use utils;
@@ -255,6 +258,30 @@ class AjaxController extends Controller
 			$iResponseCode = 500;
 		}
 
+		$this->DisplayJSONPage($aParams, $iResponseCode);
+	}
+
+	function OperationRebuildToolkitEnvironment()
+	{
+		$sTransactionId = utils::GetNewTransactionId();
+		$aParams = [];
+		$aParams['sTransactionId'] = $sTransactionId;
+		$aParams['bStatus'] = true;
+
+		$iResponseCode = 200;
+		try {
+			$aParams['sAjaxURL'] = utils::GetAbsoluteUrlAppRoot().'/pages/UI.php';
+			$oConfig = new Config(APPCONF.'production'.'/'.ITOP_CONFIG_FILE);
+			$oEnvironment = new RunTimeEnvironment('production');
+			$oEnvironment->WriteConfigFileSafe($oConfig);
+			$oEnvironment->CompileFrom('production');
+		}
+		catch (Exception $e) {
+			IssueLog::Error('RebuildToolkitEnvironment: '.$e->getMessage());
+			$aParams['sError'] = $e->getMessage();
+			$iResponseCode = 500;
+			$aParams['bStatus'] = false;
+		}
 		$this->DisplayJSONPage($aParams, $iResponseCode);
 	}
 

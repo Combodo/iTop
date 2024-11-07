@@ -47,7 +47,7 @@ Make sure you have reproduced the bug with all browser extensions and add-ons di
 
 ### Try the latest version of jQuery
 
-Bugs in old versions of jQuery may have already been fixed. In order to avoid reporting known issues, make sure you are always testing against the [latest build](http://code.jquery.com/jquery.js).
+Bugs in old versions of jQuery may have already been fixed. In order to avoid reporting known issues, make sure you are always testing against the [latest jQuery version](https://releases.jquery.com/jquery/).
 
 ### Try an older version of jQuery
 
@@ -55,7 +55,7 @@ Sometimes, bugs are introduced in newer versions of jQuery that do not exist in 
 
 ### Reduce, reduce, reduce!
 
-When you are experiencing a problem, the most useful thing you can possibly do is to [reduce your code](http://webkit.org/quality/reduction.html) to the bare minimum required to reproduce the issue. This makes it *much* easier to isolate and fix the offending code. Bugs that are reported without reduced test cases take on average 9001% longer to fix than bugs that are submitted with them, so you really should try to do this if at all possible.
+When you are experiencing a problem, the most useful thing you can possibly do is to [reduce your code](https://webkit.org/test-case-reduction/) to the bare minimum required to reproduce the issue. This makes it *much* easier to isolate and fix the offending code. Bugs that are reported without reduced test cases take on average 9001% longer to fix than bugs that are submitted with them, so you really should try to do this if at all possible.
 
 ## jQuery Core Style Guide
 
@@ -64,7 +64,7 @@ See: [jQuery Core Style Guide](http://docs.jquery.com/JQuery_Core_Style_Guidelin
 ## Tips For Bug Patching
 
 
-### Environment: localhost 
+### Environment: localhost
 
 To test the plugin you will need:
 
@@ -84,28 +84,28 @@ Change directory to your web root directory, whatever that might be:
 $ cd /path/to/your/www/root/
 ```
 
-Clone your plugin fork to work locally
+Clone your plugin fork to work locally:
 
 ```bash
 $ git clone git@github.com:username/jquery-migrate.git
 ```
 
-Change directory to the newly created dir jquery-migrate/
+Change directory to the newly created dir `jquery-migrate/`:
 
 ```bash
 $ cd jquery-migrate
 ```
 
-Add the jquery-migrate master as a remote. I label mine "upstream"
+Add the jquery-migrate repository as a remote; I label mine "upstream":
 
 ```bash
 $ git remote add upstream git://github.com/jquery/jquery-migrate.git
 ```
 
-Get in the habit of pulling in the "upstream" master to stay up to date as jQuery receives new commits
+Get in the habit of pulling in the "upstream" `main` branch to stay up to date as jQuery Migrate receives new commits:
 
 ```bash
-$ git pull upstream master
+$ git pull upstream main
 ```
 
 Run the Grunt tools:
@@ -121,14 +121,14 @@ Success! You just built and tested jQuery!
 
 ### Fix a bug from a ticket filed at bugs.jquery.com:
 
-**NEVER write your patches to the master branch**
+**NEVER write your patches to the `main` branch**
 
 **ALWAYS USE A "TOPIC" BRANCH!** Like so (#### = the ticket #)...
 
-Make sure you start with your up-to-date master:
+Make sure you start with your up-to-date `main` branch:
 
 ```bash
-$ git checkout master
+$ git checkout main
 ```
 
 Create and checkout a new branch that includes the ticket #
@@ -179,16 +179,16 @@ Then, push your branch with the bug fix commits to your github fork
 $ git push origin -u bug_####
 ```
 
-Before you tackle your next bug patch, return to the master:
+Before you tackle your next bug patch, return to the `main` branch:
 
 ```bash
-$ git checkout master
+$ git checkout main
 ```
 
 
 ### Test Suite Tips...
 
-By default the plugin runs against the current (jquery-git WIP) version of jQuery. You can select a different version by specifying it in the URL. Files are always retrieved from code.jquery.com. 
+By default the plugin runs against the current (jquery-3.x-git WIP) version of jQuery. You can select a different version by specifying it in the URL. Files are always retrieved from code.jquery.com or releases.jquery.com (the latter for development versions).
 
 Example:
 

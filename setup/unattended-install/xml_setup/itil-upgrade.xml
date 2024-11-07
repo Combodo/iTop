@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<installation>
+  <mode>upgrade</mode>
+  <preinstall>
+  </preinstall>
+  <source_dir>datamodels/2.x/</source_dir>
+  <datamodel_version>2.7.0</datamodel_version>
+  <previous_configuration_file>/var/www/html/iTop/conf/production/config-itop.php</previous_configuration_file>
+  <extensions_dir>extensions</extensions_dir>
+  <target_env>production</target_env>
+  <workspace_dir></workspace_dir>
+  <database>
+    <server></server>
+    <user></user>
+    <pwd></pwd>
+    <name></name>
+    <db_tls_enabled></db_tls_enabled>
+    <db_tls_ca></db_tls_ca>
+    <prefix></prefix>
+  </database>
+  <url></url>
+  <graphviz_path>/usr/bin/dot</graphviz_path>
+  <admin_account>
+    <user></user>
+    <pwd></pwd>
+    <language></language>
+  </admin_account>
+  <language></language>
+  <selected_modules type="array">
+  </selected_modules>
+  <selected_extensions type="array">
+  </selected_extensions>
+  <sample_data>1</sample_data>
+  <old_addon></old_addon>
+  <options type="array"/>
+  <mysql_bindir></mysql_bindir>
+  <selected_modules type="array">
+  </selected_modules>
+  <selected_extensions type="array">
+    <item>itop-config-mgmt-datacenter</item>
+    <item>itop-config-mgmt-end-user</item>
+    <item>itop-config-mgmt-storage</item>
+    <item>itop-config-mgmt-virtualization</item>
+    <item>itop-service-mgmt-enterprise</item>
+    <item>itop-ticket-mgmt-itil</item>
+    <item>itop-ticket-mgmt-itil-user-request</item>
+    <item>itop-ticket-mgmt-itil-incident</item>
+    <item>itop-ticket-mgmt-itil-enhanced-portal</item>
+    <item>itop-change-mgmt-itil</item>
+    <item>itop-config-mgmt-core</item>
+    <item>itop-kown-error-mgmt</item>
+  </selected_extensions>
+</installation>

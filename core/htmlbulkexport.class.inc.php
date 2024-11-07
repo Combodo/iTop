@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2023 Combodo SARL
+// Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
 /**
  * Bulk export: HTML export
  *
- * @copyright   Copyright (C) 2023 Combodo SARL
+ * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -129,6 +129,7 @@ class HTMLBulkExport extends TabularBulkExport
 		$this->OptimizeColumnLoad($oSet);
 
 		$sFirstAlias = $this->oSearch->GetClassAlias();
+		$sClass = $this->oSearch->GetClass();
 
 		$iCount = 0;
 		$sData = '';
@@ -141,7 +142,7 @@ class HTMLBulkExport extends TabularBulkExport
 			$sHilightClass = '';
 			if ($oMainObj)
 			{
-				$sHilightClass = $aRow[$sFirstAlias]->GetHilightClass();
+				$sHilightClass = MetaModel::GetHilightClass($sClass, $aRow[$sFirstAlias]);
 			}
 			if ($sHilightClass != '')
 			{

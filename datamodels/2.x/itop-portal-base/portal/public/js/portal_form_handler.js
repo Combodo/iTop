@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -67,8 +67,8 @@ $(function()
 		// revert other modifications here
 		_destroy: function()
 		{
-			this.element
-			.removeClass('portal_form_handler');
+			this._unregisterBlockers();
+			this.element.removeClass('portal_form_handler');
 		},
 		// _setOptions is called with a hash of all options that are changing
 		// always refresh when changing options
@@ -252,7 +252,8 @@ $(function()
 										}
 										else
 										{
-											oHelpBlock.append($('<p>' + sMessageContent + '</p>'));
+											// transform error message in pure text (to avoid XSS)
+											oHelpBlock.append($('<p>').text(sMessageContent));
 										}
 									}
 								}

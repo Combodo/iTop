@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -62,6 +62,25 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		}
 
 		return $result;
+	}
+
+	/**
+	 * @param cmdbAbstractObject $oObject
+	 *
+	 * @return bool
+	 * @since 3.2.1 N°7534
+	 */
+	public static function IsAttachmentAllowedForObject(cmdbAbstractObject $oObject) : bool
+	{
+		$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
+		foreach ($aAllowedClasses as $sAllowedClass)
+		{
+			if ($oObject instanceof $sAllowedClass)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -267,6 +286,23 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		}
 	}
 
+	/**
+	 *
+	 * @see ObjectFormManager::FinalizeAttachments() for the portal version
+	 *
+	 * @param $oObject
+	 * @param $oChange
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	protected static function UpdateAttachments($oObject, $oChange = null)
 	{
 		self::$m_bIsModified = false;
@@ -754,8 +790,9 @@ class TriggerOnAttachmentDownload extends TriggerOnAttributeBlobDownload
 			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
+			"complementary_name_attcode" => ['finalclass', 'complement'],
 			"state_attcode" => "",
-			"reconc_keys" => array('description'),
+			"reconc_keys" => ['description'],
 			"db_table" => "priv_trigger_onattdownload",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",

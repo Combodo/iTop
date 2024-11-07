@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -73,7 +73,8 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery model',
-	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_id+' => 'This is required for Tickets handling.
+The delivery model specifies the teams to which tickets can be assigned.',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery model name',
 ));
 
@@ -477,9 +478,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:DeliveryModel' => 'Delivery Model',
 	'Class:DeliveryModel+' => '',
 	'Class:DeliveryModel/Attribute:name' => 'Name',
-	'Class:DeliveryModel/Attribute:name+' => '',
+	'Class:DeliveryModel/Attribute:name+' => 'Don\'t forget to add teams to this delivery model',
 	'Class:DeliveryModel/Attribute:org_id' => 'Organization',
-	'Class:DeliveryModel/Attribute:org_id+' => '',
+	'Class:DeliveryModel/Attribute:org_id+' => 'Usually the organization that provides the services',
 	'Class:DeliveryModel/Attribute:organization_name' => 'Organization Name',
 	'Class:DeliveryModel/Attribute:organization_name+' => 'Common name',
 	'Class:DeliveryModel/Attribute:description' => 'Description',

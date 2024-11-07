@@ -43,12 +43,21 @@ $(function()
 		{
 			var me = this;
 
+			// Check if popover menu is already initialized
+			if ($(this.js_selectors.menu_toggler).hasClass('ibo-is-loaded') === true) {
+				return;
+			}
+
 			// Important: For now, the popover menu is manually instantiated even though the PHP NewsroomMenu class inherits PopoverMenu because the jQuery widget doesn't. We might refactor this in the future.
 			$(me.element).popover_menu({'toggler': this.js_selectors.menu_toggler});
 			$(this.js_selectors.menu_toggler).on('click', function (oEvent) {
 				var oEventTarget = $(oEvent.target);
 				var aEventTargetPos = oEventTarget.position();
 				var aEventTargetOffset = oEventTarget.offset();
+
+				// N°2039 - When opening the menu, refresh messages without waiting for the providers TTL to avoid news not being visible even though they have been created
+				me.clearCache();
+				me._getAllMessages();
 
 				$iHeight = Math.abs(aEventTargetOffset.top-100);
 				$(me.element).css({
@@ -128,8 +137,8 @@ $(function()
 		     .done(function(oJSONData) {
 			     me._cacheData(idx, oJSONData);
 		    	 me._onMessagesFetched(idx, oJSONData);
-		    }).error(function() {
-		    	 console.warn('Newsroom: failed to fetch data from the web for provider '+idx+' url: '+me.options.providers[idxProvider].fetch_url);
+		    }).fail(function() {
+				CombodoJSConsole.Warn('Newsroom: failed to fetch data from the web for provider '+idx+' url: '+me.options.providers[idxProvider].fetch_url);
 		    	 me._cacheData(idx, []);
 		    	 me._onMessagesFetched(idx, []);		    	
 		    });
@@ -230,15 +239,13 @@ $(function()
 		},
 		_buildMultipleShowAllMessagesItem: function(aUnreadMessagesByProvider)
 		{
-			var sNewMessageIndicator = '<div class="ibo-navigation-menu--notifications--item--new-message-indicator"></div>';
-
 			var sUnreadMessages = ''
 			for(k in this.options.providers) {
 				var sExtraMessages = '';
 				if (aUnreadMessagesByProvider[k] > 0) {
 					sExtraMessages = ' <span class="ibo-navigation-menu--notifications-show-all-multiple--counter">(' + aUnreadMessagesByProvider[k] + ')</span>'
 				}
-				sUnreadMessages += '<a class="ibo-popover-menu--item" data-provider-id="' + k + '" href="' + this.options.providers[k].view_all_url + '" target="' + this.options.providers[k].target + '">' + sNewMessageIndicator + this.options.providers[k].label + sExtraMessages + '</a>';
+				sUnreadMessages += '<a class="ibo-popover-menu--item" data-provider-id="' + k + '" href="' + this.options.providers[k].view_all_url + '" target="' + this.options.providers[k].target + '">' + this.options.providers[k].label + sExtraMessages + '</a>';
 			}
 			return '<a class="ibo-popover-menu--item ibo-navigation-menu--notifications-show-all-multiple" data-role="ibo-navigation-menu--notifications-show-all-multiple" href="#">'+Dict.S(this.options.labels.view_all)+'<i class="fas fas-caret-down"></i></a>' +
 				'<div class="ibo-popover-menu" data-role="ibo-popover-menu"><div class="ibo-popover-menu--section" data-role="ibo-popover-menu--section">'+sUnreadMessages+'</div></div>';
@@ -263,7 +270,7 @@ $(function()
 			{
 				var oMessage = aAllMessages[k];
 				aUnreadMessagesByProvider[oMessage.provider]++;
-				if (iCount < this.options.display_limit + 4) {
+				if (iCount < this.options.display_limit) {
 					var sMessageItem = this._buildMessageItems(oMessage.id, oMessage.text, oMessage.image, oMessage.start_date, oMessage.provider, oMessage.url, oMessage.target, oMessage.priority, oConverter)
 					sMessageSection += sMessageItem;
 				}
@@ -383,7 +390,7 @@ $(function()
 			}
 			catch(e)
 			{
-				console.warn('Newsroom: Failed to store newsroom messages into local storage !! reason: ' + e);
+				CombodoJSConsole.Warn('Newsroom: Failed to store newsroom messages into local storage. Reason: ' + e);
 				bSuccess = false;
 			}
 			return bSuccess;
@@ -406,7 +413,7 @@ $(function()
 			}
 			catch(e)
 			{
-				console.warn('Newsroom: Failed to fetch newsroom messages from local storage !! reason: '+e);
+				CombodoJSConsole.Warn('Newsroom: Failed to fetch newsroom messages from local storage. Reason: '+e);
 				this.clearCache(idxProvider);
 				return null;
 			}

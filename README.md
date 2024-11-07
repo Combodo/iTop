@@ -90,6 +90,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Dejin, Bie (a.k.a [@bdejin](https://github.com/bdejin))
 - Dvořák, Lukáš
 - Goethals, Stefan
+- Giuva, Vincenzo Katriel (a.k.a [@DarkNight97boss](https://github.com/DarkNight97boss))
 - Gumble, David
 - Ji, Leeb (冀利斌) (a.k.a [@chileeb](https://github.com/chileeb))
 - Kaltefleiter, Lars (a.k.a [@larhip](https://www.github.com/larhip))

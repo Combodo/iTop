@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes/>
   <user_rights>
     <groups>
@@ -146,6 +146,7 @@
           <class id="SynchroDataSource"/>
           <class id="SynchroAttribute"/>
           <class id="SynchroReplica"/>
+          <class id="SynchroLog"/>
         </classes>
       </group>
       <group id="History" _delta="define">
@@ -179,6 +180,7 @@
           <class id="SynchroDataSource"/>
           <class id="SynchroAttribute"/>
           <class id="SynchroReplica"/>
+          <class id="SynchroLog"/>
         </classes>
       </group>
     </groups>

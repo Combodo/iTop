@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -15,6 +15,8 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 
 require_once(APPROOT.'core/tar-itop.class.inc.php');
 
@@ -265,35 +267,45 @@ class DBBackup
 			SetupUtils::copydir($sExtraDir, $sFile);
 			$aRet[] = $sFile;
 		}
+
+		$aExtraFiles = [];
 		if (MetaModel::GetConfig() !== null) // During unattended install config file may be absent
 		{
 			$aExtraFiles = MetaModel::GetModuleSetting('itop-backup', 'extra_files', []);
-			foreach($aExtraFiles as $sExtraFileOrDir)
+		}
+
+		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iBackupExtraFilesExtension::class) as $sExtensionClass)
+		{
+			/** @var iBackupExtraFilesExtension $oExtensionInstance */
+			$oExtensionInstance = new $sExtensionClass();
+			$aExtraFiles = array_merge($aExtraFiles, $oExtensionInstance->GetExtraFilesRelPaths());
+		}
+
+		foreach($aExtraFiles as $sExtraFileOrDir)
+		{
+			if(!file_exists(APPROOT.'/'.$sExtraFileOrDir)) {
+				continue; // Ignore non-existing files
+			}
+
+			$sExtraFullPath = utils::RealPath(APPROOT.'/'.$sExtraFileOrDir, APPROOT);
+			if ($sExtraFullPath === false)
 			{
-				if(!file_exists(APPROOT.'/'.$sExtraFileOrDir)) {
-					continue; // Ignore non-existing files
-				}
-	
-				$sExtraFullPath = utils::RealPath(APPROOT.'/'.$sExtraFileOrDir, APPROOT);
-				if ($sExtraFullPath === false)
-				{
-					throw new Exception("Backup: Aborting, resource '$sExtraFileOrDir'. Considered as UNSAFE because not inside the iTop directory.");
-				}
-				if (is_dir($sExtraFullPath))
-				{
-					$sFile = $sTmpFolder.'/'.$sExtraFileOrDir;
-					$this->LogInfo("backup: adding directory '$sExtraFileOrDir'");
-					SetupUtils::copydir($sExtraFullPath, $sFile);
-					$aRet[] = $sFile;
-				}
-				elseif (file_exists($sExtraFullPath))
-				{
-					$sFile = $sTmpFolder.'/'.$sExtraFileOrDir;
-					$this->LogInfo("backup: adding file '$sExtraFileOrDir'");
-					@mkdir(dirname($sFile), 0755, true);
-					copy($sExtraFullPath, $sFile);
-					$aRet[] = $sFile;
-				}
+				throw new Exception("Backup: Aborting, resource '$sExtraFileOrDir'. Considered as UNSAFE because not inside the iTop directory.");
+			}
+			if (is_dir($sExtraFullPath))
+			{
+				$sFile = $sTmpFolder.'/'.$sExtraFileOrDir;
+				$this->LogInfo("backup: adding directory '$sExtraFileOrDir'");
+				SetupUtils::copydir($sExtraFullPath, $sFile);
+				$aRet[] = $sFile;
+			}
+			elseif (file_exists($sExtraFullPath))
+			{
+				$sFile = $sTmpFolder.'/'.$sExtraFileOrDir;
+				$this->LogInfo("backup: adding file '$sExtraFileOrDir'");
+				@mkdir(dirname($sFile), 0755, true);
+				copy($sExtraFullPath, $sFile);
+				$aRet[] = $sFile;
 			}
 		}
 		if (!$bSkipSQLDumpForTesting)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -155,7 +155,7 @@ const CombodoBackofficeToolbox = {
 			} else {
 				oCodeElements.each(function (iIdx, oElem) {
 					hljs.highlightBlock(oElem);
-					$(oElem).parent().addClass('ibo-hljs-container');
+					$(oElem).parent().addClass('common-hljs-container');
 				});
 			}
 		}
@@ -168,7 +168,7 @@ const CombodoBackofficeToolbox = {
 			} else {
 				oCodeElements.each(function (iIdx, oElem) {
 					hljs.highlightBlock(oElem);
-					$(oElem).parent().addClass('ibo-hljs-container');
+					$(oElem).parent().addClass('common-hljs-container');
 				});
 			}
 		}
@@ -368,7 +368,7 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 	}
 	// Merge external options with confirmation modal default options
 	oOptions = $.extend(true, {
-		title: Dict.S('UI:Modal:DefaultConfirmationTitle'),
+		title: Dict.S('UI:Modal:Confirmation:DefaultTitle'),
 		content: '',
 		do_not_show_again_pref_key: null,
 		callback_on_confirm: null,

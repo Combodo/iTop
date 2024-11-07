@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2017-2023 Combodo SARL
+// Copyright (C) 2017-2024 Combodo SAS
 //
 // This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * iTop Hub Launch Page
  * Collect the information to be posted to iTopHub
  *
- * @copyright Copyright (c) 2017-2023 Combodo SARL
+ * @copyright Copyright (c) 2017-2024 Combodo SAS
  * @license http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -266,6 +266,7 @@ try {
 	require_once('hubconnectorpage.class.inc.php');
 
 	require_once(APPROOT.'/application/startup.inc.php');
+	require_once('TokenValidation.php');
 
 	$sTargetRoute = utils::ReadParam('target', ''); // ||browse_extensions|deploy_extensions|
 
@@ -281,13 +282,23 @@ try {
 
 	switch ($sTargetRoute) {
 		case 'inform_after_setup':
-			// Hidden IFRAME at the end of the setup
-			$oPage = new NiceWebPage('');
-			$aDataToPost = MakeDataToPost($sTargetRoute);
-			$oPage->add('<form id="hub_launch_form" action="'.$sHubUrlStateless.'" method="post">');
-			$oPage->add('<input type="hidden" name="json" value="'.utils::EscapeHtml(json_encode($aDataToPost)).'">');
-			$oPage->add_ready_script('$("#hub_launch_form").submit();');
-			break;
+		// Hidden IFRAME at the end of the setup
+		require_once (APPROOT.'/application/ajaxwebpage.class.inc.php');
+
+        $sParamToken = utils::ReadParam('setup_token');
+        $oTokenValidation = new TokenValidation();
+        $bIsTokenValid = $oTokenValidation->isSetupTokenValid($sParamToken);
+        if (UserRights::IsAdministrator() || $bIsTokenValid) {
+	        $oPage = new NiceWebPage('');
+	        $aDataToPost = MakeDataToPost($sTargetRoute);
+	        $oPage->add('<form id="hub_launch_form" action="'.$sHubUrlStateless.'" method="post">');
+	        $oPage->add('<input type="hidden" name="json" value="'.utils::EscapeHtml(json_encode($aDataToPost)).'">');
+	        $oPage->add_ready_script('$("#hub_launch_form").submit();');
+        } else {
+            IssueLog::Error('TokenValidation failed on inform_after_setup page');
+            throw new Exception("Not allowed");
+        }
+		break;
 
 		default:
 			// All other cases, special "Hub like" web page

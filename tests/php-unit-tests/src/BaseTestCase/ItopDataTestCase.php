@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -127,8 +127,20 @@ abstract class ItopDataTestCase extends ItopTestCase
 		}
 		if (static::CREATE_TEST_ORG)
 		{
-			$this->CreateTestOrganization();
+			// Create a specific organization for the tests
+			$this->iTestOrgId = $this->GivenObjectInDB('Organization', [
+			    'name' => 'UnitTestOrganization',
+			]);
 		}
+
+		$oConfig = MetaModel::GetConfig();
+		if ($oConfig->GetEncryptionLibrary() != DEFAULT_ENCRYPTION_LIB
+			&& $oConfig->GetEncryptionKey() == DEFAULT_ENCRYPTION_KEY) {
+			// Config file is corrupted, let's fix it
+			$oConfig->SetEncryptionKey("6eb9d9afa3ee0fbcebe622a33bf57aaeafb7c37998fd24c403c2522c2d60117f");
+		}
+		// Align the PHP executable with the one used to launch the whole test process
+		$oConfig->Set('php_path', PHP_BINARY);
 	}
 
 	/**
@@ -139,6 +151,10 @@ abstract class ItopDataTestCase extends ItopTestCase
 		static::SetNonPublicStaticProperty(\cmdbAbstractObject::class, 'aObjectsAwaitingEventDbLinksChanged', []);
 		\cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
 
+		// disconnection before object deletions. make sure to have enough rights to proceed (especially with user object)
+		if (UserRights::IsLoggedIn()) {
+			UserRights::Logoff();
+		}
 		if (static::USE_TRANSACTION) {
 			$this->debug("ROLLBACK !!!");
 			CMDBSource::Query('ROLLBACK');
@@ -163,10 +179,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 		// As soon as a rollback has been performed, each object memoized should be discarded
 		CMDBObject::SetCurrentChange(null);
 
-		// Leave the place clean
-		if (UserRights::IsLoggedIn()) {
-			UserRights::Logoff();
-		}
 		$this->SetNonPublicStaticProperty(UserRights::class, 'm_aCacheUsers', []); // we could have cached rollbacked instances
 		if ($this->bIsUsingSilo) {
 			$this->ResetMetaModelQueyCacheGetObject();
@@ -900,59 +912,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 		return $oObject;
 	}
 
-	/**
-	 * Check or Display the CI list of a Ticket.
-	 *
-	 * @param Ticket $oTicket
-	 * @param array $aWaitedCIList { iCIId => sImpactCode }
-	 *
-	 * @throws Exception
-	 */
-	protected function CheckFunctionalCIList($oTicket, $aWaitedCIList = array())
-	{
-		$this->debug("\nResulting functionalcis_list {$oTicket->Get('ref')} ({$oTicket->Get('functionalcis_list')->Count()}):");
-		foreach ($oTicket->Get('functionalcis_list') as $oLnk)
-		{
-			$this->debug($oLnk->Get('functionalci_name')." => ".$oLnk->Get('impact_code')."");
-			$iId = $oLnk->Get('functionalci_id');
-			if (!empty($aWaitedCIList))
-			{
-				$this->assertArrayHasKey($iId, $aWaitedCIList);
-				$this->assertEquals($aWaitedCIList[$iId], $oLnk->Get('impact_code'));
-			}
-		}
-	}
-
-	/**
-	 * Check or Display the Contact list of a DBObject (having a contacts_list).
-	 * Can also control other attributes of the link.
-	 *
-	 * @param Ticket $oTicket
-	 * @param array $aWaitedContactList { iContactId => array(attcode => value) }
-	 *
-	 * @throws Exception
-	 */
-	protected function CheckContactList($oTicket, $aWaitedContactList = array())
-	{
-		$this->debug("\nResulting contacts_list {$oTicket->Get('ref')} ({$oTicket->Get('contacts_list')->Count()}):");
-		foreach ($oTicket->Get('contacts_list') as $oLnk)
-		{
-			$this->debug($oLnk->Get('contact_id_friendlyname')." => ".$oLnk->Get('role_code'));
-			$iId = $oLnk->Get('contact_id');
-			if (!empty($aWaitedContactList))
-			{
-				$this->assertArrayHasKey($iId, $aWaitedContactList);
-				foreach ($aWaitedContactList[$iId] as $sAttCode => $oValue)
-				{
-					if (MetaModel::IsValidAttCode(get_class($oTicket), $sAttCode))
-					{
-						$this->assertEquals($oValue, $oLnk->Get($sAttCode));
-					}
-				}
-			}
-		}
-	}
-
 	protected function CreateTestOrganization()
 	{
 		// Create a specific organization for the tests
@@ -1038,5 +997,446 @@ abstract class ItopDataTestCase extends ItopTestCase
 		unlink($sTmpFileName);
 
 		return $ret;
+	}
+
+
+	protected function DBInsertSingleTable($sTableClass, $aValues, $iKey = 0)
+	{
+		$sTable = MetaModel::DBGetTable($sTableClass);
+		// Abstract classes or classes having no specific attribute do not have an associated table
+		if ($sTable == '') {
+			return false;
+		}
+
+		// fields in first array, values in the second
+		$aFieldsToWrite = array();
+		$aValuesToWrite = array();
+
+		if (!empty($iKey) && ($iKey >= 0)) {
+			// Add it to the list of fields to write
+			$aFieldsToWrite[] = '`'.MetaModel::DBGetKey($sTableClass).'`';
+			$aValuesToWrite[] = CMDBSource::Quote($iKey);
+		}
+
+		$aHierarchicalKeys = array();
+
+		foreach (MetaModel::ListAttributeDefs($sTableClass) as $sAttCode => $oAttDef) {
+			// Skip this attribute if not defined in this table
+			if ((!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode) && !$oAttDef->CopyOnAllTables())
+				|| $oAttDef->IsExternalField()) {
+				continue;
+			}
+			if ($oAttDef->IsWritable() && !$oAttDef->IsNullAllowed() && !array_key_exists($sAttCode, $aValues) && $oAttDef->IsNull($oAttDef->GetDefaultValue())) {
+				throw new Exception("GivenObjectInDB('$sTableClass'), mandatory attribute '$sAttCode' is missing");
+			}
+			$currentValue = array_key_exists($sAttCode, $aValues) ? $aValues[$sAttCode] : $oAttDef->GetDefaultValue();
+			$aAttColumns = $oAttDef->GetSQLValues($currentValue);
+			foreach ($aAttColumns as $sColumn => $sValue) {
+				$aFieldsToWrite[] = "`$sColumn`";
+				$aValuesToWrite[] = CMDBSource::Quote($sValue);
+			}
+			if ($oAttDef->IsHierarchicalKey()) {
+				$aHierarchicalKeys[$sAttCode] = $oAttDef;
+			}
+		}
+
+		if (count($aValuesToWrite) == 0) {
+			return false;
+		}
+
+		if (count($aHierarchicalKeys) > 0) {
+			foreach ($aHierarchicalKeys as $sAttCode => $oAttDef) {
+				$currentValue = isset($aValues[$sAttCode]) ? $aValues[$sAttCode] : $oAttDef->GetDefaultValue();
+				$aHKValues = MetaModel::HKInsertChildUnder($currentValue, $oAttDef, $sTable);
+				$aFieldsToWrite[] = '`'.$oAttDef->GetSQLRight().'`';
+				$aValuesToWrite[] = $aHKValues[$oAttDef->GetSQLRight()];
+				$aFieldsToWrite[] = '`'.$oAttDef->GetSQLLeft().'`';
+				$aValuesToWrite[] = $aHKValues[$oAttDef->GetSQLLeft()];
+			}
+		}
+		$sInsertSQL = "INSERT INTO `$sTable` (".join(',', $aFieldsToWrite).') VALUES ('.join(', ', $aValuesToWrite).')';
+		$iNewKey = CMDBSource::InsertInto($sInsertSQL);
+		// Note that it is possible to have a key defined here, and the autoincrement expected, this is acceptable in a non root class
+		if (empty($iKey)) {
+			// Take the autonumber
+			$iKey = "$iNewKey";
+		}
+
+		return $iKey;
+	}
+
+	/**
+	 * @param string $sClass
+	 * @param array $aParams
+	 *
+	 * @return DBObject
+	 * @throws Exception
+	 */
+	protected function GivenObject(string $sClass, array $aParams): DBObject
+	{
+		$oMyObj = MetaModel::NewObject($sClass);
+		foreach ($aParams as $sAttCode => $oValue)
+		{
+			$oMyObj->Set($sAttCode, $oValue);
+		}
+
+		return $oMyObj;
+	}
+
+	/**
+	 * @param string $sClass
+	 * @param array $aValues
+	 *
+	 * @return DBObject
+	 * @throws Exception
+	 */
+	protected function GivenObjectInDB($sClass, $aValues)
+	{
+		// Check and complete the values
+		foreach ($aValues as $sAttCode => $oValue) {
+			if (MetaModel::IsValidAttCode($sClass, $sAttCode) === false) {
+				throw new \Exception("GivenObjectInDB('$sClass'), invalid attribute code '$sAttCode'");
+			}
+		}
+		$sOrgIdAttCode = $sClass::MapContextParam('org_id');
+		if ($sOrgIdAttCode !== null) {
+			if (!isset($aValues[$sOrgIdAttCode])) {
+				$aValues[$sOrgIdAttCode] = $this->getTestOrgId();
+			}
+		}
+		$aValues['finalclass'] = $sClass;
+
+		$sRootClass = MetaModel::GetRootClass($sClass);
+
+		// First query built upon on the root class, because the ID must be created first
+		$iKey = $this->DBInsertSingleTable($sRootClass, $aValues);
+
+		// Then do the leaf class, if different from the root class
+		if ($sClass != $sRootClass) {
+			$this->DBInsertSingleTable($sClass, $aValues, $iKey);
+		}
+
+		// Then do the other classes
+		foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
+			if ($sParentClass == $sRootClass) {
+				continue;
+			}
+			$this->DBInsertSingleTable($sParentClass, $aValues, $iKey);
+		}
+
+		// Then cope with the links
+		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+			if (!$oAttDef->IsLinkSet()) {
+				continue;
+			}
+			if (!isset($aValues[$sAttCode])) {
+				continue;
+			}
+
+			$sLinkClass = $oAttDef->GetLinkedClass();
+			$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
+
+			if ($aValues[$sAttCode] instanceof \DBObjectSet) {
+				$oSet = $aValues[$sAttCode];
+				$oSet->Rewind();
+				while ($oLnk = $oSet->Fetch()) {
+					$aLnkValues = [];
+					foreach (MetaModel::ListAttributeDefs($sLinkClass) as $sLnkAttCode => $oLnkAttDef) {
+						if ($sLnkAttCode == $sExtKeyToMe) {
+							$aLnkValues[$sLnkAttCode] = $iKey;
+						} else {
+							$aLnkValues[$sLnkAttCode] = $oLnk->Get($sLnkAttCode);
+						}
+					}
+					$this->GivenObjectInDB($sLinkClass, $aLnkValues);
+				}
+			} elseif (is_array($aValues[$sAttCode])) {
+				foreach ($aValues[$sAttCode] as $sLnkValues) {
+					$aLnkKeyValuePairs = explode(';', $sLnkValues);
+					$aLnkValues = [];
+					foreach ($aLnkKeyValuePairs as $sLnkKeyValue) {
+						$iSep = strpos($sLnkKeyValue, ':');
+						if ($iSep === false) {
+							throw new \Exception("GivenObjectInDB($sClass), unexpected value format for $sAttCode, missing ':' in '$sLnkKeyValue'");
+						}
+						$sLnkAttCode = substr($sLnkKeyValue, 0, $iSep);
+						$sLnkValue = substr($sLnkKeyValue, $iSep + 1);
+						$aLnkValues[$sLnkAttCode] = $sLnkValue;
+					}
+					foreach (MetaModel::ListAttributeDefs($sLinkClass) as $sLnkAttCode => $oLnkAttDef) {
+						if ($sLnkAttCode == $sExtKeyToMe) {
+							$aLnkValues[$sLnkAttCode] = $iKey;
+						}
+					}
+					$this->GivenObjectInDB($sLinkClass, $aLnkValues);
+				}
+			} else {
+				throw new \Exception("createObject($sClass), unexpected value type for $sAttCode");
+			}
+		}
+
+		return $iKey;
+	}
+
+	/**
+	 * Create a Farm in database
+	 *
+	 * @param int $iNum
+	 * @param string $sRedundancy
+	 *
+	 * @throws Exception
+	 */
+	protected function GivenFarmInDB($iNum, $sRedundancy = '1'): string
+	{
+		$sName = 'Farm_'.$iNum;
+		$sId = $this->GivenObjectInDB('Farm', [
+			'name'       => $sName,
+			'org_id'     => $this->getTestOrgId(),
+			'redundancy' => $sRedundancy,
+		]);
+		$this->debug("Created $sName ($sId) redundancy $sRedundancy");
+
+		return $sId;
+	}
+
+	/**
+	 * Create an Application Solution in database
+	 *
+	 * @param int $iNum
+	 * @param string $sRedundancy
+	 *
+	 * @throws Exception
+	 */
+	protected function GivenApplicationSolutionInDB($iNum, $sRedundancy = '1'): string
+	{
+		$sName = 'ApplicationSolution_'.$iNum;
+		$sId = $this->GivenObjectInDB('ApplicationSolution', [
+			'name'       => $sName,
+			'org_id'     => $this->getTestOrgId(),
+			'redundancy' => $sRedundancy,
+		]);
+		$this->debug("Created $sName ($sId) redundancy $sRedundancy");
+
+		return $sId;
+	}
+
+	protected function GivenServerInDB($iNum, $iRackUnit = null): string
+	{
+		$sName = 'Server_'.$iNum;
+		$sId = $this->GivenObjectInDB('Server', [
+			'name'   => $sName,
+			'org_id' => $this->getTestOrgId(),
+			'nb_u'   => $iRackUnit,
+		]);
+		$this->debug("Created $sName ($sId)");
+
+		return $sId;
+	}
+
+	protected function GivenHypervisorInDB($iNum, $sServerId, $sFarmId = 0): string
+	{
+		$sName = 'Hypervisor_'.$iNum;
+		$sId = $this->GivenObjectInDB('Hypervisor', [
+			'name'      => $sName,
+			'org_id'    => $this->getTestOrgId(),
+			'server_id' => $sServerId,
+			'farm_id'   => $sFarmId,
+		]);
+		if ($sFarmId === 0) {
+			$this->debug("Created $sName ($sId) on server $sServerId");
+		} else {
+			$this->debug("Created $sName ($sId) on server $sServerId part of farm $sFarmId");
+		}
+
+		return $sId;
+	}
+
+	protected function GivenPersonInDB($iNum, $iOrgId = 0): string
+	{
+		$sName = 'Person_'.$iNum;
+		$sId = $this->GivenObjectInDB('Person', [
+			'name'       => $sName,
+			'first_name' => 'Test',
+			'org_id'     => ($iOrgId == 0 ? $this->getTestOrgId() : $iOrgId),
+		]);
+		$this->debug("Created $sName ($sId)");
+
+		return $sId;
+	}
+
+	protected function GivenLnkContactToFunctionalCIInDB($sContactId, $sCIId): string
+	{
+		$sClass = 'lnkContactToFunctionalCI';
+		$sId = $this->GivenObjectInDB($sClass, [
+			'contact_id' => $sContactId,
+			'functionalci_id' => $sCIId,
+		]);
+		$this->debug("Created $sClass::$sId linking contact $sContactId and CI $sCIId");
+
+		return $sId;
+	}
+
+	protected function GivenLnkApplicationSolutionToFunctionalCIInDB($sApplicationSolutionId, $sCIId): string
+	{
+		$sClass = 'lnkApplicationSolutionToFunctionalCI';
+		$sId = $this->GivenObjectInDB($sClass, [
+			'applicationsolution_id' => $sApplicationSolutionId,
+			'functionalci_id' => $sCIId,
+		]);
+		$this->debug("Created $sClass::$sId linking ApplicationSolution $sApplicationSolutionId and CI $sCIId");
+
+		return $sId;
+	}
+
+	protected function GivenVirtualMachineInDB($iNum, $sVirtualHostId): string
+	{
+		$sName = 'VirtualMachine_'.$iNum;
+		$sId = $this->GivenObjectInDB('VirtualMachine', [
+			'name'           => $sName,
+			'org_id'         => $this->getTestOrgId(),
+			'virtualhost_id' => $sVirtualHostId,
+		]);
+		$this->debug("Created $sName ($sId) on virtual host $sVirtualHostId");
+
+		return $sId;
+	}
+
+	protected function GivenTicketObject($iNum): \UserRequest
+	{
+		$sTitle = 'TICKET_'.$iNum;
+		$sRef = 'Ticket_'.$iNum;
+
+		/** @var \UserRequest $oTicket */
+		$oTicket = $this->GivenObject('UserRequest', [
+			'ref'         => $sRef,
+			'title'       => $sTitle,
+			'description' => 'Created for unit tests.',
+			'org_id'      => $this->getTestOrgId(),
+		]);
+		$this->debug("Created $sTitle ($sRef)");
+
+		return $oTicket;
+	}
+
+	protected function AddLnkFunctionalCIToTicketObject($sCIId, $oTicket, $sImpactCode = 'manual'): array
+	{
+		$oNewLink = $this->GivenObject('lnkFunctionalCIToTicket', [
+			'functionalci_id' => $sCIId,
+			'impact_code' => $sImpactCode,
+		]);
+
+		$oCIs = $oTicket->Get('functionalcis_list');
+		$oCIs->AddItem($oNewLink);
+		$oTicket->Set('functionalcis_list', $oCIs);
+
+		$this->debug("Added CI $sCIId to {$oTicket->Get('ref')} with {$sImpactCode}");
+
+		return array($sCIId => $sImpactCode);
+	}
+
+	protected function RemoveLnkFunctionalCIToTicketObject($sCIId, $oTicket)
+	{
+		$oCIs = $oTicket->Get('functionalcis_list');
+		foreach ($oCIs as $oLnk)
+		{
+			if ($oLnk->Get('functionalci_id') == $sCIId)
+			{
+				$sImpactCode = $oLnk->Get('impact_code');
+				$oCIs->RemoveItem($oLnk->GetKey());
+				$oTicket->Set('functionalcis_list', $oCIs);
+				$this->debug("Removed CI $sCIId from {$oTicket->Get('ref')} ({$sImpactCode})");
+
+				return;
+			}
+		}
+		$this->debug("ERROR: CI $sCIId not attached to {$oTicket->Get('ref')}");
+		$this->assertTrue(false);
+	}
+
+	protected function AddLnkContactToTicketObject($sContactId, $oTicket, $sRoleCode, $aParams = array()): array
+	{
+		$aParams['contact_id'] = $sContactId;
+		$aParams['role_code'] = $sRoleCode;
+		$oNewLink = $this->GivenObject('lnkContactToTicket', $aParams);
+
+		$oCIs = $oTicket->Get('contacts_list');
+		$oCIs->AddItem($oNewLink);
+		$oTicket->Set('contacts_list', $oCIs);
+
+		$this->debug("Added contact $sContactId to {$oTicket->Get('ref')} with {$sRoleCode}");
+
+		return array($sContactId => $sRoleCode);
+	}
+
+	protected function RemoveLnkContactToTicketObject($sContactId, $oTicket)
+	{
+		$oContacts = $oTicket->Get('contacts_list');
+		foreach ($oContacts as $oLnk)
+		{
+			if ($oLnk->Get('contact_id') == $sContactId)
+			{
+				$sRoleCode = $oLnk->Get('role_code');
+				$oContacts->RemoveItem($oLnk->GetKey());
+				$oTicket->Set('contacts_list', $oContacts);
+				$this->debug("Removed contact $sContactId from {$oTicket->Get('ref')} ({$sRoleCode})");
+
+				return;
+			}
+		}
+	}
+
+	protected function GivenUserRestrictedToAnOrganizationInDB(int $iOrganization, string $sProfileId): string
+	{
+		$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
+		$iUser = $this->GivenObjectInDB('UserLocal', [
+			'login' => $sLogin,
+			'password' => 'tagada-Secret,007',
+			'language' => 'EN US',
+			'profile_list' => [
+				'profileid:'.$sProfileId
+			],
+			'allowed_org_list' => [
+				'allowed_org_id:'.$iOrganization
+			],
+		]);
+		return $sLogin;
+	}
+
+	/**
+	 * @param string $sPassword
+	 * @param array $aProfiles Profile names Example: ['Administrator']
+	 *
+	 * @return string The unique login
+	 * @throws \Exception
+	 */
+	protected function GivenUserInDB(string $sPassword, array $aProfiles): string
+	{
+		$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
+
+		$aProfileList = array_map(function($sProfileId) {
+			return 'profileid:'.self::$aURP_Profiles[$sProfileId];
+		}, $aProfiles);
+
+		$iUser = $this->GivenObjectInDB('UserLocal', [
+			'login' => $sLogin,
+			'password' => $sPassword,
+			'language' => 'EN US',
+			'profile_list' => $aProfileList,
+		]);
+		return $sLogin;
+	}
+
+	/**
+	 * Can be invoked in setUp or any test method to skip the test if the module is not present
+	 *
+	 * @param string $sModule e.g: itop-hub-connector
+	 *
+	 * @return void
+	 */
+	protected function SkipIfModuleNotPresent(string $sModule): void
+	{
+		if (!file_exists(\utils::GetAbsoluteModulePath($sModule))) {
+			self::markTestSkipped("Test skipped: module '$sModule' is not present");
+		}
 	}
 }

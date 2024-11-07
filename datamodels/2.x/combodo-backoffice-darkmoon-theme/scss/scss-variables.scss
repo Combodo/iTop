@@ -176,6 +176,10 @@ $ibo-input-select--action-button--color: $ibo-input-select-wrapper--after--color
 $ibo-input-select-selectize--item--active--text-color: $ibo-color-grey-100;
 $ibo-input-select-selectize--item--active--background-color: $ibo-color-grey-500;
 $ibo-vendors-selectize-input--color: $ibo-body-text-color;
+$ibo-vendors-selectize-input--background-color: $ibo-input--background-color;
+$ibo-vendors-selectize--input--border-color: $ibo-input--border-color;
+$ibo-vendors-selectize--element--active--background: $ibo-color-grey-400;
+$ibo-vendors-selectize--element--active--color: $ibo-body-text-color;
 
 $ibo-popover-menu--item-separator--background-color: $ibo-color-grey-500;
 $ibo-popover-menu--item--text-color: $ibo-color-grey-200;
@@ -277,3 +281,10 @@ $ibo-datamodel-viewer--schema--tooltip--fill: $ibo-color-grey-600;
 $ibo-csv-import--row-error--background-color: $ibo-color-red-950;
 $ibo-csv-import--cell-error--color: $ibo-color-red-500;
 $ibo-csv-import--cell-modified--color: $ibo-color-blue-500;
+
+$ibo-welcome-popup--messages-stack--background-color: $ibo-color-grey-700;
+$ibo-welcome-popup--stack-item--background-color: $ibo-color-grey-600;
+$ibo-welcome-popup--stack-item--border-color: $ibo-color-grey-800;
+$ibo-welcome-popup--stack-item--is-active--border-color: $ibo-color-grey-900;
+
+$ibo-vendors-ckeditor--ck-content--text-color: $ibo-color-grey-900;

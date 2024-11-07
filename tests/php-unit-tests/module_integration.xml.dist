@@ -2,7 +2,7 @@
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
-        bootstrap="vendor/autoload.php"
+        bootstrap="unittestautoload.php"
         backupGlobals="true"
         colors="true"
         columns="120"
@@ -18,10 +18,6 @@
         verbose="true"
         printerClass="\Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9"
 >
-
-  <extensions>
-    <extension class="Combodo\iTop\Test\UnitTest\Hook\TestsRunStartHook" />
-  </extensions>
 
   <php>
     <ini name="error_reporting" value="E_ALL"/>

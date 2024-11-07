@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -22,17 +22,18 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Service\Module\ModuleService;
-use Combodo\iTop\Test\UnitTest\Application\utilsTest;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
 use ScssPhp\ScssPhp\ValueConverter;
+use Soundasleep\Html2Text;
 
 
 /**
  * Static class utils
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 define('ITOP_CONFIG_FILE', 'config-itop.php');
@@ -112,6 +113,11 @@ class utils
 	 * @since 2.7.10 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER = 'element_identifier';
+	/**
+	 * @var string For XML / HTML node id/class selector
+	 * @since 3.1.2 3.2.1
+	 */
+	public const ENUM_SANITIZATION_FILTER_ELEMENT_SELECTOR = 'element_selector';
 	/**
 	 * @var string For variables names
 	 * @since 3.0.0
@@ -245,13 +251,8 @@ class utils
 
 	public static function IsModeCLI()
 	{
-		$sSAPIName = php_sapi_name();
-		$sCleanName = strtolower(trim($sSAPIName));
-		if ($sCleanName == 'cli') {
-			return true;
-		} else {
-			return false;
-		}
+		$sCleanName = strtolower(trim(PHP_SAPI));
+		return ($sCleanName === 'cli');
 	}
 
 	/**
@@ -374,13 +375,13 @@ class utils
 		}
 		return self::Sanitize($retValue, $defaultValue, $sSanitizationFilter);
 	}
-	
+
 	public static function ReadPostedParam($sName, $defaultValue = '', $sSanitizationFilter = 'parameter')
 	{
 		$retValue = isset($_POST[$sName]) ? $_POST[$sName] : $defaultValue;
 		return self::Sanitize($retValue, $defaultValue, $sSanitizationFilter);
 	}
-	
+
 	public static function Sanitize($value, $defaultValue, $sSanitizationFilter)
 	{
 		if ($value === $defaultValue)
@@ -396,7 +397,7 @@ class utils
 				$retValue = $defaultValue;
 			}
 		}
-		return $retValue;		
+		return $retValue;
 	}
 
 	/**
@@ -501,8 +502,17 @@ class utils
 				}
 				break;
 
+			// For XML / HTML node identifiers
 			case static::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER:
 				$retValue = preg_replace('/[^a-zA-Z0-9_-]/', '', $value);
+				$retValue = filter_var($retValue, FILTER_VALIDATE_REGEXP,
+					['options' => ['regexp' => '/^[A-Za-z0-9][A-Za-z0-9_-]*$/']]);
+				break;
+
+			// For XML / HTML node id selector
+			case static::ENUM_SANITIZATION_FILTER_ELEMENT_SELECTOR:
+				$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
+					['options' => ['regexp' => '/^[#\.][A-Za-z0-9][A-Za-z0-9_-]*$/']]);
 				break;
 
 			case static::ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
@@ -552,11 +562,11 @@ class utils
 					$sMimeType = self::GetFileMimeType($sTmpName);
 					$oDocument = new ormDocument($doc_content, $sMimeType, $sName);
 				break;
-				
+
 				case UPLOAD_ERR_NO_FILE:
 				// no file to load, it's a normal case, just return an empty document
 				break;
-				
+
 				case UPLOAD_ERR_FORM_SIZE:
 				case UPLOAD_ERR_INI_SIZE:
 				throw new FileUploadException(Dict::Format('UI:Error:UploadedFileTooBig', ini_get('upload_max_filesize')));
@@ -565,7 +575,7 @@ class utils
 				case UPLOAD_ERR_PARTIAL:
 				throw new FileUploadException(Dict::S('UI:Error:UploadedFileTruncated.'));
 				break;
-				
+
 				case UPLOAD_ERR_NO_TMP_DIR:
 				throw new FileUploadException(Dict::S('UI:Error:NoTmpDir'));
 				break;
@@ -578,7 +588,7 @@ class utils
 				$sName = is_null($sIndex) ? $aFileInfo['name'] : $aFileInfo['name'][$sIndex];
 				throw new FileUploadException(Dict::Format('UI:Error:UploadStoppedByExtension_FileName', $sName));
 				break;
-				
+
 				default:
 				throw new FileUploadException(Dict::Format('UI:Error:UploadFailedUnknownCause_Code', $sError));
 				break;
@@ -684,17 +694,17 @@ class utils
 
 		return $aSelectedObj;
 	}
-	
+
 	public static function GetNewTransactionId()
 	{
 		return privUITransaction::GetNewTransactionId();
 	}
-	
+
 	public static function IsTransactionValid($sId, $bRemoveTransaction = true)
 	{
 		return privUITransaction::IsTransactionValid($sId, $bRemoveTransaction);
 	}
-	
+
 	public static function RemoveTransaction($sId)
 	{
 		return privUITransaction::RemoveTransaction($sId);
@@ -878,9 +888,9 @@ class utils
 			$aDateTokens = array_keys($aSpec);
 			$aDateRegexps = array_values($aSpec);
 		}
-	   
+
 	   $sDateRegexp = str_replace($aDateTokens, $aDateRegexps, $sFormat);
-	   
+
 	   if (preg_match('!^(?<head>)'.$sDateRegexp.'(?<tail>)$!', $sDate, $aMatches))
 	   {
 			$sYear = isset($aMatches['year']) ? $aMatches['year'] : 0;
@@ -897,7 +907,7 @@ class utils
 	   }
 	   // http://www.spaweditor.com/scripts/regex/index.php
 	}
-	
+
 	/**
 	 * Convert an old date/time format specification (using % placeholders)
 	 * to a format compatible with DateTime::createFromFormat
@@ -1493,7 +1503,7 @@ class utils
 		$aResult = [];
 
 		// 1st - add standard built-in menu items
-		// 
+		//
 		switch($iMenuId)
 		{
 			case iPopupMenuExtension::MENU_OBJLIST_ACTIONS:
@@ -1877,7 +1887,7 @@ SQL;
 			return $sProposed;
 		}
 	}
-	
+
 	/**
 	 * Some characters cause troubles with jQuery when used inside DOM IDs, so let's replace them by the safe _ (underscore)
 	 * @param string $sId The ID to sanitize
@@ -1887,7 +1897,7 @@ SQL;
 	{
 		return str_replace(array(':', '[', ']', '+', '-', ' '), '_', $sId);
 	}
-	
+
 	/**
 	 * Helper to execute an HTTP POST request, uses CURL PHP extension
 	 *
@@ -1972,7 +1982,7 @@ SQL;
 
 	/**
 	 * Get a standard list of character sets
-	 *	 
+	 *
  	 * @param array $aAdditionalEncodings Additional values
 	 * @return array of iconv code => english label, sorted by label
 	 */
@@ -2073,13 +2083,13 @@ SQL;
 	{
 		try {
 			//return '<?xml encoding="UTF-8">'.$sHtml;
-			return \Html2Text\Html2Text::convert('<?xml encoding="UTF-8">'.$sHtml);
+			return Html2Text::convert('<?xml encoding="UTF-8">'.$sHtml, ['ignore_errors' => true]);
 		}
 		catch (Exception $e) {
 			return $e->getMessage();
 		}
 	}
-	
+
 	/**
 	 * Convert (?) plain text to some HTML markup by replacing newlines by <br/> tags
 	 * and escaping HTML entities
@@ -2096,7 +2106,7 @@ SQL;
 
 		return str_replace("\n", '<br/>', utils::EscapeHtml($sText));
 	}
-	
+
 	/**
 	 * Eventually compiles the SASS (.scss) file into the CSS (.css) file
 	 *
@@ -2210,7 +2220,7 @@ SQL;
 			case 'image/png':
 			$img = @imagecreatefromstring($oImage->GetData());
 			break;
-			
+
 			default:
 			// Unsupported image type, return the image as-is
 			//throw new Exception("Unsupported image type: '".$oImage->GetMimeType()."'. Cannot resize the image, original image will be used.");
@@ -2224,14 +2234,14 @@ SQL;
 		else
 		{
 			// Let's scale the image, preserving the transparency for GIFs and PNGs
-			
+
 			$fScale = min($iMaxImageWidth / $iWidth, $iMaxImageHeight / $iHeight);
 
 			$iNewWidth = $iWidth * $fScale;
 			$iNewHeight = $iHeight * $fScale;
-			
+
 			$new = imagecreatetruecolor($iNewWidth, $iNewHeight);
-			
+
 			// Preserve transparency
 			if(($oImage->GetMimeType() == "image/gif") || ($oImage->GetMimeType() == "image/png"))
 			{
@@ -2239,38 +2249,38 @@ SQL;
 				imagealphablending($new, false);
 				imagesavealpha($new, true);
 			}
-			
+
 			imagecopyresampled($new, $img, 0, 0, 0, 0, $iNewWidth, $iNewHeight, $iWidth, $iHeight);
-			
+
 			ob_start();
 			switch ($oImage->GetMimeType())
 			{
 				case 'image/gif':
 				imagegif($new); // send image to output buffer
 				break;
-				
+
 				case 'image/jpeg':
 				imagejpeg($new, null, 80); // null = send image to output buffer, 80 = good quality
 				break;
-				 
+
 				case 'image/png':
 				imagepng($new, null, 5); // null = send image to output buffer, 5 = medium compression
 				break;
 			}
 			$oResampledImage = new ormDocument(ob_get_contents(), $oImage->GetMimeType(), $oImage->GetFileName());
 			@ob_end_clean();
-			
+
 			imagedestroy($img);
 			imagedestroy($new);
-							
+
 			return $oResampledImage;
 		}
-				
+
 	}
-	
+
 	/**
 	 * Create a 128 bit UUID in the format: {########-####-####-####-############}
-	 * 
+	 *
 	 * Note: this method can be run from the command line as well as from the web server.
 	 * Note2: this method is not cryptographically secure! If you need a cryptographically secure value
 	 * consider using open_ssl or PHP 7 methods.
@@ -2308,7 +2318,7 @@ SQL;
 	{
         return ModuleService::GetInstance()->GetCurrentModuleName($iCallDepth + 1);
 	}
-	
+
 	/**
 	 * **Warning** : returned result can be invalid as we're using backtrace to find the module dir name
 	 *
@@ -2345,7 +2355,7 @@ SQL;
 	{
 		return ModuleService::GetInstance()->GetCurrentModuleUrl(1);
 	}
-	
+
 	/**
 	 * @param string $sProperty The name of the property to retrieve
 	 * @param mixed $defaultvalue
@@ -2355,7 +2365,7 @@ SQL;
 	{
         return ModuleService::GetInstance()->GetCurrentModuleSetting($sProperty, $defaultvalue);
 	}
-	
+
 	/**
 	 * @param string $sModuleName
 	 * @return string|NULL compiled version of a given module, as it was seen by the compiler
@@ -2364,7 +2374,7 @@ SQL;
 	{
         return ModuleService::GetInstance()->GetCompiledModuleVersion($sModuleName);
 	}
-	
+
 	/**
 	 * Check if the given path/url is an http(s) URL
 	 * @param string $sPath
@@ -2379,7 +2389,7 @@ SQL;
 		}
 		return $bRet;
 	}
-	
+
 	/**
 	 * Check if the given URL is a link to download a document/image on the CURRENT iTop
 	 * In such a case we can read the content of the file directly in the database (if the users rights allow) and return the ormDocument
@@ -2428,7 +2438,7 @@ SQL;
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Read the content of a file (and retrieve its MIME type) from either:
 	 * - an URL pointing to a blob (image/document) on the current iTop server
@@ -2472,7 +2482,7 @@ SQL;
 			'html' => 'text/html',
 			'exe' => 'application/octet-stream',
 		);
-	
+
 		$sData = null;
 		$sMimeType = 'text/plain'; // Default MIME Type: treat the file as a bunch a characters...
 		$sFileName = 'uploaded-file'; // Default name for downloaded-files
@@ -2495,6 +2505,15 @@ SQL;
 				$sData = @file_get_contents($sPath);
 				if ($sData === false)
 				{
+					IssueLog::Error(<<<TXT
+Failed to load the file from URL. This can happen for multiple reasons:
+- Invalid URL
+- URL using HTTPS with an untrusted certificate on the remote server
+- ...
+TXT
+					, LogChannels::CORE, [
+						'URL' => $sPath,
+					]);
 					throw new Exception("Failed to load the file from the URL '$sPath'.");
 				}
 				else
@@ -2530,7 +2549,7 @@ SQL;
 			}
 			$sExtension = strtolower(pathinfo($sPath, PATHINFO_EXTENSION));
 			$sFileName = basename($sPath);
-				
+
 			if (array_key_exists($sExtension, $aKnownExtensions))
 			{
 				$sMimeType = $aKnownExtensions[$sExtension];
@@ -2544,7 +2563,7 @@ SQL;
 		}
 		return $oUploadedDoc;
 	}
-	
+
 	protected static function ParseHeaders($aHeaders)
 	{
 		$aCleanHeaders = array();
@@ -2569,7 +2588,7 @@ SQL;
 		}
 		return $aCleanHeaders;
 	}
-	
+
 	/**
 	 * @return string a string based on compilation time or (if not available because the datamodel has not been loaded)
 	 * the version of iTop. This string is useful to prevent browser side caching of content that may vary at each
@@ -2782,171 +2801,18 @@ SQL;
 	}
 
 	/**
-	 * Return the CKEditor config as an array
-	 *
-	 * @return array
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @since 3.0.0
-	 */
-	public static function GetCkeditorPref()
-	{
-		$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
-
-		$aDefaultConf = array(
-			'language'=> $sLanguage,
-			'contentsLanguage' => $sLanguage,
-			'extraPlugins' => 'disabler,codesnippet,mentions,objectshortcut,font,uploadimage',
-			'uploadUrl' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php',
-			'contentsCss' => array(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/contents.css', utils::GetAbsoluteUrlAppRoot().'css/ckeditor/contents.css'),
-		);
-
-		// Mentions
-		$aMentionsAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
-		if(!empty($aMentionsAllowedClasses)) {
-			$aDefaultConf['mentions'] = [];
-
-			foreach($aMentionsAllowedClasses as $sMentionMarker => $sMentionScope) {
-				// Retrieve mention class
-				// - First test if the conf is a simple Datamodel class
-				if (MetaModel::IsValidClass($sMentionScope)) {
-					$sMentionClass = $sMentionScope;
-				}
-				// - Otherwise it must be a valid OQL
-				else {
-					$oTmpSearch = DBSearch::FromOQL($sMentionScope);
-					$sMentionClass = $oTmpSearch->GetClass();
-					unset($oTmpSearch);
-				}
-
-				// Note: Endpoints are defaults only and should be overloaded by other GUIs such as the end-users portal
-				$sMentionEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&marker='.urlencode($sMentionMarker).'&needle={encodedQuery}';
-				$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sMentionClass.'&id={id}';
-
-				$sMentionItemPictureTemplate = (empty(MetaModel::GetImageAttributeCode($sMentionClass))) ? '' : <<<HTML
-<span class="ibo-vendors-ckeditor--autocomplete-item-image" style="{picture_style}">{initials}</span>
-HTML;
-				$sMentionItemTemplate = <<<HTML
-<li class="ibo-vendors-ckeditor--autocomplete-item" data-id="{id}">{$sMentionItemPictureTemplate}<span class="ibo-vendors-ckeditor--autocomplete-item-title">{friendlyname}</span></li>
-HTML;
-				$sMentionOutputTemplate = <<<HTML
-<a href="$sMentionItemUrl" data-role="object-mention" data-object-class="{class}" data-object-id="{id}">{$sMentionMarker}{friendlyname}</a>
-HTML;
-
-				$aDefaultConf['mentions'][] = [
-					'feed' => $sMentionEndpoint,
-					'marker' => $sMentionMarker,
-					'minChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
-					'itemTemplate' => $sMentionItemTemplate,
-					'outputTemplate' => $sMentionOutputTemplate,
-					'throttle' => 500,
-				];
-			}
-		}
-
-		$aRichTextConfig = 	json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);
-
-
-		return array_merge($aDefaultConf, $aRichTextConfig);
-	}
-
-	/**
 	 * @param string $sInterface
 	 * @param string $sClassNameFilter
 	 * @param array $aExcludedPath Reg. exp. of the paths to exclude. Note that backslashes (typically for Windows env.) need to be 4 backslashes, 2 for the escaping backslash, 2 for the actual backslash 😅
 	 *
 	 * @return array classes are returned in the same order as the module dependency tree, so core classes on top
 	 * @since 3.0.0
+	 * @deprecated 3.2.0 Use {@see InterfaceDiscovery::FindItopClasses()} instead
 	 */
 	public static function GetClassesForInterface(string $sInterface, string $sClassNameFilter = '', $aExcludedPath = []): array
 	{
-		$aMatchingClasses = [];
-
-		if (!utils::IsDevelopmentEnvironment()) {
-			// Try to read from cache
-			$aFilePath = explode("\\", $sInterface);
-			$sInterfaceName = end($aFilePath);
-			$sCacheFileName = utils::GetCachePath()."ImplementingInterfaces/$sInterfaceName.php";
-			if (is_file($sCacheFileName)) {
-				$aMatchingClasses = include $sCacheFileName;
-			}
-		}
-
-		if (empty($aMatchingClasses)) {
-			$aAutoloadClassMaps = [APPROOT.'lib/composer/autoload_classmap.php'];
-			// guess all the autoload class maps from the extensions
-			$aAutoloadClassMaps = array_merge($aAutoloadClassMaps, glob(APPROOT.'env-'.utils::GetCurrentEnvironment().'/*/vendor/composer/autoload_classmap.php'));
-
-			$aClassMap = [];
-			$aAutoloaderErrors = [];
-			foreach ($aAutoloadClassMaps as $sAutoloadFile) {
-				if (false === static::RealPath($sAutoloadFile, APPROOT)) {
-					// can happen when we still have the autoloader symlink in env-*, but it points to a file that no longer exists
-					$aAutoloaderErrors[] = $sAutoloadFile;
-					continue;
-				}
-				$aTmpClassMap = include $sAutoloadFile;
-				/** @noinspection SlowArrayOperationsInLoopInspection we are getting an associative array so the documented workarounds cannot be used */
-				$aClassMap = array_merge($aClassMap, $aTmpClassMap);
-			}
-			if (count($aAutoloaderErrors) > 0) {
-				IssueLog::Debug(
-					"\utils::GetClassesForInterface cannot load some of the autoloader files",
-					LogChannels::CORE,
-					['autoloader_errors' => $aAutoloaderErrors]
-				);
-			}
-
-			// Add already loaded classes
-			$aCurrentClasses = array_fill_keys(get_declared_classes(), '');
-			$aClassMap = array_merge($aCurrentClasses, $aClassMap);
-
-			foreach ($aClassMap as $sPHPClass => $sPHPFile) {
-				$bSkipped = false;
-
-				// Check if our class matches name filter, or is in an excluded path
-				if ($sClassNameFilter !== '' && strpos($sPHPClass, $sClassNameFilter) === false) {
-					$bSkipped = true;
-				}
-				// For some PHP classes we don't have their file path as they are already in memory, so we never filter on their paths
-				elseif (utils::IsNotNullOrEmptyString($sPHPFile)) {
-					$sPHPFile = self::LocalPath($sPHPFile);
-					if ($sPHPFile !== false) {
-						$sPHPFile = '/'.$sPHPFile; // for regex
-						foreach ($aExcludedPath as $sExcludedPath) {
-							// Note: We use '#' as delimiters as usual '/' is often used in paths.
-							if ($sExcludedPath !== '' && preg_match('#'.$sExcludedPath.'#', $sPHPFile) === 1) {
-								$bSkipped = true;
-								break;
-							}
-						}
-					} else {
-						$bSkipped = true; // file not found
-					}
-				}
-
-				if(!$bSkipped){
-					try {
-						$oRefClass = new ReflectionClass($sPHPClass);
-						if ($oRefClass->implementsInterface($sInterface) &&
-							!$oRefClass->isInterface() && !$oRefClass->isAbstract() && !$oRefClass->isTrait()) {
-							$aMatchingClasses[] = $sPHPClass;
-						}
-					} catch (Exception $e) {
-					}
-				}
-			}
-
-			if (!utils::IsDevelopmentEnvironment()) {
-				// Save to cache
-				$sCacheContent = "<?php\n\nreturn ".var_export($aMatchingClasses, true).";";
-				SetupUtils::builddir(dirname($sCacheFileName));
-				file_put_contents($sCacheFileName, $sCacheContent);
-			}
-		}
-
-		return $aMatchingClasses;
+		$oInterfaceDiscoveryService = InterfaceDiscovery::GetInstance();
+		return $oInterfaceDiscoveryService->FindItopClasses($sInterface);
 	}
 
 	/**
@@ -2960,9 +2826,9 @@ HTML;
 	{
 		$aResultPref = [];
 		$aShortcutPrefs = appUserPreferences::GetPref('keyboard_shortcuts', []);
-		// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
-		$aShortcutClasses = utils::GetClassesForInterface(iKeyboardShortcut::class, '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
 
+		/** @var iKeyboardShortcut[] $aShortcutClasses */
+		$aShortcutClasses = InterfaceDiscovery::GetInstance()->FindItopClasses(iKeyboardShortcut::class);
 		foreach ($aShortcutClasses as $cShortcutPlugin) {
 			$sTriggeredElement = $cShortcutPlugin::GetShortcutTriggeredElementSelector();
 			foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {

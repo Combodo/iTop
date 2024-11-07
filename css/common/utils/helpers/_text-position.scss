@@ -1,0 +1,34 @@
+/*!
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/****************************/
+/* Disposition / alignement */
+/****************************/
+.common-is-fullwidth {
+  width: 100%;
+}
+
+%common-fully-centered-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+%common-vertically-centered-content {
+  display: flex;
+  align-items: center;
+}
+
+/* Typically to align icons and text as it is a good practice to align them on the baseline and not the "middle" */
+%common-baseline-centered-content {
+  display: flex;
+  align-items: baseline;
+}
+
+/* Note: This might not be named correctly. The intention is to make an element occupy the full height of its parent and to be centered in it */
+%common-full-height-content {
+  display: flex;
+  align-items: stretch;
+}

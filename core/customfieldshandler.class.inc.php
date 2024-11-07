@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2023 Combodo SARL
+// Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Base class to implement a handler for AttributeCustomFields
  *
- * @copyright   Copyright (C) 2023 Combodo SARL
+ * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

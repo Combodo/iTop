@@ -1,7 +1,7 @@
 <?php
 
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -13,6 +13,7 @@ use CorePortalInvalidActionRuleException;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
+use DBProperty;
 use DBSearch;
 use DeprecatedCallsLog;
 use DOMFormatException;
@@ -20,8 +21,10 @@ use DOMNodeList;
 use Exception;
 use FieldExpression;
 use IssueLog;
+use MetaModel;
 use ModuleDesign;
 use ScalarExpression;
+use SimpleCrypt;
 use Symfony\Component\Routing\RouterInterface;
 use TrueExpression;
 use UserRights;
@@ -49,6 +52,8 @@ class ContextManipulatorHelper
 	/** @var string DEFAULT_RULE_CALLBACK_OPEN */
 	const DEFAULT_RULE_CALLBACK_OPEN = self::ENUM_RULE_CALLBACK_OPEN_VIEW;
 
+	const PRIVATE_KEY = 'portal-priv-key';
+
 	/** @var array $aRules */
 	protected $aRules;
 	/** @var \Symfony\Component\Routing\RouterInterface */
@@ -57,6 +62,9 @@ class ContextManipulatorHelper
 	private $oBrickCollection;
 	/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper */
 	private $oScopeValidator;
+
+	/** @var string $sPrivateKey private key for encoding rules */
+	private static $sPrivateKey;
 
 	/**
 	 * ContextManipulatorHelper constructor.
@@ -524,8 +532,11 @@ class ContextManipulatorHelper
 	 */
 	public static function EncodeRulesToken($aTokenRules)
 	{
-		// Returning tokenised data
-		return base64_encode(json_encode($aTokenRules));
+		$aTokenRules['salt'] = base64_encode(random_bytes(8));
+
+		$sPPrivateKey = self::GetPrivateKey();
+		$oCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
+		return self::base64url_encode($oCrypt->Encrypt($sPPrivateKey, json_encode($aTokenRules)));
 	}
 
 	/**
@@ -549,9 +560,49 @@ class ContextManipulatorHelper
 	 * @param string $sToken
 	 *
 	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public static function DecodeRulesToken($sToken)
 	{
-		return json_decode(base64_decode($sToken), true);
+		$sPrivateKey = self::GetPrivateKey();
+		$oCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
+		$sDecryptedToken = $oCrypt->Decrypt($sPrivateKey, self::base64url_decode($sToken));
+
+		$aTokenRules = json_decode($sDecryptedToken, true);
+		if (!is_array($aTokenRules))
+		{
+			throw new Exception('DecodeRulesToken not a proper json structure.');
+		}
+
+		return $aTokenRules;
+	}
+
+	private static function base64url_encode($sData) {
+		return rtrim(strtr(base64_encode($sData), '+/', '-_'), '=');
+	}
+
+	private static function base64url_decode($sData) {
+		return base64_decode(str_pad(strtr($sData, '-_', '+/'), strlen($sData) % 4, '=', STR_PAD_RIGHT));
+	}
+
+	/**
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	private static function GetPrivateKey()
+	{
+		if(self::$sPrivateKey === null) {
+			self::$sPrivateKey = DBProperty::GetProperty(self::PRIVATE_KEY);
+			if (is_null(self::$sPrivateKey)) {
+				self::$sPrivateKey = bin2hex(random_bytes(32));
+				DBProperty::SetProperty(self::PRIVATE_KEY, self::$sPrivateKey);
+			}
+		}
+		return self::$sPrivateKey;
 	}
 }

@@ -2,11 +2,15 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2013 XXXXX
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+/**
+ *
+ */
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'CAS:Error:UserNotAllowed' => 'User not allowed~~',
 	'CAS:Login:SignIn' => 'Sign in with CAS~~',
 	'CAS:Login:SignInTooltip' => 'Click here to authenticate yourself with the CAS server~~',
-));
+]);

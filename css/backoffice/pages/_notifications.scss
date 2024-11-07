@@ -4,7 +4,7 @@
  */
 
 $ibo-notifications--view-all--container--grid-gap: $ibo-spacing-600 !default;
-$ibo-notifications--view-all--container--object-summary--panel--body--max-height: unset !default;
+$ibo-notifications--view-all--container--object-summary--panel--body--max-height: 400px !default;
 
 $ibo-notifications--view-all--item--unread--highlight--background-color: $ibo-color-red-600 !default;
 $ibo-notifications--view-all--item--read--highlight--background-color: $ibo-color-grey-200 !default;

@@ -75,10 +75,12 @@ class ModelFactoryTest extends ItopTestCase
 		// Canonicalize the expected XML (to cope with indentation)
 		$oExpectedDocument = new DOMDocument();
 		$oExpectedDocument->preserveWhiteSpace = false;
-		$oExpectedDocument->loadXML($sXML);
 		$oExpectedDocument->formatOutput = true;
+		$oExpectedDocument->loadXML($sXML);
 
-		return $oExpectedDocument->C14N(false, true);
+		$sSavedXML = $oExpectedDocument->SaveXML();
+
+		return str_replace(' encoding="UTF-8"', '', $sSavedXML);
 	}
 
 	/**
@@ -98,6 +100,9 @@ class ModelFactoryTest extends ItopTestCase
 	 */
 	protected function AssertEqualModels(string $sExpectedXML, ModelFactory $oFactory, $sMessage = '')
 	{
+		// constants aren't accessible in the data provider :(
+		$sExpectedXML = str_replace('##ITOP_DESIGN_LATEST_VERSION##', ITOP_DESIGN_LATEST_VERSION, $sExpectedXML);
+
 		$this->AssertEqualiTopXML($sExpectedXML, $oFactory->Dump(null, true), $sMessage);
 	}
 
@@ -665,7 +670,7 @@ class ModelFactoryTest extends ItopTestCase
 		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
 		$oFactoryDocument = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
 		$sExpectedXML = null;
-		if (\utils::StartsWith($sExpectedXMLOrErrorMessage, '<')) {
+		if (\utils::StartsWith(trim($sExpectedXMLOrErrorMessage), '<')) {
 			$sExpectedXML = $sExpectedXMLOrErrorMessage;
 		}
 
@@ -3026,14 +3031,16 @@ XML
 				,
 			],
 			'Conditionally deleted class' => [
-				'sInitialXMLInternal' => '<itop_design>
+				'sInitialXMLInternal' => '
+<itop_design>
   <classes>
     <class id="cmdbAbstractObject"/>
     <class id="C_1_1" _alteration="removed"/>
     <class id="C_1" _alteration="remove_needed"/>
   </classes>
 </itop_design>',
-				'sExpectedXMLDelta'   => '<itop_design>
+				'sExpectedXMLDelta'   => '
+<itop_design>
   <classes>
     <class id="C_1_1" _delta="delete"/>
     <class id="C_1" _delta="delete_if_exists"/>
@@ -3232,7 +3239,7 @@ XML
 				'aClasses'                 => [
 					['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
 				],
-				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="##ITOP_DESIGN_LATEST_VERSION##">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -3262,7 +3269,7 @@ XML
 					['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
 					['name' => 'B', 'module' => 'M2', 'parent' => 'cmdbAbstractObject'],
 				],
-				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="##ITOP_DESIGN_LATEST_VERSION##">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -3299,7 +3306,7 @@ XML
 					['name' => 'A', 'module' => 'M', 'parent' => 'cmdbAbstractObject'],
 					['name' => 'B', 'module' => 'M2', 'parent' => 'A'],
 				],
-				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="##ITOP_DESIGN_LATEST_VERSION##">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -3338,7 +3345,7 @@ XML
 					['name' => 'C', 'module' => 'M3', 'parent' => 'cmdbAbstractObject'],
 					['name' => 'D', 'module' => 'M3', 'parent' => 'B'],
 				],
-				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+				'sExpectedXML'             => '<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="##ITOP_DESIGN_LATEST_VERSION##">
   <loaded_modules/>
   <classes>
     <class id="DBObject"/>
@@ -3411,15 +3418,21 @@ XML
 		$oDocument->loadXML($sDeltaXML);
 		/* @var MFElement $oDeltaRoot */
 		$oDeltaRoot = $oDocument->firstChild;
+		$sExpectedXML = null;
+		if (\utils::StartsWith(trim($sExpectedXMLInLaxMode), '<')) {
+			$sExpectedXML = $sExpectedXMLInLaxMode;
+		}
 		try {
 			$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument, ModelFactory::LOAD_DELTA_MODE_LAX);
-			$this->AssertEqualModels($sExpectedXMLInLaxMode, $oFactory, 'LoadDelta(lax) did not produce the expected result');
+			$this->assertNotNull($sExpectedXML, "LoadDelta(lax) should  have failed with exception: $sExpectedXMLInLaxMode");
+			$this->AssertEqualModels($sExpectedXML, $oFactory, 'LoadDelta(lax) did not produce the expected result');
 		}
 		catch (ExpectationFailedException $e) {
 			throw $e;
 		}
 		catch (\Exception $e) {
-			$this->assertNull($sExpectedXMLInLaxMode, 'LoadDelta(lax) should not have failed with exception: '.$e->getMessage());
+			$this->assertNull($sExpectedXML, 'LoadDelta(lax) should not have failed with exception: '.$e->getMessage());
+			$this->assertEquals($sExpectedXMLInLaxMode, $e->getMessage());
 		}
 
 		// Load in Strict mode
@@ -3430,120 +3443,270 @@ XML
 		$oDocument->loadXML($sDeltaXML);
 		/* @var MFElement $oDeltaRoot */
 		$oDeltaRoot = $oDocument->firstChild;
+		$sExpectedXML = null;
+		if (\utils::StartsWith(trim($sExpectedXMLInStrictMode), '<')) {
+			$sExpectedXML = $sExpectedXMLInStrictMode;
+		}
 		try {
 			$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument, ModelFactory::LOAD_DELTA_MODE_STRICT);
-			$this->AssertEqualModels($sExpectedXMLInStrictMode, $oFactory, 'LoadDelta(strict) did not produce the expected result');
+			$this->assertNotNull($sExpectedXML, "LoadDelta(lax) should  have failed with exception: $sExpectedXMLInStrictMode");
+			$this->AssertEqualModels($sExpectedXML, $oFactory, 'LoadDelta(strict) did not produce the expected result');
 		}
 		catch (ExpectationFailedException $e) {
 			throw $e;
 		}
 		catch (\Exception $e) {
-			$this->assertNull($sExpectedXMLInStrictMode, 'LoadDelta(strict) should not have failed with exception: '.$e->getMessage());
+			$this->assertNull($sExpectedXML, 'LoadDelta(strict) should not have failed with exception: '.$e->getMessage());
+			$this->assertEquals($sExpectedXMLInStrictMode, $e->getMessage());
 		}
 	}
-
 
 	public function LoadDeltaModeProvider()
 	{
 		return [
-			'merge delta have different behavior depending on the mode' => [
+			'default no _delta have different behavior depending on the mode' => [
 				'sInitialXML'  => '
 <itop_design>
-  <nodeA>
-  </nodeA>
+  <nodeA/>
 </itop_design>',
-				'sDeltaXML'    => '<itop_design>
+				'sDeltaXML'    => '
+<itop_design>
 	<nodeA>
 		<nodeB id="C_1">
 			<parent>cmdbAbstractObject</parent>
 		</nodeB>
 	</nodeA>
 </itop_design>',
-				'sExpectedXMLInLaxMode' => '<itop_design>
+				'sExpectedXMLInLaxMode' => '
+<itop_design>
   <nodeA>
     <nodeB id="C_1" _alteration="added">
         <parent>cmdbAbstractObject</parent>
     </nodeB>
   </nodeA>
 </itop_design>',
-				'sExpectedXMLInStrictMode' => null,
+				'sExpectedXMLInStrictMode' => '/itop_design/nodeA/nodeB[C_1] at line 4: could not be found or marked as removed (strict mode)',
 			],
+
 			'mode specified in delta takes precedence' => [
 				'sInitialXML'  => '
 <itop_design>
-  <nodeA>
-  </nodeA>
+	<nodeA/>
 </itop_design>',
-				'sDeltaXML'    => '<itop_design load="strict">
+				'sDeltaXML'    => '
+<itop_design load="strict">
 	<nodeA>
 		<nodeB id="C_1">
 			<parent>cmdbAbstractObject</parent>
 		</nodeB>
 	</nodeA>
 </itop_design>',
-				'sExpectedXMLInLaxMode' => null,
-				'sExpectedXMLInStrictMode' => null,
+				'sExpectedXMLInLaxMode' => '/itop_design/nodeA/nodeB[C_1] at line 4: could not be found or marked as removed (strict mode)',
+				'sExpectedXMLInStrictMode' => '/itop_design/nodeA/nodeB[C_1] at line 4: could not be found or marked as removed (strict mode)',
 			],
-			'merge leaf nodes have different behavior depending on the mode' => [
+
+			'default no _delta leaf nodes have different behavior depending on the mode' => [
 				'sInitialXML'  => '
 <itop_design>
-  <nodeA>Test</nodeA>
+	<nodeA>Test</nodeA>
 </itop_design>',
-				'sDeltaXML'    => '<itop_design>
+				'sDeltaXML'    => '
+<itop_design>
 	<nodeA>Taste</nodeA>
 </itop_design>',
-				'sExpectedXMLInLaxMode' => '<itop_design>
-  <nodeA _alteration="replaced">Taste</nodeA>
+				'sExpectedXMLInLaxMode' => '
+<itop_design>
+    <nodeA _alteration="replaced">Taste</nodeA>
 </itop_design>',
-				'sExpectedXMLInStrictMode' => null,
+				'sExpectedXMLInStrictMode' => '/itop_design/nodeA at line 3: cannot be modified without _delta flag (strict mode)',
 			],
-			'merge existing leaf nodes without text have same behavior' => [
+
+			'default no _delta on existing leaf nodes without text have same behavior' => [
 				'sInitialXML'  => '
 <itop_design>
-  <nodeA/>
-</itop_design>',
-				'sDeltaXML'    => '<itop_design>
 	<nodeA/>
 </itop_design>',
-				'sExpectedXMLInLaxMode' => '<itop_design>
-  <nodeA/>
-</itop_design>',
-				'sExpectedXMLInStrictMode' => '<itop_design>
-  <nodeA/>
-</itop_design>',
-			],
-			'merge non-existing leaf nodes without text have different behavior' => [
-				'sInitialXML'  => '
+				'sDeltaXML'    => '
 <itop_design>
-</itop_design>',
-				'sDeltaXML'    => '<itop_design>
 	<nodeA/>
 </itop_design>',
-				'sExpectedXMLInLaxMode' => '<itop_design>
-  <nodeA/>
+				'sExpectedXMLInLaxMode' => '
+<itop_design>
+	<nodeA/>
 </itop_design>',
-				'sExpectedXMLInStrictMode' => null,
+				'sExpectedXMLInStrictMode' => '
+<itop_design>
+	<nodeA/>
+</itop_design>',
 			],
-			'merge non-existing nodes with sub-nodes defined' => [
+
+			'default no _delta on non-existing leaf nodes without text have different behavior' => [
 				'sInitialXML'  => '
 <itop_design>
 </itop_design>',
-				'sDeltaXML'    => '<itop_design>
+				'sDeltaXML'    => '
+<itop_design>
+	<nodeA/>
+</itop_design>',
+				'sExpectedXMLInLaxMode' => '
+<itop_design>
+	<nodeA/>
+</itop_design>',
+				'sExpectedXMLInStrictMode' => '/itop_design/nodeA at line 3: could not be found or marked as removed (strict mode)',
+			],
+
+			'default no _delta on non-existing nodes with sub-nodes defined' => [
+				'sInitialXML'  => '
+<itop_design>
+</itop_design>',
+				'sDeltaXML'    => '
+<itop_design>
 	<nodeA>
 		<nodeB _delta="define"/>
 	</nodeA>
 </itop_design>',
-				'sExpectedXMLInLaxMode' => '<itop_design>
+				'sExpectedXMLInLaxMode' => '
+<itop_design>
 	<nodeA>
 		<nodeB _alteration="added"/>
 	</nodeA>
 </itop_design>',
-				'sExpectedXMLInStrictMode' => '<itop_design>
+				'sExpectedXMLInStrictMode' => '
+<itop_design>
 	<nodeA>
 		<nodeB _alteration="added"/>
 	</nodeA>
 </itop_design>',
 			],
+
+			'merge _delta on non-existing node must create node' => [
+				'sInitialXML'  => '
+<itop_design>
+	<nodeA>
+		<nodeB/>
+	</nodeA>
+</itop_design>',
+				'sDeltaXML'    => '
+<itop_design load="strict">
+	<nodeA>
+		<nodeB>
+			<nodeC id="C_1" _delta="merge">
+				<items>
+					<item id="I_1" _delta="define">Test</item>
+				</items>
+			</nodeC>
+		</nodeB>
+	</nodeA>
+</itop_design>',
+				'sExpectedXMLInLaxMode' => '
+<itop_design>
+  <nodeA>
+	<nodeB>
+		<nodeC id="C_1" _alteration="added">
+			<items>
+				<item id="I_1">Test</item>
+			</items>
+		</nodeC>
+	</nodeB>
+  </nodeA>
+</itop_design>',
+				'sExpectedXMLInStrictMode' => '
+<itop_design>
+  <nodeA>
+	<nodeB>
+		<nodeC id="C_1" _alteration="added">
+			<items>
+				<item id="I_1">Test</item>
+			</items>
+		</nodeC>
+	</nodeB>
+  </nodeA>
+</itop_design>',
+			],
+
+			'merge _delta on existing tree must merge...' => [
+				'sInitialXML'  => '
+<itop_design>
+	<nodeA>
+		<nodeB>
+			<nodeC id="C_1">
+				<items/>	
+			</nodeC>
+		</nodeB>
+	</nodeA>
+</itop_design>',
+				'sDeltaXML'    => '
+<itop_design load="strict">
+	<nodeA>
+		<nodeB>
+			<nodeC id="C_1" _delta="merge">
+				<items>
+					<item id="I_1" _delta="define">Test</item>
+				</items>
+			</nodeC>
+		</nodeB>
+	</nodeA>
+</itop_design>',
+				'sExpectedXMLInLaxMode' => '
+<itop_design>
+  <nodeA>
+	<nodeB>
+		<nodeC id="C_1">
+			<items>
+				<item id="I_1" _alteration="added">Test</item>
+			</items>
+		</nodeC>
+	</nodeB>
+  </nodeA>
+</itop_design>',
+				'sExpectedXMLInStrictMode' => '
+<itop_design>
+  <nodeA>
+	<nodeB>
+		<nodeC id="C_1">
+			<items>
+				<item id="I_1" _alteration="added">Test</item>
+			</items>
+		</nodeC>
+	</nodeB>
+  </nodeA>
+</itop_design>',
+			],
 		];
+	}
+
+	public function testDictEntryIsIntegratedIntoMF() {
+		$oFactory = new ModelFactory([]);
+		$sLanguageCode = 'RU URSS';
+		$oFactory->IntegrateDictEntriesIntoXML($sLanguageCode,
+			[
+				'english_description'   => 'Russian',
+				'localized_description' => 'URSS',
+				'entries'               => [
+					'key1'   => 'Label 1',
+				],
+			]
+		);
+		$this->assertDictEntryUniqueAndEquals($oFactory, $sLanguageCode, 'key1', 'Label 1', 'New entry in new language should be present in XML');
+
+		$oFactory->IntegrateDictEntriesIntoXML($sLanguageCode,
+			[
+				'english_description'   => 'Russian',
+				'localized_description' => 'URSS',
+				'entries'               => [
+					'key1'   => 'Label new',
+					'key2'   => 'Label 😍',
+				],
+			]
+		);
+		$this->assertDictEntryUniqueAndEquals($oFactory, $sLanguageCode, 'key1', 'Label new', 'Existing entry should be overwritten by latest loaded dictionary');
+		$this->assertDictEntryUniqueAndEquals($oFactory, $sLanguageCode, 'key2', 'Label 😍', 'New entry in existing dictionary should be present in XML');
+	}
+
+	private function assertDictEntryUniqueAndEquals(ModelFactory $oFactory, string $sLanguageCode, string $sKey, string $sValue, string $sIndicationMessage)
+	{
+		$oNodes = $oFactory->GetNodes("/itop_design/dictionaries/dictionary[@id='$sLanguageCode']/entries/entry[@id='$sKey']");
+		$this->assertCount(1, $oNodes, "The dictionary entry $sKey should be found and unique");
+		$this->assertEquals($sValue, $oNodes[0]->textContent, $sIndicationMessage);
 	}
 }

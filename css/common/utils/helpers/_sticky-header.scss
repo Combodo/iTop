@@ -1,0 +1,19 @@
+/*!
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/***********************************************************************/
+/* Sticky headers                                                      */
+/*                                                                     */
+/* Used as a trigger to make an element stick to another during scroll */
+/***********************************************************************/
+
+/* SCSS variables */
+$common-sticky-sentinel--left: 0 !default;
+$common-sticky-sentinel--right: 0 !default;
+$common-sticky-sentinel--height: 0 !default;
+$common-sticky-sentinel-top--top: 0 !default;
+$common-sticky-sentinel-top--height: $common-sticky-sentinel--height !default;
+$common-sticky-sentinel-bottom--bottom: 0 !default;
+$common-sticky-sentinel-bottom--height: $common-sticky-sentinel--height !default;

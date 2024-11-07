@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -290,10 +290,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
 	'Class:DatacenterDevice/Attribute:san_list+' => 'All the SAN switches connected to this device',
 	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancy',
-	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device is up if at least one power connection (A or B) is up',
+	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device %2$s is up if at least one power connection (A or B) is up',
 	// Unused yet
-	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device is up if all its power connections are up',
-	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device is up if at least %1$s %% of its power connections are up',
+	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device %2$s is up if all its power connections are up',
+	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device %2$s is up if at least %1$s %% of its power connections are up',
 ));
 
 //
@@ -1092,6 +1092,8 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Brand' => 'Brand',
 	'Class:Brand+' => '',
+	'Class:Brand/Attribute:logo' => 'Logo',
+	'Class:Brand/Attribute:logo+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Physical devices',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand',
 	'Class:Brand/UniquenessRule:name+' => 'The name must be unique',
@@ -1110,6 +1112,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Model/Attribute:brand_id+' => '',
 	'Class:Model/Attribute:brand_name' => 'Brand name',
 	'Class:Model/Attribute:brand_name+' => '',
+	'Class:Model/Attribute:picture' => 'Picture',
+	'Class:Model/Attribute:picture+' => '',
 	'Class:Model/Attribute:type' => 'Device type',
 	'Class:Model/Attribute:type+' => '',
 	'Class:Model/Attribute:type/Value:PowerSource' => 'Power Source',

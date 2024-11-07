@@ -291,7 +291,7 @@ class ExampleFor_iQueryModifier implements \iQueryModifier
 
 	public function GetFieldExpression(QueryBuilderContext &$oBuild, $sClass, $sAttCode, $sColId, Expression $oFieldSQLExp, SQLQuery &$oSelect)
 	{
-	  // Do nothing, we just need the class to exists for the unit test
+	  return $oFieldSQLExp;
 	}
 }
       ]]></content>
@@ -349,6 +349,21 @@ class ExampleFor_iKPILoggerExtension implements \iKPILoggerExtension
 	public function LogOperation($oKpiLogData)
 	{
 	  // Do nothing, we just need the class to exists for the unit test
+	}
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iBackupExtraFilesExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iBackupExtraFilesExtension implements \iBackupExtraFilesExtension
+{
+	public function GetExtraFilesRelPaths(): array
+	{
+		return [
+		  'foo'
+		];
 	}
 }
       ]]></content>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -153,6 +153,7 @@ JS
 
 		// Used throughout the app.
 		$this->LinkScriptFromAppRoot('node_modules/jquery/dist/jquery.min.js');
+		$this->LinkScriptFromAppRoot('js/ajax_hook.js');
 		$this->LinkScriptFromAppRoot('js/jquery.blockUI.js');
 		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
 		{

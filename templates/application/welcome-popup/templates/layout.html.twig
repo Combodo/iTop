@@ -1,0 +1,37 @@
+<div class="ibo-welcome-popup--message-content
+    {% if bIsActive == true %}ibo-is-active{% endif %}
+    {% block wpMessageContentExtraCssClasses %}{% endblock %}"
+    data-role="ibo-welcome-popup--message-content"
+    data-uuid="{{ sUUID }}"
+>
+    {% block wpMessageContentInner %}
+        {% block wpMessageTextsOuter %}
+            <div class="ibo-welcome-popup--message-texts">
+                {% block wpMessageTextsInner %}
+                    {% block wpMessageTitleOuter %}
+                        <h2 class="ibo-welcome-popup--message-title">
+                            {% block wpMessageTitleInner %}
+                                {{ oMessage.GetTitle() }}
+                            {% endblock %}
+                        </h2>
+                    {% endblock %}
+                    {% block wpMessageDescriptionOuter %}
+                        <div class="ibo-welcome-popup--message-description ibo-is-html-content">
+                            {% block wpMessageDescriptionInner %}
+                                {# Mind that only description should have a "raw" filter as it can contains HTML #}
+                                {{ oMessage.GetDescription()|raw }}
+                            {% endblock %}
+                        </div>
+                    {% endblock %}
+                {% endblock %}
+            </div>
+        {% endblock %}
+        {% block wpMessageIllustrationOuter %}
+            {% if oMessage.HasIllustration() %}
+                {%  block wpMessagIllustrationInner %}
+                    <div class="ibo-welcome-popup--message-illustration" style="background-image: url('{{ oMessage.GetIllustrationAbsURI() }}')"></div>
+                {% endblock %}
+            {% endif %}
+        {% endblock %}
+    {% endblock %}
+</div>

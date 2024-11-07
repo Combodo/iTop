@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -52,7 +52,7 @@ interface iDisplay
 /**
  * Class dbObject: the root of persistent classes
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -766,6 +766,42 @@ abstract class DBObject implements iDisplay
 			$sValue = mb_substr($sValue, 0, $iMaxSize - mb_strlen($sMessage)).$sMessage;
 		}
 		$this->Set($sAttCode, $sValue);
+	}
+
+	/**
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 */
+	protected function PreDeleteActions(): void
+	{
+		$this->SetReadOnly('No modification allowed before delete');
+		$this->FireEventAboutToDelete();
+		$oKPI = new ExecutionKPI();
+		$this->OnDelete();
+		$oKPI->ComputeStatsForExtension($this, 'OnDelete');
+
+		// Activate any existing trigger
+		$sClass = get_class($this);
+		$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectDelete AS t WHERE t.target_class IN (:class_list)'), array(),
+			$aParams);
+		while ($oTrigger = $oSet->Fetch()) {
+			/** @var \TriggerOnObjectDelete $oTrigger */
+			try {
+				$oKPI = new ExecutionKPI();
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+			catch (Exception $e) {
+				$oTrigger->LogException($e, $this);
+				utils::EnrichRaisedException($oTrigger, $e);
+			}
+			finally {
+				$oKPI->ComputeStatsForExtension($this, 'TriggerOnObjectDelete');
+			}
+		}
 	}
 
 	/**
@@ -3334,6 +3370,9 @@ abstract class DBObject implements iDisplay
 	 */
 	public function DBInsertNoReload()
 	{
+		// Prevent DBUpdate at this point (reentrancy protection with temp id)
+		MetaModel::StartReentranceProtection($this);
+
 		$sClass = get_class($this);
 
 		$this->AddCurrentObjectInCrudStack('INSERT');
@@ -3380,6 +3419,8 @@ abstract class DBObject implements iDisplay
 			}
 
 			$this->ComputeStopWatchesDeadline(true);
+			// With temp id
+			MetaModel::StopReentranceProtection($this);
 
 			$iTransactionRetry = 1;
 			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
@@ -3453,6 +3494,7 @@ abstract class DBObject implements iDisplay
 
 			$this->m_bIsInDB = true;
 			$this->m_bDirty = false;
+			$this->m_bFullyLoaded = true;
 			foreach ($this->m_aCurrValues as $sAttCode => $value) {
 				if (is_object($value)) {
 					$value = clone $value;
@@ -3572,6 +3614,12 @@ abstract class DBObject implements iDisplay
 	 */
 	public function DBUpdate()
 	{
+		if (!MetaModel::StartReentranceProtection($this)) {
+			$this->LogCRUDExit(__METHOD__, 'Rejected (reentrance)');
+
+			return false;
+		}
+
 		$this->LogCRUDEnter(__METHOD__);
 		if (!$this->m_bIsInDB)
 		{
@@ -3581,12 +3629,6 @@ abstract class DBObject implements iDisplay
 
 		$this->AddCurrentObjectInCrudStack('UPDATE');
 
-		if (!MetaModel::StartReentranceProtection($this)) {
-			$this->RemoveCurrentObjectInCrudStack();
-			$this->LogCRUDExit(__METHOD__, 'Rejected (reentrance)');
-
-			return false;
-		}
 		try {
 			// Protect against infinite loop
 			$this->iUpdateLoopCount++;
@@ -4087,16 +4129,17 @@ abstract class DBObject implements iDisplay
 		CMDBSource::DeleteFrom($sDeleteSQL);
 	}
 
-    /**
-     * @internal
-     *
-     * @throws ArchivedObjectException
-     * @throws CoreException
-     * @throws CoreUnexpectedValue
-     * @throws MySQLException
-     * @throws MySQLHasGoneAwayException
-     * @throws OQLException
-     */
+	/**
+	 * @internal
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \Random\RandomException
+	 * @throws \ReflectionException
+	 */
 	protected function DBDeleteSingleObject()
 	{
 		$this->LogCRUDEnter(__METHOD__);
@@ -4107,29 +4150,7 @@ abstract class DBObject implements iDisplay
 			return;
 		}
 
-		$this->SetReadOnly("No modification allowed before delete");
-		$this->FireEventAboutToDelete();
-		$oKPI = new ExecutionKPI();
-		$this->OnDelete();
-		$oKPI->ComputeStatsForExtension($this, 'OnDelete');
-
-		// Activate any existing trigger
-		$sClass = get_class($this);
-		$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectDelete AS t WHERE t.target_class IN (:class_list)"), array(),
-			$aParams);
-		while ($oTrigger = $oSet->Fetch())
-		{
-			/** @var \TriggerOnObjectDelete $oTrigger */
-			try
-			{
-				$oTrigger->DoActivate($this->ToArgs('this'));
-			}
-			catch(Exception $e) {
-				$oTrigger->LogException($e, $this);
-				utils::EnrichRaisedException($oTrigger, $e);
-			}
-		}
+		$this->PreDeleteActions();
 
 		$this->RecordObjDeletion($this->m_iKey); // May cause a reload for storing history information
 

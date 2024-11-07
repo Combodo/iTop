@@ -241,12 +241,10 @@ SQL
 		$this->assertEquals('from table 2', $sFromTable2Data, "Data was not moved as expected");
 	}
 
-
 	/**
 	 * Test that moving columns from/to the same table works
 	 *
 	 * @covers       \ModuleInstallerAPI::MoveColumnInDB
-	 *
 	 *
 	 * @return void
 	 * @throws \ArchivedObjectException

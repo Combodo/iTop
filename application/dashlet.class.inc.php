@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2012-2023 Combodo SARL
+// Copyright (C) 2012-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -30,7 +30,7 @@ require_once(APPROOT.'application/forms.class.inc.php');
 /**
  * Base class for all 'dashlets' (i.e. widgets to be inserted into a dashboard)
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 abstract class Dashlet

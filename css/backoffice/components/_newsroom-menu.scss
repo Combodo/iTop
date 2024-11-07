@@ -1,10 +1,11 @@
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
-$ibo-navigation-menu--notifications-menu--min-width: 250px;
+$ibo-navigation-menu--notifications-menu--min-width: 550px;
+$ibo-navigation-menu--notifications-menu--max-width: 90vw;
 
 $ibo-navigation-menu--notifications--item--image--margin-x: 6px !default;
 $ibo-navigation-menu--notifications--item--image--margin-y: $ibo-spacing-0 !default;
@@ -13,9 +14,11 @@ $ibo-navigation-menu--notifications--item--image--max-height: 20px !default;
 $ibo-navigation-menu--notifications--item--image--border-radius: $ibo-border-radius-full !default;
 
 $ibo-navigation-menu--notifications--item--bottom-text--margin-left: auto !default;
+$ibo-navigation-menu--notifications--item--bottom-text--margin-right: auto !default;
 
 $ibo-navigation-menu--notifications--item--content--padding-y: $ibo-spacing-0 !default;
 $ibo-navigation-menu--notifications--item--content--padding-x: 14px !default;
+$ibo-navigation-menu--notifications--item--content--max-height: 128px !default;
 $ibo-navigation-menu--notifications--item--content--img--max-height: 100px !default;
 $ibo-navigation-menu--notifications--item--content--img--padding: 5px !default;
 
@@ -39,13 +42,15 @@ $ibo-navigation-menu--notifications-show-all-multiple--ibo-popover-menu--indicat
 
 $ibo-navigation-menu--notifications-dismiss-all--icon--margin: $ibo-spacing-0 10px $ibo-spacing-0 $ibo-spacing-0 !default;
 
-$ibo-popover-menu--item--no-message--image--svg--width : 100% !default;
+$ibo-popover-menu--item--no-message--image--svg--width : 220px !default;
 $ibo-popover-menu--item--no-message--image--svg--height : inherit !default;
 $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
 
 #ibo-navigation-menu--notifications-menu {
   flex-flow: column;
-  min-width: $ibo-navigation-menu--notifications-menu--min-width;
+  min-width: min(#{$ibo-navigation-menu--notifications-menu--min-width}, 90vw);
+  max-width: $ibo-navigation-menu--notifications-menu--max-width;
+
   .ibo-navigation-menu--notifications--messages-section {
     overflow: auto;
   }
@@ -76,9 +81,14 @@ $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
   float: right;
   align-self: center;
   margin-left: $ibo-navigation-menu--notifications--item--bottom-text--margin-left;
+  margin-right: $ibo-navigation-menu--notifications--item--bottom-text--margin-right;
 }
 .ibo-navigation-menu--notifications--item--content {
+  flex-grow: 1;
   padding: $ibo-navigation-menu--notifications--item--content--padding-y $ibo-navigation-menu--notifications--item--content--padding-x;
+  max-height: $ibo-navigation-menu--notifications--item--content--max-height;
+  overflow-y: auto;
+  white-space: normal; /* Overload rule from popupover menu item so that content wraps instead of being on a gigantic line */
 
   img {
     max-height: $ibo-navigation-menu--notifications--item--content--img--max-height;
@@ -88,6 +98,7 @@ $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
 .ibo-navigation-menu--notifications-item {
   display: flex;
   flex-direction: row;
+  cursor: pointer;
 
   .ibo-navigation-menu--notifications--item--content a {
     @extend %ibo-hyperlink-forced-colors;
@@ -100,6 +111,8 @@ $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
   border: $ibo-navigation-menu--notifications--item--new-message-indicator--border;
   border-radius: $ibo-navigation-menu--notifications--item--new-message-indicator--border-radius;
   margin-top: $ibo-navigation-menu--notifications--item--new-message-indicator--margin-top;
+  flex-shrink: 0; /* Avoid indicator to be shrinked into a non round shape */
+
   &.ibo-is-priority-1{
     background-color: $ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-1--background-color;
     border: $ibo-navigation-menu--notifications--item--new-message-indicator--is-priority-1--border;
@@ -134,8 +147,7 @@ $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
   text-align: center;
 }
 .ibo-popover-menu--item--no-message--image > svg {
-  display: flex;
-  width: $ibo-popover-menu--item--no-message--image--svg--width;
+  max-width: $ibo-popover-menu--item--no-message--image--svg--width;
   height: $ibo-popover-menu--item--no-message--image--svg--height;
   padding: $ibo-popover-menu--item--no-message--image--svg--padding;
 }

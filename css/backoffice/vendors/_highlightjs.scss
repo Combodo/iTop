@@ -1,0 +1,116 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+// Backoffice specific variables
+$ibo-vendors-highlightjs--padding: $common-vendors-highlightjs--padding !default;
+$ibo-vendors-highlightjs--box-shadow: $common-vendors-highlightjs--box-shadow !default;
+$ibo-vendors-highlightjs--border-radius: $common-vendors-highlightjs--border-radius !default;
+$ibo-vendors-highlightjs--code--padding-x: $common-vendors-highlightjs--code--padding-x !default;
+$ibo-vendors-highlightjs--code--padding-y: $common-vendors-highlightjs--code--padding-y !default;
+
+$ibo-vendors-highlightjs--background-color: $common-vendors-highlightjs--background-color !default; 
+$ibo-vendors-highlightjs--color: $common-vendors-highlightjs--color !default; 
+$ibo-vendors-highlightjs--keyword--color: $common-vendors-highlightjs--keyword--color !default; 
+$ibo-vendors-highlightjs--number--color: $common-vendors-highlightjs--number--color !default; 
+$ibo-vendors-highlightjs--attribute--color: $common-vendors-highlightjs--attribute--color !default; 
+$ibo-vendors-highlightjs--regexp--color: $common-vendors-highlightjs--regexp--color !default; 
+$ibo-vendors-highlightjs--meta--color: $common-vendors-highlightjs--meta--color !default; 
+$ibo-vendors-highlightjs--tag--color: $common-vendors-highlightjs--tag--color !default; 
+$ibo-vendors-highlightjs--string--color: $common-vendors-highlightjs--string--color !default; 
+$ibo-vendors-highlightjs--comment--color: $common-vendors-highlightjs--comment--color !default; 
+$ibo-vendors-highlightjs--selector-class--color: $common-vendors-highlightjs--selector-class--color !default; 
+$ibo-vendors-highlightjs--code--color: $common-vendors-highlightjs--code--color !default;
+
+// Highlight.js stylesheets
+/* Highlight JS */
+.common-hljs-container{
+  padding: 0 !important;
+  border: none !important;
+}
+
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: $ibo-vendors-highlightjs--padding !important;
+}
+
+code.hljs {
+  padding: $ibo-vendors-highlightjs--code--padding-y $ibo-vendors-highlightjs--code--padding-x !important;
+}
+/**
+ * Obsidian style
+ * ported by Alexander Marenin (http://github.com/ioncreature)
+ */
+.hljs {
+  box-shadow: $ibo-vendors-highlightjs--box-shadow !important;
+  border-radius: $ibo-vendors-highlightjs--border-radius !important;
+  white-space: pre-wrap;
+  border: none !important;
+  color: $ibo-vendors-highlightjs--color !important;
+  background: $ibo-vendors-highlightjs--background-color !important;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-selector-id {
+  color: $ibo-vendors-highlightjs--keyword--color !important;
+}
+.hljs-number {
+  color: $ibo-vendors-highlightjs--number--color !important;
+}
+.hljs-attribute {
+  color: $ibo-vendors-highlightjs--attribute--color
+}
+.hljs-regexp,
+.hljs-link {
+  color: $ibo-vendors-highlightjs--regexp--color !important;
+}
+.hljs-meta {
+  color: $ibo-vendors-highlightjs--meta--color !important;
+}
+.hljs-tag,
+.hljs-name,
+.hljs-bullet,
+.hljs-subst,
+.hljs-emphasis,
+.hljs-type,
+.hljs-built_in,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-tag,
+.hljs-template-variable {
+  color: $ibo-vendors-highlightjs--tag--color !important;
+}
+.hljs-string,
+.hljs-symbol {
+  color: $ibo-vendors-highlightjs--string--color !important;
+}
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion {
+  color: $ibo-vendors-highlightjs--comment--color !important;
+}
+.hljs-selector-class {
+  color: $ibo-vendors-highlightjs--selector-class--color !important;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-doctag,
+.hljs-title,
+.hljs-section,
+.hljs-type,
+.hljs-name,
+.hljs-strong {
+  font-weight: bold
+}
+.hljs-code,
+.hljs-title.class_,
+.hljs-class .hljs-title,
+.hljs-section {
+  color: $ibo-vendors-highlightjs--code--color !important;
+}

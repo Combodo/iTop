@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -370,14 +370,16 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:EventNotification' => 'Notification event',
+	'Class:EventNotification' => 'Notification sent',
 	'Class:EventNotification+' => 'Trace of a notification that has been sent',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
 	'Class:EventNotification/Attribute:trigger_id+' => '',
 	'Class:EventNotification/Attribute:action_id' => 'Action',
 	'Class:EventNotification/Attribute:action_id+' => '',
 	'Class:EventNotification/Attribute:object_id' => 'Object id',
-	'Class:EventNotification/Attribute:object_id+' => 'object id (class defined by the trigger ?)',
+	'Class:EventNotification/Attribute:object_id+' => '',
+    'Class:EventNotification/Attribute:object_class' => 'Object class',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)',
 ));
 
 //
@@ -385,7 +387,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:EventNotificationEmail' => 'Email emission event',
+	'Class:EventNotificationEmail' => 'Email sent',
 	'Class:EventNotificationEmail+' => 'Trace of an email that has been sent',
 	'Class:EventNotificationEmail/Attribute:to' => 'TO',
 	'Class:EventNotificationEmail/Attribute:to+' => '',
@@ -480,38 +482,38 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
-// Class: EventiTopNotification
+// Class: EventNotificationNewsroom
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:EventiTopNotification' => ITOP_APPLICATION_SHORT.' Notification',
-	'Class:EventiTopNotification+' => '',
-	'Class:EventiTopNotification/Attribute:title' => 'Title',
-	'Class:EventiTopNotification/Attribute:title+' => '',
-	'Class:EventiTopNotification/Attribute:icon' => 'Icon',
-	'Class:EventiTopNotification/Attribute:icon+' => '',
-	'Class:EventiTopNotification/Attribute:priority' => 'Priority',
-	'Class:EventiTopNotification/Attribute:priority+' => '',
-	'Class:EventiTopNotification/Attribute:priority/Value:1' => 'Critical',
-	'Class:EventiTopNotification/Attribute:priority/Value:1+' => 'Critical',
-	'Class:EventiTopNotification/Attribute:priority/Value:2' => 'Urgent',
-	'Class:EventiTopNotification/Attribute:priority/Value:2+' => 'Urgent',
-	'Class:EventiTopNotification/Attribute:priority/Value:3' => 'Important',
-	'Class:EventiTopNotification/Attribute:priority/Value:3+' => 'Important',
-	'Class:EventiTopNotification/Attribute:priority/Value:4' => 'Standard',
-	'Class:EventiTopNotification/Attribute:priority/Value:4+' => 'Standard',
-	'Class:EventiTopNotification/Attribute:url' => 'URL',
-	'Class:EventiTopNotification/Attribute:url+' => '',
-	'Class:EventiTopNotification/Attribute:read' => 'Read',
-	'Class:EventiTopNotification/Attribute:read+' => '',
-	'Class:EventiTopNotification/Attribute:read/Value:no' => 'No',
-	'Class:EventiTopNotification/Attribute:read/Value:no+' => 'No',
-	'Class:EventiTopNotification/Attribute:read/Value:yes' => 'Yes',
-	'Class:EventiTopNotification/Attribute:read/Value:yes+' => 'Yes',
-	'Class:EventiTopNotification/Attribute:read_date' => 'Read date',
-	'Class:EventiTopNotification/Attribute:read_date+' => '',
-	'Class:EventiTopNotification/Attribute:contact_id' => 'Contact',
-	'Class:EventiTopNotification/Attribute:contact_id+' => '',
+	'Class:EventNotificationNewsroom' => 'News sent',
+	'Class:EventNotificationNewsroom+' => '',
+	'Class:EventNotificationNewsroom/Attribute:title' => 'Title',
+	'Class:EventNotificationNewsroom/Attribute:title+' => '',
+	'Class:EventNotificationNewsroom/Attribute:icon' => 'Icon',
+	'Class:EventNotificationNewsroom/Attribute:icon+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority' => 'Priority',
+	'Class:EventNotificationNewsroom/Attribute:priority+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1' => 'Critical',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1+' => 'Critical',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2' => 'Urgent',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3' => 'Important',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3+' => 'Important',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4' => 'Standard',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4+' => 'Standard',
+	'Class:EventNotificationNewsroom/Attribute:url' => 'URL',
+	'Class:EventNotificationNewsroom/Attribute:url+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read' => 'Read',
+	'Class:EventNotificationNewsroom/Attribute:read+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no' => 'No',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no+' => 'No',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes' => 'Yes',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes+' => 'Yes',
+	'Class:EventNotificationNewsroom/Attribute:read_date' => 'Read date',
+	'Class:EventNotificationNewsroom/Attribute:read_date+' => '',
+	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact',
+	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '',
 ));
 
 //
@@ -519,13 +521,13 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:Action'                                  => 'Custom Action',
+	'Class:Action'                                  => 'Action',
 	'Class:Action+'                                 => 'User defined action',
 	'Class:Action/ComplementaryName'                => '%1$s: %2$s',
 	'Class:Action/Attribute:name'                   => 'Name',
-	'Class:Action/Attribute:name+'                  => '',
+	'Class:Action/Attribute:name+'                  => 'Any value that is meaningful to distinguish this action from the others',
 	'Class:Action/Attribute:description'            => 'Description',
-	'Class:Action/Attribute:description+'           => '',
+	'Class:Action/Attribute:description+'           => 'A longer explanation about the purpose of this action. For information only.',
 	'Class:Action/Attribute:status'                 => 'Status',
 	'Class:Action/Attribute:status+'                => 'This status drives the action behavior',
 	'Class:Action/Attribute:status/Value:test'      => 'Being tested',
@@ -555,8 +557,10 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ActionNotification' => 'Notification',
-	'Class:ActionNotification+' => 'Notification (abstract)',
+	'Class:ActionNotification' => 'Notification Action',
+	'Class:ActionNotification+' => 'Notification Action (abstract)',
+	'Class:ActionNotification/Attribute:language' => 'Language',
+	'Class:ActionNotification/Attribute:language+' => '',
 ));
 
 //
@@ -564,7 +568,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ActionEmail'                                    => 'Email notification',
+	'Class:ActionEmail'                                    => 'Notification by Email',
 	'Class:ActionEmail+'                                   => '',
 	'Class:ActionEmail/Attribute:status+'                  => 'This status drives who will be notified: 
 - Being tested: just the Test recipient, 
@@ -588,10 +592,12 @@ If omitted the From (email) is used.',
 If omitted the From (label) is used.',
 	'Class:ActionEmail/Attribute:to'                       => 'To',
 	'Class:ActionEmail/Attribute:to+'                      => 'To: an OQL query returning objects having an email field.
-While editing, click on the magnifier to get pertinent examples',
+While editing, click on the magnifier to get pertinent examples.
+You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.',
 	'Class:ActionEmail/Attribute:cc'                       => 'Cc',
 	'Class:ActionEmail/Attribute:cc+'                      => 'Carbon Copy: an OQL query returning objects having an email field.
-While editing, click on the magnifier to get pertinent examples',
+While editing, click on the magnifier to get pertinent examples.
+You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.',
 	'Class:ActionEmail/Attribute:bcc'                      => 'Bcc',
 	'Class:ActionEmail/Attribute:bcc+'                     => 'Blind Carbon Copy: an OQL query returning objects having an email field. 
 While editing, click on the magnifier to get pertinent examples',
@@ -601,7 +607,7 @@ While editing, click on the magnifier to get pertinent examples',
 	'Class:ActionEmail/Attribute:body+'                    => 'Contents of the email. Can contain placeholders like:
 - $this->attribute_code$ any attribute of the object triggering the notification,
 - $this->html(attribute_code)$ same as above but displayed in html format,
-- $this->hyperlink()$ hyperlink in the console to the object triggering the notification,
+- $this->hyperlink()$ hyperlink in the backoffice to the object triggering the notification,
 - $this->hyperlink(portal)$ hyperlink in the portal to the object triggering the notification,
 - $this->head_html(case_log_attribute)$ last reply in html format of a caselog attribute,
 - $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
@@ -634,37 +640,44 @@ While editing, click on the magnifier to get pertinent examples',
 
 
 //
-// Class: ActioniTopNotification
+// Class: ActionNewsroom
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'ActioniTopNotification:trigger' => 'Trigger',
-	'ActioniTopNotification:content' => 'Message',
-	'ActioniTopNotification:settings' => 'Settings',
-	'Class:ActioniTopNotification' => ITOP_APPLICATION_SHORT.' Notification',
-	'Class:ActioniTopNotification+' => '',
-	'Class:ActioniTopNotification/Attribute:language' => 'Language',
-	'Class:ActioniTopNotification/Attribute:language+' => '',
-	'Class:ActioniTopNotification/Attribute:title' => 'Title',
-	'Class:ActioniTopNotification/Attribute:title+' => '',
-	'Class:ActioniTopNotification/Attribute:message' => 'Message',
-	'Class:ActioniTopNotification/Attribute:message+' => '',
-	'Class:ActioniTopNotification/Attribute:icon' => 'Icon',
-	'Class:ActioniTopNotification/Attribute:icon+' => '',
-	'Class:ActioniTopNotification/Attribute:priority' => 'Priority',
-	'Class:ActioniTopNotification/Attribute:priority+' => '',
-	'Class:ActioniTopNotification/Attribute:priority/Value:1' => 'Critical',
-	'Class:ActioniTopNotification/Attribute:priority/Value:1+' => 'Critical',
-	'Class:ActioniTopNotification/Attribute:priority/Value:2' => 'Urgent',
-	'Class:ActioniTopNotification/Attribute:priority/Value:2+' => 'Urgent',
-	'Class:ActioniTopNotification/Attribute:priority/Value:3' => 'Important',
-	'Class:ActioniTopNotification/Attribute:priority/Value:3+' => 'Important',
-	'Class:ActioniTopNotification/Attribute:priority/Value:4' => 'Standard',
-	'Class:ActioniTopNotification/Attribute:priority/Value:4+' => 'Standard',
-	'Class:ActioniTopNotification/Attribute:recipients' => 'Recipients',
-	'Class:ActioniTopNotification/Attribute:recipients+' => '',
-	'Class:ActioniTopNotification/Attribute:url' => 'URL',
-	'Class:ActioniTopNotification/Attribute:url+' => '',
+	'ActionNewsroom:trigger' => 'Trigger',
+	'ActionNewsroom:content' => 'Message',
+	'ActionNewsroom:settings' => 'Settings',
+	'Class:ActionNewsroom' => 'Notification by Newsroom',
+	'Class:ActionNewsroom+' => '',
+	'Class:ActionNewsroom/Attribute:title' => 'Title',
+	'Class:ActionNewsroom/Attribute:title+' => 'Title of the news. Can contain placeholders like $this->attribute_code$',
+	'Class:ActionNewsroom/Attribute:message' => 'Message',
+	'Class:ActionNewsroom/Attribute:message+' => 'Contents of the news, in Markdown format not HTML. Can contain placeholders like:
+- $this->attribute_code$ any attribute of the object triggering the notification,
+- $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
+- $current_contact->attribute$ attribute of the Person who triggered the notification',
+	'Class:ActionNewsroom/Attribute:icon' => 'Icon',
+	'Class:ActionNewsroom/Attribute:icon+' => 'Icon to appear next to the news in the newsroom.
+- If filled, the custom icon will be used
+- Else the icon of the triggering object if there is one (e.g. picture of a Person),
+- Else the icon of the triggering object class,
+- Otherwise, the application compact logo will be used',
+	'Class:ActionNewsroom/Attribute:priority' => 'Priority',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by decreasing priority, when displayed in the Newsroom popup',
+	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critical',
+	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Critical',
+	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgent',
+	'Class:ActionNewsroom/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:ActionNewsroom/Attribute:priority/Value:3' => 'Important',
+	'Class:ActionNewsroom/Attribute:priority/Value:3+' => 'Important',
+	'Class:ActionNewsroom/Attribute:priority/Value:4' => 'Standard',
+	'Class:ActionNewsroom/Attribute:priority/Value:4+' => 'Standard',
+	'Class:ActionNewsroom/Attribute:test_recipient_id' => 'Test recipient',
+	'Class:ActionNewsroom/Attribute:test_recipient_id+' => 'Person used instead of Recipients when notification is being tested',
+	'Class:ActionNewsroom/Attribute:recipients' => 'Recipients',
+	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects',
+	'Class:ActionNewsroom/Attribute:url' => 'URL',
+	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.',
 ));
 
 //
@@ -676,7 +689,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Trigger+'                       => 'Custom event handler',
 	'Class:Trigger/ComplementaryName'      => '%1$s, %2$s',
 	'Class:Trigger/Attribute:description'  => 'Description',
-	'Class:Trigger/Attribute:description+' => 'one line description',
+	'Class:Trigger/Attribute:description+' => 'Be precise as your users will base their potential unsubscription on this information',
 	'Class:Trigger/Attribute:action_list'  => 'Triggered actions',
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
 	'Class:Trigger/Attribute:finalclass'   => 'Trigger sub-class',
@@ -684,12 +697,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Trigger/Attribute:context'      => 'Context',
 	'Class:Trigger/Attribute:context+'     => 'Context to allow the trigger to start',
 	'Class:Trigger/Attribute:complement'   => 'Additional information',
-	'Class:Trigger/Attribute:complement+'  => 'Further information as provided in english, by this trigger',
+	'Class:Trigger/Attribute:complement+'  => 'Computed automatically in english for triggers derived from TriggerOnObject',
 	'Class:Trigger/Attribute:subscription_policy'       => 'Subscription policy',
 	'Class:Trigger/Attribute:subscription_policy+'      => 'Allows users to unsubscribe from the trigger',
-	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow no channel',
-	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel',
-	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Force all channels',
+	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel (News or Email)',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Deny unsubscription',
 ));
 
 //

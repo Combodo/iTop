@@ -14,44 +14,125 @@ class WeeklyScheduledProcessTest extends ItopTestCase
 		$this->RequireOnceUnitTestFile('./WeeklyScheduledProcessMockConfig.php');
 	}
 
-
-	/**
-	 * @dataProvider GetNextOccurrenceProvider
-	 * @test
-	 *
-	 * @param boolean $bEnabledValue true if task is enabled
-	 * @param string $sCurrentTime Date string for current time, eg '2020-01-01 23:30'
-	 * @param string $sTimeValue time to run that is set in the config, eg '23:30'
-	 * @param string $sExpectedTime next occurrence that should be returned
-	 *
-	 * @throws \ProcessInvalidConfigException
-	 */
-	public function TestGetNextOccurrence($bEnabledValue, $sCurrentTime, $sTimeValue, $sExpectedTime)
+	public function testShouldPlanForNeverIfDisabled()
 	{
-		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig($bEnabledValue, $sTimeValue);
-
-		$oExpectedDateTime = new DateTime($sExpectedTime);
-
-		$this->assertEquals($oExpectedDateTime, $oWeeklyImpl->GetNextOccurrence($sCurrentTime));
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(false, '22:00', 'monday');
+		$this->assertEquals(new DateTime('3000-01-01'), $oWeeklyImpl->GetNextOccurrence('2020-05-11 21:00'), 'Disabled process should be planned for a date far in the future');
 	}
 
-	public function GetNextOccurrenceProvider()
+	public function testNextOccurrenceShouldGiveTheSameDayWhenBeforeTheLimit()
 	{
-		return array(
-			'Disabled process' => array(false, 'now', null, '3000-01-01'),
-			'working day same day, prog noon and current before noon'         => array(true, '2020-05-11 11:00',   '12:00',   '2020-05-11 12:00'),
-			'working day same day, prog noon and current is noon'             => array(true, '2020-05-11 12:00',   '12:00',   '2020-05-12 12:00'),
-			'working day same day, prog noon and current after noon'          => array(true, '2020-05-11 13:00',   '12:00',   '2020-05-12 12:00'),
-			'saturday, prog noon and current before noon'                     => array(true, '2020-05-09 11:00',   '12:00',   '2020-05-11 12:00'),
-			'saturday, prog noon and current is noon'                         => array(true, '2020-05-09 12:00',   '12:00',   '2020-05-11 12:00'),
-			'saturday, prog noon and current after noon'                      => array(true, '2020-05-09 13:00',   '12:00',   '2020-05-11 12:00'),
-			'sunday, prog noon and current before noon'                       => array(true, '2020-05-10 11:00',   '12:00',   '2020-05-11 12:00'),
-			'sunday, prog noon and current is noon'                           => array(true, '2020-05-10 12:00',   '12:00',   '2020-05-11 12:00'),
-			'sunday, prog noon and current after noon'                        => array(true, '2020-05-10 13:00',   '12:00',   '2020-05-11 12:00'),
-			'working day, day before, prog noon and current before midnight'  => array(true, '2020-05-11 23:59',   '00:00',   '2020-05-12 00:00'),
-			'working day same day, prog noon and current is midnight'         => array(true, '2020-05-12 00:00',   '00:00',   '2020-05-13 00:00'),
-			'working day same day, prog noon and current after midnight'      => array(true, '2020-05-12 00:01',   '00:00',   '2020-05-13 00:00'),
-		);
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '22:00', 'monday, tuesday');
+
+		$this->assertEquals(new DateTime('2020-05-11 22:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-11 21:00'), '9 pm should be followed by 10pm');
+		$this->assertEquals(new DateTime('2020-05-11 22:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-11 21:59'), '9:59 pm should be followed by 10pm');
+		$this->assertEquals(new DateTime('2020-05-11 22:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-11 21:59:59'), '9:59:59 pm should be followed by 10pm');
+		$this->assertEquals(new DateTime('2020-05-11 22:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-11 21:59:59.999'), '9:59:59 pm and 999 milliseconds should be followed by 10pm');
+
+		$this->assertEquals(new DateTime('2020-05-12 22:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-11 22:00:00.0'), '10 pm should be followed by 10 pm on the NEXT matching day');
+	}
+
+	public function testNextOccurrenceShouldGiveTheNextDayWhateverTheDayOfTheWeek()
+	{
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '22:00', 'monday, tuesday, wednesday, thursday, friday, saturday, sunday');
+		$this->assertEquals(new DateTime('2020-05-12 22:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-11 23:00'), 'The occurrence after monday should be tuesday');
+		$this->assertEquals(new DateTime('2020-05-13 22:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-12 23:00'), 'The occurrence after tuesday should be wednesday');
+		$this->assertEquals(new DateTime('2020-05-14 22:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-13 23:00'), 'The occurrence after wednesday should be thursday');
+		$this->assertEquals(new DateTime('2020-05-15 22:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-14 23:00'), 'The occurrence after thursday should be friday');
+		$this->assertEquals(new DateTime('2020-05-16 22:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-15 23:00'), 'The occurrence after friday should be saturday');
+		$this->assertEquals(new DateTime('2020-05-17 22:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-16 23:00'), 'The occurrence after saturday should be sunday');
+		$this->assertEquals(new DateTime('2020-05-18 22:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-17 23:00'), 'The occurrence after sunday should be monday');
+	}
+
+	public function testNextOccurrenceFindsTheNextWeekWhenOneDayIsConfigured()
+	{
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '12:00', 'monday');
+		$this->assertEquals(new DateTime('2020-05-18 12:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-11 12:45'), 'The occurrence after monday should be monday of the next week');
+
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '12:00', 'tuesday');
+		$this->assertEquals(new DateTime('2020-05-19 12:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-12 12:45'), 'The occurrence after tuesday should be tuesday of the next week');
+
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '12:00', 'wednesday');
+		$this->assertEquals(new DateTime('2020-05-20 12:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-13 12:45'), 'The occurrence after wednesday should be wednesday of the next week');
+
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '12:00', 'thursday');
+		$this->assertEquals(new DateTime('2020-05-21 12:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-14 12:45'), 'The occurrence after thursday should be thursday of the next week');
+
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '12:00', 'friday');
+		$this->assertEquals(new DateTime('2020-05-22 12:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-15 12:45'), 'The occurrence after friday should be friday of the next week');
+
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '12:00', 'saturday');
+		$this->assertEquals(new DateTime('2020-05-23 12:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-16 12:45'), 'The occurrence after saturday should be saturday of the next week');
+
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '12:00', 'sunday');
+		$this->assertEquals(new DateTime('2020-05-24 12:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-17 12:45'), 'The occurrence after sunday should be sunday of the next week');
+	}
+
+	public function testNextOccurrenceShouldCopeWithATaskPlannedAtMidnightOnWeekEnds()
+	{
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '00:00', 'saturday, sunday, monday');
+		$this->assertEquals(new DateTime('2020-05-16 00:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-15 23:59'), 'The occurrence after friday 23:59 should be one second later');
+		$this->assertEquals(new DateTime('2020-05-17 00:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-16 00:00'), 'The occurrence after saturday 00:00 should be sunday 00:00');
+		$this->assertEquals(new DateTime('2020-05-18 00:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-17 00:00'), 'The occurrence after sunday 00:00 should be monday 00:00');
+		$this->assertEquals(new DateTime('2020-05-23 00:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-18 00:00'), 'The occurrence after monday 00:00 should be on next saturday');
+	}
+
+	public function testWeekDaysConfigShouldBeCaseInsensitive()
+	{
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '12:00', 'WEDnESdAY');
+		$this->assertEquals([3], $oWeeklyImpl->InterpretWeekDays());
+	}
+
+	public function testWeekDaysConfigSpacesShouldBeIgnored()
+	{
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '12:00', '  wednesday  ,tuesday');
+		$this->assertEquals([2, 3], $oWeeklyImpl->InterpretWeekDays());
+	}
+
+	public function testWeekDaysConfigOrderShouldNotMatter()
+	{
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '12:00', 'sunday, monday, tuesday, thursday');
+		$this->assertEquals([1, 2, 4, 7], $oWeeklyImpl->InterpretWeekDays(), 'Days of week are sorted when the configuration is read');
+	}
+
+	public function testWeekDaysConfigWithInvalidDayShouldThrowAMeaningfulException()
+	{
+		$this->expectException(\ProcessInvalidConfigException::class);
+		$this->expectExceptionMessage('itop-zabu-gomeu: wrong format for setting \'week_days\' (found \'mercredi\')');
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '12:00', 'monday, tuesday, wednesday, mercredi');
+
+		$oWeeklyImpl->InterpretWeekDays();
+	}
+
+	public function testTimeConfigShouldBeTrimmed()
+	{
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '  22:33  ', 'monday');
+		$this->assertEquals(new DateTime('2020-05-11 22:33:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-11 21:00'));
+	}
+
+	public function testTimeConfigSecondsShouldBeIgnored()
+	{
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '22:33:44.123', 'monday');
+		$this->assertEquals(new DateTime('2020-05-11 22:33:00'), $oWeeklyImpl->GetNextOccurrence('2020-05-11 21:00'));
+	}
+	public function testEmptyTimeConfigShouldThrowAMeaningfulException()
+	{
+		$this->expectException(\ProcessInvalidConfigException::class);
+		$this->expectExceptionMessage('itop-zabu-gomeu: wrong format for setting \'time\' (found \'\')');
+
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '', 'monday');
+
+		$oWeeklyImpl->GetNextOccurrence();
+	}
+
+	public function testBadlyFormattedTimeConfigShouldThrowAMeaningfulException()
+	{
+		$this->expectException(\ProcessInvalidConfigException::class);
+		$this->expectExceptionMessage('itop-zabu-gomeu: wrong format for setting \'time\' (found \'12am\')');
+
+		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig(true, '12am', 'monday');
+
+		$oWeeklyImpl->GetNextOccurrence();
 	}
 }
 

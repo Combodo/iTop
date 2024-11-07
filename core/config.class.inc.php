@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -29,7 +29,7 @@ define('ITOP_APPLICATION_SHORT', 'iTop');
  *
  * @see ITOP_CORE_VERSION to get iTop core version
  */
-define('ITOP_VERSION', '3.2.0-dev');
+define('ITOP_VERSION', '3.3.0-dev');
 
 define('ITOP_VERSION_NAME', 'Fullmoon');
 define('ITOP_REVISION', 'svn');
@@ -44,7 +44,7 @@ define('ACCESS_READONLY', 0);
 /**
  * Configuration read/write
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -559,6 +559,14 @@ class Config
 			'value'               => 50,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
+		],
+		'list.highlight_abstract_class' => [
+			'type'                => 'bool',
+			'description'         => 'Compute highlight row colors for lists of abstract objects. Mind that setting this to true has a negative impact on performances.',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
 		],
 		'tag_set_item_separator' => [
 			'type' => 'string',
@@ -1209,6 +1217,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'relations.complete_analysis' => [
+			'type' => 'bool',
+			'description' => 'Continue the impact/depends analysis even if a step is not visible to the user',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'sessions_tracking.enabled' => [
 			'type' => 'bool',
 			'description' => 'Whether or not the whole mechanism to track active sessions is enabled. See PHP session.gc_maxlifetime setting to configure session expiration.',
@@ -1728,6 +1744,14 @@ class Config
 			'description'         => 'If true then unlocks dev env functionalities, see \utils::IsDevelopmentEnvironment',
 			'default'             => null,
 			'value'               => null,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'developer_mode.interface_cache.enabled' => [
+			'type'                => 'bool',
+			'description'         => 'If true then InterfaceDiscovery uses dynamic cache (in developer_mode)',
+			'default'             => false,
+			'value'               => false,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],

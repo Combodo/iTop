@@ -1,9 +1,10 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Newsroom\iTopNewsroomProvider;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
@@ -24,6 +25,7 @@ use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\Notifications\NotificationsCenterController;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Service\Router\Router;
 
 require_once('../approot.inc.php');
@@ -101,11 +103,6 @@ function DisplayPreferences($oP)
 	$oFirstColumn->AddSubBlock($oTabsFieldset);
 	$oTabsFieldset->AddSubBlock(GetTabsLayoutFieldBlock());
 	$oTabsFieldset->AddSubBlock(GetTabsNavigationFieldBlock());
-
-	// Rich text editor
-	$oRichTextFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:Preferences:RichText:Title'), 'ibo-fieldset-for-rich-text-preferences');
-	$oSecondColumn->AddSubBlock($oRichTextFieldset);
-	$oRichTextFieldset->AddSubBlock(GetRichTextToolbarExpandedFieldBlock());
 
 	// Activity panel
 	$oActivityPanelfieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:Preferences:ActivityPanel:Title'), 'ibo-fieldset-for-activity-panel');
@@ -254,7 +251,8 @@ JS
 	//////////////////////////////////////////////////////////////////////////
 	$iCountProviders = 0;
 	$oUser = UserRights::GetUserObject();
-	$aProviders = utils::GetClassesForInterface('iNewsroomProvider', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+	/** @var iNewsroomProvider[] $aProviders */
+	$aProviders = InterfaceDiscovery::GetInstance()->FindItopClasses(iNewsroomProvider::class);
 	foreach($aProviders as $cProvider) 
 	{
 		$oProvider = new $cProvider();
@@ -303,8 +301,12 @@ JS
 					}
 					$sPreferencesLink = ' - <a class=".newsroom-configuration-link" href="'.$sUrl.'"'.$sTarget.'>'.Dict::S('UI:Newsroom:ConfigurationLink').'</a>';
 				}
-				$sChecked = appUserPreferences::GetPref('newsroom_provider_'.$sProviderClass, true) ? ' checked="" ' : '';
-				$sNewsroomHtml .= '<div><input type="checkbox" id="newsroom_provider_'.$sProviderClass.'" value="on"'.$sChecked.'name="newsroom_provider_'.$sProviderClass.'"><label for="newsroom_provider_'.$sProviderClass.'">'.Dict::Format('UI:Newsroom:DisplayMessagesFor_Provider',
+
+				$sCheckedForHtml = appUserPreferences::GetPref('newsroom_provider_'.$sProviderClass, true) ? 'checked' : '';
+				// Forbid disabling internal newsroom provider
+				$sDisabledForHtml = $sProviderClass === iTopNewsroomProvider::class ? 'disabled' : '';
+
+				$sNewsroomHtml .= '<div><input type="checkbox" id="newsroom_provider_'.$sProviderClass.'" value="on" '.$sCheckedForHtml.' '.$sDisabledForHtml.' name="newsroom_provider_'.$sProviderClass.'"><label for="newsroom_provider_'.$sProviderClass.'">'.Dict::Format('UI:Newsroom:DisplayMessagesFor_Provider',
 						$oProvider->GetLabel()).'</label> '.$sPreferencesLink.'</div>';
 			}
 		}
@@ -491,7 +493,6 @@ HTML
 	//
 	// Footer
 	//
-	$oP->add_ready_script("$('#fav_page_length').bind('keyup change', function(){ ValidateOtherSettings(); })");
 	$oP->SetContentLayout($oContentLayout);
 }
 
@@ -556,7 +557,7 @@ function GetThemeFieldBlock(): iUIBlock
  */
 function GetListPageSizeFieldBlock(): iUIBlock
 {
-	$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
+	$iDefaultPageSize = (int)appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
 
 	$sInputHtml = '<input id="default_page_size" name="default_page_size" type="text" size="3" value="'.$iDefaultPageSize.'"/><span id="v_default_page_size"></span>';
 	$sHtml = '<p>'.Dict::Format('UI:Favorites:Default_X_ItemsPerPage', $sInputHtml).'</p>';
@@ -612,34 +613,6 @@ function GetTabsNavigationFieldBlock(): iUIBlock
 		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
 			$sValue,
 			Dict::S('UI:Preferences:Tabs:Scrollable:'.$sDictEntrySuffix),
-			$sValue === $sCurrentValueAsString)
-		);
-	}
-
-	return $oSelect;
-}
-
-/**
- * @return \Combodo\iTop\Application\UI\Base\iUIBlock
- * @throws \CoreException
- * @throws \CoreUnexpectedValue
- * @throws \MySQLException
- * @since 3.0.0
- */
-function GetRichTextToolbarExpandedFieldBlock(): iUIBlock
-{
-	$bCurrentValue = isset(utils::GetCkeditorPref()['toolbarStartupExpanded']) ? (bool)utils::GetCkeditorPref()['toolbarStartupExpanded'] : false;
-	$sCurrentValueAsString = $bCurrentValue ? 'true' : 'false';
-
-	$aOptionsValues = [
-		'true' => 'Expanded',
-		'false' => 'Collapsed',
-	];
-	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('toolbarexpanded', Dict::S('UI:Preferences:RichText:ToolbarState'));
-	foreach ($aOptionsValues as $sValue => $sDictEntrySuffix) {
-		$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption(
-			$sValue,
-			Dict::S('UI:Preferences:RichText:ToolbarState:'.$sDictEntrySuffix),
 			$sValue === $sCurrentValueAsString)
 		);
 	}
@@ -860,8 +833,8 @@ try {
 				$oPage->add_header('Location: '.$sURL);
 				break;
 			case 'apply_keyboard_shortcuts':
-				// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
-				$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+				/** @var iKeyboardShortcut[] $aShortcutClasses */
+				$aShortcutClasses = InterfaceDiscovery::GetInstance()->FindItopClasses(iKeyboardShortcut::class);
 				$aShortcutPrefs = [];
 				foreach ($aShortcutClasses as $cShortcutPlugin) {
 					foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {
@@ -881,7 +854,8 @@ try {
 			case 'apply_newsroom_preferences':
 				$iCountProviders = 0;
 				$oUser = UserRights::GetUserObject();
-				$aProviders = utils::GetClassesForInterface('iNewsroomProvider', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+				/** @var iNewsroomProvider[] $aProviders */
+				$aProviders = InterfaceDiscovery::GetInstance()->FindItopClasses(iNewsroomProvider::class);
 				foreach ($aProviders as $cProvider) {
 					$oProvider = new $cProvider();
 					if ($oProvider->IsApplicable($oUser)) {
@@ -906,6 +880,11 @@ try {
 				$bProvidersModified = false;
 				foreach ($aProviders as $cProvider)
 				{
+					// Forbid disabling internal newsroom provider
+					if ($cProvider === iTopNewsroomProvider::class) {
+						continue;
+					}
+
 					$oProvider = new $cProvider();
 					if ($oProvider->IsApplicable($oUser))
 					{

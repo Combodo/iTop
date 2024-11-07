@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2013-2023 Combodo SARL
+// Copyright (C) 2013-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -26,7 +26,7 @@
  *
  * @link https://dev.mysql.com/doc/refman/5.7/en/locking-functions.html MySQL locking functions documentation
  *
- * @copyright   Copyright (C) 2013-2023 Combodo SARL
+ * @copyright   Copyright (C) 2013-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class iTopMutex

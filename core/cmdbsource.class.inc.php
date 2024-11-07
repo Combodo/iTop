@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * DB Server abstraction
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1169,8 +1169,8 @@ class CMDBSource
 	 */
 	public static function IsSameFieldTypes($sItopGeneratedFieldType, $sDbFieldType)
 	{
-		list($sItopFieldDataType, $sItopFieldTypeOptions, $sItopFieldOtherOptions) = static::GetFieldDataTypeAndOptions($sItopGeneratedFieldType);
-		list($sDbFieldDataType, $sDbFieldTypeOptions, $sDbFieldOtherOptions) = static::GetFieldDataTypeAndOptions($sDbFieldType);
+		[$sItopFieldDataType, $sItopFieldTypeOptions, $sItopFieldOtherOptions] = static::GetFieldDataTypeAndOptions($sItopGeneratedFieldType);
+		[$sDbFieldDataType, $sDbFieldTypeOptions, $sDbFieldOtherOptions] = static::GetFieldDataTypeAndOptions($sDbFieldType);
 
 		if (strcasecmp($sItopFieldDataType, $sDbFieldDataType) !== 0)
 		{
@@ -1603,7 +1603,19 @@ class CMDBSource
 		return false;
 	}
 
-	/**
+    public static function GetClusterNb()
+    {
+        $result = 0;
+        $sSql = "SHOW STATUS LIKE 'wsrep_cluster_size';";
+        $aRows = self::QueryToArray($sSql);
+        if (count($aRows) > 0)
+        {
+            $result = $aRows[0]['Value'];
+        }
+        return intval($result);
+    }
+
+    /**
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-database.html
 	 * @return string query to upgrade database charset and collation if needed, null if not
 	 * @throws \MySQLException

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2023 Combodo SARL
+// Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -319,11 +319,11 @@ class DBObjectTest extends ItopDataTestCase
 		$this->DebugReloadCount("Get('org_id_friendlyname') and Get('location_id_friendlyname')");
 
 		// External key given as an id
-		$this->assertDBQueryCount(2, function() use (&$oObject){
+		$this->assertDBQueryCount(1, function() use (&$oObject){
 			$oObject->Set('org_id', 2);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 		});
-		$this->assertEquals(1, $this->GetObjectReloadCount($sClass, $sKey));
+		$this->assertEquals(0, $this->GetObjectReloadCount($sClass, $sKey));
 		$this->DebugReloadCount("Set('org_id', 2) and Get('org_id_friendlyname')");
 
 		// External key given as an object
@@ -387,7 +387,7 @@ class DBObjectTest extends ItopDataTestCase
 		$this->assertCount(0, $oTeam->ListChanges());
 
 		// External key given as an id
-		$this->assertDBQueryCount(2, function() use (&$oTeam){
+		$this->assertDBQueryCount(1, function() use (&$oTeam){
 			$oTeam->Set('org_id', 2);
 			static::assertEquals('IT Department', $oTeam->Get('org_id_friendlyname'));
 		});
@@ -522,7 +522,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oPersonOfMyCompanyOrg = MetaModel::GetObjectByName(Person::class, 'My first name My last name');
 
 		$sConfigurationManagerProfileId = 3; // Access to Person objects
-		$oUserWithAllowedOrgs = $this->CreateDemoOrgUser($oDemoOrg, $sConfigurationManagerProfileId);
+		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($oDemoOrg->GetKey(), $sConfigurationManagerProfileId);
 
 		$oAdminUser = MetaModel::GetObjectByName(User::class, 'admin', false);
 		if (is_null($oAdminUser)) {
@@ -533,7 +533,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oPersonObject = $this->CreatePerson(0, $oMyCompanyOrg->GetKey());
 
 		//--- Now we can do some tests !
-		UserRights::Login($oUserWithAllowedOrgs->Get('login'));
+		UserRights::Login($sLogin);
 		$this->ResetMetaModelQueyCacheGetObject();
 
 		try {
@@ -594,10 +594,10 @@ class DBObjectTest extends ItopDataTestCase
 		$oPersonOnDemoOrg = MetaModel::GetObjectByName(Person::class, 'Claude Monet');
 
 		$sConfigManagerProfileId = 3; // access to Team and Contact objects
-		$oUserWithAllowedOrgs = $this->CreateDemoOrgUser($oDemoOrg, $sConfigManagerProfileId);
+		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($oDemoOrg->GetKey(), $sConfigManagerProfileId);
 
 		//--- Now we can do some tests !
-		UserRights::Login($oUserWithAllowedOrgs->Get('login'));
+		UserRights::Login($sLogin);
 		$this->ResetMetaModelQueyCacheGetObject();
 
 		$oTeam = MetaModel::NewObject(Team::class, [
@@ -699,10 +699,10 @@ class DBObjectTest extends ItopDataTestCase
 		$oPersonOnDemoOrg = MetaModel::GetObjectByName(Person::class, 'Claude Monet');
 
 		$sConfigManagerProfileId = 3; // access to Team and Contact objects
-		$oUserWithAllowedOrgs = $this->CreateDemoOrgUser($oDemoOrg, $sConfigManagerProfileId);
+		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($oDemoOrg->GetKey(), $sConfigManagerProfileId);
 
 		//--- Now we can do some tests !
-		UserRights::Login($oUserWithAllowedOrgs->Get('login'));
+		UserRights::Login($sLogin);
 		$this->ResetMetaModelQueyCacheGetObject();
 
 		$oAttachment = MetaModel::NewObject(Attachment::class, [
@@ -727,20 +727,6 @@ class DBObjectTest extends ItopDataTestCase
 			$this->assertEquals('item_id', $e->GetAttCode(), 'Should report the object key attribute');
 			$this->assertEquals($oPersonOnItDepartmentOrg->GetKey(), $e->GetAttValue(), 'Should report the object key value');
 		}
-	}
-
-	private function CreateDemoOrgUser(Organization $oDemoOrg, string $sProfileId): User
-	{
-		utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');
-		$oUserWithAllowedOrgs = $this->CreateContactlessUser('demo_test_' . uniqid(__CLASS__, true), $sProfileId);
-		/** @var \URP_UserOrg $oUserOrg */
-		$oUserOrg = \MetaModel::NewObject('URP_UserOrg', ['allowed_org_id' => $oDemoOrg->GetKey(),]);
-		$oAllowedOrgList = $oUserWithAllowedOrgs->Get('allowed_org_list');
-		$oAllowedOrgList->AddItem($oUserOrg);
-		$oUserWithAllowedOrgs->Set('allowed_org_list', $oAllowedOrgList);
-		$oUserWithAllowedOrgs->DBWrite();
-
-		return $oUserWithAllowedOrgs;
 	}
 
 	/**
@@ -1325,13 +1311,13 @@ class DBObjectTest extends ItopDataTestCase
 			'title 256 chars' => ['title', 256],
 			'title 300 chars' => ['title', 300],
 
-			// UserRequest.solution is an AttributeText (maxsize=65535) with format=text
-			'solution 250 chars' => ['solution', 250],
-			'solution 60000 chars' => ['solution', 60000],
-			'solution 65534 chars' => ['solution', 65534],
-			'solution 65535 chars' => ['solution', 65535],
-			'solution 65536 chars' => ['solution', 65536],
-			'solution 70000 chars' => ['solution', 70000],
+			// UserRequest.pending_reason is an AttributeText (maxsize=65535) with format=text
+			'pending_reason 250 chars' => ['pending_reason', 250],
+			'pending_reason 60000 chars' => ['pending_reason', 60000],
+			'pending_reason 65534 chars' => ['pending_reason', 65534],
+			'pending_reason 65535 chars' => ['pending_reason', 65535],
+			'pending_reason 65536 chars' => ['pending_reason', 65536],
+			'pending_reason 70000 chars' => ['pending_reason', 70000],
 		];
 	}
 

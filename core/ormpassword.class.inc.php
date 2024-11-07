@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -26,7 +26,7 @@ require_once(APPROOT.'/core/simplecrypt.class.inc.php');
  * If a cryptographic random number generator is available (on Linux or Windows)
  * it will be used for generating the salt.
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @package     itopORM
  */

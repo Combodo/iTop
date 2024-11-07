@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -9,18 +9,21 @@ namespace Combodo\iTop\Test\UnitTest;
 use CMDBSource;
 use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
-use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use SetupUtils;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpKernel\KernelInterface;
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 /**
  * Class ItopTestCase
  *
- * Helper class to extend for tests that DO NOT need to access the DataModel or the Database
+ * Helper class to extend for tests that DO NOT need to access the DataModel or the Database,
+ * but still need to access the iTop core classes and optionally boot the Symfony kernel (to access the services container).
  *
  * @since 3.0.4 3.1.1 3.2.0 N°6658 move some setUp/tearDown code to the corresponding methods *BeforeClass to speed up tests process time.
  */
-abstract class ItopTestCase extends TestCase
+abstract class ItopTestCase extends KernelTestCase
 {
 	public const TEST_LOG_DIR = 'test';
 
@@ -49,13 +52,29 @@ abstract class ItopTestCase extends TestCase
 
 		static::$DEBUG_UNIT_TEST = getenv('DEBUG_UNIT_TEST');
 
-		require_once static::GetAppRoot() . 'approot.inc.php';
+		require_once __DIR__.'/../../../../approot.inc.php';
 
 		if ((static::DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER)
 			&& (false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME))) {
 			// setUp might be called multiple times, so protecting the define() call !
 			define(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
 		}
+
+		// This is mostly for interactive usage, to warn the developer that the tests will be slow and point her to the php.ini file
+		static $bCheckedXDebug = false;
+		if (!$bCheckedXDebug) {
+			$bCheckedXDebug = true;
+			if (extension_loaded('xdebug') && ini_get('xdebug.mode') != '') {
+				echo "Xdebug is enabled (xdebug.mode='".ini_get('xdebug.mode')."'), this will slow down the tests.\n";
+				$sIniFile = php_ini_loaded_file();
+				if ($sIniFile) {
+					echo "This can be tuned in $sIniFile\n";
+				}
+			}
+		}
+
+		// Required to boot the portal symfony Kernel
+		$_ENV['PORTAL_ID'] = 'itop-portal';
 	}
 
 	/**
@@ -77,10 +96,59 @@ abstract class ItopTestCase extends TestCase
 		}
 	}
 
+
+	/**
+	 * @param array $args
+	 * @param string $sExportFileName relative to log folder
+	 * @param array $aExcludedParams
+	 * Function that aims to export the values of the parameters of a function in a file
+	 * You can call the function anywhere like following :
+	 * ```
+	 * require __DIR__ . '/../../../tests/php-unit-tests/vendor/autoload.php'; // required to include phpunit autoload
+	 * ItopTestCase::ExportFunctionParameterValues(func_get_args(), "parameters.txt");
+	 * ```
+	 * Useful to generate realistic data for tests providers
+	 *
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public static function ExportFunctionParameterValues(array $args, string $sExportFileName, array $aExcludedParams = []): string
+	{
+		// get sclass et function dans la callstrack
+
+		// in the callstack get the call function name
+		$aCallStack = debug_backtrace();
+		$sCallFunction = $aCallStack[1]['function'];
+		// in the casll stack get the call class name
+		$sCallClass = $aCallStack[1]['class'];
+		$reflectionFunc = new ReflectionMethod($sCallClass, $sCallFunction);
+		$parameters = $reflectionFunc->getParameters();
+
+		$aParamValues = [];
+		foreach ($parameters as $index => $param) {
+			$aParamValues[$param->getName()] = $args[$index] ?? null;
+		}
+
+		$paramValues = $aParamValues;
+		foreach ($aExcludedParams as $sExcludedParam) {
+			unset($paramValues[$sExcludedParam]);
+		}
+
+		// extract oPage from the array in parameters and make a foreach on exlucded parameters
+		foreach ($aExcludedParams as $sExcludedParam) {
+			unset($paramValues[$sExcludedParam]);
+		}
+
+		$var_export = var_export($paramValues, true);
+		file_put_contents(APPROOT.'/log/' .$sExportFileName, $var_export);
+		return $var_export;
+	}
+
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
+		// Hack - Required the first time the Portal kernel is booted on a newly installed iTop
+		$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'] = __DIR__ . '/../../../../../env-production/itop-portal-base/portal/public/';
 
 		$this->LoadRequiredItopFiles();
 		$this->LoadRequiredTestFiles();
@@ -122,6 +190,27 @@ abstract class ItopTestCase extends TestCase
 		return $sAppRootPath . '/';
 	}
 
+	private static function GetFirstDirUpContainingFile(string $sSearchPath, string $sFileToFindGlobPattern): ?string
+	{
+		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
+			$aGlobFiles = glob($sSearchPath . '/' . $sFileToFindGlobPattern);
+			if (is_array($aGlobFiles) && (count($aGlobFiles) > 0)) {
+				return $sSearchPath . '/';
+			}
+			$iOffsetSep = strrpos($sSearchPath, '/');
+			if ($iOffsetSep === false) {
+				$iOffsetSep = strrpos($sSearchPath, '\\');
+				if ($iOffsetSep === false) {
+					// Do not throw an exception here as PHPUnit will not show it clearly when determing the list of test to perform
+					return 'Could not find the approot file in ' . $sSearchPath;
+				}
+			}
+			$sSearchPath = substr($sSearchPath, 0, $iOffsetSep);
+		}
+		return null;
+	}
+
+
 	/**
 	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceItopFile()}
 	 *
@@ -130,8 +219,9 @@ abstract class ItopTestCase extends TestCase
 	 */
 	protected function LoadRequiredItopFiles(): void
 	{
-		// Empty until we actually need to require some files in the class
-	}
+		// At least make sure that the autoloader will be loaded, and that the APPROOT constant is defined
+		require_once __DIR__.'/../../../../approot.inc.php';
+    }
 
 	/**
 	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceUnitTestFile()}
@@ -159,23 +249,6 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
-	 * Helper to load a module file. The caller test must be in that module !
-	 * Will browse dir up to find a module.*.php
-	 *
-	 * @param string $sFileRelPath for example 'portal/src/Helper/ApplicationHelper.php'
-	 * @since 2.7.10 3.1.1 3.2.0 N°6709 method creation
-	 */
-	protected function RequireOnceCurrentModuleFile(string $sFileRelPath): void
-	{
-		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
-		$sCallerFileFullPath = $aStack[0]['file'];
-		$sCallerDir = dirname($sCallerFileFullPath);
-
-		$sModuleRootPath = static::GetFirstDirUpContainingFile($sCallerDir, 'module.*.php');
-		require_once $sModuleRootPath . $sFileRelPath;
-	}
-
-	/**
 	 * Require once a unit test file (eg. a mock class) from its relative path from the *current* dir.
 	 * This ensure that required files don't crash when unit tests dir is moved in the iTop structure (see N°5608)
 	 *
@@ -190,26 +263,6 @@ abstract class ItopTestCase extends TestCase
 		$sCallerDirAbsPath = dirname($aStack[0]['file']);
 
 		require_once $sCallerDirAbsPath . DIRECTORY_SEPARATOR . $sFileRelPath;
-	}
-
-	private static function GetFirstDirUpContainingFile(string $sSearchPath, string $sFileToFindGlobPattern): ?string
-	{
-		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
-			$aGlobFiles = glob($sSearchPath . '/' . $sFileToFindGlobPattern);
-			if (is_array($aGlobFiles) && (count($aGlobFiles) > 0)) {
-				return $sSearchPath . '/';
-			}
-			$iOffsetSep = strrpos($sSearchPath, '/');
-			if ($iOffsetSep === false) {
-				$iOffsetSep = strrpos($sSearchPath, '\\');
-				if ($iOffsetSep === false) {
-					// Do not throw an exception here as PHPUnit will not show it clearly when determing the list of test to perform
-					return 'Could not find the approot file in ' . $sSearchPath;
-				}
-			}
-			$sSearchPath = substr($sSearchPath, 0, $iOffsetSep);
-		}
-		return null;
 	}
 
 	protected function debug($sMsg)
@@ -354,11 +407,11 @@ abstract class ItopTestCase extends TestCase
 	 */
 	private function GetProperty(string $sClass, string $sProperty): \ReflectionProperty
 	{
-		$class = new \ReflectionClass($sClass);
-		$property = $class->getProperty($sProperty);
-		$property->setAccessible(true);
+		$oClass = new \ReflectionClass($sClass);
+		$oProperty = $oClass->getProperty($sProperty);
+		$oProperty->setAccessible(true);
 
-		return $property;
+		return $oProperty;
 	}
 
 
@@ -369,7 +422,7 @@ abstract class ItopTestCase extends TestCase
 	 *
 	 * @since 2.7.8 3.0.3 3.1.0
 	 */
-	public function SetNonPublicProperty(object $oObject, string $sProperty, $value)
+	public function SetNonPublicProperty($oObject, string $sProperty, $value)
 	{
 		$oProperty = $this->GetProperty(get_class($oObject), $sProperty);
 		$oProperty->setValue($oObject, $value);
@@ -455,5 +508,68 @@ abstract class ItopTestCase extends TestCase
 			}
 		}
 		closedir($dir);
+	}
+
+	/**
+	 * An alternative to assertEquals in case the order of the elements in the array is not important
+	 *
+	 * @since 3.2.0
+	 */
+	protected function AssertArraysHaveSameItems(array $aExpected, array $aActual, string $sMessage = ''): void
+	{
+		sort($aActual);
+		sort($aExpected);
+
+		$sExpected = implode("\n", $aExpected);
+		$sActual = implode("\n", $aActual);
+		if ($sExpected === $sActual) {
+			$this->assertTrue(true);
+			return;
+		}
+		$sMessage .= "\nExpected:\n$sExpected\nActual:\n$sActual";
+		var_export($aActual);
+
+		$this->fail($sMessage);
+	}
+
+	/**
+	 * The order of the files is not important
+	 *
+	 * @since 3.2.1
+	 */
+	public function AssertDirectoryListingEquals(array $aExpected, string $sDir, string $sMessage = ''): void
+	{
+		$aFiles = [];
+
+		foreach (scandir($sDir) as $sFile) {
+			if ($sFile !== '.' && $sFile !== '..') {
+				$aFiles[] = basename($sFile);
+			}
+		}
+
+		$this->AssertArraysHaveSameItems($aExpected, $aFiles, $sMessage);
+	}
+
+	/**
+	 * Control which Kernel will be loaded when invoking the bootKernel method
+	 *
+	 * @see static::bootKernel(), static::getContainer()
+	 * @see  \Combodo\iTop\Kernel, \Combodo\iTop\Portal\Kernel
+     *
+	 * @param string $sKernelClass
+	 *
+	 * @since 3.2.1
+	 */
+	static protected function SetKernelClass(string $sKernelClass): void
+	{
+		$_SERVER['KERNEL_CLASS'] = $sKernelClass;
+	}
+
+	static protected function bootKernel(array $options = []): KernelInterface
+	{
+		if (!array_key_exists('KERNEL_CLASS', $_SERVER)) {
+			throw new \LogicException('static::SetKernelClass() must be called before booting the kernel.');
+		}
+		return parent::bootKernel($options);
 	}
 }

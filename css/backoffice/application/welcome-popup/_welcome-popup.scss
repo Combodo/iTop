@@ -1,0 +1,142 @@
+/*!
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-welcome-popup--dialog--padding-x: $ibo-spacing-0 !default;
+$ibo-welcome-popup--dialog--padding-y: $ibo-spacing-0 !default;
+
+$ibo-welcome-popup--messages-stack--width: 300px !default;
+$ibo-welcome-popup--messages-stack--padding-x: $ibo-spacing-500 !default;
+$ibo-welcome-popup--messages-stack--padding-y: $ibo-spacing-600 !default;
+$ibo-welcome-popup--messages-stack--background-color: $ibo-color-grey-100 !default;
+
+$ibo-welcome-popup--stack-item--padding-x: $ibo-spacing-400 !default;
+$ibo-welcome-popup--stack-item--padding-y: $ibo-spacing-400 !default;
+$ibo-welcome-popup--stack-item--background-color: $ibo-color-white-100 !default;
+$ibo-welcome-popup--stack-item--border-width: 1px !default;
+$ibo-welcome-popup--stack-item--border-style: solid !default;
+$ibo-welcome-popup--stack-item--border-color: $ibo-color-grey-300 !default;
+$ibo-welcome-popup--stack-item--is-active--border-color: $ibo-color-grey-600 !default;
+$ibo-welcome-popup--stack-item--opacity: 1 !default;
+$ibo-welcome-popup--stack-item--is-acknowledged--opacity: 0.6 !default;
+$ibo-welcome-popup--stack-item--sibling-spacing: $ibo-spacing-400 !default;
+
+$ibo-welcome-popup--stack-item-icon--size: $ibo-size-350 !default;
+$ibo-welcome-popup--stack-item-icon--margin-right: $ibo-spacing-400 !default;
+$ibo-welcome-popup--stack-item-icon--border-size: 1px !default;
+
+$ibo-welcome-popup--message-content--padding-x: $ibo-spacing-800 !default;
+$ibo-welcome-popup--message-content--padding-y: $ibo-spacing-700 !default;
+
+$ibo-welcome-popup--message-illustration--min-width: $ibo-size-650 !default;
+$ibo-welcome-popup--message-illustration--background-size: contain !default;
+$ibo-welcome-popup--message-illustration--spacing: $ibo-spacing-800 !default;
+
+$ibo-welcome-popup--message-title--margin-bottom: $ibo-spacing-700 !default;
+
+
+.ibo-welcome-popup--dialog {
+  @extend %ibo-full-height-content;
+
+  &.ui-dialog-content {
+    padding: $ibo-welcome-popup--dialog--padding-y $ibo-welcome-popup--dialog--padding-x; /* Overload default modal style */
+    height: auto !important; /* Overload default modal inline style to avoid "content" overflowing while "stack" size remains smaller */
+    max-height: 80vh !important; /* Overload default modal inline style to avoid modal remaining "collapsed" */
+  }
+}
+
+.ibo-welcome-popup--messages-stack {
+  min-width: $ibo-welcome-popup--messages-stack--width;
+  max-width: $ibo-welcome-popup--messages-stack--width;
+  padding: $ibo-welcome-popup--messages-stack--padding-y $ibo-welcome-popup--messages-stack--padding-x;
+  overflow-y: auto;
+  background-color: $ibo-welcome-popup--messages-stack--background-color;
+
+  /* Here instead of in .ibo-welcome-popup--stack-item as there is an intermediate DOM level */
+  > *:not(:first-child) {
+    margin-top: $ibo-welcome-popup--stack-item--sibling-spacing;
+  }
+}
+
+.ibo-welcome-popup--stack-item {
+  @extend %ibo-vertically-centered-content;
+  padding: $ibo-welcome-popup--stack-item--padding-y $ibo-welcome-popup--messages-stack--padding-x;
+  background-color: $ibo-welcome-popup--stack-item--background-color;
+  border: $ibo-welcome-popup--stack-item--border-width $ibo-welcome-popup--stack-item--border-style $ibo-welcome-popup--stack-item--border-color;
+  @extend %ibo-border-radius-400;
+
+  &.ibo-is-active {
+    border-color: $ibo-welcome-popup--stack-item--is-active--border-color;
+  }
+  &.ibo-is-acknowledged {
+    opacity: $ibo-welcome-popup--stack-item--is-acknowledged--opacity;
+
+    &.ibo-is-active {
+      opacity: $ibo-welcome-popup--stack-item--opacity;
+    }
+  }
+}
+
+.ibo-welcome-popup--stack-item-icon {
+  width: $ibo-welcome-popup--stack-item-icon--size;
+  height: $ibo-welcome-popup--stack-item-icon--size;
+  min-width: $ibo-welcome-popup--stack-item-icon--size;
+  min-height: $ibo-welcome-popup--stack-item-icon--size;
+  margin-right: $ibo-welcome-popup--stack-item-icon--margin-right; /* Space from title which is always present */
+  @extend %ibo-medallion;
+  border-width: $ibo-welcome-popup--stack-item-icon--border-size;
+}
+
+.ibo-welcome-popup--stack-item-title {
+  @extend %ibo-text-truncated-with-ellipsis;
+  @extend %ibo-font-ral-med-150;
+  @extend %ibo-hyperlink-inherited-colors;
+}
+
+.ibo-welcome-popup--message-content-wrapper {
+  overflow: auto;
+}
+
+.ibo-welcome-popup--message-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $ibo-welcome-popup--message-content--padding-y $ibo-welcome-popup--message-content--padding-x;
+
+  .ibo-welcome-popup--message-illustration {
+    margin-left: $ibo-welcome-popup--message-illustration--spacing;
+  }
+
+  &:not(.ibo-is-active) {
+    display: none;
+  }
+  &.ibo-is-illustration-on-left-side {
+    flex-direction: row-reverse;
+
+    .ibo-welcome-popup--message-illustration {
+      margin-left: unset;
+      margin-right: $ibo-welcome-popup--message-illustration--spacing;
+    }
+  }
+}
+
+.ibo-welcome-popup--message-title {
+  @extend %ibo-font-ral-bol-150;
+  margin-bottom: $ibo-welcome-popup--message-title--margin-bottom;
+}
+
+.ibo-welcome-popup--message-description {
+  @extend %ibo-font-ral-med-150;
+}
+
+.ibo-welcome-popup--message-illustration {
+  display: flex;
+  min-width: $ibo-welcome-popup--message-illustration--min-width;
+  aspect-ratio: 1;
+  background-size: $ibo-welcome-popup--message-illustration--background-size;
+  /* Raw svg needs their height overridden in case its defined in one of their attributes */
+  > svg {
+    height: auto;
+  }
+}

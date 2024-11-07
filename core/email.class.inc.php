@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Send an email (abstraction for synchronous/asynchronous modes)
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -154,7 +154,7 @@ class EMail implements iEMail
 	 */
 	public function SetInReplyTo(string $sMessageId)
 	{
-		$this->AddToHeader('In-Reply-To', $sMessageId);
+		$this->oMailer->SetInReplyTo($sMessageId);
 	}
 
 	public function SetBody($sBody, $sMimeType = 'text/html', $sCustomStyles = null)

@@ -291,7 +291,7 @@ $(function()
 		},
 		// Dirty means: at least one change has not been committed yet
 		is_dirty: function () {
-			if ($('#dashboard_editor .ui-layout-east .itop-property-field-modified').size() > 0) {
+			if ($('#dashboard_editor .ui-layout-east .itop-property-field-modified').length > 0) {
 				return true;
 			} else {
 				return false;

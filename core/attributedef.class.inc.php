@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -2069,7 +2069,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetImportColumns()
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'TEXT'.CMDBSource::GetSqlStringColumnDefinition();
+		$aColumns[$this->GetCode()] = 'MEDIUMTEXT'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
@@ -3572,6 +3572,19 @@ class AttributeBoolean extends AttributeInteger
 	{
 		return CMDBChangeOpSetAttributeScalar::class;
 	}
+
+	public function GetAllowedValues($aArgs = array(), $sContains = '') : array
+	{
+		return [
+			0 => $this->GetValueLabel(false),
+			1 => $this->GetValueLabel(true)
+		];
+	}
+
+	public function GetDisplayStyle()
+	{
+		return $this->GetOptional('display_style', 'select');
+	}
 }
 
 /**
@@ -4259,43 +4272,6 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static $sKey = null; // Encryption key used for all encrypted fields
-	static $sLibrary = null; // Encryption library used for all encrypted fields
-
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-		if (self::$sKey == null)
-		{
-			self::$sKey = MetaModel::GetConfig()->GetEncryptionKey();
-		}
-		if (self::$sLibrary == null)
-		{
-			self::$sLibrary = MetaModel::GetConfig()->GetEncryptionLibrary();
-		}
-	}
-
-	/**
-	 * When the attribute definitions are stored in APC cache:
-	 * 1) The static class variable $sKey is NOT serialized
-	 * 2) The object's constructor is NOT called upon wakeup
-	 * 3) mcrypt may crash the server if passed an empty key !!
-	 *
-	 * So let's restore the key (if needed) when waking up
-	 **/
-	public function __wakeup()
-	{
-		if (self::$sKey == null)
-		{
-			self::$sKey = MetaModel::GetConfig()->GetEncryptionKey();
-		}
-		if (self::$sLibrary == null)
-		{
-			self::$sLibrary = MetaModel::GetConfig()->GetEncryptionLibrary();
-		}
-	}
-
-
 	protected function GetSQLCol($bFullSpec = false)
 	{
 		return "TINYBLOB";
@@ -4334,8 +4310,8 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 	 */
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		$oSimpleCrypt = new SimpleCrypt(self::$sLibrary);
-		$sValue = $oSimpleCrypt->Decrypt(self::$sKey, $aCols[$sPrefix]);
+		$oSimpleCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
+		$sValue = $oSimpleCrypt->Decrypt(MetaModel::GetConfig()->GetEncryptionKey(), $aCols[$sPrefix]);
 
 		return $sValue;
 	}
@@ -4350,8 +4326,8 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 	 */
 	public function GetSQLValues($value)
 	{
-		$oSimpleCrypt = new SimpleCrypt(self::$sLibrary);
-		$encryptedValue = $oSimpleCrypt->Encrypt(self::$sKey, $value);
+		$oSimpleCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
+		$encryptedValue = $oSimpleCrypt->Encrypt(MetaModel::GetConfig()->GetEncryptionKey(), $value);
 
 		$aValues = array();
 		$aValues[$this->Get("sql")] = $encryptedValue;
@@ -4591,10 +4567,6 @@ class AttributeText extends AttributeString
 					}
 				}
 			}
-		}
-		else
-		{
-			$sValue = str_replace('&', '&amp;', $sValue);
 		}
 
 		return $sValue;
@@ -11302,6 +11274,10 @@ class AttributeEnumSet extends AttributeSet
 		}
 		return $aValues;
 	}
+	public function Equals($val1, $val2)
+	{
+		return $val1->Equals($val2);
+	}
 }
 
 
@@ -11546,6 +11522,11 @@ class AttributeClassAttCodeSet extends AttributeSet
 			$value = implode('', $value);
 		}
 		return '<span class="'.implode(' ', $this->aCSSClasses).'">'.$value.'</span>';
+	}
+
+	public function IsNull($proposedValue)
+	{
+		return (empty($proposedValue));
 	}
 }
 

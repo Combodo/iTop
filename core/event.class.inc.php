@@ -3,7 +3,7 @@
 use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -131,7 +131,7 @@ class EventNotification extends Event
 			"db_finalclass_field" => "",
 			"order_by_default" => array('date' => false),
 			'indexes' => array(
-				array('object_id'),
+				array( 'object_class', 'object_id'),
 			)
 		);
 		MetaModel::Init_Params($aParams);
@@ -139,9 +139,11 @@ class EventNotification extends Event
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("trigger_id", array("targetclass"=>"Trigger", "jointype"=> "", "allowed_values"=>null, "sql"=>"trigger_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("action_id", array("targetclass" => "Action", "jointype" => "", "allowed_values" => null, "sql" => "action_id", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("object_id", array("allowed_values" => null, "sql" => "object_id", "default_value" => 0, "is_null_allowed" => false, "depends_on" => array())));
+        //@since 3.2.0
+        MetaModel::Init_AddAttribute(new AttributeClass("object_class", array("class_category"=>"", "more_values"=>"", "sql"=>"object_class", "default_value"=>null, "is_null_allowed"=>true /*to avoid setting AbstractResource as default in database*/, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'message', 'userinfo', 'trigger_id', 'action_id', 'object_id')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('date', 'message', 'userinfo', 'trigger_id', 'action_id', 'object_class', 'object_id')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'message')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
@@ -176,7 +178,7 @@ class EventNotificationEmail extends EventNotification
 		MetaModel::Init_AddAttribute(new AttributeTable("attachments", array("allowed_values"=>null, "sql"=>"attachments", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'message', 'trigger_id', 'action_id', 'object_id', 'to', 'cc', 'bcc', 'from', 'subject', 'body', 'attachments')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'message', 'trigger_id', 'action_id', 'object_class', 'object_id', 'to', 'cc', 'bcc', 'from', 'subject', 'body', 'attachments')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'message', 'to', 'subject', 'attachments')); // Attributes to be displayed for a list
 
 		// Search criteria
@@ -231,7 +233,7 @@ class EventIssue extends Event
 
 		if (array_key_exists('_GET', $GLOBALS) && is_array($GLOBALS['_GET']))
 		{
-			$this->Set('arguments_get', $GLOBALS['_GET']);
+			$this->Set('arguments_get', $this->SanitizeRequestParams($GLOBALS['_GET']));
 		}
 		else
 		{
@@ -240,22 +242,7 @@ class EventIssue extends Event
 
 		if (array_key_exists('_POST', $GLOBALS) && is_array($GLOBALS['_POST']))
 		{
-			$aPost = array();
-			foreach($GLOBALS['_POST'] as $sKey => $sValue)
-			{
-				if (is_string($sValue))
-				{
-					if (mb_strlen($sValue) < 256) {
-						$aPost[$sKey] = $sValue;
-					} else {
-						$aPost[$sKey] = "!long string: ".mb_strlen($sValue)." chars";
-					}
-				} else {
-					// Not a string (avoid warnings in case the value cannot be easily casted into a string)
-					$aPost[$sKey] = @(string)$sValue;
-				}
-			}
-			$this->Set('arguments_post', $aPost);
+			$this->Set('arguments_post', $this->SanitizeRequestParams($GLOBALS['_POST']));
 		} else {
 			$this->Set('arguments_post', array());
 		}
@@ -273,6 +260,29 @@ class EventIssue extends Event
 		if ($sLength > 255) {
 			$this->Set('page', mb_substr($this->Get('page'), 0, 210)." -truncated ($sLength chars)");
 		}
+	}
+
+	protected function SanitizeRequestParams(array $aParams): array
+	{
+		$aSanitizedParams = [];
+
+		foreach ($aParams as $sKey => $sValue) {
+			if (is_string($sValue)) {
+				if (stristr($sKey, 'pwd') !== false || stristr($sKey, 'passwd') !== false || stristr($sKey, 'password') !== false) {
+					$aSanitizedParams[$sKey] = '****';
+				} elseif (mb_strlen($sValue) < 256) {
+					$aSanitizedParams[$sKey] = $sValue;
+				} else {
+					$aSanitizedParams[$sKey] = '!long string: '.mb_strlen($sValue).' chars';
+				}
+			} else {
+				// Not a string (avoid warnings in case the value cannot be easily cast into a string)
+				$aSanitizedParams[$sKey] = @(string)$sValue;
+			}
+		}
+
+
+		return $aSanitizedParams;
 	}
 }
 

@@ -1,0 +1,40 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+// ==========================================================================
+// $Shame
+// @see http://csswizardry.com/2013/04/shame-css/
+// Thanks https://github.com/heroheman/shepherd/blob/master/sass/_shame.scss
+// ==========================================================================
+//
+// ==========================================================================
+// because hacks happen.
+//
+// be very specific about what each piece of code is doing, and
+// how to better fix it later
+// ==========================================================================
+//
+// Try:  $ git blame _shame.scss
+//
+// Rules:
+// ---------------
+//   1. If it’s a hack, it goes in _shame.scss.
+//   2. Document all hacks fully:
+//   3. What part of the codebase does it relate to?
+//   4. Why was this needed?
+//   5. How does this fix it?
+//   6. How might you fix it properly, given more time?
+//   7. Do not blame the developer; if they explained why they had to do it then their reasons are probably (hopefully) valid.
+//   8. Try and clean _shame.scss up when you have some down time.
+
+// Example:
+// ---------------
+// Nav specificity fix.
+//
+// Someone used an ID in the header code (`#header a{}`) which trumps the
+// nav selectors (`.site-nav a{}`). Use !important to override it until I
+// have time to refactor the header stuff.
+//
+// .site-nav a { color:#BADA55!important; }

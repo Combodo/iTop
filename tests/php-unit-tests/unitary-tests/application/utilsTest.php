@@ -29,6 +29,19 @@ use utils;
  */
 class utilsTest extends ItopTestCase
 {
+	protected function setUp(): void
+	{
+		parent::setUp();
+		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', 'https://localhost/itop/');
+	}
+
+	protected function tearDown(): void
+	{
+		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', null);
+		parent::tearDown();
+	}
+
+
 	public function testEndsWith()
 	{
 		$this->assertFalse(utils::EndsWith('a', 'bbbb'));
@@ -632,21 +645,21 @@ class utilsTest extends ItopTestCase
 	}
 
 	/**
+	 * @dataProvider GetMentionedObjectsFromTextProvider
 	 * @covers       utils::GetMentionedObjectsFromText
 	 *
 	 * @throws \Exception
 	 */
-	public function testGetMentionedObjectsFromText()
+	public function testGetMentionedObjectsFromText($sInput, $sFormat, $aExceptedMentionedObjects)
 	{
 		// Emulate the "Case provider mechanism" (reason: the data provider requires utils constants not available before the application startup)
-		foreach ($this->GetMentionedObjectsFromTextProvider() as $sCase => list($sInput, $sFormat, $aExceptedMentionedObjects)) {
-			$aTestedMentionedObjects = utils::GetMentionedObjectsFromText($sInput, $sFormat);
+		echo "testGetMentionedObjectsFromText: input = $sInput\n";
+		$aTestedMentionedObjects = utils::GetMentionedObjectsFromText($sInput, $sFormat);
 
-			$sExpectedAsString = print_r($aExceptedMentionedObjects, true);
-			$sTestedAsString = print_r($aTestedMentionedObjects, true);
+		$sExpectedAsString = print_r($aExceptedMentionedObjects, true);
+		$sTestedAsString = print_r($aTestedMentionedObjects, true);
 
-			$this->assertEquals($sTestedAsString, $sExpectedAsString, "Case '$sCase': Found mentioned objects don't match. Got: $sTestedAsString, expected $sExpectedAsString");
-		}
+		$this->assertEquals($sTestedAsString, $sExpectedAsString, "Found mentioned objects don't match. Got: $sTestedAsString, expected $sExpectedAsString");
 	}
 
 	/**
@@ -666,7 +679,7 @@ class utilsTest extends ItopTestCase
 			],
 			'1 UserRequest' => [
 				"Begining
-				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
+				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php?operation=details&amp;class=UserRequest&amp;id=12345&amp;foo=bar\">R-012345</a> After link
 				End",
 				utils::ENUM_TEXT_FORMAT_HTML,
 				[
@@ -675,8 +688,8 @@ class utilsTest extends ItopTestCase
 			],
 			'2 UserRequests' => [
 				"Begining
-				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
-				And <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=987654&foo=bar\">R-987654</a>
+				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php?operation=details&amp;class=UserRequest&amp;id=12345&amp;foo=bar\">R-012345</a> After link
+				And <a href=\"$sAbsUrlAppRoot/pages/UI.php&amp;operation=details&amp;class=UserRequest&amp;id=987654&amp;foo=bar\">R-987654</a>
 				End",
 				utils::ENUM_TEXT_FORMAT_HTML,
 				[
@@ -685,8 +698,8 @@ class utilsTest extends ItopTestCase
 			],
 			'1 UserRequest, 1 Person' => [
 				"Begining
-				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
-				And <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=Person&id=3&foo=bar\">Claude Monet</a>
+				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php?operation=details&amp;class=UserRequest&amp;id=12345&amp;foo=bar\">R-012345</a> After link
+				And <a href=\"$sAbsUrlAppRoot/pages/UI.php?operation=details&amp;class=Person&amp;id=3&amp;foo=bar\">Claude Monet</a>
 				End",
 				utils::ENUM_TEXT_FORMAT_HTML,
 				[

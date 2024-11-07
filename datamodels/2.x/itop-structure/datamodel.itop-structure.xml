@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="Organization" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -7,7 +7,7 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,structure</category>
@@ -564,6 +564,9 @@
             <item id="org_id">
               <rank>30</rank>
             </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
           </items>
         </default_search>
         <list>
@@ -733,8 +736,8 @@
         $oSearch->AllowAllData();
         $oUserSet = new DBObjectSet($oSearch);
 
-        // The organization's person was changed and it has associated Users
-        if (array_key_exists('org_id', $aChanges) && ($oUserSet->Count() > 0)) {
+        // Change was not made by a DataSynchro and the organization's person was changed and there are associated Users
+        if (!ContextTag::Check(ContextTag::TAG_SYNCHRO) && array_key_exists('org_id', $aChanges) && ($oUserSet->Count() > 0)) {
             while($oUser = $oUserSet->Fetch())
             {
                 $oAddon = UserRights::GetModuleInstance();
@@ -1488,13 +1491,15 @@
         </field>
       </fields>
       <methods>
-        <method id="DisplayBareRelations">
+        <method id="DisplayBareProperties">
           <static>false</static>
           <access>public</access>
           <type>Overload-cmdbAbstractObject</type>
           <comment><![CDATA[/**
 	 * Overload the display of the properties to add a tab (the first one)
 	 * with the preview of the document
+
+
 	 */
 	]]></comment>
           <code><![CDATA[public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
@@ -2024,11 +2029,11 @@
     </themes>
     <themes_common>
       <variables>
-        </variables>
+      </variables>
       <imports>
-        </imports>
+      </imports>
       <stylesheets>
-        </stylesheets>
+      </stylesheets>
     </themes_common>
   </branding>
   <user_rights>

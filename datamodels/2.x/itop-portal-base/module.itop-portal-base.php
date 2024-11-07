@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,7 +20,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-portal-base/3.2.0', array(
+	'itop-portal-base/3.3.0', array(
 	// Identification
 	'label' => 'Portal Development Library',
 		'category' => 'Portal',
@@ -54,3 +54,11 @@ SetupWebPage::AddModule(
 	),
 	)
 );
+
+
+//  ____  _                       _        _                                      __   _   _                             _        _    _______
+// |  _ \| | ___  __ _ ___  ___  | |_ __ _| | _____    ___ __ _ _ __ ___    ___  / _| | |_| |__   ___   _ __   ___  _ __| |_ __ _| |  / /___ /
+// | |_) | |/ _ \/ _` / __|/ _ \ | __/ _` | |/ / _ \  / __/ _` | '__/ _ \  / _ \| |_  | __| '_ \ / _ \ | '_ \ / _ \| '__| __/ _` | | / /  |_ \
+// |  __/| |  __/ (_| \__ \  __/ | || (_| |   <  __/ | (_| (_| | | |  __/ | (_) |  _| | |_| | | |  __/ | |_) | (_) | |  | || (_| | | \ \ ___) |
+// |_|   |_|\___|\__,_|___/\___|  \__\__,_|_|\_\___|  \___\__,_|_|  \___|  \___/|_|    \__|_| |_|\___| | .__/ \___/|_|   \__\__,_|_|  \_\____/
+//                                                                                                     |_|

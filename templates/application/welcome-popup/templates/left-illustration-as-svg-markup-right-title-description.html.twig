@@ -1,0 +1,7 @@
+{% extends 'templates/application/welcome-popup/templates/left-illustration-right-title-description.html.twig' %}
+
+{%  block wpMessagIllustrationInner %}
+    <div class="ibo-welcome-popup--message-illustration  ibo-svg-illustration--container">
+        {{ source_abs( oMessage.GetIllustrationAbsURI() ) }}
+    </div>
+{% endblock %}

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -45,7 +45,7 @@ class WebResourcesHelper
 			['font' => utils::GetAbsoluteUrlAppRoot().'node_modules/@fontsource/raleway/files/raleway-all-500-italic.woff', 'type' => 'woff'],
 		];
 	}
-	
+
 	//---------------------------------
 	// CKEditor
 	//---------------------------------
@@ -60,8 +60,8 @@ class WebResourcesHelper
 	public static function EnableCKEditorToWebPage(WebPage &$oPage): void
 	{
 		//when ckeditor is loaded in ajax,  CKEDITOR_BASEPATH  is not well defined (this constant is used to load additional js)
-		$oPage->add_script("if (! window.CKEDITOR_BASEPATH) { var CKEDITOR_BASEPATH = '".utils::GetAbsoluteUrlAppRoot()."js/ckeditor/';}");
-		foreach (static::GetJSFilesRelPathsForCKEditor() as $sFile) {
+		$oPage->add_script("if (! window.CKEDITOR_BASEPATH) { var CKEDITOR_BASEPATH = '".utils::GetAbsoluteUrlAppRoot()."node_modules/ckeditor5-itop-build/';}");
+		foreach (CKEditorHelper::GetJSFilesRelPathsForCKEditor() as $sFile) {
 			$oPage->LinkScriptFromAppRoot($sFile);
 		}
 	}
@@ -71,13 +71,9 @@ class WebResourcesHelper
 	 */
 	public static function GetJSFilesRelPathsForCKEditor(): array
 	{
-		return [
-			'js/ckeditor/ckeditor.js',
-			'js/ckeditor/adapters/jquery.js',
-			'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js',
-			'js/ckeditor.on-init.js',
-		];
+		return CKEditorHelper::GetJSFilesRelPathsForCKEditor();
 	}
+
 
 	//---------------------------------
 	// D3/C3.js
@@ -137,8 +133,8 @@ class WebResourcesHelper
 	{
 		$oPage->LinkScriptFromAppRoot('js/raphael-min.js');
 		$oPage->LinkScriptFromAppRoot('js/fraphael.js');
-		$oPage->LinkStylesheetFromAppRoot('node_modules/jquery-contextmenu/src/jquery.contextMenu.css');
-		$oPage->LinkScriptFromAppRoot('node_modules/jquery-contextmenu/src/jquery.contextMenu.js');
+		$oPage->LinkStylesheetFromAppRoot('node_modules/jquery-contextmenu/dist/jquery.contextMenu.min.css');
+		$oPage->LinkScriptFromAppRoot('node_modules/jquery-contextmenu/dist/jquery.contextMenu.min.js');
 		$oPage->LinkScriptFromAppRoot('js/jquery.positionBy.js');
 		$oPage->LinkScriptFromAppRoot('js/jquery.popupmenu.js');
 		$oPage->LinkScriptFromAppRoot('js/jquery.mousewheel.js');

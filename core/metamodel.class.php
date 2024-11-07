@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2023 Combodo SARL
+// Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -43,7 +43,7 @@ require_once APPROOT.'application/loginurl.class.inc.php';
 /**
  * Metamodel
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -3698,6 +3698,27 @@ abstract class MetaModel
 	}
 
 	/**
+	 * Get the HTML class to apply to the object in the datatables
+	 *
+	 * @param string $sClass requested for the list (can be abstract)
+	 * @param \DBObject $oObject the object to display
+	 *
+	 * @return string   the class to apply to the object
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 *
+	 * @since 3.2.0
+	 */
+	final public static function GetHilightClass(string $sClass, DBObject $oObject): string
+	{
+		if (self::IsAbstract($sClass) && self::GetConfig()->Get('list.highlight_abstract_class') === false) {
+			return '';
+		}
+
+		return $oObject->GetHilightClass();
+	}
+
+	/**
 	 * @param string $sTargetClass
 	 *
 	 * @return array
@@ -6852,6 +6873,9 @@ abstract class MetaModel
 	/**
 	 * Instantiate an object already persisted to the Database.
 	 *
+	 * Note that LinkedSet attributes are not loaded.
+	 * DBObject::Reload() will be called when getting a LinkedSet attribute
+	 *
 	 * @api
 	 * @see MetaModel::GetObjectWithArchive to get object even if it's archived
 	 * @see utils::PushArchiveMode() to enable search on archived objects
@@ -7453,6 +7477,8 @@ abstract class MetaModel
 	 * @param string|null $sFilterInstanceOf [optional] if given, only instance of this string will be returned
 	 *
 	 * @return array classes=>instance implementing the given interface
+	 *
+	 * @see \Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery::FindItopClasses() to add extensibility to modules
 	 */
 	public static function EnumPlugins($sInterface, $sFilterInstanceOf = null)
 	{

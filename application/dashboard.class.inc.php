@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -480,7 +480,7 @@ abstract class Dashboard
 	CombodoTooltip.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
 	$("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
 	
-	$('#attr_auto_reload').change( function(ev) {
+	$('#attr_auto_reload').on('change', function(ev) {
 		$("#attr_auto_reload_sec").prop('disabled', !$(this).is(':checked'));
 	} );
 
@@ -1272,6 +1272,7 @@ EOF
 		$sAutoReloadSec = (string) $this->iAutoReloadSec;
 		$sTitle = utils::HtmlEntities($this->sTitle);
 		$sFile = utils::HtmlEntities($this->GetDefinitionFile());
+		$sFileForJS = json_encode($this->GetDefinitionFile());
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
 		$sReloadURL = $this->GetReloadURL();
 
@@ -1333,9 +1334,9 @@ $('#dashboard_editor .ui-layout-center').runtimedashboard({
 	auto_reload: $sAutoReload, 
 	auto_reload_sec: $sAutoReloadSec,
 	submit_to: '$sUrl', 
-	submit_parameters: {operation: 'save_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	submit_parameters: {operation: 'save_dashboard', file: {$sFileForJS}, extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 	render_to: '$sUrl', 
-	render_parameters: {operation: 'render_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	render_parameters: {operation: 'render_dashboard', file: {$sFileForJS}, extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 	new_dashlet_parameters: {operation: 'new_dashlet'}
 });
 

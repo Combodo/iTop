@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -1241,6 +1241,19 @@ class ObjectController extends BrickController
 
 				break;
 
+			case 'display':
+				// Preparing redirection
+				// - Route
+				$aRouteParams = array(
+					'sObjectClass' => 'Attachment',
+					'sObjectId' => $this->oRequestManipulatorHelper->ReadParam('sAttachmentId', null),
+					'sObjectField' => 'contents',
+				);
+
+				$oResponse = $this->ForwardToRoute('p_object_document_display', $aRouteParams, $oRequest->query->all());
+
+				break;
+
 			default:
 				throw new HttpException(Response::HTTP_FORBIDDEN, Dict::S('Error:HTTP:400'));
 				break;
@@ -1408,14 +1421,14 @@ class ObjectController extends BrickController
 	protected function PrepareObjectInformation(DBObject $oObject, $aAttCodes = array())
 	{
 		$sObjectClass = get_class($oObject);
-		$aObjectData = array(
+		$aObjectData = [
 			'id'         => $oObject->GetKey(),
 			'name'       => $oObject->GetName(),
-			'attributes' => array(),
-		);
+			'attributes' => [],
+		];
 
 		// Retrieving attributes definitions
-		$aAttDefs = array();
+		$aAttDefs = [];
 		foreach ($aAttCodes as $sAttCode)
 		{
 			if ($sAttCode === 'id')
@@ -1429,13 +1442,30 @@ class ObjectController extends BrickController
 		// Preparing attribute data
 		foreach ($aAttDefs as $oAttDef)
 		{
-			$aAttData = array(
-				'att_code' => $oAttDef->GetCode(),
-			);
+			$aAttData = [
+				'object_class'  => $sObjectClass,
+				'object_id'  => $oObject->GetKey(),
+				'attribute_code' => $oAttDef->GetCode(),
+				'attribute_type' => get_class($oAttDef),
+			];
+
+			// - Value raw
+			// For simple fields, we get the raw (stored) value as well
+			$bExcludeRawValue = false;
+			foreach (ApplicationHelper::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
+			{
+				if (is_a($oAttDef, $sAttDefClassToExclude, true))
+				{
+					$bExcludeRawValue = true;
+					break;
+				}
+			}
+			$aAttData['value_raw'] = ($bExcludeRawValue === false) ? $oObject->Get($oAttDef->GetCode()) : null;
+
 
 			if ($oAttDef->IsExternalKey())
 			{
-				$aAttData['value'] = $oObject->GetAsHTML($oAttDef->GetCode().'_friendlyname');
+				$aAttData['value_html'] = $oObject->GetAsHTML($oAttDef->GetCode().'_friendlyname');
 
 				// Checking if user can access object's external key
 				if ($this->oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $oAttDef->GetTargetClass()))
@@ -1467,14 +1497,14 @@ class ObjectController extends BrickController
 				{
 					$sUrl = $oAttDef->Get('default_image');
 				}
-				$aAttData['value'] = '<img src="'.$sUrl.'" />';
+				$aAttData['value_html'] = '<img src="'.$sUrl.'" />';
 			}
 			elseif ($oAttDef instanceof AttributeEnum) {
-				$aAttData['value'] = $oAttDef->GetAsPlainText($oObject->Get($oAttDef->GetCode()));
+				$aAttData['value_html'] = $oAttDef->GetAsPlainText($oObject->Get($oAttDef->GetCode()));
 			}
 			else
 			{
-				$aAttData['value'] = $oAttDef->GetAsHTML($oObject->Get($oAttDef->GetCode()));
+				$aAttData['value_html'] = $oAttDef->GetAsHTML($oObject->Get($oAttDef->GetCode()));
 
 				if ($oAttDef instanceof AttributeFriendlyName)
 				{

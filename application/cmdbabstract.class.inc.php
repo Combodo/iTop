@@ -1,9 +1,10 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
@@ -804,16 +805,16 @@ HTML
 		if (!$this->IsNew()) {
 			// Look for any trigger that considers this object as "In Scope"
 			// If any trigger has been found then display a tab with notifications
-			//
+			// If all triggers on an object have been deleted, we consider that we no longer need the event notification information
 			$aTriggers = $this->GetRelatedTriggersIDs();
 			if (count($aTriggers) > 0) {
 				$iId = $this->GetKey();
-				$aParams = array('triggers' => $aTriggers, 'id' => $iId);
+				$aParams = array('class' => get_class($this), 'id' => $iId);
 				$aNotifSearches = array();
 				$iNotifsCount = 0;
 				$aNotificationClasses = MetaModel::EnumChildClasses('EventNotification');
 				foreach ($aNotificationClasses as $sNotifClass) {
-					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN (:triggers) AND Ev.object_id = :id");
+					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev WHERE Ev.object_id = :id AND Ev.object_class = :class");
 					$aNotifSearches[$sNotifClass]->SetInternalParams($aParams);
 					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array());
 					$iNotifsCount += $oNotifSet->Count();
@@ -1058,11 +1059,6 @@ HTML
 					}
 				}
 			}
-		}
-
-		// Fields with CKEditor need to have the highlight.js lib loaded even if they are in read-only, as it is needed to format code snippets
-		if ($bHasFieldsWithRichTextEditor) {
-			WebResourcesHelper::EnableCKEditorToWebPage($oPage);
 		}
 
 		return $aFieldsMap;
@@ -2307,7 +2303,7 @@ JS
 					$sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
 
 					$sHTMLValue = "$sHeader<div class=\"ibo-caselog-entry-form--text-input\" $sStyle data-role=\"ibo-caselog-entry-form--text-input\">";
-					$sHTMLValue .= "<textarea class=\"htmlEditor ibo-input-richtext-placeholder\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".utils::EscapeHtml($sEditValue)."</textarea>";
+					$sHTMLValue .= "<textarea class=\"htmlEditor ibo-input-richtext-placeholder\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".CKEditorHelper::PrepareCKEditorValueTextEncodingForTextarea($sEditValue)."</textarea>";
 					$sHTMLValue .= "$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
 
 					// Note: This should be refactored for all types of attribute (see at the end of this function) but as we are doing this for a maintenance release, we are scheduling it for the next main release in to order to avoid regressions as much as possible.
@@ -2319,39 +2315,10 @@ JS
 
 					$oPage->add_ready_script("$('#$iId').on('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );"); // Custom validation function
 
-					// Replace the text area with CKEditor
-					// To change the default settings of the editor,
-					// a) edit the file /js/ckeditor/config.js
-					// b) or override some of the configuration settings, using the second parameter of ckeditor()
-					$aConfig = utils::GetCkeditorPref();
-					$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
-
-					// - Final config
-					$sConfigJS = json_encode($aConfig);
-
-					WebResourcesHelper::EnableCKEditorToWebPage($oPage);
-					$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
-
-					$oPage->add_ready_script(
-<<<EOF
-$('#$iId').on('update', function(evt){
-	BlockField('cke_$iId', $('#$iId').attr('disabled'));
-	//Delayed execution - ckeditor must be properly initialized before setting readonly
-	var retryCount = 0;
-	var oMe = $('#$iId');
-	var delayedSetReadOnly = function () {
-		if (oMe.data('ckeditorInstance').editable() == undefined && retryCount++ < 10) {
-			setTimeout(delayedSetReadOnly, retryCount * 100); //Wait a while longer each iteration
-		}
-		else
-		{
-			oMe.data('ckeditorInstance').setReadOnly(oMe.prop('disabled'));
-		}
-	};
-	setTimeout(delayedSetReadOnly, 50);
-});
-EOF
-					);
+					// configure CKEditor
+					CKEditorHelper::ConfigureCKEditorElementForWebPage($oPage, $iId, $sOriginalValue, true, [
+						'placeholder' => Dict::S('UI:CaseLogTypeYourTextHere'),
+					]);
 					break;
 
 				case 'HTML':
@@ -2608,6 +2575,13 @@ JS
 					$iFieldSize = $oAttDef->GetMaxSize();
 					if ($aAllowedValues !== null)
 					{
+
+						// convert AttributeBoolean value due to issue with radio style when value is false
+						// @see N°2443 - Boolean don't accept yes/no value
+						if($oAttDef instanceof AttributeBoolean){
+							$value = $value === false ? 0 : 1;
+						}
+
 						// Discrete list of values, use a SELECT or RADIO buttons depending on the config
 						$sDisplayStyle = $oAttDef->GetDisplayStyle();
 						switch ($sDisplayStyle)
@@ -4596,6 +4570,8 @@ HTML;
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBInsert()");
             $oKPI = new ExecutionKPI();
 			$oExtensionInstance->OnDBInsert($oNewObj, self::GetCurrentChange());
             $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBInsert');
@@ -4677,7 +4653,22 @@ HTML;
 		return $oDeletionPlan;
 	}
 
-	protected function PostDeleteActions(): void
+	final protected function PreDeleteActions(): void
+	{
+		/** @var \iApplicationObjectExtension $oExtensionInstance */
+		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		{
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBDelete()");
+			$oKPI = new ExecutionKPI();
+			$oExtensionInstance->OnDBDelete($this, self::GetCurrentChange());
+			$oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBDelete');
+		}
+
+		parent::PreDeleteActions();
+	}
+
+	final protected function PostDeleteActions(): void
 	{
 		parent::PostDeleteActions();
 	}
@@ -4691,6 +4682,8 @@ HTML;
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBDelete()");
             $oKPI = new ExecutionKPI();
 			$oExtensionInstance->OnDBDelete($this, self::GetCurrentChange());
             $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBDelete');
@@ -4712,6 +4705,7 @@ HTML;
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnIsModified()");
 			$oKPI = new ExecutionKPI();
 			$bIsModified = $oExtensionInstance->OnIsModified($this);
 			$oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnIsModified');
@@ -4771,6 +4765,8 @@ HTML;
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnCheckToWrite()");
             $oKPI = new ExecutionKPI();
 			$aNewIssues = $oExtensionInstance->OnCheckToWrite($this);
             $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnCheckToWrite');
@@ -4821,6 +4817,8 @@ HTML;
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnCheckToDelete()");
             $oKPI = new ExecutionKPI();
 			$aNewIssues = $oExtensionInstance->OnCheckToDelete($this);
             $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnCheckToDelete');
@@ -5947,7 +5945,7 @@ JS
 	final protected function FireEventAfterWrite(array $aChanges, bool $bIsNew): void
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
-		$this->FireEventDbLinksChangedForCurrentObject();
+		$this->RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
 		$this->FireEvent(EVENT_DB_AFTER_WRITE, ['is_new' => $bIsNew, 'changes' => $aChanges]);
 	}
 
@@ -6061,31 +6059,6 @@ JS
 	}
 
 	/**
-	 * Fire the EVENT_DB_LINKS_CHANGED event if current object is registered
-	 *
-	 * @return void
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 *
-	 * @since 3.1.0 N°5906
-	 */
-	final protected function FireEventDbLinksChangedForCurrentObject(): void
-	{
-		if (true === static::IsEventDBLinksChangedBlocked()) {
-			return;
-		}
-
-		$sClass = get_class($this);
-		$sId = $this->GetKey();
-		$bIsObjectAwaitingEventDbLinksChanged = self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
-		if (false === $bIsObjectAwaitingEventDbLinksChanged) {
-			return;
-		}
-		self::FireEventDbLinksChangedForObject($this);
-		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
-	}
-
-	/**
 	 * Fire the EVENT_DB_LINKS_CHANGED event if given object is registered, and unregister it
 	 *
 	 * @param string $sClass
@@ -6123,9 +6096,9 @@ JS
 		self::SetEventDBLinksChangedBlocked(true);
 		// N°6408 The object can have been deleted
 		if (!is_null($oObject)) {
-			MetaModel::StartReentranceProtection($oObject);
 			$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
-			MetaModel::StopReentranceProtection($oObject);
+
+			// Update the object if needed
 			if (count($oObject->ListChanges()) !== 0) {
 				$oObject->DBUpdate();
 			}

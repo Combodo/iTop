@@ -1,5 +1,5 @@
 
-{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 {# SET WIDGET #}
@@ -54,7 +54,8 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
         {% if oUIBlock.GetMinItems() is not empty %}
         'combodo_min_items' : {
             minItems: {{ oUIBlock.GetMinItems() }},
-            errorMessage: '{{ 'UI:Component:Input:Set:MinimumItems'|dict_format(oUIBlock.GetMinItems()) }}'
+            errorTitle: '{{ 'UI:Component:Input:ChangeNotAllowed'|dict_s()|escape('js') }}',
+            errorMessage: '{{ 'UI:Component:Input:Set:MinimumItems'|dict_format(oUIBlock.GetMinItems())|escape('js') }}'
         },
         {% endif %}
     },
@@ -107,8 +108,8 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
 
                 // Handle errors
                 if(!me.settings.hasError){
-                    me.toggleErrorClass(!res.data.success);
-                    if(!res.data.success) return;
+                    me.toggleErrorClass(!res.success);
+                    if(!res.success) return;
                 }
 
                 // Retrieve current input value
@@ -116,9 +117,10 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
                 // Filter old options data to keep selected values
                 // (options with force flag will be kept event if they doesn't be part of the current value)
                 let options = Object.values(me.options);
+                me.optionsBeforeFilter = options;
                 options = options.filter(item => (typeof(item.force) !== "undefined" && item.force === true) || aSelectedItems.includes(item['{{ oDataProvider.GetDataValueField() }}']));
                 // Merge kept and new values
-                options = $.merge(options, res.data.search_data);
+                options = $.merge(options, res.search_data);
                 // Compute groups
                 $.each(options, function(index, value) {
                     me.addOptionGroup(value['{{ oDataProvider.GetGroupField() }}'], {
@@ -131,7 +133,9 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
                 // Add merged values
                 callback(options);
                 // Restore input value
-                me.addItems(aSelectedItems, true);
+                aSelectedItems.forEach(function(item) {
+                    me.addItem(item, true);
+                });
             }
         });
     },
@@ -230,6 +234,11 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
         {% if oUIBlock.GetOnOptionAddJs() is not null %}
             {{ oUIBlock.GetOnOptionAddJs()|raw }}
         {% endif %}
+    },
+
+    onBlur: function(){
+        this.clearOptionGroups()
+        this.addOption(this.optionsBeforeFilter)
     },
 
     {# plugin combodo_add_button #}

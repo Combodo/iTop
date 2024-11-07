@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2023 Combodo SARL
+// Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -26,7 +26,7 @@ use ExecutionKPI;
 /**
  * Adapter class: when an API requires WebPage and you want to produce something else
  *
- * @copyright   Copyright (C) 2023 Combodo SARL
+ * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

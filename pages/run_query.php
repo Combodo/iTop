@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -247,11 +247,11 @@ JS
 		$aMoreInfoBlocks = [];
 
 		$oDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedQuery'));
-		$oDevelopedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode(utils::EscapeHtml($oFilter->ToOQL())));
+		$oDevelopedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($oFilter->ToOQL()));
 		$aMoreInfoBlocks[] = $oDevelopedQuerySet;
 
 		$oSerializedQuerySet = new FieldSet(Dict::S('UI:RunQuery:SerializedFilter'));
-		$oSerializedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode(utils::EscapeHtml($oFilter->serialize())));
+		$oSerializedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($oFilter->serialize()));
 		$aMoreInfoBlocks[] = $oSerializedQuerySet;
 
 

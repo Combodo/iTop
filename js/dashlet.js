@@ -20,7 +20,7 @@ $(function()
 
 			this.element
 			.addClass('itop-dashlet')
-			.bind('click.itop-dashlet', function(event) { me._on_click(event); } );
+			.on('click.itop-dashlet', function(event) { me._on_click(event); } );
 
 			this._update();
 		},

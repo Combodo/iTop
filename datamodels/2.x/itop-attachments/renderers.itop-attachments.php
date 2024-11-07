@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -276,7 +276,7 @@ abstract class AbstractAttachmentsRenderer
     e.stopPropagation();
   })
   
-	$(document).bind('dragover', function (e) {
+	$(document).on('dragover', function (e) {
 		var bFiles = false;
 		if (e.dataTransfer && e.dataTransfer.types)
 		{
@@ -317,7 +317,7 @@ abstract class AbstractAttachmentsRenderer
         window.dropZoneCnt++;
     });
     
-	$(document).bind('dragend dragleave drop', function(event){
+	$(document).on('dragend dragleave drop', function(event){
         window.dropZoneCnt--;
 		if(window.dropZone && window.dropZoneCnt === 0){
 			window.dropZone.removeClass('ibo-drag-in');
@@ -334,15 +334,15 @@ abstract class AbstractAttachmentsRenderer
 				$(this).addClass('image-in-use').find('img').wrap('<div class="image-in-use-wrapper" style="position:relative;display:inline-block;"></div>');
 			}
 		});
-		$('.htmlEditor').each(function() {
-			var oEditor = $(this).ckeditorGet();
-			var sHtml = oEditor.getData();
-			var jElement = $('<div/>').html(sHtml).contents();
-			jElement.find('img').each(function() {
-				var sSrc = $(this).attr('src');
-				$('.attachment a[href="'+sSrc+'"]').parent().addClass('image-in-use').find('img').wrap('<div class="image-in-use-wrapper" style="position:relative;display:inline-block;"></div>');
-			});
-		});
+		// $('.htmlEditor').each(function() {
+		// 	var oEditor = $(this).ckeditorGet();
+		// 	var sHtml = oEditor.getData();
+		// 	var jElement = $('<div/>').html(sHtml).contents();
+		// 	jElement.find('img').each(function() {
+		// 		var sSrc = $(this).attr('src');
+		// 		$('.attachment a[href="'+sSrc+'"]').parent().addClass('image-in-use').find('img').wrap('<div class="image-in-use-wrapper" style="position:relative;display:inline-block;"></div>');
+		// 	});
+		// });
 		$('.image-in-use-wrapper').append('<div style="position:absolute;top:0;left:0;"><img src="' + GetAbsoluteUrlModulesRoot() + 'images/transp-lock.png"></div>');
 	}, 200 );
 JS

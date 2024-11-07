@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -206,7 +206,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 				$('#fr_'+me.id+' input:radio').on('click', function() { me.UpdateButtons(); });
 				me.UpdateButtons();
 				me.ajax_request = null;
-				$('#count_'+me.id).change(function(){
+				$('#count_'+me.id).on('change', function(){
 					me.UpdateButtons();
 				});
 				me.UpdateSizes();

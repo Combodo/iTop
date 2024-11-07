@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -43,6 +43,7 @@ class SetupPage extends NiceWebPage
 		$this->LinkScriptFromAppRoot('node_modules/@popperjs/core/dist/umd/popper.js');
 		$this->LinkScriptFromAppRoot('node_modules/tippy.js/dist/tippy-bundle.umd.js');
 		$this->LinkScriptFromAppRoot("setup/setup.js");
+		$this->LinkScriptFromAppRoot("setup/csp-detection.js?itop_version_wiki_syntax=" . utils::GetItopVersionWikiSyntax());
 		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
 		$this->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
 		$this->LinkStylesheetFromAppRoot('node_modules/tippy.js/dist/tippy.css');

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -445,8 +445,8 @@ JS
 				
 			$fScale = min($iMaxImageSize / $iWidth, $iMaxImageSize / $iHeight);
 	
-			$iNewWidth = $iWidth * $fScale;
-			$iNewHeight = $iHeight * $fScale;
+			$iNewWidth = (int) ($iWidth * $fScale);
+			$iNewHeight = (int) ($iHeight * $fScale);
 			
 			$aDimensions['width'] = $iNewWidth;
 			$aDimensions['height'] = $iNewHeight;
@@ -536,75 +536,13 @@ JS
 
 		$sAbsoluteUrlAppRoot = utils::GetAbsoluteUrlAppRoot();
 		$sToggleFullScreen = utils::EscapeHtml(Dict::S('UI:ToggleFullScreen'));
-
-		return
-			<<<JS
-		// Hook the file upload of all CKEditor instances
+		return <<<JS
 		$('.htmlEditor').each(function() {
-			var oEditor = $(this).ckeditorGet();
-			oEditor.config.filebrowserBrowseUrl = '$sAbsoluteUrlAppRoot'+'pages/ajax.render.php?operation=cke_browse&temp_id=$sTempId&obj_class=$sObjClass&obj_key=$iObjKey';
-			oEditor.on( 'fileUploadResponse', function( evt ) {
-				var fileLoader = evt.data.fileLoader;
-				var xhr = fileLoader.xhr;
-				var data = evt.data;
-				try {
-			        var response = JSON.parse( xhr.responseText );
-		
-			        // Error message does not need to mean that upload finished unsuccessfully.
-			        // It could mean that ex. file name was changes during upload due to naming collision.
-			        if ( response.error && response.error.message ) {
-			            data.message = response.error.message;
-			        }
-		
-			        // But !uploaded means error.
-			        if ( !response.uploaded ) {
-			            evt.cancel();
-			        } else {
-			            data.fileName = response.fileName;
-			           	data.url = response.url;
-						
-			            // Do not call the default listener.
-			            evt.stop();
-			        }
-			    } catch ( err ) {
-			        // Response parsing error.
-			        data.message = fileLoader.lang.filetools.responseError;
-			        window.console && window.console.log( xhr.responseText );
-		
-			        evt.cancel();
-			    }
-			} );
-	
-			oEditor.on( 'fileUploadRequest', function( evt ) {
-				evt.data.fileLoader.uploadUrl += '?operation=cke_img_upload&temp_id=$sTempId&obj_class=$sObjClass';
-			}, null, null, 4 ); // Listener with priority 4 will be executed before priority 5.
-		
-			oEditor.on( 'instanceReady', function() {
-				if(!CKEDITOR.env.iOS && $('#'+oEditor.id+'_toolbox .ibo-vendors-ckeditor--toolbar-fullscreen-button').length == 0)
-				{
-					$('#'+oEditor.id+'_toolbox').append('<span class="ibo-vendors-ckeditor--toolbar-fullscreen-button editor-fullscreen-button" data-role="ibo-vendors-ckeditor--toolbar-fullscreen-button" title="$sToggleFullScreen">&nbsp;</span>');
-					$('#'+oEditor.id+'_toolbox .ibo-vendors-ckeditor--toolbar-fullscreen-button').on('click', function() {
-							oEditor.execCommand('maximize');
-							if ($(this).closest('.cke_maximized').length != 0)
-							{
-								$('#'+oEditor.id+'_toolbar_collapser').trigger('click');
-							}
-					});
-				}
-				if (oEditor.widgets.registered.uploadimage)
-				{
-					oEditor.widgets.registered.uploadimage.onUploaded = function( upload ) {
-					var oData = JSON.parse(upload.xhr.responseText);
-				    	this.replaceWith( '<img src="' + upload.url + '" ' +
-				    		'width="' + oData.width + '" ' +
-							'height="' + oData.height + '">' );
-				    }
-				}
-			});
+			CombodoCKEditorHandler.EnableImageUpload('#' + $(this).attr('id'), '$sAbsoluteUrlAppRoot'+'pages/ajax.render.php?operation=cke_img_upload&temp_id=$sTempId&obj_class=$sObjClass&obj_key=$iObjKey');
 		});
-JS
-		;
+JS;
 	}
+
 
 	/**
 	 * @inheritDoc

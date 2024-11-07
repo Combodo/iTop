@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -214,7 +214,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// Used by dashboard editor
 		$this->LinkScriptFromAppRoot('js/property_field.js');
 		$this->LinkScriptFromAppRoot('js/icon_select.js');
-		$this->LinkScriptFromAppRoot('js/ajaxfileupload.js');
 	}
 
 	/**
@@ -269,9 +268,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// Icons
 		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
 		$this->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
-
-		// Note: CKEditor files can't be moved easily as we need to find a way to init the "disabler" plugin, {@see js/toolbox.js}
-		$this->LinkStylesheetFromAppRoot('js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
 
 		// Used by external keys and other drop down lists
 		$this->LinkStylesheetFromAppRoot('css/selectize.default.css');
@@ -883,7 +879,7 @@ HTML;
 		// - API: Inline scripts
 		/** @var \iBackofficeScriptExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iBackofficeScriptExtension') as $oExtensionInstance) {
-			$this->add_early_script($oExtensionInstance->GetScript());
+			$this->add_script($oExtensionInstance->GetScript());
 		}
 		// - API: Init. scripts
 		/** @var \iBackofficeInitScriptExtension $oExtensionInstance */

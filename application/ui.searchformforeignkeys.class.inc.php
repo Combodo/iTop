@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (C) 2010-2023 Combodo SARL
+ * Copyright (C) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -99,7 +99,7 @@ HTML
  });
 $('#dlg_{$this->m_iInputId}').dialog('option', {title:'$sTitle'});
 $('#SearchFormToAdd_{$this->m_iInputId} form').on('submit.uilinksWizard', oForeignKeysWidget{$this->m_iInputId}.SearchObjectsToAdd);
-$('#SearchFormToAdd_{$this->m_iInputId}').resize(oForeignKeysWidget{$this->m_iInputId}.UpdateSizes);
+$('#SearchFormToAdd_{$this->m_iInputId}').on('resize', oForeignKeysWidget{$this->m_iInputId}.UpdateSizes);
 JS
 );
 	}

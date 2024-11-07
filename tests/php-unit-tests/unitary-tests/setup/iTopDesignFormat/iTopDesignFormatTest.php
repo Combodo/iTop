@@ -145,6 +145,8 @@ class iTopDesignFormatTest extends ItopTestCase
 			'3.1 to 3.0'   => ['sXmlFileName' => '3.1_to_3.0'],
 			'3.1 to 3.2'   => ['sXmlFileName' => '3.1_to_3.2'],
 			'3.2 to 3.1'   => ['sXmlFileName' => '3.2_to_3.1'],
+			'3.2 to 3.3'   => ['sXmlFileName' => '3.2_to_3.3'],
+			'3.3 to 3.2'   => ['sXmlFileName' => '3.3_to_3.2'],
 			'Bug_4569'     => ['sXmlFileName' => 'Bug_4569'],
 		];
 	}

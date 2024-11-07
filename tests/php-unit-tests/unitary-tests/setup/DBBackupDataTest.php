@@ -40,6 +40,9 @@ class DBBackupDataTest extends ItopDataTestCase
 			if (file_exists(APPROOT.'/data/'.$this->GetTestEnvironment().'.delta.xml')) {
 				$aExpectedFiles[] = $sTmpDir . '/' . 'delta.xml';
 			}
+			if (file_exists(APPROOT.'/data/'.$this->GetTestEnvironment().'-modules')) {
+				$aExpectedFiles[] = $sTmpDir . '/' . $this->GetTestEnvironment() . '-modules';
+			}
 			foreach ($aExtraFiles as $sRelFile => $bExists) {
 				if ($bExists) {
 					$aExpectedFiles[] = $sTmpDir . '/' . $sRelFile;

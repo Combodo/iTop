@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1626,7 +1626,7 @@ class SynchroLog extends DBObject
 	{
 		$aParams = array
 		(
-			'category' => 'core/cmdb,view_in_gui',
+			'category' => 'core/cmdb,view_in_gui,grant_by_profile',
 			'key_type' => 'autoincrement',
 			'name_attcode' => '',
 			'state_attcode' => '',

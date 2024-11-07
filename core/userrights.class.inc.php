@@ -2,6 +2,7 @@
 
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\Events\EventData;
 
 define('UR_ALLOWED_NO', 0);
 define('UR_ALLOWED_YES', 1);
@@ -261,10 +262,22 @@ abstract class User extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('default_search', array('login', 'contactid', 'status', 'org_id')); // Default criteria of the search banner
 	}
 
+	protected function RegisterEventListeners()
+	{
+		if ($this->IsCurrentUser() && !UserRights::IsAdministrator()) {
+			$this->RegisterCRUDListener(EVENT_DB_SET_ATTRIBUTES_FLAGS, 'SetAllowedOrgListReadOnly');
+		}
+	}
+
 	abstract public function CheckCredentials($sPassword);
 	abstract public function TrustWebServerContext();
 	abstract public function CanChangePassword();
 	abstract public function ChangePassword($sOldPassword, $sNewPassword);
+
+	protected function SetAllowedOrgListReadOnly(EventData $oEventData)
+	{
+		$this->AddAttributeFlags('allowed_org_list', OPT_ATT_READONLY);
+	}
 
 	/*
 	* Compute a name in best effort mode
@@ -385,6 +398,12 @@ abstract class User extends cmdbAbstractObject
 			/** @var \DBObjectSet $oSet */
 			$oSet = $this->Get('profile_list');
 			if ($oSet->Count() == 0) {
+				if (ContextTag::Check(ContextTag::TAG_SETUP)) {
+					// During setup, if a profile is no more part of iTop, it will be deleted
+					// But if it is the only profile assigned to a user, we don't want this to stop the setup
+					SetupLog::Warning("The user with id: ".$this->GetKey()." is no more usable as its last profile was removed during setup");
+					return;
+				}
 				$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AtLeastOneProfileIsNeeded');
 			}
 
@@ -436,8 +455,12 @@ abstract class User extends cmdbAbstractObject
 			&& empty($this->Get('contactid'))) {
 			$this->m_aCheckIssues[] = Dict::S('Class:User/Error:PersonIsMandatory');
 		}
+		// Warning if the user has no associated contact
+		elseif (empty($this->Get('contactid'))) {
+		    $this->AddCheckWarning(Dict::S('Class:User/Warning:NoContactHasImpact'));
+		}
 
-		// Allowed orgs must contains the user org (if any)
+		// Allowed orgs must contain the user org (if any)
 		if (!empty($this->Get('org_id')) && !UserRights::IsAdministrator($this)) {
 			// Get the user org and all its parent orgs
 			$aUserOrgs = [$this->Get('org_id')];
@@ -464,6 +487,11 @@ abstract class User extends cmdbAbstractObject
 					$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AllowedOrgsMustContainUserOrg');
 				}
 			}
+		}
+
+		// Modified User is not administrator and has no allowed orgs, warn about the consequences
+		if (!UserRights::IsAdministrator($this) && ($this->get('allowed_org_list')->Count() == 0)) {
+			$this->AddCheckWarning(Dict::S('Class:User/Warning:NoOrganizationMeansFullAccess'));
 		}
 
 		if (!UserRights::IsAdministrator()) {
@@ -1236,17 +1264,11 @@ class UserRights
 	{
 		$sUserPicturesFolder = 'images/user-pictures/';
 		$sUserPicturePlaceholderPrefKey = 'user_picture_placeholder';
+		$sPictureUrl = null;
 
 		// First, check cache
 		if (array_key_exists($sLogin, static::$m_aCacheContactPictureAbsUrl)) {
 			return static::$m_aCacheContactPictureAbsUrl[$sLogin];
-		}
-
-		// Then, the default picture
-		if ($bAllowDefaultPicture === true) {
-			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.'user-profile-default-256px.png';
-		} else {
-			$sPictureUrl = null;
 		}
 
 		// Then check if the user has a contact attached and if it has an picture defined
@@ -1294,6 +1316,11 @@ class UserRights
 			}
 		}
 		// Else, no contact and no login, then it's for an unknown origin (system, extension, ...)
+
+		// Then, the default picture
+		if (utils::IsNullOrEmptyString($sPictureUrl) && $bAllowDefaultPicture === true) {
+			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.'user-profile-default-256px.png';
+		}
 
 		// Update cache
 		static::$m_aCacheContactPictureAbsUrl[$sLogin] = $sPictureUrl;

@@ -40,7 +40,7 @@ class OQLParser_yyToken implements ArrayAccess
 
 	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
 	#[\ReturnTypeWillChange]
-    function offsetGet($offset)
+	function offsetGet($offset)
     {
         return $this->metadata[$offset];
     }
@@ -99,7 +99,7 @@ class OQLParser_yyStackEntry
 
 // declare_class is output here
 #line 24 "..\oql-parser.y"
-class OQLParserRaw#line 102 "..\oql-parser.php"
+class OQLParserRaw#line 104 "..\oql-parser.php"
 {
 /* First off, code is included which follows the "include_class" declaration
 ** in the input file. */
@@ -1180,7 +1180,7 @@ static public $yy_action = array(
 #line 30 "..\oql-parser.y"
 
 throw new OQLParserStackOverFlowException($this->m_sSourceQuery, $this->m_iLine, $this->m_iCol);
-#line 1186 "..\oql-parser.php"
+#line 1188 "..\oql-parser.php"
             return;
         }
         $yytos = new OQLParser_yyStackEntry;
@@ -1482,49 +1482,49 @@ throw new OQLParserStackOverFlowException($this->m_sSourceQuery, $this->m_iLine,
     */
 #line 37 "..\oql-parser.y"
     function yy_r0(){ $this->my_result = $this->yystack[$this->yyidx + 0]->minor;     }
-#line 1488 "..\oql-parser.php"
+#line 1490 "..\oql-parser.php"
 #line 41 "..\oql-parser.y"
     function yy_r3(){
 	$this->_retvalue = new OqlUnionQuery($this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);
     }
-#line 1493 "..\oql-parser.php"
+#line 1495 "..\oql-parser.php"
 #line 48 "..\oql-parser.y"
     function yy_r5(){
 	$this->_retvalue = new OqlObjectQuery($this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor, $this->yystack[$this->yyidx + -1]->minor, array($this->yystack[$this->yyidx + -2]->minor));
     }
-#line 1498 "..\oql-parser.php"
+#line 1500 "..\oql-parser.php"
 #line 51 "..\oql-parser.y"
     function yy_r6(){
 	$this->_retvalue = new OqlObjectQuery($this->yystack[$this->yyidx + -4]->minor, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor, $this->yystack[$this->yyidx + -1]->minor, array($this->yystack[$this->yyidx + -2]->minor));
     }
-#line 1503 "..\oql-parser.php"
+#line 1505 "..\oql-parser.php"
 #line 55 "..\oql-parser.y"
     function yy_r7(){
 	$this->_retvalue = new OqlObjectQuery($this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor, $this->yystack[$this->yyidx + -1]->minor, $this->yystack[$this->yyidx + -4]->minor);
     }
-#line 1508 "..\oql-parser.php"
+#line 1510 "..\oql-parser.php"
 #line 58 "..\oql-parser.y"
     function yy_r8(){
 	$this->_retvalue = new OqlObjectQuery($this->yystack[$this->yyidx + -4]->minor, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor, $this->yystack[$this->yyidx + -1]->minor, $this->yystack[$this->yyidx + -6]->minor);
     }
-#line 1513 "..\oql-parser.php"
+#line 1515 "..\oql-parser.php"
 #line 63 "..\oql-parser.y"
     function yy_r9(){
 	$this->_retvalue = array($this->yystack[$this->yyidx + 0]->minor);
     }
-#line 1518 "..\oql-parser.php"
+#line 1520 "..\oql-parser.php"
 #line 66 "..\oql-parser.y"
     function yy_r10(){
 	array_push($this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);
 	$this->_retvalue = $this->yystack[$this->yyidx + -2]->minor;
     }
-#line 1524 "..\oql-parser.php"
+#line 1526 "..\oql-parser.php"
 #line 71 "..\oql-parser.y"
     function yy_r11(){ $this->_retvalue = $this->yystack[$this->yyidx + 0]->minor;    }
-#line 1527 "..\oql-parser.php"
+#line 1529 "..\oql-parser.php"
 #line 72 "..\oql-parser.y"
     function yy_r12(){ $this->_retvalue = null;    }
-#line 1530 "..\oql-parser.php"
+#line 1532 "..\oql-parser.php"
 #line 74 "..\oql-parser.y"
     function yy_r13(){
 	// insert the join statement on top of the existing list
@@ -1532,63 +1532,63 @@ throw new OQLParserStackOverFlowException($this->m_sSourceQuery, $this->m_iLine,
 	// and return the updated array
 	$this->_retvalue = $this->yystack[$this->yyidx + 0]->minor;
     }
-#line 1538 "..\oql-parser.php"
+#line 1540 "..\oql-parser.php"
 #line 80 "..\oql-parser.y"
     function yy_r14(){
 	$this->_retvalue = Array($this->yystack[$this->yyidx + 0]->minor);
     }
-#line 1543 "..\oql-parser.php"
+#line 1545 "..\oql-parser.php"
 #line 86 "..\oql-parser.y"
     function yy_r16(){
 	// create an array with one single item
 	$this->_retvalue = new OqlJoinSpec($this->yystack[$this->yyidx + -4]->minor, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);
     }
-#line 1549 "..\oql-parser.php"
+#line 1551 "..\oql-parser.php"
 #line 91 "..\oql-parser.y"
     function yy_r17(){
 	// create an array with one single item
 	$this->_retvalue = new OqlJoinSpec($this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);
     }
-#line 1555 "..\oql-parser.php"
+#line 1557 "..\oql-parser.php"
 #line 96 "..\oql-parser.y"
     function yy_r18(){ $this->_retvalue = new BinaryOqlExpression($this->yystack[$this->yyidx + -2]->minor, '=', $this->yystack[$this->yyidx + 0]->minor);     }
-#line 1558 "..\oql-parser.php"
+#line 1560 "..\oql-parser.php"
 #line 97 "..\oql-parser.y"
     function yy_r19(){ $this->_retvalue = new BinaryOqlExpression($this->yystack[$this->yyidx + -2]->minor, 'BELOW', $this->yystack[$this->yyidx + 0]->minor);     }
-#line 1561 "..\oql-parser.php"
+#line 1563 "..\oql-parser.php"
 #line 98 "..\oql-parser.y"
     function yy_r20(){ $this->_retvalue = new BinaryOqlExpression($this->yystack[$this->yyidx + -2]->minor, 'BELOW_STRICT', $this->yystack[$this->yyidx + 0]->minor);     }
-#line 1564 "..\oql-parser.php"
+#line 1566 "..\oql-parser.php"
 #line 99 "..\oql-parser.y"
     function yy_r21(){ $this->_retvalue = new BinaryOqlExpression($this->yystack[$this->yyidx + -2]->minor, 'NOT_BELOW', $this->yystack[$this->yyidx + 0]->minor);     }
-#line 1567 "..\oql-parser.php"
+#line 1569 "..\oql-parser.php"
 #line 100 "..\oql-parser.y"
     function yy_r22(){ $this->_retvalue = new BinaryOqlExpression($this->yystack[$this->yyidx + -2]->minor, 'NOT_BELOW_STRICT', $this->yystack[$this->yyidx + 0]->minor);     }
-#line 1570 "..\oql-parser.php"
+#line 1572 "..\oql-parser.php"
 #line 101 "..\oql-parser.y"
     function yy_r23(){ $this->_retvalue = new BinaryOqlExpression($this->yystack[$this->yyidx + -2]->minor, 'ABOVE', $this->yystack[$this->yyidx + 0]->minor);     }
-#line 1573 "..\oql-parser.php"
+#line 1575 "..\oql-parser.php"
 #line 102 "..\oql-parser.y"
     function yy_r24(){ $this->_retvalue = new BinaryOqlExpression($this->yystack[$this->yyidx + -2]->minor, 'ABOVE_STRICT', $this->yystack[$this->yyidx + 0]->minor);     }
-#line 1576 "..\oql-parser.php"
+#line 1578 "..\oql-parser.php"
 #line 103 "..\oql-parser.y"
     function yy_r25(){ $this->_retvalue = new BinaryOqlExpression($this->yystack[$this->yyidx + -2]->minor, 'NOT_ABOVE', $this->yystack[$this->yyidx + 0]->minor);     }
-#line 1579 "..\oql-parser.php"
+#line 1581 "..\oql-parser.php"
 #line 104 "..\oql-parser.y"
     function yy_r26(){ $this->_retvalue = new BinaryOqlExpression($this->yystack[$this->yyidx + -2]->minor, 'NOT_ABOVE_STRICT', $this->yystack[$this->yyidx + 0]->minor);     }
-#line 1582 "..\oql-parser.php"
+#line 1584 "..\oql-parser.php"
 #line 106 "..\oql-parser.y"
     function yy_r27(){ $this->_retvalue = $this->yystack[$this->yyidx + 0]->minor;     }
-#line 1585 "..\oql-parser.php"
+#line 1587 "..\oql-parser.php"
 #line 111 "..\oql-parser.y"
     function yy_r31(){ $this->_retvalue = new FunctionOqlExpression($this->yystack[$this->yyidx + -3]->minor, $this->yystack[$this->yyidx + -1]->minor);     }
-#line 1588 "..\oql-parser.php"
+#line 1590 "..\oql-parser.php"
 #line 112 "..\oql-parser.y"
     function yy_r32(){ $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor;     }
-#line 1591 "..\oql-parser.php"
+#line 1593 "..\oql-parser.php"
 #line 113 "..\oql-parser.y"
     function yy_r33(){ $this->_retvalue = new BinaryOqlExpression($this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + -1]->minor, $this->yystack[$this->yyidx + 0]->minor);     }
-#line 1594 "..\oql-parser.php"
+#line 1596 "..\oql-parser.php"
 #line 119 "..\oql-parser.y"
     function yy_r37(){
     if ($this->yystack[$this->yyidx + -1]->minor == 'MATCHES')
@@ -1600,43 +1600,43 @@ throw new OQLParserStackOverFlowException($this->m_sSourceQuery, $this->m_iLine,
         $this->_retvalue = new BinaryOqlExpression($this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + -1]->minor, $this->yystack[$this->yyidx + 0]->minor);
     }
     }
-#line 1606 "..\oql-parser.php"
+#line 1608 "..\oql-parser.php"
 #line 136 "..\oql-parser.y"
     function yy_r42(){
 	$this->_retvalue = new ListOqlExpression($this->yystack[$this->yyidx + -1]->minor);
     }
-#line 1611 "..\oql-parser.php"
+#line 1613 "..\oql-parser.php"
 #line 139 "..\oql-parser.y"
     function yy_r43(){
 	$this->_retvalue = new NestedQueryOqlExpression($this->yystack[$this->yyidx + -1]->minor);
     }
-#line 1616 "..\oql-parser.php"
+#line 1618 "..\oql-parser.php"
 #line 154 "..\oql-parser.y"
     function yy_r47(){
 	$this->_retvalue = array();
     }
-#line 1621 "..\oql-parser.php"
+#line 1623 "..\oql-parser.php"
 #line 165 "..\oql-parser.y"
     function yy_r51(){ $this->_retvalue = new IntervalOqlExpression($this->yystack[$this->yyidx + -1]->minor, $this->yystack[$this->yyidx + 0]->minor);     }
-#line 1624 "..\oql-parser.php"
+#line 1626 "..\oql-parser.php"
 #line 178 "..\oql-parser.y"
     function yy_r61(){ $this->_retvalue = new ScalarOqlExpression($this->yystack[$this->yyidx + 0]->minor);     }
-#line 1627 "..\oql-parser.php"
+#line 1629 "..\oql-parser.php"
 #line 180 "..\oql-parser.y"
     function yy_r63(){ $this->_retvalue = new ScalarOqlExpression(null);     }
-#line 1630 "..\oql-parser.php"
+#line 1632 "..\oql-parser.php"
 #line 182 "..\oql-parser.y"
     function yy_r64(){ $this->_retvalue = new FieldOqlExpression($this->yystack[$this->yyidx + 0]->minor);     }
-#line 1633 "..\oql-parser.php"
+#line 1635 "..\oql-parser.php"
 #line 183 "..\oql-parser.y"
     function yy_r65(){ $this->_retvalue = new FieldOqlExpression($this->yystack[$this->yyidx + 0]->minor, $this->yystack[$this->yyidx + -2]->minor);     }
-#line 1636 "..\oql-parser.php"
+#line 1638 "..\oql-parser.php"
 #line 184 "..\oql-parser.y"
     function yy_r66(){ $this->_retvalue=$this->yystack[$this->yyidx + 0]->minor;     }
-#line 1639 "..\oql-parser.php"
+#line 1641 "..\oql-parser.php"
 #line 187 "..\oql-parser.y"
     function yy_r67(){ $this->_retvalue = new VariableOqlExpression(substr($this->yystack[$this->yyidx + 0]->minor, 1));     }
-#line 1642 "..\oql-parser.php"
+#line 1644 "..\oql-parser.php"
 #line 189 "..\oql-parser.y"
     function yy_r68(){
 	if ($this->yystack[$this->yyidx + 0]->minor[0] == '`')
@@ -1649,22 +1649,22 @@ throw new OQLParserStackOverFlowException($this->m_sSourceQuery, $this->m_iLine,
 	}
 	$this->_retvalue = new OqlName($name, $this->m_iColPrev);
     }
-#line 1655 "..\oql-parser.php"
+#line 1657 "..\oql-parser.php"
 #line 200 "..\oql-parser.y"
     function yy_r69(){$this->_retvalue=(int)$this->yystack[$this->yyidx + 0]->minor;    }
-#line 1658 "..\oql-parser.php"
+#line 1660 "..\oql-parser.php"
 #line 201 "..\oql-parser.y"
     function yy_r70(){$this->_retvalue=(int)-$this->yystack[$this->yyidx + 0]->minor;    }
-#line 1661 "..\oql-parser.php"
+#line 1663 "..\oql-parser.php"
 #line 202 "..\oql-parser.y"
     function yy_r71(){$this->_retvalue=new OqlHexValue($this->yystack[$this->yyidx + 0]->minor);    }
-#line 1664 "..\oql-parser.php"
+#line 1666 "..\oql-parser.php"
 #line 203 "..\oql-parser.y"
     function yy_r72(){$this->_retvalue=stripslashes(substr($this->yystack[$this->yyidx + 0]->minor, 1, strlen($this->yystack[$this->yyidx + 0]->minor) - 2));    }
-#line 1667 "..\oql-parser.php"
+#line 1669 "..\oql-parser.php"
 #line 206 "..\oql-parser.y"
     function yy_r73(){$this->_retvalue=$this->yystack[$this->yyidx + 0]->minor;    }
-#line 1670 "..\oql-parser.php"
+#line 1672 "..\oql-parser.php"
 
     /**
      * placeholder for the left hand side in a reduce operation.
@@ -1768,7 +1768,7 @@ throw new OQLParserStackOverFlowException($this->m_sSourceQuery, $this->m_iLine,
 #line 33 "..\oql-parser.y"
 
 throw new OQLParserParseFailureException($this->m_sSourceQuery, $this->m_iLine, $this->m_iCol);
-#line 1775 "..\oql-parser.php"
+#line 1777 "..\oql-parser.php"
     }
 
     /**
@@ -1783,7 +1783,7 @@ throw new OQLParserParseFailureException($this->m_sSourceQuery, $this->m_iLine, 
 #line 25 "..\oql-parser.y"
  
 throw new OQLParserSyntaxErrorException($this->m_sSourceQuery, $this->m_iLine, $this->m_iCol, $this->tokenName($yymajor), $TOKEN);
-#line 1791 "..\oql-parser.php"
+#line 1793 "..\oql-parser.php"
     }
 
     /**
@@ -2043,4 +2043,4 @@ class OQLParser extends OQLParserRaw
 	}
 }
 
-#line 2052 "..\oql-parser.php"
+#line 2054 "..\oql-parser.php"

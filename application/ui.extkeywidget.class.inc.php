@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -734,7 +734,7 @@ HTML
 				],
 		});
 		$('#fs_{$this->iId}').on('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);
-		$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);
+		$('#dc_{$this->iId}').on('resize', oACWidget_{$this->iId}.UpdateSizes);
 JS
 		);
 	}

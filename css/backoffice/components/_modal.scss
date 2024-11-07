@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -47,6 +47,8 @@ $ibo-modal--is-informative--is-success--highlight--background-color: $ibo-color-
 /* Avoid modals bigger than window size 
 !important in order to overload jQueryUI max-height:none being put on dialog elements */
 .ibo-modal{
+  display: flex;
+  flex-direction: column;
   max-height: $ibo-modal--max-height !important;
   max-width: $ibo-modal--max-width !important;
   &.ibo-is-extra-small{
@@ -79,7 +81,6 @@ $ibo-modal--is-informative--is-success--highlight--background-color: $ibo-color-
 }
 
 .ibo-modal.ibo-is-informative{
-  display: flex;
   align-items: center;
   min-width: $ibo-modal--is-informative--min-width;
   min-height: $ibo-modal--is-informative--min-height !important; // !important in order to overload jQueryUI CSS rule that's put directly on the element

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -222,9 +222,9 @@ class TransactionsTest extends ItopTestCase
 		// Reload from db after the update to check the value present in the database
 		$oTicket = MetaModel::GetObject('UserRequest', $oTicket->GetKey());
 		if ($bIsModified) {
-			$this->assertEquals('Create OK', $oTicket->Get('solution'));
+			$this->assertEquals('<p>Create OK</p>', $oTicket->Get('solution'));
 		} else {
-			$this->assertEquals('Test OK', $oTicket->Get('solution'));
+			$this->assertEquals('<p>Test OK</p>', $oTicket->Get('solution'));
 		}
 
 		if (!$oTicket->IsNew()) {

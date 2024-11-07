@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010-2023 Combodo SARL
+ * Copyright (C) 2010-2024 Combodo SAS
  *
  *   This file is part of iTop.
  *
@@ -36,17 +36,18 @@ class iTopComposer extends AbstractFolderAnalyzer
 	/**
 	 * @inheritDoc
 	 */
-	public function ListAllowedFoldersRelPaths(): array
+	public function ListAllowedFilesRelPaths(): array
 	{
 		return [
 			'twig/twig/src/Node/Expression/Test',
+			'symfony/framework-bundle/Test', // Tools for testing Symfony applications
 		];
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function ListDeniedFoldersRelPaths(): array
+	public function ListDeniedFilesRelPaths(): array
 	{
 		return [
 			'doctrine/lexer/tests',
@@ -57,11 +58,18 @@ class iTopComposer extends AbstractFolderAnalyzer
 
 			'nikic/php-parser/test',
 
+			'pear/archive_tar/.github',
 			'pear/archive_tar/tests',
 			'pear/console_getopt/tests',
 			'pear/pear_exception/tests',
+			'pear/archive_tar/docs',
+			'pear/archive_tar/scripts',
+			'pear/archive_tar/sync-php4',
 
 			'psr/log/Psr/Log/Test',
+
+			'soundasleep/html2text/.github',
+			'soundasleep/html2text/tests',
 
 			'symfony/cache/Tests',
 			'symfony/cache/Tests/DoctrineProviderTest.php',
@@ -80,7 +88,6 @@ class iTopComposer extends AbstractFolderAnalyzer
 			'symfony/http-foundation/Test',
 			'symfony/http-kernel/Tests',
 			'symfony/service-contracts/Test',
-			'symfony/framework-bundle/Test',
 			'symfony/mime/Test',
 			'symfony/routing/Tests',
 			'symfony/stopwatch/Tests',

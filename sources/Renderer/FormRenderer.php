@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,11 +20,11 @@
 
 namespace Combodo\iTop\Renderer;
 
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Exception;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\Field\Field;
 use iFieldRendererMappingsExtension;
-use utils;
 
 /**
  * Description of FormRenderer
@@ -58,8 +58,8 @@ abstract class FormRenderer
 		$this->sBaseLayout = '';
 		$this->InitOutputs();
 
-		/** @var \iFieldRendererMappingsExtension $sImplementingClass */
-		foreach (utils::GetClassesForInterface(iFieldRendererMappingsExtension::class, '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]']) as $sImplementingClass) {
+		/** @var iFieldRendererMappingsExtension $sImplementingClass */
+		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iFieldRendererMappingsExtension::class) as $sImplementingClass) {
 			$aFieldRendererMappings = $sImplementingClass::RegisterSupportedFields();
 			// For each mapping we need to check if it can be registered for the current form renderer or not
 			foreach ($aFieldRendererMappings as $aFieldRendererMapping) {

@@ -2,7 +2,7 @@
 /**
  * Send an email (abstraction for synchronous/asynchronous modes)
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -18,6 +18,8 @@ use ExecutionKPI;
 use InlineImage;
 use IssueLog;
 use Laminas\Mail\Header\ContentType;
+use Laminas\Mail\Header\InReplyTo;
+use Laminas\Mail\Header\MessageId;
 use Laminas\Mail\Message;
 use Combodo\iTop\Core\Authentication\Client\Smtp\Oauth;
 use Laminas\Mail\Transport\File;
@@ -374,11 +376,11 @@ class EMailLaminas extends Email
 	{
 		$this->m_aData['message_id'] = $sId;
 
-		// Note: Swift will add the angle brackets for you
+		// Note: The email library will add the angle brackets for you
 		// so let's remove the angle brackets if present, for historical reasons
 		$sId = str_replace(array('<', '>'), '', $sId);
 
-		$this->m_oMessage->getHeaders()->addHeaderLine('Message-ID', $sId);
+		$this->m_oMessage->getHeaders()->addHeader((new MessageId())->setId($sId));
 	}
 
 	public function SetReferences($sReferences)
@@ -397,7 +399,11 @@ class EMailLaminas extends Email
 	 */
 	public function SetInReplyTo(string $sMessageId)
 	{
-		$this->AddToHeader('In-Reply-To', $sMessageId);
+		// Note: Laminas will add the angle brackets for you
+		// so let's remove the angle brackets if present, for historical reasons
+		$sId = str_replace(array('<', '>'), '', $sMessageId);
+
+		$this->m_oMessage->getHeaders()->addHeader((new InReplyTo())->setIds([$sId]));
 	}
 
 	/**

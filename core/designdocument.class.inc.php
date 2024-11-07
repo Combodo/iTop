@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2010-2023 Combodo SARL
+ * Copyright (c) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -26,7 +26,6 @@
 
 namespace Combodo\iTop;
 
-use DOMComment;
 use DOMDocument;
 use DOMFormatException;
 use DOMNode;
@@ -35,9 +34,7 @@ use DOMXPath;
 use Exception;
 use IssueLog;
 use LogAPI;
-use MFDocument;
 use MFElement;
-use ModelFactory;
 use utils;
 
 /**
@@ -246,6 +243,56 @@ class DesignElement extends \DOMElement
 
 		return '';
 	}
+
+	/**
+	 * Compatibility with PHP8.0
+	 *
+	 * @return \DOMElement|null
+	 *
+	 * @since 3.1.2
+	 */
+	public function GetFirstElementChild()
+	{
+		if (property_exists($this, 'firstElementChild')) {
+			return $this->firstElementChild;
+		}
+
+		$oChildNode = $this->firstChild;
+		while (!is_null($oChildNode)) {
+			if ($oChildNode instanceof \DOMElement) {
+				return $oChildNode;
+			}
+			$oChildNode = $oChildNode->nextSibling;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Compatibility with PHP8.0
+	 *
+	 * @return \DOMElement|null
+	 *
+	 * @since 3.1.2
+	 */
+	public function GetNextElementSibling()
+	{
+		if (property_exists($this, 'nextElementSibling')) {
+			return $this->nextElementSibling;
+		}
+
+		$oSibling = $this->nextSibling;
+		while (!is_null($oSibling)) {
+			if ($oSibling instanceof \DOMElement) {
+				return $oSibling;
+			}
+			$oSibling = $oSibling->nextSibling;
+		}
+
+		return null;
+
+	}
+
 	/**
 	 * Returns the node directly under the given node
 	 * @param $sTagName
@@ -337,6 +384,26 @@ class DesignElement extends \DOMElement
 			// Beware: classes/class also exists in the group definition
 			if (($this->parentNode->tagName == 'classes') && ($this->parentNode->parentNode->tagName == 'itop_design')) {
 				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * True if the node is contained in a _delta="merge" tree
+	 * @return bool
+	 */
+	public function IsInSpecifiedMerge(): bool
+	{
+		// Iterate through the parents: reset the flag if any of them has a flag set
+		for ($oParent = $this; $oParent instanceof MFElement; $oParent = $oParent->parentNode) {
+			$sDeltaSpec = $oParent->getAttribute('_delta');
+			if ($sDeltaSpec === 'merge') {
+				return true;
+			}
+			if (in_array($sDeltaSpec, ['define', 'define_if_not_exists', 'force', 'redefine'])) {
+				return false;
 			}
 		}
 

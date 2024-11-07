@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -187,6 +187,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.',
 	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.',
+	'Class:User/Warning:NoOrganizationMeansFullAccess' => 'No "Allowed Organizations" defined for this user, this means they have access to all organizations',
+	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office',
 	'Class:UserInternal' => 'User Internal',
 	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT,
 ));
@@ -408,41 +410,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'BooleanLabel:no' => 'no',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
 	'UI:WelcomeMenu:Title' => 'Welcome to '.ITOP_APPLICATION_SHORT,
-
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' is a complete, OpenSource, IT Operational Portal.</p>
-<ul>It includes:
-<li>A complete CMDB (Configuration management database) to document and manage the IT inventory.</li>
-<li>An Incident management module to track and communicate about all issues occurring in the IT.</li>
-<li>A change management module to plan and track the changes to the IT environment.</li>
-<li>A known error database to speed up the resolution of incidents.</li>
-<li>An outage module to document all planned outages and notify the appropriate contacts.</li>
-<li>Dashboards to quickly get an overview of your IT.</li>
-</ul>
-<p>All the modules can be setup, step by step, indepently of each other.</p>',
-
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' is service provider oriented, it allows IT engineers to manage easily multiple customers or organizations.
-<ul>'.ITOP_APPLICATION_SHORT.', delivers a feature-rich set of business processes that:
-<li>Enhances IT management effectiveness</li> 
-<li>Drives IT operations performance</li> 
-<li>Improves customer satisfaction and provides executives with insights into business performance.</li>
-</ul>
-</p>
-<p>'.ITOP_APPLICATION_SHORT.' is completely open to be integrated within your current IT Management infrastructure.</p>
-<p>
-<ul>Adopting this new generation of IT Operational portal will help you to:
-<li>Better manage a more and more complex IT environment.</li>
-<li>Implement ITIL processes at your own pace.</li>
-<li>Manage the most important asset of your IT: Documentation.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text'            => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>This version features a brand new modern and accessible backoffice design.</div>
-
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
-
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Open requests: %1$d',
 	'UI:WelcomeMenu:MyCalls'         => 'My requests',
 	'UI:WelcomeMenu:OpenIncidents'   => 'Open incidents: %1$d',
@@ -1096,6 +1063,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 <ol>
 	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
 	A special page: <a href="../setup/email.test.php" target="_blank">email.test.php</a> is available for testing and troubleshooting your PHP mail configuration.</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
 </ol>
 </p>
@@ -1460,6 +1428,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ShortcutRenameDlg:Title'                           => 'Rename the shortcut',
 	'UI:ShortcutListDlg:Title'                             => 'Create a shortcut for the list',
 	'UI:ShortcutDelete:Confirm'                            => 'Please confirm that wou wish to delete the shortcut(s).',
+	'UI:ObjectShortcutInsert'                               => 'Insert Object Shortcut',
 	'Class:Shortcut'                                       => 'Shortcut',
 	'Class:Shortcut+'                                      => '',
 	'Class:Shortcut/Attribute:name'                        => 'Name',
@@ -1605,7 +1574,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	//   - Numeric widget
 	//   None yet
 	//   - DateTime widget
-	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s',
 	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
@@ -1743,5 +1712,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:UserManagement'         => 'User management',
 	'Menu:Queries'                => 'Queries',
 	'Menu:ConfigurationTools'     => 'Configuration',
+	'Menu:ConfigEditor'           => 'General configuration',
+	'Menu:ConfigEditor+'          => 'Configuration File editor',
+	'Menu:Integrations'           => 'Integrations',
+	'Menu:Integrations+'          => '',
 
 ));

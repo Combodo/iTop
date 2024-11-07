@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -19,6 +19,7 @@ use Combodo\iTop\Controller\AjaxRenderController;
 use Combodo\iTop\Controller\Base\Layout\ActivityPanelController;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
 use Combodo\iTop\Controller\PreferencesController;
+use Combodo\iTop\Controller\WelcomePopupController;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 use Combodo\iTop\Service\Router\Router;
@@ -26,17 +27,11 @@ use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectManager;
 
 require_once('../approot.inc.php');
 
-function LogErrorMessage($sMsgPrefix, $aContextInfo) {
-	$sCurrentUserLogin = UserRights::GetUser();
-	$sContextInfo = urldecode(http_build_query($aContextInfo, '', ', '));
-	$sErrorMessage = "$sMsgPrefix - User='$sCurrentUserLogin', $sContextInfo";
-	IssueLog::Error($sErrorMessage);
-}
-
 try
 {
 	require_once(APPROOT.'/application/startup.inc.php');
 	require_once(APPROOT.'/application/user.preferences.class.inc.php');
+
 	IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 	$oKPI = new ExecutionKPI();
 	$oKPI->ComputeAndReport('Data model loaded');
@@ -63,6 +58,20 @@ try
 			break;
 	}
 	LoginWebPage::DoLoginEx($sRequestedPortalId, false);
+
+	// check if header contains X-Combodo-Ajax for POST request (CSRF protection for ajax calls)
+	// check must be performed after DoLoginEx to be logged in and to be able to check the token (based on the transaction id)
+	if (!isset($_SERVER['HTTP_X_COMBODO_AJAX']) && $_SERVER['REQUEST_METHOD'] !== 'GET') {
+		$sTransactionId = utils::ReadPostedParam("transaction_id");
+		if (!utils::IsTransactionValid($sTransactionId, false)) { // if a form is submitted without header but contains a token... should be exceptional
+			$sReferer = $_SERVER['HTTP_REFERER'];
+			$sErrorMsg = 'Unauthorized access. Please see https://www.itophub.io/wiki/page?id=3_2_0:release:developer#checking_for_the_presence_of_specific_header_in_the_post_to_enhance_protection_against_csrf_attacks';
+			IssueLog::Error("Unprotected ajax call : $sErrorMsg", LogChannels::SECURITY, ['referer' => $sReferer]);
+			header('HTTP/1.1 401 Unauthorized');
+			die($sErrorMsg);
+		}
+	}
+
 	$oKPI->ComputeAndReport('User login');
 
 	// N°2780 Fix ContextTag for console
@@ -80,7 +89,7 @@ try
 	// First check if we can redirect the route to a dedicated controller
 	$sRoute = utils::ReadParam('route', '', false, utils::ENUM_SANITIZATION_FILTER_ROUTE);
 	$oRouter = Router::GetInstance();
-	if ($oRouter->CanDispatchRoute($sRoute)) {
+	if ($operation === '' && $oRouter->CanDispatchRoute($sRoute)) {
 		$mResponse = $oRouter->DispatchRoute($sRoute);
 
 		// If response isn't a WebPage, it is most likely that the output already occured, stop the script.
@@ -773,12 +782,12 @@ try
 				$sClass = utils::ReadParam('className', '', false, 'class');
 				$sRootClass = utils::ReadParam('baseClass', '', false, 'class');
 				$currentId = utils::ReadParam('currentId', '');
-				$sTableId = utils::ReadParam('_table_id_', null, false, 'raw_data');
+				$sTableId = utils::ReadParam('_table_id_', null, false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 				$sAction = utils::ReadParam('action', '');
-				$sSelectionMode = utils::ReadParam('selection_mode', null, false, 'raw_data');
-				$sResultListOuterSelector = utils::ReadParam('result_list_outer_selector', null, false, 'raw_data');
-				$scssCount = utils::ReadParam('css_count', null, false, 'raw_data');
-				$sTableInnerId = utils::ReadParam('table_inner_id', $sTableId, false, 'raw_data');
+				$sSelectionMode = utils::ReadParam('selection_mode');
+				$sResultListOuterSelector = utils::ReadParam('result_list_outer_selector', null,false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER); // actually an Id not a selector
+				$scssCount = utils::ReadParam('css_count', null,false,utils::ENUM_SANITIZATION_FILTER_ELEMENT_SELECTOR);
+				$sTableInnerId = utils::ReadParam('table_inner_id', null,false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 
 				$oFilter = new DBObjectSearch($sClass);
 				$oSet = new CMDBObjectSet($oFilter);
@@ -1103,31 +1112,28 @@ EOF
 						$aUpdatedDecoded[] = $sDecodedProp;
 					}
 
-					$oDashlet->FromParams($aCurrentValues);
-					$sPrevClass = get_class($oDashlet);
-					$oDashlet = $oDashlet->Update($aValues, $aUpdatedDecoded);
-					$sNewClass = get_class($oDashlet);
-					if ($sNewClass != $sPrevClass) {
-						$oPage->add_ready_script("$('#dashlet_$sDashletId').dashlet('option', {dashlet_class: '$sNewClass'});");
-					}
-					if ($oDashlet->IsRedrawNeeded()) {
-						$oBlock = $oDashlet->DoRender($oPage, true, false, $aExtraParams);
-						$sHtml = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
-						$sHtml = str_replace("\n", '', $sHtml);
-						$sHtml = str_replace("\r", '', $sHtml);
-						$sHtml = str_replace("'", "\'", $sHtml);
-						$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml');");
-					}
-					if ($oDashlet->IsFormRedrawNeeded()) {
-						$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
-						$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
-						$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true, '.itop-dashboard'));
-						$sHtml = str_replace("\n", '', $sHtml);
-						$sHtml = str_replace("\r", '', $sHtml);
-						$oPage->add_script("$('#dashlet_properties_$sDashletId').html('$sHtml')");
-					}
+				$oDashlet->FromParams($aCurrentValues);
+				$sPrevClass = get_class($oDashlet);
+				$oDashlet = $oDashlet->Update($aValues, $aUpdatedDecoded);
+				$sNewClass = get_class($oDashlet);
+				if ($sNewClass != $sPrevClass) {
+					$oPage->add_ready_script("$('#dashlet_$sDashletId').dashlet('option', {dashlet_class: '$sNewClass'});");
 				}
-				break;
+				if ($oDashlet->IsRedrawNeeded()) {
+					$oBlock = $oDashlet->DoRender($oPage, true, false, $aExtraParams);
+					$sHtml = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
+					$sHtml= json_encode($sHtml);
+					$oPage->add_script("$('#dashlet_$sDashletId').html({$sHtml});");
+				}
+				if ($oDashlet->IsFormRedrawNeeded()) {
+					$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
+					$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
+					$sHtml = $oForm->RenderAsPropertySheet($oPage, true, '.itop-dashboard');
+					$sHtml= json_encode($sHtml);
+					$oPage->add_script("$('#dashlet_properties_$sDashletId').html({$sHtml});");
+				}
+			}
+			break;
 
 			case 'dashlet_creation_dlg':
 				$sOQL = utils::ReadParam('oql', '', false, 'raw_data');
@@ -2333,121 +2339,13 @@ EOF
 				$oPage->add("</fieldset></div>");
 				break;
 
-			// TODO 3.0.0: Move this to new ajax render controller?
+			/**
+			 * @internal
+			 * @deprecated 3.2.0 N°7552 Use object.search_for_mentions route instead
+			 */
 			case 'cke_mentions':
-				$oPage->SetContentType('application/json');
-				$sMarker = utils::ReadParam('marker', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
-				$sNeedle = utils::ReadParam('needle', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
-				$sHostClass = utils::ReadParam('host_class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
-				$iHostId = (int)utils::ReadParam('host_id', 0, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
-
-				// Check parameters
-				if ($sMarker === '') {
-					throw new Exception('Invalid parameters, marker must be specified.');
-				}
-
-				$aMentionsAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
-				if (isset($aMentionsAllowedClasses[$sMarker]) === false) {
-					throw new Exception('Invalid marker "'.$sMarker.'"');
-				}
-
-				$aMatches = array();
-				if ($sNeedle !== '') {
-					// Retrieve mentioned class from marker
-					$sMentionedClass = $aMentionsAllowedClasses[$sMarker];
-					if (MetaModel::IsValidClass($sMentionedClass) === false) {
-						throw new Exception('Invalid class "'.$sMentionedClass.'" for marker "'.$sMarker.'"');
-					}
-
-					// Base search used when no trigger configured
-					$oSearch = DBSearch::FromOQL("SELECT $sMentionedClass");
-					$aSearchParams = ['needle' => "%$sNeedle%"];
-
-					// Retrieve restricting scopes from triggers if any
-					if ((strlen($sHostClass) > 0) && ($iHostId > 0)) {
-						$oHostObj = MetaModel::GetObject($sHostClass, $iHostId);
-						$aSearchParams['this'] = $oHostObj;
-
-						$aTriggerMentionedSearches = [];
-
-						$aTriggerSetParams = array('class_list' => MetaModel::EnumParentClasses($sHostClass, ENUM_PARENT_CLASSES_ALL));
-						$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"), array(), $aTriggerSetParams);
-						/** @var \TriggerOnObjectMention $oTrigger */
-						while ($oTrigger = $oTriggerSet->Fetch()) {
-							$sTriggerMentionedOQL = $oTrigger->Get('mentioned_filter');
-
-							// No filter on mentioned objects, don't restrict the scope at all, it can be any object of $sMentionedClass
-							if (strlen($sTriggerMentionedOQL) === 0) {
-								$aTriggerMentionedSearches = [$oSearch];
-								break;
-							}
-
-							$oTriggerMentionedSearch = DBSearch::FromOQL($sTriggerMentionedOQL);
-							$sTriggerMentionedClass = $oTriggerMentionedSearch->GetClass();
-
-							// Filter is not about the mentioned class, don't mind it
-							if (is_a($sMentionedClass, $sTriggerMentionedClass, true) === false) {
-								continue;
-							}
-
-							$aTriggerMentionedSearches[] = $oTriggerMentionedSearch;
-						}
-
-						if (count($aTriggerMentionedSearches) > 0) {
-							$oSearch = new DBUnionSearch($aTriggerMentionedSearches);
-						}
-					}
-
-					$sSearchMainClassName = $oSearch->GetClass();
-					$sSearchMainClassAlias = $oSearch->GetClassAlias();
-
-					$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sSearchMainClassName);
-
-					// Add condition to filter on the friendlyname
-					$oSearch->AddConditionExpression(
-						new BinaryExpression(new FieldExpression('friendlyname', $sSearchMainClassAlias), 'LIKE', new VariableExpression('needle'))
-					);
-
-					$oSet = new DBObjectSet($oSearch, [], $aSearchParams);
-					// Optimize fields to load
-					$aObjectAttCodesToLoad = [];
-					if (MetaModel::IsValidAttCode($sSearchMainClassName, $sObjectImageAttCode)) {
-						$aObjectAttCodesToLoad[] = $sObjectImageAttCode;
-					}
-					$oSet->OptimizeColumnLoad([$oSearch->GetClassAlias() => $aObjectAttCodesToLoad]);
-					$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
-					// Note: We have to this manually because of a bug in DBSearch not checking the user prefs. by default.
-					$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
-
-					while ($oObject = $oSet->Fetch()) {
-						// Note $oObject finalclass might be different than $sMentionedClass
-						$sObjectClass = get_class($oObject);
-						$iObjectId = $oObject->GetKey();
-						$aMatch = [
-							'class'        => $sObjectClass,
-							'id'           => $iObjectId,
-							'friendlyname' => $oObject->Get('friendlyname'),
-						];
-
-						// Try to retrieve image for contact
-						if (!empty($sObjectImageAttCode)) {
-							/** @var \ormDocument $oImage */
-							$oImage = $oObject->Get($sObjectImageAttCode);
-							if (!$oImage->IsEmpty()) {
-								$aMatch['picture_style'] = "background-image: url('".$oImage->GetDisplayURL($sObjectClass, $iObjectId, $sObjectImageAttCode)."')";
-								$aMatch['initials'] = '';
-							} else {
-								// If no image found, fallback on initials
-								$aMatch['picture_style'] = '';
-								$aMatch['initials'] = utils::FormatInitialsForMedallion(utils::ToAcronym($oObject->Get('friendlyname')));
-							}
-						}
-
-						$aMatches[] = $aMatch;
-					}
-				}
-
-				$oPage->add(json_encode($aMatches));
+				$oController = new ObjectController();
+				$oPage = $oController->OperationSearchForMentions();
 				break;
 
 			case 'custom_fields_update':
@@ -2571,6 +2469,25 @@ EOF
 				$oPage = $oController->OperationModify();
 				break;
 
+			//--------------------------------
+			// WelcomePopupMenu
+			//--------------------------------
+			case 'welcome_popup.acknowledge_message':
+				$oPage = new JsonPage();
+				try {
+					$oController = new WelcomePopupController();
+					$oController->AcknowledgeMessage();
+					$aResult = ['success' => true];
+				}
+				catch (Exception $oException) {
+					$aResult = [
+						'success'       => false,
+						'error_message' => $oException->getMessage(),
+					];
+				}
+				$oPage->SetData($aResult);
+				break;
+
 			default:
 				$oPage->p("Invalid query.");
 		}
@@ -2582,3 +2499,11 @@ EOF
 	echo utils::EscapeHtml($e->GetMessage());
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
+
+function LogErrorMessage($sMsgPrefix, $aContextInfo) {
+	$sCurrentUserLogin = UserRights::GetUser();
+	$sContextInfo = urldecode(http_build_query($aContextInfo, '', ', '));
+	$sErrorMessage = "$sMsgPrefix - User='$sCurrentUserLogin', $sContextInfo";
+	IssueLog::Error($sErrorMessage);
+}
+

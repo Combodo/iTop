@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -125,9 +125,7 @@ class ApplicationMenu
 	 */
 	public static function CheckMenuIdEnabled($sMenuId)
 	{
-		self::LoadAdditionalMenus();
-		$oMenuNode = self::GetMenuNode(self::GetMenuIndexById($sMenuId));
-		if (is_null($oMenuNode) || !$oMenuNode->IsEnabled())
+		if (self::IsMenuIdEnabled($sMenuId) === false)
 		{
 			require_once(APPROOT.'/setup/setuppage.class.inc.php');
 			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
@@ -136,6 +134,19 @@ class ApplicationMenu
 			$oP->output();
 			exit;
 		}
+	}
+
+	/**
+	 * @param $sMenuId
+	 *
+	 * @return bool true if the menu exists and current user is allowed to see the menu
+	 * @since 3.2.0
+	 */
+	public static function IsMenuIdEnabled($sMenuId):bool
+	{
+		self::LoadAdditionalMenus();
+		$oMenuNode = self::GetMenuNode(self::GetMenuIndexById($sMenuId));
+		return is_null($oMenuNode) === false && $oMenuNode->IsEnabled();
 	}
 
 	/**
@@ -269,9 +280,11 @@ class ApplicationMenu
 			$oMenuNode = static::GetMenuNode($sMenuGroupIdx);
 
 			if (!($oMenuNode instanceof MenuGroup)) {
-				IssueLog::Error('Menu node was not displayed as a menu group as it is actually not a menu group', LogChannels::CONSOLE, [
+				IssueLog::Error('Menu node without parent (root menu) must be of type menu group. Parent menu is missing or not visible to user.', LogChannels::CONSOLE, [
 					'menu_node_class' => get_class($oMenuNode),
+					'menu_node_id' => $oMenuNode->GetMenuID(),
 					'menu_node_label' => $oMenuNode->GetLabel(),
+					'current_user_id' => UserRights::GetUserId(),
 				]);
 				continue;
 			}

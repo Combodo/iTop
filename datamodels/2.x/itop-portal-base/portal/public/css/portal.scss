@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,6 +17,9 @@
  */
 
 @import 'variables.scss';
+@import '../../../../../node_modules/ckeditor5-itop-build/build/styles/compiled-theme';
+@import '../../../../../css/common/vendors/_highlightjs.scss';
+
 
 /*!
  * Combodo portal template v1.0.0
@@ -1113,6 +1116,11 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 /*********/
 /* Forms */
 /*********/
+/* - Ensure HTML contents are displayed like in CKEditor */
+.ipb-is-html-content {
+  @extend .ck-content;
+}
+
 .form_field_label > .control-label[data-tooltip-instantiated="true"] {
 	&::after {
 		content: "?";
@@ -1309,6 +1317,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 .caselog-thread--block-entry-content{
 	display: block;
 	overflow-x: auto;
+	overflow-y: hidden;
 
 	> p:last-of-type{
 		margin-bottom: 0px;
@@ -1729,66 +1738,21 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	}
 }
 
-/* CKEditor : Adding BS error feedback */
+/* CKEditor: Variables overload */
+.ck {
+  --ck-color-focus-border: #{$brand-primary};
+  --ck-spacing-small: 4px;
+  --ck-ui-component-min-height: 18px;
+  --ck-icon-size: 18px;
+}
+/* CKEditor: Adding BS error feedback */
 .form_field .cke{
 	border: 1px solid $gray-lighter;
 }
-.form_field.has-error .cke{
+.form_field.has-error .ck-editor{
 	border: 1px solid $state-danger-text;
 	border-radius: $border-radius-base;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-}
-/* CKEditor : Styling notifications based on BS alerts */
-.cke_notification{
-	position: relative;
-	padding: 15px;
-	margin-bottom: 18px;
-	border: 1px solid transparent;
-	border-radius: 4px;
-	background-color: $white
-}
-.cke_notification_close{
-	position: absolute;
-	top: 2px;
-	right: 5px;
-}
-.cke_notification_message{
-	margin-bottom: 0px;
-	line-height: 1em;
-	font-size: 1em;
-}
-.cke_notification_success{
-	display: none;
-	background-color: $alert-success-bg;
-	border-color: $alert-success-border;
-	color: $alert-success-text;
-}
-.cke_notification_warning{
-	background-color: $alert-warning-bg;
-	border-color: $alert-warning-border;
-	color: $alert-warning-text;
-}
-/* CKEditor : Misc */
-.cke_toolbox_collapser,
-.cke_toolbox_collapser .cke_arrow{
-	cursor: pointer !important;
-}
-.cke_toolbox_collapser.cke_toolbox_collapser_min ~ .editor-fullscreen-button {
-  display: block;
-  width: 12px;
-  height: 11px;
-  border: 1px solid $gray-lighter;
-  cursor: pointer;
-
-  /* !important so it overrides the .cke_reset_all style */
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
-  background-size: 100% !important;
-  background-image: url('../../../../../images/full-screen.png') !important;
-
-  &:hover {
-    background-color: #E5E5E5;
-  }
 }
 
 /* DataTables : Selection inputs */
@@ -1865,3 +1829,27 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px lighten($state-danger-border, 10);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px lighten($state-danger-border, 10);
 }
+
+
+/*****************************************************/
+/* Redefine highlightjs variables */
+/******************************************************/
+
+$common-vendors-highlightjs--padding: $ipb-vendors-highlightjs--padding;
+$common-vendors-highlightjs--box-shadow: $ipb-vendors-highlightjs--box-shadow;
+$common-vendors-highlightjs--border-radius: $ipb-vendors-highlightjs--border-radius;
+$common-vendors-highlightjs--code--padding-x: $ipb-vendors-highlightjs--code--padding-x;
+$common-vendors-highlightjs--code--padding-y: $ipb-vendors-highlightjs--code--padding-y;
+
+$common-vendors-highlightjs--background-color: $ipb-vendors-highlightjs--background-color;
+$common-vendors-highlightjs--color: $ipb-vendors-highlightjs--color;
+$common-vendors-highlightjs--keyword--color: $ipb-vendors-highlightjs--keyword--color;
+$common-vendors-highlightjs--number--color: $ipb-vendors-highlightjs--number--color;
+$common-vendors-highlightjs--attribute--color: $ipb-vendors-highlightjs--attribute--color;
+$common-vendors-highlightjs--regexp--color: $ipb-vendors-highlightjs--regexp--color;
+$common-vendors-highlightjs--meta--color: $ipb-vendors-highlightjs--meta--color;
+$common-vendors-highlightjs--tag--color: $ipb-vendors-highlightjs--tag--color;
+$common-vendors-highlightjs--string--color: $ipb-vendors-highlightjs--string--color;
+$common-vendors-highlightjs--comment--color: $ipb-vendors-highlightjs--comment--color;
+$common-vendors-highlightjs--selector-class--color: $ipb-vendors-highlightjs--selector-class--color;
+$common-vendors-highlightjs--code--color: $ipb-vendors-highlightjs--code--color;

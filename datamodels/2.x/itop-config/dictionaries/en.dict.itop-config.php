@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -23,7 +23,7 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 
-	'Menu:ConfigEditor' => 'General configuration',
+	'Menu:ConfigFileEditor' => 'Plain text editor',
 	'config-edit-title' => 'Configuration File Editor',
 	'config-edit-intro' => 'Be very cautious when editing the configuration file.',
 	'config-apply' => 'Apply',

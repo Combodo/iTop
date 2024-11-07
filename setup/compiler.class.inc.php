@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -1167,6 +1167,7 @@ EOF
 	 */	 	
 	protected function QuoteForPHP($sStr, $bSimpleQuotes = false)
 	{
+		$sStr = $sStr ?? '';
 		if ($bSimpleQuotes)
 		{
 			$sEscaped = str_replace(array('\\', "'"), array('\\\\', "\\'"), $sStr);
@@ -2258,7 +2259,7 @@ EOF
 			$this->CompileCommonProperty('is_null_allowed', $oField, $aParameters, $sModuleRelativeDir, false);
 			$this->CompileCommonProperty('default_value', $oField, $aParameters, $sModuleRelativeDir, '');
 			$this->CompileCommonProperty('allowed_values', $oField, $aParameters, $sModuleRelativeDir);
-			$aParameters['class_category'] = $this->GetPropString($oField, 'class_category');
+			$aParameters['class_category'] = $this->GetPropString($oField, 'class_category', '');
 			$aParameters['more_values'] = $this->GetPropString($oField, 'more_values', '');
 			$aParameters['depends_on'] = $sDependencies;
 		}else {
@@ -2611,7 +2612,7 @@ EOF
 		}
 
 		// Retrieve colors (mandatory/optional depending on the element type)
-		// Note: For now we can't use CSS variables (only SCSS variables) in the style XML definition as the ibo-adjust-alpha() / ibo-adjust-lightness() used a few steps below do not support them,
+		// Note: For now we can't use CSS variables (only SCSS variables) in the style XML definition as the common-adjust-alpha() / common-adjust-lightness() used a few steps below do not support them,
 		//       if this ever should be considered, the following article might help: https://codyhouse.co/blog/post/how-to-combine-sass-color-functions-and-css-variables#other-color-functions
 		if ($sElementType === self::ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS) {
 			$sMainColorForCss = $this->GetPropString($oNode, 'main_color', null, false);
@@ -2671,8 +2672,8 @@ EOF
 
 				$sCssRegularClassMainColorDeclaration = "--ibo-main-color:  #{{$sMainColorScssVariableName}};";
 				// Note: We have to manually force the alpha channel in case the given color is transparent
-				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: #{ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100), \$ibo-color-base-opacity-for-lightness-100)};";
-				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: #{ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900), \$ibo-color-base-opacity-for-lightness-900)};";
+				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: #{common-adjust-alpha(common-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100), \$ibo-color-base-opacity-for-lightness-100)};";
+				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: #{common-adjust-alpha(common-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900), \$ibo-color-base-opacity-for-lightness-900)};";
 
 				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: #{{$sMainColorScssVariableName}};";
 			} else {
@@ -3230,10 +3231,11 @@ EOF;
 
 			$aEntriesPHP = array();
 			$oEntries = $oDictionaryNode->GetUniqueElement('entries');
+			/** @var MFElement $oEntry */
 			foreach ($oEntries->getElementsByTagName('entry') as $oEntry)
 			{
 				$sStringCode = $oEntry->getAttribute('id');
-				$sValue = $oEntry->GetText();
+				$sValue = $oEntry->GetText('');
 				$aEntriesPHP[] = "\t'$sStringCode' => ".self::QuoteForPHP(self::FilterDictString($sValue), true).",";
 			}
 			$sEntriesPHP = implode("\n", $aEntriesPHP);
@@ -3268,7 +3270,7 @@ EOF;
 		file_put_contents($sLanguagesFile, $sLanguagesFileContent);
 	}
 
-	protected static function FilterDictString($s)
+	protected static function FilterDictString(string $s): string
 	{
 		if (strpos($s, '~') !== false)
 		{

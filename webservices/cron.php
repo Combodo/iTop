@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,6 +20,7 @@
 use Combodo\iTop\Application\WebPage\CLIPage;
 use Combodo\iTop\Application\WebPage\Page;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 
 require_once(__DIR__.'/../approot.inc.php');
 
@@ -167,7 +168,7 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 		// Background processes do repeat periodically
 		$oPlannedStart = clone $oDatePlanned;
 		// Let's schedule from the previous planned date of execution to avoid shift
-		$oPlannedStart->modify('+'.$oProcess->GetPeriodicity().' seconds');
+		$oPlannedStart->modify($oProcess->GetPeriodicity().' seconds');
 		$oEnd = new DateTime();
 		while ($oPlannedStart->format('U') < $oEnd->format('U'))
 		{
@@ -408,7 +409,7 @@ function ReSyncProcesses($oP, $bVerbose, $bDebug)
 	$oNow = new DateTime();
 
 	$aProcesses = array();
-	foreach (utils::GetClassesForInterface('iProcess', '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]']) as $sTaskClass)
+	foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iProcess::class) as $sTaskClass)
 	{
 		$oProcess = new $sTaskClass;
 		$aProcesses[$sTaskClass] = $oProcess;

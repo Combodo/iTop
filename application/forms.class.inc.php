@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
  * Helper class to build interactive forms to be used either in stand-alone
  * modal dialog or in "property-sheet" panes.
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class DesignerForm
@@ -209,7 +209,7 @@ class DesignerForm
 	public function RenderAsPropertySheet($oP, $bReturnHTML = false, $sNotifyParentSelector = null)
 	{
 		$sReturn = '';
-		$sActionUrl = addslashes($this->sSubmitTo);
+		$sActionUrl = addslashes($this->sSubmitTo ?? '');
 		$sJSSubmitParams = json_encode($this->aSubmitParams);
 		$sFormId = $this->GetFormId();
 		if ($this->oParentForm == null) {
@@ -1330,7 +1330,8 @@ class DesignerComboField extends DesignerFormField
 		{
 			if ($this->bMultipleSelection)
 			{
-				$sHtml = "<span><select $sCSSClasses multiple size=\"8\"id=\"$sId\" name=\"$sName\">";
+				$iSize = max(1, min(8, count($this->aAllowedValues)));
+				$sHtml = "<span><select $sCSSClasses multiple size=\"$iSize\" id=\"$sId\" name=\"$sName\">";
 			}
 			else
 			{

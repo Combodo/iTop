@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
 /**
  * The standardized result of any pass/fail check performed by the setup
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class CheckResult {
@@ -90,7 +90,7 @@ class CheckResult {
 /**
  * All of the functions/utilities needed by both the setup wizard and the installation process
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class SetupUtils
@@ -818,7 +818,7 @@ class SetupUtils
 		{
 			if (!is_dir($sDest))
 			{
-				mkdir($sDest);
+				mkdir($sDest, 0777 /* Default */, true);
 			}
 			$aFiles = scandir($sSource);
 			if(sizeof($aFiles) > 0 )
@@ -1296,6 +1296,12 @@ EOF
 			} else {
 				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_connections is set to $iMaxConnections.");
 			}
+
+            $iClusters = $oDBSource->GetClusterNb();
+            if ($iClusters > 0) {
+                SetupLog::Warning('Warning - Using Galera will cause malfunctions and data corruptions. Combodo does not support this type of infrastructure.');
+                $aResult['checks'][] = new CheckResult(CheckResult::WARNING, 'Using Galera will cause malfunctions and data corruptions. Combodo does not support this type of infrastructure.');
+            }
 
 			try {
 				$aResult['databases'] = $oDBSource->ListDB();
@@ -2169,6 +2175,7 @@ JS
 				'sodium' => 'Strong encryption will not be used.',
 				'openssl' => 'Strong encryption will not be used.',
 			],
+			'apcu' => 'Performances will be slightly degraded.',
 			'ldap' => 'LDAP authentication will be disabled.',
 		];
 

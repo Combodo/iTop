@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -195,7 +195,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sEx
 			oDiv.empty();
 			oDiv.append(data);
 			oDiv.unblock();
-			oDiv.parent().resize(); // Inform the parent that the form has just been (potentially) resized
+			oDiv.parent().trigger('resize'); // Inform the parent that the form has just been (potentially) resized
 			oDiv.find('form.search_form_handler').triggerHandler('itop.search.form.reloaded');
 		}
 	);
@@ -313,6 +313,7 @@ function BlockField(field_id, bBlocked) {
 		$('#'+field_id).unblock();
 	}
 }
+
 /**
  * Updates (enables/disables) a "duration" field
  */
@@ -1286,6 +1287,23 @@ const CombodoInlineImage = {
 		}).magnificPopup({type: 'image', closeOnContentClick: true });
 	}
 };
+
+/**
+ * Abstract Fetch API wrapper to manage AJAX requests in iTop.
+ */
+const CombodoHTTP = {
+	/**
+	 * @param {string} sUrl URL to fetch
+	 * @param {Object} oOptions Fetch options
+	 * @return {Promise<Response>}
+	 */
+	Fetch: function(sUrl, oOptions) {
+		oOptions = oOptions || {};
+		oOptions.headers = oOptions.headers || {};
+		oOptions.headers['X-Combodo-Ajax'] = true;
+		return fetch(sUrl, oOptions);
+	}
+}
 
 /**
  * Abstract wrapper to manage modal dialogs in iTop.

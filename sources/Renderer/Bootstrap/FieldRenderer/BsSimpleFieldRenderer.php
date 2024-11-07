@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -23,6 +23,7 @@ namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeText;
+use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Form\Field\DateField;
 use Combodo\iTop\Form\Field\DateTimeField;
 use Combodo\iTop\Form\Field\Field;
@@ -159,7 +160,8 @@ EOF
 				$oOutput->AddHtml('<div class="help-block"></div>');
 				// First the edition area
 				$oOutput->AddHtml('<div>');
-				$oOutput->AddHtml('<textarea id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" class="form-control" rows="8"  '.$sInputTags.'>'.$this->oField->GetCurrentValue().'</textarea>');
+				$sEditorClasses = $bRichEditor ? 'htmlEditor' : '';
+				$oOutput->AddHtml('<textarea id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" class="' . $sEditorClasses . ' form-control" rows="8"  '.$sInputTags.'>'. CKEditorHelper::PrepareCKEditorValueTextEncodingForTextarea($this->oField->GetCurrentValue()) .'</textarea>');
 				$oOutput->AddHtml('</div>');
 				// Then the previous entries if necessary
 				if ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\CaseLogField') {
@@ -172,18 +174,10 @@ EOF
 
 				// Some additional stuff if we are displaying it with a rich editor
 					if ($bRichEditor) {
-						$aConfig = utils::GetCkeditorPref();
-						$aConfig['extraPlugins'] = 'codesnippet';
-						$sJsConfig = json_encode($aConfig);
-						
-						$oOutput->AddJs(
-<<<EOF
-							$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
-							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, $sJsConfig).editor.on("change", function(){
-                                	$('#{$this->oField->GetGlobalId()}').trigger("change");
-                              });
-EOF
-						);
+
+						// Enable CKEditor
+						CKEditorHelper::ConfigureCKEditorElementForRenderingOutput($oOutput, $this->oField->GetGlobalId(), $this->oField->GetCurrentValue(), false, false, ['maximize' => []]);
+
 						if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null)) {
 							$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));
 						}
@@ -236,25 +230,56 @@ EOF
 				case 'Combodo\\iTop\\Form\\Field\\UrlField':
 				case 'Combodo\\iTop\\Form\\Field\\EmailField':
 				case 'Combodo\\iTop\\Form\\Field\\PhoneField':
-				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
-				case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
 				case 'Combodo\\iTop\\Form\\Field\\SelectField':
 				case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
 				case 'Combodo\\iTop\\Form\\Field\\HiddenField':
-					$oOutput->AddJs(
-						<<<EOF
-                        					$("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
-						var me = this;
-
-						$(this).closest(".field_set").trigger("field_change", {
-							id: $(me).attr("id"),
-							name: $(me).closest(".form_field").attr("data-field-id"),
-							value: $(me).val()
-						});
-					}).on("mouseup", function(){this.focus();});
-EOF
+					$oOutput->AddJs(<<<JS
+	                    $("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+							var me = this;
+	
+							$(this).closest(".field_set").trigger("field_change", {
+								id: $(me).attr("id"),
+								name: $(me).closest(".form_field").attr("data-field-id"),
+								value: $(me).val()
+							});
+						}).on("mouseup", function(){this.focus();});
+JS
 					);
 					break;
+
+				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+				case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
+					if ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML) {
+						$oOutput->AddJs(<<<JS
+							CombodoCKEditorHandler.GetInstance("#{$this->oField->GetGlobalId()}")
+								.then((oCKEditor) => {
+									oCKEditor.model.document.on("change:data", () => {
+										const oFieldElem = $("#{$this->oField->GetGlobalId()}");
+										oFieldElem.closest(".field_set").trigger("field_change", {
+											id: oFieldElem.attr("id"),
+											name: oFieldElem.closest(".form_field").attr("data-field-id"),
+											value: oCKEditor.getData()
+										});
+									});
+								});
+JS
+						);
+					} else {
+						$oOutput->AddJs(<<<JS
+                            $("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+								var me = this;
+		
+								$(this).closest(".field_set").trigger("field_change", {
+									id: $(me).attr("id"),
+									name: $(me).closest(".form_field").attr("data-field-id"),
+									value: $(me).val()
+								});
+							}).on("mouseup", function(){this.focus();});
+JS
+						);
+					}
+					break;
+
 				case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
 					// We need the focusout event has the datepicker widget seems to override the change event
 					$oOutput->AddJs(
@@ -350,7 +375,7 @@ EOF
 
 							// Value
 							$oOutput->AddHtml('<div class="form_field_control">');
-							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), false)->AddHtml('</div>');
+							$oOutput->AddHtml('<div class="form-control-static ipb-is-html-content">')->AddHtml($this->oField->GetDisplayValue(), false)->AddHtml('</div>');
 							$oOutput->AddHtml('</div>');
 						}
 
@@ -570,7 +595,7 @@ JS
 
 			// Opening thread
 			$oOutput->AddHtml(<<<HTML
-<div class="caselog-thread">
+<div class="caselog-thread ipb-is-html-content">
 HTML
 			);
 			// - Header
@@ -680,7 +705,7 @@ HTML
 	    <div class="caselog-thread--block-medallion" style="{$sEntryMedallionStyle}" data-tooltip-content="{$sEntryMedallionTooltip}" data-placement="{$sEntryMedallionTooltipPlacement}">
 	        $sEntryMedallionContent
 	    </div>
-	    <div class="caselog-thread--block-user">{$sEntryUserLogin}</div>
+	    <div class="caselog-thread--block-user">{$sEntryMedallionTooltip}</div>
 HTML
 					);
 

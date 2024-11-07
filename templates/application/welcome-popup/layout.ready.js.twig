@@ -1,0 +1,106 @@
+const oWelcomePopupDialogElem = $('#ibo-welcome-popup--dialog');
+
+// Dialog is hidden by default to avoid a flash of unstyled content
+oWelcomePopupDialogElem.removeClass('ibo-is-hidden');
+
+// Prepare dialog
+oWelcomePopupDialogElem.dialog({
+	modal: true,
+	width: $(window).innerWidth() * 0.7,
+    maxHeight: $(window).innerHeight() * 0.8,
+	autoOpen: true,
+	title: oWelcomePopupDialogElem.attr('data-title'),
+    open: function () {
+        // Focus on acknowledge button
+        const oAckButton = oWelcomePopupDialogElem.closest('[role="dialog"]').find('.ui-dialog-buttonset .ibo-is-primary:first');
+        oAckButton.trigger('focus');
+
+        // Count stack items and change button label to close if there is only one
+        // Note: "<=" so it works when stack isn't displayed as well as when it contains only one item
+        if (oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"]').length <= 1) {
+            oAckButton.text({{ 'UI:WelcomePopup:Button:AcknowledgeAndClose'|dict_s|json_encode|raw }});
+        }
+    },
+	close: function() {
+        oWelcomePopupDialogElem.remove();
+    },
+    buttons: [
+        {
+            text: {{ 'UI:WelcomePopup:Button:RemindLater'|dict_s|json_encode|raw }},
+            class: 'ibo-is-alternative',
+            click: function() {
+                oWelcomePopupDialogElem.dialog( "close" );
+            }
+        },
+        {
+            text: {{ 'UI:WelcomePopup:Button:AcknowledgeAndNext'|dict_s|json_encode|raw }},
+            class: 'ibo-is-regular ibo-is-primary',
+            click: function() {
+                oWelcomePopupDialogElem.trigger('acknowledge_message.itop.welcome_popup');
+            }
+        }
+    ]
+ });
+
+// Bind events
+oWelcomePopupDialogElem
+        // - On stack item click, display active message
+        .on('click', '[data-role="ibo-welcome-popup--stack-item"]', function () {
+            const sUUID = $(this).attr('data-uuid');
+            const sUUIDEscapedForSelector = sUUID.replace(/\\/g, '\\\\');
+
+            // Display active stack item
+            oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"]').removeClass('ibo-is-active');
+            oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"][data-uuid="' + sUUIDEscapedForSelector + '"]').addClass('ibo-is-active');
+
+            // Display active content
+            oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--message-content"]').removeClass('ibo-is-active');
+            oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--message-content"][data-uuid="' + sUUIDEscapedForSelector + '"]').addClass('ibo-is-active');
+        })
+        .on('acknowledge_message.itop.welcome_popup', function (oEvent, oData) {
+            const sUUID = oData?.uuid ?? oWelcomePopupDialogElem.find('.ibo-is-active[data-role="ibo-welcome-popup--message-content"]').attr('data-uuid');
+            const sUUIDEscapedForSelector = sUUID.replace(/\\/g, '\\\\');
+
+            // Acknowledge message on server
+            $.post(
+                '{{ sEndpointAbsURIForAcknowledgeMessage }}',
+                {
+                    message_uuid: sUUID
+                },
+                'json'
+            )
+            .done(function(oResponse) {
+                if (oResponse.success) {
+                    // Mark message as acknowledged
+                    oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"][data-uuid="' + sUUIDEscapedForSelector + '"]').addClass('ibo-is-acknowledged');
+
+                    // Display next message if any
+                    const oNextStackItemElem = oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"]:not(.ibo-is-acknowledged):first');
+                    if (oNextStackItemElem.length > 0) {
+                        oNextStackItemElem.trigger('click');
+
+                        // Count non acknowledged stack items and change button label to close if there is only one
+                        if (oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"]:not(.ibo-is-acknowledged)').length === 1) {
+                            const oAckButton = oWelcomePopupDialogElem.closest('[role="dialog"]').find('.ui-dialog-buttonset .ibo-is-primary:first');
+                            oAckButton.text({{ 'UI:WelcomePopup:Button:AcknowledgeAndClose'|dict_s|json_encode|raw }});
+                        }
+                    } else {
+                        // Close dialog
+                        oWelcomePopupDialogElem.dialog('close');
+                    }
+                } else {
+                    // Display error message
+                    CombodoModal.OpenErrorModal(oResponse.error_message);
+                }
+            })
+            .fail(function(oXHR, sTextStatus, sErrorThrown) {
+                // Display error message
+                CombodoModal.OpenErrorModal(sErrorThrown);
+            });
+        });
+
+// - Close the dialog when clicking outside of it
+$('.ui-widget-overlay').on('click', function() { oWelcomePopupDialogElem.dialog('close'); } );
+
+
+

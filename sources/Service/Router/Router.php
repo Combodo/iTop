@@ -1,11 +1,13 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Service\Router;
 
+use Combodo\iTop\Controller\iController;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Service\Router\Exception\RouteNotFoundException;
 use ReflectionClass;
 use ReflectionMethod;
@@ -174,7 +176,7 @@ class Router
 
 		// If no cache, force to re-scan for routes
 		if (count($aRoutes) === 0) {
-			foreach (utils::GetClassesForInterface('Combodo\iTop\Controller\iController', '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']) as $sControllerFQCN) {
+			foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iController::class) as $sControllerFQCN) {
 				$sRouteNamespace = $sControllerFQCN::ROUTE_NAMESPACE;
 				// Ignore controller with no namespace
 				if (is_null($sRouteNamespace)) {

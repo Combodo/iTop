@@ -1,0 +1,102 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* Base color palettes */
+$common-color-white-100: hsla(0, 0%, 100%, 1) !default;
+$common-color-white-200: hsla(0, 0%, 94.9%, 1) !default;
+$common-color-transparent: hsla(0, 0%, 100%, 0) !default;
+
+$common-color-grey-50: hsla(240, 20%, 99%, 1) !default;
+$common-color-grey-100: hsla(210, 16.7%, 97.6%, 1) !default;
+$common-color-grey-200: hsla(207, 22.4%, 90.4%, 1) !default;
+$common-color-grey-300: hsla(210, 23.5%, 86.7%, 1) !default;
+$common-color-grey-400: hsla(208, 17.2%, 82.9%, 1) !default;
+$common-color-grey-500: hsla(209, 23.7%, 74.3%, 1) !default;
+$common-color-grey-600: hsla(215, 16.6%, 63.3%, 1) !default;
+$common-color-grey-700: hsla(214, 11.3%, 48.6%, 1) !default;
+$common-color-grey-800: hsla(215, 16.9%, 30.2%, 1) !default;
+$common-color-grey-900: hsla(215, 22.4%, 16.7%, 1) !default;
+$common-color-grey-950: hsla(215, 26.4%, 10.7%, 1) !default;
+
+$common-color-blue-grey-50: hsla(210, 36%, 96%, 1) !default;
+$common-color-blue-grey-100: hsla(198, 15.7%, 83.7%, 1) !default;
+$common-color-blue-grey-200: hsla(200, 15.3%, 73.1%, 1) !default;
+$common-color-blue-grey-300: hsla(200, 15.6%, 62.4%, 1) !default;
+$common-color-blue-grey-400: hsla(200, 15.4%, 54.1%, 1) !default;
+$common-color-blue-grey-500: hsla(200, 18.3%, 46.1%, 1) !default;
+$common-color-blue-grey-600: hsla(199, 18.4%, 40.4%, 1) !default;
+$common-color-blue-grey-700: hsla(199, 18.3%, 33.1%, 1) !default;
+$common-color-blue-grey-800: hsla(200, 17.9%, 26.3%, 1) !default;
+$common-color-blue-grey-900: hsla(200, 19.1%, 18.4%, 1) !default;
+$common-color-blue-grey-950: hsla(200, 20.2%, 13.1%, 1) !default;
+
+$common-color-blue-100: hsla(201, 100%, 96.1%, 1) !default;
+$common-color-blue-200: hsla(202, 80.6%, 85.9%, 1) !default;
+$common-color-blue-300: hsla(203, 82%, 76.1%, 1) !default;
+$common-color-blue-400: hsla(205, 79.3%, 65.9%, 1) !default;
+$common-color-blue-500: hsla(207, 72.6%, 57.1%, 1) !default;
+$common-color-blue-600: hsla(209, 61.6%, 50%, 1) !default;
+$common-color-blue-700: hsla(211, 60.7%, 42.9%, 1) !default;
+$common-color-blue-800: hsla(213, 49.4%, 34.1%, 1) !default;
+$common-color-blue-900: hsla(215, 41.3%, 28%, 1) !default;
+$common-color-blue-950: hsla(215, 36.8%, 23%, 1) !default;
+
+$common-color-cyan-100: hsla(186, 61.2%, 86.9%, 1) !default;
+$common-color-cyan-200: hsla(187, 71.6%, 71%, 1) !default;
+$common-color-cyan-300: hsla(187, 71.2%, 59.2%, 1) !default;
+$common-color-cyan-400: hsla(187, 70.9%, 50.2%, 1) !default;
+$common-color-cyan-500: hsla(187, 100%, 41.6%, 1) !default;
+$common-color-cyan-600: hsla(187, 100%, 37.8%, 1) !default;
+$common-color-cyan-700: hsla(186, 100%, 32.7%, 1) !default;
+$common-color-cyan-800: hsla(185, 100%, 28%, 1) !default;
+$common-color-cyan-900: hsla(182, 100%, 19.6%, 1) !default;
+$common-color-cyan-950: hsla(180, 100%, 10.6%, 1) !default;
+
+$common-color-green-100: hsla(88, 50.7%, 85.7%, 1) !default;
+$common-color-green-200: hsla(88, 50%, 76.5%, 1) !default;
+$common-color-green-300: hsla(88, 50%, 67.1%, 1) !default;
+$common-color-green-400: hsla(88, 50.2%, 59.8%, 1) !default;
+$common-color-green-500: hsla(88, 50.2%, 52.7%, 1) !default;
+$common-color-green-600: hsla(89, 46.1%, 48%, 1) !default;
+$common-color-green-700: hsla(92, 47.9%, 42.2%, 1) !default;
+$common-color-green-800: hsla(95, 49.5%, 36.5%, 1) !default;
+$common-color-green-900: hsla(103, 55.6%, 26.5%, 1) !default;
+$common-color-green-950: hsla(108, 59.6%, 21.5%, 1) !default;
+
+
+$common-color-orange-100: hsla(40, 100%, 97.1%, 1) !default;
+$common-color-orange-200: hsla(39, 96.4%, 89%, 1) !default;
+$common-color-orange-300: hsla(38, 93.2%, 76.9%, 1) !default;
+$common-color-orange-400: hsla(33, 89.9%, 64.9%, 1) !default;
+$common-color-orange-500: hsla(28, 82.9%, 51.8%, 1) !default;
+$common-color-orange-600: hsla(24, 74.7%, 49.6%, 1) !default;
+$common-color-orange-700: hsla(20, 70.7%, 44.1%, 1) !default;
+$common-color-orange-800: hsla(16, 65.1%, 37.1%, 1) !default;
+$common-color-orange-900: hsla(14, 60.8%, 30%, 1) !default;
+$common-color-orange-950: hsla(14, 55.1%, 22%, 1) !default;
+
+$common-color-red-100: hsla(0, 76.9%, 94.9%, 1) !default;
+$common-color-red-200: hsla(0, 95.1%, 92%, 1) !default;
+$common-color-red-300: hsla(0, 97.4%, 84.7%, 1) !default;
+$common-color-red-400: hsla(0, 95.3%, 74.7%, 1) !default;
+$common-color-red-500: hsla(0, 87.8%, 67.8%, 1) !default;
+$common-color-red-600: hsla(0, 76.3%, 57.1%, 1) !default;
+$common-color-red-700: hsla(0, 60.8%, 48%, 1) !default;
+$common-color-red-800: hsla(0, 55.8%, 39%, 1) !default;
+$common-color-red-900: hsla(0, 46.8%, 31%, 1) !default;
+$common-color-red-950: hsla(0, 42.9%, 20%, 1) !default;
+
+$common-color-pink-100: hsla(348, 100%, 98%, 1) !default;
+$common-color-pink-200: hsla(343, 95%, 92%, 1) !default;
+$common-color-pink-300: hsla(339, 90%, 85%, 1) !default;
+$common-color-pink-400: hsla(336, 86%, 75%, 1) !default;
+$common-color-pink-500: hsla(331, 79%, 66%, 1) !default;
+$common-color-pink-600: hsla(329, 64%, 54%, 1) !default;
+$common-color-pink-700: hsla(325, 57%, 46%, 1) !default;
+$common-color-pink-800: hsla(322, 60%, 37%, 1) !default;
+$common-color-pink-900: hsla(318, 51%, 29%, 1) !default;
+$common-color-pink-950: hsla(318, 51%, 21%, 1) !default;
+
+$common-colors: ('grey', 'blue-grey', 'blue', 'cyan', 'green', 'orange', 'red', 'pink', 'primary', 'secondary', 'information', 'success', 'warning', 'danger');

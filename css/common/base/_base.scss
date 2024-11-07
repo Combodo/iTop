@@ -1,0 +1,17 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$common-scrollbar--scrollbar-width: 8px !default;
+$common-scrollbar--scrollbar-height: $common-scrollbar--scrollbar-width !default; /* For horizontal scrollbars */
+$common-scrollbar--scrollbar-track-background-color: $common-color-transparent !default;
+$common-scrollbar--scrollbar-track-border-radius: $common-border-radius-500 !default;
+$common-scrollbar--scrollbar-thumb-background-color: $common-color-grey-300 !default;
+$common-scrollbar--scrollbar-thumb-border: none !default;
+$common-scrollbar--scrollbar-thumb-border-radius: $common-border-radius-500 !default;
+
+$common-svg-illustration--fill: $common-color-primary-500 !default;
+
+$common-content-block--background-color: $common-color-white-100 !default;
+$common-content-block--border: 1px solid $common-color-grey-400 !default;

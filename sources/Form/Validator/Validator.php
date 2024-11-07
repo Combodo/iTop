@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -32,7 +32,7 @@ class Validator extends CustomRegexpValidator
 	public function __construct($sRegExp = null, $sErrorMessage = null)
 	{
 		// cannot use DeprecatedCallsLog::NotifyDeprecatedFile as it would trigger an exception on dev env
-		// because all autoloader files are loaded during MetaModel::Startup (calling \Combodo\iTop\Service\Events\EventService::InitService calling \utils::GetClassesForInterface)
+		// because all autoloader files are loaded during MetaModel::Startup (calling \Combodo\iTop\Service\Events\EventService::InitService calling InterfaceDiscovery::FindItopClasses)
 		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('3.1.0 N°6414 use '.CustomRegexpValidator::class.' instead');
 
 		parent::__construct($sRegExp, $sErrorMessage);

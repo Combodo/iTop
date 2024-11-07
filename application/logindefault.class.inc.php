@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -53,6 +53,12 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 		{
 			// Force login mode
 			LoginWebPage::SetLoginModeAndReload($sProposedLoginMode);
+		} else {
+			$sRawLoginMode = utils::ReadParam('login_mode', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+			if ($sProposedLoginMode !== $sRawLoginMode) {
+				IssueLog::Error("Authentication issue due to login_mode parameter sanitization. Please avoid special characters", null, ['sRawLoginMode' => $sRawLoginMode]);
+				//IssueLog::Error("Authentication issue due to login_mode parameter sanitization. Please avoid special characters", null, ['sRawLoginMode' => utils::HtmlEntities($sRawLoginMode)]);
+			}
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}

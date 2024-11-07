@@ -1,0 +1,88 @@
+/*!
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-vendors-ckeditor--ck-content--text-color: $ibo-color-grey-900 !default;
+$ibo-vendors-ckeditor--ck-content-pre-language--padding: 0 !default;
+$ibo-vendors-ckeditor--ck-content-pre-language--code--background-color: $ibo-color-grey-900 !default;
+$ibo-vendors-ckeditor--ck-content-pre-language--code--color: $ibo-color-white-100 !default;
+$ibo-vendors-ckeditor--ck-content-pre-language--code--padding: $ibo-vendors-highlightjs--padding !default;
+
+/* - Following SCSS variables are only there to overlaod the CSS3 variables of CKEditor (see `src/resources/styles/default-theme.css` in CKEditor) */
+$ibo-vendors-ckeditor--ck-color-list-button-on-background: $ibo-color-grey-200 !default;
+$ibo-vendors-ckeditor--ck-color-list-button-on-background-focus: $ibo-color-grey-200 !default;
+$ibo-vendors-ckeditor--ck-color-list-button-hover-background: $ibo-color-grey-200 !default;
+$ibo-vendors-ckeditor--ck-color-list-button-on-text: $ibo-color-grey-900 !default;
+
+$ibo-vendors-ckeditor--ck-text-tiny-font-size: $ibo-font-size-20 !default;
+$ibo-vendors-ckeditor--ck-text-small-font-size: $ibo-font-size-50 !default;
+$ibo-vendors-ckeditor--ck-text-big-font-size: $ibo-font-size-200 !default;
+$ibo-vendors-ckeditor--ck-text-huge-font-size: $ibo-font-size-350 !default;
+
+$ibo-vendors-ckeditor--ck-color-image-caption-text: $ibo-color-grey-900 !default;
+
+$ibo-vendors-ckeditor--ck-mentions--item--line-height: 1.6rem !default;
+$ibo-vendors-ckeditor--ck-mentions--item--padding-x: $ibo-spacing-300 !default;
+$ibo-vendors-ckeditor--ck-mentions--item--padding-y: $ibo-spacing-200 !default;
+
+/* CSS3 variables */
+.ck {
+  --ck-color-list-button-on-background: #{$ibo-vendors-ckeditor--ck-color-list-button-on-background};
+  --ck-color-list-button-on-background-focus: #{$ibo-vendors-ckeditor--ck-color-list-button-on-background-focus};
+  --ck-color-list-button-hover-background: #{$ibo-vendors-ckeditor--ck-color-list-button-hover-background};
+  --ck-color-list-button-on-text: #{$ibo-vendors-ckeditor--ck-color-list-button-on-text};
+
+  --ck-text-tiny-font-size: #{$ibo-vendors-ckeditor--ck-text-tiny-font-size};
+  --ck-text-small-font-size: #{$ibo-vendors-ckeditor--ck-text-small-font-size};
+  --ck-text-big-font-size: #{$ibo-vendors-ckeditor--ck-text-big-font-size};
+  --ck-text-huge-font-size: #{$ibo-vendors-ckeditor--ck-text-huge-font-size};
+
+  --ck-color-image-caption-text: #{$ibo-vendors-ckeditor--ck-color-image-caption-text};
+}
+
+/* Base style */
+.ck-editor {
+  width: 100% !important; /* Force editor to always take its container full width (not less, not more) */
+  display: inline-grid; /* Force editor to always take its container full width (not less, not more) */
+
+  .ck-editor__main {
+    overflow: auto;
+  }
+}
+
+.ck.ck-content {
+  color: $ibo-vendors-ckeditor--ck-content--text-color;
+  /* Needed to let table grow inside their resizer as `.ibo-is-html-content table` rule unset ckeditor default 100% width */
+  .table table {
+    width: 100% !important;
+  }
+}
+
+.ck-editor__editable_inline:not(.ck-comment__input *) {
+  height: 200px;
+}
+
+.ck-content pre[data-language] {
+  padding: $ibo-vendors-ckeditor--ck-content-pre-language--padding !important;
+  code {
+    display: block;
+    background: $ibo-vendors-ckeditor--ck-content-pre-language--code--background-color !important;
+    padding: $ibo-vendors-ckeditor--ck-content-pre-language--code--padding !important;
+    color: $ibo-vendors-ckeditor--ck-content-pre-language--code--color !important;
+  }
+}
+
+// N°7552 Allow source editing area to be scrollable in full screen
+.ck-maximize_editor_main .ck-source-editing-area textarea{
+  overflow: auto !important;
+}
+
+/* Mentions */
+.ck-mentions {
+  .ck-button {
+    line-height: $ibo-vendors-ckeditor--ck-mentions--item--line-height;
+    padding: $ibo-vendors-ckeditor--ck-mentions--item--padding-y $ibo-vendors-ckeditor--ck-mentions--item--padding-x !important; /* Important in order to overload the CKE native rule */
+  }
+}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <constants/>
   <classes>
     <class id="OAuthClient" _delta="define">
@@ -936,7 +936,7 @@ HTML
   <menus>
     <menu id="OAuthClient" xsi:type="OQLMenuNode" _delta="define">
       <rank>100</rank>
-      <parent>ConfigurationTools</parent>
+      <parent>Integrations</parent>
       <oql><![CDATA[SELECT OAuthClient]]></oql>
       <do_search>1</do_search>
       <enable_admin_only>0</enable_admin_only>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2023 Combodo SARL
+ * Copyright (C) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -318,11 +318,7 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 				// Delete any previous instances of CKEditor
 				$('#'+sFormId).find('.htmlEditor').each(function () {
 					var sId = $(this).attr('id');
-					var editorInst = CKEDITOR.instances[sId];
-					if (editorInst.status == 'ready')
-					{
-						editorInst.destroy(true);
-					}
+					CombodoCKEditorHandler.DeleteInstance(sId);
 				});
 
 				$('#'+sFormId).html(data);

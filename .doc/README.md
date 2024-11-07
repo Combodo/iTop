@@ -79,6 +79,8 @@ Then, **for a method** of an eligible class:
 
 ## Installation
 
+Note : PHP7 is required. Migrating to PHP8 requires some additional work which is questionable as an alternative way to generate a documentation is being considered.
+
 ```
 cd .doc
 composer require phpdocumentor/phpdocumentor:~2 --dev

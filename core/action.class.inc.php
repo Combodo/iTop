@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -26,7 +26,7 @@ use Combodo\iTop\Service\Router\Router;
 /**
  * Persistent classes (internal): user defined actions
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -52,9 +52,9 @@ abstract class Action extends cmdbAbstractObject
 			"category"                   => "grant_by_profile,core/cmdb",
 			"key_type"                   => "autoincrement",
 			"name_attcode"               => "name",
-			"complementary_name_attcode" => array('finalclass', 'description'),
+			"complementary_name_attcode" => ['finalclass', 'description'],
 			"state_attcode"              => "status",
-			"reconc_keys"                => array('name'),
+			"reconc_keys"                => ['name'],
 			"db_table"                   => "priv_action",
 			"db_key_field"               => "id",
 			"db_finalclass_field"        => "realclass",
@@ -287,8 +287,9 @@ abstract class ActionNotification extends Action
 			"category"            => "grant_by_profile,core/cmdb",
 			"key_type"            => "autoincrement",
 			"name_attcode"        => "name",
+			"complementary_name_attcode" => ['finalclass', 'description'],
 			"state_attcode"       => "",
-			"reconc_keys"         => array('name'),
+			"reconc_keys"         => ['name'],
 			"db_table"            => "priv_action_notification",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
@@ -565,6 +566,7 @@ class ActionEmail extends ActionNotification
 			$oLog->Set('trigger_id', $oTrigger->GetKey());
 			$oLog->Set('action_id', $this->GetKey());
 			$oLog->Set('object_id', $aContextArgs['this->object()']->GetKey());
+            $oLog->Set('object_class', get_class($aContextArgs['this->object()']));
 			// Must be inserted now so that it gets a valid id that will make the link
 			// between an eventual asynchronous task (queued) and the log
 			$oLog->DBInsertNoReload();
@@ -627,7 +629,7 @@ class ActionEmail extends ActionNotification
 	 */
 	protected function _DoExecute($oTrigger, $aContextArgs, &$oLog)
 	{
-		$sStyles = file_get_contents(APPROOT.'css/email.css');
+		$sStyles = file_get_contents(APPROOT . utils::GetCSSFromSASS("css/email.scss"));
 		$sStyles .= MetaModel::GetConfig()->Get('email_css');
 		
 		$oEmail = new EMail();
@@ -866,7 +868,13 @@ class ActionEmail extends ActionNotification
 	 */
 	protected function BuildMessageBody(bool $bHighlightPlaceholders = false): string
 	{
-		$sBody = $this->Get('body');
+		// Wrap content with a specific class in order to apply styles of HTML fields through the emogrifier (see `css/email.scss`)
+		$sBody = <<<HTML
+<div class="email-is-html-content">
+	{$this->Get('body')}
+</div>
+HTML;
+
 		/**  @var ormDocument $oHtmlTemplate */
 		$oHtmlTemplate = $this->Get('html_template');
 		if ($oHtmlTemplate && !$oHtmlTemplate->IsEmpty()) {

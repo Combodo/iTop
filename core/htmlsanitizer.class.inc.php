@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2016-2023 Combodo SARL
+// Copyright (C) 2016-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -15,6 +15,8 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Masterminds\HTML5;
+
 /**
  * Base class for all possible implementations of HTML Sanitization
  */
@@ -276,37 +278,39 @@ class HTMLDOMSanitizer extends DOMSanitizer
 	protected static $aTagsWhiteList = array(
 		'html' => array(),
 		'body' => array(),
-		'a' => array('href', 'name', 'style', 'target', 'title', 'data-role', 'data-object-class', 'data-object-id'),
-		'p' => array('style'),
-		'blockquote' => array('style'),
+		'a' => array('href', 'name', 'style', 'class', 'target', 'title', 'data-role', 'data-object-class', 'data-object-id'),
+		'p' => array('style', 'class'),
+		'blockquote' => array('style', 'class'),
 		'br' => array(),
-		'span' => array('style'),
-		'div' => array('style'),
-		'b' => array(),
-		'i' => array(),
-		'u' => array(),
-		'em' => array(),
-		'strong' => array(),
-		'img' => array('src', 'style', 'alt', 'title'),
-		'ul' => array('style'),
-		'ol' => array('reversed', 'start', 'style', 'type'),
-		'li' => array('style', 'value'),
-		'h1' => array('style'),
-		'h2' => array('style'),
-		'h3' => array('style'),
-		'h4' => array('style'),
-		'nav' => array('style'),
-		'section' => array('style'),
+		'span' => array('style', 'class'),
+		'div' => array('style', 'class'),
+		'b' => array('class'),
+		'i' => array('class'),
+		'u' => array('class'),
+		'em' => array('class'),
+		'strong' => array('class'),
+		'img' => array('src', 'style', 'class', 'alt', 'title', 'width', 'height'),
+		'ul' => array('style', 'class'),
+		'ol' => array('reversed', 'start', 'style', 'class', 'type'),
+		'li' => array('style', 'class', 'value'),
+		'h1' => array('style', 'class'),
+		'h2' => array('style', 'class'),
+		'h3' => array('style', 'class'),
+		'h4' => array('style', 'class'),
+		'nav' => array('style', 'class'),
+		'section' => array('style', 'class'),
 		'code' => array('style', 'class'),
-		'table' => array('style', 'width', 'summary', 'align', 'border', 'cellpadding', 'cellspacing'),
-		'thead' => array('style'),
-		'tbody' => array('style'),
-		'tr' => array('style', 'colspan', 'rowspan'),
-		'td' => array('style', 'colspan', 'rowspan'),
-		'th' => array('style', 'colspan', 'rowspan'),
-		'fieldset' => array('style'),
-		'legend' => array('style'),
-		'font' => array('face', 'color', 'style', 'size'),
+		'table' => array('style', 'class', 'width', 'summary', 'align', 'border', 'cellpadding', 'cellspacing'),
+		'colgroup' => array(),
+		'col' => array('style'),
+		'thead' => array('style', 'class'),
+		'tbody' => array('style', 'class'),
+		'tr' => array('style', 'class', 'colspan', 'rowspan'),
+		'td' => array('style', 'class', 'colspan', 'rowspan'),
+		'th' => array('style', 'class', 'colspan', 'rowspan'),
+		'fieldset' => array('style', 'class'),
+		'legend' => array('style', 'class'),
+		'font' => array('face', 'color', 'style', 'class', 'size'),
 		'big' => array(),
 		'small' => array(),
 		'tt' => array(),
@@ -318,9 +322,12 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		'ins' => array(),
 		'cite' => array(),
 		'q' => array(),
-		'hr' => array('style'),
-		'pre' => array(),
+		'hr' => array('style', 'class'),
+		'pre' => array('class'),
 		'center' => array(),
+		'figure' => array('style', 'class'), // Ckeditor 5 puts images in figures
+		'figcaption' => array('class'),
+		'mark' => array('class')
 	);
 
 	protected static $aAttrsWhiteList = array(
@@ -332,6 +339,7 @@ class HTMLDOMSanitizer extends DOMSanitizer
 	 * @see https://www.itophub.io/wiki/page?id=2_6_0%3Aadmin%3Arich_text_limitations
 	 */
 	protected static $aStylesWhiteList = array(
+		'aspect-ratio',
 		'background-color',
 		'border',
 		'border-collapse',

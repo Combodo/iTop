@@ -462,12 +462,13 @@ class MetaModelTest extends ItopDataTestCase
      * @return void
      * @throws CoreException
      * @throws \OQLException
+     * @dataProvider PurgeDataProvider
+     *
      */
-    public function testPurgeData(){
-        // Set max_chunk_size to 2 (default 1000) to test chunk deletion with only 10 items
+    public function testPurgeData( $iMaxChunkSize, $iNbQueriesExpected){
+        // Set max_chunk_size to $iMaxChunkSize (default 1000) to test chunk deletion with only 10 items
         $oConfig = MetaModel::GetConfig();
-        $oConfig->Set('purge_data.max_chunk_size', 2);
-        MetaModel::SetConfig($oConfig);
+        $oConfig->Set('purge_data.max_chunk_size', $iMaxChunkSize);
 
         $aPkPerson = [];
         for ($i=0; $i < 10; $i++) {
@@ -476,12 +477,23 @@ class MetaModelTest extends ItopDataTestCase
             $aPkPerson[] = $oPerson->GetKey();
         }
 
-        $sDeleteOQL = 'SELECT '.$sClass.' WHERE id IN ('.implode(',', $aPkPerson).')';
-        $oFilter = DBObjectSearch::FromOQL($sDeleteOQL);
+	    $oFilter = DBObjectSearch::FromOQL('SELECT '.$sClass.' WHERE id IN ('.implode(',', $aPkPerson).')');
+	    $iNbDelete = 0;
 
-        $iNbDelete = MetaModel::PurgeData($oFilter);
+		$this->assertDBQueryCount($iNbQueriesExpected, function() use ($oFilter, &$iNbDelete) {
+			$iNbDelete = MetaModel::PurgeData($oFilter);
+		} );
+
         $this->assertEquals($iNbDelete, 10, 'MetaModel::PurgeData must delete 10 objects per batch of 2 items');
     }
+
+	public function PurgeDataProvider(){
+		return [
+			'Purge 10 items with a max_chunk_size of 2 should be perfomed in 5 steps + an additional query to verify that the job is complete' => [2, 16],
+			'Purge 10 items with a max_chunk_size of 3 should be perfomed in 4 steps' => [3, 12],
+			'Purge 10 items with a max_chunk_size of 1000 (default value) should be perfomed in 1 step' => [1000, 3],
+		];
+	}
 }
 
 abstract class Wizzard

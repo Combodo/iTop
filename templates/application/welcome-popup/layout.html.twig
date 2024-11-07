@@ -1,0 +1,30 @@
+<div id="ibo-welcome-popup--dialog" class="ibo-welcome-popup--dialog ibo-is-hidden"
+    data-role="ibo-welcome-popup--dialog"
+    data-title="{{ 'UI:WelcomeMenu:Title'|dict_s }}"
+>
+    {% if aProvidersMessagesData|length > 1 %}
+        <ul class="ibo-welcome-popup--messages-stack">
+            {% for aProviderMessageData in aProvidersMessagesData %}
+                <li>
+                    <a class="ibo-welcome-popup--stack-item {% if loop.index == 1 %}ibo-is-active{% endif %}"
+                        data-role="ibo-welcome-popup--stack-item"
+                        data-uuid="{{ aProviderMessageData.uuid }}"
+                        href="#"
+                    >
+                        <div class="ibo-welcome-popup--stack-item-icon">
+                            <img src="{{ get_absolute_url_app_root() ~ aProviderMessageData.provider_icon_rel_path }}" />
+                        </div>
+                        <div class="ibo-welcome-popup--stack-item-title" data-tooltip-content="{{ aProviderMessageData.message.GetTitle() }}">{{ aProviderMessageData.message.GetTitle() }}</div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="ibo-welcome-popup--message-content-wrapper">
+        {% for aProviderMessageData in aProvidersMessagesData %}
+            {% include aProviderMessageData.message.GetTWIGTemplateRelPath() with {'oMessage': aProviderMessageData.message, 'sUUID': aProviderMessageData.uuid, 'bIsActive': loop.index == 1} %}
+        {% endfor %}
+    </div>
+</div>
+
+

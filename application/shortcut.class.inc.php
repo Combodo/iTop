@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
  * Persistent class Shortcut and derived
  * Shortcuts of any kind
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -293,7 +293,7 @@ $("#attr_auto_reload_sec").attr('data-tooltip-content', '$sRateTitle');
 CombodoTooltip.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
 $("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
 
-$('#attr_auto_reload').change( function(ev) {
+$('#attr_auto_reload').on('change', function(ev) {
 	$("#attr_auto_reload_sec").prop('disabled', !$(this).is(':checked'));
 } );
 

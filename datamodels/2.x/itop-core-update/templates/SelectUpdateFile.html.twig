@@ -1,12 +1,10 @@
-{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
 
 {% UIContentBlock Standard {'aContainerClasses':['ibo-update-core']} %}
 
-    {% UITitle ForPage {'sTitle':'iTopUpdate:UI:PageTitle'|dict_s} %}{% EndUITitle %}
-
-    <div class="ibo-v-spacer">&nbsp;</div>
+    {% UIPanel Neutral {sTitle:'iTopUpdate:UI:PageTitle'|dict_s} %}
 
     {% UIContentBlock Standard {'aContainerClasses': ['display_block', 'display-files']} %}
         {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Status'|dict_s} %}
@@ -92,6 +90,13 @@
             {% UIForm Standard {'sId':'launch-setup-form', Action:sLaunchSetupUrl} %}
                 {% UIButton ForDestructiveAction {'sLabel':'iTopUpdate:UI:SetupLaunch'|dict_s, 'sName':'launch-setup', 'sValue':'launch-setup', 'bIsSubmit':true, 'sId':'launch-setup'} %}
             {% EndUIForm %}
+            {% UIAlert ForInformation {sId:'fast-setup-alert', AddCSSClass:'ibo-is-hidden'} %}
+                {% UIContentBlock Standard {sId:'fast-setup-content', aContainerClasses:['ibo-fast-setup-content']} %}
+                    {{ 'iTopUpdate:UI:SetupMessage:Compile'|dict_s }}
+                {% EndUIContentBlock %}
+            {% EndUIAlert %}
+            {% UIButton ForDestructiveAction {sLabel:'iTopUpdate:UI:FastSetupLaunch'|dict_s, sName:'launch-fast-setup', sValue:'launch-fast-setup', sId:'launch-fast-setup'} %}
+            {% UISpinner Standard {sId:'fast-setup-wait', IsHidden:true} %}
         {% EndUIFieldSet %}
     {% endif %}
 
@@ -100,6 +105,8 @@
         {% EndUIFieldSet %}
 
     {% EndUIContentBlock %}
+
+    {% EndUIPanel %}
 
 {% EndUIContentBlock %}
 {% endapply %}

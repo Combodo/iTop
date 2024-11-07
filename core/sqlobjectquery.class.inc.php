@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015-2023 Combodo SARL
+// Copyright (C) 2015-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * SQLObjectQuery
  * build a mySQL compatible SQL query
  *
- * @copyright   Copyright (C) 2015-2023 Combodo SARL
+ * @copyright   Copyright (C) 2015-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

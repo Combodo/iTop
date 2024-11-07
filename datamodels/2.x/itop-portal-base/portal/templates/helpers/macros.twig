@@ -1,0 +1,13 @@
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% macro BlockExtension(aPluginFormData, sBlockName, oBrick) %}
+	{% for oPortalData in aPluginFormData %}
+        {% if (oPortalData is defined and oPortalData.GetBlockExtension(sBlockName)) %}
+            {% set oBlockExtension = oPortalData.GetBlockExtension(sBlockName) %}
+            {% set sTwig = oBlockExtension.GetTwig() %}
+            {% set aData = oBlockExtension.GetData() %}
+            {% include sTwig ignore missing %}
+        {% endif %}
+	{% endfor %}
+{% endmacro %}

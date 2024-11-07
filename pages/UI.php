@@ -1,19 +1,17 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
@@ -22,7 +20,9 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Application\WelcomePopup\WelcomePopupService;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
+use Combodo\iTop\Controller\WelcomePopupController;
 use Combodo\iTop\Service\Router\Router;
 
 /**
@@ -33,19 +33,19 @@ use Combodo\iTop\Service\Router\Router;
  *
  * @return void
  */
-function DisplayWelcomePopup(WebPage $oP)
+function DisplayWelcomePopup(WebPage $oP): void
 {
-	if (!Session::IsSet('welcome'))
-	{
-		// Check, only once per session, if the popup should be displayed...
-		// If the user did not already ask for hiding it forever
-		$bPopup = appUserPreferences::GetPref('welcome_popup', true);
-		if ($bPopup)
-		{
-			TwigHelper::RenderIntoPage($oP, APPROOT.'/', 'templates/pages/backoffice/welcome_popup/welcome_popup');
-			Session::Set('welcome', 'ok');
+	if (!Session::IsSet("welcome")) {
+		$oWelcomePopupService = WelcomePopupService::GetInstance();
+		$aProvidersMessagesData = $oWelcomePopupService->GetMessages();
+		if (count($aProvidersMessagesData) > 0) {
+			TwigHelper::RenderIntoPage($oP, APPROOT."/", "templates/application/welcome-popup/layout", [
+				"aProvidersMessagesData" => $aProvidersMessagesData,
+				"sEndpointAbsURIForAcknowledgeMessage" => Router::GetInstance()->GenerateUrl(WelcomePopupController::ROUTE_NAMESPACE . ".acknowledge_message"),
+			]);
 		}
-	}	
+		Session::Set("welcome", "ok"); // Try just once per session
+	}
 }
 
 /**
@@ -658,7 +658,7 @@ try
 						$oP->add("<h2>".Dict::Format('UI:FullTextSearchTitle_Text', utils::EscapeHtml($sFullText))."</h2>");
 						$oP->add("</div>\n");
 						$oP->add("</div>\n");
-						$sJSClass = addslashes($sClassName);
+						$sJSClass = addslashes($sClassName ?? '');
 						$sJSNeedles = json_encode($aFullTextNeedles);
 						$oP->add_ready_script(
 							<<<EOF
