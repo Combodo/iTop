@@ -41,7 +41,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Service:Overview+' => '',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracts by service level',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracts by status',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less then 30 days',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less than 30 days',
 
 	'Menu:ProviderContract' => 'Provider contracts',
 	'Menu:ProviderContract+' => 'Provider contracts',
@@ -528,7 +528,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:DeliveryModel/Attribute:description' => 'Description',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Contacts',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Person) for this delivery model',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Persons) for this delivery model',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Customers',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model',
 ));
