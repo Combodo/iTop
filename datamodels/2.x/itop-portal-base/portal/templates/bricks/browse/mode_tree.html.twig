@@ -205,7 +205,7 @@
                 // Building node
                 $('ul[data-level-id="'+nodeId+'"]').append(liElem);
                 spanElem.append(nameElem);
-                spanElem.append('<div class="tree-item-filter-data" style="display: none">' + item['filter_data']['values_and_codes'] + '</div>');
+                spanElem.append('<div class="tree-item-filter-data">' + item['filter_data']['values_and_codes'] + '</div>');
                 liElem.append(spanElem);
 
                 // Delegating a click on <span> to its child <a> element

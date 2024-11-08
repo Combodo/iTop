@@ -6,6 +6,11 @@
  * Project Website: http://wiki.aiwsolutions.net/dOQKO
  **/
 
+/**
+ * Altered to allow filtering tree list with extra data.
+ * Add an attribute data-tree-additional-search to tree-item-wrapper element with extra data you want the search to include.
+ */
+
 jQuery.fn.treeListFilter = function(list, timeout, callback) {
     var list = jQuery(list);
     var input = this;
