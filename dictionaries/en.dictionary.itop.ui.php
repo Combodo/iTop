@@ -36,7 +36,7 @@ It groups all audit rules applying to that object scope',
 	'Class:AuditCategory/Attribute:warning_error_tolerance'  => 'Error threshold',
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)',
 	'Class:AuditCategory/Attribute:domains_list'             => 'Domains',
-	'Class:AuditCategory/Attribute:domains_list+'            => 'Domains which includes this category',
+	'Class:AuditCategory/Attribute:domains_list+'            => 'Domains which include this category',
 ));
 
 //
@@ -333,7 +333,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_StimulusGrant' => 'stimulus_permission',
-	'Class:URP_StimulusGrant+' => 'permissions on stimilus in the life cycle of the object',
+	'Class:URP_StimulusGrant+' => 'permissions on stimulus in the life cycle of the object',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profile',
 	'Class:URP_StimulusGrant/Attribute:profileid+' => 'usage profile',
 	'Class:URP_StimulusGrant/Attribute:profile' => 'Profile',
@@ -844,7 +844,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Schema:RelationDown_Description' => 'Down: %1$s',
 	'UI:Schema:RelationUp_Description' => 'Up: %1$s',
 	'UI:Schema:RelationPropagates' => '%1$s: propagate to %2$d levels, query: %3$s',
-	'UI:Schema:RelationDoesNotPropagate' => '%1$s: does not propagates (%2$d levels), query: %3$s',
+	'UI:Schema:RelationDoesNotPropagate' => '%1$s: does not propagate (%2$d levels), query: %3$s',
 	'UI:Schema:Class_ReferencingClasses_From_By' => '%1$s is referenced by the class %2$s via the field %3$s',
 	'UI:Schema:Class_IsLinkedTo_Class_Via_ClassAndAttribute' => '%1$s is linked to %2$s via %3$s::<em>%4$s</em>',
 	'UI:Schema:Links:1-n' => 'Classes pointing to %1$s (1:n links):',
@@ -897,7 +897,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Delete:NotAllowedToDelete' => 'You are not allowed to delete this object',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'You are not allowed to update the fields: %1$s',
 	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action',
-	'UI:Error:NotEnoughRightsToDelete' => 'This object could not be deleted because the current user do not have sufficient rights',
+	'UI:Error:NotEnoughRightsToDelete' => 'This object could not be deleted because the current user does not have sufficient rights.',
 	'UI:Error:CannotDeleteBecause' => 'This object could not be deleted because: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'This object could not be deleted because some manual operations must be performed prior to that',
 	'UI:Error:CannotDeleteBecauseManualOpNeeded' => 'This object could not be deleted because some manual operations must be performed prior to that',
@@ -1095,7 +1095,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Document:NoPreview' => 'No preview is available for this type of document',
 	'UI:Download-CSV' => 'Download %1$s',
 
-	'UI:DeadlineMissedBy_duration' => 'Missed  by %1$s',
+	'UI:DeadlineMissedBy_duration' => 'Missed by %1$s',
 	'UI:Deadline_LessThan1Min' => '< 1 min',
 	'UI:Deadline_Minutes' => '%1$d min',
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
@@ -1225,7 +1225,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select',
 	'UI:NavigateAwayConfirmationMessage' => 'Any modification will be discarded.',
-	'UI:CancelConfirmationMessage' => 'You will loose your changes. Continue anyway?',
+	'UI:CancelConfirmationMessage' => 'You will lose your changes. Continue anyway?',
 	'UI:AutoApplyConfirmationMessage' => 'Some changes have not been applied yet. Do you want '.ITOP_APPLICATION_SHORT.' to take them into account?',
 	'UI:Create_Class_InState' => 'Create the %1$s in state: ',
 	'UI:OrderByHint_Values' => 'Sort order: %1$s',
@@ -1263,7 +1263,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Dashboard:EditCustom' => 'Edit custom version...',
 	'UI:Dashboard:CreateCustom' => 'Create a custom version...',
 	'UI:Dashboard:DeleteCustom' => 'Delete custom version...',
-	'UI:Dashboard:RevertConfirm' => 'Every changes made to the original version will be lost. Please confirm that you want to do this.',
+	'UI:Dashboard:RevertConfirm' => 'Every change made to the original version will be lost. Please confirm that you want to do this.',
 	'UI:ExportDashBoard' => 'Export to a file',
 	'UI:ImportDashBoard' => 'Import from a file...',
 	'UI:ImportDashboardTitle' => 'Import From a File',
@@ -1360,7 +1360,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	// ---
 
 	'UI:DashletHeaderStatic:Label' => 'Header',
-	'UI:DashletHeaderStatic:Description' => 'Displays an horizontal separator',
+	'UI:DashletHeaderStatic:Description' => 'Displays a horizontal separator',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Title',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Contacts',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Icon',
