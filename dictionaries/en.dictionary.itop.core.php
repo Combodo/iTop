@@ -126,7 +126,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeIPAddress+' => 'IP address',
 
 	'Core:AttributeOQL' => 'OQL',
-	'Core:AttributeOQL+' => 'Object Query Langage expression',
+	'Core:AttributeOQL+' => 'Object Query Language expression',
 
 	'Core:AttributeEnum' => 'Enum',
 	'Core:AttributeEnum+' => 'List of predefined alphanumeric strings',
@@ -362,7 +362,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Event/Attribute:userinfo' => 'User info',
 	'Class:Event/Attribute:userinfo+' => 'identification of the user that was doing the action that triggered this event',
 	'Class:Event/Attribute:finalclass' => 'Event sub-class',
-	'Class:Event/Attribute:finalclass+' => 'Name of the final class: specifies the sort of event which occured',
+	'Class:Event/Attribute:finalclass+' => 'Name of the final class: specifies the sort of event which occurred',
 ));
 
 //
@@ -432,7 +432,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventWebService' => 'Web service event',
-	'Class:EventWebService+' => 'Trace of an web service call',
+	'Class:EventWebService+' => 'Trace of a web service call',
 	'Class:EventWebService/Attribute:verb' => 'Verb',
 	'Class:EventWebService/Attribute:verb+' => 'Name of the operation',
 	'Class:EventWebService/Attribute:result' => 'Result',
@@ -537,7 +537,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Action/Attribute:trigger_list' => 'Related Triggers',
 	'Class:Action/Attribute:trigger_list+' => 'Triggers linked to this action',
 	'Class:Action/Attribute:asynchronous' => 'Asynchronous',
-	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in background or not',
+	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in the background or not',
 	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Use global setting',
 	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes',
 	'Class:Action/Attribute:asynchronous/Value:no' => 'No',
@@ -724,7 +724,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:TriggerOnPortalUpdate' => 'Trigger (when updated from the portal)',
-	'Class:TriggerOnPortalUpdate+' => 'Trigger on a end-user\'s update from the portal',
+	'Class:TriggerOnPortalUpdate+' => 'Trigger on an end-user\'s update from the portal',
 ));
 
 //
