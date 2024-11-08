@@ -6,14 +6,14 @@
 
 // UI elements
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'UI:WelcomePopup:Button:RemindLater' => 'Remind me later~~',
-	'UI:WelcomePopup:Button:AcknowledgeAndNext' => 'Next~~',
-	'UI:WelcomePopup:Button:AcknowledgeAndClose' => 'Close~~',
+	'UI:WelcomePopup:Button:RemindLater' => '以后再提醒我',
+	'UI:WelcomePopup:Button:AcknowledgeAndNext' => '下一步',
+	'UI:WelcomePopup:Button:AcknowledgeAndClose' => '关闭',
 ]);
 
 // Message
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'UI:WelcomePopup:Message:320_01_Welcome:Title' => 'Welcome to ' . ITOP_APPLICATION_SHORT . ' 3.2~~',
+	'UI:WelcomePopup:Message:320_01_Welcome:Title' => '欢迎使用 ' . ITOP_APPLICATION_SHORT . ' 3.2',
 	'UI:WelcomePopup:Message:320_01_Welcome:Description' => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 <br>
 <div>We\'re excited to announce this new release. </div>
