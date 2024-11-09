@@ -1387,7 +1387,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'DayOfWeek-Thursday' 	=> '周四',
 	'DayOfWeek-Friday' 		=> '周五',
 	'DayOfWeek-Saturday' 	=> '周六',
-
 	'Month-01' => '一月',
 	'Month-02' => '二月',
 	'Month-03' => '三月',
@@ -1409,18 +1408,19 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'DayOfWeek-Thursday-Min' 	=> '四',
 	'DayOfWeek-Friday-Min' 		=> '五',
 	'DayOfWeek-Saturday-Min' 	=> '六',
-	'Month-01-Short' => '1月',
-	'Month-02-Short' => '2月',
-	'Month-03-Short' => '3月',
-	'Month-04-Short' => '4月',
-	'Month-05-Short' => '5月',
-	'Month-06-Short' => '6月',
-	'Month-07-Short' => '7月',
-	'Month-08-Short' => '8月',
-	'Month-09-Short' => '9月',
-	'Month-10-Short' => '10月',
-	'Month-11-Short' => '11月',
-	'Month-12-Short' => '12月',
+	'Month-01-Short'            => '1月',
+	'Month-02-Short'            => '2月',
+	'Month-03-Short'            => '3月',
+	'Month-04-Short'            => '4月',
+	'Month-05-Short'            => '5月',
+	'Month-06-Short'            => '6月',
+	'Month-07-Short'            => '7月',
+	'Month-08-Short'            => '8月',
+	'Month-09-Short'            => '9月',
+	'Month-10-Short'            => '10月',
+	'Month-11-Short'            => '11月',
+	'Month-12-Short'            => '12月',
+	'Calendar-FirstDayOfWeek'   => '0',
 	// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList'                                  => '创建快捷方式...',
@@ -1664,8 +1664,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Expression:Unit:Long:HOUR' => '小时',
 	'Expression:Unit:Long:MINUTE' => '分钟',
 
-	'Expression:Verb:ISNULL' => ': 未定义',
 	'Expression:Verb:NOW' => '现在',
+	'Expression:Verb:ISNULL' => ': 未定义',
 ]);
 
 //
