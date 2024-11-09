@@ -58,7 +58,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 // Class: FunctionalCI
 //
-Dict::Add('EN US', 'English', 'English', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:FunctionalCI/Attribute:tickets_list' => '工单',
 	'Class:FunctionalCI/Attribute:tickets_list+' => '此配置项包含的所有工单',
 ]);
