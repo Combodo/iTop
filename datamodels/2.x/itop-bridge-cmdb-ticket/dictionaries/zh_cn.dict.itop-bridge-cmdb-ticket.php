@@ -16,10 +16,10 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
-* @author       Benjamin Planque <benjamin.planque@combodo.com>
-* @copyright   Copyright (C) 2010-2024 Combodo SAS
-* @license     http://opensource.org/licenses/AGPL-3.0
-*/
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Benjamin Planque <benjamin.planque@combodo.com>
+ */
 
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
