@@ -47,7 +47,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Action' => 'カスタムアクション',
 	'Class:Action+' => 'ユーザ定義アクション',
 	'Class:Action/Attribute:asynchronous' => 'Asynchronous~~',
-	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in background or not~~',
+	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in the background or not~~',
 	'Class:Action/Attribute:asynchronous/Value:no' => 'No~~',
 	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Use global setting~~',
 	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes~~',

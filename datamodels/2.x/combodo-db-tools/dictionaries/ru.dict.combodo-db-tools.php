@@ -18,7 +18,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'DBAnalyzer-Integrity-InvalidValue' => 'Недопустимое значение для %1$s (столбец: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Отсутствует внешний ключ %1$s (столбец: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Сиротская запись в `%1$s`, она должна иметь свой аналог в таблице `%2$s`',
-	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contains a valid class~~',
+	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contain a valid class~~',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Некоторые учетные записи пользователей не имеют профилей',
 	'DBTools:Analyze' => 'Анализировать',
 	'DBTools:Base' => 'База',

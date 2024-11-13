@@ -643,7 +643,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Subnet/Tab:FreeIPs-count' => 'Počet volných adres: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Tady je výčet volných IP adres (10)',
 	'Class:Subnet/Tab:IPUsage' => 'Využití IP',
-	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet are used or not~~',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',
 	'Class:Subnet/Tab:IPUsage-explain' => 'Rozhraní, která mají IP adresu v rozsahu: <em>%1$s</em>-<em>%2$s</em>',
 	'Class:Tablet' => 'Tablet',
 	'Class:Tablet+' => '',

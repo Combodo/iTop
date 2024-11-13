@@ -26,11 +26,13 @@ use AttributeImage;
 use AttributeSet;
 use AttributeTagSet;
 use Combodo\iTop\Portal\Brick\BrowseBrick;
+use DBObject;
 use DBSearch;
 use Dict;
 use MetaModel;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use UserRights;
+use utils;
 
 /**
  * Class BrowseBrickHelper
@@ -514,6 +516,7 @@ class BrowseBrickHelper
 				'name' => $aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]]['name_att']),
 				'class' => get_class($aCurrentRowValues[0]),
 				'subitems' => array(),
+				'filter_data' => $this->GetFilterData($aLevelsProperties[$aCurrentRowKeys[0]], $aCurrentRowKeys[0], $aCurrentRowValues[0]),
 				'action_rules_token' => $this->PrepareActionRulesForItems($aCurrentRowObjects, $aCurrentRowKeys[0], $aLevelsProperties),
 			);
 
@@ -563,5 +566,50 @@ class BrowseBrickHelper
 		{
 			$this->AddToTreeItems($aItems[$sCurrentIndex]['subitems'], $aCurrentRowSliced, $aLevelsProperties, $aCurrentRowObjects);
 		}
+	}
+
+	/**
+	 * Get data to allow filtering tree with invisible fields.
+	 *
+	 * @param array $aLevelProperties tree level properties
+	 * @param string $sRowKey row key
+	 * @param \DBObject $oRowValue row value
+	 *
+	 * @return string[]
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	private function GetFilterData(array $aLevelProperties, string $sRowKey, DBObject $oRowValue) : array
+	{
+		// result
+		$sValues = "";
+		$sValuesAndCodes = "";
+
+		// iterate throw level properties fields...
+		foreach ($aLevelProperties['fields'] as $aField) {
+
+			// retrieve the object class
+			$sFieldObjectClass = get_class($oRowValue);
+
+			// retrieve the field object attribute definition
+			$oAttDef = MetaModel::GetAttributeDef($sFieldObjectClass, $aField['code']);
+
+			// get field value (HTML representation)
+			$sValue = $oAttDef->GetAsHTML($oRowValue->Get($aField['code']));
+
+			// do not print empty fields
+			if(!utils::IsNullOrEmptyString($sValue)){
+
+				// append to result
+				$sValues .= $sValue;
+				$sValuesAndCodes .= '<span><span class="tree-item-filter-data-label">' . $aField['label'] . ':</span> ' . $sValue . '</span>';
+			}
+		}
+
+		return [
+			'values' => $sValues,
+			'values_and_codes' => $sValuesAndCodes
+		];
 	}
 }

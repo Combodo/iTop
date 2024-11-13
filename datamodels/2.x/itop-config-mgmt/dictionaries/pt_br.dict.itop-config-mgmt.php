@@ -641,7 +641,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Subnet/Tab:FreeIPs-count' => 'IPs livres: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Aqui uma faixa de 10 endereços IPs livres',
 	'Class:Subnet/Tab:IPUsage' => 'IP usado',
-	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet are used or not~~',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',
 	'Class:Subnet/Tab:IPUsage-explain' => 'Placas de rede contendo IP na faixa: <em>%1$s</em> para <em>%2$s</em>',
 	'Class:Tablet' => 'Tablet',
 	'Class:Tablet+' => '',

@@ -30,7 +30,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Show / hide fields edits on this tab~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Choose which logs to display on this tab~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Show / hide logs entries on this tab~~',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Show / hide log entries on this tab~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'State changes~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Show / hide state changes on this tab~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Number of persons interacting in the visible entries~~',

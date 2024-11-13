@@ -72,7 +72,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:DeliveryModel' => 'Leverings model',
 	'Class:DeliveryModel+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Kontakt',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Person) for this delivery model~~',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Persons) for this delivery model~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Kunde',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
 	'Class:DeliveryModel/Attribute:description' => 'Beskrivelse',

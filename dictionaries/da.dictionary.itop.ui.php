@@ -20,7 +20,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:AuditCategory/Attribute:description' => 'Beskrivelse af Audit-kategori',
 	'Class:AuditCategory/Attribute:description+' => 'Udførlig beskrivelse af denne Audit-kategori',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
-	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
 	'Class:AuditCategory/Attribute:name' => 'Kategori navn',
 	'Class:AuditCategory/Attribute:name+' => 'Kort navn for denne kategori',
 	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Warning threshold~~',

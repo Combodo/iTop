@@ -20,7 +20,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:AuditCategory/Attribute:description' => 'Leírás',
 	'Class:AuditCategory/Attribute:description+' => '',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
-	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
 	'Class:AuditCategory/Attribute:name' => 'Kategórianév',
 	'Class:AuditCategory/Attribute:name+' => '',
 	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Warning threshold~~',

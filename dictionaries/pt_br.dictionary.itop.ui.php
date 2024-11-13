@@ -20,7 +20,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:AuditCategory/Attribute:description' => 'Descrição',
 	'Class:AuditCategory/Attribute:description+' => 'Longa descrição para esta categoria de auditoria',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
-	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
 	'Class:AuditCategory/Attribute:name' => 'Nome',
 	'Class:AuditCategory/Attribute:name+' => 'Nome curto para esta categoria',
 	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Warning threshold~~',

@@ -21,7 +21,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:AuditCategory/Attribute:description' => 'Audit categorie beschrijving',
 	'Class:AuditCategory/Attribute:description+' => 'Uitgebreide beschrijving van deze Audit categorie',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domeinen',
-	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
 	'Class:AuditCategory/Attribute:name' => 'Naam categorie',
 	'Class:AuditCategory/Attribute:name+' => 'Afkorting van de naam van deze categorie',
 	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Warning threshold~~',

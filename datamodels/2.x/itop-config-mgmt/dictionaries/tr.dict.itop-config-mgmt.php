@@ -642,7 +642,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Subnet/Tab:FreeIPs-count' => 'Boş IPler: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Boş IP adresleri',
 	'Class:Subnet/Tab:IPUsage' => 'IP Kullanımı',
-	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet are used or not~~',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',
 	'Class:Subnet/Tab:IPUsage-explain' => '<em>%1$s</em> - <em>%2$s</em> aralığındaki IPye sahip arayüzler',
 	'Class:Tablet' => 'Tablet',
 	'Class:Tablet+' => '~~',

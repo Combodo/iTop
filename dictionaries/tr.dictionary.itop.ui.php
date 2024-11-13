@@ -20,7 +20,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:AuditCategory/Attribute:description' => 'Kategori tanımlaması',
 	'Class:AuditCategory/Attribute:description+' => 'Kategori tanımlaması',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
-	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
 	'Class:AuditCategory/Attribute:name' => 'Kategori Adı',
 	'Class:AuditCategory/Attribute:name+' => 'Kategornin kısa adı',
 	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Warning threshold~~',

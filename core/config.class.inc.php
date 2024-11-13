@@ -71,7 +71,7 @@ define('DEFAULT_MAX_DISPLAY_LIMIT', 30);
 define('DEFAULT_STANDARD_RELOAD_INTERVAL', 5 * 60);
 define('DEFAULT_FAST_RELOAD_INTERVAL', 1 * 60);
 define('DEFAULT_SECURE_CONNECTION_REQUIRED', false);
-define('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|external|basic');
+define('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|external|basic|token');
 define('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
 define('DEFAULT_ENCRYPTION_KEY', '@iT0pEncr1pti0n!'); // We'll use a random generated key later (if possible)
 define('DEFAULT_ENCRYPTION_LIB', 'Mcrypt'); // We'll define the best encryption available later

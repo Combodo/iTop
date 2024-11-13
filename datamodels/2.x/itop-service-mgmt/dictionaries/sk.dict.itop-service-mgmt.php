@@ -67,7 +67,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DeliveryModel' => 'Model dodávky',
 	'Class:DeliveryModel+' => '~~',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Kontakty',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Person) for this delivery model~~',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Persons) for this delivery model~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Zákazníci',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
 	'Class:DeliveryModel/Attribute:description' => 'Popis',

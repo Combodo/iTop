@@ -20,7 +20,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AuditCategory/Attribute:description' => '監査カテゴリ説明',
 	'Class:AuditCategory/Attribute:description+' => '監査カテゴリの説明',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
-	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
 	'Class:AuditCategory/Attribute:name' => 'カテゴリ名',
 	'Class:AuditCategory/Attribute:name+' => 'カテゴリの短縮名',
 	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Warning threshold~~',

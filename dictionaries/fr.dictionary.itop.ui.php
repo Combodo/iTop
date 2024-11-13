@@ -165,7 +165,7 @@ Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audi
 	'Class:URP_Profiles/Attribute:user_list' => 'Utilisateurs',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Comptes utilisateur (logins) ayant ce profil',
 	'Class:URP_StimulusGrant' => 'stimulus_permission',
-	'Class:URP_StimulusGrant+' => 'permissions on stimilus in the life cycle of the object',
+	'Class:URP_StimulusGrant+' => 'permissions on stimulus in the life cycle of the object',
 	'Class:URP_StimulusGrant/Attribute:class' => 'Class',
 	'Class:URP_StimulusGrant/Attribute:class+' => 'Target class',
 	'Class:URP_StimulusGrant/Attribute:permission' => 'Permission',

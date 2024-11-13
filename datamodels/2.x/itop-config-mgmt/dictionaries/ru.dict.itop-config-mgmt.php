@@ -642,7 +642,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Subnet/Tab:FreeIPs-count' => 'Свободных IP-адресов: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Вот выборка из 10 свободных IP-адресов',
 	'Class:Subnet/Tab:IPUsage' => 'Использование IP-адресов',
-	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet are used or not~~',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',
 	'Class:Subnet/Tab:IPUsage-explain' => 'Интерфейсы с IP-адресом в диапазоне: <em>%1$s</em> - <em>%2$s</em>',
 	'Class:Tablet' => 'Планшет',
 	'Class:Tablet+' => '',

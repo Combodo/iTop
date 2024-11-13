@@ -641,7 +641,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Subnet/Tab:FreeIPs-count' => 'Szabad IP címek: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => '10 szabad IP cím kivonata',
 	'Class:Subnet/Tab:IPUsage' => 'IP felhasználás',
-	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet are used or not~~',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',
 	'Class:Subnet/Tab:IPUsage-explain' => 'A hálózati csatolók a következő tartományba esnek: <em>%1$s</em> - <em>%2$s</em>',
 	'Class:Tablet' => 'Táblagép',
 	'Class:Tablet+' => '~~',

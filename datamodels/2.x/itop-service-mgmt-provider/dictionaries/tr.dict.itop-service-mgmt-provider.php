@@ -71,7 +71,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DeliveryModel' => 'Delivery Model~~',
 	'Class:DeliveryModel+' => '~~',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Contacts~~',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Person) for this delivery model~~',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Persons) for this delivery model~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Customers~~',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
 	'Class:DeliveryModel/Attribute:description' => 'Description~~',

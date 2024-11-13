@@ -149,6 +149,9 @@
 				}
 			}
 
+            // hide/show tree items filter data when search input is empty/notEmpty
+            $('.tree-item-filter-data').toggle($('#brick_search_field').val() !== '');
+
 			expandAll();
 		};
 		// Load current node childnodes throught AJAX
@@ -197,10 +200,12 @@
 
                 var liElem = $('<li></li>').addClass('list-group-item');
                 var spanElem = $('<span></span>').addClass('tree-item-wrapper').attr('data-item-id', item.id).attr('data-level-alias', item.level_alias);
+                spanElem.attr('data-tree-additional-search', item['filter_data']['values']);
                 var nameElem = $('<a></a>').addClass('tree-item').text(item.name);
                 // Building node
                 $('ul[data-level-id="'+nodeId+'"]').append(liElem);
                 spanElem.append(nameElem);
+                spanElem.append('<div class="tree-item-filter-data">' + item['filter_data']['values_and_codes'] + '</div>');
                 liElem.append(spanElem);
 
                 // Delegating a click on <span> to its child <a> element
