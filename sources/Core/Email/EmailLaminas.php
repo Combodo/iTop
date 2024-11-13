@@ -445,19 +445,6 @@ class EMailLaminas extends Email
 			$oBody->addPart($oAdditionalPart);
 		}
 
-		if ($oBody->isMultiPart()) {
-			$oContentTypeHeader = $this->m_oMessage->getHeaders();
-			foreach ($oContentTypeHeader as $oHeader) {
-				if (!$oHeader instanceof ContentType) {
-					continue;
-				}
-
-				$oHeader->setType(Mime::MULTIPART_MIXED);
-				$oHeader->addParameter('boundary', $oBody->getMime()->boundary());
-				break;
-			}
-		}
-
 		$this->m_oMessage->setBody($oBody);
 	}
 
@@ -478,22 +465,13 @@ class EMailLaminas extends Email
 		$oNewPart = new Part($sText);
 		$oNewPart->encoding = Mime::ENCODING_8BIT;
 		$oNewPart->type = $sMimeType;
-		$this->m_oMessage->getBody()->addPart($oNewPart);
+
+		// setBody called only to refresh Content-Type to multipart/mixed
+		$this->m_oMessage->setBody($this->m_oMessage->getBody()->addPart($oNewPart));
 	}
 
 	public function AddAttachment($data, $sFileName, $sMimeType)
 	{
-		$oBody = $this->m_oMessage->getBody();
-
-		if (!$oBody->isMultiPart()) {
-			$multipart_content = new Part($oBody->generateMessage());
-			$multipart_content->setType($oBody->getParts()[0]->getType());
-			$multipart_content->setBoundary($oBody->getMime()->boundary());
-
-			$oBody = new \Laminas\Mime\Message();
-			$oBody->addPart($multipart_content);
-		}
-
 		if (!array_key_exists('attachments', $this->m_aData)) {
 			$this->m_aData['attachments'] = array();
 		}
@@ -504,23 +482,8 @@ class EMailLaminas extends Email
 		$oNewAttachment->disposition = Mime::DISPOSITION_ATTACHMENT;
 		$oNewAttachment->encoding = Mime::ENCODING_BASE64;
 
-
-		$oBody->addPart($oNewAttachment);
-
-		if ($oBody->isMultiPart()) {
-			$oContentTypeHeader = $this->m_oMessage->getHeaders();
-			foreach ($oContentTypeHeader as $oHeader) {
-				if (!$oHeader instanceof ContentType) {
-					continue;
-				}
-
-				$oHeader->setType(Mime::MULTIPART_MIXED);
-				$oHeader->addParameter('boundary', $oBody->getMime()->boundary());
-				break;
-			}
-		}
-
-		$this->m_oMessage->setBody($oBody);
+		// setBody called only to refresh Content-Type to multipart/mixed
+		$this->m_oMessage->setBody($this->m_oMessage->getBody()->addPart($oNewAttachment));
 	}
 
 	public function SetSubject($sSubject)

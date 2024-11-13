@@ -40,7 +40,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Service:Overview+' => '',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracts by service level',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracts by status',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less then 30 days',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less than 30 days',
 	'Menu:ProviderContract' => 'Provider contracts',
 	'Menu:ProviderContract+' => 'Provider contracts',
 	'Menu:CustomerContract' => 'Customer contracts',
