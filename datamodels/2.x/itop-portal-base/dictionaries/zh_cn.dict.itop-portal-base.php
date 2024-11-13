@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (C) 2013-2024 Combodo SAS
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
