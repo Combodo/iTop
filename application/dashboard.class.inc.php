@@ -1197,8 +1197,8 @@ EOF
 		$sLayoutClass = utils::HtmlEntities($this->sLayoutClass);
 		$sAutoReload = $this->bAutoReload ? 'true' : 'false';
 		$sAutoReloadSec = (string) $this->iAutoReloadSec;
-		$sTitle = utils::HtmlEntities($this->sTitle);
-		$sFile = utils::HtmlEntities($this->GetDefinitionFile());
+		$sTitle = utils::EscapeHtml($this->sTitle);
+		$sFile = addslashes($this->GetDefinitionFile());
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
 		$sReloadURL = $this->GetReloadURL();
 
