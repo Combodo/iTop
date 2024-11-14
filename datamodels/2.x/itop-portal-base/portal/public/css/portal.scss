@@ -28,6 +28,11 @@
 /*******************/
 /* Global settings */
 /*******************/
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
 @media (max-width: 768px){
 	body{
 		padding-top: 60px;
@@ -109,7 +114,6 @@ footer{
 /* Sidebar */
 @media (min-width: 768px){
 	#sidebar{
-		position: fixed;
 		top: 0px;
 		left: 0px;
 		padding: 0px; /* Overriding BS */
@@ -174,7 +178,8 @@ footer{
 
 	/* Main content */
 	#main-wrapper{
-		margin-top: 20px;
+    flex-grow: 1;
+    overflow: auto;
 	}
 }
 @media (min-width: 992px){

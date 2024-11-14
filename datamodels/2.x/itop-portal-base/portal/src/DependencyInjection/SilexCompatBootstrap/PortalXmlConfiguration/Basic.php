@@ -82,6 +82,7 @@ class Basic extends AbstractConfiguration
 				'themes'          => array(
 					'bootstrap' => 'itop-portal-base/portal/public/css/bootstrap-theme-combodo.scss',
 					'portal' => 'itop-portal-base/portal/public/css/portal.scss',
+					'main' => 'itop-portal-base/portal/public/css/main.scss',
 					'others' => array(),
 				),
 				'templates' => array(

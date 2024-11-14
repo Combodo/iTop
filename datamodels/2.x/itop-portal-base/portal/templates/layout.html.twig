@@ -54,6 +54,8 @@
 		<link href="{{ app['combodo.absolute_url'] ~ app['combodo.portal.instance.conf'].properties.themes.bootstrap|add_itop_version }}" rel="stylesheet" id="css_bootstrap_theme">
 		{# - Portal adjustments for BS theme #}
 		<link href="{{ app['combodo.absolute_url'] ~ app['combodo.portal.instance.conf'].properties.themes.portal|add_itop_version }}" rel="stylesheet" id="css_portal">
+        {# - New main portal file #}
+        <link href="{{ app['combodo.absolute_url'] ~ app['combodo.portal.instance.conf'].properties.themes.main|add_itop_version }}" rel="stylesheet" id="css_portal">
 		{# Tippy for tooltips and Popper for their placement #}
 		<link href="{{ app['combodo.absolute_url'] ~ 'node_modules/tippy.js/dist/tippy.css'|add_itop_version }}" rel="stylesheet">
 		<link href="{{ app['combodo.absolute_url'] ~ 'node_modules/tippy.js/animations/shift-away-subtle.css'|add_itop_version }}" rel="stylesheet">
@@ -253,7 +255,7 @@
 
 			{# Sidebar navigation menu for normal screens #}
 			{% block pNavigationSideMenuWrapper %}
-				<nav class="navbar-default hidden-xs col-sm-3 col-md-2" id="sidebar" role="navigation">
+				<nav class="navbar-default hidden-xs" id="sidebar" role="navigation">
 					<div class="user_card bg-primary">
 						<div class="user_photo" style="background-image: url('{{ sUserPhotoUrl }}');">
 						</div>
@@ -289,7 +291,7 @@
 								<li class="brick_menu_item {% if oBrick is not defined %}active{% endif %}">
 									<a href="{{ app.url_generator.generate('p_home') }}">
 										<span class="brick_icon fas fa-home fa-2x"></span>
-										{{ 'Page:Home'|dict_s }}
+                                        <span class="ipb-navigation-menu--menu-entry--title">{{ 'Page:Home'|dict_s }}</span>
 									</a>
 								</li>
 								{% for brick in app['brick_collection'].navigation_menu_ordering %}
@@ -297,7 +299,7 @@
 										<li class="brick_menu_item {% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}" data-brick-id="{{ brick.GetId }}">
 											<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
 												<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
-												{{ brick.GetTitleNavigationMenu|dict_s }}
+                                            <span class="ipb-navigation-menu--menu-entry--title">{{ brick.GetTitleNavigationMenu|dict_s }}</span>
 											</a>
 										</li>
 									{% endif %}
@@ -332,7 +334,7 @@
 		{% block pMainWrapper %}
 		<div class="container-fluid" id="main-wrapper">
 			<div class="row">
-				<div class="col-xs-12 col-sm-9 col-md-10 col-sm-offset-3 col-md-offset-2">
+				<div class="col-xs-12 col-sm-9 col-md-10">
                     <section class="row">
 						<div class="col-xs-12">
                             {% include template('session_messages') %}

@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+@import 'common/main.scss';
+
 $bootstrap-sass-asset-helper: false !default;
 // Combodo Portal 1.0.0 (Based on Simplex 3.3.6)
 // Variables
@@ -26,25 +28,25 @@ $bootstrap-sass-asset-helper: false !default;
 //
 //## Gray and brand colors for use across Bootstrap.
 
-$gray-base:              #000 !default;
-$gray-darker:            lighten($gray-base, 13.5%) !default; // #222
-$gray-dark:              #444 !default;
-$gray:                   #777 !default;
-$gray-light:             #808080 !default;
-$gray-lighter:           #ddd !default;
+$gray-base:              $common-color-grey-900 !default;
+$gray-darker:            $common-color-grey-800 !default;
+$gray-dark:              $common-color-grey-700 !default;
+$gray:                   $common-color-grey-600 !default;
+$gray-light:             $common-color-grey-400 !default;
+$gray-lighter:           $common-color-grey-200 !default;
 
-$white:					#FFFFFF !default;
+$white:					$common-color-white-100 !default;
 
-$combodo-orange:		#EA7D1E !default;
-$combodo-dark-gray:		#585653 !default;
+$combodo-orange:		$common-color-orange-600 !default;
+$combodo-dark-gray:		$gray-dark !default;
 
-$combodo-orange-dark:		darken($combodo-orange, 13.8%) !default;
-$combodo-orange-darker:		darken($combodo-orange, 18%) !default;
-$combodo-dark-gray-dark:	darken($combodo-dark-gray, 13.5%) !default;
-$combodo-dark-gray-darker:	darken($combodo-dark-gray, 18%) !default;
+$combodo-orange-dark:		$common-color-orange-700 !default;
+$combodo-orange-darker:		$common-color-orange-800 !default;
+$combodo-dark-gray-dark:	$common-color-grey-800 !default;
+$combodo-dark-gray-darker:	$gray-base !default;
 
-$brand-primary:         $combodo-orange !default;
-$brand-default:         #FFFFFF !default;
+$brand-primary:         $common-color-orange-600 !default;
+$brand-default:        $common-color-grey-100  !default;
 $brand-secondary:       $combodo-dark-gray !default;
 $brand-success:         #469408 !default;
 $brand-info:            #029ACF !default;
