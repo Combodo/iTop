@@ -10,7 +10,27 @@
     height: 50px;
   }
   .user_card{
-  align-self: flex-end;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 84px;
+    padding: 0;
+    background-color: $combodo-dark-gray-dark;
+    align-self: flex-end;
+    border-radius: 0 0 8px 0;
+    .user_photo{
+      width: 48px;
+      height: 48px;
+      background-size: 100%;
+      background-position: center center;
+      background-color: #585653;
+      border: 2px solid $white;
+      border-radius: 100%;
+    }
+    .user_infos {
+      display: none;
+    }
   }
   .menu{
     display: flex;
