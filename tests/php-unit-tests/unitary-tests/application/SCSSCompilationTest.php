@@ -34,7 +34,7 @@ class SCSSCompilationTest extends ItopTestCase
 	{
 		return [
 			'console' => ['css/backoffice/main.scss', ['css/backoffice/']],
-			'portal' => ['env-production/itop-portal-base/portal/public/css/bootstrap-theme-combodo.scss', ['env-production//itop-portal-base/portal/public/css/']],
+			'portal' => ['env-production/itop-portal-base/portal/public/css/bootstrap-theme-combodo.scss', ['env-production//itop-portal-base/portal/public/css/', 'css/']],
 		];
 	}
 
