@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2024
+ * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
