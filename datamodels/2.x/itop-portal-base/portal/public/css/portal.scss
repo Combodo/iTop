@@ -148,11 +148,6 @@ footer{
 	#sidebar .user_card .user_fullname{
 		font-weight: 600;
 	}
-	#sidebar .menu{
-		max-height: 59%;
-		overflow-y: auto;
-		overflow-x: hidden;
-	}
 	#sidebar .menu .navbar-nav{
 		width: 100%;
 	}
@@ -165,16 +160,7 @@ footer{
 		text-align: center;
 		margin-right: 10px;
 	}
-	#sidebar .logo{
-		position: absolute;
-		bottom: 15px;
-		width: 100%;
-		text-align: center;
-	}
-	#sidebar .logo img{
-		max-width: 100%;
-		max-height: 50px;
-	}
+
 
 	/* Main content */
 	#main-wrapper{

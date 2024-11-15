@@ -256,35 +256,19 @@
 			{# Sidebar navigation menu for normal screens #}
 			{% block pNavigationSideMenuWrapper %}
 				<nav class="navbar-default hidden-xs" id="sidebar" role="navigation">
-					<div class="user_card bg-primary">
-						<div class="user_photo" style="background-image: url('{{ sUserPhotoUrl }}');">
-						</div>
-						<div class="user_infos">
-							<div class="user_fullname">{{ sUserFullname }}</div>
-							<div class="user_email dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user_options">
-									{{ sUserEmail }}
-									<span class="caret"></span>
-								</a>
-								<ul class="dropdown-menu user_options" aria-labelledby="user_options">
-									<li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fas fa-user fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
-									{% for aPortal in allowed_portals %}
-										{% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
-											{% set sGlyphiconClass = (aPortal.id == 'backoffice') ? 'far fa-list-alt' : 'fas fa-external-link-alt' %}
-											<li><a href="{{ aPortal.url }}" {% if app['combodo.portal.instance.conf'].properties.allowed_portals.opening_mode == 'tab' %}target="_blank"{% endif %} title="{{ aPortal.label|dict_s }}"><span class="brick_icon {{ sGlyphiconClass }} fa-lg fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
-										{% endif %}
-									{% endfor %}
-                                    {% if bUserCanLogOff %}
-                                        {# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
-									    {% if allowed_portals|length > 1 %}
-                                            <li role="separator" class="divider"></li>
-                                        {% endif %}
-									    <li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="brick_icon fas fa-sign-out-alt fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
-                                    {% endif %}
-								</ul>
-							</div>
-						</div>
-					</div>
+                    {% if app['combodo.portal.instance.conf'].properties.logo is not null %}
+                        <div class="logo">
+                            {% block pNavigationSideMenuLogo %}
+                                {# This is a debug helper to know in which screen size we are #}
+                                {% if app['kernel'].debug == true %}
+                                    <div style="position: fixed; bottom: 0px; left: 0px; z-index: 9999;">Debug: Screen size <span class="hidden-sm hidden-md hidden-lg">XS</span><span class="hidden-xs hidden-md hidden-lg">SM</span><span class="hidden-xs hidden-sm hidden-lg">MD</span><span class="hidden-xs hidden-sm hidden-md">LG</span></div>
+                                {% endif %}
+                                <a href="{{ app['combodo.conf.app_icon_url'] }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
+                                    <img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
+                                </a>
+                            {% endblock %}
+                        </div>
+                    {% endif %}
 					<div class="menu">
 						{% block pNavigationSideMenu %}
 							<ul class="nav navbar-nav">
@@ -296,7 +280,7 @@
 								</li>
 								{% for brick in app['brick_collection'].navigation_menu_ordering %}
 									{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
-										<li class="brick_menu_item {% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}" data-brick-id="{{ brick.GetId }}">
+										<li class="brick_menu_item {% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}" data-brick-id="{{ brick.GetId }}" data-tooltip-content="{{ brick.GetTitleNavigationMenu|dict_s }}" data-tooltip-placement="right">
 											<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
 												<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
                                             <span class="ipb-navigation-menu--menu-entry--title">{{ brick.GetTitleNavigationMenu|dict_s }}</span>
@@ -313,20 +297,35 @@
                             {{ app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')]|raw }}
                         {% endif %}
                     {% endblock %}
-
-					{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
-						<div class="logo">
-							{% block pNavigationSideMenuLogo %}
-								{# This is a debug helper to know in which screen size we are #}
-								{% if app['kernel'].debug == true %}
-									<div style="position: fixed; bottom: 0px; left: 0px; z-index: 9999;">Debug: Screen size <span class="hidden-sm hidden-md hidden-lg">XS</span><span class="hidden-xs hidden-md hidden-lg">SM</span><span class="hidden-xs hidden-sm hidden-lg">MD</span><span class="hidden-xs hidden-sm hidden-md">LG</span></div>
-								{% endif %}
-								<a href="{{ app['combodo.conf.app_icon_url'] }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
-									<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
-								</a>
-							{% endblock %}
-						</div>
-					{% endif %}
+                    <div class="user_card bg-primary">
+                        <div class="user_photo" style="background-image: url('{{ sUserPhotoUrl }}');">
+                        </div>
+                        <div class="user_infos">
+                            <div class="user_fullname">{{ sUserFullname }}</div>
+                            <div class="user_email dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user_options">
+                                    {{ sUserEmail }}
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu user_options" aria-labelledby="user_options">
+                                    <li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fas fa-user fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
+                                    {% for aPortal in allowed_portals %}
+                                        {% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
+                                            {% set sGlyphiconClass = (aPortal.id == 'backoffice') ? 'far fa-list-alt' : 'fas fa-external-link-alt' %}
+                                            <li><a href="{{ aPortal.url }}" {% if app['combodo.portal.instance.conf'].properties.allowed_portals.opening_mode == 'tab' %}target="_blank"{% endif %} title="{{ aPortal.label|dict_s }}"><span class="brick_icon {{ sGlyphiconClass }} fa-lg fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if bUserCanLogOff %}
+                                        {# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
+                                        {% if allowed_portals|length > 1 %}
+                                            <li role="separator" class="divider"></li>
+                                        {% endif %}
+                                        <li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="brick_icon fas fa-sign-out-alt fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
 				</nav>
 			{% endblock %}
 		{% endblock %}

@@ -3627,28 +3627,19 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     }
 }
 @media (min-width: 768px) {
-    .navbar-left {
-        float: left !important
-    }
-    .navbar-right {
-        float: right !important;
-        margin-right: -15px
-    }
-    .navbar-right~.navbar-right {
-        margin-right: 0
-    }
-}
-@media (min-width: 768px){
-	.user_card{
-		background-color: $combodo-orange;
-		background-image: url('../img/backgrounds/geometric-orange.svg');
-		background-size: 170%;
-		background-position: 60% 60%;
-		box-shadow: -3px 2px 3px rgba(0, 0, 0, 0.4);
-	}
+  .navbar-left {
+    float: left !important
+  }
+  .navbar-right {
+    float: right !important;
+    margin-right: -15px
+  }
+  .navbar-right ~ .navbar-right {
+    margin-right: 0
+  }
 }
 .navbar-default {
-    background-color: $combodo-dark-gray;
+    background-color: $combodo-dark-gray-darker;
     border-color: none;
 }
 .navbar-default .navbar-brand {
