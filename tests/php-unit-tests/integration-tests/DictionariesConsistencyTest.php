@@ -569,6 +569,7 @@ EOF
 			'da'    => ['DA DA', 'Danish', 'Dansk'],
 			'de'    => ['DE DE', 'German', 'Deutsch'],
 			'en'    => ['EN US', 'English', 'English'],
+			'en_gb' => ['EN GB', 'British English', 'British English'],
 			'es_cr' => [
 				'ES CR',
 				'Spanish',
