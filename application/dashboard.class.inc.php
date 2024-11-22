@@ -1193,12 +1193,12 @@ EOF
 		$sOkButtonLabel = Dict::S('UI:Button:Save');
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		
-		$sId = utils::HtmlEntities($this->sId);
-		$sLayoutClass = utils::HtmlEntities($this->sLayoutClass);
+		$sId = json_encode($this->sId);
+		$sLayoutClass = json_encode($this->sLayoutClass);
 		$sAutoReload = $this->bAutoReload ? 'true' : 'false';
 		$sAutoReloadSec = (string) $this->iAutoReloadSec;
-		$sTitle = utils::EscapeHtml($this->sTitle);
-		$sFile = addslashes($this->GetDefinitionFile());
+		$sTitle = json_encode($this->sTitle);
+		$sFile = json_encode($this->GetDefinitionFile());
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
 		$sReloadURL = $this->GetReloadURL();
 
@@ -1250,15 +1250,15 @@ $('#dashboard_editor').dialog({
 });
 
 $('#dashboard_editor .ui-layout-center').runtimedashboard({
-	dashboard_id: '$sId', 
-	layout_class: '$sLayoutClass', 
-	title: '$sTitle',
+	dashboard_id: $sId, 
+	layout_class: $sLayoutClass, 
+	title: $sTitle,
 	auto_reload: $sAutoReload, 
 	auto_reload_sec: $sAutoReloadSec,
 	submit_to: '$sUrl', 
-	submit_parameters: {operation: 'save_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	submit_parameters: {operation: 'save_dashboard', file: $sFile, extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 	render_to: '$sUrl', 
-	render_parameters: {operation: 'render_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	render_parameters: {operation: 'render_dashboard', file: $sFile, extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 	new_dashlet_parameters: {operation: 'new_dashlet'}
 });
 

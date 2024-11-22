@@ -1781,27 +1781,6 @@ class utils
 		return html_entity_decode($sValue, ENT_QUOTES, 'UTF-8');
 	}
 
-    /**
-     * @param string $sValue
-     * @param bool $bDoubleEncode Whether to double encode the value or not
-     *
-     * @return string passed value with only characters having a special meaning in HTML escaped as entities
-     *    we often use for this {@link HtmlEntities} but it was overkill and leads to double escaping !
-     *
-     * @uses \htmlspecialchars()
-     * @link https://www.php.net/manual/fr/function.htmlspecialchars.php
-     * @since 2.7.12
-     */
-    public static function EscapeHtml($sValue, bool $bDoubleEncode = false)
-    {
-        return htmlspecialchars(
-                $sValue ?? '',
-                ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5,
-                WebPage::PAGES_CHARSET,
-                $bDoubleEncode
-        );
-    }
-
 	/**
 	 * Convert a string containing some (valid) HTML markup to plain text
 	 * @param string $sHtml
