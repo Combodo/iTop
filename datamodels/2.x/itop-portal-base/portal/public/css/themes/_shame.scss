@@ -3085,20 +3085,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
   padding-left: 0;
   list-style: none
 }
-.nav>li {
-  position: relative;
-  display: block
-}
-.nav>li>a {
-  position: relative;
-  display: block;
-  padding: 10px 15px
-}
-.nav>li>a:hover,
-.nav>li>a:focus {
-  text-decoration: none;
-  background-color: #dddddd
-}
+
 .nav>li.disabled>a {
   color: #808080
 }
@@ -3122,9 +3109,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
   background-color: #e5e5e5;
   opacity: 0.6;
 }
-.nav>li>a>img {
-  max-width: none
-}
+
 .nav-tabs {
   border-bottom: 1px solid #dddddd
 }
@@ -3477,21 +3462,8 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     display: block;
     position: relative;
     color: $white;
-    border-bottom: 1px solid #7D7D7D;
   }
-  .navbar-nav>li.active:after{
-    content: " ";
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    border: 30px solid transparent;
-    border-right-width: 20px;
-    border-right-color: $body-bg;
-  }
-  .navbar-nav>li.active>a{
-    margin-top: -1px; /* To mask border from previous li item */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8) inset;
-  }
+
   .navbar-nav>li:last-child.active>a{
     margin-top: 0px; /* Overflow hack */
   }
@@ -3503,10 +3475,6 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     text-overflow: ellipsis;
     white-space: nowrap;
     line-height: 3em;
-  }
-  .navbar-nav>li>a:hover{
-    padding-left: 5%;
-    transition: padding-left 0.2s ease-in-out;
   }
 
 }
@@ -3661,13 +3629,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
   background-color: $combodo-dark-gray-darker;
   font-weight: 600
 }
-.navbar-default .navbar-nav>li>a:hover,
-.navbar-default .navbar-nav>li>a:focus,
-.navbar-default .navbar-nav>.active>a:hover,
-.navbar-default .navbar-nav>.active>a:focus {
-  color: $combodo-orange;
-  background-color: $white
-}
+
 .navbar-default .navbar-nav>.disabled>a,
 .navbar-default .navbar-nav>.disabled>a:hover,
 .navbar-default .navbar-nav>.disabled>a:focus {

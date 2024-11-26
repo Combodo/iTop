@@ -119,10 +119,6 @@ footer{
 		padding: 0px; /* Overriding BS */
 		height: 100%;
 	}
-	#sidebar .user_card{
-		padding: 30px 0px;
-		text-align: center;
-	}
 
 	#sidebar .user_card .user_infos{
 		font-size: 1em;
@@ -160,16 +156,6 @@ footer{
 }
 @media (min-width: 992px){
 
-}
-/* Warning : Not a offical BS breakpoint */
-@media (min-width: 1600px){
-	#sidebar .user_card .user_photo{
-		width: 120px;
-		height: 120px;
-	}
-	#sidebar .menu .nav > li > a > .brick_icon{
-		margin-right: 20px;
-	}
 }
 
 
