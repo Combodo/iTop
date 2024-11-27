@@ -7,18 +7,18 @@
     {% set sTargetBrickUrl = app['url_generator'].generate('p_manage_brick', {'sBrickId': brick.GetTargetBrickId, 'sGroupingTab': brick.GetTargetBrickTab}) %}
 {% endif %}
 
-<div class="col-xs-12 col-sm-{{ brick.GetWidth }}">
+{#<div class="col-xs-12 col-sm-{{ brick.GetWidth }}">#}
 	{% block pTileWrapper %}
-		<div class="tile tile-filter-brick" id="brick-{{ brick.GetId }}" data-brick-id="{{ brick.GetId }}">
-			<a href="#" onclick="return false;" class="tile_decoration">
-				<span class="icon {{ brick.GetDecorationClassHome }}"></span>
+		<div class="ipb-tile tile tile-filter-brick" id="brick-{{ brick.GetId }}" data-brick-id="{{ brick.GetId }}">
+			<a href="#" onclick="return false;" class="ipb-tile--decoration tile_decoration">
+				<span class="ipb-tile--decoration--icon icon {{ brick.GetDecorationClassHome }}"></span>
 			</a>
-			<div class="tile_body">
-				<div class="tile_title">{{ brick.GetTitleHome|dict_s }}</div>
+			<div class="ipb-tile--body tile_body">
+				<div class="ipb-tile--body--title tile_title">{{ brick.GetTitleHome|dict_s }}</div>
 				{% if brick.HasDescription %}
-					<div class="tile_description">{{ brick.GetDescription|dict_s|raw }}</div>
+					<div class="ipb-tile--body--description tile_description">{{ brick.GetDescription|dict_s|raw }}</div>
 				{% endif %}
-				<div class="tile_filterbox">
+				<div class="ipb-tile--body--filter-box tile_filterbox">
 					<form method="post" action="{{ sTargetBrickUrl }}" class="form-inline">
 						<div class="form-group">
 							<input type="text" class="form-control" name="sSearchValue" placeholder="{{ brick.GetSearchPlaceholderValue|dict_s }}" />
@@ -33,4 +33,4 @@
 			</div>
 		</div>
 	{% endblock %}
-</div>
+{#</div>#}

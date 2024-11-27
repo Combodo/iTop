@@ -347,200 +347,200 @@ footer{
 	padding-top: 15px;
 }
 
-.home .tile{
-	display: block;
-	margin-bottom: 8px;
-	padding: 0em 1em;
-	min-height: 4em;
-	background-color: $white;
-	background-image: none;
-	border: none;
-	border-radius: 0px;
-	text-align: center;
-	text-decoration: none;
-	white-space: normal;
-	line-height: 4em;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-}
-.home .tile .tile_decoration{
-	position: absolute;
-	top: 0.3em;
-	left: 2.5em;
-}
-.home .tile .tile_title{
-	font-weight: bold;
-	color: $gray;
-}
-
-.home .tile .tile_title > span.icon {
-	color: $combodo-orange;
-}
-
-.home .tile .tile_description{
-	display: none;
-	color: #555555;
-}
-
-
-/**********************************/
-/* ManageBrick badge tile display */
-/**********************************/
-.home a.tile.tile_badge > div {
-	display: table;
-	width: 100%;
-}
-
-.home a.tile.tile_badge > div > div {
-	display: table-row;
-}
-
-.home a.tile.tile_badge > div > div > div {
-	display: table-cell;
-}
-
-@media (max-width: 768px) {
-	.home a.tile.tile_badge > div > div > div.tile_body div.tile_count {
-		position: absolute;
-		top: 0em;
-		right: 2em;
-		text-align: right;
-		font-size: 1.2em;
-	}
-	.home a.tile.tile_badge > div.tile_description {
-		display: none;
-	}
-}
-@media (min-width: 768px) {
-	.home .tile{
-		display: block;
-		margin-bottom: 25px;
-		padding: 40px 40px 30px 40px;
-		min-height: 10em;
-		text-align: left;
-		transition: all 0.2s linear;
-	}
-	.home .tile:hover{
-		box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.10);
-	}
-	.home .tile .tile_decoration{
-		display: block;
-		position: relative;
-		float: left;
-		top: 1.5em;
-		left: initial;
-		margin: 0px 30px 15px 0px;
-	}
-	.home .tile .tile_body{
-		display: block;
-		padding-left: 4.3em;
-		text-align: left;
-		line-height: 1.5em;
-	}
-	.home .tile .tile_title{
-		margin-bottom: 1em;
-		font-size: 1.0em;
-	}
-	.home .tile .tile_description{
-		display: block;
-		text-align: left;
-	}
-
-	.home a.tile.tile_badge{
-		height: 10em;
-		overflow: hidden;
-	}
-	.home a.tile.tile_badge > div > div > div.tile_decoration{
-		top: unset;
-		vertical-align: middle;
-	}
-	.home a.tile.tile_badge > div > div > div.tile_decoration > span.icon {
-		font-size: 4em;
-	}
-	.home a.tile.tile_badge > div > div > div.tile_body{
-		position: relative;
-		padding: 0;
-		margin: 0;
-		vertical-align: middle;
-		text-align: right;
-	}
-	.home a.tile.tile_badge > div > div > div.tile_body .tile_title{
-		margin-top: 1em;
-		margin-bottom: 0;
-		font-size: 1em;
-		font-weight: normal;
-	}
-	.home a.tile.tile_badge > div > div > div.tile_body .tile_count{
-		position: absolute;
-		top: 0;
-		right: 0;
-		font-size: 2em;
-		font-weight: bold;
-		color: $gray;
-	}
-	.home a.tile.tile_badge .tile_description{
-		display: none;
-	}
-}
-@media (min-width: 992px) {
-	.home .tile{
-		min-height: 14em;
-		padding: 30px 40px 30px 40px;
-	}
-	.home .tile .tile_decoration > span.icon{
-		font-size: 4em;
-	}
-	.home .tile .tile_body{
-		padding-left: 6.3em;
-	}
-	.home .tile .tile_title{
-		font-size: 1.4em;
-	}
-	.home .tile .tile_description{
-		font-size: 1.2em;
-	}
-
-	.home a.tile.tile_badge > div > div > div.tile_body .tile_title{
-		font-size: 1.2em;
-	}
-	.home a.tile.tile_badge > div > div > div.tile_body .tile_count{
-		font-size: 3em;
-	}
-	.home a.tile.tile_badge > div > div > div.tile_decoration > span.icon {
-		font-size: 4em;
-	}
-	.home a.tile.tile_badge .tile_description{
-		display: block;
-		font-size: 1em;
-		text-align: center;
-	}
-}
-@media (min-width: 1200px) {
-	.home .tile{
-		margin-bottom: 40px;
-		min-height: 15em;
-		padding: 40px 50px 30px 50px;
-	}
-	.home .tile .tile_decoration{
-		margin: 0px 40px 15px 0px;
-		top: 1.5em;
-	}
-	.home .tile .tile_decoration > span.icon{
-		font-size: 6em;
-	}
-	.home .tile .tile_body{
-		padding-left: 9.1em;
-	}
-	.home .tile .tile_title{
-		font-size: 1.5em;
-	}
-	.home .tile .tile_description{
-		font-size: 1.2em;
-	}
-
-	.home a.tile.tile_badge > div > div > div.tile_decoration > span.icon {
-		font-size: 6em;
-	}
-}
+//.home .tile{
+//	display: block;
+//	margin-bottom: 8px;
+//	padding: 0em 1em;
+//	min-height: 4em;
+//	background-color: $white;
+//	background-image: none;
+//	border: none;
+//	border-radius: 0px;
+//	text-align: center;
+//	text-decoration: none;
+//	white-space: normal;
+//	line-height: 4em;
+//	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+//}
+//.home .tile .tile_decoration{
+//	position: absolute;
+//	top: 0.3em;
+//	left: 2.5em;
+//}
+//.home .tile .tile_title{
+//	font-weight: bold;
+//	color: $gray;
+//}
+//
+//.home .tile .tile_title > span.icon {
+//	color: $combodo-orange;
+//}
+//
+//.home .tile .tile_description{
+//	display: none;
+//	color: #555555;
+//}
+//
+//
+///**********************************/
+///* ManageBrick badge tile display */
+///**********************************/
+//.home a.tile.tile_badge > div {
+//	display: table;
+//	width: 100%;
+//}
+//
+//.home a.tile.tile_badge > div > div {
+//	display: table-row;
+//}
+//
+//.home a.tile.tile_badge > div > div > div {
+//	display: table-cell;
+//}
+//
+//@media (max-width: 768px) {
+//	.home a.tile.tile_badge > div > div > div.tile_body div.tile_count {
+//		position: absolute;
+//		top: 0em;
+//		right: 2em;
+//		text-align: right;
+//		font-size: 1.2em;
+//	}
+//	.home a.tile.tile_badge > div.tile_description {
+//		display: none;
+//	}
+//}
+//@media (min-width: 768px) {
+//	.home .tile{
+//		display: block;
+//		margin-bottom: 25px;
+//		padding: 40px 40px 30px 40px;
+//		min-height: 10em;
+//		text-align: left;
+//		transition: all 0.2s linear;
+//	}
+//	.home .tile:hover{
+//		box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.10);
+//	}
+//	.home .tile .tile_decoration{
+//		display: block;
+//		position: relative;
+//		float: left;
+//		top: 1.5em;
+//		left: initial;
+//		margin: 0px 30px 15px 0px;
+//	}
+//	.home .tile .tile_body{
+//		display: block;
+//		padding-left: 4.3em;
+//		text-align: left;
+//		line-height: 1.5em;
+//	}
+//	.home .tile .tile_title{
+//		margin-bottom: 1em;
+//		font-size: 1.0em;
+//	}
+//	.home .tile .tile_description{
+//		display: block;
+//		text-align: left;
+//	}
+//
+//	.home a.tile.tile_badge{
+//		height: 10em;
+//		overflow: hidden;
+//	}
+//	.home a.tile.tile_badge > div > div > div.tile_decoration{
+//		top: unset;
+//		vertical-align: middle;
+//	}
+//	.home a.tile.tile_badge > div > div > div.tile_decoration > span.icon {
+//		font-size: 4em;
+//	}
+//	.home a.tile.tile_badge > div > div > div.tile_body{
+//		position: relative;
+//		padding: 0;
+//		margin: 0;
+//		vertical-align: middle;
+//		text-align: right;
+//	}
+//	.home a.tile.tile_badge > div > div > div.tile_body .tile_title{
+//		margin-top: 1em;
+//		margin-bottom: 0;
+//		font-size: 1em;
+//		font-weight: normal;
+//	}
+//	.home a.tile.tile_badge > div > div > div.tile_body .tile_count{
+//		position: absolute;
+//		top: 0;
+//		right: 0;
+//		font-size: 2em;
+//		font-weight: bold;
+//		color: $gray;
+//	}
+//	.home a.tile.tile_badge .tile_description{
+//		display: none;
+//	}
+//}
+//@media (min-width: 992px) {
+//	.home .tile{
+//		min-height: 14em;
+//		padding: 30px 40px 30px 40px;
+//	}
+//	.home .tile .tile_decoration > span.icon{
+//		font-size: 4em;
+//	}
+//	.home .tile .tile_body{
+//		padding-left: 6.3em;
+//	}
+//	.home .tile .tile_title{
+//		font-size: 1.4em;
+//	}
+//	.home .tile .tile_description{
+//		font-size: 1.2em;
+//	}
+//
+//	.home a.tile.tile_badge > div > div > div.tile_body .tile_title{
+//		font-size: 1.2em;
+//	}
+//	.home a.tile.tile_badge > div > div > div.tile_body .tile_count{
+//		font-size: 3em;
+//	}
+//	.home a.tile.tile_badge > div > div > div.tile_decoration > span.icon {
+//		font-size: 4em;
+//	}
+//	.home a.tile.tile_badge .tile_description{
+//		display: block;
+//		font-size: 1em;
+//		text-align: center;
+//	}
+//}
+//@media (min-width: 1200px) {
+//	.home .tile{
+//		margin-bottom: 40px;
+//		min-height: 15em;
+//		padding: 40px 50px 30px 50px;
+//	}
+//	.home .tile .tile_decoration{
+//		margin: 0px 40px 15px 0px;
+//		top: 1.5em;
+//	}
+//	.home .tile .tile_decoration > span.icon{
+//		font-size: 6em;
+//	}
+//	.home .tile .tile_body{
+//		padding-left: 9.1em;
+//	}
+//	.home .tile .tile_title{
+//		font-size: 1.5em;
+//	}
+//	.home .tile .tile_description{
+//		font-size: 1.2em;
+//	}
+//
+//	.home a.tile.tile_badge > div > div > div.tile_decoration > span.icon {
+//		font-size: 6em;
+//	}
+//}
 
 /********************/
 /* Modules settings */

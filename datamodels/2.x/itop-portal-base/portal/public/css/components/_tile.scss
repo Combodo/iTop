@@ -1,0 +1,70 @@
+/* SCSS variables */
+$ipb-tile--padding: $common-spacing-500 !default;
+$ipb-tile--margin: $common-spacing-400 !default;
+$ipb-tile--border-color: $gray-light !default;
+$ipb-tile--border-width: $common-size-50 !default;
+$ipb-tile--hover--border-color: $combodo-dark-gray-darker !default;
+$ipb-tile--background-color: $white !default;
+$ipb-tile--decoration--padding: $common-spacing-400 !default;
+$ipb-tile--hover--decoration--background: common-adjust-alpha($brand-primary, .2) !default;
+$ipb-tile--decoration--background: common-adjust-lightness($ipb-tile--hover--decoration--background, 38%) !default;
+$ipb-tile--decoration--icon--color: $brand-primary !default;
+$ipb-tile--title--color: $combodo-dark-gray-darker !default;
+$ipb-tile--title--font-size: $common-font-size-400 !default;
+$ipb-tile--description--color: $combodo-dark-gray-darker !default;
+$ipb-tile--border-radius: $common-border-radius-500 !default;
+$ipb-tile-badge--count--font-size: $common-font-size-500 !default;
+
+.ipb-tile{
+  display: block;
+  width: 500px;
+  margin: $ipb-tile--margin;
+  padding: $ipb-tile--padding;
+  background-color: $ipb-tile--background-color;
+  border: 2px solid $ipb-tile--border-color;
+  border-radius: $ipb-tile--border-radius;
+  text-decoration: none!important;
+  white-space: normal;
+
+  transition: border-color 1s ease;
+}
+.ipb-tile--decoration{
+  display: inline-block;
+  margin-bottom: $common-spacing-300;
+  padding: $ipb-tile--decoration--padding;
+  background-color: $ipb-tile--decoration--background;
+  border-radius: $ipb-tile--border-radius;
+
+  transition: background-color 1s ease;
+}
+.ipb-tile--body--title{
+  margin-bottom: $common-spacing-300;
+  color: $ipb-tile--title--color;
+  font-size: $ipb-tile--title--font-size;
+  font-weight: bold;
+}
+
+.ipb-tile--decoration--icon {
+  color: $ipb-tile--decoration--icon--color;
+}
+
+.ipb-tile--body--description{
+  color: $ipb-tile--description--color;
+}
+
+
+.ipb-tile:hover{
+  border-color: $ipb-tile--hover--border-color;
+
+  .ipb-tile--decoration{
+    background-color: $ipb-tile--hover--decoration--background;
+  }
+}
+
+/**********************************/
+/* ManageBrick badge tile display */
+/**********************************/
+
+.ipb-tile-badge--body--count {
+	font-size: $ipb-tile-badge--count--font-size;
+}
