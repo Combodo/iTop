@@ -64,6 +64,8 @@ of vraag de iTop administrator om de opslagruimte van de iTop-server na te kijke
 	'UI:Attachments:DropYourFileHint' => 'Sleep bestanden in dit gebied',
     'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
     'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
 ]);

@@ -59,6 +59,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Attachments:DropYourFileHint' => '将文件拖放到此区域的任意位置',
     'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
     'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
 ]);

@@ -63,6 +63,8 @@ nebe se zeptejte'.ITOP_APPLICATION_SHORT.' správce '.ITOP_APPLICATION_SHORT.' z
 	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
 	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
 	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
 ]);

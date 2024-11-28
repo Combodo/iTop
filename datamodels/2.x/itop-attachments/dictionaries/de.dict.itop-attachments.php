@@ -62,6 +62,8 @@ oder melden Sie dem '.ITOP_APPLICATION_SHORT.' Administrator diesen Fehler, weil
 	'UI:Attachments:DropYourFileHint' => 'Dateien in diesem Bereich ablegen...',
 	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
 	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
 ]);
