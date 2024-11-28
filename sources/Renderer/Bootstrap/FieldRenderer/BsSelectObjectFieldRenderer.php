@@ -105,7 +105,15 @@ class BsSelectObjectFieldRenderer extends BsFieldRenderer
 					$oOutput->AddHtml('<div class="col-xs-' . ( $this->oField->GetHierarchical() ? 10 : 12 ) . ' col-sm-' . ( $this->oField->GetHierarchical() ? 9 : 12 ) . ' col-md-' . ( $this->oField->GetHierarchical() ? 10 : 12 ) . '">');
 					$oOutput->AddHtml('<select id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" class="form-control">');
 					$oOutput->AddHtml('<option value="">')->AddHtml(Dict::S('UI:SelectOne'), false)->AddHtml('</option>');
-					// - Retrieving choices
+
+                     if (defined('PORTAL_ID'))
+                    {
+                        $oModuleDesign = new ModuleDesign(PORTAL_ID);
+                        $oScopeValidatorHelper = new ScopeValidatorHelper( $oModuleDesign, PORTAL_ID);
+                        $oScopeValidatorHelper->AddScopeToQuery($oSearch, $oSearch->GetClass());
+                    }
+
+                     // - Retrieving choices
                     $sPortalId =$_ENV['PORTAL_ID'];
                     $oModuleDesign = new ModuleDesign($_ENV['PORTAL_ID']);
                     $oScopeValidatorHelper = new ScopeValidatorHelper( $oModuleDesign, $sPortalId);
