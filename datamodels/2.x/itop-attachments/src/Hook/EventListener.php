@@ -156,7 +156,11 @@ class EventListener implements iEventServiceSetup
 		/** @var \Trigger $oTrigger */
 		while ($oTrigger = $oTriggerSet->Fetch()) {
 			try {
-				$oTrigger->DoActivate($aTriggerContextArgs);
+				$aContextArgs = $aTriggerContextArgs;
+				if($oTrigger->Get('file_in_email')){
+					$aContextArgs ['attachments']= [$oDocument];
+				}
+				$oTrigger->DoActivate($aContextArgs);
 			} catch (Exception $oException) {
 				IssueLog::Error('Exception occurred during trigger activation in '.EventListener::class.'::'.__METHOD__, LogChannels::NOTIFICATIONS, [
 					'trigger_class' => get_class($oTrigger),

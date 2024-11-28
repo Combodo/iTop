@@ -61,6 +61,8 @@ Soit demandez à votre administrateur système s\'il reste de la place disque di
 	'UI:Attachments:DropYourFileHint' => 'Déposez vos fichiers dans cet espace',
 	'Class:TriggerOnAttachmentCreate'                         => 'Déclencheur sur la création d\'une pièce jointe',
 	'Class:TriggerOnAttachmentCreate+'                        => '',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Ajoute le fichier dans l\'email',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'Si coché, le fichier sera automatiquement attaché à l\'email quand l\'action email est lancée',
 	'Class:TriggerOnAttachmentDelete'                         => 'Déclencheur sur la suppression d\'une pièce jointe',
 	'Class:TriggerOnAttachmentDelete+'                        => '',
 ]);
