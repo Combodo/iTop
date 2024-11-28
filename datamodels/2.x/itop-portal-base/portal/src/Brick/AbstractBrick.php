@@ -659,4 +659,28 @@ abstract class AbstractBrick
 		return $this;
 	}
 
+	/**
+	 *  Load brick configuration that is not part of the brick definition but is part of the portal global properties.
+	 * 
+	 * @param $aPortalProperties
+	 *
+	 * @return void
+	 * @since 3.2.1
+	 */
+	public function LoadFromPortalProperties($aPortalProperties) {
+		// Get the bricks templates
+		$aBricksTemplates = $aPortalProperties['templates']['bricks'];
+		$sClassFQDN = get_class($this);
+		
+		// Get the current brick templates
+		$aCurrentBricksTemplates = array_key_exists($sClassFQDN, $aBricksTemplates) ? $aBricksTemplates[$sClassFQDN] : [];
+		foreach($aCurrentBricksTemplates as $sTemplateKey => $sTemplate) {
+			// Clean the template id
+			$sTemplateId = str_ireplace($sClassFQDN.':', '', $sTemplateKey);
+			
+			// Call the set method for the template
+			$sSetTemplateMethodName = 'Set'.$sTemplateId.'TemplatePath';
+			$this->{$sSetTemplateMethodName}($sTemplate);
+		}
+	}
 }

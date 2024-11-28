@@ -85,6 +85,7 @@ class Basic extends AbstractConfiguration
 				'templates' => array(
 					'layout' => 'itop-portal-base/portal/templates/layout.html.twig',
 					'home' => 'itop-portal-base/portal/templates/home/layout.html.twig',
+					'bricks' => array(),
 				),
 				'urlmaker_class' => null,
 				'triggers_query' => null,
@@ -185,6 +186,14 @@ class Basic extends AbstractConfiguration
 							$aPortalConf['properties']['templates'][$sNodeId] = $oSubNode->GetText(null);
 							break;
 						default:
+							// Try to accept the value as a global brick template
+							$sXsiType = $oSubNode->getAttribute('xsi:type');
+							if (utils::IsNotNullOrEmptyString($sXsiType))
+							{
+								$aPortalConf['properties']['templates']['bricks'][$sXsiType][$sNodeId] = $oSubNode->GetText(null);
+								break;
+							}
+
 							throw new DOMFormatException(
 								'Value "'.$sNodeId.'" is not handled for template[@id]',
 								null, null, $oSubNode
