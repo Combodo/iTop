@@ -113,12 +113,6 @@ class BsSelectObjectFieldRenderer extends BsFieldRenderer
                         $oScopeValidatorHelper->AddScopeToQuery($oSearch, $oSearch->GetClass());
                     }
 
-                     // - Retrieving choices
-                    $sPortalId =$_ENV['PORTAL_ID'];
-                    $oModuleDesign = new ModuleDesign($_ENV['PORTAL_ID']);
-                    $oScopeValidatorHelper = new ScopeValidatorHelper( $oModuleDesign, $sPortalId);
-                    $oScopeValidatorHelper->AddScopeToQuery($oSearch, $oSearch->GetClass());
-
                     $oChoicesSet = new DBObjectSet($oSearch);
 					$oChoicesSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 					while ($oChoice = $oChoicesSet->Fetch())
