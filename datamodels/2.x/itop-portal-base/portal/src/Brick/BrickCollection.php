@@ -48,21 +48,21 @@ class BrickCollection
 	private $aHomeOrdering;
 	/** @var array $aNavigationMenuOrdering */
 	private $aNavigationMenuOrdering;
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $container
+	/** @var \array $aCombodoPortalInstanceConf
 	 * @since 3.2.1 
 	 */
-	private $container;
+	private $aCombodoPortalInstanceConf;
 
 	/**
 	 * BrickCollection constructor.
 	 *
 	 * @param \ModuleDesign $oModuleDesign
-	 * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+	 * @param $aCombodoPortalInstanceConf
 	 *
 	 * @throws \Exception
-	 * @since 3.2.1 Added $container parameter
+	 * @since 3.2.1 Added $aCombodoPortalInstanceConf parameter
 	 */
-	public function __construct(ModuleDesign $oModuleDesign, ContainerInterface $container)
+	public function __construct(ModuleDesign $oModuleDesign, $aCombodoPortalInstanceConf)
 	{
 		$this->oModuleDesign = $oModuleDesign;
 		$this->aAllowedBricks = null;
@@ -70,7 +70,7 @@ class BrickCollection
 		$this->iDisplayedInNavigationMenu = 0;
 		$this->aHomeOrdering = array();
 		$this->aNavigationMenuOrdering = array();
-		$this->container = $container;
+		$this->aCombodoPortalInstanceConf = $aCombodoPortalInstanceConf;
 
 		$this->Load();
 	}
@@ -206,8 +206,7 @@ class BrickCollection
 					$oBrick = new $sBrickClass();
 					
 					// Load the portal properties that are common to all bricks of this type
-					$oPortalConf = $this->container->getParameter('combodo.portal.instance.conf');
-					$oBrick->LoadFromPortalProperties($oPortalConf['properties']);
+					$oBrick->LoadFromPortalProperties($this->aCombodoPortalInstanceConf['properties']);
 					
 					// Load the brick specific properties from its XML definition
 					$oBrick->LoadFromXml($oBrickNode);

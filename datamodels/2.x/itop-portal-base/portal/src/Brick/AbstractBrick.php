@@ -680,7 +680,15 @@ abstract class AbstractBrick
 			
 			// Call the set method for the template
 			$sSetTemplateMethodName = 'Set'.$sTemplateId.'TemplatePath';
-			$this->{$sSetTemplateMethodName}($sTemplate);
+			
+			if(method_exists($this, $sSetTemplateMethodName)) {
+				$this->{$sSetTemplateMethodName}($sTemplate);
+			} 
+			else {
+				throw new DOMFormatException(
+					'Template "'.$sTemplateId.'" is not a valid template for brick ' . $sClassFQDN,
+					null, null);
+			}
 		}
 	}
 }
