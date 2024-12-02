@@ -14,6 +14,7 @@ $ipb-navigation-menu--is-expanded--navigation-menu--user-card--icon--margin-righ
   width: $ipb-navigation-menu--width;
   border-radius: $ipb-navigation-menu--border-radius;
   align-items: flex-start;
+  flex-shrink: 0;
 
   &.ipb-is-expanded {
     width: $ipb-navigation-menu--is-expanded--width;

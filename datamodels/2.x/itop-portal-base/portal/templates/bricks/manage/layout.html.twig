@@ -1,6 +1,7 @@
 {% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\AbstractBrick') %}
 
-{% block pMainHeaderTitle %}{{ oBrick.GetTitle()|dict_s }} {% if iCount >= 0 %} ({{ iCount }}){% endif %} {% endblock %}
+{% block pMainHeaderTitle %}{{ oBrick.GetTitle()|dict_s }}{% endblock %}
+{% block pMainHeaderTitleAdditional %}{% if iCount >= 0 %}{{ iCount }}{% endif %}{% endblock %}
 
 {% block pMainHeaderActions %}
     {% if oBrick.GetAvailablesDisplayModes|length > 1 %}

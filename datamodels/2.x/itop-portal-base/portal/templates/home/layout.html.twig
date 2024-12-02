@@ -6,29 +6,25 @@
 
 {% block pMainWrapper %}
 {% set iCurrentTileIndex = 0 %}
-<div id="main-wrapper">
+<div id="main-wrapper" class="ipb-page--main-wrapper container-fluid">
 
-    <div class="container-fluid">
-
-        {# session messages #}
-        <section>
+    {# session messages #}
+    <section>
             {% include template('session_messages') %}
-        </section>
+    </section>
 
-        {# tiles wrapper #}
-        <section class="ipb-home--tiles-wrapper tiles_wrapper">
-            {% for brick in app['brick_collection'].home_ordering %}
-                {% if brick.GetVisibleHome %}
-                    {% if aTilesRendering[brick.GetId] is defined %}
-                        {{ aTilesRendering[brick.GetId]|raw }}
-                    {% else %}
-                        {% include '' ~ brick.GetTileTemplatePath with {brick: brick} %}
-                    {% endif %}
+    {# tiles wrapper #}
+    <section class="ipb-page--tiles-flex-wrapper tiles_wrapper">
+        {% for brick in app['brick_collection'].home_ordering %}
+            {% if brick.GetVisibleHome %}
+                {% if aTilesRendering[brick.GetId] is defined %}
+                    {{ aTilesRendering[brick.GetId]|raw }}
+                {% else %}
+                    {% include '' ~ brick.GetTileTemplatePath with {brick: brick} %}
                 {% endif %}
-            {% endfor %}
-        </section>
-
-    </div>
+            {% endif %}
+        {% endfor %}
+    </section>
 
 </div>
 {% endblock %}

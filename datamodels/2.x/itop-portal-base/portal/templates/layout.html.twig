@@ -348,24 +348,18 @@
 		{% endblock %}
 		
 		{% block pMainWrapper %}
-		<div class="container-fluid" id="main-wrapper">
-			<div class="row">
-				<div class="col-xs-12 col-sm-9 col-md-10">
-                    <section class="row">
-						<div class="col-xs-12">
-                            {% include template('session_messages') %}
-						</div>
-					</section>
-					<section class="row" id="main-header">
-						{% block pMainHeader %}
-						{% endblock %}
-					</section>
-					<section class="row" id="main-content">
-						{% block pMainContent %}
-						{% endblock %}
-					</section>
-				</div>
-			</div>
+		<div class="ipb-page--main-wrapper container-fluid">
+            <section>
+                    {% include template('session_messages') %}
+            </section>
+            <section class="ipb-page--main-header">
+                {% block pMainHeader %}
+                {% endblock %}
+            </section>
+            <section class="ipb-page--main-content">
+                {% block pMainContent %}
+                {% endblock %}
+            </section>
 
 			{% block pPageUIExtensionMainContent %}
                 {% if app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT')] is defined %}
@@ -375,11 +369,11 @@
 		</div>
 		{% endblock %}
 		
-		<footer id="footer-wrapper">
-			{% block pPageFooter%}
-				{#<a href="http://www.combodo.com">iTop &copy; {{ "now"|date('Y') }}</a>#}
-			{% endblock %}
-		</footer>
+{#		<footer id="footer-wrapper">#}
+{#			{% block pPageFooter%}#}
+{#				#}{#<a href="http://www.combodo.com">iTop &copy; {{ "now"|date('Y') }}</a>#}
+{#			{% endblock %}#}
+{#		</footer>#}
 	
 		{% block pModalForAllWrapper %}
 			<div class="modal fade" id="modal-for-all" role="dialog" tabindex="-1">

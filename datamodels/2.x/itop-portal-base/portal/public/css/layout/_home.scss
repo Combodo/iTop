@@ -1,17 +1,5 @@
 /* SCSS variables */
-$ipb-home--tiles-wrapper--padding: $common-spacing-800 !default;
-$ipb-tile--title--color: $combodo-dark-gray-darker !default;
 
-.ipb-main-header{
-
-  color: $ipb-tile--title--color;
-
-
-}
-
-.ipb-main-header:after{
-    content:url('../img/icons/dot.png');
-}
 
 .ipb-home{
   overflow: hidden;
@@ -25,16 +13,10 @@ $ipb-tile--title--color: $combodo-dark-gray-darker !default;
   right: 0;
   width: 100%;
   height: 100%;
-  background-image: url("../img/backgrounds/dots-pattern.svg");
-  -webkit-clip-path: inset(50% 0 0 50%);
-  clip-path: inset(50% 0 0 50%);
-  background-size: cover;
+  background-image: url("../img/backgrounds/dots-pattern-cropped.svg");
+  background-size: 25%;
+  background-position-y: bottom;
+  background-position-x: right;
+  background-repeat: no-repeat;
   z-index: -1;
-}
-
-.ipb-home--tiles-wrapper{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: $ipb-home--tiles-wrapper--padding;
 }

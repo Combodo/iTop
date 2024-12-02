@@ -1,0 +1,20 @@
+/* SCSS variables */
+
+.ipb-button.active{
+  background-color: #263238;
+  color: white;
+  &:hover{
+    background-color: #263238;
+    color: white;
+  }
+}
+
+.ipb-button-group .ipb-button:first-child{
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.ipb-button-group .ipb-button:last-child{
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}

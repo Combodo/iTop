@@ -5,7 +5,7 @@
 {% block pMainHeaderTitle %}{{ oBrick.GetTitle()|dict_s }}{% endblock %}
 
 {% block pMainContent %}
-    <section class="ipb-home--tiles-wrapper tiles_wrapper">
+    <section class="ipb-page--tiles-flex-wrapper tiles_wrapper">
         {% for brick in aggregatepage_bricks %}
             {% if aTilesRendering[brick.GetId] is defined %}
                 {{ aTilesRendering[brick.GetId]|raw }}
