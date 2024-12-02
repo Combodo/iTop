@@ -661,22 +661,23 @@ abstract class AbstractBrick
 
 	/**
 	 *  Load brick configuration that is not part of the brick definition but is part of the portal global properties.
-	 * 
+	 *
 	 * @param $aPortalProperties
 	 *
 	 * @return void
+	 * @throws \DOMFormatException
 	 * @since 3.2.1
 	 */
 	public function LoadFromPortalProperties($aPortalProperties) {
 		// Get the bricks templates
 		$aBricksTemplates = $aPortalProperties['templates']['bricks'];
-		$sClassFQDN = get_class($this);
+		$sClassFQCN = get_class($this);
 		
 		// Get the current brick templates
-		$aCurrentBricksTemplates = array_key_exists($sClassFQDN, $aBricksTemplates) ? $aBricksTemplates[$sClassFQDN] : [];
+		$aCurrentBricksTemplates = array_key_exists($sClassFQCN, $aBricksTemplates) ? $aBricksTemplates[$sClassFQCN] : [];
 		foreach($aCurrentBricksTemplates as $sTemplateKey => $sTemplate) {
 			// Clean the template id
-			$sTemplateId = str_ireplace($sClassFQDN.':', '', $sTemplateKey);
+			$sTemplateId = str_ireplace($sClassFQCN.':', '', $sTemplateKey);
 			
 			// Call the set method for the template
 			$sSetTemplateMethodName = 'Set'.$sTemplateId.'TemplatePath';
@@ -686,7 +687,7 @@ abstract class AbstractBrick
 			} 
 			else {
 				throw new DOMFormatException(
-					'Template "'.$sTemplateId.'" is not a valid template for brick ' . $sClassFQDN,
+					'Template "'.$sTemplateId.'" is not a valid template for brick ' . $sClassFQCN,
 					null, null);
 			}
 		}
