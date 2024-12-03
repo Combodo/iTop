@@ -668,7 +668,8 @@ abstract class AbstractBrick
 	 * @throws \DOMFormatException
 	 * @since 3.2.1
 	 */
-	public function LoadFromPortalProperties($aPortalProperties) {
+	public function LoadFromPortalProperties($aPortalProperties)
+	{
 		// Get the bricks templates
 		$aBricksTemplates = $aPortalProperties['templates']['bricks'];
 		$sClassFQCN = get_class($this);

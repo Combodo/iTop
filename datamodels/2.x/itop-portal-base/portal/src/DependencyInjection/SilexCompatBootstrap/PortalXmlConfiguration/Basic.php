@@ -186,11 +186,11 @@ class Basic extends AbstractConfiguration
 							$aPortalConf['properties']['templates'][$sNodeId] = $oSubNode->GetText(null);
 							break;
 						default:
-							// Try to accept the value as a global brick template
-							$sXsiType = $oSubNode->getAttribute('xsi:type');
-							if (utils::IsNotNullOrEmptyString($sXsiType))
+							// Try to accept the value as a global brick template, brick id format is "FQCN:page"
+							[$sBrickFQCN, $sPage] = explode(':', $sNodeId);
+							if (utils::IsNotNullOrEmptyString($sBrickFQCN) && utils::IsNotNullOrEmptyString($sPage))
 							{
-								$aPortalConf['properties']['templates']['bricks'][$sXsiType][$sNodeId] = $oSubNode->GetText(null);
+								$aPortalConf['properties']['templates']['bricks'][$sBrickFQCN][$sPage] = $oSubNode->GetText(null);
 								break;
 							}
 
