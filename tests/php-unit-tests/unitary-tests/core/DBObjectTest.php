@@ -21,6 +21,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Attachment;
 use AttributeDateTime;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreException;
@@ -1414,5 +1415,34 @@ class DBObjectTest extends ItopDataTestCase
 		$this->assertTrue(true,'No fatal error on computing date');
 		$this->assertEquals("2024-01-15 09:45:00", $oObject->Get('end_date'), 'SetComputedDate +2 weeks on a WorkOrder DateTimeAttribute');
 
+	}
+	/**
+	 * @covers DBObject::NewObject
+	 * @covers DBObject::Get
+	 * @covers DBObject::Set
+	 */
+	public function testGetLinkSet()
+	{
+		$iServer = $this->GivenObjectInDB('Server', [
+			'name' => 'The Boss',
+		]);
+
+		$iUserRequest = $this->GivenObjectInDB('UserRequest', [
+			'ref' => 'UR1', 'title' => 'UR1', 'description' => 'UR1', 'caller_id' => 3, 'org_id' => 3, 'service_id' => 1,
+			'functionalcis_list' => [
+				"functionalci_id:$iServer"
+			],
+		]);
+		$oUserRequest = MetaModel::GetObject('UserRequest', $iUserRequest);
+
+		$this->assertDBQueryCount(2, function () use (&$oUserRequest) {
+			$oUserRequest->Get('functionalcis_list');
+		});
+		$this->assertDBQueryCount(0, function () use (&$oUserRequest) {
+			$oUserRequest->Get('functionalcis_list');
+		});
+		$this->assertDBQueryCount(0, function () use (&$oUserRequest) {
+			$oUserRequest->GetValues()['functionalcis_list'];
+		});
 	}
 }
