@@ -32,7 +32,6 @@ $(function()
 					lock_token: null,
 					lock_watcher_period: 30,        // Period (in seconds) between lock status update, uses the "activity_panel.lock_watcher_period" config. param.
 					lock_endpoint: null,
-					show_multiple_entries_submit_confirmation: true,
 					save_state_endpoint: null,
 					last_loaded_entries_ids: {},
 					load_more_entries_endpoint: null,
@@ -473,8 +472,10 @@ $(function()
 				}
 
 				let sStimulusCode = (undefined !== oData.stimulus_code) ? oData.stimulus_code : null
-				// If several entry forms filled, show a confirmation message
-				if ((true === this.options.show_multiple_entries_submit_confirmation) && (Object.keys(await this._GetEntriesFromAllForms()).length > 1)) {
+                // If several entry forms filled, show a confirmation message
+                if ((GetUserPreference('activity_panel.show_multiple_entries_submit_confirmation',true) === true
+                    || GetUserPreference('activity_panel.show_multiple_entries_submit_confirmation', true) === "true")
+                    && (Object.keys(await this._GetEntriesFromAllForms()).length > 1)) {
 					this._ShowEntriesSubmitConfirmation(sStimulusCode);
 				}
 				// Else push data directly to the server
@@ -823,7 +824,7 @@ $(function()
 				// 		};
 				// 	}
 				// });
-				
+
 				const aFormElements = this.element.find(this.js_selectors.caselog_entry_form);
 
 				// Create an array of promises for each form element
@@ -935,7 +936,6 @@ $(function()
 			_SaveSubmitConfirmationPref: function()
 			{
 				// Note: We have to send the value as a string because of the API limitation
-				this.options.show_multiple_entries_submit_confirmation = false;
 				SetUserPreference('activity_panel.show_multiple_entries_submit_confirmation', 'false', true);
 			},
 			/**

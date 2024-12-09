@@ -132,7 +132,6 @@ class ActivityPanel extends UIBlock
 		$this->bAreEntriesSorted = false;
 		$this->bHasMoreEntriesToLoad = false;
 		$this->aLastLoadedEntriesIds = [];
-		$this->ComputedShowMultipleEntriesSubmitConfirmation();
 	}
 
 	/**
@@ -958,21 +957,6 @@ class ActivityPanel extends UIBlock
 		$aSubBlocks[$this->GetComposeMenu()->GetId()] = $this->GetComposeMenu();
 
 		return $aSubBlocks;
-	}
-
-	/**
-	 * @see static::$bShowMultipleEntriesSubmitConfirmation
-	 * @return $this
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 */
-	protected function ComputedShowMultipleEntriesSubmitConfirmation()
-	{
-		// Note: Test on a string is necessary as we can only store strings from the JS API, not booleans.
-		// Note 2: Do not invert the test to "=== 'true'" as it won't work. Default value is a bool ("true"), values from the DB are strings (true|false)
-		$this->bShowMultipleEntriesSubmitConfirmation = appUserPreferences::GetPref('activity_panel.show_multiple_entries_submit_confirmation', static::DEFAULT_SHOW_MULTIPLE_ENTRIES_SUBMI_CONFIRMATION) !== 'false';
-		return $this;
 	}
 
 	/**

@@ -213,10 +213,15 @@ function SetUserPreference(sPreferenceCode, sPrefValue, bPersistent) {
 	} catch (err) {
 		sPreviousValue = undefined;
 	}
-	oUserPreferences[sPreferenceCode] = sPrefValue;
 	if (bPersistent && (sPrefValue != sPreviousValue)) {
-		ajax_request = $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			{operation: 'set_pref', code: sPreferenceCode, value: sPrefValue}); // Make it persistent
+		return $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+			{operation: 'set_pref', code: sPreferenceCode, value: sPrefValue}, function (data) {
+			//do nothing
+			}).done(function() {
+				oUserPreferences[sPreferenceCode] = sPrefValue;
+			}); // Make it persistent
+	} else {
+		oUserPreferences[sPreferenceCode] = sPrefValue;
 	}
 }
 
