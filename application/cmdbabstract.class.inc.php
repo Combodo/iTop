@@ -698,11 +698,7 @@ HTML
 			$sLinkedClass = $oAttDef->GetLinkedClass();
 
 			// Filter out links pointing to obsolete objects (if relevant)
-            if (array_key_exists($sAttCode, $this->GetValues())) {
-                $oOrmLinkSet = $this->GetValues()[$sAttCode];
-            } else {
-                 $oOrmLinkSet = $this->Get($sAttCode);
-            }
+            $oOrmLinkSet = $this->Get($sAttCode);
             $oLinkSet = $oOrmLinkSet->ToDBObjectSet(utils::ShowObsoleteData());
             $iCount = $oLinkSet->Count();
 
@@ -5194,11 +5190,7 @@ HTML
 							$aKeys = array_keys($aValues[$sAttCode]);
 							$currValue = $aKeys[0]; // The only value is the first key
 							if ($oAttDef->GetEditClass() == 'LinkedSet') {
-                                if (array_key_exists($sAttCode, $oDummyObj->GetValues())) {
-                                    $oOrmLinkSet = $oDummyObj->GetValues()[$sAttCode];
-                                } else {
-                                    $oOrmLinkSet = $oDummyObj->Get($sAttCode);
-                                }
+                                $oOrmLinkSet = $oDummyObj->Get($sAttCode);
 								LinkSetDataTransformer::StringToOrmLinkSet($aValues[$sAttCode][$currValue]['edit_value'], $oOrmLinkSet);
 
 							} else {
@@ -5252,11 +5244,7 @@ HTML
 								}
 								$oDummyObj->Set($sAttCode, $oTagSet);
 							} else if ($oAttDef->GetEditClass() == 'LinkedSet') {
-                                if (array_key_exists($sAttCode, $oDummyObj->GetValues())) {
-                                    $oOrmLinkSet = $oDummyObj->GetValues()[$sAttCode];
-                                } else {
-                                    $oOrmLinkSet = $oDummyObj->Get($sAttCode);
-                                }
+                                $oOrmLinkSet = $oDummyObj->Get($sAttCode);
 								foreach ($aMultiValues as $key => $sValue) {
 									LinkSetDataTransformer::StringToOrmLinkSet($sValue['edit_value'], $oOrmLinkSet);
 								}
