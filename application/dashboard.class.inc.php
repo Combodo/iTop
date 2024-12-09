@@ -297,7 +297,7 @@ abstract class Dashboard
 	{
 		$this->sLayoutClass = $aParams['layout_class'];
 		if (!is_subclass_of($this->sLayoutClass,DashboardLayout::class)) {
-			throw new InvalidParameterException('Invalid parameter layout class "'.$aParams['layout_class'].'"');
+			throw new InvalidParameterException('Invalid parameter layout_class "'.$aParams['layout_class'].'"');
 		}
 		$this->sTitle = $aParams['title'];
 		$this->bAutoReload = $aParams['auto_reload'] == 'true';
