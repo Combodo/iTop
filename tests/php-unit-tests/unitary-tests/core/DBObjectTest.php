@@ -21,6 +21,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Attachment;
 use AttributeDateTime;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
@@ -1417,9 +1418,7 @@ class DBObjectTest extends ItopDataTestCase
 
 	}
 	/**
-	 * @covers DBObject::NewObject
 	 * @covers DBObject::Get
-	 * @covers DBObject::Set
 	 */
 	public function testGetLinkSet()
 	{
@@ -1440,9 +1439,6 @@ class DBObjectTest extends ItopDataTestCase
 		});
 		$this->assertDBQueryCount(0, function () use (&$oUserRequest) {
 			$oUserRequest->Get('functionalcis_list');
-		});
-		$this->assertDBQueryCount(0, function () use (&$oUserRequest) {
-			$oUserRequest->GetValues()['functionalcis_list'];
 		});
 	}
 }

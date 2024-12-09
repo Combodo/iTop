@@ -71,8 +71,8 @@ class AjaxRenderController
 		}
 		$oSet->SetShowObsoleteData($bShowObsoleteData);
 		$iCount = 0;
-		if(isset($aExtraParams['iCount'])){
-			$iCount = $aExtraParams['iCount'];
+		if (isset($aExtraParams['object_count'])) {
+			$iCount = $aExtraParams['object_count'];
 		} else {
 			$iCount = $oSet->Count();
 		}

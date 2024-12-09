@@ -96,7 +96,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 *
 	 * @throws \CoreException
 	 */
-	public function __construct(WebPage $oPage, DBObject $oDbObject, string $sObjectClass, string $sAttCode, AttributeLinkedSet $oAttDef, bool $bIsReadOnly = false, $iCount = null)
+	public function __construct(WebPage $oPage, DBObject $oDbObject, string $sObjectClass, string $sAttCode, AttributeLinkedSet $oAttDef, bool $bIsReadOnly = false, ?int $iCount = null)
 	{
 		parent::__construct("links_view_table_$sAttCode", ["ibo-block-links-table"]);
 
@@ -194,13 +194,12 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	private function InitTable(WebPage $oPage)
 	{
 		// retrieve db object set
-		//$oOrmLinkSet = $this->oDbObject->Get($this->sAttCode);
-		$oOrmLinkSet = $this->oDbObject->GetValues()[$this->sAttCode];
+		$oOrmLinkSet = $this->oDbObject->Get($this->sAttCode);
 		$oLinkSet = $oOrmLinkSet->ToDBObjectSet(utils::ShowObsoleteData());
 
 		$aExtraParams = $this->GetExtraParam();
-		if(is_null($this->iCount ) === false) {
-			$aExtraParams['iCount' ] = $this->iCount;
+		if (is_null($this->iCount) === false) {
+			$aExtraParams['object_count' ] = $this->iCount;
 		}
 		// add list block
 		$oBlock = new DisplayBlock($oLinkSet->GetFilter(), DisplayBlock::ENUM_STYLE_LIST_IN_OBJECT, false);

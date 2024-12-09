@@ -263,7 +263,7 @@ class DisplayBlock
 				/** param for export.php */
 				'refresh_action',
 				/**to add refresh button in datatable*/
-				'iCount',
+				'object_count',
 				/** int number of objects in list */
 			], DataTableUIBlockFactory::GetAllowedParams()),
 			static::ENUM_STYLE_LIST_SEARCH => array_merge([
@@ -1862,8 +1862,8 @@ class MenuBlock extends DisplayBlock
 		$aSelectedClasses = $this->GetFilter()->GetSelectedClasses();
 		$bIsForLinkset = isset($aExtraParams['target_attr']);
 		$oSet = new CMDBObjectSet($this->GetFilter());
-		if(isset($aExtraParams['iCount'])){
-			$iSetCount = $aExtraParams['iCount'];
+		if(isset($aExtraParams['object_count'])){
+			$iSetCount = $aExtraParams['object_count'];
 		} else {
 			$iSetCount = $oSet->Count();
 		}
