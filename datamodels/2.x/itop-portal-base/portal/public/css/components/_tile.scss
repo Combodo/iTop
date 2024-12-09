@@ -10,10 +10,9 @@ $ipb-tile--hover--decoration--background: common-adjust-alpha($brand-primary, .2
 $ipb-tile--decoration--background: common-adjust-lightness($ipb-tile--hover--decoration--background, 38%) !default;
 $ipb-tile--decoration--icon--color: $brand-primary !default;
 $ipb-tile--decoration--icon--font-size: $common-font-size-300 !default;
-$ipb-tile--title--color: $combodo-dark-gray-darker !default;
+$ipb-tile--title--color: $text-color !default;
 $ipb-tile--title--font-size: $common-font-size-400 !default;
-$ipb-tile--description--color: $combodo-dark-gray-darker !default;
-$ipb-tile-badge--count--font-size: $common-font-size-500 !default;
+$ipb-tile--description--color: $text-color !default;
 
 .ipb-tile{
   position: relative;
@@ -57,6 +56,10 @@ $ipb-tile-badge--count--font-size: $common-font-size-500 !default;
   color: $ipb-tile--title--color;
   font-size: $ipb-tile--title--font-size;
   font-weight: bold;
+
+  > span:first-child{
+    @include ipb-following-dot;
+  }
 }
 
 .ipb-tile--body--description{
@@ -64,9 +67,48 @@ $ipb-tile-badge--count--font-size: $common-font-size-500 !default;
 }
 
 /**********************************/
-/* ManageBrick badge tile display */
+/* ManageBrick tile display */
 /**********************************/
 
-.ipb-tile-badge--body--count {
-	font-size: $ipb-tile-badge--count--font-size;
+$ipb-tile--manage-brick--chart--color: $text-color !default;
+$ipb-tile--manage-brick--chart--margin-top: $common-spacing-500 !default;
+$ipb-tile--manage-brick--chart--badge--count--font-size: $common-font-size-400 !default;
+$ipb-tile--manage-brick--chart--badge--label--font-size: $common-font-size-200 !default;
+$ipb-tile--manage-brick--chart--badge--hover--item--background: common-adjust-alpha($text-color, .1) !default;
+
+.ipb-tile--manage-brick{
+  margin-top: $ipb-tile--manage-brick--chart--margin-top;
 }
+
+/* badge */
+
+.ipb-tile--manage-brick--badge{
+  display: flex;
+  flex-direction: row;
+  color: $ipb-tile--manage-brick--chart--color;
+}
+
+.ipb-tile--manage-brick--badge--item{
+  margin-right: $ipb-tile--margin;
+  border-radius: $common-border-radius-500;
+  padding: 0 $common-spacing-300;
+  transition: background-color 1s ease;
+
+  &:hover{
+    background-color: $ipb-tile--manage-brick--chart--badge--hover--item--background;
+  }
+}
+
+.ipb-tile--manage-brick--badge--count {
+	font-size: $ipb-tile--manage-brick--chart--badge--count--font-size;
+  vertical-align: middle;
+  padding: 0px 10px;
+}
+
+.ipb-tile--manage-brick--badge--label {
+  font-size: $ipb-tile--manage-brick--chart--badge--label--font-size;
+  vertical-align: middle;
+}
+
+
+

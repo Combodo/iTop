@@ -6,15 +6,15 @@
 
 {% block pMainWrapper %}
 {% set iCurrentTileIndex = 0 %}
-<div id="main-wrapper" class="ipb-page--main-wrapper container-fluid">
+<div class="ipb-page--main-wrapper">
 
     {# session messages #}
-    <section>
+    <section class="ipb-page--session-messages">
             {% include template('session_messages') %}
     </section>
 
     {# tiles wrapper #}
-    <section class="ipb-page--tiles-flex-wrapper tiles_wrapper">
+    <section class="ipb-page--tiles-flex-wrapper">
         {% for brick in app['brick_collection'].home_ordering %}
             {% if brick.GetVisibleHome %}
                 {% if aTilesRendering[brick.GetId] is defined %}

@@ -78,7 +78,7 @@ $brand-danger-darker:   darken($brand-danger, 10%) !default;
 //** Background color for `<body>`.
 $body-bg:               #EDECEC !default;
 //** Global text color on `<body>`.
-$text-color:            $gray !default;
+$text-color:            $gray-base !default;
 
 //** Global textual link color.
 $link-color:            darken($combodo-orange, 5%) !default;

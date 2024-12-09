@@ -1,0 +1,32 @@
+$ibo-vendors-datatables--column-sorting-icon--opacity: 0.3 !default;
+$ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted: 1 !default;
+$ibo-vendors-datatables--column-sorting-icon--content: "\f0dc" !default;
+$ibo-vendors-datatables--column-sorting-icon--content--is-sorted-asc: "\f0d8" !default;
+$ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc: "\f0d7" !default;
+
+.dataTable {
+
+  thead tr th {
+    cursor: pointer;
+
+    &.sorting::after {
+      position: relative;
+      bottom: unset;
+      right: -10px;
+      content: $ibo-vendors-datatables--column-sorting-icon--content;
+      opacity: $ibo-vendors-datatables--column-sorting-icon--opacity;
+      @extend %fa-solid-base;
+    }
+
+    &.sorting_asc:after {
+      content: $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-asc;
+      opacity: $ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted;
+    }
+
+    &.sorting_desc:after {
+      content: $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc;
+      opacity: $ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted;
+    }
+  }
+
+}

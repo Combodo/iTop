@@ -1,11 +1,27 @@
 /* SCSS variables */
-$ipb-tile--title--color: $combodo-dark-gray-darker !default;
-$ipb-tile--subtitle--color: $combodo-dark-gray-darker !default;
-$ipb-home--tiles-wrapper--padding: $common-spacing-800 !default;
+$ipb-page--main-wrapper--padding-y: $common-spacing-600 !default;
+$ipb-page--main-wrapper--padding-x: $common-spacing-700 !default;
+$ipb-page--main-header--information--title--font-size: $common-font-size-450 !default;
+$ipb-page--main-header--information--title--color: $text-color !default;
+$ipb-page--main-header--information--subtitle--padding: $common-spacing-200 !default;
+$ipb-page--main-header--information--subtitle--font-size: $common-font-size-250 !default;
+$ipb-page--main-header--information--subtitle--color: $text-color !default;
+$ipb-page--tiles-wrapper--padding: $common-spacing-800 !default;
+
+body{
+  overflow: hidden;
+}
+
+.ipb-main--main-container{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
 
 .ipb-page--main-wrapper{
   flex-grow: 1;
-  padding: 15px 30px;
+  padding: $ipb-page--main-wrapper--padding-y $ipb-page--main-wrapper--padding-x;
 }
 
 .ipb-page--main-header{
@@ -20,22 +36,24 @@ $ipb-home--tiles-wrapper--padding: $common-spacing-800 !default;
 }
 
 .ipb-page--main-header--information--title{
-  color: $ipb-tile--title--color;
-
+  font-size: $ipb-page--main-header--information--title--font-size;
+  color: $ipb-page--main-header--information--title--color;
   > span:first-child{
     @include ipb-following-dot;
   }
 }
 
 .ipb-page--main-header--information--subtitle{
-  color: $ipb-tile--subtitle--color;
+  font-size: $ipb-page--main-header--information--subtitle--font-size;
+  color: $ipb-page--main-header--information--subtitle--color;
+  padding: $ipb-page--main-header--information--subtitle--padding;
 }
 
 .ipb-page--tiles-flex-wrapper{
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: $ipb-home--tiles-wrapper--padding;
+  padding: $ipb-page--tiles-wrapper--padding;
 }
 
 @media (max-width: 768px) {

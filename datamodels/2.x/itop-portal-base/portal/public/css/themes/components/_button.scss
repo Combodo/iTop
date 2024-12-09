@@ -1,0 +1,23 @@
+/* SCSS variables */
+$btn--border-radius: 3px !default;
+
+
+.btn.active{
+  background-color: #263238!important;
+  color: white!important;
+  &:hover{
+    background-color: #unset!important;
+    //color: white;
+  }
+}
+
+.btn-group .btn:first-child{
+  border-top-left-radius: $btn--border-radius!important;
+  border-bottom-left-radius: $btn--border-radius!important;
+}
+
+.btn-group .btn:last-child{
+  border-top-right-radius: $btn--border-radius!important;
+  border-bottom-right-radius: $btn--border-radius!important;
+}
+

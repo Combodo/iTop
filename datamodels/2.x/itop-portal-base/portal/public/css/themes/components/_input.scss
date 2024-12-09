@@ -1,0 +1,7 @@
+/* SCSS variables */
+$form-control--border-radius: 3px !default;
+
+
+.form-control {
+  border-radius: $form-control--border-radius!important;
+}

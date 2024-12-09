@@ -14,17 +14,17 @@
 {% block pMainHeader %}
 	<div class="ipb-page--main-header">
 		<div class="ipb-page--main-header--information">
-			<h2 class="ipb-page--main-header--information--title">
+			<div class="ipb-page--main-header--information--title">
 				<span>{% block pMainHeaderTitle %}{% endblock %}</span>
-                <span>{% block pMainHeaderTitleAdditional %}{% endblock %}</span>
-			</h2>
+                <span>{% block pMainHeaderTitleAdditionalPart %}{% endblock %}</span>
+			</div>
             {% block pMainHeaderSubtitle %}
                 {% if sBrickSubtitle is defined and sBrickSubtitle is not null %}
-                    <h4 class="ipb-page--main-header--information--subtitle subtitle">{{ sBrickSubtitle }}</h4>
+                    <div class="ipb-page--main-header--information--subtitle">{{ sBrickSubtitle }}</div>
                 {% endif %}
             {% endblock %}
 		</div>
-		<div id="ipb-page--main-header--actions main-header-actions">
+		<div id="ipb-page--main-header--actions">
 			{% block pMainHeaderActions %}
 			{% endblock %}
 		</div>

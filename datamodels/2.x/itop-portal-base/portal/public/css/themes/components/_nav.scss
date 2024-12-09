@@ -1,0 +1,11 @@
+/* SCSS variables */
+$nav-pills--li--border-radius: 3px !default;
+
+.nav-pills > li > a{
+  border-top-left-radius: $nav-pills--li--border-radius!important;
+  border-top-right-radius: $nav-pills--li--border-radius!important;
+}
+
+.panel-heading{
+  border-top-right-radius: $nav-pills--li--border-radius!important;
+}

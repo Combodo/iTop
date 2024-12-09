@@ -1,11 +1,11 @@
 {% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\AbstractBrick') %}
 
-{% block pPageBodyClass %}{{ parent() }} page_aggregate_page_brick ipb-home home{% endblock %}
+{% block pPageBodyClass %}{{ parent() }} page_aggregate_page_brick{% endblock %}
 
 {% block pMainHeaderTitle %}{{ oBrick.GetTitle()|dict_s }}{% endblock %}
 
 {% block pMainContent %}
-    <section class="ipb-page--tiles-flex-wrapper tiles_wrapper">
+    <section class="ipb-page--tiles-flex-wrapper">
         {% for brick in aggregatepage_bricks %}
             {% if aTilesRendering[brick.GetId] is defined %}
                 {{ aTilesRendering[brick.GetId]|raw }}

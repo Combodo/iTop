@@ -1,30 +1,13 @@
-{# itop-portal-dashlet-basic/tile.html.twig #}
-{# Image brick tile layout #}
+{% extends 'itop-portal-base/portal/templates/bricks/manage/tile-default.html.twig' %}
 
-{#<div class="col-xs-12 col-sm-{{ oBrick.GetWidth }}">#}
-    {% block pTileWrapper %}
-        <a href="{{ app.url_generator.generate('p_manage_brick_display_as', {'sBrickId': sBrickId, 'sDisplayMode': oBrick.GetDefaultDisplayMode}) }}{% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] }}{% endif %}"
-        {% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][oBrick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %}
-        {% if oBrick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}
-                class="ipb-tile ipb-tile-badge tile tile_badge{# vertical-center#}"
-                id="brick-{{ oBrick.GetId }}"
-                data-brick-id="{{ oBrick.GetId }}"
-                {% if oBrick.GetDescription is not empty %} data-tooltip-html-enabled="true"  data-tooltip-content="{{ oBrick.GetDescription|dict_s|raw }}"{% endif %}
-                >
-            <div>
-                <div>
-                    <div class="ipb-tile--decoration tile_decoration">{% if oBrick.GetDecorationClassHome %}<span
-                            class="ipb-tile--decoration--icon icon {{ oBrick.GetDecorationClassHome }}"></span>{% else %}<img src="{{ sIconURL }}"
-                                                                                                   style="vertical-align:middle;"
-                                                                                                   alt="Class Icon">{% endif %}
-                    </div>
-                    <div class="ipb-tile--body tile_body">
-                        <div class="ipb-tile--body--title tile_title">{{ oBrick.GetTitleHome|dict_s }}</div>
-                        <div class="ipb-tile-badge--body--count tile_count">{{ iCount }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="ipb-tile--body--description tile_description">{{ oBrick.GetDescription|dict_s|raw }}</div>
-        </a>
-    {% endblock %}
-{#</div>#}
+{% block pTileExtraContent %}
+    <div class="ipb-tile--manage-brick ipb-tile--manage-brick--badge">
+        {% for item in aDisplayValues %}
+        <span class="ipb-tile--manage-brick--badge--item" onclick="window.location='{{ aUrls[loop.index0] }}';return false;">
+            <span class="ipb-tile--manage-brick--badge--count">{{ item.value }}</span>
+            <span class="ipb-tile--manage-brick--badge--label">{{ item.label_html }}</span>
+        </span>
+        {% endfor %}
+    </div>
+{% endblock %}
+
