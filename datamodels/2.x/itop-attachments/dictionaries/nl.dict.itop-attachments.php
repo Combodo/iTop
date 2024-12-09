@@ -68,4 +68,5 @@ of vraag de iTop administrator om de opslagruimte van de iTop-server na te kijke
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+'=> 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (Bij het verwijderen van een bijlage)',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger bij het verwijderen van een bijlage van een object van de opgegeven klasse (of subklasse ervan)',
+    'TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
 ]);

@@ -65,4 +65,5 @@ Soit demandez à votre administrateur système s\'il reste de la place disque di
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'Si coché, le fichier sera automatiquement attaché à l\'email quand l\'action email est lancée',
 	'Class:TriggerOnAttachmentDelete'                         => 'Déclencheur sur la suppression d\'une pièce jointe',
 	'Class:TriggerOnAttachmentDelete+'                        => '',
+    'TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Les Triggers sur les objets ne sont pas autorisés sur la classe Attachement. Veuillez utiliser les triggers spécifiques pour cette classe',
 ]);

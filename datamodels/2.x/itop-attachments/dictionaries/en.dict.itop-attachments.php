@@ -97,4 +97,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered',
+    'TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger',
 ));

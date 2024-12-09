@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+
 /**
  * A user defined trigger, to customize the application
  * A trigger will activate an action
@@ -270,6 +272,36 @@ abstract class TriggerOnObject extends Trigger
 			parent::DoActivate($aContextArgs);
 		}
 	}
+
+    /**
+     * if the target class is Attachment, then the trigger is read-only
+     * @param $sAttCode
+     * @param $aReasons
+     * @param $sTargetState
+     * @return int
+     * @throws ArchivedObjectException
+     * @throws CoreException
+     */
+    public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState='')
+	{
+       // Force the computed field to be read-only, preventing it to be written
+       if ($this->Get('target_class') == 'Attachment' ) {
+           return OPT_ATT_READONLY;
+       }
+       return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
+
+
+    public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
+    {
+        $aHeaderBlocks = parent::DisplayBareHeader($oPage, $bEditMode);
+        if ($this->Get('target_class') == 'Attachment' ) {
+            $oPage->AddUiBlock(AlertUIBlockFactory::MakeForWarning('', Dict::S('TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage')));
+            $oPage->add_ready_script("$('#UIMenuModify').hide();");
+        }
+
+        return $aHeaderBlocks;
+    }
 
 	/**
 	 * Activate trigger based on attribute list given instead of changed attributes
