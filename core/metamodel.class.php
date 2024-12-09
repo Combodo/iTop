@@ -7112,7 +7112,16 @@ abstract class MetaModel
 		if ($iKey < 0) {
 			return "$sTargetClass: $iKey (invalid value)";
 		}
-		$oObj = self::GetObject($sTargetClass, $iKey, false);
+
+		$sObjOql = 'SELECT '.$sTargetClass.' WHERE id='.$iKey;
+		$oObjFilter = DBSearch::FromOQL($sObjOql);
+		$oSet = new DBObjectSet($oObjFilter);
+
+		// we will only use id and friendlyname, so let's remove other fields !
+		$aAttToLoad = [];
+		$oSet->OptimizeColumnLoad($aAttToLoad);
+
+		$oObj = $oSet->Fetch();
 		if (is_null($oObj)) {
 			// Whatever we are looking for, the root class is the key to search for
 			$sRootClass = self::GetRootClass($sTargetClass);
