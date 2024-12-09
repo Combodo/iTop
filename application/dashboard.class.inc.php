@@ -296,21 +296,21 @@ abstract class Dashboard
 	public function FromParams($aParams)
 	{
 		$this->sLayoutClass = $aParams['layout_class'];
+		if (!is_subclass_of($this->sLayoutClass,DashboardLayout::class)) {
+			throw new InvalidParameterException('Invalid parameter layout class "'.$aParams['layout_class'].'"');
+		}
 		$this->sTitle = $aParams['title'];
 		$this->bAutoReload = $aParams['auto_reload'] == 'true';
 		$this->iAutoReloadSec = max(MetaModel::GetConfig()->Get('min_reload_interval'), (int) $aParams['auto_reload_sec']);
 		
-		foreach($aParams['cells'] as $aCell)
-		{
+		foreach($aParams['cells'] as $aCell) {
 			$aCellDashlets = array();
-			foreach($aCell as $aDashletParams)
-			{
+			foreach($aCell as $aDashletParams) {
 				$sDashletClass = $aDashletParams['dashlet_class'];
 				$sId = $aDashletParams['dashlet_id'];
 				/** @var \Dashlet $oNewDashlet */
 				$oNewDashlet = new $sDashletClass($this->oMetaModel, $sId);
-				if (isset($aDashletParams['dashlet_type']))
-				{
+				if (isset($aDashletParams['dashlet_type'])) {
 					$oNewDashlet->SetDashletType($aDashletParams['dashlet_type']);
 				}
 				$oForm = $oNewDashlet->GetForm();
