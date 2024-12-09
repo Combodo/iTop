@@ -296,7 +296,7 @@ abstract class TriggerOnObject extends Trigger
     {
         $aHeaderBlocks = parent::DisplayBareHeader($oPage, $bEditMode);
         if ($this->Get('target_class') == 'Attachment' ) {
-            $oPage->AddUiBlock(AlertUIBlockFactory::MakeForWarning('', Dict::S('TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage')));
+            $oPage->AddUiBlock(AlertUIBlockFactory::MakeForWarning('', Dict::S('Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage')));
             $oPage->add_ready_script("$('#UIMenuModify').hide();");
         }
 
