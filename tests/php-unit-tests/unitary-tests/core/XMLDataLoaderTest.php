@@ -111,7 +111,7 @@ class XMLDataLoaderTest extends ItopDataTestCase
 		<subscription_policy>allow_no_channel</subscription_policy>
 		<target_class>Contact</target_class>
 		<filter>SELECT `Person` FROM Person AS `Person` WHERE ((`status` = &apos;active&apos;) AND ((`org_id` = :current_contact-&gt;org_id) OR (`org_id` = :this-&gt;org_id)))</filter>
-		<target_attcodes>email</target_attcodes>
+		<target_attcodes>email,name</target_attcodes>
 		<finalclass>TriggerOnObjectUpdate</finalclass>
 		<friendlyname>Contact updated</friendlyname>
 	</TriggerOnObjectUpdate>
@@ -120,8 +120,10 @@ XML;
 		$this->CreateFromXMLString($sXML);
 
 		$oPerson = MetaModel::GetObjectByName('Person', 'Zacharie Zmillpatt');
+		$oTrigger = MetaModel::GetObjectByName('TriggerOnObjectUpdate', 'Contact updated');
 
 		$this->assertEquals('Zanzibar', $oPerson->Get('location_id_friendlyname'));
 		$this->assertEquals('ZuperTest', $oPerson->Get('org_id_friendlyname'));
+		$this->assertEquals('email, name', (string)$oTrigger->Get('target_attcodes')); // should add space after comma
 	}
 }
