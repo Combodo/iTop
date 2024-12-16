@@ -1,5 +1,5 @@
 /* SCSS variables */
-$nav-pills--li--border-radius: 3px !default;
+$nav-pills--li--border-radius: $common-border-radius-300 !default;
 
 .nav-pills > li > a{
   border-top-left-radius: $nav-pills--li--border-radius!important;

@@ -1,16 +1,41 @@
-{# itop-portal-base/portal/templates/bricks/tile.html.twig #}
-{# Base brick tile layout #}
+{#
+Brick tile base layout
+Tile base layout eather for static|link|modal usages.
+
+Extendable blocks:
+    - pTileWrapper: whole tile wrapper
+    - pTileDecoration: tile decoration
+    - pTileBody: tile body
+    - pTileTitle: tile title
+    - pTileDescription: tile description
+    - pTileExtraContent: extra content
+
+CSS classes:
+    - .ipb-tile: tile wrapper
+    - .ipb-tile--decoration: tile decoration
+    - .ipb-tile--decoration--icon: tile decoration icon
+    - .ipb-tile--body: tile body
+    - .ipb-tile--title: tile title
+    - .ipb-tile--description: tile description
+
+Options:
+    - tileClass: string, optional
+    - isInlineTitle: boolean, default false
+#}
 
 {# tile attributes #}
 {% set attr = '' %}
+{% set urlHash = '' %}
+
+{# inline title option #}
+{% if isInlineTitle is not defined %}
+    {% set isInlineTitle = false %}
+{% endif %}
 
 {# handle brick var name compatibility #}
 {% if oBrick is not defined %}
     {% set oBrick = brick %}
 {% endif %}
-
-{# brick url #}
-{% set url = app.url_generator.generate(oBrick.GetRouteName, {sBrickId: oBrick.GetId}) %}
 
 {# retrieve brick route data #}
 {% if app['combodo.portal.instance.routes'] is defined %}
@@ -20,51 +45,58 @@
 
     {# url hash #}
     {% if routeData['hash'] is defined %}
-        {% set url = url ~ '#%s'|format(routeData['hash']) %}
+        {% set urlHash = '#%s'|format(routeData['hash']) %}
     {% endif %}
 
     {# navigation attributes #}
     {% if routeData['navigation_menu_attr'] is defined %}
         {% for key, value in routeData['navigation_menu_attr'] %}
-            {% set attr = attr ~ ' %s=%s"'|format(key, value) %}
+            {% set attr = attr ~ ' %s=%s'|format(key, value) %}
         {% endfor %}
     {% endif %}
 
 {% endif %}
 
+{# brick route #}
+{% if oBrick.GetRouteName %}
+    {% set url = app.url_generator.generate(oBrick.GetRouteName, {sBrickId: oBrick.GetId}) %}
+    {% set attr = attr ~ ' data-role=%s data-tile-navigation-url=%s'|format('tile-navigation-trigger', url ~ urlHash) %}
+{#    {% set tileHtmlTag = 'a' %}#}
+{% endif %}
+
 {# modal attributes #}
 {% if oBrick.GetModal %}
-    {% set attr = attr ~ ' data-toggle="modal" data-target="#modal-for-all"' %}
+    {% set attr = attr ~ ' data-toggle=%s data-target=%s'|format('modal', '#modal-for-all') %}
 {% endif %}
 
 {% block pTileWrapper %}
 
     {# wrapper #}
-    <a href="{{ url }}"
+    <div
         id="brick-{{ oBrick.GetId }}"
-        class="ipb-tile tile"
         data-brick-id="{{ oBrick.GetId }}"
+        class="ipb-tile {% if tileClass is defined %}ipb-tile--{{ tileClass }}{% endif%}"
         {{ attr }}
     >
-
-        {# decoration #}
-        {% block pTileDecoration %}
-        <div class="ipb-tile--decoration">
-            {% if oBrick.GetDecorationClassHome %}
-                <span class="ipb-tile--decoration--icon icon {{ oBrick.GetDecorationClassHome }}"></span>
-            {% else %}
-                <img src="{{ sIconURL }}" style="vertical-align:middle;" alt="Class Icon">
-            {% endif %}
-        </div>
-        {% endblock %}
 
         {# body #}
         {% block pTileBody %}
         <div class="ipb-tile--body">
 
+            {# decoration #}
+            {% block pTileDecoration %}
+                <div class="ipb-tile--decoration">
+                    {% if oBrick.GetDecorationClassHome %}
+                        <span class="ipb-tile--decoration--icon icon {{ oBrick.GetDecorationClassHome }}"></span>
+                    {% else %}
+                        <img src="{{ sIconURL }}" class="ipb-tile--decoration--icon" alt="Class Icon">
+                    {% endif %}
+                </div>
+            {% endblock %}
+
             {# title #}
             {% block pTileTitle %}
-                <div class="ipb-tile--body--title">
+                <div class="ipb-tile--title {% if isInlineTitle %}ipb-tile--option--inline-title{% endif %}">
                     {{ oBrick.GetTitleHome|dict_s }}
                 </div>
             {% endblock %}
@@ -72,7 +104,7 @@
             {# description #}
             {% block pTileDescription %}
                 {% if oBrick.HasDescription %}
-                    <div class="ipb-tile--body--description">
+                    <div class="ipb-tile--description">
                         {{ oBrick.GetDescription|dict_s|raw }}
                     </div>
                 {% endif %}
@@ -85,5 +117,6 @@
         </div>
         {% endblock %}
 
-    </a>
+    </div>
+
 {% endblock %}

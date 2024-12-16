@@ -1,15 +1,17 @@
 /* SCSS variables */
+$ipb-tile--width: 450px !default;
 $ipb-tile--padding: $common-spacing-500 !default;
 $ipb-tile--margin: $common-spacing-400 !default;
 $ipb-tile--border-color: $gray-light !default;
 $ipb-tile--border-width: 1px !default;
 $ipb-tile--border-radius: $common-border-radius-500 !default;
 $ipb-tile--background-color: $white !default;
+$ipb-tile--decoration--size: 44px !default;
 $ipb-tile--decoration--padding: $common-spacing-400 !default;
-$ipb-tile--hover--decoration--background: common-adjust-alpha($brand-primary, .2) !default;
-$ipb-tile--decoration--background: common-adjust-lightness($ipb-tile--hover--decoration--background, 38%) !default;
-$ipb-tile--decoration--icon--color: $brand-primary !default;
-$ipb-tile--decoration--icon--font-size: $common-font-size-300 !default;
+$ipb-tile--decoration--hover--background: common-adjust-alpha($common-color-blue-700, .1) !default;
+$ipb-tile--decoration--background: common-adjust-lightness($ipb-tile--decoration--hover--background, 38%) !default;
+$ipb-tile--decoration--icon--color: $common-color-blue-700 !default;
+$ipb-tile--decoration--icon--font-size: $common-font-size-400 !default;
 $ipb-tile--title--color: $text-color !default;
 $ipb-tile--title--font-size: $common-font-size-400 !default;
 $ipb-tile--description--color: $text-color !default;
@@ -17,33 +19,46 @@ $ipb-tile--description--color: $text-color !default;
 .ipb-tile{
   position: relative;
   display: block;
-  width: 450px;
+  width: $ipb-tile--width;
   margin: $ipb-tile--margin;
   padding: $ipb-tile--padding;
   background-color: $ipb-tile--background-color;
   border: $ipb-tile--border-width solid $ipb-tile--border-color;
   border-radius: $ipb-tile--border-radius;
-  text-decoration: none!important;
   white-space: normal;
+  flex-grow: 1;
 
-  @include ipb-heavy-animated-border;
-}
-
-.ipb-tile:hover{
-
-  .ipb-tile--decoration{
-    background-color: $ipb-tile--hover--decoration--background;
+  &[data-role="tile-navigation-trigger"]{
+    cursor: pointer;
+    @include ipb-heavy-animated-border;
   }
-
 }
+
+/* decoration */
 
 .ipb-tile--decoration{
   display: inline-block;
+  width: $ipb-tile--decoration--size;
+  height: $ipb-tile--decoration--size;
   margin-bottom: $common-spacing-300;
   padding: $ipb-tile--decoration--padding;
   background-color: $ipb-tile--decoration--background;
   border-radius: $ipb-tile--border-radius;
+  text-align: center;
   transition: background-color 1s ease;
+
+  // font combodo size correction
+  &:has(> .fc){
+    padding: 7px;
+    > span{
+      font-size: 3rem;
+    }
+  }
+}
+.ipb-tile:hover{
+  .ipb-tile--decoration{
+    background-color: $ipb-tile--decoration--hover--background;
+  }
 }
 
 .ipb-tile--decoration--icon {
@@ -51,32 +66,55 @@ $ipb-tile--description--color: $text-color !default;
   font-size: $ipb-tile--decoration--icon--font-size;
 }
 
-.ipb-tile--body--title{
+/* title */
+
+.ipb-tile--title{
   margin-bottom: $common-spacing-300;
   color: $ipb-tile--title--color;
   font-size: $ipb-tile--title--font-size;
   font-weight: bold;
 
-  > span:first-child{
-    @include ipb-following-dot;
+  &.ipb-tile--option--inline-title{
+    display: inline-block;
+    margin-left: 8px;
   }
+
 }
 
-.ipb-tile--body--description{
+/* description */
+
+.ipb-tile--description{
+  margin-bottom: $common-spacing-300;
   color: $ipb-tile--description--color;
 }
 
-/**********************************/
+/****************************/
 /* ManageBrick tile display */
-/**********************************/
+/****************************/
 
-$ipb-tile--manage-brick--chart--color: $text-color !default;
 $ipb-tile--manage-brick--chart--margin-top: $common-spacing-500 !default;
-$ipb-tile--manage-brick--chart--badge--count--font-size: $common-font-size-400 !default;
-$ipb-tile--manage-brick--chart--badge--label--font-size: $common-font-size-200 !default;
-$ipb-tile--manage-brick--chart--badge--hover--item--background: common-adjust-alpha($text-color, .1) !default;
+$ipb-tile--manage-brick--badge--margin-top: $common-font-size-400 !default;
+$ipb-tile--manage-brick--badge--item--padding: 0 $common-spacing-300 !default;
+$ipb-tile--manage-brick--badge--item--border-radius: $common-border-radius-300 !default;
+$ipb-tile--manage-brick--badge--count--padding: 0 $common-spacing-300 !default;
+$ipb-tile--manage-brick--badge--count--font-size: $common-font-size-400 !default;
+$ipb-tile--manage-brick--badge--label--font-size: $common-font-size-200 !default;
+$ipb-tile--manage-brick--badge--hover--item--background: common-adjust-alpha($text-color, .1) !default;
+$ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 
-.ipb-tile--manage-brick{
+/* title */
+
+.ipb-tile--manage .ipb-tile--title {
+
+  > span:first-child {
+    @include ipb-following-dot;
+  }
+
+}
+
+/* chart */
+
+.ipb-tile--manage-brick--chart{
   margin-top: $ipb-tile--manage-brick--chart--margin-top;
 }
 
@@ -84,31 +122,53 @@ $ipb-tile--manage-brick--chart--badge--hover--item--background: common-adjust-al
 
 .ipb-tile--manage-brick--badge{
   display: flex;
-  flex-direction: row;
-  color: $ipb-tile--manage-brick--chart--color;
+  margin-top: $ipb-tile--manage-brick--badge--margin-top;
 }
 
 .ipb-tile--manage-brick--badge--item{
+  display: flex;
+  align-items: center;
   margin-right: $ipb-tile--margin;
-  border-radius: $common-border-radius-500;
-  padding: 0 $common-spacing-300;
+  padding: $ipb-tile--manage-brick--badge--item--padding;
+  border-radius: $ipb-tile--manage-brick--badge--item--border-radius;
   transition: background-color 1s ease;
 
   &:hover{
-    background-color: $ipb-tile--manage-brick--chart--badge--hover--item--background;
+    background-color: $ipb-tile--manage-brick--badge--hover--item--background;
   }
 }
 
 .ipb-tile--manage-brick--badge--count {
-	font-size: $ipb-tile--manage-brick--chart--badge--count--font-size;
-  vertical-align: middle;
-  padding: 0px 10px;
+  padding: $ipb-tile--manage-brick--badge--count--padding;
+	font-size: $ipb-tile--manage-brick--badge--count--font-size;
 }
 
 .ipb-tile--manage-brick--badge--label {
-  font-size: $ipb-tile--manage-brick--chart--badge--label--font-size;
-  vertical-align: middle;
+  font-size: $ipb-tile--manage-brick--badge--label--font-size;
+}
+
+/* top list */
+
+ipb-tile--manage-brick--top-list{
+  margin-top: $ipb-tile--manage-brick--top-list--margin-top;
 }
 
 
+/***********************/
+/* Filter tile display */
+/***********************/
+
+.ipb-tile--filter-brick--filter-box .form-inline{
+  display: table;
+  > .form-group{
+    display: table-cell;
+    width: 100%;
+    > input{
+      width: 100%;
+    }
+  }
+  > button{
+    margin-left: $common-spacing-200;
+  }
+}
 

@@ -15,7 +15,11 @@
 	{% if aBrowseButtons|length > 1 %}
 		<div class="btn-group">
 			{% for sBrowseButton in aBrowseButtons %}
-			<a href="{{ app.url_generator.generate('p_browse_brick_mode', {'sBrickId': sBrickId, 'sBrowseMode': sBrowseButton}) }}" class="btn btn-default {% if sBrowseMode == sBrowseButton %}active{% endif %}">{{ ('Brick:Portal:Browse:Mode:'~sBrowseButton|capitalize)|dict_s }}</a>
+			<a href="{{ app.url_generator.generate('p_browse_brick_mode', {'sBrickId': sBrickId, 'sBrowseMode': sBrowseButton}) }}"
+               class="btn btn-sm btn-default {% if sBrowseMode == sBrowseButton %}active{% endif %}"
+            >
+                {{ ('Brick:Portal:Browse:Mode:'~sBrowseButton|capitalize)|dict_s }}
+            </a>
 			{% endfor %}
 		</div>
 	{% endif %}

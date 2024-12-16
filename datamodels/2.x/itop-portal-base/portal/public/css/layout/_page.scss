@@ -1,6 +1,8 @@
+@import "../../../../../../node_modules/bulma-scss/utilities/mixins";
+
 /* SCSS variables */
-$ipb-page--main-wrapper--padding-y: $common-spacing-600 !default;
-$ipb-page--main-wrapper--padding-x: $common-spacing-700 !default;
+$ipb-page--main-wrapper--padding: $common-spacing-600 $common-spacing-700 !default;
+$ipb-page--main-header--margin-bottom: $common-size-250 !default;
 $ipb-page--main-header--information--title--font-size: $common-font-size-450 !default;
 $ipb-page--main-header--information--title--color: $text-color !default;
 $ipb-page--main-header--information--subtitle--padding: $common-spacing-200 !default;
@@ -12,6 +14,8 @@ body{
   overflow: hidden;
 }
 
+/* container */
+
 .ipb-main--main-container{
   flex-grow: 1;
   display: flex;
@@ -19,16 +23,20 @@ body{
   overflow: auto;
 }
 
+/* wrapper */
+
 .ipb-page--main-wrapper{
   flex-grow: 1;
-  padding: $ipb-page--main-wrapper--padding-y $ipb-page--main-wrapper--padding-x;
+  padding: $ipb-page--main-wrapper--padding;
 }
+
+/* header */
 
 .ipb-page--main-header{
   flex-grow: 1;
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: $ipb-page--main-header--margin-bottom;
 }
 
 .ipb-page--main-header--information{
@@ -37,6 +45,7 @@ body{
 
 .ipb-page--main-header--information--title{
   font-size: $ipb-page--main-header--information--title--font-size;
+  font-weight: bold;
   color: $ipb-page--main-header--information--title--color;
   > span:first-child{
     @include ipb-following-dot;
@@ -47,7 +56,14 @@ body{
   font-size: $ipb-page--main-header--information--subtitle--font-size;
   color: $ipb-page--main-header--information--subtitle--color;
   padding: $ipb-page--main-header--information--subtitle--padding;
+  max-width: 1400px;
 }
+
+.ipb-page--main-header--actions{
+  flex-shrink: 0;
+}
+
+/* files flex wrapper */
 
 .ipb-page--tiles-flex-wrapper{
   display: flex;
@@ -56,7 +72,7 @@ body{
   padding: $ipb-page--tiles-wrapper--padding;
 }
 
-@media (max-width: 768px) {
+@include mobile {
 
   .ipb-page--main-wrapper {
     width: 100%;

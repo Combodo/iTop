@@ -1,9 +1,9 @@
 {% extends 'itop-portal-base/portal/templates/bricks/manage/tile-default.html.twig' %}
 
 {% block pTileExtraContent %}
-    <div class="ipb-tile--manage-brick ipb-tile--manage-brick--badge">
+    <div class="ipb-tile--manage-brick--badge">
         {% for item in aDisplayValues %}
-        <span class="ipb-tile--manage-brick--badge--item" onclick="window.location='{{ aUrls[loop.index0] }}';return false;">
+        <span class="ipb-tile--manage-brick--badge--item" data-role="tile-navigation-trigger" data-tile-navigation-url="{{ aUrls[loop.index0] }}">
             <span class="ipb-tile--manage-brick--badge--count">{{ item.value }}</span>
             <span class="ipb-tile--manage-brick--badge--label">{{ item.label_html }}</span>
         </span>
