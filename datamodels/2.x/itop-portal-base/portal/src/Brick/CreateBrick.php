@@ -36,7 +36,10 @@ class CreateBrick extends PortalBrick
 	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-plus';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-plus fa-2x';
 	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/create/modal.html.twig';
-
+	protected static $DEFAULT_TEMPLATES_PATH = [
+		'page' => self::DEFAULT_PAGE_TEMPLATE_PATH,
+		'tile' => self::DEFAULT_TILE_TEMPLATE_PATH,
+	];
 	/** @var string DEFAULT_CLASS */
 	const DEFAULT_CLASS = '';
 

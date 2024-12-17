@@ -34,6 +34,7 @@ class ComposerStaticInitdf408f3f8ea034d298269cdf7647358b
         'Combodo\\iTop\\Portal\\Brick\\CreateBrick' => __DIR__ . '/../..' . '/src/Brick/CreateBrick.php',
         'Combodo\\iTop\\Portal\\Brick\\FilterBrick' => __DIR__ . '/../..' . '/src/Brick/FilterBrick.php',
         'Combodo\\iTop\\Portal\\Brick\\ManageBrick' => __DIR__ . '/../..' . '/src/Brick/ManageBrick.php',
+        'Combodo\\iTop\\Portal\\Brick\\ObjectBrick' => __DIR__ . '/../..' . '/src/Brick/ObjectBrick.php',
         'Combodo\\iTop\\Portal\\Brick\\PortalBrick' => __DIR__ . '/../..' . '/src/Brick/PortalBrick.php',
         'Combodo\\iTop\\Portal\\Brick\\PropertyNotFoundException' => __DIR__ . '/../..' . '/src/Brick/PropertyNotFoundException.php',
         'Combodo\\iTop\\Portal\\Brick\\UserProfileBrick' => __DIR__ . '/../..' . '/src/Brick/UserProfileBrick.php',

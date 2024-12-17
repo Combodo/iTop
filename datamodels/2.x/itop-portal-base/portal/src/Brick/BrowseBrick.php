@@ -77,6 +77,13 @@ class BrowseBrick extends PortalBrick
 	const DEFAULT_ACTION_OPENING_TARGET = self::ENUM_OPENING_TARGET_MODAL;
 	/** @var int DEFAULT_LIST_LENGTH */
 	const DEFAULT_LIST_LENGTH = 20;
+	protected static $DEFAULT_TEMPLATES_PATH = [
+		'page' => self::DEFAULT_PAGE_TEMPLATE_PATH,
+		'tile' => self::DEFAULT_TILE_TEMPLATE_PATH,
+		'mode-list'=> 'itop-portal-base/portal/templates/bricks/browse/mode_list.html.twig',
+		'mode-mosaic'=> 'itop-portal-base/portal/templates/bricks/browse/mode_mosaic.html.twig',
+		'mode-tree'=> 'itop-portal-base/portal/templates/bricks/browse/mode_tree.html.twig',
+	];
 
 	// Overloaded variables
 	public static $sRouteName = 'p_browse_brick';
@@ -359,7 +366,7 @@ class BrowseBrick extends PortalBrick
 									}
 									else
 									{
-										$sTemplatePath = 'itop-portal-base/portal/templates/bricks/browse/mode_'.$sModeId.'.html.twig';
+										$sTemplatePath = static::$DEFAULT_TEMPLATES_PATH['mode-'.$sModeId];
 									}
 									$aModeData['template'] = $sTemplatePath;
 

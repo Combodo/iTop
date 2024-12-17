@@ -65,6 +65,10 @@ abstract class AbstractBrick
 	const DEFAULT_ALLOWED_PROFILES_OQL = '';
 	/** @var string DEFAULT_DENIED_PROFILES_OQL */
 	const DEFAULT_DENIED_PROFILES_OQL = '';
+	/** @var array $DEFAULT_TEMPLATES_PATH  */
+	protected static $DEFAULT_TEMPLATES_PATH = [
+		'page' => self::DEFAULT_PAGE_TEMPLATE_PATH,
+	];
 
 	/** @var string $sId */
 	protected $sId;
@@ -112,7 +116,7 @@ abstract class AbstractBrick
 		$this->bActive = static::DEFAULT_ACTIVE;
 		$this->bVisible = static::DEFAULT_VISIBLE;
 		$this->fRank = static::DEFAULT_RANK;
-		$this->sPageTemplatePath = static::DEFAULT_PAGE_TEMPLATE_PATH;
+		$this->sPageTemplatePath = static::$DEFAULT_TEMPLATES_PATH['page'];
 		$this->sTitle = static::DEFAULT_TITLE;
 		$this->sDescription = static::DEFAULT_DESCRIPTION;
 		$this->sDataLoading = static::DEFAULT_DATA_LOADING;
@@ -573,6 +577,20 @@ abstract class AbstractBrick
 	}
 
 	/**
+	 * @param $sTemplateName
+	 * @param $sTemplatePath
+	 *
+	 * @return void
+	 * @since 3.2.1
+	 */
+	public static function SetDefaultTemplatePath($sTemplateName, $sTemplatePath)
+	{
+		if(array_key_exists($sTemplateName, static::$DEFAULT_TEMPLATES_PATH)) {
+			static::$DEFAULT_TEMPLATES_PATH[$sTemplateName] = $sTemplatePath;
+		}
+	}
+
+	/**
 	 * Load the brick's data from the xml passed as a ModuleDesignElement.
 	 * This is used to set all the brick attributes at once.
 	 *
@@ -665,14 +683,13 @@ abstract class AbstractBrick
 	 * @param $aPortalProperties
 	 *
 	 * @return void
-	 * @throws \DOMFormatException
 	 * @since 3.2.1
 	 */
-	public function LoadFromPortalProperties($aPortalProperties)
+	public static function LoadFromPortalProperties($aPortalProperties)
 	{
 		// Get the bricks templates
 		$aBricksTemplates = $aPortalProperties['templates']['bricks'];
-		$sClassFQCN = get_class($this);
+		$sClassFQCN = static::class;
 		
 		// Get the current brick templates
 		$aCurrentBricksTemplates = array_key_exists($sClassFQCN, $aBricksTemplates) ? $aBricksTemplates[$sClassFQCN] : [];
@@ -681,16 +698,7 @@ abstract class AbstractBrick
 			$sTemplateId = str_ireplace($sClassFQCN.':', '', $sTemplateKey);
 			
 			// Call the set method for the template
-			$sSetTemplateMethodName = 'Set'.$sTemplateId.'TemplatePath';
-			
-			if(method_exists($this, $sSetTemplateMethodName)) {
-				$this->{$sSetTemplateMethodName}($sTemplate);
-			} 
-			else {
-				throw new DOMFormatException(
-					'Template "'.$sTemplateId.'" is not a valid template for brick ' . $sClassFQCN,
-					null, null);
-			}
+			static::SetDefaultTemplatePath($sTemplateId, $sTemplate);
 		}
 	}
 }

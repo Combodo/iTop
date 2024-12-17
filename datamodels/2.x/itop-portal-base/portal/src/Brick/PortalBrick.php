@@ -63,6 +63,11 @@ abstract class PortalBrick extends AbstractBrick
 	/** @var string DEFAULT_OPENING_TARGET */
 	const DEFAULT_OPENING_TARGET = self::ENUM_OPENING_TARGET_MODAL;
 
+	protected static $DEFAULT_TEMPLATES_PATH = [
+		'page' => self::DEFAULT_PAGE_TEMPLATE_PATH,
+		'tile' => self::DEFAULT_TILE_TEMPLATE_PATH,
+	];
+
 	/** @var string|null $sRouteName */
 	static $sRouteName = null;
 	/** @var array $aOpeningTargets */
@@ -121,7 +126,7 @@ abstract class PortalBrick extends AbstractBrick
 		$this->bVisibleNavigationMenu = static::DEFAULT_VISIBLE_NAVIGATION_MENU;
 		$this->sDecorationClassHome = static::DEFAULT_DECORATION_CLASS_HOME;
 		$this->sDecorationClassNavigationMenu = static::DEFAULT_DECORATION_CLASS_NAVIGATION_MENU;
-		$this->sTileTemplatePath = static::DEFAULT_TILE_TEMPLATE_PATH;
+		$this->sTileTemplatePath = static::$DEFAULT_TEMPLATES_PATH['tile'];
 		$this->sTileControllerAction = static::DEFAULT_TILE_CONTROLLER_ACTION;
 		$this->sOpeningTarget = static::DEFAULT_OPENING_TARGET;
 	}

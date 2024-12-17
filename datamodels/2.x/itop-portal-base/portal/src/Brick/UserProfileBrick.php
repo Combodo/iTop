@@ -39,7 +39,10 @@ class UserProfileBrick extends PortalBrick
 	const DEFAUT_TITLE                             = 'Brick:Portal:UserProfile:Title';
 	const DEFAULT_DECORATION_CLASS_HOME            = 'glyphicon glyphicon-user';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'glyphicon glyphicon-user';
-
+	protected static $DEFAULT_TEMPLATES_PATH = [
+		'page' => self::DEFAULT_PAGE_TEMPLATE_PATH,
+		'tile' => self::DEFAULT_TILE_TEMPLATE_PATH,
+	];
 	/** @var bool DEFAULT_SHOW_PICTURE_FORM */
 	const DEFAULT_SHOW_PICTURE_FORM = true;
 	/** @var bool DEFAULT_SHOW_PREFERENCES_FORM */

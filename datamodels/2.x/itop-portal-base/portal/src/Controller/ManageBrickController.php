@@ -70,7 +70,9 @@ use utils;
  */
 class ManageBrickController extends BrickController
 {
-	/** @var string EXCEL_EXPORT_TEMPLATE_PATH */
+	/** @var string EXCEL_EXPORT_TEMPLATE_PATH 
+	 * @deprecated since 3.2.1
+	 */
 	const EXCEL_EXPORT_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/popup-export-excel.html.twig';
 
 	/**
@@ -281,7 +283,7 @@ class ManageBrickController extends BrickController
             'sWikiUrl' => 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Auser%3Alists#excel_export',
 		);
 
-		return $this->render(static::EXCEL_EXPORT_TEMPLATE_PATH, $aData);
+		return $this->render($oBrick->GetPopupExportExcelTemplatePath(), $aData);
 	}
 
 	/**

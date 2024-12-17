@@ -14,6 +14,7 @@ return array(
     'Combodo\\iTop\\Portal\\Brick\\CreateBrick' => $baseDir . '/src/Brick/CreateBrick.php',
     'Combodo\\iTop\\Portal\\Brick\\FilterBrick' => $baseDir . '/src/Brick/FilterBrick.php',
     'Combodo\\iTop\\Portal\\Brick\\ManageBrick' => $baseDir . '/src/Brick/ManageBrick.php',
+    'Combodo\\iTop\\Portal\\Brick\\ObjectBrick' => $baseDir . '/src/Brick/ObjectBrick.php',
     'Combodo\\iTop\\Portal\\Brick\\PortalBrick' => $baseDir . '/src/Brick/PortalBrick.php',
     'Combodo\\iTop\\Portal\\Brick\\PropertyNotFoundException' => $baseDir . '/src/Brick/PropertyNotFoundException.php',
     'Combodo\\iTop\\Portal\\Brick\\UserProfileBrick' => $baseDir . '/src/Brick/UserProfileBrick.php',

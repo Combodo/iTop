@@ -29,6 +29,7 @@ use BinaryExpression;
 use Combodo\iTop\Form\Field\DateTimeField;
 use Combodo\iTop\Portal\Brick\BrickCollection;
 use Combodo\iTop\Portal\Brick\CreateBrick;
+use Combodo\iTop\Portal\Brick\ObjectBrick;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
 use Combodo\iTop\Portal\Helper\NavigationRuleHelper;
@@ -82,8 +83,11 @@ class ObjectController extends BrickController
 	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
 	 * @param \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oObjectFormHandlerHelper
 	 * @param \Combodo\iTop\Portal\Helper\NavigationRuleHelper $oNavigationRuleHelper
+	 * @param \Combodo\iTop\Portal\Helper\ContextManipulatorHelper $oContextManipulatorHelper
+	 * @param array $aCombodoPortalInstanceConf
 	 *
 	 * @since 3.2.0 N°6933
+	 * @since 3.2.1 Added $aCombodoPortalInstanceConf parameter
 	 */
 	public function __construct(
 		protected SecurityHelper $oSecurityHelper,
@@ -93,10 +97,11 @@ class ObjectController extends BrickController
 		protected BrickCollection $oBrickCollection,
 		protected ObjectFormHandlerHelper $oObjectFormHandlerHelper,
 		protected NavigationRuleHelper $oNavigationRuleHelper,
-		protected ContextManipulatorHelper $oContextManipulatorHelper
-
+		protected ContextManipulatorHelper $oContextManipulatorHelper,
+		protected  array $aCombodoPortalInstanceConf
 	)
 	{
+		ObjectBrick::InitializeSelf($this->aCombodoPortalInstanceConf);
 	}
 
 	/**
@@ -232,7 +237,7 @@ class ObjectController extends BrickController
 		if ($oRequest->isXmlHttpRequest()) {
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation)) {
-				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
+				$oResponse = $this->render(ObjectBrick::GetModalDefaultTemplatePath(), $aData);
 			} else {
 				$oResponse = new JsonResponse($aData);
 			}
@@ -246,7 +251,7 @@ class ObjectController extends BrickController
 				}
 			}
 			$aData['sPageTitle'] = $aData['form']['title'];
-			$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/layout.html.twig', $aData);
+			$oResponse = $this->render(ObjectBrick::GetPageDefaultTemplatePath(), $aData);
 		}
 
 		return $oResponse;
@@ -307,7 +312,7 @@ class ObjectController extends BrickController
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation))
 			{
-				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
+				$oResponse = $this->render(ObjectBrick::GetModalDefaultTemplatePath(), $aData);
 			}
 			else
 			{
@@ -327,7 +332,7 @@ class ObjectController extends BrickController
 				}
 			}
 			$aData['sPageTitle'] = $aData['form']['title'];
-			$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/layout.html.twig', $aData);
+			$oResponse = $this->render(ObjectBrick::GetPageDefaultTemplatePath(), $aData);
 		}
 
 		return $oResponse;
@@ -534,11 +539,11 @@ class ObjectController extends BrickController
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation))
 			{
-				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
+				$oResponse = $this->render(ObjectBrick::GetModalDefaultTemplatePath(), $aData);
 			}
 			elseif ($sOperation === 'redirect')
 			{
-				$oResponse = $this->render('itop-portal-base/portal/templates/modal/mode_loader.html.twig', $aData);
+				$oResponse = $this->render(ObjectBrick::GetModeLoaderDefaultTemplatePath(), $aData);
 			}
 			else
 			{
@@ -547,7 +552,7 @@ class ObjectController extends BrickController
 		}
 		else
 		{
-			$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/layout.html.twig', $aData);
+			$oResponse = $this->render(ObjectBrick::GetPageDefaultTemplatePath(), $aData);
 		}
 
 		return $oResponse;
@@ -1011,12 +1016,12 @@ class ObjectController extends BrickController
 
 			if ($oRequest->isXmlHttpRequest())
 			{
-				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
+				$oResponse = $this->render(ObjectBrick::GetModalDefaultTemplatePath(), $aData);
 			}
 			else
 			{
 				//throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
-				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/layout.html.twig', $aData);
+				$oResponse = $this->render(ObjectBrick::GetPageDefaultTemplatePath(), $aData);
 			}
 		}
 		else
@@ -1560,7 +1565,7 @@ class ObjectController extends BrickController
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation))
 			{
-				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
+				$oResponse = $this->render(ObjectBrick::GetModalDefaultTemplatePath(), $aData);
 			}
 			else
 			{
@@ -1580,7 +1585,7 @@ class ObjectController extends BrickController
 				}
 			}
 			$aData['sPageTitle'] = $aData['form']['title'];
-			$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/layout.html.twig', $aData);
+			$oResponse = $this->render(ObjectBrick::GetPageDefaultTemplatePath(), $aData);
 		}
 
 		return $oResponse;

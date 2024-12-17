@@ -62,7 +62,7 @@ class BrickCollection
 	 * @throws \Exception
 	 * @since 3.2.1 Added $aCombodoPortalInstanceConf parameter
 	 */
-	public function __construct(ModuleDesign $oModuleDesign, $aCombodoPortalInstanceConf)
+	public function __construct(ModuleDesign $oModuleDesign, array $aCombodoPortalInstanceConf)
 	{
 		$this->oModuleDesign = $oModuleDesign;
 		$this->aAllowedBricks = null;
@@ -202,11 +202,12 @@ class BrickCollection
 			{
 				if (class_exists($sBrickClass))
 				{
-					/** @var \Combodo\iTop\Portal\Brick\PortalBrick $oBrick */
-					$oBrick = new $sBrickClass();
 					
 					// Load the portal properties that are common to all bricks of this type
-					$oBrick->LoadFromPortalProperties($this->aCombodoPortalInstanceConf['properties']);
+					$sBrickClass::LoadFromPortalProperties($this->aCombodoPortalInstanceConf['properties']);
+					
+					/** @var \Combodo\iTop\Portal\Brick\PortalBrick $oBrick */
+					$oBrick = new $sBrickClass();
 					
 					// Load the brick specific properties from its XML definition
 					$oBrick->LoadFromXml($oBrickNode);
