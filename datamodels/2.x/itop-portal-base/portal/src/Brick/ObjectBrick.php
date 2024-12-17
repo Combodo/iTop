@@ -10,11 +10,17 @@ namespace Combodo\iTop\Portal\Brick;
  */
 abstract class ObjectBrick extends  AbstractBrick
 {
+	/** @var string DEFAULT_PAGE_TEMPLATE_PATH */
+	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/object/layout.html.twig';
+	/** @var string DEFAULT_MODAL_TEMPLATE_PATH */
+	const DEFAULT_MODAL_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/object/modal.html.twig';
+	/** @var string DEFAULT_MODE_LOADER_TEMPLATE_PATH */
+	const DEFAULT_MODE_LOADER_TEMPLATE_PATH = 'itop-portal-base/portal/templates/modal/mode_loader.html.twig';
 
 	protected static $DEFAULT_TEMPLATES_PATH = [
-		'page'  => 'itop-portal-base/portal/templates/bricks/object/layout.html.twig',
-		'modal' => 'itop-portal-base/portal/templates/bricks/object/modal.html.twig',
-		'mode_loader' => 'itop-portal-base/portal/templates/modal/mode_loader.html.twig',
+		'page'  => self::DEFAULT_PAGE_TEMPLATE_PATH,
+		'modal' => self::DEFAULT_MODAL_TEMPLATE_PATH,
+		'mode_loader' => self::DEFAULT_MODE_LOADER_TEMPLATE_PATH,
 	];
 
 	/**
