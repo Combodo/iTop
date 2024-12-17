@@ -1929,7 +1929,7 @@ class UserRights
 				return $oUser;
 			}
 
-			return self::FindUser($sLogin, 'external');
+			return self::FindUser($sLogin, 'external', $bAllowDisabledUsers);
 		}
 
 		if (!isset(self::$m_aCacheUsers))
