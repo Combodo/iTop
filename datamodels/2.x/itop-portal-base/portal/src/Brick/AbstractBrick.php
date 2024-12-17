@@ -577,16 +577,16 @@ abstract class AbstractBrick
 	}
 
 	/**
-	 * @param $sTemplateName
+	 * @param $sTemplateId
 	 * @param $sTemplatePath
 	 *
 	 * @return void
 	 * @since 3.2.1
 	 */
-	public static function SetDefaultTemplatePath($sTemplateName, $sTemplatePath)
+	public static function SetDefaultTemplatePath($sTemplateId, $sTemplatePath)
 	{
-		if(array_key_exists($sTemplateName, static::$DEFAULT_TEMPLATES_PATH)) {
-			static::$DEFAULT_TEMPLATES_PATH[$sTemplateName] = $sTemplatePath;
+		if(array_key_exists($sTemplateId, static::$DEFAULT_TEMPLATES_PATH)) {
+			static::$DEFAULT_TEMPLATES_PATH[$sTemplateId] = $sTemplatePath;
 		}
 	}
 
