@@ -1923,7 +1923,7 @@ class UserRights
 	{
 		if ($sAuthentication === 'any')
 		{
-			$oUser = self::FindUser($sLogin, 'internal');
+			$oUser = self::FindUser($sLogin, 'internal', $bAllowDisabledUsers);
 			if ($oUser !== null)
 			{
 				return $oUser;
