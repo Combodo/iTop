@@ -1934,7 +1934,7 @@ class UserRights
 
 		if (!isset(self::$m_aCacheUsers))
 		{
-			self::$m_aCacheUsers = [ 'internal' => array(), 'external' => array() ];
+			self::$m_aCacheUsers = [ 'internal' => [], 'external' => [] ];
 		}
 
 		if (! isset(self::$m_aCacheUsers[$sAuthentication]) || ! array_key_exists($sLogin, self::$m_aCacheUsers[$sAuthentication]))
