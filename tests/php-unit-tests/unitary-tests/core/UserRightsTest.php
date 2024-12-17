@@ -489,7 +489,7 @@ class UserRightsTest extends ItopDataTestCase
 		];
 	}
 
-	public function testFindUser_internaluser()
+	public function testFindUser_ExistingInternalUser()
 	{
 		$sLogin = 'admin'.uniqid();
 		$iKey = $this->CreateUser($sLogin, self::$aURP_Profiles['Administrator'])->GetKey();
@@ -506,33 +506,14 @@ class UserRightsTest extends ItopDataTestCase
 		});
 	}
 
-	public function testFindUserUnknownLogin_AvoidSameSearchAgain()
-	{
-		$sLogin = 'admin'.uniqid();
-		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
-		$this->assertNull($oUser);
-
-		$this->assertDBQueryCount(0, function() use ($sLogin){
-			$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
-			$this->assertNull($oUser);
-		});
-	}
-
-	public function testFindUser_externaluser()
+	public function testFindUser_ExistingExternalUser()
 	{
 		$sLogin = 'admin'.uniqid();
 
-		$oUserProfile = new URP_UserProfile();
-		$oUserProfile->Set('profileid', self::$aURP_Profiles['Administrator']);
-		$oUserProfile->Set('reason', 'UNIT Tests');
-		$oSet = DBObjectSet::FromObject($oUserProfile);
-		/** @var \UserLocal $oUser */
-		$oUser = $this->createObject(\UserExternal::class, array(
+		$iKey = $this->GivenObjectInDB(\UserExternal::class, [
 			'login' => $sLogin,
 			'language' => 'EN US',
-			'profile_list' => $oSet,
-		));
-		$iKey = $oUser->GetKey();
+		]);
 
 		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
 
@@ -547,4 +528,15 @@ class UserRightsTest extends ItopDataTestCase
 		});
 	}
 
+	public function testFindUser_UnknownLogin_AvoidSameSqlQueryTwice()
+	{
+		$sLogin = 'admin'.uniqid();
+		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
+		$this->assertNull($oUser);
+
+		$this->assertDBQueryCount(0, function() use ($sLogin){
+			$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
+			$this->assertNull($oUser);
+		});
+	}
 }

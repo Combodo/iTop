@@ -1921,26 +1921,21 @@ class UserRights
 	 */
 	protected static function FindUser($sLogin, $sAuthentication = 'any', $bAllowDisabledUsers = false)
 	{
-		if ($sAuthentication === 'any')
-		{
+		if ($sAuthentication === 'any') {
 			$oUser = self::FindUser($sLogin, 'internal', $bAllowDisabledUsers);
-			if ($oUser !== null)
-			{
+			if ($oUser !== null) {
 				return $oUser;
 			}
 
 			return self::FindUser($sLogin, 'external', $bAllowDisabledUsers);
 		}
 
-		if (!isset(self::$m_aCacheUsers))
-		{
+		if (!isset(self::$m_aCacheUsers)) {
 			self::$m_aCacheUsers = [ 'internal' => [], 'external' => [] ];
 		}
 
-		if (! isset(self::$m_aCacheUsers[$sAuthentication]) || ! array_key_exists($sLogin, self::$m_aCacheUsers[$sAuthentication]))
-		{
-			switch($sAuthentication)
-			{
+		if (! isset(self::$m_aCacheUsers[$sAuthentication]) || ! array_key_exists($sLogin, self::$m_aCacheUsers[$sAuthentication])) {
+			switch($sAuthentication) {
 				case 'external':
 				$sBaseClass = 'UserExternal';
 				break;
@@ -1955,8 +1950,7 @@ class UserRights
 			}
 			$oSearch = DBObjectSearch::FromOQL("SELECT $sBaseClass WHERE login = :login");
 			$oSearch->AllowAllData();
-			if (!$bAllowDisabledUsers)
-			{
+			if (!$bAllowDisabledUsers) {
 				$oSearch->AddCondition('status', 'enabled');
 			}
 			$oSet = new DBObjectSet($oSearch, array(), array('login' => $sLogin));
