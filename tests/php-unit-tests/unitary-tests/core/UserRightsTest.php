@@ -488,4 +488,63 @@ class UserRightsTest extends ItopDataTestCase
 			'with Admins hidden' => [true, 0],
 		];
 	}
+
+	public function testFindUser_internaluser()
+	{
+		$sLogin = 'admin'.uniqid();
+		$iKey = $this->CreateUser($sLogin, self::$aURP_Profiles['Administrator'])->GetKey();
+		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
+
+		$this->assertNotNull($oUser);
+		$this->assertEquals($iKey, $oUser->GetKey());
+		$this->assertEquals(\UserLocal::class, get_class($oUser));
+
+		$this->assertDBQueryCount(0, function() use ($sLogin, $iKey){
+			$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
+			static::assertEquals($iKey, $oUser->GetKey());
+			static::assertEquals(\UserLocal::class, get_class($oUser));
+		});
+	}
+
+	public function testFindUserUnknownLogin_AvoidSameSearchAgain()
+	{
+		$sLogin = 'admin'.uniqid();
+		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
+		$this->assertNull($oUser);
+
+		$this->assertDBQueryCount(0, function() use ($sLogin){
+			$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
+			$this->assertNull($oUser);
+		});
+	}
+
+	public function testFindUser_externaluser()
+	{
+		$sLogin = 'admin'.uniqid();
+
+		$oUserProfile = new URP_UserProfile();
+		$oUserProfile->Set('profileid', self::$aURP_Profiles['Administrator']);
+		$oUserProfile->Set('reason', 'UNIT Tests');
+		$oSet = DBObjectSet::FromObject($oUserProfile);
+		/** @var \UserLocal $oUser */
+		$oUser = $this->createObject(\UserExternal::class, array(
+			'login' => $sLogin,
+			'language' => 'EN US',
+			'profile_list' => $oSet,
+		));
+		$iKey = $oUser->GetKey();
+
+		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
+
+		$this->assertNotNull($oUser);
+		$this->assertEquals($iKey, $oUser->GetKey());
+		$this->assertEquals(\UserExternal::class, get_class($oUser));
+
+		$this->assertDBQueryCount(0, function() use ($sLogin, $iKey){
+			$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
+			static::assertEquals($iKey, $oUser->GetKey());
+			static::assertEquals(\UserExternal::class, get_class($oUser));
+		});
+	}
+
 }

@@ -1921,50 +1921,51 @@ class UserRights
 	 */
 	protected static function FindUser($sLogin, $sAuthentication = 'any', $bAllowDisabledUsers = false)
 	{
-		if ($sAuthentication == 'any')
+		if ($sAuthentication === 'any')
 		{
 			$oUser = self::FindUser($sLogin, 'internal');
-			if ($oUser == null)
+			if ($oUser !== null)
 			{
-				$oUser = self::FindUser($sLogin, 'external');
+				return $oUser;
 			}
+
+			return self::FindUser($sLogin, 'external');
 		}
-		else
+
+		if (!isset(self::$m_aCacheUsers))
 		{
-			if (!isset(self::$m_aCacheUsers))
-			{
-				self::$m_aCacheUsers = array('internal' => array(), 'external' => array());
-			}
-
-			if (!isset(self::$m_aCacheUsers[$sAuthentication][$sLogin]))
-			{
-				switch($sAuthentication)
-				{
-					case 'external':
-					$sBaseClass = 'UserExternal';
-					break;
-
-					case 'internal':
-					$sBaseClass = 'UserInternal';
-					break;
-
-					default:
-					echo "<p>sAuthentication = $sAuthentication</p>\n";
-					assert(false); // should never happen
-				}
-				$oSearch = DBObjectSearch::FromOQL("SELECT $sBaseClass WHERE login = :login");
-				$oSearch->AllowAllData();
-				if (!$bAllowDisabledUsers)
-				{
-					$oSearch->AddCondition('status', 'enabled');
-				}
-				$oSet = new DBObjectSet($oSearch, array(), array('login' => $sLogin));
-				$oUser = $oSet->fetch();
-				self::$m_aCacheUsers[$sAuthentication][$sLogin] = $oUser;
-			}
-			$oUser = self::$m_aCacheUsers[$sAuthentication][$sLogin];
+			self::$m_aCacheUsers = [ 'internal' => array(), 'external' => array() ];
 		}
-		return $oUser;
+
+		if (! isset(self::$m_aCacheUsers[$sAuthentication]) || ! array_key_exists($sLogin, self::$m_aCacheUsers[$sAuthentication]))
+		{
+			switch($sAuthentication)
+			{
+				case 'external':
+				$sBaseClass = 'UserExternal';
+				break;
+
+				case 'internal':
+				$sBaseClass = 'UserInternal';
+				break;
+
+				default:
+				echo "<p>sAuthentication = $sAuthentication</p>\n";
+				assert(false); // should never happen
+			}
+			$oSearch = DBObjectSearch::FromOQL("SELECT $sBaseClass WHERE login = :login");
+			$oSearch->AllowAllData();
+			if (!$bAllowDisabledUsers)
+			{
+				$oSearch->AddCondition('status', 'enabled');
+			}
+			$oSet = new DBObjectSet($oSearch, array(), array('login' => $sLogin));
+			$oUser = $oSet->fetch();
+
+			self::$m_aCacheUsers[$sAuthentication][$sLogin] = $oUser;
+		}
+
+		return self::$m_aCacheUsers[$sAuthentication][$sLogin];
 	}
 
 	/**
