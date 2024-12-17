@@ -491,7 +491,7 @@ class UserRightsTest extends ItopDataTestCase
 
 	public function testFindUser_ExistingInternalUser()
 	{
-		$sLogin = 'admin'.uniqid();
+		$sLogin = 'UserRightsFindUser'.uniqid();
 		$iKey = $this->CreateUser($sLogin, self::$aURP_Profiles['Administrator'])->GetKey();
 		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
 
@@ -508,7 +508,7 @@ class UserRightsTest extends ItopDataTestCase
 
 	public function testFindUser_ExistingExternalUser()
 	{
-		$sLogin = 'admin'.uniqid();
+		$sLogin = 'UserRightsFindUser'.uniqid();
 
 		$iKey = $this->GivenObjectInDB(\UserExternal::class, [
 			'login' => $sLogin,
@@ -530,7 +530,7 @@ class UserRightsTest extends ItopDataTestCase
 
 	public function testFindUser_UnknownLogin_AvoidSameSqlQueryTwice()
 	{
-		$sLogin = 'admin'.uniqid();
+		$sLogin = 'UserRightsFindUser'.uniqid();
 		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
 		$this->assertNull($oUser);
 
