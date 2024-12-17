@@ -8,7 +8,6 @@ $ipb-page--main-header--information--title--color: $text-color !default;
 $ipb-page--main-header--information--subtitle--padding: $common-spacing-200 !default;
 $ipb-page--main-header--information--subtitle--font-size: $common-font-size-250 !default;
 $ipb-page--main-header--information--subtitle--color: $text-color !default;
-$ipb-page--tiles-wrapper--padding: $common-spacing-800 !default;
 
 body{
   overflow: hidden;
@@ -69,7 +68,6 @@ body{
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: $ipb-page--tiles-wrapper--padding;
 }
 
 @include mobile {

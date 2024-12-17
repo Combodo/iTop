@@ -2,8 +2,6 @@
 
 {% extends 'itop-portal-base/portal/templates/bricks/tile.html.twig' %}
 
-
-
 {% block pTileTitle %}
     <div class="ipb-tile--title {% if isInlineTitle %}ipb-tile--option--inline-title{% endif %}">
         <span>{{ oBrick.GetTitle()|dict_s }}</span>
