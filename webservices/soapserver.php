@@ -26,7 +26,7 @@ require_once(APPROOT.'/application/startup.inc.php');
 
 // this file is generated dynamically with location = here
 $sWsdlUri = utils::GetAbsoluteUrlAppRoot().'webservices/itop.wsdl.php';
-$sServiceCategory = utils::ReadParam($_REQUEST['service_category']);
+$sServiceCategory = utils::ReadParam('service_category');
 if (!empty($sServiceCategory))
 {
 	$sWsdlUri .= "?service_category=".$sServiceCategory;
