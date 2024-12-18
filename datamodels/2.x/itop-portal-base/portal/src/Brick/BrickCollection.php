@@ -204,7 +204,7 @@ class BrickCollection
 				{
 					
 					// Load the portal properties that are common to all bricks of this type
-					$sBrickClass::LoadFromPortalProperties($this->aCombodoPortalInstanceConf['properties']);
+					$sBrickClass::LoadClassDefinitionFromPortalProperties($this->aCombodoPortalInstanceConf['properties']);
 					
 					/** @var \Combodo\iTop\Portal\Brick\PortalBrick $oBrick */
 					$oBrick = new $sBrickClass();

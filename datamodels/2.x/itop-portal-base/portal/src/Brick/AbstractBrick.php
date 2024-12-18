@@ -685,7 +685,7 @@ abstract class AbstractBrick
 	 * @return void
 	 * @since 3.2.1
 	 */
-	public static function LoadFromPortalProperties($aPortalProperties)
+	public static function LoadClassDefinitionFromPortalProperties($aPortalProperties)
 	{
 		// Get the bricks templates
 		$aBricksTemplates = $aPortalProperties['templates']['bricks'];
