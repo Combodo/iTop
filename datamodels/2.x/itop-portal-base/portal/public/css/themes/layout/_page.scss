@@ -1,6 +1,4 @@
 
 body{
-  font-family: $common-font-family-base, $common-font-family-fallbacks, $common-font-family-monospace, $common-font-family-code!important;
-  font-size: $common-font-size-250!important;
-  font-weight: $common-font-weight-500!important;
+  @extend %common-font-ral-med-250;
 }
