@@ -21,6 +21,8 @@
 namespace Combodo\iTop\Portal\Controller;
 
 use Combodo\iTop\Portal\Brick\BrickCollection;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -33,6 +35,15 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DefaultController extends AbstractController
 {
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
+	{
+		parent::RegisterTemplates($oTemplatesProviderService);
+		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+			TemplateDefinitionDto::Create('home', static::TEMPLATES_BASE_PATH . 'home/layout.html.twig'),
+		);
+	}
+
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request  $oRequest
 	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBricksCollection
@@ -72,7 +83,7 @@ class DefaultController extends AbstractController
 		}
 
 		// Home page template
-		$sTemplatePath = $this->getParameter('combodo.portal.instance.conf')['properties']['templates']['home'];
+		$sTemplatePath = $this->GetTemplatesService()->GetTemplatePath(self::class, 'home');
 
 		return $this->render($sTemplatePath, $aData);
 	}

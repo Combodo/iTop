@@ -20,9 +20,12 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
+use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use DOMFormatException;
 use ModuleDesign;
-use Combodo\iTop\DesignElement;
 
 /**
  * Description of PortalBrick
@@ -57,16 +60,11 @@ abstract class PortalBrick extends AbstractBrick
 	/** @var string DEFAULT_DECORATION_CLASS_NAVIGATION_MENU */
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = '';
 	/** @var string DEFAULT_TILE_TEMPLATE_PATH */
-	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/tile.html.twig';
+	const DEFAULT_TILE_TEMPLATE_PATH = null;
 	/** @var string|null DEFAULT_TILE_CONTROLLER_ACTION */
 	const DEFAULT_TILE_CONTROLLER_ACTION = null;
 	/** @var string DEFAULT_OPENING_TARGET */
 	const DEFAULT_OPENING_TARGET = self::ENUM_OPENING_TARGET_MODAL;
-
-	protected static $DEFAULT_TEMPLATES_PATH = [
-		'page' => self::DEFAULT_PAGE_TEMPLATE_PATH,
-		'tile' => self::DEFAULT_TILE_TEMPLATE_PATH,
-	];
 
 	/** @var string|null $sRouteName */
 	static $sRouteName = null;
@@ -87,7 +85,7 @@ abstract class PortalBrick extends AbstractBrick
 	protected $sDecorationClassHome;
 	/** @var string $sDecorationClassNavigationMenu */
 	protected $sDecorationClassNavigationMenu;
-	/** @var string $sTileTemplatePath */
+	/** @var string $sTileTemplatePath @deprecated since 3.2.1 */
 	protected $sTileTemplatePath;
 	/** @var string|null $sTileControllerAction */
 	protected $sTileControllerAction;
@@ -103,6 +101,17 @@ abstract class PortalBrick extends AbstractBrick
 	protected $sTitleHome;
 	/** @var string $sTitleNavigationMenu */
 	protected $sTitleNavigationMenu;
+
+	public bool $bIsWidthPixel = true;
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
+	{
+		parent::RegisterTemplates($oTemplatesProviderService);
+		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'tile.html.twig', TemplatesKindEnumeration::PATH, true),
+		);
+	}
 
 	/**
 	 * @return string|null
@@ -126,7 +135,9 @@ abstract class PortalBrick extends AbstractBrick
 		$this->bVisibleNavigationMenu = static::DEFAULT_VISIBLE_NAVIGATION_MENU;
 		$this->sDecorationClassHome = static::DEFAULT_DECORATION_CLASS_HOME;
 		$this->sDecorationClassNavigationMenu = static::DEFAULT_DECORATION_CLASS_NAVIGATION_MENU;
-		$this->sTileTemplatePath = static::$DEFAULT_TEMPLATES_PATH['tile'];
+		// BEGIN cleaning 3.2.1 deprecated
+		$this->sTileTemplatePath = static::DEFAULT_TILE_TEMPLATE_PATH;
+		// END cleaning 3.2.1 deprecated
 		$this->sTileControllerAction = static::DEFAULT_TILE_CONTROLLER_ACTION;
 		$this->sOpeningTarget = static::DEFAULT_OPENING_TARGET;
 	}
@@ -255,10 +266,12 @@ abstract class PortalBrick extends AbstractBrick
 	 * Returns the brick tile template path
 	 *
 	 * @return string
+	 *
+	 * @deprecated since 3.2.1
 	 */
 	public function GetTileTemplatePath()
 	{
-		return $this->sTileTemplatePath;
+		return $this->sTileTemplatePath !== null ? $this->sTileTemplatePath : $this->FindBrickDefaultTemplate('tile');
 	}
 
 	/**
@@ -431,10 +444,13 @@ abstract class PortalBrick extends AbstractBrick
 	 * @param string $sTileTemplatePath
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\PortalBrick
+	 *
+	 * @deprecated since 3.2.1
 	 */
 	public function SetTileTemplatePath($sTileTemplatePath)
 	{
 		$this->sTileTemplatePath = $sTileTemplatePath;
+		$this->SetTemplatePath('tile', $sTileTemplatePath);
 
 		return $this;
 	}
@@ -488,7 +504,9 @@ abstract class PortalBrick extends AbstractBrick
 			switch ($oBrickSubNode->nodeName)
 			{
 				case 'width':
-					$this->SetWidth((int)$oBrickSubNode->GetText(static::DEFAULT_WIDTH));
+					$sWidth = $oBrickSubNode->GetText(static::DEFAULT_WIDTH);
+					$this->bIsWidthPixel = str_contains($sWidth, 'px');
+					$this->SetWidth((int)$sWidth);
 					break;
 
 				case 'height':

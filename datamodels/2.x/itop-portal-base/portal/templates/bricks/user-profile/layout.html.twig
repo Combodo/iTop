@@ -1,6 +1,4 @@
-{# itop-portal-base/portal/templates/bricks/user-profile/layout.html.twig #}
-{# User profile brick base layout #}
-{% extends 'itop-portal-base/portal/templates/bricks/layout.html.twig' %}
+{% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\AbstractBrick') %}
 
 {% if sTab == "" %}
     {% set sTab = "user-info" %}

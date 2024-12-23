@@ -20,7 +20,11 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use \Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 
@@ -31,8 +35,20 @@ use Symfony\Contracts\Service\Attribute\Required;
  * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since   2.3.0
  */
-abstract class AbstractController extends SymfonyAbstractController
+abstract class AbstractController extends SymfonyAbstractController implements TemplatesProviderInterface
 {
+	const TEMPLATES_BASE_PATH = 'itop-portal-base/portal/templates/';
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
+	{
+		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig', TemplatesKindEnumeration::PATH, true),
+			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH . 'modal/layout.html.twig', TemplatesKindEnumeration::PATH, true),
+			TemplateDefinitionDto::Create('mode_loader', static::TEMPLATES_BASE_PATH. 'modal/mode_loader.html.twig'),
+		);
+	}
+
 	/**
 	 * @var \Symfony\Component\Routing\RouterInterface symfony router
 	 *
@@ -44,6 +60,19 @@ abstract class AbstractController extends SymfonyAbstractController
 	public function setRouter(RouterInterface $oRouter): void
 	{
 		$this->oRouter = $oRouter;
+	}
+
+	/** @var TemplatesProviderService templates provider service */
+	private TemplatesProviderService $oTemplatesService;
+	#[Required]
+	public function SetTemplatesService(TemplatesProviderService $oTemplatesService): void
+	{
+		$this->oTemplatesService = $oTemplatesService;
+
+	}
+	protected function GetTemplatesService()
+	{
+		return $this->oTemplatesService;
 	}
 
 	/**

@@ -1,0 +1,102 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+
+    {% set icon %}
+        <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor"><path d="M192 64l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32zM82.7 207c-15.3 8.8-20.5 28.4-11.7 43.7l32 55.4c8.8 15.3 28.4 20.5 43.7 11.7l55.4-32c15.3-8.8 20.5-28.4 11.7-43.7l-32-55.4c-8.8-15.3-28.4-20.5-43.7-11.7L82.7 207zM288 192c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0zm64 160c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0zM160 384l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32zM32 352c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0z"/></svg>
+        </span>
+        <span class="sf-toolbar-label">Portal{% if collector.getOverridesCount > 0 %} <span style="color: #a57011;"> Overrides</span>{% endif %}</span>
+    {% endset %}
+
+    {% set text %}
+        <div class="sf-toolbar-info-piece">
+            <b>Templates registered</b><span class="sf-toolbar-status">{{ collector.getTemplates|length }}</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Templates overridden</b><span class="sf-toolbar-status">{{ collector.getOverridesCount }}</span>
+        </div>
+    {% endset %}
+
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { 'link': true }) }}
+
+{% endblock %}
+
+{% block menu %}
+
+    <span class="label label-status-none">
+        <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor"><path d="M192 64l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32zM82.7 207c-15.3 8.8-20.5 28.4-11.7 43.7l32 55.4c8.8 15.3 28.4 20.5 43.7 11.7l55.4-32c15.3-8.8 20.5-28.4 11.7-43.7l-32-55.4c-8.8-15.3-28.4-20.5-43.7-11.7L82.7 207zM288 192c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0zm64 160c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0zM160 384l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32zM32 352c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0z"/></svg>
+        </span>
+        <strong>Portal</strong>
+        <span class="count">
+           {{ collector.getTemplates|length }}
+        </span>
+    </span>
+
+{% endblock %}
+
+{% block panel %}
+
+    <h2>Templates</h2>
+
+    <div class="metrics">
+
+        <div class="metric">
+            <span class="value">{{ collector.getTemplates|length }}</span>
+            <span class="label">Templates</span>
+        </div>
+
+        <div class="metric-divider"></div>
+
+        <div class="metric-group">
+            <div class="metric">
+                <span class="value">{{ collector.getOverridesCount }}</span>
+                <span class="label">Overridden</span>
+            </div>
+        </div>
+    </div>
+
+    <p class="help">
+        Templates doesn't necessary covers all existing templates, only the ones that are registered in the portal.
+    </p>
+
+    <h2>Templates list</h2>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Scope</th>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Template</th>
+                <th>Alias</th>
+                <th>Override</th>
+            </tr>
+        </thead>
+
+        {% for scope,item in collector.templates %}
+            {% for id,template in item %}
+                <tr {% if template.IsOverridden %}style="color: #a57011;"{% endif %}>
+                    <td>{{ scope }}</td>
+                    <td>{{ template.Id }}</td>
+                    <td>{{ template.Type.name }}</td>
+                    <td>{{ template.Value }}</td>
+                    <td>{{ template.Alias }}</td>
+                    <td>{% if template.IsOverridable %}
+                            {% if template.IsOverridden %}
+                                true
+                            {% else %}
+                                false
+                            {% endif %}
+                        {% else %}
+                            Not allowed
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+
+{% endblock %}

@@ -1,6 +1,4 @@
-{# itop-portal-base/portal/templates/bricks/object/layout.html.twig #}
-{# Object brick base layout #}
-{% extends 'itop-portal-base/portal/templates/bricks/layout.html.twig' %}
+{% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\AbstractBrick') %}
 
 {% block pPageBodyClass %}{{ parent() }} page_object_brick page_object_brick_as_{{ sMode }}{% endblock %}
 

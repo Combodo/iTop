@@ -1,6 +1,4 @@
-{# itop-portal-base/portal/templates/bricks/layout.html.twig #}
-{# Brick base layout #}
-{% extends app['combodo.portal.instance.conf'].properties.templates.layout %}
+{% extends template('page') %}
 
 {% block pPageTitle %}
 	{# Overloading the default template's title to show the brick's title #}

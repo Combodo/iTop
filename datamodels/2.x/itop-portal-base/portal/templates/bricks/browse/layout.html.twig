@@ -1,6 +1,4 @@
-{# itop-portal-base/portal/templates/bricks/browse/layout.html.twig #}
-{# Browse brick base layout #}
-{% extends 'itop-portal-base/portal/templates/bricks/layout.html.twig' %}
+{% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\AbstractBrick') %}
 
 {% block pPageBodyClass %}{{ parent() }} page_browse_brick page_browse_brick_as_{{ sBrowseMode }}{% endblock %}
 

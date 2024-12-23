@@ -21,7 +21,6 @@ namespace Combodo\iTop\Portal\Brick;
 
 use DOMFormatException;
 use Exception;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use UserRights;
 use ModuleDesign;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
@@ -57,7 +56,7 @@ class BrickCollection
 	 * BrickCollection constructor.
 	 *
 	 * @param \ModuleDesign $oModuleDesign
-	 * @param $aCombodoPortalInstanceConf
+	 * @param array $aCombodoPortalInstanceConf
 	 *
 	 * @throws \Exception
 	 * @since 3.2.1 Added $aCombodoPortalInstanceConf parameter
@@ -202,10 +201,6 @@ class BrickCollection
 			{
 				if (class_exists($sBrickClass))
 				{
-					
-					// Load the portal properties that are common to all bricks of this type
-					$sBrickClass::LoadClassDefinitionFromPortalProperties($this->aCombodoPortalInstanceConf['properties']);
-					
 					/** @var \Combodo\iTop\Portal\Brick\PortalBrick $oBrick */
 					$oBrick = new $sBrickClass();
 					

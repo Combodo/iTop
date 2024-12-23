@@ -166,7 +166,7 @@ class UserProfileBrickController extends BrickController
 
 			$this->ManageUserProfileBrickExtensibility($sTab, $aData);
 
-			$oResponse = $this->render($oBrick->GetPageTemplatePath(), $aData);
+			$oResponse = $this->render($oBrick->GetTemplatePath('page'), $aData);
 		}
 
 		return $oResponse;

@@ -75,7 +75,7 @@ class AggregatePageBrickController extends BrickController
 
 		$aTilesRendering = $this->GetBricksTileRendering($oRequest, $aAggregatePageBricks);
 
-		$sLayoutTemplate = $oBrick->GetPageTemplatePath();
+		$sLayoutTemplate = $oBrick->GetTemplatePath('page');
 		$aData = array(
 			'oBrick' => $oBrick,
 			'aggregatepage_bricks' => $aAggregatePageBricks,

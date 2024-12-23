@@ -20,6 +20,8 @@
 namespace Combodo\iTop\Portal\Brick;
 
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use DOMFormatException;
 
 /**
@@ -32,17 +34,10 @@ use DOMFormatException;
 class UserProfileBrick extends PortalBrick
 {
 	// Overloaded constants
-	const DEFAULT_PAGE_TEMPLATE_PATH               = 'itop-portal-base/portal/templates/bricks/user-profile/layout.html.twig';
-	const DEFAULT_TILE_TEMPLATE_PATH               = 'itop-portal-base/portal/templates/bricks/user-profile/tile.html.twig';
 	const DEFAULT_VISIBLE_NAVIGATION_MENU          = false;
 	const DEFAULT_VISIBLE_HOME                     = false;
-	const DEFAUT_TITLE                             = 'Brick:Portal:UserProfile:Title';
 	const DEFAULT_DECORATION_CLASS_HOME            = 'glyphicon glyphicon-user';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'glyphicon glyphicon-user';
-	protected static $DEFAULT_TEMPLATES_PATH = [
-		'page' => self::DEFAULT_PAGE_TEMPLATE_PATH,
-		'tile' => self::DEFAULT_TILE_TEMPLATE_PATH,
-	];
 	/** @var bool DEFAULT_SHOW_PICTURE_FORM */
 	const DEFAULT_SHOW_PICTURE_FORM = true;
 	/** @var bool DEFAULT_SHOW_PREFERENCES_FORM */
@@ -61,6 +56,15 @@ class UserProfileBrick extends PortalBrick
 	protected $bShowPreferencesForm;
 	/** @var bool $bShowPasswordForm */
 	protected $bShowPasswordForm;
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
+	{
+		parent::RegisterTemplates($oTemplatesProviderService);
+		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'user-profile/layout.html.twig'),
+		);
+	}
 
 	/**
 	 * UserProfileBrick constructor.
