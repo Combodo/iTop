@@ -159,6 +159,8 @@
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal-clipboard.js'|add_itop_version }}"></script>
         {# tile #}
         <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_tiles.js'|add_itop_version }}"></script>
+        {# navigation menu #}
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/navigation_menu.js'|add_itop_version }}"></script>
 
 		{# UI Extensions JS, in an undefined order #}
 		{% if app['ui_extensions_helper'].js_files is defined %}
@@ -259,7 +261,7 @@
 
 			{# Sidebar navigation menu for normal screens #}
 			{% block pNavigationSideMenuWrapper %}
-				<nav class="navbar-default hidden-xs ipb-navigation-menu ipb-is-expanded" id="sidebar" role="navigation">
+				<nav class="navbar-default hidden-xs ipb-navigation-menu ipb-is-expanded" id="sidebar" role="navigation" data-role="ipb-navigation-menu">
                     <div class="ipb-navigation-menu--top-part">
                         {% if app['combodo.portal.instance.conf'].properties.logo is not null %}
                             <div class="ipb-navigation-menu--top-part--logo logo">
