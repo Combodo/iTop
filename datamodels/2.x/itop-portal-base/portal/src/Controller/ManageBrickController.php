@@ -40,6 +40,8 @@ use Combodo\iTop\Portal\Helper\RequestManipulatorHelper;
 use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
 use Combodo\iTop\Portal\Helper\SecurityHelper;
 use Combodo\iTop\Portal\Routing\UrlGenerator;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use DBObject;
 use DBObjectSet;
 use DBSearch;
@@ -70,10 +72,15 @@ use utils;
  */
 class ManageBrickController extends BrickController
 {
-	/** @var string EXCEL_EXPORT_TEMPLATE_PATH 
-	 * @deprecated since 3.2.1
-	 */
-	const EXCEL_EXPORT_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/popup-export-excel.html.twig';
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
+	{
+		parent::RegisterTemplates($oTemplatesProviderService);
+		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+			TemplateDefinitionDto::Create('modal_export_excel', static::TEMPLATES_BASE_PATH . 'bricks/manage/popup-export-excel.html.twig'),
+		);
+	}
 
 	/**
 	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
@@ -283,7 +290,7 @@ class ManageBrickController extends BrickController
             'sWikiUrl' => 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Auser%3Alists#excel_export',
 		);
 
-		return $this->render($oBrick->GetPopupExportExcelTemplatePath(), $aData);
+		return $this->render($this->GetTemplatesService()->GetTemplatePath(self::class, 'modal_export_excel'), $aData);
 	}
 
 	/**

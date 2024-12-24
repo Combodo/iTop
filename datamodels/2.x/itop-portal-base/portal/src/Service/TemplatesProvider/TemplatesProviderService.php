@@ -20,6 +20,7 @@
 
 namespace Combodo\iTop\Portal\Service\TemplatesProvider;
 
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 /**
@@ -29,6 +30,8 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
  */
 class TemplatesProviderService
 {
+	private string $sTemplateUIVersion = 'portal_base_ui_2017';
+
 	/** @var array Templates definitions (possibly altered by portal configuration) */
 	private array $aTemplatesDefinitions = [];
 
@@ -42,6 +45,10 @@ class TemplatesProviderService
 		#[AutowireIterator('combodo.template.provider')]iterable $oTemplatesProviders,
 		private array $aCombodoPortalInstanceConf)
 	{
+		// UI version
+		if(isset($aCombodoPortalInstanceConf['properties']['ui_version'])){
+			$this->sTemplateUIVersion = $aCombodoPortalInstanceConf['properties']['ui_version'];
+		}
 
 		// retrieve properties here
 		$aCombodoPortalInstanceConf['bricks'] = [
@@ -51,7 +58,7 @@ class TemplatesProviderService
 //				'modal' => 'benji-data-extension/templates/empty_for_test.html.twig'
 			],
 			'Combodo\\iTop\\Portal\\Brick\\AbstractBrick' => [
-//				'page' => 'benji-data-extension/templates/layout.html.twig'
+				'page' => 'benji-data-extension/templates/layout.html.twig'
 			],
 			'Combodo\\iTop\\Portal\\Brick\\PortalBrick' => [
 //				'tile' => 'benji-data-extension/templates/tile.html.twig',
@@ -70,8 +77,13 @@ class TemplatesProviderService
 			],
 		];
 
+		$oTemplatesProviders = InterfaceDiscovery::GetInstance()->FindItopClasses('Combodo\\iTop\\Portal\\Service\\TemplatesProvider\\TemplatesProviderInterface');
+
 		// Initialize templates providers
-		$this->RegisterTemplatesProviders($oTemplatesProviders);
+		$this->RegisterTemplatesProviders2($oTemplatesProviders);
+
+		// Initialize templates providers
+//		$this->RegisterTemplatesProviders($oTemplatesProviders);
 
 		// templates overrides
 		foreach ($this->aTemplatesDefinitions as $oTemplateProvider => $aTemplates) {
@@ -100,6 +112,21 @@ class TemplatesProviderService
 		// register templates
 		foreach ($oTemplatesProviders as $oTemplateProvider) {
 			$oTemplateProvider->RegisterTemplates($this);
+		}
+	}
+
+	/**
+	 * Register templates providers.
+	 *
+	 * @param iterable $oTemplatesProviders
+	 *
+	 * @return void
+	 */
+	private function RegisterTemplatesProviders2(iterable $oTemplatesProviders) : void
+	{
+		// register templates
+		foreach ($oTemplatesProviders as $oTemplateProvider) {
+			$oTemplateProvider::RegisterTemplates($this);
 		}
 	}
 
@@ -235,9 +262,20 @@ class TemplatesProviderService
 		return null;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function GetTemplatesDefinitions() : array
 	{
 		return $this->aTemplatesDefinitions;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetUIVersion() : string
+	{
+		return $this->sTemplateUIVersion;
 	}
 
 

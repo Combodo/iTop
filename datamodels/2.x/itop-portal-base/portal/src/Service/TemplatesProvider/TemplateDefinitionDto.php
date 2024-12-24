@@ -35,7 +35,7 @@ class TemplateDefinitionDto
 	public function __construct(
 		private readonly string $sId,
 		private ?string $sValue = null,
-		private TemplatesKindEnumeration $oType,
+		private TemplatesKindEnumeration $oType = TemplatesKindEnumeration::PATH,
 		private readonly ?bool $bIsOverridable = false,
 		private readonly ?string $sAlias = null,
 	)
@@ -94,7 +94,7 @@ class TemplateDefinitionDto
 		return $this->sInitialValue;
 	}
 
-	public static function Create(string $sTemplateId, string $sValue, TemplatesKindEnumeration $oType = TemplatesKindEnumeration::PATH, bool $isOverridable= false, ?string $sAlias = null): TemplateDefinitionDto
+	public static function Create(string $sTemplateId, string $sValue, TemplatesKindEnumeration $oType = TemplatesKindEnumeration::PATH, bool $isOverridable= true, ?string $sAlias = null): TemplateDefinitionDto
 	{
 		return new TemplateDefinitionDto($sTemplateId, $sValue, $oType, $isOverridable, $sAlias);
 	}

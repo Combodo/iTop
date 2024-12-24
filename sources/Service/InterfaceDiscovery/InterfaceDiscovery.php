@@ -109,7 +109,11 @@ class InterfaceDiscovery
 
 		// guess all the autoload class maps from the extensions
 		$aAutoloadClassMaps = glob(APPROOT.'env-'.utils::GetCurrentEnvironment().'/*/vendor/composer/autoload_classmap.php');
+		if($aAutoloadClassMaps === false) {
+			$aAutoloadClassMaps = [];
+		}
 		$aAutoloadClassMaps[] = APPROOT.'lib/composer/autoload_classmap.php';
+		$aAutoloadClassMaps[] = APPROOT.'env-'.utils::GetCurrentEnvironment().'/itop-portal-base/portal/vendor/composer/autoload_classmap.php';
 
 		if ($this->GetCacheMode() === self::CACHE_DYNAMIC) {
 			$this->oCacheService->Store('InterfaceDiscovery', 'autoload_classmaps', $aAutoloadClassMaps);
