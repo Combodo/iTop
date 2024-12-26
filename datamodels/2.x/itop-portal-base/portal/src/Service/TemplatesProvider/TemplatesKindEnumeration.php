@@ -21,7 +21,9 @@
 namespace Combodo\iTop\Portal\Service\TemplatesProvider;
 
 /**
+ * Template definition kind enumeration.
  *
+ * @package Combodo\iTop\Portal\Service\TemplatesProvider
  * @since 3.2.1
  */
 enum TemplatesKindEnumeration

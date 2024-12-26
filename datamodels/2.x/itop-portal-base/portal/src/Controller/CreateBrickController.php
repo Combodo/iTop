@@ -23,7 +23,6 @@ namespace Combodo\iTop\Portal\Controller;
 use Combodo\iTop\Portal\Brick\BrickCollection;
 use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CreateBrickController

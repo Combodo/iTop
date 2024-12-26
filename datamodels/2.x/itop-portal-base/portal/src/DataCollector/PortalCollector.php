@@ -9,8 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 /**
- * Collector for Symfony profiler.
+ * Template information collector for Symfony profiler.
  *
+ * @package Combodo\iTop\Portal\DataCollector
  * @since 3.2.1
  */
 class PortalCollector extends AbstractDataCollector
@@ -31,7 +32,7 @@ class PortalCollector extends AbstractDataCollector
 	{
 		$aTemplatesDefinitions = $this->oTemplatesProviderService->GetTemplatesDefinitions();
 		$this->data = [
-			'templates' => $aTemplatesDefinitions,
+			'templates_definitions' => $aTemplatesDefinitions,
 			'templates_count' => $this->ComputeOverridesCount($aTemplatesDefinitions),
 			'ui_version' => $this->oTemplatesProviderService->GetUIVersion(),
 		];
@@ -42,9 +43,9 @@ class PortalCollector extends AbstractDataCollector
 		return 'itop-portal-base/portal/templates/data_collector/portal.html.twig';
 	}
 
-	public function getTemplates(): array
+	public function getTemplatesDefinitions(): array
 	{
-		return $this->data['templates'];
+		return $this->data['templates_definitions'];
 	}
 
 	public function getTemplatesCount(): array
@@ -81,7 +82,7 @@ class PortalCollector extends AbstractDataCollector
 		}
 		return [
 			'count' => $iCount,
-			'scope_count' => count($aTemplatesDefinitions),
+			'providers_count' => count($aTemplatesDefinitions),
 			'overrides_count' => $iOverridesCount,
 			'extensions_count' => count($aExtensions)
 		];

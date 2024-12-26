@@ -153,7 +153,7 @@ class ManageBrick extends PortalBrick
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
 		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
-			TemplateDefinitionDto::Create('tile_default', static::TEMPLATES_BASE_PATH . 'manage/tile-default.html.twig', TemplatesKindEnumeration::PATH, true),
+			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'manage/tile-default.html.twig', TemplatesKindEnumeration::PATH, true),
 			TemplateDefinitionDto::Create('tile_badge', static::TEMPLATES_BASE_PATH. 'manage/tile-badge.html.twig', TemplatesKindEnumeration::PATH, true),
 			TemplateDefinitionDto::Create('tile_chart',  static::TEMPLATES_BASE_PATH . 'manage/tile-chart.html.twig', TemplatesKindEnumeration::PATH, true),
 			TemplateDefinitionDto::Create('tile_top_list', static::TEMPLATES_BASE_PATH . 'manage/tile-top-list.html.twig', TemplatesKindEnumeration::PATH, true),
@@ -228,7 +228,7 @@ class ManageBrick extends PortalBrick
 			self::ENUM_TILE_MODE_BADGE => $this->GetTemplatePath('tile_badge'),
 			self::ENUM_TILE_MODE_PIE, self::ENUM_TILE_MODE_BAR => $this->GetTemplatePath('tile_chart'),
 			self::ENUM_TILE_MODE_TOP => $this->GetTemplatePath('tile_top_list'),
-			default => $this->GetTemplatePath('tile_default'),
+			default => $this->GetTemplatePath('tile'),
 		};
 	}
 

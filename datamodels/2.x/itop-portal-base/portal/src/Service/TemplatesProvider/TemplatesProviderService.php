@@ -20,17 +20,22 @@
 
 namespace Combodo\iTop\Portal\Service\TemplatesProvider;
 
+use Combodo\iTop\Portal\Controller\AbstractController;
+use Combodo\iTop\Portal\Controller\DefaultController;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
-use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
+use Exception;
+use IssueLog;
 
 /**
- * Responsible for managing portal templates.
+ * Service responsible for managing portal templates.
  *
+ * @package Combodo\iTop\Portal\Service\TemplatesProvider
  * @since 3.2.1
  */
 class TemplatesProviderService
 {
-	private string $sTemplateUIVersion = 'portal_base_ui_2017';
+	/** @var string|mixed Templates UI version */
+	private string $sTemplateUIVersion = '-';
 
 	/** @var array Templates definitions (possibly altered by portal configuration) */
 	private array $aTemplatesDefinitions = [];
@@ -38,95 +43,74 @@ class TemplatesProviderService
 	/**
 	 * TemplatesService constructor.
 	 *
-	 * @param iterable $oTemplatesProviders
 	 * @param array $aCombodoPortalInstanceConf
 	 */
-	public function __construct(
-		#[AutowireIterator('combodo.template.provider')]iterable $oTemplatesProviders,
-		private array $aCombodoPortalInstanceConf)
+	public function __construct(array $aCombodoPortalInstanceConf)
 	{
 		// UI version
 		if(isset($aCombodoPortalInstanceConf['properties']['ui_version'])){
 			$this->sTemplateUIVersion = $aCombodoPortalInstanceConf['properties']['ui_version'];
 		}
 
-		// retrieve properties here
-		$aCombodoPortalInstanceConf['bricks'] = [
-			'Combodo\\iTop\\Portal\\Controller\\AbstractController' => [
-				'page' => 'benji-data-extension/templates/layout.html.twig'
-//				'mode_loader' => 'benji-data-extension/templates/empty_for_test.html.twig' ???
-//				'modal' => 'benji-data-extension/templates/empty_for_test.html.twig'
-			],
-			'Combodo\\iTop\\Portal\\Brick\\AbstractBrick' => [
-				'page' => 'benji-data-extension/templates/layout.html.twig'
-			],
-			'Combodo\\iTop\\Portal\\Brick\\PortalBrick' => [
-//				'tile' => 'benji-data-extension/templates/tile.html.twig',
-			],
-			'Combodo\\iTop\\Portal\\Brick\\ManageBrick' => [
-//				'tile_default' => 'benji-data-extension/templates/empty_for_test.html.twig',
-//				'tile_badge' => 'benji-data-extension/templates/empty_for_test.html.twig',
-//				'tile_chart' => 'benji-data-extension/templates/empty_for_test.html.twig',
-//				'tile_top_list' => 'benji-data-extension/templates/empty_for_test.html.twig',
-//				'page' => 'benji-data-extension/templates/empty_for_test.html.twig',
-//				'page_table' => 'benji-data-extension/templates/empty_for_test.html.twig',
-//				'page_chart' => 'benji-data-extension/templates/empty_for_test.html.twig',
-//				'page_chart_bar' => 'benji-data-extension/templates/empty_for_test.html.twig',
-//				'page_chart_Pie' => 'benji-data-extension/templates/empty_for_test.html.twig',
-//				'popup_export_excel' => 'benji-data-extension/templates/empty_for_test.html.twig',     ???
-			],
-		];
-
-		$oTemplatesProviders = InterfaceDiscovery::GetInstance()->FindItopClasses('Combodo\\iTop\\Portal\\Service\\TemplatesProvider\\TemplatesProviderInterface');
-
 		// Initialize templates providers
-		$this->RegisterTemplatesProviders2($oTemplatesProviders);
+		$this->RegisterTemplatesProviders();
 
-		// Initialize templates providers
-//		$this->RegisterTemplatesProviders($oTemplatesProviders);
+		// Portal properties overrides
+		$this->PortalPropertiesOverrides($aCombodoPortalInstanceConf['properties']['templates']);
+	}
 
-		// templates overrides
-		foreach ($this->aTemplatesDefinitions as $oTemplateProvider => $aTemplates) {
-			if(array_key_exists($oTemplateProvider, $aCombodoPortalInstanceConf['bricks'])){
-				$aProviderData = $aCombodoPortalInstanceConf['bricks'][$oTemplateProvider];
-				foreach($aProviderData as $sTemplateId => $sTemplatePath){
-					/** @var TemplateDefinitionDto $TemplateDefinition */
-					$TemplateDefinition = $this->aTemplatesDefinitions[$oTemplateProvider][$sTemplateId];
-					$TemplateDefinition->OverrideTemplate(TemplatesKindEnumeration::PATH, $sTemplatePath);
-				}
+	/**
+	 * Overrides templates properties.
+	 *
+	 * @param array $aPortalTemplatesProperties
+	 *
+	 * @return void
+	 */
+	private function PortalPropertiesOverrides(array $aPortalTemplatesProperties) : void
+	{
+		// Loop through the templates
+		foreach ($aPortalTemplatesProperties as $sKey => $oValue){
+
+			switch($sKey){
+				case 'layout':
+					$oTemplateDefinition = $this->GetTemplateDefinition(AbstractController::class, 'page');
+					$oTemplateDefinition->OverrideTemplate(TemplatesKindEnumeration::PATH, $oValue);
+					break;
+				case 'home':
+					$oTemplateDefinition = $this->GetTemplateDefinition(DefaultController::class, 'home');
+					$oTemplateDefinition->OverrideTemplate(TemplatesKindEnumeration::PATH, $oValue);
+					break;
+				default:
+					if(is_array($oValue)){
+						foreach($oValue as $sTemplateId => $sTemplatePath){
+							$oTemplateDefinition = $this->GetTemplateDefinition($sKey, $sTemplateId);
+							$oTemplateDefinition?->OverrideTemplate(TemplatesKindEnumeration::PATH, $sTemplatePath);
+						}
+					}
+					break;
 			}
 		}
-
-		echo '';
 	}
 
+
 	/**
-	 * Register templates providers.
-	 *
-	 * @param iterable $oTemplatesProviders
+	 * Register templates providers
 	 *
 	 * @return void
 	 */
-	private function RegisterTemplatesProviders(iterable $oTemplatesProviders) : void
+	private function RegisterTemplatesProviders() : void
 	{
-		// register templates
-		foreach ($oTemplatesProviders as $oTemplateProvider) {
-			$oTemplateProvider->RegisterTemplates($this);
+		try{
+			// search for templates providers
+			$oTemplatesProviders = InterfaceDiscovery::GetInstance()->FindItopClasses('Combodo\\iTop\\Portal\\Service\\TemplatesProvider\\TemplatesProviderInterface');
+
+			// register templates
+			foreach ($oTemplatesProviders as $oTemplateProvider) {
+				$oTemplateProvider::RegisterTemplates($this);
+			}
 		}
-	}
-
-	/**
-	 * Register templates providers.
-	 *
-	 * @param iterable $oTemplatesProviders
-	 *
-	 * @return void
-	 */
-	private function RegisterTemplatesProviders2(iterable $oTemplatesProviders) : void
-	{
-		// register templates
-		foreach ($oTemplatesProviders as $oTemplateProvider) {
-			$oTemplateProvider::RegisterTemplates($this);
+		catch(Exception $e){
+			IssueLog::Error($e->getMessage());
 		}
 	}
 

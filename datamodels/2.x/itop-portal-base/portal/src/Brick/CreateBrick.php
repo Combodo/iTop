@@ -48,15 +48,6 @@ class CreateBrick extends PortalBrick
 	/** @var array $aRules */
 	protected $aRules;
 
-	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
-	{
-		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
-			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH . 'create/modal.html.twig')
-		);
-	}
-
 	/**
 	 * Constructor
 	 */

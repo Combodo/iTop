@@ -7,7 +7,7 @@
         <span class="icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor"><path d="M192 64l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32zM82.7 207c-15.3 8.8-20.5 28.4-11.7 43.7l32 55.4c8.8 15.3 28.4 20.5 43.7 11.7l55.4-32c15.3-8.8 20.5-28.4 11.7-43.7l-32-55.4c-8.8-15.3-28.4-20.5-43.7-11.7L82.7 207zM288 192c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0zm64 160c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0zM160 384l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32zM32 352c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0z"/></svg>
         </span>
-        <span class="sf-toolbar-label">Portal{% if collector.getTemplatesCount.overrides_count > 0 %} <span style="color: #a57011;"> Overrides</span>{% endif %}</span>
+        <span class="sf-toolbar-label">Portal{% if collector.getTemplatesCount.overrides_count > 0 %} <span style=" color: var(--sf-toolbar-yellow-600);"> Overrides</span>{% endif %}</span>
     {% endset %}
 
     {# toolbar panel #}
@@ -22,6 +22,21 @@
 
     {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { 'link': true }) }}
 
+{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+
+
+    <style>
+        .overridden_value {
+            color: var(--color-link);
+        }
+        .old_value {
+            color: grey;
+            text-decoration: line-through;
+        }
+    </style>
 {% endblock %}
 
 {% block menu %}
@@ -46,21 +61,13 @@
 
     {# metrics #}
     <div class="metrics">
+        {# ui version #}
         <div class="metric">
             <span class="value">{{ collector.getUIVersion }}</span>
-            <span class="label">Version</span>
+            <span class="label">UI Version</span>
         </div>
         <div class="metric-divider"></div>
-        <div class="metric-group">
-            <div class="metric">
-                <span class="value">{{ collector.getTemplatesCount.extensions_count }}</span>
-                <span class="label">Extensions</span>
-            </div>
-            <div class="metric">
-                <span class="value">{{ collector.getTemplatesCount.scope_count }}</span>
-                <span class="label">Scopes</span>
-            </div>
-        </div>
+        {# templates #}
         <div class="metric-group">
             <div class="metric">
                 <span class="value">{{ collector.getTemplatesCount.count }}</span>
@@ -69,6 +76,18 @@
             <div class="metric">
                 <span class="value">{{ collector.getTemplatesCount.overrides_count }}</span>
                 <span class="label">Overridden</span>
+            </div>
+        </div>
+        {# additional info #}
+        <div class="metric-divider"></div>
+        <div class="metric-group">
+            <div class="metric">
+                <span class="value">{{ collector.getTemplatesCount.extensions_count }}</span>
+                <span class="label">Extensions</span>
+            </div>
+            <div class="metric">
+                <span class="value">{{ collector.getTemplatesCount.providers_count }}</span>
+                <span class="label">Providers</span>
             </div>
         </div>
     </div>
@@ -83,7 +102,7 @@
     <table>
         <thead>
             <tr>
-                <th>Scope</th>
+                <th>Provider</th>
                 <th>ID</th>
                 <th>Type</th>
                 <th>Template</th>
@@ -91,13 +110,13 @@
                 <th>Override</th>
             </tr>
         </thead>
-        {% for scope,item in collector.templates %}
+        {% for provider,item in collector.getTemplatesDefinitions %}
             {% for id,template in item %}
-                <tr {% if template.IsOverridden %}style="color: #a57011;"{% endif %}>
-                    <td>{{ scope }}</td>
+                <tr {% if template.IsOverridden %}class="overridden_value"{% endif %}>
+                    <td>{{ provider }}</td>
                     <td>{{ template.Id }}</td>
-                    <td>{{ template.Type.name }}</td>
-                    <td>{{ template.Value }}</td>
+                    <td>{{ template.Type.name }}{% if template.IsOverridden %}<div class="old_value">{{ template.initialType.name }}</div>{% endif %}</td>
+                    <td>{{ template.Value }}{% if template.IsOverridden %}<div class="old_value">{{ template.initialValue }}</div>{% endif %}</td>
                     <td>{{ template.Alias }}</td>
                     <td>{% if template.IsOverridable %}
                             {% if template.IsOverridden %}

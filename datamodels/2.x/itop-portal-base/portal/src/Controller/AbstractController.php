@@ -45,7 +45,6 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig', TemplatesKindEnumeration::PATH, true),
 			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH . 'modal/layout.html.twig', TemplatesKindEnumeration::PATH, true),
-			TemplateDefinitionDto::Create('mode_loader', static::TEMPLATES_BASE_PATH. 'modal/mode_loader.html.twig'),
 		);
 	}
 

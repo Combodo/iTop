@@ -84,6 +84,7 @@ class ObjectController extends BrickController
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH. 'bricks/object/layout.html.twig'),
 			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH. 'bricks/object/modal.html.twig'),
 			TemplateDefinitionDto::Create('mode_create', static::TEMPLATES_BASE_PATH. 'bricks/object/mode_create.html.twig'),
+			TemplateDefinitionDto::Create('mode_loader', static::TEMPLATES_BASE_PATH. 'modal/mode_loader.html.twig'),
 		);
 	}
 

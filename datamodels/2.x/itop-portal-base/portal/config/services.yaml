@@ -79,8 +79,6 @@ services:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 200 }]
     Combodo\iTop\Portal\EventListener\ExceptionListener:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.exception', priority: 500 }]
-    Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface:
-      tags: [ 'combodo.template.provider' ]
 
 
   # Add more service definitions when explicit configuration is needed
