@@ -20,6 +20,7 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
@@ -60,6 +61,9 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 	{
 		$this->oRouter = $oRouter;
 	}
+
+	/** @var array templates paths */
+	protected array $aOverloadedTemplatesPaths = [];
 
 	/** @var TemplatesProviderService templates provider service */
 	private TemplatesProviderService $oTemplatesService;
@@ -131,5 +135,34 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
 
 		return $aRouteDefaults['_controller'];
+	}
+
+	/**
+	 * Returns the controller template path
+	 * @since 3.2.1
+	 *
+	 * @param string $sTemplateId
+	 *
+	 * @return string
+	 */
+	public function GetTemplatePath(string $sTemplateId) : string
+	{
+		return static::GetTemplatesService()->FindBrickDefaultTemplate($this, $sTemplateId);
+	}
+
+	/**
+	 * Sets the brick template path
+	 *
+	 * @param string $sTemplateId
+	 * @param string $sTileTemplatePath
+	 *
+	 * @return \Combodo\iTop\Portal\Controller\AbstractController
+	 * @since 3.2.1
+	 *
+	 */
+	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath) : AbstractController
+	{
+		static::GetTemplatesService()->SetTemplatePath($this, $sTemplateId, $sTileTemplatePath);
+		return $this;
 	}
 }

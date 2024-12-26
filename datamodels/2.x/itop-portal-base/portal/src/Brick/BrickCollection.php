@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use DOMFormatException;
 use Exception;
 use UserRights;
@@ -56,12 +57,13 @@ class BrickCollection
 	 * BrickCollection constructor.
 	 *
 	 * @param \ModuleDesign $oModuleDesign
+	 * @param \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService $oTemplatesProviderService
 	 * @param array $aCombodoPortalInstanceConf
 	 *
 	 * @throws \Exception
 	 * @since 3.2.1 Added $aCombodoPortalInstanceConf parameter
 	 */
-	public function __construct(ModuleDesign $oModuleDesign, array $aCombodoPortalInstanceConf)
+	public function __construct(ModuleDesign $oModuleDesign, TemplatesProviderService $oTemplatesProviderService, array $aCombodoPortalInstanceConf)
 	{
 		$this->oModuleDesign = $oModuleDesign;
 		$this->aAllowedBricks = null;

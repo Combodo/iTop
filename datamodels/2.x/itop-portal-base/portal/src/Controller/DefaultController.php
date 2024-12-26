@@ -83,7 +83,7 @@ class DefaultController extends AbstractController
 		}
 
 		// Home page template
-		$sTemplatePath = $this->GetTemplatesService()->GetTemplatePath(self::class, 'home');
+		$sTemplatePath = $this->GetTemplatePath('home');
 
 		return $this->render($sTemplatePath, $aData);
 	}

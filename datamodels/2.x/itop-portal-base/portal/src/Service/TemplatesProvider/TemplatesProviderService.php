@@ -20,11 +20,13 @@
 
 namespace Combodo\iTop\Portal\Service\TemplatesProvider;
 
+use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Controller\AbstractController;
 use Combodo\iTop\Portal\Controller\DefaultController;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Exception;
 use IssueLog;
+use ReflectionClass;
 
 /**
  * Service responsible for managing portal templates.
@@ -39,6 +41,9 @@ class TemplatesProviderService
 
 	/** @var array Templates definitions (possibly altered by portal configuration) */
 	private array $aTemplatesDefinitions = [];
+
+	/** @var array overloaded templates paths */
+	protected array $aOverloadedTemplatesPaths = [];
 
 	/**
 	 * TemplatesService constructor.
@@ -152,6 +157,42 @@ class TemplatesProviderService
 	}
 
 	/**
+	 * @param object $oObject
+	 * @param string $sTemplateId
+	 * @param string $sTileTemplatePath
+	 *
+	 * @return $this
+	 */
+	public function SetTemplatePath(object $oObject, string $sTemplateId, string $sTileTemplatePath) : TemplatesProviderService
+	{
+		$sObjectId = spl_object_id($oObject);
+
+		if(array_key_exists($sObjectId, $this->aOverloadedTemplatesPaths) === false){
+			$this->aOverloadedTemplatesPaths[$sObjectId] = [];
+
+			$sId = $sObjectId;
+			if($oObject instanceof AbstractBrick){
+				$sId = $oObject->GetId();
+			}
+
+			$this->aOverloadedTemplatesPaths[$sObjectId]['info'] = [
+				'class' => get_class($oObject),
+				'id' => $sId,
+			];
+
+
+		}
+
+		if(array_key_exists('templates', $this->aOverloadedTemplatesPaths[$sObjectId]) === false){
+			$this->aOverloadedTemplatesPaths[$sObjectId]['templates'] = [];
+		}
+
+		$this->aOverloadedTemplatesPaths[$sObjectId]['templates'][$sTemplateId] = $sTileTemplatePath;
+
+		return $this;
+	}
+
+	/**
 	 * Get a template path.
 	 *
 	 * @param string $sScope
@@ -247,11 +288,51 @@ class TemplatesProviderService
 	}
 
 	/**
+	 * Search recursively the template path of the brick's.
+	 *
+	 * @param object $oObject
+	 * @param string $sTemplateId
+	 *
+	 * @return string|null
+	 * @since 3.2.1
+	 *
+	 */
+	public function FindBrickDefaultTemplate(object $oObject, string $sTemplateId) : ?string
+	{
+		$sObjectId = spl_object_id($oObject);
+
+		if(array_key_exists($sObjectId, $this->aOverloadedTemplatesPaths)
+		&& array_key_exists($sTemplateId, $this->aOverloadedTemplatesPaths[$sObjectId]['templates'])){
+			return $this->aOverloadedTemplatesPaths[$sObjectId]['templates'][$sTemplateId];
+		}
+
+		$sCurrentClass = get_class($oObject);
+		do{
+			$sTemplate = $this->GetTemplatePath($sCurrentClass, $sTemplateId);
+			$oReflexion = new ReflectionClass($sCurrentClass);
+			$oParent = $oReflexion->getParentClass();
+			if($oParent){
+				$sCurrentClass = $oReflexion->getParentClass()->getName();
+			}
+		}while($sTemplate === null && $oParent);
+
+		return $sTemplate;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function GetTemplatesDefinitions() : array
 	{
 		return $this->aTemplatesDefinitions;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function GetTemplatesInstancesOverloads() : array
+	{
+		return $this->aOverloadedTemplatesPaths;
 	}
 
 	/**
@@ -262,5 +343,18 @@ class TemplatesProviderService
 		return $this->sTemplateUIVersion;
 	}
 
+	/**
+	 * Returns the brick overloaded page template path
+	 *
+	 * @param string $sTemplateId
+	 *
+	 * @return string|null
+	 */
+	public function HasInstanceOverloadedTemplate(object $oObject, string $sTemplateId) : ?string
+	{
+		$sObjectId = spl_object_id($oObject);
 
+		return(array_key_exists($sObjectId, $this->aOverloadedTemplatesPaths)
+			&& array_key_exists($sTemplateId, $this->aOverloadedTemplatesPaths[$sObjectId]['templates']));
+	}
 }

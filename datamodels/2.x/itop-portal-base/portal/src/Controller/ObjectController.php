@@ -250,7 +250,7 @@ class ObjectController extends BrickController
 		if ($oRequest->isXmlHttpRequest()) {
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation)) {
-				$oResponse = $this->render($this->GetTemplatesService()->GetTemplatePath(self::class, 'modal'), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('modal'), $aData);
 			} else {
 				$oResponse = new JsonResponse($aData);
 			}
@@ -264,7 +264,7 @@ class ObjectController extends BrickController
 				}
 			}
 			$aData['sPageTitle'] = $aData['form']['title'];
-			$oResponse = $this->render($this->GetTemplatesService()->GetTemplatePath(self::class, 'page'), $aData);
+			$oResponse = $this->render($this->GetTemplatePath('page'), $aData);
 		}
 
 		return $oResponse;
@@ -325,7 +325,7 @@ class ObjectController extends BrickController
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation))
 			{
-				$oResponse = $this->render($this->GetTemplatesService()->GetTemplatePath(self::class, 'modal'), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('modal'), $aData);
 			}
 			else
 			{
@@ -345,7 +345,7 @@ class ObjectController extends BrickController
 				}
 			}
 			$aData['sPageTitle'] = $aData['form']['title'];
-			$oResponse = $this->render($this->GetTemplatesService()->GetTemplatePath(self::class, 'page'), $aData);
+			$oResponse = $this->render($this->GetTemplatePath('page'), $aData);
 		}
 
 		return $oResponse;
@@ -552,11 +552,11 @@ class ObjectController extends BrickController
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation))
 			{
-				$oResponse = $this->render($this->GetTemplatesService()->GetTemplatePath(self::class, 'modal'), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('modal'), $aData);
 			}
 			elseif ($sOperation === 'redirect')
 			{
-				$oResponse = $this->render($this->GetTemplatesService()->GetTemplatePath(AbstractController::class, 'mode_loader'), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('mode_loader'), $aData);
 			}
 			else
 			{
@@ -565,7 +565,7 @@ class ObjectController extends BrickController
 		}
 		else
 		{
-			$oResponse = $this->render($this->GetTemplatesService()->GetTemplatePath(self::class, 'page'), $aData);
+			$oResponse = $this->render($this->GetTemplatePath('page'), $aData);
 		}
 
 		return $oResponse;
@@ -1029,12 +1029,12 @@ class ObjectController extends BrickController
 
 			if ($oRequest->isXmlHttpRequest())
 			{
-				$oResponse = $this->render($this->GetTemplatesService()->GetTemplatePath(self::class, 'modal'), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('modal'), $aData);
 			}
 			else
 			{
 				//throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
-				$oResponse = $this->render($this->GetTemplatesService()->GetTemplatePath(self::class, 'page'), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('page'), $aData);
 			}
 		}
 		else
@@ -1615,7 +1615,7 @@ class ObjectController extends BrickController
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation))
 			{
-				$oResponse = $this->render($this->GetTemplatesService()->GetTemplatePath(self::class, 'modal'), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('modal'), $aData);
 			}
 			else
 			{
@@ -1635,7 +1635,7 @@ class ObjectController extends BrickController
 				}
 			}
 			$aData['sPageTitle'] = $aData['form']['title'];
-			$oResponse = $this->render($this->GetTemplatesService()->GetTemplatePath(self::class, 'page'), $aData);
+			$oResponse = $this->render($this->GetTemplatePath('page'), $aData);
 		}
 
 		return $oResponse;

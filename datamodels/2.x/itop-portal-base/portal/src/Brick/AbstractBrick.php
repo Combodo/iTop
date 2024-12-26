@@ -83,8 +83,6 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	protected $bVisible;
 	/** @var float $fRank */
 	protected $fRank;
-	/** @var array templates paths */
-	protected array $aOverloadedTemplatesPaths = [];
 	/** @var string|null $sPageTemplatePath @deprecated since 3.2.1 */
 	protected $sPageTemplatePath;
 	/** @var string $sTitle */
@@ -213,18 +211,6 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	}
 
 	/**
-	 * Returns the brick overloaded page template path
-	 *
-	 * @param string $sTemplateId
-	 *
-	 * @return string|null
-	 */
-	public function GetOverloadedTemplatePath(string $sTemplateId) : ?string
-	{
-		return array_key_exists($sTemplateId, $this->aOverloadedTemplatesPaths) ? $this->aOverloadedTemplatesPaths[$sTemplateId] : null;
-	}
-
-	/**
 	 * Returns the brick page template path
 	 *
 	 * @return string
@@ -233,49 +219,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 */
 	public function GetPageTemplatePath()
 	{
-		return $this->sPageTemplatePath !== null ? $this->sPageTemplatePath : $this->FindBrickDefaultTemplate('page');
-	}
-
-	/**
-	 * Returns the brick template path
-	 * @since 3.2.1
-	 *
-	 * @param string $sTemplateId
-	 *
-	 * @return string
-	 */
-	public function GetTemplatePath(string $sTemplateId) : string
-	{
-		// BEGIN cleaning 3.2.1 deprecated
-		if($sTemplateId === 'page' && $this->sPageTemplatePath !== null){
-			return $this->sPageTemplatePath;
-		}
-		// END cleaning 3.2.1 deprecated
-		return array_key_exists($sTemplateId, $this->aOverloadedTemplatesPaths) ? $this->aOverloadedTemplatesPaths[$sTemplateId] : $this->FindBrickDefaultTemplate($sTemplateId);
-	}
-
-	/**
-	 * Search recursively the template path of the brick's.
-	 * @since 3.2.1
-	 *
-	 * @param string $sTemplateId
-	 *
-	 * @return string|null
-	 * @throws \ReflectionException
-	 */
-	protected function FindBrickDefaultTemplate(string $sTemplateId) : ?string
-	{
-		$sCurrentClass = static::class;
-		do{
-			$sTemplate = static::GetTemplatesService()->GetTemplatePath($sCurrentClass, $sTemplateId);
-			$oReflexion = new ReflectionClass($sCurrentClass);
-			$oParent = $oReflexion->getParentClass();
-			if($oParent){
-				$sCurrentClass = $oReflexion->getParentClass()->getName();
-			}
-		}while($sTemplate === null && $oParent);
-
-		return $sTemplate;
+		return $this->sPageTemplatePath !== null ? $this->sPageTemplatePath : $this->GetTemplatePath('page');
 	}
 
 	/**
@@ -425,28 +369,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	public function SetPageTemplatePath($sPageTemplatePath)
 	{
 		$this->sPageTemplatePath = $sPageTemplatePath;
-		$this->aOverloadedTemplatesPaths['page'] = $sPageTemplatePath;
-		return $this;
-	}
-
-	/**
-	 * Sets the brick template path
-	 * @since 3.2.1
-	 *
-	 * @param string $sTemplateId
-	 * @param string $sTileTemplatePath
-	 *
-	 * @return \Combodo\iTop\Portal\Brick\PortalBrick
-	 */
-	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath) : AbstractBrick
-	{
-//		// BEGIN cleaning 3.2.1 deprecated
-//		if($sTemplateId === 'page'){
-//			$this->sPageTemplatePath = $sTileTemplatePath;
-//		}
-//		// END cleaning 3.2.1 deprecated
-		$this->aOverloadedTemplatesPaths[$sTemplateId] = $sTileTemplatePath;
-
+		$this->SetTemplatePath( 'page', $sPageTemplatePath);
 		return $this;
 	}
 
@@ -779,4 +702,48 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 		return $this;
 	}
 
+
+	/**
+	 * Sets the brick template path.
+	 * Template is managed by the TemplatesProviderService.
+	 *
+	 * @since 3.2.1
+	 *
+	 * @param string $sTemplateId
+	 * @param string $sTileTemplatePath
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\PortalBrick
+	 */
+	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath) : AbstractBrick
+	{
+		static::GetTemplatesService()->SetTemplatePath($this, $sTemplateId, $sTileTemplatePath);
+		return $this;
+	}
+
+	/**
+	 * Returns the brick template path
+	 * Template is managed by the TemplatesProviderService.
+	 *
+	 * @since 3.2.1
+	 *
+	 * @param string $sTemplateId
+	 *
+	 * @return string
+	 */
+	public function GetTemplatePath(string $sTemplateId) : string
+	{
+		return static::GetTemplatesService()->FindBrickDefaultTemplate($this, $sTemplateId);
+	}
+
+	/**
+	 * Returns the brick overloaded page template path
+	 *
+	 * @param string $sTemplateId
+	 *
+	 * @return string|null
+	 */
+	public function HasInstanceOverloadedTemplate(string $sTemplateId) : ?string
+	{
+		return static::GetTemplatesService()->HasInstanceOverloadedTemplate($this, $sTemplateId);
+	}
 }

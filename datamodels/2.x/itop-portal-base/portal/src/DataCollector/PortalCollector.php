@@ -33,6 +33,7 @@ class PortalCollector extends AbstractDataCollector
 		$aTemplatesDefinitions = $this->oTemplatesProviderService->GetTemplatesDefinitions();
 		$this->data = [
 			'templates_definitions' => $aTemplatesDefinitions,
+			'templates_instances_overloads' => $this->oTemplatesProviderService->GetTemplatesInstancesOverloads(),
 			'templates_count' => $this->ComputeOverridesCount($aTemplatesDefinitions),
 			'ui_version' => $this->oTemplatesProviderService->GetUIVersion(),
 		];
@@ -46,6 +47,11 @@ class PortalCollector extends AbstractDataCollector
 	public function getTemplatesDefinitions(): array
 	{
 		return $this->data['templates_definitions'];
+	}
+
+	public function getTemplatesInstancesOverloads(): array
+	{
+		return $this->data['templates_instances_overloads'];
 	}
 
 	public function getTemplatesCount(): array
@@ -86,6 +92,12 @@ class PortalCollector extends AbstractDataCollector
 			'overrides_count' => $iOverridesCount,
 			'extensions_count' => count($aExtensions)
 		];
+	}
+
+
+	public function GetInstanceDescriptionName(): string
+	{
+		return 'portal';
 	}
 
 }

@@ -290,7 +290,7 @@ class ManageBrickController extends BrickController
             'sWikiUrl' => 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Auser%3Alists#excel_export',
 		);
 
-		return $this->render($this->GetTemplatesService()->GetTemplatePath(self::class, 'modal_export_excel'), $aData);
+		return $this->render($this->GetTemplatePath('modal_export_excel'), $aData);
 	}
 
 	/**

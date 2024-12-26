@@ -271,7 +271,7 @@ abstract class PortalBrick extends AbstractBrick
 	 */
 	public function GetTileTemplatePath()
 	{
-		return $this->sTileTemplatePath !== null ? $this->sTileTemplatePath : $this->FindBrickDefaultTemplate('tile');
+		return $this->sTileTemplatePath !== null ? $this->sTileTemplatePath : $this->GetTemplatePath('tile');
 	}
 
 	/**

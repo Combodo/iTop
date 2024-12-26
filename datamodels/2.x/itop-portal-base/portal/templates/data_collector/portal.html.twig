@@ -133,4 +133,28 @@
         {% endfor %}
     </table>
 
+    {# Instances overloads #}
+    <h2>Instances Overloads</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Instance</th>
+            <th>Class</th>
+            <th>ID</th>
+            <th>Template</th>
+        </tr>
+        </thead>
+        {% for instance,item in collector.getTemplatesInstancesOverloads %}
+            {% for id,template in item.templates %}
+                <tr>
+                    <td>{{ item.info.id }}</td>
+                    <td>{{ item.info.class }}</td>
+                    <td>{{ id }}</td>
+                    <td>{{ template }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+
+    </table>
+
 {% endblock %}
