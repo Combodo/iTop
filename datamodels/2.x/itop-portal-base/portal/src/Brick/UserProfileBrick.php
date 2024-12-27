@@ -61,7 +61,7 @@ class UserProfileBrick extends PortalBrick
 	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+		$oTemplatesProviderService->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'user-profile/layout.html.twig'),
 		);
 	}

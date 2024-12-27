@@ -103,7 +103,7 @@ class BrowseBrick extends PortalBrick
 	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+		$oTemplatesProviderService->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'browse/layout.html.twig'),
 			TemplateDefinitionDto::Create('page_list', static::TEMPLATES_BASE_PATH . 'browse/mode_list.html.twig'),
 			TemplateDefinitionDto::Create('page_tree', static::TEMPLATES_BASE_PATH . 'browse/mode_tree.html.twig'),

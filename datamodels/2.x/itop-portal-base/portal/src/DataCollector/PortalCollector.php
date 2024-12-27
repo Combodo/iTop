@@ -28,38 +28,57 @@ class PortalCollector extends AbstractDataCollector
 	}
 
 	/** @inheritdoc  */
-	public function collect(Request $request, Response $response, Throwable $exception = null)
+	public function collect(Request $request, Response $response, Throwable $exception = null) : void
 	{
 		$aTemplatesDefinitions = $this->oTemplatesProviderService->GetTemplatesDefinitions();
 		$this->data = [
 			'templates_definitions' => $aTemplatesDefinitions,
-			'templates_instances_overloads' => $this->oTemplatesProviderService->GetTemplatesInstancesOverloads(),
+			'instances_overridden_templates' => $this->oTemplatesProviderService->GetInstancesOverriddenTemplatesPaths(),
 			'templates_count' => $this->ComputeOverridesCount($aTemplatesDefinitions),
 			'ui_version' => $this->oTemplatesProviderService->GetUIVersion(),
 		];
 	}
 
+	/**
+	 * @return string|null
+	 */
 	public static function getTemplate(): ?string
 	{
 		return 'itop-portal-base/portal/templates/data_collector/portal.html.twig';
 	}
 
-	public function getTemplatesDefinitions(): array
+	/**
+	 * @return array
+	 * @noinspection PhpUnused
+	 */
+	public function GetTemplatesDefinitions(): array
 	{
 		return $this->data['templates_definitions'];
 	}
 
-	public function getTemplatesInstancesOverloads(): array
+	/**
+	 * @return array
+	 * @noinspection PhpUnused
+	 */
+	public function GetInstancesOverriddenTemplates(): array
 	{
-		return $this->data['templates_instances_overloads'];
+		return $this->data['instances_overridden_templates'];
 	}
 
-	public function getTemplatesCount(): array
+	/**
+	 * @return array
+	 * @noinspection PhpUnused
+	 */
+	public function GetTemplatesCount(): array
 	{
 		return $this->data['templates_count'];
 	}
 
-	public function getUIVersion(): string
+	/**
+	 * @return string
+	 * @noinspection PhpUnused
+	 */
+	public function GetUIVersion(): string
 	{
 		return $this->data['ui_version'];
 	}
@@ -70,8 +89,8 @@ class PortalCollector extends AbstractDataCollector
 		$iOverridesCount = 0;
 		$aExtensions = [];
 
-		foreach($aTemplatesDefinitions as $sScope => $templates){
-			foreach ($templates as $sId => $template) {
+		foreach($aTemplatesDefinitions as $templates){
+			foreach ($templates as $template) {
 
 				$aMatches = [];
 				preg_match('#([\w-]+)/#', $template->GetValue(), $aMatches);
@@ -94,7 +113,10 @@ class PortalCollector extends AbstractDataCollector
 		];
 	}
 
-
+	/**
+	 * @return string
+	 * @noinspection PhpUnused
+	 */
 	public function GetInstanceDescriptionName(): string
 	{
 		return 'portal';

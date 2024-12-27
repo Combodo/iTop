@@ -23,7 +23,12 @@ use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-
+/**
+ * New Twig function useful for extending or including template handled by templates provider service.
+ *
+ * @package Combodo\iTop\Portal\Twig
+ * @since 3.2.1
+ */
 class TemplatesTwigExtension extends AbstractExtension
 {
 	const DEFAULT_SCOPE = 'Combodo\\iTop\\Portal\\Controller\\AbstractController';
@@ -42,6 +47,7 @@ class TemplatesTwigExtension extends AbstractExtension
 	}
 
 	/**
+	 * Retrieve the path of the desired template (maybe overridden by configuration).
 	 *
 	 * @param string $sId
 	 * @param string $sScope
@@ -55,6 +61,7 @@ class TemplatesTwigExtension extends AbstractExtension
 	}
 
 	/**
+	 * Retrieve the initial path of the desired template (hardcoded).
 	 *
 	 * @param string $sId
 	 * @param string $sScope

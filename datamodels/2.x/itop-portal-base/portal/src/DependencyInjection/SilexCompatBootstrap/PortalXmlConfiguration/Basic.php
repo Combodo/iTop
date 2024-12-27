@@ -22,10 +22,8 @@ namespace Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXml
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface;
-use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use DOMFormatException;
 use Exception;
-use IssueLog;
 use ReflectionClass;
 use Symfony\Component\DependencyInjection\Container;
 use utils;

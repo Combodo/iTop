@@ -136,7 +136,7 @@ class TemplateDefinitionDto
 	 */
 	public function OverrideTemplate(TemplatesKindEnumeration $oType, string $sValue): TemplateDefinitionDto
 	{
-		if($this->bIsOverridable){
+		if($this->IsOverridable()){
 			$this->oType = $oType;
 			$this->sValue = $sValue;
 			$this->bIsOverridden = true;
@@ -146,6 +146,8 @@ class TemplateDefinitionDto
 
 	/**
 	 * Return the overridden flag.
+	 *
+	 * @noinspection PhpUnused
 	 */
 	public function IsOverridden(): bool
 	{

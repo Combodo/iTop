@@ -80,7 +80,7 @@ class ObjectController extends BrickController
 	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+		$oTemplatesProviderService->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH. 'bricks/object/layout.html.twig'),
 			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH. 'bricks/object/modal.html.twig'),
 			TemplateDefinitionDto::Create('mode_create', static::TEMPLATES_BASE_PATH. 'bricks/object/mode_create.html.twig'),

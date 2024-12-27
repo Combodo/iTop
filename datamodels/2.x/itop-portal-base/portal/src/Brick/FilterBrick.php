@@ -64,7 +64,7 @@ class FilterBrick extends PortalBrick
 	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+		$oTemplatesProviderService->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'filter/tile.html.twig')
 		);
 	}

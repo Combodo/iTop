@@ -77,7 +77,7 @@ class ManageBrickController extends BrickController
 	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+		$oTemplatesProviderService->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('modal_export_excel', static::TEMPLATES_BASE_PATH . 'bricks/manage/popup-export-excel.html.twig'),
 		);
 	}
@@ -130,7 +130,7 @@ class ManageBrickController extends BrickController
 			$sDisplayMode = $oBrick->GetDefaultDisplayMode();
 		}
 
-		$aData = $this->GetData($oRequest, $sBrickId, $sGroupingTab, $oBrick->DetailsNeeded($sDisplayMode));
+		$aData = $this->GetData($oRequest, $sBrickId, $sGroupingTab, $oBrick->IsDetailsNeeded($sDisplayMode));
 
 		$aExportFields = $oBrick->GetExportFields();
 		$aData = $aData + array(

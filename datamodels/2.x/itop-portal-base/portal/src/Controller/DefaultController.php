@@ -39,7 +39,7 @@ class DefaultController extends AbstractController
 	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+		$oTemplatesProviderService->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('home', static::TEMPLATES_BASE_PATH . 'home/layout.html.twig'),
 		);
 	}

@@ -21,8 +21,6 @@
 namespace Combodo\iTop\Portal\Brick;
 
 use Combodo\iTop\DesignElement;
-use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
-use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use DOMFormatException;
 
 /**

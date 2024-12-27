@@ -59,7 +59,7 @@ abstract class PortalBrick extends AbstractBrick
 	const DEFAULT_DECORATION_CLASS_HOME = '';
 	/** @var string DEFAULT_DECORATION_CLASS_NAVIGATION_MENU */
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = '';
-	/** @var string DEFAULT_TILE_TEMPLATE_PATH */
+	/** @var string DEFAULT_TILE_TEMPLATE_PATH @deprecated since 3.2.1 */
 	const DEFAULT_TILE_TEMPLATE_PATH = null;
 	/** @var string|null DEFAULT_TILE_CONTROLLER_ACTION */
 	const DEFAULT_TILE_CONTROLLER_ACTION = null;
@@ -73,6 +73,8 @@ abstract class PortalBrick extends AbstractBrick
 
 	/** @var int $iWidth */
 	protected $iWidth;
+	/** @var bool width in pixel flag */
+	public bool $bIsWidthPixel = false;
 	/** @var int $iHeight */
 	protected $iHeight;
 	/** @var bool $bModal */
@@ -102,13 +104,13 @@ abstract class PortalBrick extends AbstractBrick
 	/** @var string $sTitleNavigationMenu */
 	protected $sTitleNavigationMenu;
 
-	public bool $bIsWidthPixel = true;
+
 
 	/** @inheritdoc  */
 	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+		$oTemplatesProviderService->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'tile.html.twig', TemplatesKindEnumeration::PATH, true),
 		);
 	}
@@ -267,7 +269,7 @@ abstract class PortalBrick extends AbstractBrick
 	 *
 	 * @return string
 	 *
-	 * @deprecated since 3.2.1
+	 * @deprecated since 3.2.1 use GetTemplatePath('tile') instead
 	 */
 	public function GetTileTemplatePath()
 	{
@@ -445,7 +447,7 @@ abstract class PortalBrick extends AbstractBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 *
-	 * @deprecated since 3.2.1
+	 * @deprecated since 3.2.1 use SetTemplatePath('tile') instead
 	 */
 	public function SetTileTemplatePath($sTileTemplatePath)
 	{

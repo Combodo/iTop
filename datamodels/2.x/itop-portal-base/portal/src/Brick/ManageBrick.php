@@ -31,20 +31,27 @@ use MetaModel;
 
 class ManageBrick extends PortalBrick
 {
-	/** Actions */
+	/** @var string ENUM_ACTION_VIEW */
 	const ENUM_ACTION_VIEW = 'view';
+	/** @var string ENUM_ACTION_EDIT */
 	const ENUM_ACTION_EDIT = 'edit';
 
-	/** Tile modes */
+	/** @var string ENUM_TILE_MODE_TEXT */
 	const ENUM_TILE_MODE_TEXT = 'text';
+	/** @var string ENUM_TILE_MODE_BADGE */
 	const ENUM_TILE_MODE_BADGE = 'badge';
+	/** @var string ENUM_TILE_MODE_PIE */
 	const ENUM_TILE_MODE_PIE = 'pie-chart';
+	/** @var string ENUM_TILE_MODE_BAR */
 	const ENUM_TILE_MODE_BAR = 'bar-chart';
+	/** @var string ENUM_TILE_MODE_TOP */
 	const ENUM_TILE_MODE_TOP = 'top-list';
 
-	/** Display modes */
+	/** @var string ENUM_DISPLAY_MODE_LIST */
 	const ENUM_DISPLAY_MODE_LIST = 'list';
+	/** @var string ENUM_DISPLAY_MODE_PIE */
 	const ENUM_DISPLAY_MODE_PIE = 'pie-chart';
+	/** @var string ENUM_DISPLAY_MODE_BAR */
 	const ENUM_DISPLAY_MODE_BAR = 'bar-chart';
 
 	/** Overloaded constants */
@@ -152,7 +159,7 @@ class ManageBrick extends PortalBrick
 	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+		$oTemplatesProviderService->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'manage/tile-default.html.twig', TemplatesKindEnumeration::PATH, true),
 			TemplateDefinitionDto::Create('tile_badge', static::TEMPLATES_BASE_PATH. 'manage/tile-badge.html.twig', TemplatesKindEnumeration::PATH, true),
 			TemplateDefinitionDto::Create('tile_chart',  static::TEMPLATES_BASE_PATH . 'manage/tile-chart.html.twig', TemplatesKindEnumeration::PATH, true),
@@ -197,7 +204,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return bool
 	 */
-	public function DetailsNeeded(string $sLayoutMode) : bool
+	public function IsDetailsNeeded(string $sLayoutMode) : bool
 	{
 		return static::$aDefaultLayoutData[$sLayoutMode]['need_details'];
 	}
@@ -237,7 +244,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return string
 	 */
-	public function GetOql() : string
+	public function GetOql()
 	{
 		return $this->sOql;
 	}
@@ -247,7 +254,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return string
 	 */
-	public function GetOpeningMode() : string
+	public function GetOpeningMode()
 	{
 		return $this->sOpeningMode;
 	}
@@ -257,7 +264,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return array
 	 */
-	public function GetGrouping() : array
+	public function GetGrouping()
 	{
 		return $this->aGrouping;
 	}
@@ -267,7 +274,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return array
 	 */
-	public function GetFields() : array
+	public function GetFields()
 	{
 		return $this->aFields;
 	}
@@ -277,7 +284,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return array
 	 */
-	public function GetExportFields() : array
+	public function GetExportFields()
 	{
 		return $this->aExportFields;
 	}
@@ -287,7 +294,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return bool
 	 */
-	public function GetShowTabCounts() : bool
+	public function GetShowTabCounts()
 	{
 		return $this->bShowTabCounts;
 	}
@@ -297,7 +304,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return string
 	 */
-	public function GetDefaultDisplayMode() : string
+	public function GetDefaultDisplayMode()
 	{
 		return $this->sDefaultDisplayMode;
 	}
@@ -309,7 +316,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
-	public function SetDefaultDisplayMode($sDefaultDisplayMode) : ManageBrick
+	public function SetDefaultDisplayMode($sDefaultDisplayMode)
 	{
 		$this->sDefaultDisplayMode = $sDefaultDisplayMode;
 
@@ -321,12 +328,12 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return string
 	 */
-	public function GetTileMode() : string
+	public function GetTileMode()
 	{
 		return $this->sTileMode;
 	}
 
-	public function GetDecorationCssClass() : string
+	public function GetDecorationCssClass()
 	{
 		return static::$aDefaultTileData[$this->sTileMode]['decorationCssClass'];
 	}
@@ -338,7 +345,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
-	public function SetTileMode($sTileMode) : ManageBrick
+	public function SetTileMode($sTileMode)
 	{
 		$this->sTileMode = $sTileMode;
 
@@ -346,17 +353,17 @@ class ManageBrick extends PortalBrick
 	}
 
 	/**
-	 * @return int
+	 * @return mixed
 	 */
-	public function GetGroupLimit() : int
+	public function GetGroupLimit()
 	{
 		return $this->iGroupLimit;
 	}
 
 	/**
-	 * @return bool
+	 * @return mixed
 	 */
-	public function ShowGroupOthers() : bool
+	public function ShowGroupOthers()
 	{
 		return $this->bGroupShowOthers;
 	}
@@ -368,7 +375,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
-	public function SetOql($sOql) : ManageBrick
+	public function SetOql($sOql)
 	{
 		$this->sOql = $sOql;
 
@@ -382,7 +389,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
-	public function SetOpeningMode($sOpeningMode) : ManageBrick
+	public function SetOpeningMode($sOpeningMode)
 	{
 		$this->sOpeningMode = $sOpeningMode;
 
@@ -396,7 +403,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
-	public function SetGrouping($aGrouping) : ManageBrick
+	public function SetGrouping($aGrouping)
 	{
 		$this->aGrouping = $aGrouping;
 
@@ -410,7 +417,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
-	public function SetFields($aFields) : ManageBrick
+	public function SetFields($aFields)
 	{
 		$this->aFields = $aFields;
 
@@ -424,7 +431,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
-	public function SetShowTabCounts($bShowTabCounts) : ManageBrick
+	public function SetShowTabCounts($bShowTabCounts)
 	{
 		$this->bShowTabCounts = $bShowTabCounts;
 
@@ -436,7 +443,7 @@ class ManageBrick extends PortalBrick
 	 * 
 	 * @return int
 	 */
-	public function GetDefaultListLength() : int
+	public function GetDefaultListLength()
 	{
 		return $this->iDefaultListLength;
 	}
@@ -448,8 +455,7 @@ class ManageBrick extends PortalBrick
 	 * 
 	 * @return $this
 	 */
-	public function SetDefaultListLength(int $iDefaultListLength) : ManageBrick
-	{
+	public function SetDefaultListLength($iDefaultListLength) {
 		$this->iDefaultListLength = $iDefaultListLength;
 		return $this;
 	}
@@ -464,7 +470,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
-	public function AddGrouping(string $sName, array $aGrouping) : ManageBrick
+	public function AddGrouping($sName, $aGrouping)
 	{
 		$this->aGrouping[$sName] = $aGrouping;
 
@@ -490,7 +496,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
-	public function RemoveGrouping($sName) : ManageBrick
+	public function RemoveGrouping($sName)
 	{
 		if (isset($this->aGrouping[$sName]))
 		{
@@ -507,7 +513,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
-	public function AddField($sAttCode) : ManageBrick
+	public function AddField($sAttCode)
 	{
 		if (!in_array($sAttCode, $this->aFields))
 		{
@@ -524,7 +530,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
-	public function RemoveField($sAttCode) : ManageBrick
+	public function RemoveField($sAttCode)
 	{
 		if (isset($this->aFields[$sAttCode]))
 		{
@@ -534,7 +540,7 @@ class ManageBrick extends PortalBrick
 		return $this;
 	}
 
-	public function AddExportField($sAttCode) : ManageBrick
+	public function AddExportField($sAttCode)
 	{
 		if (!in_array($sAttCode, $this->aExportFields))
 		{
@@ -544,7 +550,7 @@ class ManageBrick extends PortalBrick
 		return $this;
 	}
 
-	public function RemoveExportField($sAttCode) : ManageBrick
+	public function RemoveExportField($sAttCode)
 	{
 		if (isset($this->aExportFields[$sAttCode]))
 		{
@@ -559,7 +565,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return boolean
 	 */
-	public function HasGroupingTabs() : bool
+	public function HasGroupingTabs()
 	{
 		return (isset($this->aGrouping['tabs']) && !empty($this->aGrouping['tabs']));
 	}
@@ -569,7 +575,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return mixed false if there is no grouping named 'tabs', otherwise the array
 	 */
-	public function GetGroupingTabs() : mixed
+	public function GetGroupingTabs()
 	{
 		return (isset($this->aGrouping['tabs'])) ? $this->aGrouping['tabs'] : false;
 	}
@@ -579,7 +585,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return boolean
 	 */
-	public function HasGroupingAreas() : bool
+	public function HasGroupingAreas()
 	{
 		return (isset($this->aGrouping['areas']) && !empty($this->aGrouping['areas']));
 	}
@@ -589,7 +595,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return mixed false if there is no grouping named 'areas', otherwise the array
 	 */
-	public function GetGroupingAreas() : bool
+	public function GetGroupingAreas()
 	{
 		return (isset($this->aGrouping['areas'])) ? $this->aGrouping['areas'] : false;
 	}
@@ -601,7 +607,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @throws \Exception
 	 */
-	public function AddAvailableDisplayMode($sModeId) : ManageBrick
+	public function AddAvailableDisplayMode($sModeId)
 	{
 		if (!in_array($sModeId, static::$aDisplayModes))
 		{
@@ -621,7 +627,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
-	public function RemoveAvailableDisplayMode($sModeId): ManageBrick
+	public function RemoveAvailableDisplayMode($sModeId)
 	{
 		if (isset($this->aAvailableDisplayModes[$sModeId]))
 		{
@@ -636,7 +642,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return string[]
 	 */
-	public function GetAvailablesDisplayModes() : array
+	public function GetAvailablesDisplayModes()
 	{
 		return $this->aAvailableDisplayModes;
 	}
@@ -649,7 +655,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return boolean
 	 */
-	public function IsGroupingByDistinctValues($sGroupingName) : bool
+	public function IsGroupingByDistinctValues($sGroupingName)
 	{
 		return (isset($this->aGrouping[$sGroupingName]) && isset($this->aGrouping[$sGroupingName]['attribute']) && $this->aGrouping[$sGroupingName]['attribute'] !== '');
 	}
@@ -673,7 +679,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return boolean
 	 */
-	public function IsGroupingAreasByDistinctValues() : bool
+	public function IsGroupingAreasByDistinctValues()
 	{
 		return $this->IsGroupingByDistinctValues('areas');
 	}

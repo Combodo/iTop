@@ -30,7 +30,6 @@ use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use DOMFormatException;
 use ModuleDesign;
-use ReflectionClass;
 
 /**
  * Description of AbstractBrick
@@ -103,12 +102,11 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	/** @var \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService Templating provider service for registering default templates paths */
 	private static TemplatesProviderService $oTemplatesProviderService;
 
-
 	/** @inheritdoc  */
 	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
 	{
 		self::$oTemplatesProviderService = $oTemplatesProviderService;
-		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+		$oTemplatesProviderService->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig', TemplatesKindEnumeration::PATH, true),
 		);
 	}
@@ -122,12 +120,6 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	{
 		return self::$oTemplatesProviderService;
 	}
-
-	protected static function HasTemplatesServices() : bool
-	{
-		return isset(self::$oTemplatesProviderService);
-	}
-
 
 	/**
 	 * Returns all enum values for the data loading modes in an array.
@@ -215,7 +207,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 *
 	 * @return string
 	 *
-	 * @deprecated since 3.2.1
+	 * @deprecated since 3.2.1 use GetTemplatePath('page') instead
 	 */
 	public function GetPageTemplatePath()
 	{
@@ -364,7 +356,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
      *
      * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 *
-	 * @deprecated since 3.2.1
+	 * @deprecated since 3.2.1 use SetTemplatePath('page') instead
 	 */
 	public function SetPageTemplatePath($sPageTemplatePath)
 	{
@@ -704,7 +696,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 
 
 	/**
-	 * Sets the brick template path.
+	 * Override the brick default template path.
 	 * Template is managed by the TemplatesProviderService.
 	 *
 	 * @since 3.2.1
@@ -716,7 +708,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 */
 	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath) : AbstractBrick
 	{
-		static::GetTemplatesService()->SetTemplatePath($this, $sTemplateId, $sTileTemplatePath);
+		static::GetTemplatesService()->OverrideInstanceTemplatePath($this, $sTemplateId, $sTileTemplatePath);
 		return $this;
 	}
 
@@ -732,11 +724,11 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 */
 	public function GetTemplatePath(string $sTemplateId) : string
 	{
-		return static::GetTemplatesService()->FindBrickDefaultTemplate($this, $sTemplateId);
+		return static::GetTemplatesService()->GetProviderInstanceTemplatePath($this, $sTemplateId);
 	}
 
 	/**
-	 * Returns the brick overloaded page template path
+	 * Returns true if this brick has an overloaded page template path
 	 *
 	 * @param string $sTemplateId
 	 *
@@ -744,6 +736,6 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 */
 	public function HasInstanceOverloadedTemplate(string $sTemplateId) : ?string
 	{
-		return static::GetTemplatesService()->HasInstanceOverloadedTemplate($this, $sTemplateId);
+		return static::GetTemplatesService()->HasInstanceOverriddenTemplate($this, $sTemplateId);
 	}
 }

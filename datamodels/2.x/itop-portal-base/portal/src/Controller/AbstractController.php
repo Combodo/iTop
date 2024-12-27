@@ -20,7 +20,6 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
@@ -43,7 +42,7 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 	/** @inheritdoc  */
 	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
 	{
-		$oTemplatesProviderService->SetTemplatesDefinitions(self::class,
+		$oTemplatesProviderService->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig', TemplatesKindEnumeration::PATH, true),
 			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH . 'modal/layout.html.twig', TemplatesKindEnumeration::PATH, true),
 		);
@@ -62,9 +61,6 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 		$this->oRouter = $oRouter;
 	}
 
-	/** @var array templates paths */
-	protected array $aOverloadedTemplatesPaths = [];
-
 	/** @var TemplatesProviderService templates provider service */
 	private TemplatesProviderService $oTemplatesService;
 	#[Required]
@@ -73,7 +69,13 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 		$this->oTemplatesService = $oTemplatesService;
 
 	}
-	protected function GetTemplatesService()
+
+	/**
+	 * Return the templates provider service.
+	 *
+	 * @return \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService
+	 */
+	protected function GetTemplatesService() : TemplatesProviderService
 	{
 		return $this->oTemplatesService;
 	}
@@ -139,6 +141,7 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 
 	/**
 	 * Returns the controller template path
+	 *
 	 * @since 3.2.1
 	 *
 	 * @param string $sTemplateId
@@ -147,22 +150,21 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 	 */
 	public function GetTemplatePath(string $sTemplateId) : string
 	{
-		return static::GetTemplatesService()->FindBrickDefaultTemplate($this, $sTemplateId);
+		return static::GetTemplatesService()->GetProviderInstanceTemplatePath($this, $sTemplateId);
 	}
 
 	/**
 	 * Sets the brick template path
 	 *
+	 * @since 3.2.1
 	 * @param string $sTemplateId
 	 * @param string $sTileTemplatePath
 	 *
 	 * @return \Combodo\iTop\Portal\Controller\AbstractController
-	 * @since 3.2.1
-	 *
 	 */
 	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath) : AbstractController
 	{
-		static::GetTemplatesService()->SetTemplatePath($this, $sTemplateId, $sTileTemplatePath);
+		static::GetTemplatesService()->OverrideInstanceTemplatePath($this, $sTemplateId, $sTileTemplatePath);
 		return $this;
 	}
 }
