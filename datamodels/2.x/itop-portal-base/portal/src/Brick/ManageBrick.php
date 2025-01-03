@@ -167,9 +167,9 @@ class ManageBrick extends PortalBrick
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'manage/layout.html.twig', TemplatesKindEnumeration::PATH, true),
 			TemplateDefinitionDto::Create('page_table', static::TEMPLATES_BASE_PATH . 'manage/layout-table.html.twig', TemplatesKindEnumeration::PATH, true),
 			TemplateDefinitionDto::Create('page_chart',  static::TEMPLATES_BASE_PATH . 'manage/layout-chart.html.twig', TemplatesKindEnumeration::PATH, true),
-			TemplateDefinitionDto::Create('page_chart_bar', static::TEMPLATES_BASE_PATH . 'manage/mode-bar-chart.html.twig', TemplatesKindEnumeration::PATH, true, self::ENUM_DISPLAY_MODE_BAR),
-			TemplateDefinitionDto::Create('page_chart_pie',  static::TEMPLATES_BASE_PATH . 'manage/mode-pie-chart.html.twig', TemplatesKindEnumeration::PATH,true,self::ENUM_DISPLAY_MODE_PIE),
-			TemplateDefinitionDto::Create('popup_export_excel',  static::TEMPLATES_BASE_PATH . 'manage/popup-export-excel.html.twig'),
+			TemplateDefinitionDto::Create('mode_chart_bar', static::TEMPLATES_BASE_PATH . 'manage/mode-bar-chart.html.twig', TemplatesKindEnumeration::PATH, true, self::ENUM_DISPLAY_MODE_BAR),
+			TemplateDefinitionDto::Create('mode_chart_pie',  static::TEMPLATES_BASE_PATH . 'manage/mode-pie-chart.html.twig', TemplatesKindEnumeration::PATH,true,self::ENUM_DISPLAY_MODE_PIE),
+//			TemplateDefinitionDto::Create('popup_export_excel',  static::TEMPLATES_BASE_PATH . 'manage/popup-export-excel.html.twig'),
 		);
 	}
 

@@ -6,7 +6,7 @@
 {% block pMainContentHolder %}
     <div class="panel panel-default">
         <div class="panel-body">
-            {% include 'itop-portal-base/portal/templates/bricks/manage/mode-' ~ sDisplayMode ~ '.html.twig' with {'oBrick': oBrick, 'aColumns': aColumns, 'aNames': aNames, 'aUrls': aUrls, 'aDisplayValues': aDisplayValues} %}
+            {% include template(sDisplayMode, 'Combodo\\iTop\\Portal\\Brick\\ManageBrick') with {'oBrick': oBrick, 'aColumns': aColumns, 'aNames': aNames, 'aUrls': aUrls, 'aDisplayValues': aDisplayValues}%}
         </div>
     </div>
 {% endblock %}
