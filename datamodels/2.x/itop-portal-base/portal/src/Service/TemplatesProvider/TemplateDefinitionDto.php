@@ -35,22 +35,18 @@ class TemplateDefinitionDto
 	 *
 	 * @param string $sTemplateId
 	 * @param string $sValue
-	 * @param \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration $oType
 	 * @param bool $isOverridable
 	 * @param string|null $sAlias
 	 *
 	 * @return \Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto
 	 */
-	public static function Create(string $sTemplateId, string $sValue, TemplatesKindEnumeration $oType = TemplatesKindEnumeration::PATH, bool $isOverridable= true, ?string $sAlias = null): TemplateDefinitionDto
+	public static function Create(string $sTemplateId, string $sValue, bool $isOverridable= true, ?string $sAlias = null): TemplateDefinitionDto
 	{
-		return new TemplateDefinitionDto($sTemplateId, $sValue, $oType, $isOverridable, $sAlias);
+		return new TemplateDefinitionDto($sTemplateId, $sValue, $isOverridable, $sAlias);
 	}
 
 	/** @var bool $bIsOverridden flag set when overriding a template */
 	private bool $bIsOverridden = false;
-
-	/** @var \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration Initial template type */
-	private TemplatesKindEnumeration $oInitialType;
 
 	/** @var string|null $sInitialValue Initial template value */
 	private ?string $sInitialValue;
@@ -60,20 +56,17 @@ class TemplateDefinitionDto
 	 *
 	 * @param string $sId
 	 * @param string|null $sValue
-	 * @param \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration $oType
 	 * @param bool|null $bIsOverridable
 	 * @param string|null $sAlias
 	 */
 	private function __construct(
 		private readonly string $sId,
 		private ?string $sValue = null,
-		private TemplatesKindEnumeration $oType = TemplatesKindEnumeration::PATH,
 		private readonly ?bool $bIsOverridable = false,
 		private readonly ?string $sAlias = null,
 	)
 	{
 		// save overridable values
-		$this->oInitialType = $oType;
 		$this->sInitialValue = $sValue;
 	}
 
@@ -88,21 +81,17 @@ class TemplateDefinitionDto
 	}
 
 	/**
-	 * Return the template type.
-	 *
-	 * @return \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration|null
-	 */
-	public function GetType(): ?TemplatesKindEnumeration
-	{
-		return $this->oType !== null ? $this->oType : null;
-	}
-
-	/**
 	 * Return the template value depending on the template type
+	 *
+	 * @param bool $bInitialValue
+	 *
 	 * @return string
 	 */
-	public function GetValue(): string
+	public function GetValue(bool $bInitialValue = false): string
 	{
+		if($bInitialValue){
+			return $this->sInitialValue !== null ? $this->sInitialValue : '';
+		}
 		return $this->sValue !== null ? $this->sValue : '';
 	}
 
@@ -129,15 +118,13 @@ class TemplateDefinitionDto
 	/**
 	 * Override a template.
 	 *
-	 * @param \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration $oType
 	 * @param string $sValue
 	 *
 	 * @return $this
 	 */
-	public function OverrideTemplate(TemplatesKindEnumeration $oType, string $sValue): TemplateDefinitionDto
+	public function OverrideTemplate(string $sValue): TemplateDefinitionDto
 	{
 		if($this->IsOverridable()){
-			$this->oType = $oType;
 			$this->sValue = $sValue;
 			$this->bIsOverridden = true;
 		}
@@ -153,26 +140,5 @@ class TemplateDefinitionDto
 	{
 		return $this->bIsOverridden;
 	}
-
-	/**
-	 * Return the original template type.
-	 *
-	 * @return \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration
-	 */
-	public function GetInitialType(): TemplatesKindEnumeration
-	{
-		return $this->oInitialType;
-	}
-
-	/**
-	 * Return the original template value.
-	 *
-	 * @return string
-	 */
-	public function GetInitialValue(): string
-	{
-		return $this->sInitialValue;
-	}
-
 
 }

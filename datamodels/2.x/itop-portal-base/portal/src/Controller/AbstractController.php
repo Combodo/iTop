@@ -20,7 +20,6 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
@@ -43,8 +42,8 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
 	{
 		$oTemplatesProviderService->RegisterTemplates(self::class,
-			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig', TemplatesKindEnumeration::PATH, true),
-			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH . 'modal/layout.html.twig', TemplatesKindEnumeration::PATH, true),
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig'),
+			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH . 'modal/layout.html.twig'),
 		);
 	}
 

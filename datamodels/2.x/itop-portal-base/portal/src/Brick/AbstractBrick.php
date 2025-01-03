@@ -24,7 +24,6 @@ require_once APPROOT.'/core/moduledesign.class.inc.php';
 require_once APPROOT.'/setup/compiler.class.inc.php';
 
 use Combodo\iTop\DesignElement;
-use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
@@ -107,7 +106,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	{
 		self::$oTemplatesProviderService = $oTemplatesProviderService;
 		$oTemplatesProviderService->RegisterTemplates(self::class,
-			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig', TemplatesKindEnumeration::PATH, true),
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig'),
 		);
 	}
 

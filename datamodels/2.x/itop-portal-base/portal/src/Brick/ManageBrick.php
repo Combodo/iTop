@@ -22,7 +22,6 @@ namespace Combodo\iTop\Portal\Brick;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
-use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use DBSearch;
 use DOMFormatException;
@@ -160,16 +159,15 @@ class ManageBrick extends PortalBrick
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
 		$oTemplatesProviderService->RegisterTemplates(self::class,
-			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'manage/tile-default.html.twig', TemplatesKindEnumeration::PATH, true),
-			TemplateDefinitionDto::Create('tile_badge', static::TEMPLATES_BASE_PATH. 'manage/tile-badge.html.twig', TemplatesKindEnumeration::PATH, true),
-			TemplateDefinitionDto::Create('tile_chart',  static::TEMPLATES_BASE_PATH . 'manage/tile-chart.html.twig', TemplatesKindEnumeration::PATH, true),
-			TemplateDefinitionDto::Create('tile_top_list', static::TEMPLATES_BASE_PATH . 'manage/tile-top-list.html.twig', TemplatesKindEnumeration::PATH, true),
-			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'manage/layout.html.twig', TemplatesKindEnumeration::PATH, true),
-			TemplateDefinitionDto::Create('page_table', static::TEMPLATES_BASE_PATH . 'manage/layout-table.html.twig', TemplatesKindEnumeration::PATH, true),
-			TemplateDefinitionDto::Create('page_chart',  static::TEMPLATES_BASE_PATH . 'manage/layout-chart.html.twig', TemplatesKindEnumeration::PATH, true),
-			TemplateDefinitionDto::Create('mode_chart_bar', static::TEMPLATES_BASE_PATH . 'manage/mode-bar-chart.html.twig', TemplatesKindEnumeration::PATH, true, self::ENUM_DISPLAY_MODE_BAR),
-			TemplateDefinitionDto::Create('mode_chart_pie',  static::TEMPLATES_BASE_PATH . 'manage/mode-pie-chart.html.twig', TemplatesKindEnumeration::PATH,true,self::ENUM_DISPLAY_MODE_PIE),
-//			TemplateDefinitionDto::Create('popup_export_excel',  static::TEMPLATES_BASE_PATH . 'manage/popup-export-excel.html.twig'),
+			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'manage/tile-default.html.twig'),
+			TemplateDefinitionDto::Create('tile_badge', static::TEMPLATES_BASE_PATH. 'manage/tile-badge.html.twig'),
+			TemplateDefinitionDto::Create('tile_chart',  static::TEMPLATES_BASE_PATH . 'manage/tile-chart.html.twig'),
+			TemplateDefinitionDto::Create('tile_top_list', static::TEMPLATES_BASE_PATH . 'manage/tile-top-list.html.twig'),
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'manage/layout.html.twig'),
+			TemplateDefinitionDto::Create('page_table', static::TEMPLATES_BASE_PATH . 'manage/layout-table.html.twig'),
+			TemplateDefinitionDto::Create('page_chart',  static::TEMPLATES_BASE_PATH . 'manage/layout-chart.html.twig'),
+			TemplateDefinitionDto::Create('mode_chart_bar', static::TEMPLATES_BASE_PATH . 'manage/mode-bar-chart.html.twig', true, self::ENUM_DISPLAY_MODE_BAR),
+			TemplateDefinitionDto::Create('mode_chart_pie',  static::TEMPLATES_BASE_PATH . 'manage/mode-pie-chart.html.twig', true,self::ENUM_DISPLAY_MODE_PIE),
 		);
 	}
 

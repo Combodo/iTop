@@ -27,7 +27,6 @@
 {% block head %}
     {{ parent() }}
 
-
     <style>
         .overridden_value {
             color: var(--color-link);
@@ -37,6 +36,7 @@
             text-decoration: line-through;
         }
     </style>
+
 {% endblock %}
 
 {% block menu %}
@@ -136,7 +136,6 @@
             <tr>
                 <th>Provider</th>
                 <th>ID</th>
-                <th>Type</th>
                 <th>Template</th>
                 <th>Alias</th>
                 <th>Override</th>
@@ -147,8 +146,7 @@
                 <tr {% if template.IsOverridden %}class="overridden_value"{% endif %}>
                     <td>{{ provider }}</td>
                     <td>{{ template.Id }}</td>
-                    <td>{{ template.Type.name }}{% if template.IsOverridden %}<div class="old_value">{{ template.initialType.name }}</div>{% endif %}</td>
-                    <td>{{ template.Value }}{% if template.IsOverridden %}<div class="old_value">{{ template.initialValue }}</div>{% endif %}</td>
+                    <td>{{ template.Value }}{% if template.IsOverridden %}<div class="old_value">{{ template.GetValue(true) }}</div>{% endif %}</td>
                     <td>{{ template.Alias }}</td>
                     <td>{% if template.IsOverridable %}
                             {% if template.IsOverridden %}

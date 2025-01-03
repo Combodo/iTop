@@ -22,7 +22,6 @@ namespace Combodo\iTop\Portal\Brick;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
-use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesKindEnumeration;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use DOMFormatException;
 use ModuleDesign;
@@ -111,7 +110,7 @@ abstract class PortalBrick extends AbstractBrick
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
 		$oTemplatesProviderService->RegisterTemplates(self::class,
-			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'tile.html.twig', TemplatesKindEnumeration::PATH, true),
+			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'tile.html.twig'),
 		);
 	}
 

@@ -132,17 +132,17 @@ class TemplatesProviderService
 			switch($sKey){
 				case 'layout':
 					$oTemplateDefinition = $this->GetTemplateDefinition(AbstractController::class, 'page');
-					$oTemplateDefinition->OverrideTemplate(TemplatesKindEnumeration::PATH, $oValue);
+					$oTemplateDefinition->OverrideTemplate($oValue);
 					break;
 				case 'home':
 					$oTemplateDefinition = $this->GetTemplateDefinition(DefaultController::class, 'home');
-					$oTemplateDefinition->OverrideTemplate(TemplatesKindEnumeration::PATH, $oValue);
+					$oTemplateDefinition->OverrideTemplate($oValue);
 					break;
 				default:
 					if(is_array($oValue)){
 						foreach($oValue as $sTemplateId => $sTemplatePath){
 							$oTemplateDefinition = $this->GetTemplateDefinition($sKey, $sTemplateId);
-							$oTemplateDefinition?->OverrideTemplate(TemplatesKindEnumeration::PATH, $sTemplatePath);
+							$oTemplateDefinition?->OverrideTemplate($sTemplatePath);
 						}
 					}
 					break;
@@ -205,7 +205,7 @@ class TemplatesProviderService
 		$oTemplateDefinition = $this->GetTemplateDefinition($sProviderId, $sTemplateId);
 
 		// return the template path
-		return $oTemplateDefinition !== null ? $this->GetTemplateDefinitionPath($oTemplateDefinition, $bIsInitial) : null;
+		return $oTemplateDefinition?->GetValue($bIsInitial);
 	}
 
 	/**
@@ -221,12 +221,12 @@ class TemplatesProviderService
 		// retrieve template path
 		if(array_key_exists($sProviderId, $this->aTemplatesDefinitions)){
 
-			// in template definitions
+			// search in template definitions
 			if(array_key_exists($sTemplateId, $this->aTemplatesDefinitions[$sProviderId])){
 				return $this->aTemplatesDefinitions[$sProviderId][$sTemplateId];
 			}
 
-			// in aliases
+			// search in aliases
 			foreach($this->aTemplatesDefinitions[$sProviderId] as $item){
 				/** @var \Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto $item */
 				if($item->GetAlias() === $sTemplateId){
@@ -236,33 +236,6 @@ class TemplatesProviderService
 		}
 
 		return null;
-	}
-
-	/**
-	 * Get template definition path.
-	 *
-	 * @param TemplateDefinitionDto $oTemplateDefinition the template definition
-	 * @param bool $bIsInitial
-	 *
-	 * @return string
-	 */
-	private function GetTemplateDefinitionPath(TemplateDefinitionDto $oTemplateDefinition, bool $bIsInitial = false) : string
-	{
-		$oType = $bIsInitial ? $oTemplateDefinition->GetInitialType() : $oTemplateDefinition->GetType();
-		$sValue = $bIsInitial ? $oTemplateDefinition->GetInitialValue() : $oTemplateDefinition->GetValue();
-
-		switch($oType){
-
-			// global id template
-			case TemplatesKindEnumeration::REFERENCE:
-				$sGlobalItem = $this->aTemplatesDefinitions[AbstractController::class][$sValue];
-				return $sGlobalItem->GetValue();
-
-			// path template
-			case TemplatesKindEnumeration::PATH:
-			default:
-				return $sValue;
-		}
 	}
 
 	/**
