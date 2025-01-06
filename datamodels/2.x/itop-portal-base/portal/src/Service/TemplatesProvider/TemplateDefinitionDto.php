@@ -124,7 +124,7 @@ class TemplateDefinitionDto
 	 */
 	public function OverrideTemplate(string $sValue): TemplateDefinitionDto
 	{
-		if($this->IsOverridable()){
+		if($this->IsOverridable() && $sValue !== $this->sValue){
 			$this->sValue = $sValue;
 			$this->bIsOverridden = true;
 		}

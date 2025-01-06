@@ -15,9 +15,11 @@
         <div class="sf-toolbar-info-piece">
             <b>Templates registered</b><span class="sf-toolbar-status">{{ collector.GetTemplatesCount.count }}</span>
         </div>
+        {% if collector.GetTemplatesCount.overrides_count %}
         <div class="sf-toolbar-info-piece">
             <b>Templates overridden</b><span class="sf-toolbar-status">{{ collector.GetTemplatesCount.overrides_count }}</span>
         </div>
+        {% endif %}
     {% endset %}
 
     {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { 'link': true }) }}
