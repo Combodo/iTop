@@ -109,7 +109,7 @@ class BsSelectObjectFieldRenderer extends BsFieldRenderer
                      if (defined('PORTAL_ID'))
                     {
                         $oModuleDesign = new ModuleDesign(PORTAL_ID);
-                        $oScopeValidatorHelper = new ScopeValidatorHelper( $oModuleDesign, PORTAL_ID);
+                        $oScopeValidatorHelper = new ScopeValidatorHelper($oModuleDesign, PORTAL_ID);
                         $oScopeValidatorHelper->AddScopeToQuery($oSearch, $oSearch->GetClass());
                     }
 
