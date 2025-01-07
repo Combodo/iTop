@@ -56,7 +56,15 @@ class ManageBrick extends PortalBrick
 	/** Overloaded constants */
 	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-pen-square';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-pen-square fa-2x';
+	/**
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_PAGE_TEMPLATE_PATH = self::ENUM_PAGE_TEMPLATE_PATH_TABLE;
 	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_LAZY;
+	/**
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/tile-default.html.twig';
 	const DEFAULT_TILE_CONTROLLER_ACTION = 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::TileAction';
 
 	/** @var string DEFAULT_OQL */
