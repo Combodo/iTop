@@ -72,7 +72,12 @@ use utils;
  */
 class ManageBrickController extends BrickController
 {
-
+	/** 
+	 * @var string EXCEL_EXPORT_TEMPLATE_PATH 
+	 * @deprecated since 3.2.1
+	 */
+	const EXCEL_EXPORT_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/popup-export-excel.html.twig';
+	
 	/** @inheritdoc  */
 	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
 	{
