@@ -275,7 +275,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return string
 	 */
-	public function GetTileTemplateFromTileMode() : string
+	public function GetTileTemplateFromTileMode(): string
 	{
 		return match ($this->GetTileMode()) {
 			self::ENUM_TILE_MODE_BADGE => $this->GetTemplatePath('tile_badge'),
