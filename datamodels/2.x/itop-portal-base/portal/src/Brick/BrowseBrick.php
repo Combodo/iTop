@@ -34,6 +34,23 @@ use DOMFormatException;
  */
 class BrowseBrick extends PortalBrick
 {
+	/**
+	 * @var string DEFAULT_PAGE_TEMPLATE_PATH 
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_MODE_LIST_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_list.html.twig';
+	/**
+	 * @var string  DEFAULT_MODE_MOSAIC_TEMPLATE_PATH */
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_MODE_MOSAIC_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_mosaic.html.twig';
+	/**
+	 * @var string DEFAULT_MODE_TREE_TEMPLATE_PATH
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_MODE_TREE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_tree.html.twig';
+
+
 	/** @var string ENUM_BROWSE_MODE_LIST */
 	const ENUM_BROWSE_MODE_LIST = 'list';
 	/** @var string ENUM_BROWSE_MODE_TREE */
