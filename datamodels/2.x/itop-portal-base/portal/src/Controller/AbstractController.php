@@ -74,7 +74,7 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 	 *
 	 * @return \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService
 	 */
-	protected function GetTemplatesService() : TemplatesProviderService
+	protected function GetTemplatesService(): TemplatesProviderService
 	{
 		return $this->oTemplatesService;
 	}
