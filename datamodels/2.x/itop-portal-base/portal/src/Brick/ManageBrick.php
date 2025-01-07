@@ -133,7 +133,12 @@ class ManageBrick extends PortalBrick
 		self::ENUM_TILE_MODE_BAR,
 		self::ENUM_TILE_MODE_TOP,
 	);
-
+	/** Specific data for the current brick, including brick definition overloads */
+	/** 
+	 * @var array $aPresentationData
+	 * @deprecated 3.2.1
+	 */
+	public $aPresentationData = [];
 	/** @var array $aDefaultTileData */
 	private static array $aDefaultTileData = [
 		self::ENUM_TILE_MODE_BADGE => [
