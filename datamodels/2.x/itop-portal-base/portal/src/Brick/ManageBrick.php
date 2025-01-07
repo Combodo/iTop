@@ -200,7 +200,7 @@ class ManageBrick extends PortalBrick
 	protected $iDefaultListLength;
 
 	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
+	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService): void
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
 		$oTemplatesProviderService->RegisterTemplates(self::class,
