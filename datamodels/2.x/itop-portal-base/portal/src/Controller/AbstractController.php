@@ -39,7 +39,7 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 	const TEMPLATES_BASE_PATH = 'itop-portal-base/portal/templates/';
 
 	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
+	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService): void
 	{
 		$oTemplatesProviderService->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig'),
