@@ -35,6 +35,8 @@ parameters:
   combodo.portal.base.absolute_path:  '%env(string:COMBODO_PORTAL_BASE_ABSOLUTE_PATH)%'
   combodo.portal.instance.absolute_url: '%env(string:COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL)%'
   combodo.portal.instance.id:         '%env(string:PORTAL_ID)%'
+  combodo.portal.language:            '%env(string:COMBODO_PORTAL_LANGUAGE)%'
+  combodo.portal.metadata.language:   '%env(string:COMBODO_PORTAL_METADATA_LANGUAGE)%'
 
 services:
   # Default configuration for services in *this* file

@@ -139,3 +139,5 @@ $_ENV['COMBODO_MODULES_ABSOLUTE_URL'] = utils::GetAbsoluteUrlModulesRoot();
 $_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_URL'] = utils::GetAbsoluteUrlModulesRoot().'itop-portal-base/portal/public/';
 $_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'] = MODULESROOT.'/itop-portal-base/portal/public/';
 $_ENV['COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL'] = utils::GetAbsoluteUrlModulesRoot().$_ENV['PORTAL_ID'].'/';
+$_ENV['COMBODO_PORTAL_LANGUAGE'] = UserRights::GetUserLanguage();
+$_ENV['COMBODO_PORTAL_METADATA_LANGUAGE'] = strtolower(substr($_ENV['COMBODO_PORTAL_LANGUAGE'], 0, 2));;
