@@ -733,7 +733,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 *
 	 * @return string|null
 	 */
-	public function HasInstanceOverloadedTemplate(string $sTemplateId) : ?string
+	public function HasInstanceOverloadedTemplate(string $sTemplateId): ?string
 	{
 		return static::GetTemplatesService()->HasInstanceOverriddenTemplate($this, $sTemplateId);
 	}
