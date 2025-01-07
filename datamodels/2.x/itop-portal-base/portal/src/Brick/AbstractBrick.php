@@ -102,7 +102,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	private static TemplatesProviderService $oTemplatesProviderService;
 
 	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
+	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService): void
 	{
 		self::$oTemplatesProviderService = $oTemplatesProviderService;
 		$oTemplatesProviderService->RegisterTemplates(self::class,
