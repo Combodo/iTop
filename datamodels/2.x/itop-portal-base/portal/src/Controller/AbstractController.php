@@ -147,7 +147,7 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 	 *
 	 * @return string
 	 */
-	public function GetTemplatePath(string $sTemplateId) : string
+	public function GetTemplatePath(string $sTemplateId): string
 	{
 		return static::GetTemplatesService()->GetProviderInstanceTemplatePath($this, $sTemplateId);
 	}
