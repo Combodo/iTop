@@ -106,7 +106,7 @@ abstract class PortalBrick extends AbstractBrick
 
 
 	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
+	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService): void
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
 		$oTemplatesProviderService->RegisterTemplates(self::class,
