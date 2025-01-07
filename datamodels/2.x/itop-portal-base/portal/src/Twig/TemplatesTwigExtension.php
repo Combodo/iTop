@@ -38,7 +38,7 @@ class TemplatesTwigExtension extends AbstractExtension
 	}
 
 	/** @inheritdoc  */
-	public function getFunctions() : array
+	public function getFunctions(): array
 	{
 		return [
 			new TwigFunction('template', [$this, 'Template'], ['id' => null, 'scope' => null]),
