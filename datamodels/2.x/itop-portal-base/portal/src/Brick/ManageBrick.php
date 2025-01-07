@@ -66,6 +66,38 @@ class ManageBrick extends PortalBrick
 	 */
 	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/tile-default.html.twig';
 	const DEFAULT_TILE_CONTROLLER_ACTION = 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::TileAction';
+	/**
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_LAYOUT_CHART_TEMPLATE_PATH = self::ENUM_PAGE_TEMPLATE_PATH_CHART;
+	/**
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_LAYOUT_TABLE_TEMPLATE_PATH = self::ENUM_PAGE_TEMPLATE_PATH_TABLE;
+	/**
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_LAYOUT_BADGE_TEMPLATE_PATH = self::ENUM_PAGE_TEMPLATE_PATH_TABLE;
+	/**
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_TILE_CHART_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/tile-chart.html.twig';
+	/**
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_TILE_TOP_LIST_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/tile-top-list.html.twig';
+	/**
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_TILE_BADGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/tile-badge.html.twig';
+	/**
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_TILE_DEFAULT_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/tile-default.html.twig';
+	/**
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_POPUP_EXPORT_EXCEL_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/popup-export-excel.html.twig';
 
 	/** @var string DEFAULT_OQL */
 	const DEFAULT_OQL = '';
