@@ -248,7 +248,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return bool
 	 */
-	public function IsDetailsNeeded(string $sLayoutMode) : bool
+	public function IsDetailsNeeded(string $sLayoutMode): bool
 	{
 		return static::$aDefaultLayoutData[$sLayoutMode]['need_details'];
 	}
