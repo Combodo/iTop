@@ -261,7 +261,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @return string
 	 */
-	public function GetPageTemplateFromDisplayMode(string $sDisplayMode) : string
+	public function GetPageTemplateFromDisplayMode(string $sDisplayMode): string
 	{
 		return match ($sDisplayMode) {
 			self::ENUM_DISPLAY_MODE_BAR, self::ENUM_DISPLAY_MODE_PIE => $this->GetTemplatePath('page_chart'),
