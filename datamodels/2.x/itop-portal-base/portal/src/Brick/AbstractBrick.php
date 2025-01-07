@@ -705,7 +705,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
-	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath) : AbstractBrick
+	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath): AbstractBrick
 	{
 		static::GetTemplatesService()->OverrideInstanceTemplatePath($this, $sTemplateId, $sTileTemplatePath);
 		return $this;
