@@ -15,7 +15,8 @@ $ipb-navigation-menu--is-expanded--navigation-menu--user-card--icon--margin-righ
   border-radius: $ipb-navigation-menu--border-radius;
   align-items: flex-start;
   flex-shrink: 0;
-
+  
+  background-color: $combodo-dark-gray-darker;
   &.ipb-is-expanded {
     width: $ipb-navigation-menu--is-expanded--width;
 
@@ -145,7 +146,10 @@ $ipb-navigation-menu--is-expanded--navigation-menu--user-card--icon--margin-righ
   margin-bottom: 8px;
   &.active .ibp-navigation-menu--menu-entry{
       background-color: $white !important;
+      color: $common-color-grey-800 !important;
+    .ibp-navigation-menu--menu-entry--icon {
       color: $common-color-orange-600 !important;
+    }
   }
 }
 
@@ -167,6 +171,7 @@ $ipb-navigation-menu--is-expanded--navigation-menu--user-card--icon--margin-righ
     width: 28px;
     min-width: 28px;
     margin-right: 16px;
+    font-size: 2rem;
   }
   &:hover, &:focus{
     color: white !important;

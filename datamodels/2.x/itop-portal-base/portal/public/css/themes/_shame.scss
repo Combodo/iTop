@@ -3603,29 +3603,6 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     margin-right: 0
   }
 }
-.navbar-default {
-  background-color: $combodo-dark-gray-darker;
-  border-color: none;
-}
-.navbar-default .navbar-brand {
-  color: $gray;
-}
-.navbar-default .navbar-brand:hover,
-.navbar-default .navbar-brand:focus {
-  color: $brand-primary;
-  background-color: transparent
-}
-.navbar-default .navbar-text {
-  color: $gray;
-}
-.navbar-default .navbar-nav>li>a {
-  color: white;
-}
-.navbar-default .navbar-nav>.active>a {
-  color: white;
-  background-color: $combodo-dark-gray-darker;
-  font-weight: 600
-}
 
 .navbar-default .navbar-nav>.disabled>a,
 .navbar-default .navbar-nav>.disabled>a:hover,

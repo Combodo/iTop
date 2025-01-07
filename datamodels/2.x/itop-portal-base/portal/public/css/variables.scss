@@ -86,11 +86,11 @@ $body-bg:               #EDECEC !default;
 $text-color:            $gray-base !default;
 
 //** Global textual link color.
-$link-color:            darken($combodo-orange, 5%) !default;
+$link-color:            $common-hyperlink-color !default;
 //** Link hover color set via `darken()` function.
-$link-hover-color:      darken($link-color, 5%) !default;
+$link-hover-color:      $common-hyperlink-color--on-hover !default;
 //** Link hover decoration.
-$link-hover-decoration: underline !default;
+$link-hover-decoration: $common-hyperlink-text-decoration--on-hover !default;
 
 
 //== Typography
