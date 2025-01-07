@@ -161,7 +161,7 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 	 *
 	 * @return \Combodo\iTop\Portal\Controller\AbstractController
 	 */
-	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath) : AbstractController
+	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath): AbstractController
 	{
 		static::GetTemplatesService()->OverrideInstanceTemplatePath($this, $sTemplateId, $sTileTemplatePath);
 		return $this;
