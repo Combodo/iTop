@@ -199,6 +199,7 @@ class ManageBrick extends PortalBrick
 	 * Returns if the $sLayoutMode need objects details for rendering.
 	 *
 	 * @param string $sLayoutMode
+	 * @since 3.2.1
 	 *
 	 * @return bool
 	 */
