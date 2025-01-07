@@ -115,7 +115,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 *
 	 * @return \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService
 	 */
-	protected static function GetTemplatesService() : TemplatesProviderService
+	protected static function GetTemplatesService(): TemplatesProviderService
 	{
 		return self::$oTemplatesProviderService;
 	}
