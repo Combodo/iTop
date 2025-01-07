@@ -77,7 +77,7 @@ class ObjectController extends BrickController
 	const DEFAULT_LIST_LENGTH = 10;
 
 	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
+	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService): void
 	{
 		parent::RegisterTemplates($oTemplatesProviderService);
 		$oTemplatesProviderService->RegisterTemplates(self::class,
