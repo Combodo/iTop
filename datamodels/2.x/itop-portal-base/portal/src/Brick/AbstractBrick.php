@@ -721,7 +721,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 *
 	 * @return string
 	 */
-	public function GetTemplatePath(string $sTemplateId) : string
+	public function GetTemplatePath(string $sTemplateId): string
 	{
 		return static::GetTemplatesService()->GetProviderInstanceTemplatePath($this, $sTemplateId);
 	}
