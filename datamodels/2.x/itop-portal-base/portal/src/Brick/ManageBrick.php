@@ -212,6 +212,7 @@ class ManageBrick extends PortalBrick
 	 * Returns the page template path for the $sDisplayMode
 	 *
 	 * @param string $sDisplayMode
+	 * @since 3.2.1
 	 *
 	 * @return string
 	 */
