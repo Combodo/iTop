@@ -276,7 +276,12 @@
                                 {% endblock %}
                             </div>
                         {% endif %}
-                        <a class="ipb-navigation-menu--toggler" data-role="ipb-navigation-menu--toggler" href="#">
+                        <a class="ipb-navigation-menu--toggler" data-role="ipb-navigation-menu--toggler"
+                           aria-label="{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}"
+                           data-tooltip-content="{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}"
+                           data-tooltip-placement="right"
+                           data-tooltip-distance-offset="20"
+                           href="#">
                             <span class="ipb-navigation-menu--toggler-icon">
                                 <span class="ipb-navigation-menu--toggler-bar"></span>
                                 <span class="ipb-navigation-menu--toggler-bar"></span>
