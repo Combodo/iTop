@@ -48,22 +48,20 @@ class BrickCollection
 	private $aHomeOrdering;
 	/** @var array $aNavigationMenuOrdering */
 	private $aNavigationMenuOrdering;
-	/** @var \array $aCombodoPortalInstanceConf
-	 * @since 3.2.1 
-	 */
-	private $aCombodoPortalInstanceConf;
 
 	/**
 	 * BrickCollection constructor.
 	 *
 	 * @param \ModuleDesign $oModuleDesign
 	 * @param \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService $oTemplatesProviderService
-	 * @param array $aCombodoPortalInstanceConf
 	 *
 	 * @throws \Exception
-	 * @since 3.2.1 Added $aCombodoPortalInstanceConf parameter
+	 *
+	 * @since 3.2.1 Added $oTemplatesProviderService parameter
+	 * Important: The service is not directly used, but the injection ensure that the service is initialized.
+	 * Bricks may need to use the service to get the templates.
 	 */
-	public function __construct(ModuleDesign $oModuleDesign, TemplatesProviderService $oTemplatesProviderService, array $aCombodoPortalInstanceConf)
+	public function __construct(ModuleDesign $oModuleDesign, TemplatesProviderService $oTemplatesProviderService)
 	{
 		$this->oModuleDesign = $oModuleDesign;
 		$this->aAllowedBricks = null;
@@ -71,7 +69,6 @@ class BrickCollection
 		$this->iDisplayedInNavigationMenu = 0;
 		$this->aHomeOrdering = array();
 		$this->aNavigationMenuOrdering = array();
-		$this->aCombodoPortalInstanceConf = $aCombodoPortalInstanceConf;
 
 		$this->Load();
 	}
