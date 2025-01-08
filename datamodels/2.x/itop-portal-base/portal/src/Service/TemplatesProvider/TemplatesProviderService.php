@@ -61,7 +61,7 @@ class TemplatesProviderService
 	public function __construct(array $aCombodoPortalInstanceConf)
 	{
 		// UI version
-		if(isset($aCombodoPortalInstanceConf['properties']['ui_version'])){
+		if (isset($aCombodoPortalInstanceConf['properties']['ui_version'])) {
 			$this->sTemplateUIVersion = $aCombodoPortalInstanceConf['properties']['ui_version'];
 		}
 
@@ -77,9 +77,9 @@ class TemplatesProviderService
 	 *
 	 * @return void
 	 */
-	private function RegisterProvidersTemplates() : void
+	private function RegisterProvidersTemplates(): void
 	{
-		try{
+		try {
 			// search for templates providers
 			$oTemplatesProviders = InterfaceDiscovery::GetInstance()->FindItopClasses(TemplatesProviderInterface::class);
 
@@ -88,7 +88,7 @@ class TemplatesProviderService
 				$oTemplateProvider::RegisterTemplates($this);
 			}
 		}
-		catch(Exception $e){
+		catch (Exception $e) {
 			IssueLog::Error($e->getMessage());
 		}
 	}
@@ -101,10 +101,10 @@ class TemplatesProviderService
 	 *
 	 * @return $this
 	 */
-	public function RegisterTemplates(string $sProviderId, TemplateDefinitionDto... $aTemplatesDefinitions) : TemplatesProviderService
+	public function RegisterTemplates(string $sProviderId, TemplateDefinitionDto...$aTemplatesDefinitions): TemplatesProviderService
 	{
 		// prevent child classes to erase parent templates
-		if(array_key_exists($sProviderId, $this->aTemplatesDefinitions)) {
+		if (array_key_exists($sProviderId, $this->aTemplatesDefinitions)) {
 			return $this;
 		}
 
@@ -124,12 +124,12 @@ class TemplatesProviderService
 	 *
 	 * @return void
 	 */
-	private function OverrideTemplatesFromPortalProperties(array $aPortalTemplatesProperties) : void
+	private function OverrideTemplatesFromPortalProperties(array $aPortalTemplatesProperties): void
 	{
 		// loop through the templates...
-		foreach ($aPortalTemplatesProperties as $sKey => $oValue){
+		foreach ($aPortalTemplatesProperties as $sKey => $oValue) {
 
-			switch($sKey){
+			switch ($sKey) {
 				case 'layout':
 					$oTemplateDefinition = $this->GetTemplateDefinition(AbstractController::class, 'page');
 					$oTemplateDefinition->OverrideTemplate($oValue);
@@ -139,8 +139,8 @@ class TemplatesProviderService
 					$oTemplateDefinition->OverrideTemplate($oValue);
 					break;
 				default:
-					if(is_array($oValue)){
-						foreach($oValue as $sTemplateId => $sTemplatePath){
+					if (is_array($oValue)) {
+						foreach ($oValue as $sTemplateId => $sTemplatePath) {
 							$oTemplateDefinition = $this->GetTemplateDefinition($sKey, $sTemplateId);
 							$oTemplateDefinition?->OverrideTemplate($sTemplatePath);
 						}
@@ -159,20 +159,20 @@ class TemplatesProviderService
 	 *
 	 * @return $this
 	 */
-	public function OverrideInstanceTemplatePath(object $oObject, string $sTemplateId, string $sTemplatePath) : TemplatesProviderService
+	public function OverrideInstanceTemplatePath(object $oObject, string $sTemplateId, string $sTemplatePath): TemplatesProviderService
 	{
 		// get object UUID
 		$sObjectId = spl_object_id($oObject);
 
 		// initialize overloaded object templates and information
-		if(array_key_exists($sObjectId, $this->aInstancesOverriddenTemplatesPaths) === false){
+		if (array_key_exists($sObjectId, $this->aInstancesOverriddenTemplatesPaths) === false) {
 
 			$this->aInstancesOverriddenTemplatesPaths[$sObjectId] = [];
 			$this->aInstancesOverriddenTemplatesPaths[$sObjectId]['templates'] = [];
 
 			// friendly id for troubleshooting
 			$sId = $sObjectId;
-			if($oObject instanceof AbstractBrick){
+			if ($oObject instanceof AbstractBrick) {
 				$sId = $oObject->GetId();
 			}
 
@@ -200,18 +200,16 @@ class TemplatesProviderService
 	 * @return string|null
 	 * @throws \ReflectionException
 	 */
-	public function GetTemplatePath(string $sProviderId, string $sTemplateId, bool $bIsInitial = false) : ?string
+	public function GetTemplatePath(string $sProviderId, string $sTemplateId, bool $bIsInitial = false): ?string
 	{
-		if(array_key_exists($sProviderId, $this->aTemplatesDefinitions)){
+		if (array_key_exists($sProviderId, $this->aTemplatesDefinitions)) {
 
 			// search for the template definition
 			$oTemplateDefinition = $this->GetTemplateDefinition($sProviderId, $sTemplateId);
 
 			// return the template path
 			return $oTemplateDefinition?->GetValue($bIsInitial);
-		}
-
-		else{
+		} else {
 
 			// reflexion for class
 			$oReflexion = new ReflectionClass($sProviderId);
@@ -238,20 +236,20 @@ class TemplatesProviderService
 	 *
 	 * @return TemplateDefinitionDto|null
 	 */
-	public function GetTemplateDefinition(string $sProviderId, string $sTemplateId) : ?TemplateDefinitionDto
+	public function GetTemplateDefinition(string $sProviderId, string $sTemplateId): ?TemplateDefinitionDto
 	{
 		// retrieve template path
-		if(array_key_exists($sProviderId, $this->aTemplatesDefinitions)){
+		if (array_key_exists($sProviderId, $this->aTemplatesDefinitions)) {
 
 			// search in template definitions
-			if(array_key_exists($sTemplateId, $this->aTemplatesDefinitions[$sProviderId])){
+			if (array_key_exists($sTemplateId, $this->aTemplatesDefinitions[$sProviderId])) {
 				return $this->aTemplatesDefinitions[$sProviderId][$sTemplateId];
 			}
 
 			// search in aliases
-			foreach($this->aTemplatesDefinitions[$sProviderId] as $item){
+			foreach ($this->aTemplatesDefinitions[$sProviderId] as $item) {
 				/** @var \Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto $item */
-				if($item->GetAlias() === $sTemplateId){
+				if ($item->GetAlias() === $sTemplateId) {
 					return $item;
 				}
 			}
@@ -270,30 +268,35 @@ class TemplatesProviderService
 	 * @since 3.2.1
 	 *
 	 */
-	public function GetProviderInstanceTemplatePath(object $oObject, string $sTemplateId) : ?string
+	public function GetProviderInstanceTemplatePath(object $oObject, string $sTemplateId): ?string
 	{
 		// object UUID
 		$sObjectId = spl_object_id($oObject);
 
-		// if instance overload exists, return it
-		if(array_key_exists($sObjectId, $this->aInstancesOverriddenTemplatesPaths)
-		&& array_key_exists($sTemplateId, $this->aInstancesOverriddenTemplatesPaths[$sObjectId]['templates'])){
+		// if instance override exists, return it
+		if (array_key_exists($sObjectId, $this->aInstancesOverriddenTemplatesPaths)
+			&& array_key_exists($sTemplateId, $this->aInstancesOverriddenTemplatesPaths[$sObjectId]['templates'])) {
 			return $this->aInstancesOverriddenTemplatesPaths[$sObjectId]['templates'][$sTemplateId];
 		}
 
+		// now, we search in class hierarchy for a template
+		// note: GetTemplatePath() will return the templates defined in service first, then check if constant with default template path exists
 		$sCurrentClass = get_class($oObject);
-		do{
-			$sTemplate = $this->GetTemplatePath($sCurrentClass, $sTemplateId);
+		do {
+			$sTemplate = null;
 			$oParent = null;
-			try{
+			try {
+				$sTemplate = $this->GetTemplatePath($sCurrentClass, $sTemplateId);
 				$oReflexion = new ReflectionClass($sCurrentClass);
 				$oParent = $oReflexion->getParentClass();
-				if($oParent){
+				if ($oParent) {
 					$sCurrentClass = $oReflexion->getParentClass()->getName();
 				}
-			}catch(Exception){}
+			}
+			catch (Exception) {
+			}
 
-		}while($sTemplate === null && $oParent);
+		} while ($sTemplate === null && $oParent); // continue while no template found and parent class exists
 
 		return $sTemplate;
 	}
@@ -303,7 +306,7 @@ class TemplatesProviderService
 	 *
 	 * @return array
 	 */
-	public function GetTemplatesDefinitions() : array
+	public function GetTemplatesDefinitions(): array
 	{
 		return $this->aTemplatesDefinitions;
 	}
@@ -313,7 +316,7 @@ class TemplatesProviderService
 	 *
 	 * @return array
 	 */
-	public function GetInstancesOverriddenTemplatesPaths() : array
+	public function GetInstancesOverriddenTemplatesPaths(): array
 	{
 		return $this->aInstancesOverriddenTemplatesPaths;
 	}
@@ -326,19 +329,19 @@ class TemplatesProviderService
 	 *
 	 * @return bool
 	 */
-	public function HasInstanceOverriddenTemplate(object $oObject, string $sTemplateId) : bool
+	public function HasInstanceOverriddenTemplate(object $oObject, string $sTemplateId): bool
 	{
 		// object UUID
 		$sObjectId = spl_object_id($oObject);
 
-		return(array_key_exists($sObjectId, $this->aInstancesOverriddenTemplatesPaths)
+		return (array_key_exists($sObjectId, $this->aInstancesOverriddenTemplatesPaths)
 			&& array_key_exists($sTemplateId, $this->aInstancesOverriddenTemplatesPaths[$sObjectId]['templates']));
 	}
 
 	/**
 	 * @return string
 	 */
-	public function GetUIVersion() : string
+	public function GetUIVersion(): string
 	{
 		return $this->sTemplateUIVersion;
 	}

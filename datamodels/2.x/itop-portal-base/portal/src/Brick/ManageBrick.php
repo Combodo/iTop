@@ -158,7 +158,7 @@ class ManageBrick extends PortalBrick
 			'decorationCssClass' => 'fas fa-id-card fa-2x',
 		],
 		self::ENUM_TILE_MODE_TOP => [
-			'decorationCssClass' => 'fas fa-signal fa-rotate-270 fa-2x',
+			'decorationCssClass' => 'fas fa-list-ol fa-2x',
 		],
 		self::ENUM_TILE_MODE_PIE => [
 			'decorationCssClass' => 'fas fa-chart-pie fa-2x',

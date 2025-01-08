@@ -31,7 +31,7 @@ use Twig\TwigFunction;
  */
 class TemplatesTwigExtension extends AbstractExtension
 {
-	const DEFAULT_SCOPE = 'Combodo\\iTop\\Portal\\Controller\\AbstractController';
+	const DEFAULT_PROVIDER_CLASS = 'Combodo\\iTop\\Portal\\Controller\\AbstractController';
 
 	public function __construct(private readonly TemplatesProviderService $oTemplatesService)
 	{
@@ -41,36 +41,41 @@ class TemplatesTwigExtension extends AbstractExtension
 	public function getFunctions(): array
 	{
 		return [
-			new TwigFunction('template', [$this, 'Template'], ['id' => null, 'scope' => null]),
-			new TwigFunction('initial_template', [$this, 'InitialTemplate'], ['id' => null, 'scope' => null]),
+			new TwigFunction('template', [$this, 'GetTemplate'], ['id' => null, 'provider' => null, 'provider_instance' => null]),
+			new TwigFunction('template_initial', [$this, 'GetInitialTemplate'], ['id' => null, 'provider' => null]),
 		];
 	}
 
 	/**
 	 * Retrieve the path of the desired template (maybe overridden by configuration).
 	 *
-	 * @param string $sId
-	 * @param string $sScope
+	 * @param string $sId template identifier
+	 * @param string $sProviderClass provider class FQN
+	 * @param object|null $oProviderInstance the provider instance
 	 *
-	 * @return string
-	 * @throws \Exception
+	 * @return string the template path
+	 * @throws \ReflectionException
 	 */
-	public function Template(string $sId, string $sScope = self::DEFAULT_SCOPE): string
+	public function GetTemplate(string $sId, string $sProviderClass = self::DEFAULT_PROVIDER_CLASS, object $oProviderInstance = null): string
 	{
-		return $this->oTemplatesService->GetTemplatePath($sScope, $sId);
+		if ($oProviderInstance === null) {
+			return $this->oTemplatesService->GetTemplatePath($sProviderClass, $sId);
+		} else {
+			return $this->oTemplatesService->GetProviderInstanceTemplatePath($oProviderInstance, $sId);
+		}
 	}
 
 	/**
 	 * Retrieve the initial path of the desired template (hardcoded).
 	 *
-	 * @param string $sId
-	 * @param string $sScope
+	 * @param string $sId template identifier
+	 * @param string $sProviderClass provider class FQN
 	 *
-	 * @return string
-	 * @throws \Exception
+	 * @return string the template path
+	 * @throws \ReflectionException
 	 */
-	public function InitialTemplate(string $sId, string $sScope = self::DEFAULT_SCOPE): string
+	public function GetInitialTemplate(string $sId, string $sProviderClass = self::DEFAULT_PROVIDER_CLASS): string
 	{
-		return $this->oTemplatesService->GetTemplatePath($sScope, $sId, true);
+		return $this->oTemplatesService->GetTemplatePath($sProviderClass, $sId, true);
 	}
 }
