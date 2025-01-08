@@ -58,8 +58,8 @@ abstract class PortalBrick extends AbstractBrick
 	const DEFAULT_DECORATION_CLASS_HOME = '';
 	/** @var string DEFAULT_DECORATION_CLASS_NAVIGATION_MENU */
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = '';
-	/** @var string DEFAULT_TILE_TEMPLATE_PATH @deprecated since 3.2.1 */
-	const DEFAULT_TILE_TEMPLATE_PATH = null;
+	/** @var string DEFAULT_TILE_TEMPLATE_PATH */
+	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/tile.html.twig';
 	/** @var string|null DEFAULT_TILE_CONTROLLER_ACTION */
 	const DEFAULT_TILE_CONTROLLER_ACTION = null;
 	/** @var string DEFAULT_OPENING_TARGET */
@@ -272,7 +272,7 @@ abstract class PortalBrick extends AbstractBrick
 	 */
 	public function GetTileTemplatePath()
 	{
-		return $this->sTileTemplatePath !== null ? $this->sTileTemplatePath : $this->GetTemplatePath('tile');
+		return  $this->GetTemplatePath('tile');
 	}
 
 	/**
@@ -550,7 +550,7 @@ abstract class PortalBrick extends AbstractBrick
 					{
 						/** @var \Combodo\iTop\DesignElement $oTemplateNode */
 						$oTemplateNode = $oTemplateNodeList->item(0);
-						$this->SetTileTemplatePath($oTemplateNode->GetText(static::DEFAULT_TILE_TEMPLATE_PATH));
+						$this->SetTemplatePath('tile', $oTemplateNode->GetText(static::DEFAULT_TILE_TEMPLATE_PATH));
 					}
 					break;
 

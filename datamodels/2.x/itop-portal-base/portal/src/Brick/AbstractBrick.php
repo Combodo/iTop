@@ -210,7 +210,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 */
 	public function GetPageTemplatePath()
 	{
-		return $this->sPageTemplatePath !== null ? $this->sPageTemplatePath : $this->GetTemplatePath('page');
+		return $this->GetTemplatePath('page');
 	}
 
 	/**
@@ -650,7 +650,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 					{
 						/** @var \Combodo\iTop\DesignElement $oTemplateNode */
 						$oTemplateNode = $oTemplateNodeList->item(0);
-						$this->SetPageTemplatePath($oTemplateNode->GetText(static::DEFAULT_PAGE_TEMPLATE_PATH));
+						$this->SetTemplatePath('page', $oTemplateNode->GetText(static::DEFAULT_PAGE_TEMPLATE_PATH));
 					}
 					break;
 				case 'title':
@@ -693,7 +693,6 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 		return $this;
 	}
 
-
 	/**
 	 * Override the brick default template path.
 	 * Template is managed by the TemplatesProviderService.
@@ -712,14 +711,14 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	}
 
 	/**
-	 * Returns the brick template path
+	 * Returns the brick template path.
 	 * Template is managed by the TemplatesProviderService.
 	 *
 	 * @since 3.2.1
 	 *
-	 * @param string $sTemplateId
+	 * @param string $sTemplateId template identifier
 	 *
-	 * @return string
+	 * @return string template path
 	 */
 	public function GetTemplatePath(string $sTemplateId): string
 	{
@@ -727,13 +726,15 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	}
 
 	/**
-	 * Returns true if this brick has an overloaded page template path
+	 * Returns true if this brick template path is overridden.
 	 *
-	 * @param string $sTemplateId
+	 * @since 3.2.1
+	 *
+	 * @param string $sTemplateId template identifier
 	 *
 	 * @return string|null
 	 */
-	public function HasInstanceOverloadedTemplate(string $sTemplateId): ?string
+	public function HasInstanceOverriddenTemplate(string $sTemplateId): ?string
 	{
 		return static::GetTemplatesService()->HasInstanceOverriddenTemplate($this, $sTemplateId);
 	}

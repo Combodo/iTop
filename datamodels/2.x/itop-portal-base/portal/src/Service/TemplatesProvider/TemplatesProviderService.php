@@ -198,14 +198,36 @@ class TemplatesProviderService
 	 * @param bool $bIsInitial
 	 *
 	 * @return string|null
+	 * @throws \ReflectionException
 	 */
 	public function GetTemplatePath(string $sProviderId, string $sTemplateId, bool $bIsInitial = false) : ?string
 	{
-		// search for the template definition
-		$oTemplateDefinition = $this->GetTemplateDefinition($sProviderId, $sTemplateId);
+		if(array_key_exists($sProviderId, $this->aTemplatesDefinitions)){
 
-		// return the template path
-		return $oTemplateDefinition?->GetValue($bIsInitial);
+			// search for the template definition
+			$oTemplateDefinition = $this->GetTemplateDefinition($sProviderId, $sTemplateId);
+
+			// return the template path
+			return $oTemplateDefinition?->GetValue($bIsInitial);
+		}
+
+		else{
+
+			// reflexion for class
+			$oReflexion = new ReflectionClass($sProviderId);
+
+			// class defined constants
+			$aClassDefinedConstants = array_diff($oReflexion->getConstants(), $oReflexion->getParentClass()->getConstants());
+
+			// return the constant if
+			return match ($sTemplateId) {
+				'page' => array_key_exists('DEFAULT_PAGE_TEMPLATE_PATH', $aClassDefinedConstants) ? $oReflexion->getConstant('DEFAULT_PAGE_TEMPLATE_PATH') : null,
+				'tile' => array_key_exists('DEFAULT_TILE_TEMPLATE_PATH', $aClassDefinedConstants) ? $oReflexion->getConstant('DEFAULT_TILE_TEMPLATE_PATH') : null,
+				default => null,
+			};
+		}
+
+
 	}
 
 	/**
@@ -277,6 +299,8 @@ class TemplatesProviderService
 	}
 
 	/**
+	 * Return templates definitions.
+	 *
 	 * @return array
 	 */
 	public function GetTemplatesDefinitions() : array
@@ -285,6 +309,8 @@ class TemplatesProviderService
 	}
 
 	/**
+	 * Return instances overridden templates paths.
+	 *
 	 * @return array
 	 */
 	public function GetInstancesOverriddenTemplatesPaths() : array
@@ -293,15 +319,16 @@ class TemplatesProviderService
 	}
 
 	/**
-	 * Returns the brick overridden page template path
+	 * Returns true if brick template path is overridden.
 	 *
-	 * @param object $oObject
-	 * @param string $sTemplateId
+	 * @param object $oObject object instance
+	 * @param string $sTemplateId template identifier
 	 *
-	 * @return string|null
+	 * @return bool
 	 */
-	public function HasInstanceOverriddenTemplate(object $oObject, string $sTemplateId) : ?string
+	public function HasInstanceOverriddenTemplate(object $oObject, string $sTemplateId) : bool
 	{
+		// object UUID
 		$sObjectId = spl_object_id($oObject);
 
 		return(array_key_exists($sObjectId, $this->aInstancesOverriddenTemplatesPaths)

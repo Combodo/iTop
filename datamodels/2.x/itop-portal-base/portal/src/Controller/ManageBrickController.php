@@ -149,7 +149,7 @@ class ManageBrickController extends BrickController
 		}
 		else
 		{
-			$sLayoutTemplate = $oBrick->GetPageTemplateFromDisplayMode($sDisplayMode);
+			$sLayoutTemplate = $oBrick->GetPageTemplate($sDisplayMode);
 			$oResponse = $this->render($sLayoutTemplate, $aData);
 		}
 
@@ -181,7 +181,7 @@ class ManageBrickController extends BrickController
 			$aData = array();
 		}
 
-		return $this->render($oBrick->GetTileTemplateFromTileMode(), $aData);
+		return $this->render($oBrick->GetTileTemplate(), $aData);
 	}
 
 	/**

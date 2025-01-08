@@ -495,7 +495,7 @@ class BrowseBrickController extends BrickController
 			//	 - Create a template for that browse mode,
 			//	 - Add the mode to those available in the brick configuration,
 			//	 - Create a router and add a route for the new browse mode
-			if ($oBrick->HasInstanceOverloadedTemplate('page'))
+			if ($oBrick->HasInstanceOverriddenTemplate('page'))
 			{
 				$sTemplatePath = $oBrick->GetTemplatePath('page');
 			}

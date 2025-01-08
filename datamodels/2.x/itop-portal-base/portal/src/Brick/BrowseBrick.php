@@ -40,7 +40,7 @@ class BrowseBrick extends PortalBrick
 	 */
 	const DEFAULT_MODE_LIST_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_list.html.twig';
 	/**
-	 * @var string  DEFAULT_MODE_MOSAIC_TEMPLATE_PATH */
+	 * @var string  DEFAULT_MODE_MOSAIC_TEMPLATE_PATH
 	 * @deprecated 3.2.1
 	 */
 	const DEFAULT_MODE_MOSAIC_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_mosaic.html.twig';

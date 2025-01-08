@@ -40,6 +40,10 @@ class AggregatePageBrick extends PortalBrick
 	// Overloaded constants
 	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-tachometer-alt';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-tachometer-alt fa-2x';
+
+	/** @var string @deprecated since 3.2.1 */
+	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/aggregate-page/layout.html.twig';
+
 	// Overloaded variables
 	public static $sRouteName = 'p_aggregatepage_brick';
 
