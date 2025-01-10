@@ -217,7 +217,7 @@ class TemplatesProviderService
 			// class defined constants
 			$aClassDefinedConstants = array_diff($oReflexion->getConstants(), $oReflexion->getParentClass()->getConstants());
 
-			// return the constant if
+			// return the constant if exists
 			return match ($sTemplateId) {
 				'page' => array_key_exists('DEFAULT_PAGE_TEMPLATE_PATH', $aClassDefinedConstants) ? $oReflexion->getConstant('DEFAULT_PAGE_TEMPLATE_PATH') : null,
 				'tile' => array_key_exists('DEFAULT_TILE_TEMPLATE_PATH', $aClassDefinedConstants) ? $oReflexion->getConstant('DEFAULT_TILE_TEMPLATE_PATH') : null,
@@ -259,6 +259,16 @@ class TemplatesProviderService
 	}
 
 	/**
+	 * @param string $sProviderId
+	 *
+	 * @return array
+	 */
+	public function GetProviderTemplatesIds(string $sProviderId): array
+	{
+		return array_map(fn($oTemplateDefinition) => $oTemplateDefinition->GetId(), $this->aTemplatesDefinitions[$sProviderId] ?? ['tile', 'page']);
+	}
+
+	/**
 	 * Get a provider instance template path.
 	 *
 	 * @param object $oObject
@@ -273,15 +283,21 @@ class TemplatesProviderService
 		// object UUID
 		$sObjectId = spl_object_id($oObject);
 
+		// get the provider instance class name
+		$sCurrentClass = get_class($oObject);
+
+		// get template definition if it exists
+		$oTemplateDefinition = $this->GetTemplateDefinition($sCurrentClass, $sTemplateId);
+		$sId = $oTemplateDefinition != null ? $oTemplateDefinition->GetId() : $sTemplateId;
+
 		// if instance override exists, return it
 		if (array_key_exists($sObjectId, $this->aInstancesOverriddenTemplatesPaths)
-			&& array_key_exists($sTemplateId, $this->aInstancesOverriddenTemplatesPaths[$sObjectId]['templates'])) {
-			return $this->aInstancesOverriddenTemplatesPaths[$sObjectId]['templates'][$sTemplateId];
+			&& array_key_exists($sId, $this->aInstancesOverriddenTemplatesPaths[$sObjectId]['templates'])) {
+			return $this->aInstancesOverriddenTemplatesPaths[$sObjectId]['templates'][$sId];
 		}
 
 		// now, we search in class hierarchy for a template
 		// note: GetTemplatePath() will return the templates defined in service first, then check if constant with default template path exists
-		$sCurrentClass = get_class($oObject);
 		do {
 			$sTemplate = null;
 			$oParent = null;

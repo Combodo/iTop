@@ -25,7 +25,7 @@
 {% block pMainContentHolder%}
 	<div class="panel panel-default">
 		<div class="panel-body">
-			{% include 'itop-portal-base/portal/templates/bricks/object/mode_' ~ sMode ~ '.html.twig' %}
+			{% include template(sMode, 'Combodo\\iTop\\Portal\\Controller\\ObjectController') %}
 		</div>
 	</div>
 {% endblock %}

@@ -27,6 +27,7 @@ use DBSearch;
 use DOMFormatException;
 use Exception;
 use MetaModel;
+use ModuleDesign;
 
 class ManageBrick extends PortalBrick
 {
@@ -168,7 +169,7 @@ class ManageBrick extends PortalBrick
 		],
 		self::ENUM_TILE_MODE_BAR => [
 			'decorationCssClass' => 'fas fa-chart-bar fa-2x',
-		]
+		],
 	];
 
 	/** @var array $aDefaultLayoutData */
@@ -181,7 +182,7 @@ class ManageBrick extends PortalBrick
 		],
 		self::ENUM_DISPLAY_MODE_BAR => [
 			'need_details' => false,
-		]
+		],
 	];
 
 	// Overloaded variables
@@ -915,6 +916,8 @@ class ManageBrick extends PortalBrick
 								$this->SetTileMode($oDisplayNode->GetText(static::DEFAULT_TILE_MODE));
 								if($this->sDecorationClassHome === static::DEFAULT_DECORATION_CLASS_HOME){
 									$this->sDecorationClassHome = static::$aDefaultTileData[$this->GetTileMode()]['decorationCssClass'];
+									$this->SetDecorationClassNavigationMenu(static::$aDefaultTileData[$this->GetTileMode()]['decorationCssClass']);
+									$this->SetDecorationClassHome(static::$aDefaultTileData[$this->GetTileMode()]['decorationCssClass']);
 								}
 								break;
 						}
@@ -1046,6 +1049,19 @@ class ManageBrick extends PortalBrick
 								}
 								$this->AddGrouping('tabs', array('groups' => $aGroups));
 								break;
+						}
+					}
+					break;
+
+				case 'templates':
+					$aTemplatesIds = static::GetTemplatesService()->GetProviderTemplatesIds(self::class);
+					/** @var TemplateDefinitionDto $oTemplateDefinition */
+					foreach ($aTemplatesIds as $sTemplateId) {
+						$oTemplateNodeList = $oBrickSubNode->GetNodes('template[@id='.ModuleDesign::XPathQuote($sTemplateId).']');
+						if ($oTemplateNodeList->length > 0) {
+							/** @var \Combodo\iTop\DesignElement $oTemplateNode */
+							$oTemplateNode = $oTemplateNodeList->item(0);
+							$this->SetTemplatePath($sTemplateId, $oTemplateNode->GetText(static::DEFAULT_TILE_TEMPLATE_PATH));
 						}
 					}
 					break;

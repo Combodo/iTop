@@ -17,5 +17,5 @@
 {% endblock %}
 
 {% block pModalBody %}
-	{% include 'itop-portal-base/portal/templates/bricks/object/mode_' ~ sMode ~ '.html.twig' with {tIsModal: true} %}
+    {% include template(sMode, 'Combodo\\iTop\\Portal\\Controller\\ObjectController') with {tIsModal: true} %}
 {% endblock %}

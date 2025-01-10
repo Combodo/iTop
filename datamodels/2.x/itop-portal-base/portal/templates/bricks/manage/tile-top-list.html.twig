@@ -11,7 +11,7 @@
         data-brick-id="{{ oBrick.GetId }}">
         <div style="background-color:#fff;padding:0.25em;">
             <div class="tile_title">
-                <span class="icon fas fa-signal fa-rotate-270"></span> {{ oBrick.GetTitle()|dict_s }}
+                <span class="icon {{ oBrick.GetDecorationClassHome }}"></span> {{ oBrick.GetTitle()|dict_s }}
                 ({{ iCount }})</span> </div>
             <table class="table table-sm">
                 <thead>
