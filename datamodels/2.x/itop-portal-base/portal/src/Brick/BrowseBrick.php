@@ -22,7 +22,7 @@ namespace Combodo\iTop\Portal\Brick;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
-use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use DOMFormatException;
 
 /**
@@ -117,10 +117,10 @@ class BrowseBrick extends PortalBrick
 	protected $iDefaultListLength;
 
 	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
-		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->RegisterTemplates(self::class,
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'browse/layout.html.twig'),
 			TemplateDefinitionDto::Create('page_list', static::TEMPLATES_BASE_PATH . 'browse/mode_list.html.twig'),
 			TemplateDefinitionDto::Create('page_tree', static::TEMPLATES_BASE_PATH . 'browse/mode_tree.html.twig'),

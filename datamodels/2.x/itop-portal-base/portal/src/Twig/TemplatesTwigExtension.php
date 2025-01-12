@@ -47,7 +47,7 @@ class TemplatesTwigExtension extends AbstractExtension
 	}
 
 	/**
-	 * Retrieve the path of the desired template (maybe overridden by configuration).
+	 * Retrieve the path of the desired template (maybe overridden by configuration or by instance).
 	 *
 	 * @param string $sId template identifier
 	 * @param string $sProviderClass provider class FQN

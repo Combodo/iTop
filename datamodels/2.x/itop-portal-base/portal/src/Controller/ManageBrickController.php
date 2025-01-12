@@ -41,7 +41,7 @@ use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
 use Combodo\iTop\Portal\Helper\SecurityHelper;
 use Combodo\iTop\Portal\Routing\UrlGenerator;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
-use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use DBObject;
 use DBObjectSet;
 use DBSearch;
@@ -79,10 +79,10 @@ class ManageBrickController extends BrickController
 	const EXCEL_EXPORT_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/popup-export-excel.html.twig';
 	
 	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService): void
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
-		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->RegisterTemplates(self::class,
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('modal_export_excel', static::TEMPLATES_BASE_PATH . 'bricks/manage/popup-export-excel.html.twig'),
 		);
 	}

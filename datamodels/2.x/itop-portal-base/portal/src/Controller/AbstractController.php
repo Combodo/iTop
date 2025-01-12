@@ -23,6 +23,7 @@ namespace Combodo\iTop\Portal\Controller;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -39,9 +40,9 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 	const TEMPLATES_BASE_PATH = 'itop-portal-base/portal/templates/';
 
 	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService): void
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
-		$oTemplatesProviderService->RegisterTemplates(self::class,
+		$oTemplatesRegister->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig'),
 			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH . 'modal/layout.html.twig'),
 		);
@@ -74,7 +75,7 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 	 *
 	 * @return \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService
 	 */
-	protected function GetTemplatesService(): TemplatesProviderService
+	protected function GetTemplatesProviderService(): TemplatesProviderService
 	{
 		return $this->oTemplatesService;
 	}
@@ -149,7 +150,7 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 	 */
 	public function GetTemplatePath(string $sTemplateId): string
 	{
-		return static::GetTemplatesService()->GetProviderInstanceTemplatePath($this, $sTemplateId);
+		return static::GetTemplatesProviderService()->GetProviderInstanceTemplatePath($this, $sTemplateId);
 	}
 
 	/**
@@ -163,7 +164,7 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 	 */
 	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath): AbstractController
 	{
-		static::GetTemplatesService()->OverrideInstanceTemplatePath($this, $sTemplateId, $sTileTemplatePath);
+		static::GetTemplatesProviderService()->OverrideInstanceTemplatePath($this, $sTemplateId, $sTileTemplatePath);
 		return $this;
 	}
 }

@@ -21,7 +21,7 @@ namespace Combodo\iTop\Portal\Brick;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
-use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use DOMFormatException;
 
 /**
@@ -58,10 +58,10 @@ class UserProfileBrick extends PortalBrick
 	protected $bShowPasswordForm;
 
 	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
-		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->RegisterTemplates(self::class,
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'user-profile/layout.html.twig'),
 		);
 	}

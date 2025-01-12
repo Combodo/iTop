@@ -95,7 +95,7 @@
     </div>
 
     {# Instances overloads #}
-    <h2>Bricks overridden templates list</h2>
+    <h2>Bricks declared templates list</h2>
     {# help #}
     <p class="help">
         Bricks overridden templates are templates defined in brick declarations.
@@ -148,7 +148,8 @@
                 <tr {% if template.IsOverridden %}class="overridden_value"{% endif %}>
                     <td>{{ provider }}</td>
                     <td>{{ template.Id }}</td>
-                    <td>{{ template.Value }}{% if template.IsOverridden %}<div class="old_value">{{ template.GetValue(true) }}</div>{% endif %}</td>
+                    <td>{{ template.path }}{% if template.IsOverridden %}
+                            <div class="old_value">{{ template.GetPath(true) }}</div>{% endif %}</td>
                     <td>{{ template.Alias }}</td>
                     <td>{% if template.IsOverridable %}
                             {% if template.IsOverridden %}

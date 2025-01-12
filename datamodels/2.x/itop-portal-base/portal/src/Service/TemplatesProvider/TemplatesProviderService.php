@@ -25,30 +25,31 @@ use Combodo\iTop\Portal\Controller\AbstractController;
 use Combodo\iTop\Portal\Controller\DefaultController;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Exception;
-use IssueLog;
 use ReflectionClass;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 /**
  * Service responsible for managing portal templates.
  *
  * The templates provider interface allows any provider to register templates for the portal.
- * The templates registered may be overridden by the portal configuration.
+ * The templates registered may be overridden by the portal configuration and for a specific instance (brick instance).
  *
  * Templates are defined in module_design properties section, under the templates key.
  * The layouts for home and default layout still allow to be defined in the portal configuration.
  * Otherwise, the templates for providers are defined as follows:
  * <template id="{class implementing TemplatesProviderInterface}:{template_id}">{path to template}</template>
  *
+ * Templates are store in register object.
+ * This register is cached.
+ *
  * @package Combodo\iTop\Portal\Service\TemplatesProvider
  * @since 3.2.1
  */
 class TemplatesProviderService
 {
-	/** @var string|mixed Templates UI version */
-	private string $sTemplateUIVersion = '-';
-
-	/** @var array Templates definitions (possibly altered by portal configuration) */
-	private array $aTemplatesDefinitions = [];
+	/** @var \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister templates register */
+	protected TemplatesRegister $oTemplateRegister;
 
 	/** @var array instances overridden templates paths */
 	protected array $aInstancesOverriddenTemplatesPaths = [];
@@ -57,97 +58,77 @@ class TemplatesProviderService
 	 * TemplatesService constructor.
 	 *
 	 * @param array $aCombodoPortalInstanceConf configuration for the current portal instance
+	 * @param \Symfony\Contracts\Cache\CacheInterface $templatesCachePool cache pool for templates
+	 *
+	 * @throws \Psr\Cache\InvalidArgumentException
 	 */
-	public function __construct(array $aCombodoPortalInstanceConf)
+	public function __construct(array $aCombodoPortalInstanceConf, CacheInterface $templatesCachePool)
+	{
+		// template register cache
+		$this->oTemplateRegister = $templatesCachePool->get('portal_templates_register', function (ItemInterface $item) use ($aCombodoPortalInstanceConf): TemplatesRegister {
+
+			// initialize register
+			return $this->InitializeTemplatesRegister($aCombodoPortalInstanceConf);
+		});
+
+		// brick should be able to give the templates with GetTileTemplate, GetPageTemplate (so it needs to know the service)
+		// a more elegant way would be to use a controller to achieve this
+		AbstractBrick::SetTemplatesProviderService($this);
+	}
+
+	/**
+	 * Initialize templates register.
+	 * Store the UI version defined in portal instance configuration.
+	 * Iterate throw TemplatesProviderInterface implementations to register templates.
+	 * Override templates with portal instance configuration.
+	 *
+	 * @throws \ReflectionException
+	 */
+	private function InitializeTemplatesRegister(array $aCombodoPortalInstanceConf): TemplatesRegister
 	{
 		// UI version
+		$sUIVersion = 'unset';
 		if (isset($aCombodoPortalInstanceConf['properties']['ui_version'])) {
-			$this->sTemplateUIVersion = $aCombodoPortalInstanceConf['properties']['ui_version'];
+			$sUIVersion = $aCombodoPortalInstanceConf['properties']['ui_version'];
 		}
 
-		// register providers templates
-		$this->RegisterProvidersTemplates();
+		// create template register
+		$oTemplateRegister = new TemplatesRegister($sUIVersion);
 
-		// overrides templates with portal configuration
-		$this->OverrideTemplatesFromPortalProperties($aCombodoPortalInstanceConf['properties']['templates']);
-	}
+		// search for templates providers
+		// only non-abstract classes are discovered.
+		// classes implementing the interface needs to call the parent to ensure abstracted class levels templates are registered.
+		$oTemplatesProviders = InterfaceDiscovery::GetInstance()->FindItopClasses(TemplatesProviderInterface::class);
 
-	/**
-	 * Register providers templates.
-	 *
-	 * @return void
-	 */
-	private function RegisterProvidersTemplates(): void
-	{
-		try {
-			// search for templates providers
-			$oTemplatesProviders = InterfaceDiscovery::GetInstance()->FindItopClasses(TemplatesProviderInterface::class);
-
-			// register templates
-			foreach ($oTemplatesProviders as $oTemplateProvider) {
-				$oTemplateProvider::RegisterTemplates($this);
-			}
-		}
-		catch (Exception $e) {
-			IssueLog::Error($e->getMessage());
-		}
-	}
-
-	/**
-	 * Register templates.
-	 *
-	 * @param string $sProviderId the templates provider id
-	 * @param \Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto ...$aTemplatesDefinitions
-	 *
-	 * @return $this
-	 */
-	public function RegisterTemplates(string $sProviderId, TemplateDefinitionDto...$aTemplatesDefinitions): TemplatesProviderService
-	{
-		// prevent child classes to erase parent templates
-		if (array_key_exists($sProviderId, $this->aTemplatesDefinitions)) {
-			return $this;
+		// register default templates...
+		foreach ($oTemplatesProviders as $oTemplateProvider) {
+			$oTemplateProvider::RegisterTemplates($oTemplateRegister);
 		}
 
-		// register templates...
-		$this->aTemplatesDefinitions[$sProviderId] = [];
-		foreach ($aTemplatesDefinitions as $oTemplateDefinition) {
-			$this->aTemplatesDefinitions[$sProviderId][$oTemplateDefinition->GetId()] = $oTemplateDefinition;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Overrides templates properties.
-	 *
-	 * @param array $aPortalTemplatesProperties
-	 *
-	 * @return void
-	 */
-	private function OverrideTemplatesFromPortalProperties(array $aPortalTemplatesProperties): void
-	{
-		// loop through the templates...
-		foreach ($aPortalTemplatesProperties as $sKey => $oValue) {
+		// overrides the templates declared in portal configuration...
+		foreach ($aCombodoPortalInstanceConf['properties']['templates'] as $sKey => $oValue) {
 
 			switch ($sKey) {
-				case 'layout':
-					$oTemplateDefinition = $this->GetTemplateDefinition(AbstractController::class, 'page');
-					$oTemplateDefinition->OverrideTemplate($oValue);
+				case 'layout': // legacy configuration
+					$oTemplateDefinition = $oTemplateRegister->GetTemplateDefinition(AbstractController::class, 'page');
+					$oTemplateDefinition->OverrideTemplatePath($oValue);
 					break;
-				case 'home':
-					$oTemplateDefinition = $this->GetTemplateDefinition(DefaultController::class, 'home');
-					$oTemplateDefinition->OverrideTemplate($oValue);
+				case 'home': // legacy configuration
+					$oTemplateDefinition = $oTemplateRegister->GetTemplateDefinition(DefaultController::class, 'home');
+					$oTemplateDefinition->OverrideTemplatePath($oValue);
 					break;
 				default:
 					if (is_array($oValue)) {
 						foreach ($oValue as $sTemplateId => $sTemplatePath) {
-							$oTemplateDefinition = $this->GetTemplateDefinition($sKey, $sTemplateId);
-							$oTemplateDefinition?->OverrideTemplate($sTemplatePath);
+							$oTemplateDefinition = $oTemplateRegister->GetTemplateDefinition($sKey, $sTemplateId);
+							$oTemplateDefinition?->OverrideTemplatePath($sTemplatePath);
 						}
 					}
 					break;
 			}
 		}
+
+		return $oTemplateRegister;
 	}
 
 	/**
@@ -164,13 +145,13 @@ class TemplatesProviderService
 		// get object UUID
 		$sObjectId = spl_object_id($oObject);
 
-		// initialize overloaded object templates and information
+		// initialize overridden object templates and information
 		if (array_key_exists($sObjectId, $this->aInstancesOverriddenTemplatesPaths) === false) {
 
 			$this->aInstancesOverriddenTemplatesPaths[$sObjectId] = [];
 			$this->aInstancesOverriddenTemplatesPaths[$sObjectId]['templates'] = [];
 
-			// friendly id for troubleshooting
+			// friendly id
 			$sId = $sObjectId;
 			if ($oObject instanceof AbstractBrick) {
 				$sId = $oObject->GetId();
@@ -193,79 +174,60 @@ class TemplatesProviderService
 	/**
 	 * Get a template path.
 	 *
-	 * @param string $sProviderId the templates provider id
+	 * @param string $sProviderClass the templates provider class
 	 * @param string $sTemplateId the template id
 	 * @param bool $bIsInitial
 	 *
 	 * @return string|null
 	 * @throws \ReflectionException
 	 */
-	public function GetTemplatePath(string $sProviderId, string $sTemplateId, bool $bIsInitial = false): ?string
+	public function GetTemplatePath(string $sProviderClass, string $sTemplateId, bool $bIsInitial = false): ?string
 	{
-		if (array_key_exists($sProviderId, $this->aTemplatesDefinitions)) {
+		if ($this->oTemplateRegister->IsProviderExists($sProviderClass)) {
+
+			// I
+			// SERVICE DECLARATION
+			// the provider class is known by service
+			// the class register its templates with service
 
 			// search for the template definition
-			$oTemplateDefinition = $this->GetTemplateDefinition($sProviderId, $sTemplateId);
+			$oTemplateDefinition = $this->oTemplateRegister->GetTemplateDefinition($sProviderClass, $sTemplateId);
 
 			// return the template path
-			return $oTemplateDefinition?->GetValue($bIsInitial);
+			return $oTemplateDefinition?->GetPath($bIsInitial);
+
 		} else {
 
-			// reflexion for class
-			$oReflexion = new ReflectionClass($sProviderId);
+			// II
+			// LEGACY DECLARATION
+			// the provider class is unknown by service
+			// the class register its templates with legacy constants
 
-			// class defined constants
-			$aClassDefinedConstants = array_diff($oReflexion->getConstants(), $oReflexion->getParentClass()->getConstants());
-
-			// return the constant if exists
-			return match ($sTemplateId) {
-				'page' => array_key_exists('DEFAULT_PAGE_TEMPLATE_PATH', $aClassDefinedConstants) ? $oReflexion->getConstant('DEFAULT_PAGE_TEMPLATE_PATH') : null,
-				'tile' => array_key_exists('DEFAULT_TILE_TEMPLATE_PATH', $aClassDefinedConstants) ? $oReflexion->getConstant('DEFAULT_TILE_TEMPLATE_PATH') : null,
-				default => null,
-			};
+			return $this->GetLegacyTemplatePath($sProviderClass, $sTemplateId);
 		}
-
-
 	}
 
 	/**
-	 * Get a template definition.
+	 * @param string $sProviderClass
+	 * @param string $sTemplateId
 	 *
-	 * @param string $sProviderId the templates provider id
-	 * @param string $sTemplateId the template id
-	 *
-	 * @return TemplateDefinitionDto|null
+	 * @return string|null
+	 * @throws \ReflectionException
 	 */
-	public function GetTemplateDefinition(string $sProviderId, string $sTemplateId): ?TemplateDefinitionDto
+	private function GetLegacyTemplatePath(string $sProviderClass, string $sTemplateId): ?string
 	{
-		// retrieve template path
-		if (array_key_exists($sProviderId, $this->aTemplatesDefinitions)) {
+		// reflexion for class
+		$oReflexion = new ReflectionClass($sProviderClass);
 
-			// search in template definitions
-			if (array_key_exists($sTemplateId, $this->aTemplatesDefinitions[$sProviderId])) {
-				return $this->aTemplatesDefinitions[$sProviderId][$sTemplateId];
-			}
+		// class defined constants
+		$aClassDefinedConstants = array_diff($oReflexion->getConstants(), $oReflexion->getParentClass()->getConstants());
 
-			// search in aliases
-			foreach ($this->aTemplatesDefinitions[$sProviderId] as $item) {
-				/** @var \Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto $item */
-				if ($item->GetAlias() === $sTemplateId) {
-					return $item;
-				}
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * @param string $sProviderId
-	 *
-	 * @return array
-	 */
-	public function GetProviderTemplatesIds(string $sProviderId): array
-	{
-		return array_map(fn($oTemplateDefinition) => $oTemplateDefinition->GetId(), $this->aTemplatesDefinitions[$sProviderId] ?? ['tile', 'page']);
+		// return the constant if exists
+		return match ($sTemplateId) {
+			'page' => array_key_exists('DEFAULT_PAGE_TEMPLATE_PATH', $aClassDefinedConstants) ? $oReflexion->getConstant('DEFAULT_PAGE_TEMPLATE_PATH') : null,
+			'tile' => array_key_exists('DEFAULT_TILE_TEMPLATE_PATH', $aClassDefinedConstants) ? $oReflexion->getConstant('DEFAULT_TILE_TEMPLATE_PATH') : null,
+			default => null,
+		};
 	}
 
 	/**
@@ -275,7 +237,6 @@ class TemplatesProviderService
 	 * @param string $sTemplateId
 	 *
 	 * @return string|null
-	 * @since 3.2.1
 	 *
 	 */
 	public function GetProviderInstanceTemplatePath(object $oObject, string $sTemplateId): ?string
@@ -287,7 +248,7 @@ class TemplatesProviderService
 		$sCurrentClass = get_class($oObject);
 
 		// get template definition if it exists
-		$oTemplateDefinition = $this->GetTemplateDefinition($sCurrentClass, $sTemplateId);
+		$oTemplateDefinition = $this->oTemplateRegister->GetTemplateDefinition($sCurrentClass, $sTemplateId);
 		$sId = $oTemplateDefinition != null ? $oTemplateDefinition->GetId() : $sTemplateId;
 
 		// if instance override exists, return it
@@ -297,12 +258,17 @@ class TemplatesProviderService
 		}
 
 		// now, we search in class hierarchy for a template
-		// note: GetTemplatePath() will return the templates defined in service first, then check if constant with default template path exists
 		do {
-			$sTemplate = null;
 			$oParent = null;
 			try {
+
+				// get template path for current class
 				$sTemplate = $this->GetTemplatePath($sCurrentClass, $sTemplateId);
+				if ($sTemplate !== null) {
+					return $sTemplate;
+				}
+
+				// no template defined at this level, try parent class
 				$oReflexion = new ReflectionClass($sCurrentClass);
 				$oParent = $oReflexion->getParentClass();
 				if ($oParent) {
@@ -312,19 +278,19 @@ class TemplatesProviderService
 			catch (Exception) {
 			}
 
-		} while ($sTemplate === null && $oParent); // continue while no template found and parent class exists
+		} while ($oParent); // continue while parent class exists
 
-		return $sTemplate;
+		return null; // no template found
 	}
 
 	/**
-	 * Return templates definitions.
+	 * Return the register.
 	 *
-	 * @return array
+	 * @return \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister
 	 */
-	public function GetTemplatesDefinitions(): array
+	public function GetRegister(): TemplatesRegister
 	{
-		return $this->aTemplatesDefinitions;
+		return $this->oTemplateRegister;
 	}
 
 	/**
@@ -352,14 +318,6 @@ class TemplatesProviderService
 
 		return (array_key_exists($sObjectId, $this->aInstancesOverriddenTemplatesPaths)
 			&& array_key_exists($sTemplateId, $this->aInstancesOverriddenTemplatesPaths[$sObjectId]['templates']));
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetUIVersion(): string
-	{
-		return $this->sTemplateUIVersion;
 	}
 
 }

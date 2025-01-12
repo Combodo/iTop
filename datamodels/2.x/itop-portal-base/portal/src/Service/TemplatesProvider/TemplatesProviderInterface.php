@@ -23,15 +23,17 @@ namespace Combodo\iTop\Portal\Service\TemplatesProvider;
 /**
  * Template provider interface.
  *
+ * This interface is used to register templates in the templates provider service.
+ *
  * @package Combodo\iTop\Portal\Service\TemplatesProvider
  * @since 3.2.1
  */
 interface TemplatesProviderInterface
 {
 	/**
-	 * @param \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService $oTemplatesProviderService
+	 * @param \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister $oTemplatesRegister
 	 *
 	 * @return void
 	 */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void;
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void;
 }

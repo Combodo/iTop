@@ -23,7 +23,7 @@ namespace Combodo\iTop\Portal\Service\TemplatesProvider;
 /**
  * Template definition DTO.
  *
- * Describe a template.
+ * Describes a template.
  *
  * @package Combodo\iTop\Portal\Service\TemplatesProvider
  * @since 3.2.1
@@ -33,16 +33,16 @@ class TemplateDefinitionDto
 	/**
 	 * Create a new template definition instance.
 	 *
-	 * @param string $sTemplateId
-	 * @param string $sValue
-	 * @param bool $isOverridable
-	 * @param string|null $sAlias
+	 * @param string $sTemplateId template identifier
+	 * @param string $sPath template path
+	 * @param bool $isOverridable flag set when the template is overridable
+	 * @param string|null $sAlias template alias
 	 *
 	 * @return \Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto
 	 */
-	public static function Create(string $sTemplateId, string $sValue, bool $isOverridable= true, ?string $sAlias = null): TemplateDefinitionDto
+	public static function Create(string $sTemplateId, string $sPath, bool $isOverridable = true, ?string $sAlias = null): TemplateDefinitionDto
 	{
-		return new TemplateDefinitionDto($sTemplateId, $sValue, $isOverridable, $sAlias);
+		return new TemplateDefinitionDto($sTemplateId, $sPath, $isOverridable, $sAlias);
 	}
 
 	/** @var bool $bIsOverridden flag set when overriding a template */
@@ -54,24 +54,24 @@ class TemplateDefinitionDto
 	/**
 	 * Constructor.
 	 *
-	 * @param string $sId
-	 * @param string|null $sValue
-	 * @param bool|null $bIsOverridable
-	 * @param string|null $sAlias
+	 * @param string $sId template identifier
+	 * @param string|null $sPath template path
+	 * @param bool|null $bIsOverridable flag set when the template is overridable
+	 * @param string|null $sAlias template alias
 	 */
 	private function __construct(
 		private readonly string $sId,
-		private ?string $sValue = null,
+		private ?string $sPath = null,
 		private readonly ?bool $bIsOverridable = false,
 		private readonly ?string $sAlias = null,
 	)
 	{
 		// save overridable values
-		$this->sInitialValue = $sValue;
+		$this->sInitialValue = $sPath;
 	}
 
 	/**
-	 * Return the template ID.
+	 * Return the template identifier.
 	 *
 	 * @return string
 	 */
@@ -81,18 +81,19 @@ class TemplateDefinitionDto
 	}
 
 	/**
-	 * Return the template value depending on the template type
+	 * Return the template path.
 	 *
-	 * @param bool $bInitialValue
+	 * @param bool $bInitialValue Return the initial value instead of the overridden one.
 	 *
 	 * @return string
 	 */
-	public function GetValue(bool $bInitialValue = false): string
+	public function GetPath(bool $bInitialValue = false): string
 	{
 		if($bInitialValue){
 			return $this->sInitialValue !== null ? $this->sInitialValue : '';
 		}
-		return $this->sValue !== null ? $this->sValue : '';
+
+		return $this->sPath !== null ? $this->sPath : '';
 	}
 
 	/**
@@ -118,14 +119,14 @@ class TemplateDefinitionDto
 	/**
 	 * Override a template.
 	 *
-	 * @param string $sValue
+	 * @param string $sPath template path
 	 *
 	 * @return $this
 	 */
-	public function OverrideTemplate(string $sValue): TemplateDefinitionDto
+	public function OverrideTemplatePath(string $sPath): TemplateDefinitionDto
 	{
-		if($this->IsOverridable() && $sValue !== $this->sValue){
-			$this->sValue = $sValue;
+		if ($this->IsOverridable() && $sPath !== $this->sPath) {
+			$this->sPath = $sPath;
 			$this->bIsOverridden = true;
 		}
 		return $this;

@@ -27,6 +27,7 @@ use Combodo\iTop\DesignElement;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use DOMFormatException;
 use ModuleDesign;
 
@@ -102,12 +103,21 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	private static TemplatesProviderService $oTemplatesProviderService;
 
 	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService): void
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
-		self::$oTemplatesProviderService = $oTemplatesProviderService;
-		$oTemplatesProviderService->RegisterTemplates(self::class,
+		$oTemplatesRegister->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig'),
 		);
+	}
+
+	/**
+	 * @param \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService $oTemplateProviderService
+	 *
+	 * @return void
+	 */
+	public static function SetTemplatesProviderService(TemplatesProviderService $oTemplateProviderService): void
+	{
+		self::$oTemplatesProviderService = $oTemplateProviderService;
 	}
 
 	/**
@@ -115,7 +125,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 *
 	 * @return \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService
 	 */
-	protected static function GetTemplatesService(): TemplatesProviderService
+	protected static function GetTemplatesProviderService(): TemplatesProviderService
 	{
 		return self::$oTemplatesProviderService;
 	}
@@ -706,7 +716,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 */
 	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath): AbstractBrick
 	{
-		static::GetTemplatesService()->OverrideInstanceTemplatePath($this, $sTemplateId, $sTileTemplatePath);
+		static::GetTemplatesProviderService()->OverrideInstanceTemplatePath($this, $sTemplateId, $sTileTemplatePath);
 		return $this;
 	}
 
@@ -722,7 +732,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 */
 	public function GetTemplatePath(string $sTemplateId): string
 	{
-		return static::GetTemplatesService()->GetProviderInstanceTemplatePath($this, $sTemplateId);
+		return static::GetTemplatesProviderService()->GetProviderInstanceTemplatePath($this, $sTemplateId);
 	}
 
 	/**
@@ -736,6 +746,6 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 */
 	public function HasInstanceOverriddenTemplate(string $sTemplateId): ?string
 	{
-		return static::GetTemplatesService()->HasInstanceOverriddenTemplate($this, $sTemplateId);
+		return static::GetTemplatesProviderService()->HasInstanceOverriddenTemplate($this, $sTemplateId);
 	}
 }

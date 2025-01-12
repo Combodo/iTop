@@ -30,12 +30,13 @@ class PortalCollector extends AbstractDataCollector
 	/** @inheritdoc  */
 	public function collect(Request $request, Response $response, Throwable $exception = null): void
 	{
-		$aTemplatesDefinitions = $this->oTemplatesProviderService->GetTemplatesDefinitions();
+		$oRegister = $this->oTemplatesProviderService->GetRegister();
+		$aTemplatesDefinitions = $oRegister->GetTemplatesDefinitions();
 		$this->data = [
 			'templates_definitions' => $aTemplatesDefinitions,
 			'instances_overridden_templates' => $this->oTemplatesProviderService->GetInstancesOverriddenTemplatesPaths(),
 			'templates_count' => $this->ComputeOverridesCount($aTemplatesDefinitions),
-			'ui_version' => $this->oTemplatesProviderService->GetUIVersion(),
+			'ui_version' => $oRegister->GetUIVersion(),
 		];
 	}
 
@@ -93,7 +94,7 @@ class PortalCollector extends AbstractDataCollector
 			foreach ($templates as $template) {
 
 				$aMatches = [];
-				preg_match('#([\w-]+)/#', $template->GetValue(), $aMatches);
+				preg_match('#([\w-]+)/#', $template->GetPath(), $aMatches);
 
 				if(!in_array($aMatches[1], $aExtensions)){
 					$aExtensions[] = $aMatches[1];
@@ -109,7 +110,8 @@ class PortalCollector extends AbstractDataCollector
 			'count' => $iCount,
 			'providers_count' => count($aTemplatesDefinitions),
 			'overrides_count' => $iOverridesCount,
-			'extensions_count' => count($aExtensions)
+			'extensions_count' => count($aExtensions),
+			'bricks_count'     => count($this->oTemplatesProviderService->GetInstancesOverriddenTemplatesPaths()),
 		];
 	}
 

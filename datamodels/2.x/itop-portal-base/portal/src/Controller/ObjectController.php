@@ -38,7 +38,7 @@ use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
 use Combodo\iTop\Portal\Helper\SecurityHelper;
 use Combodo\iTop\Portal\Routing\UrlGenerator;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
-use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use Combodo\iTop\Renderer\Bootstrap\FieldRenderer\BsLinkedSetFieldRenderer;
 use DBObject;
 use DBObjectSearch;
@@ -77,10 +77,10 @@ class ObjectController extends BrickController
 	const DEFAULT_LIST_LENGTH = 10;
 
 	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService): void
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
-		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->RegisterTemplates(self::class,
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH. 'bricks/object/layout.html.twig'),
 			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH. 'bricks/object/modal.html.twig'),
 			TemplateDefinitionDto::Create('mode_create', static::TEMPLATES_BASE_PATH.'bricks/object/mode_create.html.twig', true, 'create'),

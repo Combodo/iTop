@@ -22,7 +22,7 @@ namespace Combodo\iTop\Portal\Brick;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
-use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use DOMFormatException;
 
 /**
@@ -65,10 +65,10 @@ class FilterBrick extends PortalBrick
 	protected $sSearchSubmitClass;
 
 	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService) : void
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
-		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->RegisterTemplates(self::class,
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'filter/tile.html.twig')
 		);
 	}

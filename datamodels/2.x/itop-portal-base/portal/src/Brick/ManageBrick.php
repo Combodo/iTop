@@ -22,7 +22,7 @@ namespace Combodo\iTop\Portal\Brick;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
-use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use DBSearch;
 use DOMFormatException;
 use Exception;
@@ -214,10 +214,10 @@ class ManageBrick extends PortalBrick
 	protected $iDefaultListLength;
 
 	/** @inheritdoc  */
-	public static function RegisterTemplates(TemplatesProviderService $oTemplatesProviderService): void
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
-		parent::RegisterTemplates($oTemplatesProviderService);
-		$oTemplatesProviderService->RegisterTemplates(self::class,
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'manage/tile-default.html.twig'),
 			TemplateDefinitionDto::Create('tile_badge', static::TEMPLATES_BASE_PATH. 'manage/tile-badge.html.twig'),
 			TemplateDefinitionDto::Create('tile_chart',  static::TEMPLATES_BASE_PATH . 'manage/tile-chart.html.twig'),
@@ -1054,7 +1054,7 @@ class ManageBrick extends PortalBrick
 					break;
 
 				case 'templates':
-					$aTemplatesIds = static::GetTemplatesService()->GetProviderTemplatesIds(self::class);
+					$aTemplatesIds = static::GetTemplatesProviderService()->GetRegister()->GetProviderTemplatesIds(self::class);
 					/** @var TemplateDefinitionDto $oTemplateDefinition */
 					foreach ($aTemplatesIds as $sTemplateId) {
 						$oTemplateNodeList = $oBrickSubNode->GetNodes('template[@id='.ModuleDesign::XPathQuote($sTemplateId).']');
@@ -1112,10 +1112,10 @@ class ManageBrick extends PortalBrick
 
 		// Checking the navigation icon
 		$sDecorationClassNavigationMenu = $this->GetDecorationClassNavigationMenu();
-		if (empty($sDecorationClassNavigationMenu) && isset(static::$aDefaultPresentationData[$this->sTileMode]))
+		if (empty($sDecorationClassNavigationMenu) && isset(static::$aDefaultTileData[$this->sTileMode]))
 		{
 			/** @var string $sDecorationClassNavigationMenu */
-			$sDecorationClassNavigationMenu = static::$aDefaultPresentationData[$this->sTileMode]['decorationCssClass'];
+			$sDecorationClassNavigationMenu = static::$aDefaultTileData[$this->sTileMode]['decorationCssClass'];
 			if (!empty($sDecorationClassNavigationMenu))
 			{
 				$this->SetDecorationClassNavigationMenu($sDecorationClassNavigationMenu);
