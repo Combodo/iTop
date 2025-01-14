@@ -75,7 +75,7 @@ class Basic extends AbstractConfiguration
 		$aPortalConf = array(
 			'properties' => array(
 				'id'              => $_ENV['PORTAL_ID'],
-				'ui_version'        => '2017',
+				'ui_version' => '2025',
 				'name'            => 'Page:DefaultTitle',
 				'logo'            => Branding::GetPortalLogoAbsoluteUrl(),
 				'favicon'         => Branding::GetPortalFavIconAbsoluteUrl(),

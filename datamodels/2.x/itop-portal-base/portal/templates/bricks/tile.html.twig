@@ -88,7 +88,7 @@ Options:
                 <div class="ipb-tile--decoration">
                     {% if oBrick.GetDecorationClassHome %}
                         <span class="ipb-tile--decoration--icon icon {{ oBrick.GetDecorationClassHome }}"></span>
-                    {% else %}
+                    {% elseif sIconURL is defined %}
                         <img src="{{ sIconURL }}" class="ipb-tile--decoration--icon" alt="Class Icon">
                     {% endif %}
                 </div>
