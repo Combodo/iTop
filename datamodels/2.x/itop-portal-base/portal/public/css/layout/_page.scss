@@ -9,6 +9,9 @@ $ipb-page--main-header--information--subtitle--padding: $common-spacing-200 !def
 $ipb-page--main-header--information--subtitle--font-size: $common-font-size-250 !default;
 $ipb-page--main-header--information--subtitle--color: $text-color !default;
 
+html {
+  font-size: 12px;
+}
 body{
   overflow: hidden;
 }

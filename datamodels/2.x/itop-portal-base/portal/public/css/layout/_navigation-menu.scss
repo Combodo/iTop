@@ -138,6 +138,7 @@ $ipb-navigation-menu--is-expanded--navigation-menu--user-card--icon--margin-righ
   white-space: nowrap;
   overflow-x: hidden;
   text-overflow: ellipsis;
+  @extend %common-font-ral-nor-200;
 }
 
 .ibp-navigation-menu--menu-entry--wrapper{
