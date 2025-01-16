@@ -4,7 +4,7 @@
 
 {% block pMainContentHolder %}
     {% if aGroupingTabsValues|length > 1 %}
-        <ul class="nav nav-pills grouping_tabs">
+        <ul class="ipb-manage-brick--tabs nav nav-pills grouping_tabs">
             {% for aGroupingTab in aGroupingTabsValues %}
                 <li{% if sGroupingTab is defined and sGroupingTab == aGroupingTab.value %} class="active"{% endif %} data-id="{{ aGroupingTab.value }}" data-label="{{ aGroupingTab.label }}" data-item-count="{{ aGroupingTab.count }}">
                     <a href="{{ app.url_generator.generate('p_manage_brick_display_as', {'sBrickId': sBrickId, 'sDisplayMode': sDisplayMode, 'sGroupingTab': aGroupingTab.value}) }}"
@@ -22,7 +22,7 @@
     {% if aGroupingAreasData|length > 0 %}
         {% for aAreaData in aGroupingAreasData %}
             {% set iTableCount = iTableCount + 1 %}
-            <div class="panel panel-default">
+            <div class="ipb-manage-brick--panel panel panel-default">
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title" style="float: left;">{{ aAreaData.sTitle }}</h3>
                     {% if bCanExport %}
@@ -34,8 +34,8 @@
                         </a>
                     {% endif %}
                 </div>
-                <div class="panel-body">
-                        <table id="table-{{ aAreaData.sId }}" class="object-list table table-striped responsive" width="100%"></table>
+                <div class="ipb-manage-brick--panel--body panel-body">
+                        <table id="table-{{ aAreaData.sId }}" class="ipb-manage-brick--panel--body--table object-list table table-striped responsive" width="100%"></table>
                 </div>
             </div>
         {% endfor %}

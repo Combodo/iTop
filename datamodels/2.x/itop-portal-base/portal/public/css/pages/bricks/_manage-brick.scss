@@ -1,0 +1,17 @@
+.ipb-manage-brick--panel--body {
+  padding: 15px 0;
+  
+  > .dataTables_wrapper {
+    padding: 15px 0;
+    > .row {
+      margin: 0;
+      > div {
+        padding: 0 12px;
+      }
+    }
+  }
+}
+
+.ipb-manage-brick--panel--body--table  {
+  margin-top: 16px !important;
+}
