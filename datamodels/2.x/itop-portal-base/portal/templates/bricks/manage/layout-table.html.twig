@@ -28,8 +28,9 @@
                     {% if bCanExport %}
                         <a href="{{ app.url_generator.generate('p_manage_brick_excel_export_start', {'sBrickId': sBrickId, 'sGroupingTab': sGroupingTab, 'sGroupingArea': aAreaData.sId})|raw }}"
                            id="btn_export_excel_for_{{ aAreaData.sId }}"
+                           class="ipb-manage-brick--export-action"
                            data-toggle="modal" data-target="#modal-for-all">
-                            <span class="fas fa-download fa-lg" style="float: right;"
+                            <span class="ipb-manage-brick--export-action--icon fas fa-download fa-lg"
                               data-tooltip-content="{{ 'ExcelExporter:ExportMenu'|dict_s }}"></span>
                         </a>
                     {% endif %}
