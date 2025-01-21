@@ -11,7 +11,7 @@ $ipb-tile--decoration--padding: $common-spacing-400 !default;
 $ipb-tile--decoration--hover--background: common-adjust-alpha($common-color-blue-700, .1) !default;
 $ipb-tile--decoration--background: common-adjust-lightness($ipb-tile--decoration--hover--background, 38%) !default;
 $ipb-tile--decoration--icon--color: $common-color-blue-700 !default;
-$ipb-tile--decoration--icon--font-size: $common-font-size-400 !default;
+$ipb-tile--decoration--icon--font-size: $common-font-size-250 !default;
 $ipb-tile--title--color: $text-color !default;
 $ipb-tile--title--font-size: $common-font-size-400 !default;
 $ipb-tile--description--color: $text-color !default;
@@ -51,7 +51,7 @@ $ipb-tile--description--color: $text-color !default;
   &:has(> .fc){
     padding: 7px;
     > span{
-      font-size: 3rem;
+      font-size: 2.5rem;
     }
   }
 }
