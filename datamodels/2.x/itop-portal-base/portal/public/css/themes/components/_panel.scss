@@ -3,8 +3,6 @@ $panel--border-radius: $common-border-radius-300!default;
 
 
 .panel{
-
-  border-radius: $panel--border-radius!important;
-
+  box-shadow: none;
 }
 
