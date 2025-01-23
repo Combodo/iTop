@@ -2867,6 +2867,14 @@ abstract class DBObject implements iDisplay
 	protected function ListChangedValues(array $aProposal)
 	{
 		$aDelta = array();
+		$sClass = get_class($this);
+		if (MetaModel::HasLifecycle($sClass) && utils::IsNotNullOrEmptyString($this->sStimulusBeingApplied)) {
+			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+			if (!in_array($sStateAttCode, $aProposal)) {
+				// Same state but the transition was asked, act as if the state was changed
+				$aDelta[$sStateAttCode] = $this->m_aCurrValues[$sStateAttCode];
+			}
+		}
 		foreach ($aProposal as $sAtt => $proposedValue)
 		{
 			if (!array_key_exists($sAtt, $this->m_aOrigValues))
@@ -3811,7 +3819,7 @@ abstract class DBObject implements iDisplay
 				}
 
 				try {
-					$this->PostUpdateActions($aChanges, $sClass);
+					$this->PostUpdateActions($this->m_aPreviousValuesForUpdatedAttributes, $sClass);
 				}
 				catch (Exception $e) {
 					$this->LogCRUDExit(__METHOD__, 'Error: '.$e->getMessage());

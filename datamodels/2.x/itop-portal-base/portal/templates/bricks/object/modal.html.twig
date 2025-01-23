@@ -1,6 +1,4 @@
-{# itop-portal-base/portal/templates/bricks/object/modal.html.twig #}
-{# Object brick base layout #}
-{% extends 'itop-portal-base/portal/templates/modal/layout.html.twig' %}
+{% extends template('modal') %}
 
 {% block pModalTitle %}
 	{% if form.title_clipboard_text is defined %}
@@ -19,5 +17,5 @@
 {% endblock %}
 
 {% block pModalBody %}
-	{% include 'itop-portal-base/portal/templates/bricks/object/mode_' ~ sMode ~ '.html.twig' with {tIsModal: true} %}
+    {% include template(sMode, 'Combodo\\iTop\\Portal\\Controller\\ObjectController') with {tIsModal: true} %}
 {% endblock %}

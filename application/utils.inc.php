@@ -3110,8 +3110,7 @@ TXT
 		$aMentionMatches = [];
 		$sText = html_entity_decode($sText);
 
-		preg_match_all('/<a\s*([^>]*)data-object-class="([^"]*)"\s*data-object-key="([^"]*)"/i', $sText, $aMentionMatches);
-
+		preg_match_all('/<a\s*([^>]*)data-object-class="([^"]*)"\s.*data-object-key="([^"]*)"/Ui', $sText, $aMentionMatches);
 		foreach ($aMentionMatches[0] as $iMatchIdx => $sCompleteMatch) {
 			$sMatchedClass = $aMentionMatches[2][$iMatchIdx];
 			$sMatchedId = $aMentionMatches[3][$iMatchIdx];

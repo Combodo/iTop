@@ -42,8 +42,8 @@ class iTopOwnershipToken extends DBObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeDateTime("acquired", array("allowed_values"=>null, "sql"=>'acquired', "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDateTime("last_seen", array("allowed_values"=>null, "sql"=>'last_seen', "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("acquired", array("allowed_values"=>null, "sql"=>'acquired', "default_value"=>'NOW()', "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("last_seen", array("allowed_values"=>null, "sql"=>'last_seen', "default_value"=>'NOW()', "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("obj_class", array("allowed_values"=>null, "sql"=>'obj_class', "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("obj_key", array("allowed_values"=>null, "sql"=>'obj_key', "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("token", array("allowed_values"=>null, "sql"=>'token', "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));

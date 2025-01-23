@@ -22,6 +22,7 @@
 namespace Combodo\iTop\Test\UnitTest\Module\iTopPortalBase;
 
 use Combodo\iTop\Portal\Helper\RequestManipulatorHelper;
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -29,13 +30,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * @covers \Combodo\iTop\Portal\Helper\RequestManipulatorHelper
  */
-class RequestManipulatorTest extends ItopTestCase
+class RequestManipulatorTest extends ItopDataTestCase
 {
 
 	protected function LoadRequiredItopFiles(): void
 	{
 		parent::LoadRequiredItopFiles();
-		$this->RequireOnceItopFile('datamodels/2.x/itop-portal-base/portal/src/Helper/RequestManipulatorHelper.php');
 	}
 
 	public function testReadParam()

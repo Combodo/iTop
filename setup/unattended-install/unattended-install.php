@@ -26,6 +26,8 @@ EOF;
 }
 /////////////////////////////////////////////////
 
+$oCtx = new ContextTag(ContextTag::TAG_SETUP);
+
 $sCleanName = strtolower(trim(PHP_SAPI));
 if ($sCleanName !== 'cli')
 {

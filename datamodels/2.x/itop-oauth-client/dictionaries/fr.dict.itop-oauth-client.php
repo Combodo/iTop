@@ -4,13 +4,13 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:OAuthClient' => 'Client OAuth',
+	'Class:OAuthClient' => 'Client OAuth pour l\'Accès Mail',
 	'Class:OAuthClient/Attribute:client_id' => 'ID Client',
 	'Class:OAuthClient/Attribute:client_id+' => 'Recopier la chaine fournie par votre fournisseur OAuth2',
 	'Class:OAuthClient/Attribute:client_secret' => 'Code secret du client',
@@ -86,7 +86,7 @@ Pour recalculer la valeur par défaut, il faut effacer le champ',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Menu:CreateMailbox' => 'Créer une boite mail...',
 	'Menu:GenerateTokens' => 'Créer un jeton d\'accès...',
-	'Menu:OAuthClient' => 'Client OAuth',
+	'Menu:OAuthClient' => 'Client OAuth pour l\'Accès Mail',
 	'Menu:OAuthClient+' => 'Client OAuth pour l\'email',
 	'Menu:RegenerateTokens' => 'Recréer un jeton d\'accès..',
 	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'La combinaison Login (%1$s) and Utilisé pour SMTP (%2$s) a déjà été utilisée pour OAuth Client',

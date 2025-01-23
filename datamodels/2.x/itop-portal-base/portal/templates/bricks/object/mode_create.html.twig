@@ -30,7 +30,7 @@
             {# Misc. buttons #}
             {% if form.buttons is defined and (form.buttons.actions is defined or form.buttons.links is defined) %}
 				<div class="form_btn_misc">
-                    {% include 'itop-portal-base/portal/templates/bricks/object/plugins_buttons.html.twig' with {'aButtons': form.buttons} %}
+                    {% include template('plugins_buttons', 'Combodo\\iTop\\Portal\\Controller\\ObjectController') with {'aButtons': form.buttons} %}
 				</div>
             {% endif %}
 			{# Transition buttons #}

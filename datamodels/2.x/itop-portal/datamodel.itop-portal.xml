@@ -16,6 +16,7 @@
     <module_design id="itop-portal" xsi:type="portal" _delta="define">
       <properties>
         <name>portal:itop-portal</name>
+        <ui_version>2017</ui_version>
         <!-- Can be either a fileref or a relative path to the file (To be tested). Takes over env-xxx/branding/portal-logo.png -->
         <!-- Priority order is <logo> from xml > env-xxx/branding/portal-logo.png > /images/logo-itop-dark-bg.svg -->
         <!--<fileref ref="brt_6a2be154b2a62659d3332c513bdad715"  />-->

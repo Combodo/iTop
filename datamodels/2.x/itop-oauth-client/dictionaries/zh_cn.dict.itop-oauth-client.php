@@ -8,7 +8,7 @@
 
  Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:CreateMailbox' => '创建邮箱...',
-	'Menu:OAuthClient' => 'OAuth客户端',
+	'Menu:OAuthClient' => 'OAuth Mail Access~~',
 	'Menu:OAuthClient+' => '',
 	'Menu:GenerateTokens' => '生成访问令牌...',
 	'Menu:RegenerateTokens' => '重新生成访问令牌...',
@@ -35,7 +35,7 @@
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:OAuthClient' => 'OAuth客户端',
+	'Class:OAuthClient' => 'OAuth Mail Access~~',
 	'Class:OAuthClient/Attribute:provider' => '提供商',
 	'Class:OAuthClient/Attribute:provider+' => '~~',
 	'Class:OAuthClient/Attribute:name' => '登录',
@@ -73,7 +73,7 @@ EOF
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:OAuthClientAzure' => '用于微软Azure的OAuth客户端',
+	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure~~',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientAzure/Attribute:scope' => '范围',
 	'Class:OAuthClientAzure/Attribute:scope+' => '通常情况下使用默认选择最合适',
@@ -102,7 +102,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:OAuthClientGoogle' => '用于Google的OAuth客户端',
+	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google~~',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientGoogle/Attribute:scope' => '范围',
 	'Class:OAuthClientGoogle/Attribute:scope+' => '通常情况下使用默认选择最合适',

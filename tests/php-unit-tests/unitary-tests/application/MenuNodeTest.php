@@ -20,16 +20,6 @@ class MenuNodeTest extends ItopDataTestCase {
 		$this->oUR = $this->CreateUserRequest(666, $aUserRequestCustomParams);
 	}
 
-	private function StartStopwatchInThePast(\UserRequest $oTicket, string $sAttCode, int $iSecDelay)
-	{
-		$iStartDate = time() - $iSecDelay;
-		/** @var \ormStopWatch $oStopwatch */
-		$oStopwatch = $oTicket->Get($sAttCode);
-		$oAttDef = \MetaModel::GetAttributeDef(get_class($oTicket), $sAttCode);
-		$oStopwatch->Start($oTicket, $oAttDef, $iStartDate);
-		$oStopwatch->ComputeDeadlines($oTicket, $oAttDef);
-		$oTicket->Set($sAttCode, $oStopwatch);
-	}
 
 	public function RenderOQLSearchProvider()
 	{
@@ -70,7 +60,7 @@ OQL;
 	 */
 	public function testRenderOQLSearchOqlWithDateFormatOnDeadline()
 	{
-		$this->StartStopwatchInThePast($this->oUR, 'ttr', 10);
+		static::StartStopwatchInThePast($this->oUR, 'ttr', 10);
 
 		$sOql = <<<OQL
 SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (DATE_FORMAT(`UserRequest`.`ttr_escalation_deadline`, '%Y%v') != DATE_FORMAT(NOW(), '%Y%v'))

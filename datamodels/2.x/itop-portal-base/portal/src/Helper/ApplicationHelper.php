@@ -100,9 +100,9 @@ class ApplicationHelper
 		try
 		{
 			// Allowed profiles
-			if ($oBrick->GetAllowedProfilesOql() !== null && $oBrick->GetAllowedProfilesOql() !== '')
+			if (utils::IsNotNullOrEmptyString($oBrick->GetAllowedProfilesOql()))
 			{
-				$oSearch = DBObjectSearch::FromOQL($oBrick->GetAllowedProfilesOql());
+				$oSearch = DBObjectSearch::FromOQL_AllData($oBrick->GetAllowedProfilesOql());
 				$oSet = new DBObjectSet($oSearch);
 				while ($oProfile = $oSet->Fetch())
 				{
@@ -111,9 +111,9 @@ class ApplicationHelper
 			}
 
 			// Denied profiles
-			if ($oBrick->GetDeniedProfilesOql() !== null && $oBrick->GetDeniedProfilesOql() !== '')
+			if (utils::IsNotNullOrEmptyString($oBrick->GetDeniedProfilesOql()))
 			{
-				$oSearch = DBObjectSearch::FromOQL($oBrick->GetDeniedProfilesOql());
+				$oSearch = DBObjectSearch::FromOQL_AllData($oBrick->GetDeniedProfilesOql());
 				$oSet = new DBObjectSet($oSearch);
 				while ($oProfile = $oSet->Fetch())
 				{

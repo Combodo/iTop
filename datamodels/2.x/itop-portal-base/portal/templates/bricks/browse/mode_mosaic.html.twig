@@ -1,6 +1,4 @@
-{# itop-portal-base/portal/templates/bricks/browse/mode_mosaic.html.twig #}
-{# Browse brick mosaic mode layout #}
-{% extends 'itop-portal-base/portal/templates/bricks/browse/layout.html.twig' %}
+{% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\BrowseBrick', oBrick) %}
 
 {% block bBrowseMainContent %}
 	<div id="brick_content_mosaic">
@@ -21,7 +19,7 @@
 	<div id="brick_mosaic_overlay">
 		{% block bBrowseMosaicOverlay %}
 			<div class="overlay_content">
-				{% include 'itop-portal-base/portal/templates/helpers/loader.html.twig' %}
+                {% include template('loader') %}
 			</div>
 		{% endblock %}
 	</div>

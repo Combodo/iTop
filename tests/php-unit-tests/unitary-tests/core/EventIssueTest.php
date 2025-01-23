@@ -62,7 +62,7 @@ class EventIssueTest extends ItopDataTestCase
 			$oEventIssue->DBInsert();
 		}
 		catch (CoreException $e) {
-			$this->fail('we should be able to persist the object though it contains long values in its attributes');
+			$this->fail('we should be able to persist the object though it contains long values in its attributes: '.$e->getMessage());
 		}
 		$this->assertTrue(true);
 	}

@@ -8,7 +8,7 @@
 
 Dict::Add('EN US', 'English', 'English', [
 	'Menu:CreateMailbox' => 'Create a mailbox...',
-	'Menu:OAuthClient' => 'OAuth client',
+	'Menu:OAuthClient' => 'OAuth Mail Access',
 	'Menu:OAuthClient+' => 'Oauth for email access',
 	'Menu:GenerateTokens' => 'Generate access token...',
 	'Menu:RegenerateTokens' => 'Regenerate access token...',
@@ -35,7 +35,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:OAuthClient' => 'OAuth Client',
+	'Class:OAuthClient' => 'OAuth Mail Access',
 	'Class:OAuthClient/Attribute:provider' => 'Provider',
 	'Class:OAuthClient/Attribute:provider+' => '',
 	'Class:OAuthClient/Attribute:name' => 'Login',
@@ -73,7 +73,7 @@ EOF
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:OAuthClientAzure' => 'OAuth client for Microsoft Azure',
+	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Scope',
 	'Class:OAuthClientAzure/Attribute:scope+' => 'Usually default selection is appropriate',
@@ -102,7 +102,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:OAuthClientGoogle' => 'OAuth client for Google',
+	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Scope',
 	'Class:OAuthClientGoogle/Attribute:scope+' => 'Usually default selection is appropriate',

@@ -1,0 +1,170 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+
+    {# toolbar text & icon #}
+    {% set icon %}
+        <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor"><path d="M192 64l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32zM82.7 207c-15.3 8.8-20.5 28.4-11.7 43.7l32 55.4c8.8 15.3 28.4 20.5 43.7 11.7l55.4-32c15.3-8.8 20.5-28.4 11.7-43.7l-32-55.4c-8.8-15.3-28.4-20.5-43.7-11.7L82.7 207zM288 192c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0zm64 160c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0zM160 384l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32zM32 352c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0z"/></svg>
+        </span>
+        <span class="sf-toolbar-label">Portal{% if collector.GetTemplatesCount.overrides_count > 0 %} <span style=" color: var(--sf-toolbar-yellow-600);"> Overrides</span>{% endif %}</span>
+    {% endset %}
+
+    {# toolbar panel #}
+    {% set text %}
+        <div class="sf-toolbar-info-piece">
+            <b>Templates registered</b><span class="sf-toolbar-status">{{ collector.GetTemplatesCount.count }}</span>
+        </div>
+        {% if collector.GetTemplatesCount.overrides_count %}
+        <div class="sf-toolbar-info-piece">
+            <b>Templates overridden</b><span class="sf-toolbar-status">{{ collector.GetTemplatesCount.overrides_count }}</span>
+        </div>
+        {% endif %}
+    {% endset %}
+
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { 'link': true }) }}
+
+{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+
+    <style>
+        .overridden_value {
+            color: var(--color-link);
+        }
+        .old_value {
+            color: grey;
+            text-decoration: line-through;
+        }
+    </style>
+
+{% endblock %}
+
+{% block menu %}
+
+    {# menu #}
+    <span class="label label-status-none">
+        <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor"><path d="M192 64l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32zM82.7 207c-15.3 8.8-20.5 28.4-11.7 43.7l32 55.4c8.8 15.3 28.4 20.5 43.7 11.7l55.4-32c15.3-8.8 20.5-28.4 11.7-43.7l-32-55.4c-8.8-15.3-28.4-20.5-43.7-11.7L82.7 207zM288 192c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0zm64 160c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0zM160 384l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32zM32 352c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0z"/></svg>
+        </span>
+        <strong>Portal</strong>
+        <span class="count">
+           {{ collector.GetTemplatesCount.count }}
+        </span>
+    </span>
+
+{% endblock %}
+
+{% block panel %}
+
+    {# title #}
+    <h2>Templates</h2>
+
+    {# metrics #}
+    <div class="metrics">
+        {# ui version #}
+        <div class="metric">
+            <span class="value">{{ collector.GetUIVersion }}</span>
+            <span class="label">UI Version</span>
+        </div>
+        <div class="metric-divider"></div>
+        {# templates #}
+        <div class="metric-group">
+            <div class="metric">
+                <span class="value">{{ collector.GetTemplatesCount.count }}</span>
+                <span class="label">Templates</span>
+            </div>
+            <div class="metric">
+                <span class="value">{{ collector.GetTemplatesCount.overrides_count }}</span>
+                <span class="label">Overridden</span>
+            </div>
+        </div>
+        {# additional info #}
+        <div class="metric-divider"></div>
+        <div class="metric-group">
+            <div class="metric">
+                <span class="value">{{ collector.GetTemplatesCount.extensions_count }}</span>
+                <span class="label">Extensions</span>
+            </div>
+            <div class="metric">
+                <span class="value">{{ collector.GetTemplatesCount.providers_count }}</span>
+                <span class="label">Providers</span>
+            </div>
+        </div>
+    </div>
+
+    {# Instances overloads #}
+    <h2>Bricks declared templates list</h2>
+    {# help #}
+    <p class="help">
+        Bricks overridden templates are templates defined in brick declarations.
+    </p>
+    {% if collector.GetInstancesOverriddenTemplates|length == 0 %}
+        No instance overridden template.
+    {% else %}
+    <table>
+        <thead>
+        <tr>
+            <th>Brick</th>
+            <th>Class</th>
+            <th>ID</th>
+            <th>Template</th>
+        </tr>
+        </thead>
+        {% for instance,item in collector.GetInstancesOverriddenTemplates %}
+            {% for id,template in item.templates %}
+                <tr>
+                    <td>{{ item.info.id }}</td>
+                    <td>{{ item.info.class }}</td>
+                    <td>{{ id }}</td>
+                    <td>{{ template }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    {# templates list #}
+    <h2>Templates list</h2>
+
+    {# help #}
+    <p class="help">
+        Templates doesn't necessary covers all existing templates, only the ones that are registered in the portal.
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Provider</th>
+                <th>ID</th>
+                <th>Template</th>
+                <th>Alias</th>
+                <th>Override</th>
+            </tr>
+        </thead>
+        {% for provider,item in collector.GetTemplatesDefinitions %}
+            {% for id,template in item %}
+                <tr {% if template.IsOverridden %}class="overridden_value"{% endif %}>
+                    <td>{{ provider }}</td>
+                    <td>{{ template.Id }}</td>
+                    <td>{{ template.path }}{% if template.IsOverridden %}
+                            <div class="old_value">{{ template.GetPath(true) }}</div>{% endif %}</td>
+                    <td>{{ template.Alias }}</td>
+                    <td>{% if template.IsOverridable %}
+                            {% if template.IsOverridden %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                        {% else %}
+                            Not allowed
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+
+
+{% endblock %}

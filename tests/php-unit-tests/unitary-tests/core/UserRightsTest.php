@@ -491,52 +491,65 @@ class UserRightsTest extends ItopDataTestCase
 
 	public function testFindUser_ExistingInternalUser()
 	{
-		$sLogin = 'UserRightsFindUser'.uniqid();
-		$iKey = $this->CreateUser($sLogin, self::$aURP_Profiles['Administrator'])->GetKey();
-		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
+		$sLogin = 'AnInternalUser'.uniqid();
+		$iKey = $this->GivenObjectInDB(\UserLocal::class, ['login' => $sLogin]);
 
-		$this->assertNotNull($oUser);
-		$this->assertEquals($iKey, $oUser->GetKey());
-		$this->assertEquals(\UserLocal::class, get_class($oUser));
+		$this->assertDBQueryCount(
+			1,
+			fn() => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
+			'A query should be performed the first time FindUser is called'
+		);
 
-		$this->assertDBQueryCount(0, function() use ($sLogin, $iKey){
-			$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
-			static::assertEquals($iKey, $oUser->GetKey());
-			static::assertEquals(\UserLocal::class, get_class($oUser));
-		});
+		$this->assertDBQueryCount(
+			0,
+			fn() => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
+			'The cache should prevent additional queries on subsequent calls'
+		);
 	}
 
 	public function testFindUser_ExistingExternalUser()
 	{
-		$sLogin = 'UserRightsFindUser'.uniqid();
+		$sLogin = 'AnExternalUser'.uniqid();
+		$iKey = $this->GivenObjectInDB(\UserExternal::class, ['login' => $sLogin]);
 
-		$iKey = $this->GivenObjectInDB(\UserExternal::class, [
-			'login' => $sLogin,
-			'language' => 'EN US',
-		]);
+		$this->assertDBQueryCount(
+			2,
+			fn() => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
+			'Some queries should be performed the first time FindUser is called'
+		);
 
-		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
-
-		$this->assertNotNull($oUser);
-		$this->assertEquals($iKey, $oUser->GetKey());
-		$this->assertEquals(\UserExternal::class, get_class($oUser));
-
-		$this->assertDBQueryCount(0, function() use ($sLogin, $iKey){
-			$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
-			static::assertEquals($iKey, $oUser->GetKey());
-			static::assertEquals(\UserExternal::class, get_class($oUser));
-		});
+		$this->assertDBQueryCount(
+			0,
+			fn() => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
+			'The cache should prevent additional queries on subsequent calls'
+		);
 	}
 
-	public function testFindUser_UnknownLogin_AvoidSameSqlQueryTwice()
+	public function testFindUser_UnknownLogin()
 	{
-		$sLogin = 'UserRightsFindUser'.uniqid();
-		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
-		$this->assertNull($oUser);
+		$sLogin = 'NobodyLogin';
 
-		$this->assertDBQueryCount(0, function() use ($sLogin){
-			$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
-			$this->assertNull($oUser);
-		});
+		$this->assertDBQueryCount(
+			2,
+			fn() => $this->FindUserAndAssertItWasNotFound($sLogin),
+			'Some queries should be performed the first time FindUser is called'
+		);
+
+		$this->assertDBQueryCount(
+			0,
+			fn() => $this->FindUserAndAssertItWasNotFound($sLogin),
+			'The cache should prevent additional queries on subsequent calls'
+		);
+	}
+
+	public function FindUserAndAssertItHasBeenFound($sLogin, $iExpectedKey)
+	{
+		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
+		static::assertIsDBObject(\User::class, $iExpectedKey, $oUser, 'FindUser should return the User object corresponding to the login');
+	}
+	public function FindUserAndAssertItWasNotFound($sLogin)
+	{
+		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
+		static::assertNull($oUser, 'FindUser should return null when the login is unknown');
 	}
 }

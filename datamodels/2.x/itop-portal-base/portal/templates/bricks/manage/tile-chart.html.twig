@@ -10,9 +10,9 @@
         id="brick-{{ oBrick.GetId }}"
         data-brick-id="{{ oBrick.GetId }}">
         <div>
-            <div class="tile_title"><span class="icon fas fa-{{ oBrick.GetDecorationCssClass }}"></span> {{ oBrick.GetTitle()|dict_s }}
+            <div class="tile_title"><span class="icon {{ oBrick.GetDecorationClassHome }}"></span> {{ oBrick.GetTitle()|dict_s }}
                 ({{ iCount }})</span> </div>
-            {% include 'itop-portal-base/portal/templates/bricks/manage/mode-' ~ oBrick.GetTileMode ~ '.html.twig' with {'oBrick': oBrick, 'aColumns': aColumns, 'aNames': aNames, 'aUrls': aUrls, 'aDisplayValues': aDisplayValues} %}
+            {% include template(oBrick.GetTileMode, 'Combodo\\iTop\\Portal\\Brick\\ManageBrick', oBrick) with {'oBrick': oBrick, 'aColumns': aColumns, 'aNames': aNames, 'aUrls': aUrls, 'aDisplayValues': aDisplayValues} %}
         </div>
         </a>
     {% endblock %}

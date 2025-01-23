@@ -29,7 +29,6 @@ use BinaryExpression;
 use Combodo\iTop\Form\Field\DateTimeField;
 use Combodo\iTop\Portal\Brick\BrickCollection;
 use Combodo\iTop\Portal\Brick\CreateBrick;
-use Combodo\iTop\Portal\Brick\ObjectBrick;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
 use Combodo\iTop\Portal\Helper\NavigationRuleHelper;
@@ -38,6 +37,8 @@ use Combodo\iTop\Portal\Helper\RequestManipulatorHelper;
 use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
 use Combodo\iTop\Portal\Helper\SecurityHelper;
 use Combodo\iTop\Portal\Routing\UrlGenerator;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use Combodo\iTop\Renderer\Bootstrap\FieldRenderer\BsLinkedSetFieldRenderer;
 use DBObject;
 use DBObjectSearch;
@@ -75,6 +76,24 @@ class ObjectController extends BrickController
 	const DEFAULT_PAGE_NUMBER = 1;
 	const DEFAULT_LIST_LENGTH = 10;
 
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH. 'bricks/object/layout.html.twig'),
+			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH. 'bricks/object/modal.html.twig'),
+			TemplateDefinitionDto::Create('mode_create', static::TEMPLATES_BASE_PATH.'bricks/object/mode_create.html.twig', true, 'create'),
+			TemplateDefinitionDto::Create('mode_edit', static::TEMPLATES_BASE_PATH.'bricks/object/mode_edit.html.twig', true, 'edit'),
+			TemplateDefinitionDto::Create('mode_search_hierarchy', static::TEMPLATES_BASE_PATH.'bricks/object/mode_search_hierarchy.html.twig', true, 'search_hierarchy'),
+			TemplateDefinitionDto::Create('mode_search_regular', static::TEMPLATES_BASE_PATH.'bricks/object/mode_search_regular.html.twig', true, 'search_regular'),
+			TemplateDefinitionDto::Create('mode_view', static::TEMPLATES_BASE_PATH.'bricks/object/mode_view.html.twig', true, 'view'),
+			TemplateDefinitionDto::Create('mode_apply_stimulus', static::TEMPLATES_BASE_PATH.'bricks/object/mode_apply_stimulus.html.twig', true, 'apply_stimulus'),
+			TemplateDefinitionDto::Create('mode_loader', static::TEMPLATES_BASE_PATH.'modal/mode_loader.html.twig'),
+			TemplateDefinitionDto::Create('plugins_buttons', static::TEMPLATES_BASE_PATH.'bricks/object/plugins_buttons.html.twig'),
+		);
+	}
+
 	/**
 	 * @param \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper
 	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidatorHelper
@@ -101,7 +120,7 @@ class ObjectController extends BrickController
 		protected  array $aCombodoPortalInstanceConf = []
 	)
 	{
-		ObjectBrick::InitializeSelf($this->aCombodoPortalInstanceConf);
+
 	}
 
 	/**
@@ -237,7 +256,7 @@ class ObjectController extends BrickController
 		if ($oRequest->isXmlHttpRequest()) {
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation)) {
-				$oResponse = $this->render(ObjectBrick::GetModalDefaultTemplatePath(), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('modal'), $aData);
 			} else {
 				$oResponse = new JsonResponse($aData);
 			}
@@ -251,7 +270,7 @@ class ObjectController extends BrickController
 				}
 			}
 			$aData['sPageTitle'] = $aData['form']['title'];
-			$oResponse = $this->render(ObjectBrick::GetPageDefaultTemplatePath(), $aData);
+			$oResponse = $this->render($this->GetTemplatePath('page'), $aData);
 		}
 
 		return $oResponse;
@@ -312,7 +331,7 @@ class ObjectController extends BrickController
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation))
 			{
-				$oResponse = $this->render(ObjectBrick::GetModalDefaultTemplatePath(), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('modal'), $aData);
 			}
 			else
 			{
@@ -332,7 +351,7 @@ class ObjectController extends BrickController
 				}
 			}
 			$aData['sPageTitle'] = $aData['form']['title'];
-			$oResponse = $this->render(ObjectBrick::GetPageDefaultTemplatePath(), $aData);
+			$oResponse = $this->render($this->GetTemplatePath('page'), $aData);
 		}
 
 		return $oResponse;
@@ -539,11 +558,11 @@ class ObjectController extends BrickController
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation))
 			{
-				$oResponse = $this->render(ObjectBrick::GetModalDefaultTemplatePath(), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('modal'), $aData);
 			}
 			elseif ($sOperation === 'redirect')
 			{
-				$oResponse = $this->render(ObjectBrick::GetModeLoaderDefaultTemplatePath(), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('mode_loader'), $aData);
 			}
 			else
 			{
@@ -552,7 +571,7 @@ class ObjectController extends BrickController
 		}
 		else
 		{
-			$oResponse = $this->render(ObjectBrick::GetPageDefaultTemplatePath(), $aData);
+			$oResponse = $this->render($this->GetTemplatePath('page'), $aData);
 		}
 
 		return $oResponse;
@@ -1016,12 +1035,12 @@ class ObjectController extends BrickController
 
 			if ($oRequest->isXmlHttpRequest())
 			{
-				$oResponse = $this->render(ObjectBrick::GetModalDefaultTemplatePath(), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('modal'), $aData);
 			}
 			else
 			{
 				//throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
-				$oResponse = $this->render(ObjectBrick::GetPageDefaultTemplatePath(), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('page'), $aData);
 			}
 		}
 		else
@@ -1602,7 +1621,7 @@ class ObjectController extends BrickController
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation))
 			{
-				$oResponse = $this->render(ObjectBrick::GetModalDefaultTemplatePath(), $aData);
+				$oResponse = $this->render($this->GetTemplatePath('modal'), $aData);
 			}
 			else
 			{
@@ -1622,7 +1641,7 @@ class ObjectController extends BrickController
 				}
 			}
 			$aData['sPageTitle'] = $aData['form']['title'];
-			$oResponse = $this->render(ObjectBrick::GetPageDefaultTemplatePath(), $aData);
+			$oResponse = $this->render($this->GetTemplatePath('page'), $aData);
 		}
 
 		return $oResponse;
@@ -1656,7 +1675,7 @@ class ObjectController extends BrickController
 		if (!empty($sBrickId))
 		{
 			$oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
-			$sTemplatePath = $oBrick->GetPageTemplatePath();
+			$sTemplatePath = $oBrick->GetTemplatePath('page');
 
 			$aData['sBrickId'] = $sBrickId;
 			$aData['oBrick'] = $oBrick;

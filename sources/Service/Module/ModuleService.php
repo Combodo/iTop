@@ -46,6 +46,8 @@ class ModuleService
         $sExtension = $this->GetModuleNameFromObject($oReflectionClass->getName());
         if (strlen($sExtension) !== 0) {
             $sSignature .= '['.$sExtension.'] ';
+        } else {
+	        $sSignature .= '[core] ';
         }
         $sSignature .= $oReflectionClass->getShortName().'::'.$sMethod.'()';
 

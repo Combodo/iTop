@@ -4,13 +4,13 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:OAuthClient' => 'Client OAuth',
+	'Class:OAuthClient' => 'OAuth Mail Access~~',
 	'Class:OAuthClient/Attribute:client_id' => 'ID cliente',
 	'Class:OAuthClient/Attribute:client_id+' => 'A long string of characters provided by your OAuth2 provider~~',
 	'Class:OAuthClient/Attribute:client_secret' => 'Segreto del cliente',
@@ -39,7 +39,7 @@ Erase the field to recalculate default value~~',
 	'Class:OAuthClient/Attribute:token+' => '~~',
 	'Class:OAuthClient/Attribute:token_expiration' => 'Scadenza del token di accesso',
 	'Class:OAuthClient/Attribute:token_expiration+' => '~~',
-	'Class:OAuthClientAzure' => 'Client OAuth per Microsoft Azure',
+	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure~~',
 	'Class:OAuthClientAzure/Attribute:advanced_scope' => 'Ambito avanzato',
 	'Class:OAuthClientAzure/Attribute:advanced_scope+' => 'Non appena inserisci qualcosa qui, essa ha la precedenza sulla selezione “Ambito” che viene quindi ignorata',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Ambito',
@@ -61,7 +61,7 @@ Erase the field to recalculate default value~~',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple' => 'Semplice',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple+' => '~~',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
-	'Class:OAuthClientGoogle' => 'Client OAuth per Google',
+	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google~~',
 	'Class:OAuthClientGoogle/Attribute:advanced_scope' => 'Ambito avanzato',
 	'Class:OAuthClientGoogle/Attribute:advanced_scope+' => 'Non appena inserisci qualcosa qui, essa ha la precedenza sulla selezione “Ambito” che viene quindi ignorata',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Ambito',
@@ -83,7 +83,7 @@ Erase the field to recalculate default value~~',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Menu:CreateMailbox' => 'Crea una casella di posta...',
 	'Menu:GenerateTokens' => 'Genera token di accesso...',
-	'Menu:OAuthClient' => 'Client OAuth',
+	'Menu:OAuthClient' => 'OAuth Mail Access~~',
 	'Menu:OAuthClient+' => '~~',
 	'Menu:RegenerateTokens' => 'Rigenera token di accesso...',
 	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'La combinazione Login (%1$s) e Uso per SMTP (%2$s) è già stata utilizzata per un altro Client OAuth',

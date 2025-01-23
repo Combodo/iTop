@@ -20,8 +20,10 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use DOMFormatException;
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
+use DOMFormatException;
 
 /**
  * Description of BrowseBrick
@@ -32,13 +34,23 @@ use Combodo\iTop\DesignElement;
  */
 class BrowseBrick extends PortalBrick
 {
-	/** @var string DEFAULT_PAGE_TEMPLATE_PATH */
+	/**
+	 * @var string DEFAULT_PAGE_TEMPLATE_PATH 
+	 * @deprecated 3.2.1
+	 */
 	const DEFAULT_MODE_LIST_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_list.html.twig';
-	/** @var string  DEFAULT_MODE_MOSAIC_TEMPLATE_PATH */
+	/**
+	 * @var string  DEFAULT_MODE_MOSAIC_TEMPLATE_PATH
+	 * @deprecated 3.2.1
+	 */
 	const DEFAULT_MODE_MOSAIC_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_mosaic.html.twig';
-	/** @var string DEFAULT_MODE_TREE_TEMPLATE_PATH */
+	/**
+	 * @var string DEFAULT_MODE_TREE_TEMPLATE_PATH
+	 * @deprecated 3.2.1
+	 */
 	const DEFAULT_MODE_TREE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_tree.html.twig';
-	
+
+
 	/** @var string ENUM_BROWSE_MODE_LIST */
 	const ENUM_BROWSE_MODE_LIST = 'list';
 	/** @var string ENUM_BROWSE_MODE_TREE */
@@ -84,13 +96,6 @@ class BrowseBrick extends PortalBrick
 	const DEFAULT_ACTION_OPENING_TARGET = self::ENUM_OPENING_TARGET_MODAL;
 	/** @var int DEFAULT_LIST_LENGTH */
 	const DEFAULT_LIST_LENGTH = 20;
-	protected static $DEFAULT_TEMPLATES_PATH = [
-		'page' => self::DEFAULT_PAGE_TEMPLATE_PATH,
-		'tile' => self::DEFAULT_TILE_TEMPLATE_PATH,
-		'mode-list'=> self::DEFAULT_MODE_LIST_TEMPLATE_PATH,
-		'mode-mosaic'=> self::DEFAULT_MODE_MOSAIC_TEMPLATE_PATH,
-		'mode-tree'=> self::DEFAULT_MODE_TREE_TEMPLATE_PATH,
-	];
 
 	// Overloaded variables
 	public static $sRouteName = 'p_browse_brick';
@@ -110,6 +115,18 @@ class BrowseBrick extends PortalBrick
 	protected $sDefaultBrowseMode;
 	/** @var int $iDefaultListLength */
 	protected $iDefaultListLength;
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'browse/layout.html.twig'),
+			TemplateDefinitionDto::Create('page_list', static::TEMPLATES_BASE_PATH . 'browse/mode_list.html.twig'),
+			TemplateDefinitionDto::Create('page_tree', static::TEMPLATES_BASE_PATH . 'browse/mode_tree.html.twig'),
+			TemplateDefinitionDto::Create('page_mosaic', static::TEMPLATES_BASE_PATH . 'browse/mode_mosaic.html.twig'),
+		);
+	}
 
 	/**
 	 * BrowseBrick constructor.
@@ -369,13 +386,8 @@ class BrowseBrick extends PortalBrick
 									$oTemplateNode = $oModeNode->GetOptionalElement('template');
 									if (($oTemplateNode !== null) && ($oTemplateNode->GetText() !== null))
 									{
-										$sTemplatePath = $oTemplateNode->GetText();
+										$this->SetTemplatePath('page_'.$sModeId, $oTemplateNode->GetText());
 									}
-									else
-									{
-										$sTemplatePath = static::$DEFAULT_TEMPLATES_PATH['mode-'.$sModeId];
-									}
-									$aModeData['template'] = $sTemplatePath;
 
 									$this->AddAvailableBrowseMode($sModeId, $aModeData);
 								}

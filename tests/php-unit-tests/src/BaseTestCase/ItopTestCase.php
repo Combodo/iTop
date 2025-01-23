@@ -9,9 +9,9 @@ namespace Combodo\iTop\Test\UnitTest;
 use CMDBSource;
 use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
+use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 use SetupUtils;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
@@ -23,7 +23,7 @@ use const DEBUG_BACKTRACE_IGNORE_ARGS;
  *
  * @since 3.0.4 3.1.1 3.2.0 N°6658 move some setUp/tearDown code to the corresponding methods *BeforeClass to speed up tests process time.
  */
-abstract class ItopTestCase extends KernelTestCase
+abstract class ItopTestCase extends TestCase
 {
 	public const TEST_LOG_DIR = 'test';
 

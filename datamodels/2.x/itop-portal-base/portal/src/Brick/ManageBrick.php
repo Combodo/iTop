@@ -20,11 +20,14 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use Exception;
-use DOMFormatException;
-use DBSearch;
-use MetaModel;
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
+use DBSearch;
+use DOMFormatException;
+use Exception;
+use MetaModel;
+use ModuleDesign;
 
 class ManageBrick extends PortalBrick
 {
@@ -51,26 +54,28 @@ class ManageBrick extends PortalBrick
 	/** @var string ENUM_DISPLAY_MODE_BAR */
 	const ENUM_DISPLAY_MODE_BAR = 'bar-chart';
 
-	/** @var string ENUM_PAGE_TEMPLATE_PATH_TABLE */
+	/** @var string ENUM_PAGE_TEMPLATE_PATH_TABLE
+	 * @deprecated since 3.2.1
+	 * */
 	const ENUM_PAGE_TEMPLATE_PATH_TABLE = 'itop-portal-base/portal/templates/bricks/manage/layout-table.html.twig';
-	/** @var string ENUM_PAGE_TEMPLATE_PATH_CHART */
+	/** @var string ENUM_PAGE_TEMPLATE_PATH_CHART
+	 * @deprecated since 3.2.1
+	 * */
 	const ENUM_PAGE_TEMPLATE_PATH_CHART = 'itop-portal-base/portal/templates/bricks/manage/layout-chart.html.twig';
 
-	// Overloaded constants
+	/** Overloaded constants */
 	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-pen-square';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-pen-square fa-2x';
+	/**
+	 * @deprecated 3.2.1
+	 */
 	const DEFAULT_PAGE_TEMPLATE_PATH = self::ENUM_PAGE_TEMPLATE_PATH_TABLE;
 	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_LAZY;
+	/**
+	 * @deprecated 3.2.1
+	 */
 	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/tile-default.html.twig';
 	const DEFAULT_TILE_CONTROLLER_ACTION = 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::TileAction';
-	const DEFAULT_LAYOUT_CHART_TEMPLATE_PATH = self::ENUM_PAGE_TEMPLATE_PATH_CHART;
-	const DEFAULT_LAYOUT_TABLE_TEMPLATE_PATH = self::ENUM_PAGE_TEMPLATE_PATH_TABLE;
-	const DEFAULT_LAYOUT_BADGE_TEMPLATE_PATH = self::ENUM_PAGE_TEMPLATE_PATH_TABLE;
-	const DEFAULT_TILE_CHART_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/tile-chart.html.twig';
-	const DEFAULT_TILE_TOP_LIST_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/tile-top-list.html.twig';
-	const DEFAULT_TILE_BADGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/tile-badge.html.twig';
-	const DEFAULT_TILE_DEFAULT_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/tile-default.html.twig';
-	const DEFAULT_POPUP_EXPORT_EXCEL_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/popup-export-excel.html.twig';
 
 	/** @var string DEFAULT_OQL */
 	const DEFAULT_OQL = '';
@@ -91,40 +96,94 @@ class ManageBrick extends PortalBrick
 	/** @var bool DEFAULT_GROUP_SHOW_OTHERS */
 	const DEFAULT_GROUP_SHOW_OTHERS = true;
 
-	protected static $DEFAULT_TEMPLATES_PATH = [
-		'page' => self::DEFAULT_PAGE_TEMPLATE_PATH,
-		'tile' => self::DEFAULT_TILE_TEMPLATE_PATH,
-		'layout-chart' => self::DEFAULT_LAYOUT_CHART_TEMPLATE_PATH,
-		'layout-table' => self::DEFAULT_LAYOUT_TABLE_TEMPLATE_PATH,
-		'layout-badge' => self::DEFAULT_LAYOUT_BADGE_TEMPLATE_PATH,
-		'tile-chart' => self::DEFAULT_TILE_CHART_TEMPLATE_PATH,
-		'tile-top-list' => self::DEFAULT_TILE_TOP_LIST_TEMPLATE_PATH,
-		'tile-badge' => self::DEFAULT_TILE_BADGE_TEMPLATE_PATH,
-		'tile-default' => self::DEFAULT_TILE_DEFAULT_TEMPLATE_PATH,
-		'popup-export-excel' => self::DEFAULT_POPUP_EXPORT_EXCEL_TEMPLATE_PATH,
-	];
-	
 	/** @var array $aDisplayModes */
-	static $aDisplayModes = array(
+	public static array $aDisplayModes = array(
 		self::ENUM_DISPLAY_MODE_LIST,
 		self::ENUM_DISPLAY_MODE_PIE,
 		self::ENUM_DISPLAY_MODE_BAR,
 	);
+
 	/** @var array $aTileModes */
-	public static $aTileModes = array(
+	public static array $aTileModes = array(
 		self::ENUM_TILE_MODE_TEXT,
 		self::ENUM_TILE_MODE_BADGE,
 		self::ENUM_TILE_MODE_PIE,
 		self::ENUM_TILE_MODE_BAR,
 		self::ENUM_TILE_MODE_TOP,
 	);
-	/** Initialized in its getter as we need DEFAULT_TEMPLATE static values to be accessible */
-	/** @var array $aDefaultPresentationData */
-	private static $aDefaultPresentationData = [];
-	
-	/** Specific data for the current brick, including brick definition overloads */
-	/** @var array $aPresentationData */
-	public $aPresentationData = [];
+
+	/** @var array $aPresentationData
+	 * @deprecated since 3.2.1
+	 */
+	public static $aPresentationData = array(
+		self::ENUM_TILE_MODE_BADGE => array(
+			'decorationCssClass' => 'fas fa-id-card fa-2x',
+			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-badge.html.twig',
+			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
+			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
+			'need_details' => true,
+		),
+		self::ENUM_TILE_MODE_TOP => array(
+			'decorationCssClass' => 'fas fa-signal fa-rotate-270 fa-2x',
+			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-top-list.html.twig',
+			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
+			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
+			'need_details' => true,
+		),
+		self::ENUM_TILE_MODE_PIE => array(
+			'decorationCssClass' => 'fas fa-chart-pie fa-2x',
+			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-chart.html.twig',
+			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
+			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_PIE,
+			'need_details' => false,
+		),
+		self::ENUM_TILE_MODE_BAR => array(
+			'decorationCssClass' => 'fas fa-chart-bar fa-2x',
+			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-chart.html.twig',
+			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
+			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_BAR,
+			'need_details' => false,
+		),
+		self::ENUM_TILE_MODE_TEXT => array(
+			'decorationCssClass' => 'fas fa-pen-square fa-2x',
+			'tileTemplate' => self::DEFAULT_TILE_TEMPLATE_PATH,
+			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
+			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
+			'need_details' => true,
+		),
+	);
+
+	/** @var array $aDefaultTileData */
+	private static array $aDefaultTileData = [
+		self::ENUM_TILE_MODE_BADGE => [
+			'decorationCssClass' => 'fas fa-id-card fa-2x',
+		],
+		self::ENUM_TILE_MODE_TOP => [
+			'decorationCssClass' => 'fas fa-list-ol fa-2x',
+		],
+		self::ENUM_TILE_MODE_PIE => [
+			'decorationCssClass' => 'fas fa-chart-pie fa-2x',
+		],
+		self::ENUM_TILE_MODE_TEXT => [
+			'decorationCssClass' => 'fas fa-pen-square fa-2x',
+		],
+		self::ENUM_TILE_MODE_BAR => [
+			'decorationCssClass' => 'fas fa-chart-bar fa-2x',
+		],
+	];
+
+	/** @var array $aDefaultLayoutData */
+	private static array $aDefaultLayoutData = [
+		self::ENUM_DISPLAY_MODE_LIST => [
+			'need_details' => true,
+		],
+		self::ENUM_DISPLAY_MODE_PIE => [
+			'need_details' => false,
+		],
+		self::ENUM_DISPLAY_MODE_BAR => [
+			'need_details' => false,
+		],
+	];
 
 	// Overloaded variables
 	public static $sRouteName = 'p_manage_brick';
@@ -153,51 +212,22 @@ class ManageBrick extends PortalBrick
 	protected $bGroupShowOthers;
 	/** @var int $iDefaultListLength */
 	protected $iDefaultListLength;
-	/** @var string $sPopupExportExcelTemplatePath */
-	protected $sPopupExportExcelTemplatePath;
 
-	/**
-	 * Returns true if the $sDisplayMode need objects details for rendering.
-	 *
-	 * @param string $sDisplayMode
-	 *
-	 * @return bool
-	 */
-	static public function AreDetailsNeededForDisplayMode($sDisplayMode)
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
-		$bNeedDetails = false;
-		foreach (static::GetDefaultPresentationData() as $aData)
-		{
-			if ($aData['layoutDisplayMode'] === $sDisplayMode)
-			{
-				$bNeedDetails = $aData['need_details'];
-				break;
-			}
-		}
-
-		return $bNeedDetails;
-	}
-
-	/**
-	 * Returns the page template path for the $sDisplayMode
-	 *
-	 * @param string $sDisplayMode
-	 *
-	 * @return string
-	 */
-	static public function GetPageTemplateFromDisplayMode($sDisplayMode)
-	{
-		$sTemplate = static::$DEFAULT_TEMPLATES_PATH['page'];
-		foreach (static::GetDefaultPresentationData() as $aData)
-		{
-			if ($aData['layoutDisplayMode'] === $sDisplayMode)
-			{
-				$sTemplate = $aData['layoutTemplate'];
-				break;
-			}
-		}
-
-		return $sTemplate;
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
+			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'manage/tile-default.html.twig'),
+			TemplateDefinitionDto::Create('tile_badge', static::TEMPLATES_BASE_PATH. 'manage/tile-badge.html.twig'),
+			TemplateDefinitionDto::Create('tile_chart',  static::TEMPLATES_BASE_PATH . 'manage/tile-chart.html.twig'),
+			TemplateDefinitionDto::Create('tile_top_list', static::TEMPLATES_BASE_PATH . 'manage/tile-top-list.html.twig'),
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'manage/layout.html.twig'),
+			TemplateDefinitionDto::Create('page_table', static::TEMPLATES_BASE_PATH . 'manage/layout-table.html.twig'),
+			TemplateDefinitionDto::Create('page_chart',  static::TEMPLATES_BASE_PATH . 'manage/layout-chart.html.twig'),
+			TemplateDefinitionDto::Create('mode_chart_bar', static::TEMPLATES_BASE_PATH . 'manage/mode-bar-chart.html.twig', true, self::ENUM_DISPLAY_MODE_BAR),
+			TemplateDefinitionDto::Create('mode_chart_pie',  static::TEMPLATES_BASE_PATH . 'manage/mode-pie-chart.html.twig', true,self::ENUM_DISPLAY_MODE_PIE),
+		);
 	}
 
 	/**
@@ -219,10 +249,104 @@ class ManageBrick extends PortalBrick
 		$this->iGroupLimit = static::DEFAULT_GROUP_LIMIT;
 		$this->bGroupShowOthers = static::DEFAULT_GROUP_SHOW_OTHERS;
 		$this->iDefaultListLength = static::DEFAULT_LIST_LENGTH;
-		$this->sPopupExportExcelTemplatePath = static::$DEFAULT_TEMPLATES_PATH['popup-export-excel'];
 
 		// This is hardcoded for now, we might allow area grouping on another attribute in the future
 		$this->AddGrouping('areas', array('attribute' => 'finalclass'));
+	}
+
+	/**
+	 * Returns true if the $sDisplayMode need objects details for rendering.
+	 *
+	 * @deprecated since 3.2.1
+	 *
+	 * @param string $sDisplayMode
+	 *
+	 * @return bool
+	 */
+	static public function AreDetailsNeededForDisplayMode($sDisplayMode)
+	{
+		$bNeedDetails = false;
+		foreach (static::$aPresentationData as $aData)
+		{
+			if ($aData['layoutDisplayMode'] === $sDisplayMode)
+			{
+				$bNeedDetails = $aData['need_details'];
+				break;
+			}
+		}
+
+		return $bNeedDetails;
+	}
+
+
+	/**
+	 * Returns if the $sLayoutMode need objects details for rendering.
+	 *
+	 * @since 3.2.1
+	 *
+	 * @param string $sLayoutMode
+	 *
+	 * @return bool
+	 */
+	public function IsDetailsNeeded(string $sLayoutMode): bool
+	{
+		return static::$aDefaultLayoutData[$sLayoutMode]['need_details'];
+	}
+
+	/**
+	 * Returns the page template path for the $sDisplayMode
+	 *
+	 * @deprecated since 3.2.1
+	 *
+	 * @param string $sDisplayMode
+	 * @return string
+	 */
+	static public function GetPageTemplateFromDisplayMode($sDisplayMode)
+	{
+		$sTemplate = static::DEFAULT_PAGE_TEMPLATE_PATH;
+		foreach (static::$aPresentationData as $aData)
+		{
+			if ($aData['layoutDisplayMode'] === $sDisplayMode)
+			{
+				$sTemplate = $aData['layoutTemplate'];
+				break;
+			}
+		}
+
+		return $sTemplate;
+	}
+
+	/**
+	 * Returns the page template path for the $sDisplayMode
+	 *
+	 * @since 3.2.1
+	 *
+	 * @param string $sDisplayMode
+	 *
+	 * @return string
+	 */
+	public function GetPageTemplate(string $sDisplayMode): string
+	{
+		return match ($sDisplayMode) {
+			self::ENUM_DISPLAY_MODE_BAR, self::ENUM_DISPLAY_MODE_PIE => $this->GetTemplatePath('page_chart'),
+			default => $this->GetTemplatePath('page_table'),
+		};
+	}
+
+	/**
+	 * Returns the page template path for the $sDisplayMode
+	 * @since 3.2.1
+	 *
+	 * @return string
+	 */
+	public function GetTileTemplate(): string
+	{
+		return match ($this->GetTileMode()) {
+			self::ENUM_TILE_MODE_BADGE => $this->GetTemplatePath('tile_badge'),
+			self::ENUM_TILE_MODE_PIE, self::ENUM_TILE_MODE_BAR => $this->GetTemplatePath('tile_chart'),
+			self::ENUM_TILE_MODE_TOP => $this->GetTemplatePath('tile_top_list'),
+			default => $this->GetTemplatePath('tile'),
+		};
 	}
 
 	/**
@@ -319,10 +443,24 @@ class ManageBrick extends PortalBrick
 		return $this->sTileMode;
 	}
 
+	/**
+	 * @deprecated since 3.2.1
+	 */
 	public function GetDecorationCssClass()
 	{
-		return static::GetDefaultPresentationData()[$this->sTileMode]['decorationCssClass'];
+		return static::$aPresentationData[$this->sTileMode]['decorationCssClass'];
 	}
+
+	/**
+	 * @since 3.2.1
+	 *
+	 * @return mixed|string
+	 */
+	public function GetDecoration()
+	{
+		return static::$aDefaultTileData[$this->sTileMode]['decorationCssClass'];
+	}
+
 	/**
 	 * Sets the tile mode (display)
 	 *
@@ -337,65 +475,21 @@ class ManageBrick extends PortalBrick
 		return $this;
 	}
 
-	public static function GetDefaultPresentationData()
-	{
-		/** If the table isn't initialized yet, do it now */
-		if (count(static::$aDefaultPresentationData) === 0) {
-			static::$aDefaultPresentationData = array(
-				self::ENUM_TILE_MODE_BADGE => array(
-					'decorationCssClass' => 'fas fa-id-card fa-2x',
-					'tileTemplate' => static::$DEFAULT_TEMPLATES_PATH['tile-badge'],
-					'layoutTemplate' => static::$DEFAULT_TEMPLATES_PATH['layout-table'],
-					'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
-					'need_details' => true,
-				),
-				self::ENUM_TILE_MODE_TOP => array(
-					'decorationCssClass' => 'fas fa-signal fa-rotate-270 fa-2x',
-					'tileTemplate' => static::$DEFAULT_TEMPLATES_PATH['tile-top-list'],
-					'layoutTemplate' => static::$DEFAULT_TEMPLATES_PATH['layout-table'],
-					'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
-					'need_details' => true,
-				),
-				self::ENUM_TILE_MODE_PIE => array(
-					'decorationCssClass' => 'fas fa-chart-pie fa-2x',
-					'tileTemplate' => static::$DEFAULT_TEMPLATES_PATH['tile-chart'],
-					'layoutTemplate' => static::$DEFAULT_TEMPLATES_PATH['layout-chart'],
-					'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_PIE,
-					'need_details' => false,
-				),
-				self::ENUM_TILE_MODE_BAR => array(
-					'decorationCssClass' => 'fas fa-chart-bar fa-2x',
-					'tileTemplate' => static::$DEFAULT_TEMPLATES_PATH['tile-chart'],
-					'layoutTemplate' => static::$DEFAULT_TEMPLATES_PATH['layout-chart'],
-					'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_BAR,
-					'need_details' => false,
-				),
-				self::ENUM_TILE_MODE_TEXT => array(
-					'decorationCssClass' => 'fas fa-pen-square fa-2x',
-					'tileTemplate' => static::$DEFAULT_TEMPLATES_PATH['tile-default'],
-					'layoutTemplate' => static::$DEFAULT_TEMPLATES_PATH['layout-table'],
-					'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
-					'need_details' => true,
-				),
-			);
-		}
-		
-		return static::$aDefaultPresentationData;
-	}
-	
 	/**
+	 * @deprecated since 3.2.1
+	 *
 	 * @param string $sTileMode
 	 *
 	 * @return string[] parameters for specified type, default parameters if type is invalid
 	 */
 	public function GetPresentationDataForTileMode($sTileMode)
 	{
-		if (isset(static::GetDefaultPresentationData()[$sTileMode]))
+		if (isset(static::$aPresentationData[$sTileMode]))
 		{
-			return static::GetDefaultPresentationData()[$sTileMode];
+			return static::$aPresentationData[$sTileMode];
 		}
 
-		return static::GetDefaultPresentationData()[static::DEFAULT_TILE_MODE];
+		return static::$aPresentationData[static::DEFAULT_TILE_MODE];
 	}
 
 	/**
@@ -505,16 +599,7 @@ class ManageBrick extends PortalBrick
 		$this->iDefaultListLength = $iDefaultListLength;
 		return $this;
 	}
-	
-	public function GetPopupExportExcelTemplatePath() {
-		return $this->sPopupExportExcelTemplatePath;
-	}
-	
-	public function SetPopupExportExcelTemplatePath($sPopupExportExcelTemplatePath) {
-		$this->sPopupExportExcelTemplatePath = $sPopupExportExcelTemplatePath;
-		return $this;
-	}
-	
+
 	/**
 	 * Adds a grouping.
 	 *
@@ -829,10 +914,11 @@ class ManageBrick extends PortalBrick
 
 							case 'tile';
 								$this->SetTileMode($oDisplayNode->GetText(static::DEFAULT_TILE_MODE));
-
-								$aTileParametersForType = $this->GetPresentationDataForTileMode($this->sTileMode);
-								$this->SetTileTemplatePath($aTileParametersForType['tileTemplate']);
-								$this->SetPageTemplatePath($aTileParametersForType['layoutTemplate']);
+								if($this->sDecorationClassHome === static::DEFAULT_DECORATION_CLASS_HOME){
+									$this->sDecorationClassHome = static::$aDefaultTileData[$this->GetTileMode()]['decorationCssClass'];
+									$this->SetDecorationClassNavigationMenu(static::$aDefaultTileData[$this->GetTileMode()]['decorationCssClass']);
+									$this->SetDecorationClassHome(static::$aDefaultTileData[$this->GetTileMode()]['decorationCssClass']);
+								}
 								break;
 						}
 					}
@@ -966,6 +1052,19 @@ class ManageBrick extends PortalBrick
 						}
 					}
 					break;
+
+				case 'templates':
+					$aTemplatesIds = static::GetTemplatesProviderService()->GetRegister()->GetProviderTemplatesIds(self::class);
+					/** @var TemplateDefinitionDto $oTemplateDefinition */
+					foreach ($aTemplatesIds as $sTemplateId) {
+						$oTemplateNodeList = $oBrickSubNode->GetNodes('template[@id='.ModuleDesign::XPathQuote($sTemplateId).']');
+						if ($oTemplateNodeList->length > 0) {
+							/** @var \Combodo\iTop\DesignElement $oTemplateNode */
+							$oTemplateNode = $oTemplateNodeList->item(0);
+							$this->SetTemplatePath($sTemplateId, $oTemplateNode->GetText(static::DEFAULT_TILE_TEMPLATE_PATH));
+						}
+					}
+					break;
 			}
 		}
 
@@ -1013,10 +1112,10 @@ class ManageBrick extends PortalBrick
 
 		// Checking the navigation icon
 		$sDecorationClassNavigationMenu = $this->GetDecorationClassNavigationMenu();
-		if (empty($sDecorationClassNavigationMenu) && isset(static::GetDefaultPresentationData()[$this->sTileMode]))
+		if (empty($sDecorationClassNavigationMenu) && isset(static::$aDefaultTileData[$this->sTileMode]))
 		{
 			/** @var string $sDecorationClassNavigationMenu */
-			$sDecorationClassNavigationMenu = static::GetDefaultPresentationData()[$this->sTileMode]['decorationCssClass'];
+			$sDecorationClassNavigationMenu = static::$aDefaultTileData[$this->sTileMode]['decorationCssClass'];
 			if (!empty($sDecorationClassNavigationMenu))
 			{
 				$this->SetDecorationClassNavigationMenu($sDecorationClassNavigationMenu);

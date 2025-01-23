@@ -4,13 +4,13 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'Class:OAuthClient' => 'OAuth-Client',
+	'Class:OAuthClient' => 'Mailpostfach-OAuth-Client',
 	'Class:OAuthClient/Attribute:client_id' => 'Client ID',
 	'Class:OAuthClient/Attribute:client_id+' => 'Eine lange Zeichenfolge, die durch den oAuth2-Provider bereitgestellt wird',
 	'Class:OAuthClient/Attribute:client_secret' => 'Client Secret',
@@ -40,7 +40,7 @@ Löschen Sie das Feld, um den Standardwert neu zu berechnen.',
 	'Class:OAuthClient/Attribute:token+' => '',
 	'Class:OAuthClient/Attribute:token_expiration' => 'Zugriffstoken Ablaufszeitpunkt',
 	'Class:OAuthClient/Attribute:token_expiration+' => '',
-	'Class:OAuthClientAzure' => 'OAuth-Client für Microsoft Azure',
+	'Class:OAuthClientAzure' => 'Mailpostfach-OAuth-Client für Microsoft Azure',
 	'Class:OAuthClientAzure/Attribute:advanced_scope' => 'Erweiterter Scope',
 	'Class:OAuthClientAzure/Attribute:advanced_scope+' => 'Sobald Sie hier etwas eingeben, hat es Vorrang vor der Auswahl im Feld "Scope", die dann ignoriert wird.',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Scope',
@@ -62,7 +62,7 @@ Löschen Sie das Feld, um den Standardwert neu zu berechnen.',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple' => 'Einfach',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple+' => '',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
-	'Class:OAuthClientGoogle' => 'OAuth-Client für Google',
+	'Class:OAuthClientGoogle' => 'Mailpostfach-OAuth-Client für Google',
 	'Class:OAuthClientGoogle/Attribute:advanced_scope' => 'Erweiterter Scope',
 	'Class:OAuthClientGoogle/Attribute:advanced_scope+' => 'Sobald Sie hier etwas eingeben, hat es Vorrang vor der Auswahl im Feld "Scope", die dann ignoriert wird.',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Scope',
@@ -84,7 +84,7 @@ Löschen Sie das Feld, um den Standardwert neu zu berechnen.',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Menu:CreateMailbox' => 'Mailpostfach erstellen...',
 	'Menu:GenerateTokens' => 'Zugriffstoken generieren...',
-	'Menu:OAuthClient' => 'OAuth-Client',
+	'Menu:OAuthClient' => 'Mailpostfach-OAuth-Client',
 	'Menu:OAuthClient+' => '',
 	'Menu:RegenerateTokens' => 'Zugriffstoken neu generieren...',
 	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'Die Kombination aus "Login" (%1$s) und "Verwendung für SMTP" (%2$s) existiert bereits.',

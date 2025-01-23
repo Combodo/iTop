@@ -354,6 +354,8 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		'font-style',
 		'height',
 		'margin',
+		'margin-left',
+		'margin-right',
 		'padding',
 		'text-align',
 		'vertical-align',

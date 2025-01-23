@@ -1,6 +1,4 @@
-{# itop-portal-base/portal/templates/bricks/manage/layout-table.html.twig #}
-{# Manage brick base layout #}
-{% extends 'itop-portal-base/portal/templates/bricks/manage/layout.html.twig' %}
+{% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\ManageBrick', oBrick) %}
 
 {% block pPageBodyClass %}{{ parent() }} page_manage_brick{% endblock %}
 
@@ -23,25 +21,23 @@
     {% set iTableCount = 0 %}
     {% if aGroupingAreasData|length > 0 %}
         {% for aAreaData in aGroupingAreasData %}
-            {% if aAreaData.iItemsCount > 0 %}
-                {% set iTableCount = iTableCount + 1 %}
-                <div class="panel panel-default">
-                    <div class="panel-heading clearfix">
-                        <h3 class="panel-title" style="float: left;">{{ aAreaData.sTitle }}</h3>
-                        {% if bCanExport %}
-                            <a href="{{ app.url_generator.generate('p_manage_brick_excel_export_start', {'sBrickId': sBrickId, 'sGroupingTab': sGroupingTab, 'sGroupingArea': aAreaData.sId})|raw }}"
-                               id="btn_export_excel_for_{{ aAreaData.sId }}"
-                               data-toggle="modal" data-target="#modal-for-all">
-                                <span class="fas fa-download fa-lg" style="float: right;"
-                                  data-tooltip-content="{{ 'ExcelExporter:ExportMenu'|dict_s }}"></span>
-                            </a>
-                        {% endif %}
-                    </div>
-                    <div class="panel-body">
-                        <table id="table-{{ aAreaData.sId }}" class="object-list table table-striped table-bordered responsive" width="100%"></table>
-                    </div>
+            {% set iTableCount = iTableCount + 1 %}
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title" style="float: left;">{{ aAreaData.sTitle }}</h3>
+                    {% if bCanExport %}
+                        <a href="{{ app.url_generator.generate('p_manage_brick_excel_export_start', {'sBrickId': sBrickId, 'sGroupingTab': sGroupingTab, 'sGroupingArea': aAreaData.sId})|raw }}"
+                           id="btn_export_excel_for_{{ aAreaData.sId }}"
+                           data-toggle="modal" data-target="#modal-for-all">
+                            <span class="fas fa-download fa-lg" style="float: right;"
+                              data-tooltip-content="{{ 'ExcelExporter:ExportMenu'|dict_s }}"></span>
+                        </a>
+                    {% endif %}
                 </div>
-            {% endif %}
+                <div class="panel-body">
+                    <table id="table-{{ aAreaData.sId }}" class="object-list table table-striped table-bordered responsive" width="100%"></table>
+                </div>
+            </div>
         {% endfor %}
     {% endif %}
 

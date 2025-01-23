@@ -1113,8 +1113,10 @@ HTML
 		}
 
 		// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
-		/** @var iTopWebPage $oPage */
+		/** @var \iTopWebPage $oPage */
+		$oKPI = new ExecutionKPI();
 		$aHeadersBlocks = $this->DisplayBareHeader($oPage, $bEditMode);
+		$oKPI->ComputeStatsForExtension($this, 'DisplayBareHeader');
 		if (false === empty($aHeadersBlocks['subtitle'])) {
 			$oObjectDetails->AddSubTitleBlocks($aHeadersBlocks['subtitle']);
 		}
@@ -1127,8 +1129,12 @@ HTML
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab('UI:PropertiesTab');
+		$oKPI = new ExecutionKPI();
 		$this->DisplayBareProperties($oPage, $bEditMode);
+		$oKPI->ComputeStatsForExtension($this, 'DisplayBareProperties');
+		$oKPI = new ExecutionKPI();
 		$this->DisplayBareRelations($oPage, $bEditMode);
+		$oKPI->ComputeStatsForExtension($this, 'DisplayBareRelations');
 
 
 		// Note: Adding the JS snippet which enables the image upload should have been done directly by the ActivityPanel which would have kept the independance principle
@@ -3439,8 +3445,18 @@ EOF
 					}
 					$sInputType = '';
 					$sInputId   = 'att_'.$iFieldIndex;
+					$value = $this->Get($sAttCode);
+					$sDisplayValue = $this->GetEditValue($sAttCode);
+					if ($oAttDef instanceof AttributeDateTime && !$oAttDef->IsNullAllowed() && $value === $oAttDef->GetNullValue()) {
+						$value = $oAttDef->GetDefaultValue($this);
+						if ($value !== $oAttDef->GetNullValue()) {
+							// Set default date
+							$this->Set($sAttCode, $value);
+							$sDisplayValue = $this->GetEditValue($sAttCode);
+						}
+					}
 					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef,
-						$this->Get($sAttCode), $this->GetEditValue($sAttCode), $sInputId, '', $iExpectCode,
+						$value, $sDisplayValue, $sInputId, '', $iExpectCode,
 						$aArgs, true, $sInputType);
 					$aAttrib    = array(
 						'label' => '<span>'.$oAttDef->GetLabel().'</span>',

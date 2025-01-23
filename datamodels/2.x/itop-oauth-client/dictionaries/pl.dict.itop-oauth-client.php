@@ -4,13 +4,13 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
 Dict::Add('PL PL', 'Polish', 'Polski', [
-	'Class:OAuthClient' => 'Klient OAuth',
+	'Class:OAuthClient' => 'OAuth Mail Access~~',
 	'Class:OAuthClient/Attribute:client_id' => 'Id klienta',
 	'Class:OAuthClient/Attribute:client_id+' => 'Długi ciąg znaków dostarczony przez dostawcę protokołu OAuth2',
 	'Class:OAuthClient/Attribute:client_secret' => 'Sekretny ciąg',
@@ -80,7 +80,7 @@ Usuń pole, aby ponownie obliczyć wartość domyślną',
 	'Class:OAuthClient/Attribute:token+' => '',
 	'Class:OAuthClient/Attribute:token_expiration' => 'Wygaśnięcie tokenu dostępu',
 	'Class:OAuthClient/Attribute:token_expiration+' => '',
-	'Class:OAuthClientAzure' => 'Klient OAuth dla Microsoft Azure',
+	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure~~',
 	'Class:OAuthClientAzure/Attribute:advanced_scope' => 'Zaawansowany zakres',
 	'Class:OAuthClientAzure/Attribute:advanced_scope+' => 'Gdy tylko coś tu wpiszesz, będzie to miało pierwszeństwo przed wyborem „Zakres”, który zostanie następnie zignorowany',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Zakres',
@@ -150,7 +150,7 @@ Usuń pole, aby ponownie obliczyć wartość domyślną',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple' => 'Prosty',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple+' => '',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
-	'Class:OAuthClientGoogle' => 'Klient OAuth dla Google',
+	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google~~',
 	'Class:OAuthClientGoogle/Attribute:advanced_scope' => 'Zaawansowany zakres',
 	'Class:OAuthClientGoogle/Attribute:advanced_scope+' => 'Gdy tylko coś tu wpiszesz, będzie to miało pierwszeństwo przed wyborem „Zakres”, który zostanie następnie zignorowany',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Zakres',
@@ -220,7 +220,7 @@ Usuń pole, aby ponownie obliczyć wartość domyślną',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Menu:CreateMailbox' => 'Utwórz skrzynkę pocztową...',
 	'Menu:GenerateTokens' => 'Wygeneruj token dostępu...',
-	'Menu:OAuthClient' => 'Klient OAuth',
+	'Menu:OAuthClient' => 'OAuth Mail Access~~',
 	'Menu:OAuthClient+' => '',
 	'Menu:RegenerateTokens' => 'Wygeneruj ponownie token dostępu...',
 	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'Kombinacja Loginu (%1$s) i SMTP (%2$s) była już użyta dla klienta OAuth',

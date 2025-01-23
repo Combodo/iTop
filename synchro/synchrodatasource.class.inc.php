@@ -92,7 +92,7 @@ class SynchroDataSource extends cmdbAbstractObject
 			'depends_on' => array(),
 		)));
 
-		//MetaModel::Init_AddAttribute(new AttributeDateTime("last_synchro_date", array("allowed_values"=>null, "sql"=>"last_synchro_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		//MetaModel::Init_AddAttribute(new AttributeDateTime("last_synchro_date", array("allowed_values"=>null, "sql"=>"last_synchro_date", "default_value"=>"NOW()", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		// Format: seconds (int)
 		MetaModel::Init_AddAttribute(new AttributeDuration('full_load_periodicity', array(
@@ -2029,7 +2029,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		MetaModel::Init_AddAttribute(new AttributeDateTime('status_last_seen', array(
 			'allowed_values' => null,
 			'sql' => 'status_last_seen',
-			'default_value' => '',
+			'default_value' => 'NOW()',
 			'is_null_allowed' => false,
 			'depends_on' => array(),
 		)));

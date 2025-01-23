@@ -1,12 +1,10 @@
-{# itop-portal-base/portal/templates/bricks/browse/layout.html.twig #}
-{# Browse brick base layout #}
-{% extends 'itop-portal-base/portal/templates/bricks/layout.html.twig' %}
+{% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\AbstractBrick') %}
 
 {% block pPageBodyClass %}{{ parent() }} page_browse_brick page_browse_brick_as_{{ sBrowseMode }}{% endblock %}
 
 {% block pPageReadyScripts %}
     {{ parent() }}
-    {% include 'itop-portal-base/portal/templates/helpers/tagset_clic_handler.js.twig' %}
+    {% include template('tagset_clic_handler_js') %}
 {% endblock %}
 
 

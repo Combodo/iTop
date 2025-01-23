@@ -4,13 +4,13 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:OAuthClient' => 'OAuth ügyfél',
+	'Class:OAuthClient' => 'OAuth Mail Access~~',
 	'Class:OAuthClient/Attribute:client_id' => 'Ügyfél azonosító',
 	'Class:OAuthClient/Attribute:client_id+' => 'A long string of characters provided by your OAuth2 provider~~',
 	'Class:OAuthClient/Attribute:client_secret' => 'Ügyfél kulcs',
@@ -40,7 +40,7 @@ Erase the field to recalculate default value~~',
 	'Class:OAuthClient/Attribute:token+' => '~~',
 	'Class:OAuthClient/Attribute:token_expiration' => 'Hozzáférési token lejárata',
 	'Class:OAuthClient/Attribute:token_expiration+' => '~~',
-	'Class:OAuthClientAzure' => 'OAuth ügyfél Microsoft Azure-hoz',
+	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure~~',
 	'Class:OAuthClientAzure/Attribute:advanced_scope' => 'Advanced scope~~',
 	'Class:OAuthClientAzure/Attribute:advanced_scope+' => 'As soon as you enter something here it takes precedence over the “Scope” selection which is then ignored~~',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Scope~~',
@@ -62,7 +62,7 @@ Erase the field to recalculate default value~~',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple' => 'Simple~~',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple+' => '~~',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
-	'Class:OAuthClientGoogle' => 'OAuth ügyfél a Google-höz',
+	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google~~',
 	'Class:OAuthClientGoogle/Attribute:advanced_scope' => 'Advanced scope~~',
 	'Class:OAuthClientGoogle/Attribute:advanced_scope+' => 'As soon as you enter something here it takes precedence over the “Scope” selection which is then ignored~~',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Scope~~',
@@ -84,7 +84,7 @@ Erase the field to recalculate default value~~',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Menu:CreateMailbox' => 'Postafiók létrehozása...',
 	'Menu:GenerateTokens' => 'Hozzáférési tokenek generálása...',
-	'Menu:OAuthClient' => 'OAuth ügyfél',
+	'Menu:OAuthClient' => 'OAuth Mail Access~~',
 	'Menu:OAuthClient+' => '~~',
 	'Menu:RegenerateTokens' => 'Hozzáférési tokenek újragenerálása...',
 	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'The combination Login (%1$s) and Use for SMTP (%2$s) has already been used for OAuth Client~~',

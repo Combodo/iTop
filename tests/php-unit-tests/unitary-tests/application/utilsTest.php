@@ -695,7 +695,7 @@ HTML,
 			],
 			'1 UserRequest, 1 Person' => [
 				<<<HTML
-<div class="ibo-activity-entry--main-information-content"><div class="ibo-activity-entry--main-information-content"><p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="UserRequest" data-object-key="12345" data-object-id="#Test Ticket" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=UserRequest&id=12345">#Test Ticket</a> After link</p><p>And <a data-role="object-mention" data-object-class="Person" data-object-key="3" data-object-id="@Agatha Christie" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=3">@Agatha Christie</a></p><p>End</p></div></div>
+<div class="ibo-activity-entry--main-information-content"><div class="ibo-activity-entry--main-information-content"><p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="UserRequest" data-object-key="12345" data-object-id="#Test Ticket" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=UserRequest&id=12345">#Test Ticket</a> After link</p><p>And <a data-role="object-mention" data-object-class="Person" data-object-id="@Agatha Christie" data-object-key="3" data-object-id="@Agatha Christie" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=3">@Agatha Christie</a></p><p>End</p></div></div>
 HTML,
 				[
 					'UserRequest' => ['12345'],

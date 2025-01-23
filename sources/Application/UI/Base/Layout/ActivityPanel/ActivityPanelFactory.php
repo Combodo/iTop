@@ -27,6 +27,7 @@ use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
 use Exception;
+use ExecutionKPI;
 use IssueLog;
 use MetaModel;
 
@@ -58,6 +59,7 @@ class ActivityPanelFactory
 	 */
 	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE)
 	{
+		$oKPI = new ExecutionKPI();
 		$sObjClass = get_class($oObject);
 		$sObjId = $oObject->GetKey();
 
@@ -170,6 +172,8 @@ class ActivityPanelFactory
 				}
 			}
 		}
+
+		$oKPI->ComputeStatsForExtension(new ActivityPanelFactory(), 'MakeForObjectDetails');
 
 		return $oActivityPanel;
 	}

@@ -5,10 +5,10 @@
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
-	'Class:OAuthClient' => 'Cliente OAuth',
+	'Class:OAuthClient' => 'OAuth Mail Access~~',
 	'Class:OAuthClient/Attribute:client_id' => 'Id Cliente',
 	'Class:OAuthClient/Attribute:client_id+' => 'Una cadena larga de caracteres proporcionada por su proveedor de OAuth2',
 	'Class:OAuthClient/Attribute:client_secret' => 'Secreto del Cliente',
@@ -82,7 +82,7 @@ Borre el campo para recalcular el valor predeterminado',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Menu:CreateMailbox' => 'Crear un buzón...',
 	'Menu:GenerateTokens' => 'Generar token de acceso...',
-	'Menu:OAuthClient' => 'Cliente OAuth',
+	'Menu:OAuthClient' => 'OAuth Mail Access~~',
 	'Menu:OAuthClient+' => 'Cliente OAuth',
 	'Menu:RegenerateTokens' => 'Regenerar token de acceso...',
 	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'La combinación Inicio de sesión (%1$s) y Uso para SMTP (%2$s) ya se ha utilizado para el Cliente OAuth',

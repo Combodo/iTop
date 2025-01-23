@@ -2,6 +2,8 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
+use AttributeDate;
+use AttributeDateTime;
 use Change;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
@@ -229,7 +231,7 @@ PHP
 		$this->assertEquals($bComputationExpected, $oAttDef->HasPHPComputation(), "Standard DataModel should be configured with property 'has_php_computation'=$sComputationExpected for $sClass:$sAttCode");
 	}
 
-	public function WithConstraintParameterProvider()
+	public static function WithConstraintParameterProvider()
 	{
 		return [
 			['User', 'profile_list', true, true],
@@ -238,4 +240,105 @@ PHP
 			['Ticket', 'functionalcis_list', false, true],
 		];
 	}
+
+	public function testDateTimeEmptyDefaultReturnsNullAsDefaultValue()
+	{
+		// Given
+		$oDateAttribute = new AttributeDateTime('start_date', ['sql' => 'start_date', 'is_null_allowed' => false, 'default_value' => '', 'allowed_values' => null, 'depends_on' => [], 'always_load_in_tables' => false]);
+		$oDateAttribute->SetHostClass('WorkOrder');
+
+		//When
+		$defaultValue = $oDateAttribute->GetDefaultValue();
+
+		// Then
+		self::assertNull($defaultValue, 'Empty default value for DateTime attribute should give null default value');
+	}
+
+	public function testDateEmptyDefaultReturnsNullAsDefaultValue()
+	{
+		// Given
+		$oDateAttribute = new AttributeDate('start_date', ['sql' => 'start_date', 'is_null_allowed' => false, 'default_value' => '', 'allowed_values' => null, 'depends_on' => [], 'always_load_in_tables' => false]);
+		$oDateAttribute->SetHostClass('WorkOrder');
+
+		//When
+		$defaultValue = $oDateAttribute->GetDefaultValue();
+
+		// Then
+		self::assertNull($defaultValue, 'Empty default value for Date attribute should give null default value');
+	}
+
+
+	public function testDateTimeNowAsDefaultGivesCurrentDateAsDefaultValue()
+	{
+		// Given
+		$oDateAttribute = new AttributeDateTime('start_date', [
+			'sql' => 'start_date',
+			'is_null_allowed' => false,
+			'default_value' => 'NOW()',
+			'allowed_values' => null,
+			'depends_on' => [],
+			'always_load_in_tables' => false
+		]);
+		$oDateAttribute->SetHostClass('WorkOrder');
+
+		//When
+		$defaultValue = $oDateAttribute->GetDefaultValue();
+
+		// Then
+		$sNow = date($oDateAttribute->GetInternalFormat());
+		self::assertEquals($sNow, $defaultValue, 'Now as default value for DateTime attribute should give current date as default value');
+	}
+
+
+	public function testDateNowAsDefaultGivesCurrentDateAsDefaultValue()
+	{
+		// Given
+		$oDateAttribute = new AttributeDate('start_date', [
+			'sql' => 'start_date',
+			'is_null_allowed' => false,
+			'default_value' => 'NOW()',
+			'allowed_values' => null,
+			'depends_on' => [],
+			'always_load_in_tables' => false
+		]);
+		$oDateAttribute->SetHostClass('WorkOrder');
+
+		//When
+		$defaultValue = $oDateAttribute->GetDefaultValue();
+
+		// Then
+		$sNow = date($oDateAttribute->GetInternalFormat());
+		self::assertEquals($sNow, $defaultValue, 'Now as default value for Date attribute should give current date as default value');
+	}
+
+	public function testDateTimeIntervalAsDefaultGivesCorrectDateAsDefaultValue()
+	{
+		// Given
+		$oDateAttribute = new AttributeDateTime('start_date', ['sql' => 'start_date', 'is_null_allowed' => false, 'default_value' => 'DATE_ADD(NOW(), INTERVAL 1 DAY)', 'allowed_values' => null, 'depends_on' => [], 'always_load_in_tables' => false]);
+		$oDateAttribute->SetHostClass('WorkOrder');
+
+		//When
+		$defaultValue = $oDateAttribute->GetDefaultValue();
+
+		// Then
+		$oDate = new \DateTimeImmutable('+1day');
+		$sExpected = $oDate->format($oDateAttribute->GetInternalFormat());
+		self::assertEquals($sExpected, $defaultValue, 'Interval as default value for DateTime attribute should give correct date as default value');
+	}
+
+	public function testDateIntervalAsDefaultGivesCorrectDateAsDefaultValue()
+	{
+		// Given
+		$oDateAttribute = new AttributeDate('start_date', ['sql' => 'start_date', 'is_null_allowed' => false, 'default_value' => 'DATE_ADD(NOW(), INTERVAL 1 DAY)', 'allowed_values' => null, 'depends_on' => [], 'always_load_in_tables' => false]);
+		$oDateAttribute->SetHostClass('WorkOrder');
+
+		//When
+		$defaultValue = $oDateAttribute->GetDefaultValue();
+
+		// Then
+		$oDate = new \DateTimeImmutable('+1day');
+		$sExpected = $oDate->format($oDateAttribute->GetInternalFormat());
+		self::assertEquals($sExpected, $defaultValue, 'Interval as default value for Date attribute should give correct date as default value');
+	}
+
 }

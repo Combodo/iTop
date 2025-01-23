@@ -21,9 +21,10 @@ namespace Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXml
 
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\DesignElement;
-use Combodo\iTop\Portal\Helper\UIExtensionsHelper;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface;
 use DOMFormatException;
 use Exception;
+use ReflectionClass;
 use Symfony\Component\DependencyInjection\Container;
 use utils;
 
@@ -74,6 +75,7 @@ class Basic extends AbstractConfiguration
 		$aPortalConf = array(
 			'properties' => array(
 				'id'              => $_ENV['PORTAL_ID'],
+				'ui_version'        => '2017',
 				'name'            => 'Page:DefaultTitle',
 				'logo'            => Branding::GetPortalLogoAbsoluteUrl(),
 				'favicon'         => Branding::GetPortalFavIconAbsoluteUrl(),
@@ -85,7 +87,6 @@ class Basic extends AbstractConfiguration
 				'templates' => array(
 					'layout' => 'itop-portal-base/portal/templates/layout.html.twig',
 					'home' => 'itop-portal-base/portal/templates/home/layout.html.twig',
-					'bricks' => array(),
 				),
 				'urlmaker_class' => null,
 				'triggers_query' => null,
@@ -117,6 +118,7 @@ class Basic extends AbstractConfiguration
 		{
 			switch ($oPropertyNode->nodeName)
 			{
+				case 'ui_version':
 				case 'name':
 				case 'urlmaker_class':
 				case 'triggers_query':
@@ -186,19 +188,22 @@ class Basic extends AbstractConfiguration
 							$aPortalConf['properties']['templates'][$sNodeId] = $oSubNode->GetText(null);
 							break;
 						default:
-							// Try to accept the value as a global brick template, brick id format is "FQCN:page"
-							[$sBrickFQCN, $sPage] = explode(':', $sNodeId);
-							if (utils::IsNotNullOrEmptyString($sBrickFQCN) && utils::IsNotNullOrEmptyString($sPage))
-							{
-								$aPortalConf['properties']['templates']['bricks'][$sBrickFQCN][$sPage] = $oSubNode->GetText(null);
-								break;
+							$aMatches = [];
+							// allowed format is: <class implementing TemplatesProviderInterface>:<template_id>
+							if(preg_match('#([\w\\\d_]+):(\w+)#', $sNodeId, $aMatches)){
+								try{
+									$oClass = new ReflectionClass($aMatches[1]);
+									if($oClass->implementsInterface(TemplatesProviderInterface::class)){
+										$aPortalConf['properties']['templates'][$aMatches[1]][$aMatches[2]] = $oSubNode->GetText(null);
+										break;
+									}
+								}
+								catch(Exception){}
 							}
-
 							throw new DOMFormatException(
-								'Value "'.$sNodeId.'" is not handled for template[@id]',
+								'Template ID "'.$sNodeId.'" is not handled in module design templates property',
 								null, null, $oSubNode
 							);
-							break;
 					}
 					break;
 			}

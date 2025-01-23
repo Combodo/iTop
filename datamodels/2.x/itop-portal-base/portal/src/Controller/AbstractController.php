@@ -20,7 +20,11 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use \Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 
@@ -31,8 +35,23 @@ use Symfony\Contracts\Service\Attribute\Required;
  * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since   2.3.0
  */
-abstract class AbstractController extends SymfonyAbstractController
+abstract class AbstractController extends SymfonyAbstractController implements TemplatesProviderInterface
 {
+	const TEMPLATES_BASE_PATH = 'itop-portal-base/portal/templates/';
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		$oTemplatesRegister->RegisterTemplates(self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig'),
+			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH . 'modal/layout.html.twig'),
+			TemplateDefinitionDto::Create('loader', static::TEMPLATES_BASE_PATH.'helpers/loader.html.twig'),
+			TemplateDefinitionDto::Create('tagset_clic_handler_js', static::TEMPLATES_BASE_PATH.'helpers/tagset_clic_handler.js.twig'),
+			TemplateDefinitionDto::Create('session_message', static::TEMPLATES_BASE_PATH.'helpers/session_messages/session_message.html.twig'),
+			TemplateDefinitionDto::Create('session_messages', static::TEMPLATES_BASE_PATH.'helpers/session_messages/session_messages.html.twig'),
+		);
+	}
+
 	/**
 	 * @var \Symfony\Component\Routing\RouterInterface symfony router
 	 *
@@ -44,6 +63,25 @@ abstract class AbstractController extends SymfonyAbstractController
 	public function setRouter(RouterInterface $oRouter): void
 	{
 		$this->oRouter = $oRouter;
+	}
+
+	/** @var TemplatesProviderService templates provider service */
+	private TemplatesProviderService $oTemplatesService;
+	#[Required]
+	public function SetTemplatesService(TemplatesProviderService $oTemplatesService): void
+	{
+		$this->oTemplatesService = $oTemplatesService;
+
+	}
+
+	/**
+	 * Return the templates provider service.
+	 *
+	 * @return \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService
+	 */
+	protected function GetTemplatesProviderService(): TemplatesProviderService
+	{
+		return $this->oTemplatesService;
 	}
 
 	/**
@@ -103,5 +141,34 @@ abstract class AbstractController extends SymfonyAbstractController
 		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
 
 		return $aRouteDefaults['_controller'];
+	}
+
+	/**
+	 * Returns the controller template path
+	 *
+	 * @since 3.2.1
+	 *
+	 * @param string $sTemplateId
+	 *
+	 * @return string
+	 */
+	public function GetTemplatePath(string $sTemplateId): string
+	{
+		return static::GetTemplatesProviderService()->GetProviderInstanceTemplatePath($this, $sTemplateId);
+	}
+
+	/**
+	 * Sets the brick template path
+	 *
+	 * @since 3.2.1
+	 * @param string $sTemplateId
+	 * @param string $sTileTemplatePath
+	 *
+	 * @return \Combodo\iTop\Portal\Controller\AbstractController
+	 */
+	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath): AbstractController
+	{
+		static::GetTemplatesProviderService()->OverrideInstanceTemplatePath($this, $sTemplateId, $sTileTemplatePath);
+		return $this;
 	}
 }

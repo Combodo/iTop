@@ -87,7 +87,7 @@ class ExtensionInstallation extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("label", array("allowed_values"=>null, "sql"=>"label", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("version", array("allowed_values"=>null, "sql"=>"version", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("source", array("allowed_values"=>null, "sql"=>"source", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDateTime("installed", array("allowed_values"=>null, "sql"=>"installed", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("installed", array("allowed_values"=>null, "sql"=>"installed", "default_value"=>'NOW()', "is_null_allowed"=>false, "depends_on"=>array())));
 		
 		
 		// Display lists

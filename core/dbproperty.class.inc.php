@@ -51,7 +51,7 @@ class DBProperty extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("value", array("allowed_values"=>null, "sql"=>"value", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_AddAttribute(new AttributeDateTime("change_date", array("allowed_values"=>null, "sql"=>"change_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("change_date", array("allowed_values"=>null, "sql"=>"change_date", "default_value"=>"NOW()", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("change_comment", array("allowed_values"=>null, "sql"=>"change_comment", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 	}
 

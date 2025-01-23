@@ -1,6 +1,4 @@
-{# itop-portal-base/portal/templates/bricks/user-profile/layout.html.twig #}
-{# User profile brick base layout #}
-{% extends 'itop-portal-base/portal/templates/bricks/layout.html.twig' %}
+{% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\AbstractBrick') %}
 
 {% if sTab == "" %}
     {% set sTab = "user-info" %}
@@ -57,7 +55,7 @@
 	    {% set oContactForm = forms.contact %}
 	    {% set oPreferencesForm = forms.preferences %}
 	    {% set oPasswordForm = forms.password %}
-        {% include 'itop-portal-base/portal/templates/bricks/user-profile/user_info.html.twig' %}
+        {% include template('user_info', 'Combodo\\iTop\\Portal\\Brick\\UserProfileBrick') %}
     {% else %}
         <div id="user-profile-wrapper">
             <div class="row">
@@ -82,7 +80,7 @@
 		{% set oContactForm = forms.contact %}
 		{% set oPreferencesForm = forms.preferences %}
 		{% set oPasswordForm = forms.password %}
-        {% include 'itop-portal-base/portal/templates/bricks/user-profile/user_info.ready.js.twig' %}
+        {% include template('user_info_ready_js', 'Combodo\\iTop\\Portal\\Brick\\UserProfileBrick') %}
 	{% endif %}
 {% endblock %}
 
