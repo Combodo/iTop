@@ -3,6 +3,8 @@ $ipb-group-items-action--hover--background-color: common-adjust-alpha($common-co
 
 $ipb-page--list--group-item-actions: $common-spacing-600 $common-spacing-700 !default;
 
+$ipb-item-action--icon--margin-right: 6px !default;
+
 .list-group-item-actions,.item-action-wrapper,.group-actions{
   .panel-body{
     padding: 5px;
@@ -12,7 +14,7 @@ $ipb-page--list--group-item-actions: $common-spacing-600 $common-spacing-700 !de
     }
   }
   a{
-    padding: 5px 10px;
+    padding: 8px 14px;
     border-radius: 3px;
     cursor: pointer;
     text-decoration: none;
@@ -21,4 +23,8 @@ $ipb-page--list--group-item-actions: $common-spacing-600 $common-spacing-700 !de
       background-color: $ipb-group-items-action--hover--background-color;
     }
   }
+}
+
+.ipb-item-action--icon {
+  margin-right: $ipb-item-action--icon--margin-right;
 }

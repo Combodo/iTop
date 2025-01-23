@@ -27,13 +27,15 @@
 
 {% block pMainContentHolder%}
 	{% if iItemsCount > 0 or sSearchValue is not null %}
-		<div class="panel panel-default">
+        {% block bBrowseHeaderContent %}
+        {% endblock %}
+		<div class="ipb-panel ipb-browse-brick-panel panel panel-default">
 			{% block bBrowseMainContent %}
 			{% endblock %}
 		</div>
 	{% else %}
-		<div class="panel panel-default">
-			<div class="panel-body">
+		<div class="ipb-panel panel panel-default">
+			<div class="ipb-panel--body panel-body">
 				<h3 class="text-center">{{ 'Brick:Portal:Browse:Filter:NoData'|dict_s }}</h3>
 			</div>
 		</div>

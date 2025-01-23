@@ -1,0 +1,214 @@
+@import "../../../../../../../node_modules/bulma-scss/utilities/mixins";
+
+$ipb-browse-brick--mosaic-item--color:  $common-color-blue-800, $common-color-orange-800, $common-color-green-800, $common-color-pink-800, $common-color-cyan-800, $common-color-red-800;
+
+$ipb-content-mosaic--padding: $common-spacing-0 !default;
+$ipb-browse-brick--mosaic-breadcrumb--padding: $common-spacing-200 !default;
+$ipb-browse-brick--mosaic-breadcrumb--active--color: $common-color-grey-800 !default;
+$ipb-browse-brick--mosaic-breadcrumb--a--color: $common-color-primary-800 !default;
+
+$ipb-browse-brick--mosaic--small--grid-template-columns: 100% !default;
+$ipb-browse-brick--mosaic--medium--grid-template-columns: 50% 50% !default;
+$ipb-browse-brick--mosaic--large--grid-template-columns: 33.3% 33.3% 33.3% !default;
+
+
+$ipb-browse-brick--mosaic-group-item--min-height: $common-size-550 !default;
+$ipb-browse-brick--mosaic-group-item--height: auto !default;
+$ipb-browse-brick--mosaic-group-item--width: 100% !default;
+$ipb-browse-brick--mosaic-group-item--padding: $common-spacing-500 !default;
+$ipb-browse-brick--mosaic-group-item--margin: $common-spacing-0 !default;
+$ipb-browse-brick--mosaic-group-item--color: $common-base-variable--text-color !default;
+$ipb-browse-brick--mosaic-group-item--border: 1px solid $common-color-grey-300 !default;
+
+$ipb-browse-brick--mosaic-group-item--actions--top: $common-spacing-500 !default;
+$ipb-browse-brick--mosaic-group-item--actions--right: $common-spacing-500 !default;
+$ipb-browse-brick--mosaic-group-item--actions--a--padding: $common-spacing-200 !default;
+$ipb-browse-brick--mosaic-group-item--actions--a--color: $common-color-grey-800 !default;
+
+$ipb-browse-brick--mosaic-item--margin: $common-spacing-0 !default;
+$ipb-browse-brick--mosaic-item--background-color: $common-color-white-100 !default;
+$ipb-browse-brick--mosaic-item--color: $common-base-variable--text-color !default;
+
+$ipb-browse-brick--mosaic-item-description--color: $common-color-grey-800 !default;
+
+$ipb-browse-brick--mosaic-item-image--height: 44px !default;
+$ipb-browse-brick--mosaic-item-image--width: 44px !default;
+$ipb-browse-brick--mosaic-item-image--border-radius: $common-border-radius-700 !default;
+$ipb-browse-brick--mosaic-item-image--padding: $common-spacing-0 !default;
+$ipb-browse-brick--mosaic-item-image--margin-bottom: $common-spacing-500 !default;
+$ipb-browse-brick--mosaic-item-image--background-color: common-adjust-alpha($common-color-blue-700, .1) !default;
+$ipb-browse-brick--mosaic-item-image--color: $common-color-blue-700 !default;
+
+$ipb-browse-brick--mosaic-item-image--img--height: $common-size-300 !default;
+
+$ipb-browse-brick--mosaic-item-description--margin-top: $common-spacing-300 !default;
+
+$ipb-browse-brick-panel--dataTables_wrapper--padding-x: $common-spacing-0 !default;
+$ipb-browse-brick-panel--dataTables_wrapper--padding-y: $common-size-200 !default;
+$ipb-browse-brick-panel--dataTables_wrapper--row--padding: $common-size-0 !default;
+$ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-x: $common-size-200 !default;
+$ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-y: $common-size-0 !default;
+
+// Mosaic view 
+
+#brick_content_mosaic{
+  padding: $ipb-content-mosaic--padding;
+}
+#mosaic-breadcrumb {
+  padding: $ipb-browse-brick--mosaic-breadcrumb--padding;
+  a {
+    color: $ipb-browse-brick--mosaic-breadcrumb--a--color;
+  }
+  .active {
+    color: $ipb-browse-brick--mosaic-breadcrumb--active--color;
+  }
+}
+
+.mosaic-group {
+  display: grid;
+  @include touch {
+    grid-template-columns: $ipb-browse-brick--mosaic--small--grid-template-columns;
+  }
+  @include desktop {
+    grid-template-columns: $ipb-browse-brick--mosaic--medium--grid-template-columns;
+  }
+  @include fullhd {
+    grid-template-columns: $ipb-browse-brick--mosaic--large--grid-template-columns;
+  }
+}
+
+.mosaic-group-item {
+  position: relative;
+  min-height: $ipb-browse-brick--mosaic-group-item--min-height;
+  height: $ipb-browse-brick--mosaic-group-item--height;
+  width: $ipb-browse-brick--mosaic-group-item--width;
+  padding: $ipb-browse-brick--mosaic-group-item--padding;
+  margin: $ipb-browse-brick--mosaic-group-item--margin;
+  color: $ipb-browse-brick--mosaic-group-item--color;
+
+  @for $i from 1 through length($ipb-browse-brick--mosaic-item--color) {
+    &:nth-child(#{length($ipb-browse-brick--mosaic-item--color)}n + #{$i}) .mosaic-item-image {
+      background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--color, $i), .1);
+      color: nth($ipb-browse-brick--mosaic-item--color, $i);
+    }
+  }
+
+  @include touch {
+    border-bottom: $ipb-browse-brick--mosaic-group-item--border;
+    border-right: $ipb-browse-brick--mosaic-group-item--border;
+    
+      border-right: none;
+      &:last-child {
+        border-bottom: none; // Remove bottom border from last element
+      }
+    }
+  
+    // TODO: could be cleaned up, but desktop to widescreen needs to not affect fullhd
+  
+    @include desktop-only {
+      border-bottom: $ipb-browse-brick--mosaic-group-item--border;
+      border-right: $ipb-browse-brick--mosaic-group-item--border;
+      
+      // Remove bottom border only from elements in the last row
+      &:last-child, // Last element
+      &:nth-last-child(2):nth-child(2n - 1) { // Second-last element if it's in the same row as last element
+        border-bottom: none;
+      }
+    }
+
+  @include widescreen-only {
+    border-bottom: $ipb-browse-brick--mosaic-group-item--border;
+    border-right: $ipb-browse-brick--mosaic-group-item--border;
+
+    // Remove bottom border only from elements in the last row
+    &:last-child,  // Last element
+    &:nth-last-child(2):nth-child(2n - 1) { // Second-last element if it's in the same row as last element
+      border-bottom: none;
+    }
+  }
+    @include fullhd {
+      border-bottom: $ipb-browse-brick--mosaic-group-item--border;
+      border-right: $ipb-browse-brick--mosaic-group-item--border;
+
+      &:nth-child(3n) {
+        border-right: none;
+      }
+
+      // Remove bottom border from elements in the last row only
+      &:last-child,  // Last element
+      &:nth-last-child(2):nth-child(3n - 1),  // Second-last element if in same row as last
+      &:nth-last-child(2):nth-child(3n - 2),  // Second-last element if in same row as last
+      &:nth-last-child(3):nth-child(3n - 2) { // Third-last element if in same row as last
+        border-bottom: none;
+      }
+    }
+  
+  > .mosaic-group-item-actions {
+    position: absolute;
+    top: $ipb-browse-brick--mosaic-group-item--actions--top;
+    right: $ipb-browse-brick--mosaic-group-item--actions--right;
+    > a {
+      padding: $ipb-browse-brick--mosaic-group-item--actions--a--padding;
+      color: $ipb-browse-brick--mosaic-group-item--actions--a--color;
+    }
+  }
+}
+
+.mosaic-item {
+  display: flex;
+  flex-direction: column;
+  margin: $ipb-browse-brick--mosaic-item--margin;
+  background-color: $ipb-browse-brick--mosaic-item--background-color;
+  color: $ipb-browse-brick--mosaic-item--color;
+}
+
+
+.mosaic-item-text {
+  max-width: unset;
+  overflow: unset;
+  text-align: left;
+
+  .mosaic-item-name {
+    @extend %common-font-ral-bol-200;
+  }
+
+  .mosaic-item-description {
+    @extend %common-font-ral-nor-150;
+    color: $ipb-browse-brick--mosaic-item-description--color;
+  }
+}
+
+.mosaic-item-image {
+  display: flex;
+  height: $ipb-browse-brick--mosaic-item-image--height;
+  width: $ipb-browse-brick--mosaic-item-image--width;
+  padding: $ipb-browse-brick--mosaic-item-image--padding;
+  margin-bottom: $ipb-browse-brick--mosaic-item-image--margin-bottom;
+  border-radius: $ipb-browse-brick--mosaic-item-image--border-radius;
+  background-color: $ipb-browse-brick--mosaic-item-image--background-color;
+  color: $ipb-browse-brick--mosaic-item-image--color;
+  align-items: center;
+  justify-content: center;
+  text-transform: capitalize;
+  
+  @extend %common-font-ral-bol-300;
+  img {
+    height: $ipb-browse-brick--mosaic-item-image--img--height;
+  }
+}
+
+.mosaic-item-name ~ .mosaic-item-description {
+  margin-top: $ipb-browse-brick--mosaic-item-description--margin-top;
+}
+
+// List view
+
+.ipb-browse-brick-panel .dataTables_wrapper {
+  padding: $ipb-browse-brick-panel--dataTables_wrapper--padding-y $ipb-browse-brick-panel--dataTables_wrapper--padding-x;
+  .row {
+    margin: $ipb-browse-brick-panel--dataTables_wrapper--row--padding;
+    > div {
+      padding: $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-y $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-x;
+    }
+  }
+}

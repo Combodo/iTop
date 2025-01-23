@@ -1,11 +1,14 @@
 {% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\BrowseBrick', oBrick) %}
 
+{% block bBrowseHeaderContent %}
+    <ol id="mosaic-breadcrumb" class="breadcrumb">
+        <li><a href="#" data-level-id="L"><span class="fas fa-home"></span></a></li>
+    </ol>
+{% endblock %}
+
 {% block bBrowseMainContent %}
 	<div id="brick_content_mosaic">
 		{% block bBrowseMosaicContent %}
-			<ol id="mosaic-breadcrumb" class="breadcrumb">
-				<li><a href="#" data-level-id="L"><span class="fas fa-home"></span></a></li>
-			</ol>
 			<div class="mosaic-group" data-level-id="L">
 			</div>
 		{% endblock %}
@@ -159,7 +162,7 @@
                 // Building back button
                 if( $('div[data-level-id="'+nodeId+'"] .mosaic-group-back').length === 0 ) {
                     var backElem = $('<div></div>').addClass('mosaic-group-item').addClass('mosaic-group-back');
-                    var aElem = $('<a></a>').addClass('mosaic-item').addClass('mosaic-rollup').attr('href', '#').attr('data-level-id', upperlevelId).html('<div class="mosaic-item-text"><span class="glyphicon glyphicon-arrow-left"></span></div>');
+                    var aElem = $('<a></a>').addClass('mosaic-item').addClass('mosaic-rollup').attr('href', '#').attr('data-level-id', upperlevelId).html('<div class="mosaic-item-image"><span class="glyphicon glyphicon-arrow-left"></span></div><div class="mosaic-item-text"><div class="mosaic-item-name">Back back</div></div>');
 
                     backElem.append(aElem);
                     $('div[data-level-id="' + nodeId + '"]').append(backElem);
@@ -192,6 +195,10 @@
                 {
                     iItemFlags += 4;
                     aElem.append( $('<div></div>').addClass('mosaic-item-image').append( $('<img />').attr('src', item.image) ) );
+                }
+                else if ((item.name !== undefined) && (item.name !== '')){
+                    iItemFlags += 4;
+                    aElem.append( $('<div></div>').addClass('mosaic-item-image').append( $('<span>'+item.name.charAt(0)+'</span>') ) );
                 }
                 // - Adding name
                 if( (item.name !== undefined) && (item.name !== '') )
@@ -272,7 +279,7 @@
 					{
 						var action = actionsButtons[j];
 						var actionElem = $('<a></a>');
-						var actionIconElem = $('<span></span>').appendTo(actionElem);
+						var actionIconElem = $('<span></span>').addClass('ipb-item-action--icon').appendTo(actionElem);
 						
 						switch(action.type)
 						{
