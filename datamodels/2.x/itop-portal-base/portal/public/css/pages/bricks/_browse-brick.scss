@@ -1,6 +1,6 @@
 @import "../../../../../../../node_modules/bulma-scss/utilities/mixins";
 
-$ipb-browse-brick--mosaic-item--color:  $common-color-blue-800, $common-color-orange-800, $common-color-green-800, $common-color-pink-800, $common-color-cyan-800, $common-color-red-800;
+$ipb-browse-brick--mosaic-item--highlight-color:  $common-color-blue-800, $common-color-orange-800, $common-color-green-800, $common-color-pink-800, $common-color-cyan-800, $common-color-red-800;
 
 $ipb-content-mosaic--padding: $common-spacing-0 !default;
 $ipb-browse-brick--mosaic-breadcrumb--padding: $common-spacing-200 !default;
@@ -86,10 +86,10 @@ $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-y: $common-size-0
   margin: $ipb-browse-brick--mosaic-group-item--margin;
   color: $ipb-browse-brick--mosaic-group-item--color;
 
-  @for $i from 1 through length($ipb-browse-brick--mosaic-item--color) {
-    &:nth-child(#{length($ipb-browse-brick--mosaic-item--color)}n + #{$i}) .mosaic-item-image {
-      background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--color, $i), .1);
-      color: nth($ipb-browse-brick--mosaic-item--color, $i);
+  @for $i from 1 through length($ipb-browse-brick--mosaic-item--highlight-color) {
+    &:nth-child(#{length($ipb-browse-brick--mosaic-item--highlight-color)}n + #{$i}) .mosaic-item-image {
+      background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), .1);
+      color: nth($ipb-browse-brick--mosaic-item--highlight-color, $i);
     }
   }
 
