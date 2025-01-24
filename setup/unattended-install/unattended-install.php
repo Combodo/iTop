@@ -221,21 +221,10 @@ if ($sMode == 'install')
 			die("Cleanup not implemented for a partial database (prefix= '$sDBPrefix')\nExiting.");
 		}
 
-		$oMysqli = new mysqli();
-		$iMySqlFlag = 0;
-		if ($bDBTlsEnabled)
+		try
 		{
-			$iMySqlFlag = (empty($sDBTlsCa))
-				? MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT
-				: MYSQLI_CLIENT_SSL;
-			$oMysqli->ssl_set($bDBTlsEnabled, null, $sDBTlsCa, null, null);
-		}
-		if (!$oMysqli->real_connect($sDBServer, $sDBUser, $sDBPwd, null, null, null, $iMySqlFlag))
-		{
-		    die("Cannot connect to the MySQL server (".$oMysqli->connect_errno . ") ".$oMysqli->connect_error."\nExiting");
-		}
-		else
-		{
+			$oMysqli = CMDBSource::GetMysqliInstance($sDBServer, $sDBUser, $sDBPwd, null, $bDBTlsEnabled, $sDBTlsCa, true);
+
 			if ($oMysqli->select_db($sDBName))
 			{
 				echo "Deleting database '$sDBName'\n";
@@ -245,6 +234,10 @@ if ($sMode == 'install')
 			{
 				echo "The database '$sDBName' does not seem to exist. Nothing to cleanup.\n";
 			}
+		}
+		catch (MySQLException $e)
+		{
+		    die($e->getMessage()."\nExiting");
 		}
 	}
 }
@@ -322,17 +315,9 @@ if ($bInstall)
 	}
 	else
 	{
-		$oMysqli = new mysqli();
-		$iMySqlFlag = 0;
-		if ($bDBTlsEnabled)
+		try
 		{
-			$iMySqlFlag = (empty($sDBTlsCa))
-				? MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT
-				: MYSQLI_CLIENT_SSL;
-			$oMysqli->ssl_set($bDBTlsEnabled, null, $sDBTlsCa, null, null);
-		}
-		if ($oMysqli->real_connect($sDBServer, $sDBUser, $sDBPwd, null, null, null, $iMySqlFlag))
-		{
+			$oMysqli = CMDBSource::GetMysqliInstance($sDBServer, $sDBUser, $sDBPwd, null, $bDBTlsEnabled, $sDBTlsCa, true);
 			if ($oMysqli->select_db($sDBName))
 			{
 				// Check the presence of a table to record information about the MTP (from the Designer)
@@ -374,6 +359,10 @@ if ($bInstall)
 					}
 				}
 			}
+		}
+		catch (MySQLException $e)
+		{
+		    // Continue anyway
 		}
 	}
 }
