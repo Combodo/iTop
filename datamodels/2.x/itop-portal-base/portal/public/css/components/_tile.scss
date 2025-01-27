@@ -1,5 +1,6 @@
 /* SCSS variables */
 $ipb-tile--width: 450px !default;
+$ipb-tile--min-width: 150px !default;
 $ipb-tile--padding: $common-spacing-500 !default;
 $ipb-tile--margin: $common-spacing-400 !default;
 $ipb-tile--border-color: $gray-light !default;
@@ -20,6 +21,7 @@ $ipb-tile--description--color: $text-color !default;
   position: relative;
   display: block;
   width: $ipb-tile--width;
+  min-width: $ipb-tile--min-width;
   margin: $ipb-tile--margin;
   padding: $ipb-tile--padding;
   background-color: $ipb-tile--background-color;
@@ -28,9 +30,35 @@ $ipb-tile--description--color: $text-color !default;
   white-space: normal;
   flex-grow: 1;
 
-  &[data-role="tile-navigation-trigger"]{
+  &[data-role="navigation-trigger"] {
     cursor: pointer;
     @include ipb-heavy-animated-border;
+  }
+}
+
+.ipb-tile--body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* header */
+
+.ipb-tile--header {
+  display: flex;
+  flex-direction: column;
+
+  &.ipb-tile--header--inline {
+    flex-direction: row;
+    align-items: center;
+
+    .ipb-tile--decoration {
+      margin-right: $common-spacing-400;
+    }
+
+    .ipb-tile--title {
+      margin-top: 0;
+    }
   }
 }
 
@@ -40,7 +68,6 @@ $ipb-tile--description--color: $text-color !default;
   display: inline-block;
   width: $ipb-tile--decoration--size;
   height: $ipb-tile--decoration--size;
-  margin-bottom: $common-spacing-300;
   padding: $ipb-tile--decoration--padding;
   background-color: $ipb-tile--decoration--background;
   border-radius: $ipb-tile--border-radius;
@@ -62,30 +89,70 @@ $ipb-tile--description--color: $text-color !default;
 }
 
 .ipb-tile--decoration--icon {
-  color: $ipb-tile--decoration--icon--color;
-  font-size: $ipb-tile--decoration--icon--font-size;
+  &.icon {
+    color: $ipb-tile--decoration--icon--color;
+    font-size: $ipb-tile--decoration--icon--font-size;
+  }
+
+  &.class-icon {
+    width: 20px;
+  }
 }
 
 /* title */
 
 .ipb-tile--title{
-  margin-bottom: $common-spacing-300;
+  margin-top: $common-spacing-300;
   color: $ipb-tile--title--color;
   font-size: $ipb-tile--title--font-size;
   font-weight: bold;
+}
 
-  &.ipb-tile--option--inline-title{
-    display: inline-block;
-    margin-left: 8px;
+/* actions */
+
+.ipb-tile--actions {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: #6e6e6e !important;
+  outline: none !important;
+
+  button:focus {
+    outline: none;
+    color: unset;
   }
 
+  button:focus-visible {
+    outline: none;
+    color: unset;
+  }
+
+  button:active {
+    outline: none;
+    color: unset;
+    background-color: rgb(230, 230, 230);
+    box-shadow: unset;
+  }
+
+  button:active:focus {
+    outline: none;
+    color: unset;
+  }
 }
 
 /* description */
 
 .ipb-tile--description{
-  margin-bottom: $common-spacing-300;
+  margin-top: $common-spacing-300;
   color: $ipb-tile--description--color;
+}
+
+/* extra content */
+
+.ipb-tile--extra-content {
+  flex-grow: 1;
+  margin-top: $common-spacing-300;
+  position: relative;
 }
 
 /****************************/
@@ -94,7 +161,7 @@ $ipb-tile--description--color: $text-color !default;
 
 $ipb-tile--manage-brick--chart--margin-top: $common-spacing-500 !default;
 $ipb-tile--manage-brick--badge--margin-top: $common-font-size-400 !default;
-$ipb-tile--manage-brick--badge--item--padding: 0 $common-spacing-300 !default;
+$ipb-tile--manage-brick--badge--item--padding: $common-spacing-200 $common-spacing-300 !default;
 $ipb-tile--manage-brick--badge--item--border-radius: $common-border-radius-300 !default;
 $ipb-tile--manage-brick--badge--count--padding: 0 $common-spacing-300 !default;
 $ipb-tile--manage-brick--badge--count--font-size: $common-font-size-400 !default;
@@ -149,7 +216,7 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 
 /* top list */
 
-ipb-tile--manage-brick--top-list{
+.ipb-tile--manage-brick--top-list {
   margin-top: $ipb-tile--manage-brick--top-list--margin-top;
 }
 

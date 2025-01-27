@@ -45,9 +45,9 @@ abstract class PortalBrick extends AbstractBrick
 	const ENUM_OPENING_TARGET_NEW = 'new';
 
 	/** @var int DEFAULT_WIDTH */
-	const DEFAULT_WIDTH = 6;
+	const DEFAULT_WIDTH = 400;
 	/** @var int DEFAULT_HEIGHT */
-	const DEFAULT_HEIGHT = 1;
+	const DEFAULT_HEIGHT = null;
 	/** @var bool DEFAULT_MODAL */
 	const DEFAULT_MODAL = false;
 	/** @var bool DEFAULT_VISIBLE_HOME */
@@ -73,7 +73,7 @@ abstract class PortalBrick extends AbstractBrick
 	/** @var int $iWidth */
 	protected $iWidth;
 	/** @var bool width in pixel flag */
-	public bool $bIsWidthPixel = false;
+	public bool $bIsWidthPixel = true;
 	/** @var int $iHeight */
 	protected $iHeight;
 	/** @var bool $bModal */

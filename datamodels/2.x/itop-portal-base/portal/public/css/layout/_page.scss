@@ -73,6 +73,11 @@ body{
   justify-content: center;
 }
 
+.ipb-copyright {
+  text-decoration: none !important;
+  color: $common-color-secondary-800;
+}
+
 @include mobile {
 
   .ipb-page--main-wrapper {

@@ -34,6 +34,7 @@ use DOMFormatException;
 class UserProfileBrick extends PortalBrick
 {
 	// Overloaded constants
+	const DEFAULT_WIDTH = 200;
 	const DEFAULT_VISIBLE_NAVIGATION_MENU          = false;
 	const DEFAULT_VISIBLE_HOME                     = false;
 	const DEFAULT_DECORATION_CLASS_HOME            = 'glyphicon glyphicon-user';

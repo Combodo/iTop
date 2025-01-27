@@ -1,10 +1,10 @@
-{% set tileClass = 'manage' %}
+{% set name = 'manage' %}
 
 {% extends 'itop-portal-base/portal/templates/bricks/tile.html.twig' %}
 
 {% block pTileTitle %}
     {% apply spaceless %}
-        <div class="ipb-tile--title {% if isInlineTitle %}ipb-tile--option--inline-title{% endif %}">
+        <div class="ipb-tile--title">
             <span>{{ oBrick.GetTitle()|dict_s }}</span>
             <span>{{ iCount }}</span>
         </div>

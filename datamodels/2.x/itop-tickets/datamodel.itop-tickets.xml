@@ -946,7 +946,7 @@
       <bricks>
         <brick id="services" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick" _delta="define">
           <active>true</active>
-          <width>6</width>
+          <width>400px</width>
           <rank>
             <default>10</default>
           </rank>
@@ -1042,7 +1042,7 @@
           <rank>
             <default>20</default>
           </rank>
-          <width>6</width>
+          <width>400px</width>
           <title>
             <default>Brick:Portal:OngoingRequests:Title</default>
           </title>
@@ -1121,7 +1121,7 @@
           <visible>
             <home>false</home>
           </visible>
-          <width>12</width>
+          <width>400px</width>
           <title>
             <default>Brick:Portal:ClosedRequests:Title</default>
           </title>
@@ -1169,7 +1169,7 @@
             <home>false</home>
             <navigation_menu>false</navigation_menu>
           </visible>
-          <width>6</width>
+          <width>400px</width>
           <title>
             <default>Brick:Portal:ListAllRequests:Title</default>
           </title>
@@ -1235,7 +1235,7 @@
             <home>true</home>
             <navigation_menu>false</navigation_menu>
           </visible>
-          <width>6</width>
+          <width>400px</width>
           <title>
             <default>Brick:Portal:SearchInAllRequests:Title</default>
           </title>

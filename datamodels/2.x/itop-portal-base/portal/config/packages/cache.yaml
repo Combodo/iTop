@@ -11,3 +11,10 @@ framework:
 
       templates_cache_pool:
         adapter: cache.app
+
+when@dev:
+  framework:
+    cache:
+      pools:
+        templates_cache_pool:
+          default_lifetime: 1

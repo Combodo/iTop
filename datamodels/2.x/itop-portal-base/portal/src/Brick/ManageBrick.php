@@ -64,7 +64,7 @@ class ManageBrick extends PortalBrick
 	const ENUM_PAGE_TEMPLATE_PATH_CHART = 'itop-portal-base/portal/templates/bricks/manage/layout-chart.html.twig';
 
 	/** Overloaded constants */
-	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-pen-square';
+	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-tag';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-pen-square fa-2x';
 	/**
 	 * @deprecated 3.2.1
@@ -95,6 +95,8 @@ class ManageBrick extends PortalBrick
 	const DEFAULT_GROUP_LIMIT = 0;
 	/** @var bool DEFAULT_GROUP_SHOW_OTHERS */
 	const DEFAULT_GROUP_SHOW_OTHERS = true;
+	/** @var int DEFAULT_WIDTH */
+	const DEFAULT_WIDTH = 500;
 
 	/** @var array $aDisplayModes */
 	public static array $aDisplayModes = array(
@@ -156,19 +158,24 @@ class ManageBrick extends PortalBrick
 	/** @var array $aDefaultTileData */
 	private static array $aDefaultTileData = [
 		self::ENUM_TILE_MODE_BADGE => [
-			'decorationCssClass' => 'fas fa-id-card fa-2x',
+			'decorationCssClass' => 'fas fa-tags fa-2x',
+			'width'              => self::DEFAULT_WIDTH,
 		],
 		self::ENUM_TILE_MODE_TOP => [
 			'decorationCssClass' => 'fas fa-list-ol fa-2x',
+			'width' => self::DEFAULT_WIDTH,
 		],
 		self::ENUM_TILE_MODE_PIE => [
 			'decorationCssClass' => 'fas fa-chart-pie fa-2x',
+			'width' => 600,
 		],
 		self::ENUM_TILE_MODE_TEXT => [
-			'decorationCssClass' => 'fas fa-pen-square fa-2x',
+			'decorationCssClass' => 'fas fa-tag fa-2x',
+			'width'              => self::DEFAULT_WIDTH,
 		],
 		self::ENUM_TILE_MODE_BAR => [
 			'decorationCssClass' => 'fas fa-chart-bar fa-2x',
+			'width' => 600,
 		],
 	];
 
@@ -918,6 +925,7 @@ class ManageBrick extends PortalBrick
 									$this->sDecorationClassHome = static::$aDefaultTileData[$this->GetTileMode()]['decorationCssClass'];
 									$this->SetDecorationClassNavigationMenu(static::$aDefaultTileData[$this->GetTileMode()]['decorationCssClass']);
 									$this->SetDecorationClassHome(static::$aDefaultTileData[$this->GetTileMode()]['decorationCssClass']);
+									$this->SetWidth(static::$aDefaultTileData[$this->GetTileMode()]['width']);
 								}
 								break;
 						}

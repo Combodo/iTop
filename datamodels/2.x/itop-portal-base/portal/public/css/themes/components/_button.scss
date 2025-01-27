@@ -13,12 +13,21 @@ $btn--active--background-color: $common-color-blue-grey-900 !default;
 }
 
 .btn-group .btn:first-child{
-  border-top-left-radius: $btn--border-radius!important;
-  border-bottom-left-radius: $btn--border-radius!important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
 }
 
 .btn-group .btn:last-child{
-  border-top-right-radius: $btn--border-radius!important;
-  border-bottom-right-radius: $btn--border-radius!important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+// todo
+.btn.btn-secondary:hover {
+  color: unset;
+}
+
+.btn.btn-secondary:active {
+  color: unset;
 }
 
