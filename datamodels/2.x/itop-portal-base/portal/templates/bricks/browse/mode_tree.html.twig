@@ -199,9 +199,18 @@
                 var liElem = $('<li></li>').addClass('list-group-item');
                 var spanElem = $('<span></span>').addClass('tree-item-wrapper').attr('data-item-id', item.id).attr('data-level-alias', item.level_alias);
                 spanElem.attr('data-tree-additional-search', item['filter_data']['values']);
+                let iconElem = $('<div>').addClass('tree-item-image');
+                if( (item.image !== undefined) && (item.image !== '') && (item.image !== null) )
+                {
+                    iconElem.append( $('<img />').attr('src', item.image));
+                }
+                else if ((item.name !== undefined) && (item.name !== '')){
+                    iconElem.append('<span>'+item.name.charAt(0)+'</span>');
+                }
                 var nameElem = $('<a></a>').addClass('tree-item').text(item.name);
                 // Building node
                 $('ul[data-level-id="'+nodeId+'"]').append(liElem);
+                spanElem.append(iconElem);
                 spanElem.append(nameElem);
                 spanElem.append('<div class="tree-item-filter-data">' + item['filter_data']['values_and_codes'] + '</div>');
                 liElem.append(spanElem);
@@ -215,25 +224,14 @@
                     }
                 });
 
-                // Building tooltip for the node
-                // N°4662 - Surround tooltip with div to ensure text retrival
-                if ((item.tooltip !== undefined) && ($('<div>'+item.tooltip+'</div>').text() !== ''))
-                {
-                    nameElem.attr('data-tooltip-content', item.tooltip).attr('data-tooltip-html-enabled', true);
-                    CombodoTooltip.InitTooltipFromMarkup(nameElem);
-                }
-                // Building description for the node
-                if ((item.description !== undefined) && (item.description !== ''))
-                {
-                    spanElem.append($('<span class="list-group-item-description">'+item.description+'</span>'));
-                }
+
 
 				// Building actions for that node
 				switch(levelPrimaryAction.type)
 				{
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}':
                         spanElem.addClass('tree-toggle');
-                        nameElem.html('<span class="glyphicon '+sNodeCollapsedClass+'" aria-hidden="true"></span><span class="list-group-item-text">'+nameElem.text()+'</span>');
+                        nameElem.html('<span class="glyphicon '+sNodeCollapsedClass+'" aria-hidden="true"></span><span class="list-group-item-text">'+item.name+'</span>');
                         break;
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
 						url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
@@ -255,6 +253,19 @@
 						//console.log('Action "'+levelPrimaryAction.type+'" not implemented for primary action');
 						break;
 				}
+
+                // Building tooltip for the node
+                // N°4662 - Surround tooltip with div to ensure text retrival
+                if ((item.tooltip !== undefined) && ($('<div>'+item.tooltip+'</div>').text() !== ''))
+                {
+                    nameElem.attr('data-tooltip-content', item.tooltip).attr('data-tooltip-html-enabled', true);
+                    CombodoTooltip.InitTooltipFromMarkup(nameElem);
+                }
+                // Building description for the node
+                if ((item.description !== undefined) && (item.description !== ''))
+                {
+                    nameElem.append($('<span class="list-group-item-description">'+item.description+'</span>'));
+                }
 				
 				if(levelActionsKeys.length > 1)
 				{

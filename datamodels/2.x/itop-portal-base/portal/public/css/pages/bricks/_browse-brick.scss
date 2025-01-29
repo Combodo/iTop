@@ -49,6 +49,45 @@ $ipb-browse-brick-panel--dataTables_wrapper--row--padding: $common-size-0 !defau
 $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-x: $common-size-200 !default;
 $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-y: $common-size-0 !default;
 
+
+$ipb-browse-brick--tree-item--color: $common-color-grey-900 !default;
+$ipb-browse-brick--tree-item--hyperlink--color: $common-hyperlink-color !default;
+
+
+$ipb-browse-brick--tree-item-filter-data--color: $common-color-grey-500 !default;
+$ipb-browse-brick--tree-item-filter-data--padding-top: $common-spacing-300 !default;
+
+$ipb-browse-brick--tree-item--description--margin-top: $common-spacing-200 !default;
+$ipb-browse-brick--tree-item--description--color: $common-color-grey-800 !default;
+
+$ipb-browse-brick--tree-item--wrapper--padding-top: $common-spacing-500 !default;
+$ipb-browse-brick--tree-item--wrapper--color: inherit !default;
+
+$ipb-browse-brick--tree-item-image--height: $common-size-350 !default;
+$ipb-browse-brick--tree-item-image--width: $common-size-350 !default;
+$ipb-browse-brick--tree-item-image--padding: $common-spacing-0 !default;
+$ipb-browse-brick--tree-item-image--margin-bottom: $common-spacing-0 !default;
+$ipb-browse-brick--tree-item-image--margin-right: $common-spacing-400 !default;
+$ipb-browse-brick--tree-item-image--border-radius: $common-border-radius-500 !default;
+
+$ipb-browse-brick--tree-item-image--image--height: $common-size-300 !default;
+
+$ipb-browse-brick--tree-item-image--has-glyphicon--margin-right: $common-spacing-300 !default;
+
+$ipb-browse-brick--tree-item--has-glyphicon--description--margin-left: 19px !default;
+
+
+$ipb-browse-brick--list-group-item--padding-y: $common-spacing-400 !default;
+$ipb-browse-brick--list-group-item--padding-x: $common-spacing-500 !default;
+$ipb-browse-brick--list-group-item--margin-bottom: -1px !default;
+$ipb-browse-brick--list-group-item--background-color: $common-color-white-100 !default;
+$ipb-browse-brick--list-group-item--border: 1px solid $common-color-grey-400 !default;
+
+$ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
+
+
+
+
 // Mosaic view 
 
 #brick_content_mosaic{
@@ -211,4 +250,111 @@ $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-y: $common-size-0
       padding: $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-y $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-x;
     }
   }
+}
+
+// Tree view
+
+.list-group-item .list-group-item-text, .tree-item {
+  color: $ipb-browse-brick--tree-item--color;
+  
+  @extend %common-font-ral-bol-150;
+  & a {
+    @extend %common-font-size-150;
+    color: $ipb-browse-brick--tree-item--hyperlink--color;
+  }
+}
+
+.row, .form_field_compact .form-group.form_group_small {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.list-group.tree .list-group-item .list-group-item-description {
+  display: block;
+  margin-top: $ipb-browse-brick--tree-item--description--margin-top;
+  color: $ipb-browse-brick--tree-item--description--color;
+
+  @extend %common-font-ral-nor-100;
+}
+
+.list-group-item .tree-item-wrapper .tree-item-filter-data {
+  padding-top: $ipb-browse-brick--tree-item-filter-data--padding-top;
+  color: $ipb-browse-brick--tree-item-filter-data--color;
+}
+
+#brick_content_tree .list-group-item>.tree-item-wrapper {
+  display: flex;
+  padding-top: $ipb-browse-brick--tree-item--wrapper--padding-top;
+  color: $ipb-browse-brick--tree-item--wrapper--color;
+  text-decoration: inherit;
+  cursor: pointer
+}
+
+.list-group-item {
+  display: block;
+  position: relative;
+  padding: $ipb-browse-brick--list-group-item--padding-y $ipb-browse-brick--list-group-item--padding-x;
+  margin-bottom: $ipb-browse-brick--list-group-item--margin-bottom;
+  background-color: $ipb-browse-brick--list-group-item--background-color;
+  border: $ipb-browse-brick--list-group-item--border;
+  border-bottom: none;
+
+
+  @for $i from 1 through length($ipb-browse-brick--mosaic-item--highlight-color) {
+    &:nth-child(#{length($ipb-browse-brick--mosaic-item--highlight-color)}n + #{$i - 1}) > .tree-item-wrapper .tree-item-image {
+      background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), .1);
+      color: nth($ipb-browse-brick--mosaic-item--highlight-color, $i);
+    }
+  }
+}
+
+
+.tree-item-wrapper {
+  display: flex;
+  
+  .tree-item-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+
+    height: $ipb-browse-brick--tree-item-image--height;
+    width: $ipb-browse-brick--tree-item-image--width;
+    padding: $ipb-browse-brick--tree-item-image--padding;
+    margin-right: $ipb-browse-brick--tree-item-image--margin-right;
+    margin-bottom: $ipb-browse-brick--tree-item-image--margin-bottom;
+    border-radius: $ipb-browse-brick--tree-item-image--border-radius;
+    text-transform: capitalize;
+    @extend %common-font-ral-bol-250;
+
+    img {
+      height: $ipb-browse-brick--tree-item-image--image--height;
+    }
+  }
+}
+
+.tree-item-image:has(~ .tree-item > .glyphicon) {
+  margin-right: $ipb-browse-brick--tree-item-image--has-glyphicon--margin-right;
+}
+
+.tree-item:has(.glyphicon) .list-group-item-description {
+  margin-left: $ipb-browse-brick--tree-item--has-glyphicon--description--margin-left;
+}
+
+.list-group .list-group-item:hover {
+  background-color: transparent;
+}
+
+.list-group{
+  margin-bottom: $ipb-browse-brick--list-group-margin-bottom;
+}
+#brick_content_tree .list-group-item > .tree-item-wrapper {
+  padding-bottom: 16px;
+}
+
+.list-group-item {
+  padding: 0 16px;
+}
+.list-group.tree {
+  margin: 0;
 }

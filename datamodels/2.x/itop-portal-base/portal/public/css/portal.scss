@@ -119,14 +119,7 @@ footer{
 		padding: 0px; /* Overriding BS */
 		height: 100%;
 	}
-
-	#sidebar .user_card .user_infos{
-		font-size: 1em;
-		color: $white;
-	}
-	#sidebar .user_card .user_infos .dropdown-toggle{
-		color: $white;
-	}
+  
 	#sidebar .user_card .user_options.dropdown-menu{
 		width: 92%;
 		left: 4%;
@@ -547,7 +540,7 @@ footer{
 /********************/
 
 #main-header{
-	text-align: center;
+	//text-align: center;
 }
 #main-header-title{
 	margin-bottom: 15px;
@@ -711,7 +704,6 @@ footer{
 .list-group.tree .list-group-item .list-group-item-description{
 	display: block;
 	margin-top: 3px;
-	font-size: 0.8em;
 }
 
 /* Secondary actions */
