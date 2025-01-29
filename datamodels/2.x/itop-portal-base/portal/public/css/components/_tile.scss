@@ -145,6 +145,8 @@ $ipb-tile--description--color: $text-color !default;
 .ipb-tile--description{
   margin-top: $common-spacing-300;
   color: $ipb-tile--description--color;
+  
+  @extend %common-font-ral-nor-150;
 }
 
 /* extra content */
