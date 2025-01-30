@@ -216,7 +216,6 @@ function SetUserPreference(sPreferenceCode, sPrefValue, bPersistent) {
 	if (bPersistent && (sPrefValue != sPreviousValue)) {
 		return $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 			{operation: 'set_pref', code: sPreferenceCode, value: sPrefValue}, function (data) {
-			//do nothing
 			}).done(function() {
 				oUserPreferences[sPreferenceCode] = sPrefValue;
 			}); // Make it persistent
