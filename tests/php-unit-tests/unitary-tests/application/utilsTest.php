@@ -21,6 +21,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Application;
 
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use MetaModel;
 use ormDocument;
@@ -29,8 +30,10 @@ use utils;
 /**
  * @covers utils
  */
-class utilsTest extends ItopTestCase
+class utilsTest extends ItopDataTestCase
 {
+    const USE_TRANSACTION = false;
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -47,6 +50,7 @@ class utilsTest extends ItopTestCase
 	public function testEndsWith()
 	{
 		$this->assertFalse(utils::EndsWith('a', 'bbbb'));
+        $this->assertTrue(utils::EndsWith('bbba', 'a'));
 	}
 
 	/**
@@ -681,7 +685,7 @@ class utilsTest extends ItopTestCase
 			],
 			'1 Object' => [
 				<<<HTML
-<p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="Person" data-object-key="12345" data-object-id="#Test Person" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=12345">#Test Person</a>After link</p><p>End</p>
+<p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="Person" data-object-key="12345" data-object-id="#Test Person" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=12345">@Test Person</a>After link</p><p>End</p>
 HTML,
 				[
 					'Person' => ['12345'],
@@ -689,26 +693,25 @@ HTML,
 			],
             'Should not match 1 Object if the mention prefix is missing' => [
 				<<<HTML
-<div class="ibo-activity-entry--main-information-content"><p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="Person" data-object-key="12345" data-object-id="#Test Person 1" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=12345">#Test Ticket</a> After link</p><p>And <a data-role="object-mention" data-object-class="Person" data-object-key="987654" data-object-id="#Test Person 2" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=987654">#Test Ticket</a></p><p>End</p></div>
+<div class="ibo-activity-entry--main-information-content"><p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="Person" data-object-key="12345" data-object-id="#Test Person 1" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=12345">#Test Ticket</a> After link</p></div>
 HTML,
-				[
-                [],
-            ],
+				[],
 			],
             'Should return 2 Objects' => [
 				<<<HTML
-<div class="ibo-activity-entry--main-information-content"><div class="ibo-activity-entry--main-information-content"><p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="Person" data-object-key="12345" data-object-id="#Test Person" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=UserRequest&id=12345">#Test Person</a> After link</p><p>And <a data-role="object-mention" data-object-class="Person" data-object-id="@Agatha Christie" data-object-key="3" data-object-id="@Agatha Christie" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=3">@Agatha Christie</a></p><p>End</p></div></div>
+<div class="ibo-activity-entry--main-information-content"><div class="ibo-activity-entry--main-information-content"><p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="Person" data-object-key="12345" data-object-id="#Test Person" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=UserRequest&id=12345">@Test Person</a> After link</p><p>And <a data-role="object-mention" data-object-class="Person" data-object-id="@Agatha Christie" data-object-key="3" data-object-id="@Agatha Christie" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=3">@Agatha Christie</a></p><p>End</p></div></div>
 HTML,
 				[
-					'Person' => ['12345', '987654'],
+					'Person' => ['12345', '3'],
 				],
 			],
 			'Should process objects of different classes' => [
-				"Begining
-				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=Team&id=12345&foo=bar\">😊#R-012345</a> After link
-				And <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=Person&id=3&foo=bar\">@Claude Monet</a>
-				End",
-				utils::ENUM_TEXT_FORMAT_HTML,
+                <<<HTML
+				Begining
+				Before link <a data-object-class="Team" data-object-key="12345" href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=Team&id=12345&foo=bar\">😊#R-012345</a> After link
+				And <a data-object-class="Person" data-object-key="3" href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=Person&id=3&foo=bar\">@Claude Monet</a>
+				End
+HTML,
 				[
 					'Team' => ['12345'],
 					'Person' => ['3'],
