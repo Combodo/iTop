@@ -3109,24 +3109,29 @@ TXT
 		$aMentionMatches = [];
 		$sText = html_entity_decode($sText);
 
-		preg_match_all('/<a\s*([^>]*)data-object-class="([^"]*)"\s.*data-object-key="([^"]*)"/Ui', $sText, $aMentionMatches);
+        $aMentionAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
+        preg_match_all('/<a\s*([^>]*)data-object-class="([^"]*)"\s.*data-object-key="([^"]*)"/Ui', $sText, $aMentionMatches);
 		foreach ($aMentionMatches[0] as $iMatchIdx => $sCompleteMatch) {
 			$sMatchedClass = $aMentionMatches[2][$iMatchIdx];
 			$sMatchedId = $aMentionMatches[3][$iMatchIdx];
 			$sMatchedName = $aMentionMatches[1][$iMatchIdx];
 
-			//tests if the name starts with @
-			if(str_starts_with($sMatchedName,'@')) {
-
-				// Prepare array for matched class if not already present
-				if (!array_key_exists($sMatchedClass, $aMentionedObjects)) {
-					$aMentionedObjects[$sMatchedClass] = array();
-				}
-				// Add matched ID if not already there
-				if (!in_array($sMatchedId, $aMentionedObjects[$sMatchedClass])) {
-					$aMentionedObjects[$sMatchedClass][] = $sMatchedId;
-				}
-			}
+            $sMentionPrefix = array_search($sMatchedClass, $aMentionAllowedClasses);
+            if ($sMentionPrefix === false) {
+                continue;
+            }
+			//tests if the name starts with $sMentionPrefix (@)
+			if (str_starts_with($sMatchedName,$sMentionPrefix) === false) {
+                continue;
+            }
+            // Prepare array for matched class if not already present
+            if (!array_key_exists($sMatchedClass, $aMentionedObjects)) {
+                $aMentionedObjects[$sMatchedClass] = array();
+            }
+            // Add matched ID if not already there
+            if (!in_array($sMatchedId, $aMentionedObjects[$sMatchedClass])) {
+                $aMentionedObjects[$sMatchedClass][] = $sMatchedId;
+            }
 		}
 
 		return $aMentionedObjects;

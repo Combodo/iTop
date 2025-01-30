@@ -22,6 +22,7 @@
 namespace Combodo\iTop\Test\UnitTest\Application;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use MetaModel;
 use ormDocument;
 use utils;
 
@@ -653,6 +654,7 @@ class utilsTest extends ItopTestCase
 	 */
 	public function testGetMentionedObjectsFromText($sInput, $aExceptedMentionedObjects)
 	{
+        MetaModel::GetConfig()->Set('mentions.allowed_classes', ['@' => 'Person','😊#' => 'Team']);
 		// Emulate the "Case provider mechanism" (reason: the data provider requires utils constants not available before the application startup)
 		echo "testGetMentionedObjectsFromText: input = $sInput\n";
 		$aTestedMentionedObjects = utils::GetMentionedObjectsFromText($sInput);
@@ -677,28 +679,38 @@ class utilsTest extends ItopTestCase
 				End",
 				[],
 			],
-			'1 UserRequest' => [
+			'1 Object' => [
 				<<<HTML
-<p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="UserRequest" data-object-key="12345" data-object-id="#Test Ticket" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=UserRequest&id=12345">#Test Ticket</a>After link</p><p>End</p>
+<p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="Person" data-object-key="12345" data-object-id="#Test Person" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=12345">#Test Person</a>After link</p><p>End</p>
 HTML,
 				[
-					'UserRequest' => ['12345'],
+					'Person' => ['12345'],
 				],
 			],
-			'2 UserRequests' => [
+            'Should not match 1 Object if the mention prefix is missing' => [
 				<<<HTML
-<div class="ibo-activity-entry--main-information-content"><p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="UserRequest" data-object-key="12345" data-object-id="#Test Ticket 1" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=UserRequest&id=12345">#Test Ticket</a> After link</p><p>And <a data-role="object-mention" data-object-class="UserRequest" data-object-key="987654" data-object-id="#Test Ticket 2" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=UserRequest&id=987654">#Test Ticket</a></p><p>End</p></div>
+<div class="ibo-activity-entry--main-information-content"><p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="Person" data-object-key="12345" data-object-id="#Test Person 1" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=12345">#Test Ticket</a> After link</p><p>And <a data-role="object-mention" data-object-class="Person" data-object-key="987654" data-object-id="#Test Person 2" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=987654">#Test Ticket</a></p><p>End</p></div>
 HTML,
 				[
-					'UserRequest' => ['12345', '987654'],
+                [],
+            ],
+			],
+            'Should return 2 Objects' => [
+				<<<HTML
+<div class="ibo-activity-entry--main-information-content"><div class="ibo-activity-entry--main-information-content"><p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="Person" data-object-key="12345" data-object-id="#Test Person" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=UserRequest&id=12345">#Test Person</a> After link</p><p>And <a data-role="object-mention" data-object-class="Person" data-object-id="@Agatha Christie" data-object-key="3" data-object-id="@Agatha Christie" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=3">@Agatha Christie</a></p><p>End</p></div></div>
+HTML,
+				[
+					'Person' => ['12345', '987654'],
 				],
 			],
-			'1 UserRequest, 1 Person' => [
-				<<<HTML
-<div class="ibo-activity-entry--main-information-content"><div class="ibo-activity-entry--main-information-content"><p>Beginning</p><p>Before link <a data-role="object-mention" data-object-class="UserRequest" data-object-key="12345" data-object-id="#Test Ticket" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=UserRequest&id=12345">#Test Ticket</a> After link</p><p>And <a data-role="object-mention" data-object-class="Person" data-object-id="@Agatha Christie" data-object-key="3" data-object-id="@Agatha Christie" href="$sAbsUrlAppRoot/pages/UI.php?operation=details&class=Person&id=3">@Agatha Christie</a></p><p>End</p></div></div>
-HTML,
+			'Should process objects of different classes' => [
+				"Begining
+				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=Team&id=12345&foo=bar\">😊#R-012345</a> After link
+				And <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=Person&id=3&foo=bar\">@Claude Monet</a>
+				End",
+				utils::ENUM_TEXT_FORMAT_HTML,
 				[
-					'UserRequest' => ['12345'],
+					'Team' => ['12345'],
 					'Person' => ['3'],
 				],
 			],
