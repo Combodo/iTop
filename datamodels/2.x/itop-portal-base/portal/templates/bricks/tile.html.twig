@@ -20,7 +20,7 @@ CSS classes:
 
 Options:
     - classes: string, optional
-    - isInlineTitle: boolean, default false
+    - hasInlineTitle: boolean, default false
 #}
 
 {# handle brick var name compatibility #}
@@ -35,6 +35,11 @@ Options:
     {% set name = 'name-undefined' %}
 {% endif %}
 
+{# element name #}
+{% if html_element is not defined %}
+    {% set html_element = 'ipb-tile' %}
+{% endif %}
+
 {# tile attributes #}
 {% if attr is not defined %}
     {% set attr = '' %}
@@ -42,10 +47,9 @@ Options:
 {% set urlHash = '' %}
 
 {# inline title option #}
-{% if isInlineTitle is not defined %}
-    {% set isInlineTitle = false %}
+{% if hasInlineTitle is not defined %}
+    {% set hasInlineTitle = false %}
 {% endif %}
-
 
 {# retrieve brick route data #}
 {% if app['combodo.portal.instance.routes'] is defined %}
@@ -61,7 +65,7 @@ Options:
     {# navigation attributes #}
     {% if routeData['navigation_menu_attr'] is defined %}
         {% for key, value in routeData['navigation_menu_attr'] %}
-            {% set attr = attr ~ ' %s=%s'|format(key, value) %}
+            {% set attr = attr ~ ' %s="%s"'|format(key, value) %}
         {% endfor %}
     {% endif %}
 
@@ -70,22 +74,22 @@ Options:
 {# brick route #}
 {% if oBrick.GetRouteName %}
     {% set url = app.url_generator.generate(oBrick.GetRouteName, {sBrickId: oBrick.GetId}) %}
-    {% set attr = attr ~ ' data-role=%s data-tile-navigation-url=%s'|format('navigation-trigger', url ~ urlHash) %}
+    {% set attr = attr ~ ' data-role="%s" data-tile-navigation-url="%s"'|format('navigation-trigger', url ~ urlHash) %}
 {% endif %}
 
 {# modal attributes #}
 {% if oBrick.GetModal %}
-    {% set attr = attr ~ ' data-toggle=%s data-target=%s'|format('modal', '#modal-for-all') %}
+    {% set attr = attr ~ ' data-toggle="%s" data-target="%s"'|format('modal', '#modal-for-all') %}
 {% endif %}
 
 {% block pTileWrapper %}
 
     {# wrapper #}
-    <div
+    <{{ html_element }}
             id="{{ id }}"
         data-brick-id="{{ oBrick.GetId }}"
             class="ipb-tile ipb-tile--{{ name }} {% if classes is defined %}{{ classes }}{% endif %}"
-        {{ attr }}
+    {{ attr|raw }}
             style="width: {% if oBrick.bIsWidthPixel %}{{ oBrick.GetWidth }}px{% else %}{{ oBrick.GetWidth * 90 / 12 }}%{% endif %};"
     >
 
@@ -93,22 +97,15 @@ Options:
         {% block pTileBody %}
             <div class="ipb-tile--body">
 
-                <div class="ipb-tile--header {% if isInlineTitle %}ipb-tile--header--inline{% endif %}">
+                <div class="ipb-tile--header {% if hasInlineTitle %}ipb-tile--header--inline{% endif %}">
 
                     {# decoration #}
                     {% block pTileDecoration %}
-                        <div style="display: flex;">
-                            {% if oBrick.GetDecorationClassHome %}
-                                <div class="ipb-tile--decoration">
-                                    <span class="ipb-tile--decoration--icon icon {{ oBrick.GetDecorationClassHome }}"></span>
-                                </div>
-                            {% endif %}
-                            {% if sIconURL is defined %}
-                                <div class="ipb-tile--decoration ipb-tile--decoration--class" style="margin-left: 5px;background-color: transparent;" data-role="image-background-dominant">
-                                    <img src="{{ sIconURL }}" class="ipb-tile--decoration--icon class-icon" alt="Class Icon">
-                                </div>
-                            {% endif %}
-                        </div>
+                        {% if oBrick.GetDecorationClassHome %}
+                            <div class="ipb-tile--decoration">
+                                <span class="ipb-tile--decoration--icon icon {{ oBrick.GetDecorationClassHome }}"></span>
+                            </div>
+                        {% endif %}
                     {% endblock %}
 
                     {# title #}
@@ -144,7 +141,7 @@ Options:
         </div>
         {% endblock %}
 
-    </div>
+    </{{ html_element }}>
 
 {% endblock %}
 
@@ -152,16 +149,9 @@ Options:
 {% endblock %}
 
 <script>
-
-    {% block pTileJsComponent %}
-    new IpbTile('{{ id }}', '{{ name }}');
-    {% endblock %}
-
-    Component.PageReady(function () {
+    BaseElement.PageReady(function () {
         {% block pTileLiveScriptHelpers %}
         {% endblock %}
     });
-
-
 </script>
 

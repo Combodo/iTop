@@ -65,7 +65,7 @@ class ManageBrick extends PortalBrick
 
 	/** Overloaded constants */
 	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-tag';
-	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-pen-square fa-2x';
+	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-tag fa-2x';
 	/**
 	 * @deprecated 3.2.1
 	 */

@@ -12,25 +12,23 @@
 {% block pPageBodyClass %}{{ parent() }} {% if oBrick is defined and oBrick is not null %}page_brick_of_id_{{ oBrick.GetId() }}{% endif %}{% endblock %}
 
 {% block pMainHeader %}
-    {% apply spaceless %}
-        <div class="ipb-page--main-header">
-            <div class="ipb-page--main-header--information">
-                <div class="ipb-page--main-header--information--title">
-                    <span>{% block pMainHeaderTitle %}{% endblock %}</span>
-                    <span>{% block pMainHeaderTitleAdditionalPart %}{% endblock %}</span>
-                </div>
-                {% block pMainHeaderSubtitle %}
-                    {% if sBrickSubtitle is defined and sBrickSubtitle is not null %}
-                        <div class="ipb-page--main-header--information--subtitle">{{ sBrickSubtitle }}</div>
-                    {% endif %}
-                {% endblock %}
+    <div class="ipb-page--main-header">
+        <div class="ipb-page--main-header--information">
+            <div class="ipb-page--main-header--information--title">
+                <span>{% block pMainHeaderTitle %}{% endblock %}</span>
+                <span>{% block pMainHeaderTitleAdditionalPart %}{% endblock %}</span>
             </div>
-            <div class="ipb-page--main-header--actions">
-                {% block pMainHeaderActions %}
-                {% endblock %}
-            </div>
+            {% block pMainHeaderSubtitle %}
+                {% if sBrickSubtitle is defined and sBrickSubtitle is not null %}
+                    <div class="ipb-page--main-header--information--subtitle">{{ sBrickSubtitle }}</div>
+                {% endif %}
+            {% endblock %}
         </div>
-        {% endapply %}
+        <div class="ipb-page--main-header--actions">
+            {% block pMainHeaderActions %}
+            {% endblock %}
+        </div>
+    </div>
 {% endblock %}
 
 {% block pMainContent %}

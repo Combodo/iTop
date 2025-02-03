@@ -102,6 +102,8 @@ $ipb-tile--description--color: $text-color !default;
 /* title */
 
 .ipb-tile--title{
+  display: flex;
+  align-items: center;
   margin-top: $common-spacing-300;
   color: $ipb-tile--title--color;
   font-size: $ipb-tile--title--font-size;
@@ -164,10 +166,12 @@ $ipb-tile--description--color: $text-color !default;
 $ipb-tile--manage-brick--chart--margin-top: $common-spacing-500 !default;
 $ipb-tile--manage-brick--badge--margin-top: $common-font-size-400 !default;
 $ipb-tile--manage-brick--badge--item--padding: $common-spacing-200 $common-spacing-300 !default;
+$ipb-tile--manage-brick--badge--item--margin-right: $common-spacing-400 !default;
+$ipb-tile--manage-brick--badge--item--margin-bottom: $common-spacing-300 !default;
 $ipb-tile--manage-brick--badge--item--border-radius: $common-border-radius-300 !default;
 $ipb-tile--manage-brick--badge--count--padding: 0 $common-spacing-300 !default;
-$ipb-tile--manage-brick--badge--count--font-size: $common-font-size-400 !default;
-$ipb-tile--manage-brick--badge--label--font-size: $common-font-size-200 !default;
+$ipb-tile--manage-brick--badge--count--font-size: $common-font-size-300 !default;
+$ipb-tile--manage-brick--badge--label--font-size: $common-font-size-100 !default;
 $ipb-tile--manage-brick--badge--hover--item--background: common-adjust-alpha($text-color, .1) !default;
 $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 
@@ -177,6 +181,11 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 
   > span:first-child {
     @include ipb-following-dot;
+  }
+
+  > img {
+    width: 20px;
+    margin-left: 5px;
   }
 
 }
@@ -191,13 +200,15 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 
 .ipb-tile--manage-brick--badge{
   display: flex;
+  flex-wrap: wrap;
   margin-top: $ipb-tile--manage-brick--badge--margin-top;
 }
 
 .ipb-tile--manage-brick--badge--item{
   display: flex;
   align-items: center;
-  margin-right: $ipb-tile--margin;
+  margin-right: $ipb-tile--manage-brick--badge--item--margin-right;
+  margin-bottom: $ipb-tile--manage-brick--badge--item--margin-bottom;
   padding: $ipb-tile--manage-brick--badge--item--padding;
   border-radius: $ipb-tile--manage-brick--badge--item--border-radius;
   transition: background-color 1s ease;

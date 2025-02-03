@@ -17,40 +17,28 @@
  */
 
 /**
- * Component to manipulate a tile.
+ * Tile element.
  *
  * @since 3.3.0
  */
-class IpbTile extends Component {
+class IpbTileElement extends BaseElement {
 
     static {
-        Component.PageReady(() => {
-            ComponentToolkit.InstallNavigationTriggerComponents();
+        BaseElement.PageReady(() => {
+            customElements.define("ipb-tile", IpbTileElement);
         });
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param sId HTMLElement id
-     * @param sName tile name
-     */
-    constructor(sId, sName) {
-        super(sId, sName, (eComponent) => {
-            ComponentToolkit.InstallBackgroundDominantComponents(eComponent);
-        });
-
     }
 
     SetTitle(sText) {
-        this.GetComponent().querySelector('.ipb-tile--title').textContent = sText;
+        this.querySelector('.ipb-tile--title').textContent = sText;
     }
 
     SetDecorationClass(sClassName) {
-        this.GetComponent().querySelector('.ipb-tile--decoration').className = `ipb-tile--decoration ${sClassName}`;
+        this.querySelector('.ipb-tile--decoration').className = `ipb-tile--decoration ${sClassName}`;
     }
 
     SetIconClass(sClassName) {
-        this.GetComponent().querySelector('.ipb-tile--decoration').innerHTML = `<span class="ipb-tile--decoration--icon icon ${sClassName}"></span>`;
+        this.querySelector('.ipb-tile--decoration').innerHTML = `<span class="ipb-tile--decoration--icon icon ${sClassName}"></span>`;
     }
 }
+
