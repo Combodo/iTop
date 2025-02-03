@@ -198,16 +198,23 @@ $ipb-navigation-menu--is-expanded--navigation-menu--user-card--icon--margin-righ
     text-decoration: none;
   }
   .ipb-navigation-menu--user-card--photo{
+    min-width: 36px;
+    min-height: 36px;
     width: 36px;
     height: 36px;
     background-size: 100%;
     background-position: center center;
+    background-repeat: no-repeat;
     background-color: #585653;
     border-radius: 100%;
   }
   .ipb-navigation-menu--user-card--infos, .ipb-navigation-menu--user-card--icon {
-    font-size: 2rem;
+    @extend %common-font-ral-nor-150;
     color: white;
     display: none;
   }
+}
+
+#sidebar .dropup {
+  width: 100%;
 }
