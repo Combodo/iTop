@@ -3120,7 +3120,7 @@ TXT
             if ($sMentionPrefix === false) {
                 continue;
             }
-			//tests if the name starts with $sMentionPrefix (@)
+			//tests if the name starts with $sMentionPrefix (e.g. '@' for 'Contact' class)
 			if (str_starts_with($sMatchedName,$sMentionPrefix) === false) {
                 continue;
             }
