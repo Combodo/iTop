@@ -7,8 +7,6 @@
         <span>{{ oBrick.GetTitle()|dict_s }}</span>
         <span>{{ iCount }}</span>
         {% if sIconURL is defined %}
-            <span style="border-radius: 50%;width: 9px;height: 9px;margin-left: 8px;" data-role="image-dominant-color" data-dominant-image-id="img{{ id }}" data-dominant-transparency="1">
-            </span>
             <img id="img{{ id }}" src="{{ sIconURL }}" class="ipb-tile--decoration--icon class-icon" alt="Class Icon">
         {% endif %}
     </div>
