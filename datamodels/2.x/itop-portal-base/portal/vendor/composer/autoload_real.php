@@ -29,6 +29,7 @@ class ComposerAutoloaderInitd751713988987e9331980363e24189ce
         require __DIR__ . '/autoload_static.php';
         call_user_func(\Composer\Autoload\ComposerStaticInitd751713988987e9331980363e24189ce::getInitializer($loader));
 
+        $loader->setClassMapAuthoritative(true);
         $loader->register(true);
 
         return $loader;

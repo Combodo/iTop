@@ -9,16 +9,11 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
     public static $prefixLengthsPsr4 = array (
         'C' => 
         array (
-            'Combodo\\iTop\\Portal\\Tests\\' => 26,
             'Combodo\\iTop\\Portal\\' => 20,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Combodo\\iTop\\Portal\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/tests',
-        ),
         'Combodo\\iTop\\Portal\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
