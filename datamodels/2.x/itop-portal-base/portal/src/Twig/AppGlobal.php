@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Portal\Twig;
 
+use appUserPreferences;
 use Combodo\iTop\Portal\EventListener\UserProvider;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -56,6 +57,7 @@ class AppGlobal extends AbstractExtension implements GlobalsInterface
 	{
 		$data = array();
 		$data['allowed_portals'] = $this->userProvider->getAllowedPortals();
+		$data['user_preferences'] = json_decode(appUserPreferences::GetAsJSON(), true);
 
 		return $data;
 	}

@@ -1,4 +1,4 @@
-<nav class="navbar-default hidden-xs ipb-navigation-menu ipb-is-expanded" id="sidebar" role="navigation" data-role="ipb-navigation-menu">
+<nav is="ipb-navigation-menu" class="navbar-default hidden-xs ipb-navigation-menu {% if user_preferences['portal.navigation_menu.expanded'] == 'expanded' %}ipb-is-expanded{% endif %}" id="sidebar" role="navigation" data-role="ipb-navigation-menu">
     <div class="ipb-navigation-menu--top-part">
         {% if app['combodo.portal.instance.conf'].properties.logo is not null %}
             <div class="ipb-navigation-menu--top-part--logo logo">
