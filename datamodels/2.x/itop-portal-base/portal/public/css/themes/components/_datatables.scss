@@ -8,6 +8,7 @@ $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc: "\f0d7" !
 
   thead tr th {
     cursor: pointer;
+    white-space: nowrap;
 
     &.sorting::after {
       position: relative;
