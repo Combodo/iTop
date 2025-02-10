@@ -1,0 +1,85 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ipb-modal--max-height: 90vh !default;
+$ipb-modal--max-width: 90vw !default;
+
+$ipb-modal--extra-small--relative-height: 20vh !default;
+$ipb-modal--extra-small--absolute-height: 150px !default;
+$ipb-modal--extra-small--height: calc(min(#{$ipb-modal--extra-small--relative-height}, #{$ipb-modal--extra-small--absolute-height})) !default;
+$ipb-modal--extra-small--relative-width: 20vw !default;
+$ipb-modal--extra-small--absolute-width: 200px !default;
+$ipb-modal--extra-small--width: calc(min(#{$ipb-modal--extra-small--relative-width}, #{$ipb-modal--extra-small--absolute-width})) !default;
+
+$ipb-modal--small--relative-height: 60vh !default;
+$ipb-modal--small--absolute-height: 400px !default;
+$ipb-modal--small--height: calc(min(#{$ipb-modal--small--relative-height}, #{$ipb-modal--small--absolute-height})) !default;
+$ipb-modal--small--relative-width: 60vw !default;
+$ipb-modal--small--absolute-width: 800px !default;
+$ipb-modal--small--width: calc(min(#{$ipb-modal--small--relative-width}, #{$ipb-modal--small--absolute-width})) !default;
+
+$ipb-modal--medium--relative-height: 75vh !default;
+$ipb-modal--medium--absolute-height: 600px !default;
+$ipb-modal--medium--height: calc(min(#{$ipb-modal--medium--relative-height}, #{$ipb-modal--medium--absolute-height})) !default;
+$ipb-modal--medium--relative-width: 75vw !default;
+$ipb-modal--medium--absolute-width: 1200px !default;
+$ipb-modal--medium--width: calc(min(#{$ipb-modal--medium--relative-width}, #{$ipb-modal--medium--absolute-width})) !default;
+
+$ipb-modal--large--relative-height: 90vh !default;
+$ipb-modal--large--absolute-height: 900px !default;
+$ipb-modal--large--height: calc(min(#{$ipb-modal--large--relative-height}, #{$ipb-modal--large--absolute-height})) !default;
+$ipb-modal--large--relative-width: 90vw !default;
+$ipb-modal--large--absolute-width: 1800px !default;
+$ipb-modal--large--width: calc(min(#{$ipb-modal--large--relative-width}, #{$ipb-modal--large--absolute-width})) !default;
+
+$ipb-modal-option--do-not-show-again--margin-top: $common-spacing-500 !default;
+
+$ipb-modal--is-informative--min-width: $common-size-700 !default;
+$ipb-modal--is-informative--min-height: $common-size-300 !default;
+$ipb-modal--is-informative--is-error--highlight--background-color: $common-color-red-600 !default;
+$ipb-modal--is-informative--is-warning--highlight--background-color: $common-color-orange-600 !default;
+$ipb-modal--is-informative--is-information--highlight--background-color: $common-color-blue-600 !default;
+$ipb-modal--is-informative--is-success--highlight--background-color: $common-color-green-600 !default;
+
+/* Avoid modals bigger than window size 
+!important in order to overload jQueryUI max-height:none being put on dialog elements */
+.modal .modal-dialog{
+  display: flex;
+  flex-direction: column;
+  max-height: $ipb-modal--max-height !important;
+  max-width: $ipb-modal--max-width !important;
+  border-radius: 5px;
+  .modal-header {
+  background-color: white;
+    color: #232323;
+}
+}
+
+.modal-backdrop.in {
+  opacity: .6;
+  background-color: $common-color-blue-grey-800;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  border-radius: 5px !important;
+  border: 1px solid $common-color-grey-400;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+.modal-header {
+  border-radius: 5px 5px 0 0 !important;
+}
+
+.modal-title {
+  color: #232323 !important;
+  display: flex;
+  align-items: center;
+  .url-to-clipboard.url-to-clipboard-icon {
+    margin-right: 4px;
+  }
+}

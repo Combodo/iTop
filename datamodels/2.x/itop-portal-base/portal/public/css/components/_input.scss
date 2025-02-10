@@ -1,0 +1,18 @@
+$ipb-form-control--color: $common-color-grey-800 !default;
+$ipb-form-control--border-radius: $common-border-radius-500 !default;
+$ipb-form-control--box-shadow: none !default;
+
+$ipb-form-control--is-focused--border-color: $common-color-primary-700 !default;
+$ipb-form-control--is-focused--box-shadow: none !default;
+
+.form-control {
+  color: $ipb-form-control--color;
+  border-radius: $common-border-radius-500 !important;
+  -webkit-box-shadow: $ipb-form-control--box-shadow;
+  box-shadow: $ipb-form-control--box-shadow;
+  &:focus {
+    border-color: $ipb-form-control--is-focused--border-color;
+    box-shadow: $ipb-form-control--is-focused--box-shadow;
+    -webkit-box-shadow: $ipb-form-control--is-focused--box-shadow;
+  }
+}

@@ -1,6 +1,8 @@
 @import "../../../../../../../node_modules/bulma-scss/utilities/mixins";
 
-$ipb-browse-brick--mosaic-item--highlight-color:  $common-color-blue-800, $common-color-orange-800, $common-color-green-800, $common-color-pink-800, $common-color-cyan-800, $common-color-red-800;
+$ipb-browse-brick--mosaic-item--highlight-color:  $common-color-blue-800, $common-color-orange-800, $common-color-green-800, $common-color-pink-800, $common-color-cyan-800, $common-color-yellow-800, $common-color-purple-800;
+
+$ipb-browse-brick-panel--row--margin: $common-size-0 !default;
 
 $ipb-content-mosaic--padding: $common-spacing-0 !default;
 $ipb-browse-brick--mosaic-breadcrumb--padding: $common-spacing-200 !default;
@@ -45,7 +47,6 @@ $ipb-browse-brick--mosaic-item-description--margin-top: $common-spacing-300 !def
 
 $ipb-browse-brick-panel--dataTables_wrapper--padding-x: $common-spacing-0 !default;
 $ipb-browse-brick-panel--dataTables_wrapper--padding-y: $common-size-200 !default;
-$ipb-browse-brick-panel--dataTables_wrapper--row--padding: $common-size-0 !default;
 $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-x: $common-size-200 !default;
 $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-y: $common-size-0 !default;
 
@@ -86,7 +87,12 @@ $ipb-browse-brick--list-group-item--border: 1px solid $common-color-grey-400 !de
 $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
 
 
-
+// Common
+.ipb-browse-brick-panel {
+  .row {
+    margin: $ipb-browse-brick-panel--row--margin;
+  }
+}
 
 // Mosaic view 
 
@@ -245,7 +251,6 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
 .ipb-browse-brick-panel .dataTables_wrapper {
   padding: $ipb-browse-brick-panel--dataTables_wrapper--padding-y $ipb-browse-brick-panel--dataTables_wrapper--padding-x;
   .row {
-    margin: $ipb-browse-brick-panel--dataTables_wrapper--row--padding;
     > div {
       padding: $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-y $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-x;
     }
@@ -262,11 +267,6 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
     @extend %common-font-size-150;
     color: $ipb-browse-brick--tree-item--hyperlink--color;
   }
-}
-
-.row, .form_field_compact .form-group.form_group_small {
-  margin-left: 0;
-  margin-right: 0;
 }
 
 .list-group.tree .list-group-item .list-group-item-description {

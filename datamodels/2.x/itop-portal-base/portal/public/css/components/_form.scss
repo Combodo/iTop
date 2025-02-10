@@ -1,0 +1,21 @@
+$ipb--fieldset--background-color: $common-color-grey-50 !default;
+$ipb--fieldset--padding-y: 10px !default;
+$ipb--fieldset--padding-x: 7px !default;
+$ipb--fieldset--border: 1px solid $common-color-grey-200 !default;
+$ipb--fieldset--border-radius: $common-border-radius-500 !default;
+
+$ipb--fieldset--legend--padding-y: $common-spacing-0 !default;
+$ipb--fieldset--legend--padding-x: 13px !default;
+
+
+.form_fields {
+  fieldset {
+    background-color: $common-color-grey-50;
+    padding: $ipb--fieldset--padding-y $ipb--fieldset--padding-x;
+    border-radius: $ipb--fieldset--border-radius;
+    border: $ipb--fieldset--border;
+    legend {
+      padding: $ipb--fieldset--legend--padding-y $ipb--fieldset--legend--padding-x;
+    }
+  }
+}
