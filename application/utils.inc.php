@@ -1961,7 +1961,7 @@ SQL;
 			CURLOPT_HTTPHEADER     => $aHTTPHeaders,
 		);
 
-		$aAllOptions = $aCurlOptions + $aOptions;
+        $aAllOptions = $aCurlOptions + $aOptions;
 		$ch = curl_init($sUrl);
 		curl_setopt_array($ch, $aAllOptions);
 		$response = curl_exec($ch);
@@ -3114,14 +3114,14 @@ TXT
 		foreach ($aMentionMatches[0] as $iMatchIdx => $sCompleteMatch) {
 			$sMatchedClass = $aMentionMatches[2][$iMatchIdx];
 			$sMatchedId = $aMentionMatches[3][$iMatchIdx];
-			$sMatchedName = $aMentionMatches[1][$iMatchIdx];
+            $sMatchedName = $aMentionMatches[5][$iMatchIdx];
 
             $sMentionPrefix = array_search($sMatchedClass, $aMentionAllowedClasses);
             if ($sMentionPrefix === false) {
                 continue;
             }
 			//tests if the name starts with $sMentionPrefix (e.g. '@' for 'Contact' class)
-			if (str_starts_with($sMatchedName,$sMentionPrefix) === false) {
+            if (str_starts_with($sMatchedName, $sMentionPrefix) === false) {
                 continue;
             }
             // Prepare array for matched class if not already present
