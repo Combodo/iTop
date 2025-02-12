@@ -1,0 +1,127 @@
+/*
+ * Copyright (C) 2013-2025 Combodo SAS
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/**
+ * Dropdown element.
+ *
+ * @since 3.3.0
+ */
+
+class IpbDropdown extends HTMLElement {
+	connectedCallback() {
+		this.setupDropdown();
+	}
+
+	setupDropdown() {
+		const menu = this;
+		const container = this.getAttribute('data-container') || 'parent';
+		let button = this.findSiblingToggler() || this.closest('[data-toggle="dropdown"]');
+
+		if (!button){
+			return;
+		}
+
+		button.addEventListener('click', (event) => {
+			event.stopPropagation();
+			const isOpen = menu.classList.contains('show');
+			document.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
+
+			if (!isOpen) {
+				menu.classList.add('show');
+				if (container === 'body') {
+					this.moveToBody(menu, button);
+				}
+			}
+		});
+
+		document.addEventListener('click', () => {
+			menu.classList.remove('show');
+		});
+	}
+
+	findSiblingToggler() {
+		let parent = this.parentElement;
+		if (!parent) return null;
+		return [...parent.children].find(el => el.matches('[data-toggle="dropdown"]')) || null;
+	}
+
+	moveToBody(menu, button) {
+		if (!menu._moved) {
+			document.body.appendChild(menu);
+			menu._moved = true;
+		}
+
+		const rect = button.getBoundingClientRect();
+		const placement = this.getAttribute('data-placement') || 'bottom';
+		menu.style.position = 'absolute';
+		menu.style.zIndex = '1000';
+
+		switch (placement) {
+			case 'top':
+				menu.style.top = `${rect.top + window.scrollY - menu.offsetHeight}px`;
+				menu.style.left = `${rect.left + window.scrollX + rect.width / 2 - menu.offsetWidth / 2}px`;
+				break;
+			case 'top-left':
+				menu.style.top = `${rect.top + window.scrollY - menu.offsetHeight}px`;
+				menu.style.left = `${rect.left + window.scrollX}px`;
+				break;
+			case 'top-right':
+				menu.style.top = `${rect.top + window.scrollY - menu.offsetHeight}px`;
+				menu.style.left = `${rect.right + window.scrollX - menu.offsetWidth}px`;
+				break;
+			case 'bottom':
+				menu.style.top = `${rect.bottom + window.scrollY}px`;
+				menu.style.left = `${rect.left + window.scrollX + rect.width / 2 - menu.offsetWidth / 2}px`;
+				break;
+			case 'bottom-left':
+				menu.style.top = `${rect.bottom + window.scrollY}px`;
+				menu.style.left = `${rect.left + window.scrollX}px`;
+				break;
+			case 'bottom-right':
+				menu.style.top = `${rect.bottom + window.scrollY}px`;
+				menu.style.left = `${rect.right + window.scrollX - menu.offsetWidth}px`;
+				break;
+			case 'left':
+				menu.style.top = `${rect.top + window.scrollY + rect.height / 2 - menu.offsetHeight / 2}px`;
+				menu.style.left = `${rect.left + window.scrollX - menu.offsetWidth}px`;
+				break;
+			case 'left-top':
+				menu.style.top = `${rect.top + window.scrollY}px`;
+				menu.style.left = `${rect.left + window.scrollX - menu.offsetWidth}px`;
+				break;
+			case 'left-bottom':
+				menu.style.top = `${rect.bottom + window.scrollY - menu.offsetHeight}px`;
+				menu.style.left = `${rect.left + window.scrollX - menu.offsetWidth}px`;
+				break;
+			case 'right':
+				menu.style.top = `${rect.top + window.scrollY + rect.height / 2 - menu.offsetHeight / 2}px`;
+				menu.style.left = `${rect.right + window.scrollX}px`;
+				break;
+			case 'right-top':
+				menu.style.top = `${rect.top + window.scrollY}px`;
+				menu.style.left = `${rect.right + window.scrollX}px`;
+				break;
+			case 'right-bottom':
+				menu.style.top = `${rect.bottom + window.scrollY - menu.offsetHeight}px`;
+				menu.style.left = `${rect.right + window.scrollX}px`;
+				break;
+		}
+	}
+}
+
+customElements.define('ipb-dropdown', IpbDropdown);

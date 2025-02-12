@@ -1,0 +1,19 @@
+.ipb-dropdown {
+  display: none;
+  background: white;
+  border: 1px solid #ccc;
+  list-style: none;
+  padding: 5px 0;
+  margin: 0;
+  width: max-content;
+}
+.ipb-dropdown.show {
+  display: block;
+}
+.ipb-dropdown li {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.ipb-dropdown li:hover {
+  background: #f0f0f0;
+}
