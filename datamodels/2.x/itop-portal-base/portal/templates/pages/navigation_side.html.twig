@@ -61,7 +61,7 @@
         {% endif %}
     {% endblock %}
     <div class="dropup">
-        <a class="user_card ipb-navigation-menu--user-card dropup" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user_options">
+        <a class="user_card ipb-navigation-menu--user-card" href="#" data-toggle="ipb-dropdown" aria-haspopup="true" aria-expanded="false" id="user_options">
             <div class="user_photo ipb-navigation-menu--user-card--photo" style="background-image: url('{{ sUserPhotoUrl }}');">
             </div>
             <div class="user_infos ipb-navigation-menu--user-card--infos">
@@ -74,7 +74,7 @@
                 <span class="fas fa-angle-down"></span>
             </div>
         </a>
-        <ipb-dropdown class="ipb-dropdown dropdown-menu user_options" aria-labelledby="user_options" data-container="body" data-placement="top">
+        <ipb-dropdown class="ipb-dropdown user_options" aria-labelledby="user_options" data-container="body" data-placement="top-right">
             <li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fas fa-user fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
             {% for aPortal in allowed_portals %}
                 {% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}

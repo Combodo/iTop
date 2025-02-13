@@ -30,7 +30,7 @@ class IpbDropdown extends HTMLElement {
 	setupDropdown() {
 		const menu = this;
 		const container = this.getAttribute('data-container') || 'parent';
-		let button = this.findSiblingToggler() || this.closest('[data-toggle="dropdown"]');
+		let button = this.findSiblingToggler() || this.closest('[data-toggle="ipb-dropdown"]');
 
 		if (!button){
 			return;
@@ -39,7 +39,7 @@ class IpbDropdown extends HTMLElement {
 		button.addEventListener('click', (event) => {
 			event.stopPropagation();
 			const isOpen = menu.classList.contains('show');
-			document.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
+			document.querySelectorAll('ipb-dropdown.show').forEach(m => m.classList.remove('show'));
 
 			if (!isOpen) {
 				menu.classList.add('show');
@@ -48,16 +48,19 @@ class IpbDropdown extends HTMLElement {
 				}
 			}
 		});
-
-		document.addEventListener('click', () => {
-			menu.classList.remove('show');
+		
+		let me = this;
+		document.addEventListener('click', (event) => {
+			if (!this.contains(event.target) && !menu.contains(event.target)) {
+				menu.classList.remove('show');
+			}
 		});
 	}
 
 	findSiblingToggler() {
 		let parent = this.parentElement;
 		if (!parent) return null;
-		return [...parent.children].find(el => el.matches('[data-toggle="dropdown"]')) || null;
+		return [...parent.children].find(el => el.matches('[data-toggle="ipb-dropdown"]')) || null;
 	}
 
 	moveToBody(menu, button) {

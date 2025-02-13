@@ -721,40 +721,6 @@ table .group-actions a.glyphicon-menu-hamburger{
 	cursor: pointer;
 	text-decoration: none;
 }
-.list-group-item-actions .item-action-wrapper,
-.mosaic-group-item-actions .item-action-wrapper,
-table .group-actions .item-action-wrapper
-{
-	display: none;
-	position: absolute;
-	z-index: 5;
-	bottom: -7px;
-	right: 15px;
-	-webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
-	-moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
-	box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
-}
-.list-group-item-actions .item-action-wrapper .glyphicon,
-.mosaic-group-item-actions .item-action-wrapper .glyphicon,
-table .group-actions .item-action-wrapper .glyphicon{
-	margin-right: 0.6em;
-}
-.list-group-item-actions .item-action-wrapper.collapse.in,
-.mosaic-group-item-actions .item-action-wrapper.collapse.in,
-table .group-actions .item-action-wrapper.collapse.in{
-	display: block;
-}
-.list-group-item-actions .item-action-wrapper .panel-body > p,
-.mosaic-group-item-actions .item-action-wrapper .panel-body > p,
-table .group-actions .item-action-wrapper .panel-body > p{
-	text-align: left;
-	white-space: nowrap;
-}
-.list-group-item-actions .item-action-wrapper .panel-body > p:last-child,
-.mosaic-group-item-actions .item-action-wrapper .panel-body > p:last-child,
-table .group-actions .item-action-wrapper .panel-body > p:last-child{
-	margin-bottom: 0px;
-}
 
 #brick_content_empty{
 	display: none;
