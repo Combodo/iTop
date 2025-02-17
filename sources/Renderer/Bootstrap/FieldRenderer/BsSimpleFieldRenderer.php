@@ -595,26 +595,26 @@ JS
 
 			// Opening thread
 			$oOutput->AddHtml(<<<HTML
-<div class="caselog-thread ipb-is-html-content">
+<div class="ipb-caselog-thread ipb-is-html-content">
 HTML
 			);
 			// - Header
 			$oOutput->AddHtml(<<<HTML
-    <div class="caselog-thread--header">
-        <span class="caselog-thread--header-togglers">
-            <a href="#" class="caselog-thread--header-toggler caselog-thread--open-all-toggler" data-tooltip-content="{$sOpenAllEntriesTooltip}"><span class="fas fa-book-open"></span></a>
-            <a href="#" class="caselog-thread--header-toggler caselog-thread--close-all-toggler" data-tooltip-content="{$sCloseAllEntriesTooltip}"><span class="fas fa-book"></span></a>
+    <div class="ipb-caselog-thread--header">
+        <span class="ipb-caselog-thread--header-togglers">
+            <a href="#" class="ipb-caselog-thread--header-toggler ipb-caselog-thread--open-all-toggler" data-tooltip-content="{$sOpenAllEntriesTooltip}"><span class="fas fa-book-open"></span></a>
+            <a href="#" class="ipb-caselog-thread--header-toggler ipb-caselog-thread--close-all-toggler" data-tooltip-content="{$sCloseAllEntriesTooltip}"><span class="fas fa-book"></span></a>
         </span>
-        <span class="caselog-thread--header-info pull-right">
-	        <span class="caselog-thread--participants-count" data-tooltip-content="{$sUsersCountTooltip}">{$iNbUsers}<span class="fas fa-users"></span></span>
-	        <span class="caselog-thread--messages-count" data-tooltip-content="{$sEntriesCountTooltip}">{$iNbEntries}<span class="fas fa-comment-alt"></span></span>
+        <span class="ipb-caselog-thread--header-info pull-right">
+	        <span class="ipb-caselog-thread--participants-count" data-tooltip-content="{$sUsersCountTooltip}">{$iNbUsers}<span class="fas fa-users"></span></span>
+	        <span class="ipb-caselog-thread--messages-count" data-tooltip-content="{$sEntriesCountTooltip}">{$iNbEntries}<span class="fas fa-comment-alt"></span></span>
 		</span>
     </div>
 HTML
 			);
 			// - Content
 			$oOutput->AddHtml(<<<HTML
-	<div class="caselog-thread--content">
+	<div class="ipb-caselog-thread--content">
 HTML
 			);
 
@@ -673,24 +673,24 @@ HTML
 				if (($iEntryUserId !== $sLastUserId) || ($sEntryDate !== $sLastDate)) {
 					if ($sEntryDate !== $sLastDate) {
 						$oOutput->AddHtml(<<<HTML
-		<div class="caselog-thread--date">{$sEntryDate}</div>
+		<div class="ipb-caselog-thread--date">{$sEntryDate}</div>
 HTML
 						);
 					}
 
 					// Open block
 					if ($iEntryUserId === $iCurrentUserId) {
-						$sEntryBlockClass = 'caselog-thread--block-me';
+						$sEntryBlockClass = 'ipb-caselog-thread--block-me';
 					}
 					else {
 						if (!array_key_exists($iEntryUserId, $aPeerColorClassCache)) {
 							$iPeerClassNumber = (count($aPeerColorClassCache) % 5) + 1;
-							$aPeerColorClassCache[$iEntryUserId] = 'caselog-thread--block-color-'.$iPeerClassNumber;
+							$aPeerColorClassCache[$iEntryUserId] = 'ipb-caselog-thread--block-color-'.$iPeerClassNumber;
 						}
 						$sEntryBlockClass = $aPeerColorClassCache[$iEntryUserId];
 					}
 					$oOutput->AddHtml(<<<HTML
-		<div class="caselog-thread--block {$sEntryBlockClass}">
+		<div class="ipb-caselog-thread--block {$sEntryBlockClass}">
 HTML
 					);
 
@@ -702,31 +702,31 @@ HTML
 					$sEntryMedallionTooltip = utils::HtmlEntities($sEntryUserLogin);
 					$sEntryMedallionTooltipPlacement = ($iEntryUserId === $iCurrentUserId) ? 'left' : 'right';
 					$oOutput->AddHtml(<<<HTML
-	    <div class="caselog-thread--block-medallion" style="{$sEntryMedallionStyle}" data-tooltip-content="{$sEntryMedallionTooltip}" data-placement="{$sEntryMedallionTooltipPlacement}">
+	    <div class="ipb-caselog-thread--block-medallion" style="{$sEntryMedallionStyle}" data-tooltip-content="{$sEntryMedallionTooltip}" data-placement="{$sEntryMedallionTooltipPlacement}">
 	        $sEntryMedallionContent
 	    </div>
-	    <div class="caselog-thread--block-user">{$sEntryMedallionTooltip}</div>
+	    <div class="ipb-caselog-thread--block-user">{$sEntryMedallionTooltip}</div>
 HTML
 					);
 
 					// Open entries
 					$oOutput->AddHtml(<<<HTML
-			<div class="caselog-thread--block-entries">
+			<div class="ipb-caselog-thread--block-entries">
 HTML
 					);
 				}
 
 				// Prepare entry content
-				$sEntryId = 'caselog-thread--block-entry-'.$sThreadUniqueId.'-'.$i;
+				$sEntryId = 'ipb-caselog-thread--block-entry-'.$sThreadUniqueId.'-'.$i;
 				$sEntryHtml = AttributeText::RenderWikiHtml($aEntries[$i]['message_html'], true /* wiki only */);
 				$sEntryHtml = InlineImage::FixUrls($sEntryHtml);
 
 				// Add entry
 				$oOutput->AddHtml(<<<HTML
-			    <div class="caselog-thread--block-entry" id="{$sEntryId}">
-			        <div class="caselog-thread--block-entry-content">{$sEntryHtml}</div>
-			        <div class="caselog-thread--block-entry-date">{$sEntryDatetime}</div>
-			        <div class="caselog-thread--block-entry-toggler"><span class="fas fa-caret-up" title="{$sCloseEntryTooltip}"></span></div>
+			    <div class="ipb-caselog-thread--block-entry" id="{$sEntryId}">
+			        <div class="ipb-caselog-thread--block-entry-content">{$sEntryHtml}</div>
+			        <div class="ipb-caselog-thread--block-entry-date">{$sEntryDatetime}</div>
+			        <div class="ipb-caselog-thread--block-entry-toggler"><span class="fas fa-caret-up" title="{$sCloseEntryTooltip}"></span></div>
 			    </div>
 HTML
 				);
@@ -758,16 +758,16 @@ HTML
 			// Add JS handlers
 			$oOutput->AddJs(<<<JS
 $('[data-field-id="{$this->oField->GetId()}"][data-form-path="{$this->oField->GetFormPath()}"]')
-	.on('click', '.caselog-thread--block-entry-toggler, .caselog-thread--block-entry.closed', function(){
-		$(this).closest('.caselog-thread--block-entry').toggleClass('closed');
+	.on('click', '.ipb-caselog-thread--block-entry-toggler, .ipb-caselog-thread--block-entry.closed', function(){
+		$(this).closest('.ipb-caselog-thread--block-entry').toggleClass('closed');
 	})
-	.on('click', '.caselog-thread--open-all-toggler', function(oEvent){
+	.on('click', '.ipb-caselog-thread--open-all-toggler', function(oEvent){
 		oEvent.preventDefault()
-		$('[data-field-id="{$this->oField->GetId()}"][data-form-path="{$this->oField->GetFormPath()}"]').find('.caselog-thread--block-entry').removeClass('closed');
+		$('[data-field-id="{$this->oField->GetId()}"][data-form-path="{$this->oField->GetFormPath()}"]').find('.ipb-caselog-thread--block-entry').removeClass('closed');
 	})
-	.on('click', '.caselog-thread--close-all-toggler', function(oEvent){
+	.on('click', '.ipb-caselog-thread--close-all-toggler', function(oEvent){
 		oEvent.preventDefault()
-		$('[data-field-id="{$this->oField->GetId()}"][data-form-path="{$this->oField->GetFormPath()}"]').find('.caselog-thread--block-entry').addClass('closed');
+		$('[data-field-id="{$this->oField->GetId()}"][data-form-path="{$this->oField->GetFormPath()}"]').find('.ipb-caselog-thread--block-entry').addClass('closed');
 	});
 JS
 			);
