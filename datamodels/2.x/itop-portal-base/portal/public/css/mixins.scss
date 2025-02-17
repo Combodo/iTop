@@ -42,3 +42,134 @@ $ipb-heavy-animated-border--border-radius: $common-border-radius-500 !default;
   }
 }
 
+
+/* SCSS variables */
+$ipb-toggle-nav--color: white !default;
+
+@mixin ipb-toggle-nav($color:$ipb-toggle-nav--color) {
+
+  padding: 10px 8px;
+  border-radius: 5px;
+
+  .ipb-navigation-menu--toggle-icon {
+    position: relative;
+    display: flex;
+    height: 20px;
+    width: 28px;
+  }
+
+  .ipb-navigation-menu--toggle-bar {
+    position: absolute;
+    display: block;
+    height: 3px;
+    width: 100%;
+    opacity: 1;
+    transition: all 0.2s linear;
+    background-color: $color;
+
+    &:nth-child(1) {
+      top: 0;
+    }
+
+    &:nth-child(2) {
+      top: 8px;
+    }
+
+    &:nth-child(3) {
+      top: 16px;
+    }
+
+  }
+
+}
+
+@mixin ipb-toggle-nav-animated-cross($color:$ipb-toggle-nav--color) {
+
+  .ipb-navigation-menu--toggle-bar {
+
+    background-color: $color;
+
+    &:nth-child(1) {
+      top: 9px;
+      left: 2px;
+      width: 25px;
+      transform: rotateZ(-45deg);
+    }
+
+    &:nth-child(2) {
+      top: 8px;
+      left: 7px;
+      width: 0;
+      opacity: 0;
+    }
+
+    &:nth-child(3) {
+      top: 9px;
+      left: 2px;
+      width: 25px;
+      transform: rotateZ(45deg);
+    }
+
+  }
+
+}
+
+@mixin ipb-toggle-nav-animated-chevron-right($color:$ipb-toggle-nav--color) {
+
+  .ipb-navigation-menu--toggle-bar {
+
+    background-color: $color;
+
+    &:nth-child(1) {
+      top: 4px;
+      left: 7px;
+      width: 14px;
+      transform: rotateZ(-45deg);
+    }
+
+    &:nth-child(2) {
+      top: 8px;
+      left: 7px;
+      width: 0;
+      opacity: 0;
+    }
+
+    &:nth-child(3) {
+      top: 12px;
+      left: 7px;
+      width: 14px;
+      transform: rotateZ(45deg);
+    }
+
+  }
+
+}
+
+/* SCSS variables */
+$ipb-scrollbar--color: $common-color-grey-200 $combodo-dark-gray-darker !default;
+
+@mixin ipb-scrollbar($overflowX:hidden, $overflowY:auto, $scrollbarWidth:thin, $scrollbarColor:$ipb-scrollbar--color) {
+  overflow-x: $overflowX;
+  overflow-y: $overflowY;
+  scrollbar-width: $scrollbarWidth;
+  scrollbar-color: $scrollbarColor;
+}
+
+/* SCSS variables */
+
+@mixin ipb-text-overflow-ellipsis() {
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+/* SCSS variables */
+$ipb-animation--property: all;
+$ipb-animation--duration: 0.1s !default;
+$ipb-animation--timing: linear !default;
+
+@mixin ipb-transition($property: $ipb-animation--property, $duration:$ipb-animation--duration, $timing:$ipb-animation--timing) {
+  transition-property: $property;
+  transition-duration: $duration;
+  transition-timing-function: $timing;
+}

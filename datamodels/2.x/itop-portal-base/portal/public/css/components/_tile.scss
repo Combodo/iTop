@@ -40,6 +40,8 @@ $ipb-tile--description--color: $text-color !default;
   height: 100%;
   display: flex;
   flex-direction: column;
+  row-gap: 8px;
+  column-gap: 8px;
 }
 
 /* header */
@@ -47,18 +49,12 @@ $ipb-tile--description--color: $text-color !default;
 .ipb-tile--header {
   display: flex;
   flex-direction: column;
+  column-gap: 5px;
+  row-gap: 5px;
 
   &.ipb-tile--header--inline {
     flex-direction: row;
     align-items: center;
-
-    .ipb-tile--decoration {
-      margin-right: $common-spacing-400;
-    }
-
-    .ipb-tile--title {
-      margin-top: 0;
-    }
   }
 }
 
@@ -104,18 +100,15 @@ $ipb-tile--description--color: $text-color !default;
 .ipb-tile--title{
   display: flex;
   align-items: center;
-  margin-top: $common-spacing-300;
   color: $ipb-tile--title--color;
   font-size: $ipb-tile--title--font-size;
   font-weight: bold;
+  flex-grow: 1;
 }
 
 /* actions */
 
 .ipb-tile--actions {
-  position: absolute;
-  top: 15px;
-  right: 15px;
   color: #6e6e6e !important;
   outline: none !important;
 
@@ -140,12 +133,32 @@ $ipb-tile--description--color: $text-color !default;
     outline: none;
     color: unset;
   }
+
+  button {
+    > i {
+      border: 2px solid transparent;
+      transition: border ease 0.5s;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      padding: 2px;
+      font-size: 0.95rem;
+    }
+  }
+
+  button.selected {
+    background-color: #e1e1e1;
+    color: #263238;
+
+    > i {
+      border: 2px solid #263238;
+    }
+  }
 }
 
 /* description */
 
 .ipb-tile--description{
-  margin-top: $common-spacing-300;
   color: $ipb-tile--description--color;
   
   @extend %common-font-ral-nor-150;
@@ -155,7 +168,6 @@ $ipb-tile--description--color: $text-color !default;
 
 .ipb-tile--extra-content {
   flex-grow: 1;
-  margin-top: $common-spacing-300;
   position: relative;
 }
 
@@ -193,7 +205,7 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 /* chart */
 
 .ipb-tile--manage-brick--chart{
-  margin-top: $ipb-tile--manage-brick--chart--margin-top;
+
 }
 
 /* badge */
@@ -201,7 +213,6 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 .ipb-tile--manage-brick--badge{
   display: flex;
   flex-wrap: wrap;
-  margin-top: $ipb-tile--manage-brick--badge--margin-top;
 }
 
 .ipb-tile--manage-brick--badge--item{
@@ -230,7 +241,6 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 /* top list */
 
 .ipb-tile--manage-brick--top-list {
-  margin-top: $ipb-tile--manage-brick--top-list--margin-top;
 }
 
 
@@ -252,3 +262,28 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
   }
 }
 
+
+.ipb-button-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+
+  button:not(:last-child, :first-child) {
+    border-radius: 0 !important;
+    border: none;
+    border-right: 1px #dcdcdc solid;
+  }
+
+  button:first-child {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-right: none;
+    border-right: 1px #dcdcdc solid;
+  }
+
+  button:last-child {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-left: none;
+  }
+
+}

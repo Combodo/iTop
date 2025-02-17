@@ -33,14 +33,6 @@ body {
   height: 100vh;
   display: flex;
 }
-@media (max-width: 768px){
-	body{
-		padding-top: 60px;
-	}
-	body.home{
-		padding-top: 70px;
-	}
-}
 footer{
 	margin: 5em 1em;
 	text-align: center;
@@ -58,16 +50,6 @@ footer{
 	color: #000;
 }
 
-/* Navigation menu */
-.navbar-nav .dropdown-menu a .glyphicon,
-.user_infos .dropdown-menu a .glyphicon{
-	margin-right: 15px;
-}
-.nav > li > a > span.brick_icon,
-.dropdown-menu > li > a > span.brick_icon{
-	margin-right: 20px;
-	vertical-align: sub;
-}
 /* Topbar */
 #topbar .navbar-header{
 	position: relative;
@@ -113,33 +95,6 @@ footer{
 }
 /* Sidebar */
 @media (min-width: 768px){
-	#sidebar{
-		top: 0px;
-		left: 0px;
-		padding: 0px; /* Overriding BS */
-		height: 100%;
-	}
-  
-	#sidebar .user_card .user_options.dropdown-menu{
-		width: 92%;
-		left: 4%;
-	}
-	#sidebar .user_card .user_fullname{
-		font-weight: 600;
-	}
-	#sidebar .menu .navbar-nav{
-		width: 100%;
-	}
-	#sidebar .menu .navbar-nav > li{
-		width: 100%;
-	}
-	#sidebar .menu .navbar-nav > li > a > .brick_icon{
-		width: 1.2em;
-		vertical-align: sub;
-		text-align: center;
-		margin-right: 10px;
-	}
-
 
 	/* Main content */
 	#main-wrapper{

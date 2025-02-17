@@ -133,10 +133,8 @@ Options:
                 {% endblock %}
 
                 {# extra content #}
-                <div class="ipb-tile--extra-content" {% if oBrick.GetHeight %}style="height:{{ oBrick.GetHeight }}em;"{% endif %}>
-                    {% block pTileExtraContent %}
-                    {% endblock %}
-                </div>
+                {% block pTileExtraContent %}
+                {% endblock %}
 
         </div>
         {% endblock %}

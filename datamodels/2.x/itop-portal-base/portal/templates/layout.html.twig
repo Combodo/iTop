@@ -172,7 +172,7 @@
         {% endif %}
 	{% endblock %}
 </head>
-<body class="{% block pPageBodyClass %}{% endblock %}" data-gui-type="portal">
+<body class="ipb-body {% block pPageBodyClass %}{% endblock %}" data-gui-type="portal">
 	{% block pPageBodyWrapper %}
 		{% block pEnvBannerWrapper %}
 			{% if app['combodo.current_environment'] != 'production' %}
@@ -186,14 +186,8 @@
 		{% endblock %}
 		
 		{% block pNavigationWrapper %}
-			{# Topbar navigation menu for mobile screens #}
-			{% block pNavigationTopMenuWrapper %}
-                {% include template('navigation_top') %}
-			{% endblock %}
-
-			{# Sidebar navigation menu for normal screens #}
 			{% block pNavigationSideMenuWrapper %}
-                {% include template('navigation_side') %}
+                {% include template('navigation_menu') %}
 			{% endblock %}
 		{% endblock %}
 
