@@ -84,10 +84,6 @@ class IpbDropdown extends HTMLElement {
 					menu.style.top = `${rect.top+window.scrollY-menu.offsetHeight}px`;
 					menu.style.left = `${rect.left+window.scrollX+rect.width / 2-menu.offsetWidth / 2}px`;
 					break;
-				case 'bottom':
-					menu.style.top = `${rect.bottom+window.scrollY}px`;
-					menu.style.left = `${rect.left+window.scrollX+rect.width / 2-menu.offsetWidth / 2}px`;
-					break;
 				case 'left':
 					menu.style.top = `${rect.top+window.scrollY+rect.height / 2-menu.offsetHeight / 2}px`;
 					menu.style.left = `${rect.left+window.scrollX-menu.offsetWidth}px`;
@@ -95,6 +91,11 @@ class IpbDropdown extends HTMLElement {
 				case 'right':
 					menu.style.top = `${rect.top+window.scrollY+rect.height / 2-menu.offsetHeight / 2}px`;
 					menu.style.left = `${rect.right+window.scrollX}px`;
+					break;
+				case 'bottom':
+				default:
+					menu.style.top = `${rect.bottom+window.scrollY}px`;
+					menu.style.left = `${rect.left+window.scrollX+rect.width / 2-menu.offsetWidth / 2}px`;
 					break;
 			}
 		}
@@ -104,10 +105,6 @@ class IpbDropdown extends HTMLElement {
 					menu.style.top = `-${menu.offsetHeight}px`;
 					menu.style.left = `0px`;
 					break;
-				case 'bottom':
-					menu.style.top = `${rect.height}px`;
-					menu.style.left = `0px`;
-					break;
 				case 'left':
 					menu.style.top = `-${rect.height}px`;
 					menu.style.left = `-${rect.width + menu.offsetWidth / 2}px`;
@@ -115,6 +112,11 @@ class IpbDropdown extends HTMLElement {
 				case 'right':
 					menu.style.bottom = `0px`;
 					menu.style.right = `-${menu.offsetWidth}px`;
+					break;
+				case 'bottom':
+				default:
+					menu.style.top = `${rect.height}px`;
+					menu.style.left = `0px`;
 					break;
 			}
 		}
