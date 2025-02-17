@@ -23,3 +23,28 @@
 .ipb-manage-brick--export-action--icon {
   float: right;
 }
+
+$ipb-manage-brick--pie-chart--colors: 
+$common-color-blue-400 $common-color-blue-950 "rgb(44, 160, 44)",
+$common-color-blue-500 $common-color-blue-950 "rgb(214, 39, 40)",
+$common-color-blue-600 $common-color-blue-100 "rgb(148, 103, 189)",
+$common-color-blue-700 $common-color-blue-100 "rgb(140, 86, 75)",
+$common-color-blue-800 $common-color-blue-100 "rgb(227, 119, 194)",
+$common-color-blue-900 $common-color-blue-100 "rgb(127, 127, 127)",
+$common-color-blue-950 $common-color-blue-100 "rgb(188, 189, 34)",
+$common-color-blue-100 $common-color-blue-950 "rgb(23, 190, 207)",
+$common-color-blue-200 $common-color-blue-950 "rgb(31, 119, 180)",
+$common-color-blue-300 $common-color-blue-950 "rgb(255, 127, 14)"
+!default;
+
+@each $background, $text, $originalColor in $ipb-manage-brick--pie-chart--colors {
+.c3-chart-arc path[style="fill: #{$originalColor}; cursor: pointer; opacity: 1;"] {
+  fill: $background !important;
+}
+.c3-legend-item-tile[style="stroke: #{$originalColor}; pointer-events: none;"] {
+  stroke: $background !important;
+}
+.c3-chart-arc:has(path[style="fill: #{$originalColor}; cursor: pointer; opacity: 1;"])  text {
+  fill: $text !important;
+}
+}

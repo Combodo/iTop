@@ -44,8 +44,10 @@ class IpbDropdown extends HTMLElement {
 			if (!isOpen) {
 				menu.classList.add('show');
 				if (container === 'body') {
-					this.moveToBody(menu, button);
+					this.moveToBody(menu);
 				}
+				this.changePlacement(menu, button);
+				this.changeZIndex(menu, button);
 			}
 		});
 		
@@ -63,67 +65,63 @@ class IpbDropdown extends HTMLElement {
 		return [...parent.children].find(el => el.matches('[data-toggle="ipb-dropdown"]')) || null;
 	}
 
-	moveToBody(menu, button) {
+	moveToBody(menu) {
 		if (!menu._moved) {
 			document.body.appendChild(menu);
 			menu._moved = true;
 		}
+	}
+	
+	changePlacement(menu, button) {
 
 		const rect = button.getBoundingClientRect();
 		const placement = this.getAttribute('data-placement') || 'bottom';
 		menu.style.position = 'absolute';
 		menu.style.zIndex = '1000';
-
-		switch (placement) {
-			case 'top':
-				menu.style.top = `${rect.top + window.scrollY - menu.offsetHeight}px`;
-				menu.style.left = `${rect.left + window.scrollX + rect.width / 2 - menu.offsetWidth / 2}px`;
-				break;
-			case 'top-left':
-				menu.style.top = `${rect.top + window.scrollY - menu.offsetHeight}px`;
-				menu.style.left = `${rect.left + window.scrollX}px`;
-				break;
-			case 'top-right':
-				menu.style.top = `${rect.top + window.scrollY - menu.offsetHeight}px`;
-				menu.style.left = `${rect.right + window.scrollX - menu.offsetWidth}px`;
-				break;
-			case 'bottom':
-				menu.style.top = `${rect.bottom + window.scrollY}px`;
-				menu.style.left = `${rect.left + window.scrollX + rect.width / 2 - menu.offsetWidth / 2}px`;
-				break;
-			case 'bottom-left':
-				menu.style.top = `${rect.bottom + window.scrollY}px`;
-				menu.style.left = `${rect.left + window.scrollX}px`;
-				break;
-			case 'bottom-right':
-				menu.style.top = `${rect.bottom + window.scrollY}px`;
-				menu.style.left = `${rect.right + window.scrollX - menu.offsetWidth}px`;
-				break;
-			case 'left':
-				menu.style.top = `${rect.top + window.scrollY + rect.height / 2 - menu.offsetHeight / 2}px`;
-				menu.style.left = `${rect.left + window.scrollX - menu.offsetWidth}px`;
-				break;
-			case 'left-top':
-				menu.style.top = `${rect.top + window.scrollY}px`;
-				menu.style.left = `${rect.left + window.scrollX - menu.offsetWidth}px`;
-				break;
-			case 'left-bottom':
-				menu.style.top = `${rect.bottom + window.scrollY - menu.offsetHeight}px`;
-				menu.style.left = `${rect.left + window.scrollX - menu.offsetWidth}px`;
-				break;
-			case 'right':
-				menu.style.top = `${rect.top + window.scrollY + rect.height / 2 - menu.offsetHeight / 2}px`;
-				menu.style.left = `${rect.right + window.scrollX}px`;
-				break;
-			case 'right-top':
-				menu.style.top = `${rect.top + window.scrollY}px`;
-				menu.style.left = `${rect.right + window.scrollX}px`;
-				break;
-			case 'right-bottom':
-				menu.style.top = `${rect.bottom + window.scrollY - menu.offsetHeight}px`;
-				menu.style.left = `${rect.right + window.scrollX}px`;
-				break;
+		if( (this.getAttribute('data-container') || 'parent') === 'body') {
+			switch (placement) {
+				case 'top':
+					menu.style.top = `${rect.top+window.scrollY-menu.offsetHeight}px`;
+					menu.style.left = `${rect.left+window.scrollX+rect.width / 2-menu.offsetWidth / 2}px`;
+					break;
+				case 'bottom':
+					menu.style.top = `${rect.bottom+window.scrollY}px`;
+					menu.style.left = `${rect.left+window.scrollX+rect.width / 2-menu.offsetWidth / 2}px`;
+					break;
+				case 'left':
+					menu.style.top = `${rect.top+window.scrollY+rect.height / 2-menu.offsetHeight / 2}px`;
+					menu.style.left = `${rect.left+window.scrollX-menu.offsetWidth}px`;
+					break;
+				case 'right':
+					menu.style.top = `${rect.top+window.scrollY+rect.height / 2-menu.offsetHeight / 2}px`;
+					menu.style.left = `${rect.right+window.scrollX}px`;
+					break;
+			}
 		}
+		else {
+			switch (placement) {
+				case 'top':
+					menu.style.top = `-${menu.offsetHeight}px`;
+					menu.style.left = `0px`;
+					break;
+				case 'bottom':
+					menu.style.top = `${rect.height}px`;
+					menu.style.left = `0px`;
+					break;
+				case 'left':
+					menu.style.top = `-${rect.height}px`;
+					menu.style.left = `-${rect.width + menu.offsetWidth / 2}px`;
+					break;
+				case 'right':
+					menu.style.bottom = `0px`;
+					menu.style.right = `-${menu.offsetWidth}px`;
+					break;
+			}
+		}
+	}
+	changeZIndex(menu, button) {
+		const zIndex = button.style.zIndex || '30';
+		menu.style.zIndex = zIndex + 1;
 	}
 }
 
