@@ -115,7 +115,7 @@
         </a>
 
         {# drop down #}
-        <ipb-dropdown class="ipb-dropdown user_options" aria-labelledby="user_options" data-container="body" data-placement="right">
+        <ipb-dropdown class="ipb-dropdown user_options" aria-labelledby="user_options" data-container="body" data-placement="top-right">
             <li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fas fa-user fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
             {% for aPortal in allowed_portals %}
                 {% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}

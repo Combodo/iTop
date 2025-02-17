@@ -76,26 +76,40 @@ class IpbDropdown extends HTMLElement {
 
 		const rect = button.getBoundingClientRect();
 		const placement = this.getAttribute('data-placement') || 'bottom';
+		const container = this.getAttribute('data-container') || 'parent';
+
 		menu.style.position = 'absolute';
 		menu.style.zIndex = '1000';
-		if( (this.getAttribute('data-container') || 'parent') === 'body') {
+		
+		const checkBounds = (value, min, max) => Math.max(min, Math.min(max, value));
+
+
+		if(container === 'body') {
 			switch (placement) {
 				case 'top':
-					menu.style.top = `${rect.top+window.scrollY-menu.offsetHeight}px`;
-					menu.style.left = `${rect.left+window.scrollX+rect.width / 2-menu.offsetWidth / 2}px`;
+					menu.style.top = `${checkBounds(rect.top + window.scrollY - menu.offsetHeight, 0, window.innerHeight - menu.offsetHeight)}px`;
+					menu.style.left = `${checkBounds(rect.left + window.scrollX + rect.width / 2 - menu.offsetWidth / 2, 0, window.innerWidth - menu.offsetWidth)}px`;
+					break;
+				case 'top-left':
+					menu.style.top = `${checkBounds(rect.top + window.scrollY - menu.offsetHeight, 0, window.innerHeight - menu.offsetHeight)}px`;
+					menu.style.left = `${checkBounds(rect.left + window.scrollX, 0, window.innerWidth - menu.offsetWidth)}px`;
+					break;
+				case 'top-right':
+					menu.style.top = `${checkBounds(rect.top + window.scrollY - menu.offsetHeight, 0, window.innerHeight - menu.offsetHeight)}px`;
+					menu.style.left = `${checkBounds(rect.right + window.scrollX - menu.offsetWidth, 0, window.innerWidth - menu.offsetWidth)}px`;
 					break;
 				case 'left':
-					menu.style.top = `${rect.top+window.scrollY+rect.height / 2-menu.offsetHeight / 2}px`;
-					menu.style.left = `${rect.left+window.scrollX-menu.offsetWidth}px`;
+					menu.style.top = `${checkBounds(rect.top + window.scrollY + rect.height / 2 - menu.offsetHeight / 2, 0, window.innerHeight - menu.offsetHeight)}px`;
+					menu.style.left = `${checkBounds(rect.left + window.scrollX - menu.offsetWidth, 0, window.innerWidth - menu.offsetWidth)}px`;
 					break;
 				case 'right':
-					menu.style.top = `${rect.top+window.scrollY+rect.height / 2-menu.offsetHeight / 2}px`;
-					menu.style.left = `${rect.right+window.scrollX}px`;
+					menu.style.top = `${checkBounds(rect.top + window.scrollY + rect.height / 2 - menu.offsetHeight / 2, 0, window.innerHeight - menu.offsetHeight)}px`;
+					menu.style.left = `${checkBounds(rect.right + window.scrollX, 0, window.innerWidth - menu.offsetWidth)}px`;
 					break;
 				case 'bottom':
 				default:
-					menu.style.top = `${rect.bottom+window.scrollY}px`;
-					menu.style.left = `${rect.left+window.scrollX+rect.width / 2-menu.offsetWidth / 2}px`;
+					menu.style.top = `${checkBounds(rect.bottom + window.scrollY, 0, window.innerHeight - menu.offsetHeight)}px`;
+					menu.style.left = `${checkBounds(rect.left + window.scrollX + rect.width / 2 - menu.offsetWidth / 2, 0, window.innerWidth - menu.offsetWidth)}px`;
 					break;
 			}
 		}
