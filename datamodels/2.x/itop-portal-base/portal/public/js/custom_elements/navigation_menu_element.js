@@ -25,28 +25,71 @@
  */
 class NavigationMenuElement extends HTMLElement {
 
+	static MOBILE_WIDTH_THRESHOLD = 768;
+	static ROLE_NAV_MENU = 'ipb-navigation-menu';
+	static DATA_EXPANDED_STATE = 'data-expanded-state';
+	static DATA_POSITION = 'data-position';
+	static CLASS_NAV_MENU = 'ipb-navigation-menu';
 	static CLASS_NAV_HORIZONTAL = 'ipb-nav-horizontal';
 	static CLASS_NAV_EXPANDED = 'ipb-is-expanded';
 	static CLASS_MOBILE_OPENED = 'ipb-is-opened';
-	static CLASS_HIDDEN = 'ipb-hidden';
+	static CLASS_HIDDEN = 'ipb-is-hidden';
 
 	static {
-		BaseElement.PageReady(() => {
-			customElements.define("ipb-navigation-menu", NavigationMenuElement, {extends: 'nav'});
-		});
+		customElements.define("ipb-navigation-menu", NavigationMenuElement, {extends: 'nav'});
+	}
+
+	static get observedAttributes() {
+		return [NavigationMenuElement.DATA_EXPANDED_STATE, NavigationMenuElement.DATA_POSITION];
 	}
 
 	// properties
+	bIsConnected = false;
 	eOverlay = null;
 	eExpandToggle = null;
 	eMobileToggle = null;
 	eMiddlePart = null;
 	eMenuEntries = null;
 	eMoreMenuItemsButton = null;
+	eUserDropdown = null;
+
+	attributeChangedCallback(name, oldValue, newValue) {
+
+		if (!this.bIsConnected) {
+			return;
+		}
+
+		switch (name) {
+			case NavigationMenuElement.DATA_EXPANDED_STATE:
+				// invalid values
+				this.EnsureAttributeValidValue(name, ['expanded', 'collapsed'], newValue, oldValue);
+				// update expanded state
+				newValue === 'expanded' ? this.Expand(true) : this.Collapse(true);
+				break;
+
+			case NavigationMenuElement.DATA_POSITION:
+				// invalid values
+				this.EnsureAttributeValidValue(name, ['vertical', 'horizontal'], newValue, oldValue);
+				// update expanded state
+				newValue === 'horizontal' ? this.Horizontal() : this.Vertical();
+				break;
+		}
+	}
 
 	connectedCallback() {
 
-		// get elements
+		// element attributes
+		this.setAttribute('data-role', NavigationMenuElement.ROLE_NAV_MENU);
+
+		// element classes
+		this.classList.add(NavigationMenuElement.CLASS_NAV_MENU);
+
+		// load element template
+		let template = document.getElementById("navigation-menu-template");
+		this.appendChild(template.content.cloneNode(true));
+		template.remove();
+
+		// retrieve useful elements
 		this.eOverlay = this.querySelector('[data-role="navigation-menu-overlay"]');
 		this.eExpandToggle = this.querySelector('[data-role="ipb-navigation-menu--expand-toggle"]');
 		this.eMobileToggle = this.querySelector('[data-role="ipb-navigation-menu--mobile--toggle"]');
@@ -54,42 +97,50 @@ class NavigationMenuElement extends HTMLElement {
 		this.eMenuEntries = this.querySelector('.ipb-navigation-menu--menu-entries');
 		this.aMenuEntries = this.eMenuEntries.querySelectorAll('.brick_menu_item');
 		this.eMoreMenuItemsButton = this.querySelector('.ipb-navigation-menu--menu-entry--more');
+		this.eUserDropdown = this.querySelector('ipb-dropdown[data-role="ipb-user-dropdown"]');
 
 		// click on expand toggle
 		this.eExpandToggle.addEventListener('click', () => {
-			let bIsExpanded = this.classList.contains(NavigationMenuElement.CLASS_NAV_EXPANDED);
-			bIsExpanded ? this.Compress() : this.Expand();
-
-			// save user preference
-			SetUserPreference('portal.navigation_menu.expanded', bIsExpanded ? 'expanded' : 'collapsed', true);
+			// toggle expanded state
+			this.IsExpanded() ? this.Collapse(true) : this.Expand(true);
 		});
 
 		// click on mobile open toggle
 		this.eMobileToggle.addEventListener('click', () => {
+			// toggle open state
 			let bIsOpened = this.classList.contains(NavigationMenuElement.CLASS_MOBILE_OPENED);
 			bIsOpened ? this.Close() : this.Open();
 		});
-
-
-		// observe middle part resize
-		new ResizeObserver(() => this.MiddlePartResizeCallback()).observe(this.eMiddlePart);
-
-		// store menu entries flex gap
-		this.StoreMenuEntriesFlexColumnGap();
 
 		// hide mobile menu when clicking on overlay
 		this.eOverlay.addEventListener('click', () => {
 			this.eOverlay.classList.toggle(NavigationMenuElement.CLASS_HIDDEN, true);
 			this.Close();
 		});
+
+		// observe middle part resize
+		new ResizeObserver(() => this.MiddlePartResizeCallback()).observe(this.eMiddlePart);
+
+		// observe body resize
+		new ResizeObserver(() => this.BodyResizeCallback()).observe(document.body);
+
+		// store menu entries flex gap
+		this.StoreMenuEntriesFlexColumnGap();
+
+		// initial state
+		this.IsExpanded() ? this.Expand() : this.Collapse();
+		this.IsHorizontal() ? this.Horizontal() : this.Vertical();
+
+		this.bIsConnected = true;
 	}
 
-	/**
-	 * Store the gap between menu entries.
-	 * Used to compute the visible menu entries in horizontal mode.
-	 *
-	 * @constructor
-	 */
+	EnsureAttributeValidValue(attributeName, validValues, value, defaultValue) {
+		if (!validValues.includes(value)) {
+			this.setAttribute(attributeName, defaultValue);
+			throw new Error(`Invalid attribute value detected: attribute=${attributeName} value=${value} allowed=${JSON.stringify(validValues)} !`);
+		}
+	}
+
 	StoreMenuEntriesFlexColumnGap() {
 		let style = window.getComputedStyle(this.eMenuEntries);
 		let regex = /(\d)+px/g;
@@ -97,23 +148,39 @@ class NavigationMenuElement extends HTMLElement {
 		this.gap = match !== null ? parseInt(match[1]) : 10;
 	}
 
-	/**
-	 * Callback triggered when the middle part is resized.
-	 * @constructor
-	 */
+	BodyResizeCallback() {
+		this.UpdateUserDropDownPosition();
+	}
+
+	UpdateUserDropDownPosition() {
+
+		if (document.body.offsetWidth < NavigationMenuElement.MOBILE_WIDTH_THRESHOLD) {
+			// when mobile
+			this.eUserDropdown.setAttribute('data-placement', 'bottom-right');
+		} else {
+			if (this.IsHorizontal()) {
+				// when navbar is horizontal
+				this.eUserDropdown.setAttribute('data-placement', 'bottom-right');
+			} else if (this.IsVertical()) {
+				if (this.IsExpanded()) {
+					// when navbar is vertical and expanded
+					this.eUserDropdown.setAttribute('data-placement', 'top-right');
+				} else {
+					// when navbar is vertical and not expanded
+					this.eUserDropdown.setAttribute('data-placement', 'top-left');
+				}
+			}
+		}
+	}
+
 	MiddlePartResizeCallback() {
 
 		let style = window.getComputedStyle(this.eMenuEntries);
 		if (style.flexDirection === 'row') {
-			console.log('horizontal mode ResizeCallback');
 			this.UpdateMenuVisibleMenuEntriesInHorizontalMode();
 		}
 	}
 
-	/**
-	 * Update the visible menu entries in horizontal mode.
-	 * @constructor
-	 */
 	UpdateMenuVisibleMenuEntriesInHorizontalMode() {
 
 		let viewportWidth = this.eMiddlePart.offsetWidth;
@@ -129,7 +196,7 @@ class NavigationMenuElement extends HTMLElement {
 
 			let brickId = li.getAttribute('data-brick-id');
 			if (brickId !== null) {
-				this.querySelector(`.dropdown-menu--items-remainder .brick_menu_item[data-brick-id="${brickId}"]`).classList.toggle(NavigationMenuElement.CLASS_HIDDEN, iTotalWidth <= viewportWidth);
+				this.querySelector(`.ipb-dropdown-menu--items-remainder .brick_menu_item[data-brick-id="${brickId}"]`).classList.toggle(NavigationMenuElement.CLASS_HIDDEN, iTotalWidth <= viewportWidth);
 			}
 		});
 
@@ -137,10 +204,6 @@ class NavigationMenuElement extends HTMLElement {
 		this.eMoreMenuItemsButton.classList.toggle(NavigationMenuElement.CLASS_HIDDEN, iTotalWidth < viewportWidth);
 	}
 
-	/**
-	 * Reset the navigation menu.
-	 * @constructor
-	 */
 	ResetMenuEntriesVisibility() {
 
 		// restore menu items visibility...
@@ -170,38 +233,104 @@ class NavigationMenuElement extends HTMLElement {
 		});
 	}
 
-	Expand() {
+	Expand(bSaveUserPreference = false) {
+		// sync attribute
+		if (this.getAttribute(NavigationMenuElement.DATA_EXPANDED_STATE) !== 'expanded') {
+			this.setAttribute(NavigationMenuElement.DATA_EXPANDED_STATE, 'expanded');
+			return;
+		}
+		// set classes
 		this.classList.toggle(NavigationMenuElement.CLASS_NAV_EXPANDED, true);
+		// update user dropdown position
+		this.UpdateUserDropDownPosition();
+		// dispatch events
 		window.dispatchEvent(new Event('resize')); // do layout
+		this.dispatchEvent(new CustomEvent("state", {detail: 'expanded'}));
+		// save user preference
+		if (bSaveUserPreference) {
+			SetUserPreference('portal.navigation_menu.expanded', 'expanded', true);
+		}
 	}
 
-	Compress() {
+	IsExpanded() {
+		return this.getAttribute(NavigationMenuElement.DATA_EXPANDED_STATE) === 'expanded';
+	}
+
+	Collapse(bSaveUserPreference = false) {
+		// sync attribute
+		if (this.getAttribute(NavigationMenuElement.DATA_EXPANDED_STATE) !== 'collapsed') {
+			this.setAttribute(NavigationMenuElement.DATA_EXPANDED_STATE, 'collapsed');
+			return;
+		}
+		// set classes
 		this.classList.toggle(NavigationMenuElement.CLASS_NAV_EXPANDED, false);
+		// update user dropdown position
+		this.UpdateUserDropDownPosition();
+		// dispatch events
 		window.dispatchEvent(new Event('resize')); // do layout
+		this.dispatchEvent(new CustomEvent("state", {detail: 'collapsed'}));
+		// save user preference
+		if (bSaveUserPreference) {
+			SetUserPreference('portal.navigation_menu.expanded', 'collapsed', true);
+		}
 	}
 
 	Horizontal() {
-		this.InstallMenuEntriesTooltip(null);
+		// sync attribute
+		if (this.getAttribute(NavigationMenuElement.DATA_POSITION) !== 'horizontal') {
+			this.setAttribute(NavigationMenuElement.DATA_POSITION, 'horizontal');
+			return;
+		}
+		// set classes
 		document.querySelector('body').classList.toggle(NavigationMenuElement.CLASS_NAV_HORIZONTAL, true);
+		// install tooltip
+		this.InstallMenuEntriesTooltip(null);
+		// update menu entries visibility
 		this.UpdateMenuVisibleMenuEntriesInHorizontalMode();
+		// update user dropdown position
+		this.UpdateUserDropDownPosition();
+		// dispatch events
 		window.dispatchEvent(new Event('resize')); // do layout
+		this.dispatchEvent(new CustomEvent("position", {detail: 'horizontal'}));
+	}
+
+	IsHorizontal() {
+		return this.getAttribute(NavigationMenuElement.DATA_POSITION) === 'horizontal';
 	}
 
 	Vertical() {
-		this.InstallMenuEntriesTooltip('right');
+		// sync attribute
+		if (this.getAttribute(NavigationMenuElement.DATA_POSITION) !== 'vertical') {
+			this.setAttribute(NavigationMenuElement.DATA_POSITION, 'vertical');
+			return;
+		}
+		// set classes
 		document.querySelector('body').classList.toggle(NavigationMenuElement.CLASS_NAV_HORIZONTAL, false);
+		// install tooltip
+		this.InstallMenuEntriesTooltip('right');
+		// reset menu entries visibility
 		this.ResetMenuEntriesVisibility();
+		// update user dropdown position
+		this.UpdateUserDropDownPosition();
+		// dispatch events
 		window.dispatchEvent(new Event('resize')); // do layout
+		this.dispatchEvent(new CustomEvent("position", {detail: 'vertical'}));
+	}
+
+	IsVertical() {
+		return this.getAttribute(NavigationMenuElement.DATA_POSITION) === 'vertical';
 	}
 
 	Open() {
 		this.classList.toggle(NavigationMenuElement.CLASS_MOBILE_OPENED, true);
 		this.eOverlay.classList.toggle(NavigationMenuElement.CLASS_HIDDEN, false);
+		this.dispatchEvent(new CustomEvent("mobile_menu", {detail: 'opened'}));
 	}
 
 	Close() {
 		this.classList.toggle(NavigationMenuElement.CLASS_MOBILE_OPENED, false);
 		this.eOverlay.classList.toggle(NavigationMenuElement.CLASS_HIDDEN, true);
+		this.dispatchEvent(new CustomEvent("mobile_menu", {detail: 'closed'}));
 	}
 
 }

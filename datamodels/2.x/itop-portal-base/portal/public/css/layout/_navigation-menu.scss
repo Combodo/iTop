@@ -138,7 +138,7 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
 // menu entry
 .ipb-navigation-menu--menu-entry,
   // prevent bootstrap styling
-.dropdown-menu--items-remainder > li > a {
+.ipb-dropdown-menu--items-remainder > li > a {
   flex-grow: 0;
   width: $ipb-navigation-menu--menu-entry--size;
   height: $ipb-navigation-menu--menu-entry--size;
@@ -161,7 +161,7 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
   }
 
   // hover and focus effect
-  &:hover, &:focus {
+  &:hover, &:focus:not(.ipb-not-focusable) {
     color: white;
     background-color: $combodo-dark-blue-gray;
   }
@@ -169,12 +169,12 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
 }
 
 // drop down items remainder
-.dropdown--items-remainder {
+.ipb-dropdown--items-remainder {
   align-self: center;
 }
 
 // drop down menu items remainder
-.dropdown-menu--items-remainder {
+.ipb-dropdown-menu--items-remainder {
   padding: $dropdown-menu--items-remainder--padding;
   background-color: $ipb-navigation-menu--background-color;
   border-radius: $dropdown-menu--items-remainder--border-radius;
@@ -408,7 +408,7 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
 
       }
 
-      .ipb-navigation-menu--menu-entry--wrapper.ipb-hidden {
+      .ipb-navigation-menu--menu-entry--wrapper.ipb-is-hidden {
         display: initial !important; // ensure hidden elements by horizontal mode are displayed in mobile mode
       }
 
@@ -460,9 +460,4 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
 
   }
 
-}
-
-
-.ipb-hidden {
-  display: none !important;
 }
