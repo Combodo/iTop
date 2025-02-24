@@ -37,6 +37,7 @@ class PortalCollector extends AbstractDataCollector
 			'instances_overridden_templates' => $this->oTemplatesProviderService->GetInstancesOverriddenTemplatesPaths(),
 			'templates_count' => $this->ComputeOverridesCount($aTemplatesDefinitions),
 			'ui_version' => $oRegister->GetUIVersion(),
+			'ui_settings' => $oRegister->GetSettings(),
 		];
 	}
 
@@ -82,6 +83,15 @@ class PortalCollector extends AbstractDataCollector
 	public function GetUIVersion(): string
 	{
 		return $this->data['ui_version'];
+	}
+
+	/**
+	 * @return string
+	 * @noinspection PhpUnused
+	 */
+	public function GetUISettings(): array
+	{
+		return $this->data['ui_settings'];
 	}
 
 	private function ComputeOverridesCount($aTemplatesDefinitions): array

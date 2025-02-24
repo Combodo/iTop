@@ -17,6 +17,9 @@
       <properties>
         <name>portal:itop-portal</name>
         <ui_version>2025</ui_version>
+        <ui_settings>
+          <navigation_menu>vertical</navigation_menu>
+        </ui_settings>
         <!-- Can be either a fileref or a relative path to the file (To be tested). Takes over env-xxx/branding/portal-logo.png -->
         <!-- Priority order is <logo> from xml > env-xxx/branding/portal-logo.png > /images/logo-itop-dark-bg.svg -->
         <!--<fileref ref="brt_6a2be154b2a62659d3332c513bdad715"  />-->

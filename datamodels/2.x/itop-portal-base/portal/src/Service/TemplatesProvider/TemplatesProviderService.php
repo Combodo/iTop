@@ -92,8 +92,14 @@ class TemplatesProviderService
 			$sUIVersion = $aCombodoPortalInstanceConf['properties']['ui_version'];
 		}
 
+		// UI settings
+		$aUISettings = [];
+		if (isset($aCombodoPortalInstanceConf['properties']['ui_settings'])) {
+			$aUISettings = $aCombodoPortalInstanceConf['properties']['ui_settings'];
+		}
+
 		// create template register
-		$oTemplateRegister = new TemplatesRegister($sUIVersion);
+		$oTemplateRegister = new TemplatesRegister($sUIVersion, $aUISettings);
 
 		// search for templates providers
 		// only non-abstract classes are discovered.

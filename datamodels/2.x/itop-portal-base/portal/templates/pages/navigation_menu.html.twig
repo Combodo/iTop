@@ -1,3 +1,4 @@
+{# template for the navigation menu custom element #}
 <template id="navigation-menu-template">
 
     {# TOP PART #}
@@ -38,12 +39,16 @@
     <div class="ipb-navigation-menu--middle-part menu">
         {% block pNavigationSideMenu %}
             <ul class="ipb-navigation-menu--menu-entries">
-                <li class="brick_menu_item ipb-navigation-menu--menu-entry--wrapper {% if oBrick is not defined %}active{% endif %}">
+                {# home menu #}
+                <li class="brick_menu_item ipb-navigation-menu--menu-entry--wrapper {% if oBrick is not defined %}active{% endif %}"
+                    data-tooltip-content="{{ 'Page:Home'|dict_s }}"
+                    data-tooltip-placement="right" data-tooltip-instantiated="true">
                     <a href="{{ app.url_generator.generate('p_home') }}" class="ipb-navigation-menu--menu-entry ipb-navigation-menu--menu-entry--brick-item">
                         <span class="ipb-navigation-menu--menu-entry--icon brick_icon fas fa-home fa-2x"></span>
                         <span class="ipb-navigation-menu--menu-entry--title">{{ 'Page:Home'|dict_s }}</span>
                     </a>
                 </li>
+                {# others... #}
                 {% for brick in app['brick_collection'].navigation_menu_ordering %}
                     {% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
                         <li class="brick_menu_item ipb-navigation-menu--menu-entry--wrapper {% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}"
@@ -66,7 +71,7 @@
         {% endblock %}
     </div>
 
-
+    {# items remainder drop down #}
     <div class="ipb-dropdown--items-remainder dropdown">
         <a id="menu_items_remainder" href="#"
            class="ipb-navigation-menu--menu-entry ipb-navigation-menu--menu-entry--more ipb-is-hidden"
@@ -92,7 +97,6 @@
             {% endfor %}
         </ul>
     </div>
-
 
     {# extensibility #}
     {% block pPageUIExtensionNavigationMenuSidebar %}
@@ -121,7 +125,7 @@
             </div>
         </a>
 
-        {# drop down #}
+        {# user drop down #}
         <ipb-dropdown class="ipb-dropdown user_options" data-role="ipb-user-dropdown" aria-labelledby="user_options"
                       data-container="body">
             <li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fas fa-user fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
@@ -156,11 +160,13 @@
         </a>
     </div>
 
+    {# overlay #}
     <div class="ipb-navigation-menu-overlay ipb-is-hidden" data-role="navigation-menu-overlay"></div>
 
 </template>
 
+{# navigation menu custom element #}
 <nav id="sidebar" is="ipb-navigation-menu"
-     data-expanded-state="{% if user_preferences['portal.navigation_menu.expanded'] is defined %}{{ user_preferences['portal.navigation_menu.expanded'] }}{% else %}expanded{% endif %}"
-     data-position="vertical">
+     {% if user_preferences['portal.navigation_menu.expanded'] is defined %}data-expanded-state="{{ user_preferences['portal.navigation_menu.expanded'] }}"{% endif %}
+        {% if ui_settings is defined %}data-position="{{ ui_settings['navigation_menu'] }}"{% endif %}>
 </nav>

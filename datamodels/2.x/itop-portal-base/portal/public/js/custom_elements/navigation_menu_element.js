@@ -35,6 +35,9 @@ class NavigationMenuElement extends HTMLElement {
 	static CLASS_MOBILE_OPENED = 'ipb-is-opened';
 	static CLASS_HIDDEN = 'ipb-is-hidden';
 
+	static DEFAULT_POSITION = 'vertical';
+	static DEFAULT_STATE = 'expanded';
+
 	static {
 		customElements.define("ipb-navigation-menu", NavigationMenuElement, {extends: 'nav'});
 	}
@@ -64,7 +67,7 @@ class NavigationMenuElement extends HTMLElement {
 				// invalid values
 				this.EnsureAttributeValidValue(name, ['expanded', 'collapsed'], newValue, oldValue);
 				// update expanded state
-				newValue === 'expanded' ? this.Expand(true) : this.Collapse(true);
+				newValue === 'expanded' ? this.Expand() : this.Collapse();
 				break;
 
 			case NavigationMenuElement.DATA_POSITION:
@@ -128,10 +131,9 @@ class NavigationMenuElement extends HTMLElement {
 		this.StoreMenuEntriesFlexColumnGap();
 
 		// initial state
+		this.bIsConnected = true;
 		this.IsExpanded() ? this.Expand() : this.Collapse();
 		this.IsHorizontal() ? this.Horizontal() : this.Vertical();
-
-		this.bIsConnected = true;
 	}
 
 	EnsureAttributeValidValue(attributeName, validValues, value, defaultValue) {
@@ -233,6 +235,10 @@ class NavigationMenuElement extends HTMLElement {
 		});
 	}
 
+	GetState() {
+		return this.getAttribute(NavigationMenuElement.DATA_EXPANDED_STATE) !== null ? this.getAttribute(NavigationMenuElement.DATA_EXPANDED_STATE) : NavigationMenuElement.DEFAULT_STATE;
+	}
+
 	Expand(bSaveUserPreference = false) {
 		// sync attribute
 		if (this.getAttribute(NavigationMenuElement.DATA_EXPANDED_STATE) !== 'expanded') {
@@ -252,10 +258,6 @@ class NavigationMenuElement extends HTMLElement {
 		}
 	}
 
-	IsExpanded() {
-		return this.getAttribute(NavigationMenuElement.DATA_EXPANDED_STATE) === 'expanded';
-	}
-
 	Collapse(bSaveUserPreference = false) {
 		// sync attribute
 		if (this.getAttribute(NavigationMenuElement.DATA_EXPANDED_STATE) !== 'collapsed') {
@@ -273,6 +275,37 @@ class NavigationMenuElement extends HTMLElement {
 		if (bSaveUserPreference) {
 			SetUserPreference('portal.navigation_menu.expanded', 'collapsed', true);
 		}
+	}
+
+	IsExpanded() {
+		return this.GetState() === 'expanded';
+	}
+
+	IsCollapsed() {
+		return this.GetState() === 'collapsed';
+	}
+
+	GetPosition() {
+		return this.getAttribute(NavigationMenuElement.DATA_POSITION) !== null ? this.getAttribute(NavigationMenuElement.DATA_POSITION) : NavigationMenuElement.DEFAULT_POSITION;
+	}
+
+	Vertical() {
+		// sync attribute
+		if (this.getAttribute(NavigationMenuElement.DATA_POSITION) !== 'vertical') {
+			this.setAttribute(NavigationMenuElement.DATA_POSITION, 'vertical');
+			return;
+		}
+		// set classes
+		document.querySelector('body').classList.toggle(NavigationMenuElement.CLASS_NAV_HORIZONTAL, false);
+		// install tooltip
+		this.InstallMenuEntriesTooltip('right');
+		// reset menu entries visibility
+		this.ResetMenuEntriesVisibility();
+		// update user dropdown position
+		this.UpdateUserDropDownPosition();
+		// dispatch events
+		window.dispatchEvent(new Event('resize')); // do layout
+		this.dispatchEvent(new CustomEvent("position", {detail: 'vertical'}));
 	}
 
 	Horizontal() {
@@ -295,30 +328,11 @@ class NavigationMenuElement extends HTMLElement {
 	}
 
 	IsHorizontal() {
-		return this.getAttribute(NavigationMenuElement.DATA_POSITION) === 'horizontal';
-	}
-
-	Vertical() {
-		// sync attribute
-		if (this.getAttribute(NavigationMenuElement.DATA_POSITION) !== 'vertical') {
-			this.setAttribute(NavigationMenuElement.DATA_POSITION, 'vertical');
-			return;
-		}
-		// set classes
-		document.querySelector('body').classList.toggle(NavigationMenuElement.CLASS_NAV_HORIZONTAL, false);
-		// install tooltip
-		this.InstallMenuEntriesTooltip('right');
-		// reset menu entries visibility
-		this.ResetMenuEntriesVisibility();
-		// update user dropdown position
-		this.UpdateUserDropDownPosition();
-		// dispatch events
-		window.dispatchEvent(new Event('resize')); // do layout
-		this.dispatchEvent(new CustomEvent("position", {detail: 'vertical'}));
+		return this.GetPosition() === 'horizontal';
 	}
 
 	IsVertical() {
-		return this.getAttribute(NavigationMenuElement.DATA_POSITION) === 'vertical';
+		return this.GetPosition() === 'vertical';
 	}
 
 	Open() {

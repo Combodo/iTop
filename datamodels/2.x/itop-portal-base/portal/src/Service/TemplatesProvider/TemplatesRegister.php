@@ -33,8 +33,7 @@ class TemplatesRegister
 	/** @var array Templates definitions (possibly altered by portal configuration) */
 	private array $aTemplatesDefinitions = [];
 
-
-	public function __construct(private string $sTemplateUIVersion = 'unset')
+	public function __construct(private string $sTemplateUIVersion = 'unset', private array $aSettings = [])
 	{
 
 	}
@@ -45,6 +44,16 @@ class TemplatesRegister
 	public function GetUIVersion(): string
 	{
 		return $this->sTemplateUIVersion;
+	}
+
+	public function GetSettings(): array
+	{
+		return $this->aSettings;
+	}
+
+	public function GetSetting(string $sSettingName): string
+	{
+		return $this->aSettings[$sSettingName];
 	}
 
 	public function IsProviderExists(string $sProviderId): bool

@@ -94,6 +94,28 @@
         </div>
     </div>
 
+    {# settings #}
+    <h2>Settings</h2>
+    {# help #}
+    <p class="help">
+        List of the visual settings used by the portal.
+    </p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Setting</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        {% for setting, value in collector.GetUISettings %}
+            <tr>
+                <td>{{ setting }}</td>
+                <td>{{ value }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
     {# Instances overloads #}
     <h2>Bricks declared templates list</h2>
     {# help #}

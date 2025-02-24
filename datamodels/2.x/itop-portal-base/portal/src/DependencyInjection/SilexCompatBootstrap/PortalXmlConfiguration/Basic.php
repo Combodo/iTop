@@ -76,6 +76,9 @@ class Basic extends AbstractConfiguration
 			'properties' => array(
 				'id'              => $_ENV['PORTAL_ID'],
 				'ui_version' => '2025',
+				'ui_settings' => [
+					'navigation_menu' => 'horizontal',
+				],
 				'name'            => 'Page:DefaultTitle',
 				'logo'            => Branding::GetPortalLogoAbsoluteUrl(),
 				'favicon'         => Branding::GetPortalFavIconAbsoluteUrl(),
@@ -128,6 +131,11 @@ class Basic extends AbstractConfiguration
 					$aPortalConf['properties'][$oPropertyNode->nodeName] = $oPropertyNode->GetText(
 						$aPortalConf['properties'][$oPropertyNode->nodeName]
 					);
+				break;
+				case 'ui_settings':
+					foreach ($oPropertyNode->GetNodes('*') as $oSubNode) {
+						$aPortalConf['properties'][$oPropertyNode->nodeName][$oSubNode->nodeName] = $oSubNode->GetText();
+					}
 					break;
 				case 'themes':
 				case 'templates':

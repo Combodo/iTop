@@ -21,6 +21,7 @@ namespace Combodo\iTop\Portal\Twig;
 
 use appUserPreferences;
 use Combodo\iTop\Portal\EventListener\UserProvider;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
@@ -35,17 +36,16 @@ use Twig\Extension\GlobalsInterface;
  */
 class AppGlobal extends AbstractExtension implements GlobalsInterface
 {
-	/** @var \Combodo\iTop\Portal\EventListener\UserProvider $userProvider */
-	private $userProvider;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param \Combodo\iTop\Portal\EventListener\UserProvider $userProvider
+	 * @param \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService $oTemplateProviderService
 	 */
-	public function __construct(UserProvider $userProvider)
+	public function __construct(private UserProvider $userProvider, private TemplatesProviderService $oTemplateProviderService)
 	{
-		$this->userProvider = $userProvider;
+
 	}
 
 	/**
@@ -58,6 +58,8 @@ class AppGlobal extends AbstractExtension implements GlobalsInterface
 		$data = array();
 		$data['allowed_portals'] = $this->userProvider->getAllowedPortals();
 		$data['user_preferences'] = json_decode(appUserPreferences::GetAsJSON(), true);
+
+		$data['ui_settings'] = $this->oTemplateProviderService->GetRegister()->GetSettings();
 
 		return $data;
 	}
