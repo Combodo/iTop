@@ -4,13 +4,13 @@ $ibo-vendors-datatables--column-sorting-icon--content: "\f0dc" !default;
 $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-asc: "\f0d8" !default;
 $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc: "\f0d7" !default;
 
-.dataTable {
+table.dataTable thead {
 
-  thead tr th {
-    cursor: pointer;
+  .sorting {
     white-space: nowrap;
+  }
 
-    &.sorting::after {
+  .sorting::after {
       position: relative;
       bottom: unset;
       right: -10px;
@@ -19,15 +19,14 @@ $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc: "\f0d7" !
       @extend %fa-solid-base;
     }
 
-    &.sorting_asc:after {
+  .sorting_asc:after {
       content: $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-asc;
       opacity: $ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted;
     }
 
-    &.sorting_desc:after {
+  .sorting_desc:after {
       content: $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc;
       opacity: $ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted;
     }
-  }
 
 }
