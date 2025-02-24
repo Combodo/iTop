@@ -102,8 +102,24 @@ class IpbDropdown extends HTMLElement {
 					menu.style.top = `${checkBounds(rect.top + window.scrollY + rect.height / 2 - menu.offsetHeight / 2, 0, window.innerHeight - menu.offsetHeight)}px`;
 					menu.style.left = `${checkBounds(rect.left + window.scrollX - menu.offsetWidth, 0, window.innerWidth - menu.offsetWidth)}px`;
 					break;
+				case 'left-top':
+					menu.style.top = `${checkBounds(rect.top + window.scrollY, 0, window.innerHeight - menu.offsetHeight)}px`;
+					menu.style.left = `${checkBounds(rect.left + window.scrollX - menu.offsetWidth, 0, window.innerWidth - menu.offsetWidth)}px`;
+					break;
+				case 'left-bottom':
+					menu.style.top = `${checkBounds(rect.bottom + window.scrollY - menu.offsetHeight, 0, window.innerHeight - menu.offsetHeight)}px`;
+					menu.style.left = `${checkBounds(rect.left + window.scrollX - menu.offsetWidth, 0, window.innerWidth - menu.offsetWidth)}px`;
+					break;
 				case 'right':
 					menu.style.top = `${checkBounds(rect.top + window.scrollY + rect.height / 2 - menu.offsetHeight / 2, 0, window.innerHeight - menu.offsetHeight)}px`;
+					menu.style.left = `${checkBounds(rect.right + window.scrollX, 0, window.innerWidth - menu.offsetWidth)}px`;
+					break;
+				case 'right-top':
+					menu.style.top = `${checkBounds(rect.top + window.scrollY, 0, window.innerHeight - menu.offsetHeight)}px`;
+					menu.style.left = `${checkBounds(rect.right + window.scrollX, 0, window.innerWidth - menu.offsetWidth)}px`;
+					break;
+				case 'right-bottom':
+					menu.style.top = `${checkBounds(rect.bottom + window.scrollY - menu.offsetHeight, 0, window.innerHeight - menu.offsetHeight)}px`;
 					menu.style.left = `${checkBounds(rect.right + window.scrollX, 0, window.innerWidth - menu.offsetWidth)}px`;
 					break;
 				case 'bottom':
@@ -111,27 +127,62 @@ class IpbDropdown extends HTMLElement {
 					menu.style.top = `${checkBounds(rect.bottom + window.scrollY, 0, window.innerHeight - menu.offsetHeight)}px`;
 					menu.style.left = `${checkBounds(rect.left + window.scrollX + rect.width / 2 - menu.offsetWidth / 2, 0, window.innerWidth - menu.offsetWidth)}px`;
 					break;
+				case 'bottom-left':
+					menu.style.top = `${checkBounds(rect.bottom + window.scrollY, 0, window.innerHeight - menu.offsetHeight)}px`;
+					menu.style.left = `${checkBounds(rect.left + window.scrollX, 0, window.innerWidth - menu.offsetWidth)}px`;
+					break;
 			}
 		}
 		else {
 			switch (placement) {
 				case 'top':
 					menu.style.top = `-${menu.offsetHeight}px`;
-					menu.style.left = `0px`;
+					menu.style.left = `-${menu.offsetWidth/2 - rect.width/2}px`;
+					break;
+					case 'top-left':
+					menu.style.top = `-${menu.offsetHeight}px`;
+						menu.style.left = `-${menu.offsetWidth - rect.width/2}px`;
+					break;
+				case 'top-right':
+					menu.style.top = `-${menu.offsetHeight}px`;
+					menu.style.left = `${rect.width/2}px`;
 					break;
 				case 'left':
 					menu.style.top = `-${rect.height}px`;
-					menu.style.left = `-${rect.width + menu.offsetWidth / 2}px`;
+					menu.style.left = `-${menu.offsetWidth}px`;
+					break;
+				case 'left-top':
+					menu.style.bottom = `${rect.height/2}px`;
+					menu.style.left = `-${menu.offsetWidth}px`;
+					break;
+				case 'left-bottom':
+					menu.style.top = `${rect.height/2}px`;
+					menu.style.left = `-${menu.offsetWidth}px`;
 					break;
 				case 'right':
-					menu.style.bottom = `0px`;
+					menu.style.top = `-${rect.height}px`;
 					menu.style.right = `-${menu.offsetWidth}px`;
+					break;
+				case 'right-top':
+					menu.style.bottom = `${rect.height/2}px`;
+					menu.style.left = `${rect.width}px`;
+					break;
+				case 'right-bottom':
+					menu.style.top = `${rect.height/2}px`;
+					menu.style.left = `${rect.width}px`;
 					break;
 				case 'bottom':
 				default:
 					menu.style.top = `${rect.height}px`;
-					menu.style.left = `0px`;
+					menu.style.left = `-${menu.offsetWidth/2 - rect.width/2}px`;
 					break;
+				case 'bottom-left':
+					menu.style.top = `${rect.height}px`;
+					menu.style.left = `-${menu.offsetWidth - rect.width/2}px`;
+					break
+				case 'bottom-right':
+					menu.style.top = `${rect.height}px`;
+					menu.style.left = `${rect.width/2}px`;
 			}
 		}
 	}
