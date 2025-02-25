@@ -204,6 +204,13 @@ class ModuleDiscovery
 		return self::OrderModulesByDependencies(self::$m_aModules, $bAbortOnMissingDependency, $aModulesToLoad);
 	}
 
+	public static function SortModulesByCountOfDepencenciesDescending(array &$aOngoingDependencies) : void
+	{
+		uasort($aOngoingDependencies, function (array $aDeps1, array $aDeps2){
+			return count($aDeps1) - count($aDeps2);
+		});
+	}
+
 	/**
 	 * Arrange an list of modules, based on their (inter) dependencies
 	 * @param array $aModules The list of modules to process: 'id' => $aModuleInfo
@@ -216,43 +223,65 @@ class ModuleDiscovery
 	{
 		// Order the modules to take into account their inter-dependencies
 		$aDependencies = [];
+		$aOngoingDependencies = [];
 		$aSelectedModules = [];
 		foreach ($aModules as $sId => $aModule) {
 			list($sModuleName, ) = self::GetModuleName($sId);
-			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad)) {
-				$aDependencies[$sId] = $aModule['dependencies'];
+			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad))
+			{
+				$aCurrentDependencies = $aModule['dependencies'];
+				$aDependencies[$sId] = $aCurrentDependencies;
+				$aOngoingDependencies[$sId] = $aCurrentDependencies;
 				$aSelectedModules[$sModuleName] = true;
 			}
 		}
-		ksort($aDependencies);
+		self::SortModulesByCountOfDepencenciesDescending($aOngoingDependencies);
 		$aOrderedModules = [];
-		$iLoopCount = 0;
-		while (($iLoopCount < count($aModules)) && (count($aDependencies) > 0)) {
-			foreach ($aDependencies as $sId => $aRemainingDeps) {
+		$iLoopCount = 1;
+		$iModulesCount = count($aModules);
+		while(($iLoopCount < $iModulesCount) && (count($aOngoingDependencies) > 0) )
+		{
+			foreach($aOngoingDependencies as $sId => $aCurrentRemainingDeps)
+			{
+				$aNextDependencies=[];
 				$bDependenciesSolved = true;
-				foreach ($aRemainingDeps as $sDepId) {
-					if (!self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules)) {
+				foreach($aCurrentRemainingDeps as $sDepId)
+				{
+					if (!self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules))
+					{
+						$aNextDependencies[]=$sDepId;
 						$bDependenciesSolved = false;
 					}
 				}
 				if ($bDependenciesSolved) {
 					$aOrderedModules[] = $sId;
 					unset($aDependencies[$sId]);
+					unset($aOngoingDependencies[$sId]);
+					continue;
 				}
+
+				$aOngoingDependencies[$sId]=$aNextDependencies;
 			}
 			$iLoopCount++;
+			self::SortModulesByCountOfDepencenciesDescending($aOngoingDependencies);
 		}
-		if ($bAbortOnMissingDependency && count($aDependencies) > 0) {
+		if ($bAbortOnMissingDependency && count($aOngoingDependencies) > 0)
+		{
 			$aModulesInfo = [];
 			$aModuleDeps = [];
-			foreach ($aDependencies as $sId => $aDeps) {
+			foreach($aOngoingDependencies as $sId => $aCurrentRemainingDeps)
+			{
 				$aModule = $aModules[$sId];
 				$aDepsWithIcons = [];
-				foreach ($aDeps as $sIndex => $sDepId) {
-					if (self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules)) {
-						$aDepsWithIcons[$sIndex] = '✅ '.$sDepId;
-					} else {
-						$aDepsWithIcons[$sIndex] = '❌ '.$sDepId;
+				$aDeps=$aDependencies[$sId];
+				foreach($aDeps as $sIndex => $sDepId)
+				{
+					if (in_array($sDepId, $aCurrentRemainingDeps))
+					{
+						$aDepsWithIcons[$sIndex] = '❌ ' .  $sDepId;
+					} else
+					{
+						$aDepsWithIcons[$sIndex] = '✅ ' . $sDepId;
 					}
 				}
 				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on: ".implode(' + ', $aDepsWithIcons);
