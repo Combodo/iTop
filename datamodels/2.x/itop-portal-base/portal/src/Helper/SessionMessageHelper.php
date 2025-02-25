@@ -140,7 +140,7 @@ class SessionMessageHelper implements IteratorAggregate
 				$aRanks = array();
 				foreach ($aMessageObjectData as $sMessageId => $aMessageData)
 				{
-					$sMsgClass = 'alert alert-dismissible alert-';
+					$sMsgClass = 'ipb-alert alert alert-dismissible alert-';
 					switch ($aMessageData['severity'])
 					{
 						case static::ENUM_SEVERITY_INFO:
