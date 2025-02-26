@@ -1,3 +1,5 @@
+@import "../../../../../../node_modules/bulma-scss/utilities/mixins";
+
 /* SCSS variables */
 $ipb-tile--width: 450px !default;
 $ipb-tile--min-width: 150px !default;
@@ -40,7 +42,7 @@ $ipb-tile--description--color: $text-color !default;
   height: 100%;
   display: flex;
   flex-direction: column;
-  row-gap: 8px;
+  row-gap: 5px;
   column-gap: 8px;
 }
 
@@ -49,12 +51,13 @@ $ipb-tile--description--color: $text-color !default;
 .ipb-tile--header {
   display: flex;
   flex-direction: column;
-  column-gap: 5px;
+  column-gap: 8px;
   row-gap: 5px;
 
   &.ipb-tile--header--inline {
     flex-direction: row;
     align-items: center;
+    justify-content: center;
   }
 }
 
@@ -98,19 +101,24 @@ $ipb-tile--description--color: $text-color !default;
 /* title */
 
 .ipb-tile--title{
-  display: flex;
-  align-items: center;
+  flex-grow: 1;
   color: $ipb-tile--title--color;
   font-size: $ipb-tile--title--font-size;
   font-weight: bold;
-  flex-grow: 1;
+  @include ipb-text-overflow-ellipsis;
 }
 
 /* actions */
 
 .ipb-tile--actions {
+  flex-shrink: 0;
+  white-space: nowrap;
   color: #6e6e6e !important;
   outline: none !important;
+
+  > .ipb-button-group {
+    display: inline-block;
+  }
 
   button:focus {
     outline: none;
@@ -178,8 +186,6 @@ $ipb-tile--description--color: $text-color !default;
 $ipb-tile--manage-brick--chart--margin-top: $common-spacing-500 !default;
 $ipb-tile--manage-brick--badge--margin-top: $common-font-size-400 !default;
 $ipb-tile--manage-brick--badge--item--padding: $common-spacing-200 $common-spacing-300 !default;
-$ipb-tile--manage-brick--badge--item--margin-right: $common-spacing-400 !default;
-$ipb-tile--manage-brick--badge--item--margin-bottom: $common-spacing-300 !default;
 $ipb-tile--manage-brick--badge--item--border-radius: $common-border-radius-300 !default;
 $ipb-tile--manage-brick--badge--count--padding: 0 $common-spacing-300 !default;
 $ipb-tile--manage-brick--badge--count--font-size: $common-font-size-300 !default;
@@ -191,7 +197,14 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 
 .ipb-tile--manage .ipb-tile--title {
 
+  display: flex;
+  align-items: center;
+
   > span:first-child {
+    @include ipb-text-overflow-ellipsis;
+  }
+
+  > span:nth-child(2) {
     @include ipb-following-dot;
   }
 
@@ -213,13 +226,13 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 .ipb-tile--manage-brick--badge{
   display: flex;
   flex-wrap: wrap;
+  column-gap: 8px;
+  row-gap: 5px;
 }
 
 .ipb-tile--manage-brick--badge--item{
   display: flex;
   align-items: center;
-  margin-right: $ipb-tile--manage-brick--badge--item--margin-right;
-  margin-bottom: $ipb-tile--manage-brick--badge--item--margin-bottom;
   padding: $ipb-tile--manage-brick--badge--item--padding;
   border-radius: $ipb-tile--manage-brick--badge--item--border-radius;
   transition: background-color 1s ease;
@@ -262,28 +275,22 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
   }
 }
 
-
-.ipb-button-group {
-  display: inline-flex;
-  flex-wrap: wrap;
-
-  button:not(:last-child, :first-child) {
-    border-radius: 0 !important;
-    border: none;
-    border-right: 1px #dcdcdc solid;
+@include mobile {
+  .ipb-tile--header {
+    flex-direction: column;
+    align-items: center;
   }
-
-  button:first-child {
-    border-top-right-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-    border-right: none;
-    border-right: 1px #dcdcdc solid;
+  .ipb-tile--title {
+    align-self: stretch;
+    text-align: center;
+    justify-content: center;
   }
-
-  button:last-child {
-    border-top-left-radius: 0 !important;
-    border-bottom-left-radius: 0 !important;
-    border-left: none;
+  .ipb-tile--header.ipb-tile--header--inline {
+    flex-direction: column;
+    align-items: center;
   }
-
+  .ipb-tile--manage-brick--badge {
+    justify-content: center;
+  }
 }
+

@@ -94,6 +94,12 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
   }
 }
 
+// List view
+
+#brick-content-table {
+  width: 100% !important;
+}
+
 // Mosaic view 
 
 #brick_content_mosaic{

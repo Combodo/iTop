@@ -90,7 +90,7 @@ class NavigationMenuElement extends HTMLElement {
 		// load element template
 		let template = document.getElementById("navigation-menu-template");
 		this.appendChild(template.content.cloneNode(true));
-		template.remove();
+		template.remove(); // not needed anymore
 
 		// retrieve useful elements
 		this.eOverlay = this.querySelector('[data-role="navigation-menu-overlay"]');
@@ -118,6 +118,11 @@ class NavigationMenuElement extends HTMLElement {
 		// hide mobile menu when clicking on overlay
 		this.eOverlay.addEventListener('click', () => {
 			this.eOverlay.classList.toggle(NavigationMenuElement.CLASS_HIDDEN, true);
+			this.Close();
+		});
+
+		// close mobile menu when clicking on menu entries
+		this.eMenuEntries.addEventListener('click', () => {
 			this.Close();
 		});
 
@@ -296,7 +301,7 @@ class NavigationMenuElement extends HTMLElement {
 			return;
 		}
 		// set classes
-		document.querySelector('body').classList.toggle(NavigationMenuElement.CLASS_NAV_HORIZONTAL, false);
+		document.body.classList.toggle(NavigationMenuElement.CLASS_NAV_HORIZONTAL, false);
 		// install tooltip
 		this.InstallMenuEntriesTooltip('right');
 		// reset menu entries visibility
@@ -315,7 +320,7 @@ class NavigationMenuElement extends HTMLElement {
 			return;
 		}
 		// set classes
-		document.querySelector('body').classList.toggle(NavigationMenuElement.CLASS_NAV_HORIZONTAL, true);
+		document.body.classList.toggle(NavigationMenuElement.CLASS_NAV_HORIZONTAL, true);
 		// install tooltip
 		this.InstallMenuEntriesTooltip(null);
 		// update menu entries visibility

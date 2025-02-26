@@ -5,10 +5,12 @@
 {% block pTileTitle %}
     <div class="ipb-tile--title">
         <span>{{ oBrick.GetTitle()|dict_s }}</span>
-        <span>{{ iCount }}</span>
-        {% if sIconURL is defined %}
-            <img id="img{{ id }}" src="{{ sIconURL }}" class="ipb-tile--decoration--icon class-icon" alt="Class Icon">
-        {% endif %}
+        <span>
+            <span>{{ iCount }}</span>
+            {% if sIconURL is defined %}
+                <img id="img{{ id }}" src="{{ sIconURL }}" class="ipb-tile--decoration--icon class-icon" alt="Class Icon">
+            {% endif %}
+        </span>
     </div>
 {% endblock %}
 

@@ -5,7 +5,7 @@ $ipb-following-dot--margin-y: auto !default;
 $ipb-following-dot--margin-x: $common-spacing-300 !default;
 
 @mixin ipb-following-dot($size:$ipb-following-dot--size, $color:$ipb-following-dot--color) {
-  &:after{
+  &:before {
     content: '';
     height: $size;
     width: $size;
