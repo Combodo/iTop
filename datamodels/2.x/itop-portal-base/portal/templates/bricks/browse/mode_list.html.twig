@@ -44,6 +44,7 @@
 					"data": oLevelsProperties[sKey].alias,
 					"render":
 						{_: function(data, type, row){
+                                let wrapperElement = $('<div></div>');
 							var cellElem;
 							var levelAltId = data.level_alias+'_'+data.id;
 							var levelActions;
@@ -64,7 +65,8 @@
 							levelActionsKeys = Object.keys(levelActions);
 
 							// Preparing the cell data
-							cellElem = (levelActionsKeys.length > 0) ? $('<a></a>') : $('<span></span>');
+                                cellElem = (levelActionsKeys.length > 0) ? $('<a></a>') : $('<span></span>');
+                                wrapperElement.append(cellElem);
 							cellElem.attr('data-item-id', data.id).attr('data-level-alias', data.level_alias);
 
 							// Building metadata
@@ -124,7 +126,7 @@
 
 									// Preparing secondary actions container
 									var actionsElem = $('<div></div>').addClass('pull-right group-actions');
-									cellElem.append(actionsElem);
+                                    wrapperElement.append(actionsElem);
 									// Preparing secondary actions
 									var actionsSSTogglerElem = $('<a class="fas fa-ellipsis-v" data-toggle="ipb-dropdown" data-target="#item-actions-menu-'+levelAltId+'"></a>');
 									var actionsSSMenuElem = $('<ipb-dropdown id="item-actions-menu-'+levelAltId+'" data-placement="left" class="item-action-wrapper panel panel-default"></ipb-dropdown>');
@@ -176,7 +178,7 @@
 								}
 							}
 
-							return cellElem.prop('outerHTML');
+                                return wrapperElement.prop('outerHTML');
 						},
 						filter:function (data, type, row) {
                         	return $.text($.parseHTML(data.name));
