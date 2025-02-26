@@ -237,10 +237,13 @@ class ModuleDiscovery
 		}
 		self::SortModulesByCountOfDepencenciesDescending($aOngoingDependencies);
 		$aOrderedModules = [];
-		$iLoopCount = 1;
-		$iModulesCount = count($aModules);
-		while(($iLoopCount < $iModulesCount) && (count($aOngoingDependencies) > 0) )
+		$iPreviousLoopDepencyCount=-1;
+		$iNextLoopCount=count($aOngoingDependencies);
+		while(($iNextLoopCount!=$iPreviousLoopDepencyCount) //stop loop when no new dependency is resolved
+			&& ($iNextLoopCount > 0) //still remaining dependencies
+		)
 		{
+			$iPreviousLoopDepencyCount=$iNextLoopCount;
 			foreach($aOngoingDependencies as $sId => $aCurrentRemainingDeps)
 			{
 				$aNextDependencies=[];
@@ -262,11 +265,13 @@ class ModuleDiscovery
 
 				$aOngoingDependencies[$sId]=$aNextDependencies;
 			}
-			$iLoopCount++;
+
+			$iNextLoopCount=count($aOngoingDependencies);
 			self::SortModulesByCountOfDepencenciesDescending($aOngoingDependencies);
 		}
 		if ($bAbortOnMissingDependency && count($aOngoingDependencies) > 0)
 		{
+			self::SortModulesByCountOfDepencenciesDescending($aOngoingDependencies);
 			$aModulesInfo = [];
 			$aModuleDeps = [];
 			foreach($aOngoingDependencies as $sId => $aCurrentRemainingDeps)
