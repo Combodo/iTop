@@ -5,7 +5,7 @@ $ipb-tile--width: 450px !default;
 $ipb-tile--min-width: 150px !default;
 $ipb-tile--padding: $common-spacing-500 !default;
 $ipb-tile--margin: $common-spacing-400 !default;
-$ipb-tile--border-color: $gray-light !default;
+$ipb-tile--border-color: $common-color-grey-200 !default;
 $ipb-tile--border-width: 1px !default;
 $ipb-tile--border-radius: $common-border-radius-500 !default;
 $ipb-tile--background-color: $common-color-white-100 !default;
@@ -15,9 +15,9 @@ $ipb-tile--decoration--hover--background: common-adjust-alpha($common-color-blue
 $ipb-tile--decoration--background: common-adjust-lightness($ipb-tile--decoration--hover--background, 38%) !default;
 $ipb-tile--decoration--icon--color: $common-color-blue-700 !default;
 $ipb-tile--decoration--icon--font-size: $common-font-size-250 !default;
-$ipb-tile--title--color: $text-color !default;
+$ipb-tile--title--color: $common-base-variable--text-color !default;
 $ipb-tile--title--font-size: $common-font-size-400 !default;
-$ipb-tile--description--color: $text-color !default;
+$ipb-tile--description--color: $common-base-variable--text-color !default;
 
 .ipb-tile{
   position: relative;
@@ -147,7 +147,7 @@ $ipb-tile--manage-brick--badge--margin-top: $common-font-size-400 !default;
 $ipb-tile--manage-brick--badge--count--padding: 0 $common-spacing-300 !default;
 $ipb-tile--manage-brick--badge--count--font-size: $common-font-size-300 !default;
 $ipb-tile--manage-brick--badge--label--font-size: $common-font-size-100 !default;
-$ipb-tile--manage-brick--badge--hover--item--background: common-adjust-alpha($text-color, .1) !default;
+$ipb-tile--manage-brick--badge--hover--item--background: common-adjust-alpha($common-base-variable--text-color, .1) !default;
 $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 
 /* title */

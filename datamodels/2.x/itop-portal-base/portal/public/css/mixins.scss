@@ -1,6 +1,6 @@
 /* SCSS variables */
 $ipb-following-dot--size: $common-size-150 !default;
-$ipb-following-dot--color: $combodo-orange !default;
+$ipb-following-dot--color: $common-color-orange-600 !default;
 $ipb-following-dot--margin-y: auto !default;
 $ipb-following-dot--margin-x: $common-spacing-300 !default;
 
@@ -18,7 +18,7 @@ $ipb-following-dot--margin-x: $common-spacing-300 !default;
 }
 
 /* SCSS variables */
-$ipb-heavy-animated-border--border-color: $combodo-dark-blue-gray !default;
+$ipb-heavy-animated-border--border-color: $common-color-blue-grey-700 !default;
 $ipb-heavy-animated-border--border-width: $common-size-50 !default;
 $ipb-heavy-animated-border--border-radius: $common-border-radius-500 !default;
 
@@ -146,7 +146,7 @@ $ipb-toggle-nav--color: white !default;
 }
 
 /* SCSS variables */
-$ipb-scrollbar--color: $common-color-grey-200 $combodo-dark-gray-darker !default;
+$ipb-scrollbar--color: $common-color-grey-200 $common-color-blue-grey-800 !default;
 
 @mixin ipb-scrollbar($overflowX:hidden, $overflowY:auto, $scrollbarWidth:thin, $scrollbarColor:$ipb-scrollbar--color) {
   overflow-x: $overflowX;

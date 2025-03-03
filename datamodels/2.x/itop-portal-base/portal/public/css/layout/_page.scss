@@ -4,10 +4,10 @@
 $ipb-page--main-wrapper--padding: $common-spacing-600 $common-spacing-700 !default;
 $ipb-page--main-header--margin-bottom: $common-size-250 !default;
 $ipb-page--main-header--information--title--font-size: $common-font-size-450 !default;
-$ipb-page--main-header--information--title--color: $text-color !default;
+$ipb-page--main-header--information--title--color: $common-base-variable--text-color !default;
 $ipb-page--main-header--information--subtitle--padding: $common-spacing-200 !default;
 $ipb-page--main-header--information--subtitle--font-size: $common-font-size-250 !default;
-$ipb-page--main-header--information--subtitle--color: $text-color !default;
+$ipb-page--main-header--information--subtitle--color: $common-base-variable--text-color !default;
 
 html {
   font-size: 12px;
