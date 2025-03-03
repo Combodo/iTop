@@ -24,9 +24,6 @@ $ipb-browse-brick--mosaic-group-item--border: 1px solid $common-color-grey-300 !
 
 $ipb-browse-brick--mosaic-group-item--actions--top: $common-spacing-500 !default;
 $ipb-browse-brick--mosaic-group-item--actions--right: $common-spacing-500 !default;
-$ipb-browse-brick--mosaic-group-item--actions--a--padding: $common-spacing-200 !default;
-$ipb-browse-brick--mosaic-group-item--actions--a--color: $common-color-grey-800 !default;
-
 $ipb-browse-brick--mosaic-item--margin: $common-spacing-0 !default;
 $ipb-browse-brick--mosaic-item--background-color: $common-color-white-100 !default;
 $ipb-browse-brick--mosaic-item--color: $common-base-variable--text-color !default;
@@ -198,10 +195,6 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
     position: absolute;
     top: $ipb-browse-brick--mosaic-group-item--actions--top;
     right: $ipb-browse-brick--mosaic-group-item--actions--right;
-    > a {
-      padding: $ipb-browse-brick--mosaic-group-item--actions--a--padding;
-      color: $ipb-browse-brick--mosaic-group-item--actions--a--color;
-    }
   }
 }
 

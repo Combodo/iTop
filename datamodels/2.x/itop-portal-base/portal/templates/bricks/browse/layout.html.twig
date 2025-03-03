@@ -13,10 +13,10 @@
 
 {% block pMainHeaderActions %}
 	{% if aBrowseButtons|length > 1 %}
-		<div class="btn-group">
+		<div class="ipb-button--group">
 			{% for sBrowseButton in aBrowseButtons %}
 			<a href="{{ app.url_generator.generate('p_browse_brick_mode', {'sBrickId': sBrickId, 'sBrowseMode': sBrowseButton}) }}"
-               class="btn btn-sm btn-default {% if sBrowseMode == sBrowseButton %}active{% endif %}"
+               class="ipb-button {% if sBrowseMode == sBrowseButton %}ipb-is-primary{% else %}ipb-is-default{% endif %}"
             >
                 {{ ('Brick:Portal:Browse:Mode:'~sBrowseButton|capitalize)|dict_s }}
             </a>

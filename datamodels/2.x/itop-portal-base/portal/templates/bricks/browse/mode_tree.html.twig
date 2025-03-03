@@ -17,9 +17,9 @@
 {% block bBrowseMainContent %}
 	<div class="row" id="brick_content_toolbar">
 		<div class="col-xs-4 col-sm-2 col-lg-1">
-			<div class="btn-group btn-group-justified btn-group-sm">
-				<a href="#" class="btn btn-default" id="btn-collapse-all" title="{{ 'Brick:Portal:Browse:Tree:CollapseAll'|dict_s }}">-</a>
-				<a href="#" class="btn btn-default" id="btn-expand-all" title="{{ 'Brick:Portal:Browse:Tree:ExpandAll'|dict_s }}">+</a>
+			<div class="ipb-button--group">
+				<a href="#" class="ipb-button ipb-is-default" id="btn-collapse-all" title="{{ 'Brick:Portal:Browse:Tree:CollapseAll'|dict_s }}"><i class="fas fa-minus-square"></i></a>
+				<a href="#" class="ipb-button ipb-is-default" id="btn-expand-all" title="{{ 'Brick:Portal:Browse:Tree:ExpandAll'|dict_s }}"><i class="fas fa-plus-square"></i></a>
 			</div>
 		</div>
 		<div class="col-xs-8 col-sm-10 col-lg-11 text-right">
@@ -280,7 +280,7 @@
 					var actionsElem = $('<div></div>').addClass('list-group-item-actions');
 					liElem.append(actionsElem);
 					// Checking if a menu is necessary
-					var actionsSSTogglerElem = $('<a class="fas fa-ellipsis-v" data-toggle="ipb-dropdown" data-target="#item-actions-menu-'+levelAltId+'"></a>');
+					var actionsSSTogglerElem = $('<a class="ipb-button ipb-is-alternative ipb-is-default fas fa-ellipsis-v" data-toggle="ipb-dropdown" data-target="#item-actions-menu-'+levelAltId+'"></a>');
 					var actionsSSMenuElem = $('<ipb-dropdown id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default" data-placement="left-bottom"></ipb-dropdown>');
 					var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
 					actionsSSMenuElem.append(actionsSSMenuContainerElem);
