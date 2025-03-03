@@ -28,17 +28,17 @@ $ipb-button-colors: (
             '': (
                     $common-color-white-100,
                     $common-color-grey-800,
-                    $common-color-grey-800
+                    $common-color-grey-600
             ),
             ':hover': (
                     $common-color-grey-100,
                     $common-color-grey-900,
-                    $common-color-grey-900
+                    $common-color-grey-700
             ),
             ':active': (
                     $common-color-grey-200,
                     $common-color-grey-900,
-                    $common-color-grey-900
+                    $common-color-grey-700
             ),
             ':disabled': (
                     $common-color-grey-200,
@@ -281,11 +281,11 @@ $ipb-button-colors: (
   border: solid 1px $common-color-blue-700;
   padding: $ipb-button--padding-y $ipb-button--padding-x;
   color: $common-color-blue-800 !important;
-
+  cursor: pointer;
   @each $sType, $aColors in $ipb-button-colors {
     @each $sColor, $sPseudoClasses in $aColors {
       @each $sPseudoClass, $sAttributes in $sPseudoClasses {
-        &.ipb-is-#{$sColor}#{if($sType != '', ".ipb-is#{$sType}", '')}#{$sPseudoClass}, &.btn-#{$sColor}#{if($sType != '', ".#{$sType}", '')}#{$sPseudoClass} {
+        &.ipb-is-#{$sColor}#{if($sType != '', ".ipb-is-#{$sType}", '')}#{$sPseudoClass}, &.btn-#{$sColor}#{if($sType != '', ".#{$sType}", '')}#{$sPseudoClass} {
           background-color: nth($sAttributes, 1) !important;
           color: nth($sAttributes, 2) !important;
           border-color: nth($sAttributes, 3) !important;
