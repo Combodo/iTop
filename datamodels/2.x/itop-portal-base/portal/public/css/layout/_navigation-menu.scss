@@ -179,7 +179,12 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
 .ipb-dropdown-menu--items-remainder {
   padding: $dropdown-menu--items-remainder--padding;
   background-color: $ipb-navigation-menu--background-color;
-  border-radius: $dropdown-menu--items-remainder--border-radius;
+  border-bottom-left-radius: $dropdown-menu--items-remainder--border-radius;
+  border-bottom-right-radius: $dropdown-menu--items-remainder--border-radius;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-top: none;
+  right: -9px;
 }
 
 // USER PART ////////////////////////////////////////////

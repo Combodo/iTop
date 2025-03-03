@@ -175,9 +175,9 @@ $ipb-button-colors: (
                           $common-color-grey-300
                   ),
                   ':disabled': (
-                          $common-color-grey-200,
-                          $common-color-grey-700,
-                          $common-color-grey-300
+                          $common-color-transparent,
+                          $common-color-grey-500,
+                          $common-color-transparent
                   ),
           ),
           'success': (

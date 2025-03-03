@@ -30,3 +30,29 @@ table.dataTable thead {
     }
 
 }
+
+table.table > thead > tr > th,
+table.table > tbody > tr > th,
+table.table > tfoot > tr > th,
+table.table > thead > tr > td,
+table.table > tbody > tr > td,
+table.table > tfoot > tr > td {
+  vertical-align: middle;
+}
+
+table.table-striped > tbody > tr:hover {
+  background-color: inherit;
+}
+
+table .ipb-table--actions--wrapper {
+  display: flex;
+  align-items: center;
+
+  > a {
+    flex-grow: 1;
+  }
+
+  .group-actions {
+
+  }
+}

@@ -112,56 +112,15 @@ $ipb-tile--description--color: $text-color !default;
 
 .ipb-tile--actions {
   flex-shrink: 0;
+  position: absolute;
+  right: 16px;
+  top: 20px;
   white-space: nowrap;
-  color: #6e6e6e !important;
-  outline: none !important;
 
   > .ipb-button-group {
     display: inline-block;
   }
 
-  button:focus {
-    outline: none;
-    color: unset;
-  }
-
-  button:focus-visible {
-    outline: none;
-    color: unset;
-  }
-
-  button:active {
-    outline: none;
-    color: unset;
-    background-color: rgb(230, 230, 230);
-    box-shadow: unset;
-  }
-
-  button:active:focus {
-    outline: none;
-    color: unset;
-  }
-
-  button {
-    > i {
-      border: 2px solid transparent;
-      transition: border ease 0.5s;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      padding: 2px;
-      font-size: 0.95rem;
-    }
-  }
-
-  button.selected {
-    background-color: #e1e1e1;
-    color: #263238;
-
-    > i {
-      border: 2px solid #263238;
-    }
-  }
 }
 
 /* description */
@@ -185,8 +144,6 @@ $ipb-tile--description--color: $text-color !default;
 
 $ipb-tile--manage-brick--chart--margin-top: $common-spacing-500 !default;
 $ipb-tile--manage-brick--badge--margin-top: $common-font-size-400 !default;
-$ipb-tile--manage-brick--badge--item--padding: $common-spacing-200 $common-spacing-300 !default;
-$ipb-tile--manage-brick--badge--item--border-radius: $common-border-radius-300 !default;
 $ipb-tile--manage-brick--badge--count--padding: 0 $common-spacing-300 !default;
 $ipb-tile--manage-brick--badge--count--font-size: $common-font-size-300 !default;
 $ipb-tile--manage-brick--badge--label--font-size: $common-font-size-100 !default;
@@ -206,12 +163,14 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 
   > span:nth-child(2) {
     @include ipb-following-dot;
+
+    > .class-icon {
+      width: 20px;
+      margin-left: 5px;
+      vertical-align: baseline;
+    }
   }
 
-  > img {
-    width: 20px;
-    margin-left: 5px;
-  }
 
 }
 
@@ -233,13 +192,6 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 .ipb-tile--manage-brick--badge--item{
   display: flex;
   align-items: center;
-  padding: $ipb-tile--manage-brick--badge--item--padding;
-  border-radius: $ipb-tile--manage-brick--badge--item--border-radius;
-  transition: background-color 1s ease;
-
-  &:hover{
-    background-color: $ipb-tile--manage-brick--badge--hover--item--background;
-  }
 }
 
 .ipb-tile--manage-brick--badge--count {
@@ -278,19 +230,13 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 @include mobile {
   .ipb-tile--header {
     flex-direction: column;
-    align-items: center;
   }
   .ipb-tile--title {
     align-self: stretch;
-    text-align: center;
-    justify-content: center;
   }
   .ipb-tile--header.ipb-tile--header--inline {
     flex-direction: column;
-    align-items: center;
-  }
-  .ipb-tile--manage-brick--badge {
-    justify-content: center;
+    align-items: start;
   }
 }
 

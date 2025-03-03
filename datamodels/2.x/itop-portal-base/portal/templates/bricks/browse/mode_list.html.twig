@@ -45,6 +45,7 @@
 					"render":
 						{_: function(data, type, row){
                                 let wrapperElement = $('<div></div>');
+                                wrapperElement.addClass('ipb-table--actions--wrapper');
 							var cellElem;
 							var levelAltId = data.level_alias+'_'+data.id;
 							var levelActions;
@@ -125,10 +126,10 @@
 									}
 
 									// Preparing secondary actions container
-									var actionsElem = $('<div></div>').addClass('pull-right group-actions');
+                                    var actionsElem = $('<div></div>').addClass('group-actions');
                                     wrapperElement.append(actionsElem);
 									// Preparing secondary actions
-									var actionsSSTogglerElem = $('<a class="fas fa-ellipsis-v" data-toggle="ipb-dropdown" data-target="#item-actions-menu-'+levelAltId+'"></a>');
+                                    var actionsSSTogglerElem = $('<button class="ipb-button btn btn-default alternative" data-toggle="ipb-dropdown" data-target="#item-actions-menu-' + levelAltId + '"><i class="fas fa-ellipsis-v"></i></button>');
 									var actionsSSMenuElem = $('<ipb-dropdown id="item-actions-menu-'+levelAltId+'" data-placement="left" class="item-action-wrapper panel panel-default"></ipb-dropdown>');
 
 									actionsElem.append(actionsSSTogglerElem);
