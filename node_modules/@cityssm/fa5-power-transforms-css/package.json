@@ -1,0 +1,25 @@
+{
+  "name": "@cityssm/fa5-power-transforms-css",
+  "version": "1.0.0",
+  "description": "Font Awesome 5 \"Power Transform\" like functionality using straight CSS",
+  "main": "fa5-power-transforms.min.css",
+  "scripts": {
+    "test": "index.htm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cityssm/fa5-power-transforms-css.git"
+  },
+  "author": "The Corporation of the City of Sault Ste. Marie",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cityssm/fa5-power-transforms-css/issues"
+  },
+  "homepage": "https://github.com/cityssm/fa5-power-transforms-css#readme",
+  "keywords": [
+    "font-awesome-5",
+    "css",
+    "html",
+    "power-transforms"
+  ]
+}

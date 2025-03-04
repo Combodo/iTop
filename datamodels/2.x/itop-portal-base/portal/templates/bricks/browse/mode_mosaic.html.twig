@@ -9,7 +9,7 @@
 {% block bBrowseMainContent %}
 	<div id="brick_content_mosaic">
 		{% block bBrowseMosaicContent %}
-			<div class="mosaic-group" data-level-id="L">
+			<div class="mosaic-group ipb-is-visible" data-level-id="L">
 			</div>
 		{% endblock %}
 	</div>
@@ -60,11 +60,7 @@
 		    var bLevelLoaded = (oLevelElem.length > 0);
 
 		    // Hiding current level
-            $('#brick_content_mosaic .mosaic-group:visible').hide(
-                sMosaicEffectName,
-				oMosaicEffectOptions,
-				iMosaicEffectDuration,
-				function(){
+            $('#brick_content_mosaic .mosaic-group.ipb-is-visible').removeClass('ipb-is-visible');
                     // Showing level
 					if(!bLevelLoaded)
 					{
@@ -73,10 +69,9 @@
 					}
 					else
 					{
-					    oLevelElem.show(sMosaicEffectName, oMosaicEffectOptions, iMosaicEffectDuration, function(){ buildBreadcrumb(); });
+                        oLevelElem.addClass('ipb-is-visible');
+					    buildBreadcrumb();
 					}
-				}
-			);
 		};
 		// Registers the toggle listeners on the tree nodes. Used after every AJAX calls.
 		var registerToggleListeners = function()
@@ -172,8 +167,14 @@
 			{
                 $('div[data-level-id="'+nodeId+'"]').html('');
 			}
-			
-			$.each(data, function(i, item){
+            
+            // Used to calculate delay for each item for their animation
+            let index = 0;
+            let totalDuration = 500; 
+            let delayStep = totalDuration / Object.keys(data).length / 1000;
+            $('div[data-level-id="' + nodeId + '"]').css("--delay",`${delayStep}s`)
+            
+            $.each(data, function(i, item){
 				var levelId = item.level_alias+'::'+item.id;
 				var levelAltId = item.level_alias+'_'+item.id;
 				var levelActions = oLevelsProperties[item.level_alias].actions;
@@ -183,6 +184,7 @@
 
                 // Building node
                 var itemElem  = $('<div></div>').addClass('mosaic-group-item');
+                itemElem.css("--index", index++)
 				var aElem   = $('<a></a>').addClass('mosaic-item').attr('data-item-id', item.id).attr('href', '#').attr('data-level-alias', item.level_alias);
 				var iItemFlags = 0;
                 // - Adding stub div
@@ -352,7 +354,7 @@
 			    bLeafLevel = true;
 
                 // Retrieving current level id
-                var sCurrentLevelId = $('#brick_content_mosaic > .mosaic-group:visible').attr('data-level-id');
+                var sCurrentLevelId = $('#brick_content_mosaic > .mosaic-group.ipb-is-visible').attr('data-level-id');
                 aCurrentLevelParts = sCurrentLevelId.split('::');
 
                 // Emptying breadcrumb

@@ -21,6 +21,7 @@ $ipb-browse-brick--mosaic-group-item--padding: $common-spacing-500 !default;
 $ipb-browse-brick--mosaic-group-item--margin: $common-spacing-0 !default;
 $ipb-browse-brick--mosaic-group-item--color: $common-base-variable--text-color !default;
 $ipb-browse-brick--mosaic-group-item--border: 1px solid $common-color-grey-300 !default;
+$ipb-browse-brick--mosaic-group-item--animation--transform-x: -20px !default;
 
 $ipb-browse-brick--mosaic-group-item--actions--top: $common-spacing-500 !default;
 $ipb-browse-brick--mosaic-group-item--actions--right: $common-spacing-500 !default;
@@ -114,6 +115,9 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
 
 .mosaic-group {
   display: grid;
+  animation: opacity 0.3s ease-out;
+  animation-delay: 0.2s;
+  
   @include touch {
     grid-template-columns: $ipb-browse-brick--mosaic--small--grid-template-columns;
   }
@@ -122,6 +126,14 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
   }
   @include fullhd {
     grid-template-columns: $ipb-browse-brick--mosaic--large--grid-template-columns;
+  }
+  &:not(.ipb-is-visible) {
+    opacity: 0;
+    display: none !important;
+  }
+  &.ipb-is-visible {
+    opacity: 1;
+    display: grid !important;
   }
 }
 
@@ -133,6 +145,10 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
   padding: $ipb-browse-brick--mosaic-group-item--padding;
   margin: $ipb-browse-brick--mosaic-group-item--margin;
   color: $ipb-browse-brick--mosaic-group-item--color;
+  opacity: 0;
+  transform: translateX($ipb-browse-brick--mosaic-group-item--animation--transform-x); /* Move from left */
+  animation: mosaicGroupItemFadeInLeft 0.3s ease-out forwards;
+  animation-delay: calc(var(--delay) * var(--index));
 
   @for $i from 1 through length($ipb-browse-brick--mosaic-item--highlight-color) {
     &:nth-child(#{length($ipb-browse-brick--mosaic-item--highlight-color)}n + #{$i}) .mosaic-item-image {
@@ -195,6 +211,17 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
     position: absolute;
     top: $ipb-browse-brick--mosaic-group-item--actions--top;
     right: $ipb-browse-brick--mosaic-group-item--actions--right;
+  }
+}
+
+@keyframes mosaicGroupItemFadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX($ipb-browse-brick--mosaic-group-item--animation--transform-x);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 

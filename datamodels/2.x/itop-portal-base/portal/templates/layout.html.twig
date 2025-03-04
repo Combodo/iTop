@@ -61,6 +61,8 @@
 		{# Tippy for tooltips and Popper for their placement #}
 		<link href="{{ app['combodo.absolute_url'] ~ 'node_modules/tippy.js/dist/tippy.css'|add_itop_version }}" rel="stylesheet">
 		<link href="{{ app['combodo.absolute_url'] ~ 'node_modules/tippy.js/animations/shift-away-subtle.css'|add_itop_version }}" rel="stylesheet">
+        {# Fontawesome 5 power transform as CSS #}
+		<link href="{{ app['combodo.absolute_url'] ~ 'node_modules/@cityssm/fa5-power-transforms-css/fa5-power-transforms.min.css'|add_itop_version }}" rel="stylesheet">
 		{# UI Extensions CSS, in an undefined order #}
         {% if app['ui_extensions_helper'].css_files is defined %}
             {% for css_file in app['ui_extensions_helper'].css_files %}
