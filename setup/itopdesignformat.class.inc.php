@@ -920,12 +920,12 @@ class iTopDesignFormat
 			$oNode->setAttribute('id', 'ibo-page-banner--background-color');
 		}
 
-		$oNodeList = $oXPath->query( '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-color"]');
+		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-color"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--text-color');
 		}
 
-		$oNodeList = $oXPath->query( '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-content"]');
+		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-content"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--text-content');
 		}
@@ -1067,7 +1067,6 @@ class iTopDesignFormat
 	 */
 	protected function From30To31($oFactory)
 	{
-
 	}
 	/**
 	 * Downgrade the format from version 3.1 to 3.0
@@ -1097,6 +1096,7 @@ class iTopDesignFormat
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field/sort_type");
 		// - Remove rank in values
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field/values/value/rank");
+
 	}
 
 	/**
@@ -1139,7 +1139,7 @@ class iTopDesignFormat
 	 */
 	protected function From33To32($oFactory)
 	{
-		// Nothing for now...
+        $this->RemoveNodeFromXPath('/itop_design/branding/local_brandings');
 	}
 
 	/**
