@@ -17,7 +17,6 @@ $ipb-browse-brick--mosaic--large--grid-template-columns: 33.3% 33.3% 33.3% !defa
 $ipb-browse-brick--mosaic-group-item--min-height: $common-size-550 !default;
 $ipb-browse-brick--mosaic-group-item--height: auto !default;
 $ipb-browse-brick--mosaic-group-item--width: 100% !default;
-$ipb-browse-brick--mosaic-group-item--padding: $common-spacing-500 !default;
 $ipb-browse-brick--mosaic-group-item--margin: $common-spacing-0 !default;
 $ipb-browse-brick--mosaic-group-item--color: $common-base-variable--text-color !default;
 $ipb-browse-brick--mosaic-group-item--border: 1px solid $common-color-grey-300 !default;
@@ -25,9 +24,13 @@ $ipb-browse-brick--mosaic-group-item--animation--transform-x: -20px !default;
 
 $ipb-browse-brick--mosaic-group-item--actions--top: $common-spacing-500 !default;
 $ipb-browse-brick--mosaic-group-item--actions--right: $common-spacing-500 !default;
+$ipb-browse-brick--mosaic-item--height: 100% !default;
+$ipb-browse-brick--mosaic-item--padding: $common-spacing-500 !default;
 $ipb-browse-brick--mosaic-item--margin: $common-spacing-0 !default;
 $ipb-browse-brick--mosaic-item--background-color: $common-color-white-100 !default;
 $ipb-browse-brick--mosaic-item--color: $common-base-variable--text-color !default;
+$ipb-browse-brick--mosaic-item--hover--background-color: $common-color-grey-200 !default;
+$ipb-browse-brick--mosaic-item--hover--color: $common-color-grey-800 !default;
 
 $ipb-browse-brick--mosaic-item-description--color: $common-color-grey-800 !default;
 
@@ -149,7 +152,6 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
   min-height: $ipb-browse-brick--mosaic-group-item--min-height;
   height: $ipb-browse-brick--mosaic-group-item--height;
   width: $ipb-browse-brick--mosaic-group-item--width;
-  padding: $ipb-browse-brick--mosaic-group-item--padding;
   margin: $ipb-browse-brick--mosaic-group-item--margin;
   color: $ipb-browse-brick--mosaic-group-item--color;
   opacity: 0;
@@ -235,9 +237,19 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
 .mosaic-item {
   display: flex;
   flex-direction: column;
+  height: $ipb-browse-brick--mosaic-item--height;
+  padding: $ipb-browse-brick--mosaic-item--padding;
   margin: $ipb-browse-brick--mosaic-item--margin;
+
   background-color: $ipb-browse-brick--mosaic-item--background-color;
   color: $ipb-browse-brick--mosaic-item--color;
+  transition: background-color 0.3s linear;
+
+
+  &:hover {
+    background-color: $ipb-browse-brick--mosaic-item--hover--background-color;
+    color: $ipb-browse-brick--mosaic-item--hover--color;
+  }
 }
 
 
