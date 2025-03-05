@@ -90,6 +90,13 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
   .row {
     margin: $ipb-browse-brick-panel--row--margin;
   }
+  
+  #brick_content_toolbar {
+   display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $ipb-browse-brick-panel--row--margin;
+  }
 }
 
 // List view
@@ -346,6 +353,7 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
 
     height: $ipb-browse-brick--tree-item-image--height;
     width: $ipb-browse-brick--tree-item-image--width;
+    min-width: $ipb-browse-brick--tree-item-image--width;
     padding: $ipb-browse-brick--tree-item-image--padding;
     margin-right: $ipb-browse-brick--tree-item-image--margin-right;
     margin-bottom: $ipb-browse-brick--tree-item-image--margin-bottom;
