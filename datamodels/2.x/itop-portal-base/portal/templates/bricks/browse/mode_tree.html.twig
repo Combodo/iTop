@@ -289,9 +289,7 @@
 					liElem.append(actionsElem);
 					// Checking if a menu is necessary
 					var actionsSSTogglerElem = $('<a class="ipb-button ipb-is-alternative ipb-is-default fas fa-ellipsis-v" data-toggle="ipb-dropdown" data-target="#item-actions-menu-'+levelAltId+'"></a>');
-					var actionsSSMenuElem = $('<ipb-dropdown id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default" data-placement="left-bottom"></ipb-dropdown>');
-					var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
-					actionsSSMenuElem.append(actionsSSMenuContainerElem);
+					var actionsSSMenuElem = $('<ipb-dropdown id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper" data-placement="left-bottom"></ipb-dropdown>');
 					actionsElem.append(actionsSSTogglerElem);
 					actionsElem.append(actionsSSMenuElem);
 
@@ -300,7 +298,7 @@
 					{
 						var action = actionsButtons[j];
 						var actionElem = $('<a></a>');
-						var actionIconElem = $('<span></span>').appendTo(actionElem);
+						var actionIconElem = $('<span></span>').addClass('ipb-dropdown--icon').appendTo(actionElem);
 
 						switch(action.type)
 						{
@@ -334,7 +332,7 @@
 						}
 
 						actionElem.append(action.title);
-						actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
+                        actionsSSMenuElem.append( $('<li></li>').append(actionElem) );
 					}
 				}
 
