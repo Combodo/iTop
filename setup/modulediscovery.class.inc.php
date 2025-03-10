@@ -71,6 +71,188 @@ HTML;
 	}
 }
 
+class ModuleDependency {
+	private array $aPotentialPrerequisites;
+	private array $aParamsPerModuleId;
+	private string $sDepString;
+	private bool $bAlwaysUnresolved=false;
+
+	public function __construct(string $sDepString)
+	{
+		$this->sDepString = $sDepString;
+		$this->aParamsPerModuleId = [];
+		$this->aPotentialPrerequisites = [];
+
+		if (preg_match_all('/([^\(\)&| ]+)/', $sDepString, $aMatches))
+		{
+			foreach($aMatches as $aMatch)
+			{
+				foreach($aMatch as $sModuleId)
+				{
+					if (! array_key_exists($sModuleId, $this->aParamsPerModuleId)) {
+						// $sModuleId in the dependency string is made of a <name>/<optional_operator><version>
+						// where the operator is < <= = > >= (by default >=)
+						$aModuleMatches = array();
+						if (preg_match('|^([^/]+)/(<?>?=?)([^><=]+)$|', $sModuleId, $aModuleMatches)) {
+							$sModuleName = $aModuleMatches[1];
+							$this->aPotentialPrerequisites[$sModuleName] = true;
+							$sOperator = $aModuleMatches[2];
+							if ($sOperator == '') {
+								$sOperator = '>=';
+							}
+							$sExpectedVersion = $aModuleMatches[3];
+							$this->aParamsPerModuleId[$sModuleId] = [$sModuleName, $sOperator, $sExpectedVersion];
+						}
+					}
+				}
+			}
+		} else {
+			$this->bAlwaysUnresolved=true;
+		}
+	}
+
+	public function GetPotentialPrerequisites() : array
+	{
+		return array_keys($this->aPotentialPrerequisites);
+	}
+
+	public function IsDependencyResolved(array $aModuleVersions, array $aSelectedModules) : bool
+	{
+		if ($this->bAlwaysUnresolved){
+			return false;
+		}
+
+		$aReplacements=[];
+		foreach ($this->aParamsPerModuleId as $sModuleId => list($sModuleName, $sOperator, $sExpectedVersion)){
+			if (array_key_exists($sModuleName, $aModuleVersions))
+			{
+				// module is present, check the version
+				$sCurrentVersion = $aModuleVersions[$sModuleName];
+				if (version_compare($sCurrentVersion, $sExpectedVersion, $sOperator))
+				{
+					if (array_key_exists($sModuleName, $this->aPotentialPrerequisites)) {
+						unset($this->aPotentialPrerequisites[$sModuleName]);
+					}
+					$aReplacements[$sModuleId] = '(true)'; // Add parentheses to protect against invalid condition causing
+					// a function call that results in a runtime fatal error
+				}
+				else
+				{
+					$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
+					// a function call that results in a runtime fatal error
+				}
+			}
+			else
+			{
+				// module is not present
+				$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
+				// a function call that results in a runtime fatal error
+			}
+		}
+
+		foreach ($this->aPotentialPrerequisites as $sModuleName)
+		{
+			if (array_key_exists($sModuleName, $aSelectedModules))
+			{
+				// This module is actually a prerequisite
+				if (!array_key_exists($sModuleName, $aModuleVersions))
+				{
+					return false;
+				}
+			}
+		}
+
+		$bResult=false;
+		$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $this->sDepString);
+		$bOk = @eval('$bResult = '.$sBooleanExpr.'; return true;');
+		if ($bOk == false)
+		{
+			SetupLog::Warning("Eval of '$sBooleanExpr' returned false");
+			echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";
+		}
+		return $bResult;
+	}
+}
+
+class Module {
+	private string $sModuleId;
+	private string $sModuleName;
+	private string $sVersion;
+
+	public array $aAllDependencies;
+	public array $aOngoingDependencies;
+
+	public function __construct(string $sModuleId)
+	{
+		$this->sModuleId = $sModuleId;
+		list($this->sModuleName, $this->sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+		if (strlen($this->sVersion) == 0) {
+			// No version number found, assume 1.0.0
+			$this->sVersion = '1.0.0';
+		}
+	}
+
+	public function GetModuleName()
+	{
+		return $this->sModuleName;
+	}
+
+	public function GetVersion()
+	{
+		return $this->sVersion;
+	}
+
+	public function GetModuleId()
+	{
+		return $this->sModuleId;
+	}
+
+	public function SetDependencies(array $aAllDependencies)
+	{
+		$this->aAllDependencies = $aAllDependencies;
+		$this->aOngoingDependencies = [];
+
+		foreach ($aAllDependencies as $sDepString){
+			$this->aOngoingDependencies[$sDepString]= new ModuleDependency($sDepString);
+		}
+	}
+
+	public function IsModuleResolved(array $aModuleVersions, array $aSelectedModules) : bool
+	{
+		$aNextDependencies=[];
+		$bDependenciesSolved = true;
+		foreach($this->aOngoingDependencies as $sDepId => $oModuleDependency)
+		{
+			/** @var ModuleDependency $oModuleDependency*/
+			if (!$oModuleDependency->IsDependencyResolved($aModuleVersions, $aSelectedModules))
+			{
+				$aNextDependencies[$sDepId]=$oModuleDependency;
+				$bDependenciesSolved = false;
+			}
+		}
+
+		$this->aOngoingDependencies=$aNextDependencies;
+
+		if ($bDependenciesSolved)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	public function GetUnresolvedDependencyModuleNames(): array
+	{
+		$aRes=[];
+		foreach($this->aOngoingDependencies as $sDepId => $oModuleDependency) {
+			/** @var ModuleDependency $oModuleDependency */
+			$aRes = array_merge($aRes, $oModuleDependency->GetPotentialPrerequisites());
+		}
+
+		return array_unique($aRes);
+	}
+}
+
 class ModuleDiscovery
 {
 	public static $m_aModuleArgs = [
@@ -204,11 +386,76 @@ class ModuleDiscovery
 		return self::OrderModulesByDependencies(self::$m_aModules, $bAbortOnMissingDependency, $aModulesToLoad);
 	}
 
-	public static function SortModulesByCountOfDepencenciesDescending(array &$aOngoingDependencies) : void
+	public static function SortModulesByCountOfDepencenciesDescending(array &$aUnresolvedDependencyModules) : void
 	{
-		uasort($aOngoingDependencies, function (array $aDeps1, array $aDeps2){
-			return count($aDeps1) - count($aDeps2);
-		});
+		$aCountDepsByModuleId=[];
+		$aDependsOnModuleName=[];
+
+		foreach($aUnresolvedDependencyModules as $sModuleId => $oModule) {
+			/** @var Module $oModule */
+			$aDependsOnModuleName[$oModule->GetModuleName()]=[];
+		}
+
+		foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
+			$iDepsCount = 0;
+			/** @var Module $oModule */
+			$aUnresolvedDependencyModuleNames = $oModule->GetUnresolvedDependencyModuleNames();
+			foreach ($aUnresolvedDependencyModuleNames as $sModuleName) {
+				if (array_key_exists($sModuleName, $aDependsOnModuleName)) {
+					$aDependsOnModuleName[$sModuleName][] = $sModuleId;
+					$iDepsCount++;
+				}
+			}
+			$iDepsCountIncludingOutsideModules = count($oModule->GetUnresolvedDependencyModuleNames());
+			$aCountDepsByModuleId[$sModuleId] = [$iDepsCount, $iDepsCountIncludingOutsideModules];
+		}
+
+		$aRes=[];
+		while(count($aUnresolvedDependencyModules)>0) {
+			asort($aCountDepsByModuleId);
+
+			uasort($aCountDepsByModuleId, function (array $aDeps1, array $aDeps2){
+				//compare only
+				$res  = $aDeps1[0] - $aDeps2[0];
+				if ($res != 0){
+					return $res;
+				}
+
+				return $aDeps1[1] - $aDeps2[1];
+			});
+
+			$bOneLoopAtLeast=false;
+			foreach ($aCountDepsByModuleId as $sModuleId => $iDepsCount){
+				$oModule=$aUnresolvedDependencyModules[$sModuleId];
+
+				if ($bOneLoopAtLeast && $iDepsCount>0){
+					break;
+				}
+
+				unset($aUnresolvedDependencyModules[$sModuleId]);
+				unset($aCountDepsByModuleId[$sModuleId]);
+
+				$aRes[$sModuleId]=$oModule;
+
+				//when 2 versions of the same module (name) below array has been removed already
+				if (array_key_exists($oModule->GetModuleName(), $aDependsOnModuleName)) {
+					foreach ($aDependsOnModuleName[$oModule->GetModuleName()] as $sModuleId2) {
+						if (! array_key_exists($sModuleId2, $aCountDepsByModuleId)){
+							continue;
+						}
+						$aDepCount = $aCountDepsByModuleId[$sModuleId2];
+						$iDepsCount = $aDepCount[0] - 1;
+						$aCountDepsByModuleId[$sModuleId2] = [ $iDepsCount, $aDepCount[1]];
+					}
+
+					unset($aDependsOnModuleName[$oModule->GetModuleName()]);
+				}
+
+				$bOneLoopAtLeast=true;
+			}
+		}
+
+		$aUnresolvedDependencyModules=$aRes;
 	}
 
 	/**
@@ -218,70 +465,63 @@ class ModuleDiscovery
 	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
 	 * @return array
 	 * @throws \MissingDependencyException
-	 */
-	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
+*/
+	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null, ?int &$iLoopCount=0)
 	{
+		$iLoopCount=0;
+
 		// Order the modules to take into account their inter-dependencies
-		$aDependencies = [];
-		$aOngoingDependencies = [];
+		$aUnresolvedDependencyModules = [];
 		$aSelectedModules = [];
-		foreach ($aModules as $sId => $aModule) {
-			list($sModuleName, ) = self::GetModuleName($sId);
+		foreach($aModules as $sModuleId => $aModule)
+		{
+			$oModule = new Module($sModuleId);
+			$sModuleName = $oModule->GetModuleName();
 			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad))
 			{
-				$aCurrentDependencies = $aModule['dependencies'];
-				$aDependencies[$sId] = $aCurrentDependencies;
-				$aOngoingDependencies[$sId] = $aCurrentDependencies;
+				$oModule->SetDependencies($aModule['dependencies']);
+				$aUnresolvedDependencyModules[$sModuleId]=$oModule;
 				$aSelectedModules[$sModuleName] = true;
 			}
 		}
-		self::SortModulesByCountOfDepencenciesDescending($aOngoingDependencies);
+		self::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 		$aOrderedModules = [];
+		$aModuleVersions=[];
 		$iPreviousLoopDepencyCount=-1;
-		$iNextLoopCount=count($aOngoingDependencies);
+		$iNextLoopCount=count($aUnresolvedDependencyModules);
 		while(($iNextLoopCount!=$iPreviousLoopDepencyCount) //stop loop when no new dependency is resolved
 			&& ($iNextLoopCount > 0) //still remaining dependencies
 		)
 		{
+			$iLoopCount++;
 			$iPreviousLoopDepencyCount=$iNextLoopCount;
-			foreach($aOngoingDependencies as $sId => $aCurrentRemainingDeps)
+			foreach($aUnresolvedDependencyModules as $sModuleId => $oModule)
 			{
-				$aNextDependencies=[];
-				$bDependenciesSolved = true;
-				foreach($aCurrentRemainingDeps as $sDepId)
-				{
-					if (!self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules))
-					{
-						$aNextDependencies[]=$sDepId;
-						$bDependenciesSolved = false;
-					}
+				/** @var Module $oModule */
+				if ($oModule->IsModuleResolved($aModuleVersions, $aSelectedModules)){
+					$aOrderedModules[] = $sModuleId;
+					$aModuleVersions[$oModule->GetModuleName()] = $oModule->GetVersion();
+					unset($aUnresolvedDependencyModules[$sModuleId]);
 				}
-				if ($bDependenciesSolved) {
-					$aOrderedModules[] = $sId;
-					unset($aDependencies[$sId]);
-					unset($aOngoingDependencies[$sId]);
-					continue;
-				}
-
-				$aOngoingDependencies[$sId]=$aNextDependencies;
 			}
 
-			$iNextLoopCount=count($aOngoingDependencies);
-			self::SortModulesByCountOfDepencenciesDescending($aOngoingDependencies);
+			$iNextLoopCount=count($aUnresolvedDependencyModules);
+			self::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 		}
-		if ($bAbortOnMissingDependency && count($aOngoingDependencies) > 0)
+
+		if ($bAbortOnMissingDependency && count($aUnresolvedDependencyModules) > 0)
 		{
-			self::SortModulesByCountOfDepencenciesDescending($aOngoingDependencies);
+			self::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 			$aModulesInfo = [];
 			$aModuleDeps = [];
-			foreach($aOngoingDependencies as $sId => $aCurrentRemainingDeps)
+			/** @var Module $oModule */
+			foreach($aUnresolvedDependencyModules as $sModuleId => $oModule)
 			{
-				$aModule = $aModules[$sId];
+				$aModule = $aModules[$sModuleId];
 				$aDepsWithIcons = [];
-				$aDeps=$aDependencies[$sId];
-				foreach($aDeps as $sIndex => $sDepId)
+				foreach($oModule->aAllDependencies as $sIndex => $sDepId)
 				{
-					if (in_array($sDepId, $aCurrentRemainingDeps))
+					if (array_key_exists($sDepId, $oModule->aOngoingDependencies))
 					{
 						$aDepsWithIcons[$sIndex] = '❌ ' .  $sDepId;
 					} else
@@ -289,8 +529,8 @@ class ModuleDiscovery
 						$aDepsWithIcons[$sIndex] = '✅ ' . $sDepId;
 					}
 				}
-				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on: ".implode(' + ', $aDepsWithIcons);
-				$aModulesInfo[$sId] = ['module' => $aModule, 'dependencies' => $aDepsWithIcons];
+				$aModuleDeps[] = "{$aModule['label']} (id: $sModuleId) depends on: ".implode(' + ', $aDepsWithIcons);
+				$aModulesInfo[$sModuleId] = array('module' => $aModule, 'dependencies' => $aDepsWithIcons);
 			}
 			$sMessage = "The following modules have unmet dependencies:\n".implode(",\n", $aModuleDeps);
 			$oException = new MissingDependencyException($sMessage);
@@ -298,9 +538,10 @@ class ModuleDiscovery
 			throw $oException;
 		}
 		// Return the ordered list, so that the dependencies are met...
-		$aResult = [];
-		foreach ($aOrderedModules as $sId) {
-			$aResult[$sId] = $aModules[$sId];
+		$aResult = array();
+		foreach($aOrderedModules as $sModuleId)
+		{
+			$aResult[$sModuleId] = $aModules[$sModuleId];
 		}
 		return $aResult;
 	}
