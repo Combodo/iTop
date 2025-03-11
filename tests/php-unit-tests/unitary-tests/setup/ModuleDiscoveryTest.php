@@ -164,6 +164,41 @@ MSG;
 		$this->assertEquals(1, $iLoopCount);
 	}
 
+	public function testOrderModulesByDependencies_ResolveOk_ModulesToLoadProvided()
+	{
+		$aModules=[
+			"id1/1" => [
+				'dependencies' => [ 'id2/2'],
+				'label' => 'label1',
+			],
+			"id2/2" => [
+				'dependencies' => ['id3/3 || id3-itil/3'],
+				'label' => 'label2',
+			],
+			"id3/3" => [
+				'dependencies' => [],
+				'label' => 'label3',
+			],
+			"id3-itil/3" => [
+				'dependencies' => [],
+				'label' => 'label3-itil',
+			],
+		];
+
+		foreach(["id3", "id3-itil"] as $sLastModuleNameToLoad) {
+			$iLoopCount = 0;
+			$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, ['id1', 'id2', $sLastModuleNameToLoad], $iLoopCount);
+
+			$aExpected = [
+				"$sLastModuleNameToLoad/3",
+				"id2/2",
+				"id1/1",
+			];
+			$this->assertEquals($aExpected, array_keys($aResult));
+			$this->assertEquals(1, $iLoopCount);
+		}
+	}
+
 	public function testOrderModulesByDependencies_RealExample(){
 		$aModules = json_decode(file_get_contents(__DIR__ . '/ressources/module_deps.json'), true);
 		$iLoopCount=0;
@@ -212,6 +247,24 @@ MSG;
 				'itop-tickets/2.0.0',
 				'itop-config-mgmt/123',
 				'itop-change-mgmt/456',
+			],
+			array_keys($aUnresolvedDependencyModules));
+	}
+
+	public function testSortModulesByCountOfDepencenciesDescending_FurtherVersionsOfSameModule(){
+		$aUnresolvedDependencyModules = [];
+		$this->AddModule($aUnresolvedDependencyModules, 'moduleA/1', []);
+		$this->AddModule($aUnresolvedDependencyModules, 'moduleA/2', ['moduleC/1']);
+		$this->AddModule($aUnresolvedDependencyModules, 'moduleB/1', ['moduleA/1']);
+		$this->AddModule($aUnresolvedDependencyModules, 'moduleC/1', []);
+
+		ModuleDiscovery::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+		$this->assertEquals(
+			[
+				'moduleA/1',
+				'moduleC/1',
+				'moduleB/1',
+				'moduleA/2',
 			],
 			array_keys($aUnresolvedDependencyModules));
 	}

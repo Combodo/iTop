@@ -71,6 +71,9 @@ HTML;
 	}
 }
 
+/**
+ * Class that handles a module dependency
+ */
 class ModuleDependency {
 	private array $aPotentialPrerequisites;
 	private array $aParamsPerModuleId;
@@ -111,11 +114,22 @@ class ModuleDependency {
 		}
 	}
 
-	public function GetPotentialPrerequisites() : array
+	/**
+	 * Return module names potentially required by current dependency
+	 * @return array
+	 */
+	public function GetPotentialPrerequisiteModuleNames() : array
 	{
 		return array_keys($this->aPotentialPrerequisites);
 	}
 
+	/**
+	 * Check if dependency is resolved with current list of module versions
+	 * @param array $aModuleVersions: versions by module names dict
+	 * @param array $aSelectedModules: modules names dict
+	 *
+	 * @return bool
+	 */
 	public function IsDependencyResolved(array $aModuleVersions, array $aSelectedModules) : bool
 	{
 		if ($this->bAlwaysUnresolved){
@@ -174,6 +188,9 @@ class ModuleDependency {
 	}
 }
 
+/**
+ * Class that handles a modules and all its dependencies
+ */
 class Module {
 	private string $sModuleId;
 	private string $sModuleName;
@@ -192,22 +209,36 @@ class Module {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetModuleName()
 	{
 		return $this->sModuleName;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetVersion()
 	{
 		return $this->sVersion;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetModuleId()
 	{
 		return $this->sModuleId;
 	}
 
-	public function SetDependencies(array $aAllDependencies)
+	/**
+	 * @param array $aAllDependencies: list of dependencies (string)
+	 *
+	 * @return void
+	 */
+	public function SetDependencies(array $aAllDependencies): void
 	{
 		$this->aAllDependencies = $aAllDependencies;
 		$this->aOngoingDependencies = [];
@@ -217,6 +248,13 @@ class Module {
 		}
 	}
 
+	/**
+	 * Check if module dependencies are resolved with current list of module versions
+	 * @param array $aModuleVersions : versions by module names dict
+	 * @param array $aSelectedModules : modules names dict
+	 *
+	 * @return bool
+	 */
 	public function IsModuleResolved(array $aModuleVersions, array $aSelectedModules) : bool
 	{
 		$aNextDependencies=[];
@@ -241,12 +279,15 @@ class Module {
 		return false;
 	}
 
+	/**
+	 * @return array: list of unique module names
+	 */
 	public function GetUnresolvedDependencyModuleNames(): array
 	{
 		$aRes=[];
 		foreach($this->aOngoingDependencies as $sDepId => $oModuleDependency) {
 			/** @var ModuleDependency $oModuleDependency */
-			$aRes = array_merge($aRes, $oModuleDependency->GetPotentialPrerequisites());
+			$aRes = array_merge($aRes, $oModuleDependency->GetPotentialPrerequisiteModuleNames());
 		}
 
 		return array_unique($aRes);
@@ -386,6 +427,18 @@ class ModuleDiscovery
 		return self::OrderModulesByDependencies(self::$m_aModules, $bAbortOnMissingDependency, $aModulesToLoad);
 	}
 
+	/**
+	 * This method is key as it sorts modules by their dependencies (topological sort).
+	 * Modules with less dependencies are first.
+	 * When module A depends from module B with same amount of dependencies, moduleB is first.
+	 * This order can deal with
+	 *      - cyclic dependencies
+	 *      - further versions of same module (name)
+	 *
+	 * @param array $aUnresolvedDependencyModules: dict of Module objects by moduleId key
+	 *
+	 * @return void
+	 */
 	public static function SortModulesByCountOfDepencenciesDescending(array &$aUnresolvedDependencyModules) : void
 	{
 		$aCountDepsByModuleId=[];
@@ -397,17 +450,18 @@ class ModuleDiscovery
 		}
 
 		foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
-			$iDepsCount = 0;
+			$iInDegreeCounter = 0;
 			/** @var Module $oModule */
 			$aUnresolvedDependencyModuleNames = $oModule->GetUnresolvedDependencyModuleNames();
 			foreach ($aUnresolvedDependencyModuleNames as $sModuleName) {
 				if (array_key_exists($sModuleName, $aDependsOnModuleName)) {
 					$aDependsOnModuleName[$sModuleName][] = $sModuleId;
-					$iDepsCount++;
+					$iInDegreeCounter++;
 				}
 			}
-			$iDepsCountIncludingOutsideModules = count($oModule->GetUnresolvedDependencyModuleNames());
-			$aCountDepsByModuleId[$sModuleId] = [$iDepsCount, $iDepsCountIncludingOutsideModules];
+			//include all modules
+			$iInDegreeCounterIncludingOutsideModules = count($oModule->GetUnresolvedDependencyModuleNames());
+			$aCountDepsByModuleId[$sModuleId] = [$iInDegreeCounter, $iInDegreeCounterIncludingOutsideModules];
 		}
 
 		$aRes=[];
@@ -415,20 +469,21 @@ class ModuleDiscovery
 			asort($aCountDepsByModuleId);
 
 			uasort($aCountDepsByModuleId, function (array $aDeps1, array $aDeps2){
-				//compare only
+				//compare $iInDegreeCounter
 				$res  = $aDeps1[0] - $aDeps2[0];
 				if ($res != 0){
 					return $res;
 				}
 
+				//compare $iInDegreeCounterIncludingOutsideModules
 				return $aDeps1[1] - $aDeps2[1];
 			});
 
 			$bOneLoopAtLeast=false;
-			foreach ($aCountDepsByModuleId as $sModuleId => $iDepsCount){
+			foreach ($aCountDepsByModuleId as $sModuleId => $iInDegreeCounter){
 				$oModule=$aUnresolvedDependencyModules[$sModuleId];
 
-				if ($bOneLoopAtLeast && $iDepsCount>0){
+				if ($bOneLoopAtLeast && $iInDegreeCounter>0){
 					break;
 				}
 
@@ -444,8 +499,9 @@ class ModuleDiscovery
 							continue;
 						}
 						$aDepCount = $aCountDepsByModuleId[$sModuleId2];
-						$iDepsCount = $aDepCount[0] - 1;
-						$aCountDepsByModuleId[$sModuleId2] = [ $iDepsCount, $aDepCount[1]];
+						$iInDegreeCounter = $aDepCount[0] - 1;
+						$iInDegreeCounterIncludingOutsideModules = $aDepCount[1];
+						$aCountDepsByModuleId[$sModuleId2] = [$iInDegreeCounter, $iInDegreeCounterIncludingOutsideModules];
 					}
 
 					unset($aDependsOnModuleName[$oModule->GetModuleName()]);
@@ -463,6 +519,7 @@ class ModuleDiscovery
 	 * @param array $aModules The list of modules to process: 'id' => $aModuleInfo
 	 * @param bool $bAbortOnMissingDependency ...
 	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
+	 * @param int $iLoopCount: used to count loop count for testing purpose (see if algo is optimized)
 	 * @return array
 	 * @throws \MissingDependencyException
 */
