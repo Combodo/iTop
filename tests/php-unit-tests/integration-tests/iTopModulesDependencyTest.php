@@ -30,17 +30,15 @@ use ModuleInstallerAPI;
  * @group beforeSetup
  */
 class iTopModulesDependencyTest extends ItopTestCase {
-	/**
-	 * define
-	 * define_if_not_exists
-	 * delete
-	 * force
-	 * if_exists
-	 * must_exist
-	 * redefine
-	 */
-
 	private array $aFilesToRemove = [];
+	private array $aModules=[];
+	private array $aModulesDepsByModuleName=[];
+	private string $sCurrentModule;
+	private array $aDefineNodes;
+	private array $aDependencyNodes;
+	private array $aAllDmFiles=[];
+
+	private array $aSoftDependencyNodes=[];
 
 	protected function setUp(): void
 	{
@@ -57,8 +55,6 @@ class iTopModulesDependencyTest extends ItopTestCase {
 			@unlink($sTmpFile);
 		}
 	}
-
-	private array $aAllDmFiles=[];
 	public function ListDatamodelFiles() : array
 	{
 		if (count($this->aAllDmFiles)==0){
@@ -74,8 +70,6 @@ class iTopModulesDependencyTest extends ItopTestCase {
 		}
 		return $this->aAllDmFiles;
 	}
-
-	private array $aModules=[];
 
 	public function FetchAllDependenciesViaDM()
 	{
@@ -129,7 +123,6 @@ class iTopModulesDependencyTest extends ItopTestCase {
 		$this->CompleteModuleDependencies();
 	}
 
-	private array $aModulesDepsByModuleName=[];
 	public function testModules()
 	{
 		$this->FetchAllDependenciesViaDM();
@@ -142,9 +135,6 @@ class iTopModulesDependencyTest extends ItopTestCase {
 
 		foreach(\ModuleDiscovery::GetAvailableModules($aDirsToScan) as $sModuleId => $aData) {
 			list($sModuleName, $sVersion) = \ModuleDiscovery::GetModuleName($sModuleId);
-			if ($sModuleName==="itop-enduser-devices"){
-				var_dump($aData);
-			}
 			$aCurrentDeps = $aData['dependencies'] ?? [];
 			$this->aModulesDepsByModuleName[$sModuleName] = $aCurrentDeps;
 		}
@@ -152,7 +142,6 @@ class iTopModulesDependencyTest extends ItopTestCase {
 		$aErrors=[];
 		/** @var XmlModule $oXmlModule */
 		foreach ($this->aModules as $sModuleName => $oXmlModule) {
-			//$bDebug = ($sModuleName === "itop-tickets");
 			$aCurrentDeps = $this->aModulesDepsByModuleName[$sModuleName] ?? [];
 			$aModuleErrors=[];
 			foreach ($oXmlModule->aDependencyModulesNames as $sDepModuleName => $oXmlModule2){
@@ -160,12 +149,6 @@ class iTopModulesDependencyTest extends ItopTestCase {
 				$bResolved=false;
 				foreach ($aCurrentDeps as $sDepString){
 					$oModuleDependency = new \ModuleDependency($sDepString);
-					/*if ($bDebug){
-						var_dump($sDepModuleName);
-						var_dump($sDepString);
-						var_dump(in_array($sDepModuleName, $oModuleDependency->GetPotentialPrerequisiteModuleNames()));
-						var_dump($oModuleDependency->GetPotentialPrerequisiteModuleNames());
-					}*/
 
 					if (in_array($sDepModuleName, $oModuleDependency->GetPotentialPrerequisiteModuleNames())) {
 						$bResolved=true;
@@ -200,23 +183,6 @@ class iTopModulesDependencyTest extends ItopTestCase {
 		$this->assertEquals(0, count($aErrors), var_export($aErrors, true));
 
 	}
-
-	public function testGetMetaInfo()
-	{
-		$this->FetchXmlMetaInfo(APPROOT . 'core/datamodel.core.xml');
-
-		$this->assertEquals("core", $this->sCurrentModule);
-		$this->assertEquals(22, count($this->aDefineNodes));
-		$this->assertEquals(0, count($this->aDependencyNodes));
-		//var_dump($this->aDefineNodes);
-		$this->assertEquals([], $this->aDefineNodes);
-		$this->assertEquals([], $this->aDependencyNodes);
-	}
-
-	private string $sCurrentModule;
-	private array $aDefineNodes;
-	private array $aDependencyNodes;
-	private array $aSoftDependencyNodes=[];
 
 	private function GetModuleSuffix($sFile) : string
 	{
@@ -253,7 +219,6 @@ class iTopModulesDependencyTest extends ItopTestCase {
 
 	private function FetchMetaInfo(\DOMNodeList $oDomNodeList, ?string $sPath=null)
 	{
-		$bDebug = $this->sCurrentModule==="itop-tickets";
 		/** @var \DOMNode $oDomNode */
 		foreach ($oDomNodeList as $oDomNode) {
 			/** @var \DOMAttr $oDelta */
@@ -261,13 +226,9 @@ class iTopModulesDependencyTest extends ItopTestCase {
 			/** @var \DOMAttr $oId */
 			$oId = $oDomNode->attributes['id'] ?? null;
 
-			$bDebug=false;// $this->sCurrentModule==="itop-tickets";
 			if (! is_null($oId)) {
 				$sId = $oId->nodeValue;
 				$sCurrentPath = $sPath ? $sPath."->".$sId : $sId;
-				if ($bDebug){
-					echo $sCurrentPath . '\n';
-				}
 
 				if (!is_null($oDelta)) {
 					$oXmlModuleMetaInfo = new XmlModuleMetaInfo($sId, $oDomNode->nodeName, $sCurrentPath, $oDelta->nodeValue);
@@ -296,10 +257,6 @@ class iTopModulesDependencyTest extends ItopTestCase {
 				}
 			} else if ($oDomNode instanceof \DOMElement){
 				$sCurrentPath = $sPath ? $sPath . '->' . $oDomNode->nodeName : $oDomNode->nodeName;
-
-				if ($bDebug){
-					echo $sCurrentPath . '\n';
-				}
 			} else{
 				$sCurrentPath = $sPath;
 			}
@@ -322,17 +279,6 @@ class iTopModulesDependencyTest extends ItopTestCase {
 
 			foreach ($aModuleDepsCount as $sModuleName => $iCount){
 				if ($iCount>0){
-					/** @var XmlModule $oXmlModule */
-					$oXmlModule = $this->aModules[$sModuleName];
-
-					//var_dump($this->aModules['itop-config-mgmt']->aXMlMetaInfosByModuleNames["itop-structure"]);
-					//var_dump($this->aModules['itop-structure']->aXMlMetaInfosByModuleNames["itop-config-mgmt"]);
-
-					/*echo (string)$this->aModules['itop-config-mgmt'] . ' \n';
-					echo (string)$this->aModules['itop-datacenter-mgmt'] . ' \n';
-					echo (string)$this->aModules['itop-structure'] . ' \n';
-					echo (string)$this->aModules[$sModuleName] . ' \n';
-					var_dump($aModuleDepsCount);*/
 					throw new \Exception("still deps with $sModuleName");
 				}
 
