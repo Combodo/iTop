@@ -89,6 +89,22 @@ class iTopModulesDependencyTest extends ItopTestCase {
 					$this->aModules[$sModuleName] = new XmlModule($sModuleName);
 				}
 			}
+
+			$aSoftlyDependentModules = $this->aSoftDependencyNodes[$sKey] ?? null;
+			if (is_null($aSoftlyDependentModules)){
+				continue;
+			}
+
+			foreach ($aSoftlyDependentModules as $sModuleName){
+				/** @var XmlModule $oCurrentXmlModule */
+				$oCurrentXmlModule = $this->aModules[$sModuleName] ?? null;
+				if (is_null($oCurrentXmlModule)){
+					$oCurrentXmlModule = new XmlModule($sModuleName);
+					$this->aModules[$sModuleName] = $oCurrentXmlModule;
+				}
+
+				$oCurrentXmlModule->AddDependency($sKey, $aModules, $this->aModules);
+			}
 		}
 
 		foreach ($this->aDependencyNodes as $sKey => $aModules){
@@ -102,13 +118,10 @@ class iTopModulesDependencyTest extends ItopTestCase {
 
 				$aDefiningModules = $this->aDefineNodes[$sKey] ?? null;
 				if (is_null($aDefiningModules)){
-					//throw new \Exception("weard behaviour $sKey");
 					continue;
 				}
 
-				foreach ($aDefiningModules as $sDefiningModuleName){
-					$oCurrentXmlModule->AddDependency($sKey, $sDefiningModuleName, $this->aModules);
-				}
+				$oCurrentXmlModule->AddDependency($sKey, $aDefiningModules, $this->aModules);
 			}
 		}
 
@@ -129,6 +142,9 @@ class iTopModulesDependencyTest extends ItopTestCase {
 
 		foreach(\ModuleDiscovery::GetAvailableModules($aDirsToScan) as $sModuleId => $aData) {
 			list($sModuleName, $sVersion) = \ModuleDiscovery::GetModuleName($sModuleId);
+			if ($sModuleName==="itop-enduser-devices"){
+				var_dump($aData);
+			}
 			$aCurrentDeps = $aData['dependencies'] ?? [];
 			$this->aModulesDepsByModuleName[$sModuleName] = $aCurrentDeps;
 		}
@@ -136,30 +152,43 @@ class iTopModulesDependencyTest extends ItopTestCase {
 		$aErrors=[];
 		/** @var XmlModule $oXmlModule */
 		foreach ($this->aModules as $sModuleName => $oXmlModule) {
+			//$bDebug = ($sModuleName === "itop-tickets");
 			$aCurrentDeps = $this->aModulesDepsByModuleName[$sModuleName] ?? [];
 			$aModuleErrors=[];
 			foreach ($oXmlModule->aDependencyModulesNames as $sDepModuleName => $oXmlModule2){
-				if ($sDepModuleName==="core"||$sDepModuleName==="application"){
-					continue;
-				}
-
 				$sXmlUIDs = implode('|', $oXmlModule->aXMlMetaInfosByModuleNames[$sDepModuleName]);
+				$bResolved=false;
 				foreach ($aCurrentDeps as $sDepString){
 					$oModuleDependency = new \ModuleDependency($sDepString);
-					if (! in_array($sDepModuleName, $oModuleDependency->GetPotentialPrerequisiteModuleNames())){
-						$bResolved=false;
-						foreach ($oModuleDependency->GetPotentialPrerequisiteModuleNames() as $sPotentialDepModuleName){
-							/** @var XmlModule $oXmlModule2 */
-							$oXmlModule2 = $this->aModules[$sPotentialDepModuleName]??null;
+					/*if ($bDebug){
+						var_dump($sDepModuleName);
+						var_dump($sDepString);
+						var_dump(in_array($sDepModuleName, $oModuleDependency->GetPotentialPrerequisiteModuleNames()));
+						var_dump($oModuleDependency->GetPotentialPrerequisiteModuleNames());
+					}*/
 
-							if (! is_null($oXmlModule2) && $oXmlModule2->Depends($sDepModuleName)){
-								$bResolved=true;
-							}
-						}
-						if (! $bResolved){
-							$aModuleErrors []= "$sModuleName depends on $sDepModuleName but missing in module dependencies: " . implode('|', $aCurrentDeps) . ". ($sXmlUIDs)";
+					if (in_array($sDepModuleName, $oModuleDependency->GetPotentialPrerequisiteModuleNames())) {
+						$bResolved=true;
+						break;
+					}
+
+					foreach ($oModuleDependency->GetPotentialPrerequisiteModuleNames() as $sPotentialDepModuleName){
+						/** @var XmlModule $oXmlModule2 */
+						$oXmlModule2 = $this->aModules[$sPotentialDepModuleName]??null;
+
+						if (! is_null($oXmlModule2) && $oXmlModule2->Depends($sDepModuleName)){
+							$bResolved=true;
+							break;
 						}
 					}
+
+					if ($bResolved) {
+						break;
+					}
+				}
+
+				if (! $bResolved){
+					$aModuleErrors []= "$sModuleName depends on $sDepModuleName but missing in module dependencies: " . implode(' & ', $aCurrentDeps) . ". ($sXmlUIDs)";
 				}
 			}
 
@@ -187,6 +216,7 @@ class iTopModulesDependencyTest extends ItopTestCase {
 	private string $sCurrentModule;
 	private array $aDefineNodes;
 	private array $aDependencyNodes;
+	private array $aSoftDependencyNodes=[];
 
 	private function GetModuleSuffix($sFile) : string
 	{
@@ -223,6 +253,7 @@ class iTopModulesDependencyTest extends ItopTestCase {
 
 	private function FetchMetaInfo(\DOMNodeList $oDomNodeList, ?string $sPath=null)
 	{
+		$bDebug = $this->sCurrentModule==="itop-tickets";
 		/** @var \DOMNode $oDomNode */
 		foreach ($oDomNodeList as $oDomNode) {
 			/** @var \DOMAttr $oDelta */
@@ -230,27 +261,50 @@ class iTopModulesDependencyTest extends ItopTestCase {
 			/** @var \DOMAttr $oId */
 			$oId = $oDomNode->attributes['id'] ?? null;
 
-			if (!is_null($oDelta) && ! is_null($oId)) {
+			$bDebug=false;// $this->sCurrentModule==="itop-tickets";
+			if (! is_null($oId)) {
 				$sId = $oId->nodeValue;
-				$sPath = $sPath ? $sPath . "->" . $sId : $sId;
-				$oXmlModuleMetaInfo = new XmlModuleMetaInfo($sId, $oDomNode->nodeName, $sPath, $oDelta->nodeValue);
-				$sKey = $oXmlModuleMetaInfo->GetUID();
-				if ($oXmlModuleMetaInfo->IsDefine()){
-					if (array_key_exists($sKey, $this->aDefineNodes)){
-						$this->aDefineNodes[$sKey][]=$this->sCurrentModule;
+				$sCurrentPath = $sPath ? $sPath."->".$sId : $sId;
+				if ($bDebug){
+					echo $sCurrentPath . '\n';
+				}
+
+				if (!is_null($oDelta)) {
+					$oXmlModuleMetaInfo = new XmlModuleMetaInfo($sId, $oDomNode->nodeName, $sCurrentPath, $oDelta->nodeValue);
+					$sKey = $oXmlModuleMetaInfo->GetUID();
+					if ($oXmlModuleMetaInfo->IsDefine()) {
+						if (array_key_exists($sKey, $this->aDefineNodes)) {
+							$this->aDefineNodes[$sKey][] = $this->sCurrentModule;
+						} else {
+							$this->aDefineNodes[$sKey] = [$this->sCurrentModule];
+						}
 					} else {
-						$this->aDefineNodes[$sKey]=[ $this->sCurrentModule ];
+						if (array_key_exists($sKey, $this->aDependencyNodes)) {
+							$this->aDependencyNodes[$sKey][] = $this->sCurrentModule;
+						} else {
+							$this->aDependencyNodes[$sKey] = [$this->sCurrentModule];
+						}
 					}
 				} else {
-					if (array_key_exists($sKey, $this->aDependencyNodes)){
-						$this->aDependencyNodes[$sKey][]=$this->sCurrentModule;
+					$oXmlModuleMetaInfo = new XmlModuleMetaInfo($sId, $oDomNode->nodeName, $sCurrentPath, "nodelta");
+					$sKey = $oXmlModuleMetaInfo->GetUID();
+					if (array_key_exists($sKey, $this->aSoftDependencyNodes)) {
+						$this->aSoftDependencyNodes[$sKey][] = $this->sCurrentModule;
 					} else {
-						$this->aDependencyNodes[$sKey]=[ $this->sCurrentModule ];
+						$this->aSoftDependencyNodes[$sKey] = [$this->sCurrentModule];
 					}
 				}
+			} else if ($oDomNode instanceof \DOMElement){
+				$sCurrentPath = $sPath ? $sPath . '->' . $oDomNode->nodeName : $oDomNode->nodeName;
+
+				if ($bDebug){
+					echo $sCurrentPath . '\n';
+				}
+			} else{
+				$sCurrentPath = $sPath;
 			}
 
-			$this->FetchMetaInfo($oDomNode->childNodes, $sPath);
+			$this->FetchMetaInfo($oDomNode->childNodes, $sCurrentPath);
 		}
 	}
 
@@ -270,12 +324,15 @@ class iTopModulesDependencyTest extends ItopTestCase {
 				if ($iCount>0){
 					/** @var XmlModule $oXmlModule */
 					$oXmlModule = $this->aModules[$sModuleName];
-					/*var_dump((string)$oXmlModule);
-					var_dump((string)$this->aModules['itop-datacenter-mgmt']);
-					var_dump((string)$this->aModules['itop-config-mgmt']);
+
+					//var_dump($this->aModules['itop-config-mgmt']->aXMlMetaInfosByModuleNames["itop-structure"]);
+					//var_dump($this->aModules['itop-structure']->aXMlMetaInfosByModuleNames["itop-config-mgmt"]);
+
+					/*echo (string)$this->aModules['itop-config-mgmt'] . ' \n';
+					echo (string)$this->aModules['itop-datacenter-mgmt'] . ' \n';
+					echo (string)$this->aModules['itop-structure'] . ' \n';
+					echo (string)$this->aModules[$sModuleName] . ' \n';
 					var_dump($aModuleDepsCount);*/
-					//var_dump($this->aModules['itop-bridge-cmdb-services']->aXMlMetaInfosByModuleNames["itop-bridge-cmdb-ticket"]);
-					//var_dump($this->aModules['itop-bridge-cmdb-ticket']->aXMlMetaInfosByModuleNames["itop-bridge-cmdb-services"]);
 					throw new \Exception("still deps with $sModuleName");
 				}
 
@@ -284,7 +341,7 @@ class iTopModulesDependencyTest extends ItopTestCase {
 				break;
 			}
 
-			//echo "$sModuleName\n";
+			echo "$sModuleName\n";
 			foreach ($aModuleDepsCount as $sStillToProcessModuleName => $c){
 				/** @var XmlModule $oXmlStillToProcessModule */
 				$oXmlStillToProcessModule = $this->aModules[$sStillToProcessModuleName];

@@ -13,9 +13,22 @@ class XmlModule {
 		$this->sModuleName = $sModuleName;
 	}
 
-	public function AddDependency(string $sXmlMetaInfoUID, string $sDefiningModuleName, array $aModules)
+	public function AddDependency(string $sXmlMetaInfoUID, array $aDefiningModuleNames, array $aModules)
 	{
-		if ($sDefiningModuleName===$this->sModuleName){
+		$aRemainingModules=[];
+		foreach ($aDefiningModuleNames as $sDefiningModuleName) {
+			if ($sDefiningModuleName === $this->sModuleName) {
+				continue;
+			}
+
+			if ($sDefiningModuleName === "core" || $sDefiningModuleName === "application") {
+				continue;
+			}
+
+			$aRemainingModules[]=$sDefiningModuleName;
+		}
+
+		if (count($aRemainingModules)==0){
 			return;
 		}
 
@@ -24,39 +37,46 @@ class XmlModule {
 			echo $this->sModuleName . " => $sDefiningModuleName === " . $sXmlMetaInfoUID . "\n";
 		}*/
 
-		if (! array_key_exists($sDefiningModuleName, $this->aXMlMetaInfosByModuleNames)){
-			$this->aXMlMetaInfosByModuleNames[$sDefiningModuleName]=[$sXmlMetaInfoUID];
+		$sKey=implode(' || ', $aRemainingModules);
+		if (! array_key_exists($sKey, $this->aXMlMetaInfosByModuleNames)){
+			$this->aXMlMetaInfosByModuleNames[$sKey]=[$sXmlMetaInfoUID];
 		} else {
-			if (! in_array($sXmlMetaInfoUID, $this->aXMlMetaInfosByModuleNames[$sDefiningModuleName])){
-				$this->aXMlMetaInfosByModuleNames[$sDefiningModuleName][]=$sXmlMetaInfoUID;
+			if (! in_array($sXmlMetaInfoUID, $this->aXMlMetaInfosByModuleNames[$sKey])){
+				$this->aXMlMetaInfosByModuleNames[$sKey][]=$sXmlMetaInfoUID;
 			}
 		}
 
-		if (! array_key_exists($sDefiningModuleName, $this->aDependencyModulesNames)){
-			/** @var XmlModule $oXmlModule */
-			$oXmlModule = $aModules[$sDefiningModuleName];
-			$this->aDependencyModulesNames[$sDefiningModuleName]=$oXmlModule;
+		if (! array_key_exists($sKey, $this->aDependencyModulesNames)){
+			$aCurrentModules=[];
+			foreach ($aRemainingModules as $sDefiningModuleName) {
+				/** @var XmlModule $oXmlModule */
+				$oXmlModule = $aModules[$sDefiningModuleName];
+				$aCurrentModules[]=$oXmlModule;
+			}
+			$this->aDependencyModulesNames[$sKey]=$aCurrentModules;
 		}
 	}
 
 	public function Depends(string $sModuleName) : bool
 	{
-		return array_key_exists($sModuleName, $this->aDependencyModulesNames) || array_key_exists($sModuleName, $this->aXMlMetaInfosByModuleNames);
+		return array_key_exists($sModuleName, $this->aDependencyModulesNames) || array_key_exists($sModuleName, $this->aAllDependencyModulesNames);
 	}
 
 	public function __toString(): string
 	{
-		return sprintf("%s (%s)", $this->sModuleName, implode('|', array_keys($this->aDependencyModulesNames)));
+		return sprintf("%s (%s)", $this->sModuleName, implode(' & ', array_keys($this->aDependencyModulesNames)));
 	}
 
 	public function CompleteModuleDependencies(array $aAllModules) : void
 	{
-		foreach ($this->aDependencyModulesNames as $sDirectDependency => $oXmlMod){
+		foreach ($this->aDependencyModulesNames as $sDirectDependency => $oXmlModules){
 			/** @var \Combodo\iTop\Test\UnitTest\XmlModule $oDirectDepXmlModule */
-			$oDirectDepXmlModule = $aAllModules[$sDirectDependency];
-			foreach ($oDirectDepXmlModule->aDependencyModulesNames as $sDirectDependency2 => $oXmlMod2){
-				if (! array_key_exists($sDirectDependency2, $this->aDependencyModulesNames) && ! in_array($sDirectDependency2, $this->aAllDependencyModulesNames)){
-					$this->aAllDependencyModulesNames[]=$sDirectDependency2;
+			$oDirectDepXmlModule = $aAllModules[$sDirectDependency] ?? null;
+			if (! is_null($oDirectDepXmlModule)) {
+				foreach ($oDirectDepXmlModule->aDependencyModulesNames as $sDirectDependency2 => $oXmlModules2) {
+					if (!array_key_exists($sDirectDependency2, $this->aDependencyModulesNames) && !in_array($sDirectDependency2, $this->aAllDependencyModulesNames)) {
+						$this->aAllDependencyModulesNames[] = $sDirectDependency2;
+					}
 				}
 			}
 		}

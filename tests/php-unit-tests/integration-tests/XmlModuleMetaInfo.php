@@ -24,6 +24,6 @@ class XmlModuleMetaInfo {
 
 	public function GetUID() : string
 	{
-		return $this->sNodeName . '_' . $this->sLastNodeId;
+		return $this->sNodeName . '_' . $this->sPath;
 	}
 }
