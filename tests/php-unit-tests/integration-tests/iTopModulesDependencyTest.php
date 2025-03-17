@@ -37,7 +37,6 @@ class iTopModulesDependencyTest extends ItopTestCase {
 	private array $aDefineNodes;
 	private array $aDependencyNodes;
 	private array $aAllDmFiles=[];
-
 	private array $aSoftDependencyNodes=[];
 
 	protected function setUp(): void
