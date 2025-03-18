@@ -360,6 +360,17 @@ JS
 					);
 			}
 
+			// !!patch!! Change registration needs to be performed after Selectize initialization
+			// @see N°8245 - External key not saved in n-n link in edition
+			// @see N°8245 since N°7264 Update selectize.js from 0.12.4 to 0.15.2
+			if ($iUniqueId > 0) {
+				$oP->add_ready_script(
+					<<<EOF
+oWidget{$this->oUILinksWidget->GetInputId()}.OnLinkAdded($iUniqueId, $iRemoteObjKey);
+EOF
+				);
+			}
+
 			$sState = '';
 			$sRemoteKeySafeFieldId = $this->GetFieldId($iUniqueId, $this->oUILinksWidget->GetExternalKeyToRemote());
 		}
