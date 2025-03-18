@@ -33,6 +33,7 @@ class iTopModulesDependencyTest extends ItopTestCase {
 	private array $aFilesToRemove = [];
 	private array $aModules=[];
 	private array $aModulesDepsByModuleName=[];
+	private array $aModulesDatamodelSectionByModuleName=[];
 	private string $sCurrentModule;
 	private array $aDefineNodes;
 	private array $aDependencyNodes;
@@ -122,10 +123,8 @@ class iTopModulesDependencyTest extends ItopTestCase {
 		$this->CompleteModuleDependencies();
 	}
 
-	public function testModules()
+	/*private function ReadModuleFileData2() : void
 	{
-		$this->FetchAllDependenciesViaDM();
-
 		$aDirsToScan = [
 			APPROOT.'datamodels/2.x',
 			APPROOT.'extensions',
@@ -137,6 +136,53 @@ class iTopModulesDependencyTest extends ItopTestCase {
 			$aCurrentDeps = $aData['dependencies'] ?? [];
 			$this->aModulesDepsByModuleName[$sModuleName] = $aCurrentDeps;
 		}
+	}*/
+
+	private function ReadModuleFileData() : void
+	{
+		$aDirsToScan = [
+			APPROOT.'datamodels/2.x',
+			APPROOT.'extensions',
+			APPROOT.'data/production-modules',
+		];
+		$this->aModulesDepsByModuleName=[];
+		foreach ($aDirsToScan as $sDir){
+			foreach (glob("$sDir/*/module.*.php") as $sFile) {
+				$sContent = file_get_contents($sFile);
+				$sContent=str_replace('SetupWebPage::AddModule', '$aModuleData=array', $sContent);
+
+				$sTempFile = tempnam(sys_get_temp_dir(), 'modulefile_');
+				$this->aFilesToRemove[]=$sTempFile;
+				file_put_contents($sTempFile, $sContent);
+				$bDebug=false;
+				if ($bDebug){
+					echo "$sFile\n";
+					echo $sContent;
+				}
+				require_once $sTempFile;
+				if ($bDebug){
+					var_dump($aModuleData);
+				}
+				$sModuleId=$aModuleData[1];
+				list($sModuleName, $sVersion) = \ModuleDiscovery::GetModuleName($sModuleId);
+				$aData=$aModuleData[2];
+				$this->aModulesDepsByModuleName[$sModuleName] = $aData['dependencies'] ?? [];
+				$this->aModulesDatamodelSectionByModuleName[$sModuleName] = $aData['datamodel'] ?? [];
+			}
+		}
+	}
+
+	/*public function testReadModuleFileData()
+	{
+		$this->ReadModuleFileData2();
+		ksort($this->aModulesDepsByModuleName);
+		$this->assertEquals([], $this->aModulesDepsByModuleName);
+	}*/
+
+	public function testModules()
+	{
+		$this->FetchAllDependenciesViaDM();
+		$this->ReadModuleFileData();
 
 		$aErrors=[];
 		/** @var XmlModule $oXmlModule */
