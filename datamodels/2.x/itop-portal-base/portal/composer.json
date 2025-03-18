@@ -1,5 +1,8 @@
 {
-	"license": "AGPLv3",
+  "license": "AGPLv3",
+  "config" : {
+    "autoloader-suffix": "Combodo_ItopPortalBase_Portal"
+  },
 	"autoload": {
 		"psr-4": {
 			"Combodo\\iTop\\Portal\\": "src/"
