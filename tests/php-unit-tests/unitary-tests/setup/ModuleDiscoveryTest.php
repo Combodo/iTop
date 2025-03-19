@@ -270,7 +270,7 @@ MSG;
 	}
 
 	private function AddModule(array &$aUnresolvedDependencyModules, string $sModuleId, array $aDeps){
-		$oModule = new \Module($sModuleId);
+		$oModule = new \iTopCoreModule($sModuleId);
 		$oModule->SetDependencies($aDeps);
 		$aUnresolvedDependencyModules[$sModuleId]= $oModule;
 	}
