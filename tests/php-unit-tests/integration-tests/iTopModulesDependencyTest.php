@@ -178,19 +178,115 @@ class iTopModulesDependencyTest extends ItopTestCase {
 	{
 		$aFullnameClassesByModuleName=[];
 		foreach (self::$aModulesDataByModuleName as $sModuleName => $aModuleData){
-			echo "$sModuleName\n";
+			//echo "$sModuleName\n";
 			$aFiles = $aModuleData[2]['datamodel'] ?? [];
 			$sDir = dirname($aModuleData[0]);
 
+			$aDeps=[];
 			foreach ($aFiles as $sFile){
 				if (preg_match("|.*model\.$sModuleName\.php|", $sFile)){
 					continue;
 				}
-				$aFullnameClassesByModuleName=array_merge($aFullnameClassesByModuleName, $this->ReadDependencies($sModuleName, "$sDir/$sFile"));
+				//echo "$sDir/$sFile\n";
+				$aDeps=array_merge($aDeps, $this->ReadDependencies("$sDir/$sFile"));
 			}
+
+			$aFullnameClassesByModuleName[$sModuleName]=$aDeps;
 		}
 
+		$this->FetchAllDependenciesViaModulesFiles($aFullnameClassesByModuleName);
+
 		$this->assertEquals([], $aFullnameClassesByModuleName);
+	}
+
+	public function FetchAllDependenciesViaModulesFiles(array $aFullnameClassesByModuleName)
+	{
+		foreach ($aFullnameClassesByModuleName as $sModuleName => $aFullnameClasses){
+			foreach (self::$aModulesDataByModuleName as $sModuleName2 => $aModuleData){
+				if ($sModuleName2 === $sModuleName){
+					continue;
+				}
+
+				$sDir = dirname($aModuleData[0]);
+
+				if (count($aFullnameClassesByModuleName)==0){
+					throw new \Exception("no defs in $sModuleName??");
+				}
+
+				$sStr = "";
+				foreach ($aFullnameClasses as $sClass){
+					$sStr .= <<<TXT
+ -e "$sClass"
+TXT;
+;
+				}
+
+				//$bDebug=($sModuleName==="combodo-oauth2-client") && ($sModuleName2==="combodo-webhook-integration");
+				//$bDebug=($sModuleName==="itop-backup");
+				$bDebug=false;
+				/*if (!$bDebug){
+					continue;
+				}*/
+
+				$bFound=false;
+				foreach ($this->GetFolders($sModuleName2, $sDir) as $sFolderDir) {
+					$sCliCmd = str_replace('\\', '\\\\\\\\', sprintf("grep -rl %s $sFolderDir", $sStr));
+					$sOutput = exec($sCliCmd);
+
+
+					if ($bDebug) {
+						//echo "Check deps of $sModuleName2 to $sModuleName in $sFolderDir\n";
+						echo "$sCliCmd\n";
+						echo "|$sOutput|\n";
+					}
+
+					if (strlen($sOutput) != 0) {
+						$bFound=true;
+						break;
+					}
+				}
+
+				if ($bFound){
+					echo "$sModuleName2 => $sModuleName\n";
+				}
+			}
+
+			if ($bDebug){
+				break;
+			}
+		}
+	}
+
+	private array $aSubfoldersByModulename=[];
+	private function GetFolders($sModuleName2, $sDir) : array
+	{
+		if (array_key_exists($sModuleName2, $this->aSubfoldersByModulename)){
+			return $this->aSubfoldersByModulename[$sModuleName2];
+		}
+
+		$aRes=[];
+		foreach (glob("$sDir/*") as $sPath){
+			if (! is_dir($sPath)){
+				continue;
+			}
+
+			if (strpos($sPath, '\.git') !== false){
+				continue;
+			}
+
+			if (strpos($sPath, 'vendor') !== false){
+				continue;
+			}
+
+			if (strpos($sPath, 'test') !== false){
+				continue;
+			}
+
+			$aRes[]=$sPath;
+		}
+
+		$this->aSubfoldersByModulename[$sModuleName2]=$aRes;
+		return $aRes;
 	}
 
 	public function testModules()
@@ -345,7 +441,7 @@ class iTopModulesDependencyTest extends ItopTestCase {
 				break;
 			}
 
-			echo "$sModuleName\n";
+			//echo "$sModuleName\n";
 			foreach ($aModuleDepsCount as $sStillToProcessModuleName => $c){
 				/** @var XmlModule $oXmlStillToProcessModule */
 				$oXmlStillToProcessModule = $this->aModules[$sStillToProcessModuleName];
@@ -368,15 +464,14 @@ class iTopModulesDependencyTest extends ItopTestCase {
 
 	/**
 	 * Read declared classes/interfaces in modules.php file (either directly listed files or inside autoload)
-	 * @param string $sModuleName: module name
 	 * @param string : module file path
 	 *
-	 * @return array: dict with fullname classes as keys and module name as value
+	 * @return array: list of fullname classes
 	 */
-	public function ReadDependencies(string $sModuleName, string $sPath) : array
+	public function ReadDependencies(string $sPath) : array
 	{
 		if (false !== strpos($sPath, 'autoload.php')){
-			return $this->ReadAutoloadDependencies($sModuleName, $sPath);
+			return $this->ReadAutoloadDependencies($sPath);
 	    }
 
 		$aRes=[];
@@ -391,13 +486,13 @@ class iTopModulesDependencyTest extends ItopTestCase {
 
 		if (preg_match_all('|^class ([a-zA-Z]*) |m', $sContent, $aMatches)){
 			foreach($aMatches[1] as $sClass){
-				$aRes[$sNamespace.$sClass]=$sModuleName;
+				$aRes[]=$sNamespace.$sClass;
 			}
 		}
 
 		if (preg_match_all('|^interface ([a-zA-Z]*) |m', $sContent, $aMatches)){
 			foreach($aMatches[1] as $sInterface){
-				$aRes[$sNamespace.$sInterface]=$sModuleName;
+				$aRes[]=$sNamespace.$sInterface;
 			}
 		}
 
@@ -406,12 +501,12 @@ class iTopModulesDependencyTest extends ItopTestCase {
 
 	/**
 	 * Read declared classes/interfaces autoload file
-	 * @param string $sModuleName: module name
+	 *
 	 * @param string : module file path
 	 *
-	 * @return array: dict with fullname classes as keys and module name as value
+	 * @return array: list of fullname classes
 	 */
-	private function ReadAutoloadDependencies(string $sModuleName, string $sPath) : array
+	private function ReadAutoloadDependencies(string $sPath) : array
 	{
 		$sAutoloadClassMap = dirname($sPath) . "/composer/autoload_classmap.php";
 		//echo $sAutoloadClassMap . '\n';
@@ -435,14 +530,19 @@ TXT;
 			if (strpos($sClass, 'InstalledVersions')){
 				continue;
 			}
-			$aRes[$sClass]=$sModuleName;
+			$aRes[]=$sClass;
 		}
 		return $aRes;
 	}
 
 	public function testReadDependencies()
 	{
-		$this->assertEquals(['CASLoginExtension'], $this->ReadDependencies('authent-cas', APPROOT . 'datamodels/2.x/authent-cas/src/CASLoginExtension.php'));
+		$this->assertEquals(['CASLoginExtension'], $this->ReadDependencies(APPROOT . 'datamodels/2.x/authent-cas/src/CASLoginExtension.php'));
+	}
+
+	public function testReadAutoloadDependencies()
+	{
+		$this->assertEquals([], $this->ReadAutoloadDependencies(APPROOT . 'extensions/combodo-hybridauth-configuration/combodo-oauth2-client/vendor/autoload.php'));
 	}
 }
 
