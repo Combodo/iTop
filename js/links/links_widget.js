@@ -390,16 +390,17 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 
 	this.RegisterChange = function () {
 		// Listen only used inputs
-		$('#linkedset_'+me.id+' :input[name^="attr_'+me.sAttCode+'["]').off('change').on('change', function () {
+		$('body').off('change', '#linkedset_'+me.id+' :input[name^="attr_'+me.sAttCode+'["]')
+			.on('change', '#linkedset_'+me.id+' :input[name^="attr_'+me.sAttCode+'["]', function () {
 			if (!($(this).hasClass('selection')))
-			{
-				let oCheckbox = $(this).closest('tr').find('.selection');
-				let iLink = oCheckbox.attr('data-link-id');
-				let iUniqueId = oCheckbox.attr('data-unique-id');
-				let sAttCode = $(this).closest('.attribute-edit').attr('data-attcode');
-				let value = $(this).val();;
-				return me.OnValueChange(iLink, iUniqueId, sAttCode, value, this);
-			}
+				{
+					let oCheckbox = $(this).closest('tr').find('.selection');
+					let iLink = oCheckbox.attr('data-link-id');
+					let iUniqueId = oCheckbox.attr('data-unique-id');
+					let sAttCode = $(this).closest('.attribute-edit').attr('data-attcode');
+					let value = $(this).val();;
+					return me.OnValueChange(iLink, iUniqueId, sAttCode, value, this);
+				}
 			return true;
 		});
 	};
