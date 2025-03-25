@@ -10,9 +10,10 @@ $ipb-browse-brick--mosaic-breadcrumb--padding: $common-spacing-200 !default;
 $ipb-browse-brick--mosaic-breadcrumb--active--color: $common-color-grey-800 !default;
 $ipb-browse-brick--mosaic-breadcrumb--a--color: $common-color-primary-800 !default;
 
-$ipb-browse-brick--mosaic--small--grid-template-columns: 100% !default;
-$ipb-browse-brick--mosaic--medium--grid-template-columns: 50% 50% !default;
-$ipb-browse-brick--mosaic--large--grid-template-columns: 33.3% 33.3% 33.3% !default;
+$ipb-browse-brick--mosaic--gap: $common-spacing-300 !default;
+$ipb-browse-brick--mosaic--small--grid-template-columns: 1fr !default;
+$ipb-browse-brick--mosaic--medium--grid-template-columns: repeat(2, 1fr) !default;
+$ipb-browse-brick--mosaic--large--grid-template-columns: repeat(3, 1fr) !default;
 
 
 $ipb-browse-brick--mosaic-group-item--min-height: $common-size-550 !default;
@@ -21,17 +22,20 @@ $ipb-browse-brick--mosaic-group-item--width: 100% !default;
 $ipb-browse-brick--mosaic-group-item--margin: $common-spacing-0 !default;
 $ipb-browse-brick--mosaic-group-item--color: $common-base-variable--text-color !default;
 $ipb-browse-brick--mosaic-group-item--border: 1px solid $common-color-grey-300 !default;
+$ipb-browse-brick--mosaic-group-item--border-radius: $common-border-radius-300 !default;
+$ipb-browse-brick--mosaic-group-item--background-color: $common-color-white-100 !default;
 $ipb-browse-brick--mosaic-group-item--animation--transform-x: -20px !default;
 
 $ipb-browse-brick--mosaic-group-item--actions--top: $common-spacing-500 !default;
 $ipb-browse-brick--mosaic-group-item--actions--right: $common-spacing-500 !default;
 $ipb-browse-brick--mosaic-item--height: 100% !default;
-$ipb-browse-brick--mosaic-item--padding: $common-spacing-500 !default;
+$ipb-browse-brick--mosaic-item--padding: $common-spacing-600 !default;
 $ipb-browse-brick--mosaic-item--margin: $common-spacing-0 !default;
+$ipb-browse-brick--mosaic-item--border-radius: $ipb-browse-brick--mosaic-group-item--border-radius !default;
 $ipb-browse-brick--mosaic-item--background-color: $common-color-white-100 !default;
 $ipb-browse-brick--mosaic-item--color: $common-base-variable--text-color !default;
-$ipb-browse-brick--mosaic-item--hover--background-color: $common-color-grey-200 !default;
-$ipb-browse-brick--mosaic-item--hover--color: $common-color-grey-800 !default;
+$ipb-browse-brick--mosaic-item--hover--color: inherit !default;
+$ipb-browse-brick--mosaic-item--hover--background-color--alpha: 0.05 !default;
 
 $ipb-browse-brick--mosaic-item-description--color: $common-color-grey-800 !default;
 
@@ -41,11 +45,15 @@ $ipb-browse-brick--mosaic-item-image--border-radius: $common-border-radius-700 !
 $ipb-browse-brick--mosaic-item-image--padding: $common-spacing-0 !default;
 $ipb-browse-brick--mosaic-item-image--margin-bottom: $common-spacing-500 !default;
 $ipb-browse-brick--mosaic-item-image--background-color: common-adjust-alpha($common-color-blue-700, .1) !default;
+$ipb-browse-brick--mosaic-item-image--background-color--alpha: 0.1 !default;
 $ipb-browse-brick--mosaic-item-image--color: $common-color-blue-700 !default;
 
 $ipb-browse-brick--mosaic-item-image--img--height: $common-size-300 !default;
 
 $ipb-browse-brick--mosaic-item-description--margin-top: $common-spacing-300 !default;
+
+$ipb-browse-brick-panel--mosaic--background-color: transparent !default;
+$ipb-browse-brick-panel--mosaic--border: none !default;
 
 $ipb-browse-brick-panel--dataTables_wrapper--padding-x: $common-spacing-0 !default;
 $ipb-browse-brick-panel--dataTables_wrapper--padding-y: $common-size-200 !default;
@@ -80,14 +88,18 @@ $ipb-browse-brick--tree-item-image--has-glyphicon--margin-right: $common-spacing
 $ipb-browse-brick--tree-item--has-glyphicon--description--margin-left: 19px !default;
 
 
-$ipb-browse-brick--list-group-item--padding-y: $common-spacing-400 !default;
+$ipb-browse-brick--list-group-item--padding-y: $common-spacing-0 !default;
 $ipb-browse-brick--list-group-item--padding-x: $common-spacing-500 !default;
 $ipb-browse-brick--list-group-item--margin-bottom: -1px !default;
 $ipb-browse-brick--list-group-item--background-color: $common-color-white-100 !default;
 $ipb-browse-brick--list-group-item--border: 1px solid $common-color-grey-400 !default;
 
-$ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
+$ipb-browse-brick--list-group--margin-bottom: $common-spacing-0 !default;
+$ipb-browse-brick--list-group-item--tree-item-wrapper--padding-bottom: $common-spacing-500 !default;
 
+
+$ipb-browse-brick--list-group--tree--margin: $common-spacing-0 !default;
+$ipb-browse-brick--list-group--tree--background-color: $common-color-white-100 !default;
 
 // Common
 .ipb-browse-brick-panel {
@@ -110,6 +122,10 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
 }
 
 // Mosaic view 
+.page_browse_brick_as_mosaic .ipb-browse-brick-panel{
+  background-color: $ipb-browse-brick-panel--mosaic--background-color !important;
+  border: $ipb-browse-brick-panel--mosaic--border !important;
+}
 
 #brick_content_mosaic{
   padding: $ipb-content-mosaic--padding;
@@ -126,9 +142,10 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
 
 .mosaic-group {
   display: grid;
-  animation: opacity 0.3s ease-out;
+  transition: all 1s;
   animation-delay: 0.2s;
-  
+  gap: $ipb-browse-brick--mosaic--gap;
+
   @include touch {
     grid-template-columns: $ipb-browse-brick--mosaic--small--grid-template-columns;
   }
@@ -155,67 +172,22 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
   width: $ipb-browse-brick--mosaic-group-item--width;
   margin: $ipb-browse-brick--mosaic-group-item--margin;
   color: $ipb-browse-brick--mosaic-group-item--color;
-  opacity: 0;
-  transform: translateX($ipb-browse-brick--mosaic-group-item--animation--transform-x); /* Move from left */
-  animation: mosaicGroupItemFadeInLeft 0.3s ease-out forwards;
-  animation-delay: calc(var(--delay) * var(--index));
-
+  border: $ipb-browse-brick--mosaic-group-item--border;
+  border-radius: $ipb-browse-brick--mosaic-group-item--border-radius;
+  background-color: $ipb-browse-brick--mosaic-group-item--background-color;
+  
   @for $i from 1 through length($ipb-browse-brick--mosaic-item--highlight-color) {
-    &:nth-child(#{length($ipb-browse-brick--mosaic-item--highlight-color)}n + #{$i}) .mosaic-item-image {
-      background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), .1);
-      color: nth($ipb-browse-brick--mosaic-item--highlight-color, $i);
+    &:nth-child(#{length($ipb-browse-brick--mosaic-item--highlight-color)}n + #{$i}){
+        .mosaic-item:hover{
+          background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), $ipb-browse-brick--mosaic-item--hover--background-color--alpha);
+        }
+      .mosaic-item-image {
+        background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), $ipb-browse-brick--mosaic-item-image--background-color--alpha);
+        color: nth($ipb-browse-brick--mosaic-item--highlight-color, $i);
+      }
     }
   }
-
-  @include touch {
-    border-bottom: $ipb-browse-brick--mosaic-group-item--border;
-    border-right: $ipb-browse-brick--mosaic-group-item--border;
-    
-      border-right: none;
-      &:last-child {
-        border-bottom: none; // Remove bottom border from last element
-      }
-    }
   
-    // TODO: could be cleaned up, but desktop to widescreen needs to not affect fullhd
-  
-    @include desktop-only {
-      border-bottom: $ipb-browse-brick--mosaic-group-item--border;
-      border-right: $ipb-browse-brick--mosaic-group-item--border;
-      
-      // Remove bottom border only from elements in the last row
-      &:last-child, // Last element
-      &:nth-last-child(2):nth-child(2n - 1) { // Second-last element if it's in the same row as last element
-        border-bottom: none;
-      }
-    }
-
-  @include widescreen-only {
-    border-bottom: $ipb-browse-brick--mosaic-group-item--border;
-    border-right: $ipb-browse-brick--mosaic-group-item--border;
-
-    // Remove bottom border only from elements in the last row
-    &:last-child,  // Last element
-    &:nth-last-child(2):nth-child(2n - 1) { // Second-last element if it's in the same row as last element
-      border-bottom: none;
-    }
-  }
-    @include fullhd {
-      border-bottom: $ipb-browse-brick--mosaic-group-item--border;
-      border-right: $ipb-browse-brick--mosaic-group-item--border;
-
-      &:nth-child(3n) {
-        border-right: none;
-      }
-
-      // Remove bottom border from elements in the last row only
-      &:last-child,  // Last element
-      &:nth-last-child(2):nth-child(3n - 1),  // Second-last element if in same row as last
-      &:nth-last-child(2):nth-child(3n - 2),  // Second-last element if in same row as last
-      &:nth-last-child(3):nth-child(3n - 2) { // Third-last element if in same row as last
-        border-bottom: none;
-      }
-    }
   
   > .mosaic-group-item-actions {
     position: absolute;
@@ -224,16 +196,6 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
   }
 }
 
-@keyframes mosaicGroupItemFadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX($ipb-browse-brick--mosaic-group-item--animation--transform-x);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
 
 .mosaic-item {
   display: flex;
@@ -241,6 +203,7 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
   height: $ipb-browse-brick--mosaic-item--height;
   padding: $ipb-browse-brick--mosaic-item--padding;
   margin: $ipb-browse-brick--mosaic-item--margin;
+  border-radius: $ipb-browse-brick--mosaic-item--border-radius;
 
   background-color: $ipb-browse-brick--mosaic-item--background-color;
   color: $ipb-browse-brick--mosaic-item--color;
@@ -248,7 +211,6 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
 
 
   &:hover {
-    background-color: $ipb-browse-brick--mosaic-item--hover--background-color;
     color: $ipb-browse-brick--mosaic-item--hover--color;
   }
 }
@@ -347,9 +309,14 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
 
 
   @for $i from 1 through length($ipb-browse-brick--mosaic-item--highlight-color) {
-    &:nth-child(#{length($ipb-browse-brick--mosaic-item--highlight-color)}n + #{$i - 1}) > .tree-item-wrapper .tree-item-image {
-      background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), .1);
-      color: nth($ipb-browse-brick--mosaic-item--highlight-color, $i);
+    &:nth-child(#{length($ipb-browse-brick--mosaic-item--highlight-color)}n + #{$i - 1}) {
+      &:hover {
+        background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), $ipb-browse-brick--mosaic-item--hover--background-color--alpha);
+      }
+      > .tree-item-wrapper .tree-item-image {
+        background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), $ipb-browse-brick--mosaic-item-image--background-color--alpha);
+        color: nth($ipb-browse-brick--mosaic-item--highlight-color, $i);
+      }
     }
   }
 }
@@ -388,20 +355,14 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
   margin-left: $ipb-browse-brick--tree-item--has-glyphicon--description--margin-left;
 }
 
-.list-group .list-group-item:hover {
-  background-color: transparent;
-}
-
 .list-group{
-  margin-bottom: $ipb-browse-brick--list-group-margin-bottom;
+  margin-bottom: $ipb-browse-brick--list-group--margin-bottom;
 }
 #brick_content_tree .list-group-item > .tree-item-wrapper {
-  padding-bottom: 16px;
+  padding-bottom: $ipb-browse-brick--list-group-item--tree-item-wrapper--padding-bottom;
 }
 
-.list-group-item {
-  padding: 0 16px;
-}
 .list-group.tree {
-  margin: 0;
+  margin: $ipb-browse-brick--list-group--tree--margin;
+  background-color: $ipb-browse-brick--list-group--tree--background-color;
 }
