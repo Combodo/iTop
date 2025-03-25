@@ -793,26 +793,7 @@ table .group-actions a.glyphicon-menu-hamburger{
   @extend .ck-content;
 }
 
-.form_field_label > .control-label[data-tooltip-instantiated="true"] {
-	&::after {
-		content: "\1F6C8";
-		padding-left: 3px;
-		vertical-align: top;
 
-		cursor: pointer;
-		color: $gray;
-		font-size: 0.85em;
-    font-weight: 200;
-	}
-}
-.form_field .form_mandatory .control-label:after{
-	content: "\1F6C8";
-	position: relative;
-	left: 3px;
-	color: $brand-primary;
-	font-size: 0.9em;
-  font-weight: 200;
-};
 /* Note: We don't put the .form_field selector as it must work for read-only */
 .form-control-static img{
 	max-width: 100% !important;
