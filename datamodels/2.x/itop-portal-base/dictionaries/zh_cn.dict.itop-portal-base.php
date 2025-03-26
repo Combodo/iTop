@@ -129,13 +129,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Object:Name' => '对象',
 	'Brick:Portal:Object:Form:Create:Title' => '新建 %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => '正在更新 %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s: %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => '正在更新 %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => '请填写下列信息:',
 	'Brick:Portal:Object:Form:Message:Saved' => '已保存',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '已保存 %1$s',
-	'Brick:Portal:Object:Search:Regular:Title' => '选择 %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => '选择 %1$s (%2$s)',
+	'Brick:Portal:Object:Search:Regular:Title' => '选择 %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => '选择 %1$s',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => '复制对象链接',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => '已复制'

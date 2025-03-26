@@ -1,0 +1,20 @@
+$ipb-object-brick--url-to-clipboard--opacity: 0.5 !default;
+$ipb-object-brick--url-to-clipboard-tooltip-copied--color: $common-color-green-500!default;
+$ipb-object-brick--url-to-clipboard-tooltip-copied--margin-right: $common-spacing-200!default;
+
+
+.url-to-clipboard{
+  &.url-to-clipboard-icon {
+    opacity: $ipb-object-brick--url-to-clipboard--opacity;
+    cursor: pointer;
+    transition: opacity 0.2s linear;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+// Used for clipboard's tooltip, which is not part of .url-to-clipboard element
+.url-to-clipboard-tooltip-copied {
+  color: $ipb-object-brick--url-to-clipboard-tooltip-copied--color;
+  margin-right: $ipb-object-brick--url-to-clipboard-tooltip-copied--margin-right;
+}

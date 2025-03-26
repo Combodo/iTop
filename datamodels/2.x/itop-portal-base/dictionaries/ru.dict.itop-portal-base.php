@@ -121,13 +121,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:Object:Name' => 'Object',
 	'Brick:Portal:Object:Form:Create:Title' => 'Создать %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Обновление %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Обновление %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Пожалуйста, укажите следующую информацию:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Сохранено',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s сохранено',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Выбрать %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Выбрать %1$s (%2$s)',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Выбрать %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Выбрать %1$s',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Скопировать ссылку на объект',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Ссылка скопирована'

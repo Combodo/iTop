@@ -237,8 +237,9 @@ class ObjectController extends BrickController
 
 		$aData = array('sMode' => 'view');
 		$aData['form'] = $this->oObjectFormHandlerHelper->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId);
-		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:View:Title', MetaModel::GetName($sObjectClass),
-			$oObject->GetName());
+		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:View:Title', $oObject->GetName());
+		$aData['form']['title_complement'] = MetaModel::GetName($sObjectClass);
+
 
 		// Add an edit button if user is allowed
 		if ($this->oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sObjectClass, $sObjectId)) {
@@ -322,8 +323,8 @@ class ObjectController extends BrickController
 
 		$aData = array('sMode' => 'edit');
 		$aData['form'] = $this->oObjectFormHandlerHelper->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId);
-		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:Edit:Title', MetaModel::GetName($sObjectClass),
-			$aData['form']['object_name']);
+		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:Edit:Title', $aData['form']['object_name']);
+		$aData['form']['title_complement'] = MetaModel::GetName($sObjectClass);
 
 		// Preparing response
 		if ($oRequest->isXmlHttpRequest())
@@ -1015,8 +1016,8 @@ class ObjectController extends BrickController
 			$aData = $aData + array(
 					'form' => array(
 						'id' => 'object_search_form_'.time(),
-						'title' => Dict::Format('Brick:Portal:Object:Search:Regular:Title', $oTargetAttDef->GetLabel(),
-							MetaModel::GetName($sTargetObjectClass)),
+						'title' => Dict::Format('Brick:Portal:Object:Search:Regular:Title', $oTargetAttDef->GetLabel()),
+						'title_complement' => MetaModel::GetName($sTargetObjectClass)
 					),
 					'aColumnProperties' => json_encode($aColumnProperties),
 					'aResults' => array(

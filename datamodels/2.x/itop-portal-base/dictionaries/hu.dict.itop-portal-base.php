@@ -120,13 +120,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Brick:Portal:Object:Name' => 'Objektum',
 	'Brick:Portal:Object:Form:Create:Title' => 'Új %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => '%2$s frissítése (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => '%1$s frissítése',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Adja meg a következő információkat:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Mentve',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s mentve',
-	'Brick:Portal:Object:Search:Regular:Title' => '%1$s kiválasztása (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => '%1$s kiválasztása (%2$s)',
+	'Brick:Portal:Object:Search:Regular:Title' => '%1$s kiválasztása',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => '%1$s kiválasztása',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Objektum hivatkozás másolása',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Másolva'

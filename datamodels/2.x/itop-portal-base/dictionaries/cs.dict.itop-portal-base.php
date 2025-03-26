@@ -120,13 +120,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Object:Name' => 'Objekt',
 	'Brick:Portal:Object:Form:Create:Title' => 'Nový %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Aktualizace %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Aktualizace %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Vyplňte prosím následující informace:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Uloženo',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s uloženo',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Vybrat %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Vybrat %1$s (%2$s)',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Vybrat %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Vybrat %1$s',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Zkopíruj odkaz na objekt',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Zkopírováno'

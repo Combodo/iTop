@@ -118,13 +118,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Object:Name' => 'Objecto',
 	'Brick:Portal:Object:Form:Create:Title' => 'Nuevo %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Actualizando %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Actualizando %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Por favor, proporcione la siguiente información:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Guardado',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s guardado',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Selección %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selección %1$s (%2$s)',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Selección %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selección %1$s',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Copiar liga al objeto',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copiado'

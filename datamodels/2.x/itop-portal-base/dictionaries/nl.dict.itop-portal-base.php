@@ -121,13 +121,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Object:Name' => 'Object',
 	'Brick:Portal:Object:Form:Create:Title' => 'Nieuw %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Verwerken %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Verwerken %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Vul de volgende informatie in:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Opgeslagen',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s opgeslagen',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Geselecteerd %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecteer %1$s (%2$s)',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Geselecteerd %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecteer %1$s',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Kopieer link naar object',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Gekopieerd'

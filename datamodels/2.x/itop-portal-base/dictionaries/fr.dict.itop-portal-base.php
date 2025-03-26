@@ -120,13 +120,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:Object:Name' => 'Objet',
 	'Brick:Portal:Object:Form:Create:Title' => 'Création de %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Modification de %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Modification de %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Veuillez compléter les informations suivantes :',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Enregistré',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s enregistré(e)',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Sélection de %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Sélection de %1$s (%2$s)',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Sélection de %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Sélection de %1$s',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Copier l\'url de l\'objet',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copié'

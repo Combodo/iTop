@@ -120,13 +120,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Object:Name' => 'Objeto',
 	'Brick:Portal:Object:Form:Create:Title' => 'Novo %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Alterar %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Alterar %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Por favor, preencha as seguintes informações:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Salvo',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s salvo',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Selecionar %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecinar %1$s (%2$s)',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Selecionar %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecionar %1$s',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Copiar',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copiado'

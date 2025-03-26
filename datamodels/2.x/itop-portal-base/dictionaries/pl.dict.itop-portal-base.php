@@ -120,13 +120,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Brick:Portal:Object:Name' => 'Obiekty',
 	'Brick:Portal:Object:Form:Create:Title' => 'Nowy %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Aktualizacja %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s: %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Aktualizacja %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Prosimy o uzupełnienie poniższych informacji:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Zapisany',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s zapisany',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Wybierz %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Wybierz %1$s (%2$s)',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Wybierz %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Wybierz %1$s',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Skopiuj obiekt',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Skopiowano'

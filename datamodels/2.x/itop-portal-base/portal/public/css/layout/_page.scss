@@ -50,7 +50,7 @@ body{
   font-weight: bold;
   color: $ipb-page--main-header--information--title--color;
 
-  > span:nth-child(2) {
+  > span ~ span {
     @include ipb-following-dot;
   }
 }
