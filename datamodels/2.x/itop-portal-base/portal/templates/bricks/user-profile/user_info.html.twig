@@ -5,7 +5,7 @@
     {% block pUserProfileWrapper %}
         <div class="row">
             <div class="col-sm-6">
-                <div class="panel panel-default">
+                <div class="ipb-panel panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">{{ 'Brick:Portal:UserProfile:PersonalInformations:Title'|dict_s }}</h3>
                     </div>
@@ -27,7 +27,7 @@
             <div class="col-sm-6">
                 {% if oBrick.GetShowPictureForm() %}
                     {% block pUserProfilePictureFormContainer %}
-                        <div class="panel panel-default user_profile_picture">
+                        <div class="ipb-panel panel panel-default user_profile_picture">
                             <div class="panel-heading">
                                 <h3 class="panel-title">{{ 'Brick:Portal:UserProfile:Photo:Title'|dict_s }}</h3>
                             </div>
@@ -59,7 +59,7 @@
 
                 {% if oBrick.GetShowPreferencesForm() %}
                     {% block pUserProfilePreferencesFormContainer %}
-                        <div class="panel panel-default">
+                        <div class="ipb-panel panel panel-default">
                             <div class="panel-heading">
                                 <h3 class="panel-title">{{ 'Class:appUserPreferences/Attribute:preferences'|dict_s }}</h3>
                             </div>
@@ -81,7 +81,7 @@
 
                 {% if oBrick.GetShowPasswordForm() %}
                     {% block pUserProfilePasswordFormContainer %}
-                        <div class="panel panel-default">
+                        <div class="ipb-panel panel panel-default">
                             <div class="panel-heading">
                                 <h3 class="panel-title">{{ 'Brick:Portal:UserProfile:Password:Title'|dict_s }}</h3>
                             </div>
