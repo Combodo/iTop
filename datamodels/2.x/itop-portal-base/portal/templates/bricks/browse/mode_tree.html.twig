@@ -220,7 +220,6 @@
                 $('ul[data-level-id="'+nodeId+'"]').append(liElem);
                 spanElem.append(iconElem);
                 spanElem.append(nameElem);
-                spanElem.append('<div class="tree-item-filter-data">' + item['filter_data']['values_and_codes'] + '</div>');
                 liElem.append(spanElem);
 
                 // Delegating a click on <span> to its child <a> element
@@ -261,6 +260,13 @@
 						//console.log('Action "'+levelPrimaryAction.type+'" not implemented for primary action');
 						break;
 				}
+
+                // Add filter data if present
+                if(item['filter_data']['values'] !== '')
+                {
+                    nameElem.append('<div class="tree-item-filter-data">' + item['filter_data']['values_and_codes'] + '</div>');
+                }
+
 
                 // Building tooltip for the node
                 // N°4662 - Surround tooltip with div to ensure text retrival

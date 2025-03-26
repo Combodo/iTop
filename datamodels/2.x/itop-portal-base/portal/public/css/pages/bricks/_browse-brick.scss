@@ -65,8 +65,10 @@ $ipb-browse-brick--tree-item--color: $common-color-grey-900 !default;
 $ipb-browse-brick--tree-item--hyperlink--color: $common-hyperlink-color !default;
 
 
-$ipb-browse-brick--tree-item-filter-data--color: $common-color-grey-500 !default;
-$ipb-browse-brick--tree-item-filter-data--padding-top: $common-spacing-300 !default;
+$ipb-browse-brick--tree-item-filter-data--color: $common-color-grey-800 !default;
+$ipb-browse-brick--tree-item-filter-data--margin-top: $common-spacing-300 !default;
+$ipb-browse-brick--tree-item-filter-data--item--margin-y: $common-spacing-0 !default;
+$ipb-browse-brick--tree-item-filter-data--item--margin-x: $common-spacing-300 !default;
 
 $ipb-browse-brick--tree-item--description--margin-top: $common-spacing-200 !default;
 $ipb-browse-brick--tree-item--description--color: $common-color-grey-800 !default;
@@ -266,6 +268,9 @@ $ipb-browse-brick--list-group--tree--background-color: $common-color-white-100 !
 }
 
 // Tree view
+.tree-item {
+  align-self: center;
+}
 
 .list-group-item .list-group-item-text, .tree-item {
   color: $ipb-browse-brick--tree-item--color;
@@ -286,8 +291,18 @@ $ipb-browse-brick--list-group--tree--background-color: $common-color-white-100 !
 }
 
 .list-group-item .tree-item-wrapper .tree-item-filter-data {
-  padding-top: $ipb-browse-brick--tree-item-filter-data--padding-top;
+  margin-top: $ipb-browse-brick--tree-item-filter-data--margin-top;
   color: $ipb-browse-brick--tree-item-filter-data--color;
+  @extend %common-font-ral-med-100;
+
+  > span:not(:last-child):after {
+    content: '●';
+    margin: $ipb-browse-brick--tree-item-filter-data--item--margin-y $ipb-browse-brick--tree-item-filter-data--item--margin-x;
+  }
+  a {
+    color: $ipb-browse-brick--tree-item-filter-data--color;
+    font-size: $common-font-size-100 !important;
+  }
 }
 
 #brick_content_tree .list-group-item>.tree-item-wrapper {
