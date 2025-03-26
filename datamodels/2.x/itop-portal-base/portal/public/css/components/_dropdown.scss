@@ -26,6 +26,7 @@ ipb-dropdown {
     background-color: $ipb-dropdown--li--background-color;
     a {
       display: inline-block;
+      width: 100%;
       padding: $ipb-dropdown--a--padding-y $ipb-dropdown--a--padding-x;
       border-radius: $ipb-dropdown--a--border-radius;
       cursor: pointer;
