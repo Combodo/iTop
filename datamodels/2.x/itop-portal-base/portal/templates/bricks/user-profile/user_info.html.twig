@@ -13,9 +13,9 @@
                         <form id="{{ oContactForm.id }}" class="" method="POST" action="{{ oContactForm.renderer.GetEndpoint()|raw }}">
                             <input type="hidden" name="transaction_id" value="{{ oContactForm.transaction_id }}" />
                             <div class="form_alerts">
-                                <div class="alert alert-success" role="alert" style="display: none;"></div>
-                                <div class="alert alert-warning" role="alert" style="display: none;"></div>
-                                <div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+                                <div class="ipb-alert alert alert-success" role="alert" style="display: none;"></div>
+                                <div class="ipb-alert alert alert-warning" role="alert" style="display: none;"></div>
+                                <div class="ipb-alert alert alert-error alert-danger" role="alert" style="display: none;"></div>
                             </div>
                             <div class="form_fields">
                                 {{ oContactForm.renderer.GetBaseLayout()|raw }}
@@ -33,9 +33,9 @@
                             </div>
                             <div class="panel-body" style="position: relative;">
                                 <div class="form_alerts">
-                                    <div class="alert alert-success" role="alert" style="display: none;"></div>
-                                    <div class="alert alert-warning" role="alert" style="display: none;"></div>
-                                    <div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+                                    <div class="ipb-alert alert alert-success" role="alert" style="display: none;"></div>
+                                    <div class="ipb-alert alert alert-warning" role="alert" style="display: none;"></div>
+                                    <div class="ipb-alert alert alert-error alert-danger" role="alert" style="display: none;"></div>
                                 </div>
                                 <form id="picture-form" method="POST" action="{{ app['url_generator'].generate('p_user_profile_brick') }}">
                                     <input type="hidden" name="current_values[form_type]" value="{{ constant('\\Combodo\\iTop\\Portal\\Controller\\UserProfileBrickController::ENUM_FORM_TYPE_PICTURE') }}" />
@@ -66,9 +66,9 @@
                             <div class="panel-body">
                                 <form id="{{ oPreferencesForm.id }}" class="" method="POST" action="{{ oPreferencesForm.renderer.GetEndpoint()|raw }}">
                                     <div class="form_alerts">
-                                        <div class="alert alert-success" role="alert" style="display: none;"></div>
-                                        <div class="alert alert-warning" role="alert" style="display: none;"></div>
-                                        <div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+                                        <div class="ipb-alert alert alert-success" role="alert" style="display: none;"></div>
+                                        <div class="ipb-alert alert alert-warning" role="alert" style="display: none;"></div>
+                                        <div class="ipb-alert alert alert-error alert-danger" role="alert" style="display: none;"></div>
                                     </div>
                                     <div class="form_fields">
                                         {{ oPreferencesForm.renderer.GetBaseLayout()|raw }}
@@ -89,9 +89,9 @@
                                 {% if oPasswordForm is not null %}
                                     <form id="{{ oPasswordForm.id }}" class="" method="POST" action="{{ oPasswordForm.renderer.GetEndpoint()|raw }}" autocomplete="off">
                                         <div class="form_alerts">
-                                            <div class="alert alert-success" role="alert" style="display: none;"></div>
-                                            <div class="alert alert-warning" role="alert" style="display: none;"></div>
-                                            <div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+                                            <div class="ipb-alert alert alert-success" role="alert" style="display: none;"></div>
+                                            <div class="ipb-alert alert alert-warning" role="alert" style="display: none;"></div>
+                                            <div class="ipb-alert alert alert-error alert-danger" role="alert" style="display: none;"></div>
                                         </div>
                                         <div class="form_fields">
                                             {{ oPasswordForm.renderer.GetBaseLayout()|raw }}

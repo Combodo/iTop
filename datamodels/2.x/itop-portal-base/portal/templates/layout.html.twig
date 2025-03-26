@@ -178,7 +178,7 @@
 	{% block pPageBodyWrapper %}
 		{% block pEnvBannerWrapper %}
 			{% if app['combodo.current_environment'] != 'production' %}
-				<div id="envbanner" class="alert alert-danger" role="alert">
+				<div id="envbanner" class="ipb-alert alert alert-danger" role="alert">
 					{{ 'Portal:EnvironmentBanner:Title'|dict_format( app['combodo.current_environment']|upper )|raw }}
 					<button type="button" onclick="window;location.href='{{ app['url_generator'].generate('p_home', {'switch_env': 'production'}) }}'">
 						{{ 'Portal:EnvironmentBanner:GoToProduction'|dict_s|raw }}

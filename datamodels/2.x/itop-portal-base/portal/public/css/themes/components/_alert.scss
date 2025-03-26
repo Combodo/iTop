@@ -29,9 +29,7 @@ $ipb-alerts-colors: (
         )
 ) !default;
 
-.ipb-page--session-messages .ipb-alert {
-  margin-left: $ipb-alert--margin-x;
-  margin-right: $ipb-alert--margin-x;
+.ipb-alert {
   margin-bottom: $ipb-alert--margin-bottom;
   background-color: $ipb-alert--background-color;
   color: $ipb-alert--message--color;
@@ -48,6 +46,11 @@ $ipb-alerts-colors: (
     width: $ipb-alert--icon--width;
     text-align: center;
   }
+}
+
+.ipb-page--session-messages .ipb-alert {
+  margin-left: $ipb-alert--margin-x;
+  margin-right: $ipb-alert--margin-x;
 }
 
 // for each alert level....
