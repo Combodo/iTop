@@ -136,6 +136,8 @@ $ipb-tile--description--color: $common-base-variable--text-color !default;
 .ipb-tile--extra-content {
   flex-grow: 1;
   position: relative;
+
+  @extend %common-font-ral-nor-150;
 }
 
 /****************************/
