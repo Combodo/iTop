@@ -1,8 +1,8 @@
 $ipb-manage-brick--panel--body--padding-y: $common-spacing-500 !default;
 $ipb-manage-brick--panel--body--padding-x: $common-spacing-0 !default;
 
-$ipb-manage-brick--panel--body--datatable--padding-y: $ipb-manage-brick--panel--body--padding-y !default;
-$ipb-manage-brick--panel--body--datatable--padding-x: $ipb-manage-brick--panel--body--padding-x !default;
+$ipb-manage-brick--panel--body--datatable--padding-y: $common-spacing-200 !default;
+$ipb-manage-brick--panel--body--datatable--padding-x: $common-spacing-0 !default;
 $ipb-manage-brick--panel--body--datatable--row--margin: $common-spacing-0 !default;
 $ipb-manage-brick--panel--body--datatable--row--padding-y: $common-spacing-0 !default;
 $ipb-manage-brick--panel--body--datatable--row--padding-x: $common-spacing-400 !default;
@@ -26,7 +26,7 @@ $ipb-manage-brick--tabs--tab--active--indicator--border-radius: $common-border-r
 $ipb-manage-brick--panel--body--table--margin-top: $common-spacing-500 !default;
 
 .ipb-manage-brick--panel--body {
-  padding: $ipb-manage-brick--panel--body--padding-y $ipb-manage-brick--panel--body--padding-x;
+  padding: $ipb-manage-brick--panel--body--padding-y $ipb-manage-brick--panel--body--padding-x 0 $ipb-manage-brick--panel--body--padding-x;
   
   > .dataTables_wrapper {
     padding: $ipb-manage-brick--panel--body--datatable--padding-y $ipb-manage-brick--panel--body--datatable--padding-x;

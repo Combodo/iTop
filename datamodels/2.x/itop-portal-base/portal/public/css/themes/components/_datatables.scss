@@ -40,13 +40,6 @@ table.table > tfoot > tr > td {
   vertical-align: middle;
 }
 
-table.table > thead > tr > th {
-  border-bottom-width: 0px;
-}
-
-table.table-striped > tbody > tr:hover {
-  background-color: $common-color-blue-grey-50;
-}
 
 table .ipb-table--actions--wrapper {
   display: flex;

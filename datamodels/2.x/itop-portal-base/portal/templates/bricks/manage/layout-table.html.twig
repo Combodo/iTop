@@ -269,21 +269,21 @@
                     "rowCallback": function (oRow, oData) {
                         if (oData.highlight_class !== undefined) {
                             var sHighlightClass = oData.highlight_class;
-                            var sBSHiglightClass = '';
+                            var sCSSHiglightClass = '';
 
                             // Adding classic iTop class
                             $(oRow).addClass(sHighlightClass);
-                            // Adding mapped BS class
+                            // Adding mapped ipb class
                             if (sHighlightClass === '{{ constant('HILIGHT_CLASS_CRITICAL') }}') {
-                                sBSHiglightClass = 'danger';
+                                sCSSHiglightClass = 'ipb-is-danger';
                             }
                             else if (sHighlightClass === '{{ constant('HILIGHT_CLASS_WARNING') }}') {
-                                sBSHiglightClass = 'warning';
+                                sCSSHiglightClass = 'ipb-is-warning';
                             }
                             else if (sHighlightClass === '{{ constant('HILIGHT_CLASS_OK') }}') {
-                                sBSHiglightClass = 'success';
+                                sCSSHiglightClass = 'ipb-is-success';
                             }
-                            $(oRow).addClass(sBSHiglightClass);
+                            $(oRow).addClass(sCSSHiglightClass);
                         }
                     },
                     "drawCallback": function (settings) {

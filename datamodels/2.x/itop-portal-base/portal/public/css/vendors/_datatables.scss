@@ -1,3 +1,13 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ipb-vendors-datatables--cell--padding-x: $common-spacing-400 !default;
+$ipb-vendors-datatables--cell--padding-y: 10px !default;
+
+$ipb-vendors-datatables--columns-header--border-bottom: 2px solid $common-color-grey-400 !default;
+
 $ipb-vendors--datatables--paginate-button--colors: map-get(map-get(map-get($ipb-button-colors, ''), 'default'), '') !default;
 $ipb-vendors--datatables--paginate-button--hover--colors: map-get(map-get(map-get($ipb-button-colors, ''), 'default'), ':hover') !default;
 $ipb-vendors--datatables--paginate-button--focus--colors: map-get(map-get(map-get($ipb-button-colors, ''), 'default'), ':active') !default;
@@ -5,6 +15,85 @@ $ipb-vendors--datatables--paginate-button--disabled--colors: map-get(map-get(map
 $ipb-vendors--datatables--paginate-button--active--colors: map-get(map-get(map-get($ipb-button-colors, ''), 'primary'), '') !default;
 $ipb-vendors--datatables--paginate-button--active--hover--colors: map-get(map-get(map-get($ipb-button-colors, ''), 'primary'), ':hover') !default;
 
+$ipb-vendors-datatables--row--background-color--is-odd: $common-color-white-100 !default;
+$ipb-vendors-datatables--row--background-color--is-even: $common-color-white-200 !default;
+
+$ipb-vendors-datatables--row-highlight--first-cell--width: 3px !default;
+
+$ipb-vendors-datatables--row-highlight--colors:(
+        'red': ($common-color-red-100, $common-color-red-200),
+        'danger': ($common-color-danger-200, $common-color-danger-300),
+        'alert': ($common-color-red-200, $common-color-red-300),
+        'orange': ($common-color-orange-100, $common-color-orange-200),
+        'warning': ($common-color-warning-200, $common-color-warning-300),
+        'blue': ($common-color-blue-200, $common-color-blue-300),
+        'info': ($common-color-information-200, $common-color-information-300),
+        'green': ($common-color-green-100, $common-color-green-200),
+        'success': ($common-color-success-100, $common-color-success-200),
+) !default;
+
+$ipb-vendors-datatables--row-highlight--first-cell--colors:(
+        'red': ($common-color-red-300),
+        'danger': ($common-color-danger-400),
+        'alert': ($common-color-red-400),
+        'orange': ($common-color-orange-300),
+        'warning': ($common-color-warning-400),
+        'blue': ($common-color-blue-400),
+        'info': ($common-color-information-400),
+        'green': ($common-color-green-300),
+        'success': ($common-color-success-300),
+) !default;
+
+.table {
+  > thead, tbody, tfoot {
+    > tr {
+      > th, td {
+        position: relative;
+        padding: $ipb-vendors-datatables--cell--padding-y $ipb-vendors-datatables--cell--padding-x;
+        border: none;
+      }
+    }
+  }
+  > thead > tr > th {
+    border-bottom: $ipb-vendors-datatables--columns-header--border-bottom !important;
+  }
+}
+
+.table-striped > tbody > tr{
+  background-color: $ipb-vendors-datatables--row--background-color--is-even;
+  cursor: pointer;
+  &:nth-of-type(2n+1) {
+    background-color: $ipb-vendors-datatables--row--background-color--is-odd;
+  }
+  @each $sColorLabel, $aAttributes in $ipb-vendors-datatables--row-highlight--colors {
+    $sBgColor: nth($aAttributes, 1);
+    $sBgColorHover: nth($aAttributes, 2);
+    &.ipb-is-#{$sColorLabel}, &.#{$sColorLabel}{
+      td {
+        background-color: $sBgColor;
+      }
+      &:hover td {
+        background-color: $sBgColorHover;
+      }
+      
+    }
+  }
+  @each $sColorLabel, $aAttributes in $ipb-vendors-datatables--row-highlight--first-cell--colors {
+    $sBgColor: nth($aAttributes, 1);
+    &.ipb-is-#{$sColorLabel} td:first-child::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background-color: $sBgColor;
+    }
+  }
+ &:hover {
+    background-color: $common-color-blue-100;
+  }
+}
 
 .pagination > .paginate_button{
   > a {
@@ -40,4 +129,8 @@ $ipb-vendors--datatables--paginate-button--active--hover--colors: map-get(map-ge
       border-color: nth($ipb-vendors--datatables--paginate-button--active--hover--colors, 3)
     }
   }
+}
+
+.dataTables_length, .dataTables_filter, .dataTables_info {
+  @extend %common-font-ral-nor-150;
 }
