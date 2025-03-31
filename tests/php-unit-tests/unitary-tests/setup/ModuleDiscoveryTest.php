@@ -134,6 +134,10 @@ MSG;
 	public function testOrderModulesByDependencies_ResolveOk()
 	{
 		$aModules=[
+			"id0/1" => [
+				'dependencies' => [ 'id2/2 || id1/1'],
+				'label' => 'label1',
+			],
 			"id1/1" => [
 				'dependencies' => [ 'id2/2'],
 				'label' => 'label1',
@@ -159,6 +163,45 @@ MSG;
 			"id3/3",
 			"id2/2",
 			"id1/1",
+			"id0/1",
+		];
+		$this->assertEquals($aExpected, array_keys($aResult));
+		$this->assertEquals(1, $iLoopCount);
+	}
+
+	public function testOrderModulesByDependencies_ResolveNoDependendenciesOrderByAlphabeticalOrder()
+	{
+		$aModules=[
+			"id2/2" => [
+				'dependencies' => [],
+				'label' => 'label2',
+			],
+			"id1/1" => [
+				'dependencies' => [ ],
+				'label' => 'label1',
+			],
+			"id3/3" => [
+				'dependencies' => [],
+				'label' => 'label3',
+			],
+			"id4/4" => [
+				'dependencies' => [],
+				'label' => 'label4',
+			],
+			"id0/1" => [
+				'dependencies' => [],
+				'label' => 'label0',
+			],
+		];
+		$iLoopCount=0;
+		$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
+
+		$aExpected = [
+			"id0/1",
+			"id1/1",
+			"id2/2",
+			"id3/3",
+			"id4/4",
 		];
 		$this->assertEquals($aExpected, array_keys($aResult));
 		$this->assertEquals(1, $iLoopCount);
@@ -211,7 +254,7 @@ MSG;
 
 	public function testSortModulesByCountOfDepencenciesDescending_NoDependencies(){
 		$aUnresolvedDependencyModules = [];
-		foreach (['a', 'b', 'c'] as $sModuleId){
+		foreach (['c', 'b', 'a'] as $sModuleId){
 			$this->AddModule($aUnresolvedDependencyModules, $sModuleId, []);
 		}
 		ModuleDiscovery::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
@@ -229,8 +272,8 @@ MSG;
 		$this->assertEquals(
 			[
 				'itop-structure/2.7.1',
-				'itop-tickets/2.0.0',
 				'itop-config-mgmt/123',
+				'itop-tickets/2.0.0',
 				'itop-change-mgmt/456',
 			], array_keys($aUnresolvedDependencyModules));
 	}
@@ -244,8 +287,8 @@ MSG;
 		ModuleDiscovery::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 		$this->assertEquals(
 			[
-				'itop-tickets/2.0.0',
 				'itop-config-mgmt/123',
+				'itop-tickets/2.0.0',
 				'itop-change-mgmt/456',
 			],
 			array_keys($aUnresolvedDependencyModules));
@@ -263,8 +306,8 @@ MSG;
 			[
 				'moduleA/1',
 				'moduleC/1',
-				'moduleB/1',
 				'moduleA/2',
+				'moduleB/1',
 			],
 			array_keys($aUnresolvedDependencyModules));
 	}

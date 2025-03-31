@@ -461,7 +461,7 @@ class ModuleDiscovery
 			}
 			//include all modules
 			$iInDegreeCounterIncludingOutsideModules = count($oModule->GetUnresolvedDependencyModuleNames());
-			$aCountDepsByModuleId[$sModuleId] = [$iInDegreeCounter, $iInDegreeCounterIncludingOutsideModules];
+			$aCountDepsByModuleId[$sModuleId] = [$iInDegreeCounter, $iInDegreeCounterIncludingOutsideModules, $sModuleId];
 		}
 
 		$aRes=[];
@@ -476,7 +476,13 @@ class ModuleDiscovery
 				}
 
 				//compare $iInDegreeCounterIncludingOutsideModules
-				return $aDeps1[1] - $aDeps2[1];
+				$res = $aDeps1[1] - $aDeps2[1];
+				if ($res != 0){
+					return $res;
+				}
+
+				//alphabetical order at least
+				return strcmp($aDeps1[2], $aDeps2[2]);
 			});
 
 			$bOneLoopAtLeast=false;
@@ -501,7 +507,7 @@ class ModuleDiscovery
 						$aDepCount = $aCountDepsByModuleId[$sModuleId2];
 						$iInDegreeCounter = $aDepCount[0] - 1;
 						$iInDegreeCounterIncludingOutsideModules = $aDepCount[1];
-						$aCountDepsByModuleId[$sModuleId2] = [$iInDegreeCounter, $iInDegreeCounterIncludingOutsideModules];
+						$aCountDepsByModuleId[$sModuleId2] = [$iInDegreeCounter, $iInDegreeCounterIncludingOutsideModules, $sModuleId2];
 					}
 
 					unset($aDependsOnModuleName[$oModule->GetModuleName()]);
