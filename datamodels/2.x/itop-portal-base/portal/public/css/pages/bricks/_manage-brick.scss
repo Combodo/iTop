@@ -1,19 +1,85 @@
+$ipb-manage-brick--panel--body--padding-y: $common-spacing-500 !default;
+$ipb-manage-brick--panel--body--padding-x: $common-spacing-0 !default;
+
+$ipb-manage-brick--panel--body--datatable--padding-y: $ipb-manage-brick--panel--body--padding-y !default;
+$ipb-manage-brick--panel--body--datatable--padding-x: $ipb-manage-brick--panel--body--padding-x !default;
+$ipb-manage-brick--panel--body--datatable--row--margin: $common-spacing-0 !default;
+$ipb-manage-brick--panel--body--datatable--row--padding-y: $common-spacing-0 !default;
+$ipb-manage-brick--panel--body--datatable--row--padding-x: $common-spacing-400 !default;
+
+$ipb-manage-brick--tabs--tab--border: solid 1px $common-color-grey-400 !default;
+$ipb-manage-brick--tabs--tab--badge--border-radius: $common-border-radius-500 !default;
+$ipb-manage-brick--tabs--tab--badge--padding-y: 3px !default;
+$ipb-manage-brick--tabs--tab--badge--padding-x: 5px !default;
+$ipb-manage-brick--tabs--tab--badge--margin-left: $common-spacing-200 !default;
+
+$ipb-manage-brick--tabs--tab--background-color: $common-color-grey-100 !default;
+$ipb-manage-brick--tabs--tab--color: $common-color-grey-900 !default;
+$ipb-manage-brick--tabs--tab--active--background-color: $common-color-white-100 !default;
+$ipb-manage-brick--tabs--tab--active--badge--background-color: $common-color-grey-200 !default;
+$ipb-manage-brick--tabs--tab--active--indicator--background-color: $common-color-primary-600 !default;
+$ipb-manage-brick--tabs--tab--active--indicator--width: $common-size-150 !default;
+$ipb-manage-brick--tabs--tab--active--indicator--height: $ipb-manage-brick--tabs--tab--active--indicator--width !default;
+$ipb-manage-brick--tabs--tab--active--indicator--margin-right: $common-spacing-300 !default;
+$ipb-manage-brick--tabs--tab--active--indicator--border-radius: $common-border-radius-full !default;
+
+$ipb-manage-brick--panel--body--table--margin-top: $common-spacing-500 !default;
+
 .ipb-manage-brick--panel--body {
-  padding: 15px 0;
+  padding: $ipb-manage-brick--panel--body--padding-y $ipb-manage-brick--panel--body--padding-x;
   
   > .dataTables_wrapper {
-    padding: 15px 0;
+    padding: $ipb-manage-brick--panel--body--datatable--padding-y $ipb-manage-brick--panel--body--datatable--padding-x;
     > .row {
-      margin: 0;
+      margin: $ipb-manage-brick--panel--body--datatable--row--margin;
       > div {
-        padding: 0 12px;
+        padding: $ipb-manage-brick--panel--body--datatable--row--padding-y $ipb-manage-brick--panel--body--datatable--row--padding-x;
       }
+    }
+  }
+
+
+}
+.ipb-manage-brick--tabs.grouping_tabs.nav-pills > li{
+  > a {
+    display: flex;
+    align-items: center;
+    background-color: $ipb-manage-brick--tabs--tab--background-color;
+    color: $ipb-manage-brick--tabs--tab--color;;
+
+    > .badge {
+      color: $common-color-grey-900;
+      background-color: transparent;
+      border-radius: $ipb-manage-brick--tabs--tab--badge--border-radius;
+      padding: $ipb-manage-brick--tabs--tab--badge--padding-y $ipb-manage-brick--tabs--tab--badge--padding-x;
+      margin-left: $ipb-manage-brick--tabs--tab--badge--margin-left;
+    }
+
+    border: $ipb-manage-brick--tabs--tab--border;
+    border-bottom: none;
+  }
+  
+  &.active > a {
+    background-color: $ipb-manage-brick--tabs--tab--active--background-color;
+    
+    &:before {
+      content: " ";
+      display: inline-block;
+      width: $ipb-manage-brick--tabs--tab--active--indicator--width;
+      height: $ipb-manage-brick--tabs--tab--active--indicator--height;
+      margin-right: $ipb-manage-brick--tabs--tab--active--indicator--margin-right;
+      border-radius: $ipb-manage-brick--tabs--tab--active--indicator--border-radius;
+      background-color: $ipb-manage-brick--tabs--tab--active--indicator--background-color;
+    }
+    
+    > .badge {
+      background-color: $ipb-manage-brick--tabs--tab--active--badge--background-color;
     }
   }
 }
 
 .ipb-manage-brick--panel--body--table  {
-  margin-top: 16px !important;
+  margin-top: $ipb-manage-brick--panel--body--table--margin-top !important;
 }
 
 .ipb-manage-brick--export-action {

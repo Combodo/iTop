@@ -66,6 +66,7 @@ return array(
     'Combodo\\iTop\\Portal\\Service\\TemplatesProvider\\TemplatesRegister' => $baseDir . '/src/Service/TemplatesProvider/TemplatesRegister.php',
     'Combodo\\iTop\\Portal\\Twig\\AppExtension' => $baseDir . '/src/Twig/AppExtension.php',
     'Combodo\\iTop\\Portal\\Twig\\AppGlobal' => $baseDir . '/src/Twig/AppGlobal.php',
+    'Combodo\\iTop\\Portal\\Twig\\AppIconUrlAccessor' => $baseDir . '/src/Twig/AppIconUrlAccessor.php',
     'Combodo\\iTop\\Portal\\Twig\\AppVariable' => $baseDir . '/src/Twig/AppVariable.php',
     'Combodo\\iTop\\Portal\\Twig\\CKEditorExtension' => $baseDir . '/src/Twig/CKEditorExtension.php',
     'Combodo\\iTop\\Portal\\Twig\\CurrentUserAccessor' => $baseDir . '/src/Twig/CurrentUserAccessor.php',

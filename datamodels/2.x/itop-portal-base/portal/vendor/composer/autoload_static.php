@@ -9,11 +9,16 @@ class ComposerStaticInitCombodo_ItopPortalBase_Portal
     public static $prefixLengthsPsr4 = array (
         'C' => 
         array (
+            'Combodo\\iTop\\Portal\\Tests\\' => 26,
             'Combodo\\iTop\\Portal\\' => 20,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Combodo\\iTop\\Portal\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tests',
+        ),
         'Combodo\\iTop\\Portal\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
@@ -81,6 +86,7 @@ class ComposerStaticInitCombodo_ItopPortalBase_Portal
         'Combodo\\iTop\\Portal\\Service\\TemplatesProvider\\TemplatesRegister' => __DIR__ . '/../..' . '/src/Service/TemplatesProvider/TemplatesRegister.php',
         'Combodo\\iTop\\Portal\\Twig\\AppExtension' => __DIR__ . '/../..' . '/src/Twig/AppExtension.php',
         'Combodo\\iTop\\Portal\\Twig\\AppGlobal' => __DIR__ . '/../..' . '/src/Twig/AppGlobal.php',
+        'Combodo\\iTop\\Portal\\Twig\\AppIconUrlAccessor' => __DIR__ . '/../..' . '/src/Twig/AppIconUrlAccessor.php',
         'Combodo\\iTop\\Portal\\Twig\\AppVariable' => __DIR__ . '/../..' . '/src/Twig/AppVariable.php',
         'Combodo\\iTop\\Portal\\Twig\\CKEditorExtension' => __DIR__ . '/../..' . '/src/Twig/CKEditorExtension.php',
         'Combodo\\iTop\\Portal\\Twig\\CurrentUserAccessor' => __DIR__ . '/../..' . '/src/Twig/CurrentUserAccessor.php',

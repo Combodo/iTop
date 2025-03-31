@@ -8,7 +8,7 @@
         {% if app['combodo.portal.instance.conf'].properties.logo is not null %}
             <div class="ipb-navigation-menu--top-part--logo">
                 {% block pNavigationSideMenuLogo %}
-                    <a class="ipb-navigation-menu--top-part--logo--hyperlink" href="{{ app['combodo.conf.app_icon_url'] }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
+                    <a class="ipb-navigation-menu--top-part--logo--hyperlink" href="{{ app['combodo.app_icon_url'].GetAppIconUrl() }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
                         <img class="ipb-navigation-menu--top-part--logo--image" src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}"/>
                     </a>
                 {% endblock %}

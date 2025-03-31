@@ -6,5 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Combodo\\iTop\\Portal\\Tests\\' => array($baseDir . '/tests'),
     'Combodo\\iTop\\Portal\\' => array($baseDir . '/src'),
 );
