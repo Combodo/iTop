@@ -93,8 +93,8 @@ class BaseElement extends HTMLElement {
             // listen click event
             eElement.addEventListener('click', (oEvent) => {
 
-                // prevent redirection when clicking on a button or a link
-                if (oEvent.target.closest("a") || oEvent.target.closest("button")) {
+                // prevent redirection when clicking on a button or a link that are not navigation-trigger
+                if (oEvent.target.closest("a") && oEvent.target.closest("a").getAttribute('data-role') !== 'navigation-trigger' || oEvent.target.closest("button") && oEvent.target.closest("button").getAttribute('data-role') !== 'navigation-trigger') {
                     return;
                 }
 
