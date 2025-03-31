@@ -118,6 +118,10 @@ services:
   combodo.current_user:
     alias: Combodo\iTop\Portal\Twig\CurrentUserAccessor
     public: true
+  
+  combodo.app_icon_url:
+    alias: Combodo\iTop\Portal\Twig\AppIconUrlAccessor
+    public: true
 
   # Aliases
   brick_collection:
