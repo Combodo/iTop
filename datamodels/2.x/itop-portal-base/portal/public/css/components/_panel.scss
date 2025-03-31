@@ -7,3 +7,7 @@ $ipb-panel--border-radius: $common-border-radius-300!default;
   box-shadow: none;
   -webkit-box-shadow: none;
 }
+
+.panel-title {
+  @extend %common-font-ral-med-200;
+}

@@ -45,7 +45,9 @@ $ipb-manage-brick--panel--body--table--margin-top: $common-spacing-500 !default;
     display: flex;
     align-items: center;
     background-color: $ipb-manage-brick--tabs--tab--background-color;
-    color: $ipb-manage-brick--tabs--tab--color;;
+    color: $ipb-manage-brick--tabs--tab--color;
+    
+    @extend %common-font-ral-med-150;
 
     > .badge {
       color: $common-color-grey-900;
