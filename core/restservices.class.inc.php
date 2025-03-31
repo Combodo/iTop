@@ -77,6 +77,52 @@ class ObjectResult
 	}
 
 	/**
+	 * Creates an ObjectResult from a DBObject.
+	 *
+	 * @param DBObject $oObj The object.
+	 * @param array|null $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
+	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
+	 * @param integer $iCode An error code (RestResult::OK is no issue has been found)
+	 * @param string $sMessage Description of the error if any, an empty string otherwise
+	 * 
+	 * @return ObjectResult
+	 */
+	public static function FromDBObject(DBObject $oObj, ?array $aFieldSpec = null, $bExtendedOutput = false, $iCode = 0, $sMessage = '') : ObjectResult {
+
+		$oObjRes = new ObjectResult($oObj::class, $oObj->GetKey());
+		$oObjRes->code = $iCode;
+		$oObjRes->message = $sMessage;
+
+		$aFields = null;
+		if (!is_null($aFieldSpec))
+		{
+			// Enum all classes in the hierarchy, starting with the current one
+			foreach (MetaModel::EnumParentClasses($oObj::class, ENUM_PARENT_CLASSES_ALL, false) as $sRefClass)
+			{
+				if (array_key_exists($sRefClass, $aFieldSpec))
+				{
+					$aFields = $aFieldSpec[$sRefClass];
+					break;
+				}
+			}
+		}
+		if (is_null($aFields))
+		{
+			// No fieldspec given, or not found...
+			$aFields = array('id', 'friendlyname');
+		}
+
+		foreach ($aFields as $sAttCode)
+		{
+			$oObjRes->AddField($oObj, $sAttCode, $bExtendedOutput);
+		}
+
+		return $oObjRes;
+
+	}
+
+
+	/**
 	 * Helper to make an output value for a given attribute
 	 *
 	 * @api
@@ -204,34 +250,7 @@ class RestResultWithObjects extends RestResult
 	 */
 	public function AddObject($iCode, $sMessage, $oObject, $aFieldSpec = null, $bExtendedOutput = false)
 	{
-		$sClass = get_class($oObject);
-		$oObjRes = new ObjectResult($sClass, $oObject->GetKey());
-		$oObjRes->code = $iCode;
-		$oObjRes->message = $sMessage;
-
-		$aFields = null;
-		if (!is_null($aFieldSpec))
-		{
-			// Enum all classes in the hierarchy, starting with the current one
-			foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sRefClass)
-			{
-				if (array_key_exists($sRefClass, $aFieldSpec))
-				{
-					$aFields = $aFieldSpec[$sRefClass];
-					break;
-				}
-			}
-		}
-		if (is_null($aFields))
-		{
-			// No fieldspec given, or not found...
-			$aFields = array('id', 'friendlyname');
-		}
-
-		foreach ($aFields as $sAttCode)
-		{
-			$oObjRes->AddField($oObject, $sAttCode, $bExtendedOutput);
-		}
+		$oObjRes = ObjectResult::FromDBObject($oObject, $aFieldSpec, $bExtendedOutput, $iCode, $sMessage);
 
 		$sObjKey = get_class($oObject).'::'.$oObject->GetKey();
 		$this->objects[$sObjKey] = $oObjRes;
