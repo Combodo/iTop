@@ -575,7 +575,6 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 				$sClass = RestUtils::GetClass($aParams, 'class');
 				$key = RestUtils::GetMandatoryParam($aParams, 'key');
 				$sShowFields = RestUtils::GetOptionalParam($aParams, 'output_fields', '*');
-				$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
 				$iLimit = (int)RestUtils::GetOptionalParam($aParams, 'limit', 0);
 				$iPage = (int)RestUtils::GetOptionalParam($aParams, 'page', 1);
 
@@ -595,40 +594,38 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 			elseif (count($oObjectSet->GetSelectedClasses()) > 1)
 			{
 				$oResult = new RestResultWithObjectSets();
-				$aCache = array();
+				$aCache = [];
+				$aShowFields = [];
+				foreach ($oObjectSet->GetSelectedClasses() as $sSelectedClass) {
+					$aShowFields = array_merge( $aShowFields, RestUtils::GetFieldList($sSelectedClass, $aParams, 'output_fields'));
+				}
 
-				while ($oObjects = $oObjectSet->FetchAssoc())
-				{
+				while ($oObjects = $oObjectSet->FetchAssoc()) {
 					$oResult->MakeNewObjectSet();
 
 					foreach ($oObjects as $sAlias => $oObject) {
-						if (!$oObject)
+						if (!$oObject) {
 							continue;
+						}
 
-						if (!array_key_exists($sAlias, $aCache))
-						{
+						if (!array_key_exists($sAlias, $aCache)) {
 							$sClass = get_class($oObject);
-							$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
 							$bExtendedOutput = RestUtils::HasRequestedExtendedOutput($sShowFields);
 
-							if (!RestUtils::HasRequestedAllOutputFields($sShowFields))
-							{
+							if (!RestUtils::HasRequestedAllOutputFields($sShowFields)) {
 								$aFields = $aShowFields[$sClass];
 								//Id is not a valid attribute to optimize
-								if ($aFields && in_array('id', $aFields))
-								{
+								if ($aFields && in_array('id', $aFields)) {
 									unset($aFields[array_search('id', $aFields)]);
 								}
-								$aAttToLoad = array($sAlias => $aFields);
+								$aAttToLoad = [$sAlias => $aFields];
 								$oObjectSet->OptimizeColumnLoad($aAttToLoad);
 							}
-							$aCache[$sAlias] = array(
+							$aCache[$sAlias] = [
 								'aShowFields' => $aShowFields,
 								'bExtendedOutput' => $bExtendedOutput,
-							);
-						}
-						else
-						{
+							];
+						} else {
 							$aShowFields = $aCache[$sAlias]['aShowFields'];
 							$bExtendedOutput = $aCache[$sAlias]['bExtendedOutput'];
 						}
@@ -637,21 +634,20 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 					}
 				}
 				$oResult->message = "Found: ".$oObjectSet->Count();
-			}
-			else
-			{
+			} else {
+				$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
 
-                  if (!RestUtils::HasRequestedAllOutputFields($sShowFields)) {
-						$aFields = $aShowFields[$sClass];
-						//Id is not a valid attribute to optimize
-						if (in_array('id', $aFields)) {
-							unset($aFields[array_search('id', $aFields)]);
-						}
+                if (!RestUtils::HasRequestedAllOutputFields($sShowFields)) {
+	                $aFields = $aShowFields[$sClass];
+	                //Id is not a valid attribute to optimize
+	                if (in_array('id', $aFields)) {
+	                    unset($aFields[array_search('id', $aFields)]);
+	                }
 						$aAttToLoad = [$oObjectSet->GetClassAlias() => $aFields];
-						$oObjectSet->OptimizeColumnLoad($aAttToLoad);
-					}
+	                $oObjectSet->OptimizeColumnLoad($aAttToLoad);
+                }
 
-					while ($oObject = $oObjectSet->Fetch()) {
+				while ($oObject = $oObjectSet->Fetch()) {
 						$oResult->AddObject(0, '', $oObject, $aShowFields, RestUtils::HasRequestedExtendedOutput($sShowFields));
 					}
 					$oResult->message = "Found: ".$oObjectSet->Count();
