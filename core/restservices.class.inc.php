@@ -572,13 +572,21 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 				break;
 
 			case 'core/get':
-				$sClass = RestUtils::GetClass($aParams, 'class');
+			$sClassParam =  RestUtils::GetMandatoryParam($aParams, 'class');
 				$key = RestUtils::GetMandatoryParam($aParams, 'key');
 				$sShowFields = RestUtils::GetOptionalParam($aParams, 'output_fields', '*');
 				$iLimit = (int)RestUtils::GetOptionalParam($aParams, 'limit', 0);
 				$iPage = (int)RestUtils::GetOptionalParam($aParams, 'page', 1);
 
-				$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key, $iLimit, self::getOffsetFromLimitAndPage($iLimit, $iPage));
+			// Validate the class(es)
+			$aClass = explode(',', $sClassParam);
+			foreach ($aClass as $sClass) {
+				if (!MetaModel::IsValidClass(trim($sClass))) {
+					throw new Exception("class '$sClass' is not valid");
+				}
+			}
+
+			$oObjectSet = RestUtils::GetObjectSetFromKey($sClassParam, $key, $iLimit, self::getOffsetFromLimitAndPage($iLimit, $iPage));
 				$sTargetClass = $oObjectSet->GetFilter()->GetClass();
 
 				if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ) != UR_ALLOWED_YES) {
@@ -597,7 +605,7 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 				$aCache = [];
 				$aShowFields = [];
 				foreach ($oObjectSet->GetSelectedClasses() as $sSelectedClass) {
-					$aShowFields = array_merge( $aShowFields, RestUtils::GetFieldList($sSelectedClass, $aParams, 'output_fields'));
+					$aShowFields = array_merge( $aShowFields, RestUtils::GetFieldList($sSelectedClass, $aParams, 'output_fields', false));
 				}
 
 				while ($oObjects = $oObjectSet->FetchAssoc()) {
@@ -635,9 +643,13 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 				}
 				$oResult->message = "Found: ".$oObjectSet->Count();
 			} else {
-				$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
+				$aShowFields =[];
+				foreach ($aClass  as $sSelectedClass) {
+					$sSelectedClass = trim($sSelectedClass);
+					$aShowFields = array_merge($aShowFields, RestUtils::GetFieldList($sSelectedClass, $aParams, 'output_fields', false));
+				}
 
-                if (!RestUtils::HasRequestedAllOutputFields($sShowFields)) {
+                if (!RestUtils::HasRequestedAllOutputFields($sShowFields) && count($aShowFields) == 1) {
 	                $aFields = $aShowFields[$sClass];
 	                //Id is not a valid attribute to optimize
 	                if (in_array('id', $aFields)) {
