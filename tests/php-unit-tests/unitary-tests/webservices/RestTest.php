@@ -139,6 +139,158 @@ JSON;
 		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $sJSONOutput);
 	}
 
+
+	public function testCoreApiGet_Select2SubClasses(){
+		// Create ticket
+		$description = date('dmY H:i:s');
+		$iIdCaller = $this->CreatePerson(1)->GetKey();
+		$oUserRequest = $this->CreateSampleTicket($description, 'UserRequest', $iIdCaller);
+		$oChange = $this->CreateSampleTicket($description, 'Change', $iIdCaller);
+		$iIdUserRequest = $oUserRequest->GetKey();
+		$iIdChange = $oChange->GetKey();
+
+		$sJSONOutput = $this->CallCoreRestApi_Internally(<<<JSON
+{
+   "operation": "core/get",
+   "class": "UserRequest, Change",
+   "key": "SELECT UserRequest WHERE id=$iIdUserRequest UNION SELECT Change WHERE id=$iIdChange",
+   "output_fields": "id, description, outage"
+}
+JSON);
+
+		$sExpectedJsonOuput = <<<JSON
+{
+    "code": 0,
+    "message": "Found: 2",
+    "objects": {
+        "UserRequest::$iIdUserRequest": {
+            "class": "UserRequest",
+            "code": 0,
+            "fields": {
+                "description": "<p>$description</p>",
+                "id": "$iIdUserRequest"
+            },
+            "key": "$iIdUserRequest",
+            "message": ""
+        },       
+         "Change::$iIdChange": {
+            "class": "Change",
+            "code": 0,
+            "fields": {
+                "description": "<p>$description</p>",
+                "id": "$iIdChange",
+                "outage": "no"
+            },
+            "key": "$iIdChange",
+            "message": ""
+        }
+    }
+}
+JSON;
+		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $sJSONOutput);
+	}
+
+
+	public function testCoreApiGet_SelectTicketAndPerson(){
+		// Create ticket
+		$description = date('dmY H:i:s');
+		$iIdCaller = $this->CreatePerson(1)->GetKey();
+		$oUserRequest = $this->CreateSampleTicket($description, 'UserRequest', $iIdCaller);
+		$iIdUserRequest = $oUserRequest->GetKey();
+
+		$sJSONOutput = $this->CallCoreRestApi_Internally(<<<JSON
+{
+   "operation": "core/get",
+   "class": "UserRequest, Change",
+   "key": "SELECT UR, P FROM UserRequest AS UR JOIN Person AS P ON UR.caller_id = P.id WHERE UR.id=$iIdUserRequest ",
+   "output_fields": "id, title, description, name, email"
+}
+JSON);
+
+		$sExpectedJsonOuput = <<<JSON
+{
+    "code": 0,
+    "message": "Found: 1",
+    "objects": [{
+	        "UR": {
+	            "class": "UserRequest",
+	            "code": 0,
+	            "fields": {
+	                "description": "<p>$description</p>",
+	                "id": "$iIdUserRequest",                
+	                "title": "Houston, got a problem"
+	            },
+	            "key": "$iIdUserRequest",
+	            "message": ""
+	        },       
+            "P": {
+                "class": "Person",
+                "code": 0,
+                "fields": {
+                    "email": "",
+                    "id": "$iIdCaller",
+                    "name": "Person_1"
+                },
+            "key": "$iIdCaller",
+            "message": ""
+        }
+    }]
+}
+JSON;
+		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $sJSONOutput);
+	}
+
+	public function testCoreApiGetWithUnionAndDifferentOutputFields(){
+		// Create ticket
+		$description = date('dmY H:i:s');
+		$oUserRequest = $this->CreateSampleTicket($description);
+		$oChange = $this->CreateSampleTicket($description, 'Change');
+		$iUserRequestId = $oUserRequest->GetKey();
+		$sUserRequestRef = $oUserRequest->Get('ref');
+		$iChangeId = $oChange->GetKey();
+		$sChangeRef = $oChange->Get('ref');
+
+		$sJSONOutput = $this->CallCoreRestApi_Internally(<<<JSON
+{
+   "operation": "core/get",
+   "class": "Ticket",
+   "key": "SELECT UserRequest WHERE id=$iUserRequestId UNION SELECT Change WHERE id=$iChangeId",
+   "output_fields": "Ticket:ref;UserRequest:ref,status,origin;Change:ref,status,outage"
+}
+JSON);
+
+		$sExpectedJsonOuput = <<<JSON
+{
+    "code": 0,
+    "message": "Found: 2",
+    "objects": {
+    	"Change::$iChangeId": {
+            "class": "Change",
+            "code": 0,
+            "fields": {
+            	"outage": "no",
+                "ref": "$sChangeRef",
+                "status": "new"
+            },
+            "key": "$iChangeId",
+            "message": ""
+        },
+        "UserRequest::$iUserRequestId": {
+            "class": "UserRequest",
+            "code": 0,
+            "fields": {
+            	"origin": "phone",
+                "ref": "$sUserRequestRef",
+                "status": "new"
+            },
+            "key": "$iUserRequestId",
+            "message": ""
+        }
+    }
+}
+JSON;
+		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $sJSONOutput);
+	}
 	public function testCoreApiCreate()
 	{
 		// Create ticket
@@ -251,12 +403,13 @@ JSON;
 	//
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private function CreateSampleTicket($description)
+	private function CreateSampleTicket($description, $sType = 'UserRequest', $iIdCaller = null)
 	{
-		$oTicket = $this->createObject('UserRequest', [
+		$oTicket = $this->createObject($sType, [
 			'org_id' => $this->getTestOrgId(),
 			"title" => "Houston, got a problem",
 			"description" => $description,
+			"caller_id" => $iIdCaller,
 		]);
 		return $oTicket;
 	}
