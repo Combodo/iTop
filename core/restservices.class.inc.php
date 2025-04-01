@@ -214,6 +214,40 @@ class RestResultWithObjects extends RestResult
 	/** @var array "DBObject_class:DBObject_key" as key, {@see \ObjectResult} as value */
 	public $objects;
 
+	public function PrepareObject($iCode, $sMessage, $oObject, $aFieldSpec = null, $bExtendedOutput = false)
+	{
+		$sClass = get_class($oObject);
+		$oObjRes = new ObjectResult($sClass, $oObject->GetKey());
+		$oObjRes->code = $iCode;
+		$oObjRes->message = $sMessage;
+
+		$aFields = null;
+		if (!is_null($aFieldSpec))
+		{
+			// Enum all classes in the hierarchy, starting with the current one
+			foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sRefClass)
+			{
+				if (array_key_exists($sRefClass, $aFieldSpec))
+				{
+					$aFields = $aFieldSpec[$sRefClass];
+					break;
+				}
+			}
+		}
+		if (is_null($aFields))
+		{
+			// No fieldspec given, or not found...
+			$aFields = array('id', 'friendlyname');
+		}
+
+		foreach ($aFields as $sAttCode)
+		{
+			$oObjRes->AddField($oObject, $sAttCode, $bExtendedOutput);
+		}
+
+		return $oObjRes;
+	}
+
 	/**
 	 * Report the given object
 	 *
@@ -232,8 +266,7 @@ class RestResultWithObjects extends RestResult
 	 */
 	public function AddObject($iCode, $sMessage, $oObject, $aFieldSpec = null, $bExtendedOutput = false)
 	{
-		$oObjRes = ObjectResult::FromDBObject($oObject, $aFieldSpec, $bExtendedOutput, $iCode, $sMessage);
-
+		$oObjRes = $this->PrepareObject($iCode, $sMessage, $oObject, $aFieldSpec, $bExtendedOutput);
 		$sObjKey = get_class($oObject).'::'.$oObject->GetKey();
 		$this->objects[$sObjKey] = $oObjRes;
 	}
@@ -245,6 +278,45 @@ class RestResultWithObjects extends RestResult
 		foreach ($this->objects as $sObjKey => $oObjRes) {
 			$oObjRes->SanitizeContent();
 		}
+	}
+}
+
+/**
+ * @package RESTAPI
+ * @api
+ */
+class RestResultWithObjectSets extends RestResultWithObjects
+{
+	private $current_object = null;
+
+	public function MakeNewObjectSet()
+	{
+		$arr = array();
+		$this->current_object = &$arr;
+		$this->objects[] = &$arr;
+	}
+
+	/**
+	 * Report the given object
+	 *
+	 * @api
+	 * @param string $sObjectAlias Name of the subobject, usually the OQL class alias
+	 * @param int $iCode An error code (RestResult::OK is no issue has been found)
+	 * @param string $sMessage Description of the error if any, an empty string otherwise
+	 * @param DBObject $oObject The object being reported
+	 * @param array|null $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
+	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	public function AppendSubObject($sObjectAlias, $iCode, $sMessage, $oObject, $aFieldSpec = null, $bExtendedOutput = false)
+	{
+		$oObjRes = $this->PrepareObject($iCode, $sMessage, $oObject, $aFieldSpec, $bExtendedOutput);
+		$this->current_object[$sObjectAlias] = $oObjRes;
 	}
 }
 
@@ -502,8 +574,8 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 			case 'core/get':
 				$sClass = RestUtils::GetClass($aParams, 'class');
 				$key = RestUtils::GetMandatoryParam($aParams, 'key');
+				$sShowFields = RestUtils::GetOptionalParam($aParams, 'output_fields', '*');
 				$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
-				$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
 				$iLimit = (int)RestUtils::GetOptionalParam($aParams, 'limit', 0);
 				$iPage = (int)RestUtils::GetOptionalParam($aParams, 'page', 1);
 
@@ -519,8 +591,57 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 				} elseif ($iPage < 1) {
 					$oResult->code = RestResult::INVALID_PAGE;
 					$oResult->message = "The request page number is not valid. It must be an integer greater than 0";
-				} else {
-					if (!$bExtendedOutput && RestUtils::GetOptionalParam($aParams, 'output_fields', '*') != '*') {
+            }
+			elseif (count($oObjectSet->GetSelectedClasses()) > 1)
+			{
+				$oResult = new RestResultWithObjectSets();
+				$aCache = array();
+
+				while ($oObjects = $oObjectSet->FetchAssoc())
+				{
+					$oResult->MakeNewObjectSet();
+
+					foreach ($oObjects as $sAlias => $oObject) {
+						if (!$oObject)
+							continue;
+
+						if (!array_key_exists($sAlias, $aCache))
+						{
+							$sClass = get_class($oObject);
+							$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
+							$bExtendedOutput = RestUtils::HasRequestedExtendedOutput($sShowFields);
+
+							if (!RestUtils::HasRequestedAllOutputFields($sShowFields))
+							{
+								$aFields = $aShowFields[$sClass];
+								//Id is not a valid attribute to optimize
+								if ($aFields && in_array('id', $aFields))
+								{
+									unset($aFields[array_search('id', $aFields)]);
+								}
+								$aAttToLoad = array($sAlias => $aFields);
+								$oObjectSet->OptimizeColumnLoad($aAttToLoad);
+							}
+							$aCache[$sAlias] = array(
+								'aShowFields' => $aShowFields,
+								'bExtendedOutput' => $bExtendedOutput,
+							);
+						}
+						else
+						{
+							$aShowFields = $aCache[$sAlias]['aShowFields'];
+							$bExtendedOutput = $aCache[$sAlias]['bExtendedOutput'];
+						}
+
+						$oResult->AppendSubObject($sAlias, 0, '', $oObject, $aShowFields, $bExtendedOutput);
+					}
+				}
+				$oResult->message = "Found: ".$oObjectSet->Count();
+			}
+			else
+			{
+
+                  if (!RestUtils::HasRequestedAllOutputFields($sShowFields)) {
 						$aFields = $aShowFields[$sClass];
 						//Id is not a valid attribute to optimize
 						if (in_array('id', $aFields)) {
@@ -531,7 +652,7 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 					}
 
 					while ($oObject = $oObjectSet->Fetch()) {
-						$oResult->AddObject(0, '', $oObject, $aShowFields, $bExtendedOutput);
+						$oResult->AddObject(0, '', $oObject, $aShowFields, RestUtils::HasRequestedExtendedOutput($sShowFields));
 					}
 					$oResult->message = "Found: ".$oObjectSet->Count();
 				}
