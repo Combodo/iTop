@@ -245,7 +245,7 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 	public function GetSearchLinkUrl()
 	{
 		return sprintf("UI.php?operation=search&filter=%s",
-			rawurlencode($this->sSerializedSearch ?? "")
+			$this->sSerializedSearch ?? ""
 		);
 	}
 
@@ -256,7 +256,7 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 	public function GetAllowedValuesLinkUrl(): ?string
 	{
 		return sprintf("UI.php?operation=search&filter=%s",
-			rawurlencode($this->sAllowedValuesSearch ?? "")
+			$this->sAllowedValuesSearch ?? ""
 		);
 	}
 }
@@ -339,7 +339,7 @@ class CellStatus_Ambiguous extends CellStatus_Issue
 	public function GetSearchLinkUrl()
 	{
 		return sprintf("UI.php?operation=search&filter=%s",
-			rawurlencode($this->sSerializedSearch ?? "")
+			$this->sSerializedSearch ?? ""
 		);
 	}
 }

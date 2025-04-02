@@ -202,7 +202,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		$aCsvData = [["UnexistingRackDescription"]];
 		$aExtKeys = ["org_id" => ["name" => 0], "rack_id" => ["name" => 1, "description" => 3]];
 
-		$sSearchLinkUrl = 'UI.php?operation=search&filter='.\rawurlencode('%5B%22SELECT+%60Rack%60+FROM+Rack+AS+%60Rack%60+WHERE+%28%28%60Rack%60.%60name%60+%3D+%3Aname%29+AND+%28%60Rack%60.%60description%60+%3D+%3Adescription%29%29%22%2C%7B%22name%22%3A%22UnexistingRack%22%2C%22description%22%3A%22UnexistingRackDescription%22%7D%2C%5B%5D%5D');
+		$sSearchLinkUrl = 'UI.php?operation=search&filter=%5B%22SELECT+%60Rack%60+FROM+Rack+AS+%60Rack%60+WHERE+%28%28%60Rack%60.%60name%60+%3D+%3Aname%29+AND+%28%60Rack%60.%60description%60+%3D+%3Adescription%29%29%22%2C%7B%22name%22%3A%22UnexistingRack%22%2C%22description%22%3A%22UnexistingRackDescription%22%7D%2C%5B%5D%5D';
 		$this->performBulkChangeTest(
 			"No match for value 'UnexistingRack UnexistingRackDescription'",
 			"Some possible 'Rack' value(s): RackTest1 RackTest1Desc, RackTest2 RackTest2Desc, RackTest3 RackTest3Desc...",
@@ -226,7 +226,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	public function performBulkChangeTest($sExpectedDisplayableValue, $sExpectedDescription, $oOrg, $bIsRackReconKey,
 		$aAdditionalCsvData=null, $aExtKeys=null, $sSearchLinkUrl=null, $sError="Object not found") {
 		if ($sSearchLinkUrl===null){
-			$sSearchLinkUrl = 'UI.php?operation=search&filter='.rawurlencode('%5B%22SELECT+%60Rack%60+FROM+Rack+AS+%60Rack%60+WHERE+%28%60Rack%60.%60name%60+%3D+%3Aname%29%22%2C%7B%22name%22%3A%22UnexistingRack%22%7D%2C%5B%5D%5D');
+			$sSearchLinkUrl = 'UI.php?operation=search&filter=%5B%22SELECT+%60Rack%60+FROM+Rack+AS+%60Rack%60+WHERE+%28%60Rack%60.%60name%60+%3D+%3Aname%29%22%2C%7B%22name%22%3A%22UnexistingRack%22%7D%2C%5B%5D%5D';
 		}
 		if (is_null($oOrg)){
 			$iOrgId = $this->getTestOrgId();

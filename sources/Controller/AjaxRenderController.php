@@ -651,7 +651,7 @@ class AjaxRenderController
 				} else {
 					$aQueryParams = array();
 				}
-				$sFilter = rawurlencode($oSubsetSearch->serialize(false, $aQueryParams));
+				$sFilter = $oSubsetSearch->serialize(false, $aQueryParams);
 
 				$aResult[] = array(
 					'group' => $aLabels[$iRow],

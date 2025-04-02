@@ -10956,7 +10956,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			$oAppContext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
-			$sFilter = rawurlencode($oFilter->serialize());
+			$sFilter = $oFilter->serialize();
 			$sLink = '';
 			if ($bWithLink && $this->bDisplayLink) {
 				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
@@ -12278,7 +12278,7 @@ class AttributeTagSet extends AttributeSet
 				$oAppContext = new ApplicationContext();
 				$sContext = $oAppContext->GetForLink();
 				$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
-				$sFilter = rawurlencode($oFilter->serialize());
+				$sFilter = $oFilter->serialize();
 
 				$sLink = '';
 				if ($bWithLink && $this->bDisplayLink) {

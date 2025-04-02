@@ -1693,7 +1693,7 @@ class utils
 		$sUrl = $sAppRootUrl
 			.'pages/UI.php?operation=search&'
 			.$oAppContext->GetForLink()
-			.'&filter='.rawurlencode($oDataTableSearchFilter->serialize());
+			.'&filter='.$oDataTableSearchFilter->serialize();
 		$sUrl .= '&aParams='.rawurlencode($sParams); // Not working... yet, cause not handled by UI.php
 
 		return $sUrl;

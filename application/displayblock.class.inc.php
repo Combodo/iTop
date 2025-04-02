@@ -1125,7 +1125,7 @@ JS
 					}
 					$sHyperlink = utils::GetAbsoluteUrlAppRoot()
 						.'pages/UI.php?operation=search&'.$oAppContext->GetForLink()
-						.'&filter='.rawurlencode($oSingleGroupByValueFilter->serialize());
+						.'&filter='.$oSingleGroupByValueFilter->serialize();
 					$aCounts[$sStateValue] = ['link' => $sHyperlink, 'label' => $aCounts[$sStateValue]];
 				}
 			}
@@ -1232,7 +1232,7 @@ JS
 		$iCount = $this->m_oSet->Count();
 		$sClassLabel = MetaModel::GetName($sClass);
 		$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
-		$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize());
+		$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.$this->m_oFilter->serialize();
 
 		$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
 		$aRefreshParams = [
@@ -1300,7 +1300,7 @@ JS
 				} else {
 					$aQueryParams = array();
 				}
-				$sFilter = rawurlencode($oSubsetSearch->serialize(false, $aQueryParams));
+				$sFilter = $oSubsetSearch->serialize(false, $aQueryParams);
 
 				$aData[] = array(
 					'group' => $aLabels[$iRow],
@@ -1644,9 +1644,9 @@ JS
 		$sOrderDirection = isset($aExtraParams['order_direction']) ? $aExtraParams['order_direction'] : '';
 
 		if (isset($aExtraParams['group_by_label'])) {
-			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$sChartId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sChartId{$iChartCounter}&filter=".rawurlencode($sFilter).'&'.$sContextParam;
+			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$sChartId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sChartId{$iChartCounter}&filter=".$sFilter.'&'.$sContextParam;
 		} else {
-			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sChartId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sChartId{$iChartCounter}&filter=".rawurlencode($sFilter).'&'.$sContextParam;
+			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sChartId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sChartId{$iChartCounter}&filter=".$sFilter.'&'.$sContextParam;
 		}
 
 		$oBlock->sUrl = $sUrl;
@@ -1705,7 +1705,7 @@ JS
 				$oSubsetSearch = $this->m_oFilter->DeepClone();
 				$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
 				$oSubsetSearch->AddConditionExpression($oCondition);
-				$aURLs[] = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".rawurlencode($oSubsetSearch->serialize()).'&'.$sContextParam;
+				$aURLs[] = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".$oSubsetSearch->serialize().'&'.$sContextParam;
 			}
 			$sJSURLs = json_encode($aURLs);
 		}
@@ -1785,7 +1785,7 @@ JS
 
 		$oBlock->sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv';
 		$oBlock->sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($oBlock->sCsvFile);
-		$oBlock->sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize()).'&format=csv';
+		$oBlock->sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.$this->m_oFilter->serialize().'&format=csv';
 		// Pass the parameters via POST, since expression may be very long
 		$aParamsToPost = array(
 			'expression' => $this->m_oFilter->ToOQL(true),
