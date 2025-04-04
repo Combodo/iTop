@@ -23,20 +23,16 @@ use utils;
 
 require_once __DIR__ . '/XmlModuleMetaInfo.php';
 require_once __DIR__ . '/XmlModule.php';
+require_once __DIR__ . '/iTopModulesDependencyValidationService.php';
 
 use ModuleInstallerAPI;
 /**
  * @package Combodo\iTop\Test\UnitTest\Setup
  */
 class iTopModulesDependencyTest extends ItopTestCase {
+	private iTopModulesDependencyValidationService $oiTopModulesDependencyValidationService;
+
 	private array $aFilesToRemove = [];
-	private array $aModules=[];
-	private static array $aModulesDataByModuleName=[];
-	private string $sCurrentModule;
-	private array $aDefineNodes;
-	private array $aDependencyNodes;
-	private array $aAllDmFiles=[];
-	private array $aSoftDependencyNodes=[];
 
 	protected function setUp(): void
 	{
@@ -49,254 +45,29 @@ class iTopModulesDependencyTest extends ItopTestCase {
 		foreach ($this->aFilesToRemove as $sTmpFile){
 			@unlink($sTmpFile);
 		}
-	}
-	public function ListDatamodelFiles() : array
-	{
-		if (count($this->aAllDmFiles)==0){
-		    $aGlobPAtterns = [
-			    APPROOT.'datamodels/2.x',
-			    APPROOT.'application/*.xml',
-			    APPROOT.'core/*.xml',
-			    APPROOT.'extensions',
-			    APPROOT.'extensions/*',
-			    APPROOT.'data/production-modules',
-			    APPROOT.'data/production-modules/*',
-		    ];
-
-			foreach ($aGlobPAtterns as $sPattern) {
-				$this->aAllDmFiles = array_merge($this->aAllDmFiles, glob("$sPattern/datamodel.*.xml"));
-			}
-		}
-		return $this->aAllDmFiles;
+		iTopModulesDependencyValidationService::SetInstance(null);
 	}
 
-	public function FetchAllDependenciesViaDM()
-	{
-		foreach ($this->ListDatamodelFiles() as $sFile) {
-			$this->FetchXmlMetaInfo($sFile);
-		}
-
-		foreach ($this->aDefineNodes as $sKey => $aModules){
-			foreach ($aModules as $sModuleName){
-				if (! array_key_exists($sModuleName, $this->aModules)){
-					$this->aModules[$sModuleName] = new XmlModule($sModuleName);
-				}
-			}
-
-			$aSoftlyDependentModules = $this->aSoftDependencyNodes[$sKey] ?? null;
-			if (is_null($aSoftlyDependentModules)){
-				continue;
-			}
-
-			foreach ($aSoftlyDependentModules as $sModuleName){
-				/** @var XmlModule $oCurrentXmlModule */
-				$oCurrentXmlModule = $this->aModules[$sModuleName] ?? null;
-				if (is_null($oCurrentXmlModule)){
-					$oCurrentXmlModule = new XmlModule($sModuleName);
-					$this->aModules[$sModuleName] = $oCurrentXmlModule;
-				}
-
-				$oCurrentXmlModule->AddDependency($sKey, $aModules, $this->aModules);
-			}
-		}
-
-		foreach ($this->aDependencyNodes as $sKey => $aModules){
-			foreach ($aModules as $sModuleName){
-				/** @var XmlModule $oCurrentXmlModule */
-				$oCurrentXmlModule = $this->aModules[$sModuleName] ?? null;
-				if (is_null($oCurrentXmlModule)){
-					$oCurrentXmlModule = new XmlModule($sModuleName);
-					$this->aModules[$sModuleName] = $oCurrentXmlModule;
-				}
-
-				$aDefiningModules = $this->aDefineNodes[$sKey] ?? null;
-				if (is_null($aDefiningModules)){
-					continue;
-				}
-
-				$oCurrentXmlModule->AddDependency($sKey, $aDefiningModules, $this->aModules);
-			}
-		}
-
-		$this->OrderModules();
-		$this->CompleteModuleDependencies();
-	}
-
-	public static function setUpBeforeClass(): void
-	{
-		parent::setUpBeforeClass();
-
-		require_once APPROOT."setup/modulediscovery.class.inc.php";
-		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
-
-		if (count(self::$aModulesDataByModuleName)>0){
-			return;
-		}
-
-		$aDirsToScan = [
-			APPROOT.'datamodels/2.x',
-			APPROOT.'extensions',
-			APPROOT.'extensions/*',
-			APPROOT.'data/production-modules',
-			APPROOT.'data/production-modules/*',
-		];
-		$aFilesToRemove=[];
-		foreach ($aDirsToScan as $sDir){
-			foreach (glob("$sDir/*/module.*.php") as $sFile) {
-				$sContent = file_get_contents($sFile);
-				$sContent=str_replace('SetupWebPage::AddModule', '$aModuleData=array', $sContent);
-
-				$sTempFile = tempnam(sys_get_temp_dir(), 'modulefile_');
-				$aFilesToRemove[]=$sTempFile;
-				file_put_contents($sTempFile, $sContent);
-				$bDebug=false;
-				if ($bDebug){
-					echo "$sFile\n";
-					echo $sContent;
-				}
-				require_once $sTempFile;
-				if ($bDebug){
-					var_dump($aModuleData);
-				}
-				//replace tmp file by real module path
-				$aModuleData[0]=$sFile;
-				$sModuleId=$aModuleData[1];
-
-				list($sModuleName, $sVersion) = \ModuleDiscovery::GetModuleName($sModuleId);
-				self::$aModulesDataByModuleName[$sModuleName] = $aModuleData;
-			}
-
-			ksort(self::$aModulesDataByModuleName);
-
-			foreach ($aFilesToRemove as $sTmpFile){
-				@unlink($sTmpFile);
-			}
-		}
-	}
-
+	/**
+	 * Module dependency validation: make sure dependencies are correct toward classes/interfaces coming from PHP/Xml datamodel files
+	 */
 	public function testReadModuleFileData()
 	{
-		$aFullnameClassesByModuleName=[];
-		foreach (self::$aModulesDataByModuleName as $sModuleName => $aModuleData){
-			//echo "$sModuleName\n";
-			$aFiles = $aModuleData[2]['datamodel'] ?? [];
-			$sDir = dirname($aModuleData[0]);
-
-			$aDeps=[];
-			foreach ($aFiles as $sFile){
-				if (preg_match("|.*model\.$sModuleName\.php|", $sFile)){
-					continue;
-				}
-				//echo "$sDir/$sFile\n";
-				$aDeps=array_merge($aDeps, $this->ReadDependencies("$sDir/$sFile"));
-			}
-
-			$aFullnameClassesByModuleName[$sModuleName]=$aDeps;
-		}
-
-		$this->FetchAllDependenciesViaModulesFiles($aFullnameClassesByModuleName);
-
-		$this->assertEquals([], $aFullnameClassesByModuleName);
+		iTopModulesDependencyValidationService::GetInstance()->FetchAllDependenciesViaModulesFiles();
+		$this->testModulesBasedOnDMFilesOnly();
 	}
 
-	public function FetchAllDependenciesViaModulesFiles(array $aFullnameClassesByModuleName)
+	/**
+	 * Module dependency validation: make sure dependencies are correct toward classes/interfaces coming from Xml datamodel files
+	 */
+	public function testModulesBasedOnDMFilesOnly()
 	{
-		foreach ($aFullnameClassesByModuleName as $sModuleName => $aFullnameClasses){
-			foreach (self::$aModulesDataByModuleName as $sModuleName2 => $aModuleData){
-				if ($sModuleName2 === $sModuleName){
-					continue;
-				}
-
-				$sDir = dirname($aModuleData[0]);
-
-				if (count($aFullnameClassesByModuleName)==0){
-					throw new \Exception("no defs in $sModuleName??");
-				}
-
-				$sStr = "";
-				foreach ($aFullnameClasses as $sClass){
-					$sStr .= <<<TXT
- -e "$sClass"
-TXT;
-;
-				}
-
-				//$bDebug=($sModuleName==="combodo-oauth2-client") && ($sModuleName2==="combodo-webhook-integration");
-				//$bDebug=($sModuleName==="itop-backup");
-				$bDebug=false;
-				/*if (!$bDebug){
-					continue;
-				}*/
-
-				$bFound=false;
-				foreach ($this->GetFolders($sModuleName2, $sDir) as $sFolderDir) {
-					$sCliCmd = str_replace('\\', '\\\\\\\\', sprintf("grep -rl %s $sFolderDir", $sStr));
-					$sOutput = exec($sCliCmd);
-
-
-					if ($bDebug) {
-						//echo "Check deps of $sModuleName2 to $sModuleName in $sFolderDir\n";
-						echo "$sCliCmd\n";
-						echo "|$sOutput|\n";
-					}
-
-					if (strlen($sOutput) != 0) {
-						$bFound=true;
-						break;
-					}
-				}
-
-				if ($bFound){
-					echo "$sModuleName2 => $sModuleName\n";
-				}
-			}
-
-			if ($bDebug){
-				break;
-			}
-		}
-	}
-
-	private array $aSubfoldersByModulename=[];
-	private function GetFolders($sModuleName2, $sDir) : array
-	{
-		if (array_key_exists($sModuleName2, $this->aSubfoldersByModulename)){
-			return $this->aSubfoldersByModulename[$sModuleName2];
-		}
-
-		$aRes=[];
-		foreach (glob("$sDir/*") as $sPath){
-			if (! is_dir($sPath)){
-				continue;
-			}
-
-			if (strpos($sPath, '\.git') !== false){
-				continue;
-			}
-
-			if (strpos($sPath, 'vendor') !== false){
-				continue;
-			}
-
-			if (strpos($sPath, 'test') !== false){
-				continue;
-			}
-
-			$aRes[]=$sPath;
-		}
-
-		$this->aSubfoldersByModulename[$sModuleName2]=$aRes;
-		return $aRes;
-	}
-
-	public function testModules()
-	{
-		$this->FetchAllDependenciesViaDM();
+		iTopModulesDependencyValidationService::GetInstance()->FetchAllDependenciesViaDM();
 
 		$aErrors=[];
 		/** @var XmlModule $oXmlModule */
-		foreach ($this->aModules as $sModuleName => $oXmlModule) {
-			$aCurrentDeps = self::$aModulesDataByModuleName[$sModuleName][2]['dependencies'] ?? [];
+		foreach (iTopModulesDependencyValidationService::GetInstance()->aModules as $sModuleName => $oXmlModule) {
+			$aCurrentDeps = iTopModulesDependencyValidationService::GetInstance()::$aModulesDataByModuleName[$sModuleName][2]['dependencies'] ?? [];
 			$aModuleErrors=[];
 			foreach ($oXmlModule->aDependencyModulesNames as $sDepModuleName => $oXmlModule2){
 				$sXmlUIDs = implode('|', $oXmlModule->aXMlMetaInfosByModuleNames[$sDepModuleName]);
@@ -311,7 +82,7 @@ TXT;
 
 					foreach ($oModuleDependency->GetPotentialPrerequisiteModuleNames() as $sPotentialDepModuleName){
 						/** @var XmlModule $oXmlModule2 */
-						$oXmlModule2 = $this->aModules[$sPotentialDepModuleName]??null;
+						$oXmlModule2 = iTopModulesDependencyValidationService::GetInstance()->aModules[$sPotentialDepModuleName]??null;
 
 						if (! is_null($oXmlModule2) && $oXmlModule2->Depends($sDepModuleName)){
 							$bResolved=true;
@@ -338,211 +109,83 @@ TXT;
 
 	}
 
-	private function GetModuleSuffix($sFile) : string
+	public function testListDeclaredFullnameClassesFromPhpFile()
 	{
-		if (! preg_match('|.*datamodel\.([^\.]+)\.xml|', $sFile, $aMatches)){
-			throw new \Exception("Regexp issue: $sFile");
-		}
-		return $aMatches[1];
+		$aExpected = [
+			'CMDBChangeOp',
+			'CMDBChangeOpCreate',
+			'CMDBChangeOpDelete',
+			'CMDBChangeOpSetAttribute',
+			'CMDBChangeOpSetAttributeScalar',
+			'CMDBChangeOpSetAttributeTagSet',
+			'CMDBChangeOpSetAttributeURL',
+			'CMDBChangeOpSetAttributeBlob',
+			'CMDBChangeOpSetAttributeOneWayPassword',
+			'CMDBChangeOpSetAttributeEncrypted',
+			'CMDBChangeOpSetAttributeText',
+			'CMDBChangeOpSetAttributeLongText',
+			'CMDBChangeOpSetAttributeHTML',
+			'CMDBChangeOpSetAttributeCaseLog',
+			'CMDBChangeOpPlugin',
+			'CMDBChangeOpSetAttributeLinksAddRemove',
+			'CMDBChangeOpSetAttributeLinksTune',
+			'CMDBChangeOpSetAttributeCustomFields',
+			'iCMDBChangeOp',
+		];
+		$this->assertEquals($aExpected, iTopModulesDependencyValidationService::GetInstance()->ListDeclaredFullnameClassesFromPhpFile(APPROOT . 'core/cmdbchangeop.class.inc.php'));
 	}
 
-	public function FetchXmlMetaInfo($sFile) : void {
-		$oDomDoc = new \DOMDocument('1.0', 'UTF-8');
-		libxml_clear_errors();
-		$oDomDoc->loadXml(file_get_contents($sFile));
-		$aErrors = libxml_get_errors();
-		if (count($aErrors) > 0)
-		{
-			throw new \Exception("Malformed XML");
-		}
-
-		$this->sCurrentModule = $this->GetModuleSuffix($sFile);
-
-		if (! isset($this->aDefineNodes)){
-			$this->aDefineNodes=[];
-		}
-
-		if (! isset($this->aDependencyNodes)){
-			$this->aDependencyNodes=[];
-		}
-
-		foreach ($oDomDoc->childNodes as $oDomNode){
-			$this->FetchMetaInfo($oDomDoc->childNodes);
-		}
+	public function testListDeclaredFullnameClassesFromAutoloadFile()
+	{
+		$aExpected = [
+			'Combodo\iTop\OAuthClient\Controller\AjaxOauthClientController',
+			'Combodo\iTop\OAuthClient\Controller\OAuthClientController',
+			'Combodo\iTop\OAuthClient\Service\ApplicationUIExtension',
+			'Combodo\iTop\OAuthClient\Service\PopupMenuExtension',
+		];
+		$this->assertEquals($aExpected, iTopModulesDependencyValidationService::GetInstance()->ListDeclaredFullnameClassesFromPhpFile(APPROOT . 'datamodels/2.x/itop-oauth-client/vendor/autoload.php'));
 	}
 
-	private function FetchMetaInfo(\DOMNodeList $oDomNodeList, ?string $sPath=null)
+	public function testReadModuleMetaInfo()
 	{
-		/** @var \DOMNode $oDomNode */
-		foreach ($oDomNodeList as $oDomNode) {
-			/** @var \DOMAttr $oDelta */
-			$oDelta = $oDomNode->attributes['_delta'] ?? null;
-			/** @var \DOMAttr $oId */
-			$oId = $oDomNode->attributes['id'] ?? null;
-
-			if (! is_null($oId)) {
-				$sId = $oId->nodeValue;
-				$sCurrentPath = $sPath ? $sPath."->".$sId : $sId;
-
-				if (!is_null($oDelta)) {
-					$oXmlModuleMetaInfo = new XmlModuleMetaInfo($sId, $oDomNode->nodeName, $sCurrentPath, $oDelta->nodeValue);
-					$sKey = $oXmlModuleMetaInfo->GetUID();
-					if ($oXmlModuleMetaInfo->IsDefine()) {
-						if (array_key_exists($sKey, $this->aDefineNodes)) {
-							$this->aDefineNodes[$sKey][] = $this->sCurrentModule;
-						} else {
-							$this->aDefineNodes[$sKey] = [$this->sCurrentModule];
-						}
-					} else {
-						if (array_key_exists($sKey, $this->aDependencyNodes)) {
-							$this->aDependencyNodes[$sKey][] = $this->sCurrentModule;
-						} else {
-							$this->aDependencyNodes[$sKey] = [$this->sCurrentModule];
-						}
-					}
-				} else {
-					$oXmlModuleMetaInfo = new XmlModuleMetaInfo($sId, $oDomNode->nodeName, $sCurrentPath, "nodelta");
-					$sKey = $oXmlModuleMetaInfo->GetUID();
-					if (array_key_exists($sKey, $this->aSoftDependencyNodes)) {
-						$this->aSoftDependencyNodes[$sKey][] = $this->sCurrentModule;
-					} else {
-						$this->aSoftDependencyNodes[$sKey] = [$this->sCurrentModule];
-					}
-				}
-			} else if ($oDomNode instanceof \DOMElement){
-				$sCurrentPath = $sPath ? $sPath . '->' . $oDomNode->nodeName : $oDomNode->nodeName;
-			} else{
-				$sCurrentPath = $sPath;
-			}
-
-			$this->FetchMetaInfo($oDomNode->childNodes, $sCurrentPath);
-		}
+		$this->markTestSkipped();
+		$aExpected = [
+			'/var/www/html/iTop/datamodels/2.x/itop-portal-base/module.itop-portal-base.php',
+			'itop-portal-base/3.2.1',
+			[
+				'label' => 'Portal Development Library',
+		        'category' => 'Portal',
+		        'dependencies' => [ 'itop-attachments/3.2.1' ],
+		        'mandatory' => true,
+		        'visible' => false,
+		        'datamodel' => [ 'portal/vendor/autoload.php' ],
+		        'webservice' => [],
+		        'dictionary' => [],
+		        'data.struct' => [],
+		        'data.sample' => [],
+		        'doc.manual_setup' => '',
+		        'doc.more_information' => '',
+		        'settings' => [],
+			],
+		];
+		$this->assertEquals($aExpected, iTopModulesDependencyValidationService::GetInstance()->GetModuleMetainfo('itop-portal-base'));
 	}
 
-	private function OrderModules()
-	{
-		$aModuleDepsCount = [];
-		/** @var XmlModule $oXmlModule */
-		foreach ($this->aModules as $oXmlModule) {
-			$aModuleDepsCount[$oXmlModule->sModuleName] = count($oXmlModule->aDependencyModulesNames);
-		}
-
-		$aOrderModules=[];
-		while (count($aModuleDepsCount)>0) {
-			asort($aModuleDepsCount);
-
-			foreach ($aModuleDepsCount as $sModuleName => $iCount){
-				if ($iCount>0){
-					throw new \Exception("still deps with $sModuleName");
-				}
-
-				unset($aModuleDepsCount[$sModuleName]);
-				$aOrderModules[$sModuleName] = $this->aModules[$sModuleName];
-				break;
-			}
-
-			//echo "$sModuleName\n";
-			foreach ($aModuleDepsCount as $sStillToProcessModuleName => $c){
-				/** @var XmlModule $oXmlStillToProcessModule */
-				$oXmlStillToProcessModule = $this->aModules[$sStillToProcessModuleName];
-				if ($oXmlStillToProcessModule->Depends($sModuleName)){
-					$aModuleDepsCount[$sStillToProcessModuleName] = $c - 1 ;
-				}
-			}
-		}
-
-		$this->aModules = $aOrderModules;
-	}
-
-	private function CompleteModuleDependencies()
-	{
-		/** @var XmlModule $oXmlModule */
-		foreach ($this->aModules as $oXmlModule) {
-			$oXmlModule->CompleteModuleDependencies($this->aModules);
-		}
-	}
-
-	/**
-	 * Read declared classes/interfaces in modules.php file (either directly listed files or inside autoload)
-	 * @param string : module file path
-	 *
-	 * @return array: list of fullname classes
-	 */
-	public function ReadDependencies(string $sPath) : array
-	{
-		if (false !== strpos($sPath, 'autoload.php')){
-			return $this->ReadAutoloadDependencies($sPath);
-	    }
-
-		$aRes=[];
-
-		$sContent = file_get_contents($sPath);
-
-		$sNamespace='';
-		if (preg_match('|namespace (.*)[ ]*;|', $sContent, $aMatches)){
-			$sNamespace=trim($aMatches[1]) . '\\';
-		}
-
-
-		if (preg_match_all('|^class ([a-zA-Z]*) |m', $sContent, $aMatches)){
-			foreach($aMatches[1] as $sClass){
-				$aRes[]=$sNamespace.$sClass;
-			}
-		}
-
-		if (preg_match_all('|^interface ([a-zA-Z]*) |m', $sContent, $aMatches)){
-			foreach($aMatches[1] as $sInterface){
-				$aRes[]=$sNamespace.$sInterface;
-			}
-		}
-
-		return $aRes;
-	}
-
-	/**
-	 * Read declared classes/interfaces autoload file
-	 *
-	 * @param string : module file path
-	 *
-	 * @return array: list of fullname classes
-	 */
-	private function ReadAutoloadDependencies(string $sPath) : array
-	{
-		$sAutoloadClassMap = dirname($sPath) . "/composer/autoload_classmap.php";
-		//echo $sAutoloadClassMap . '\n';
-		if (!is_file($sAutoloadClassMap)) {
-			return [];
-		}
-
-		$sTempfile = tempnam(sys_get_temp_dir(), 'autoload_');
-		$this->aFilesToRemove[] = $sTempfile;
-		$sContent = file_get_contents($sAutoloadClassMap);
-		$sReplace=<<<TXT
-\$aModuleFiles=
+	public function testGetFirstFoundDepsUID() {
+		$sOutput=<<<TXT
+/var/www/html/Professional-3.2.1-16428/web/datamodels/2.x/authent-token/src/Hook/MyAccountSectionTabContentExtension.php:Combodo\iTop\MyAccount\Hook\iMyAccountTabContentExtension
 TXT;
-		$sContent = preg_replace('|return|', $sReplace, $sContent);
-		//echo $sContent;
-		file_put_contents($sTempfile, $sContent);
-		require_once $sTempfile;
 
-		$aRes=[];
-		foreach (array_keys($aModuleFiles) as $sClass){
-			if (strpos($sClass, 'InstalledVersions')){
-				continue;
-			}
-			$aRes[]=$sClass;
-		}
-		return $aRes;
-	}
+		$this->assertEquals('Combodo\iTop\MyAccount\Hook\iMyAccountTabContentExtension', iTopModulesDependencyValidationService::GetInstance()->GetFirstFoundDepsUID($sOutput));
 
-	public function testReadDependencies()
-	{
-		$this->assertEquals(['CASLoginExtension'], $this->ReadDependencies(APPROOT . 'datamodels/2.x/authent-cas/src/CASLoginExtension.php'));
-	}
 
-	public function testReadAutoloadDependencies()
-	{
-		$this->assertEquals([], $this->ReadAutoloadDependencies(APPROOT . 'extensions/combodo-hybridauth-configuration/combodo-oauth2-client/vendor/autoload.php'));
+		$sOutput=<<<TXT
+/var/www/html/Professional-3.2.1-16428/web/datamodels/2.x/authent-token/src/Hook/MyAccountSectionTabContentExtension.php:Combodo\iTop\MyAccount\Hook\iMyAccountTabContentExtension
+/var/www/html/Professional-3.2.1-16428/web/datamodels/2.x/authent-token/src/Hook/MyAccountSectionTabContentExtension2.php:Combodo\iTop\MyAccount\Hook\iMyAccountTabContentExtension2
+/var/www/html/Professional-3.2.1-16428/web/datamodels/2.x/authent-token/src/Hook/MyAccountSectionTabContentExtension3.php:Combodo\iTop\MyAccount\Hook\iMyAccountTabContentExtension3
+TXT;
+
+		$this->assertEquals('Combodo\iTop\MyAccount\Hook\iMyAccountTabContentExtension', iTopModulesDependencyValidationService::GetInstance()->GetFirstFoundDepsUID($sOutput));
 	}
 }
 
