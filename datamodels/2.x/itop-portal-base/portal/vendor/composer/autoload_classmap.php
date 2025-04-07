@@ -25,6 +25,7 @@ return array(
     'Combodo\\iTop\\Portal\\Controller\\DefaultController' => $baseDir . '/src/Controller/DefaultController.php',
     'Combodo\\iTop\\Portal\\Controller\\ManageBrickController' => $baseDir . '/src/Controller/ManageBrickController.php',
     'Combodo\\iTop\\Portal\\Controller\\ObjectController' => $baseDir . '/src/Controller/ObjectController.php',
+    'Combodo\\iTop\\Portal\\Controller\\PreferencesController' => $baseDir . '/src/Controller/PreferencesController.php',
     'Combodo\\iTop\\Portal\\Controller\\SessionMessageController' => $baseDir . '/src/Controller/SessionMessageController.php',
     'Combodo\\iTop\\Portal\\Controller\\UserProfileBrickController' => $baseDir . '/src/Controller/UserProfileBrickController.php',
     'Combodo\\iTop\\Portal\\DataCollector\\PortalCollector' => $baseDir . '/src/DataCollector/PortalCollector.php',

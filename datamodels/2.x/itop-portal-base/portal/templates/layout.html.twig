@@ -160,6 +160,8 @@
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/clipboard/dist/clipboard.min.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/clipboardwidget.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal-clipboard.js'|add_itop_version }}"></script>
+        {# User Preferences #}
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/user_preferences.js'|add_itop_version }}"></script>
         {# custom elements #}
         <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/custom_elements/base_element.js'|add_itop_version }}"></script>
         <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/custom_elements/tile_element.js'|add_itop_version }}"></script>
@@ -279,8 +281,8 @@
 				{
 					return '{{ app['url_generator'].generate('p_session_message_add')|raw }}';
 				};
-            // used to allow SetUserPreferences to be called from the UI
-            const oUserPreferences = JSON.parse('{{ user_preferences|json_encode|e('js') }}');
+                // user preferences object
+                const oUserPreferences = new UserPreferences('{{ app['url_generator'].generate('p_preferences_set_preference')|raw }}');
 				/**
 				 * @param sUrl {string} The URL to append the new param to
 				 * @param sParamName {string} Name of the parameter

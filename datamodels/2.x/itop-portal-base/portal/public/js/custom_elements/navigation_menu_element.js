@@ -245,6 +245,10 @@ class NavigationMenuElement extends HTMLElement {
 	}
 
 	Expand(bSaveUserPreference = false) {
+		// save user preference
+		if (bSaveUserPreference) {
+			oUserPreferences.setPreference('portal.navigation_menu.expanded', 'expanded');
+		}
 		// sync attribute
 		if (this.getAttribute(NavigationMenuElement.DATA_EXPANDED_STATE) !== 'expanded') {
 			this.setAttribute(NavigationMenuElement.DATA_EXPANDED_STATE, 'expanded');
@@ -257,13 +261,13 @@ class NavigationMenuElement extends HTMLElement {
 		// dispatch events
 		window.dispatchEvent(new Event('resize')); // do layout
 		this.dispatchEvent(new CustomEvent("state", {detail: 'expanded'}));
-		// save user preference
-		if (bSaveUserPreference) {
-			SetUserPreference('portal.navigation_menu.expanded', 'expanded', true);
-		}
 	}
 
 	Collapse(bSaveUserPreference = false) {
+		// save user preference
+		if (bSaveUserPreference) {
+			oUserPreferences.setPreference('portal.navigation_menu.expanded', 'collapsed');
+		}
 		// sync attribute
 		if (this.getAttribute(NavigationMenuElement.DATA_EXPANDED_STATE) !== 'collapsed') {
 			this.setAttribute(NavigationMenuElement.DATA_EXPANDED_STATE, 'collapsed');
@@ -276,10 +280,6 @@ class NavigationMenuElement extends HTMLElement {
 		// dispatch events
 		window.dispatchEvent(new Event('resize')); // do layout
 		this.dispatchEvent(new CustomEvent("state", {detail: 'collapsed'}));
-		// save user preference
-		if (bSaveUserPreference) {
-			SetUserPreference('portal.navigation_menu.expanded', 'collapsed', true);
-		}
 	}
 
 	IsExpanded() {

@@ -45,6 +45,7 @@ class ComposerStaticInitCombodo_ItopPortalBase_Portal
         'Combodo\\iTop\\Portal\\Controller\\DefaultController' => __DIR__ . '/../..' . '/src/Controller/DefaultController.php',
         'Combodo\\iTop\\Portal\\Controller\\ManageBrickController' => __DIR__ . '/../..' . '/src/Controller/ManageBrickController.php',
         'Combodo\\iTop\\Portal\\Controller\\ObjectController' => __DIR__ . '/../..' . '/src/Controller/ObjectController.php',
+        'Combodo\\iTop\\Portal\\Controller\\PreferencesController' => __DIR__ . '/../..' . '/src/Controller/PreferencesController.php',
         'Combodo\\iTop\\Portal\\Controller\\SessionMessageController' => __DIR__ . '/../..' . '/src/Controller/SessionMessageController.php',
         'Combodo\\iTop\\Portal\\Controller\\UserProfileBrickController' => __DIR__ . '/../..' . '/src/Controller/UserProfileBrickController.php',
         'Combodo\\iTop\\Portal\\DataCollector\\PortalCollector' => __DIR__ . '/../..' . '/src/DataCollector/PortalCollector.php',
