@@ -1,0 +1,23 @@
+{% use "application/form/itop_base_layout.html.twig" %}
+
+{# Widgets #}
+
+{%- block widget_attributes -%}
+    {%  if type == 'text' %}{% set ibo_class='ibo-input-string' %}{% else %}{% set ibo_class='ibo-input-' ~ type %}{% endif %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input ' ~ ibo_class)|trim}) %}
+    {{- parent() -}}
+{%- endblock widget_attributes -%}
+
+{%- block form_label -%}
+    {%- if compound is defined and compound -%}
+        {%- set element = 'legend' -%}
+    {%- else -%}
+        {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ibo-field--label')|trim}) %}
+    {%- endif -%}
+    {{- parent() -}}
+{%- endblock form_label -%}
+
+{%- block form_row -%}
+    {% set row_attr = row_attr|merge({class: (row_attr.class|default('') ~ ' ibo-field ibo-content-block ibo-block  ibo-field-small')|trim}) %}
+    {{- parent() -}}
+{%- endblock form_row -%}

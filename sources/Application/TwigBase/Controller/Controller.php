@@ -110,6 +110,7 @@ abstract class Controller extends AbstractController
 		$this->m_aBlockParams = [];
 		$this->SetModuleName($sModuleName);
 		$aAdditionalPaths[] = APPROOT.'lib/symfony/twig-bridge/Resources/views/Form';
+		$aAdditionalPaths[] = APPROOT.'templates';
 		if (strlen($sViewPath) > 0) {
 			$this->SetViewPath($sViewPath, $aAdditionalPaths);
 			if ($sModuleName != 'core') {
@@ -149,7 +150,7 @@ abstract class Controller extends AbstractController
 	public function SetViewPath($sViewPath, $aAdditionalPaths = [])
 	{
 		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath, $aAdditionalPaths);
-		$formEngine = new TwigRendererEngine(['bootstrap_5_layout.html.twig'], $oTwig);
+		$formEngine = new TwigRendererEngine(['application/form/itop_console_layout.twig'], $oTwig);
 		$oTwig->addRuntimeLoader(new FactoryRuntimeLoader([
 			FormRenderer::class => function () use ($formEngine): FormRenderer {
 				return new FormRenderer($formEngine, null);
