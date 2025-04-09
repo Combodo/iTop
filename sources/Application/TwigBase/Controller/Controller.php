@@ -37,8 +37,10 @@ use SetupPage;
 use SetupUtils;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,7 +92,6 @@ abstract class Controller extends AbstractController
 	private $m_aBreadCrumbEntry = [];
 	/** @var \Symfony\Component\HttpFoundation\Request */
 	private Request $oRequest;
-	private FormFactoryInterface $oFormFactory;
 
 	/**
 	 * Controller constructor.
@@ -101,9 +102,6 @@ abstract class Controller extends AbstractController
 	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
 	{
 		$this->oRequest = Request::createFromGlobals();
-		$this->oFormFactory = Forms::createFormFactoryBuilder()
-			->addExtension(new HttpFoundationExtension())
-			->getFormFactory();
 		$this->m_aLinkedScripts = [];
 		$this->m_aLinkedStylesheets = [];
 		$this->m_aSaas = [];
@@ -688,9 +686,17 @@ abstract class Controller extends AbstractController
 		return $this->oRequest;
 	}
 
-	public function GetFormFactory(): FormFactoryInterface
+	public function GetFormBuilder(string $type = FormType::class, mixed $data = null, array $options = []): FormBuilderInterface
 	{
-		return $this->oFormFactory;
+		$oFormFactory = Forms::createFormFactoryBuilder()
+			->addExtension(new HttpFoundationExtension())
+			->getFormFactory();
+		return $oFormFactory->createBuilder($type, $data,$options);
+	}
+
+	public function GetForm(string $type = FormType::class, mixed $data = null, array $options = []): FormInterface
+	{
+		return $this->GetFormBuilder($type, $data,$options)->getForm();
 	}
 
 	/**
