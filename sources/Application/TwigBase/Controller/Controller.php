@@ -19,25 +19,33 @@
 
 namespace Combodo\iTop\Application\TwigBase\Controller;
 
-use Combodo\iTop\Application\WebPage\AjaxPage;
 use ApplicationMenu;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\AbstractController;
 use Dict;
-use Combodo\iTop\Application\WebPage\ErrorPage;
 use Exception;
 use ExecutionKPI;
 use IssueLog;
-use Combodo\iTop\Application\WebPage\iTopWebPage;
 use LoginWebPage;
 use MetaModel;
 use ReflectionClass;
 use SetupPage;
 use SetupUtils;
+use Symfony\Bridge\Twig\Extension\FormExtension;
+use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormRenderer;
+use Symfony\Component\Form\Forms;
+use Symfony\Component\HttpFoundation\Request;
 use Twig\Error\Error;
 use Twig\Error\SyntaxError;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use utils;
-use Combodo\iTop\Application\WebPage\WebPage;
 use ZipArchive;
 
 abstract class Controller extends AbstractController
@@ -80,6 +88,9 @@ abstract class Controller extends AbstractController
 	private $m_bIsBreadCrumbEnabled = true;
 	/** @var array contains same parameters as {@see iTopWebPage::SetBreadCrumbEntry()} */
 	private $m_aBreadCrumbEntry = [];
+	/** @var \Symfony\Component\HttpFoundation\Request */
+	private Request $oRequest;
+	private FormFactoryInterface $oFormFactory;
 
 	/**
 	 * Controller constructor.
@@ -89,6 +100,10 @@ abstract class Controller extends AbstractController
 	 */
 	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
 	{
+		$this->oRequest = Request::createFromGlobals();
+		$this->oFormFactory = Forms::createFormFactoryBuilder()
+			->addExtension(new HttpFoundationExtension())
+			->getFormFactory();
 		$this->m_aLinkedScripts = [];
 		$this->m_aLinkedStylesheets = [];
 		$this->m_aSaas = [];
@@ -96,6 +111,7 @@ abstract class Controller extends AbstractController
 		$this->m_aDefaultParams = [];
 		$this->m_aBlockParams = [];
 		$this->SetModuleName($sModuleName);
+		$aAdditionalPaths[] = APPROOT.'lib/symfony/twig-bridge/Resources/views/Form';
 		if (strlen($sViewPath) > 0) {
 			$this->SetViewPath($sViewPath, $aAdditionalPaths);
 			if ($sModuleName != 'core') {
@@ -135,6 +151,14 @@ abstract class Controller extends AbstractController
 	public function SetViewPath($sViewPath, $aAdditionalPaths = [])
 	{
 		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath, $aAdditionalPaths);
+		$formEngine = new TwigRendererEngine(['bootstrap_5_layout.html.twig'], $oTwig);
+		$oTwig->addRuntimeLoader(new FactoryRuntimeLoader([
+			FormRenderer::class => function () use ($formEngine): FormRenderer {
+				return new FormRenderer($formEngine, null);
+			},
+		]));
+		$oExt = new FormExtension();
+		$oTwig->addExtension($oExt);
 		$this->m_oTwig = $oTwig;
 	}
 
@@ -657,6 +681,16 @@ abstract class Controller extends AbstractController
 	 */
 	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '') {
 		$this->m_aBreadCrumbEntry = [$sId, $sLabel, $sDescription, $sUrl, $sIcon];
+	}
+
+	public function GetRequest(): Request
+	{
+		return $this->oRequest;
+	}
+
+	public function GetFormFactory(): FormFactoryInterface
+	{
+		return $this->oFormFactory;
 	}
 
 	/**

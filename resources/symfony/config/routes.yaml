@@ -1,5 +1,5 @@
 controllers:
     resource:
-        path: ../../../sources/Controller/
-        namespace: Combodo\iTop\Controller
+        path: ../../../sources/Application/Symfony/
+        namespace: Combodo\iTop\Application\Symfony
     type: attribute

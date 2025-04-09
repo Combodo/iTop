@@ -16,7 +16,6 @@ use Combodo\iTop\Renderer\BlockRenderer;
 use Dict;
 use Exception;
 use Twig\Environment;
-use Twig\Extension\CoreExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\Source;
 use Twig\TwigFilter;
@@ -58,6 +57,11 @@ class Extension
 		$aFilters[] = new TwigFilter('dict_s', function ($sStringCode, $sDefault = null, $bUserLanguageOnly = false) {
 			return Dict::S($sStringCode, $sDefault, $bUserLanguageOnly);
 		});
+
+		$aFilters[] = new TwigFilter('trans', function ($sStringCode, $sDefault = null, $bUserLanguageOnly = false) {
+			return $sStringCode;
+		});
+
 
 		// Filter to format a string via the Dict::Format function
 		// Usage in twig: {{ 'String:ToTranslate'|dict_format() }}

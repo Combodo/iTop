@@ -136,7 +136,7 @@ abstract class Template
     public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true, ?self $templateContext = null): void
     {
         foreach ($this->yieldBlock($name, $context, $blocks, $useBlocks, $templateContext) as $data) {
-            echo $data;
+           echo $data;
         }
     }
 
