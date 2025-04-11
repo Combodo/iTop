@@ -697,6 +697,9 @@ abstract class Controller extends AbstractController
 
 	public function GetForm(string $type = FormType::class, mixed $data = null, array $options = []): FormInterface
 	{
+		if (is_null($data)) {
+			$data = $type::GetDefaultData();
+		}
 		return $this->GetFormBuilder($type, $data,$options)->getForm();
 	}
 

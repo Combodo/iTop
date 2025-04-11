@@ -42,6 +42,7 @@ register_shutdown_function(function()
 	$sReservedMemory = null;
 	if (!is_null($err = error_get_last()) && ($err['type'] == E_ERROR))
 	{
+		var_export($err);
 		// Remove stack trace from MySQLException (since 2.7.2 see N°3174)
 		$sMessage = $err['message'];
 		if (strpos($sMessage, 'MySQLException') !== false) {

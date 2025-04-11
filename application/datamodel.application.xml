@@ -562,7 +562,70 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
       </event_data>
     </event>
   </events>
+  <forms>
+    <form id="DashletHeaderDynamicProperties" xsi:type="FormType">
+      <form_types>
+        <form_type id="title" xsi:type="TextType">
+          <options>
+            <label>UI:DashletHeaderDynamic:Prop-Title</label>
+            <default>UI:DashletHeaderDynamic:Prop-Title:Default</default>
+          </options>
+        </form_type>
+        <form_type id="icon" xsi:type="IconType">
+          <options>
+            <label>UI:DashletHeaderDynamic:Prop-Icon</label>
+            <default>images/icons/icons8-customer.svg</default>
+          </options>
+        </form_type>
+        <form_type id="subtitle" xsi:type="TextType">
+          <options>
+            <label>UI:DashletHeaderDynamic:Prop-Subtitle</label>
+            <default>UI:DashletHeaderDynamic:Prop-Subtitle:Default</default>
+          </options>
+        </form_type>
+        <form_type id="query" xsi:type="QueryType">
+          <options>
+            <label>UI:DashletHeaderDynamic:Prop-Query</label>
+            <default>SELECT Contact</default>
+          </options>
+        </form_type>
+        <form_type id="group_by" xsi:type="GroupByAttcodeType">
+          <options>
+            <label>UI:DashletHeaderDynamic:Prop-GroupBy</label>
+            <default>status</default>
+            <class_source>query</class_source>
+          </options>
+        </form_type>
+        <form_type id="values" xsi:type="ValuesFromAttcodeType">
+          <options>
+            <label>UI:DashletHeaderDynamic:Prop-Values</label>
+            <default>
+              <values>
+                <value id="active"/>
+                <value id="inactive"/>
+              </values>
+            </default>
+            <attcode_source>group_by</attcode_source>
+          </options>
+        </form_type>
+      </form_types>
+    </form>
+  </forms>
   <meta>
+    <form_type_definitions>
+      <form_type_definition id="IconType">
+        <options>
+          <option id="label">
+            <mandatory>true</mandatory>
+            <type>string</type>
+          </option>
+          <option id="default">
+            <mandatory>true</mandatory>
+            <type>string</type>
+          </option>
+        </options>
+      </form_type_definition>
+    </form_type_definitions>
     <classes>
       <class id="cmdbAbstractObject" _delta="define">
         <methods>
