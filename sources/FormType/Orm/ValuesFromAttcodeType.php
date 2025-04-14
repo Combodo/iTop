@@ -6,57 +6,29 @@
 
 namespace Combodo\iTop\FormType\Orm;
 
-use Combodo\iTop\FormType\Base\HiddenType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType as SymfonyChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfonycasts\DynamicForms\DependentField;
 
 class ValuesFromAttcodeType extends AbstractType
 {
-	public function buildForm(FormBuilderInterface $builder, array $options)
+	public function getParent()
 	{
-		$builder->add('hidden', HiddenType::class, ['mapped' => false]);
-		$sAttCodeType = $options['attcode_source'];
-		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($sAttCodeType): void {
-			$oForm = $event->getForm();
-			$sAttCode = $oForm->getParent()->get($sAttCodeType)->get('selected')->getData();
-			$this->BuildSubField($oForm, $sAttCode);
-		});
-
-		$builder->get('hidden')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($sAttCodeType): void {
-			$oForm = $event->getForm()->getParent();
-			$sAttCode = $oForm->getParent()->get($sAttCodeType)->get('selected')->getData();
-			$this->BuildSubField($oForm, $sAttCode);
-		});
+		return SymfonyChoiceType::class;
 	}
 
-	public function configureOptions(OptionsResolver $resolver)
+	public static function BuildSubField(DependentField $oDependentField, string $sQuery, string $sGroupByAttCode, array $aFormOptions = []): void
 	{
-		parent::configureOptions($resolver);
-		$resolver->setRequired('attcode_source');
-		$resolver->setAllowedTypes('attcode_source', 'string');
-	}
-
-	public function BuildSubField(FormInterface $oForm, string $sAttCode): void
-	{
-		$aData = $oForm->getParent()->getData();
-		\IssueLog::Info('Form Data: '.var_export($aData, true));
-
-		$sQuery = $aData['query'];
-		$sClass = \DBSearch::FromOQL($sQuery)->GetClass();
-		$oAttDef = \MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$oModelReflection = new \ModelReflectionRuntime();
+		$oQuery = $oModelReflection->GetQuery($sQuery);
+		$sClass = $oQuery->GetClass();
+		$oAttDef = \MetaModel::GetAttributeDef($sClass, $sGroupByAttCode);
 
 		//$aFormOptions['inherit_data'] = true;
-		$aFormOptions['choices'] = array_flip($oAttDef->GetAllowedValues());
+		$aFormOptions['choices'] = array_flip($oAttDef->GetAllowedValues() ?? []);
 		$aFormOptions['multiple'] = true;
 
-		// create the field, this is similar the $builder->add()
-		// field name, field type, field options
-		$oForm->add('selected', SymfonyChoiceType::class, $aFormOptions);
+		$oDependentField->add(ValuesFromAttcodeType::class, $aFormOptions);
 	}
 
 }

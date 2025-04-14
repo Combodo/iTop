@@ -1,0 +1,51 @@
+{
+    "name": "symfonycasts/dynamic-forms",
+    "description": "Add dynamic/dependent fields to Symfony forms",
+    "license": "MIT",
+    "type": "library",
+    "keywords": ["symfony", "forms"],
+    "authors": [
+        {
+            "name": "Ryan Weaver",
+            "homepage": "https://symfonycasts.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "symfony/form": "^5.4|^6.3|^7.0"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "^6.3|^7.0",
+        "symfony/phpunit-bridge": "^5.4.32|^6.3.9|^7.0",
+        "zenstruck/browser": "^1.4",
+        "symfony/twig-bundle": "^5.4|^6.3|^7.0",
+        "twig/twig": "^2.15|^3.0",
+        "symfony/options-resolver": "^5.4|^6.3|^7.0",
+        "phpunit/phpunit": "^9.6"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Symfonycasts\\DynamicForms\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfonycasts\\DynamicForms\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "tools:upgrade": [
+            "@tools:upgrade:php-cs-fixer",
+            "@tools:upgrade:phpstan"
+        ],
+        "tools:upgrade:php-cs-fixer": "composer upgrade -W -d tools/php-cs-fixer",
+        "tools:upgrade:phpstan": "composer upgrade -W -d tools/phpstan",
+        "tools:run": [
+            "@tools:run:php-cs-fixer",
+            "@tools:run:phpstan"
+        ],
+        "tools:run:php-cs-fixer": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix",
+        "tools:run:phpstan": "tools/phpstan/vendor/bin/phpstan --memory-limit=1G"
+    }
+}
