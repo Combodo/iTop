@@ -17,15 +17,19 @@ class ValuesFromAttcodeType extends AbstractType
 		return SymfonyChoiceType::class;
 	}
 
-	public static function BuildSubField(DependentField $oDependentField, string $sQuery, string $sGroupByAttCode, array $aFormOptions = []): void
+	public static function BuildSubField(DependentField $oDependentField, string $sQuery, ?string $sGroupByAttCode, array $aFormOptions = []): void
 	{
-		$oModelReflection = new \ModelReflectionRuntime();
-		$oQuery = $oModelReflection->GetQuery($sQuery);
-		$sClass = $oQuery->GetClass();
-		$oAttDef = \MetaModel::GetAttributeDef($sClass, $sGroupByAttCode);
+		if (is_null($sGroupByAttCode)) {
+			$aFormOptions['choices'] = [];
+		} else {
+			$oModelReflection = new \ModelReflectionRuntime();
+			$oQuery = $oModelReflection->GetQuery($sQuery);
+			$sClass = $oQuery->GetClass();
+			$oAttDef = \MetaModel::GetAttributeDef($sClass, $sGroupByAttCode);
 
-		//$aFormOptions['inherit_data'] = true;
-		$aFormOptions['choices'] = array_flip($oAttDef->GetAllowedValues() ?? []);
+			//$aFormOptions['inherit_data'] = true;
+			$aFormOptions['choices'] = array_flip($oAttDef->GetAllowedValues() ?? []);
+		}
 		$aFormOptions['multiple'] = true;
 
 		$oDependentField->add(ValuesFromAttcodeType::class, $aFormOptions);
