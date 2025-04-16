@@ -20,7 +20,7 @@ class AttCodeGroupByType extends AbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder->addEventListener($options['hook_type'], function (FormEvent $event) use ($options): void {
-			\IssueLog::Info($event->getForm()->getName().' POST_SUBMIT');
+			\IssueLog::Info($event->getForm()->getName().' '.$options['hook_type']);
 			call_user_func($options['callback'], $event);
 		});
 	}
