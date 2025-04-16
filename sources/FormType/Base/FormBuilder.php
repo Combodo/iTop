@@ -108,9 +108,15 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 			throw new \Exception("type must be an instance of AbstractType (found $type)");
 		}
 		$oType = new $type();
-		if (is_null($oType->GetPrerequisites($options))) {
+		$aPrerequisites = $oType->GetPrerequisites($options);
+		if (is_null($aPrerequisites)) {
 			$this->builder->add($child, $type, $options);
 		} else {
+			$this->aDynamicFields[$child] = [
+				'type' => $type,
+				'prerequisites' => $aPrerequisites,
+				'user_options' => $options,
+			];
 			$this->builder->add($child, HiddenType::class, ['mapped' => false]);
 		}
 		return $this;
