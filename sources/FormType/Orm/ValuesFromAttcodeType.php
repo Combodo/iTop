@@ -11,12 +11,13 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType as SymfonyChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use utils;
 
 class ValuesFromAttcodeType extends AbstractType
 {
+
+
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -44,18 +45,22 @@ class ValuesFromAttcodeType extends AbstractType
 	    $resolver->setDefault('attr', ['class' => 'ibo-input ibo-input-select']);
     }
 
-	public static function BuildSubField(FormInterface $oForm, string $sName, array $aData, array $aFormOptions = []): void
+	public function BuildOptions(array $aUserOptions, array $aModelData): ?array
 	{
-		\IssueLog::Info("ValuesFromAttcodeType BuildSubField data: ".var_export($aData, true));
-
-
-		if (utils::IsNullOrEmptyString($aData['group_by'] ?? null)) {
-			return;
+		$sAttCode = $aModelData[$aUserOptions['source_attcode']] ?? null;
+		if (utils::IsNullOrEmptyString($sAttCode)) {
+			return null;
 		} else {
 			$oModelReflection = new \ModelReflectionRuntime();
-			$oQuery = $oModelReflection->GetQuery($aData['query']);
-			$sClass = $oQuery->GetClass();
-			$sAttCode = $aData['group_by'];
+			$sClass = $aModelData[$aUserOptions['source_class']];
+			if (! $oModelReflection->IsValidClass($sClass)) {
+				try {
+					$oQuery = $oModelReflection->GetQuery($sClass);
+				} catch (\Exception $e) {
+					return null;
+				}
+				$sClass = $oQuery->GetClass();
+			}
 			if (\MetaModel::IsValidAttCode($sClass, $sAttCode)) {
 				$aAllowed = $oModelReflection->GetAllowedValues_att($sClass, $sAttCode);
 				if (is_array($aAllowed))
@@ -72,7 +77,14 @@ class ValuesFromAttcodeType extends AbstractType
 		$aFormOptions['multiple'] = true;
 		$aFormOptions['required'] = false;
 
-		$oForm->add($sName, ValuesFromAttcodeType::class, $aFormOptions);
+		return $aFormOptions;
 	}
 
+	public function GetPrerequisites(array $aUserOptions): ?array
+	{
+		return [
+			$aUserOptions['source_class'],
+			$aUserOptions['source_attcode'],
+		];
+	}
 }

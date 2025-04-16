@@ -12,7 +12,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType as SymfonyChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AttCodeGroupByType extends AbstractType
@@ -39,24 +38,19 @@ class AttCodeGroupByType extends AbstractType
 			->setAllowedTypes('hook_type', 'string');
 	}
 
-	public static function BuildSubField(FormInterface $oForm, string $sName, array $aData, array $aFormOptions = []): void
-	{
-		\IssueLog::Info('AttCodeGroupByType BuildSubField data: '.var_export($aData, true));
-
-		$aFormOptions['choices'] = self::GetGroupByOptions($aData['query']);
-		$aFormOptions['multiple'] = false;
-		$oForm->add($sName, AttCodeGroupByType::class, $aFormOptions);
-	}
-
-	protected static function GetGroupByOptions($sOql)
+	protected function GetGroupByOptions($sClassOrOql)
 	{
 		$oModelReflection = new \ModelReflectionRuntime();
 
 		$aGroupBy = array();
 		try
 		{
-			$oQuery = $oModelReflection->GetQuery($sOql);
-			$sClass = $oQuery->GetClass();
+			if ($oModelReflection->IsValidClass($sClassOrOql)) {
+				$sClass = $sClassOrOql;
+			} else {
+				$oQuery = $oModelReflection->GetQuery($sClassOrOql);
+				$sClass = $oQuery->GetClass();
+			}
 			foreach($oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
 			{
 				// For external fields, find the real type of the target
@@ -109,5 +103,30 @@ class AttCodeGroupByType extends AbstractType
 			// Fallback in case of OQL problem
 		}
 		return array_flip($aGroupBy);
+	}
+
+	public function BuildOptions(array $aUserOptions, array $aModelData): ?array
+	{
+		$oModelReflection = new \ModelReflectionRuntime();
+		$sClassOrOql = $aModelData[$aUserOptions['source_class']];
+		if ($oModelReflection->IsValidClass($sClassOrOql)) {
+			$sClass = $sClassOrOql;
+		} else {
+			try {
+				$oQuery = $oModelReflection->GetQuery($sClassOrOql);
+			} catch (Exception $e) {
+				return null;
+			}
+			$sClass = $oQuery->GetClass();
+		}
+		$aFormOptions['choices'] = $this->GetGroupByOptions($sClass);
+		$aFormOptions['multiple'] = false;
+
+		return $aFormOptions;
+	}
+
+	public function GetPrerequisites(array $aUserOptions): ?array
+	{
+		return [$aUserOptions['source_class']];
 	}
 }
