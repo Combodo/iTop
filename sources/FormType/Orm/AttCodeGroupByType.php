@@ -6,36 +6,41 @@
 
 namespace Combodo\iTop\FormType\Orm;
 
+use Combodo\iTop\FormType\Base\AbstractType;
 use Dict;
 use Exception;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType as SymfonyChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AttCodeGroupByType extends AbstractType
 {
-	public function buildForm(FormBuilderInterface $builder, array $options)
-	{
-		$builder->addEventListener($options['hook_type'], function (FormEvent $event) use ($options): void {
-			\IssueLog::Info($event->getForm()->getName().' '.$options['hook_type']);
-			call_user_func($options['callback'], $event);
-		});
-	}
-
 	public function getParent()
 	{
 		return SymfonyChoiceType::class;
 	}
 
-	public function configureOptions(OptionsResolver $resolver)
+	public function BuildOptions(array $aUserOptions, array $aModelData): ?array
 	{
-		parent::configureOptions($resolver);
-		$resolver->setDefined('callback')
-			->setAllowedTypes('callback', 'callable');
-		$resolver->setDefined('hook_type')
-			->setAllowedTypes('hook_type', 'string');
+		$oModelReflection = new \ModelReflectionRuntime();
+		$sClassOrOql = $aModelData[$aUserOptions['source_class']];
+		if ($oModelReflection->IsValidClass($sClassOrOql)) {
+			$sClass = $sClassOrOql;
+		} else {
+			try {
+				$oQuery = $oModelReflection->GetQuery($sClassOrOql);
+			} catch (Exception $e) {
+				return null;
+			}
+			$sClass = $oQuery->GetClass();
+		}
+		$aFormOptions['choices'] = $this->GetGroupByOptions($sClass);
+		$aFormOptions['multiple'] = false;
+
+		return $aFormOptions;
+	}
+
+	public function GetPrerequisites(array $aUserOptions): ?array
+	{
+		return [$aUserOptions['source_class']];
 	}
 
 	protected function GetGroupByOptions($sClassOrOql)
@@ -103,30 +108,5 @@ class AttCodeGroupByType extends AbstractType
 			// Fallback in case of OQL problem
 		}
 		return array_flip($aGroupBy);
-	}
-
-	public function BuildOptions(array $aUserOptions, array $aModelData): ?array
-	{
-		$oModelReflection = new \ModelReflectionRuntime();
-		$sClassOrOql = $aModelData[$aUserOptions['source_class']];
-		if ($oModelReflection->IsValidClass($sClassOrOql)) {
-			$sClass = $sClassOrOql;
-		} else {
-			try {
-				$oQuery = $oModelReflection->GetQuery($sClassOrOql);
-			} catch (Exception $e) {
-				return null;
-			}
-			$sClass = $oQuery->GetClass();
-		}
-		$aFormOptions['choices'] = $this->GetGroupByOptions($sClass);
-		$aFormOptions['multiple'] = false;
-
-		return $aFormOptions;
-	}
-
-	public function GetPrerequisites(array $aUserOptions): ?array
-	{
-		return [$aUserOptions['source_class']];
 	}
 }
