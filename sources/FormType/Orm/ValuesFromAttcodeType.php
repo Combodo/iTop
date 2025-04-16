@@ -13,6 +13,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use utils;
 
 class ValuesFromAttcodeType extends AbstractType
 {
@@ -42,17 +43,25 @@ class ValuesFromAttcodeType extends AbstractType
 	    parent::configureOptions($resolver);
     }
 
-	public static function BuildSubField(FormInterface $oForm, string $sName, string $sQuery, ?string $sGroupByAttCode, array $aFormOptions = []): void
+	public static function BuildSubField(FormInterface $oForm, string $sName, array $aData, array $aFormOptions = []): void
 	{
-		if (is_null($sGroupByAttCode)) {
+		\IssueLog::Info("ValuesFromAttcodeType BuildSubField data: ".var_export($aData, true));
+
+
+		if (utils::IsNullOrEmptyString($aData['group_by'] ?? null)) {
 			return;
 		} else {
 			$oModelReflection = new \ModelReflectionRuntime();
-			$oQuery = $oModelReflection->GetQuery($sQuery);
+			$oQuery = $oModelReflection->GetQuery($aData['query']);
 			$sClass = $oQuery->GetClass();
-			$oAttDef = \MetaModel::GetAttributeDef($sClass, $sGroupByAttCode);
+			$sAttCode = $aData['group_by'];
+			if (\MetaModel::IsValidAttCode($sClass, $sAttCode)) {
+				$oAttDef = \MetaModel::GetAttributeDef($sClass, $sAttCode);
 
-			$aFormOptions['choices'] = array_flip($oAttDef->GetAllowedValues() ?? []);
+				$aFormOptions['choices'] = array_flip($oAttDef->GetAllowedValues() ?? []);
+			} else {
+				$aFormOptions['choices'] = [];
+			}
 		}
 		$aFormOptions['multiple'] = true;
 		$aFormOptions['required'] = false;

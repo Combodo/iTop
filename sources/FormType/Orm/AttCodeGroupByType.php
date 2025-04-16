@@ -22,11 +22,11 @@ class AttCodeGroupByType extends AbstractType
 	{
 		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
 			\IssueLog::Info($event->getForm()->getName().' PRE_SET_DATA');
-			call_user_func($options['callback'], $event);
 		});
 
 		$builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) use ($options): void {
 			\IssueLog::Info($event->getForm()->getName().' POST_SET_DATA');
+			call_user_func($options['callback'], $event);
 		});
 
 		$builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
@@ -51,9 +51,11 @@ class AttCodeGroupByType extends AbstractType
 			->setAllowedTypes('callback', 'callable');
 	}
 
-	public static function BuildSubField(FormInterface $oForm, string $sName, string $sQuery, array $aFormOptions = []): void
+	public static function BuildSubField(FormInterface $oForm, string $sName, array $aData, array $aFormOptions = []): void
 	{
-		$aFormOptions['choices'] = self::GetGroupByOptions($sQuery);
+		\IssueLog::Info('AttCodeGroupByType BuildSubField data: '.var_export($aData, true));
+
+		$aFormOptions['choices'] = self::GetGroupByOptions($aData['query']);
 		$aFormOptions['multiple'] = false;
 		$oForm->add($sName, AttCodeGroupByType::class, $aFormOptions);
 	}

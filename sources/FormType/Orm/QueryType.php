@@ -17,17 +17,19 @@ class QueryType extends AbstractType
 {
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
-		parent::buildForm($builder, $options);
-		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
 			\IssueLog::Info($event->getForm()->getName().' PRE_SET_DATA');
 		});
-		$builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
+
+		$builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) use ($options): void {
 			\IssueLog::Info($event->getForm()->getName().' POST_SET_DATA');
 		});
+
 		$builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
 			\IssueLog::Info($event->getForm()->getName().' PRE_SUBMIT');
 		});
-		$builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+
+		$builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($options): void {
 			\IssueLog::Info($event->getForm()->getName().' POST_SUBMIT');
 		});
 	}
