@@ -431,6 +431,7 @@ return array(
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\DesignElement' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\FormType\\Base\\AbstractType' => $baseDir . '/sources/FormType/Base/AbstractType.php',
+    'Combodo\\iTop\\FormType\\Base\\FormBuilder' => $baseDir . '/sources/FormType/Base/FormBuilder.php',
     'Combodo\\iTop\\FormType\\Base\\HiddenType' => $baseDir . '/sources/FormType/Base/HiddenType.php',
     'Combodo\\iTop\\FormType\\Base\\TextType' => $baseDir . '/sources/FormType/Base/TextType.php',
     'Combodo\\iTop\\FormType\\Base\\TextareaType' => $baseDir . '/sources/FormType/Base/TextareaType.php',

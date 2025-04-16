@@ -6,7 +6,6 @@
 
 namespace Combodo\iTop\FormType\Base;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType as SymfonyHiddenType;
 
 class HiddenType extends AbstractType

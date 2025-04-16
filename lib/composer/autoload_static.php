@@ -786,6 +786,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\DesignDocument' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\DesignElement' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\FormType\\Base\\AbstractType' => __DIR__ . '/../..' . '/sources/FormType/Base/AbstractType.php',
+        'Combodo\\iTop\\FormType\\Base\\FormBuilder' => __DIR__ . '/../..' . '/sources/FormType/Base/FormBuilder.php',
         'Combodo\\iTop\\FormType\\Base\\HiddenType' => __DIR__ . '/../..' . '/sources/FormType/Base/HiddenType.php',
         'Combodo\\iTop\\FormType\\Base\\TextType' => __DIR__ . '/../..' . '/sources/FormType/Base/TextType.php',
         'Combodo\\iTop\\FormType\\Base\\TextareaType' => __DIR__ . '/../..' . '/sources/FormType/Base/TextareaType.php',

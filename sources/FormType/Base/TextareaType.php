@@ -6,7 +6,6 @@
 
 namespace Combodo\iTop\FormType\Base;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType as SymfonyTextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
