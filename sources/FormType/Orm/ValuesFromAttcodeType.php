@@ -41,6 +41,7 @@ class ValuesFromAttcodeType extends AbstractType
 	public function configureOptions(OptionsResolver $resolver)
     {
 	    parent::configureOptions($resolver);
+	    $resolver->setDefault('attr', ['class' => 'ibo-input ibo-input-select']);
     }
 
 	public static function BuildSubField(FormInterface $oForm, string $sName, array $aData, array $aFormOptions = []): void
@@ -56,9 +57,14 @@ class ValuesFromAttcodeType extends AbstractType
 			$sClass = $oQuery->GetClass();
 			$sAttCode = $aData['group_by'];
 			if (\MetaModel::IsValidAttCode($sClass, $sAttCode)) {
-				$oAttDef = \MetaModel::GetAttributeDef($sClass, $sAttCode);
-
-				$aFormOptions['choices'] = array_flip($oAttDef->GetAllowedValues() ?? []);
+				$aAllowed = $oModelReflection->GetAllowedValues_att($sClass, $sAttCode);
+				if (is_array($aAllowed))
+				{
+					$aValues = array_flip($aAllowed);
+				} else {
+					$aValues = [];
+				}
+				$aFormOptions['choices'] = $aValues;
 			} else {
 				$aFormOptions['choices'] = [];
 			}

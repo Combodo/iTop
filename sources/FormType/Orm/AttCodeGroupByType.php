@@ -12,7 +12,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType as SymfonyChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,20 +19,7 @@ class AttCodeGroupByType extends AbstractType
 {
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
-		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
-			\IssueLog::Info($event->getForm()->getName().' PRE_SET_DATA');
-		});
-
-		$builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) use ($options): void {
-			\IssueLog::Info($event->getForm()->getName().' POST_SET_DATA');
-			call_user_func($options['callback'], $event);
-		});
-
-		$builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-			\IssueLog::Info($event->getForm()->getName().' PRE_SUBMIT');
-		});
-
-		$builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($options): void {
+		$builder->addEventListener($options['hook_type'], function (FormEvent $event) use ($options): void {
 			\IssueLog::Info($event->getForm()->getName().' POST_SUBMIT');
 			call_user_func($options['callback'], $event);
 		});
@@ -49,6 +35,8 @@ class AttCodeGroupByType extends AbstractType
 		parent::configureOptions($resolver);
 		$resolver->setDefined('callback')
 			->setAllowedTypes('callback', 'callable');
+		$resolver->setDefined('hook_type')
+			->setAllowedTypes('hook_type', 'string');
 	}
 
 	public static function BuildSubField(FormInterface $oForm, string $sName, array $aData, array $aFormOptions = []): void
