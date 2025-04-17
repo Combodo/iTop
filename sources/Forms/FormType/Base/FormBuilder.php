@@ -37,7 +37,7 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 		});
 	}
 
-	private function GetCookedCallback(DependencyNode $oField, bool $IsHookedOnRootForm): callable
+	private function GetDynamicFormCallback(DependencyNode $oField, bool $IsHookedOnRootForm): callable
 	{
 		return function (FormEvent $event) use ($IsHookedOnRootForm, $oField) {
 			if ($IsHookedOnRootForm) {
@@ -55,8 +55,8 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 				$aFieldOptions = $oType->BuildOptions($aUserOptions, $this->aModelData);
 				if (!is_null($aFieldOptions)) {
 					if ($oDependentField->HasChildren()) {
-						$aFieldOptions['callback'] = $this->GetCookedCallback($oDependentField, false);
-						$aFieldOptions['hook_type'] = ($event instanceof PostSetDataEvent) ? FormEvents::POST_SET_DATA : FormEvents::POST_SUBMIT;
+						$aFieldOptions['dynamic_form_hook.callable'] = $this->GetDynamicFormCallback($oDependentField, false);
+						$aFieldOptions['dynamic_form_hook.event_name'] = ($event instanceof PostSetDataEvent) ? FormEvents::POST_SET_DATA : FormEvents::POST_SUBMIT;
 					}
 					$oForm->add($oDependentField->GetName(), $sClass, $aFieldOptions);
 				} else {
@@ -81,8 +81,8 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 
 		foreach ($this->oDependencies as $oField) {
 			if ($oField->HasChildren()) {
-				$this->addEventListener(FormEvents::POST_SET_DATA, $this->GetCookedCallback($oField, true));
-				$this->get($oField->GetName())->addEventListener(FormEvents::POST_SUBMIT, $this->GetCookedCallback($oField, false));
+				$this->addEventListener(FormEvents::POST_SET_DATA, $this->GetDynamicFormCallback($oField, true));
+				$this->get($oField->GetName())->addEventListener(FormEvents::POST_SUBMIT, $this->GetDynamicFormCallback($oField, false));
 			}
 		}
 	}

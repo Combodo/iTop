@@ -16,10 +16,10 @@ abstract class AbstractType extends SymfonyAbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		parent::buildForm($builder, $options);
-		if (isset($options['callback']) && isset($options['hook_type'])) {
-			$builder->addEventListener($options['hook_type'], function (FormEvent $event) use ($options): void {
-				\IssueLog::Info($event->getForm()->getName().' AbstractType.php'.$options['hook_type']);
-				call_user_func($options['callback'], $event);
+		if (isset($options['dynamic_form_hook.callable']) && isset($options['dynamic_form_hook.event_name'])) {
+			$builder->addEventListener($options['dynamic_form_hook.event_name'], function (FormEvent $event) use ($options): void {
+				\IssueLog::Info($event->getForm()->getName().' AbstractType.php'.$options['dynamic_form_hook.event_name']);
+				call_user_func($options['dynamic_form_hook.callable'], $event);
 			});
 		}
 	}
@@ -27,10 +27,10 @@ abstract class AbstractType extends SymfonyAbstractType
 	public function configureOptions(OptionsResolver $resolver)
 	{
 		parent::configureOptions($resolver);
-		$resolver->setDefined('callback')
-			->setAllowedTypes('callback', 'callable');
-		$resolver->setDefined('hook_type')
-			->setAllowedTypes('hook_type', 'string');
+		$resolver->setDefined('dynamic_form_hook.callable')
+			->setAllowedTypes('dynamic_form_hook.callable', 'callable');
+		$resolver->setDefined('dynamic_form_hook.event_name')
+			->setAllowedTypes('dynamic_form_hook.event_name', 'string');
 	}
 
 	/**
