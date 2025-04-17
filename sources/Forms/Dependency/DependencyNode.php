@@ -44,6 +44,19 @@ class DependencyNode implements \Iterator
 		return null;
 	}
 
+	/**
+	 * @return array<\Combodo\iTop\Forms\Dependency\DependencyNode>
+	 */
+	public function GetSubNodes() : array
+	{
+		$aResult = [];
+		foreach ($this as $oChildNode) {
+			$aResult = array_merge($aResult, $oChildNode->GetSubNodes());
+		}
+
+		return $aResult;
+	}
+
 	public function Display(int $iDepth = 1)
 	{
 		$sResult = str_repeat('    ', $iDepth).$this->GetName()."\n";

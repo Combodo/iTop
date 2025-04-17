@@ -7,13 +7,12 @@
 namespace Combodo\iTop\Forms\FormType\Base;
 
 use Combodo\iTop\Forms\Dependency\DependencyGraph;
-use Combodo\iTop\Forms\FormType\Orm\AttCodeGroupByType;
-use Combodo\iTop\Forms\FormType\Orm\ValuesFromAttcodeType;
+use Combodo\iTop\Forms\Dependency\DependencyNode;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\DataMapperInterface;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Event\PostSubmitEvent;
+use Symfony\Component\Form\Event\PostSetDataEvent;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\Form\FormEvent;
@@ -38,57 +37,53 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 		});
 	}
 
+	private function GetCookedCallback(DependencyNode $oField, bool $IsHookedOnRootForm): callable
+	{
+		return function (FormEvent $event) use ($IsHookedOnRootForm, $oField) {
+			if ($IsHookedOnRootForm) {
+				$this->aModelData[$oField->GetName()] = $event->getData()[$oField->GetName()];
+				$oForm = $event->getForm();
+			} else {
+				$this->aModelData[$oField->GetName()] = $event->getForm()->getData();
+				$oForm = $event->getForm()->getParent();
+			}
+
+			foreach ($oField as $oDependentField) {
+				$aUserOptions = $oDependentField->GetUserOptions();
+				$sClass = $oDependentField->GetType();
+				$oType = new $sClass;
+				$aFieldOptions = $oType->BuildOptions($aUserOptions, $this->aModelData);
+				if (!is_null($aFieldOptions)) {
+					if ($oDependentField->HasChildren()) {
+						$aFieldOptions['callback'] = $this->GetCookedCallback($oDependentField, false);
+						$aFieldOptions['hook_type'] = ($event instanceof PostSetDataEvent) ? FormEvents::POST_SET_DATA : FormEvents::POST_SUBMIT;
+					}
+					$oForm->add($oDependentField->GetName(), $sClass, $aFieldOptions);
+				} else {
+					// Remove field and dependencies
+					$this->HideField($oForm, $oDependentField->GetName());
+					foreach ($oDependentField->GetSubNodes() as $oSubNode) {
+						$this->HideField($oForm, $oSubNode->GetName());
+					}
+				}
+			}
+		};
+	}
+
+	private function HideField(FormInterface $oForm, string $sName): void
+	{
+		$oForm->add($sName, HiddenType::class, ['mapped' => false]);
+	}
+
 	public function Finalize(): void
 	{
 		\IssueLog::Info($this->oDependencies);
 
-		$aCallbacks['query'] =  function (FormEvent $event) {
-			if ($event instanceof PostSubmitEvent) {
-				$this->aModelData['query'] = $event->getForm()->getData();
-				$options['hook_type'] = FormEvents::POST_SUBMIT;
-			} else {
-				$this->aModelData['query'] = $event->getData()['query'];
-				$options['hook_type'] = FormEvents::POST_SET_DATA;
+		foreach ($this->oDependencies as $oField) {
+			if ($oField->HasChildren()) {
+				$this->addEventListener(FormEvents::POST_SET_DATA, $this->GetCookedCallback($oField, true));
+				$this->get($oField->GetName())->addEventListener(FormEvents::POST_SUBMIT, $this->GetCookedCallback($oField, false));
 			}
-			$options['callback'] = function (FormEvent $event) {
-				$this->aModelData['group_by'] = $event->getForm()->getData();
-				$oParentForm = $event->getForm()->getParent();
-				$aUserOptions = [
-					'source_attcode' => 'group_by',
-					'source_class' => 'query',
-				];
-				// TODO Filtrer seulement les données requises dans aModelData
-				$aFieldOptions = (new ValuesFromAttcodeType())->BuildOptions($aUserOptions, $this->aModelData);
-				if (!is_null($aFieldOptions)) {
-					$oParentForm->add('values', ValuesFromAttcodeType::class, $aFieldOptions);
-				} else {
-					// Remove field and dependencies
-					$oParentForm->add('values', HiddenType::class, ['mapped' => false]);
-				}
-			};
-			if ($event instanceof PostSubmitEvent) {
-				$oForm = $event->getForm()->getParent();
-			} else {
-				$oForm = $event->getForm();
-			}
-
-			$aUserOptions = [
-				'source_class' => 'query',
-			];
-			// TODO Filtrer seulement les données requises dans aModelData
-			$aFieldOptions = (new AttCodeGroupByType())->BuildOptions($aUserOptions, $this->aModelData);
-			if (!is_null($aFieldOptions)) {
-				$oForm->add('group_by', AttCodeGroupByType::class, array_merge($options, $aFieldOptions));
-			} else {
-				// Remove field and dependencies
-				$oForm->add('group_by', HiddenType::class, ['mapped' => false]);
-				$oForm->add('values', HiddenType::class, ['mapped' => false]);
-			}
-		};
-
-		foreach($aCallbacks as $sField => $cCallback) {
-			$this->addEventListener(FormEvents::POST_SET_DATA, $cCallback);
-			$this->get($sField)->addEventListener(FormEvents::POST_SUBMIT, $cCallback);
 		}
 	}
 

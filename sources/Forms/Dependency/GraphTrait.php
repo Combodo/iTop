@@ -15,15 +15,14 @@ trait GraphTrait
 		$this->aChildren[] = $node;
 	}
 
-	public function IsLast(): bool
-	{
-		return $this->iPosition === count($this->aChildren) - 1;
+	public function HasChildren() : bool {
+		return count($this->aChildren) > 0;
 	}
 
 	/*
 	 * Iterator interface
 	 */
-	public function current(): mixed
+	public function current(): DependencyNode
 	{
 		return $this->aChildren[$this->iPosition];
 	}
@@ -33,7 +32,7 @@ trait GraphTrait
 		$this->iPosition++;
 	}
 
-	public function key(): mixed
+	public function key(): int
 	{
 		return $this->iPosition;
 	}
