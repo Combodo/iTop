@@ -32,6 +32,10 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 	{
 		$this->oDependencies = new DependencyGraph();
 
+		$this->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+			$this->Finalize();
+		});
+
 		$this->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
 			$this->aModelData = [];
 		});
@@ -72,6 +76,7 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 
 	private function HideField(FormInterface $oForm, string $sName): void
 	{
+		\IssueLog::Info("Hiding field $sName");
 		$oForm->add($sName, HiddenType::class, ['mapped' => false]);
 	}
 

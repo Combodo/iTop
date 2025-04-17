@@ -51,7 +51,7 @@ class DependencyNode implements \Iterator
 	{
 		$aResult = [];
 		foreach ($this as $oChildNode) {
-			$aResult = array_merge($aResult, $oChildNode->GetSubNodes());
+			$aResult = array_merge($aResult, [$oChildNode], $oChildNode->GetSubNodes());
 		}
 
 		return $aResult;
