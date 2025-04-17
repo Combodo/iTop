@@ -4,19 +4,19 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\FormType\Base;
+namespace Combodo\iTop\Forms\FormType\Base;
 
-use Symfony\Component\Form\Extension\Core\Type\TextType as SymfonyTextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType as SymfonyHiddenType;
 
-class TextType extends AbstractType
+class HiddenType extends AbstractType
 {
 	public function getParent(): ?string
 	{
-		return SymfonyTextType::class;
+		return SymfonyHiddenType::class;
 	}
 
 	public function getBlockPrefix(): string
 	{
-		return 'itop_text';
+		return 'itop_hidden';
 	}
 }

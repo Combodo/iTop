@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\FormType\Base;
+namespace Combodo\iTop\Forms\FormType\Base;
 
 use Symfony\Component\Form\Extension\Core\Type\TextareaType as SymfonyTextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;

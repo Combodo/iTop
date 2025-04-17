@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\FormType\Base;
+namespace Combodo\iTop\Forms\FormType\Base;
 
 use Symfony\Component\Form\AbstractType as SymfonyAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,7 +18,7 @@ abstract class AbstractType extends SymfonyAbstractType
 		parent::buildForm($builder, $options);
 		if (isset($options['callback']) && isset($options['hook_type'])) {
 			$builder->addEventListener($options['hook_type'], function (FormEvent $event) use ($options): void {
-				\IssueLog::Info($event->getForm()->getName().' '.$options['hook_type']);
+				\IssueLog::Info($event->getForm()->getName().' AbstractType.php'.$options['hook_type']);
 				call_user_func($options['callback'], $event);
 			});
 		}

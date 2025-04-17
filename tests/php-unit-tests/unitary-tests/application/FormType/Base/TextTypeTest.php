@@ -6,7 +6,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Application\FormType\Base;
 
-use Combodo\iTop\FormType\Orm\AttCodeGroupByType;
+use Combodo\iTop\Forms\FormType\Orm\AttCodeGroupByType;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;

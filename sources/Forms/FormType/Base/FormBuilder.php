@@ -4,10 +4,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\FormType\Base;
+namespace Combodo\iTop\Forms\FormType\Base;
 
-use Combodo\iTop\FormType\Orm\AttCodeGroupByType;
-use Combodo\iTop\FormType\Orm\ValuesFromAttcodeType;
+use Combodo\iTop\Forms\FormType\Orm\AttCodeGroupByType;
+use Combodo\iTop\Forms\FormType\Orm\ValuesFromAttcodeType;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\DataMapperInterface;
@@ -86,21 +86,13 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 		}
 	}
 
-	/*
-	 * ----------------------------------------
-	 *
-	 * Pure decoration methods below.
-	 *
-	 * ----------------------------------------
-	 */
-
-	public function count(): int
-	{
-		return $this->builder->count();
-	}
-
 	/**
 	 * @param string|FormBuilderInterface $child
+	 * @param string|null $type
+	 * @param array $options
+	 *
+	 * @return \Combodo\iTop\Forms\FormType\Base\FormBuilder
+	 * @throws \Exception
 	 */
 	public function add($child, ?string $type = null, array $options = []): static
 	{
@@ -120,6 +112,19 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 			$this->builder->add($child, HiddenType::class, ['mapped' => false]);
 		}
 		return $this;
+	}
+
+	/*
+	 * ----------------------------------------
+	 *
+	 * Pure decoration methods below.
+	 *
+	 * ----------------------------------------
+	 */
+
+	public function count(): int
+	{
+		return $this->builder->count();
 	}
 
 	public function create(string $name, ?string $type = null, array $options = []): FormBuilderInterface
