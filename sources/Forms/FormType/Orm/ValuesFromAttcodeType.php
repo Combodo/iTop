@@ -55,8 +55,8 @@ class ValuesFromAttcodeType extends AbstractType
 	public function GetPrerequisites(array $aUserOptions): ?array
 	{
 		return [
-			$aUserOptions['source_class'],
 			$aUserOptions['source_attcode'],
+			$aUserOptions['source_class'],
 		];
 	}
 }

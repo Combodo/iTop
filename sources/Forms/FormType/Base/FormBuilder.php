@@ -6,6 +6,7 @@
 
 namespace Combodo\iTop\Forms\FormType\Base;
 
+use Combodo\iTop\Forms\Dependency\DependencyGraph;
 use Combodo\iTop\Forms\FormType\Orm\AttCodeGroupByType;
 use Combodo\iTop\Forms\FormType\Orm\ValuesFromAttcodeType;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -26,9 +27,12 @@ use Symfony\Component\PropertyAccess\PropertyPathInterface;
 class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 {
 	public array $aModelData = [];
+	private DependencyGraph $oDependencies;
 
 	public function __construct(private FormBuilderInterface $builder)
 	{
+		$this->oDependencies = new DependencyGraph();
+
 		$this->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
 			$this->aModelData = [];
 		});
@@ -36,6 +40,8 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 
 	public function Finalize(): void
 	{
+		\IssueLog::Info($this->oDependencies);
+
 		$aCallbacks['query'] =  function (FormEvent $event) {
 			if ($event instanceof PostSubmitEvent) {
 				$this->aModelData['query'] = $event->getForm()->getData();
@@ -102,13 +108,10 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 		$oType = new $type();
 		$aPrerequisites = $oType->GetPrerequisites($options);
 		if (is_null($aPrerequisites)) {
+			$this->oDependencies->Add($child, $type);
 			$this->builder->add($child, $type, $options);
 		} else {
-			$this->aDynamicFields[$child] = [
-				'type' => $type,
-				'prerequisites' => $aPrerequisites,
-				'user_options' => $options,
-			];
+			$this->oDependencies->Add($child, $type, $aPrerequisites, $options);
 			$this->builder->add($child, HiddenType::class, ['mapped' => false]);
 		}
 		return $this;
