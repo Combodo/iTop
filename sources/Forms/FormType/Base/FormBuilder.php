@@ -80,9 +80,11 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 		$oForm->add($sName, HiddenType::class, ['mapped' => false]);
 	}
 
-	public function Finalize(): void
+	protected function Finalize(): void
 	{
-		\IssueLog::Info($this->oDependencies);
+		if ($this->oDependencies->HasChildren()) {
+			\IssueLog::Info($this->oDependencies);
+		}
 
 		foreach ($this->oDependencies as $oField) {
 			if ($oField->HasChildren()) {
@@ -103,8 +105,11 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 	public function add($child, ?string $type = null, array $options = []): static
 	{
 		if (!is_subclass_of($type,  AbstractType::class)) {
-			throw new \Exception("type must be an instance of AbstractType (found $type)");
+			$this->oDependencies->Add($child, $type);
+			$this->builder->add($child, $type, $options);
+			return $this;
 		}
+
 		$oType = new $type();
 		$aPrerequisites = $oType->GetPrerequisites($options);
 		if (is_null($aPrerequisites)) {

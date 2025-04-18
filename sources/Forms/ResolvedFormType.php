@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\ResolvedFormType as SymfonyResolvedFormType;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
 /**
@@ -18,6 +19,8 @@ use Symfony\Component\Form\ResolvedFormTypeInterface;
  */
 class ResolvedFormType extends SymfonyResolvedFormType implements ResolvedFormTypeInterface
 {
+	private ?OptionsResolver $oDynamicOptionsResolver = null;
+
 	/**
 	 * Creates a new builder instance.
 	 *
@@ -29,5 +32,14 @@ class ResolvedFormType extends SymfonyResolvedFormType implements ResolvedFormTy
 
 		// Wrap the builder in a DynamicFormBuilder
 		return new FormBuilder($builder);
+	}
+
+	public function GetDynamicOptionsResolver(): OptionsResolver
+	{
+		if (!$this->oDynamicOptionsResolver) {
+			$this->oDynamicOptionsResolver = new OptionsResolver();
+		}
+
+		return $this->oDynamicOptionsResolver;
 	}
 }

@@ -10,6 +10,7 @@ use Combodo\iTop\Forms\FormType\Base\AbstractType;
 use Dict;
 use Exception;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType as SymfonyChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AttCodeGroupByType extends AbstractType
 {
@@ -36,6 +37,12 @@ class AttCodeGroupByType extends AbstractType
 		$aFormOptions['multiple'] = false;
 
 		return $aFormOptions;
+	}
+
+	public function ConfigureDynamicOptions(OptionsResolver $oResolver)
+	{
+		$oResolver->setRequired('source_class');
+		$oResolver->setAllowedTypes('source_class', 'string');
 	}
 
 	public function GetPrerequisites(array $aUserOptions): ?array

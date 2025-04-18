@@ -33,6 +33,11 @@ abstract class AbstractType extends SymfonyAbstractType
 			->setAllowedTypes('dynamic_form_hook.event_name', 'string');
 	}
 
+	public function ConfigureDynamicOptions(OptionsResolver $oResolver)
+	{
+		return;
+	}
+
 	/**
 	 * Called only when GetPrerequisites() is not null
 	 * @param array $aUserOptions
