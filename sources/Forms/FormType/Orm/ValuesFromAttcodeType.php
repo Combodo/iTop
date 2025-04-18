@@ -8,6 +8,7 @@ namespace Combodo\iTop\Forms\FormType\Orm;
 
 use Combodo\iTop\Forms\FormType\Base\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType as SymfonyChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use utils;
 
 class ValuesFromAttcodeType extends AbstractType
@@ -50,6 +51,13 @@ class ValuesFromAttcodeType extends AbstractType
 		$aFormOptions['required'] = false;
 
 		return $aFormOptions;
+	}
+
+	public function ConfigureDynamicOptions(OptionsResolver $oResolver)
+	{
+		$oResolver->setRequired(['source_class', 'source_attcode']);
+		$oResolver->setAllowedTypes('source_class', 'string');
+		$oResolver->setAllowedTypes('source_attcode', 'string');
 	}
 
 	public function GetPrerequisites(array $aUserOptions): ?array
