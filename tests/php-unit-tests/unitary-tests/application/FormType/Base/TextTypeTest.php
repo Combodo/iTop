@@ -6,7 +6,6 @@
 
 namespace Combodo\iTop\Test\UnitTest\Application\FormType\Base;
 
-use Combodo\iTop\Forms\FormType\Orm\AttCodeGroupByType;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
@@ -27,11 +26,5 @@ class TextTypeTest extends iTopTestCase
 	public function GetForm(string $type = FormType::class, mixed $data = null, array $options = []): FormInterface
 	{
 		return $this->GetFormBuilder($type, $data,$options)->getForm();
-	}
-
-	public function testTextType()
-	{
-		$oFormView = $this->GetForm(AttCodeGroupByType::class)->createView();
-		return;
 	}
 }
