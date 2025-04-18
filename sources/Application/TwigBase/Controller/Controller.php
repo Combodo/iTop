@@ -26,6 +26,7 @@ use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\AbstractController;
+use Combodo\iTop\Forms\Forms;
 use Dict;
 use Exception;
 use ExecutionKPI;
@@ -38,11 +39,9 @@ use SetupUtils;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormRenderer;
-use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Error\Error;
 use Twig\Error\SyntaxError;
@@ -689,10 +688,7 @@ abstract class Controller extends AbstractController
 
 	public function GetFormBuilder(string $type = FormType::class, mixed $data = null, array $options = []): FormBuilderInterface
 	{
-		$oFormFactory = Forms::createFormFactoryBuilder()
-			->addExtension(new HttpFoundationExtension())
-			->getFormFactory();
-		return $oFormFactory->createBuilder($type, $data,$options);
+		return Forms::createFormFactory()->createBuilder($type, $data,$options);
 	}
 
 	public function GetForm(string $type = FormType::class, mixed $data = null, array $options = []): FormInterface
