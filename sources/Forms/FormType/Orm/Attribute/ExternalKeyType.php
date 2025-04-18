@@ -4,37 +4,38 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Forms\FormType\Attribute;
+namespace Combodo\iTop\Forms\FormType\Orm\Attribute;
 
 use Combodo\iTop\Forms\FormType\Base\AbstractType;
 use Combodo\iTop\Forms\FormType\FormTypeException;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType as SymfonyChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use ValueSetObjects;
 
 class ExternalKeyType extends AbstractType
 {
+	public function getParent()
+	{
+		return SymfonyChoiceType::class;
+	}
+
 	public function configureOptions(OptionsResolver $resolver)
 	{
 		parent::configureOptions($resolver);
-		$resolver->setRequired('class');
-		$resolver->setAllowedTypes('class', 'string');
 	}
 
-	public function buildForm(FormBuilderInterface $builder, array $options)
+	public function BuildOptions(array $aUserOptions, array $aModelData = []): ?array
 	{
 		$oModelReflection = new \ModelReflectionRuntime();
-		$sClass = $options['class'];
+		$sClass = $aUserOptions['class'];
 		if (!$oModelReflection->IsValidClass($sClass)) {
 			throw new FormTypeException("Unknown class $sClass");
 		}
 		$oValueSet = new ValueSetObjects("SELECT `$sClass`");
-		$aUserOptions['choices'] = array_flip($oValueSet->GetValues([]));
-		$aUserOptions['multiple'] = false;
-		$aUserOptions['inherit_data'] = true;
-		$builder->add('selected', SymfonyChoiceType::class, $aUserOptions);
-		parent::buildForm($builder, $options);
+		$aOptions['choices'] = array_flip($oValueSet->GetValues([]));
+		$aOptions['multiple'] = false;
+
+		return $aOptions;
 	}
 
 }

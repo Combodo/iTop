@@ -114,6 +114,7 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 		$aPrerequisites = $oType->GetPrerequisites($options);
 		if (is_null($aPrerequisites)) {
 			$this->oDependencies->Add($child, $type);
+			$options = $oType->BuildOptions($options);
 			$this->builder->add($child, $type, $options);
 		} else {
 			$this->oDependencies->Add($child, $type, $aPrerequisites, $options);

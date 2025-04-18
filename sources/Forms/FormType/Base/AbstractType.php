@@ -45,9 +45,9 @@ abstract class AbstractType extends SymfonyAbstractType
 	 *
 	 * @return array|null null if field is not present
 	 */
-	public function BuildOptions(array $aUserOptions, array $aModelData): ?array
+	public function BuildOptions(array $aUserOptions, array $aModelData = []): ?array
 	{
-		return null;
+		return $aUserOptions;
 	}
 
 	/**

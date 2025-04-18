@@ -19,7 +19,7 @@ class AttCodeGroupByType extends AbstractType
 		return SymfonyChoiceType::class;
 	}
 
-	public function BuildOptions(array $aUserOptions, array $aModelData): ?array
+	public function BuildOptions(array $aUserOptions, array $aModelData = []): ?array
 	{
 		$oModelReflection = new \ModelReflectionRuntime();
 		$sClassOrOql = $aModelData[$aUserOptions['source_class']];

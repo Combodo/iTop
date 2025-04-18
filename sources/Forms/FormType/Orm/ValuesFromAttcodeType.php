@@ -18,7 +18,7 @@ class ValuesFromAttcodeType extends AbstractType
 		return SymfonyChoiceType::class;
 	}
 
-	public function BuildOptions(array $aUserOptions, array $aModelData): ?array
+	public function BuildOptions(array $aUserOptions, array $aModelData = []): ?array
 	{
 		$sAttCode = $aModelData[$aUserOptions['source_attcode']] ?? null;
 		if (utils::IsNullOrEmptyString($sAttCode)) {
