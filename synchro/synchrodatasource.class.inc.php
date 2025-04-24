@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 
 class SynchroDataSource extends cmdbAbstractObject
 {
@@ -2200,6 +2201,16 @@ class SynchroReplica extends DBObject implements iDisplay
 		$this->Set('status_last_error', $sText);
 	}
 
+	/*
+	 * Disassociate the replica from the destination object and set the status to "new" to be synchronized with the next operation
+	 */
+	public function UnLink(){
+		$this->Set('dest_id', '');
+		$this->Set('dest_class', '');
+		$this->Set('status', 'new');
+		$this->DBWrite();
+	}
+
 	public function Synchro($oDataSource, $aReconciliationKeys, $aAttributes, $oChange, &$oStatLog)
 	{
 		$oStatLog->AddTrace(">>> Beginning of SynchroReplica::Synchro, replica status is '".$this->Get('status')."'.", $this);
@@ -2375,6 +2386,89 @@ class SynchroReplica extends DBObject implements iDisplay
 		}
 		$oStatLog->AddTrace('<<< End of SynchroReplica::Synchro.', $this);
 	}
+
+
+	/**
+	 *
+	 * @return \SynchroLog
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \SynchroExceptionNotStarted
+	 */
+	public function ReSynchro(): SynchroLog
+	{
+		$oDataSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
+
+		$oStatLog = new SynchroLog();
+		$oStatLog->Set('sync_source_id', $oDataSource->GetKey());
+		$oStatLog->Set('start_date', time());
+		$oStatLog->Set('status', 'running');
+		$oStatLog->AddTrace('Manual synchro');
+
+		// Get the list of SQL columns
+		$aAttCodesExpected = array();
+		$aAttCodesToReconcile = array();
+		$aAttCodesToUpdate = array();
+		$sSelectAtt = 'SELECT SynchroAttribute WHERE sync_source_id = :source_id AND (update = 1 OR reconcile = 1)';
+		$oSetAtt = new DBObjectSet(DBObjectSearch::FromOQL($sSelectAtt), array() /* order by*/, array('source_id' => $oDataSource->GetKey()) /* aArgs */);
+		while ($oSyncAtt = $oSetAtt->Fetch()) {
+			if ($oSyncAtt->Get('update')) {
+				$aAttCodesToUpdate[$oSyncAtt->Get('attcode')] = $oSyncAtt;
+			}
+			if ($oSyncAtt->Get('reconcile')) {
+				$aAttCodesToReconcile[$oSyncAtt->Get('attcode')] = $oSyncAtt;
+			}
+			$aAttCodesExpected[$oSyncAtt->Get('attcode')] = $oSyncAtt;
+		}
+
+		// Get the list of attributes, determine reconciliation keys and update targets
+		//
+		if ($oDataSource->Get('reconciliation_policy') == 'use_attributes') {
+			$aReconciliationKeys = $aAttCodesToReconcile;
+		} elseif ($oDataSource->Get('reconciliation_policy') == 'use_primary_key') {
+			// Override the settings made at the attribute level !
+			$aReconciliationKeys = array('primary_key' => null);
+		}
+
+		if (count($aAttCodesToUpdate) == 0) {
+			$oStatLog->AddTrace('No attribute to update');
+			throw new SynchroExceptionNotStarted('There is no attribute to update');
+		}
+		if (count($aReconciliationKeys) == 0) {
+			$oStatLog->AddTrace('No attribute for reconciliation');
+			throw new SynchroExceptionNotStarted('No attribute for reconciliation');
+		}
+
+
+		$aAttributesToUpdate = array();
+		foreach ($aAttCodesToUpdate as $sAttCode => $oSyncAtt) {
+			$oAttDef = MetaModel::GetAttributeDef($oDataSource->GetTargetClass(), $sAttCode);
+			if ($oAttDef->IsWritable()) {
+				$aAttributesToUpdate[$sAttCode] = $oSyncAtt;
+			}
+		}
+		// Create a change used for logging all the modifications/creations happening during the synchro
+		$oChange = MetaModel::NewObject('CMDBChange');
+		$oChange->Set('date', time());
+		$sUserString = CMDBChange::GetCurrentUserName();
+		$oChange->Set('userinfo', $sUserString.' '.Dict::S('Core:SyncDataExchangeComment'));
+		$oChange->Set('origin', CMDBChangeOrigin::SYNCHRO_DATA_SOURCE);
+		$oChange->DBInsert();
+		CMDBObject::SetCurrentChange($oChange);
+
+		$this->InitExtendedData($oDataSource);
+
+		$this->Synchro($oDataSource, $aReconciliationKeys, $aAttributesToUpdate, $oChange, $oStatLog);
+		$this->DBUpdate();
+
+		return $oStatLog;
+	}
+
 
 	/**
 	 * Updates the destination object with the Extended data found in the synchro_data_XXXX table
@@ -2728,6 +2822,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			$aActions['UI:Menu:Delete'] = array(
 				'label' => Dict::S('UI:Menu:Delete'),
 				'url'   => "{$sRootUrl}pages/$sUIPage?operation=delete&class=$sClass&id=$sId{$sContext}",
+				'tooltip' => Dict::S('Class:SynchroReplica/Action:delete+'),
 			);
 		}
 

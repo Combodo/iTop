@@ -19,7 +19,7 @@
  */
 
 use Combodo\iTop\Application\WebPage\iTopWebPage;
-use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
+use UI;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -35,89 +35,6 @@ $oP = new iTopWebPage("iTop - Synchro Replicas");
 
 // Main program
 $sOperation = utils::ReadParam('operation', 'details');
-
-/**
- * @param \DBObject|null $oReplica
- * @param $this
- *
- * @return \SynchroLog
- * @throws \ArchivedObjectException
- * @throws \CoreCannotSaveObjectException
- * @throws \CoreException
- * @throws \CoreUnexpectedValue
- * @throws \CoreWarning
- * @throws \MySQLException
- * @throws \OQLException
- * @throws \SynchroExceptionNotStarted
- */
-function Synchro($oReplica): SynchroLog
-{
-	$oDataSource = MetaModel::GetObject('SynchroDataSource', $oReplica->Get('sync_source_id'));
-
-	$oStatLog = new SynchroLog();
-	$oStatLog->Set('sync_source_id', $oDataSource->GetKey());
-	$oStatLog->Set('start_date', time());
-	$oStatLog->Set('status', 'running');
-	$oStatLog->AddTrace('Manual synchro');
-
-	// Get the list of SQL columns
-	$aAttCodesExpected = array();
-	$aAttCodesToReconcile = array();
-	$aAttCodesToUpdate = array();
-	$sSelectAtt = 'SELECT SynchroAttribute WHERE sync_source_id = :source_id AND (update = 1 OR reconcile = 1)';
-	$oSetAtt = new DBObjectSet(DBObjectSearch::FromOQL($sSelectAtt), array() /* order by*/, array('source_id' => $oDataSource->GetKey()) /* aArgs */);
-	while ($oSyncAtt = $oSetAtt->Fetch()) {
-		if ($oSyncAtt->Get('update')) {
-			$aAttCodesToUpdate[$oSyncAtt->Get('attcode')] = $oSyncAtt;
-		}
-		if ($oSyncAtt->Get('reconcile')) {
-			$aAttCodesToReconcile[$oSyncAtt->Get('attcode')] = $oSyncAtt;
-		}
-		$aAttCodesExpected[$oSyncAtt->Get('attcode')] = $oSyncAtt;
-	}
-
-	// Get the list of attributes, determine reconciliation keys and update targets
-	//
-	if ($oDataSource->Get('reconciliation_policy') == 'use_attributes') {
-		$aReconciliationKeys = $aAttCodesToReconcile;
-	} elseif ($oDataSource->Get('reconciliation_policy') == 'use_primary_key') {
-		// Override the settings made at the attribute level !
-		$aReconciliationKeys = array('primary_key' => null);
-	}
-
-	if (count($aAttCodesToUpdate) == 0) {
-		$oStatLog->AddTrace('No attribute to update');
-		throw new SynchroExceptionNotStarted('There is no attribute to update');
-	}
-	if (count($aReconciliationKeys) == 0) {
-		$oStatLog->AddTrace('No attribute for reconciliation');
-		throw new SynchroExceptionNotStarted('No attribute for reconciliation');
-	}
-
-
-	$aAttributesToUpdate = array();
-	foreach ($aAttCodesToUpdate as $sAttCode => $oSyncAtt) {
-		$oAttDef = MetaModel::GetAttributeDef($oDataSource->GetTargetClass(), $sAttCode);
-		if ($oAttDef->IsWritable()) {
-			$aAttributesToUpdate[$sAttCode] = $oSyncAtt;
-		}
-	}
-	// Create a change used for logging all the modifications/creations happening during the synchro
-	$oChange = MetaModel::NewObject('CMDBChange');
-	$oChange->Set('date', time());
-	$sUserString = CMDBChange::GetCurrentUserName();
-	$oChange->Set('userinfo', $sUserString.' '.Dict::S('Core:SyncDataExchangeComment'));
-	$oChange->Set('origin', CMDBChangeOrigin::SYNCHRO_DATA_SOURCE);
-	$oChange->DBInsert();
-	CMDBObject::SetCurrentChange($oChange);
-
-	$oReplica->InitExtendedData($oDataSource);
-
-	$oReplica->Synchro($oDataSource, $aReconciliationKeys, $aAttributesToUpdate, $oChange, $oStatLog);
-	$oReplica->DBUpdate();
-
-	return $oStatLog;
-}
 
 try {
 	switch ($sOperation) {
@@ -161,11 +78,9 @@ try {
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
 			}
 			$oReplica = MetaModel::GetObject('SynchroReplica', $iId);
-			$oReplica->Set('dest_id', '');
-			$oReplica->Set('status', 'new');
-			$oReplica->DBWrite();
+			$oReplica->UnLink();
 
-			$oStatLog = Synchro($oReplica);
+			$oStatLog = $oReplica->ReSynchro();
 			$oP->add(implode('<br>', $oStatLog->GetTraces()));
 
 			$oReplica->DisplayDetails($oP);
@@ -177,9 +92,7 @@ try {
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
 			}
 			$oReplica = MetaModel::GetObject('SynchroReplica', $iId);
-			$oReplica->Set('dest_id', '');
-			$oReplica->Set('status', 'new');
-			$oReplica->DBWrite();
+			$oReplica->UnLink();
 
 			$oReplica->DisplayDetails($oP);
 			break;
@@ -190,7 +103,19 @@ try {
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
 			}
 			$oReplica = MetaModel::GetObject('SynchroReplica', $iId);
-			$oStatLog = Synchro($oReplica);
+			$oStatLog = $oReplica->ReSynchro();
+			break;
+
+		case 'select_for_unlink_all': // Select the list of objects to be modified (bulk modify)
+			UI::OperationSelectForModifyAll($oP,'UI:UnlinkAllTabTitle', 'UI:UnlinkAllPageTitle', 'form_for_unlink_all');
+			break;
+
+		case 'select_for_unlinksynchro_all': // Select the list of objects to be modified (bulk modify)
+			UI::OperationSelectForModifyAll($oP,'UI:UnlinkSynchroAllTabTitle', 'UI:UnlinkSynchroAllPageTitle', 'form_for_unlinksynchro_all');
+			break;
+
+		case 'select_for_synchro_all': // Select the list of objects to be modified (bulk modify)
+			UI::OperationSelectForModifyAll($oP,'UI:SynchroAllTabTitle', 'UI:SynchroAllPageTitle','form_for_synchro_all');
 			break;
 	}
 } catch (CoreException $e) {

@@ -1075,6 +1075,7 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Class:SynchroReplica/Attribute:status_last_warning'                => 'Warnings',
 	'Class:SynchroReplica/Attribute:info_creation_date'                 => 'Creation Date',
 	'Class:SynchroReplica/Attribute:info_last_modified'                 => 'Last Modified Date',
+	'Class:SynchroReplica/Action:delete+'                               => 'delete replica',
 	'Class:SynchroReplica/Action:unlink'                                => 'Unlink',
 	'Class:SynchroReplica/Action:unlink+'                               => 'Unlink replica with destination object',
 	'Class:SynchroReplica/Action:unlinksynchro'                         => 'Unlink & Synchro',
@@ -1082,6 +1083,19 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Class:SynchroReplica/Action:synchro'                               => 'Synchro',
 	'Class:SynchroReplica/Action:synchro+'                              => 'Execute synchronization with this replica',
 
+	'Class:SynchroReplica/Action:unlink_all'                                => 'Unlink Synchro Replica objects',
+	'Class:SynchroReplica/Action:unlink_all+'                               => 'Unlink replica with destination object',
+	'Class:SynchroReplica/Action:unlinksynchro_all'                         => 'Unlink & Synchronize Synchro Replica objects',
+	'Class:SynchroReplica/Action:unlinksynchro_all+'                        => 'Unlink replica with destination object and execute synchronization with this replica',
+	'Class:SynchroReplica/Action:synchro_all'                               => 'Synchronize Synchro Replica objects',
+	'Class:SynchroReplica/Action:synchro_all+'                              => 'Execute synchronization with this replica',
+
+	'UI:UnlinkAllTabTitle' => 'Unlink Synchro Replica objects',
+	'UI:UnlinkAllPageTitle' => 'Unlink Synchro Replica objects',
+	'UI:UnlinkSynchroAllTabTitle'       => 'Unlink & Synchronize Synchro Replica objects',
+	'UI:UnlinkSynchroAllPageTitle' => ' Unlink & Synchronize Synchro Replica objects',
+	'UI:SynchroAllTabTitle' => 'Synchronize Synchro Replica objects',
+	'UI:SynchroAllPageTitle'       => 'Synchronize Synchro Replica objects',
 
 	'Class:appUserPreferences'                       => 'User Preferences',
 	'Class:appUserPreferences/Attribute:userid'      => 'User',
