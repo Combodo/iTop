@@ -270,37 +270,7 @@ class SynchroDataSource extends cmdbAbstractObject
 					}
 					else
 					{
-						if ($oAttDef->IsExternalKey())
-						{
-							$oAttribute = new SynchroAttExtKey();
-							$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
-						}
-						elseif ($oAttDef::IsLinkSet() && $oAttDef->IsIndirect())
-						{
-							$oAttribute = new SynchroAttLinkSet();
-							// Todo - add these settings into the form
-							$oAttribute->Set('row_separator', MetaModel::GetConfig()->Get('link_set_item_separator'));
-							$oAttribute->Set('attribute_separator', MetaModel::GetConfig()->Get('link_set_attribute_separator'));
-							$oAttribute->Set('value_separator', MetaModel::GetConfig()->Get('link_set_value_separator'));
-							$oAttribute->Set('attribute_qualifier', MetaModel::GetConfig()->Get('link_set_attribute_qualifier'));
-						}
-						elseif ($oAttDef::IsScalar())
-						{
-							$oAttribute = new SynchroAttribute();
-						}
-						else
-						{
-							$oAttribute = null;
-						}
-
-						if ($oAttribute !== null)
-						{
-							$oAttribute->Set('sync_source_id', $this->GetKey());
-							$oAttribute->Set('attcode', $sAttCode);
-							$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
-							$oAttribute->Set('update', 1);
-							$oAttribute->Set('update_policy', 'master_locked');
-						}
+						$oAttribute = $this->CreateSynchroAtt($sAttCode);
 					}
 					if ($oAttribute !== null)
 					{
@@ -795,38 +765,7 @@ EOF
 				{
 					if ($oAttDef->IsWritable())
 					{
-						$oAttDef = MetaModel::GetAttributeDef($this->GetTargetClass(), $sAttCode);
-						if ($oAttDef->IsExternalKey())
-						{
-							$oAttribute = new SynchroAttExtKey();
-							$oAttribute->Set('reconciliation_attcode', ''); // Blank means by pkey
-						}
-						elseif ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
-						{
-							$oAttribute = new SynchroAttLinkSet();
-							// Todo - set those value from the form
-							$oAttribute->Set('row_separator', MetaModel::GetConfig()->Get('link_set_item_separator'));
-							$oAttribute->Set('attribute_separator', MetaModel::GetConfig()->Get('link_set_attribute_separator'));
-							$oAttribute->Set('value_separator', MetaModel::GetConfig()->Get('link_set_value_separator'));
-							$oAttribute->Set('attribute_qualifier', MetaModel::GetConfig()->Get('link_set_attribute_qualifier'));
-						}
-						elseif ($oAttDef->IsScalar())
-						{
-							$oAttribute = new SynchroAttribute();
-						}
-						else
-						{
-							$oAttribute = null;
-						}
-
-						if (!is_null($oAttribute))
-						{
-							$oAttribute->Set('attcode', $sAttCode);
-							$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
-							$oAttribute->Set('update', 1);
-							$oAttribute->Set('update_policy', 'master_locked');
-							$oAttributeSet->AddItem($oAttribute);
-						}
+						$oAttributeSet->AddItem($this->CreateSynchroAtt($sAttCode));
 					}
 				}
 				$this->Set('attribute_list', $oAttributeSet);
