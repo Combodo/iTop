@@ -1555,6 +1555,11 @@ class utils
 				}
 				$aResult[] = new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL', '$sContext')");
 				$aResult[] = new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sDataTableId', '$sContext')");
+                if (ApplicationMenu::IsMenuIdEnabled('RunQueriesMenu')) {
+                    $oMenuItemPlay = new JSPopupMenuItem('UI:Menu:OpenOQL', Dict::S('UI:Edit:TestQuery'), "OpenOql('$sOQL')");
+                    $oMenuItemPlay->SetIconClass('fas fa-play');
+                    $aResult[] = $oMenuItemPlay;
+                }
 
 				break;
 

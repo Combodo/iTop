@@ -369,6 +369,12 @@ function DashletCreationDlg(sOQL, sContext) {
 	return false;
 }
 
+function OpenOql(sOQL) {
+	sBaseUrl = GetAbsoluteUrlAppRoot() + 'pages/run_query.php?expression=';
+	sQueryEncoded = encodeURI(sOQL);
+	window.open(sBaseUrl + sQueryEncoded, '_blank');
+}
+
 function ShortcutListDlg(sOQL, sDataTableId, sContext) {
 	var sDataTableName = 'datatable_'+sDataTableId;
 	var oTableSettings = {
