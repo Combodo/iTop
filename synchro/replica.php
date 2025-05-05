@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use UI;
 
@@ -48,6 +50,16 @@ try {
 			break;
 
 		case 'oql':
+			$iSourceId = utils::ReadParam('datasource', null);
+			if ($iSourceId != null) {
+				$oSource = MetaModel::GetObject('SynchroDataSource', $iSourceId);
+				//$oP->p(Dict::Format('Core:SynchroReplica:BackToDataSource', $oSource->GetHyperlink()).'</a>');
+				//$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::Format('Core:SynchroReplica:BackToDataSource', $oSource->GetName()), ApplicationContext::MakeObjectUrl('SynchroDataSource', $iSourceId));
+				$oBackButton = ButtonUIBlockFactory::MakeLinkNeutral( ApplicationContext::MakeObjectUrl('SynchroDataSource', $iSourceId), Dict::S('Core:SynchroReplica:BackToDataSource'), 'fas fa-chevron-left');
+				$oP->AddUiBlock($oBackButton);
+				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::Format('Core:SynchroReplica:ListOfReplicas', $oSource->GetName())));
+			}
+
 			$sOQL = utils::ReadParam('oql', null, false, 'raw_data');
 			if ($sOQL == null) {
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'oql'));
@@ -104,6 +116,27 @@ try {
 			}
 			$oReplica = MetaModel::GetObject('SynchroReplica', $iId);
 			$oStatLog = $oReplica->ReSynchro();
+			$oReplica->DisplayDetails($oP);
+			break;
+
+		case 'allowdelete':
+			$iId = utils::ReadParam('id', null);
+			if ($iId == null) {
+				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
+			}
+			$oReplica = MetaModel::GetObject('SynchroReplica', $iId);
+			$oStatLog = $oReplica->Set('status_dest_creator',1);
+			$oReplica->DisplayDetails($oP);
+			break;
+
+		case 'denydelete': // Select the list of objects to be modified (bulk modify)
+			$iId = utils::ReadParam('id', null);
+			if ($iId == null) {
+				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
+			}
+			$oReplica = MetaModel::GetObject('SynchroReplica', $iId);
+			$oStatLog = $oReplica->Set('status_dest_creator', 0);
+			$oReplica->DisplayDetails($oP);
 			break;
 
 		case 'select_for_unlink_all': // Select the list of objects to be modified (bulk modify)
@@ -116,6 +149,14 @@ try {
 
 		case 'select_for_synchro_all': // Select the list of objects to be modified (bulk modify)
 			UI::OperationSelectForModifyAll($oP,'UI:SynchroAllTabTitle', 'UI:SynchroAllPageTitle','form_for_synchro_all');
+			break;
+
+		case 'select_for_allowdelete_all': // Select the list of objects to be modified (bulk modify)
+			UI::OperationSelectForModifyAll($oP,'UI:AllowDeleteAllTabTitle', 'UI:AllowDeleteAllPageTitle','form_for_allowdelete_all');
+			break;
+
+		case 'select_for_denydelete_all': // Select the list of objects to be modified (bulk modify)
+			UI::OperationSelectForModifyAll($oP,'UI:DenyDeleteAllTabTitle', 'UI:DenyDeleteAllPageTitle','form_for_denydelete_all');
 			break;
 	}
 } catch (CoreException $e) {

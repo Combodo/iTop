@@ -84,13 +84,19 @@ class SynchroReplicaController extends Controller
 			$bResult = true;
 			try {
 				if (in_array($sOperation, ['unlink', 'unlinksynchro'])) {
-					\IssueLog::Error('unlinking replica '.$oReplica->GetKey());
-					$oReplica->UnLink();
+						$oReplica->UnLink();
 				}
 				if (in_array($sOperation, ['synchro', 'unlinksynchro'])) {
-					\IssueLog::Error('synchro replica '.$oReplica->GetKey());
 					$oStatLog = $oReplica->ReSynchro();
 					$aErrors = $oStatLog->GetTraces();
+				}
+				if ($sOperation == 'allowdelete') {
+					$oReplica->Set('status_dest_creator', 1);
+					$oReplica->DBUpdate();
+				}
+				if ($sOperation == 'denydelete') {
+					$oReplica->Set('status_dest_creator', 0);
+					$oReplica->DBUpdate();
 				}
 			}
 			catch (Exception $e) {

@@ -2851,6 +2851,22 @@ class SynchroReplica extends DBObject implements iDisplay
 				'url'     => $sUrl,
 				'tooltip' => Dict::S('Class:SynchroReplica/Action:synchro+'),
 			];
+
+			if ($this->Get('status_dest_creator') == 1) {
+				$sUrl = "{$sRootUrl}synchro/replica.php?operation=denydelete&class=$sClass&id=$sId{$sContext}";
+				$aActions['Class:SynchroReplica/Action:denydelete'] = [
+					'label'   => Dict::S('Class:SynchroReplica/Action:denydelete'),
+					'url'     => $sUrl,
+					'tooltip' => Dict::S('Class:SynchroReplica/Action:denydelete+'),
+				];
+			} else {
+				$sUrl = "{$sRootUrl}synchro/replica.php?operation=allowdelete&class=$sClass&id=$sId{$sContext}";
+				$aActions['Class:SynchroReplica/Action:allowdelete'] = [
+					'label'   => Dict::S('Class:SynchroReplica/Action:allowdelete'),
+					'url'     => $sUrl,
+					'tooltip' => Dict::S('Class:SynchroReplica/Action:allowdelete+'),
+				];
+			}
 		}
 		if (count($aActions) > 0) {
 			$sRegularActionsMenuTogglerId = "ibo-regular-actions-menu-toggler-{$sId}";

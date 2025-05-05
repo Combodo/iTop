@@ -1962,6 +1962,8 @@ class MenuBlock extends DisplayBlock
 							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:UnlinkAll:', Dict::S('Class:SynchroReplica/Action:unlink_all'),'unlink');
 							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:UnLinkSynchroAll:', Dict::S('Class:SynchroReplica/Action:unlinksynchro_all'),'unlinksynchro');
 							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:SynchroAll:', Dict::S('Class:SynchroReplica/Action:synchro_all'),'synchro');
+							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:AllowDeleteAll:', Dict::S('Class:SynchroReplica/Action:allowdelete_all'),'allowdelete');
+							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:DenyDeleteAll:', Dict::S('Class:SynchroReplica/Action:denydelete_all'),'denydelete');
 						} else {
 							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:ModifyAll:'.$sSelectedAlias, Dict::Format('UI:Menu:ModifyAll_'.$sActionLabelCodeSuffix, $sSelectedClassName));
 						}

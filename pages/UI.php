@@ -595,6 +595,13 @@ try {
 				SynchroReplicaController::OperationUnlinkAll($oP, $oAppContext,'synchro');
 				break;
 
+			case 'form_for_allowdelete_all': // Form to modify multiple objects (bulk modify)
+				SynchroReplicaController::OperationUnlinkAll($oP, $oAppContext,'allowdelete');
+				break;
+			case 'form_for_denydelete_all': // Form to modify multiple objects (bulk modify)
+				SynchroReplicaController::OperationUnlinkAll($oP, $oAppContext,'denydelete');
+				break;
+
 				///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'preview_or_modify_all': // Preview or apply bulk modify

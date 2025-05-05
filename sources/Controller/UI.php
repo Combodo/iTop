@@ -38,7 +38,7 @@ class UI
 
         $aDisplayParams = [
             'icon' => MetaModel::GetClassIcon($sClass, false),
-            'title' => Dict::Format('UI:Modify_ObjectsOf_Class', $sClassName),
+            'title' => Dict::Format($sTitleCode, $sClassName),
         ];
         IssueLog::Error('OperationSelectForModifyAll');
         self::DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker, [], $aDisplayParams);
