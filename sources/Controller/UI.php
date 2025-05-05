@@ -23,8 +23,7 @@ class UI
     public static function OperationSelectForModifyAll(iTopWebPage $oP, $sTitleTab = 'UI:ModifyAllPageTitle', $sTitleCode = 'UI:Modify_ObjectsOf_Class', $sNextOperation = 'form_for_modify_all'): void
     {
         $oP->DisableBreadCrumb();
-		IssueLog::Error('OperationSelectForModifyAll'.$sTitleCode);
-        $oP->set_title(Dict::S($sTitleTab));
+		$oP->set_title(Dict::S($sTitleTab));
         $sFilter = utils::ReadParam('filter', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
         if (empty($sFilter)) {
             throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
@@ -40,7 +39,6 @@ class UI
             'icon' => MetaModel::GetClassIcon($sClass, false),
             'title' => Dict::Format($sTitleCode, $sClassName),
         ];
-        IssueLog::Error('OperationSelectForModifyAll');
         self::DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker, [], $aDisplayParams);
     }
 
@@ -144,7 +142,6 @@ class UI
 	foreach ($aExtraFormParams as $sName => $sValue) {
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sName, $sValue));
 	}
-	IssueLog::Error('DisplayMultipleSelectionForm');
 	$oForm->AddSubBlock($oAppContext->GetForFormBlock());
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
 	//by default all the elements are selected
