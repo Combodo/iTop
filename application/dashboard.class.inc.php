@@ -529,10 +529,7 @@ EOF
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
 	{
-		if (!array_key_exists('dashboard_div_id', $aExtraParams))
-		{
-			$aExtraParams['dashboard_div_id'] = utils::Sanitize($this->GetId(), '', 'element_identifier');
-		}
+		$aExtraParams['dashboard_div_id'] = utils::Sanitize($aExtraParams['dashboard_div_id'] ?? null, $this->GetId(), utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 
 		$oPage->add('<div class="dashboard-title-line"><div class="dashboard-title">'.htmlentities(Dict::S($this->sTitle), ENT_QUOTES, 'UTF-8', false).'</div></div>');
 
@@ -1059,7 +1056,7 @@ EOF
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
 		$sEditMenu = "<div id=\"DashboardMenu\"><ul><li><i class=\"top-right-icon icon-additional-arrow fas fa-pencil-alt\"></i><ul>";
-	
+
 		$aActions = array();
 		$sFile = addslashes($this->sDefinitionFile);
 		$sJSExtraParams = json_encode($aExtraParams);
@@ -1188,7 +1185,7 @@ EOF
 		$oPage->add('</div>');
 		$oPage->add('<div id="event_bus"/>'); // For exchanging messages between the panes, same as in the designer
 		$oPage->add('</div>');
-		
+
 		$sDialogTitle = Dict::S('UI:DashboardEdit:Title');
 		$sOkButtonLabel = Dict::S('UI:Button:Save');
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
