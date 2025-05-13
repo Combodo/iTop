@@ -521,8 +521,8 @@ class utils
 
 			// For URL
 			case static::ENUM_SANITIZATION_FILTER_URL:
-                // N°6350 - returns only valid URLs
-				$retValue = filter_var($value, FILTER_VALIDATE_URL);
+				$retValue = filter_var($value, FILTER_SANITIZE_URL);
+				$retValue = filter_var($retValue, FILTER_VALIDATE_URL);
 				break;
 
 			default:

@@ -1050,7 +1050,7 @@ EOF
 		$sSelectorHtml .= '</div>';
 
 		$sFile = addslashes($this->GetDefinitionFile());
-		$sReloadURL = $this->GetReloadURL();
+		$sReloadURL = json_encode($this->GetReloadURL());
 
 		$bFromDashboardPage = isset($aAjaxParams['from_dashboard_page']) ? isset($aAjaxParams['from_dashboard_page']) : false;
 		if ($bFromDashboardPage) {
@@ -1164,7 +1164,7 @@ JS
 		$oToolbar->AddSubBlock($oActionButton)
 			->AddSubBlock($oActionsMenu);
 
-		$sReloadURL = $this->GetReloadURL();
+		$sReloadURL = json_encode($this->GetReloadURL());
 		$oPage->add_script(
 			<<<EOF
 function EditDashboard(sId, sDashboardFile, aExtraParams)
@@ -1271,7 +1271,7 @@ EOF
 		$sTitle = json_encode($this->sTitle);
 		$sFile = json_encode($this->GetDefinitionFile());
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
-		$sReloadURL = $this->GetReloadURL();
+		$sReloadURL = json_encode($this->GetReloadURL());
 
 		$sExitConfirmationMessage = addslashes(Dict::S('UI:NavigateAwayConfirmationMessage'));
 		$sCancelConfirmationMessage = addslashes(Dict::S('UI:CancelConfirmationMessage'));
