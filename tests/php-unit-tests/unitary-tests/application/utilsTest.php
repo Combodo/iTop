@@ -495,7 +495,7 @@ class utilsTest extends ItopTestCase
 			'good element_identifier' => ['element_identifier', 'AD05nb', 'AD05nb'],
 			'bad element_identifier' => ['element_identifier', 'AD05nb+', 'AD05nb'],
 			'good url' => ['url', 'https://www.w3schools.com', 'https://www.w3schools.com'],
-			'bad url' => ['url', 'https://www.w3schoo��ls.co�m', null],
+			'bad url' => ['url', 'https//www.w3schools.com', null],
 			'raw_data' => ['raw_data', '<Test>\s😃😃😃', '<Test>\s😃😃😃'],
 		];
 	}
