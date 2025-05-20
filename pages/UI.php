@@ -1520,7 +1520,7 @@ catch (Exception $e) {
 		$oErrorPage->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
 	}
 	$sErrorDetails = ($e instanceof CoreException) ? $e->getHtmlDesc() : $e->getMessage();
-	$oErrorPage->error(Dict::Format('UI:Error_Details', $sErrorDetails));
+	$oErrorPage->error(Dict::Format('UI:Error_Details', utils::EscapeHtml($sErrorDetails)));
 	$oErrorPage->output();
 
 	$sErrorStackTrace = ($e instanceof CoreException) ? $e->getFullStackTraceAsString() : $e->getTraceAsString();
