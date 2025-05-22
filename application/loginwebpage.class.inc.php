@@ -132,7 +132,7 @@ class LoginWebPage extends NiceWebPage
 		{
 			array_push($aExistingProfiles, $oProfile->Get('profileid'));
 			$iArrayKey = array_search($oProfile->Get('profileid'), $aProfiles);
-			if (!$iArrayKey)
+			if ($iArrayKey === false)
 			{
 				$oProfilesSet->RemoveItem($oProfile->Get('profileid'));
 			}
