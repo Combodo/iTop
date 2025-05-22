@@ -128,19 +128,25 @@ class LoginWebPage extends NiceWebPage
 		$oProfilesSet = $oUser->Get('profile_list');
 		//delete old profiles
 		$aExistingProfiles = [];
+		$aProfilestoRemove = [];
 		while ($oProfile = $oProfilesSet->Fetch())
 		{
 			array_push($aExistingProfiles, $oProfile->Get('profileid'));
 			$iArrayKey = array_search($oProfile->Get('profileid'), $aProfiles);
 			if ($iArrayKey === false)
 			{
-				$oProfilesSet->RemoveItem($oProfile->Get('profileid'));
+				$aProfilestoRemove[] = $oProfile;
 			}
 			else
 			{
 				unset($aProfiles[$iArrayKey]);
 			}
 		}
+
+		foreach ($aProfilestoRemove as $oProfile) {
+			$oProfilesSet->RemoveItem($oProfile->GetKey());
+		}
+
 		//add profiles not already linked with user
 		foreach ($aProfiles as $iProfileId)
 		{
