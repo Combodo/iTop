@@ -2076,6 +2076,127 @@ SQL;
 	}
 
 	/**
+	*  Format a string using vsprintf with safety checks to avoid ValueError
+	*
+	*  This method fills missing arguments with their original format specifiers,
+	*  then calls vsprintf with the complete array.
+	*
+	* @param string $sFormat The format string
+	* @param array $aArgs The arguments to format
+	* @param bool $bLogErrors Whether to log errors (defaults to true)
+	*
+	* @return string The formatted string
+	 * @since 3.2.2
+	*/
+	public static function VSprintf(string $sFormat, array $aArgs, bool $bLogErrors = true): string
+	{
+		// Extract all format specifiers
+		$sPattern = '/%(?:(?:[1-9][0-9]*)\$)?[-+\'0# ]*(?:[0-9]*|\*)?(?:\.(?:[0-9]*|\*))?(?:[hlL])?[diouxXeEfFgGcrs%]/';
+		preg_match_all($sPattern, $sFormat, $aMatches, PREG_OFFSET_CAPTURE);
+
+		// Process matches, keeping track of their positions and excluding escaped percent signs (%%)
+		$aSpecifierMatches = [];
+		foreach ($aMatches[0] as $sMatch) {
+			if ($sMatch[0] !== '%%') {
+				$aSpecifierMatches[] = $sMatch;
+			}
+		}
+
+		// Check for positional specifiers and build position map
+		$bHasPositional = false;
+		$iMaxPosition = 0;
+		$aPositions = [];
+		$aUniquePositions = [];
+
+		foreach ($aSpecifierMatches as $index => $match) {
+			$sSpec = $match[0];
+			if (preg_match('/^%([1-9][0-9]*)\$/', $sSpec, $posMatch)) {
+				$bHasPositional = true;
+				$iPosition = (int)$posMatch[1] - 1; // Convert to 0-based
+				$aPositions[$index] = $iPosition;
+				$aUniquePositions[$iPosition] = true;
+				$iMaxPosition = max($iMaxPosition, $iPosition + 1);
+			} else {
+				$aPositions[$index] = $index;
+				$aUniquePositions[$index] = true;
+				$iMaxPosition = max($iMaxPosition, $index + 1);
+			}
+		}
+
+		// Count unique positions, this tells us how many arguments we actually need
+		$iExpectedCount = count($aUniquePositions);
+		$iActualCount = count($aArgs);
+
+		// If we have enough arguments, just use vsprintf
+		if ($iActualCount >= $iExpectedCount) {
+			return vsprintf($sFormat, $aArgs);
+		}
+		// else log the error if needed
+		if ($bLogErrors) {
+			IssueLog::Warning("Format string requires $iExpectedCount arguments, but only $iActualCount provided. Format: '$sFormat'"	);
+		}
+
+		// Create a replacement map
+		if ($bHasPositional) {
+			// For positional, we need to handle the exact positions
+			$aReplacements = array_fill(0, $iMaxPosition, null);
+
+			// Fill in the real arguments first
+			foreach ($aArgs as $index => $sValue) {
+				if ($index < $iMaxPosition) {
+					$aReplacements[$index] = $sValue;
+				}
+			}
+
+			// For null values in the replacement map, use the original specifier
+			foreach ($aSpecifierMatches as $index => $sMatch) {
+				$iPosition = $aPositions[$index];
+				if ($aReplacements[$iPosition] === null) {
+					// Use the original format specifier when we don't have an argument
+					$aReplacements[$iPosition] = $sMatch[0];
+				}
+			}
+
+			// Remove any remaining nulls (for positions that weren't referenced)
+			$aReplacements = array_filter($aReplacements, static function($val) { return $val !== null; });
+		} else {
+			// For non-positional, we need to map each position
+			$aReplacements = [];
+			$iUsed = 0;
+
+			// Create a map of what values to use for each position
+			$aPositionValues = [];
+			for ($i = 0; $i < $iMaxPosition; $i++) {
+				if (isset($aUniquePositions[$i])) {
+					if ($iUsed < $iActualCount) {
+						// We have an actual argument for this position
+						$aPositionValues[$i] = $aArgs[$iUsed++];
+					} else {
+						// Mark this position to use the original specifier
+						$aPositionValues[$i] = null;
+					}
+				}
+			}
+
+			// Build the replacements array preserving the original order
+			foreach ($aSpecifierMatches as $index => $sMatch) {
+				$iPosition = $aPositions[$index];
+				if (isset($aPositionValues[$iPosition])) {
+					$aReplacements[] = $aPositionValues[$iPosition];
+				} else {
+					// Use the original format specifier when we don't have an argument
+					$aReplacements[] = $sMatch[0];
+					// Mark this position as used, so if it appears again, it gets the same replacement
+					$aPositionValues[$iPosition] = $sMatch[0];
+				}
+			}
+		}
+
+		// Process the format string with our filled-in arguments
+		return vsprintf($sFormat, $aReplacements);
+	}
+
+	/**
 	 * Convert a string containing some (valid) HTML markup to plain text
 	 *
 	 * @param string $sHtml

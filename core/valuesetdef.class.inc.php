@@ -435,7 +435,7 @@ class ValueSetObjects extends ValueSetDefinition
 				foreach ($aAdditionalField as $sAdditionalField) {
 					array_push($aArguments, $oObject->Get($sAdditionalField));
 				}
-				$aData['additional_field'] = vsprintf($sFormatAdditionalField, $aArguments);
+				$aData['additional_field'] = utils::VSprintf($sFormatAdditionalField, $aArguments);
 			} else {
 				$aData['additional_field'] = '';
 			}
