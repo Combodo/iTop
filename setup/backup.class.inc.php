@@ -204,20 +204,22 @@ class DBBackup
 
 		$oArchive = new ITopArchiveTar($sTargetFile.'.tar.gz');
 
-		$sTmpFolder = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
+		$sTmpFolder = SetupUtils::GetTmpDir().'/itop-backup-'.rand(10000, getrandmax());
 		$aFiles = $this->PrepareFilesToBackup($sSourceConfigFile, $sTmpFolder);
 
 		$sFilesList = var_export($aFiles, true);
 		$this->LogInfo("backup: adding to archive files '$sFilesList'");
 		$bArchiveCreationResult = $oArchive->createModify($aFiles, '', $sTmpFolder);
+
+		$this->LogInfo("backup: removing tmp folder '$sTmpFolder'");
+		SetupUtils::rrmdir($sTmpFolder);
+
 		if (!$bArchiveCreationResult) {
+			@unlink($sTargetFile.'.tar.gz');
 			$sErrorMsg = 'Cannot backup : unable to create archive';
 			$this->LogError($sErrorMsg);
 			throw new BackupException($sErrorMsg);
 		}
-
-		$this->LogInfo("backup: removing tmp folder '$sTmpFolder'");
-		SetupUtils::rrmdir($sTmpFolder);
 	}
 
 	/**
