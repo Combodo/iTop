@@ -43,8 +43,7 @@ SetupWebPage::AddModule(
 		// Default settings
 		//
 		'settings' => array(
-			'host' => 'localhost', // host or IP address of your LDAP server
-			'port' => 389,		  // LDAP port (std: 389)
+			'uri' => 'ldap://localhost', // URI with host or IP address of your LDAP server
 			'default_user' => '', // User and password used for initial "Anonymous" bind to LDAP
 			'default_pwd' => '',  // Leave both blank, if anonymous (read-only) bind is allowed
 			'base_dn' => 'dc=yourcompany,dc=com', // Base DN for User queries, adjust it to your LDAP schema
@@ -74,6 +73,27 @@ class AuthentLDAPInstaller extends ModuleInstallerAPI
 		$sUserTable = MetaModel::DBGetTable('User');
 		$sSQL = "insert into $sUserLDAPTable (id) select U.id from $sUserTable as U left join $sUserLDAPTable as L on U.id = L.id where U.finalclass='UserLDAP' and isnull(L.id);";
 		CMDBSource::Query($sSQL);
+	}
+
+	public static function BeforeWritingConfig(Config $oConfiguration)
+	{
+		$sURI = $oConfiguration->GetModuleSetting('authent-ldap', 'uri');
+		if (empty($sURI)) {
+			$sLDAPHost = MetaModel::GetModuleSetting('authent-ldap', 'host', 'localhost');
+			$iLDAPPort = MetaModel::GetModuleSetting('authent-ldap', 'port', 389);
+			$sURI = preg_match('#^ldaps?://#i', $sLDAPHost) ? $sLDAPHost : 'ldap://'.$sLDAPHost.':'.$iLDAPPort;
+			$oConfiguration->SetModuleSetting('authent-ldap', 'uri', $sURI);
+		}
+
+		$aServers = $oConfiguration->GetModuleSetting('authent-ldap', 'servers', []);
+		foreach ($aServers as &$aServer) {
+			if (!array_key_exists($aServer, 'uri')) {
+				$sLDAPHost = $aServerParams['host'] ?? 'localhost';
+				$iLDAPPort = $aServerParams['port'] ?? 389;
+				$aServer['uri'] = preg_match('#^ldaps?://#i', $sLDAPHost) ? $sLDAPHost : 'ldap://'.$sLDAPHost.':'.$iLDAPPort;
+			}
+		}
+		$oConfiguration->SetModuleSetting('authent-ldap', 'servers', $aServers);
 	}
 }
 

@@ -68,8 +68,7 @@
 		$sServer = $this->Get('ldap_server');
 		if (empty($sServer))
 		{
-			$sLDAPHost = MetaModel::GetModuleSetting('authent-ldap', 'host', 'localhost');
-			$iLDAPPort = MetaModel::GetModuleSetting('authent-ldap', 'port', 389);
+			$sURI = MetaModel::GetModuleSetting('authent-ldap', 'uri', 'ldap://localhost');
 
 			$sDefaultLDAPUser = MetaModel::GetModuleSetting('authent-ldap', 'default_user', '');
 			$sDefaultLDAPPwd = MetaModel::GetModuleSetting('authent-ldap', 'default_pwd', '');
@@ -90,8 +89,7 @@
 				return false;
 			}
 			$aServerParams = $aServers[$sServer];
-			$sLDAPHost = isset($aServerParams['host']) ? $aServerParams['host'] : 'localhost';
-			$iLDAPPort = isset($aServerParams['port']) ? $aServerParams['port'] : 389;
+			$sURI = $aServerParams['uri'] ?? 'ldap://localhost';
 			$sDefaultLDAPUser = isset($aServerParams['default_user']) ? $aServerParams['default_user'] : '';
 			$sDefaultLDAPPwd = isset($aServerParams['default_pwd']) ? $aServerParams['default_pwd'] : '';
 			$bLDAPStartTLS = isset($aServerParams['start_tls']) ? $aServerParams['start_tls'] : false;
@@ -101,10 +99,10 @@
 			$bDebug = isset($aServerParams['debug']) ? $aServerParams['debug'] : false;
 		}
 
-		$hDS = @ldap_connect($sLDAPHost, $iLDAPPort);
+		$hDS = @ldap_connect($sURI);
 		if ($hDS === false)
 		{
-			$this->LogIssue($bDebug, "ldap_authentication: can not connect to the LDAP server '$sLDAPHost' (port: $iLDAPPort). Check the configuration file config-itop.php.");
+			$this->LogIssue($bDebug, "ldap_authentication: can not connect to the LDAP server '$sURI'. Check the configuration file config-itop.php.");
 			return false;
 		}
 		if (array_key_exists(LDAP_OPT_DEBUG_LEVEL, $aOptions))
@@ -186,7 +184,7 @@
 		else
 		{
 			// Trace: invalid default user for LDAP initial binding
-			$this->LogIssue($bDebug, "ldap_authentication: cannot bind to the LDAP server '$sLDAPHost' (port: $iLDAPPort), user='$sDefaultLDAPUser', pwd='****'. Error: '".ldap_error($hDS)."'. Check the configuration file config-itop.php.");
+			$this->LogIssue($bDebug, "ldap_authentication: cannot bind to the LDAP server '$sURI', user='$sDefaultLDAPUser', pwd='****'. Error: '".ldap_error($hDS)."'. Check the configuration file config-itop.php.");
 			return false;
 		}
 	}]]></code>
