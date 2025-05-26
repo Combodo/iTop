@@ -82,7 +82,7 @@ class ObjectController extends AbstractController
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 		}
-		if (!is_subclass_of($sClass, 'cmdbAbstractObject')) {
+		if (!is_subclass_of($sClass, cmdbAbstractObject::class)) {
 			throw new SecurityException('The class "'.$sClass.'" is not a subclass of cmdbAbstractObject so it can\'t be created by the user');
 		}
 		// If the specified class has subclasses, ask the user an instance of which class to create
