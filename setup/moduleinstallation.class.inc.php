@@ -25,7 +25,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class ModuleInstallation extends cmdbAbstractObject
+class ModuleInstallation extends DBObject
 {
 	public static function Init()
 	{
