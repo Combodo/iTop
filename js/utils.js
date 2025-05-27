@@ -370,9 +370,21 @@ function DashletCreationDlg(sOQL, sContext) {
 }
 
 function OpenOql(sOQL) {
-	sBaseUrl = GetAbsoluteUrlAppRoot() + 'pages/run_query.php?expression=';
-	sQueryEncoded = encodeURI(sOQL);
-	window.open(sBaseUrl + sQueryEncoded, '_blank');
+	sBaseUrl = GetAbsoluteUrlAppRoot() + 'pages/run_query.php';
+	var form = document.createElement("form");
+	form.setAttribute("method", "post");
+	form.setAttribute("action", sBaseUrl);
+	form.setAttribute("target", '_blank');
+	form.setAttribute("id", 'run_query_form');
+	var input = document.createElement('input');
+	input.type = 'hidden';
+	input.name = 'expression';
+	input.value = sOQL;
+	form.appendChild(input);
+	document.body.appendChild(form);
+	// form.submit() is blocked by the browser
+	$('#run_query_form').submit();
+	document.body.removeChild(form);
 }
 
 function ShortcutListDlg(sOQL, sDataTableId, sContext) {
