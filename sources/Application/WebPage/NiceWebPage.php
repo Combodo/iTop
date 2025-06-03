@@ -204,7 +204,7 @@ JS
 	function GetApplicationContext()
 	{
 		$oAppContext = new ApplicationContext();
-		return $oAppContext->GetForLink();
+		return $oAppContext->GetQueryParametersString(false);
 	}
 
 	// By Rom, used by CSVImport and Advanced search

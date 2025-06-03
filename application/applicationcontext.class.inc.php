@@ -195,6 +195,8 @@ class ApplicationContext
 	/**
 	 * Returns the context as string with the format name1=value1&name2=value2....
 	 * @return string The context as a string to be appended to an href property
+	 *
+	 * @deprecated since 3.2.2 Use GetQueryParametersString() instead, responsible in adding the leading '&'
 	 */
 	public function GetForLink()
 	{
@@ -205,6 +207,39 @@ class ApplicationContext
 		}
 		return implode("&", $aParams);
 	}
+
+	/**
+	 * Returns the context as string with the format c[name1]=value1&c[name2]=value2....
+	 * Add a leading ampersand if requested
+	 *
+	 * @param bool $bWithLeadingAmpersand
+	 *
+	 * @return string
+	 * @since 3.2.2
+	 */
+	public function GetQueryParametersString(bool $bWithLeadingAmpersand = true): string
+	{
+		// If there are no parameters, return an empty string
+		if(empty($this->aValues)){
+			return '';
+		}
+
+		// Build the query string with ampersand separated parameters
+		$aParams = array();
+		foreach($this->aValues as $sName => $sValue)
+		{
+			$aParams[] = "c[$sName]".'='.urlencode($sValue);
+		}
+		$sReturnValue = implode('&', $aParams);
+
+		// add the leading ampersand if requested
+		if($bWithLeadingAmpersand){
+			$sReturnValue = '&' . $sReturnValue;
+		}
+
+		return $sReturnValue;
+	}
+
 	/**
 	 * @since 3.0.0 N°2534 - dashboard: bug with autorefresh that deactivates filtering on organisation
 	 * Returns the params as c[menu]:..., c[org_id]:....
@@ -382,7 +417,7 @@ class ApplicationContext
 		$sUrl = call_user_func(array($sUrlMakerClass, 'MakeObjectUrl'), $sObjClass, $sObjKey);
 	   if (utils::StrLen($sUrl) > 0) {
 		   if ($bWithNavigationContext) {
-			   return $sUrl."&".$oAppContext->GetForLink();
+			   return $sUrl.$oAppContext->GetQueryParametersString();
 		   } else {
 			   return $sUrl;
 		   }

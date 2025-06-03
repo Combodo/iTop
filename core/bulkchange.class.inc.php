@@ -1406,7 +1406,7 @@ class BulkChange
 		$aDetails = array();
 		while ($oChange = $oBulkChanges->Fetch())
 		{
-			$sDate = '<a href="csvimport.php?step=10&changeid='.$oChange->GetKey().'&'.$oAppContext->GetForLink().'">'.$oChange->Get('date').'</a>';
+			$sDate = '<a href="csvimport.php?step=10&changeid='.$oChange->GetKey().$oAppContext->GetQueryParametersString().'">'.$oChange->Get('date').'</a>';
 			$sUser = $oChange->GetUserName();
 			if (preg_match('/^(.*)\\(CSV\\)$/i', $oChange->Get('userinfo'), $aMatches))
 			{
@@ -1482,13 +1482,13 @@ EOF
 				);
 
 
-				$sAppContext = $oAppContext->GetForLink();
+				$sAppContext = $oAppContext->GetQueryParametersString(false);
 				$oPage->add_script(
 					<<<EOF
 	function OnTruncatedHistoryToggle(bShowAll)
 	{
 		$('#csv_history_reload').html('<img src="' + GetAbsoluteUrlAppRoot() + 'images/indicator.gif"/>');
-		$.get(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?{$sAppContext}', {operation: 'displayCSVHistory', showall: bShowAll}, function(data)
+		$.get(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?$sAppContext', {operation: 'displayCSVHistory', showall: bShowAll}, function(data)
 			{
 				$('#$sAjaxDivId').html(data);
 			}

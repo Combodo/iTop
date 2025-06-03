@@ -98,7 +98,7 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 			'selection_title' => Dict::Format('UI:SelectionOf_Class', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
 		);
 		$oContext = new ApplicationContext();
-		$this->sSubmitUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?'.$oContext->GetForLink();
+		$this->sSubmitUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?'.$oContext->GetQueryParametersString(false);
 
 		// Don't automatically launch the search if the table is huge
 		$bDoSearch = !utils::IsHighCardinality($this->oUILinksDirectWidget->GetLinkedClass());

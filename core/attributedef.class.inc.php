@@ -10954,12 +10954,12 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			$sDescription = utils::EscapeHtml($this->GetValueDescription($sValue));
 			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sValue'");
 			$oAppContext = new ApplicationContext();
-			$sContext = $oAppContext->GetForLink();
+			$sContext = $oAppContext->GetQueryParametersString();
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
 			$sFilter = rawurlencode($oFilter->serialize());
 			$sLink = '';
 			if ($bWithLink && $this->bDisplayLink) {
-				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter.$sContext;
 				$sLink = ' href="'.$sUrl.'"';
 			}
 
@@ -12276,13 +12276,13 @@ class AttributeTagSet extends AttributeSet
 				$sTagDescription = $oTag->Get('description');
 				$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
 				$oAppContext = new ApplicationContext();
-				$sContext = $oAppContext->GetForLink();
+				$sContext = $oAppContext->GetQueryParametersString();
 				$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
 				$sFilter = rawurlencode($oFilter->serialize());
 
 				$sLink = '';
 				if ($bWithLink && $this->bDisplayLink) {
-					$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+					$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter.$sContext;
 					$sLink = ' href="'.$sUrl.'"';
 				}
 

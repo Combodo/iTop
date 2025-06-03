@@ -1516,12 +1516,12 @@ class utils
 			case iPopupMenuExtension::MENU_OBJLIST_TOOLKIT:
 				/** @var \DBObjectSet $param */
 				$oAppContext = new ApplicationContext();
-				$sContext = $oAppContext->GetForLink();
+				$sContext = $oAppContext->GetQueryParametersString();
 				$sDataTableId = is_null($sDataTableId) ? '' : $sDataTableId;
 				$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($param->GetFilter()->GetClass());
 				$sOQL = addslashes($param->GetFilter()->ToOQL(true));
 				$sFilter = urlencode($param->GetFilter()->serialize());
-				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter.$sContext;
 				$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
 				$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
 				$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
@@ -1696,8 +1696,8 @@ class utils
 		$oAppContext = new ApplicationContext();
 
 		$sUrl = $sAppRootUrl
-			.'pages/UI.php?operation=search&'
-			.$oAppContext->GetForLink()
+			.'pages/UI.php?operation=search'
+			.$oAppContext->GetQueryParametersString()
 			.'&filter='.rawurlencode($oDataTableSearchFilter->serialize());
 		$sUrl .= '&aParams='.rawurlencode($sParams); // Not working... yet, cause not handled by UI.php
 
