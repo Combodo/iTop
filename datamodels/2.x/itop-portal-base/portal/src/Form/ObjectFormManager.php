@@ -359,7 +359,8 @@ class ObjectFormManager extends FormManager
 		foreach ($this->aFieldsAtts as $sAttCode => $iFieldFlags)
 		{
 			// handle plugins fields
-			if(array_key_exists($sAttCode, $this->aExtraData)
+			if($this->sMode !== 'apply_stimulus'
+				&& array_key_exists($sAttCode, $this->aExtraData)
 				&& array_key_exists('plugin', $this->aExtraData[$sAttCode])){
 				$sPluginName = $this->aExtraData[$sAttCode]['plugin'];
 				switch($sPluginName){
@@ -713,7 +714,8 @@ class ObjectFormManager extends FormManager
 
 		// fallback Checking if the instance has attachments
 		// (in case attachment is not explicitly declared in layout)
-		if (class_exists('Attachment') && class_exists('AttachmentPlugIn')
+		if ($this->sMode !== 'apply_stimulus'
+			&& class_exists('Attachment') && class_exists('AttachmentPlugIn')
 			&& !$this->IsPluginInitialized(AttachmentPlugIn::class)
 			&& AttachmentPlugIn::IsAttachmentAllowedForObject($this->oObject)){
 			$this->AddAttachmentField($this->oForm, 'attachments_plugin', $this->aExtraData);
