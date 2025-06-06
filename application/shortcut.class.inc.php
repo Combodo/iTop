@@ -282,7 +282,7 @@ class ShortcutOQL extends Shortcut
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		
 		$oAppContext = new ApplicationContext();
-		$sContext = $oAppContext->GetQueryParametersString(false);
+		$sContext = $oAppContext->GetForLink();
 
 		$sRateTitle = addslashes(Dict::Format('Class:ShortcutOQL/Attribute:auto_reload_sec/tip', MetaModel::GetConfig()->Get('min_reload_interval')));
 

@@ -640,7 +640,7 @@ class AjaxRenderController
 
 			$aResult = array();
 			$oAppContext = new ApplicationContext();
-			$sParams = $oAppContext->GetQueryParametersString();
+			$sParams = $oAppContext->GetForLink(true);
 			foreach ($aGroupBy as $iRow => $iCount) {
 				// Build the search for this subset
 				$oSubsetSearch = $oFilter->DeepClone();

@@ -10954,7 +10954,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			$sDescription = utils::EscapeHtml($this->GetValueDescription($sValue));
 			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sValue'");
 			$oAppContext = new ApplicationContext();
-			$sContext = $oAppContext->GetQueryParametersString();
+			$sContext = $oAppContext->GetForLink(true);
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
 			$sFilter = rawurlencode($oFilter->serialize());
 			$sLink = '';
@@ -12276,7 +12276,7 @@ class AttributeTagSet extends AttributeSet
 				$sTagDescription = $oTag->Get('description');
 				$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
 				$oAppContext = new ApplicationContext();
-				$sContext = $oAppContext->GetQueryParametersString();
+				$sContext = $oAppContext->GetForLink(true);
 				$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
 				$sFilter = rawurlencode($oFilter->serialize());
 

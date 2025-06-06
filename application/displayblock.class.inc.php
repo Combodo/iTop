@@ -1124,7 +1124,7 @@ JS
 						$oSingleGroupByValueFilter->SetShowObsoleteData($this->m_bShowObsoleteData);
 					}
 					$sHyperlink = utils::GetAbsoluteUrlAppRoot()
-						.'pages/UI.php?operation=search'.$oAppContext->GetQueryParametersString()
+						.'pages/UI.php?operation=search'.$oAppContext->GetForLink(true)
 						.'&filter='.rawurlencode($oSingleGroupByValueFilter->serialize());
 					$aCounts[$sStateValue] = ['link' => $sHyperlink, 'label' => $aCounts[$sStateValue]];
 				}
@@ -1232,7 +1232,7 @@ JS
 		$iCount = $this->m_oSet->Count();
 		$sClassLabel = MetaModel::GetName($sClass);
 		$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
-		$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search'.$oAppContext->GetQueryParametersString().'&filter='.rawurlencode($this->m_oFilter->serialize());
+		$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search'.$oAppContext->GetForLink(true).'&filter='.rawurlencode($this->m_oFilter->serialize());
 
 		$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
 		$aRefreshParams = [
@@ -1241,7 +1241,7 @@ JS
 		];
 
 		if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY)) {
-			$sCreateActionUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=new&class='.$sClass.$oAppContext->GetQueryParametersString();
+			$sCreateActionUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=new&class='.$sClass.$oAppContext->GetForLink(true);
 			$sCreateActionLabel = Dict::Format('UI:Button:Create');
 			$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, $sCreateActionUrl,
 				$sCreateActionLabel, $aRefreshParams);
@@ -1289,7 +1289,7 @@ JS
 
 			$aData = array();
 			$oAppContext = new ApplicationContext();
-			$sParams = $oAppContext->GetQueryParametersString();
+			$sParams = $oAppContext->GetForLink(true);
 			foreach ($aGroupBy as $iRow => $iCount) {
 				// Build the search for this subset
 				$oSubsetSearch = $this->m_oFilter->DeepClone();
@@ -1636,7 +1636,7 @@ JS
 		$sGroupByExpr = isset($aExtraParams['group_by_expr']) ? '&params[group_by_expr]='.$aExtraParams['group_by_expr'] : '';
 		$sFilter = $this->m_oFilter->serialize(false, $aQueryParams);
 		$oContext = new ApplicationContext();
-		$sContextParam = $oContext->GetQueryParametersString();
+		$sContextParam = $oContext->GetForLink(true);
 		$sAggregationFunction = isset($aExtraParams['aggregation_function']) ? $aExtraParams['aggregation_function'] : '';
 		$sAggregationAttr = isset($aExtraParams['aggregation_attribute']) ? $aExtraParams['aggregation_attribute'] : '';
 		$sLimit = isset($aExtraParams['limit']) ? $aExtraParams['limit'] : '';
@@ -1682,7 +1682,7 @@ JS
 		$sJSURLs = '';
 
 		$oContext = new ApplicationContext();
-		$sContextParam = $oContext->GetQueryParametersString();
+		$sContextParam = $oContext->GetForLink(true);
 
 		if (isset($aExtraParams['group_by'])) {
 			$this->MakeGroupByQuery($aExtraParams, $oGroupByExp, $sGroupByLabel, $aGroupBy, $sAggregationFunction, $sFctVar, $sAggregationAttr, $sSql);
@@ -1788,7 +1788,7 @@ JS
 
 		$oBlock->sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv';
 		$oBlock->sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($oBlock->sCsvFile);
-		$oBlock->sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search'.$oAppContext->GetQueryParametersString().'&filter='.rawurlencode($this->m_oFilter->serialize()).'&format=csv';
+		$oBlock->sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search'.$oAppContext->GetForLink(true).'&filter='.rawurlencode($this->m_oFilter->serialize()).'&format=csv';
 		// Pass the parameters via POST, since expression may be very long
 		$aParamsToPost = array(
 			'expression' => $this->m_oFilter->ToOQL(true),
@@ -1888,7 +1888,7 @@ class MenuBlock extends DisplayBlock
 			&& (!isset($aExtraParams['menu']) || $aExtraParams['menu'] === "1" || $aExtraParams['menu'] === true)
 		) {
 			$oAppContext = new ApplicationContext();
-			$sContext = $oAppContext->GetQueryParametersString();
+			$sContext = $oAppContext->GetForLink(true);
 
 
 			$sFilter = $this->GetFilter()->serialize();
@@ -2578,7 +2578,7 @@ class MenuBlock extends DisplayBlock
 		$sUrl = "{$sRootUrl}pages/{$sUIPage}?{$sUrlParams}";
 
 		$oAppContext = new ApplicationContext();
-		$sContext = $oAppContext->GetQueryParametersString();
+		$sContext = $oAppContext->GetForLink(true);
 
 		return $sUrl . $sContext;
 	}

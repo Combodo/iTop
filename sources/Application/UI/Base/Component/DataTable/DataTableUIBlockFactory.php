@@ -819,7 +819,7 @@ JS;
 			"columns" => $aColumnsDefinitions,
 			"allColumns" => $aColumns,
 			'ajax' => '$.fn.dataTable.pipeline( {
-					"url": "ajax.render.php?'.$oAppContext->GetQueryParametersString(false).'",
+					"url": "ajax.render.php?'.$oAppContext->GetForLink().'",
 					"data": '.$sAjaxData.',
 					"method":	"post",
 					"pages": 5 // number of pages to cache

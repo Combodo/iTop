@@ -1516,7 +1516,7 @@ class utils
 			case iPopupMenuExtension::MENU_OBJLIST_TOOLKIT:
 				/** @var \DBObjectSet $param */
 				$oAppContext = new ApplicationContext();
-				$sContext = $oAppContext->GetQueryParametersString();
+				$sContext = $oAppContext->GetForLink(true);
 				$sDataTableId = is_null($sDataTableId) ? '' : $sDataTableId;
 				$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($param->GetFilter()->GetClass());
 				$sOQL = addslashes($param->GetFilter()->ToOQL(true));
@@ -1697,7 +1697,7 @@ class utils
 
 		$sUrl = $sAppRootUrl
 			.'pages/UI.php?operation=search'
-			.$oAppContext->GetQueryParametersString()
+			.$oAppContext->GetForLink(true)
 			.'&filter='.rawurlencode($oDataTableSearchFilter->serialize());
 		$sUrl .= '&aParams='.rawurlencode($sParams); // Not working... yet, cause not handled by UI.php
 

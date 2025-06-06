@@ -311,7 +311,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		{
 			$sParams .= $sName.'='.urlencode($value).'&'; // Always add a trailing &
 		}
-		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/'.$oObj->GetUIPage().'?'.$sParams.'class='.get_class($oObj).'&id='.$oObj->getKey().$oAppContext->GetQueryParametersString().'&a=1';
+		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/'.$oObj->GetUIPage().'?'.$sParams.'class='.get_class($oObj).'&id='.$oObj->getKey().$oAppContext->GetForLink(true).'&a=1';
 		$oPage->add_early_script(<<<JS
 	if (!sessionStorage.getItem('$sSessionStorageKey'))
 	{
@@ -3071,7 +3071,7 @@ JS
 		$oPage->add($oAppContext->GetForForm());
 
 		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
-		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search_form&class='.$sClass.$oAppContext->GetQueryParametersString();
+		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search_form&class='.$sClass.$oAppContext->GetForLink(true);
 
 		$sCancelButtonOnClickScript = "let fOnClick{$this->m_iFormId}CancelButton = ";
 		if(isset($aExtraParams['js_handlers']['cancel_button_on_click'])){

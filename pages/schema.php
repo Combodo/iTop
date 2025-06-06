@@ -1174,7 +1174,7 @@ EOF
 
 
 $oAppContext = new ApplicationContext();
-$sContext = $oAppContext->GetQueryParametersString();
+$sContext = $oAppContext->GetForLink(true);
 $operation = utils::ReadParam('operation', '');
 
 $oLayout = new PageContentWithSideContent();

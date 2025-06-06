@@ -118,7 +118,7 @@ class SearchForm
 			}
 		}
 
-		$sContext = $oAppContext->GetQueryParametersString(false);
+		$sContext = $oAppContext->GetForLink();
 		$sJsonExtraParams = utils::EscapeHtml(json_encode($aListParams));
 		$sOuterSelector = $aExtraParams['result_list_outer_selector'];
 

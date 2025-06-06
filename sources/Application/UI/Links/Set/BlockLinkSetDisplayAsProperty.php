@@ -97,7 +97,7 @@ class BlockLinkSetDisplayAsProperty extends UIContentBlock
 		$this->oTwigEnv = TwigHelper::GetTwigEnvironment(TwigHelper::ENUM_TEMPLATES_BASE_PATH_BACKOFFICE);
 
 		$oAppContext = new ApplicationContext();
-		$this->sAppContext = $oAppContext->GetQueryParametersString();
+		$this->sAppContext = $oAppContext->GetForLink(true);
 		$this->sUIPage = cmdbAbstractObject::ComputeStandardUIPage($this->sTargetClass);
 	}
 

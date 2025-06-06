@@ -41,7 +41,7 @@ function DisplayPreferences($oP)
 {
 	$oContentLayout = PageContentFactory::MakeStandardEmpty();
 	$oAppContext = new ApplicationContext();
-	$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?'.$oAppContext->GetQueryParametersString(false);
+	$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?'.$oAppContext->GetForLink();
 
 	$oContentLayout->AddMainBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Preferences:Title')));
 
@@ -829,7 +829,7 @@ try {
 				
 				// Redirect to force a reload/display of the page in case language has been changed
 				$oAppContext = new ApplicationContext();
-				$sURL = utils::GetAbsoluteUrlAppRoot().'pages/preferences.php?'.$oAppContext->GetQueryParametersString(false);
+				$sURL = utils::GetAbsoluteUrlAppRoot().'pages/preferences.php?'.$oAppContext->GetForLink();
 				$oPage->add_header('Location: '.$sURL);
 				break;
 			case 'apply_keyboard_shortcuts':
