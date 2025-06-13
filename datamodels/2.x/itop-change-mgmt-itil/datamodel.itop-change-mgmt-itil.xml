@@ -46,12 +46,12 @@
         <field id="status" xsi:type="AttributeEnum">
           <sort_type>rank</sort_type>
           <values>
-            <value id="approved">approved
+            <value id="approved">
               <code>approved</code>
               <rank>60</rank>
               <style><main_color>$ibo-lifecycle-success-state-primary-color</main_color><complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color><decoration_classes>fas fa-user-check</decoration_classes></style>
             </value>
-            <value id="assigned">assigned
+            <value id="assigned">
               <code>assigned</code>
               <rank>40</rank>
               <style><main_color>$ibo-lifecycle-neutral-state-primary-color</main_color><complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color><decoration_classes/></style>

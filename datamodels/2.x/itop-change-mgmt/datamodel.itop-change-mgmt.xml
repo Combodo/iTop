@@ -380,7 +380,6 @@
               </attribute>
               <attribute id="private_log">
                 <read_only/>
-                <read_only/>
               </attribute>
               <attribute id="caller_id">
                 <read_only/>
