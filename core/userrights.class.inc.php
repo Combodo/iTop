@@ -2120,6 +2120,8 @@ class StimulusChecker extends ActionChecker
 {
 	var $sState = null;
 
+	public mixed $iState = null;
+
 	public function __construct(DBSearch $oFilter, $sState, $iStimulusCode)
 	{
 		parent::__construct($oFilter, $iStimulusCode);

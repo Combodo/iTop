@@ -1014,7 +1014,7 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Class:SynchroAttLinkSet'                                                  => 'Synchro Attribute (Linkset)',
 	'Class:SynchroAttLinkSet/Attribute:row_separator'                          => 'Rows separator',
 	'Class:SynchroAttLinkSet/Attribute:attribute_separator'                    => 'Attributes separator',
-	'Class:SynchroLog'                                                         => 'Synchr Log',
+	'Class:SynchroLog'                                                         => 'Synchro Log',
 	'Class:SynchroLog/Attribute:sync_source_id'                                => 'Synchro Data Source',
 	'Class:SynchroLog/Attribute:start_date'                                    => 'Start Date',
 	'Class:SynchroLog/Attribute:end_date'                                      => 'End Date',

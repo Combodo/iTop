@@ -937,7 +937,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:SynchroAttLinkSet' => 'Synchro Attribut (Linksæt)',
 	'Class:SynchroAttLinkSet/Attribute:row_separator' => 'Række separator',
 	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => 'Attribut separator',
-	'Class:SynchroLog' => 'Synchr Log',
+	'Class:SynchroLog' => 'Synchro Log',
 	'Class:SynchroLog/Attribute:sync_source_id' => 'Synchro Data Kilde',
 	'Class:SynchroLog/Attribute:start_date' => 'Start Dato',
 	'Class:SynchroLog/Attribute:end_date' => 'Slut Dato',

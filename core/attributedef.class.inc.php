@@ -4995,7 +4995,7 @@ class AttributeCaseLog extends AttributeLongText
 			}
 			else
 			{
-				if (strlen($proposedValue) > 0)
+				if (utils::StrLen($proposedValue) > 0)
 				{
 					//N°5135 - add impersonation information in caselog
 					if (UserRights::IsImpersonated()){

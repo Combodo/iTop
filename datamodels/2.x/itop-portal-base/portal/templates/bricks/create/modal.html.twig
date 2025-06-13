@@ -1,0 +1,44 @@
+{# itop-portal-base/portal/templates/bricks/create/layout.html.twig #}
+{# Create brick base layout #}
+{% extends 'itop-portal-base/portal/templates/modal/layout.html.twig' %}
+
+{% block pModalTitle %}
+    {{ sPageTitle|dict_s }}
+{% endblock %}
+
+{% block pModalBody %}
+	<p>{{ 'Brick:Portal:Create:ChooseType'|dict_s }}</p>
+	<ul id="{{ sLeafClassesListId }}">
+        {% for aLeafClass in aLeafClasses %}
+			<li><a href="#" data-target-class="{{ aLeafClass.id }}">{{ aLeafClass.name }}</a></li>
+        {% endfor %}
+	</ul>
+
+	<script type="text/javascript">
+        $(document).ready(function(){
+            $('#{{ sLeafClassesListId }} a').off('click').on('click', function(oEvent){
+                oEvent.preventDefault();
+
+	            // Preparing target class url
+                var sUrl = '{{ app['url_generator'].generate('p_object_create', {sObjectClass : '-sObjectClass-'})|raw }}';
+	            sUrl = sUrl.replace(/-sObjectClass-/, $(this).attr('data-target-class') );
+	            sUrl = CombodoGlobalToolbox.AddParameterToUrl(sUrl, 'ar_token', '{{ ar_token }}');
+
+	            // Creating a new modal
+                CombodoModal.OpenModal({
+		            base_modal: {
+			            usage: 'replace',
+			            selector: $(this).closest('.modal'),
+		            },
+		            content: {
+			            endpoint: sUrl,
+		            },
+	            });
+            });
+        });
+	</script>
+{% endblock %}
+
+{% block pModalFooter %}
+	<button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Portal:Button:Cancel'|dict_s }}</button>
+{% endblock %}

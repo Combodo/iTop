@@ -29,9 +29,8 @@ use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
-use Combodo\iTop\Service\Import\CSVImportPageProcessor;
-use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Service\Import\CSVImportPageProcessor;
 
 try {
 	require_once('../approot.inc.php');
@@ -83,21 +82,24 @@ try {
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Select\
 	 */
-	function GetClassesSelectUIBlock(string $sName, $sDefaultValue, int $iActionCode): Select
+	function GetClassesSelectUIBlock(string $sName, $sDefaultValue, int $iActionCode, bool $bAdvanced = false): Select
 	{
 		$oSelectBlock = SelectUIBlockFactory::MakeForSelect($sName, 'select_'.$sName);
 		$oOption = SelectOptionUIBlockFactory::MakeForSelectOption("", Dict::S('UI:CSVImport:ClassesSelectOne'), false);
 		$oSelectBlock->AddSubBlock($oOption);
 		$aValidClasses = array();
-		$aClassCategories = array('bizmodel', 'addon/authentication', 'grant_by_profile');
+		$aClassCategories = array('bizmodel', 'addon/authentication');
+		if ($bAdvanced) {
+			$aClassCategories[] = 'grant_by_profile';
+		}
 		if (UserRights::IsAdministrator()) {
-			$aClassCategories = array('bizmodel', 'application', 'addon/authentication', 'grant_by_profile');
+			$aClassCategories[] = 'application';
 		}
 		foreach ($aClassCategories as $sClassCategory) {
 			foreach (MetaModel::GetClasses($sClassCategory) as $sClassName) {
 				if ((is_null($iActionCode) || UserRights::IsActionAllowed($sClassName, $iActionCode)) &&
 					(!MetaModel::IsAbstract($sClassName))) {
-					$sDisplayName = MetaModel::GetName($sClassName);
+					$sDisplayName = ($bAdvanced) ? MetaModel::GetName($sClassName)." ($sClassName)" : MetaModel::GetName($sClassName);
 					$aValidClasses[$sDisplayName] = SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, $sDisplayName, ($sClassName == $sDefaultValue));
 				}
 			}
@@ -333,7 +335,7 @@ try {
 			$oClassesSelect->AddSubBlock($oDefaultSelect);
 			$aSynchroUpdate = utils::ReadParam('synchro_update', array());
 		} else {
-			$oClassesSelect = GetClassesSelectUIBlock('class_name', $sClassName, UR_ACTION_BULK_MODIFY);
+			$oClassesSelect = GetClassesSelectUIBlock('class_name', $sClassName, UR_ACTION_BULK_MODIFY, (bool)$bAdvanced);
 		}
 		$oPanel = TitleUIBlockFactory::MakeForPage(Dict::S('UI:Title:CSVImportStep3'));
 		$oPage->AddSubBlock($oPanel);
@@ -398,7 +400,7 @@ try {
 		$oPage->add_ready_script(
 			<<<EOF
 	$('#select_class_name').on('change', function(ev) { DoMapping(); } );
-	$('#advanced').on('click', function(ev) { DoMapping(); } );
+	$('#advanced').on('click', function(ev) { DoReload(); } );
 EOF
 		);
 		if ($sClassName != '')
@@ -415,6 +417,13 @@ EOF
 <<<EOF
 	var aDefaultKeys = new Array();
 	var aReadOnlyKeys = new Array();
+	
+	function DoReload()
+	{
+		$('input[name=step]').val(3);
+		$('#wizForm').removeAttr('onsubmit'); // No need to perform validation checks when going back
+		$('#wizForm').submit();
+	}
 	
 	function CSVGoBack()
 	{

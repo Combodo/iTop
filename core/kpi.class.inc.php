@@ -469,7 +469,8 @@ class ExecutionKPI
             // Invoke extensions to log the KPI operation
             /** @var \iKPILoggerExtension $oExtensionInstance */
             foreach (MetaModel::EnumPlugins('iKPILoggerExtension') as $oExtensionInstance) {
-                $sExtension = ModuleService::GetInstance()->GetModuleNameFromCallStack(1);
+	            //$sExtension = ModuleService::GetInstance()->GetModuleNameFromCallStack(1);
+	            $sExtension = '';
                 $oKPILogData = new KpiLogData(
                         KpiLogData::TYPE_STATS,
                         $sOperation,

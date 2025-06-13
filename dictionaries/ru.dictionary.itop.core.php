@@ -937,7 +937,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SynchroAttLinkSet' => 'Synchro Attribute (Linkset)~~',
 	'Class:SynchroAttLinkSet/Attribute:row_separator' => 'Разделитель строк',
 	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => 'Разделитель атрибутов',
-	'Class:SynchroLog' => 'Synchr Log~~',
+	'Class:SynchroLog' => 'Synchro Log~~',
 	'Class:SynchroLog/Attribute:sync_source_id' => 'Синх.исходные данные',
 	'Class:SynchroLog/Attribute:start_date' => 'Стартовать в',
 	'Class:SynchroLog/Attribute:end_date' => 'Закончить в',
