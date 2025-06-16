@@ -3802,27 +3802,24 @@ HTML;
      * function to test if the posted value or fi not exists the existing value matches the expected value
      * this is used to check the current value in GetAttributeFlag function (useful to manage dynamic readonly attributes)
      * @param $sAttr
-     * @param $sValue
-     * @return bool
-     * @throws ArchivedObjectException
-     * @throws CoreException
      */
-    public function GetCurrentValue($sAttr)
+    public function GetCurrentValue($sAttCode)
     {
-        if (array_key_exists($sAttr, $this->aPostedValues)) {
-            return $this->aPostedValues[$sAttr];
+        if (array_key_exists($sAttCode, $this->aPostedValues)) {
+            return $this->aPostedValues[$sAttCode];
         }
-        return $this->Get($sAttr);
+        return $this->Get($sAttCode);
     }
 
     /*
      * This function checks if the value of the attribute has been modified in screen
      * this is used to check if field has been modifed in GetAttributeFlag function (useful to manage dynamic readonly attributes)
+     * @param $sAttr
      */
-    public function IsModifiedValue($sAttr)
+    public function IsModifiedValue($sAttCode)
     {
-        if (array_key_exists($sAttr, $this->aPostedValues)) {
-            return $this->aPostedValues[$sAttr] == $this->Get($sAttr);
+        if (array_key_exists($sAttCode, $this->aPostedValues)) {
+            return $this->aPostedValues[$sAttCode] == $this->Get($sAttCode);
         }
         return false;
     }
