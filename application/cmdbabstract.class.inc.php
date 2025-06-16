@@ -175,7 +175,9 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 */
 	protected $sDisplayMode;
 	protected $aFieldsMap;
-    /*store posted values in order to be used in GetAttributeFlag*/
+    /**
+     * @var array Store posted values in order to be used in GetAttributeFlag
+     */
     protected $aPostedValues = [];
 
 	/**
