@@ -3819,7 +3819,7 @@ HTML;
     public function IsModifiedValue($sAttCode)
     {
         if (array_key_exists($sAttCode, $this->aPostedValues)) {
-            return $this->aPostedValues[$sAttCode] == $this->Get($sAttCode);
+            return $this->aPostedValues[$sAttCode] != $this->Get($sAttCode);
         }
         return false;
     }
