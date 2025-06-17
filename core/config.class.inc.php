@@ -1795,6 +1795,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+        'audit.filter' => [
+            'type' => 'array',
+            'description' => 'Array to use in filter "field" => ["label" =>"my_label", "values" => "array_of_values","oql"=>"my_oql"]',
+            'default' => [],
+            'value' => [],
+            'source_of_value' => '',
+            'show_in_conf_sample' => false,
+        ],
 		'application.secret' => [
 			'type'                => 'string',
 			'description'         => 'Application secret, uses this value for encrypting the cookies used in the remember me functionality and for creating signed URIs when using ESI (Edge Side Includes).',

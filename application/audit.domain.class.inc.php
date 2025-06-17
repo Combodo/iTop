@@ -25,6 +25,7 @@
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+require_once(APPROOT.'/application/audit.AuditFilterField.class.inc.php');
 
 /**
  * @since 3.1.0
@@ -50,11 +51,11 @@ class AuditDomain extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("description" => "Short name for this category", "allowed_values" => null, "sql" => "name", "default_value" => "", "is_null_allowed" => false, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values" => null, "sql" => "description", "default_value" => "", "is_null_allowed" => true, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeImage("icon", array("is_null_allowed" => true, "depends_on" => array(), "display_max_width" => 96, "display_max_height" => 96, "storage_max_width" => 256, "storage_max_height" => 256, "default_image" => null, "always_load_in_tables" => false)));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("categories_list",
-			array("linked_class" => "lnkAuditCategoryToAuditDomain", "ext_key_to_me" => "domain_id", "ext_key_to_remote" => "category_id", "allowed_values" => null, "count_min" => 0, "count_max" => 0, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("categories_list", array("linked_class" => "lnkAuditCategoryToAuditDomain", "ext_key_to_me" => "domain_id", "ext_key_to_remote" => "category_id", "allowed_values" => null, "count_min" => 0, "count_max" => 0, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSet("filterfield_list", array("linked_class"=>"AuditFilterField", "ext_key_to_me"=>"auditdomain_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>5,"edit_mode"=>LINKSET_EDITMODE_INPLACE, "depends_on"=>array(), "tracking_level"=>LINKSET_TRACKING_ALL)));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'icon', 'categories_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'icon', 'categories_list', 'filterfield_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('description',)); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description')); // Criteria of the std search form
@@ -70,6 +71,36 @@ class AuditDomain extends cmdbAbstractObject
 
 		return $aShortcutActions;
 	}
+    public function GetDependentFields():array
+    {
+        $aListFields=[];
+        foreach ($this->Get('categories_list') as $oLnkToCategory) {
+            $aMatches = [];
+            $oCategory = MetaModel::GetObject('AuditCategory', $oLnkToCategory->Get('category_id'));
+            if (preg_match_all('/:\w+/', $oCategory->Get('definition_set'), $aMatches)) {
+                foreach ($aMatches as $aMatchesList) {
+                    foreach ($aMatchesList as $sPlaceholder) {
+                        if (!in_array(substr($sPlaceholder, 1), $aListFields)) {
+                            $aListFields[] = substr($sPlaceholder, 1);
+                        }
+                    }
+                }
+            }
+            foreach ($oCategory->Get('rules_list') as $oRule) {
+                $aMatches = [];
+                if (preg_match_all('/:\w+/', $oRule->Get('query'), $aMatches)) {
+                    foreach ($aMatches as $aMatchesList) {
+                        foreach ($aMatchesList as $sPlaceholder) {
+                            if (!in_array(substr($sPlaceholder, 1), $aListFields)) {
+                                $aListFields[] = substr($sPlaceholder, 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $aListFields;
+    }
 
 }
 

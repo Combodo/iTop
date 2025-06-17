@@ -11,6 +11,7 @@
 require_once(APPROOT.'/application/applicationcontext.class.inc.php');
 require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
 require_once(APPROOT.'/application/displayblock.class.inc.php');
+require_once(APPROOT.'/application/audit.AuditFilterField.class.inc.php');
 require_once(APPROOT.'/application/audit.category.class.inc.php');
 require_once(APPROOT.'/application/audit.domain.class.inc.php');
 require_once(APPROOT.'/application/audit.rule.class.inc.php');

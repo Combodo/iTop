@@ -6,6 +6,39 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+//
+// Class: AuditFilterField
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+    'Class:AuditFilterField' => 'Filtre pour les audits',
+    'Class:AuditFilterField+' => 'Dans les Périmètres et les règles d\'audit, vous pouvez utiliser les filtres définis ici pour limiter les objets audités',
+    'Class:AuditFilterField/Attribute:label' => 'Libellé',
+    'Class:AuditFilterField/Attribute:label+' => 'Libellé affiché dans l\'écran d\audit',
+    'Class:AuditFilterField/Attribute:placeholder' => 'Nom de la variable',
+    'Class:AuditFilterField/Attribute:placeholder+' => 'Nom  de la variable utilisé dans les requêtes des Périmètres et des règles d\'audit',
+    'Class:AuditFilterField/Attribute:placeholder:Error:StartWithThis' => 'Le nom de la vaiable ne peut pas commencer par le mot réservé "%1$s"',
+    'Class:AuditFilterField/Attribute:placeholder:Error:ReservedWord' => 'Le nom de la vaiable ne peut  être le mot réservé "%1$s"',
+    'Class:AuditFilterField/Attribute:type' =>'Type de champ',
+    'Class:AuditFilterField/Attribute:type+' =>'',
+    'Class:AuditFilterField/Attribute:type/Value:select_oql' => 'Select définit par OQL',
+    'Class:AuditFilterField/Attribute:type/Value:select_oql+'  => '',
+    'Class:AuditFilterField/Attribute:type/Value:select_values' => 'Select définit avec une liste de valeurs',
+    'Class:AuditFilterField/Attribute:type/Value:select_values+' => '',
+    'Class:AuditFilterField/Attribute:type/Value:number' => 'Nombre',
+    'Class:AuditFilterField/Attribute:type/Value:number+' => '',
+    'Class:AuditFilterField/Attribute:type/Value:date'  => 'Date',
+    'Class:AuditFilterField/Attribute:type/Value:date+' => '',
+    'Class:AuditFilterFieldSelectOQL/Attribute:oql' => 'Requête',
+    'Class:AuditFilterFieldSelectOQL/Attribute:oql+' => 'Requête de définition de l\'ensemble des objets pouvant être selectionnés pour les règles et les catégories d\'audit',
+    'Class:AuditFilterFieldSelectValues/Attribute:values'   => ' Liste des valeurs possibles',
+    'Class:AuditFilterFieldSelectValues/Attribute:values+' => ' Liste des valeurs pouvant être selectionnés pour les règles et les catégories d\'audit',
+    'Class:AuditFilterField/Attribute:oql/Error:Empty' => 'Si le type sélectionné est "Select définit par OQL", le champ "Oql" est obligatoire',
+    'Class:AuditFilterField/Attribute:values/Error:Empty' => 'Si le type sélectionné est "Select définit avec une liste de valeurs", le champ "Liste des valeurs" est obligatoire',
+    'Class:AuditDomain/Select:DependentFields' => 'Veuillez sélectionner tous les champs nécessaires :<br>- %1$s',
+]);
+
+
 /**
  *
  */
@@ -412,6 +445,8 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:WelcomeMenu:AllConfigItems' => 'Actifs: %1$d',
 	'UI:WelcomeMenu:MyIncidents' => 'Mes incidents',
 	'UI:AllOrganizations' => ' Toutes les Organisations ',
+    'UI:Audit:Interactive:Selection:SubTitleParams'  => 'Veuillez sélectionner les paramètres suivant : ',
+    'UI:Audit:Interactive:FilterList'  => 'Avec les paramètres suivants : ',
 	'UI:YourSearch' => 'Votre recherche',
 	'UI:LoggedAsMessage' => 'Connecté(e) comme: %1$s (%2$s)',
 	'UI:LoggedAsMessage+Admin' => 'Connecté(e) comme: %1$s (%2$s, Administrateur)',
@@ -742,6 +777,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Audit:Interactive:Selection:BadgeAll' => 'Toutes les catégories',
 	'UI:Audit:Interactive:Button:Back' => 'Retour à l\'audit',
 	'UI:Audit:Interactive:Button:Configuration' => 'Configurer l\'audit',
+	'UI:Audit:Interactive:Button:Run' => 'Lancer l\'audit',
 	'UI:Audit:ViewRules' => 'Vérifier les régles d\'audit',
 	'UI:Audit:HeaderAuditRule' => 'Règle d\'audit',
 	'UI:Audit:HeaderNbObjects' => 'Nb d\'Objets',

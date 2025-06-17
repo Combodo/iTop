@@ -100,3 +100,8 @@ $ibo-dashlet-badge--body--tooltip-title--margin-bottom: $ibo-spacing-500 !defaul
   @extend %ibo-font-weight-600;
   margin-bottom: $ibo-dashlet-badge--body--tooltip-title--margin-bottom;
 }
+
+.ibo-dashlet-badge--disabled{
+  cursor: not-allowed !important;
+  color:$ibo-color-grey-300;
+}

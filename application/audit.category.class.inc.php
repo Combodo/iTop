@@ -92,5 +92,13 @@ class AuditCategory extends cmdbAbstractObject
 
 		return $aShortcutActions;
 	}
+
+	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
+	{
+        AuditFilterField::DisplayListOfFields($oPage);
+        $aFieldsMap = parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);;
+		return $aFieldsMap;
+	}
+
+
 }
-?>

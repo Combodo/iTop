@@ -6,6 +6,39 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+//
+// Class: AuditFilterField
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', [
+    'Class:AuditFilterField' => 'Audit Filter Fields~~',
+    'Class:AuditFilterField+'  => 'In Audit rules and Audit categories you can use Filter Fields defined here.~~',
+    'Class:AuditFilterField/Attribute:label' => 'Label~~',
+    'Class:AuditFilterField/Attribute:label+'  => 'Label for select field~~',
+    'Class:AuditFilterField/Attribute:placeholder' => 'Placeholder~~',
+    'Class:AuditFilterField/Attribute:placeholder+' => 'The field can be used in Audit rules and Audit categories requests~~',
+    'Class:AuditFilterField/Attribute:placeholder:Error:StartWithThis' => 'The placeholder can not start with the reserved word "%1$s"~~',
+    'Class:AuditFilterField/Attribute:placeholder:Error:ReservedWord' => 'The placeholder can not be the reserved word "%1$s"~~',
+    'Class:AuditFilterField/Attribute:type' =>'Field type~~',
+    'Class:AuditFilterField/Attribute:type+' =>'~~',
+    'Class:AuditFilterField/Attribute:type/Value:select_oql'  => ' Select defined by OQL~~',
+    'Class:AuditFilterField/Attribute:type/Value:select_oql+' => 'In Audit rules and Audit categories you can use Filter Fields value in a select list defined by OQL.~~',
+    'Class:AuditFilterField/Attribute:type/Value:select_values' => ' Select defined by values~~',
+    'Class:AuditFilterField/Attribute:type/Value:select_values+' => 'In Audit rules and Audit categories you can use Filter Fields value in a select value list defined here.~~',
+    'Class:AuditFilterField/Attribute:type/Value:number' => ' Number~~',
+    'Class:AuditFilterField/Attribute:type/Value:number+'  => 'In Audit rules and Audit categories you can use number Filter Fields.~~',
+    'Class:AuditFilterField/Attribute:type/Value:date' => ' Date~~',
+    'Class:AuditFilterField/Attribute:type/Value:date+'  => 'In Audit rules and Audit categories you can use date Filter Fields.~~',
+    'Class:AuditFilterField/Attribute:oql' => 'Query for select~~',
+    'Class:AuditFilterField/Attribute:oql+' => 'OQL query defining the set of objects to be selected in audit rules and audit categories~~',
+    'Class:AuditFilterField/Attribute:values' => 'List of avalaible values~~',
+    'Class:AuditFilterField/Attribute:values+' => ' Defining the list of values to be selected in audit rules and audit categories~~',
+    'Class:AuditFilterField/Attribute:oql/Error:Empty' => 'If selected type is "Select defined by OQL", Oql field is mandatory~~',
+    'Class:AuditFilterField/Attribute:values/Error:Empty' => 'If selected type is "Select defined by values", Values field is mandatory~~',
+    'Class:AuditDomain/Select:DependentFields' => 'Please select necessary parameters: <br>- %1$s~~',
+]);
+
+
 /**
  *
  */
@@ -417,6 +450,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Button:SaveAnd' => 'Salva e %1$s',
 	'UI:Button:Cancel' => 'Annulla',
 	'UI:Button:Close' => 'Chiudi',
+    'UI:Audit:Interactive:Selection:SubTitleParams'  => 'Please select the following parameters: ~~',
+    'UI:Audit:Interactive:FilterList'  => 'With following parameters: ~~',
 	'UI:Button:Apply' => 'Applica',
 	'UI:Button:Send' => 'Invia',
 	'UI:Button:SendAnd' => 'Invia e %1$s',
@@ -731,6 +766,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Audit:Interactive:Selection:BadgeAll' => 'Tutte le categorie',
 	'UI:Audit:Interactive:Button:Back' => 'Torna all\'audit',
 	'UI:Audit:Interactive:Button:Configuration' => 'Configurazione audit',
+	'UI:Audit:Interactive:Button:Run' => 'Run the audit~~',
 	'UI:Audit:ViewRules' => 'Controlla le regole',
 	'UI:Audit:HeaderAuditRule' => 'Regole di Audit',
 	'UI:Audit:HeaderNbObjects' => '# Oggetti',

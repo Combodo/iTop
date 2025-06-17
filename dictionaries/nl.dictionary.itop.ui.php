@@ -6,6 +6,40 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+//
+// Class: AuditFilterField
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+    'Class:AuditFilterField' => 'Audit Filter Fields~~',
+    'Class:AuditFilterField+'  => 'In Audit rules and Audit categories you can use Filter Fields defined here.~~',
+    'Class:AuditFilterField/Attribute:label' => 'Label~~',
+    'Class:AuditFilterField/Attribute:label+'  => 'Label for select field~~',
+    'Class:AuditFilterField/Attribute:placeholder' => 'Placeholder~~',
+    'Class:AuditFilterField/Attribute:placeholder+' => 'The field can be used in Audit rules and Audit categories requests~~',
+    'Class:AuditFilterField/Attribute:placeholder:Error:StartWithThis' => 'The placeholder can not start with the reserved word "%1$s"~~',
+    'Class:AuditFilterField/Attribute:placeholder:Error:ReservedWord' => 'The placeholder can not be the reserved word "%1$s"~~',
+    'Class:AuditFilterField/Attribute:type' =>'Field type~~',
+    'Class:AuditFilterField/Attribute:type+' =>'~~',
+    'Class:AuditFilterField/Attribute:type/Value:select_oql'  => ' Select defined by OQL~~',
+    'Class:AuditFilterField/Attribute:type/Value:select_oql+' => 'In Audit rules and Audit categories you can use Filter Fields value in a select list defined by OQL.~~',
+    'Class:AuditFilterField/Attribute:type/Value:select_values' => ' Select defined by values~~',
+    'Class:AuditFilterField/Attribute:type/Value:select_values+' => 'In Audit rules and Audit categories you can use Filter Fields value in a select value list defined here.~~',
+    'Class:AuditFilterField/Attribute:type/Value:number' => ' Number~~',
+    'Class:AuditFilterField/Attribute:type/Value:number+'  => 'In Audit rules and Audit categories you can use number Filter Fields.~~',
+    'Class:AuditFilterField/Attribute:type/Value:date' => ' Date~~',
+    'Class:AuditFilterField/Attribute:type/Value:date+'  => 'In Audit rules and Audit categories you can use date Filter Fields.~~',
+    'Class:AuditFilterField/Attribute:oql' => 'Query for select~~',
+    'Class:AuditFilterField/Attribute:oql+' => 'OQL query defining the set of objects to be selected in audit rules and audit categories~~',
+    'Class:AuditFilterField/Attribute:values' => 'List of avalaible values~~',
+    'Class:AuditFilterField/Attribute:values+' => ' Defining the list of values to be selected in audit rules and audit categories~~',
+    'Class:AuditFilterField/Attribute:oql/Error:Empty' => 'If selected type is "Select defined by OQL", Oql field is mandatory~~',
+    'Class:AuditFilterField/Attribute:values/Error:Empty' => 'If selected type is "Select defined by values", Values field is mandatory~~',
+    'Class:AuditDomain/Select:DependentFields' => 'Please select necessary parameters: <br>- %1$s~~',
+]);
+
+
+
 /**
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
@@ -398,6 +432,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:WelcomeMenu:AllConfigItems' => 'Configuratie-items: %1$d',
 	'UI:WelcomeMenu:MyIncidents' => 'Aan mij toegewezen incidenten',
 	'UI:AllOrganizations' => ' Alle Organisaties ',
+    'UI:Audit:Interactive:Selection:SubTitleParams'  => 'Please select the following parameters: ~~',
+    'UI:Audit:Interactive:FilterList'  => 'With following parameters: ~~',
 	'UI:YourSearch' => 'Jouw zoekopdracht',
 	'UI:LoggedAsMessage' => 'Ingelogd als %1$s (%2$s)',
 	'UI:LoggedAsMessage+Admin' => 'Ingelogd als %1$s (%2$s, Beheerder)',
@@ -727,6 +763,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Audit:Interactive:Selection:BadgeAll' => 'Alle categorieën',
 	'UI:Audit:Interactive:Button:Back' => 'Terug naar de audit',
 	'UI:Audit:Interactive:Button:Configuration' => 'Audit configuratie',
+	'UI:Audit:Interactive:Button:Run' => 'Run the audit~~',
 	'UI:Audit:ViewRules' => 'Check the rules~~',
 	'UI:Audit:HeaderAuditRule' => 'Auditregel',
 	'UI:Audit:HeaderNbObjects' => '# objecten',
