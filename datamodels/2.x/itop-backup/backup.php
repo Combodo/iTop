@@ -127,9 +127,7 @@ function ExecuteMainOperation($oP){
 		exit;
 	}
 
-
-	$sDefaultBackupFileName = SetupUtils::GetTmpDir().'/'."__DB__-%Y-%m-%d";
-	$sBackupFile =  utils::ReadParam('backup_file', $sDefaultBackupFileName, true, 'raw_data');
+	$sBackupFile =  utils::ReadParam('backup_file', BACKUP_DEFAULT_FORMAT, true, 'raw_data');
 
 // Interpret strftime specifications (like %Y) and database placeholders
 	$oBackup = new MyDBBackup($oP);
