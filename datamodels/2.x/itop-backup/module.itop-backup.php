@@ -52,6 +52,7 @@ SetupWebPage::AddModule(
 			'retention_count' => 5, 
 			'enabled' => true,
 			'itop_backup_incident' => '',
+			'backup_tmpdir' => 'data/',
 		),
 	)
 );

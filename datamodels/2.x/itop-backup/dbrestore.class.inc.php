@@ -128,7 +128,7 @@ class DBRestore extends DBBackup
 			IssueLog::Info('Backup Restore - LOCK acquired, executing...');
 			$bReadonlyBefore = SetupUtils::EnterMaintenanceMode(MetaModel::GetConfig());
 
-			$sDataDir = SetupUtils::GetTmpDir().'/itop-backup-'.rand(10000, getrandmax());
+			$sDataDir = static::GetTmpDir($this->oConfig);
 			SetupUtils::builddir($sDataDir); // Here is the directory
 
 			try {

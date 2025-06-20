@@ -204,7 +204,7 @@ class DBBackup
 
 		$oArchive = new ITopArchiveTar($sTargetFile.'.tar.gz');
 
-		$sTmpFolder = SetupUtils::GetTmpDir().'/itop-backup-'.rand(10000, getrandmax());
+		$sTmpFolder = static::GetTmpDir($this->oConfig);
 		$aFiles = $this->PrepareFilesToBackup($sSourceConfigFile, $sTmpFolder);
 
 		$sFilesList = var_export($aFiles, true);
@@ -642,6 +642,20 @@ EOF;
 		}
 
 		return $sMySQLCommand;
+	}
+
+	/**
+	 * Return a directory name for temporary backup files.
+	 * If the configured value is empty, then use the system tmp dir
+	 */
+	public static function GetTmpDir(Config $oConfig): string
+	{
+		$sTmpDir = $oConfig->GetModuleSetting('itop-backup', 'backup_tmpdir', 'data/');
+
+		$sTmpDir = tempnam(empty($sTmpDir) ? SetupUtils::getTmpDir() : APPROOT.$sTmpDir , 'itop-backup-');
+		unlink($sTmpDir); // I need a directory, not a file...
+
+		return $sTmpDir;
 	}
 }
 
