@@ -2897,21 +2897,6 @@ TXT
 	}
 
 	/**
-	 * @param string $sInterface
-	 * @param string $sClassNameFilter
-	 * @param array $aExcludedPath Reg. exp. of the paths to exclude. Note that backslashes (typically for Windows env.) need to be 4 backslashes, 2 for the escaping backslash, 2 for the actual backslash 😅
-	 *
-	 * @return array classes are returned in the same order as the module dependency tree, so core classes on top
-	 * @since 3.0.0
-	 * @deprecated 3.2.0 Use {@see InterfaceDiscovery::FindItopClasses()} instead
-	 */
-	public static function GetClassesForInterface(string $sInterface, string $sClassNameFilter = '', $aExcludedPath = []): array
-	{
-		$oInterfaceDiscoveryService = InterfaceDiscovery::GetInstance();
-		return $oInterfaceDiscoveryService->FindItopClasses($sInterface);
-	}
-
-	/**
 	 * @return array All keyboard shortcuts config as an array
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
