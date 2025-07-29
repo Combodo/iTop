@@ -85,7 +85,7 @@ trait FilesystemCommonTrait
         return @unlink($file);
     }
 
-    private function write(string $file, string $data, int $expiresAt = null): bool
+    private function write(string $file, string $data, ?int $expiresAt = null): bool
     {
         $unlink = false;
         set_error_handler(static fn ($type, $message, $file, $line) => throw new \ErrorException($message, 0, $type, $file, $line));
@@ -109,8 +109,13 @@ trait FilesystemCommonTrait
                 touch($tmp, $expiresAt ?: time() + 31556952); // 1 year in seconds
             }
 
-            $success = rename($tmp, $file);
-            $unlink = !$success;
+            if ('\\' === \DIRECTORY_SEPARATOR) {
+                $success = copy($tmp, $file);
+                $unlink = true;
+            } else {
+                $success = rename($tmp, $file);
+                $unlink = !$success;
+            }
 
             return $success;
         } finally {
@@ -122,7 +127,7 @@ trait FilesystemCommonTrait
         }
     }
 
-    private function getFile(string $id, bool $mkdir = false, string $directory = null): string
+    private function getFile(string $id, bool $mkdir = false, ?string $directory = null): string
     {
         // Use xxh128 to favor speed over security, which is not an issue here
         $hash = str_replace('/', '-', base64_encode(hash('xxh128', static::class.$id, true)));

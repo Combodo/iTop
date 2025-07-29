@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-if (\PHP_VERSION_ID < 80000) {
-    class UnhandledMatchError extends Error
+if (\PHP_VERSION_ID < 80300) {
+    class SQLite3Exception extends Exception
     {
     }
 }

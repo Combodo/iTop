@@ -11,9 +11,11 @@
 
 namespace Symfony\Component\DependencyInjection\Compiler;
 
+use Symfony\Component\DependencyInjection\Argument\AbstractArgument;
 use Symfony\Component\DependencyInjection\Argument\BoundArgument;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -181,10 +183,17 @@ class ResolveBindingsPass extends AbstractRecursivePass
             foreach ($reflectionMethod->getParameters() as $key => $parameter) {
                 $names[$key] = $parameter->name;
 
-                if (\array_key_exists($key, $arguments) && '' !== $arguments[$key]) {
+                if (\array_key_exists($key, $arguments) && '' !== $arguments[$key] && !$arguments[$key] instanceof AbstractArgument) {
                     continue;
                 }
-                if (\array_key_exists($parameter->name, $arguments) && '' !== $arguments[$parameter->name]) {
+                if (\array_key_exists($parameter->name, $arguments) && '' !== $arguments[$parameter->name] && !$arguments[$parameter->name] instanceof AbstractArgument) {
+                    continue;
+                }
+                if (
+                    $value->isAutowired()
+                    && !$value->hasTag('container.ignore_attributes')
+                    && $parameter->getAttributes(Autowire::class, \ReflectionAttribute::IS_INSTANCEOF)
+                ) {
                     continue;
                 }
 
@@ -222,7 +231,9 @@ class ResolveBindingsPass extends AbstractRecursivePass
 
             foreach ($names as $key => $name) {
                 if (\array_key_exists($name, $arguments) && (0 === $key || \array_key_exists($key - 1, $arguments))) {
-                    $arguments[$key] = $arguments[$name];
+                    if (!array_key_exists($key, $arguments)) {
+                        $arguments[$key] = $arguments[$name];
+                    }
                     unset($arguments[$name]);
                 }
             }

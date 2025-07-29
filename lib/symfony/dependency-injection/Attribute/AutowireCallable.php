@@ -25,9 +25,9 @@ class AutowireCallable extends Autowire
      * @param bool|class-string $lazy Whether to use lazy-loading for this argument
      */
     public function __construct(
-        string|array $callable = null,
-        string $service = null,
-        string $method = null,
+        string|array|null $callable = null,
+        ?string $service = null,
+        ?string $method = null,
         bool|string $lazy = false,
     ) {
         if (!(null !== $callable xor null !== $service)) {
@@ -42,7 +42,7 @@ class AutowireCallable extends Autowire
 
     public function buildDefinition(mixed $value, ?string $type, \ReflectionParameter $parameter): Definition
     {
-        return (new Definition($type = \is_string($this->lazy) ? $this->lazy : ($type ?: 'Closure')))
+        return (new Definition($type = \is_array($this->lazy) ? current($this->lazy) : ($type ?: 'Closure')))
             ->setFactory(['Closure', 'fromCallable'])
             ->setArguments([\is_array($value) ? $value + [1 => '__invoke'] : $value])
             ->setLazy($this->lazy || 'Closure' !== $type && 'callable' !== (string) $parameter->getType());

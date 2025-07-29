@@ -82,7 +82,7 @@ abstract class AbstractRecursivePass implements CompilerPassInterface
                     continue;
                 }
                 if ($isRoot) {
-                    if ($v->hasTag('container.excluded')) {
+                    if ($v instanceof Definition && $v->hasTag('container.excluded')) {
                         continue;
                     }
                     $this->currentId = $k;
@@ -216,6 +216,10 @@ abstract class AbstractRecursivePass implements CompilerPassInterface
 
         if (!$r->hasMethod($method)) {
             if ($r->hasMethod('__call') && ($r = $r->getMethod('__call')) && $r->isPublic()) {
+                return new \ReflectionMethod(static function (...$arguments) {}, '__invoke');
+            }
+
+            if ($r->hasMethod('__callStatic') && ($r = $r->getMethod('__callStatic')) && $r->isPublic()) {
                 return new \ReflectionMethod(static function (...$arguments) {}, '__invoke');
             }
 

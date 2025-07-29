@@ -45,6 +45,7 @@ use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Uid\Factory\UuidFactory;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Webhook\Controller\WebhookController;
 use Symfony\Component\WebLink\HttpHeaderSerializer;
@@ -146,7 +147,7 @@ class Configuration implements ConfigurationInterface
             ->end()
         ;
 
-        $willBeAvailable = static function (string $package, string $class, string $parentPackage = null) {
+        $willBeAvailable = static function (string $package, string $class, ?string $parentPackage = null) {
             $parentPackages = (array) $parentPackage;
             $parentPackages[] = 'symfony/framework-bundle';
 
@@ -930,6 +931,10 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->scalarNode('importmap_polyfill')
                             ->info('The importmap name that will be used to load the polyfill. Set to false to disable.')
+                            ->validate()
+                                ->ifTrue()
+                                ->thenInvalid('Invalid "importmap_polyfill" value. Must be either an importmap name or false.')
+                            ->end()
                             ->defaultValue('es-module-shims')
                         ->end()
                         ->arrayNode('importmap_script_attributes')
@@ -1062,7 +1067,7 @@ class Configuration implements ConfigurationInterface
                             ->validate()->castToArray()->end()
                         ->end()
                         ->scalarNode('translation_domain')->defaultValue('validators')->end()
-                        ->enumNode('email_validation_mode')->values(['html5', 'loose', 'strict'])->end()
+                        ->enumNode('email_validation_mode')->values(array_merge(class_exists(Email::class) ? Email::VALIDATION_MODES : ['html5-allow-no-tld', 'html5', 'strict'], ['loose']))->end()
                         ->arrayNode('mapping')
                             ->addDefaultsIfNotSet()
                             ->fixXmlConfig('path')
@@ -1192,8 +1197,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->arrayNode('default_context')
                             ->normalizeKeys(false)
-                            ->useAttributeAsKey('name')
-                            ->beforeNormalization()
+                            ->validate()
                                 ->ifTrue(fn () => $this->debug && class_exists(JsonParser::class))
                                 ->then(fn (array $v) => $v + [JsonDecode::DETAILED_ERROR_MESSAGES => true])
                             ->end()
@@ -2089,6 +2093,9 @@ class Configuration implements ConfigurationInterface
                                             ->variableNode('md5')->end()
                                         ->end()
                                     ->end()
+                                    ->scalarNode('crypto_method')
+                                        ->info('The minimum version of TLS to accept; must be one of STREAM_CRYPTO_METHOD_TLSv*_CLIENT constants.')
+                                    ->end()
                                     ->arrayNode('extra')
                                         ->info('Extra options for specific HTTP client')
                                         ->normalizeKeys(false)
@@ -2195,6 +2202,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->arrayNode('envelope')
                             ->info('Mailer Envelope configuration')
+                            ->fixXmlConfig('recipient')
                             ->children()
                                 ->scalarNode('sender')->end()
                                 ->arrayNode('recipients')

@@ -34,7 +34,7 @@ class InlineServiceDefinitionsPass extends AbstractRecursivePass
     private array $notInlinableIds = [];
     private ?ServiceReferenceGraph $graph = null;
 
-    public function __construct(AnalyzeServiceReferencesPass $analyzingPass = null)
+    public function __construct(?AnalyzeServiceReferencesPass $analyzingPass = null)
     {
         $this->analyzingPass = $analyzingPass;
     }
@@ -72,6 +72,9 @@ class InlineServiceDefinitionsPass extends AbstractRecursivePass
                 foreach ($analyzedContainer->getDefinitions() as $id => $definition) {
                     if (!$this->graph->hasNode($id)) {
                         continue;
+                    }
+                    if ($definition->isPublic()) {
+                        $this->connectedIds[$id] = true;
                     }
                     foreach ($this->graph->getNode($id)->getOutEdges() as $edge) {
                         if (isset($notInlinedIds[$edge->getSourceNode()->getId()])) {
@@ -189,17 +192,13 @@ class InlineServiceDefinitionsPass extends AbstractRecursivePass
             return true;
         }
 
-        if ($definition->isPublic()) {
+        if ($definition->isPublic()
+            || $this->currentId === $id
+            || !$this->graph->hasNode($id)
+        ) {
             return false;
         }
 
-        if (!$this->graph->hasNode($id)) {
-            return true;
-        }
-
-        if ($this->currentId === $id) {
-            return false;
-        }
         $this->connectedIds[$id] = true;
 
         $srcIds = [];
@@ -224,6 +223,8 @@ class InlineServiceDefinitionsPass extends AbstractRecursivePass
             return false;
         }
 
-        return $this->container->getDefinition($srcId)->isShared();
+        $srcDefinition = $this->container->getDefinition($srcId);
+
+        return $srcDefinition->isShared() && !$srcDefinition->isLazy();
     }
 }

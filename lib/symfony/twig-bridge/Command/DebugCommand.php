@@ -48,7 +48,7 @@ class DebugCommand extends Command
 
     private ?FileLinkFormatter $fileLinkFormatter;
 
-    public function __construct(Environment $twig, string $projectDir = null, array $bundlesMetadata = [], string $twigDefaultPath = null, FileLinkFormatter $fileLinkFormatter = null)
+    public function __construct(Environment $twig, ?string $projectDir = null, array $bundlesMetadata = [], ?string $twigDefaultPath = null, ?FileLinkFormatter $fileLinkFormatter = null)
     {
         parent::__construct();
 
@@ -217,7 +217,7 @@ EOF
         $io->writeln(json_encode($data));
     }
 
-    private function displayGeneralText(SymfonyStyle $io, string $filter = null): void
+    private function displayGeneralText(SymfonyStyle $io, ?string $filter = null): void
     {
         $decorated = $io->isDecorated();
         $types = ['functions', 'filters', 'tests', 'globals'];
@@ -279,7 +279,7 @@ EOF
         $io->writeln($decorated ? OutputFormatter::escape($data) : $data);
     }
 
-    private function getLoaderPaths(string $name = null): array
+    private function getLoaderPaths(?string $name = null): array
     {
         $loaderPaths = [];
         foreach ($this->getFilesystemLoaders() as $loader) {
@@ -561,7 +561,7 @@ EOF
 
     private function isAbsolutePath(string $file): bool
     {
-        return strspn($file, '/\\', 0, 1) || (\strlen($file) > 3 && ctype_alpha($file[0]) && ':' === $file[1] && strspn($file, '/\\', 2, 1)) || null !== parse_url($file, \PHP_URL_SCHEME);
+        return strspn($file, '/\\', 0, 1) || (\strlen($file) > 3 && ctype_alpha($file[0]) && ':' === $file[1] && strspn($file, '/\\', 2, 1)) || parse_url($file, \PHP_URL_SCHEME);
     }
 
     /**

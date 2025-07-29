@@ -57,7 +57,7 @@ class Logger extends AbstractLogger implements DebugLoggerInterface
     /**
      * @param string|resource|null $output
      */
-    public function __construct(string $minLevel = null, $output = null, callable $formatter = null, private readonly ?RequestStack $requestStack = null, bool $debug = false)
+    public function __construct(?string $minLevel = null, $output = null, ?callable $formatter = null, private readonly ?RequestStack $requestStack = null, bool $debug = false)
     {
         if (null === $minLevel) {
             $minLevel = null === $output || 'php://stdout' === $output || 'php://stderr' === $output ? LogLevel::ERROR : LogLevel::WARNING;
@@ -79,7 +79,7 @@ class Logger extends AbstractLogger implements DebugLoggerInterface
 
         $this->minLevelIndex = self::LEVELS[$minLevel];
         $this->formatter = null !== $formatter ? $formatter(...) : $this->format(...);
-        if ($output && false === $this->handle = \is_resource($output) ? $output : @fopen($output, 'a')) {
+        if ($output && false === $this->handle = \is_string($output) ? @fopen($output, 'a') : $output) {
             throw new InvalidArgumentException(sprintf('Unable to open "%s".', $output));
         }
         $this->debug = $debug;
@@ -112,7 +112,7 @@ class Logger extends AbstractLogger implements DebugLoggerInterface
         }
     }
 
-    public function getLogs(Request $request = null): array
+    public function getLogs(?Request $request = null): array
     {
         if ($request) {
             return $this->logs[spl_object_id($request)] ?? [];
@@ -121,7 +121,7 @@ class Logger extends AbstractLogger implements DebugLoggerInterface
         return array_merge(...array_values($this->logs));
     }
 
-    public function countErrors(Request $request = null): int
+    public function countErrors(?Request $request = null): int
     {
         if ($request) {
             return $this->errorCount[spl_object_id($request)] ?? 0;

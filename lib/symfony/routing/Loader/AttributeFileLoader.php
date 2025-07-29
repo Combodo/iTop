@@ -43,7 +43,7 @@ class AttributeFileLoader extends FileLoader
      *
      * @throws \InvalidArgumentException When the file does not exist or its routes cannot be parsed
      */
-    public function load(mixed $file, string $type = null): ?RouteCollection
+    public function load(mixed $file, ?string $type = null): ?RouteCollection
     {
         $path = $this->locator->locate($file);
 
@@ -63,7 +63,7 @@ class AttributeFileLoader extends FileLoader
         return $collection;
     }
 
-    public function supports(mixed $resource, string $type = null): bool
+    public function supports(mixed $resource, ?string $type = null): bool
     {
         if ('annotation' === $type) {
             trigger_deprecation('symfony/routing', '6.4', 'The "annotation" route type is deprecated, use the "attribute" route type instead.');
@@ -82,7 +82,7 @@ class AttributeFileLoader extends FileLoader
         $tokens = token_get_all(file_get_contents($file));
 
         if (1 === \count($tokens) && \T_INLINE_HTML === $tokens[0][0]) {
-            throw new \InvalidArgumentException(sprintf('The file "%s" does not contain PHP code. Did you forgot to add the "<?php" start tag at the beginning of the file?', $file));
+            throw new \InvalidArgumentException(sprintf('The file "%s" does not contain PHP code. Did you forget to add the "<?php" start tag at the beginning of the file?', $file));
         }
 
         $nsTokens = [\T_NS_SEPARATOR => true, \T_STRING => true];

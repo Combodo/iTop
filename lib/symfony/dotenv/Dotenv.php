@@ -98,7 +98,7 @@ final class Dotenv
      * @throws FormatException when a file has a syntax error
      * @throws PathException   when a file does not exist or is not readable
      */
-    public function loadEnv(string $path, string $envKey = null, string $defaultEnv = 'dev', array $testEnvs = ['test'], bool $overrideExistingVars = false): void
+    public function loadEnv(string $path, ?string $envKey = null, string $defaultEnv = 'dev', array $testEnvs = ['test'], bool $overrideExistingVars = false): void
     {
         $k = $envKey ?? $this->envKey;
 
@@ -480,7 +480,7 @@ final class Dotenv
             (?!\()                             # no opening parenthesis
             (?P<opening_brace>\{)?             # optional brace
             (?P<name>'.self::VARNAME_REGEX.')? # var name
-            (?P<default_value>:[-=][^\}]++)?   # optional default value
+            (?P<default_value>:[-=][^\}]*+)?   # optional default value
             (?P<closing_brace>\})?             # optional closing brace
         /x';
 
@@ -553,7 +553,13 @@ final class Dotenv
                 throw new PathException($path);
             }
 
-            $this->populate($this->parse(file_get_contents($path), $path), $overrideExistingVars);
+            $data = file_get_contents($path);
+
+            if ("\xEF\xBB\xBF" === substr($data, 0, 3)) {
+                throw new FormatException('Loading files starting with a byte-order-mark (BOM) is not supported.', new FormatExceptionContext($data, $path, 1, 0));
+            }
+
+            $this->populate($this->parse($data, $path), $overrideExistingVars);
         }
     }
 }

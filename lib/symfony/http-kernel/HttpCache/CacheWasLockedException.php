@@ -9,8 +9,11 @@
  * file that was distributed with this source code.
  */
 
-if (\PHP_VERSION_ID < 80000) {
-    class ValueError extends Error
-    {
-    }
+namespace Symfony\Component\HttpKernel\HttpCache;
+
+/**
+ * @internal
+ */
+class CacheWasLockedException extends \Exception
+{
 }

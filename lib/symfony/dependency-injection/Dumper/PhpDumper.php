@@ -353,7 +353,7 @@ $preloadedFiles
 EOF;
 
                 foreach ($this->preload as $class) {
-                    if (!$class || str_contains($class, '$') || \in_array($class, ['int', 'float', 'string', 'bool', 'resource', 'object', 'array', 'null', 'callable', 'iterable', 'mixed', 'void'], true)) {
+                    if (!$class || str_contains($class, '$') || \in_array($class, ['int', 'float', 'string', 'bool', 'resource', 'object', 'array', 'null', 'callable', 'iterable', 'mixed', 'void', 'never'], true)) {
                         continue;
                     }
                     if (!(class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false)) || (new \ReflectionClass($class))->isUserDefined()) {
@@ -624,7 +624,9 @@ EOF;
                 $proxyCode = substr(self::stripComments($proxyCode), 5);
             }
 
-            $proxyClass = explode(' ', $this->inlineRequires ? substr($proxyCode, \strlen($code)) : $proxyCode, 3)[1];
+            $proxyClass = $this->inlineRequires ? substr($proxyCode, \strlen($code)) : $proxyCode;
+            $i = strpos($proxyClass, 'class');
+            $proxyClass = substr($proxyClass, 6 + $i, strpos($proxyClass, ' ', 7 + $i) - $i - 6);
 
             if ($this->asFiles || $this->namespace) {
                 $proxyCode .= "\nif (!\\class_exists('$proxyClass', false)) {\n    \\class_alias(__NAMESPACE__.'\\\\$proxyClass', '$proxyClass', false);\n}\n";
@@ -844,8 +846,7 @@ EOF;
         if ($class = $definition->getClass()) {
             $class = $class instanceof Parameter ? '%'.$class.'%' : $this->container->resolveEnvPlaceholders($class);
             $return[] = sprintf(str_starts_with($class, '%') ? '@return object A %1$s instance' : '@return \%s', ltrim($class, '\\'));
-        } elseif ($definition->getFactory()) {
-            $factory = $definition->getFactory();
+        } elseif ($factory = $definition->getFactory()) {
             if (\is_string($factory) && !str_starts_with($factory, '@=')) {
                 $return[] = sprintf('@return object An instance returned by %s()', $factory);
             } elseif (\is_array($factory) && (\is_string($factory[0]) || $factory[0] instanceof Definition || $factory[0] instanceof Reference)) {
@@ -1048,7 +1049,7 @@ EOTXT
         return $code;
     }
 
-    private function addInlineService(string $id, Definition $definition, Definition $inlineDef = null, bool $forConstructor = true): string
+    private function addInlineService(string $id, Definition $definition, ?Definition $inlineDef = null, bool $forConstructor = true): string
     {
         $code = '';
 
@@ -1108,7 +1109,7 @@ EOTXT
         return $code."\n        return \$instance;\n";
     }
 
-    private function addServices(array &$services = null): string
+    private function addServices(?array &$services = null): string
     {
         $publicServices = $privateServices = '';
         $definitions = $this->container->getDefinitions();
@@ -1150,7 +1151,7 @@ EOTXT
         }
     }
 
-    private function addNewInstance(Definition $definition, string $return = '', string $id = null, bool $asGhostObject = false): string
+    private function addNewInstance(Definition $definition, string $return = '', ?string $id = null, bool $asGhostObject = false): string
     {
         $tail = $return ? str_repeat(')', substr_count($return, '(') - substr_count($return, ')')).";\n" : '';
 
@@ -1168,9 +1169,7 @@ EOTXT
             $arguments[] = (\is_string($i) ? $i.': ' : '').$this->dumpValue($value);
         }
 
-        if (null !== $definition->getFactory()) {
-            $callable = $definition->getFactory();
-
+        if ($callable = $definition->getFactory()) {
             if ('current' === $callable && [0] === array_keys($definition->getArguments()) && \is_array($value) && [0] === array_keys($value)) {
                 return $return.$this->dumpValue($value[0]).$tail;
             }
@@ -1203,13 +1202,13 @@ EOTXT
                 throw new RuntimeException(sprintf('Cannot dump definition because of invalid factory method (%s).', $callable[1] ?: 'n/a'));
             }
 
-            if (['...'] === $arguments && ($definition->isLazy() || 'Closure' !== ($definition->getClass() ?? 'Closure')) && (
+            if (['...'] === $arguments && ('Closure' !== ($class = $definition->getClass() ?: 'Closure') || $definition->isLazy() && (
                 $callable[0] instanceof Reference
                 || ($callable[0] instanceof Definition && !$this->definitionVariables->contains($callable[0]))
-            )) {
+            ))) {
                 $initializer = 'fn () => '.$this->dumpValue($callable[0]);
 
-                return $return.LazyClosure::getCode($initializer, $callable, $definition, $this->container, $id).$tail;
+                return $return.LazyClosure::getCode($initializer, $callable, $class, $this->container, $id).$tail;
             }
 
             if ($callable[0] instanceof Reference
@@ -1779,7 +1778,7 @@ EOF;
         return implode(' && ', $conditions);
     }
 
-    private function getDefinitionsFromArguments(array $arguments, \SplObjectStorage $definitions = null, array &$calls = [], bool $byConstructor = null): \SplObjectStorage
+    private function getDefinitionsFromArguments(array $arguments, ?\SplObjectStorage $definitions = null, array &$calls = [], ?bool $byConstructor = null): \SplObjectStorage
     {
         $definitions ??= new \SplObjectStorage();
 
@@ -2010,7 +2009,7 @@ EOF;
         return sprintf('$container->parameters[%s]', $this->doExport($name));
     }
 
-    private function getServiceCall(string $id, Reference $reference = null): string
+    private function getServiceCall(string $id, ?Reference $reference = null): string
     {
         while ($this->container->hasAlias($id)) {
             $id = (string) $this->container->getAlias($id);
@@ -2183,6 +2182,12 @@ EOF;
             if ($edge->isLazy() || !$value instanceof Definition || !$value->isShared()) {
                 return false;
             }
+
+            // When the source node is a proxy or ghost, it will construct its references only when the node itself is initialized.
+            // Since the node can be cloned before being fully initialized, we do not know how often its references are used.
+            if ($this->getProxyDumper()->isProxyCandidate($value)) {
+                return false;
+            }
             $ids[$edge->getSourceNode()->getId()] = true;
         }
 
@@ -2291,7 +2296,6 @@ EOF;
     private function getClasses(Definition $definition, string $id): array
     {
         $classes = [];
-        $resolve = $this->container->getParameterBag()->resolveValue(...);
 
         while ($definition instanceof Definition) {
             foreach ($definition->getTag($this->preloadTags[0]) as $tag) {
@@ -2303,24 +2307,24 @@ EOF;
             }
 
             if ($class = $definition->getClass()) {
-                $classes[] = trim($resolve($class), '\\');
+                $classes[] = trim($class, '\\');
             }
             $factory = $definition->getFactory();
 
-            if (!\is_array($factory)) {
-                $factory = [$factory];
+            if (\is_string($factory) && !str_starts_with($factory, '@=') && str_contains($factory, '::')) {
+                $factory = explode('::', $factory);
             }
 
-            if (\is_string($factory[0])) {
-                $factory[0] = $resolve($factory[0]);
+            if (!\is_array($factory)) {
+                $definition = $factory;
+                continue;
+            }
 
-                if (false !== $i = strrpos($factory[0], '::')) {
-                    $factory[0] = substr($factory[0], 0, $i);
-                }
+            $definition = $factory[0] ?? null;
+
+            if (\is_string($definition)) {
                 $classes[] = trim($factory[0], '\\');
             }
-
-            $definition = $factory[0];
         }
 
         return $classes;

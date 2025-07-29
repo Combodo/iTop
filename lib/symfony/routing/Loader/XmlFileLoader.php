@@ -38,7 +38,7 @@ class XmlFileLoader extends FileLoader
      * @throws \InvalidArgumentException when the file cannot be loaded or when the XML cannot be
      *                                   parsed because it does not validate against the scheme
      */
-    public function load(mixed $file, string $type = null): RouteCollection
+    public function load(mixed $file, ?string $type = null): RouteCollection
     {
         $path = $this->locator->locate($file);
 
@@ -94,7 +94,7 @@ class XmlFileLoader extends FileLoader
         }
     }
 
-    public function supports(mixed $resource, string $type = null): bool
+    public function supports(mixed $resource, ?string $type = null): bool
     {
         return \is_string($resource) && 'xml' === pathinfo($resource, \PATHINFO_EXTENSION) && (!$type || 'xml' === $type);
     }
@@ -135,7 +135,7 @@ class XmlFileLoader extends FileLoader
             throw new \InvalidArgumentException(sprintf('The <route> element in file "%s" must not have both a "path" attribute and <path> child nodes.', $path));
         }
 
-        $routes = $this->createLocalizedRoute($collection, $id, $paths ?: $node->getAttribute('path'));
+        $routes = $this->createLocalizedRoute(new RouteCollection(), $id, $paths ?: $node->getAttribute('path'));
         $routes->addDefaults($defaults);
         $routes->addRequirements($requirements);
         $routes->addOptions($options);
@@ -146,6 +146,8 @@ class XmlFileLoader extends FileLoader
         if (null !== $hosts) {
             $this->addHost($routes, $hosts);
         }
+
+        $collection->addCollection($routes);
     }
 
     /**

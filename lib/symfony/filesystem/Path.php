@@ -254,7 +254,7 @@ final class Path
      * @param string|null $extension if specified, only that extension is cut
      *                               off (may contain leading dot)
      */
-    public static function getFilenameWithoutExtension(string $path, string $extension = null): string
+    public static function getFilenameWithoutExtension(string $path, ?string $extension = null): string
     {
         if ('' === $path) {
             return '';
@@ -365,7 +365,7 @@ final class Path
         }
 
         // Strip scheme
-        if (false !== $schemeSeparatorPosition = strpos($path, '://')) {
+        if (false !== ($schemeSeparatorPosition = strpos($path, '://')) && 1 !== $schemeSeparatorPosition) {
             $path = substr($path, $schemeSeparatorPosition + 3);
         }
 

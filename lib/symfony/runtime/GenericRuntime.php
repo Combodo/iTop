@@ -71,19 +71,19 @@ class GenericRuntime implements RuntimeInterface
         if ($debug) {
             umask(0000);
             $_SERVER[$debugKey] = $_ENV[$debugKey] = '1';
-
-            if (false !== $errorHandler = ($options['error_handler'] ?? BasicErrorHandler::class)) {
-                $errorHandler::register($debug);
-                $options['error_handler'] = false;
-            }
         } else {
             $_SERVER[$debugKey] = $_ENV[$debugKey] = '0';
+        }
+
+        if (false !== $errorHandler = ($options['error_handler'] ?? BasicErrorHandler::class)) {
+            $errorHandler::register($debug);
+            $options['error_handler'] = false;
         }
 
         $this->options = $options;
     }
 
-    public function getResolver(callable $callable, \ReflectionFunction $reflector = null): ResolverInterface
+    public function getResolver(callable $callable, ?\ReflectionFunction $reflector = null): ResolverInterface
     {
         $callable = $callable(...);
         $parameters = ($reflector ?? new \ReflectionFunction($callable))->getParameters();

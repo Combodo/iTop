@@ -58,9 +58,11 @@ class CachePoolPass implements CompilerPassInterface
                 continue;
             }
             $class = $adapter->getClass();
+            $providers = $adapter->getArguments();
             while ($adapter instanceof ChildDefinition) {
                 $adapter = $container->findDefinition($adapter->getParent());
                 $class = $class ?: $adapter->getClass();
+                $providers += $adapter->getArguments();
                 if ($t = $adapter->getTag('cache.pool')) {
                     $tags[0] += $t[0];
                 }
@@ -90,7 +92,7 @@ class CachePoolPass implements CompilerPassInterface
 
             if (ChainAdapter::class === $class) {
                 $adapters = [];
-                foreach ($adapter->getArgument(0) as $provider => $adapter) {
+                foreach ($providers['index_0'] ?? $providers[0] as $provider => $adapter) {
                     if ($adapter instanceof ChildDefinition) {
                         $chainedPool = $adapter;
                     } else {
@@ -181,11 +183,11 @@ class CachePoolPass implements CompilerPassInterface
             $container->removeDefinition('cache.early_expiration_handler');
         }
 
-        $notAliasedCacheClearerId = $aliasedCacheClearerId = 'cache.global_clearer';
-        while ($container->hasAlias('cache.global_clearer')) {
-            $aliasedCacheClearerId = (string) $container->getAlias('cache.global_clearer');
+        $notAliasedCacheClearerId = 'cache.global_clearer';
+        while ($container->hasAlias($notAliasedCacheClearerId)) {
+            $notAliasedCacheClearerId = (string) $container->getAlias($notAliasedCacheClearerId);
         }
-        if ($container->hasDefinition($aliasedCacheClearerId)) {
+        if ($container->hasDefinition($notAliasedCacheClearerId)) {
             $clearers[$notAliasedCacheClearerId] = $allPools;
         }
 
@@ -197,10 +199,6 @@ class CachePoolPass implements CompilerPassInterface
                 $clearer->setArgument(0, $pools);
             }
             $clearer->addTag('cache.pool.clearer');
-
-            if ('cache.system_clearer' === $id) {
-                $clearer->addTag('kernel.cache_clearer');
-            }
         }
 
         $allPoolsKeys = array_keys($allPools);
