@@ -528,7 +528,14 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		else
 		{
 			// For backward compatibility reasons, let's rebuild a delta...
-
+			//@since 3.2.2 N°2364 - API : remove old linkedset persistance
+			/* Goo pattern to use:
+			* $oCISet = $oTicket->Get(‘functioncis_list’);
+			* $oCISet->AddItem(MetaModel::NewObject(‘lnkFunctionCIToTicket’, array(‘ci_id’=> 12345));
+			* $oCISet->RemoveItem(123456);
+			* $oTicket->Set(‘functionalcis_list’, $oCISet);
+			 */
+			DeprecatedCallsLog::NotifyDeprecatedPhpMethod('old pattern - please get previous value of the linked set, modify it and set it back to the host object');
 			// Reset the delta
 			$this->iCursor = 0;
 			$this->aAdded = array();
