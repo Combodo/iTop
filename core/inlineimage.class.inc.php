@@ -407,86 +407,12 @@ JS
 	 * Resize an image so that it fits the maximum width/height defined in the config file
 	 * @param ormDocument $oImage The original image stored as an array (content / mimetype / filename)
 	 * @return ormDocument The resampled image (or the original one if it already fit)
+	 * @deprecated Replaced by ormDocument::ResizeImageToFit
 	 */
 	public static function ResizeImageToFit(ormDocument $oImage, &$aDimensions = null)
 	{
-		$img = false;
-		switch($oImage->GetMimeType())
-		{
-			case 'image/gif':
-			case 'image/jpeg':
-			case 'image/png':
-				$img = @imagecreatefromstring($oImage->GetData());
-				break;
-					
-			default:
-				// Unsupported image type, return the image as-is
-				$aDimensions = null;
-				return $oImage;
-		}
-		if ($img === false)
-		{
-			$aDimensions = null;
-			return $oImage;
-		}
-		else
-		{
-			// Let's scale the image, preserving the transparency for GIFs and PNGs
-			$iWidth = imagesx($img);
-			$iHeight = imagesy($img);
-			$aDimensions = array('width' => $iWidth, 'height' => $iHeight);
-			$iMaxImageSize = (int)MetaModel::GetConfig()->Get('inline_image_max_storage_width', 0);
-						
-			if (($iMaxImageSize > 0) && ($iWidth <= $iMaxImageSize) && ($iHeight <= $iMaxImageSize))
-			{
-				// No need to resize
-				return $oImage;
-			}
-				
-			$fScale = min($iMaxImageSize / $iWidth, $iMaxImageSize / $iHeight);
-	
-			$iNewWidth = (int) ($iWidth * $fScale);
-			$iNewHeight = (int) ($iHeight * $fScale);
-			
-			$aDimensions['width'] = $iNewWidth;
-			$aDimensions['height'] = $iNewHeight;
-				
-			$new = imagecreatetruecolor($iNewWidth, $iNewHeight);
-				
-			// Preserve transparency
-			if(($oImage->GetMimeType() == "image/gif") || ($oImage->GetMimeType() == "image/png"))
-			{
-				imagecolortransparent($new, imagecolorallocatealpha($new, 0, 0, 0, 127));
-				imagealphablending($new, false);
-				imagesavealpha($new, true);
-			}
-				
-			imagecopyresampled($new, $img, 0, 0, 0, 0, $iNewWidth, $iNewHeight, $iWidth, $iHeight);
-				
-			ob_start();
-			switch ($oImage->GetMimeType())
-			{
-				case 'image/gif':
-					imagegif($new); // send image to output buffer
-					break;
-	
-				case 'image/jpeg':
-					imagejpeg($new, null, 80); // null = send image to output buffer, 80 = good quality
-					break;
-						
-				case 'image/png':
-					imagepng($new, null, 5); // null = send image to output buffer, 5 = medium compression
-					break;
-			}
-			$oNewImage = new ormDocument(ob_get_contents(), $oImage->GetMimeType(), $oImage->GetFileName());
-			@ob_end_clean();
-				
-			imagedestroy($img);
-			imagedestroy($new);
-	
-			return $oNewImage;
-		}
-	
+		$iMaxImageSize = (int)MetaModel::GetConfig()->Get('inline_image_max_storage_width', 0);
+		return $oImage->ResizeImageToFit($iMaxImageSize, $iMaxImageSize, $aDimensions);
 	}
 
 	/**

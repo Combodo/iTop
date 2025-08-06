@@ -2002,7 +2002,8 @@ EOF
 						$oDoc = utils::ReadPostedDocument('upload');
 						if (InlineImage::IsImage($oDoc->GetMimeType())) {
 							$aDimensions = null;
-							$oDoc = InlineImage::ResizeImageToFit($oDoc, $aDimensions);
+							$iMaxImageSize = (int)MetaModel::GetConfig()->Get('inline_image_max_storage_width', 0);
+							$oDoc = $oDoc->ResizeImageToFit($iMaxImageSize, $iMaxImageSize, $aDimensions);
 							/** @var InlineImage $oAttachment */
 							$oAttachment = MetaModel::NewObject('InlineImage');
 							$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime'));
@@ -2059,7 +2060,8 @@ EOF
 							));
 					} else {
 						$aDimensions = null;
-						$oDoc = InlineImage::ResizeImageToFit($oDoc, $aDimensions);
+						$iMaxImageSize = (int)MetaModel::GetConfig()->Get('inline_image_max_storage_width', 0);
+						$oDoc = $oDoc->ResizeImageToFit($iMaxImageSize, $iMaxImageSize, $aDimensions);
 						/** @var InlineImage $oAttachment */
 						$oAttachment = MetaModel::NewObject('InlineImage');
 						$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime'));

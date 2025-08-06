@@ -433,9 +433,10 @@ class UserProfileBrickController extends BrickController
 					$oCurContact = UserRights::GetContactObject();
 					// Resizing image
 					$oAttDef = MetaModel::GetAttributeDef(get_class($oCurContact), $sPictureAttCode);
-					$aSize = utils::GetImageSize($oImage->GetData());
-					$oImage = utils::ResizeImageToFit($oImage, $aSize[0], $aSize[1], $oAttDef->Get('storage_max_width'),
-						$oAttDef->Get('storage_max_height'));
+					$oImage = $oImage->ResizeImageToFit(
+						$oAttDef->Get('storage_max_width'),
+						$oAttDef->Get('storage_max_height')
+					);
 					// Setting it to the contact
 					$oCurContact->Set($sPictureAttCode, $oImage);
 					// Forcing allowed writing on the object if necessary.

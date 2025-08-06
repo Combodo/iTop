@@ -2323,87 +2323,12 @@ SQL;
 	 * @param int $iMaxImageWidth Maximum width for the resized image
 	 * @param int $iMaxImageHeight Maximum height for the resized image
 	 * @return ormDocument The resampled image
+	 *
+	 * @deprecated Replaced by ormDocument::ResizeImageToFit
 	 */
 	public static function ResizeImageToFit(ormDocument $oImage, $iWidth, $iHeight, $iMaxImageWidth, $iMaxImageHeight)
 	{
-		// If image size smaller than maximums, we do nothing
-		if (($iWidth <= $iMaxImageWidth) && ($iHeight <= $iMaxImageHeight))
-		{
-			return $oImage;
-		}
-
-
-		// If gd extension is not loaded, we put a warning in the log and return the image as is
-		if (extension_loaded('gd') === false)
-		{
-			IssueLog::Warning('Image could not be resized as the "gd" extension does not seem to be loaded. It will remain as ' . $iWidth . 'x' . $iHeight . ' instead of ' . $iMaxImageWidth . 'x' . $iMaxImageHeight);
-			return $oImage;
-		}
-
-
-		switch($oImage->GetMimeType())
-		{
-			case 'image/gif':
-			case 'image/jpeg':
-			case 'image/png':
-			$img = @imagecreatefromstring($oImage->GetData());
-			break;
-
-			default:
-			// Unsupported image type, return the image as-is
-			//throw new Exception("Unsupported image type: '".$oImage->GetMimeType()."'. Cannot resize the image, original image will be used.");
-			return $oImage;
-		}
-		if ($img === false)
-		{
-			//throw new Exception("Warning: corrupted image: '".$oImage->GetFileName()." / ".$oImage->GetMimeType()."'. Cannot resize the image, original image will be used.");
-			return $oImage;
-		}
-		else
-		{
-			// Let's scale the image, preserving the transparency for GIFs and PNGs
-
-			$fScale = min($iMaxImageWidth / $iWidth, $iMaxImageHeight / $iHeight);
-
-			$iNewWidth = $iWidth * $fScale;
-			$iNewHeight = $iHeight * $fScale;
-
-			$new = imagecreatetruecolor($iNewWidth, $iNewHeight);
-
-			// Preserve transparency
-			if(($oImage->GetMimeType() == "image/gif") || ($oImage->GetMimeType() == "image/png"))
-			{
-				imagecolortransparent($new, imagecolorallocatealpha($new, 0, 0, 0, 127));
-				imagealphablending($new, false);
-				imagesavealpha($new, true);
-			}
-
-			imagecopyresampled($new, $img, 0, 0, 0, 0, $iNewWidth, $iNewHeight, $iWidth, $iHeight);
-
-			ob_start();
-			switch ($oImage->GetMimeType())
-			{
-				case 'image/gif':
-				imagegif($new); // send image to output buffer
-				break;
-
-				case 'image/jpeg':
-				imagejpeg($new, null, 80); // null = send image to output buffer, 80 = good quality
-				break;
-
-				case 'image/png':
-				imagepng($new, null, 5); // null = send image to output buffer, 5 = medium compression
-				break;
-			}
-			$oResampledImage = new ormDocument(ob_get_contents(), $oImage->GetMimeType(), $oImage->GetFileName());
-			@ob_end_clean();
-
-			imagedestroy($img);
-			imagedestroy($new);
-
-			return $oResampledImage;
-		}
-
+		return $oImage->ResizeImageToFit($iMaxImageWidth, $iMaxImageHeight);
 	}
 
 	/**

@@ -4313,24 +4313,15 @@ HTML;
 
 			case 'Image':
 				$value = null;
+				$aDimensions = null;
 				$oImage = utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents');
-				if (!is_null($oImage->GetData()))
-				{
-					$aSize = utils::GetImageSize($oImage->GetData());
-					if (is_array($aSize) && $aSize[0] > 0 && $aSize[1] > 0)
-					{
-						$oImage = utils::ResizeImageToFit(
-							$oImage,
-							$aSize[0],
-							$aSize[1],
-							$oAttDef->Get('storage_max_width'),
-							$oAttDef->Get('storage_max_height')
-						);
-					}
-					else
-					{
-						IssueLog::Warning($sClass . ':' . $this->GetKey() . '/' . $sAttCode . ': Image could not be resized. Mimetype: ' . $oImage->GetMimeType() . ', filename: ' . $oImage->GetFileName());
-					}
+				$oImage = $oImage->ResizeImageToFit(
+					$oAttDef->Get('storage_max_width'),
+					$oAttDef->Get('storage_max_height'),
+					$aDimensions
+				);
+				if (is_null($aDimensions)) {
+					IssueLog::Warning($sClass . ':' . $this->GetKey() . '/' . $sAttCode . ': Image could not be resized. Mimetype: ' . $oImage->GetMimeType() . ', filename: ' . $oImage->GetFileName());
 				}
 				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
 				if (is_array($aOtherData))

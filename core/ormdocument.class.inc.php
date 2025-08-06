@@ -406,10 +406,95 @@ class ormDocument
 	}
 
 	/**
+	 * Resize an image so that it fits in the given dimensions
+	 * @param int $iMaxImageWidth Maximum width for the resized image
+	 * @param int $iMaxImageHeight Maximum height for the resized image
+	 * @param array|null $aFinalDimensions Image dimensions after resizing or null if unable to read the image
+	 * @return ormDocument The resampled image
+	 *
+	 */
+	public function ResizeImageToFit(int $iMawWidth, int $iMaxHeight, array|null &$aFinalDimensions = null) : static
+	{
+		$aFinalDimensions = null;
+		// If gd extension is not loaded, we put a warning in the log and return the image as is
+		if (extension_loaded('gd') === false) {
+			IssueLog::Warning('Image could not be resized as the "gd" extension does not seem to be loaded. Its dimensions will remain the same instead of ' . $iMawWidth . 'x' . $iMaxHeight);
+			return $this;
+		}
+		$oGdImage = false;
+		switch($this->GetMimeType()) {
+			case 'image/gif':
+			case 'image/jpeg':
+			case 'image/png':
+				$oGdImage = @imagecreatefromstring($this->GetData());
+				break;
+			default:
+				// Unsupported image type, return the image as-is
+				return $this;
+		}
+
+		if ($oGdImage === false) {
+			IssueLog::Warning('Image could not be resized as . It will remain as imagecreatefromstring could not read its data.Its dimensions will remain the same instead of ' . $iMawWidth . 'x' . $iMaxHeight);
+			return $this;
+		}
+
+		$iWidth = imagesx($oGdImage);
+		$iHeight = imagesy($oGdImage);
+
+		if ( ($iMawWidth === 0 || $iWidth <= $iMawWidth) && ($iMaxHeight === 0 || $iHeight <= $iMaxHeight)) {
+			// No need to resize
+			$aFinalDimensions = [
+				'width' => $iWidth,
+				'height' =>$iHeight
+			];
+			return $this;
+		}
+
+		$fScale = min($iMawWidth / $iWidth, $iMaxHeight / $iHeight);
+		$iNewWidth = $iWidth * $fScale;
+		$iNewHeight = $iHeight * $fScale;
+
+		$oNewGdImage = imagecreatetruecolor($iNewWidth, $iNewHeight);
+
+		// Preserve transparency
+		if($this->GetMimeType() == "image/gif" || $this->GetMimeType() == "image/png") {
+			imagecolortransparent($oNewGdImage, imagecolorallocatealpha($new, 0, 0, 0, 127));
+			imagealphablending($new, false);
+			imagesavealpha($new, true);
+		}
+		imagecopyresampled($oNewGdImage, $oGdImage, 0, 0, 0, 0, $iNewWidth, $iNewHeight, $iWidth, $iHeight);
+
+		ob_start();
+		switch ($this->GetMimeType()) {
+			case 'image/gif':
+			imagegif($oNewGdImage); // send image to output buffer
+			break;
+
+			case 'image/jpeg':
+			imagejpeg($oNewGdImage, null, 80); // null = send image to output buffer, 80 = good quality
+			break;
+
+			case 'image/png':
+			imagepng($oNewGdImage, null, 5); // null = send image to output buffer, 5 = medium compression
+			break;
+		}
+		$oResampledImage = new ormDocument(ob_get_contents(), $this->GetMimeType(), $this->GetFileName());
+		@ob_end_clean();
+
+		imagedestroy($oGdImage);
+		imagedestroy($oNewGdImage);
+
+		return $oResampledImage;
+
+	}
+
+	/**
 	 * @return string
 	 */
 	public function GetSignature(): string
 	{
 		return md5($this->GetData() ?? '');
 	}
+
+
 }
