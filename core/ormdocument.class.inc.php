@@ -451,16 +451,22 @@ class ormDocument
 		}
 
 		$fScale = min($iMawWidth / $iWidth, $iMaxHeight / $iHeight);
-		$iNewWidth = $iWidth * $fScale;
-		$iNewHeight = $iHeight * $fScale;
+		$iNewWidth = (int)($iWidth * $fScale);
+		$iNewHeight = (int)($iHeight * $fScale);
 
 		$oNewGdImage = imagecreatetruecolor($iNewWidth, $iNewHeight);
 
+
+		$aFinalDimensions = [
+			'width' => $iNewWidth,
+			'height' =>$iNewHeight
+		];
+
 		// Preserve transparency
 		if($this->GetMimeType() == "image/gif" || $this->GetMimeType() == "image/png") {
-			imagecolortransparent($oNewGdImage, imagecolorallocatealpha($new, 0, 0, 0, 127));
-			imagealphablending($new, false);
-			imagesavealpha($new, true);
+			imagecolortransparent($oNewGdImage, imagecolorallocatealpha($oNewGdImage, 0, 0, 0, 127));
+			imagealphablending($oNewGdImage, false);
+			imagesavealpha($oNewGdImage, true);
 		}
 		imagecopyresampled($oNewGdImage, $oGdImage, 0, 0, 0, 0, $iNewWidth, $iNewHeight, $iWidth, $iHeight);
 
