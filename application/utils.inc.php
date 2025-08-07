@@ -2316,22 +2316,6 @@ SQL;
 	}
 
 	/**
-	 * Resize an image attachment so that it fits in the given dimensions
-	 * @param ormDocument $oImage The original image stored as an ormDocument
-	 * @param int $iWidth Image's original width
-	 * @param int $iHeight Image's original height
-	 * @param int $iMaxImageWidth Maximum width for the resized image
-	 * @param int $iMaxImageHeight Maximum height for the resized image
-	 * @return ormDocument The resampled image
-	 *
-	 * @deprecated Replaced by ormDocument::ResizeImageToFit
-	 */
-	public static function ResizeImageToFit(ormDocument $oImage, $iWidth, $iHeight, $iMaxImageWidth, $iMaxImageHeight)
-	{
-		return $oImage->ResizeImageToFit($iMaxImageWidth, $iMaxImageHeight);
-	}
-
-	/**
 	 * Create a 128 bit UUID in the format: {########-####-####-####-############}
 	 *
 	 * Note: this method can be run from the command line as well as from the web server.
