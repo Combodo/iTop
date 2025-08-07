@@ -139,4 +139,84 @@ class ormDocumentTest extends ItopDataTestCase
 			],
 		];
 	}
+
+
+
+	public function testResizeImageToFitShouldResizeImageWhenImageIsTooBig()
+	{
+		$sImageData = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAIAAABPmPnhAAAAe0lEQVQI132OMQoCMRRE3/9Z3M126V0kB9BCvICnziXs7QIWlttqpWMRFQT1VcMbGMb4xPoQ18uWL4eTxxglSaq1Au8OwM1TSi3nnLGnzxKA4fM8N1VKQVyPZ6Br6s4Xhj7st9OwcNy61yUsGEK3Nmu+mUawcbfiN85fHsBoHdXt5HATAAAAAElFTkSuQmCC');
+		$sMimeType = 'image/png';
+		$sFileName = 'MyImage.png';
+		$oDoc = new ormDocument($sImageData, $sMimeType, $sFileName);
+		$iMawWidth = 6;
+		$iMaxHeight = 5;
+
+		$oResult = $oDoc->ResizeImageToFit($iMawWidth, $iMaxHeight, $aDimensions);
+
+		$this->assertNotSame( $oDoc, $oResult, 'ResizeImageToFit should return a new object when there have been some modifications');
+		$this->assertIsArray( $aDimensions, 'ResizeImageToFit should fill aDimension with the dimensions of the new image when there are no issues');
+		$this->assertEquals( $aDimensions, $this->getImageDimensions($oResult), 'The returned dimensions should match the real dimensions of the image');
+		$this->assertLessThanOrEqual($iMawWidth, $aDimensions['width'], 'The new width should be less than or equal to max width');
+		$this->assertLessThanOrEqual($iMaxHeight, $aDimensions['height'], 'The new height should be less than or equal to max height');
+	}
+
+	public function testResizeImageToFitShouldDoNothingWhenImageIsAlreadySmallEnough()
+	{
+		$sImageData = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAIAAABPmPnhAAAAe0lEQVQI132OMQoCMRRE3/9Z3M126V0kB9BCvICnziXs7QIWlttqpWMRFQT1VcMbGMb4xPoQ18uWL4eTxxglSaq1Au8OwM1TSi3nnLGnzxKA4fM8N1VKQVyPZ6Br6s4Xhj7st9OwcNy61yUsGEK3Nmu+mUawcbfiN85fHsBoHdXt5HATAAAAAElFTkSuQmCC');
+		$sMimeType = 'image/png';
+		$sFileName = 'MyImage.png';
+		$oDoc = new ormDocument($sImageData, $sMimeType, $sFileName);
+		$iMawWidth = 10;
+		$iMaxHeight = 8;
+
+		$oResult = $oDoc->ResizeImageToFit($iMawWidth, $iMaxHeight, $aDimensions);
+
+		$this->assertSame( $oDoc, $oResult, 'ResizeImageToFit should return the same object when there have been no modifications');
+		$this->assertIsArray( $aDimensions, 'ResizeImageToFit should fill aDimension with the dimensions of the image when there are no issues');
+	}
+
+	public function testResizeImageToFitShouldDoNothingWhenItCannotReadTheImage()
+	{
+		$sImageData = 'garbagedata';
+		$sMimeType = 'image/png';
+		$sFileName = 'MyImage.png';
+		$oDoc = new ormDocument($sImageData, $sMimeType, $sFileName);
+		$iMawWidth = 10;
+		$iMaxHeight = 8;
+
+		$oResult = $oDoc->ResizeImageToFit($iMawWidth, $iMaxHeight, $aDimensions);
+
+		$this->assertSame( $oDoc, $oResult, 'ResizeImageToFit should return the same object when there have been no modifications');
+		$this->assertNull( $aDimensions, 'ResizeImageToFit should fill aDimension with null when there are issues');
+	}
+
+	public function testResizeImageToFitShouldDoNothingWhenItDoesNotHandleTheMimeType()
+	{
+		$sImageData = base64_decode('Qk3mAAAAAAAAAEYAAAA4AAAACgAAAAgAAAABABAAAwAAAKAAAAAjLgAAIy4AAAAAAAAAAAAAAHwAAOADAAAfAAAAAAAAAMQExATEBMQExATEBMQExATEBMQExATEBMQExATEBMQExATEBMQExAQAAAAAAAAAAAAAAAAgBMQgxATEBAAAAAAAAAAAAAAAACAExCAgBAAAIQT/f/9/1loAACAAxATEGMQEAABjDP9//3//fwAAxATEBMQUxAQAACEE/3//f3tvAADEBMQExATEBAAAAAAAAAAAAAAAACAAxATEBMQEAAA=');
+		$sMimeType = 'image/bmp';
+		$sFileName = 'MyImage.bmp';
+		$oDoc = new ormDocument($sImageData, $sMimeType, $sFileName);
+		$iMawWidth = 5;
+		$iMaxHeight = 5;
+
+		$oResult = $oDoc->ResizeImageToFit($iMawWidth, $iMaxHeight, $aDimensions);
+
+		$this->assertSame( $oDoc, $oResult, 'ResizeImageToFit should return the same object when there have been no modifications');
+		$this->assertNull( $aDimensions, 'ResizeImageToFit should fill aDimension with null when there are issues');
+	}
+
+	public function getImageDimensions($oOrmDocument)
+	{
+		$oGdImage = @imagecreatefromstring($oOrmDocument->GetData());
+		if ($oGdImage === false) {
+			return null;
+		}
+		$iWidth = imagesx($oGdImage);
+		$iHeight = imagesy($oGdImage);
+		return [
+			'width' => $iWidth,
+			'height' => $iHeight
+		];
+	}
+
 }
