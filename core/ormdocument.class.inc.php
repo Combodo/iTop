@@ -413,12 +413,12 @@ class ormDocument
 	 * @return ormDocument The resampled image
 	 *
 	 */
-	public function ResizeImageToFit(int $iMawWidth, int $iMaxHeight, array|null &$aFinalDimensions = null) : static
+	public function ResizeImageToFit(int $iMaxWidth, int $iMaxHeight, array|null &$aFinalDimensions = null) : static
 	{
 		$aFinalDimensions = null;
 		// If gd extension is not loaded, we put a warning in the log and return the image as is
 		if (extension_loaded('gd') === false) {
-			IssueLog::Warning('Image could not be resized as the "gd" extension does not seem to be loaded. Its dimensions will remain the same instead of ' . $iMawWidth . 'x' . $iMaxHeight);
+			IssueLog::Warning('Image could not be resized as the "gd" extension does not seem to be loaded. Its dimensions will remain the same instead of ' . $iMaxWidth . 'x' . $iMaxHeight);
 			return $this;
 		}
 		$oGdImage = false;
@@ -434,14 +434,14 @@ class ormDocument
 		}
 
 		if ($oGdImage === false) {
-			IssueLog::Warning('Image could not be resized as . It will remain as imagecreatefromstring could not read its data.Its dimensions will remain the same instead of ' . $iMawWidth . 'x' . $iMaxHeight);
+			IssueLog::Warning('Image could not be resized as . It will remain as imagecreatefromstring could not read its data.Its dimensions will remain the same instead of ' . $iMaxWidth . 'x' . $iMaxHeight);
 			return $this;
 		}
 
 		$iWidth = imagesx($oGdImage);
 		$iHeight = imagesy($oGdImage);
 
-		if ( ($iMawWidth === 0 || $iWidth <= $iMawWidth) && ($iMaxHeight === 0 || $iHeight <= $iMaxHeight)) {
+		if ( ($iMaxWidth === 0 || $iWidth <= $iMaxWidth) && ($iMaxHeight === 0 || $iHeight <= $iMaxHeight)) {
 			// No need to resize
 			$aFinalDimensions = [
 				'width' => $iWidth,
@@ -450,7 +450,13 @@ class ormDocument
 			return $this;
 		}
 
-		$fScale = min($iMawWidth / $iWidth, $iMaxHeight / $iHeight);
+		$fScale = 1.0;
+		if ($iMaxWidth > 0) {
+			$fScale = min($fScale, $iMaxWidth / $iWidth);
+		}
+		if ($iMaxHeight > 0) {
+			$fScale = min($fScale, $iMaxHeight / $iHeight);
+		}
 		$iNewWidth = (int)($iWidth * $fScale);
 		$iNewHeight = (int)($iHeight * $fScale);
 

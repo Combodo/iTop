@@ -153,11 +153,17 @@ class ormDocumentTest extends ItopDataTestCase
 
 		$oResult = $oDoc->ResizeImageToFit($iMawWidth, $iMaxHeight, $aDimensions);
 
+		$aRealDimensions = \utils::GetImageSize($oResult->GetData());
+		$aActualDimensions = [
+			'width' => $aRealDimensions[0],
+			'height' => $aRealDimensions[1],
+		];
+
 		$this->assertNotSame( $oDoc, $oResult, 'ResizeImageToFit should return a new object when there have been some modifications');
 		$this->assertIsArray( $aDimensions, 'ResizeImageToFit should fill aDimension with the dimensions of the new image when there are no issues');
-		$this->assertEquals( $aDimensions, $this->getImageDimensions($oResult), 'The returned dimensions should match the real dimensions of the image');
-		$this->assertLessThanOrEqual($iMawWidth, $aDimensions['width'], 'The new width should be less than or equal to max width');
-		$this->assertLessThanOrEqual($iMaxHeight, $aDimensions['height'], 'The new height should be less than or equal to max height');
+		$this->assertEquals( $aDimensions, $aActualDimensions, 'The returned dimensions should match the real dimensions of the image');
+		$this->assertLessThanOrEqual($iMawWidth, $aActualDimensions['width'], 'The new width should be less than or equal to max width');
+		$this->assertLessThanOrEqual($iMaxHeight, $aActualDimensions['height'], 'The new height should be less than or equal to max height');
 	}
 
 	public function testResizeImageToFitShouldDoNothingWhenImageIsAlreadySmallEnough()
@@ -205,18 +211,43 @@ class ormDocumentTest extends ItopDataTestCase
 		$this->assertNull( $aDimensions, 'ResizeImageToFit should fill aDimension with null when there are issues');
 	}
 
-	public function getImageDimensions($oOrmDocument)
+	public function testResizeImageToFitShouldNotResizeWhenMaximumIs0()
 	{
-		$oGdImage = @imagecreatefromstring($oOrmDocument->GetData());
-		if ($oGdImage === false) {
-			return null;
-		}
-		$iWidth = imagesx($oGdImage);
-		$iHeight = imagesy($oGdImage);
-		return [
-			'width' => $iWidth,
-			'height' => $iHeight
+		$sImageData = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAIAAABPmPnhAAAAe0lEQVQI132OMQoCMRRE3/9Z3M126V0kB9BCvICnziXs7QIWlttqpWMRFQT1VcMbGMb4xPoQ18uWL4eTxxglSaq1Au8OwM1TSi3nnLGnzxKA4fM8N1VKQVyPZ6Br6s4Xhj7st9OwcNy61yUsGEK3Nmu+mUawcbfiN85fHsBoHdXt5HATAAAAAElFTkSuQmCC');
+		$sMimeType = 'image/png';
+		$sFileName = 'MyImage.png';
+		$oDoc = new ormDocument($sImageData, $sMimeType, $sFileName);
+		$iMawWidth = 0;
+		$iMaxHeight = 0;
+
+		$oResult = $oDoc->ResizeImageToFit($iMawWidth, $iMaxHeight, $aDimensions);
+
+		$this->assertSame( $oDoc, $oResult, 'ResizeImageToFit should return the same object when there have been no modifications');
+		$this->assertIsArray( $aDimensions, 'ResizeImageToFit should fill aDimension with the dimensions of the image when there are no issues');
+	}
+
+	public function testResizeImageToFitShouldIgnoreMaximum0Axis()
+	{
+		$sImageData = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAIAAABPmPnhAAAAe0lEQVQI132OMQoCMRRE3/9Z3M126V0kB9BCvICnziXs7QIWlttqpWMRFQT1VcMbGMb4xPoQ18uWL4eTxxglSaq1Au8OwM1TSi3nnLGnzxKA4fM8N1VKQVyPZ6Br6s4Xhj7st9OwcNy61yUsGEK3Nmu+mUawcbfiN85fHsBoHdXt5HATAAAAAElFTkSuQmCC');
+		$sMimeType = 'image/png';
+		$sFileName = 'MyImage.png';
+		$oDoc = new ormDocument($sImageData, $sMimeType, $sFileName);
+		$iMawWidth = 5;
+		$iMaxHeight = 0;
+
+		$oResult = $oDoc->ResizeImageToFit($iMawWidth, $iMaxHeight, $aDimensions);
+
+		$aRealDimensions = \utils::GetImageSize($oResult->GetData());
+		$aActualDimensions = [
+			'width' => $aRealDimensions[0],
+			'height' => $aRealDimensions[1],
 		];
+
+		$this->assertNotSame( $oDoc, $oResult, 'ResizeImageToFit should return a new object when there have been some modifications');
+		$this->assertIsArray( $aDimensions, 'ResizeImageToFit should fill aDimension with the dimensions of the new image when there are no issues');
+		$this->assertEquals( $aDimensions, $aActualDimensions, 'The returned dimensions should match the real dimensions of the image');
+		$this->assertEquals($iMawWidth, $aActualDimensions['width'], 'The new width should be exactly the max width');
+		$this->assertGreaterThanOrEqual($iMaxHeight, $aActualDimensions['height'], 'The new height should not be 0');
 	}
 
 }
