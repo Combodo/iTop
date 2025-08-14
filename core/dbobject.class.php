@@ -1748,9 +1748,9 @@ abstract class DBObject implements iDisplay
 	 * @throws \CoreException
 	 * @since 3.0.0 N°4106 Method should not be overloaded anymore for performances reasons. It will be set final in 3.1.0 (N°4107)
 	 * @since 3.0.0 N°580 New $sType parameter
-	 *
+	 * @since 3.3.0 N°4107 Should never be overriden
 	 */
-	public function GetName($sType = FriendlyNameType::SHORT)
+	public final function GetName($sType = FriendlyNameType::SHORT)
 	{
 		return utils::EscapeHtml($this->GetRawName($sType));
 	}
