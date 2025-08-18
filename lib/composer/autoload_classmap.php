@@ -6,7 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'AbstractApplicationObjectExtension' => $baseDir . '/application/applicationextension.inc.php',
     'AbstractApplicationUIExtension' => $baseDir . '/application/applicationextension.inc.php',
     'AbstractLoginFSMExtension' => $baseDir . '/application/applicationextension.inc.php',
     'AbstractPageUIBlockExtension' => $baseDir . '/application/applicationextension.inc.php',
@@ -3185,7 +3184,6 @@ return array(
     'appUserPreferences' => $baseDir . '/application/user.preferences.class.inc.php',
     'cmdbAbstractObject' => $baseDir . '/application/cmdbabstract.class.inc.php',
     'cmdbDataGenerator' => $baseDir . '/core/data.generator.class.inc.php',
-    'iApplicationObjectExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iApplicationUIExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iAttributeNoGroupBy' => $baseDir . '/core/attributedef.class.inc.php',
     'iBackgroundProcess' => $baseDir . '/core/backgroundprocess.inc.php',

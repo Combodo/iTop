@@ -384,7 +384,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
     );
 
     public static $classMap = array (
-        'AbstractApplicationObjectExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'AbstractApplicationUIExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'AbstractLoginFSMExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'AbstractPageUIBlockExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
@@ -3563,7 +3562,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'appUserPreferences' => __DIR__ . '/../..' . '/application/user.preferences.class.inc.php',
         'cmdbAbstractObject' => __DIR__ . '/../..' . '/application/cmdbabstract.class.inc.php',
         'cmdbDataGenerator' => __DIR__ . '/../..' . '/core/data.generator.class.inc.php',
-        'iApplicationObjectExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iApplicationUIExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iAttributeNoGroupBy' => __DIR__ . '/../..' . '/core/attributedef.class.inc.php',
         'iBackgroundProcess' => __DIR__ . '/../..' . '/core/backgroundprocess.inc.php',

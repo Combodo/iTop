@@ -71,16 +71,6 @@ class ExampleFor_iApplicationUIExtension extends \AbstractApplicationUIExtension
 }
       ]]></content>
     </snippet>
-    <snippet id="ExampleFor_iApplicationObjectExtension" _delta="define">
-      <placement>core</placement>
-      <rank>0</rank>
-      <content><![CDATA[
-class ExampleFor_iApplicationObjectExtension extends \AbstractApplicationObjectExtension
-{
-	// Do nothing, we just need the class to exists for the unit test
-}
-      ]]></content>
-    </snippet>
     <snippet id="ExampleFor_iPopupMenuExtension" _delta="define">
       <placement>core</placement>
       <rank>0</rank>
