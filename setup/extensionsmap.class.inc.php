@@ -22,12 +22,12 @@ class iTopExtension
 	 */
 	public $sVersion;
 
-		/**
+	/**
 	 * @var string
 	 */
 	public $sInstalledVersion;
 
-/**
+	/**
 	 * @var string
 	 */
 	public $sLabel;
@@ -134,7 +134,7 @@ class iTopExtensionsMap
 		$this->ScanDisk($sFromEnvironment);
 		foreach($aExtraDirs as $sDir)
 		{
-		    $this->ReadDir($sDir, iTopExtension::SOURCE_REMOTE);
+			$this->ReadDir($sDir, iTopExtension::SOURCE_REMOTE);
 		}
 		$this->CheckDependencies($sFromEnvironment);
 		if ($bNormalizeOldExtensions)
@@ -264,11 +264,11 @@ class iTopExtensionsMap
 		$hDir = opendir($sSearchDir);
 		if ($hDir !== false)
 		{
-		    if ($sParentExtensionId == null)
-		    {
-		        // We're not recursing, let's add the directory to the list of scanned dirs
-		        $this->aScannedDirs[] = $sSearchDir;
-		    }
+			if ($sParentExtensionId == null)
+			{
+				// We're not recursing, let's add the directory to the list of scanned dirs
+				$this->aScannedDirs[] = $sSearchDir;
+			}
 			$sExtensionId = null;
 			$aSubDirectories = array();
 
@@ -303,8 +303,11 @@ class iTopExtensionsMap
 					else if (preg_match('/^module\.(.*).php$/i', $sFile, $aMatches))
 					{
 						// Found a module
-						$aModuleInfo = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sSearchDir.'/'.$sFile);
-
+						try {
+							$aModuleInfo = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sSearchDir.'/'.$sFile);
+						} catch(ModuleDiscoveryServiceException $e){
+							continue;
+						}
 						// If we are not already inside a formal extension, then the module itself is considered
 						// as an extension, otherwise, the module is just added to the list of modules belonging
 						// to this extension
@@ -331,7 +334,7 @@ class iTopExtensionsMap
 							$bVisible = true;
 							if (!$aModuleInfo[2]['visible'] || isset($aModuleInfo[2]['auto_select']))
 							{
-							    $bVisible = false;
+								$bVisible = false;
 							}
 
 							// Let's create a "fake" extension from this module (containing just this module) for backwards compatibility
@@ -564,51 +567,51 @@ class iTopExtensionsMap
 	 */
 	public function NormalizeOldExtensions($sInSourceOnly = iTopExtension::SOURCE_MANUAL)
 	{
-	    $aSignatures = $this->GetOldExtensionsSignatures();
-	    foreach($aSignatures as $sExtensionCode => $aExtensionSignatures)
-	    {
-	        $bFound = false;
-	        foreach($aExtensionSignatures['versions'] as $sVersion => $aModules)
-	        {
-	            $bInstalled = true;
-	            foreach($aModules as $sModuleId)
-	            {
-	                if(!$this->ModuleIsPresent($sModuleId, $sInSourceOnly))
-	               {
-	                   $bFound = false;
-	                   break; // One missing module is enough to determine that the extension/version is not present
-	               }
-	               else
-	               {
-	                   $bInstalled = $bInstalled && (!$this->ModuleIsInstalled($sModuleId, $sInSourceOnly));
-	                   $bFound = true;
-	               }
-	            }
-	            if ($bFound) break; // The current version matches the signature
-	        }
+		$aSignatures = $this->GetOldExtensionsSignatures();
+		foreach($aSignatures as $sExtensionCode => $aExtensionSignatures)
+		{
+			$bFound = false;
+			foreach($aExtensionSignatures['versions'] as $sVersion => $aModules)
+			{
+				$bInstalled = true;
+				foreach($aModules as $sModuleId)
+				{
+					if(!$this->ModuleIsPresent($sModuleId, $sInSourceOnly))
+					{
+						$bFound = false;
+						break; // One missing module is enough to determine that the extension/version is not present
+					}
+					else
+					{
+						$bInstalled = $bInstalled && (!$this->ModuleIsInstalled($sModuleId, $sInSourceOnly));
+						$bFound = true;
+					}
+				}
+				if ($bFound) break; // The current version matches the signature
+			}
 
-	        if ($bFound)
-	        {
-	            $oExtension = new iTopExtension();
-	            $oExtension->sCode = $sExtensionCode;
-	            $oExtension->sLabel = $aExtensionSignatures['label'];
-	            $oExtension->sSource = $sInSourceOnly;
-	            $oExtension->sDescription = $aExtensionSignatures['description'];
-	            $oExtension->sVersion = $sVersion;
-	            $oExtension->aModules = array();
-	            if ($bInstalled)
-	            {
-	                $oExtension->sInstalledVersion = $sVersion;
-	                $oExtension->bMarkedAsChosen = true;
-	            }
-	            foreach($aModules as $sModuleId)
-	            {
-	                list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-	                $oExtension->aModules[] = $sModuleName;
-	            }
-	            $this->ReplaceModulesByNormalizedExtension($aExtensionSignatures['versions'][$sVersion], $oExtension);
-	        }
-	    }
+			if ($bFound)
+			{
+				$oExtension = new iTopExtension();
+				$oExtension->sCode = $sExtensionCode;
+				$oExtension->sLabel = $aExtensionSignatures['label'];
+				$oExtension->sSource = $sInSourceOnly;
+				$oExtension->sDescription = $aExtensionSignatures['description'];
+				$oExtension->sVersion = $sVersion;
+				$oExtension->aModules = array();
+				if ($bInstalled)
+				{
+					$oExtension->sInstalledVersion = $sVersion;
+					$oExtension->bMarkedAsChosen = true;
+				}
+				foreach($aModules as $sModuleId)
+				{
+					list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+					$oExtension->aModules[] = $sModuleName;
+				}
+				$this->ReplaceModulesByNormalizedExtension($aExtensionSignatures['versions'][$sVersion], $oExtension);
+			}
+		}
 	}
 
 	/**
@@ -619,7 +622,7 @@ class iTopExtensionsMap
 	 */
 	protected function ModuleIsPresent($sModuleIdToFind, $sInSourceOnly)
 	{
-	    return (array_key_exists($sModuleIdToFind, $this->aExtensions) && ($this->aExtensions[$sModuleIdToFind]->sSource == $sInSourceOnly));
+		return (array_key_exists($sModuleIdToFind, $this->aExtensions) && ($this->aExtensions[$sModuleIdToFind]->sSource == $sInSourceOnly));
 	}
 
 	/**
@@ -630,9 +633,9 @@ class iTopExtensionsMap
 	 */
 	protected function ModuleIsInstalled($sModuleIdToFind, $sInSourceOnly)
 	{
-	    return (array_key_exists($sModuleIdToFind, $this->aExtensions) &&
-	            ($this->aExtensions[$sModuleIdToFind]->sSource == $sInSourceOnly) &&
-	            ($this->aExtensions[$sModuleIdToFind]->sInstalledVersion !== '') );
+		return (array_key_exists($sModuleIdToFind, $this->aExtensions) &&
+			($this->aExtensions[$sModuleIdToFind]->sSource == $sInSourceOnly) &&
+			($this->aExtensions[$sModuleIdToFind]->sInstalledVersion !== '') );
 	}
 
 	/**
@@ -664,11 +667,11 @@ class iTopExtensionsMap
 	 */
 	protected function ReplaceModulesByNormalizedExtension($aModules, iTopExtension $oNewExtension)
 	{
-	    foreach($aModules as $sModuleId)
-	    {
-	        unset($this->aExtensions[$sModuleId]);
-	    }
-	    $this->AddExtension($oNewExtension);
+		foreach($aModules as $sModuleId)
+		{
+			unset($this->aExtensions[$sModuleId]);
+		}
+		$this->AddExtension($oNewExtension);
 	}
 
 	/**
@@ -678,637 +681,637 @@ class iTopExtensionsMap
 	 */
 	protected function GetOldExtensionsSignatures()
 	{
-	    // Generated by the Factory using the page export_component_versions_for_normalisation.php
-	    return array (
-	        'combodo-approval-process-light' =>
-	        array (
-	            'label' => 'Approval process light',
-	            'description' => 'Approve a request via a simple email',
-	            'versions' =>
-	            array (
-	                '1.0.1' =>
-	                array (
-	                    0 => 'approval-base/2.1.0',
-	                    1 => 'combodo-approval-light/1.0.1',
-	                ),
-	                '1.0.2' =>
-	                array (
-	                    0 => 'approval-base/2.1.1',
-	                    1 => 'combodo-approval-light/1.0.2',
-	                ),
-	                '1.0.3' =>
-	                array (
-	                    0 => 'approval-base/2.1.2',
-	                    1 => 'combodo-approval-light/1.0.2',
-	                ),
-	                '1.1.0' =>
-	                array (
-	                    0 => 'approval-base/2.2.2',
-	                    1 => 'combodo-approval-light/1.0.2',
-	                ),
-	                '1.1.1' =>
-	                array (
-	                    0 => 'approval-base/2.2.3',
-	                    1 => 'combodo-approval-light/1.0.2',
-	                ),
-	                '1.1.2' =>
-	                array (
-	                    0 => 'approval-base/2.2.6',
-	                    1 => 'combodo-approval-light/1.0.2',
-	                ),
-	                '1.1.3' =>
-	                array (
-	                    0 => 'approval-base/2.2.6',
-	                    1 => 'combodo-approval-light/1.0.3',
-	                ),
-	                '1.2.0' =>
-	                array (
-	                    0 => 'approval-base/2.3.0',
-	                    1 => 'combodo-approval-light/1.0.3',
-	                ),
-	                '1.2.1' =>
-	                array (
-	                    0 => 'approval-base/2.4.0',
-	                    1 => 'combodo-approval-light/1.0.4',
-	                ),
-	                '1.3.0' =>
-	                array (
-	                    0 => 'approval-base/2.4.2',
-	                    1 => 'combodo-approval-light/1.1.1',
-	                ),
-	                '1.3.1' =>
-	                array (
-	                    0 => 'approval-base/2.5.0',
-	                    1 => 'combodo-approval-light/1.1.1',
-	                ),
-	                '1.3.2' =>
-	                array (
-	                    0 => 'approval-base/2.5.0',
-	                    1 => 'combodo-approval-light/1.1.2',
-	                ),
-	                '1.2.2' =>
-	                array (
-	                    0 => 'approval-base/2.4.2',
-	                    1 => 'combodo-approval-light/1.0.5',
-	                ),
-	                '1.3.3' =>
-	                array (
-	                    0 => 'approval-base/2.5.1',
-	                    1 => 'combodo-approval-light/1.1.2',
-	                ),
-	                '1.3.4' =>
-	                array (
-	                    0 => 'approval-base/2.5.2',
-	                    1 => 'combodo-approval-light/1.1.2',
-	                ),
-	                '1.3.5' =>
-	                array (
-	                    0 => 'approval-base/2.5.3',
-	                    1 => 'combodo-approval-light/1.1.2',
-	                ),
-	                '1.4.0' =>
-	                array (
-	                    0 => 'approval-base/2.5.3',
-	                    1 => 'combodo-approval-light/1.1.2',
-	                    2 => 'itop-approval-portal/1.0.0',
-	                ),
-	            ),
-	        ),
-	        'combodo-approval-process-automation' =>
-	        array (
-	            'label' => 'Approval process automation',
-	            'description' => 'Control your approval process with predefined rules based on service catalog',
-	            'versions' =>
-	            array (
-	                '1.0.1' =>
-	                array (
-	                    0 => 'approval-base/2.1.0',
-	                    1 => 'combodo-approval-extended/1.0.2',
-	                ),
-	                '1.0.2' =>
-	                array (
-	                    0 => 'approval-base/2.1.1',
-	                    1 => 'combodo-approval-extended/1.0.4',
-	                ),
-	                '1.0.3' =>
-	                array (
-	                    0 => 'approval-base/2.1.2',
-	                    1 => 'combodo-approval-extended/1.0.4',
-	                ),
-	                '1.1.0' =>
-	                array (
-	                    0 => 'approval-base/2.2.2',
-	                    1 => 'combodo-approval-extended/1.0.4',
-	                ),
-	                '1.1.1' =>
-	                array (
-	                    0 => 'approval-base/2.2.3',
-	                    1 => 'combodo-approval-extended/1.0.4',
-	                ),
-	                '1.1.2' =>
-	                array (
-	                    0 => 'approval-base/2.2.6',
-	                    1 => 'combodo-approval-extended/1.0.5',
-	                ),
-	                '1.1.3' =>
-	                array (
-	                    0 => 'approval-base/2.2.6',
-	                    1 => 'combodo-approval-extended/1.0.6',
-	                ),
-	                '1.2.0' =>
-	                array (
-	                    0 => 'approval-base/2.3.0',
-	                    1 => 'combodo-approval-extended/1.0.7',
-	                ),
-	                '1.2.1' =>
-	                array (
-	                    0 => 'approval-base/2.4.0',
-	                    1 => 'combodo-approval-extended/1.0.8',
-	                ),
-	                '1.3.0' =>
-	                array (
-	                    0 => 'approval-base/2.4.2',
-	                    1 => 'combodo-approval-extended/1.2.1',
-	                ),
-	                '1.3.1' =>
-	                array (
-	                    0 => 'approval-base/2.5.0',
-	                    1 => 'combodo-approval-extended/1.2.1',
-	                ),
-	                '1.3.2' =>
-	                array (
-	                    0 => 'approval-base/2.5.0',
-	                    1 => 'combodo-approval-extended/1.2.2',
-	                ),
-	                '1.2.2' =>
-	                array (
-	                    0 => 'approval-base/2.4.2',
-	                    1 => 'combodo-approval-extended/1.0.9',
-	                ),
-	                '1.3.3' =>
-	                array (
-	                    0 => 'approval-base/2.5.1',
-	                    1 => 'combodo-approval-extended/1.2.3',
-	                ),
-	                '1.3.4' =>
-	                array (
-	                    0 => 'approval-base/2.5.2',
-	                    1 => 'combodo-approval-extended/1.2.3',
-	                ),
-	                '1.3.5' =>
-	                array (
-	                    0 => 'approval-base/2.5.3',
-	                    1 => 'combodo-approval-extended/1.2.3',
-	                ),
-	                '1.4.0' =>
-	                array (
-	                    0 => 'approval-base/2.5.3',
-	                    1 => 'combodo-approval-extended/1.2.3',
-	                    3 => 'itop-approval-portal/1.0.0',
-	                ),
-	            ),
-	        ),
-	        'combodo-predefined-response-models' =>
-	        array (
-	            'label' => 'Predefined response models',
-	            'description' => 'Pick common answers from a list of predefined replies grouped by categories to update tickets log',
-	            'versions' =>
-	            array (
-	                '1.0.0' =>
-	                array (
-	                    0 => 'precanned-replies/1.0.0',
-	                    1 => 'precanned-replies-pro/1.0.0',
-	                ),
-	                '1.0.1' =>
-	                array (
-	                    0 => 'precanned-replies/1.0.1',
-	                    1 => 'precanned-replies-pro/1.0.1',
-	                ),
-	                '1.0.2' =>
-	                array (
-	                    0 => 'precanned-replies/1.0.2',
-	                    1 => 'precanned-replies-pro/1.0.1',
-	                ),
-	                '1.0.3' =>
-	                array (
-	                    0 => 'precanned-replies/1.0.3',
-	                    1 => 'precanned-replies-pro/1.0.1',
-	                ),
-	                '1.0.4' =>
-	                array (
-	                    0 => 'precanned-replies/1.0.3',
-	                    1 => 'precanned-replies-pro/1.0.2',
-	                ),
-	                '1.0.5' =>
-	                array (
-	                    0 => 'precanned-replies/1.0.4',
-	                    1 => 'precanned-replies-pro/1.0.2',
-	                ),
-	                '1.1.0' =>
-	                array (
-	                    0 => 'precanned-replies/1.1.0',
-	                    1 => 'precanned-replies-pro/1.0.2',
-	                ),
-	                '1.1.1' =>
-	                array (
-	                    0 => 'precanned-replies/1.1.1',
-	                    1 => 'precanned-replies-pro/1.0.2',
-	                ),
-	            ),
-	        ),
-	        'combodo-customized-request-forms' =>
-	        array (
-	            'label' => 'Customized request forms',
-	            'description' => 'Define personalized request forms based on the service catalog. Add extra fields for a given type of request.',
-	            'versions' =>
-	            array (
-	                '1.0.1' =>
-	                array (
-	                    0 => 'templates-base/2.1.1',
-	                    1 => 'itop-request-template/1.0.0',
-	                ),
-	                '1.0.2' =>
-	                array (
-	                    0 => 'templates-base/2.1.2',
-	                    1 => 'itop-request-template/1.0.0',
-	                ),
-	                '1.0.3' =>
-	                array (
-	                    0 => 'templates-base/2.1.2',
-	                    1 => 'itop-request-template/1.0.1',
-	                ),
-	                '1.0.4' =>
-	                array (
-	                    0 => 'templates-base/2.1.3',
-	                    1 => 'itop-request-template/1.0.1',
-	                ),
-	                '1.0.5' =>
-	                array (
-	                    0 => 'templates-base/2.1.4',
-	                    1 => 'itop-request-template/1.0.1',
-	                ),
-	                '2.0.0' =>
-	                array (
-	                    0 => 'templates-base/3.0.0',
-	                    1 => 'itop-request-template/2.0.0',
-	                    2 => 'itop-request-template-portal/1.0.0',
-	                ),
-	                '2.0.1' =>
-	                array (
-	                    0 => 'templates-base/3.0.1',
-	                    1 => 'itop-request-template/2.0.0',
-	                    2 => 'itop-request-template-portal/1.0.0',
-	                ),
-	                '2.0.2' =>
-	                array (
-	                    0 => 'templates-base/3.0.2',
-	                    1 => 'itop-request-template/2.0.0',
-	                    2 => 'itop-request-template-portal/1.0.0',
-	                ),
-	                '2.0.3' =>
-	                array (
-	                    0 => 'templates-base/3.0.4',
-	                    1 => 'itop-request-template/2.0.0',
-	                    2 => 'itop-request-template-portal/1.0.0',
-	                ),
-	                '2.0.4' =>
-	                array (
-	                    0 => 'templates-base/3.0.5',
-	                    1 => 'itop-request-template/2.0.0',
-	                    2 => 'itop-request-template-portal/1.0.0',
-	                ),
-	                '2.0.5' =>
-	                array (
-	                    0 => 'templates-base/3.0.6',
-	                    1 => 'itop-request-template/2.0.0',
-	                    2 => 'itop-request-template-portal/1.0.0',
-	                ),
-	                '2.0.6' =>
-	                array (
-	                    0 => 'templates-base/3.0.8',
-	                    1 => 'itop-request-template/2.0.0',
-	                    2 => 'itop-request-template-portal/1.0.0',
-	                ),
-	                '2.0.7' =>
-	                array (
-	                    0 => 'templates-base/3.0.9',
-	                    1 => 'itop-request-template/2.0.0',
-	                    2 => 'itop-request-template-portal/1.0.0',
-	                ),
-	                '2.0.8' =>
-	                array (
-	                    0 => 'templates-base/3.0.12',
-	                    1 => 'itop-request-template/2.0.0',
-	                    2 => 'itop-request-template-portal/1.0.0',
-	                ),
-	            ),
-	        ),
-	        'combodo-sla-considering-business-hours' =>
-	        array (
-	            'label' => 'SLA considering business hours',
-	            'description' => 'Compute SLAs taking into account service coverage window and holidays',
-	            'versions' =>
-	            array (
-	                '2.0.1' =>
-	                array (
-	                    0 => 'combodo-sla-computation/2.0.1',
-	                    1 => 'combodo-coverage-windows-computation/2.0.0',
-	                ),
-	                '2.1.0' =>
-	                array (
-	                    0 => 'combodo-sla-computation/2.1.0',
-	                    1 => 'combodo-coverage-windows-computation/2.0.0',
-	                ),
-	                '2.1.1' =>
-	                array (
-	                    0 => 'combodo-sla-computation/2.1.1',
-	                    1 => 'combodo-coverage-windows-computation/2.0.0',
-	                ),
-	                '2.1.2' =>
-	                array (
-	                    0 => 'combodo-sla-computation/2.1.2',
-	                    1 => 'combodo-coverage-windows-computation/2.0.0',
-	                ),
-	                '2.1.3' =>
-	                array (
-	                    0 => 'combodo-sla-computation/2.1.2',
-	                    1 => 'combodo-coverage-windows-computation/2.0.1',
-	                ),
-	                '2.0.2' =>
-	                array (
-	                    0 => 'combodo-sla-computation/2.0.1',
-	                    1 => 'combodo-coverage-windows-computation/2.0.1',
-	                ),
-	                '2.1.4' =>
-	                array (
-	                    0 => 'combodo-sla-computation/2.1.3',
-	                    1 => 'combodo-coverage-windows-computation/2.0.1',
-	                ),
-	                '2.1.5' =>
-	                array (
-	                    0 => 'combodo-sla-computation/2.1.5',
-	                    1 => 'combodo-coverage-windows-computation/2.0.1',
-	                ),
-	                '2.1.6' =>
-	                array (
-	                    0 => 'combodo-sla-computation/2.1.5',
-	                    1 => 'combodo-coverage-windows-computation/2.0.2',
-	                ),
-	                '2.1.7' =>
-	                array (
-	                    0 => 'combodo-sla-computation/2.1.6',
-	                    1 => 'combodo-coverage-windows-computation/2.0.2',
-	                ),
-	                '2.1.8' =>
-	                array (
-	                    0 => 'combodo-sla-computation/2.1.7',
-	                    1 => 'combodo-coverage-windows-computation/2.0.2',
-	                ),
-	                '2.1.9' =>
-	                array (
-	                    0 => 'combodo-sla-computation/2.1.8',
-	                    1 => 'combodo-coverage-windows-computation/2.0.2',
-	                ),
-	            ),
-	        ),
-	        'combodo-mail-to-ticket-automation' =>
-	        array (
-	            'label' => 'Mail to ticket automation',
-	            'description' => 'Scan several mailboxes to create or update tickets.',
-	            'versions' =>
-	            array (
-	                '2.6.0' =>
-	                array (
-	                    0 => 'combodo-email-synchro/2.6.0',
-	                    1 => 'itop-standard-email-synchro/2.6.0',
-	                ),
-	                '2.6.1' =>
-	                array (
-	                    0 => 'combodo-email-synchro/2.6.1',
-	                    1 => 'itop-standard-email-synchro/2.6.0',
-	                ),
-	                '2.6.2' =>
-	                array (
-	                    0 => 'combodo-email-synchro/2.6.2',
-	                    1 => 'itop-standard-email-synchro/2.6.0',
-	                ),
-	                '2.6.3' =>
-	                array (
-	                    0 => 'combodo-email-synchro/2.6.2',
-	                    1 => 'itop-standard-email-synchro/2.6.1',
-	                ),
-	                '2.6.4' =>
-	                array (
-	                    0 => 'combodo-email-synchro/2.6.3',
-	                    1 => 'itop-standard-email-synchro/2.6.2',
-	                ),
-	                '2.6.5' =>
-	                array (
-	                    0 => 'combodo-email-synchro/2.6.4',
-	                    1 => 'itop-standard-email-synchro/2.6.2',
-	                ),
-	                '2.6.6' =>
-	                array (
-	                    0 => 'combodo-email-synchro/2.6.5',
-	                    1 => 'itop-standard-email-synchro/2.6.3',
-	                ),
-	                '2.6.7' =>
-	                array (
-	                    0 => 'combodo-email-synchro/2.6.6',
-	                    1 => 'itop-standard-email-synchro/2.6.4',
-	                ),
-	                '2.6.8' =>
-	                array (
-	                    0 => 'combodo-email-synchro/2.6.7',
-	                    1 => 'itop-standard-email-synchro/2.6.4',
-	                ),
-	                '2.6.9' =>
-	                array (
-	                    0 => 'combodo-email-synchro/2.6.8',
-	                    1 => 'itop-standard-email-synchro/2.6.5',
-	                ),
-	                '2.6.10' =>
-	                array (
-	                    0 => 'combodo-email-synchro/2.6.9',
-	                    1 => 'itop-standard-email-synchro/2.6.6',
-	                ),
-	                '2.6.11' =>
-	                array (
-	                    0 => 'combodo-email-synchro/2.6.10',
-	                    1 => 'itop-standard-email-synchro/2.6.6',
-	                ),
-	                '2.6.12' =>
-	                array (
-	                    0 => 'combodo-email-synchro/2.6.11',
-	                    1 => 'itop-standard-email-synchro/2.6.6',
-	                ),
-	                '3.0.0' =>
-	                array (
-	                    0 => 'combodo-email-synchro/3.0.0',
-	                    1 => 'itop-standard-email-synchro/3.0.0',
-	                ),
-	                '3.0.1' =>
-	                array (
-	                    0 => 'combodo-email-synchro/3.0.1',
-	                    1 => 'itop-standard-email-synchro/3.0.1',
-	                ),
-	                '3.0.2' =>
-	                array (
-	                    0 => 'combodo-email-synchro/3.0.2',
-	                    1 => 'itop-standard-email-synchro/3.0.1',
-	                ),
-	                '3.0.3' =>
-	                array (
-	                    0 => 'combodo-email-synchro/3.0.3',
-	                    1 => 'itop-standard-email-synchro/3.0.3',
-	                ),
-	                '3.0.4' =>
-	                array (
-	                    0 => 'combodo-email-synchro/3.0.3',
-	                    1 => 'itop-standard-email-synchro/3.0.4',
-	                ),
-	                '3.0.5' =>
-	                array (
-	                    0 => 'combodo-email-synchro/3.0.4',
-	                    1 => 'itop-standard-email-synchro/3.0.4',
-	                ),
-	                '3.0.6' =>
-	                array (
-	                    0 => 'combodo-email-synchro/3.0.5',
-	                    1 => 'itop-standard-email-synchro/3.0.4',
-	                ),
-	                '3.0.7' =>
-	                array (
-	                    0 => 'combodo-email-synchro/3.0.5',
-	                    1 => 'itop-standard-email-synchro/3.0.5',
-	                ),
-	            ),
-	        ),
-	        'combodo-configurator-for-automatic-object-creation' =>
-	        array (
-	            'label' => 'Configurator for automatic object creation',
-	            'description' => 'Templating based on existing objects.',
-	            'versions' =>
-	            array (
-	                '1.0.13' =>
-	                array (
-		                    1 => 'itop-stencils/1.0.6',
-	                ),
-	            ),
-	        ),
-	        'combodo-user-actions-configurator' =>
-	        array (
-	            'label' => 'User actions configurator',
-	            'description' => 'Configure user actions to simplify and automate processes (e.g. create an incident from a CI).',
-	            'versions' =>
-	            array (
-	                '1.0.0' =>
-	                array (
-	                    0 => 'itop-object-copier/1.0.0',
-	                ),
-	                '1.0.1' =>
-	                array (
-	                    0 => 'itop-object-copier/1.0.1',
-	                ),
-	                '1.0.2' =>
-	                array (
-	                    0 => 'itop-object-copier/1.0.2',
-	                ),
-	                '1.0.3' =>
-	                array (
-	                    0 => 'itop-object-copier/1.0.3',
-	                ),
-	                '1.1.0' =>
-	                array (
-	                    0 => 'itop-object-copier/1.1.0',
-	                ),
-	                '1.1.1' =>
-	                array (
-	                    0 => 'itop-object-copier/1.1.1',
-	                ),
-	                '1.1.2' =>
-	                array (
-	                    0 => 'itop-object-copier/1.1.2',
-	                ),
-	                '1.1.3' =>
-	                array (
-	                    0 => 'itop-object-copier/1.1.3',
-	                ),
-	                '1.1.4' =>
-	                array (
-	                    0 => 'itop-object-copier/1.1.4',
-	                ),
-	                '1.1.5' =>
-	                array (
-	                    0 => 'itop-object-copier/1.1.5',
-	                ),
-	                '1.1.6' =>
-	                array (
-	                    0 => 'itop-object-copier/1.1.6',
-	                ),
-	                '1.1.7' =>
-	                array (
-	                    0 => 'itop-object-copier/1.1.7',
-	                ),
-	                '1.1.8' =>
-	                array (
-	                    0 => 'itop-object-copier/1.1.8',
-	                ),
-	            ),
-	        ),
-	        'combodo-send-updates-by-email' =>
-	        array (
-	            'label' => 'Send updates by email',
-	            'description' => 'Send an email to pre-configured contacts when a ticket log is updated.',
-	            'versions' =>
-	            array (
-	                '1.0.1' =>
-	                array (
-	                    0 => 'email-reply/1.0.1',
-	                ),
-	                '1.0.3' =>
-	                array (
-	                    0 => 'email-reply/1.0.3',
-	                ),
-	                '1.1.1' =>
-	                array (
-	                    0 => 'email-reply/1.1.1',
-	                ),
-	                '1.1.2' =>
-	                array (
-	                    0 => 'email-reply/1.1.2',
-	                ),
-	                '1.1.3' =>
-	                array (
-	                    0 => 'email-reply/1.1.3',
-	                ),
-	                '1.1.4' =>
-	                array (
-	                    0 => 'email-reply/1.1.4',
-	                ),
-	                '1.1.5' =>
-	                array (
-	                    0 => 'email-reply/1.1.5',
-	                ),
-	                '1.1.6' =>
-	                array (
-	                    0 => 'email-reply/1.1.6',
-	                ),
-	                '1.1.7' =>
-	                array (
-	                    0 => 'email-reply/1.1.7',
-	                ),
-	                // 1.1.8 was never released
-	                '1.1.9' =>
-	                array (
-	                    0 => 'email-reply/1.1.9',
-	                ),
-	                '1.1.10' =>
-	                array (
-	                    0 => 'email-reply/1.1.10',
-	                ),
-	            ),
-	        ),
-	    );
+		// Generated by the Factory using the page export_component_versions_for_normalisation.php
+		return array (
+			'combodo-approval-process-light' =>
+				array (
+					'label' => 'Approval process light',
+					'description' => 'Approve a request via a simple email',
+					'versions' =>
+						array (
+							'1.0.1' =>
+								array (
+									0 => 'approval-base/2.1.0',
+									1 => 'combodo-approval-light/1.0.1',
+								),
+							'1.0.2' =>
+								array (
+									0 => 'approval-base/2.1.1',
+									1 => 'combodo-approval-light/1.0.2',
+								),
+							'1.0.3' =>
+								array (
+									0 => 'approval-base/2.1.2',
+									1 => 'combodo-approval-light/1.0.2',
+								),
+							'1.1.0' =>
+								array (
+									0 => 'approval-base/2.2.2',
+									1 => 'combodo-approval-light/1.0.2',
+								),
+							'1.1.1' =>
+								array (
+									0 => 'approval-base/2.2.3',
+									1 => 'combodo-approval-light/1.0.2',
+								),
+							'1.1.2' =>
+								array (
+									0 => 'approval-base/2.2.6',
+									1 => 'combodo-approval-light/1.0.2',
+								),
+							'1.1.3' =>
+								array (
+									0 => 'approval-base/2.2.6',
+									1 => 'combodo-approval-light/1.0.3',
+								),
+							'1.2.0' =>
+								array (
+									0 => 'approval-base/2.3.0',
+									1 => 'combodo-approval-light/1.0.3',
+								),
+							'1.2.1' =>
+								array (
+									0 => 'approval-base/2.4.0',
+									1 => 'combodo-approval-light/1.0.4',
+								),
+							'1.3.0' =>
+								array (
+									0 => 'approval-base/2.4.2',
+									1 => 'combodo-approval-light/1.1.1',
+								),
+							'1.3.1' =>
+								array (
+									0 => 'approval-base/2.5.0',
+									1 => 'combodo-approval-light/1.1.1',
+								),
+							'1.3.2' =>
+								array (
+									0 => 'approval-base/2.5.0',
+									1 => 'combodo-approval-light/1.1.2',
+								),
+							'1.2.2' =>
+								array (
+									0 => 'approval-base/2.4.2',
+									1 => 'combodo-approval-light/1.0.5',
+								),
+							'1.3.3' =>
+								array (
+									0 => 'approval-base/2.5.1',
+									1 => 'combodo-approval-light/1.1.2',
+								),
+							'1.3.4' =>
+								array (
+									0 => 'approval-base/2.5.2',
+									1 => 'combodo-approval-light/1.1.2',
+								),
+							'1.3.5' =>
+								array (
+									0 => 'approval-base/2.5.3',
+									1 => 'combodo-approval-light/1.1.2',
+								),
+							'1.4.0' =>
+								array (
+									0 => 'approval-base/2.5.3',
+									1 => 'combodo-approval-light/1.1.2',
+									2 => 'itop-approval-portal/1.0.0',
+								),
+						),
+				),
+			'combodo-approval-process-automation' =>
+				array (
+					'label' => 'Approval process automation',
+					'description' => 'Control your approval process with predefined rules based on service catalog',
+					'versions' =>
+						array (
+							'1.0.1' =>
+								array (
+									0 => 'approval-base/2.1.0',
+									1 => 'combodo-approval-extended/1.0.2',
+								),
+							'1.0.2' =>
+								array (
+									0 => 'approval-base/2.1.1',
+									1 => 'combodo-approval-extended/1.0.4',
+								),
+							'1.0.3' =>
+								array (
+									0 => 'approval-base/2.1.2',
+									1 => 'combodo-approval-extended/1.0.4',
+								),
+							'1.1.0' =>
+								array (
+									0 => 'approval-base/2.2.2',
+									1 => 'combodo-approval-extended/1.0.4',
+								),
+							'1.1.1' =>
+								array (
+									0 => 'approval-base/2.2.3',
+									1 => 'combodo-approval-extended/1.0.4',
+								),
+							'1.1.2' =>
+								array (
+									0 => 'approval-base/2.2.6',
+									1 => 'combodo-approval-extended/1.0.5',
+								),
+							'1.1.3' =>
+								array (
+									0 => 'approval-base/2.2.6',
+									1 => 'combodo-approval-extended/1.0.6',
+								),
+							'1.2.0' =>
+								array (
+									0 => 'approval-base/2.3.0',
+									1 => 'combodo-approval-extended/1.0.7',
+								),
+							'1.2.1' =>
+								array (
+									0 => 'approval-base/2.4.0',
+									1 => 'combodo-approval-extended/1.0.8',
+								),
+							'1.3.0' =>
+								array (
+									0 => 'approval-base/2.4.2',
+									1 => 'combodo-approval-extended/1.2.1',
+								),
+							'1.3.1' =>
+								array (
+									0 => 'approval-base/2.5.0',
+									1 => 'combodo-approval-extended/1.2.1',
+								),
+							'1.3.2' =>
+								array (
+									0 => 'approval-base/2.5.0',
+									1 => 'combodo-approval-extended/1.2.2',
+								),
+							'1.2.2' =>
+								array (
+									0 => 'approval-base/2.4.2',
+									1 => 'combodo-approval-extended/1.0.9',
+								),
+							'1.3.3' =>
+								array (
+									0 => 'approval-base/2.5.1',
+									1 => 'combodo-approval-extended/1.2.3',
+								),
+							'1.3.4' =>
+								array (
+									0 => 'approval-base/2.5.2',
+									1 => 'combodo-approval-extended/1.2.3',
+								),
+							'1.3.5' =>
+								array (
+									0 => 'approval-base/2.5.3',
+									1 => 'combodo-approval-extended/1.2.3',
+								),
+							'1.4.0' =>
+								array (
+									0 => 'approval-base/2.5.3',
+									1 => 'combodo-approval-extended/1.2.3',
+									3 => 'itop-approval-portal/1.0.0',
+								),
+						),
+				),
+			'combodo-predefined-response-models' =>
+				array (
+					'label' => 'Predefined response models',
+					'description' => 'Pick common answers from a list of predefined replies grouped by categories to update tickets log',
+					'versions' =>
+						array (
+							'1.0.0' =>
+								array (
+									0 => 'precanned-replies/1.0.0',
+									1 => 'precanned-replies-pro/1.0.0',
+								),
+							'1.0.1' =>
+								array (
+									0 => 'precanned-replies/1.0.1',
+									1 => 'precanned-replies-pro/1.0.1',
+								),
+							'1.0.2' =>
+								array (
+									0 => 'precanned-replies/1.0.2',
+									1 => 'precanned-replies-pro/1.0.1',
+								),
+							'1.0.3' =>
+								array (
+									0 => 'precanned-replies/1.0.3',
+									1 => 'precanned-replies-pro/1.0.1',
+								),
+							'1.0.4' =>
+								array (
+									0 => 'precanned-replies/1.0.3',
+									1 => 'precanned-replies-pro/1.0.2',
+								),
+							'1.0.5' =>
+								array (
+									0 => 'precanned-replies/1.0.4',
+									1 => 'precanned-replies-pro/1.0.2',
+								),
+							'1.1.0' =>
+								array (
+									0 => 'precanned-replies/1.1.0',
+									1 => 'precanned-replies-pro/1.0.2',
+								),
+							'1.1.1' =>
+								array (
+									0 => 'precanned-replies/1.1.1',
+									1 => 'precanned-replies-pro/1.0.2',
+								),
+						),
+				),
+			'combodo-customized-request-forms' =>
+				array (
+					'label' => 'Customized request forms',
+					'description' => 'Define personalized request forms based on the service catalog. Add extra fields for a given type of request.',
+					'versions' =>
+						array (
+							'1.0.1' =>
+								array (
+									0 => 'templates-base/2.1.1',
+									1 => 'itop-request-template/1.0.0',
+								),
+							'1.0.2' =>
+								array (
+									0 => 'templates-base/2.1.2',
+									1 => 'itop-request-template/1.0.0',
+								),
+							'1.0.3' =>
+								array (
+									0 => 'templates-base/2.1.2',
+									1 => 'itop-request-template/1.0.1',
+								),
+							'1.0.4' =>
+								array (
+									0 => 'templates-base/2.1.3',
+									1 => 'itop-request-template/1.0.1',
+								),
+							'1.0.5' =>
+								array (
+									0 => 'templates-base/2.1.4',
+									1 => 'itop-request-template/1.0.1',
+								),
+							'2.0.0' =>
+								array (
+									0 => 'templates-base/3.0.0',
+									1 => 'itop-request-template/2.0.0',
+									2 => 'itop-request-template-portal/1.0.0',
+								),
+							'2.0.1' =>
+								array (
+									0 => 'templates-base/3.0.1',
+									1 => 'itop-request-template/2.0.0',
+									2 => 'itop-request-template-portal/1.0.0',
+								),
+							'2.0.2' =>
+								array (
+									0 => 'templates-base/3.0.2',
+									1 => 'itop-request-template/2.0.0',
+									2 => 'itop-request-template-portal/1.0.0',
+								),
+							'2.0.3' =>
+								array (
+									0 => 'templates-base/3.0.4',
+									1 => 'itop-request-template/2.0.0',
+									2 => 'itop-request-template-portal/1.0.0',
+								),
+							'2.0.4' =>
+								array (
+									0 => 'templates-base/3.0.5',
+									1 => 'itop-request-template/2.0.0',
+									2 => 'itop-request-template-portal/1.0.0',
+								),
+							'2.0.5' =>
+								array (
+									0 => 'templates-base/3.0.6',
+									1 => 'itop-request-template/2.0.0',
+									2 => 'itop-request-template-portal/1.0.0',
+								),
+							'2.0.6' =>
+								array (
+									0 => 'templates-base/3.0.8',
+									1 => 'itop-request-template/2.0.0',
+									2 => 'itop-request-template-portal/1.0.0',
+								),
+							'2.0.7' =>
+								array (
+									0 => 'templates-base/3.0.9',
+									1 => 'itop-request-template/2.0.0',
+									2 => 'itop-request-template-portal/1.0.0',
+								),
+							'2.0.8' =>
+								array (
+									0 => 'templates-base/3.0.12',
+									1 => 'itop-request-template/2.0.0',
+									2 => 'itop-request-template-portal/1.0.0',
+								),
+						),
+				),
+			'combodo-sla-considering-business-hours' =>
+				array (
+					'label' => 'SLA considering business hours',
+					'description' => 'Compute SLAs taking into account service coverage window and holidays',
+					'versions' =>
+						array (
+							'2.0.1' =>
+								array (
+									0 => 'combodo-sla-computation/2.0.1',
+									1 => 'combodo-coverage-windows-computation/2.0.0',
+								),
+							'2.1.0' =>
+								array (
+									0 => 'combodo-sla-computation/2.1.0',
+									1 => 'combodo-coverage-windows-computation/2.0.0',
+								),
+							'2.1.1' =>
+								array (
+									0 => 'combodo-sla-computation/2.1.1',
+									1 => 'combodo-coverage-windows-computation/2.0.0',
+								),
+							'2.1.2' =>
+								array (
+									0 => 'combodo-sla-computation/2.1.2',
+									1 => 'combodo-coverage-windows-computation/2.0.0',
+								),
+							'2.1.3' =>
+								array (
+									0 => 'combodo-sla-computation/2.1.2',
+									1 => 'combodo-coverage-windows-computation/2.0.1',
+								),
+							'2.0.2' =>
+								array (
+									0 => 'combodo-sla-computation/2.0.1',
+									1 => 'combodo-coverage-windows-computation/2.0.1',
+								),
+							'2.1.4' =>
+								array (
+									0 => 'combodo-sla-computation/2.1.3',
+									1 => 'combodo-coverage-windows-computation/2.0.1',
+								),
+							'2.1.5' =>
+								array (
+									0 => 'combodo-sla-computation/2.1.5',
+									1 => 'combodo-coverage-windows-computation/2.0.1',
+								),
+							'2.1.6' =>
+								array (
+									0 => 'combodo-sla-computation/2.1.5',
+									1 => 'combodo-coverage-windows-computation/2.0.2',
+								),
+							'2.1.7' =>
+								array (
+									0 => 'combodo-sla-computation/2.1.6',
+									1 => 'combodo-coverage-windows-computation/2.0.2',
+								),
+							'2.1.8' =>
+								array (
+									0 => 'combodo-sla-computation/2.1.7',
+									1 => 'combodo-coverage-windows-computation/2.0.2',
+								),
+							'2.1.9' =>
+								array (
+									0 => 'combodo-sla-computation/2.1.8',
+									1 => 'combodo-coverage-windows-computation/2.0.2',
+								),
+						),
+				),
+			'combodo-mail-to-ticket-automation' =>
+				array (
+					'label' => 'Mail to ticket automation',
+					'description' => 'Scan several mailboxes to create or update tickets.',
+					'versions' =>
+						array (
+							'2.6.0' =>
+								array (
+									0 => 'combodo-email-synchro/2.6.0',
+									1 => 'itop-standard-email-synchro/2.6.0',
+								),
+							'2.6.1' =>
+								array (
+									0 => 'combodo-email-synchro/2.6.1',
+									1 => 'itop-standard-email-synchro/2.6.0',
+								),
+							'2.6.2' =>
+								array (
+									0 => 'combodo-email-synchro/2.6.2',
+									1 => 'itop-standard-email-synchro/2.6.0',
+								),
+							'2.6.3' =>
+								array (
+									0 => 'combodo-email-synchro/2.6.2',
+									1 => 'itop-standard-email-synchro/2.6.1',
+								),
+							'2.6.4' =>
+								array (
+									0 => 'combodo-email-synchro/2.6.3',
+									1 => 'itop-standard-email-synchro/2.6.2',
+								),
+							'2.6.5' =>
+								array (
+									0 => 'combodo-email-synchro/2.6.4',
+									1 => 'itop-standard-email-synchro/2.6.2',
+								),
+							'2.6.6' =>
+								array (
+									0 => 'combodo-email-synchro/2.6.5',
+									1 => 'itop-standard-email-synchro/2.6.3',
+								),
+							'2.6.7' =>
+								array (
+									0 => 'combodo-email-synchro/2.6.6',
+									1 => 'itop-standard-email-synchro/2.6.4',
+								),
+							'2.6.8' =>
+								array (
+									0 => 'combodo-email-synchro/2.6.7',
+									1 => 'itop-standard-email-synchro/2.6.4',
+								),
+							'2.6.9' =>
+								array (
+									0 => 'combodo-email-synchro/2.6.8',
+									1 => 'itop-standard-email-synchro/2.6.5',
+								),
+							'2.6.10' =>
+								array (
+									0 => 'combodo-email-synchro/2.6.9',
+									1 => 'itop-standard-email-synchro/2.6.6',
+								),
+							'2.6.11' =>
+								array (
+									0 => 'combodo-email-synchro/2.6.10',
+									1 => 'itop-standard-email-synchro/2.6.6',
+								),
+							'2.6.12' =>
+								array (
+									0 => 'combodo-email-synchro/2.6.11',
+									1 => 'itop-standard-email-synchro/2.6.6',
+								),
+							'3.0.0' =>
+								array (
+									0 => 'combodo-email-synchro/3.0.0',
+									1 => 'itop-standard-email-synchro/3.0.0',
+								),
+							'3.0.1' =>
+								array (
+									0 => 'combodo-email-synchro/3.0.1',
+									1 => 'itop-standard-email-synchro/3.0.1',
+								),
+							'3.0.2' =>
+								array (
+									0 => 'combodo-email-synchro/3.0.2',
+									1 => 'itop-standard-email-synchro/3.0.1',
+								),
+							'3.0.3' =>
+								array (
+									0 => 'combodo-email-synchro/3.0.3',
+									1 => 'itop-standard-email-synchro/3.0.3',
+								),
+							'3.0.4' =>
+								array (
+									0 => 'combodo-email-synchro/3.0.3',
+									1 => 'itop-standard-email-synchro/3.0.4',
+								),
+							'3.0.5' =>
+								array (
+									0 => 'combodo-email-synchro/3.0.4',
+									1 => 'itop-standard-email-synchro/3.0.4',
+								),
+							'3.0.6' =>
+								array (
+									0 => 'combodo-email-synchro/3.0.5',
+									1 => 'itop-standard-email-synchro/3.0.4',
+								),
+							'3.0.7' =>
+								array (
+									0 => 'combodo-email-synchro/3.0.5',
+									1 => 'itop-standard-email-synchro/3.0.5',
+								),
+						),
+				),
+			'combodo-configurator-for-automatic-object-creation' =>
+				array (
+					'label' => 'Configurator for automatic object creation',
+					'description' => 'Templating based on existing objects.',
+					'versions' =>
+						array (
+							'1.0.13' =>
+								array (
+									1 => 'itop-stencils/1.0.6',
+								),
+						),
+				),
+			'combodo-user-actions-configurator' =>
+				array (
+					'label' => 'User actions configurator',
+					'description' => 'Configure user actions to simplify and automate processes (e.g. create an incident from a CI).',
+					'versions' =>
+						array (
+							'1.0.0' =>
+								array (
+									0 => 'itop-object-copier/1.0.0',
+								),
+							'1.0.1' =>
+								array (
+									0 => 'itop-object-copier/1.0.1',
+								),
+							'1.0.2' =>
+								array (
+									0 => 'itop-object-copier/1.0.2',
+								),
+							'1.0.3' =>
+								array (
+									0 => 'itop-object-copier/1.0.3',
+								),
+							'1.1.0' =>
+								array (
+									0 => 'itop-object-copier/1.1.0',
+								),
+							'1.1.1' =>
+								array (
+									0 => 'itop-object-copier/1.1.1',
+								),
+							'1.1.2' =>
+								array (
+									0 => 'itop-object-copier/1.1.2',
+								),
+							'1.1.3' =>
+								array (
+									0 => 'itop-object-copier/1.1.3',
+								),
+							'1.1.4' =>
+								array (
+									0 => 'itop-object-copier/1.1.4',
+								),
+							'1.1.5' =>
+								array (
+									0 => 'itop-object-copier/1.1.5',
+								),
+							'1.1.6' =>
+								array (
+									0 => 'itop-object-copier/1.1.6',
+								),
+							'1.1.7' =>
+								array (
+									0 => 'itop-object-copier/1.1.7',
+								),
+							'1.1.8' =>
+								array (
+									0 => 'itop-object-copier/1.1.8',
+								),
+						),
+				),
+			'combodo-send-updates-by-email' =>
+				array (
+					'label' => 'Send updates by email',
+					'description' => 'Send an email to pre-configured contacts when a ticket log is updated.',
+					'versions' =>
+						array (
+							'1.0.1' =>
+								array (
+									0 => 'email-reply/1.0.1',
+								),
+							'1.0.3' =>
+								array (
+									0 => 'email-reply/1.0.3',
+								),
+							'1.1.1' =>
+								array (
+									0 => 'email-reply/1.1.1',
+								),
+							'1.1.2' =>
+								array (
+									0 => 'email-reply/1.1.2',
+								),
+							'1.1.3' =>
+								array (
+									0 => 'email-reply/1.1.3',
+								),
+							'1.1.4' =>
+								array (
+									0 => 'email-reply/1.1.4',
+								),
+							'1.1.5' =>
+								array (
+									0 => 'email-reply/1.1.5',
+								),
+							'1.1.6' =>
+								array (
+									0 => 'email-reply/1.1.6',
+								),
+							'1.1.7' =>
+								array (
+									0 => 'email-reply/1.1.7',
+								),
+							// 1.1.8 was never released
+							'1.1.9' =>
+								array (
+									0 => 'email-reply/1.1.9',
+								),
+							'1.1.10' =>
+								array (
+									0 => 'email-reply/1.1.10',
+								),
+						),
+				),
+		);
 	}
 }

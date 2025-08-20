@@ -117,7 +117,7 @@ class ModuleDiscovery
 			if (!array_key_exists($sArgName, $aArgs))
 			{
 				throw new Exception("Module '$sId': missing argument '$sArgName'");
-		   }
+			}
 		}
 
 		$aArgs['root_dir'] = dirname($sFilePath);
@@ -220,7 +220,7 @@ class ModuleDiscovery
 	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
 	 * @return array
 	 * @throws \MissingDependencyException
-*/
+	 */
 	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		// Order the modules to take into account their inter-dependencies
@@ -351,19 +351,19 @@ class ModuleDiscovery
 							if (version_compare($sCurrentVersion, $sExpectedVersion, $sOperator))
 							{
 								$aReplacements[$sModuleId] = '(true)'; // Add parentheses to protect against invalid condition causing
-																	   // a function call that results in a runtime fatal error
+								// a function call that results in a runtime fatal error
 							}
 							else
 							{
 								$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
-																	   // a function call that results in a runtime fatal error
+								// a function call that results in a runtime fatal error
 							}
 						}
 						else
 						{
 							// module is not present
 							$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
-																    // a function call that results in a runtime fatal error
+							// a function call that results in a runtime fatal error
 						}
 					}
 				}
@@ -387,10 +387,10 @@ class ModuleDiscovery
 			else
 			{
 				$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $sDepString);
-				$bOk = ModuleDiscoveryService::GetInstance()->ComputeDependencyExpression($sBooleanExpr);
-				if ($bOk == false)
-				{
-					SetupLog::Warning("Eval of '$sBooleanExpr' returned false");
+				try{
+					$bResult = ModuleDiscoveryService::GetInstance()->ComputeBooleanExpression($sBooleanExpr);
+				} catch(ModuleDiscoveryServiceException $e){
+					//logged already
 					echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";
 				}
 			}
@@ -498,40 +498,12 @@ class ModuleDiscovery
 				else if (preg_match('/^module\.(.*).php$/i', $sFile, $aMatches))
 				{
 					self::SetModulePath($sRelDir);
-					try
-					{
-						$sModuleFileContents = file_get_contents($sDirectory.'/'.$sFile);
-						$sModuleFileContents = str_replace(array('<?php', '?>'), '', $sModuleFileContents);
-						$sModuleFileContents = str_replace('__FILE__', "'".addslashes($sDirectory.'/'.$sFile)."'", $sModuleFileContents);
-						preg_match_all('/class ([A-Za-z0-9_]+) extends ([A-Za-z0-9_]+)/', $sModuleFileContents, $aMatches);
-						//print_r($aMatches);
-						$idx = 0;
-						foreach($aMatches[1] as $sClassName)
-						{
-							if (class_exists($sClassName))
-							{
-								// rename the class inside the code to prevent a "duplicate class" declaration
-								// and change its parent class as well so that nobody will find it and try to execute it
-								$sModuleFileContents = str_replace($sClassName.' extends '.$aMatches[2][$idx], $sClassName.'_'.($iDummyClassIndex++).' extends DummyHandler', $sModuleFileContents);
-							}
-							$idx++;
-						}
-
-						$sModuleFilePath = $sDirectory.'/'.$sFile;
-						$aModuleInfo = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
-						SetupWebPage::AddModule($sModuleFilePath, $aModuleInfo[1], $aModuleInfo);
-
-						//echo "<p>Done.</p>\n";
-					}
-					catch(ParseError $e)
-					{
-					    // PHP 7
-						SetupLog::Warning("Eval of $sModuleFilePath caused an exception: ".$e->getMessage()." at line ".$e->getLine());
-					}
-					catch(Exception $e)
-					{
-						// Continue...
-						SetupLog::Warning("Eval of $sModuleFilePath caused an exception: ".$e->getMessage());
+					$sModuleFilePath = $sDirectory.'/'.$sFile;
+					try {
+						$aModuleInfo = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sDirectory.'/'.$sFile);
+						SetupWebPage::AddModule($sModuleFilePath, $aModuleInfo[1], $aModuleInfo[2]);
+					} catch(ModuleDiscoveryServiceException $e){
+						continue;
 					}
 				}
 			}

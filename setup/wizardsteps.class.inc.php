@@ -90,7 +90,7 @@ class WizStepWelcome extends WizardStep
 
 		$oPage->add("<!--[if lt IE 11]><div id=\"old_ie\"></div><![endif]-->");
 		$oPage->add_ready_script(
-<<<EOF
+			<<<EOF
 		if ($('#old_ie').length > 0)
 		{
 			alert("Internet Explorer version 10 or older is NOT supported! (Check that IE is not running in compatibility mode)");
@@ -144,7 +144,7 @@ EOF
 			$sH2Class = 'text-valid';
 		}
 		$oPage->add(
-<<<HTML
+			<<<HTML
 		<h2 class="message">Prerequisites validation: <span class="$sH2Class">$sTitle</span></h2>
 		<div id="details" $sStyle>
 HTML
@@ -271,12 +271,12 @@ class WizStepInstallOrUpgrade extends WizardStep
 		}
 		$oPage->add('<div class="setup-content-title">What do you want to do?</div>');
 		$sChecked = ($sInstallMode == 'install') ? ' checked ' : '';
-        $oPage->p('<input id="radio_install" type="radio" name="install_mode" value="install" '.$sChecked.'/><label for="radio_install">&nbsp;Install a new '.ITOP_APPLICATION.'</label>');
+		$oPage->p('<input id="radio_install" type="radio" name="install_mode" value="install" '.$sChecked.'/><label for="radio_install">&nbsp;Install a new '.ITOP_APPLICATION.'</label>');
 		$sChecked = ($sInstallMode == 'upgrade') ? ' checked ' : '';
 		$sDisabled = (($sInstallMode == 'install') && (empty($sPreviousVersionDir))) ? ' disabled' : '';
-        $oPage->p('<input id="radio_update" type="radio" name="install_mode" value="upgrade" '.$sChecked.$sDisabled.'/><label for="radio_update">&nbsp;Upgrade an existing '.ITOP_APPLICATION.' instance</label>');
+		$oPage->p('<input id="radio_update" type="radio" name="install_mode" value="upgrade" '.$sChecked.$sDisabled.'/><label for="radio_update">&nbsp;Upgrade an existing '.ITOP_APPLICATION.' instance</label>');
 
-        $sUpgradeDir = utils::HtmlEntities($sPreviousVersionDir);
+		$sUpgradeDir = utils::HtmlEntities($sPreviousVersionDir);
 		$oPage->add(<<<HTML
 <div id="upgrade_info"'.$sUpgradeInfoStyle.'>
 		<div class="setup-disk-location--input--container">Location on the disk:<input id="previous_version_dir_display" type="text" value="$sUpgradeDir" class="ibo-input" disabled>
@@ -319,7 +319,7 @@ HTML
 		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		//$oPage->add('</fieldset>');
 		$oPage->add_ready_script(
-<<<JS
+			<<<JS
 	$("#radio_update").on('change', function() { if (this.checked ) { $('#upgrade_info').show(); WizardUpdateButtons(); } else { $('#upgrade_info').hide(); } });
 	$("#radio_install").on('change', function() { if (this.checked ) { $('#upgrade_info').hide(); WizardUpdateButtons(); } else { $('#upgrade_info').show(); } });
 	$("#db_backup_path").on('change keyup', function() { WizardAsyncAction('check_backup', { db_backup_path: $('#db_backup_path').val() }); });
@@ -350,12 +350,12 @@ JS
 	$("#db_pwd").trigger('change'); // Forces check of the DB connection
 EOF
 					);
-			}
-			break;
+				}
+				break;
 
 			case 'check_db':
-			SetupUtils:: AsyncCheckDB($oPage, $aParameters);
-			break;
+				SetupUtils:: AsyncCheckDB($oPage, $aParameters);
+				break;
 
 			case 'check_backup':
 				$sDBBackupPath = $aParameters['db_backup_path'];
@@ -372,9 +372,9 @@ EOF
 						<<<EOF
 	$("#backup_info").html('');
 EOF
-				);
-			}
-			break;
+					);
+				}
+				break;
 		}
 	}
 
@@ -385,7 +385,7 @@ EOF
 	public function JSCanMoveForward()
 	{
 		return
-<<<EOF
+			<<<EOF
 		if ($("#radio_install").prop("checked"))
 		{
 			ValidateField("db_name", false);
@@ -403,7 +403,7 @@ EOF
 			return bRet;
 		}
 EOF
-		;
+			;
 	}
 
 }
@@ -436,19 +436,19 @@ class WizStepDetectedInfo extends WizardStep
 		switch ($sUpgradeType)
 		{
 			case 'keep-previous':
-			$sSourceDir = utils::ReadParam('relative_source_dir', '', false, 'raw_data');
-			$this->oWizard->SetParameter('source_dir', $this->oWizard->GetParameter('previous_version_dir').'/'.$sSourceDir);
-			$this->oWizard->SetParameter('datamodel_version', utils::ReadParam('datamodel_previous_version', '', false, 'raw_data'));
-			break;
+				$sSourceDir = utils::ReadParam('relative_source_dir', '', false, 'raw_data');
+				$this->oWizard->SetParameter('source_dir', $this->oWizard->GetParameter('previous_version_dir').'/'.$sSourceDir);
+				$this->oWizard->SetParameter('datamodel_version', utils::ReadParam('datamodel_previous_version', '', false, 'raw_data'));
+				break;
 
 			case 'use-compatible':
-			$sDataModelPath = utils::ReadParam('datamodel_path', '', false, 'raw_data');
-			$this->oWizard->SetParameter('source_dir', $sDataModelPath);
-			$this->oWizard->SaveParameter('datamodel_version', '');
-			break;
+				$sDataModelPath = utils::ReadParam('datamodel_path', '', false, 'raw_data');
+				$this->oWizard->SetParameter('source_dir', $sDataModelPath);
+				$this->oWizard->SaveParameter('datamodel_version', '');
+				break;
 
 			default:
-			// Do nothing, maybe the user pressed the Back button
+				// Do nothing, maybe the user pressed the Back button
 		}
 		if ($bDisplayLicense)
 		{
@@ -469,7 +469,7 @@ class WizStepDetectedInfo extends WizardStep
 	public function Display(WebPage $oPage)
 	{
 		$oPage->add_style(
-<<<EOF
+			<<<EOF
 #changes_summary {
 	max-height: 200px;
 	overflow: auto;
@@ -606,7 +606,7 @@ EOF
 				$sCompatibleDMDirToDisplay = utils::HtmlEntities($sCompatibleDMDir);
 				$sUpgradeDMVersionToDisplay = utils::HtmlEntities($sUpgradeDMVersion);
 				$oPage->add(
-<<<HTML
+					<<<HTML
 <div class="message message-valid">The datamodel will be upgraded from version $sInstalledDataModelVersion to version $sUpgradeDMVersion.</div>
 <input type="hidden" name="upgrade_type" value="use-compatible">
 <input type="hidden" name="datamodel_path" value="$sCompatibleDMDirToDisplay">
@@ -617,7 +617,7 @@ HTML
 			}
 
 			$oPage->add_ready_script(
-<<<EOF
+				<<<EOF
 	$("#changes_summary .title").on('click', function() { $(this).parent().toggleClass('closed'); } );
 	$('input[name=upgrade_type]').on('click change', function() { WizardUpdateButtons(); });
 EOF
@@ -650,13 +650,13 @@ EOF
 	public function JSCanMoveForward()
 	{
 		return
-<<<EOF
+			<<<EOF
 	if ($("#radio_upgrade_keep").length == 0) return true;
 	
 	bRet = ($('input[name=upgrade_type]:checked').length > 0);
 	return bRet;
 EOF
-		;
+			;
 	}
 }
 
@@ -695,55 +695,55 @@ class WizStepLicense extends WizardStep
 		return (($sMode === 'install') && SetupUtils::IsConnectableToITopHub($aModules));
 	}
 
-    /**
-     * @param WebPage $oPage
-     */
-    public function Display(WebPage $oPage)
-    {
-	    $aLicenses = SetupUtils::GetLicenses();
-	    $oPage->add_style(
-		    <<<CSS
+	/**
+	 * @param WebPage $oPage
+	 */
+	public function Display(WebPage $oPage)
+	{
+		$aLicenses = SetupUtils::GetLicenses();
+		$oPage->add_style(
+			<<<CSS
 fieldset ul {
 	max-height: min(30em, 40vh); /* Allow usage of the UI up to 150% zoom */
 	overflow: auto;
 }
 CSS
-	    );
+		);
 
-	    $oPage->add('<h2>Licenses agreements for the components of '.ITOP_APPLICATION.'</h2>');
-	    $oPage->add_style('div a.no-arrow { background:transparent; padding-left:0;}');
-	    $oPage->add_style('.toggle { cursor:pointer; text-decoration:underline; color:#1C94C4; }');
-	    $oPage->add('<fieldset>');
-	    $oPage->add('<legend>Components of '.ITOP_APPLICATION.'</legend>');
-	    $oPage->add('<ul id="ibo-setup-licenses--components-list">');
-	    $index = 0;
-	    foreach ($aLicenses as $oLicense) {
-		    $oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<span class="toggle" id="toggle_'.$index.'">Details</span>)');
-		    $oPage->add('<div id="license_'.$index.'" class="license_text ibo-is-html-content" style="display:none;overflow:auto;max-height:10em;font-size:12px;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;"><pre>'.$oLicense->text.'</pre></div>');
-		    $oPage->add_ready_script('$(".license_text a").attr("target", "_blank").addClass("no-arrow");');
-		    $oPage->add_ready_script('$("#toggle_'.$index.'").on("click", function() { $("#license_'.$index.'").toggle(); } );');
-		    $index++;
-	    }
-	    $oPage->add('</ul>');
-	    $oPage->add('</fieldset>');
-	    $sChecked = ($this->oWizard->GetParameter('accept_license', 'no') == 'yes') ? ' checked ' : '';
-	    $oPage->add('<div class="setup-accept-licenses"><input class="check_select" type="checkbox" name="accept_license" id="accept" value="yes" '.$sChecked.'><label for="accept">I accept the terms of the licenses of the '.count($aLicenses).' components mentioned above.</label></div>');
-	    if ($this->NeedsGdprConsent()) {
-		    $oPage->add('<br>');
-		    $oPage->add('<fieldset>');
-		    $oPage->add('<legend>European General Data Protection Regulation</legend>');
-		    $oPage->add('<div class="ibo-setup-licenses--components-list">'.ITOP_APPLICATION.' software is compliant with the processing of personal data according to the European General Data Protection Regulation (GDPR).<p></p>
+		$oPage->add('<h2>Licenses agreements for the components of '.ITOP_APPLICATION.'</h2>');
+		$oPage->add_style('div a.no-arrow { background:transparent; padding-left:0;}');
+		$oPage->add_style('.toggle { cursor:pointer; text-decoration:underline; color:#1C94C4; }');
+		$oPage->add('<fieldset>');
+		$oPage->add('<legend>Components of '.ITOP_APPLICATION.'</legend>');
+		$oPage->add('<ul id="ibo-setup-licenses--components-list">');
+		$index = 0;
+		foreach ($aLicenses as $oLicense) {
+			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<span class="toggle" id="toggle_'.$index.'">Details</span>)');
+			$oPage->add('<div id="license_'.$index.'" class="license_text ibo-is-html-content" style="display:none;overflow:auto;max-height:10em;font-size:12px;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;"><pre>'.$oLicense->text.'</pre></div>');
+			$oPage->add_ready_script('$(".license_text a").attr("target", "_blank").addClass("no-arrow");');
+			$oPage->add_ready_script('$("#toggle_'.$index.'").on("click", function() { $("#license_'.$index.'").toggle(); } );');
+			$index++;
+		}
+		$oPage->add('</ul>');
+		$oPage->add('</fieldset>');
+		$sChecked = ($this->oWizard->GetParameter('accept_license', 'no') == 'yes') ? ' checked ' : '';
+		$oPage->add('<div class="setup-accept-licenses"><input class="check_select" type="checkbox" name="accept_license" id="accept" value="yes" '.$sChecked.'><label for="accept">I accept the terms of the licenses of the '.count($aLicenses).' components mentioned above.</label></div>');
+		if ($this->NeedsGdprConsent()) {
+			$oPage->add('<br>');
+			$oPage->add('<fieldset>');
+			$oPage->add('<legend>European General Data Protection Regulation</legend>');
+			$oPage->add('<div class="ibo-setup-licenses--components-list">'.ITOP_APPLICATION.' software is compliant with the processing of personal data according to the European General Data Protection Regulation (GDPR).<p></p>
 By installing '.ITOP_APPLICATION.' you agree that some information will be collected by Combodo to help you manage your instances and for statistical purposes.
 This data remains anonymous until it is associated to a user account on iTop Hub.</p>
 <p>List of collected data available in our <a target="_blank" href="https://www.itophub.io/page/data-privacy">Data privacy section.</a></p><br></div>');
-		    $oPage->add('<input type="checkbox" class="check_select" id="rgpd_consent">');
-		    $oPage->add('<label for="rgpd_consent">&nbsp;I accept the processing of my personal data</label>');
-		    $oPage->add('</fieldset>');
-	    }
-	    $oPage->add_ready_script('$(".check_select").on("click change", function() { WizardUpdateButtons(); });');
+			$oPage->add('<input type="checkbox" class="check_select" id="rgpd_consent">');
+			$oPage->add('<label for="rgpd_consent">&nbsp;I accept the processing of my personal data</label>');
+			$oPage->add('</fieldset>');
+		}
+		$oPage->add_ready_script('$(".check_select").on("click change", function() { WizardUpdateButtons(); });');
 
-	    $oPage->add_script(
-		    <<<JS
+		$oPage->add_script(
+			<<<JS
 				function isRgpdConsentOk(){
 		            let eRgpdConsent = $("#rgpd_consent");
 		            if(eRgpdConsent.length){
@@ -754,7 +754,7 @@ This data remains anonymous until it is associated to a user account on iTop Hub
                     return true;
 				}
 JS
-	    );
+		);
 	}
 
 	/**
@@ -850,8 +850,8 @@ class WizStepDBParams extends WizardStep
 		switch($sCode)
 		{
 			case 'check_db':
-			SetupUtils:: AsyncCheckDB($oPage, $aParameters);
-			break;
+				SetupUtils:: AsyncCheckDB($oPage, $aParameters);
+				break;
 		}
 	}
 
@@ -862,7 +862,7 @@ class WizStepDBParams extends WizardStep
 	public function JSCanMoveForward()
 	{
 		return
-<<<EOF
+			<<<EOF
 	if ($("#wiz_form").data("db_connection") === "error") return false;
 
 	var bRet = true;
@@ -872,7 +872,7 @@ class WizStepDBParams extends WizardStep
 
 	return bRet;
 EOF
-		;
+			;
 	}
 }
 
@@ -937,7 +937,7 @@ EOF
 	public function JSCanMoveForward()
 	{
 		return
-<<<EOF
+			<<<EOF
 	bRet = ($('#admin_user').val() != '');
 	if (!bRet)
 	{
@@ -1107,10 +1107,10 @@ EOF
 						default:
 						case CheckResult::ERROR:
 						case CheckResult::WARNING:
-						$sStatus = 'ko';
-						$sErrorExplanation = $oCheck->sLabel;
-						$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
-						break;
+							$sStatus = 'ko';
+							$sErrorExplanation = $oCheck->sLabel;
+							$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
+							break;
 					}
 
 					if ($oCheck->iSeverity !== CheckResult::TRACE) {
@@ -1134,7 +1134,7 @@ JS
 	public function JSCanMoveForward()
 	{
 		return
-<<<EOF
+			<<<EOF
 	bRet = ($('#application_url').val() != '');
 	if (!bRet)
 	{
@@ -1156,7 +1156,7 @@ JS
 	}
 	return bRet;
 EOF
-		;
+			;
 	}
 }
 
@@ -1261,7 +1261,7 @@ EOF
 JS
 					);
 				}
-			break;
+				break;
 		}
 	}
 
@@ -1272,7 +1272,7 @@ JS
 	public function JSCanMoveForward()
 	{
 		return
-<<<EOF
+			<<<EOF
 	bRet = ($('#application_url').val() != '');
 	if (!bRet)
 	{
@@ -1294,7 +1294,7 @@ JS
 	}
 	return bRet;
 EOF
-		;
+			;
 	}
 }
 /**
@@ -1481,7 +1481,7 @@ class WizStepModulesChoice extends WizardStep
 		$oPage->add('</div>');
 
 		$oPage->add_script(
-<<<EOF
+			<<<EOF
 function CheckChoice(sChoiceId)
 {
 	var oElement = $('#'+sChoiceId);
@@ -1530,7 +1530,7 @@ function CheckChoice(sChoiceId)
 EOF
 		);
 		$oPage->add_ready_script(
-<<<EOF
+			<<<EOF
 		$('.wiz-choice').on('change', function() { CheckChoice($(this).attr('id')); } );
 		$('.wiz-choice').trigger('change');
 EOF
@@ -1787,15 +1787,17 @@ EOF
 								// Check the module selection
 								try {
 									SetupInfo::SetSelectedModules($aModules);
-									$bSelected = ModuleDiscoveryService::GetInstance()->ComputeAutoSelectExpression($aInfo['auto_select']);
-									if ($bSelected) {
-										$aModules[$sModuleId] = true; // store the Id of the selected module
-										SetupInfo::SetSelectedModules($aModules);
-									}
+									$bSelected = ModuleDiscoveryService::GetInstance()->ComputeBooleanExpression($aInfo['auto_select']);
 								}
-								catch (Exception $e) {
+								catch (ModuleDiscoveryServiceException $e) {
+									//logged already
+									$bSelected = false;
 								}
 							}
+						}
+						if ($bSelected) {
+							$aModules[$sModuleId] = true; // store the Id of the selected module
+							SetupInfo::SetSelectedModules($aModules);
 						}
 					}
 				}
@@ -1823,7 +1825,7 @@ EOF
 				$sChoiceName = $sChoiceId;
 			}
 			if ( (isset($aChoice['mandatory']) && $aChoice['mandatory']) ||
-				 (isset($aSelectedChoices[$sChoiceName]) && ($aSelectedChoices[$sChoiceName] == $sChoiceId)) )
+				(isset($aSelectedChoices[$sChoiceName]) && ($aSelectedChoices[$sChoiceName] == $sChoiceId)) )
 			{
 				$sDisplayChoices .= '<li>'.$aChoice['title'].'</li>';
 				if ($aSelectedExtensions !== null)
@@ -1863,7 +1865,7 @@ EOF
 						try
 						{
 							SetupInfo::SetSelectedModules($aModules);
-							$bSelected = ModuleDiscoveryService::GetInstance()->ComputeAutoSelectExpression($aModule['auto_select']);
+							$bSelected = ModuleDiscoveryService::GetInstance()->ComputeBooleanExpression($aModule['auto_select']);
 							if ($bSelected)
 							{
 								$aModules[$sModuleId] = true; // store the Id of the selected module
@@ -1871,8 +1873,9 @@ EOF
 								$bModuleAdded  = true;
 							}
 						}
-						catch(Exception $e)
+						catch(ModuleDiscoveryServiceException $e)
 						{
+							//logged already
 							$sDisplayChoices .= '<li><b>Warning: auto_select failed with exception ('.$e->getMessage().') for module "'.$sModuleId.'"</b></li>';
 						}
 					}
@@ -1890,11 +1893,11 @@ EOF
 		{
 			case 'start_install':
 			case 'start_upgrade':
-			$index = 0;
-			break;
+				$index = 0;
+				break;
 
 			default:
-			$index = (integer)$this->sCurrentState;
+				$index = (integer)$this->sCurrentState;
 		}
 		return $index;
 	}
@@ -1921,10 +1924,10 @@ EOF
 
 			// Additional step for the "extensions"
 			$aStepDefinition = array(
-					'title' => 'Extensions',
-					'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions, but you cannot remove already installed extensions.</h2>',
-					'banner' => '/images/icons/icons8-puzzle.svg',
-					'options' => array()
+				'title' => 'Extensions',
+				'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions, but you cannot remove already installed extensions.</h2>',
+				'banner' => '/images/icons/icons8-puzzle.svg',
+				'options' => array()
 			);
 
 			foreach($this->oExtensionsMap->GetAllExtensions() as $oExtension)
@@ -1932,14 +1935,14 @@ EOF
 				if (($oExtension->sSource !== iTopExtension::SOURCE_WIZARD) && ($oExtension->bVisible) && (count($oExtension->aMissingDependencies) == 0))
 				{
 					$aStepDefinition['options'][] = array(
-							'extension_code' => $oExtension->sCode,
-							'title' => $oExtension->sLabel,
-							'description' => $oExtension->sDescription,
-							'more_info' => $oExtension->sMoreInfoUrl,
-							'default' => true, // by default offer to install all modules
-							'modules' => $oExtension->aModules,
-							'mandatory' => $oExtension->bMandatory || ($oExtension->sSource === iTopExtension::SOURCE_REMOTE),
-							'source_label' => $this->GetExtensionSourceLabel($oExtension->sSource),
+						'extension_code' => $oExtension->sCode,
+						'title' => $oExtension->sLabel,
+						'description' => $oExtension->sDescription,
+						'more_info' => $oExtension->sMoreInfoUrl,
+						'default' => true, // by default offer to install all modules
+						'modules' => $oExtension->aModules,
+						'mandatory' => $oExtension->bMandatory || ($oExtension->sSource === iTopExtension::SOURCE_REMOTE),
+						'source_label' => $this->GetExtensionSourceLabel($oExtension->sSource),
 					);
 				}
 			}
@@ -1954,24 +1957,24 @@ EOF
 		{
 			// No wizard configuration provided, build a standard one with just one big list
 			$aStepDefinition = array(
-					'title' => 'Modules Selection',
-					'description' => '<h2>Select the modules to install. You can launch the installation again to install new modules, but you cannot remove already installed modules.</h2>',
-					'banner' => '/images/icons/icons8-apps-tab.svg',
-					'options' => array()
+				'title' => 'Modules Selection',
+				'description' => '<h2>Select the modules to install. You can launch the installation again to install new modules, but you cannot remove already installed modules.</h2>',
+				'banner' => '/images/icons/icons8-apps-tab.svg',
+				'options' => array()
 			);
 			foreach($this->oExtensionsMap->GetAllExtensions() as $oExtension)
 			{
 				if (($oExtension->bVisible) && (count($oExtension->aMissingDependencies) == 0))
 				{
 					$aStepDefinition['options'][] = array(
-							'extension_code' => $oExtension->sCode,
-							'title' => $oExtension->sLabel,
-							'description' => $oExtension->sDescription,
-							'more_info' => $oExtension->sMoreInfoUrl,
-							'default' => true, // by default offer to install all modules
-							'modules' => $oExtension->aModules,
-							'mandatory' => $oExtension->bMandatory ||  ($oExtension->sSource !== iTopExtension::SOURCE_REMOTE),
-							'source_label' => $this->GetExtensionSourceLabel($oExtension->sSource),
+						'extension_code' => $oExtension->sCode,
+						'title' => $oExtension->sLabel,
+						'description' => $oExtension->sDescription,
+						'more_info' => $oExtension->sMoreInfoUrl,
+						'default' => true, // by default offer to install all modules
+						'modules' => $oExtension->aModules,
+						'mandatory' => $oExtension->bMandatory ||  ($oExtension->sSource !== iTopExtension::SOURCE_REMOTE),
+						'source_label' => $this->GetExtensionSourceLabel($oExtension->sSource),
 					);
 				}
 			}
@@ -1992,17 +1995,17 @@ EOF
 		switch($sSource)
 		{
 			case iTopExtension::SOURCE_MANUAL:
-			$sResult = 'Local extensions folder';
-			$sDecorationClass = 'fas fa-folder';
-			break;
+				$sResult = 'Local extensions folder';
+				$sDecorationClass = 'fas fa-folder';
+				break;
 
 			case iTopExtension::SOURCE_REMOTE:
-			$sResult = (ITOP_APPLICATION == 'iTop') ? 'iTop Hub' : 'ITSM Designer';
-			$sDecorationClass = (ITOP_APPLICATION == 'iTop') ? 'fc fc-chameleon-icon' : 'fa pencil-ruler';
-			break;
+				$sResult = (ITOP_APPLICATION == 'iTop') ? 'iTop Hub' : 'ITSM Designer';
+				$sDecorationClass = (ITOP_APPLICATION == 'iTop') ? 'fc fc-chameleon-icon' : 'fa pencil-ruler';
+				break;
 
 			default:
-			$sResult = '';
+				$sResult = '';
 		}
 		if ($sResult == '')
 		{
@@ -2587,10 +2590,10 @@ class WizStepDone extends WizardStep
 		$oProductionEnv->InitDataModel($oConfig, true);
 		$sIframeUrl = $oConfig->GetModuleSetting('itop-hub-connector', 'setup_url', '');
 
-        $sSetupTokenFile = APPROOT.'data/.setup';
-        $sSetupToken = bin2hex(random_bytes(12));
-        file_put_contents($sSetupTokenFile, $sSetupToken);
-        $sIframeUrl.= "&setup_token=$sSetupToken";
+		$sSetupTokenFile = APPROOT.'data/.setup';
+		$sSetupToken = bin2hex(random_bytes(12));
+		file_put_contents($sSetupTokenFile, $sSetupToken);
+		$sIframeUrl.= "&setup_token=$sSetupToken";
 
 		if ($sIframeUrl != '')
 		{
