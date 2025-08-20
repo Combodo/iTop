@@ -604,7 +604,7 @@ EOF
 				// No changes detected... or no way to tell because of the lack of a manifest or previous source dir
 				// Use the "compatible" datamodel as-is.
 				$sCompatibleDMDirToDisplay = utils::HtmlEntities($sCompatibleDMDir);
-				$sUpgradeDMVersionToDisplay = utils::HtmlEntities($sUpgradeDMVersion); 
+				$sUpgradeDMVersionToDisplay = utils::HtmlEntities($sUpgradeDMVersion);
 				$oPage->add(
 <<<HTML
 <div class="message message-valid">The datamodel will be upgraded from version $sInstalledDataModelVersion to version $sUpgradeDMVersion.</div>
@@ -1786,18 +1786,16 @@ EOF
 							if (isset($aInfo['auto_select'])) {
 								// Check the module selection
 								try {
-									$bSelected = false;
 									SetupInfo::SetSelectedModules($aModules);
-									eval('$bSelected = ('.$aInfo['auto_select'].');');
+									$bSelected = ModuleDiscoveryService::GetInstance()->ComputeAutoSelectExpression($aInfo['auto_select']);
+									if ($bSelected) {
+										$aModules[$sModuleId] = true; // store the Id of the selected module
+										SetupInfo::SetSelectedModules($aModules);
+									}
 								}
 								catch (Exception $e) {
-									$bSelected = false;
 								}
 							}
-						}
-						if ($bSelected) {
-							$aModules[$sModuleId] = true; // store the Id of the selected module
-							SetupInfo::SetSelectedModules($aModules);
 						}
 					}
 				}
@@ -1864,20 +1862,18 @@ EOF
 					{
 						try
 						{
-							$bSelected = false;
 							SetupInfo::SetSelectedModules($aModules);
-							eval('$bSelected = ('.$aModule['auto_select'].');');
+							$bSelected = ModuleDiscoveryService::GetInstance()->ComputeAutoSelectExpression($aModule['auto_select']);
+							if ($bSelected)
+							{
+								$aModules[$sModuleId] = true; // store the Id of the selected module
+								$sDisplayChoices .= '<li>'.$aModule['label'].' (auto_select)</li>';
+								$bModuleAdded  = true;
+							}
 						}
 						catch(Exception $e)
 						{
 							$sDisplayChoices .= '<li><b>Warning: auto_select failed with exception ('.$e->getMessage().') for module "'.$sModuleId.'"</b></li>';
-							$bSelected = false;
-						}
-						if ($bSelected)
-						{
-							$aModules[$sModuleId] = true; // store the Id of the selected module
-							$sDisplayChoices .= '<li>'.$aModule['label'].' (auto_select)</li>';
-							$bModuleAdded  = true;
 						}
 					}
 				}

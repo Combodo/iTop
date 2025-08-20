@@ -459,18 +459,17 @@ class RunTimeEnvironment
 				{
 					try
 					{
-						$bSelected = false;
 						SetupInfo::SetSelectedModules($aRet);
-						eval('$bSelected = ('.$oModule->GetAutoSelect().');');
+						$bSelected = ModuleDiscoveryService::GetInstance()->ComputeAutoSelectExpression($oModule->GetAutoSelect());
+
+						if ($bSelected)
+						{
+							$aRet[$oModule->GetName()] = $oModule; // store the Id of the selected module
+							$bModuleAdded  = true;
+						}
 					}
 					catch(Exception $e)
 					{
-						$bSelected = false;
-					}
-					if ($bSelected)
-					{
-						$aRet[$oModule->GetName()] = $oModule; // store the Id of the selected module
-						$bModuleAdded  = true;
 					}
 				}
 			}

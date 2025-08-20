@@ -11,52 +11,52 @@ class iTopExtension
 	const SOURCE_WIZARD = 'datamodels';
 	const SOURCE_MANUAL = 'extensions';
 	const SOURCE_REMOTE = 'data';
-	
+
 	/**
 	 * @var string
 	 */
 	public $sCode;
-	
+
 	/**
 	 * @var string
 	 */
 	public $sVersion;
-	
+
 		/**
 	 * @var string
 	 */
 	public $sInstalledVersion;
-	
+
 /**
 	 * @var string
 	 */
 	public $sLabel;
-	
+
 	/**
 	 * @var string
 	 */
 	public $sDescription;
-	
+
 	/**
 	 * @var string
 	 */
 	public $sSource;
-	
+
 	/**
 	 * @var bool
 	 */
 	public $bMandatory;
-	
+
 	/**
 	 * @var string
 	 */
 	public $sMoreInfoUrl;
-	
+
 	/**
 	 * @var bool
 	 */
 	public $bMarkedAsChosen;
-	
+
 	/**
 	 * @var bool
 	 */
@@ -87,7 +87,7 @@ class iTopExtension
 	 * @var string[]
 	 */
 	public $aMissingDependencies;
-	
+
 	public function __construct()
 	{
 		$this->sCode = '';
@@ -120,13 +120,13 @@ class iTopExtensionsMap
 	 * @return void
 	 */
 	protected $aExtensions;
-	
+
 	/**
 	 * The list of directories browsed using the ReadDir method when building the map
 	 * @var string[]
 	 */
 	protected $aScannedDirs;
-	
+
 	public function __construct($sFromEnvironment = 'production', $bNormalizeOldExtensions = true, $aExtraDirs = array())
 	{
 		$this->aExtensions = array();
@@ -142,7 +142,7 @@ class iTopExtensionsMap
 			$this->NormalizeOldExtensions();
 		}
 	}
-	
+
 	/**
 	 * Populate the list of available (pseudo)extensions by scanning the disk
 	 * where the iTop files are located
@@ -158,7 +158,7 @@ class iTopExtensionsMap
 		$this->ReadDir(APPROOT.'/extensions', iTopExtension::SOURCE_MANUAL);
 		$this->ReadDir(APPROOT.'/data/'.$sEnvironment.'-modules', iTopExtension::SOURCE_REMOTE);
 	}
-	
+
 	/**
 	 * Read the information contained in the "installation.xml" file in the given directory
 	 * and create pseudo extensions from the list of choices described in this file
@@ -168,7 +168,7 @@ class iTopExtensionsMap
 	protected function ReadInstallationWizard($sDir)
 	{
 		if (!is_readable($sDir.'/installation.xml')) return false;
-		
+
 		$oXml = new XMLParameters($sDir.'/installation.xml');
 		foreach($oXml->Get('steps') as $aStepInfo)
 		{
@@ -183,7 +183,7 @@ class iTopExtensionsMap
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Helper to process a "choice" array read from the installation.xml file
 	 * @param array $aChoices
@@ -218,7 +218,7 @@ class iTopExtensionsMap
 			}
 		}
 	}
-	
+
 	/**
 	 * Add an extension to the list of existing extensions, taking care of removing duplicates
 	 * (only the latest/greatest version is kept)
@@ -248,7 +248,7 @@ class iTopExtensionsMap
 		// Finally it's not a duplicate, let's add it to the list
 		$this->aExtensions[$oNewExtension->sCode.'/'.$oNewExtension->sVersion] = $oNewExtension;
 	}
-	
+
 	/**
 	 * Read (recursively) a directory to find if it contains extensions (or modules)
 	 *
@@ -266,7 +266,7 @@ class iTopExtensionsMap
 		{
 		    if ($sParentExtensionId == null)
 		    {
-		        // We're not recursing, let's add the directory to the list of scanned dirs 
+		        // We're not recursing, let's add the directory to the list of scanned dirs
 		        $this->aScannedDirs[] = $sSearchDir;
 		    }
 			$sExtensionId = null;
@@ -285,7 +285,7 @@ class iTopExtensionsMap
 				$oExtension->sMoreInfoUrl = $oXml->Get('more_info_url');
 				$oExtension->sSource = $sSource;
 				$oExtension->sSourceDir = $sSearchDir;
-				
+
 				$sParentExtensionId = $sExtensionId = $oExtension->sCode.'/'.$oExtension->sVersion;
 				$this->AddExtension($oExtension);
 			}
@@ -303,7 +303,8 @@ class iTopExtensionsMap
 					else if (preg_match('/^module\.(.*).php$/i', $sFile, $aMatches))
 					{
 						// Found a module
-						$aModuleInfo = $this->GetModuleInfo($sSearchDir.'/'.$sFile);
+						$aModuleInfo = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sSearchDir.'/'.$sFile);
+
 						// If we are not already inside a formal extension, then the module itself is considered
 						// as an extension, otherwise, the module is just added to the list of modules belonging
 						// to this extension
@@ -314,7 +315,7 @@ class iTopExtensionsMap
 							// Provide a default module version since version is mandatory when recording ExtensionInstallation
 							$sModuleVersion = '0.0.1';
 						}
-						
+
 						if (($sParentExtensionId !== null) && (array_key_exists($sParentExtensionId, $this->aExtensions)) && ($this->aExtensions[$sParentExtensionId] instanceof iTopExtension)) {
 							// Already inside an extension, let's add this module the list of modules belonging to this extension
 							$this->aExtensions[$sParentExtensionId]->aModules[] = $sModuleName;
@@ -324,7 +325,7 @@ class iTopExtensionsMap
 						else
 						{
 							// Not already inside an folder containing an 'extension.xml' file
-							
+
 							// Ignore non-visible modules and auto-select ones, since these are never prompted
 							// as a choice to the end-user
 							$bVisible = true;
@@ -332,7 +333,7 @@ class iTopExtensionsMap
 							{
 							    $bVisible = false;
 							}
-							
+
 							// Let's create a "fake" extension from this module (containing just this module) for backwards compatibility
 							$oExtension = new iTopExtension();
 							$oExtension->sCode = $sModuleName;
@@ -366,7 +367,7 @@ class iTopExtensionsMap
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Check if some extension contains a module with missing dependencies...
 	 * If so, populate the aMissingDepenencies array
@@ -376,7 +377,7 @@ class iTopExtensionsMap
 	protected function CheckDependencies($sFromEnvironment)
 	{
 		$aSearchDirs = array();
-		
+
 		if (is_dir(APPROOT.'/datamodels/2.x'))
 		{
 			$aSearchDirs[] = APPROOT.'/datamodels/2.x';
@@ -386,7 +387,7 @@ class iTopExtensionsMap
 			$aSearchDirs[] = APPROOT.'/datamodels/1.x';
 		}
 		$aSearchDirs = array_merge($aSearchDirs, $this->aScannedDirs);
-		
+
 		try
 		{
 			$aAllModules = ModuleDiscovery::GetAvailableModules($aSearchDirs, true);
@@ -404,7 +405,7 @@ class iTopExtensionsMap
 						// This information is not available for pseudo modules defined in the installation wizard, but let's ignore them
 						$sVersion = $oExtension->aModuleVersion[$sModuleName];
 						$sModuleId = $sModuleName.'/'.$sVersion;
-						
+
 						if (array_key_exists($sModuleId, $e->aModulesInfo))
 						{
 							// The extension actually contains a module which has unmet dependencies
@@ -416,61 +417,7 @@ class iTopExtensionsMap
 			}
 		}
 	}
-	
-	/**
-	 * Read the information from a module file (module.xxx.php)
-	 * Closely inspired (almost copied/pasted !!) from ModuleDiscovery::ListModuleFiles
-	 * @param string $sModuleFile
-	 * @return array
-	 */
-	protected function GetModuleInfo($sModuleFile)
-	{
-		static $iDummyClassIndex = 0;
-		
-		$aModuleInfo = array(); // will be filled by the "eval" line below...
-		try
-		{
-			$aMatches = array();
-			$sModuleFileContents = file_get_contents($sModuleFile);
-			$sModuleFileContents = str_replace(array('<?php', '?>'), '', $sModuleFileContents);
-			$sModuleFileContents = str_replace('__FILE__', "'".addslashes($sModuleFile)."'", $sModuleFileContents);
-			preg_match_all('/class ([A-Za-z0-9_]+) extends ([A-Za-z0-9_]+)/', $sModuleFileContents, $aMatches);
-			//print_r($aMatches);
-			$idx = 0;
-			foreach($aMatches[1] as $sClassName)
-			{
-				if (class_exists($sClassName))
-				{
-					// rename any class declaration inside the code to prevent a "duplicate class" declaration
-					// and change its parent class as well so that nobody will find it and try to execute it
-					// Note: don't use the same naming scheme as ModuleDiscovery otherwise you 'll have the duplicate class error again !!
-					$sModuleFileContents = str_replace($sClassName.' extends '.$aMatches[2][$idx], $sClassName.'_Ext_'.($iDummyClassIndex++).' extends DummyHandler', $sModuleFileContents);
-				}
-				$idx++;
-			}
-			// Replace the main function call by an assignment to a variable, as an array...
-			$sModuleFileContents = str_replace(array('SetupWebPage::AddModule', 'ModuleDiscovery::AddModule'), '$aModuleInfo = array', $sModuleFileContents);	
-			
-			eval($sModuleFileContents); // Assigns $aModuleInfo
-			
-			if (count($aModuleInfo) === 0)
-			{
-				SetupLog::Warning("Eval of $sModuleFile did  not return the expected information...");
-			}
-		}
-		catch(ParseError $e)
-		{
-		    // Continue...
-			SetupLog::Warning("Eval of $sModuleFile caused a parse error: ".$e->getMessage()." at line ".$e->getLine());
-		}
-		catch(Exception $e)
-		{
-			// Continue...
-			SetupLog::Warning("Eval of $sModuleFile caused an exception: ".$e->getMessage());
-		}
-		return $aModuleInfo;
-	}
-	
+
 	/**
 	 * Get all available extensions
 	 * @return iTopExtension[]
@@ -479,7 +426,7 @@ class iTopExtensionsMap
 	{
 		return $this->aExtensions;
 	}
-	
+
 	/**
 	 * Mark the given extension as chosen
 	 * @param string $sExtensionCode The code of the extension (code without verison number)
@@ -497,7 +444,7 @@ class iTopExtensionsMap
 			}
 		}
 	}
-	
+
 	/**
 	 * Tells if a given extension(code) is marked as chosen
 	 * @param string $sExtensionCode
@@ -532,7 +479,7 @@ class iTopExtensionsMap
 			}
 		}
 	}
-	
+
 	/**
 	 * Get the list of the "chosen" extensions
 	 * @return iTopExtension[]
@@ -549,7 +496,7 @@ class iTopExtensionsMap
 		}
 		return $aResult;
 	}
-	
+
 	/**
 	 * Load the choices (i.e. MarkedAsChosen) from the database defined in the supplied Config
 	 * @param Config $oConfig
@@ -572,7 +519,7 @@ class iTopExtensionsMap
 			// No database or erroneous information
 			return false;
 		}
-		
+
 		foreach($aInstalledExtensions as $aDBInfo)
 		{
 			$this->MarkAsChosen($aDBInfo['code']);
@@ -580,7 +527,7 @@ class iTopExtensionsMap
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Find is a single-module extension is contained within another extension
 	 * @param iTopExtension $oExtension
@@ -590,7 +537,7 @@ class iTopExtensionsMap
 	{
 		// Complex extensions (more than 1 module) are never considered as obsolete
 		if (count($oExtension->aModules) != 1) return null;
-		
+
 		foreach($this->GetAllExtensions() as $oOtherExtension)
 		{
 			if (($oOtherExtension->sSourceDir != $oExtension->sSourceDir) && ($oOtherExtension->sSource != iTopExtension::SOURCE_WIZARD))
@@ -603,12 +550,12 @@ class iTopExtensionsMap
 				}
 			}
 		}
-		
+
 		// No match at all
 		return null;
-		
+
 	}
-	
+
 	/**
 	 * Search for multi-module extensions that are NOT deployed as an extension (i.e. shipped with an extension.xml file)
 	 * but as a bunch of un-related modules based on the signature of some well-known extensions. If such an extension is found,
@@ -639,7 +586,7 @@ class iTopExtensionsMap
 	            }
 	            if ($bFound) break; // The current version matches the signature
 	        }
-	        
+
 	        if ($bFound)
 	        {
 	            $oExtension = new iTopExtension();
@@ -663,7 +610,7 @@ class iTopExtensionsMap
 	        }
 	    }
 	}
-	
+
 	/**
 	 * Check if the given module-code/version is present on the disk
 	 * @param string $sModuleIdToFind The module ID (code/version) to search for
@@ -674,7 +621,7 @@ class iTopExtensionsMap
 	{
 	    return (array_key_exists($sModuleIdToFind, $this->aExtensions) && ($this->aExtensions[$sModuleIdToFind]->sSource == $sInSourceOnly));
 	}
-	
+
 	/**
 	 * Check if the given module-code/version is currently installed
 	 * @param string $sModuleIdToFind The module ID (code/version) to search for
@@ -687,7 +634,7 @@ class iTopExtensionsMap
 	            ($this->aExtensions[$sModuleIdToFind]->sSource == $sInSourceOnly) &&
 	            ($this->aExtensions[$sModuleIdToFind]->sInstalledVersion !== '') );
 	}
-	
+
 	/**
 	 * Tells if the given module name is "chosen" since it is part of a "chosen" extension (in the specified source dir)
 	 * @param string $sModuleNameToFind
@@ -697,7 +644,7 @@ class iTopExtensionsMap
 	public function ModuleIsChosenAsPartOfAnExtension($sModuleNameToFind, $sInSourceOnly = iTopExtension::SOURCE_REMOTE)
 	{
 		$bChosen = false;
-		
+
 		foreach($this->GetAllExtensions() as $oExtension)
 		{
 			if (($oExtension->sSource == $sInSourceOnly) &&
@@ -709,7 +656,7 @@ class iTopExtensionsMap
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Replace a given set of stand-alone modules by one single "extension"
 	 * @param string[] $aModules
@@ -723,7 +670,7 @@ class iTopExtensionsMap
 	    }
 	    $this->AddExtension($oNewExtension);
 	}
-	
+
 	/**
 	 * Get the list of signatures of some well-known multi-module extensions without extension.xml file (should not exist anymore)
 	 *

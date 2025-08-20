@@ -19,6 +19,8 @@
  *
  */
 
+require_once(APPROOT.'setup/modulediscovery/ModuleDiscoveryService.php');
+
 class MissingDependencyException extends CoreException
 {
 	/**
@@ -385,7 +387,7 @@ class ModuleDiscovery
 			else
 			{
 				$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $sDepString);
-				$bOk = @eval('$bResult = '.$sBooleanExpr.'; return true;');
+				$bOk = ModuleDiscoveryService::GetInstance()->ComputeDependencyExpression($sBooleanExpr);
 				if ($bOk == false)
 				{
 					SetupLog::Warning("Eval of '$sBooleanExpr' returned false");
@@ -514,24 +516,22 @@ class ModuleDiscovery
 							}
 							$idx++;
 						}
-						$bRet = eval($sModuleFileContents);
 
-						if ($bRet === false)
-						{
-							SetupLog::Warning("Eval of $sRelDir/$sFile returned false");
-						}
+						$sModuleFilePath = $sDirectory.'/'.$sFile;
+						$aModuleInfo = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
+						SetupWebPage::AddModule($sModuleFilePath, $aModuleInfo[1], $aModuleInfo);
 
 						//echo "<p>Done.</p>\n";
 					}
 					catch(ParseError $e)
 					{
 					    // PHP 7
-						SetupLog::Warning("Eval of $sRelDir/$sFile caused an exception: ".$e->getMessage()." at line ".$e->getLine());
+						SetupLog::Warning("Eval of $sModuleFilePath caused an exception: ".$e->getMessage()." at line ".$e->getLine());
 					}
 					catch(Exception $e)
 					{
 						// Continue...
-						SetupLog::Warning("Eval of $sRelDir/$sFile caused an exception: ".$e->getMessage());
+						SetupLog::Warning("Eval of $sModuleFilePath caused an exception: ".$e->getMessage());
 					}
 				}
 			}

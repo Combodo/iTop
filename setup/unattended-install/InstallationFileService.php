@@ -269,9 +269,8 @@ class InstallationFileService {
 		foreach($this->GetAutoSelectModules() as $sModuleId => $aModule)
 		{
 			try {
-				$bSelected = false;
 				SetupInfo::SetSelectedModules($this->aSelectedModules);
-				eval('$bSelected = ('.$aModule['auto_select'].');');
+				$bSelected = ModuleDiscoveryService::GetInstance()->ComputeAutoSelectExpression($aModule['auto_select']);
 				if ($bSelected)
 				{
 					// Modules in data/production-modules/ are considered as mandatory and always installed
