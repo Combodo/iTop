@@ -35,6 +35,26 @@ class ModuleDiscoveryServiceTest extends ItopDataTestCase
 		$this->assertEquals($aExpected, $aRes);
 	}
 
+	public function testReadModuleFileConfigurationWithConstants()
+	{
+		$sModuleFilePath = __DIR__.'/resources/module.authent-ldap.php';
+		$aRes = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
+		$aExpected = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfigurationLegacy($sModuleFilePath);
+
+		$this->assertEquals($aExpected, $aRes);
+	}
+
+	public function testReadModuleFileConfigurationParsingIssue()
+	{
+		$sModuleFilePath = __DIR__.'/resources/module.__MODULE__.php';
+
+		$this->expectException(\ModuleDiscoveryServiceException::class);
+		$this->expectExceptionMessage("Syntax error, unexpected T_CONSTANT_ENCAPSED_STRING, expecting ',' or ']' or ')' on line 31");
+
+		ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
+	}
+
+
 	public static function ComputeBooleanExpressionProvider()
 	{
 		return [

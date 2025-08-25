@@ -107,6 +107,9 @@ class ModuleDiscovery
 	 */
 	public static function AddModule($sFilePath, $sId, $aArgs)
 	{
+		if (is_null($aArgs)||! is_array($aArgs)){
+			throw new ModuleDiscoveryServiceException("Error parsing module file args", 0, null, $sFilePath);
+		}
 		if (!array_key_exists('itop_version', $aArgs))
 		{
 			// Assume 1.0.2

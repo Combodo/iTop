@@ -88,85 +88,40 @@ class ModuleDiscoveryService {
 	 */
 	public function ReadModuleFileConfiguration(string $sModuleFilePath) : array
 	{
-		$aModuleInfo = []; // will be filled by the "eval" line below...
 		try
 		{
 			$oParser = (new ParserFactory())->createForNewestSupportedVersion();
 			$aNodes = $oParser->parse(file_get_contents($sModuleFilePath));
 		}
-		catch (\Error $e) {
-			$sMessage = Dict::Format('config-parse-error', $e->getMessage(), $e->getLine());
-			$this->oException = new \ModuleDiscoveryServiceException($sMessage, 0, $e);
+		catch (PhpParser\Error $e) {
+			throw new \ModuleDiscoveryServiceException($e->getMessage(), 0, $e, $sModuleFilePath);
 		}
 
 		try {
 			foreach ($aNodes as $sKey => $oNode) {
-				if (false === ($oNode instanceof \PhpParser\Node\Stmt\Expression)) {
-					continue;
+				if ($oNode instanceof \PhpParser\Node\Stmt\Expression) {
+					$aModuleConfig = $this->ParseCallToAddModuleAndReturnModuleConfiguration($sModuleFilePath, $oNode);
+					if (! is_null($aModuleConfig)){
+						return $aModuleConfig;
+					}
 				}
 
-				/** @var Assign $oAssignation */
-				$oAssignation = $oNode->expr;
-
-				if (false === ($oAssignation instanceof PhpParser\Node\Expr\StaticCall)) {
-					continue;
+				if ($oNode instanceof PhpParser\Node\Stmt\If_) {
+					$aModuleConfig = $this->BrowseIfStructure($sModuleFilePath, $oNode);
+					if (! is_null($aModuleConfig)){
+						return $aModuleConfig;
+					}
 				}
-
-				/** @var PhpParser\Node\Expr\StaticCall $oAssignation */
-
-				if ("SetupWebPage" !== $oAssignation?->class?->name) {
-					continue;
-				}
-
-				if ("AddModule" !== $oAssignation?->name?->name) {
-					continue;
-				}
-
-				$aArgs = $oAssignation?->args;
-				if (count($aArgs) != 3) {
-					throw new ModuleDiscoveryServiceException("Not enough parameters when calling SetupWebPage::AddModule");
-				}
-
-				$oModuleId = $aArgs[1];
-				if (false === ($oModuleId instanceof PhpParser\Node\Arg)) {
-					throw new ModuleDiscoveryServiceException("2nd parameter to SetupWebPage::AddModule call issue: " . get_class($oModuleId));
-				}
-
-				/** @var PhpParser\Node\Arg $oModuleId */
-				if (false === ($oModuleId->value instanceof PhpParser\Node\Scalar\String_)) {
-					throw new ModuleDiscoveryServiceException("2nd parameter to SetupWebPage::AddModule not a string: " . get_class($oModuleId->value));
-				}
-
-				/** @var PhpParser\Node\Scalar\String_ $sModuleIdStringObj */
-				$sModuleIdStringObj = $oModuleId->value;
-				$sModuleId = $sModuleIdStringObj->value;
-
-				$oModuleConfigInfo = $aArgs[2];
-				if (false === ($oModuleConfigInfo instanceof PhpParser\Node\Arg)) {
-					throw new ModuleDiscoveryServiceException("3rd parameter to SetupWebPage::AddModule call issue: " . get_class($oModuleConfigInfo));
-				}
-
-				/** @var PhpParser\Node\Arg $oModuleConfigInfo */
-				if (false === ($oModuleConfigInfo->value instanceof PhpParser\Node\Expr\Array_)) {
-					throw new ModuleDiscoveryServiceException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value));
-				}
-
-				$aModuleConfig=[];
-				$this->BrowseArrayStructure($oModuleConfigInfo->value, $aModuleConfig);
-
-				return [
-					$sModuleFilePath,
-					$sModuleId,
-					$aModuleConfig
-				];
 			}
 		} catch(ModuleDiscoveryServiceException $e) {
 			// Continue...
 			throw $e;
 		} catch(Exception $e) {
 			// Continue...
-			throw new ModuleDiscoveryServiceException("Eval of $sModuleFilePath caused an exception: ".$e->getMessage(), 0, $e);
+			throw new ModuleDiscoveryServiceException("Eval of $sModuleFilePath caused an exception: ".$e->getMessage(), 0, $e, $sModuleFilePath);
 		}
+
+		throw new ModuleDiscoveryServiceException("No proper call to SetupWebPage::AddModule found in module file", 0, null, $sModuleFilePath);
 	}
 
 	/**
@@ -195,7 +150,12 @@ class ModuleDiscoveryService {
 			if ($oArrayItem->key instanceof PhpParser\Node\Scalar\String_) {
 				//dictionnary
 				$sKey = $oArrayItem->key->value;
-			} else {
+			} else if ($oArrayItem->key instanceof \PhpParser\Node\Expr\ConstFetch) {
+				$sKey = $this->EvaluateConstantExpression($oArrayItem->key);
+				if (is_null($sKey)){
+					continue;
+				}
+			}else {
 				$sKey = $iIndex++;
 			}
 
@@ -207,15 +167,154 @@ class ModuleDiscoveryService {
 				$aModuleConfig[$sKey]=$aSubConfig;
 			}
 
-			if ($oValue instanceof PhpParser\Node\Scalar\String_) {
+			if ($oValue instanceof PhpParser\Node\Scalar\String_||$oValue instanceof PhpParser\Node\Scalar\Int_) {
 				$aModuleConfig[$sKey]=$oValue->value;
 				continue;
 			}
 
 			if ($oValue instanceof \PhpParser\Node\Expr\ConstFetch) {
-				$aModuleConfig[$sKey]= filter_var($oValue->name->name, FILTER_VALIDATE_BOOLEAN);
+				$oEvaluatedConstant = $this->EvaluateConstantExpression($oValue);
+				$aModuleConfig[$sKey]= $oEvaluatedConstant;
 			}
 		}
+	}
+
+	/**
+	 * @param string $sModuleFilePath
+	 * @param \PhpParser\Node\Expr\Assign $oAssignation
+	 *
+	 * @return array|null
+	 * @throws \ModuleDiscoveryServiceException
+	 */
+	private function ParseCallToAddModuleAndReturnModuleConfiguration(string $sModuleFilePath, \PhpParser\Node\Stmt\Expression $oExpression) : ?array
+	{
+		/** @var Assign $oAssignation */
+		$oAssignation = $oExpression->expr;
+		if (false === ($oAssignation instanceof PhpParser\Node\Expr\StaticCall)) {
+			return null;
+		}
+
+		/** @var PhpParser\Node\Expr\StaticCall $oAssignation */
+
+		if ("SetupWebPage" !== $oAssignation?->class?->name) {
+			return null;
+		}
+
+		if ("AddModule" !== $oAssignation?->name?->name) {
+			return null;
+		}
+
+		$aArgs = $oAssignation?->args;
+		if (count($aArgs) != 3) {
+			throw new ModuleDiscoveryServiceException("Not enough parameters when calling SetupWebPage::AddModule", 0, null, $sModuleFilePath);
+		}
+
+		$oModuleId = $aArgs[1];
+		if (false === ($oModuleId instanceof PhpParser\Node\Arg)) {
+			throw new ModuleDiscoveryServiceException("2nd parameter to SetupWebPage::AddModule call issue: " . get_class($oModuleId), 0, null, $sModuleFilePath);
+		}
+
+		/** @var PhpParser\Node\Arg $oModuleId */
+		if (false === ($oModuleId->value instanceof PhpParser\Node\Scalar\String_)) {
+			throw new ModuleDiscoveryServiceException("2nd parameter to SetupWebPage::AddModule not a string: " . get_class($oModuleId->value), 0, null, $sModuleFilePath);
+		}
+
+		/** @var PhpParser\Node\Scalar\String_ $sModuleIdStringObj */
+		$sModuleIdStringObj = $oModuleId->value;
+		$sModuleId = $sModuleIdStringObj->value;
+
+		$oModuleConfigInfo = $aArgs[2];
+		if (false === ($oModuleConfigInfo instanceof PhpParser\Node\Arg)) {
+			throw new ModuleDiscoveryServiceException("3rd parameter to SetupWebPage::AddModule call issue: " . get_class($oModuleConfigInfo), 0, null, $sModuleFilePath);
+		}
+
+		/** @var PhpParser\Node\Arg $oModuleConfigInfo */
+		if (false === ($oModuleConfigInfo->value instanceof PhpParser\Node\Expr\Array_)) {
+			throw new ModuleDiscoveryServiceException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
+		}
+
+		$aModuleConfig=[];
+		$this->BrowseArrayStructure($oModuleConfigInfo->value, $aModuleConfig);
+
+		if (! is_array($aModuleConfig)){
+			throw new ModuleDiscoveryServiceException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
+		}
+		return [
+			$sModuleFilePath,
+			$sModuleId,
+			$aModuleConfig
+		];
+	}
+
+	/**
+	 * @param string $sModuleFilePath
+	 * @param \PhpParser\Node\Stmt\If_ $oNode
+	 *
+	 * @return array|null
+	 * @throws \ModuleDiscoveryServiceException
+	 */
+	private function BrowseIfStructure(string $sModuleFilePath, \PhpParser\Node\Stmt\If_ $oNode) : ?array
+	{
+		$bCondition = $this->EvaluateBooleanExpression($oNode->cond);
+		if ($bCondition) {
+			foreach ($oNode->stmts as $oSubNode) {
+				if ($oSubNode instanceof \PhpParser\Node\Stmt\Expression) {
+					$aModuleConfig = $this->ParseCallToAddModuleAndReturnModuleConfiguration($sModuleFilePath, $oSubNode);
+					if (!is_null($aModuleConfig)) {
+						return $aModuleConfig;
+					}
+				}
+			}
+			return null;
+		}
+
+		foreach ($oNode->elseifs as $oElseIfSubNode) {
+			/** @var \PhpParser\Node\Stmt\ElseIf_ $oElseIfSubNode*/
+			$bCondition = $this->EvaluateBooleanExpression($oElseIfSubNode->cond);
+			if($bCondition){
+				$aModuleConfig = $this->ParseStatementsAndReturnModuleConfiguration($sModuleFilePath, $oNode->stmts);
+				if (!is_null($aModuleConfig)) {
+					return $aModuleConfig;
+				}
+				break;
+			}
+		}
+
+		$aModuleConfig = $this->ParseStatementsAndReturnModuleConfiguration($sModuleFilePath, $oNode->else->stmts);
+		return $aModuleConfig;
+	}
+
+
+	private function ParseStatementsAndReturnModuleConfiguration(string $sModuleFilePath, array $aStmts) : ?array
+	{
+		foreach ($aStmts as $oSubNode) {
+			if ($oSubNode instanceof \PhpParser\Node\Stmt\Expression) {
+				$aModuleConfig = $this->ParseCallToAddModuleAndReturnModuleConfiguration($sModuleFilePath, $oSubNode);
+				if (!is_null($aModuleConfig)) {
+					return $aModuleConfig;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private function EvaluateConstantExpression(\PhpParser\Node\Expr\ArrayItem|\PhpParser\Node\Expr\ConstFetch $oValue) : mixed
+	{
+		$bResult = false;
+		try{
+			@eval('$bResult = '.$oValue->name.';');
+		} catch (Throwable $t) {
+			throw new ModuleDiscoveryServiceException("Eval of ' . $oValue->name . ' caused an error: ".$t->getMessage());
+		}
+
+		return $bResult;
+	}
+
+	private function EvaluateBooleanExpression(\PhpParser\Node\Expr $oCondExpression) : bool
+	{
+		//var_dump($oCondExpression);
+		return true;
 	}
 }
 
@@ -228,11 +327,15 @@ class ModuleDiscoveryServiceException extends Exception
 	 * @param int $iHttpCode
 	 * @param Exception|null $oPrevious
 	 */
-	public function __construct($sMessage, $iHttpCode = 0, Exception $oPrevious = null)
+	public function __construct($sMessage, $iHttpCode = 0, Exception $oPrevious = null, $sModuleFile=null)
 	{
 		$e = new \Exception("");
 
-		SetupLog::Warning($sMessage, null, ['previous' => $oPrevious?->getMessage(), 'stack' => $e->getTraceAsString()]);
+		$aContext = ['previous' => $oPrevious?->getMessage(), 'stack' => $e->getTraceAsString()];
+		if (! is_null($sModuleFile)){
+			$aContext['module_file'] = $sModuleFile;
+		}
+		SetupLog::Warning($sMessage, null, $aContext);
 		parent::__construct($sMessage, $iHttpCode, $oPrevious);
 	}
 }
