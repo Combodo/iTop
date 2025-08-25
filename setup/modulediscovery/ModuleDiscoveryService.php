@@ -80,6 +80,17 @@ class ModuleDiscoveryService {
 	}
 
 	/**
+	 * @param string $sPhpContent
+	 *
+	 * @return \PhpParser\Node\Stmt[]|null
+	 */
+	public function parsePhpCode(string $sPhpContent): ?array
+	{
+		$oParser = (new ParserFactory())->createForNewestSupportedVersion();
+		return $oParser->parse($sPhpContent);
+	}
+
+	/**
 	 * Read the information from a module file (module.xxx.php)
 	 * Closely inspired (almost copied/pasted !!) from ModuleDiscovery::ListModuleFiles
 	 * @param string $sModuleFile
@@ -90,8 +101,7 @@ class ModuleDiscoveryService {
 	{
 		try
 		{
-			$oParser = (new ParserFactory())->createForNewestSupportedVersion();
-			$aNodes = $oParser->parse(file_get_contents($sModuleFilePath));
+			$aNodes = $this->parsePhpCode(file_get_contents($sModuleFilePath));
 		}
 		catch (PhpParser\Error $e) {
 			throw new \ModuleDiscoveryServiceException($e->getMessage(), 0, $e, $sModuleFilePath);
@@ -122,24 +132,6 @@ class ModuleDiscoveryService {
 		}
 
 		throw new ModuleDiscoveryServiceException("No proper call to SetupWebPage::AddModule found in module file", 0, null, $sModuleFilePath);
-	}
-
-	/**
-	 * @param string $sBooleanExpr
-	 *
-	 * @return bool
-	 * @throws ModuleDiscoveryServiceException
-	 */
-	public function ComputeBooleanExpression(string $sBooleanExpr) : bool
-	{
-		$bResult = false;
-		try{
-			@eval('$bResult = '.$sBooleanExpr.';');
-		} catch (Throwable $t) {
-			throw new ModuleDiscoveryServiceException("Eval of '$sBooleanExpr' caused an error: ".$t->getMessage());
-		}
-
-		return $bResult;
 	}
 
 	private function BrowseArrayStructure(PhpParser\Node\Expr\Array_ $oArray, array &$aModuleConfig) : void
@@ -242,7 +234,7 @@ class ModuleDiscoveryService {
 		return [
 			$sModuleFilePath,
 			$sModuleId,
-			$aModuleConfig
+			$aModuleConfig,
 		];
 	}
 
@@ -268,20 +260,27 @@ class ModuleDiscoveryService {
 			return null;
 		}
 
-		foreach ($oNode->elseifs as $oElseIfSubNode) {
-			/** @var \PhpParser\Node\Stmt\ElseIf_ $oElseIfSubNode*/
-			$bCondition = $this->EvaluateBooleanExpression($oElseIfSubNode->cond);
-			if($bCondition){
-				$aModuleConfig = $this->ParseStatementsAndReturnModuleConfiguration($sModuleFilePath, $oNode->stmts);
-				if (!is_null($aModuleConfig)) {
-					return $aModuleConfig;
+		if (! is_null($oNode->elseifs)) {
+			foreach ($oNode->elseifs as $oElseIfSubNode) {
+				/** @var \PhpParser\Node\Stmt\ElseIf_ $oElseIfSubNode */
+				$bCondition = $this->EvaluateBooleanExpression($oElseIfSubNode->cond);
+				if ($bCondition) {
+					$aModuleConfig = $this->ParseStatementsAndReturnModuleConfiguration($sModuleFilePath, $oElseIfSubNode->stmts);
+					if (!is_null($aModuleConfig)) {
+						return $aModuleConfig;
+					}
+					break;
 				}
-				break;
 			}
 		}
 
-		$aModuleConfig = $this->ParseStatementsAndReturnModuleConfiguration($sModuleFilePath, $oNode->else->stmts);
-		return $aModuleConfig;
+		if (! is_null($oNode->else)) {
+			$aModuleConfig = $this->ParseStatementsAndReturnModuleConfiguration($sModuleFilePath, $oNode->else->stmts);
+
+			return $aModuleConfig;
+		}
+
+		return null;
 	}
 
 
@@ -311,10 +310,95 @@ class ModuleDiscoveryService {
 		return $bResult;
 	}
 
+	private function GetMixedValueForBooleanOperatorEvaluation(\PhpParser\Node\Expr $oExpr) : string
+	{
+		if ($oExpr instanceof \PhpParser\Node\Scalar\Int_ || $oExpr instanceof \PhpParser\Node\Scalar\Float_){
+			return "" . $oExpr->value;
+		}
+
+		return $this->EvaluateBooleanExpression($oExpr) ? "true" : "false";
+	}
+
+	/**
+	 * @param string $sBooleanExpr
+	 *
+	 * @return bool
+	 * @throws ModuleDiscoveryServiceException
+	 */
+	public function ComputeBooleanExpression(string $sBooleanExpr) : bool
+	{
+		$bResult = false;
+		try{
+			@eval('$bResult = '.$sBooleanExpr.';');
+		} catch (Throwable $t) {
+			throw new ModuleDiscoveryServiceException("Eval of '$sBooleanExpr' caused an error: ".$t->getMessage());
+		}
+
+		return $bResult;
+	}
+
+	/**
+	 * @param string $sBooleanExpr
+	 *
+	 * @return bool
+	 * @throws ModuleDiscoveryServiceException
+	 */
+	public function ComputeBooleanExpression3(string $sBooleanExpr) : bool
+	{
+		$sPhpContent = <<<PHP
+<?php
+$sBooleanExpr;
+PHP;
+		$aNodes = ModuleDiscoveryService::GetInstance()->parsePhpCode($sPhpContent);
+		$oExpr = $aNodes[0];
+		return $this->EvaluateBooleanExpression($oExpr->expr);
+	}
+
 	private function EvaluateBooleanExpression(\PhpParser\Node\Expr $oCondExpression) : bool
 	{
 		//var_dump($oCondExpression);
+
+		if ($oCondExpression instanceof \PhpParser\Node\Expr\BinaryOp){
+			$sExpr = $this->GetMixedValueForBooleanOperatorEvaluation($oCondExpression->left)
+				. " "
+				. $oCondExpression->getOperatorSigil()
+				. " "
+				. $this->GetMixedValueForBooleanOperatorEvaluation($oCondExpression->right);
+			return $this->ComputeBooleanExpression($sExpr);
+		}
+
+		if ($oCondExpression instanceof \PhpParser\Node\Expr\BooleanNot){
+			return ! $this->EvaluateBooleanExpression($oCondExpression->expr);
+		}
+
+		if ($oCondExpression instanceof \PhpParser\Node\Expr\FuncCall){
+			return $this->CallFunction($oCondExpression);
+		}
+
+		if ($oCondExpression instanceof \PhpParser\Node\Expr\ConstFetch){
+			return $this->EvaluateConstantExpression($oCondExpression);
+		}
+
 		return true;
+	}
+
+	private function CallFunction(\PhpParser\Node\Expr\FuncCall $oFunct) : bool
+	{
+		$sFunction = $oFunct->name->name;
+		$aWhiteList = ["function_exists"];
+		if (! in_array($sFunction, $aWhiteList)){
+			throw new ModuleDiscoveryServiceException("FuncCall $sFunction not supported");
+			//return false;
+		}
+
+		$aArgs=[];
+		foreach ($oFunct->args as $arg){
+			/** @var \PhpParser\Node\Arg $arg */
+			$aArgs[]=$arg->value->value;
+		}
+
+		$oReflectionFunction = new ReflectionFunction($sFunction);
+		return (bool)$oReflectionFunction->invoke(...$aArgs);
 	}
 }
 

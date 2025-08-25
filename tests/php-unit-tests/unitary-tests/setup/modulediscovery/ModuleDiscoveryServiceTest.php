@@ -4,9 +4,11 @@ namespace Combodo\iTop\Test\UnitTest\Setup\ModuleDiscovery;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ModuleDiscoveryService;
+use PhpParser\ParserFactory;
 
 class ModuleDiscoveryServiceTest extends ItopDataTestCase
 {
+	private string $sTempModuleFilePath;
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -25,6 +27,16 @@ class ModuleDiscoveryServiceTest extends ItopDataTestCase
 		$this->assertArrayHasKey('label', $aRes[2]);
 		$this->assertEquals('Bridge - Request management ITIL + Incident management ITIL', $aRes[2]['label'] ?? null);
 	}
+
+	/*public function testAllReadModuleFileConfiguration()
+	{
+		foreach (glob(__DIR__.'/resources/all/module.*.php') as $sModuleFilePath){
+		$aRes = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
+		$aExpected = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfigurationLegacy($sModuleFilePath);
+
+		$this->assertEquals($aExpected, $aRes);
+		}
+	}*/
 
 	public function testReadModuleFileConfiguration()
 	{
@@ -78,5 +90,252 @@ class ModuleDiscoveryServiceTest extends ItopDataTestCase
 		$this->expectException(\ModuleDiscoveryServiceException::class);
 		$this->expectExceptionMessage('Eval of \'(a || true)\' caused an error: Undefined constant "a"');
 		$this->assertTrue(ModuleDiscoveryService::GetInstance()->ComputeBooleanExpression("(a || true)"));
+	}
+
+	public function testEvaluateConstantExpression()
+	{
+		$sPHP = <<<PHP
+<?php
+APPROOT;
+PHP;
+		$aNodes = ModuleDiscoveryService::GetInstance()->parsePhpCode($sPHP);
+		/** @var \PhpParser\Node\Expr $oExpr */
+		$oExpr = $aNodes[0];
+		$val = $this->InvokeNonPublicMethod(ModuleDiscoveryService::class, "EvaluateConstantExpression", ModuleDiscoveryService::GetInstance(), [$oExpr->expr]);
+		$this->assertEquals(APPROOT, $val);
+	}
+
+	public function CallReadModuleFileConfiguration($sPHpCode)
+	{
+		$this->sTempModuleFilePath = tempnam(__DIR__, "test");
+		file_put_contents($this->sTempModuleFilePath, $sPHpCode);
+		try {
+			return $this->InvokeNonPublicMethod(ModuleDiscoveryService::class, "ReadModuleFileConfiguration", ModuleDiscoveryService::GetInstance(), [$this->sTempModuleFilePath]);
+		}
+		finally {
+			@unlink($this->sTempModuleFilePath);
+		}
+
+	}
+
+	public function testReadModuleFileConfigurationCheckBasicStatementWithoutIf()
+	{
+		$sPHP = <<<PHP
+<?php
+\$a=1;
+SetupWebPage::AddModule("a", "noif", ["c" => "d"]);
+\$b=2;
+PHP;
+		$val = $this->CallReadModuleFileConfiguration($sPHP);
+		$this->assertEquals([$this->sTempModuleFilePath, "noif", ["c" => "d"]], $val);
+	}
+
+	public function testReadModuleFileConfigurationCheckBasicStatement_IfConditionVerified()
+	{
+		$sPHP = <<<PHP
+<?php
+\$a=1;
+if (true){
+	SetupWebPage::AddModule("a", "if", ["c" => "d"]);
+} elseif (true){
+	SetupWebPage::AddModule("a", "elseif1", ["c" => "d"]);
+} elseif (true){
+	SetupWebPage::AddModule("a", "elseif2", ["c" => "d"]);
+} else {
+	SetupWebPage::AddModule("a", "else", ["c" => "d"]);
+}
+SetupWebPage::AddModule("a", "outsideif", ["c" => "d"]);
+\$b=2;
+PHP;
+		$val = $this->CallReadModuleFileConfiguration($sPHP);
+		$this->assertEquals([$this->sTempModuleFilePath, "if", ["c" => "d"]], $val);
+	}
+
+	public function testReadModuleFileConfigurationCheckBasicStatement_IfNoConditionVerifiedAndNoElse()
+	{
+		$sPHP = <<<PHP
+<?php
+\$a=1;
+if (false){
+	SetupWebPage::AddModule("a", "if", ["c" => "d"]);
+} elseif (false){
+	SetupWebPage::AddModule("a", "elseif1", ["c" => "d"]);
+} elseif (false){
+	SetupWebPage::AddModule("a", "elseif2", ["c" => "d"]);
+}
+SetupWebPage::AddModule("a", "outsideif", ["c" => "d"]);
+\$b=2;
+PHP;
+		$val = $this->CallReadModuleFileConfiguration($sPHP);
+		$this->assertEquals([$this->sTempModuleFilePath, "outsideif", ["c" => "d"]], $val);
+	}
+
+	public function testReadModuleFileConfigurationCheckBasicStatement_ElseApplied()
+	{
+		$sPHP = <<<PHP
+<?php
+\$a=1;
+if (false){
+	SetupWebPage::AddModule("a", "if", ["c" => "d"]);
+} elseif (false){
+	SetupWebPage::AddModule("a", "elseif1", ["c" => "d"]);
+} elseif (false){
+	SetupWebPage::AddModule("a", "elseif2", ["c" => "d"]);
+} else {
+	SetupWebPage::AddModule("a", "else", ["c" => "d"]);
+}
+SetupWebPage::AddModule("a", "outsideif", ["c" => "d"]);
+\$b=2;
+PHP;
+		$val = $this->CallReadModuleFileConfiguration($sPHP);
+		$this->assertEquals([$this->sTempModuleFilePath, "else", ["c" => "d"]], $val);
+	}
+
+	public function testReadModuleFileConfigurationCheckBasicStatement_FirstElseIfApplied()
+	{
+		$sPHP = <<<PHP
+<?php
+\$a=1;
+if (false){
+	SetupWebPage::AddModule("a", "if", ["c" => "d"]);
+} elseif (true){
+	SetupWebPage::AddModule("a", "elseif1", ["c" => "d"]);
+} elseif (true){
+	SetupWebPage::AddModule("a", "elseif2", ["c" => "d"]);
+} else {
+	SetupWebPage::AddModule("a", "else", ["c" => "d"]);
+}
+SetupWebPage::AddModule("a", "outsideif", ["c" => "d"]);
+\$b=2;
+PHP;
+		$val = $this->CallReadModuleFileConfiguration($sPHP);
+		$this->assertEquals([$this->sTempModuleFilePath, "elseif1", ["c" => "d"]], $val);
+	}
+
+	public function testReadModuleFileConfigurationCheckBasicStatement_LastElseIfApplied()
+	{
+		$sPHP = <<<PHP
+<?php
+\$a=1;
+if (false){
+	SetupWebPage::AddModule("a", "if", ["c" => "d"]);
+} elseif (false){
+	SetupWebPage::AddModule("a", "elseif1", ["c" => "d"]);
+} elseif (true){
+	SetupWebPage::AddModule("a", "elseif2", ["c" => "d"]);
+} else {
+	SetupWebPage::AddModule("a", "else", ["c" => "d"]);
+}
+SetupWebPage::AddModule("a", "outsideif", ["c" => "d"]);
+\$b=2;
+PHP;
+		$val = $this->CallReadModuleFileConfiguration($sPHP);
+		$this->assertEquals([$this->sTempModuleFilePath, "elseif2", ["c" => "d"]], $val);
+	}
+
+	public static function EvaluateExpressionBooleanProvider() {
+		$sTruePHP = <<<PHP
+<?php
+if (COND){
+	echo "toto";
+}
+PHP;
+
+		return [
+			"true" => [
+				"code" => str_replace("COND", "true", $sTruePHP),
+				"bool_expected" => true
+
+			],
+			"false" => [
+				"code" => str_replace("COND", "false", $sTruePHP),
+				"bool_expected" => false
+
+			],
+			"not ok" => [
+				"code" => str_replace("COND", "! false", $sTruePHP),
+				"bool_expected" => true
+
+			],
+			"not ko" => [
+				"code" => str_replace("COND", "! (true)", $sTruePHP),
+				"bool_expected" => false
+
+			],
+			"AND ko" => [
+				"code" => str_replace("COND", "true && false", $sTruePHP),
+				"bool_expected" => false
+
+			],
+			"AND ok1" => [
+				"code" => str_replace("COND", "true && true", $sTruePHP),
+				"bool_expected" => true
+
+			],
+			"AND ko2" => [
+				"code" => str_replace("COND", "true && true && false", $sTruePHP),
+				"bool_expected" => false
+
+			],
+			"OR ko" => [
+				"code" => str_replace("COND", "false || false", $sTruePHP),
+				"bool_expected" => false
+
+			],
+			"OR ok" => [
+				"code" => str_replace("COND", "false ||true", $sTruePHP),
+				"bool_expected" => true
+
+			],
+			"OR ok2" => [
+				"code" => str_replace("COND", "false ||false||true", $sTruePHP),
+				"bool_expected" => true
+
+			],
+			"function_exists('ldap_connect')" => [
+				"code" => str_replace("COND", "function_exists('ldap_connect')", $sTruePHP),
+				"bool_expected" => function_exists('ldap_connect')
+
+			],
+			"function_exists('gabuzomeushouldnotexist')" => [
+				"code" => str_replace("COND", "function_exists('gabuzomeushouldnotexist')", $sTruePHP),
+				"bool_expected" => function_exists('gabuzomeushouldnotexist')
+
+			],
+			"1 > 2" => [
+				"code" => str_replace("COND", "1 > 2", $sTruePHP),
+				"bool_expected" => false
+
+			],
+			"1 == 1" => [
+				"code" => str_replace("COND", "1 == 1", $sTruePHP),
+				"bool_expected" => true
+
+			],
+			"1 < 2" => [
+				"code" => str_replace("COND", "1 < 2", $sTruePHP),
+				"bool_expected" => true
+			],
+			"PHP_VERSION_ID == PHP_VERSION_ID" => [
+				"code" => str_replace("COND", "PHP_VERSION_ID == PHP_VERSION_ID", $sTruePHP),
+				"bool_expected" => true
+			],
+			"PHP_VERSION_ID != PHP_VERSION_ID" => [
+				"code" => str_replace("COND", "PHP_VERSION_ID != PHP_VERSION_ID", $sTruePHP),
+				"bool_expected" => false
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider EvaluateExpressionBooleanProvider
+	 */
+	public function testEvaluateExpressionBoolean($sPHP, $bExpected)
+	{
+		$aNodes = ModuleDiscoveryService::GetInstance()->parsePhpCode($sPHP);
+		/** @var \PhpParser\Node\Expr $oExpr */
+		$oExpr = $aNodes[0];
+		$val = $this->InvokeNonPublicMethod(ModuleDiscoveryService::class, "EvaluateBooleanExpression", ModuleDiscoveryService::GetInstance(), [$oExpr->cond]);
+		$this->assertEquals($bExpected, $val);
 	}
 }
