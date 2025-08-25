@@ -13,12 +13,10 @@ class ModuleDiscoveryServiceTest extends ItopDataTestCase
 		$this->RequireOnceItopFile('setup/modulediscovery/ModuleDiscoveryService.php');
 	}
 
-	public function test()
+	public function testReadModuleFileConfigurationLegacy()
 	{
 		$sModuleFilePath = __DIR__.'/resources/module.itop-full-itil.php';
 		$aRes = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
-
-		var_dump($aRes);
 
 		$this->assertCount(3, $aRes);
 		$this->assertEquals($sModuleFilePath, $aRes[0]);
@@ -26,6 +24,15 @@ class ModuleDiscoveryServiceTest extends ItopDataTestCase
 		$this->assertIsArray($aRes[2]);
 		$this->assertArrayHasKey('label', $aRes[2]);
 		$this->assertEquals('Bridge - Request management ITIL + Incident management ITIL', $aRes[2]['label'] ?? null);
+	}
+
+	public function testReadModuleFileConfiguration()
+	{
+		$sModuleFilePath = __DIR__.'/resources/module.itop-full-itil.php';
+		$aRes = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
+		$aExpected = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfigurationLegacy($sModuleFilePath);
+
+		$this->assertEquals($aExpected, $aRes);
 	}
 
 	public static function ComputeBooleanExpressionProvider()
