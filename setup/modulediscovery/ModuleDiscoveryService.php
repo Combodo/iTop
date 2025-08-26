@@ -60,6 +60,8 @@ class ModuleDiscoveryService {
 			{
 				throw new ModuleDiscoveryServiceException("Eval of $sModuleFilePath did  not return the expected information...");
 			}
+
+			$this->AddModuleFilePath($aModuleInfo);
 		}
 		catch(ModuleDiscoveryServiceException $e)
 		{
@@ -77,6 +79,20 @@ class ModuleDiscoveryService {
 			throw new ModuleDiscoveryServiceException("Eval of $sModuleFilePath caused an exception: ".$e->getMessage(), 0, $e);
 		}
 		return $aModuleInfo;
+	}
+
+	/**
+	 * N°4789 - Parse datamodel module.xxx.php files instead of interpreting them
+	 * additional path added to handle ModuleInstallerAPI declaration during setup only
+	 * @param array &$aModuleInfo
+	 *
+	 * @return void
+	 */
+	private function AddModuleFilePath(array &$aModuleInfo)
+	{
+		if (count($aModuleInfo)==3) {
+			$aModuleInfo[2]['module_file_path'] = $aModuleInfo[0];
+		}
 	}
 
 	/**
@@ -112,6 +128,7 @@ class ModuleDiscoveryService {
 				if ($oNode instanceof \PhpParser\Node\Stmt\Expression) {
 					$aModuleConfig = $this->ParseCallToAddModuleAndReturnModuleConfiguration($sModuleFilePath, $oNode);
 					if (! is_null($aModuleConfig)){
+						$this->AddModuleFilePath($aModuleConfig);
 						return $aModuleConfig;
 					}
 				}
@@ -119,6 +136,7 @@ class ModuleDiscoveryService {
 				if ($oNode instanceof PhpParser\Node\Stmt\If_) {
 					$aModuleConfig = $this->BrowseIfStructure($sModuleFilePath, $oNode);
 					if (! is_null($aModuleConfig)){
+						$this->AddModuleFilePath($aModuleConfig);
 						return $aModuleConfig;
 					}
 				}
@@ -441,6 +459,37 @@ PHP;
 		}
 
 		return (bool) $method->invokeArgs(null, $aArgs);
+	}
+
+	/**
+	 *
+	 * @param \Config $oConfig
+	 * @param array $aModuleInfo
+	 *
+	 * @return void
+	 * @throws \ModuleDiscoveryServiceException
+	 */
+	public function CallInstallerBeforeWritingConfigMethod(Config $oConfig, array $aModuleInfo)
+	{
+		if (isset($aModuleInfo['installer']))
+		{
+			$sModuleInstallerClass = $aModuleInfo['installer'];
+			if (!class_exists($sModuleInstallerClass)) {
+				$sModuleFilePath = $aModuleInfo['module_file_path'];
+				$this->ReadModuleFileConfigurationLegacy($sModuleFilePath);
+			}
+
+			if (!class_exists($sModuleInstallerClass))
+			{
+				throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aModuleInfo['label']);
+			}
+			if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI'))
+			{
+				throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
+			}
+			$aCallSpec = array($sModuleInstallerClass, 'BeforeWritingConfig');
+			call_user_func_array($aCallSpec, array($oConfig));
+		}
 	}
 }
 

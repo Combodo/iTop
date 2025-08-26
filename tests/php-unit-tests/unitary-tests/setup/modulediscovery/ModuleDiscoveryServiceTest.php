@@ -108,19 +108,19 @@ class ModuleDiscoveryServiceTest extends ItopDataTestCase
 		return [
 			"simple call to SetupInfo::ModuleIsSelected SELECTED" => [
 				"expr" => $sSimpleCallToModuleIsSelected,
-				"expected" => true
+				"expected" => true,
 			],
 			"simple call to SetupInfo::ModuleIsSelected NOT SELECTED" => [
 				"expr" => $sSimpleCallToModuleIsSelected2,
-				"expected" => false
+				"expected" => false,
 			],
 			"call to SetupInfo::ModuleIsSelected + OR => SELECTED" => [
 				"expr" => $sCallToModuleIsSelectedCombinedWithAndOperator,
-				"expected" => true
+				"expected" => true,
 			],
 			"simple call to SetupInfo::ModuleIsSelected + OR => NOT SELECTED" => [
 				"expr" => $sCallToModuleIsSelectedCombinedWithAndOperator2,
-				"expected" => false
+				"expected" => false,
 			],
 		];
 	}
@@ -152,12 +152,11 @@ PHP;
 		$this->sTempModuleFilePath = tempnam(__DIR__, "test");
 		file_put_contents($this->sTempModuleFilePath, $sPHpCode);
 		try {
-			return $this->InvokeNonPublicMethod(ModuleDiscoveryService::class, "ReadModuleFileConfiguration", ModuleDiscoveryService::GetInstance(), [$this->sTempModuleFilePath]);
+			return ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($this->sTempModuleFilePath);
 		}
 		finally {
 			@unlink($this->sTempModuleFilePath);
 		}
-
 	}
 
 	public function testReadModuleFileConfigurationCheckBasicStatementWithoutIf()
@@ -169,7 +168,7 @@ SetupWebPage::AddModule("a", "noif", ["c" => "d"]);
 \$b=2;
 PHP;
 		$val = $this->CallReadModuleFileConfiguration($sPHP);
-		$this->assertEquals([$this->sTempModuleFilePath, "noif", ["c" => "d"]], $val);
+		$this->assertEquals([$this->sTempModuleFilePath, "noif", ["c" => "d", 'module_file_path' => $this->sTempModuleFilePath]], $val);
 	}
 
 	public function testReadModuleFileConfigurationCheckBasicStatement_IfConditionVerified()
@@ -190,7 +189,7 @@ SetupWebPage::AddModule("a", "outsideif", ["c" => "d"]);
 \$b=2;
 PHP;
 		$val = $this->CallReadModuleFileConfiguration($sPHP);
-		$this->assertEquals([$this->sTempModuleFilePath, "if", ["c" => "d"]], $val);
+		$this->assertEquals([$this->sTempModuleFilePath, "if", ["c" => "d", 'module_file_path' => $this->sTempModuleFilePath]], $val);
 	}
 
 	public function testReadModuleFileConfigurationCheckBasicStatement_IfNoConditionVerifiedAndNoElse()
@@ -209,7 +208,7 @@ SetupWebPage::AddModule("a", "outsideif", ["c" => "d"]);
 \$b=2;
 PHP;
 		$val = $this->CallReadModuleFileConfiguration($sPHP);
-		$this->assertEquals([$this->sTempModuleFilePath, "outsideif", ["c" => "d"]], $val);
+		$this->assertEquals([$this->sTempModuleFilePath, "outsideif", ["c" => "d", 'module_file_path' => $this->sTempModuleFilePath]], $val);
 	}
 
 	public function testReadModuleFileConfigurationCheckBasicStatement_ElseApplied()
@@ -230,7 +229,7 @@ SetupWebPage::AddModule("a", "outsideif", ["c" => "d"]);
 \$b=2;
 PHP;
 		$val = $this->CallReadModuleFileConfiguration($sPHP);
-		$this->assertEquals([$this->sTempModuleFilePath, "else", ["c" => "d"]], $val);
+		$this->assertEquals([$this->sTempModuleFilePath, "else", ["c" => "d", 'module_file_path' => $this->sTempModuleFilePath]], $val);
 	}
 
 	public function testReadModuleFileConfigurationCheckBasicStatement_FirstElseIfApplied()
@@ -251,7 +250,7 @@ SetupWebPage::AddModule("a", "outsideif", ["c" => "d"]);
 \$b=2;
 PHP;
 		$val = $this->CallReadModuleFileConfiguration($sPHP);
-		$this->assertEquals([$this->sTempModuleFilePath, "elseif1", ["c" => "d"]], $val);
+		$this->assertEquals([$this->sTempModuleFilePath, "elseif1", ["c" => "d", 'module_file_path' => $this->sTempModuleFilePath]], $val);
 	}
 
 	public function testReadModuleFileConfigurationCheckBasicStatement_LastElseIfApplied()
@@ -272,7 +271,7 @@ SetupWebPage::AddModule("a", "outsideif", ["c" => "d"]);
 \$b=2;
 PHP;
 		$val = $this->CallReadModuleFileConfiguration($sPHP);
-		$this->assertEquals([$this->sTempModuleFilePath, "elseif2", ["c" => "d"]], $val);
+		$this->assertEquals([$this->sTempModuleFilePath, "elseif2", ["c" => "d", 'module_file_path' => $this->sTempModuleFilePath]], $val);
 	}
 
 	public static function EvaluateExpressionBooleanProvider() {
@@ -286,85 +285,85 @@ PHP;
 		return [
 			"true" => [
 				"code" => str_replace("COND", "true", $sTruePHP),
-				"bool_expected" => true
+				"bool_expected" => true,
 
 			],
 			"false" => [
 				"code" => str_replace("COND", "false", $sTruePHP),
-				"bool_expected" => false
+				"bool_expected" => false,
 
 			],
 			"not ok" => [
 				"code" => str_replace("COND", "! false", $sTruePHP),
-				"bool_expected" => true
+				"bool_expected" => true,
 
 			],
 			"not ko" => [
 				"code" => str_replace("COND", "! (true)", $sTruePHP),
-				"bool_expected" => false
+				"bool_expected" => false,
 
 			],
 			"AND ko" => [
 				"code" => str_replace("COND", "true && false", $sTruePHP),
-				"bool_expected" => false
+				"bool_expected" => false,
 
 			],
 			"AND ok1" => [
 				"code" => str_replace("COND", "true && true", $sTruePHP),
-				"bool_expected" => true
+				"bool_expected" => true,
 
 			],
 			"AND ko2" => [
 				"code" => str_replace("COND", "true && true && false", $sTruePHP),
-				"bool_expected" => false
+				"bool_expected" => false,
 
 			],
 			"OR ko" => [
 				"code" => str_replace("COND", "false || false", $sTruePHP),
-				"bool_expected" => false
+				"bool_expected" => false,
 
 			],
 			"OR ok" => [
 				"code" => str_replace("COND", "false ||true", $sTruePHP),
-				"bool_expected" => true
+				"bool_expected" => true,
 
 			],
 			"OR ok2" => [
 				"code" => str_replace("COND", "false ||false||true", $sTruePHP),
-				"bool_expected" => true
+				"bool_expected" => true,
 
 			],
 			"function_exists('ldap_connect')" => [
 				"code" => str_replace("COND", "function_exists('ldap_connect')", $sTruePHP),
-				"bool_expected" => function_exists('ldap_connect')
+				"bool_expected" => function_exists('ldap_connect'),
 
 			],
 			"function_exists('gabuzomeushouldnotexist')" => [
 				"code" => str_replace("COND", "function_exists('gabuzomeushouldnotexist')", $sTruePHP),
-				"bool_expected" => function_exists('gabuzomeushouldnotexist')
+				"bool_expected" => function_exists('gabuzomeushouldnotexist'),
 
 			],
 			"1 > 2" => [
 				"code" => str_replace("COND", "1 > 2", $sTruePHP),
-				"bool_expected" => false
+				"bool_expected" => false,
 
 			],
 			"1 == 1" => [
 				"code" => str_replace("COND", "1 == 1", $sTruePHP),
-				"bool_expected" => true
+				"bool_expected" => true,
 
 			],
 			"1 < 2" => [
 				"code" => str_replace("COND", "1 < 2", $sTruePHP),
-				"bool_expected" => true
+				"bool_expected" => true,
 			],
 			"PHP_VERSION_ID == PHP_VERSION_ID" => [
 				"code" => str_replace("COND", "PHP_VERSION_ID == PHP_VERSION_ID", $sTruePHP),
-				"bool_expected" => true
+				"bool_expected" => true,
 			],
 			"PHP_VERSION_ID != PHP_VERSION_ID" => [
 				"code" => str_replace("COND", "PHP_VERSION_ID != PHP_VERSION_ID", $sTruePHP),
-				"bool_expected" => false
+				"bool_expected" => false,
 			],
 		];
 	}
@@ -379,5 +378,28 @@ PHP;
 		$oExpr = $aNodes[0];
 		$val = $this->InvokeNonPublicMethod(ModuleDiscoveryService::class, "EvaluateBooleanExpression", ModuleDiscoveryService::GetInstance(), [$oExpr->cond]);
 		$this->assertEquals($bExpected, $val);
+	}
+
+	public function testCallDeclaredInstaller()
+	{
+		$sModuleInstallerClass = "TicketsInstaller" . uniqid();
+		$sPHpCode = file_get_contents(__DIR__.'/resources/module.itop-tickets.php');
+		$sPHpCode = str_replace("TicketsInstaller", $sModuleInstallerClass, $sPHpCode);
+		$this->sTempModuleFilePath = tempnam(__DIR__, "test");
+		file_put_contents($this->sTempModuleFilePath, $sPHpCode);
+		var_dump($sPHpCode);
+
+		try {
+			$this->assertFalse(class_exists($sModuleInstallerClass));
+			$aModuleInfo = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($this->sTempModuleFilePath);
+			$this->assertFalse(class_exists($sModuleInstallerClass));
+
+			ModuleDiscoveryService::GetInstance()->CallInstallerBeforeWritingConfigMethod(\MetaModel::GetConfig(), $aModuleInfo[2]);
+		}
+		finally {
+			@unlink($this->sTempModuleFilePath);
+		}
+
+		$this->assertTrue(class_exists($sModuleInstallerClass));
 	}
 }
