@@ -325,7 +325,7 @@ class ModuleDiscoveryService {
 	 * @return bool
 	 * @throws ModuleDiscoveryServiceException
 	 */
-	public function ComputeBooleanExpression(string $sBooleanExpr) : bool
+	public function UnprotectedComputeBooleanExpression(string $sBooleanExpr) : bool
 	{
 		$bResult = false;
 		try{
@@ -343,20 +343,28 @@ class ModuleDiscoveryService {
 	 * @return bool
 	 * @throws ModuleDiscoveryServiceException
 	 */
-	public function ComputeBooleanExpression3(string $sBooleanExpr) : bool
+	public function ComputeBooleanExpression(string $sBooleanExpr, $bProtected=true) : bool
 	{
+		if (! $bProtected){
+			return 	$this->UnprotectedComputeBooleanExpression($sBooleanExpr);
+		}
+
 		$sPhpContent = <<<PHP
 <?php
 $sBooleanExpr;
 PHP;
-		$aNodes = ModuleDiscoveryService::GetInstance()->parsePhpCode($sPhpContent);
-		$oExpr = $aNodes[0];
-		return $this->EvaluateBooleanExpression($oExpr->expr);
+		try{
+			$aNodes = ModuleDiscoveryService::GetInstance()->parsePhpCode($sPhpContent);
+			$oExpr = $aNodes[0];
+			return $this->EvaluateBooleanExpression($oExpr->expr);
+		} catch (ModuleDiscoveryServiceException $previous) {
+			throw new ModuleDiscoveryServiceException("Eval of '$sBooleanExpr' caused an error", 0, $previous);
+		}
 	}
 
 	private function EvaluateBooleanExpression(\PhpParser\Node\Expr $oCondExpression) : bool
 	{
-		//var_dump($oCondExpression);
+		#var_dump($oCondExpression);
 
 		if ($oCondExpression instanceof \PhpParser\Node\Expr\BinaryOp){
 			$sExpr = $this->GetMixedValueForBooleanOperatorEvaluation($oCondExpression->left)
@@ -364,7 +372,7 @@ PHP;
 				. $oCondExpression->getOperatorSigil()
 				. " "
 				. $this->GetMixedValueForBooleanOperatorEvaluation($oCondExpression->right);
-			return $this->ComputeBooleanExpression($sExpr);
+			return $this->ComputeBooleanExpression($sExpr, false);
 		}
 
 		if ($oCondExpression instanceof \PhpParser\Node\Expr\BooleanNot){
@@ -373,6 +381,10 @@ PHP;
 
 		if ($oCondExpression instanceof \PhpParser\Node\Expr\FuncCall){
 			return $this->CallFunction($oCondExpression);
+		}
+
+		if ($oCondExpression instanceof \PhpParser\Node\Expr\StaticCall){
+			return $this->StaticCallFunction($oCondExpression);
 		}
 
 		if ($oCondExpression instanceof \PhpParser\Node\Expr\ConstFetch){
@@ -399,6 +411,39 @@ PHP;
 
 		$oReflectionFunction = new ReflectionFunction($sFunction);
 		return (bool)$oReflectionFunction->invoke(...$aArgs);
+	}
+
+	/**
+	 * @param \PhpParser\Node\Expr\StaticCall $oStaticCall
+	 *
+	 * @return bool
+	 * @throws \ModuleDiscoveryServiceException
+	 * @throws \ReflectionException
+	 */
+	private function StaticCallFunction(\PhpParser\Node\Expr\StaticCall $oStaticCall) : bool
+	{
+		var_dump($oStaticCall);
+		$sClassName = $oStaticCall->class->name;
+		$sMethodName = $oStaticCall->name->name;
+		$aWhiteList = ["SetupInfo::ModuleIsSelected"];
+		$sStaticCallDescription = "$sClassName::$sMethodName";
+		if (! in_array($sStaticCallDescription, $aWhiteList)){
+			throw new ModuleDiscoveryServiceException("StaticCall $sStaticCallDescription not supported");
+		}
+
+		$aArgs=[];
+		foreach ($oStaticCall->args as $arg){
+			/** @var \PhpParser\Node\Arg $arg */
+			$aArgs[]=$arg->value->value;
+		}
+
+		$class = new \ReflectionClass($sClassName);
+		$method = $class->getMethod($sMethodName);
+		if (! $method->isPublic()){
+			throw new ModuleDiscoveryServiceException("StaticCall $sStaticCallDescription not public");
+		}
+
+		return (bool) $method->invokeArgs(null, $aArgs);
 	}
 }
 

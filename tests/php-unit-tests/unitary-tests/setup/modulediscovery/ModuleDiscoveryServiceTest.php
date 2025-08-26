@@ -31,10 +31,15 @@ class ModuleDiscoveryServiceTest extends ItopDataTestCase
 	/*public function testAllReadModuleFileConfiguration()
 	{
 		foreach (glob(__DIR__.'/resources/all/module.*.php') as $sModuleFilePath){
-		$aRes = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
-		$aExpected = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfigurationLegacy($sModuleFilePath);
+			$aRes = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
+			$aExpected = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfigurationLegacy($sModuleFilePath);
 
-		$this->assertEquals($aExpected, $aRes);
+			$this->assertEquals($aExpected, $aRes);
+
+			$aAutoselect = $aRes[2]['auto_select'] ?? "";
+			if (strlen($aAutoselect) >0){
+				var_dump($aAutoselect);
+			}
 		}
 	}*/
 
@@ -88,8 +93,45 @@ class ModuleDiscoveryServiceTest extends ItopDataTestCase
 
 	public function testComputeBooleanExpression_BrokenBooleanExpression(){
 		$this->expectException(\ModuleDiscoveryServiceException::class);
-		$this->expectExceptionMessage('Eval of \'(a || true)\' caused an error: Undefined constant "a"');
+		$this->expectExceptionMessage('Eval of \'(a || true)\' caused an error');
 		$this->assertTrue(ModuleDiscoveryService::GetInstance()->ComputeBooleanExpression("(a || true)"));
+	}
+
+
+	public static function ComputeBooleanExpressionAutoselectProvider()
+	{
+		$sSimpleCallToModuleIsSelected = "SetupInfo::ModuleIsSelected(\"itop-storage-mgmt\")";
+		$sSimpleCallToModuleIsSelected2 = "SetupInfo::ModuleIsSelected(\"itop-storage-mgmt-notselected\")";
+		$sCallToModuleIsSelectedCombinedWithAndOperator = "SetupInfo::ModuleIsSelected(\"itop-storage-mgmt\") || SetupInfo::ModuleIsSelected(\"itop-virtualization-mgmt\")";
+		$sCallToModuleIsSelectedCombinedWithAndOperator2 = "SetupInfo::ModuleIsSelected(\"itop-storage-mgmt-notselected\") || SetupInfo::ModuleIsSelected(\"itop-virtualization-mgmt\")";
+
+		return [
+			"simple call to SetupInfo::ModuleIsSelected SELECTED" => [
+				"expr" => $sSimpleCallToModuleIsSelected,
+				"expected" => true
+			],
+			"simple call to SetupInfo::ModuleIsSelected NOT SELECTED" => [
+				"expr" => $sSimpleCallToModuleIsSelected2,
+				"expected" => false
+			],
+			"call to SetupInfo::ModuleIsSelected + OR => SELECTED" => [
+				"expr" => $sCallToModuleIsSelectedCombinedWithAndOperator,
+				"expected" => true
+			],
+			"simple call to SetupInfo::ModuleIsSelected + OR => NOT SELECTED" => [
+				"expr" => $sCallToModuleIsSelectedCombinedWithAndOperator2,
+				"expected" => false
+			],
+		];
+	}
+
+
+	/**
+	 * @dataProvider ComputeBooleanExpressionAutoselectProvider
+	 */
+	public function testComputeBooleanExpressionAutoselect(string $sBooleanExpression, bool $expected){
+		\SetupInfo::SetSelectedModules(["itop-storage-mgmt" => "123"]);
+		$this->assertEquals($expected, ModuleDiscoveryService::GetInstance()->ComputeBooleanExpression($sBooleanExpression), $sBooleanExpression);
 	}
 
 	public function testEvaluateConstantExpression()
