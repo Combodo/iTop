@@ -357,15 +357,13 @@ PHP;
 			$aNodes = ModuleDiscoveryService::GetInstance()->parsePhpCode($sPhpContent);
 			$oExpr = $aNodes[0];
 			return $this->EvaluateBooleanExpression($oExpr->expr);
-		} catch (ModuleDiscoveryServiceException $previous) {
-			throw new ModuleDiscoveryServiceException("Eval of '$sBooleanExpr' caused an error", 0, $previous);
+		} catch (Throwable $t) {
+			throw new ModuleDiscoveryServiceException("Eval of '$sBooleanExpr' caused an error:".$t->getMessage());
 		}
 	}
 
 	private function EvaluateBooleanExpression(\PhpParser\Node\Expr $oCondExpression) : bool
 	{
-		#var_dump($oCondExpression);
-
 		if ($oCondExpression instanceof \PhpParser\Node\Expr\BinaryOp){
 			$sExpr = $this->GetMixedValueForBooleanOperatorEvaluation($oCondExpression->left)
 				. " "
@@ -422,7 +420,6 @@ PHP;
 	 */
 	private function StaticCallFunction(\PhpParser\Node\Expr\StaticCall $oStaticCall) : bool
 	{
-		var_dump($oStaticCall);
 		$sClassName = $oStaticCall->class->name;
 		$sMethodName = $oStaticCall->name->name;
 		$aWhiteList = ["SetupInfo::ModuleIsSelected"];
