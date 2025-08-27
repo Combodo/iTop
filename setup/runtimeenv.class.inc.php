@@ -459,7 +459,7 @@ class RunTimeEnvironment
 				{
 					SetupInfo::SetSelectedModules($aRet);
 					try{
-						$bSelected = ModuleDiscoveryService::GetInstance()->ComputeBooleanExpression($oModule->GetAutoSelect());
+						$bSelected = ModuleDiscoveryEvaluationService::GetInstance()->EvaluateBooleanExpression($oModule->GetAutoSelect());
 						if ($bSelected)
 						{
 							$aRet[$oModule->GetName()] = $oModule; // store the Id of the selected module
@@ -1087,28 +1087,9 @@ class RunTimeEnvironment
 	{
 		foreach($aAvailableModules as $sModuleId => $aModule)
 		{
-			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules) &&
-				isset($aAvailableModules[$sModuleId]['installer']) )
+			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules))
 			{
-				$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
-				SetupLog::Info("Calling Module Handler: $sModuleInstallerClass::$sHandlerName(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
-				$aCallSpec = array($sModuleInstallerClass, $sHandlerName);
-				if (is_callable($aCallSpec))
-				{
-					try {
-						call_user_func_array($aCallSpec, array(MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']));
-					} catch (Exception $e) {
-						$sErrorMessage = "Module $sModuleId : error when calling module installer class $sModuleInstallerClass for $sHandlerName handler";
-						$aExceptionContextData = [
-							'ModulelId' => $sModuleId,
-							'ModuleInstallerClass' => $sModuleInstallerClass,
-							'ModuleInstallerHandler' => $sHandlerName,
-							'ExceptionClass' => get_class($e),
-							'ExceptionMessage' => $e->getMessage(),
-						];
-						throw new CoreException($sErrorMessage, $aExceptionContextData, '', $e);
-					}
-				}
+				ModuleDiscoveryService::GetInstance()->CallInstallerHandler(MetaModel::GetConfig(), $aAvailableModules[$sModuleId], $aModule, $sHandlerName);
 			}
 		}
 	}

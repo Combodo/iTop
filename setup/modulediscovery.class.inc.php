@@ -391,7 +391,7 @@ class ModuleDiscovery
 			{
 				$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $sDepString);
 				try{
-					$bResult = ModuleDiscoveryService::GetInstance()->ComputeBooleanExpression($sBooleanExpr);
+					$bResult = ModuleDiscoveryEvaluationService::GetInstance()->EvaluateBooleanExpression($sBooleanExpr);
 				} catch(ModuleDiscoveryServiceException $e){
 					//logged already
 					echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";
