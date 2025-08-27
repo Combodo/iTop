@@ -214,6 +214,15 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 */
 	protected static bool $bBlockEventDBLinksChanged = false;
 
+	/**
+	 * If set to true, the object is considered as modified, whatever the actual state is.
+	 * This is used when an object is modified indirectly (eg. through a linked set)
+	 *
+	 * @var bool
+	 *
+	 * @since 3.3.0 N°8210 - Remove iApplicationObjectExtension
+	 */
+	private bool $bIsMarkedAsModified = false;
 
 	/**
 	 * Constructor from a row of data (as a hash 'attcode' => value)
@@ -4621,7 +4630,20 @@ HTML;
 			return true;
 		}
 
-		return false;
+		return $this->bIsMarkedAsModified;
+	}
+
+	/**
+	 * Override the default modification state of the object.
+	 *
+	 * The object is considered as modified, whatever the actual state is.
+	 * This is used when an object is modified indirectly (eg. through a linked set)
+	 *
+	 * @return void
+	 */
+	public function MarkObjectAsModified(): void
+	{
+		$this->bIsMarkedAsModified = true;
 	}
 
 	/**

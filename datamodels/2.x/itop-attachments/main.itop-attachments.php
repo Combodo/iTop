@@ -346,6 +346,8 @@ class AttachmentPlugIn implements iApplicationUIExtension, iEventServiceSetup
 				{
 					self::RecordHistory($oChange, $oObject, $oChangeOp);
 				}
+
+				$oObject->MarkObjectAsModified();
 			}
 		}
 	}
