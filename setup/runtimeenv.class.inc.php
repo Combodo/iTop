@@ -459,13 +459,13 @@ class RunTimeEnvironment
 				{
 					SetupInfo::SetSelectedModules($aRet);
 					try{
-						$bSelected = ModuleDiscoveryEvaluationService::GetInstance()->EvaluateBooleanExpression($oModule->GetAutoSelect());
+						$bSelected = ModuleFileParser::GetInstance()->EvaluateBooleanExpression($oModule->GetAutoSelect());
 						if ($bSelected)
 						{
 							$aRet[$oModule->GetName()] = $oModule; // store the Id of the selected module
 							$bModuleAdded  = true;
 						}
-					} catch(ModuleDiscoveryServiceException $e){
+					} catch(ModuleFileReaderException $e){
 						//do nothing. logged already
 					}
 				}
@@ -1089,7 +1089,44 @@ class RunTimeEnvironment
 		{
 			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules))
 			{
-				ModuleDiscoveryService::GetInstance()->CallInstallerHandler(MetaModel::GetConfig(), $aAvailableModules[$sModuleId], $aModule, $sHandlerName);
+				$aArgs = [MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']];
+				RunTimeEnvironment::CallInstallerHandler($aAvailableModules[$sModuleId], $sHandlerName, $aArgs);
+			}
+		}
+	}
+
+	/**
+	 * Call the given handler method for all selected modules having an installation handler
+	 *
+	 * @param array $aModuleInfo
+	 * @param string $sHandlerName
+	 * @param array $aArgs
+	 *
+	 * @throws CoreException
+	 */
+	public static function CallInstallerHandler(array $aModuleInfo, $sHandlerName, array $aArgs)
+	{
+		$sModuleInstallerClass = ModuleFileReader::GetInstance()->GetAndCheckModuleInstallerClass($aModuleInfo);
+		if (is_null($sModuleInstallerClass)){
+			return;
+		}
+
+		SetupLog::Info("Calling Module Handler: $sModuleInstallerClass::$sHandlerName", null, $aArgs);
+		$aCallSpec = [$sModuleInstallerClass, $sHandlerName];
+		if (is_callable($aCallSpec))
+		{
+			try {
+				call_user_func_array($aCallSpec, $aArgs);
+			} catch (Exception $e) {
+				$sErrorMessage = "Module $sModuleId : error when calling module installer class $sModuleInstallerClass for $sHandlerName handler";
+				$aExceptionContextData = [
+					'ModulelId' => $sModuleId,
+					'ModuleInstallerClass' => $sModuleInstallerClass,
+					'ModuleInstallerHandler' => $sHandlerName,
+					'ExceptionClass' => get_class($e),
+					'ExceptionMessage' => $e->getMessage(),
+				];
+				throw new CoreException($sErrorMessage, $aExceptionContextData, '', $e);
 			}
 		}
 	}

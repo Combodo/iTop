@@ -304,8 +304,8 @@ class iTopExtensionsMap
 					{
 						// Found a module
 						try {
-							$aModuleInfo = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sSearchDir.'/'.$sFile);
-						} catch(ModuleDiscoveryServiceException $e){
+							$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($sSearchDir.'/'.$sFile);
+						} catch(ModuleFileReaderException $e){
 							continue;
 						}
 						// If we are not already inside a formal extension, then the module itself is considered

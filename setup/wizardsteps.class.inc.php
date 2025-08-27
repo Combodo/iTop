@@ -1787,9 +1787,9 @@ EOF
 								// Check the module selection
 								try {
 									SetupInfo::SetSelectedModules($aModules);
-									$bSelected = ModuleDiscoveryEvaluationService::GetInstance()->EvaluateBooleanExpression($aInfo['auto_select']);
+									$bSelected = ModuleFileParser::GetInstance()->EvaluateBooleanExpression($aInfo['auto_select']);
 								}
-								catch (ModuleDiscoveryServiceException $e) {
+								catch (ModuleFileReaderException $e) {
 									//logged already
 									$bSelected = false;
 								}
@@ -1865,7 +1865,7 @@ EOF
 						try
 						{
 							SetupInfo::SetSelectedModules($aModules);
-							$bSelected = ModuleDiscoveryEvaluationService::GetInstance()->EvaluateBooleanExpression($aModule['auto_select']);
+							$bSelected = ModuleFileParser::GetInstance()->EvaluateBooleanExpression($aModule['auto_select']);
 							if ($bSelected)
 							{
 								$aModules[$sModuleId] = true; // store the Id of the selected module
@@ -1873,7 +1873,7 @@ EOF
 								$bModuleAdded  = true;
 							}
 						}
-						catch(ModuleDiscoveryServiceException $e)
+						catch(ModuleFileReaderException $e)
 						{
 							//logged already
 							$sDisplayChoices .= '<li><b>Warning: auto_select failed with exception ('.$e->getMessage().') for module "'.$sModuleId.'"</b></li>';

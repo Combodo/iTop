@@ -19,7 +19,7 @@
  *
  */
 
-require_once(APPROOT.'setup/modulediscovery/ModuleDiscoveryService.php');
+require_once(APPROOT.'setup/modulediscovery/ModuleFileReader.php');
 
 class MissingDependencyException extends CoreException
 {
@@ -108,7 +108,7 @@ class ModuleDiscovery
 	public static function AddModule($sFilePath, $sId, $aArgs)
 	{
 		if (is_null($aArgs)||! is_array($aArgs)){
-			throw new ModuleDiscoveryServiceException("Error parsing module file args", 0, null, $sFilePath);
+			throw new ModuleFileReaderException("Error parsing module file args", 0, null, $sFilePath);
 		}
 		if (!array_key_exists('itop_version', $aArgs))
 		{
@@ -391,8 +391,8 @@ class ModuleDiscovery
 			{
 				$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $sDepString);
 				try{
-					$bResult = ModuleDiscoveryEvaluationService::GetInstance()->EvaluateBooleanExpression($sBooleanExpr);
-				} catch(ModuleDiscoveryServiceException $e){
+					$bResult = ModuleFileParser::GetInstance()->EvaluateBooleanExpression($sBooleanExpr);
+				} catch(ModuleFileReaderException $e){
 					//logged already
 					echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";
 				}
@@ -503,9 +503,9 @@ class ModuleDiscovery
 					self::SetModulePath($sRelDir);
 					$sModuleFilePath = $sDirectory.'/'.$sFile;
 					try {
-						$aModuleInfo = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sDirectory.'/'.$sFile);
+						$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($sDirectory.'/'.$sFile);
 						SetupWebPage::AddModule($sModuleFilePath, $aModuleInfo[1], $aModuleInfo[2]);
-					} catch(ModuleDiscoveryServiceException $e){
+					} catch(ModuleFileReaderException $e){
 						continue;
 					}
 				}

@@ -1,9 +1,9 @@
 <?php
 
-class ModuleDiscoveryServiceException extends Exception
+class ModuleFileReaderException extends Exception
 {
 	/**
-	 * ModuleDiscoveryServiceException constructor.
+	 * ModuleFileReaderException constructor.
 	 *
 	 * @param string $sMessage
 	 * @param int $iHttpCode

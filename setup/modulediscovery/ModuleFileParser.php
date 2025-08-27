@@ -3,13 +3,13 @@
 use PhpParser\ParserFactory;
 use PhpParser\Node\Expr\Assign;
 
-class ModuleDiscoveryEvaluationService {
-	private static ModuleDiscoveryEvaluationService $oInstance;
+class ModuleFileParser {
+	private static ModuleFileParser $oInstance;
 
 	protected function __construct() {
 	}
 
-	final public static function GetInstance(): ModuleDiscoveryEvaluationService {
+	final public static function GetInstance(): ModuleFileParser {
 		if (!isset(static::$oInstance)) {
 			static::$oInstance = new static();
 		}
@@ -17,7 +17,7 @@ class ModuleDiscoveryEvaluationService {
 		return static::$oInstance;
 	}
 
-	final public static function SetInstance(?ModuleDiscoveryEvaluationService $oInstance): void {
+	final public static function SetInstance(?ModuleFileParser $oInstance): void {
 		static::$oInstance = $oInstance;
 	}
 
@@ -37,9 +37,9 @@ class ModuleDiscoveryEvaluationService {
 	 * @param \PhpParser\Node\Expr\Assign $oAssignation
 	 *
 	 * @return array|null
-	 * @throws \ModuleDiscoveryServiceException
+	 * @throws \ModuleFileReaderException
 	 */
-	public function BrowseAddModuleCallAndReturnModuleConfiguration(string $sModuleFilePath, \PhpParser\Node\Stmt\Expression $oExpression) : ?array
+	public function GetModuleInformationFromAddModuleCall(string $sModuleFilePath, \PhpParser\Node\Stmt\Expression $oExpression) : ?array
 	{
 		/** @var Assign $oAssignation */
 		$oAssignation = $oExpression->expr;
@@ -59,17 +59,17 @@ class ModuleDiscoveryEvaluationService {
 
 		$aArgs = $oAssignation?->args;
 		if (count($aArgs) != 3) {
-			throw new ModuleDiscoveryServiceException("Not enough parameters when calling SetupWebPage::AddModule", 0, null, $sModuleFilePath);
+			throw new ModuleFileReaderException("Not enough parameters when calling SetupWebPage::AddModule", 0, null, $sModuleFilePath);
 		}
 
 		$oModuleId = $aArgs[1];
 		if (false === ($oModuleId instanceof PhpParser\Node\Arg)) {
-			throw new ModuleDiscoveryServiceException("2nd parameter to SetupWebPage::AddModule call issue: " . get_class($oModuleId), 0, null, $sModuleFilePath);
+			throw new ModuleFileReaderException("2nd parameter to SetupWebPage::AddModule call issue: " . get_class($oModuleId), 0, null, $sModuleFilePath);
 		}
 
 		/** @var PhpParser\Node\Arg $oModuleId */
 		if (false === ($oModuleId->value instanceof PhpParser\Node\Scalar\String_)) {
-			throw new ModuleDiscoveryServiceException("2nd parameter to SetupWebPage::AddModule not a string: " . get_class($oModuleId->value), 0, null, $sModuleFilePath);
+			throw new ModuleFileReaderException("2nd parameter to SetupWebPage::AddModule not a string: " . get_class($oModuleId->value), 0, null, $sModuleFilePath);
 		}
 
 		/** @var PhpParser\Node\Scalar\String_ $sModuleIdStringObj */
@@ -78,19 +78,19 @@ class ModuleDiscoveryEvaluationService {
 
 		$oModuleConfigInfo = $aArgs[2];
 		if (false === ($oModuleConfigInfo instanceof PhpParser\Node\Arg)) {
-			throw new ModuleDiscoveryServiceException("3rd parameter to SetupWebPage::AddModule call issue: " . get_class($oModuleConfigInfo), 0, null, $sModuleFilePath);
+			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule call issue: " . get_class($oModuleConfigInfo), 0, null, $sModuleFilePath);
 		}
 
 		/** @var PhpParser\Node\Arg $oModuleConfigInfo */
 		if (false === ($oModuleConfigInfo->value instanceof PhpParser\Node\Expr\Array_)) {
-			throw new ModuleDiscoveryServiceException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
+			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
 		}
 
 		$aModuleConfig=[];
-		$this->BrowseArrayStructure($oModuleConfigInfo->value, $aModuleConfig);
+		$this->FillModuleInformationFromArray($oModuleConfigInfo->value, $aModuleConfig);
 
 		if (! is_array($aModuleConfig)){
-			throw new ModuleDiscoveryServiceException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
+			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
 		}
 		return [
 			$sModuleFilePath,
@@ -99,7 +99,7 @@ class ModuleDiscoveryEvaluationService {
 		];
 	}
 
-	public function BrowseArrayStructure(PhpParser\Node\Expr\Array_ $oArray, array &$aModuleConfig) : void
+	public function FillModuleInformationFromArray(PhpParser\Node\Expr\Array_ $oArray, array &$aModuleInformation) : void
 	{
 		$iIndex=0;
 		/** @var \PhpParser\Node\Expr\ArrayItem $oValue */
@@ -120,18 +120,18 @@ class ModuleDiscoveryEvaluationService {
 
 			if ($oValue instanceof PhpParser\Node\Expr\Array_) {
 				$aSubConfig=[];
-				$this->BrowseArrayStructure($oValue, $aSubConfig);
-				$aModuleConfig[$sKey]=$aSubConfig;
+				$this->FillModuleInformationFromArray($oValue, $aSubConfig);
+				$aModuleInformation[$sKey]=$aSubConfig;
 			}
 
 			if ($oValue instanceof PhpParser\Node\Scalar\String_||$oValue instanceof PhpParser\Node\Scalar\Int_) {
-				$aModuleConfig[$sKey]=$oValue->value;
+				$aModuleInformation[$sKey]=$oValue->value;
 				continue;
 			}
 
 			if ($oValue instanceof \PhpParser\Node\Expr\ConstFetch) {
 				$oEvaluatedConstant = $this->EvaluateConstantExpression($oValue);
-				$aModuleConfig[$sKey]= $oEvaluatedConstant;
+				$aModuleInformation[$sKey]= $oEvaluatedConstant;
 			}
 		}
 	}
@@ -141,15 +141,15 @@ class ModuleDiscoveryEvaluationService {
 	 * @param \PhpParser\Node\Stmt\If_ $oNode
 	 *
 	 * @return array|null
-	 * @throws \ModuleDiscoveryServiceException
+	 * @throws \ModuleFileReaderException
 	 */
-	public function BrowseIfStructure(string $sModuleFilePath, \PhpParser\Node\Stmt\If_ $oNode) : ?array
+	public function GetModuleInformationFromIf(string $sModuleFilePath, \PhpParser\Node\Stmt\If_ $oNode) : ?array
 	{
 		$bCondition = $this->EvaluateExpression($oNode->cond);
 		if ($bCondition) {
 			foreach ($oNode->stmts as $oSubNode) {
 				if ($oSubNode instanceof \PhpParser\Node\Stmt\Expression) {
-					$aModuleConfig = $this->BrowseAddModuleCallAndReturnModuleConfiguration($sModuleFilePath, $oSubNode);
+					$aModuleConfig = $this->GetModuleInformationFromAddModuleCall($sModuleFilePath, $oSubNode);
 					if (!is_null($aModuleConfig)) {
 						return $aModuleConfig;
 					}
@@ -163,7 +163,7 @@ class ModuleDiscoveryEvaluationService {
 				/** @var \PhpParser\Node\Stmt\ElseIf_ $oElseIfSubNode */
 				$bCondition = $this->EvaluateExpression($oElseIfSubNode->cond);
 				if ($bCondition) {
-					$aModuleConfig = $this->BrowseStatementsAndReturnModuleConfiguration($sModuleFilePath, $oElseIfSubNode->stmts);
+					$aModuleConfig = $this->GetModuleConfigurationFromStatement($sModuleFilePath, $oElseIfSubNode->stmts);
 					if (!is_null($aModuleConfig)) {
 						return $aModuleConfig;
 					}
@@ -173,7 +173,7 @@ class ModuleDiscoveryEvaluationService {
 		}
 
 		if (! is_null($oNode->else)) {
-			$aModuleConfig = $this->BrowseStatementsAndReturnModuleConfiguration($sModuleFilePath, $oNode->else->stmts);
+			$aModuleConfig = $this->GetModuleConfigurationFromStatement($sModuleFilePath, $oNode->else->stmts);
 
 			return $aModuleConfig;
 		}
@@ -181,11 +181,11 @@ class ModuleDiscoveryEvaluationService {
 		return null;
 	}
 
-	public function BrowseStatementsAndReturnModuleConfiguration(string $sModuleFilePath, array $aStmts) : ?array
+	public function GetModuleConfigurationFromStatement(string $sModuleFilePath, array $aStmts) : ?array
 	{
 		foreach ($aStmts as $oSubNode) {
 			if ($oSubNode instanceof \PhpParser\Node\Stmt\Expression) {
-				$aModuleConfig = $this->BrowseAddModuleCallAndReturnModuleConfiguration($sModuleFilePath, $oSubNode);
+				$aModuleConfig = $this->GetModuleInformationFromAddModuleCall($sModuleFilePath, $oSubNode);
 				if (!is_null($aModuleConfig)) {
 					return $aModuleConfig;
 				}
@@ -195,13 +195,14 @@ class ModuleDiscoveryEvaluationService {
 		return null;
 	}
 
+	//TODO replace eval
 	public function EvaluateConstantExpression(\PhpParser\Node\Expr\ArrayItem|\PhpParser\Node\Expr\ConstFetch $oValue) : mixed
 	{
 		$bResult = false;
 		try{
 			@eval('$bResult = '.$oValue->name.';');
 		} catch (Throwable $t) {
-			throw new ModuleDiscoveryServiceException("Eval of ' . $oValue->name . ' caused an error: ".$t->getMessage());
+			throw new ModuleFileReaderException("Eval of ' . $oValue->name . ' caused an error: ".$t->getMessage());
 		}
 
 		return $bResult;
@@ -220,7 +221,7 @@ class ModuleDiscoveryEvaluationService {
 	 * @param string $sBooleanExpr
 	 *
 	 * @return bool
-	 * @throws ModuleDiscoveryServiceException
+	 * @throws ModuleFileReaderException
 	 */
 	private function UnprotectedComputeBooleanExpression(string $sBooleanExpr) : bool
 	{
@@ -228,7 +229,7 @@ class ModuleDiscoveryEvaluationService {
 		try{
 			@eval('$bResult = '.$sBooleanExpr.';');
 		} catch (Throwable $t) {
-			throw new ModuleDiscoveryServiceException("Eval of '$sBooleanExpr' caused an error: ".$t->getMessage());
+			throw new ModuleFileReaderException("Eval of '$sBooleanExpr' caused an error: ".$t->getMessage());
 		}
 
 		return $bResult;
@@ -239,7 +240,7 @@ class ModuleDiscoveryEvaluationService {
 	 * @param bool $bSafe: when true, evaluation relies on unsafe eval() call
 	 *
 	 * @return bool
-	 * @throws ModuleDiscoveryServiceException
+	 * @throws ModuleFileReaderException
 	 */
 	public function EvaluateBooleanExpression(string $sBooleanExpr, $bSafe=true) : bool
 	{
@@ -256,7 +257,7 @@ PHP;
 			$oExpr = $aNodes[0];
 			return $this->EvaluateExpression($oExpr->expr);
 		} catch (Throwable $t) {
-			throw new ModuleDiscoveryServiceException("Eval of '$sBooleanExpr' caused an error:".$t->getMessage());
+			throw new ModuleFileReaderException("Eval of '$sBooleanExpr' caused an error:".$t->getMessage());
 		}
 	}
 
@@ -293,10 +294,9 @@ PHP;
 	private function EvaluateCallFunction(\PhpParser\Node\Expr\FuncCall $oFunct) : bool
 	{
 		$sFunction = $oFunct->name->name;
-		$aWhiteList = ["function_exists"];
+		$aWhiteList = ["function_exists", "class_exists", "method_exists"];
 		if (! in_array($sFunction, $aWhiteList)){
-			throw new ModuleDiscoveryServiceException("FuncCall $sFunction not supported");
-			//return false;
+			throw new ModuleFileReaderException("FuncCall $sFunction not supported");
 		}
 
 		$aArgs=[];
@@ -313,7 +313,7 @@ PHP;
 	 * @param \PhpParser\Node\Expr\StaticCall $oStaticCall
 	 *
 	 * @return bool
-	 * @throws \ModuleDiscoveryServiceException
+	 * @throws \ModuleFileReaderException
 	 * @throws \ReflectionException
 	 */
 	private function EvaluateStaticCallFunction(\PhpParser\Node\Expr\StaticCall $oStaticCall) : bool
@@ -323,7 +323,7 @@ PHP;
 		$aWhiteList = ["SetupInfo::ModuleIsSelected"];
 		$sStaticCallDescription = "$sClassName::$sMethodName";
 		if (! in_array($sStaticCallDescription, $aWhiteList)){
-			throw new ModuleDiscoveryServiceException("StaticCall $sStaticCallDescription not supported");
+			throw new ModuleFileReaderException("StaticCall $sStaticCallDescription not supported");
 		}
 
 		$aArgs=[];
@@ -335,7 +335,7 @@ PHP;
 		$class = new \ReflectionClass($sClassName);
 		$method = $class->getMethod($sMethodName);
 		if (! $method->isPublic()){
-			throw new ModuleDiscoveryServiceException("StaticCall $sStaticCallDescription not public");
+			throw new ModuleFileReaderException("StaticCall $sStaticCallDescription not public");
 		}
 
 		return (bool) $method->invokeArgs(null, $aArgs);

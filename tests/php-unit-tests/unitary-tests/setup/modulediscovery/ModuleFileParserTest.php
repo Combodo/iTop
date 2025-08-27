@@ -3,17 +3,16 @@
 namespace Combodo\iTop\Test\UnitTest\Setup\ModuleDiscovery;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use ModuleDiscoveryEvaluationService;
-use ModuleDiscoveryService;
+use ModuleFileParser;
+use ModuleFileReader;
 use PhpParser\ParserFactory;
 
-class ModuleDiscoveryEvaluationServiceTest extends ItopDataTestCase
+class ModuleFileParserTest extends ItopDataTestCase
 {
-	private string $sTempModuleFilePath;
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->RequireOnceItopFile('setup/modulediscovery/ModuleDiscoveryService.php');
+		$this->RequireOnceItopFile('setup/modulediscovery/ModuleFileReader.php');
 	}
 
 	public static function EvaluateBooleanExpressionProvider()
@@ -32,13 +31,13 @@ class ModuleDiscoveryEvaluationServiceTest extends ItopDataTestCase
 	 * @dataProvider EvaluateBooleanExpressionProvider
 	 */
 	public function testEvaluateBooleanExpression(string $sBooleanExpression, bool $expected){
-		$this->assertEquals($expected, ModuleDiscoveryEvaluationService::GetInstance()->EvaluateBooleanExpression($sBooleanExpression), $sBooleanExpression);
+		$this->assertEquals($expected, ModuleFileParser::GetInstance()->EvaluateBooleanExpression($sBooleanExpression), $sBooleanExpression);
 	}
 
 	public function testEvaluateBooleanExpression_BrokenBooleanExpression(){
-		$this->expectException(\ModuleDiscoveryServiceException::class);
+		$this->expectException(\ModuleFileReaderException::class);
 		$this->expectExceptionMessage('Eval of \'(a || true)\' caused an error');
-		$this->assertTrue(ModuleDiscoveryEvaluationService::GetInstance()->EvaluateBooleanExpression("(a || true)"));
+		$this->assertTrue(ModuleFileParser::GetInstance()->EvaluateBooleanExpression("(a || true)"));
 	}
 
 
@@ -75,7 +74,7 @@ class ModuleDiscoveryEvaluationServiceTest extends ItopDataTestCase
 	 */
 	public function testEvaluateBooleanExpression_Autoselect(string $sBooleanExpression, bool $expected){
 		\SetupInfo::SetSelectedModules(["itop-storage-mgmt" => "123"]);
-		$this->assertEquals($expected, ModuleDiscoveryEvaluationService::GetInstance()->EvaluateBooleanExpression($sBooleanExpression), $sBooleanExpression);
+		$this->assertEquals($expected, ModuleFileParser::GetInstance()->EvaluateBooleanExpression($sBooleanExpression), $sBooleanExpression);
 	}
 
 	public function testEvaluateConstantExpression()
@@ -84,10 +83,10 @@ class ModuleDiscoveryEvaluationServiceTest extends ItopDataTestCase
 <?php
 APPROOT;
 PHP;
-		$aNodes = ModuleDiscoveryEvaluationService::GetInstance()->ParsePhpCode($sPHP);
+		$aNodes = ModuleFileParser::GetInstance()->ParsePhpCode($sPHP);
 		/** @var \PhpParser\Node\Expr $oExpr */
 		$oExpr = $aNodes[0];
-		$val = $this->InvokeNonPublicMethod(ModuleDiscoveryEvaluationService::class, "EvaluateConstantExpression", ModuleDiscoveryEvaluationService::GetInstance(), [$oExpr->expr]);
+		$val = $this->InvokeNonPublicMethod(ModuleFileParser::class, "EvaluateConstantExpression", ModuleFileParser::GetInstance(), [$oExpr->expr]);
 		$this->assertEquals(APPROOT, $val);
 	}
 
@@ -190,10 +189,10 @@ PHP;
 	 */
 	public function testEvaluateExpression($sPHP, $bExpected)
 	{
-		$aNodes = ModuleDiscoveryEvaluationService::GetInstance()->ParsePhpCode($sPHP);
+		$aNodes = ModuleFileParser::GetInstance()->ParsePhpCode($sPHP);
 		/** @var \PhpParser\Node\Expr $oExpr */
 		$oExpr = $aNodes[0];
-		$val = $this->InvokeNonPublicMethod(ModuleDiscoveryEvaluationService::class, "EvaluateExpression", ModuleDiscoveryEvaluationService::GetInstance(), [$oExpr->cond]);
+		$val = $this->InvokeNonPublicMethod(ModuleFileParser::class, "EvaluateExpression", ModuleFileParser::GetInstance(), [$oExpr->cond]);
 		$this->assertEquals($bExpected, $val);
 	}
 }

@@ -3,22 +3,22 @@
 namespace Combodo\iTop\Test\UnitTest\Setup\ModuleDiscovery;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use ModuleDiscoveryService;
+use ModuleFileReader;
 use PhpParser\ParserFactory;
 
-class ModuleDiscoveryServiceTest extends ItopDataTestCase
+class ModuleFileReaderTest extends ItopDataTestCase
 {
 	private string $sTempModuleFilePath;
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->RequireOnceItopFile('setup/modulediscovery/ModuleDiscoveryService.php');
+		$this->RequireOnceItopFile('setup/modulediscovery/ModuleFileReader.php');
 	}
 
 	public function testReadModuleFileConfigurationLegacy()
 	{
 		$sModuleFilePath = __DIR__.'/resources/module.itop-full-itil.php';
-		$aRes = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
+		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
 
 		$this->assertCount(3, $aRes);
 		$this->assertEquals($sModuleFilePath, $aRes[0]);
@@ -31,8 +31,8 @@ class ModuleDiscoveryServiceTest extends ItopDataTestCase
 	/*public function testAllReadModuleFileConfiguration()
 	{
 		foreach (glob(__DIR__.'/resources/all/module.*.php') as $sModuleFilePath){
-			$aRes = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
-			$aExpected = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfigurationLegacy($sModuleFilePath);
+			$aRes = ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
+			$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileConfigurationLegacy($sModuleFilePath);
 
 			$this->assertEquals($aExpected, $aRes);
 
@@ -46,8 +46,8 @@ class ModuleDiscoveryServiceTest extends ItopDataTestCase
 	public function testReadModuleFileConfiguration()
 	{
 		$sModuleFilePath = __DIR__.'/resources/module.itop-full-itil.php';
-		$aRes = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
-		$aExpected = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfigurationLegacy($sModuleFilePath);
+		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
+		$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileConfigurationUnsafe($sModuleFilePath);
 
 		$this->assertEquals($aExpected, $aRes);
 	}
@@ -55,8 +55,8 @@ class ModuleDiscoveryServiceTest extends ItopDataTestCase
 	public function testReadModuleFileConfigurationWithConstants()
 	{
 		$sModuleFilePath = __DIR__.'/resources/module.authent-ldap.php';
-		$aRes = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
-		$aExpected = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfigurationLegacy($sModuleFilePath);
+		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
+		$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileConfigurationUnsafe($sModuleFilePath);
 
 		$this->assertEquals($aExpected, $aRes);
 	}
@@ -65,10 +65,10 @@ class ModuleDiscoveryServiceTest extends ItopDataTestCase
 	{
 		$sModuleFilePath = __DIR__.'/resources/module.__MODULE__.php';
 
-		$this->expectException(\ModuleDiscoveryServiceException::class);
+		$this->expectException(\ModuleFileReaderException::class);
 		$this->expectExceptionMessage("Syntax error, unexpected T_CONSTANT_ENCAPSED_STRING, expecting ',' or ']' or ')' on line 31");
 
-		ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
+		ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
 	}
 
 
@@ -80,7 +80,7 @@ class ModuleDiscoveryServiceTest extends ItopDataTestCase
 		$this->sTempModuleFilePath = tempnam(__DIR__, "test");
 		file_put_contents($this->sTempModuleFilePath, $sPHpCode);
 		try {
-			return ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($this->sTempModuleFilePath);
+			return ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($this->sTempModuleFilePath);
 		}
 		finally {
 			@unlink($this->sTempModuleFilePath);
@@ -202,7 +202,7 @@ PHP;
 		$this->assertEquals([$this->sTempModuleFilePath, "elseif2", ["c" => "d", 'module_file_path' => $this->sTempModuleFilePath]], $val);
 	}
 
-	public function testCallDeclaredInstaller()
+	public function testGetAndCheckModuleInstallerClass()
 	{
 		$sModuleInstallerClass = "TicketsInstaller" . uniqid();
 		$sPHpCode = file_get_contents(__DIR__.'/resources/module.itop-tickets.php');
@@ -213,10 +213,10 @@ PHP;
 
 		try {
 			$this->assertFalse(class_exists($sModuleInstallerClass));
-			$aModuleInfo = ModuleDiscoveryService::GetInstance()->ReadModuleFileConfiguration($this->sTempModuleFilePath);
+			$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($this->sTempModuleFilePath);
 			$this->assertFalse(class_exists($sModuleInstallerClass));
 
-			ModuleDiscoveryService::GetInstance()->CallInstallerBeforeWritingConfigMethod(\MetaModel::GetConfig(), $aModuleInfo[2]);
+			$this->assertEquals($sModuleInstallerClass, ModuleFileReader::GetInstance()->GetAndCheckModuleInstallerClass($aModuleInfo[2]));
 		}
 		finally {
 			@unlink($this->sTempModuleFilePath);
