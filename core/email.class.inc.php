@@ -114,9 +114,6 @@ class EMail implements iEMail
 	 * @param string $sSerializedMessage The serialized representation of the message
 	 *
 	 * @return \Email
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \Symfony\Component\CssSelector\Exception\SyntaxErrorException
 	 */
 	public static function UnSerializeV2($sSerializedMessage)
 	{

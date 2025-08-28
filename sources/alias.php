@@ -10,8 +10,9 @@ class_alias(\Combodo\iTop\Application\UI\Hook\iKeyboardShortcut::class, 'iKeyboa
 class_alias(\Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableConfig\DataTableConfig::class, 'DataTableConfig');
 class_alias(\Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory::class, 'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\SelectUIBlockFactory');
 class_alias(\Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryFormFactory::class, 'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\CaseLogEntryFormFactory\\CaseLogEntryFormFactory');
-class_alias(\Combodo\iTop\Core\Authentication\Client\Smtp\Oauth::class, 'Laminas\\Mail\\Protocol\\Smtp\\Auth\\Oauth');
-class_alias(\Combodo\iTop\Core\Email\EMailLaminas::class, 'EMailLaminas');
+class_alias(\Combodo\iTop\Core\Email\EMailSymfony::class, 'EMailSymfony');
+class_alias(\Combodo\iTop\Core\Email\Transport\SymfonyFileTransport::class, 'SymfonyFileTransport');
+class_alias(\Combodo\iTop\Core\Email\Transport\SymfonyOAuthTransport::class, 'SymfonyOAuthTransport');
 class_alias(\Combodo\iTop\Application\WebPage\AjaxPage::class, 'AjaxPage');
 class_alias(\Combodo\iTop\Application\WebPage\CaptureWebPage::class, 'CaptureWebPage');
 class_alias(\Combodo\iTop\Application\WebPage\CLILikeWebPage::class, 'CLILikeWebPage');
