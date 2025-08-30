@@ -142,7 +142,7 @@ abstract class UserRightsAddOnAPI
 		$oFilter  = new DBObjectSearch($sClass);
 		$oListExpr = ListExpression::FromScalars($aAllowedOrgs);
 
-		$oNullCondition = new BinaryExpression($oExpression, 'IS', new ScalarExpression(null));
+		$oNullCondition = new FunctionExpression('ISNULL', [$oExpression]);
 		$oInCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
 		$oCondition = $oNullCondition->LogOr($oInCondition);
 		$oFilter->AddConditionExpression($oCondition);
