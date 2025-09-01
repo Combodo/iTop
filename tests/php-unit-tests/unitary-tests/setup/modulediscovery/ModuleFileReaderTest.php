@@ -15,10 +15,10 @@ class ModuleFileReaderTest extends ItopDataTestCase
 		$this->RequireOnceItopFile('setup/modulediscovery/ModuleFileReader.php');
 	}
 
-	public function testReadModuleFileConfigurationLegacy()
+	public function testReadModuleFileInformationUnsafe()
 	{
 		$sModuleFilePath = __DIR__.'/resources/module.itop-full-itil.php';
-		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
+		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformationUnsafe($sModuleFilePath);
 
 		$this->assertCount(3, $aRes);
 		$this->assertEquals($sModuleFilePath, $aRes[0]);
@@ -30,34 +30,66 @@ class ModuleFileReaderTest extends ItopDataTestCase
 
 	/*public function testAllReadModuleFileConfiguration()
 	{
-		foreach (glob(__DIR__.'/resources/all/module.*.php') as $sModuleFilePath){
-			$aRes = ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
-			$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileConfigurationLegacy($sModuleFilePath);
+		$aErrors=[];
+		foreach (glob(__DIR__.'/resources/all_factory/module.*.php') as $sModuleFilePath){
+			$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
+			$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileInformationUnsafe($sModuleFilePath);
 
-			$this->assertEquals($aExpected, $aRes);
-
-			$aAutoselect = $aRes[2]['auto_select'] ?? "";
-			if (strlen($aAutoselect) >0){
-				var_dump($aAutoselect);
+			if ($aExpected !== $aRes){
+				$aErrors[]=basename($sModuleFilePath);
+				continue;
 			}
+			//$this->assertEquals($aExpected, $aRes);
 		}
+
+		$this->assertEquals([], $aErrors);
 	}*/
 
-	public function testReadModuleFileConfiguration()
+	public static function ReadModuleFileConfigurationFileNameProvider()
 	{
-		$sModuleFilePath = __DIR__.'/resources/module.itop-full-itil.php';
-		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
-		$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileConfigurationUnsafe($sModuleFilePath);
+		return [
+			'nominal case : module.itop-full-itil.php' => ['module.itop-full-itil.php'],
+			'constant as value of a dict entry: module.authent-ldap.php' => ['module.authent-ldap.php'],
+			'int operation evaluation required: email-synchro' => ['module.combodo-email-synchro.php'],
+			'module.itop-admin-delegation-profiles-bridge-for-combodo-email-synchro.php' => ['module.itop-admin-delegation-profiles-bridge-for-combodo-email-synchro.php'],
+			'unknown class name to evaluation as installer: module.itop-global-requests-mgmt.php' => ['module.itop-global-requests-mgmt.php'],
+		];
+	}
+
+	/**
+	 * @dataProvider ReadModuleFileConfigurationFileNameProvider
+	 */
+	public function testReadModuleFileConfigurationVsLegacyMethod(string $sModuleBasename)
+	{
+		$sModuleFilePath = __DIR__."/resources/$sModuleBasename";
+		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
+		$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileInformationUnsafe($sModuleFilePath);
 
 		$this->assertEquals($aExpected, $aRes);
 	}
 
-	public function testReadModuleFileConfigurationWithConstants()
-	{
-		$sModuleFilePath = __DIR__.'/resources/module.authent-ldap.php';
-		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
-		$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileConfigurationUnsafe($sModuleFilePath);
+	/**
+	 * Covers below legacy usecase
+	 * 'dependencies' => array(
+	 * 'itop-config-mgmt/2.0.0'||'itop-structure/3.0.0',
+	 * 'itop-request-mgmt/2.0.0||itop-request-mgmt-itil/2.0.0||itop-incident-mgmt-itil/2.0.0',
+	 * ),
+	 *
+	 * @param string $sModuleBasename
+	 *
+	 * @return void
+	 * @throws \ModuleFileReaderException
+	 */
+	public function testReadModuleFileConfiguration_BadlyWrittenDependencies(){
+		//$sModuleFilePath = __DIR__."/resources/module.combodo-make-it-vip.php";
+		$sModuleFilePath = __DIR__."/resources/module.itop-admin-delegation-profiles.php";
+		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
+		$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileInformationUnsafe($sModuleFilePath);
 
+		//do not check dumb conf on dependencies
+		$aDependencies=$aRes[2]['dependencies'];
+		$aDependencies= array_merge([true], $aDependencies);
+		$aRes[2]['dependencies']=$aDependencies;
 		$this->assertEquals($aExpected, $aRes);
 	}
 
@@ -68,9 +100,8 @@ class ModuleFileReaderTest extends ItopDataTestCase
 		$this->expectException(\ModuleFileReaderException::class);
 		$this->expectExceptionMessage("Syntax error, unexpected T_CONSTANT_ENCAPSED_STRING, expecting ',' or ']' or ')' on line 31");
 
-		ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($sModuleFilePath);
+		ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
 	}
-
 
 	/**
 	 * local tool function
@@ -80,7 +111,7 @@ class ModuleFileReaderTest extends ItopDataTestCase
 		$this->sTempModuleFilePath = tempnam(__DIR__, "test");
 		file_put_contents($this->sTempModuleFilePath, $sPHpCode);
 		try {
-			return ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($this->sTempModuleFilePath);
+			return ModuleFileReader::GetInstance()->ReadModuleFileInformation($this->sTempModuleFilePath);
 		}
 		finally {
 			@unlink($this->sTempModuleFilePath);
@@ -213,7 +244,7 @@ PHP;
 
 		try {
 			$this->assertFalse(class_exists($sModuleInstallerClass));
-			$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($this->sTempModuleFilePath);
+			$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileInformation($this->sTempModuleFilePath);
 			$this->assertFalse(class_exists($sModuleInstallerClass));
 
 			$this->assertEquals($sModuleInstallerClass, ModuleFileReader::GetInstance()->GetAndCheckModuleInstallerClass($aModuleInfo[2]));

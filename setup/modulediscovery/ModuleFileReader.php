@@ -27,12 +27,58 @@ class ModuleFileReader {
 
 	/**
 	 * Read the information from a module file (module.xxx.php)
-	 * Use this method to load the ModuleInstallerAPI
 	 * @param string $sModuleFile
 	 * @return array
 	 * @throws ModuleFileReaderException
 	 */
-	public function ReadModuleFileConfigurationUnsafe(string $sModuleFilePath) : array
+	public function ReadModuleFileInformation(string $sModuleFilePath) : array
+	{
+		try
+		{
+			$aNodes = ModuleFileParser::GetInstance()->ParsePhpCode(file_get_contents($sModuleFilePath));
+		}
+		catch (PhpParser\Error $e) {
+			throw new \ModuleFileReaderException($e->getMessage(), 0, $e, $sModuleFilePath);
+		}
+
+		try {
+			foreach ($aNodes as $sKey => $oNode) {
+				if ($oNode instanceof \PhpParser\Node\Stmt\Expression) {
+					$aModuleInfo = ModuleFileParser::GetInstance()->GetModuleInformationFromAddModuleCall($sModuleFilePath, $oNode);
+					if (! is_null($aModuleInfo)){
+						$this->CompleteModuleInfoWithFilePath($aModuleInfo);
+						return $aModuleInfo;
+					}
+				}
+
+				if ($oNode instanceof PhpParser\Node\Stmt\If_) {
+					$aModuleInfo = ModuleFileParser::GetInstance()->GetModuleInformationFromIf($sModuleFilePath, $oNode);
+					if (! is_null($aModuleInfo)){
+						$this->CompleteModuleInfoWithFilePath($aModuleInfo);
+						return $aModuleInfo;
+					}
+				}
+			}
+		} catch(ModuleFileReaderException $e) {
+			// Continue...
+			throw $e;
+		} catch(Exception $e) {
+			// Continue...
+			throw new ModuleFileReaderException("Eval of $sModuleFilePath caused an exception: ".$e->getMessage(), 0, $e, $sModuleFilePath);
+		}
+
+		throw new ModuleFileReaderException("No proper call to SetupWebPage::AddModule found in module file", 0, null, $sModuleFilePath);
+	}
+
+	/**
+	 * Read the information from a module file (module.xxx.php)
+	 * Warning: this method is using eval() function to load the ModuleInstallerAPI classes.
+	 * Current method is never called at design/runtime. It is acceptable to use it during setup only.
+	 * @param string $sModuleFile
+	 * @return array
+	 * @throws ModuleFileReaderException
+	 */
+	public function ReadModuleFileInformationUnsafe(string $sModuleFilePath) : array
 	{
 		$aModuleInfo = []; // will be filled by the "eval" line below...
 		try
@@ -84,52 +130,6 @@ class ModuleFileReader {
 		return $aModuleInfo;
 	}
 
-
-	/**
-	 * Read the information from a module file (module.xxx.php)
-	 * @param string $sModuleFile
-	 * @return array
-	 * @throws ModuleFileReaderException
-	 */
-	public function ReadModuleFileConfiguration(string $sModuleFilePath) : array
-	{
-		try
-		{
-			$aNodes = ModuleFileParser::GetInstance()->ParsePhpCode(file_get_contents($sModuleFilePath));
-		}
-		catch (PhpParser\Error $e) {
-			throw new \ModuleFileReaderException($e->getMessage(), 0, $e, $sModuleFilePath);
-		}
-
-		try {
-			foreach ($aNodes as $sKey => $oNode) {
-				if ($oNode instanceof \PhpParser\Node\Stmt\Expression) {
-					$aModuleInfo = ModuleFileParser::GetInstance()->GetModuleInformationFromAddModuleCall($sModuleFilePath, $oNode);
-					if (! is_null($aModuleInfo)){
-						$this->CompleteModuleInfoWithFilePath($aModuleInfo);
-						return $aModuleInfo;
-					}
-				}
-
-				if ($oNode instanceof PhpParser\Node\Stmt\If_) {
-					$aModuleInfo = ModuleFileParser::GetInstance()->GetModuleInformationFromIf($sModuleFilePath, $oNode);
-					if (! is_null($aModuleInfo)){
-						$this->CompleteModuleInfoWithFilePath($aModuleInfo);
-						return $aModuleInfo;
-					}
-				}
-			}
-		} catch(ModuleFileReaderException $e) {
-			// Continue...
-			throw $e;
-		} catch(Exception $e) {
-			// Continue...
-			throw new ModuleFileReaderException("Eval of $sModuleFilePath caused an exception: ".$e->getMessage(), 0, $e, $sModuleFilePath);
-		}
-
-		throw new ModuleFileReaderException("No proper call to SetupWebPage::AddModule found in module file", 0, null, $sModuleFilePath);
-	}
-
 	/**
 	 *
 	 * Internal trick: additional path is added into the module info structure to handle ModuleInstallerAPI execution during setup
@@ -153,7 +153,7 @@ class ModuleFileReader {
 		$sModuleInstallerClass = $aModuleInfo['installer'];
 		if (!class_exists($sModuleInstallerClass)) {
 			$sModuleFilePath = $aModuleInfo['module_file_path'];
-			$this->ReadModuleFileConfigurationUnsafe($sModuleFilePath);
+			$this->ReadModuleFileInformationUnsafe($sModuleFilePath);
 		}
 
 		if (!class_exists($sModuleInstallerClass))

@@ -72,9 +72,7 @@ class ModuleFileParser {
 			throw new ModuleFileReaderException("2nd parameter to SetupWebPage::AddModule not a string: " . get_class($oModuleId->value), 0, null, $sModuleFilePath);
 		}
 
-		/** @var PhpParser\Node\Scalar\String_ $sModuleIdStringObj */
-		$sModuleIdStringObj = $oModuleId->value;
-		$sModuleId = $sModuleIdStringObj->value;
+		$sModuleId = $oModuleId->value->value;
 
 		$oModuleConfigInfo = $aArgs[2];
 		if (false === ($oModuleConfigInfo instanceof PhpParser\Node\Arg)) {
@@ -92,6 +90,7 @@ class ModuleFileParser {
 		if (! is_array($aModuleConfig)){
 			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
 		}
+
 		return [
 			$sModuleFilePath,
 			$sModuleId,
@@ -102,37 +101,40 @@ class ModuleFileParser {
 	public function FillModuleInformationFromArray(PhpParser\Node\Expr\Array_ $oArray, array &$aModuleInformation) : void
 	{
 		$iIndex=0;
+
 		/** @var \PhpParser\Node\Expr\ArrayItem $oValue */
 		foreach ($oArray->items as $oArrayItem){
 			if ($oArrayItem->key instanceof PhpParser\Node\Scalar\String_) {
 				//dictionnary
 				$sKey = $oArrayItem->key->value;
 			} else if ($oArrayItem->key instanceof \PhpParser\Node\Expr\ConstFetch) {
+				//dictionnary
 				$sKey = $this->EvaluateConstantExpression($oArrayItem->key);
 				if (is_null($sKey)){
 					continue;
 				}
-			}else {
+			} else {
+				//array
 				$sKey = $iIndex++;
 			}
 
 			$oValue = $oArrayItem->value;
-
 			if ($oValue instanceof PhpParser\Node\Expr\Array_) {
 				$aSubConfig=[];
 				$this->FillModuleInformationFromArray($oValue, $aSubConfig);
 				$aModuleInformation[$sKey]=$aSubConfig;
-			}
-
-			if ($oValue instanceof PhpParser\Node\Scalar\String_||$oValue instanceof PhpParser\Node\Scalar\Int_) {
-				$aModuleInformation[$sKey]=$oValue->value;
 				continue;
 			}
 
-			if ($oValue instanceof \PhpParser\Node\Expr\ConstFetch) {
-				$oEvaluatedConstant = $this->EvaluateConstantExpression($oValue);
-				$aModuleInformation[$sKey]= $oEvaluatedConstant;
+			try {
+				$oEvaluatuedValue = $this->EvaluateExpression($oValue);
+			} catch(ModuleFileReaderException $e){
+				//required to support legacy below dump dependency
+				//'dependencies' => ['itop-config-mgmt/2.0.0'||'itop-structure/3.0.0']
+				continue;
 			}
+
+			$aModuleInformation[$sKey]=$oEvaluatuedValue;
 		}
 	}
 
@@ -155,6 +157,7 @@ class ModuleFileParser {
 					}
 				}
 			}
+
 			return null;
 		}
 
@@ -163,19 +166,13 @@ class ModuleFileParser {
 				/** @var \PhpParser\Node\Stmt\ElseIf_ $oElseIfSubNode */
 				$bCondition = $this->EvaluateExpression($oElseIfSubNode->cond);
 				if ($bCondition) {
-					$aModuleConfig = $this->GetModuleConfigurationFromStatement($sModuleFilePath, $oElseIfSubNode->stmts);
-					if (!is_null($aModuleConfig)) {
-						return $aModuleConfig;
-					}
-					break;
+					return $this->GetModuleConfigurationFromStatement($sModuleFilePath, $oElseIfSubNode->stmts);
 				}
 			}
 		}
 
 		if (! is_null($oNode->else)) {
-			$aModuleConfig = $this->GetModuleConfigurationFromStatement($sModuleFilePath, $oNode->else->stmts);
-
-			return $aModuleConfig;
+			return $this->GetModuleConfigurationFromStatement($sModuleFilePath, $oNode->else->stmts);
 		}
 
 		return null;
@@ -195,59 +192,74 @@ class ModuleFileParser {
 		return null;
 	}
 
-	//TODO replace eval
 	public function EvaluateConstantExpression(\PhpParser\Node\Expr\ArrayItem|\PhpParser\Node\Expr\ConstFetch $oValue) : mixed
 	{
-		$bResult = false;
-		try{
-			@eval('$bResult = '.$oValue->name.';');
-		} catch (Throwable $t) {
-			throw new ModuleFileReaderException("Eval of ' . $oValue->name . ' caused an error: ".$t->getMessage());
-		}
-
-		return $bResult;
+		return $this->UnprotectedComputeBooleanExpression($oValue->name);
 	}
 
-	private function GetMixedValueForBooleanOperatorEvaluation(\PhpParser\Node\Expr $oExpr) : string
+	public function EvaluateClassConstantExpression(\PhpParser\Node\Expr\ClassConstFetch $oValue) : mixed
 	{
-		if ($oExpr instanceof \PhpParser\Node\Scalar\Int_ || $oExpr instanceof \PhpParser\Node\Scalar\Float_){
-			return "" . $oExpr->value;
+		$sClassName = $oValue->class->name;
+		$sProperty = $oValue->name->name;
+		if (class_exists($sClassName)){
+			$class = new \ReflectionClass($sClassName);
+			if (array_key_exists($sProperty, $class->getConstants())) {
+				$oReflectionConstant = $class->getReflectionConstant($sProperty);
+				if ($oReflectionConstant->isPublic()){
+					return $class->getConstant($sProperty);
+				}
+			}
 		}
 
-		return $this->EvaluateExpression($oExpr) ? "true" : "false";
+		if ('class' === $sProperty){
+			return $sClassName;
+		}
+
+		return null;
+	}
+
+	public function EvaluateStaticPropertyExpression(\PhpParser\Node\Expr\StaticPropertyFetch $oValue) : mixed
+	{
+		$sClassName = $oValue->class->name;
+		$sProperty = $oValue->name->name;
+		if (class_exists($sClassName)){
+			$class = new \ReflectionClass($sClassName);
+			if (array_key_exists($sProperty, $class->getStaticProperties())) {
+				$oReflectionProperty = $class->getProperty($sProperty);
+				if ($oReflectionProperty->isPublic()){
+					return $class->getStaticPropertyValue($sProperty);
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
 	 * @param string $sBooleanExpr
 	 *
-	 * @return bool
+	 * @return mixed
 	 * @throws ModuleFileReaderException
 	 */
-	private function UnprotectedComputeBooleanExpression(string $sBooleanExpr) : bool
+	private function UnprotectedComputeBooleanExpression(string $sBooleanExpr) : mixed
 	{
-		$bResult = false;
 		try{
+			$bResult = null;
 			@eval('$bResult = '.$sBooleanExpr.';');
+			return $bResult;
 		} catch (Throwable $t) {
 			throw new ModuleFileReaderException("Eval of '$sBooleanExpr' caused an error: ".$t->getMessage());
 		}
-
-		return $bResult;
 	}
 
 	/**
 	 * @param string $sBooleanExpr
-	 * @param bool $bSafe: when true, evaluation relies on unsafe eval() call
 	 *
 	 * @return bool
 	 * @throws ModuleFileReaderException
 	 */
-	public function EvaluateBooleanExpression(string $sBooleanExpr, $bSafe=true) : bool
+	public function EvaluateBooleanExpression(string $sBooleanExpr) : bool
 	{
-		if (! $bSafe){
-			return 	$this->UnprotectedComputeBooleanExpression($sBooleanExpr);
-		}
-
 		$sPhpContent = <<<PHP
 <?php
 $sBooleanExpr;
@@ -255,43 +267,68 @@ PHP;
 		try{
 			$aNodes = $this->ParsePhpCode($sPhpContent);
 			$oExpr = $aNodes[0];
-			return $this->EvaluateExpression($oExpr->expr);
+			$oRes = $this->EvaluateExpression($oExpr->expr);
+
+			return (bool) $oRes;
+
 		} catch (Throwable $t) {
 			throw new ModuleFileReaderException("Eval of '$sBooleanExpr' caused an error:".$t->getMessage());
 		}
 	}
 
-	private function EvaluateExpression(\PhpParser\Node\Expr $oCondExpression) : bool
+	private function GetMixedValueToString(mixed $oExpr) : string
 	{
-		if ($oCondExpression instanceof \PhpParser\Node\Expr\BinaryOp){
-			$sExpr = $this->GetMixedValueForBooleanOperatorEvaluation($oCondExpression->left)
-				. " "
-				. $oCondExpression->getOperatorSigil()
-				. " "
-				. $this->GetMixedValueForBooleanOperatorEvaluation($oCondExpression->right);
-			return $this->EvaluateBooleanExpression($sExpr, false);
+		if (false === $oExpr){
+			return "false";
 		}
 
-		if ($oCondExpression instanceof \PhpParser\Node\Expr\BooleanNot){
-			return ! $this->EvaluateExpression($oCondExpression->expr);
+		if (true === $oExpr){
+			return "true";
 		}
 
-		if ($oCondExpression instanceof \PhpParser\Node\Expr\FuncCall){
-			return $this->EvaluateCallFunction($oCondExpression);
-		}
-
-		if ($oCondExpression instanceof \PhpParser\Node\Expr\StaticCall){
-			return $this->EvaluateStaticCallFunction($oCondExpression);
-		}
-
-		if ($oCondExpression instanceof \PhpParser\Node\Expr\ConstFetch){
-			return $this->EvaluateConstantExpression($oCondExpression);
-		}
-
-		return true;
+		return $oExpr;
 	}
 
-	private function EvaluateCallFunction(\PhpParser\Node\Expr\FuncCall $oFunct) : bool
+	private function EvaluateExpression(\PhpParser\Node\Expr $oExpression) : mixed
+	{
+		if ($oExpression instanceof \PhpParser\Node\Expr\BinaryOp){
+			$sExpr = sprintf("%s %s %s",
+				$this->GetMixedValueToString($this->EvaluateExpression($oExpression->left)),
+				$oExpression->getOperatorSigil(),
+				$this->GetMixedValueToString($this->EvaluateExpression($oExpression->right))
+			);
+			//return $this->UnprotectedComputeBooleanExpression($sBooleanExpr);;
+			return $this->UnprotectedComputeBooleanExpression($sExpr);
+		}
+
+		if ($oExpression instanceof \PhpParser\Node\Expr\BooleanNot){
+			return ! $this->EvaluateExpression($oExpression->expr);
+		}
+
+		if ($oExpression instanceof \PhpParser\Node\Expr\FuncCall){
+			return $this->EvaluateCallFunction($oExpression);
+		}
+
+		if ($oExpression instanceof \PhpParser\Node\Expr\StaticCall){
+			return $this->EvaluateStaticCallFunction($oExpression);
+		}
+
+		if ($oExpression instanceof \PhpParser\Node\Expr\ConstFetch){
+			return $this->EvaluateConstantExpression($oExpression);
+		}
+
+		if ($oExpression instanceof \PhpParser\Node\Expr\ClassConstFetch) {
+			return $this->EvaluateClassConstantExpression($oExpression);
+		}
+
+		if ($oExpression instanceof \PhpParser\Node\Expr\StaticPropertyFetch) {
+			return $this->EvaluateStaticPropertyExpression($oExpression);
+		}
+
+		return $oExpression->value;
+	}
+
+	private function EvaluateCallFunction(\PhpParser\Node\Expr\FuncCall $oFunct) : mixed
 	{
 		$sFunction = $oFunct->name->name;
 		$aWhiteList = ["function_exists", "class_exists", "method_exists"];
@@ -306,17 +343,17 @@ PHP;
 		}
 
 		$oReflectionFunction = new ReflectionFunction($sFunction);
-		return (bool)$oReflectionFunction->invoke(...$aArgs);
+		return $oReflectionFunction->invoke(...$aArgs);
 	}
 
 	/**
 	 * @param \PhpParser\Node\Expr\StaticCall $oStaticCall
 	 *
-	 * @return bool
+	 * @return mixed
 	 * @throws \ModuleFileReaderException
 	 * @throws \ReflectionException
 	 */
-	private function EvaluateStaticCallFunction(\PhpParser\Node\Expr\StaticCall $oStaticCall) : bool
+	private function EvaluateStaticCallFunction(\PhpParser\Node\Expr\StaticCall $oStaticCall) : mixed
 	{
 		$sClassName = $oStaticCall->class->name;
 		$sMethodName = $oStaticCall->name->name;
@@ -338,6 +375,6 @@ PHP;
 			throw new ModuleFileReaderException("StaticCall $sStaticCallDescription not public");
 		}
 
-		return (bool) $method->invokeArgs(null, $aArgs);
+		return $method->invokeArgs(null, $aArgs);
 	}
 }

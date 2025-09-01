@@ -304,7 +304,7 @@ class iTopExtensionsMap
 					{
 						// Found a module
 						try {
-							$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileConfiguration($sSearchDir.'/'.$sFile);
+							$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sSearchDir.'/'.$sFile);
 						} catch(ModuleFileReaderException $e){
 							continue;
 						}

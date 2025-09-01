@@ -6,9 +6,14 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ModuleFileParser;
 use ModuleFileReader;
 use PhpParser\ParserFactory;
+use SetupUtils;
 
 class ModuleFileParserTest extends ItopDataTestCase
 {
+	public static $STATIC_PROPERTY = 123;
+	private static $PRIVATE_STATIC_PROPERTY = 123;
+	private const PRIVATE_CONSTANT = 123;
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -20,17 +25,20 @@ class ModuleFileParserTest extends ItopDataTestCase
 		return [
 			"true" => [ "expr" => "true", "expected" => true],
 			"(true)" => [ "expr" => "(true)", "expected" => true],
+			"(false|true)" => [ "expr" => "(false|true)", "expected" => true],
 			"(false||true)" => [ "expr" => "(false||true)", "expected" => true],
 			"false" => [ "expr" => "false", "expected" => false],
 			"(false)" => [ "expr" => "(false)", "expected" => false],
 			"(false&&true)" => [ "expr" => "(false&&true)", "expected" => false],
+			"(false&true)" => [ "expr" => "(false&true)", "expected" => false],
+			"10 * 10" => [ "expr" => "10 * 10", "expected" => 100],
 		];
 	}
 
 	/**
 	 * @dataProvider EvaluateBooleanExpressionProvider
 	 */
-	public function testEvaluateBooleanExpression(string $sBooleanExpression, bool $expected){
+	public function testEvaluateBooleanExpression(string $sBooleanExpression, $expected){
 		$this->assertEquals($expected, ModuleFileParser::GetInstance()->EvaluateBooleanExpression($sBooleanExpression), $sBooleanExpression);
 	}
 
@@ -90,6 +98,67 @@ PHP;
 		$this->assertEquals(APPROOT, $val);
 	}
 
+	public function testEvaluateClassConstantExpression_PublicConstant()
+	{
+		$this->validateEvaluateClassConstantExpression('SetupUtils::PHP_MIN_VERSION', SetupUtils::PHP_MIN_VERSION);
+	}
+
+	public function testEvaluateClassConstantExpression_PrivateConstantShouldNotBeFound()
+	{
+		$this->validateEvaluateClassConstantExpression('Combodo\iTop\Test\UnitTest\Setup\ModuleDiscovery\ModuleFileParserTest::PRIVATE_CONSTANT', null);
+	}
+
+	public function testEvaluateClassConstant_UnknownConstant()
+	{
+		$this->validateEvaluateClassConstantExpression('SetupUtils::UNKOWN_CONSTANT', null);
+	}
+
+	public function testEvaluateClassConstant_UnknownClass()
+	{
+		$this->validateEvaluateClassConstantExpression('UnknownGaBuZoMeuClass::PHP_MIN_VERSION', null);
+	}
+
+	public function testEvaluateClassConstant_UnknownClassGetClass()
+	{
+		$this->validateEvaluateClassConstantExpression('UnknownGaBuZoMeuClass::class', 'UnknownGaBuZoMeuClass');
+	}
+
+	public function validateEvaluateClassConstantExpression($sExpression, $expected)
+	{
+		$sPHP = <<<PHP
+<?php
+$sExpression;
+PHP;
+		$aNodes = ModuleFileParser::GetInstance()->ParsePhpCode($sPHP);
+		/** @var \PhpParser\Node\Expr $oExpr */
+		$oExpr = $aNodes[0];
+		$val = $this->InvokeNonPublicMethod(ModuleFileParser::class, "EvaluateClassConstantExpression", ModuleFileParser::GetInstance(), [$oExpr->expr]);
+		$this->assertEquals($expected, $val, "$sExpression");
+	}
+
+	public function testEvaluateClassConstant_PublicGetStaticProperty()
+	{
+		$this->validateEvaluateStaticPropertyExpression('Combodo\iTop\Test\UnitTest\Setup\ModuleDiscovery\ModuleFileParserTest::$STATIC_PROPERTY', ModuleFileParserTest::$STATIC_PROPERTY);
+	}
+
+	public function testEvaluateClassConstant_PrivateGetStaticPropertyShouldNotBeFound()
+	{
+		$this->validateEvaluateStaticPropertyExpression('Combodo\iTop\Test\UnitTest\Setup\ModuleDiscovery\ModuleFileParserTest::$PRIVATE_STATIC_PROPERTY', null);
+	}
+
+	public function validateEvaluateStaticPropertyExpression($sExpression, $expected)
+	{
+		$sPHP = <<<PHP
+<?php
+$sExpression;
+PHP;
+		$aNodes = ModuleFileParser::GetInstance()->ParsePhpCode($sPHP);
+		/** @var \PhpParser\Node\Expr $oExpr */
+		$oExpr = $aNodes[0];
+		$val = $this->InvokeNonPublicMethod(ModuleFileParser::class, "EvaluateStaticPropertyExpression", ModuleFileParser::GetInstance(), [$oExpr->expr]);
+		$this->assertEquals($expected, $val, "$sExpression");
+	}
+
 	public static function EvaluateExpressionBooleanProvider() {
 		$sTruePHP = <<<PHP
 <?php
@@ -99,6 +168,11 @@ if (COND){
 PHP;
 
 		return [
+			'"true"' => [
+				"code" => str_replace("COND", '"true"', $sTruePHP),
+				"bool_expected" => "true",
+
+			],
 			"true" => [
 				"code" => str_replace("COND", "true", $sTruePHP),
 				"bool_expected" => true,
@@ -107,6 +181,11 @@ PHP;
 			"false" => [
 				"code" => str_replace("COND", "false", $sTruePHP),
 				"bool_expected" => false,
+
+			],
+			'"false"' => [
+				"code" => str_replace("COND", '"false"', $sTruePHP),
+				"bool_expected" => "false",
 
 			],
 			"not ok" => [
