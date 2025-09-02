@@ -1332,6 +1332,11 @@ EOF
 			$aClassParams['is_link'] = 'true';
 		}
 
+		$oWorkingTimeClass = $oProperties->GetOptionalElement('working_time');
+		if ($oWorkingTimeClass) {
+			$sWorkingTimeClass = $oWorkingTimeClass->GetText();
+			$aClassParams['working_time'] =  "'$sWorkingTimeClass'";
+		}
 		// Naming
 		$sComplementaryNameAttCode = "";
 		if ($oNaming = $oProperties->GetOptionalElement('naming')) {
