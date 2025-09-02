@@ -40,6 +40,7 @@
  */
 
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/parameters.class.inc.php');
@@ -1787,7 +1788,7 @@ EOF
 								// Check the module selection
 								try {
 									SetupInfo::SetSelectedModules($aModules);
-									$bSelected = \evaluation\expression\PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aInfo['auto_select']);
+									$bSelected = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aInfo['auto_select']);
 								}
 								catch (ModuleFileReaderException $e) {
 									//logged already
@@ -1865,7 +1866,7 @@ EOF
 						try
 						{
 							SetupInfo::SetSelectedModules($aModules);
-							$bSelected = \evaluation\expression\PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aModule['auto_select']);
+							$bSelected = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aModule['auto_select']);
 							if ($bSelected)
 							{
 								$aModules[$sModuleId] = true; // store the Id of the selected module

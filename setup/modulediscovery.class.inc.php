@@ -19,6 +19,8 @@
  *
  */
 
+use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+
 require_once(APPROOT.'setup/modulediscovery/ModuleFileReader.php');
 
 class MissingDependencyException extends CoreException
@@ -391,7 +393,7 @@ class ModuleDiscovery
 			{
 				$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $sDepString);
 				try{
-					$bResult = \evaluation\expression\PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($sBooleanExpr);
+					$bResult = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($sBooleanExpr);
 				} catch(ModuleFileReaderException $e){
 					//logged already
 					echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";

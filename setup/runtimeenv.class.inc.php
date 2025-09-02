@@ -24,6 +24,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+
 require_once APPROOT."setup/modulediscovery.class.inc.php";
 require_once APPROOT.'setup/modelfactory.class.inc.php';
 require_once APPROOT.'setup/compiler.class.inc.php';
@@ -459,7 +461,7 @@ class RunTimeEnvironment
 				{
 					SetupInfo::SetSelectedModules($aRet);
 					try{
-						$bSelected = \evaluation\expression\PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($oModule->GetAutoSelect());
+						$bSelected = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($oModule->GetAutoSelect());
 						if ($bSelected)
 						{
 							$aRet[$oModule->GetName()] = $oModule; // store the Id of the selected module
