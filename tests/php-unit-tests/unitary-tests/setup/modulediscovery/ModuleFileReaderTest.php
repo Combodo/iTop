@@ -86,10 +86,6 @@ class ModuleFileReaderTest extends ItopDataTestCase
 		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
 		$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileInformationUnsafe($sModuleFilePath);
 
-		//do not check dumb conf on dependencies
-		$aDependencies=$aRes[2]['dependencies'];
-		$aDependencies= array_merge([true], $aDependencies);
-		$aRes[2]['dependencies']=$aDependencies;
 		$this->assertEquals($aExpected, $aRes);
 	}
 
