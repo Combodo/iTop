@@ -1,11 +1,10 @@
 <?php
 
-use evaluation\expression\PhpExpressionEvaluator;
-use PhpParser\Node\Expr;
+use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\ParserFactory;
+require_once APPROOT . 'sources/PhpParser/Evaluation/PhpExpressionEvaluator.php';
 
-require_once __DIR__ . "/evaluation/expression/PhpExpressionEvaluator.php";
 class ModuleFileParser {
 	private static ModuleFileParser $oInstance;
 

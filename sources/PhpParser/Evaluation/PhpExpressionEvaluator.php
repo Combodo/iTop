@@ -1,8 +1,8 @@
 <?php
 
-#Combodo\\iTop\\
-namespace evaluation\expression;
+namespace Combodo\iTop\PhpParser\Evaluation;
 
+use ModuleFileParser;
 use PhpParser\Node\Expr;
 
 require_once __DIR__ . '/iExprEvaluator.php';
@@ -22,7 +22,7 @@ class PhpExpressionEvaluator {
 
 			foreach (glob(__DIR__ . "/**Evaluator.php") as $sFile){
 				require_once $sFile;
-				$sNamespace = 'evaluation\\expression\\';
+				$sNamespace = 'Combodo\\iTop\PhpParser\\Evaluation\\';
 				$sClass = $sNamespace. str_replace(".php", "", basename($sFile));
 				$oReflectionClass = new \ReflectionClass($sClass);
 				if ($oReflectionClass->isInstantiable()
@@ -69,7 +69,7 @@ class PhpExpressionEvaluator {
 $sExpr;
 PHP;
 		try{
-			$aNodes = \ModuleFileParser::GetInstance()->ParsePhpCode($sPhpContent);
+			$aNodes = ModuleFileParser::GetInstance()->ParsePhpCode($sPhpContent);
 			$oExpr = $aNodes[0];
 			return $this->EvaluateExpression($oExpr->expr);
 

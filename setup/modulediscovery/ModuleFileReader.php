@@ -1,8 +1,5 @@
 <?php
 
-use PhpParser\ParserFactory;
-use PhpParser\Node\Expr\Assign;
-
 require_once __DIR__ . '/ModuleFileParser.php';
 require_once __DIR__ . '/ModuleFileReaderException.php';
 

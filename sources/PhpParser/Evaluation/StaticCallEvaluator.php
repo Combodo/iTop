@@ -1,6 +1,6 @@
 <?php
 
-namespace evaluation\expression;
+namespace Combodo\iTop\PhpParser\Evaluation;;
 
 use ModuleFileReaderException;
 use PhpParser\Node\Expr;
