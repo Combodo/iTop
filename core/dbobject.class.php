@@ -4927,7 +4927,7 @@ abstract class DBObject implements iDisplay
 	{
 		if (is_null($sWorkingTimeComputer))
 		{
-			$sWorkingTimeComputer = class_exists('SLAComputation') ? 'SLAComputation' : 'DefaultWorkingTimeComputer';
+			$sWorkingTimeComputer = MetaModel::GetWorkingTime(get_class($this));
 		}
 		$oComputer = new $sWorkingTimeComputer();
 		$aCallSpec = array($oComputer, 'GetOpenDuration');

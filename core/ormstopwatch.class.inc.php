@@ -289,7 +289,7 @@ class ormStopWatch
 		$sWorkingTimeComputer = $oAttDef->Get('working_time_computing');
 		if ($sWorkingTimeComputer == '')
 		{
-			$sWorkingTimeComputer = class_exists('SLAComputation') ? 'SLAComputation' : 'DefaultWorkingTimeComputer';
+			$sWorkingTimeComputer = MetaModel::GetWorkingTime(get_class($oObject));
 		}
 		$oComputer = new $sWorkingTimeComputer();
 		$aCallSpec = array($oComputer, 'GetDeadline');
@@ -318,7 +318,7 @@ class ormStopWatch
 		$sWorkingTimeComputer = $oAttDef->Get('working_time_computing');
 		if ($sWorkingTimeComputer == '')
 		{
-			$sWorkingTimeComputer = class_exists('SLAComputation') ? 'SLAComputation' : 'DefaultWorkingTimeComputer';
+			$sWorkingTimeComputer = MetaModel::GetWorkingTime(get_class($oObject));
 		}
 		$oComputer = new $sWorkingTimeComputer();
 		$aCallSpec = array($oComputer, 'GetOpenDuration');
