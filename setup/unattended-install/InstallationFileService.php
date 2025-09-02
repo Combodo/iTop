@@ -1,5 +1,7 @@
 <?php
 
+use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/setup/setuppage.class.inc.php');
 require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
@@ -270,7 +272,7 @@ class InstallationFileService {
 		{
 			try {
 				SetupInfo::SetSelectedModules($this->aSelectedModules);
-				$bSelected =\evaluation\expression\PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aModule['auto_select']);
+				$bSelected = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aModule['auto_select']);
 				if ($bSelected)
 				{
 					// Modules in data/production-modules/ are considered as mandatory and always installed
