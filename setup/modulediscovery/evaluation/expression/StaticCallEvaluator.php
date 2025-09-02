@@ -18,7 +18,7 @@ class StaticCallEvaluator implements iExprEvaluator {
 		$sClassName = $oExpr->class->name;
 		$sMethodName = $oExpr->name->name;
 
-		$aWhiteList = ["SetupInfo::ModuleIsSelected"];
+		$aWhiteList = ["SetupInfo::ModuleIsSelected", "utils::GetItopVersionWikiSyntax"];
 		$sStaticCallDescription = "$sClassName::$sMethodName";
 		if (! in_array($sStaticCallDescription, $aWhiteList)){
 			throw new ModuleFileReaderException("StaticCall $sStaticCallDescription not supported");

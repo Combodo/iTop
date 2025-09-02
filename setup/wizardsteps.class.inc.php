@@ -1787,7 +1787,7 @@ EOF
 								// Check the module selection
 								try {
 									SetupInfo::SetSelectedModules($aModules);
-									$bSelected = ModuleFileParser::GetInstance()->EvaluateBooleanExpression($aInfo['auto_select']);
+									$bSelected = \evaluation\expression\PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aInfo['auto_select']);
 								}
 								catch (ModuleFileReaderException $e) {
 									//logged already
@@ -1865,7 +1865,7 @@ EOF
 						try
 						{
 							SetupInfo::SetSelectedModules($aModules);
-							$bSelected = ModuleFileParser::GetInstance()->EvaluateBooleanExpression($aModule['auto_select']);
+							$bSelected = \evaluation\expression\PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aModule['auto_select']);
 							if ($bSelected)
 							{
 								$aModules[$sModuleId] = true; // store the Id of the selected module

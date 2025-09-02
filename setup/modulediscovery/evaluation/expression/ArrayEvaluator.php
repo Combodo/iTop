@@ -6,6 +6,7 @@ use ModuleFileReaderException;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ConstFetch;
+use PhpParser\Node\Scalar\Int_;
 use PhpParser\Node\Scalar\String_;
 
 class ArrayEvaluator implements iExprEvaluator {
@@ -20,7 +21,7 @@ class ArrayEvaluator implements iExprEvaluator {
 		$aModuleInformation=[];
 		/** @var \PhpParser\Node\Expr\ArrayItem $oValue */
 		foreach ($oExpr->items as $oArrayItem){
-			if ($oArrayItem->key instanceof String_||$oArrayItem->key instanceof ConstFetch) {
+			if ($oArrayItem->key instanceof Int_||$oArrayItem->key instanceof String_||$oArrayItem->key instanceof ConstFetch) {
 				//dictionnary
 				$sKey = PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oArrayItem->key);
 				if (is_null($sKey)){

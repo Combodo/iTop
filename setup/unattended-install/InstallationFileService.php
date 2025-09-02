@@ -270,7 +270,7 @@ class InstallationFileService {
 		{
 			try {
 				SetupInfo::SetSelectedModules($this->aSelectedModules);
-				$bSelected = ModuleFileParser::GetInstance()->EvaluateBooleanExpression($aModule['auto_select']);
+				$bSelected =\evaluation\expression\PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aModule['auto_select']);
 				if ($bSelected)
 				{
 					// Modules in data/production-modules/ are considered as mandatory and always installed

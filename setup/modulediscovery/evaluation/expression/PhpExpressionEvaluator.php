@@ -1,5 +1,6 @@
 <?php
 
+#Combodo\\iTop\\
 namespace evaluation\expression;
 
 use PhpParser\Node\Expr;
@@ -61,7 +62,7 @@ class PhpExpressionEvaluator {
 		return $this->ParseAndEvaluateExpression($sBooleanExpr);
 	}
 
-	public function ParseAndEvaluateExpression(string $sExpr) : bool
+	public function ParseAndEvaluateExpression(string $sExpr) : mixed
 	{
 		$sPhpContent = <<<PHP
 <?php

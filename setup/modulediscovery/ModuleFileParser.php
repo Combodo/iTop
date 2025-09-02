@@ -75,7 +75,7 @@ class ModuleFileParser {
 			throw new ModuleFileReaderException("2nd parameter to SetupWebPage::AddModule not a string: " . get_class($oModuleId->value), 0, null, $sModuleFilePath);
 		}
 
-		$sModuleId = $this->EvaluateExpression($oModuleId->value);
+		$sModuleId = PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oModuleId->value);
 
 		$oModuleConfigInfo = $aArgs[2];
 		if (false === ($oModuleConfigInfo instanceof PhpParser\Node\Arg)) {
@@ -87,7 +87,7 @@ class ModuleFileParser {
 			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
 		}
 
-		$aModuleConfig = $this->EvaluateExpression($oModuleConfigInfo->value);
+		$aModuleConfig = PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oModuleConfigInfo->value);
 
 		if (! is_array($aModuleConfig)){
 			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
@@ -109,7 +109,7 @@ class ModuleFileParser {
 	 */
 	public function GetModuleInformationFromIf(string $sModuleFilePath, \PhpParser\Node\Stmt\If_ $oNode) : ?array
 	{
-		$bCondition = $this->EvaluateExpression($oNode->cond);
+		$bCondition = PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oNode->cond);
 		if ($bCondition) {
 			foreach ($oNode->stmts as $oSubNode) {
 				if ($oSubNode instanceof \PhpParser\Node\Stmt\Expression) {
@@ -126,7 +126,7 @@ class ModuleFileParser {
 		if (! is_null($oNode->elseifs)) {
 			foreach ($oNode->elseifs as $oElseIfSubNode) {
 				/** @var \PhpParser\Node\Stmt\ElseIf_ $oElseIfSubNode */
-				$bCondition = $this->EvaluateExpression($oElseIfSubNode->cond);
+				$bCondition = PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oElseIfSubNode->cond);
 				if ($bCondition) {
 					return $this->GetModuleConfigurationFromStatement($sModuleFilePath, $oElseIfSubNode->stmts);
 				}
@@ -152,21 +152,5 @@ class ModuleFileParser {
 		}
 
 		return null;
-	}
-
-	/**
-	 * @param string $sBooleanExpr
-	 *
-	 * @return bool
-	 * @throws ModuleFileReaderException
-	 */
-	public function EvaluateBooleanExpression(string $sBooleanExpr) : bool
-	{
-		return PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($sBooleanExpr);
-	}
-
-	private function EvaluateExpression(Expr $oExpression) : mixed
-	{
-		return  PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oExpression);
 	}
 }

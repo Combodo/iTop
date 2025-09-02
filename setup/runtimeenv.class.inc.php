@@ -459,7 +459,7 @@ class RunTimeEnvironment
 				{
 					SetupInfo::SetSelectedModules($aRet);
 					try{
-						$bSelected = ModuleFileParser::GetInstance()->EvaluateBooleanExpression($oModule->GetAutoSelect());
+						$bSelected = \evaluation\expression\PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($oModule->GetAutoSelect());
 						if ($bSelected)
 						{
 							$aRet[$oModule->GetName()] = $oModule; // store the Id of the selected module

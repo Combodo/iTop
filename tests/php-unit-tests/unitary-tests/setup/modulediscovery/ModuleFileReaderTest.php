@@ -30,16 +30,28 @@ class ModuleFileReaderTest extends ItopDataTestCase
 
 	/*public function testAllReadModuleFileConfiguration()
 	{
+		$_SERVER=[
+			'SERVER_NAME' => 'titi'
+		];
+
 		$aErrors=[];
-		foreach (glob(__DIR__.'/resources/all_factory/module.*.php') as $sModuleFilePath){
-			$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
+		foreach (glob(__DIR__.'/resources/all_designer/**.php') as $sModuleFilePath){
+			//var_dump($sModuleFilePath);
+			try{
+				$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
+			} catch(\Exception $e){
+				$aErrors[]=basename($sModuleFilePath);
+				continue;
+			}
+
 			$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileInformationUnsafe($sModuleFilePath);
 
 			if ($aExpected !== $aRes){
 				$aErrors[]=basename($sModuleFilePath);
 				continue;
 			}
-			//$this->assertEquals($aExpected, $aRes);
+			//break;
+			//$this->assertEquals($aExpected, $aRes, $sModuleFilePath);
 		}
 
 		$this->assertEquals([], $aErrors);

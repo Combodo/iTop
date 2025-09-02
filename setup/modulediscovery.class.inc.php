@@ -391,7 +391,7 @@ class ModuleDiscovery
 			{
 				$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $sDepString);
 				try{
-					$bResult = ModuleFileParser::GetInstance()->EvaluateBooleanExpression($sBooleanExpr);
+					$bResult = \evaluation\expression\PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($sBooleanExpr);
 				} catch(ModuleFileReaderException $e){
 					//logged already
 					echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";
