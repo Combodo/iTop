@@ -3,9 +3,9 @@
 namespace Combodo\iTop\PhpParser\Evaluation;
 
 use ModuleFileParser;
+use ModuleFileReaderException;
 use PhpParser\Node\Expr;
 
-require_once __DIR__ . '/iExprEvaluator.php';
 class PhpExpressionEvaluator {
 	private static PhpExpressionEvaluator $oInstance;
 
@@ -22,18 +22,35 @@ class PhpExpressionEvaluator {
 
 			foreach (glob(__DIR__ . "/**Evaluator.php") as $sFile){
 				require_once $sFile;
+				require_once $sFile;
 				$sNamespace = 'Combodo\\iTop\PhpParser\\Evaluation\\';
 				$sClass = $sNamespace. str_replace(".php", "", basename($sFile));
 				$oReflectionClass = new \ReflectionClass($sClass);
 				if ($oReflectionClass->isInstantiable()
-					&& $oReflectionClass->implementsInterface("{$sNamespace}iExprEvaluator")){
+					&& $oReflectionClass->implementsInterface(iExprEvaluator::class)){
 					$oClass = new $sClass;
-					static::$aPhpParserEvaluators[$oClass->GetHandledExpressionType()] = $oClass;
+
+					if (! is_null($oClass->GetHandledExpressionType())){
+						static::RegisterEvaluator($oClass, $oClass->GetHandledExpressionType());
+					}
+					if (! is_null($oClass->GetHandledExpressionTypes())) {
+						foreach ($oClass->GetHandledExpressionTypes() as $sHandledExpressionType){
+							static::RegisterEvaluator($oClass, $sHandledExpressionType);
+						}
+					}
 				}
 			}
 		}
 
 		return static::$oInstance;
+	}
+
+	private static function RegisterEvaluator(iExprEvaluator $oClass, string $sHandledExpressionType)
+	{
+		if (array_key_exists($sHandledExpressionType, static::$aPhpParserEvaluators)){
+			throw new \CoreException("Another Evaluator class already deals with $sHandledExpressionType");
+		}
+		static::$aPhpParserEvaluators[$sHandledExpressionType] = $oClass;
 	}
 
 	final public static function SetInstance(?PhpExpressionEvaluator $oInstance): void {
@@ -72,9 +89,8 @@ PHP;
 			$aNodes = ModuleFileParser::GetInstance()->ParsePhpCode($sPhpContent);
 			$oExpr = $aNodes[0];
 			return $this->EvaluateExpression($oExpr->expr);
-
 		} catch (\Throwable $t) {
-			throw new \ModuleFileReaderException("Eval of '$sExpr' caused an error:".$t->getMessage());
+			throw new ModuleFileReaderException("Eval of '$sExpr' caused an error:".$t->getMessage());
 		}
 	}
 }

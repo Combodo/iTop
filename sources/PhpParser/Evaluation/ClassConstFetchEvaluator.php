@@ -1,12 +1,12 @@
 <?php
 
-namespace Combodo\iTop\PhpParser\Evaluation;;
+namespace Combodo\iTop\PhpParser\Evaluation;
 
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\ClassConstFetch;
 
-class ClassConstFetchEvaluator implements iExprEvaluator {
-	public function GetHandledExpressionType(): string {
+class ClassConstFetchEvaluator extends AbstractExprEvaluator {
+	public function GetHandledExpressionType(): ?string {
 		return ClassConstFetch::class;
 	}
 

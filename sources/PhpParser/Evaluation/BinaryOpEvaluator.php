@@ -1,11 +1,11 @@
 <?php
 
-namespace Combodo\iTop\PhpParser\Evaluation;;
+namespace Combodo\iTop\PhpParser\Evaluation;
 
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\BinaryOp;
 
-abstract class BinaryOpEvaluator implements iExprEvaluator {
+abstract class BinaryOpEvaluator extends AbstractExprEvaluator {
 	abstract function EvaluateBinaryOperation(mixed $left, mixed $right) : mixed;
 
 	public function Evaluate(Expr $oExpr): mixed {

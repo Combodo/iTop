@@ -1,14 +1,14 @@
 <?php
 
-namespace Combodo\iTop\PhpParser\Evaluation;;
+namespace Combodo\iTop\PhpParser\Evaluation;
 
 use ModuleFileReaderException;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\FuncCall;
 use ReflectionFunction;
 
-class FuncCallEvaluator implements iExprEvaluator {
-	public function GetHandledExpressionType(): string {
+class FuncCallEvaluator extends AbstractExprEvaluator {
+	public function GetHandledExpressionType(): ?string {
 		return FuncCall::class;
 	}
 

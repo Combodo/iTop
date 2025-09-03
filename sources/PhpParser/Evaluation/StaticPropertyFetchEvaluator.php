@@ -1,12 +1,12 @@
 <?php
 
-namespace Combodo\iTop\PhpParser\Evaluation;;
+namespace Combodo\iTop\PhpParser\Evaluation;
 
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\StaticPropertyFetch;
 
-class StaticPropertyFetchEvaluator implements iExprEvaluator {
-	public function GetHandledExpressionType(): string {
+class StaticPropertyFetchEvaluator extends AbstractExprEvaluator {
+	public function GetHandledExpressionType(): ?string {
 		return StaticPropertyFetch::class;
 	}
 

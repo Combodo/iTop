@@ -2,15 +2,15 @@
 
 namespace Combodo\iTop\PhpParser\Evaluation;
 
-use PhpParser\Node\Expr\BinaryOp\GreaterOrEqual;
+use PhpParser\Node\Expr\BinaryOp\Mod;
 
-class GreaterOrEqualEvaluator extends BinaryOpEvaluator {
+class ModEvaluator extends BinaryOpEvaluator {
 	public function GetHandledExpressionType(): ?string {
-		return GreaterOrEqual::class;
+		return Mod::class;
 	}
 
 	function EvaluateBinaryOperation(mixed $left, mixed $right) : mixed
 	{
-		return $left >= $right;
+		return $left % $right;
 	}
 }

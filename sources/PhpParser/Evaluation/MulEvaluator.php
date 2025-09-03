@@ -1,11 +1,11 @@
 <?php
 
-namespace Combodo\iTop\PhpParser\Evaluation;;
+namespace Combodo\iTop\PhpParser\Evaluation;
 
 use PhpParser\Node\Expr\BinaryOp\Mul;
 
 class MulEvaluator extends BinaryOpEvaluator {
-	public function GetHandledExpressionType(): string {
+	public function GetHandledExpressionType(): ?string {
 		return Mul::class;
 	}
 

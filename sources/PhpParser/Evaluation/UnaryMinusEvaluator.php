@@ -1,13 +1,12 @@
 <?php
 
-namespace Combodo\iTop\PhpParser\Evaluation;;
+namespace Combodo\iTop\PhpParser\Evaluation;
 
 use PhpParser\Node\Expr;
-use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\UnaryMinus;
 
-class UnaryMinusEvaluator implements iExprEvaluator {
-	public function GetHandledExpressionType(): string {
+class UnaryMinusEvaluator extends AbstractExprEvaluator {
+	public function GetHandledExpressionType(): ?string {
 		return UnaryMinus::class;
 	}
 

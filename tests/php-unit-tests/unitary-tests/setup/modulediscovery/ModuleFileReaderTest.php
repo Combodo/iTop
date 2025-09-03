@@ -4,7 +4,6 @@ namespace Combodo\iTop\Test\UnitTest\Setup\ModuleDiscovery;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ModuleFileReader;
-use PhpParser\ParserFactory;
 
 class ModuleFileReaderTest extends ItopDataTestCase
 {
@@ -35,7 +34,7 @@ class ModuleFileReaderTest extends ItopDataTestCase
 		];
 
 		$aErrors=[];
-		foreach (glob(__DIR__.'/resources/all_designer/**.php') as $sModuleFilePath){
+		foreach (glob(__DIR__.'/resources/all_designer/*.php') as $sModuleFilePath){
 			//var_dump($sModuleFilePath);
 			try{
 				$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
@@ -54,7 +53,7 @@ class ModuleFileReaderTest extends ItopDataTestCase
 			//$this->assertEquals($aExpected, $aRes, $sModuleFilePath);
 		}
 
-		$this->assertEquals([], $aErrors);
+		$this->assertEquals([], $aErrors, var_export($aErrors, true));
 	}*/
 
 	public static function ReadModuleFileConfigurationFileNameProvider()

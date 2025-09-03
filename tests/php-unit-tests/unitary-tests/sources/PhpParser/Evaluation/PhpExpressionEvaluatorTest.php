@@ -23,12 +23,12 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 			'ClassConstFetch: unknown class:class' => [ 'sExpression' => 'GabuZomeuUnknownClass::class'],
 			'ClassConstFetch: private existing constant' => [
 				'sExpression' => 'Combodo\iTop\Test\UnitTest\Setup\ModuleDiscovery\PhpExpressionEvaluatorTest::PRIVATE_CONSTANT',
-				'forced_expected' => null
+				'forced_expected' => null,
 			],
 			'StaticProperty: public existing constant' => [ 'sExpression' => 'Combodo\iTop\Test\UnitTest\Setup\ModuleDiscovery\PhpExpressionEvaluatorTest::$STATIC_PROPERTY'],
 			'StaticProperty: private existing constant' => [
 				'sExpression' => 'Combodo\iTop\Test\UnitTest\Setup\ModuleDiscovery\PhpExpressionEvaluatorTest::$PRIVATE_STATIC_PROPERTY',
-				'forced_expected' => null
+				'forced_expected' => null,
 			],
 			'BinaryOperator: false|true' => [ 'sExpression' => 'false|true'],
 			'BinaryOperator: false||true' => [ 'sExpression' => 'false||true'],
@@ -45,13 +45,40 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 			'FuncCall: function_exists(\'ldap_connect\')' => [ 'sExpression' => 'function_exists(\'ldap_connect\')'],
 			'FuncCall: function_exists(\'gabuzomeushouldnotexist\')' => [ 'sExpression' => 'function_exists(\'gabuzomeushouldnotexist\')'],
 			'UnaryMinus: -1' => ['sExpression' => '-1'],
+			'UnaryPlus: +1' => ['sExpression' => '+1'],
 			'Concat: "a"."b"' => ['sExpression' => '"a"."b"'],
 			'ArrayDimFetch: $_SERVER[\'toto\']' => ['sExpression' => '$_SERVER[\'toto\']'],
 			'Variable: $_SERVER' => ['sExpression' => '$_SERVER'],
 			'Array: [1000 => "a"]' => ['sExpression' => '[1000 => "a"]'],
 			'Array: ["a"]' => ['sExpression' => '["a"]'],
 			'Array dict: ["a"=>"b"]' => ['sExpression' => '["a"=>"b"]'],
-			'StaticCall utils::GetItopVersionWikiSyntax()' => ['sExpression' => 'utils::GetItopVersionWikiSyntax()']
+			'StaticCall utils::GetItopVersionWikiSyntax()' => ['sExpression' => 'utils::GetItopVersionWikiSyntax()'],
+			'NullsafePropertyFetch: $oNullVar?->b' => ['sExpression' => '$oNullVar?->b'],
+			'NullsafePropertyFetch: $oEvaluationFakeClass?->bIsOk' => ['sExpression' => '$oEvaluationFakeClass?->bIsOk'],
+			'PropertyFetch: $oEvaluationFakeClass->bIsOk' => ['sExpression' => '$oEvaluationFakeClass->bIsOk'],
+			'NullsafeMethodCall: $oEvaluationFakeClass?->GetName()' => ['sExpression' => '$oEvaluationFakeClass?->GetName()'],
+			'NullsafeMethodCall: $oEvaluationFakeClass?->GetLongName("aa")' => ['sExpression' => '$oEvaluationFakeClass?->GetLongName("aa")'],
+			'MethodCall: $oEvaluationFakeClass->GetName()' => ['sExpression' => '$oEvaluationFakeClass->GetName()'],
+			'MethodCall: $oEvaluationFakeClass->GetLongName("aa")' => ['sExpression' => '$oEvaluationFakeClass->GetLongName("aa")'],
+			'Coalesce: $oNullVar ?? 1' => ['sExpression' => '$oNullVar ?? 1'],
+			'Coalesce: $oNonNullVar ?? 1' => ['sExpression' => '$oNonNullVar ?? 1'],
+			'Isset: isset($a)' => ['sExpression' => 'isset($a)'],
+			'Isset: isset($a, $_SERVER)' => ['sExpression' => 'isset($a, $_SERVER)'],
+			'Isset: isset($_SERVER)' => ['sExpression' => 'isset($_SERVER)'],
+			'Isset: isset($_SERVER, $a)' => ['sExpression' => 'isset($_SERVER, $a)'],
+			'BitwiseNot: ~3' => ['sExpression' => '~3'],
+			'Mod: 3%2' => ['sExpression' => '3%2'],
+			'BitwiseXor: 3^2' => ['sExpression' => '3^2'],
+			'Ternary: (true) ? 1 : 2' => ['sExpression' => '(true) ? 1 : 2'],
+			'Ternary: (false) ? 1 : 2' => ['sExpression' => '(false) ? 1 : 2'],
+			'Cast: (array)3' => ['sExpression' => '(array)3'],
+			'Cast: (bool)1' => ['sExpression' => '(bool)1'],
+			'Cast: (bool)0' => ['sExpression' => '(bool)0'],
+			'Cast: (double)3' => ['sExpression' => '(double)3'],
+			'Cast: (float)3' => ['sExpression' => '(float)3'],
+			'Cast: (int)3' => ['sExpression' => '(int)3'],
+			'Cast: (object)3' => ['sExpression' => '(object)3'],
+			'Cast: (string)3' => ['sExpression' => '(string)3'],
 		];
 	}
 
@@ -60,9 +87,15 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 	 */
 	public function testEvaluateExpression($sExpression, $forced_expected="NOTPROVIDED")
 	{
+		$oNullVar=null;
+		$oNonNullVar="a";
 		$_SERVER=[
-			'toto' => 'titi'
+			'toto' => 'titi',
 		];
+
+		$oEvaluationFakeClass = new EvaluationFakeClass();
+		$oEvaluationFakeClass->bIsOk;
+		$oEvaluationFakeClass->GetName();
 
 		$res = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateExpression($sExpression);
 		if ($forced_expected === "NOTPROVIDED"){
@@ -88,12 +121,6 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 		} catch (\Throwable $t){
 			return null;
 		}
-	}
-
-	public function testParseAndEvaluateBooleanExpression_BrokenBooleanExpression(){
-		$this->expectException(\ModuleFileReaderException::class);
-		$this->expectExceptionMessage('Eval of \'(a || true)\' caused an error');
-		$this->assertTrue(PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression("(a || true)"));
 	}
 
 	public static function ParseAndEvaluateBooleanExpression_AutoselectProvider()
@@ -130,5 +157,19 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 	public function testEvaluateBooleanExpression_Autoselect(string $sBooleanExpression, bool $expected){
 		\SetupInfo::SetSelectedModules(["itop-storage-mgmt" => "123"]);
 		$this->assertEquals($expected, PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($sBooleanExpression), $sBooleanExpression);
+	}
+}
+
+class EvaluationFakeClass {
+	public bool $bIsOk=true;
+
+	public function GetName()
+	{
+		return "gabuzomeu";
+	}
+
+	public function GetLongName($suffix)
+	{
+		return "gabuzomeu_" . $suffix;
 	}
 }

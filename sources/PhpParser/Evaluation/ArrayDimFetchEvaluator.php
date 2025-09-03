@@ -1,12 +1,12 @@
 <?php
 
-namespace Combodo\iTop\PhpParser\Evaluation;;
+namespace Combodo\iTop\PhpParser\Evaluation;
 
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\ArrayDimFetch;
 
-class ArrayDimFetchEvaluator implements iExprEvaluator {
-	public function GetHandledExpressionType(): string {
+class ArrayDimFetchEvaluator extends AbstractExprEvaluator {
+	public function GetHandledExpressionType(): ?string {
 		return ArrayDimFetch::class;
 	}
 

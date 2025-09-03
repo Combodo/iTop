@@ -1,6 +1,6 @@
 <?php
 
-namespace Combodo\iTop\PhpParser\Evaluation;;
+namespace Combodo\iTop\PhpParser\Evaluation;
 
 use ModuleFileReaderException;
 use PhpParser\Node\Expr;
@@ -9,8 +9,8 @@ use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Scalar\Int_;
 use PhpParser\Node\Scalar\String_;
 
-class ArrayEvaluator implements iExprEvaluator {
-	public function GetHandledExpressionType(): string {
+class ArrayEvaluator extends AbstractExprEvaluator {
+	public function GetHandledExpressionType(): ?string {
 		return Array_::class;
 	}
 
