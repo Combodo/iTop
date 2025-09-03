@@ -1,6 +1,0 @@
-{
-    "require-dev": {
-        "phpdocumentor/phpdocumentor": "~2",
-	"jms/serializer": "1.7.*"
-    }
-}
