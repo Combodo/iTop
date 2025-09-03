@@ -168,13 +168,13 @@ class AttachmentPlugIn implements iApplicationUIExtension, iEventServiceSetup
 	public function OnDBAfterWrite(EventData $oEventData)
 	{
 		$oObject = $oEventData->Get('object');
-		$oChange = $oEventData->Get('changes');
+		$oCMDBChange = $oEventData->Get('cmdb_change');
 		$bIsNew = $oEventData->Get('is_new');
 
 		if ($this->IsTargetObject($oObject))
 		{
 			if($bIsNew){
-				self::UpdateAttachments($oObject, $oChange);
+				self::UpdateAttachments($oObject, $oCMDBChange);
 			}
 			else{
 				// Get all current attachments
@@ -286,7 +286,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iEventServiceSetup
 	 * @see ObjectFormManager::FinalizeAttachments() for the portal version
 	 *
 	 * @param $oObject
-	 * @param $oChange
+	 * @param $oCMDBChange
 	 *
 	 * @return void
 	 * @throws \ArchivedObjectException
@@ -298,7 +298,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iEventServiceSetup
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	protected static function UpdateAttachments($oObject, $oChange = null)
+	protected static function UpdateAttachments($oObject, $oCMDBChange = null)
 	{
 		if (utils::ReadParam('attachment_plugin', 'not-in-form') == 'not-in-form')
 		{
@@ -356,7 +356,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iEventServiceSetup
 			{
 				foreach ($aActions as $oChangeOp)
 				{
-					self::RecordHistory($oChange, $oObject, $oChangeOp);
+					self::RecordHistory($oCMDBChange, $oObject, $oChangeOp);
 				}
 
 				$oObject->MarkObjectAsModified();
@@ -550,11 +550,11 @@ class AttachmentPlugIn implements iApplicationUIExtension, iEventServiceSetup
 	}
 
 	/////////////////////////////////////////////////////////////////////////
-	private static function RecordHistory($oChange, $oTargetObject, $oMyChangeOp)
+	private static function RecordHistory($oCMDBChange, $oTargetObject, $oMyChangeOp)
 	{
-		if (!is_null($oChange))
+		if (!is_null($oCMDBChange))
 		{
-			$oMyChangeOp->Set("change", $oChange->GetKey());
+			$oMyChangeOp->Set("change", $oCMDBChange->GetKey());
 		}
 		$oMyChangeOp->Set("objclass", get_class($oTargetObject));
 		$oMyChangeOp->Set("objkey", $oTargetObject->GetKey());

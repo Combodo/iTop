@@ -5736,7 +5736,7 @@ JS
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
 		$this->RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
-		$this->FireEvent(EVENT_DB_AFTER_WRITE, ['is_new' => $bIsNew, 'changes' => $aChanges, 'stimulus_applied' => $sStimulusBeingApplied]);
+		$this->FireEvent(EVENT_DB_AFTER_WRITE, ['is_new' => $bIsNew, 'changes' => $aChanges, 'stimulus_applied' => $sStimulusBeingApplied, 'cmdb_change' => self::GetCurrentChange()]);
 	}
 
 	//////////////
@@ -5774,7 +5774,7 @@ JS
 	final protected function FireEventAfterDelete(): void
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
-		$this->FireEvent(EVENT_DB_AFTER_DELETE);
+		$this->FireEvent(EVENT_DB_AFTER_DELETE, ['cmdb_change' => self::GetCurrentChange()]);
 	}
 
 	/**
