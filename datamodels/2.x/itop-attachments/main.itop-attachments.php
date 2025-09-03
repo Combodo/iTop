@@ -169,10 +169,22 @@ class AttachmentPlugIn implements iApplicationUIExtension, iEventServiceSetup
 	{
 		$oObject = $oEventData->Get('object');
 		$oChange = $oEventData->Get('changes');
+		$bIsNew = $oEventData->Get('is_new');
 
 		if ($this->IsTargetObject($oObject))
 		{
-			self::UpdateAttachments($oObject, $oChange);
+			if($bIsNew){
+				self::UpdateAttachments($oObject, $oChange);
+			}
+			else{
+				// Get all current attachments
+				$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
+				$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
+				while ($oAttachment = $oSet->Fetch())
+				{
+					$oAttachment->SetItem($oObject, true /*updateonchange*/);
+				}
+			}
 		}
 	}
 
