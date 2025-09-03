@@ -15,7 +15,6 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 			'ConstFetch: false' => [ 'sExpression' => 'false'],
 			'ConstFetch: (false)' => [ 'sExpression' => 'false'],
 			'ConstFetch: true' => [ 'sExpression' => 'true'],
-			//'ConstFetch: __FILE__' => [ 'sExpression' => __FILE__],
 			'ConstFetch: (true)' => [ 'sExpression' => 'true'],
 			'ClassConstFetch: public existing constant' => [ 'sExpression' => 'SetupUtils::PHP_MIN_VERSION'],
 			'ClassConstFetch: unknown constant' => [ 'sExpression' => 'SetupUtils::UNKNOWN_CONSTANT'],
@@ -48,7 +47,8 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 			'UnaryPlus: +1' => ['sExpression' => '+1'],
 			'Concat: "a"."b"' => ['sExpression' => '"a"."b"'],
 			'ArrayDimFetch: $_SERVER[\'toto\']' => ['sExpression' => '$_SERVER[\'toto\']'],
-			'Variable: $_SERVER' => ['sExpression' => '$_SERVER'],
+			//'Variable: $_SERVER' => ['sExpression' => '$_SERVER'],
+			'Variable: $oNonNullVar' => ['sExpression' => '$oNonNullVar'],
 			'Array: [1000 => "a"]' => ['sExpression' => '[1000 => "a"]'],
 			'Array: ["a"]' => ['sExpression' => '["a"]'],
 			'Array dict: ["a"=>"b"]' => ['sExpression' => '["a"=>"b"]'],
@@ -78,7 +78,7 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 			'Cast: (float)3' => ['sExpression' => '(float)3'],
 			'Cast: (int)3' => ['sExpression' => '(int)3'],
 			'Cast: (object)3' => ['sExpression' => '(object)3'],
-			'Cast: (string)3' => ['sExpression' => '(string)3'],
+			'Cast: (string)$oEvaluationFakeClass' => ['sExpression' => '(string)$oEvaluationFakeClass'],
 		];
 	}
 
@@ -94,8 +94,6 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 		];
 
 		$oEvaluationFakeClass = new EvaluationFakeClass();
-		$oEvaluationFakeClass->bIsOk;
-		$oEvaluationFakeClass->GetName();
 
 		$res = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateExpression($sExpression);
 		if ($forced_expected === "NOTPROVIDED"){
@@ -171,5 +169,10 @@ class EvaluationFakeClass {
 	public function GetLongName($suffix)
 	{
 		return "gabuzomeu_" . $suffix;
+	}
+
+	public function __toString(): string
+	{
+		return "a";
 	}
 }

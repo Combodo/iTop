@@ -22,10 +22,7 @@ class VariableEvaluator extends AbstractExprEvaluator {
 
 		$sVarname=$oExpr->name;
 
-		$bResult = null;
-		@eval('$bResult = $'.$sVarname.';');
-
-		return $bResult;
-
+		global $$sVarname;
+		return $$sVarname;
 	}
 }
