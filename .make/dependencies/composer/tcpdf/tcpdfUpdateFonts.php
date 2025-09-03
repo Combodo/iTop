@@ -25,7 +25,7 @@ if (false === file_exists($sTcPdfRootFolder)) {
 	echo $sCurrentScriptFileName.": No TCPDF lib detected, exiting !\n";
 	return;
 }
-$sTcPdfFontsFolder = $sTcPdfRootFolder.'/Fonts/';
+$sTcPdfFontsFolder = $sTcPdfRootFolder.'/fonts/';
 
 
 /**
