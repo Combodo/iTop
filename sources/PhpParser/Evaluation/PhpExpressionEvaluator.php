@@ -4,6 +4,7 @@ namespace Combodo\iTop\PhpParser\Evaluation;
 
 use ModuleFileParser;
 use ModuleFileReaderException;
+use PhpParser\ConstExprEvaluator;
 use PhpParser\Node\Expr;
 
 class PhpExpressionEvaluator {
@@ -57,7 +58,24 @@ class PhpExpressionEvaluator {
 		static::$oInstance = $oInstance;
 	}
 
-	public function EvaluateExpression(Expr $oExpression) : mixed
+	public function EvaluateExpression(Expr $oExpression, int $iMode=self::LIB_AND_FALLBACK) : mixed
+	{
+		if ($iMode==self::ITOP_ALGO){
+			return $this->EvaluateExpressionLocally($oExpression);
+		}
+
+		if ($iMode==self::LIB_ONLY){
+			$oConstExprEvaluator = new ConstExprEvaluator();
+		} else {
+			$oConstExprEvaluator = new ConstExprEvaluator([$this, "EvaluateExpressionLocally"]);
+		}
+
+		$oConstExprEvaluator->setFunctionsWhitelist(FuncCallEvaluator::WHITELIST);
+		$oConstExprEvaluator->setStaticcallsWhitelist(StaticCallEvaluator::WHITELIST);
+		return $oConstExprEvaluator->evaluateDirectly($oExpression);
+	}
+
+	public function EvaluateExpressionLocally(Expr $oExpression) : mixed
 	{
 		$sClass = get_class($oExpression);
 		$oPhpParserEvaluator = static::$aPhpParserEvaluators[$sClass] ?? null;
@@ -79,7 +97,10 @@ class PhpExpressionEvaluator {
 		return $this->ParseAndEvaluateExpression($sBooleanExpr);
 	}
 
-	public function ParseAndEvaluateExpression(string $sExpr) : mixed
+	const LIB_AND_FALLBACK=1;
+	const LIB_ONLY=2;
+	const ITOP_ALGO=3;
+	public function ParseAndEvaluateExpression(string $sExpr, int $iMode=self::LIB_AND_FALLBACK) : mixed
 	{
 		$sPhpContent = <<<PHP
 <?php
@@ -88,7 +109,7 @@ PHP;
 		try{
 			$aNodes = ModuleFileParser::GetInstance()->ParsePhpCode($sPhpContent);
 			$oExpr = $aNodes[0];
-			return $this->EvaluateExpression($oExpr->expr);
+			return $this->EvaluateExpression($oExpr->expr, $iMode);
 		} catch (\Throwable $t) {
 			throw new ModuleFileReaderException("Eval of '$sExpr' caused an error:".$t->getMessage());
 		}

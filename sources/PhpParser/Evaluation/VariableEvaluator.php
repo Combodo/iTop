@@ -21,7 +21,6 @@ class VariableEvaluator extends AbstractExprEvaluator {
 		}
 
 		$sVarname=$oExpr->name;
-
 		global $$sVarname;
 		return $$sVarname;
 	}

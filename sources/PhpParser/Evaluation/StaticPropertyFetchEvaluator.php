@@ -4,6 +4,7 @@ namespace Combodo\iTop\PhpParser\Evaluation;
 
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\StaticPropertyFetch;
+use PhpParser\Node\Identifier;
 
 class StaticPropertyFetchEvaluator extends AbstractExprEvaluator {
 	public function GetHandledExpressionType(): ?string {
@@ -14,7 +15,11 @@ class StaticPropertyFetchEvaluator extends AbstractExprEvaluator {
 		/** @var StaticPropertyFetch $oExpr */
 
 		$sClassName = $oExpr->class->name;
-		$sProperty = $oExpr->name->name;
+		if ($oExpr->name instanceof Identifier){
+			$sProperty = $oExpr->name->name;
+		} else {
+			$sProperty = PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oExpr->name);
+		}
 
 		if (class_exists($sClassName)){
 			$class = new \ReflectionClass($sClassName);

@@ -5,8 +5,14 @@ namespace Combodo\iTop\PhpParser\Evaluation;
 use ModuleFileReaderException;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Identifier;
 
 class StaticCallEvaluator extends AbstractExprEvaluator {
+	public const WHITELIST=[
+		"SetupInfo::ModuleIsSelected",
+		"utils::GetItopVersionWikiSyntax"
+	];
+
 	public function GetHandledExpressionType(): ?string {
 		return StaticCall::class;
 	}
@@ -15,11 +21,14 @@ class StaticCallEvaluator extends AbstractExprEvaluator {
 		/** @var StaticCall $oExpr */
 
 		$sClassName = $oExpr->class->name;
-		$sMethodName = $oExpr->name->name;
+		if ($oExpr->name instanceof Identifier){
+			$sMethodName = $oExpr->name->name;
+		} else {
+			$sMethodName = PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oExpr->name);
+		}
 
-		$aWhiteList = ["SetupInfo::ModuleIsSelected", "utils::GetItopVersionWikiSyntax"];
 		$sStaticCallDescription = "$sClassName::$sMethodName";
-		if (! in_array($sStaticCallDescription, $aWhiteList)){
+		if (! in_array($sStaticCallDescription, self::WHITELIST)){
 			throw new ModuleFileReaderException("StaticCall $sStaticCallDescription not supported");
 		}
 

@@ -16,6 +16,10 @@ class ClassConstFetchEvaluator extends AbstractExprEvaluator {
 		$sClassName = $oExpr->class->name;
 		$sProperty = $oExpr->name->name;
 
+		if ('class' === $sProperty){
+			return $sClassName;
+		}
+
 		if (class_exists($sClassName)){
 			$class = new \ReflectionClass($sClassName);
 			if (array_key_exists($sProperty, $class->getConstants())) {
@@ -24,10 +28,6 @@ class ClassConstFetchEvaluator extends AbstractExprEvaluator {
 					return $class->getConstant($sProperty);
 				}
 			}
-		}
-
-		if ('class' === $sProperty){
-			return $sClassName;
 		}
 
 		return null;
