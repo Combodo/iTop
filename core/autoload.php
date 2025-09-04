@@ -26,7 +26,16 @@ MetaModel::IncludeModule('application/query.class.inc.php');
 MetaModel::IncludeModule('setup/moduleinstallation.class.inc.php');
 
 
-MetaModel::IncludeModule('core/event.class.inc.php');
+//MetaModel::IncludeModule('core/event.class.inc.php');
+MetaModel::IncludeModule('core/event/Event.php');
+MetaModel::IncludeModule('core/event/EventNotification.php');
+MetaModel::IncludeModule('core/event/EventNotificationEmail.php');
+MetaModel::IncludeModule('core/event/EventIssue.php');
+MetaModel::IncludeModule('core/event/EventWebService.php');
+MetaModel::IncludeModule('core/event/EventRestService.php');
+MetaModel::IncludeModule('core/event/EventLoginUsage.php');
+MetaModel::IncludeModule('core/event/EventOnObject.php');
+
 MetaModel::IncludeModule('core/action.class.inc.php');
 MetaModel::IncludeModule('core/trigger.class.inc.php');
 MetaModel::IncludeModule('core/bulkexport.class.inc.php');

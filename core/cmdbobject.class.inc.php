@@ -64,7 +64,7 @@ require_once('dbproperty.class.inc.php');
 
 // db change tracking data model
 require_once('cmdbchange.class.inc.php');
-require_once('cmdbchangeop.class.inc.php');
+//require_once('cmdbchangeop.class.inc.php');
 
 // customization data model
 // Romain: temporary moved into application.inc.php (see explanations there)
@@ -77,7 +77,7 @@ require_once('cmdbchangeop.class.inc.php');
 
 require_once('templatestring.class.inc.php');
 require_once('csvparser.class.inc.php');
-require_once('bulkchange.class.inc.php');
+//require_once('bulkchange.class.inc.php');
 
 /**
  * A persistent object, which changes are accurately recorded

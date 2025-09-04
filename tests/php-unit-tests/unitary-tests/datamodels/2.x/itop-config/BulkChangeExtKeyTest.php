@@ -27,7 +27,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 
 	protected function setUp() : void {
 		parent::setUp();
-		require_once(APPROOT.'core/bulkchange.class.inc.php');
+		//require_once(APPROOT.'core/bulkchange.class.inc.php');
 	}
 
 	private function deleteAllRacks(){

@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 
-require_once(APPROOT.'/core/simplecrypt.class.inc.php');
+//require_once(APPROOT.'/core/simplecrypt.class.inc.php');
 
 /**
  * ormPassword

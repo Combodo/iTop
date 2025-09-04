@@ -1538,7 +1538,7 @@ EOF
 			case 'relation_pdf':
 			case 'relation_attachment':
 				require_once(APPROOT.'core/simplegraph.class.inc.php');
-				require_once(APPROOT.'core/relationgraph.class.inc.php');
+				//require_once(APPROOT.'core/relationgraph.class.inc.php');
 				require_once(APPROOT.'core/displayablegraph.class.inc.php');
 				$sRelation = utils::ReadParam('relation', 'impacts');
 				$sDirection = utils::ReadParam('direction', 'down');
@@ -1696,7 +1696,7 @@ EOF
 
 			case 'relation_json':
 				require_once(APPROOT.'core/simplegraph.class.inc.php');
-				require_once(APPROOT.'core/relationgraph.class.inc.php');
+				//require_once(APPROOT.'core/relationgraph.class.inc.php');
 				require_once(APPROOT.'core/displayablegraph.class.inc.php');
 				$sRelation = utils::ReadParam('relation', 'impacts');
 				$sDirection = utils::ReadParam('direction', 'down');
@@ -1801,7 +1801,7 @@ EOF
 
 			case 'ticket_impact':
 				require_once(APPROOT.'core/simplegraph.class.inc.php');
-				require_once(APPROOT.'core/relationgraph.class.inc.php');
+				//require_once(APPROOT.'core/relationgraph.class.inc.php');
 				require_once(APPROOT.'core/displayablegraph.class.inc.php');
 
 				$sRelation = utils::ReadParam('relation', 'impacts');
