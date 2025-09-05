@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a0021a80fcc9bccc3f577530893e2974",
+    "content-hash": "be4951ced82be6e0ac8c18fa6ddaafc9",
     "packages": [
         {
             "name": "apereo/phpcas",
@@ -1020,16 +1020,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.6.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "221b0d0fdf1369c71047ad1d18bb5880017bbc56"
+                "url": "https://github.com/Combodo/PHP-Parser.git",
+                "reference": "fe64d1ac8a1332b9dcc1af05ec4fdfd9d8665f3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/221b0d0fdf1369c71047ad1d18bb5880017bbc56",
-                "reference": "221b0d0fdf1369c71047ad1d18bb5880017bbc56",
+                "url": "https://api.github.com/repos/Combodo/PHP-Parser/zipball/fe64d1ac8a1332b9dcc1af05ec4fdfd9d8665f3a",
+                "reference": "fe64d1ac8a1332b9dcc1af05ec4fdfd9d8665f3a",
                 "shasum": ""
             },
             "require": {
@@ -1042,13 +1042,14 @@
                 "ircmaxell/php-yacc": "^0.0.7",
                 "phpunit/phpunit": "^9.0"
             },
+            "default-branch": true,
             "bin": [
                 "bin/php-parse"
             ],
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.0-dev"
+                    "dev-master": "5.x-dev"
                 }
             },
             "autoload": {
@@ -1056,7 +1057,11 @@
                     "PhpParser\\": "lib/PhpParser"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "PhpParser\\": "test/PhpParser/"
+                }
+            },
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1071,10 +1076,9 @@
                 "php"
             ],
             "support": {
-                "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.6.0"
+                "source": "https://github.com/Combodo/PHP-Parser/tree/master"
             },
-            "time": "2025-07-27T20:03:57+00:00"
+            "time": "2025-09-05T13:41:49+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -5243,7 +5247,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "nikic/php-parser": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

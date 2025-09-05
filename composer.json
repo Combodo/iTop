@@ -18,7 +18,7 @@
     "laminas/laminas-mail": "^2.11",
     "laminas/laminas-servicemanager": "^3.5",
     "league/oauth2-google": "^4.0.1",
-    "nikic/php-parser": "~5.6.0",
+    "nikic/php-parser": "dev-master",
     "pear/archive_tar": "~1.4.14",
     "pelago/emogrifier": "^7.2.0",
     "psr/log": "^3.0.0",
@@ -41,6 +41,10 @@
     "symfony/stopwatch": "~6.4.0",
     "symfony/web-profiler-bundle": "~6.4.0"
   },
+  "repositories": [{
+    "type": "vcs",
+    "url": "https://github.com/Combodo/PHP-Parser"
+  }],
   "suggest": {
     "ext-libsodium": "Required to use the AttributeEncryptedString.",
     "ext-openssl": "Can be used as a polyfill if libsodium is not installed",
