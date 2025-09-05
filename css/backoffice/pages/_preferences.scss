@@ -9,6 +9,8 @@ $ibo-preferences--user-preferences--picture-placeholder--image--diameter: 54px !
 $ibo-preferences--user-preferences--picture-placeholder--image--border-radius: $ibo-border-radius-full !default;
 $ibo-preferences--user-preferences--picture-placeholder--image--margin: $ibo-spacing-400 !default;
 $ibo-preferences--user-preferences--picture-placeholder--image--background-color: $ibo-color-grey-300 !default;
+$ibo-preferences--user-preferences--picture-placeholder--image--border-color: $ibo-preferences--user-preferences--picture-placeholder--image--background-color !default;
+$ibo-preferences--user-preferences--picture-placeholder--image--border: solid 3px $ibo-preferences--user-preferences--picture-placeholder--image--border-color !default;
 
 $ibo-preferences--user-preferences--picture-placeholder--image--active--border-color: $ibo-color-blue-800;
 $ibo-preferences--user-preferences--picture-placeholder--image--hover--border-color: $ibo-color-blue-600;
@@ -18,6 +20,8 @@ $ibo-keyboard-shortcut--shortcut--width: 30% !default;
 $ibo-keyboard-shortcut--input--color: $ibo-color-grey-800 !default;
 $ibo-keyboard-shortcut--input--background-color: transparent !default;
 $ibo-keyboard-shortcut--input--border-color: $ibo-color-grey-500 !default;
+$ibo-keyboard-shortcut--input--border:  1px solid $ibo-keyboard-shortcut--input--border-color !default;
+$ibo-keyboard-shortcut--input--border-bottom:  2px solid $ibo-keyboard-shortcut--input--border-color !default;
 $ibo-keyboard-shortcut--input--border-radius: $ibo-border-radius-300 !default;
 $ibo-keyboard-shortcut--input--padding-y: $ibo-spacing-100 !default;
 $ibo-keyboard-shortcut--input--padding-x: $ibo-spacing-200 !default;
@@ -25,6 +29,8 @@ $ibo-keyboard-shortcut--input--margin-bottom: 5px !default;
 
 $ibo-keyboard-shortcut--input--is-focus--color: $ibo-color-primary-800 !default;
 $ibo-keyboard-shortcut--input--is-focus--border-color: $ibo-color-primary-600 !default;
+
+$ibo-favorite-organizations--toolbar--padding-top: $ibo-button--padding-y/2 !default;
 
 #ibo-main-content >.ibo-panel{
   margin-left: $ibo-preferences--panel--margin-x;
@@ -41,7 +47,7 @@ $ibo-keyboard-shortcut--input--is-focus--border-color: $ibo-color-primary-600 !d
   width: $ibo-preferences--user-preferences--picture-placeholder--image--diameter;
   border-radius: $ibo-preferences--user-preferences--picture-placeholder--image--border-radius;
   margin: $ibo-preferences--user-preferences--picture-placeholder--image--margin;
-  border: solid 3px $ibo-preferences--user-preferences--picture-placeholder--image--background-color;
+  border: $ibo-preferences--user-preferences--picture-placeholder--image--border;
 
   > img{
     border-radius: $ibo-preferences--user-preferences--picture-placeholder--image--border-radius;
@@ -72,8 +78,8 @@ $ibo-keyboard-shortcut--input--is-focus--border-color: $ibo-color-primary-600 !d
 
   color: $ibo-keyboard-shortcut--input--color;
   background-color: $ibo-keyboard-shortcut--input--background-color;
-  border: 1px solid $ibo-keyboard-shortcut--input--border-color;
-  border-bottom: 2px solid $ibo-keyboard-shortcut--input--border-color;
+  border: $ibo-keyboard-shortcut--input--border;
+  border-bottom: $ibo-keyboard-shortcut--input--border-bottom;
   border-radius: $ibo-keyboard-shortcut--input--border-radius;
 
   padding: $ibo-keyboard-shortcut--input--padding-y $ibo-keyboard-shortcut--input--padding-x;
@@ -92,5 +98,5 @@ $ibo-keyboard-shortcut--input--is-focus--border-color: $ibo-color-primary-600 !d
 }
 
 #ibo-favorite-organizations .ibo-datatable--toolbar {
-  padding-top: $ibo-button--padding-y/2;
+  padding-top: $ibo-favorite-organizations--toolbar--padding-top;
 }

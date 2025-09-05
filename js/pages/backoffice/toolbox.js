@@ -308,7 +308,9 @@ CombodoModal._BindEvents = function (oModalElem) {
 	// Center modal on resize
 	if(window.ResizeObserver) {
 		const oModalObs = new ResizeObserver(function(){
-			me._CenterModalInViewport(oModalElem);
+			if(oModalElem.width()>0) {
+				me._CenterModalInViewport(oModalElem);
+			}
 		});
 		oModalObs.observe(oModalElem[0]);
 	}

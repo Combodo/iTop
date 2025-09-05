@@ -2,6 +2,9 @@
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+$ibo-v-spacer--padding-top: 1em !default;
+$ibo-side-content--background-color: $ibo-content-block--background-color !default;
+$ibo-side-content--border-left: $ibo-content-block--border !default;
 
 /* Note: We have to wrap it in the ID in order to overload its rules, otherwise, the ID takes over the simple CSS class... */
 #ibo-center-container {
@@ -16,10 +19,10 @@
 }
 
 .ibo-v-spacer {
-  padding-top: 1em;
+  padding-top: $ibo-v-spacer--padding-top;
 }
 
 #ibo-side-content {
-  background-color: $ibo-content-block--background-color;
-  border-left: $ibo-content-block--border;
+  background-color: $ibo-side-content--background-color;
+  border-left: $ibo-side-content--border-left;
 }

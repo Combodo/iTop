@@ -3,8 +3,11 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-datatable-within-panel--panel-body--width: 100% !default;
+
+
 .ibo-panel .ibo-panel--body{
   .ibo-datatable{
-    width: 100%
+    width: $ibo-datatable-within-panel--panel-body--width;
   }
 }

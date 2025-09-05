@@ -1,3 +1,9 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+$ibo-oauth-wizard--illustration--svg--max-height: $ibo-size-700 !default;
+
 .ibo-oauth-wizard .ibo-panel--body{
   .ibo-oauth-wizard--form--container{
     display: flex;
@@ -8,7 +14,7 @@
 
   }
   .ibo-oauth-wizard--illustration svg{
-    max-height: 400px;
+    max-height: $ibo-oauth-wizard--illustration--svg--max-height;
   }
 }
 #ibo-oauth-wizard--conf--result{

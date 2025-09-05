@@ -1303,6 +1303,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:DashletHeaderStatic:Prop-Title' => 'Başlık',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kişiler',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Simge',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'İstatistikli Başlık',
 	'UI:DashletHeaderDynamic:Description' => 'İstatistiklerle başlık (Gruplandırılmış ...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Başlık',

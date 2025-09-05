@@ -372,7 +372,7 @@ abstract class DBSearch
      * @internal
      *
 	 * @param string $sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
-	 *                 Example: infra_list->ci_id->location_id->country	 
+	 *                 Example: infra_list->ci_id->location_id->country
 	 * @param mixed $value The value to match (can be an array => IN(val1, val2...)
 	 * @return void
 	 */
@@ -769,7 +769,7 @@ abstract class DBSearch
 				$oKPI = new ExecutionKPI();
 				$result = apc_fetch($sAPCCacheId);
 				$oKPI->ComputeStats('Search APC (fetch)', $sQuery);
-	
+
 				if (is_object($result))
 				{
 					$oResultFilter = $result;
@@ -785,17 +785,17 @@ abstract class DBSearch
 
 			$oOql = new OqlInterpreter($sQuery);
 			$oOqlQuery = $oOql->ParseQuery();
-	
+
 			if ($oMetaModel === null)
 			{
 				$oMetaModel = new ModelReflectionRuntime();
 			}
 			$oOqlQuery->Check($oMetaModel, $sQuery); // Exceptions thrown in case of issue
-	
+
 			$oResultFilter = $oOqlQuery->ToDBSearch($sQuery);
 
 			$oKPI->ComputeStats('Parse OQL', $sQuery);
-	
+
 			if ($bOQLCacheEnabled)
 			{
 				self::$m_aOQLQueries[$sQueryId] = $oResultFilter->DeepClone();
@@ -1087,17 +1087,17 @@ abstract class DBSearch
 				{
 					$aOrderSpec[$sSQLExpression] = $bAscending;
 				}
-			}
-			else
-			{
-				$aOrderSpec['`'.$sAttClassAlias.$sAttCode.'`'] = $bAscending;
-			}
 
 			// Make sure that the columns used for sorting are present in the loaded columns
 			if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sAttClassAlias][$sAttCode]))
 			{
 				$aAttToLoad[$sAttClassAlias][$sAttCode] = MetaModel::GetAttributeDef($sAttClass, $sAttCode);
-			}			
+			}
+		}
+			else
+			{
+				$aOrderSpec['`'.$sAttClassAlias.$sAttCode.'`'] = $bAscending;
+			}
 		}
 
 		$oSQLQuery = $this->GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount);
@@ -1255,7 +1255,7 @@ abstract class DBSearch
 			$oSQLQueryExt = new SQLObjectQuery($aExtendedDataSpec['table'], $sTableAlias, $aExtendedFields);
 			$oSQLQuery->AddInnerJoin($oSQLQueryExt, 'id', $aExtendedDataSpec['join_key'] /*, $sTableAlias*/);
 		}
-		
+
 		return $oSQLQuery;
 	}
 
@@ -1590,7 +1590,7 @@ abstract class DBSearch
 		}
 		$aBacktrace = debug_backtrace();
 		$iCallStackPos = count($aBacktrace) - self::$m_bDebugQuery;
-		$sIndent = ""; 
+		$sIndent = "";
 		for ($i = 0 ; $i < $iCallStackPos ; $i++)
 		{
 			$sIndent .= " .-=^=-. ";

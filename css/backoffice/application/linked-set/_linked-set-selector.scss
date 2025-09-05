@@ -3,12 +3,16 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-linked-set--bulk-tooltip-info--content: '\f05a' !default;
+$ibo-linked-set--bulk-tooltip-info--color: $ibo-color-information-500 !default;
+$ibo-linked-set--bulk-tooltip-info--margin-right: $ibo-vendors-selectize--item--icon--margin-right !default;
+
 .ibo-linked-set--bulk-tooltip-info {
-  font-size: $ibo-font-size-100;
+  @extend %ibo-font-ral-nor-100;
   &:before{
-    margin-right: $ibo-vendors-selectize--item--icon--margin-right;
+    margin-right: $ibo-linked-set--bulk-tooltip-info--margin-right;
     @extend %fa-solid-base;
-    content: '\f05a';
-    color: $ibo-color-information-500;
+    content: $ibo-linked-set--bulk-tooltip-info--content;
+    color: $ibo-linked-set--bulk-tooltip-info--color;
   }
 }

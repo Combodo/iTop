@@ -1367,6 +1367,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashletHeaderStatic:Prop-Title' => 'Title',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Contacts',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Icon',
+	'UI:DashletIcon:None' => 'None',
 
 	'UI:DashletHeaderDynamic:Label' => 'Header with statistics',
 	'UI:DashletHeaderDynamic:Description' => 'Header with stats (grouped by...)',

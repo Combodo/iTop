@@ -1298,6 +1298,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:DashletHeaderStatic:Prop-Title' => '标题',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => '联系人',
 	'UI:DashletHeaderStatic:Prop-Icon' => '图标',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => '统计标头',
 	'UI:DashletHeaderDynamic:Description' => '统计标头 (分组...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => '标题',

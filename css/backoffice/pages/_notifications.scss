@@ -4,10 +4,14 @@
  */
 
 $ibo-notifications--view-all--container--grid-gap: $ibo-spacing-600 !default;
+$ibo-notifications--view-all--container--object-summary--title--font-size: $ibo-font-size-250 !default;
+$ibo-notifications--view-all--container--object-summary--toolbar--min-width: $ibo-size-500 !default;
 $ibo-notifications--view-all--container--object-summary--panel--body--max-height: 400px !default;
 
 $ibo-notifications--view-all--item--unread--highlight--background-color: $ibo-color-red-600 !default;
 $ibo-notifications--view-all--item--read--highlight--background-color: $ibo-color-grey-200 !default;
+
+$ibo-notifications--view-all--container--read-unread--action--margin-left: $ibo-spacing-0 !default;
 
 $ibo-notifications--view-all--container--large--grid-template-columns: repeat(3, 1fr) !default;
 $ibo-notifications--view-all--container--medium--grid-template-columns: repeat(2, 1fr) !default;
@@ -20,10 +24,10 @@ $ibo-notifications--view-all--empty--svg--max-width: 30% !default;
   display: grid;
   grid-gap: $ibo-notifications--view-all--container--grid-gap;
   .ibo-object-summary  .ibo-panel--title{
-    font-size: $ibo-font-size-250;
+    font-size: $ibo-notifications--view-all--container--object-summary--title--font-size;
   }  
   .ibo-object-summary  .ibo-panel--toolbar{
-    min-width: 102px;
+    min-width: $ibo-notifications--view-all--container--object-summary--toolbar--min-width;
   }
   .ibo-object-summary > .ibo-panel--body{
     box-shadow: none;
@@ -59,7 +63,7 @@ $ibo-notifications--view-all--empty--svg--max-width: 30% !default;
   
 .ibo-notifications--view-all--container {
   .ibo-notifications--view-all--read-action, .ibo-notifications--view-all--unread-action {
-    margin-left: 0 !important;
+    margin-left: $ibo-notifications--view-all--container--read-unread--action--margin-left !important;
   }
 }
 

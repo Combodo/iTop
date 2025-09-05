@@ -1295,6 +1295,7 @@ Quando associada a um gatilho, cada ação recebe um número de "ordem", especif
 	'UI:DashletHeaderStatic:Prop-Title' => 'Título',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Contatos',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Ícone',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'Cabeçalho com estatísticas',
 	'UI:DashletHeaderDynamic:Description' => 'Cabeçalho com estatística (agrupado por...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Título',

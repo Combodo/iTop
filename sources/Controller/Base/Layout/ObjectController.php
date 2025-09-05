@@ -789,7 +789,6 @@ JS;
 		return [
 			'js/forms-json-utils.js',
 			'js/wizardhelper.js',
-			'js/wizard.utils.js',
 			'js/extkeywidget.js',
 			'js/jquery.blockUI.js',
 		];

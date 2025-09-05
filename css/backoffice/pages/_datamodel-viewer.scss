@@ -29,12 +29,14 @@ $ibo-datamodel-viewer--schema--self-referencing--hover--fill: $ibo-datamodel-vie
 $ibo-datamodel-viewer--schema--tooltip--fill: $ibo-color-white-100 !default;
 $ibo-datamodel-viewer--schema--tooltip--background-color: $ibo-color-grey-900 !default;
 $ibo-datamodel-viewer--schema--tooltip--border-color: $ibo-color-grey-700 !default;
+$ibo-datamodel-viewer--schema--tooltip--border: 1px solid $ibo-datamodel-viewer--schema--tooltip--border-color !default;
 $ibo-datamodel-viewer--schema--tooltip--border-radius: $ibo-border-radius-300 !default;
 
 $ibo-datamodel-viewer--schema--tooltip--icon--font-size: $ibo-font-size-100 !default;
 $ibo-datamodel-viewer--schema--tooltip--span--margin: 3px !default;
 
 $ibo-datamodel-viewer--schema--tooltip-top--border-color: $ibo-color-grey-700 !default;
+$ibo-datamodel-viewer--schema--tooltip-top--border: 1px solid $ibo-datamodel-viewer--schema--tooltip-top--border-color !default;
 $ibo-datamodel-viewer--schema--tooltip-top--padding: 3px !default;
 
 $ibo-datamodel-viewer--lifecycle-image--margin-bottom: $ibo-spacing-500 !default;
@@ -116,7 +118,7 @@ $ibo-datamodel-viewer--lifecycle-image--margin-bottom: $ibo-spacing-500 !default
   position: fixed;
   text-align: center;
   background: $ibo-datamodel-viewer--schema--tooltip--fill;
-  border: 1px solid $ibo-datamodel-viewer--schema--tooltip--border-color;
+  border: $ibo-datamodel-viewer--schema--tooltip--border;
   border-radius: $ibo-datamodel-viewer--schema--tooltip--border-radius;
   pointer-events: none;
   fill: $ibo-datamodel-viewer--schema--tooltip--background-color;
@@ -132,7 +134,7 @@ $ibo-datamodel-viewer--lifecycle-image--margin-bottom: $ibo-spacing-500 !default
 
 #tooltipD3_top {
   @extend %ibo-font-ral-bol-100;
-  border-bottom: 1px solid $ibo-datamodel-viewer--schema--tooltip-top--border-color;
+  border-bottom: $ibo-datamodel-viewer--schema--tooltip-top--border;
   padding: $ibo-datamodel-viewer--schema--tooltip-top--padding;
 }
 

@@ -1303,6 +1303,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DashletHeaderStatic:Prop-Title' => 'Titre',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Contacts',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Icône',
+	'UI:DashletIcon:None' => 'Aucune',
 	'UI:DashletHeaderDynamic:Label' => 'En-tête dynamique',
 	'UI:DashletHeaderDynamic:Description' => 'En-tête avec statistiques (regroupements)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Titre',

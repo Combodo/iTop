@@ -15,6 +15,13 @@ $ibo-panel-with-tab-container--margin-bottom: -1 * $ibo-panel--body--padding-bot
 
 $ibo-panel-with-tab-container--tab-toggler--font-size--is-sticking: $ibo-font-size-100 !default;
 
+$ibo-tab-container-within-panel--tabs-list--padding-top: $ibo-spacing-800 !default;
+// I'm not sure where these values come from, might need to be replaced by variables
+$ibo-tab-container-within-panel--tabs-list--min-width: calc(32px + 90px + 32px) !default;
+$ibo-tab-container-within-panel--tabs-header--height: $ibo-spacing-800 !default;
+$ibo-tab-container-within-panel--tabs--list--is-sticking--z-index: 10 !default;
+$ibo-tab-container-within-panel--tabs--list--is-sticking--is-not-vertical--padding-left: $ibo-spacing-0 !default;
+
 // Note: We use the child ">" selector to ensure this applies only to the child tab container, not another one that would be nested
 .ibo-panel {
 	> .ibo-panel--body {
@@ -35,15 +42,15 @@ $ibo-panel-with-tab-container--tab-toggler--font-size--is-sticking: $ibo-font-si
         flex-direction: row;
 
         > .ibo-tab-container--tabs-list {
-          padding-top: 50px;
+          padding-top: $ibo-tab-container-within-panel--tabs-list--padding-top;
           flex-direction: column;
           height: auto;
           padding-left: unset;
           margin-right: unset;
-          min-width: calc(32px + 90px + 32px);
+          min-width: $ibo-tab-container-within-panel--tabs-list--min-width;
 
           > .ibo-tab-container--tab-header {
-            height: 50px;
+            height: $ibo-tab-container-within-panel--tabs-header--height;
             width: 100%;
             justify-content: left;
 
@@ -68,12 +75,12 @@ $ibo-panel-with-tab-container--tab-toggler--font-size--is-sticking: $ibo-font-si
       > .ibo-tab-container {
         > .ibo-tab-container--tabs-list.ibo-is-sticking {
           position: fixed;
-          z-index: 10;
+          z-index: $ibo-tab-container-within-panel--tabs--list--is-sticking--z-index;
         }
 
         &:not(.ibo-is-vertical){
           > .ibo-tab-container--tabs-list.ibo-is-sticking {
-            padding-left: 0;
+            padding-left: $ibo-tab-container-within-panel--tabs--list--is-sticking--is-not-vertical--padding-left;
 
             .ibo-tab-container--tab-toggler,
             .ibo-tab-container--extra-tabs-list-toggler {

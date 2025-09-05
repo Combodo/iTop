@@ -2,6 +2,7 @@
  * @copyright   Copyright (C) 2010-2024 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+$ibo-input-select--notification-item--mixed-value--font-size: $ibo-font-size-100 !default;
 $ibo-input-select--notification-item--mixed-value--color: $ibo-color-primary-800 !default;
 $ibo-input-select--notification-item--mixed-value--margin-left: 4px !default;
 
@@ -12,7 +13,7 @@ $ibo-input-select--notification-item--mixed-value--margin-left: 4px !default;
 }
 
 .ibo-input-select--notification-item--mixed-value{
-  font-size: $ibo-font-size-100;
+  font-size: $ibo-input-select--notification-item--mixed-value--font-size;
   color: $ibo-input-select--notification-item--mixed-value--color;
   margin-left: $ibo-input-select--notification-item--mixed-value--margin-left;
 }

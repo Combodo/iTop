@@ -32,6 +32,5 @@ $MyModuleSettings = array(
  *
  */
 $MyModules = array(
-	'addons' => array('user rights' => 'addons/userrights/userrightsprofile.class.inc.php'),
 );
 ?>

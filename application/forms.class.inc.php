@@ -1501,6 +1501,11 @@ class DesignerIconSelectionField extends DesignerFormField
 		$this->aAllowedValues = $aAllowedValues;
 	}
 
+	public function AddAllowedValue($aValue)
+	{
+		// Add a null value to the list of allowed values
+		$this->aAllowedValues = array_merge([$aValue], $this->aAllowedValues);
+	}
 	public function EnableUpload($sIconUploadUrl)
 	{
 		$this->sUploadUrl = $sIconUploadUrl;

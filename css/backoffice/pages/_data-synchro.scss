@@ -11,6 +11,9 @@ $ibo-data-synchro-source--replicas-table--cell--arrow--min-width: 100px !default
 
 $ibo-data-synchro-source--replicas-status--warning--margin: $ibo-spacing-0 5px $ibo-spacing-0 $ibo-spacing-300 !default;
 
+$ibo-data-synchro-source--replicas-status-separator--border-color: $ibo-color-white-100 !default;
+$ibo-data-synchro-source--replicas-status-separator--border: 2px solid $ibo-data-synchro-source--replicas-status-separator--border-color !default;
+
 $ibo-data-synchro-source--replicas-status--color: (
         'grey': (
                 $ibo-color-grey-400,
@@ -42,6 +45,10 @@ $ibo-data-synchro-source--replicas-status--color: (
         ),
 ) !default;
 
+$ibo-data-synchro-source--synoptics--cell--arrow--border-color: $ibo-color-grey-50 !default;
+$ibo-data-synchro-source--synoptics--cell--arrow--border: 2px solid $ibo-data-synchro-source--synoptics--cell--arrow--border-color !default;
+
+
 @each $sColor, $aAttributes in $ibo-data-synchro-source--replicas-status--color {
   $bg-color: nth($aAttributes, 1);
   $color: nth($aAttributes, 2);
@@ -50,8 +57,9 @@ $ibo-data-synchro-source--replicas-status--color: (
       background-color: $bg-color;
   }
 }
+
 .ibo-data-synchro-source--replicas-status-separator {
-  border-top: 2px solid $ibo-color-white-100;
+  border-top: $ibo-data-synchro-source--replicas-status-separator--border-color;
 }
 
 .ibo-data-synchro-source--replicas-status.ibo-is-light{
@@ -67,7 +75,7 @@ $ibo-data-synchro-source--replicas-status--color: (
   text-align: center;
   &.arrow {
     min-width: $ibo-data-synchro-source--replicas-table--cell--arrow--min-width;
-    border-top: 2px solid $ibo-color-grey-50;
+    border-top: $ibo-data-synchro-source--synoptics--cell--arrow--border;
   }
 }
 .ibo-data-synchro-source--replicas-status--warning{

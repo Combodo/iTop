@@ -10,60 +10,6 @@
  */
 aTruncatedLists = {}; // To keep track of the list being loaded, each member is an ajaxRequest object
 
-function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams) {
-	$('#'+divId).block();
-	//$('#'+divId).blockUI();
-	if (aTruncatedLists[divId] != undefined) {
-		try {
-			aAjaxRequest = aTruncatedLists[divId];
-			aAjaxRequest.abort();
-		} catch (e) {
-			// Do nothing special, just continue
-			console.log('Uh,uh, exception !');
-		}
-	}
-	aTruncatedLists[divId] = $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?style=list',
-		{operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams},
-		function (data) {
-			aTruncatedLists[divId] = undefined;
-			if (data.length > 0) {
-				$('#'+divId).html(data);
-				//$('#'+divId+' .listResults').tableHover(); // hover tables
-				$('#'+divId+' .listResults').each(function () {
-					var table = $(this);
-					var id = $(this).parent();
-					aTruncatedLists[divId] = undefined;
-					var checkbox = (table.find('th').first().find(':checkbox').length > 0);
-					if (checkbox) {
-						// There is a checkbox in the first column, don't make it sortable
-						table.tablesorter({headers: {0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']}).tablesorterPager({container: $("#pager")}); // sortable and zebra tables
-					} else {
-						// There is NO checkbox in the first column, all columns are considered sortable
-						table.tablesorter({widgets: ['myZebra', 'truncatedList']}).tablesorterPager({container: $("#pager"), totalRows: 97, filter: sSerializedFilter, extra_params: sExtraParams}); // sortable and zebra tables
-					}
-				});
-				$('#'+divId).unblock();
-			}
-		}
-	);
-}
-
-/**
- * Truncate a previously expanded list !
- */
-function TruncateList(divId, iLimit, sNewLabel, sLinkLabel) {
-	$('#'+divId).block();
-	var iCount = 0;
-	$('#'+divId+' table.listResults tr:gt('+iLimit+')').each(function () {
-		$(this).remove();
-	});
-	$('#lbl_'+divId).html(sNewLabel);
-	$('#'+divId+' table.listResults tr:last td').addClass('truncated');
-	$('#'+divId+' table.listResults').addClass('truncated');
-	$('#trc_'+divId).html(sLinkLabel);
-	$('#'+divId+' .listResults').trigger("update"); //  Reset the cache
-	$('#'+divId).unblock();
-}
 
 /**
  * Reload any block -- used for periodic auto-reload
@@ -96,30 +42,6 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams) {
 			);
 		}
 	}
-}
-
-function SaveGroupBySortOrder(sTableId, aValues) {
-	var sDashboardId = $('#'+sTableId).closest('.ibo-dashboard').attr('id');
-	var sPrefKey = 'GroupBy_'+sDashboardId+'_'+sTableId;
-	if (aValues.length != 0) {
-		$sValue = JSON.stringify(aValues);
-		if (GetUserPreference(sPrefKey, null) != $sValue) {
-			SetUserPreference(sPrefKey, $sValue, true);
-		}
-	}
-}
-
-function LoadGroupBySortOrder(sTableId) {
-	var sDashboardId = $('#'+sTableId).closest('.ibo-dashboard').attr('id');
-	var sPrefKey = 'GroupBy_'+sDashboardId+'_'+sTableId;
-	var sValues = GetUserPreference(sPrefKey, null);
-	if (sValues != null) {
-		aValues = JSON.parse(sValues);
-		window.setTimeout(function () {
-			$('#'+sTableId+' table.listResults').trigger('sorton', [aValues]);
-		}, 50);
-	}
-
 }
 
 /**
@@ -307,18 +229,6 @@ function ToggleField(value, field_id) {
 }
 
 /**
- * For the fields that cannot be visually disabled, they can be blocked
- * @return
- */
-function BlockField(field_id, bBlocked) {
-	if (bBlocked) {
-		$('#'+field_id).block({message: ' ** disabled ** ', enableValidation : true});
-	} else {
-		$('#'+field_id).unblock();
-	}
-}
-
-/**
  * Updates (enables/disables) a "duration" field
  */
 function ToggleDurationField(field_id) {
@@ -352,6 +262,7 @@ function PropagateCheckBox(bCurrValue, aFieldsList, bCheck) {
 	}
 }
 
+//used only in designer
 function FixTableSorter(table) {
 	if (table[0].config == undefined) {
 		// Table is not sort-able, let's fix it

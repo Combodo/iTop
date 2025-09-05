@@ -6,14 +6,15 @@
 $ibo-page-banner--background-color: $ibo-color-red-600 !default;
 $ibo-page-banner--text-color: $ibo-color-red-100 !default;
 $ibo-page-banner--text-content: "THIS IS NOT PRODUCTION INSTANCE" !default;
-
+$ibo-page-banner--padding: 0.2 !default;
+$ibo-page-banner--font-size: 1rem !default;
 
 #ibo-page-banner::before {
   display: block;
   width: 100%;
-  padding: 0.2rem;
+  padding: $ibo-page-banner--padding;
   text-align: center;
-  font-size: 1rem;
+  font-size: $ibo-page-banner--font-size;
   background: $ibo-page-banner--background-color;
   color: $ibo-page-banner--text-color;
   content: $ibo-page-banner--text-content;

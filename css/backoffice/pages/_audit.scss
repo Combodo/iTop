@@ -19,18 +19,19 @@ $ibo-audit--audit-line--csv-download--height: 2.5em !default;
 $ibo-audit--audit-line--status-indicator--diameter: 12px !default;
 $ibo-audit--audit-line--status-indicator--margin-right: 5px !default;
 
-
+/* Use semantic colors to ease accessibility */
 $ibo-audit--status--color: (
   'red': (
-    $ibo-color-red-700,
+    $ibo-color-danger-700,
   ),
   'orange': (
-    $ibo-color-orange-700,
+    $ibo-color-warning-700,
   ),
   'green': (
-    $ibo-color-green-800,
+    $ibo-color-success-800,
   ),
 );
+
 @each $sColor, $aAttributes in $ibo-audit--status--color {
   $bg-color: nth($aAttributes, 1);
   .ibo-audit--audit-category--panel .ibo-panel--body {

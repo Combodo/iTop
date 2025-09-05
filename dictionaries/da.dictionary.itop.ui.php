@@ -1296,6 +1296,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:DashletHeaderStatic:Prop-Title' => 'Titel',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kontakter',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Ikon',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'Header med statistik',
 	'UI:DashletHeaderDynamic:Description' => 'Header med stats (grupperet efter...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Titel',

@@ -27,6 +27,9 @@ $ibo-input--disabled--background-color: $ibo-color-grey-300 !default;
 $ibo-input--placeholder--color: $ibo-color-grey-700 !default;
 
 $ibo-input-wrapper--is-error--border-color: $ibo-color-red-600 !default;
+$ibo-input-wrapper--vanilla--is-error--border: 0 !default;
+$ibo-input-wrapper--vanilla--is-error--background-color: $ibo-color-transparent !default;
+
 $ibo-field-validation: $ibo-color-red-700 !default;
 
 $ibo-input--margin-x: $ibo-spacing-200 !default;
@@ -62,8 +65,8 @@ textarea.ibo-input{
     border-color: $ibo-input-wrapper--is-error--border-color;
   }
   .ibo-input-vanilla input{
-    border: 0;
-    background-color: #11ffee00;
+    border: $ibo-input-wrapper--vanilla--is-error--border;
+    background-color: $ibo-input-wrapper--vanilla--is-error--background-color;
   }
 }
 input.ibo-input-vanilla{

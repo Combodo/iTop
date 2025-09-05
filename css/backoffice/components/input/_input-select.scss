@@ -20,6 +20,7 @@ $ibo-input-select-selectize--item--active--background-color: $ibo-color-blue-100
 
 $ibo-input-select-wrapper--width: 100% !default;
 
+$ibo-input-select-wrapper--after--content: "\f0d7" !default;
 $ibo-input-select-wrapper--after--right: 8px !default;
 $ibo-input-select-wrapper--after--height: 28px !default;
 $ibo-input-select-wrapper--after--margin-left: -16px !default;
@@ -32,6 +33,7 @@ $ibo-input-select--action-button--height: 28px !default;
 $ibo-input-select--action-button--width: 23px !default;
 $ibo-input-select--action-button--margin-top: $ibo-spacing-0 !default;
 $ibo-input-select--action-button--margin-right: 3px !default;
+$ibo-input-select--action-button--font-size: $ibo-font-size-100 !default;
 $ibo-input-select--action-button--background-color: inherit !default;
 $ibo-input-select--action-button--color: $ibo-color-grey-800 !default;
 $ibo-input-select--action-button--padding-x: $ibo-spacing-100 !default;
@@ -57,7 +59,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
     min-width: $ibo-input-select-selectize--value--min-midth !important;
 
     input {
-      border-width: 0px;
+      border-width: 0;
       color: inherit;
       border-color: $ibo-color-white-100;
       padding-left: $ibo-input-select--padding-x;
@@ -121,7 +123,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 .ibo-input-select-wrapper::after{
 	position: absolute;
   z-index: 1;
-	content: "\f0d7";
+	content: $ibo-input-select-wrapper--after--content;
 	font-family: "Font Awesome 5 Free";
 	font-weight: 600;
 
@@ -145,7 +147,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 .ibo-input-select-wrapper--with-buttons:not(.ibo-input-select-autocomplete-wrapper)::after {
   position: absolute;
   z-index: 1;
-  content: "\f0d7";
+  content: $ibo-input-select-wrapper--after--content;
   font-family: "Font Awesome 5 Free";
   font-weight: 600;
   cursor: pointer;
@@ -168,7 +170,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
   margin-top: $ibo-input-select--action-button--margin-top;
   margin-right: $ibo-input-select--action-button--margin-right;
 
-  font-size: $ibo-font-size-100;
+  font-size: $ibo-input-select--action-button--font-size;
   background-color: $ibo-input-select--action-button--background-color;
   color: $ibo-input-select--action-button--color;
   padding: $ibo-input-select--action-button--padding-y $ibo-input-select--action-button--padding-x;

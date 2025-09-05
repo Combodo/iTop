@@ -226,27 +226,23 @@ class CMDBSource
 	 */
 	public static function InitServerAndPort($sDbHost, &$sServer, &$iPort)
 	{
-		$aConnectInfo = explode(':', $sDbHost);
+		if ($sDbHost != null) {
+			$aConnectInfo = explode(':', $sDbHost);
 
-		$bUsePersistentConnection = false;
-		if (strcasecmp($aConnectInfo[0], 'p') === 0)
-		{
-			$bUsePersistentConnection = true;
-			$sServer = $aConnectInfo[0].':'.$aConnectInfo[1];
-		}
-		else
-		{
-			$sServer = $aConnectInfo[0];
-		}
+			$bUsePersistentConnection = false;
+			if (strcasecmp($aConnectInfo[0], 'p') === 0) {
+				$bUsePersistentConnection = true;
+				$sServer = $aConnectInfo[0].':'.$aConnectInfo[1];
+			} else {
+				$sServer = $aConnectInfo[0];
+			}
 
-		$iConnectInfoCount = count($aConnectInfo);
-		if ($bUsePersistentConnection && ($iConnectInfoCount == 3))
-		{
-			$iPort = (int)($aConnectInfo[2]);
-		}
-		else if (!$bUsePersistentConnection && ($iConnectInfoCount == 2))
-		{
-			$iPort = (int)($aConnectInfo[1]);
+			$iConnectInfoCount = count($aConnectInfo);
+			if ($bUsePersistentConnection && ($iConnectInfoCount == 3)) {
+				$iPort = (int)($aConnectInfo[2]);
+			} else if (!$bUsePersistentConnection && ($iConnectInfoCount == 2)) {
+				$iPort = (int)($aConnectInfo[1]);
+			}
 		}
 	}
 

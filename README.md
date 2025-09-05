@@ -1,4 +1,4 @@
-<p align="center"><a href="https://www.combodo.com/itop-193" target="_blank">
+<p align="center"><a href="https://combodo.com" target="_blank">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/images/logos/logo-itop-baseline-light.svg">
   <source media="(prefers-color-scheme: light)" srcset="/images/logos/logo-itop-baseline-dark.svg">

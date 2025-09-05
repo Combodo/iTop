@@ -218,7 +218,8 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 		.ibo-navigation-menu--body{
 			width: $ibo-navigation-menu--body--width-expanded;
 
-			.ibo-navigation-menu--toggler-bar{
+      /* Values are hardcoded to ease the animation and there's no point in overloading them */
+      .ibo-navigation-menu--toggler-bar{
 				&:nth-child(1){
 					top: 4px;
 					left: 7px;
@@ -412,6 +413,7 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 	transition: all 0.2s linear;
 	background-color: $ibo-navigation-menu--body--text-color;
 
+  /* Values are hardcoded to ease the animation and there's no point in overloading them */
 	&:nth-child(1){
 		top: 0;
 	}

@@ -187,7 +187,6 @@ CONF;
 		//add few dynamic configurations in MyModules section
 		$expected_line = <<< CONF
 	'addons' => array(
-		'user rights' => 'addons/userrights/userrightsprofile.class.inc.php',
 		'user rights2' => '\$_SERVER[\\'TEST\\']'
 	),
 CONF;

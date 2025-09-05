@@ -63,11 +63,10 @@ $ibo-attachment--tab-header--drop-in--icon--color: $ibo-color-blue-600 !default;
     background-color: $ibo-attachment--tab-header--drop-in--background-color;
     color: $ibo-attachment--tab-header--drop-in--color;
     > a::after{
-      padding-left: $ibo-attachment--tab-header--drop-in--icon--padding-left;
-      font-family: "Font Awesome 5 Free";
       content: $ibo-attachment--tab-header--drop-in--icon--content;
-      font-weight: 900;
-      color: $ibo-color-blue-600;
+      @extend %fa-solid-base;
+      padding-left: $ibo-attachment--tab-header--drop-in--icon--padding-left;
+      color: $ibo-attachment--tab-header--drop-in--icon--color;
     }
   }
 }

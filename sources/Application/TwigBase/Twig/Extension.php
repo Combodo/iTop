@@ -154,6 +154,12 @@ class Extension
 			return twig_array_filter($oTwigEnv, $array, $arrow);
 		}, ['needs_environment' => true]);
 
+		// @since 3.3.0 N°8579
+		// Filter to remove spaces between HTML tags, overwrite the deprecated core "spaceless" filter
+		$aFilters[] = new TwigFilter('spaceless', function (?string $content) {
+			return trim(preg_replace('/>\s+</', '><', $content ?? ''));
+		}, ['is_safe' => ['html']]);
+
 		return $aFilters;
 	}
 

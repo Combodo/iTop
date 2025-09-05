@@ -24,6 +24,8 @@ $ibo-datatable--sort-order--color: $ibo-color-primary-600 !default;
 
 $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
 
+$ibo-datatable--selected-result-count--padding-right: 0.2em !default;
+$ibo-datatable--selected-result-count--padding-left: 0.1em !default;
 
 /* CSS variables (can be changed directly from the browser) */
 :root {
@@ -134,8 +136,8 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
 }
 
 .ibo-datatable--selected-count, .ibo-datatable--result-count{
-  padding-right: 0.2em;
-  padding-left: 0.1em;
+  padding-right: $ibo-datatable--selected-result-count--padding-right;
+  padding-left: $ibo-datatable--selected-result-count--padding-left;
 }
 
 //

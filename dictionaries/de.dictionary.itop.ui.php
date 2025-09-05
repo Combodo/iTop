@@ -1296,6 +1296,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:DashletHeaderStatic:Prop-Title' => 'Titel',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kontakte',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Icon',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'Header mit Statistiken',
 	'UI:DashletHeaderDynamic:Description' => 'Header mit Statistiken (gruppiert nach...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Titel',

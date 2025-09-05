@@ -1,0 +1,29 @@
+{% for sError in aErrors %}
+	{% UIAlert ForDanger{sContent: sError} %}{% EndUIAlert %}
+{% endfor %}
+{% for sWarning in aWarnings %}
+	{% UIAlert ForWarning{sContent: sWarning} %}{% EndUIAlert %}
+{% endfor %}
+{% for sNotice in aNotices %}
+	{% UIAlert ForInformation{sContent: sNotice} %}{% EndUIAlert %}
+{% endfor %}
+{% for sSuccess in aSuccesses %}
+	{% UIAlert ForSuccess{sContent: sSuccess} %}{% EndUIAlert %}
+{% endfor %}
+
+{% UITitle ForPage {'sTitle':'config-edit-title'|dict_s} %}{% EndUITitle %}
+
+{% if bShowEditor %}
+	<p>{{ 'config-edit-intro'|dict_s }}</p>
+	{% UIForm Standard {} %}
+		{% UIButton ForCancel { 'sLabel':'config-cancel'|dict_s, 'bIsSubmit':true, 'sId':'cancel_button', 'sName':'edit_operation', 'sValue': 'revert'} %}
+		{% UIButton ForPrimaryAction {'sLabel':'config-apply'|dict_s, 'bIsSubmit':true, 'sId':'submit_button', 'sName':'edit_operation', 'sValue': 'save' } %}
+
+		{% UIInput ForHidden {'sName':'transaction_id', 'sValue':sTransactionId} %}
+		{% UIInput ForHidden {'sName':'checksum', 'sValue':sChecksum} %}
+		{% UIInput ForHidden {'sName':'prev_config', 'sValue':sPrevConfig} %}
+		{% UIInput ForHidden {'sName':'new_config', 'sValue':sNewConfig} %}
+
+		<div id ="new_config" style="position: absolute; top: 125px; bottom: 0; left: 5px; right: 5px;"></div>
+	{% EndUIForm %}
+{% endif %}

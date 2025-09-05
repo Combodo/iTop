@@ -1301,6 +1301,7 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:DashletHeaderStatic:Prop-Title' => 'Cím',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kapcsolattartók',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Ikon',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'Fejléc statisztikákkal',
 	'UI:DashletHeaderDynamic:Description' => 'Fejléc statisztikákkal (csoportosítva...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Cím',

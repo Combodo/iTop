@@ -1302,6 +1302,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:DashletHeaderStatic:Prop-Title' => '題名',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => '連絡先',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'アイコン',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => '統計付ヘッダー',
 	'UI:DashletHeaderDynamic:Description' => '状態付ヘッダー (..によるグループ化)',
 	'UI:DashletHeaderDynamic:Prop-Title' => '題名',

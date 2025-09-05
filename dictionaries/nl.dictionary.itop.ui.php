@@ -1297,6 +1297,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:DashletHeaderStatic:Prop-Title' => 'Titel',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Contacten',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Icoon',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'Kolom met gegevens',
 	'UI:DashletHeaderDynamic:Description' => 'Kolom met statistieken (gegroepeerd aan de hand van...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Titel',

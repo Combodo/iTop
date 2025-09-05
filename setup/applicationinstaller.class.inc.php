@@ -701,9 +701,7 @@ class ApplicationInstaller
 		if ($bOldAddon)
 		{
 			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons(array(
-				'user rights' => 'addons/userrights/userrightsprofile.db.class.inc.php',
-			));
+			$oConfig->SetAddons([]);
 		}
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
@@ -904,9 +902,7 @@ class ApplicationInstaller
 		if ($bOldAddon)
 		{
 			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons(array(
-				'user rights' => 'addons/userrights/userrightsprofile.db.class.inc.php',
-			));
+			$oConfig->SetAddons([]);
 		}
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
@@ -973,9 +969,7 @@ class ApplicationInstaller
 		if ($bOldAddon)
 		{
 			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons(array(
-				'user rights' => 'addons/userrights/userrightsprofile.db.class.inc.php',
-			));
+			$oConfig->SetAddons([]);
 		}
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
@@ -1054,9 +1048,7 @@ class ApplicationInstaller
 		if ($bOldAddon)
 		{
 			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons(array(
-				'user rights' => 'addons/userrights/userrightsprofile.db.class.inc.php',
-			));
+			$oConfig->SetAddons([]);
 		}
 
 		// Record which modules are installed...

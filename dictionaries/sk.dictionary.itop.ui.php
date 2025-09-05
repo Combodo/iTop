@@ -1302,6 +1302,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:DashletHeaderStatic:Prop-Title' => 'Nadpis',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kontakty',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Ikonka',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'Hlavička so štatistikami',
 	'UI:DashletHeaderDynamic:Description' => 'Hlavička s vlastnosťami (zoskupené podľa...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Nadpis',

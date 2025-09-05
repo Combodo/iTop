@@ -10,6 +10,10 @@ $ibo-popover-menu--padding: $ibo-spacing-0 !default;
 
 $ibo-popover-menu--toggler-visual-hint--margin-left: 0.5rem !default;
 
+$ibo-popover-menu--section--height: 100% !default;
+$ibo-popover-menu--section--margin-x: $ibo-spacing-0 !default;
+$ibo-popover-menu--section--margin-y: $ibo-spacing-0 !default;
+
 $ibo-popover-menu--section-border-radius: $ibo-popover-menu--border-radius !default;
 
 .ibo-popover-menu {
@@ -35,8 +39,8 @@ $ibo-popover-menu--section-border-radius: $ibo-popover-menu--border-radius !defa
   display: flex;
   flex-direction: column;
   align-self: flex-start;
-  margin: $ibo-spacing-0 $ibo-spacing-0;
-  width: 100%;
+  margin: $ibo-popover-menu--section--margin-y $ibo-popover-menu--section--margin-x;
+  width: $ibo-popover-menu--section--height;
   white-space: nowrap;
   overflow: hidden; /* To avoid first/last entries of the menu to have no border-radius on hover */
 

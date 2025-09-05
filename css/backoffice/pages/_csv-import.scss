@@ -7,6 +7,7 @@ $ibo-csv-import--cell-message--padding-top: 3px !default;
 $ibo-csv-import--cell-modified--color: $ibo-color-blue-700 !default;
 $ibo-csv-import--cell-error--color: $ibo-color-red-700 !default;
 $ibo-csv-import--row--border-color: $ibo-color-grey-400 !default;
+$ibo-csv-import--row--border:  1px $ibo-csv-import--row--border-color solid !default;
 $ibo-csv-import--row-error--background-color: $ibo-color-red-200 !default;
 $ibo-csv-import--download-file--color: $ibo-color-primary-400 !default;
 $ibo-csv-import--download-file--font-size: 4em !default;
@@ -31,20 +32,20 @@ div.ibo-csv-import--cell-message {
 }
 
 tr.ibo-csv-import--row-unchanged td {
-  border-bottom: 1px $ibo-csv-import--row--border-color solid;
+  border-bottom: $ibo-csv-import--row--border;
 }
 
 .wizContainer table tr.ibo-csv-import--row-error td {
-  border-bottom: 1px $ibo-csv-import--row--border-color solid;
+  border-bottom: $ibo-csv-import--row--border;
   background-color: $ibo-csv-import--row-error--background-color;
 }
 
 tr.ibo-csv-import--row-modified td {
-  border-bottom: 1px $ibo-csv-import--row--border-color solid;
+  border-bottom: $ibo-csv-import--row--border;
 }
 
 tr.ibo-csv-import--row-added td {
-  border-bottom: 1px $ibo-csv-import--row--border-color solid;
+  border-bottom: $ibo-csv-import--row--border;
 }
 
 .ibo-csv-import--download-file {

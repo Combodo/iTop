@@ -1294,6 +1294,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:DashletHeaderStatic:Prop-Title' => 'Titul',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kontakty',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Ikona',
+	'UI:DashletIcon:None' => 'None~',
+
 	'UI:DashletHeaderDynamic:Label' => 'Hlavička se statistikami',
 	'UI:DashletHeaderDynamic:Description' => 'Hlavička se statistikami',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Titul',

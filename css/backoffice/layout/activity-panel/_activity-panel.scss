@@ -104,6 +104,7 @@ $ibo-activity-panel--add-caselog-entry-button--icon--line-height: 33px !default;
 $ibo-activity-panel--entry-forms-confirmation-explanation--spacing: $ibo-spacing-500 !default;
 $ibo-activity-panel--entry-forms-confirmation-preference-input--spacing: 0.5rem !default;
 
+$ibo-activity-panel--closed-cover--z-index: 2 !default;
 $ibo-activity-panel--closed-cover--background-color: $ibo-activity-panel--header--background-color !default;
 $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 
@@ -433,14 +434,12 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 .ibo-activity-panel--closed-cover {
   display: none;
   position: absolute;
-  z-index: 2; // Above the compose button and all
-  // padding-top: 64px;
+  z-index: $ibo-activity-panel--closed-cover--z-index; // Above the compose button and all
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   @extend %ibo-fully-centered-content;
-  // align-items: flex-start;
   background-color: $ibo-activity-panel--closed-cover--background-color;
   cursor: pointer;
 }

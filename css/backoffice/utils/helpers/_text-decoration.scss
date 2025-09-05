@@ -19,6 +19,9 @@ $ibo-hyperlink-text-decoration--on-hover: $common-hyperlink-text-decoration--on-
 $ibo-hyperlink-color--on-active: $common-hyperlink-color--on-active !default;
 $ibo-hyperlink-text-decoration--on-active: $common-hyperlink-text-decoration--on-active !default;
 
+$ibo-paragraph--spacing-top: 0.25em !default;
+$ibo-paragraph--spacing-bottom: 0.25em !default;
+
 $ibo-figure--spacing-x: $common-figure--spacing-x !default; /* Mind that this matches Bulma rule for figure */
 $ibo-figure--spacing-y: $common-figure--spacing-y !default;
 
@@ -122,8 +125,8 @@ $ibo-figure--spacing-y: $common-figure--spacing-y !default;
   }
 
   p {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
+    margin-top: $ibo-paragraph--spacing-top;
+    margin-bottom: $ibo-paragraph--spacing-bottom;
   }
 
   figure {

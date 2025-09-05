@@ -3,6 +3,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-input-select-icon--menu--icon--max-height: 100% !default;
+$ibo-input-select-icon--menu--icon--max-width: 100% !default;
 $ibo-input-select-icon--icon--padding-right: $ibo-spacing-200 !default;
 
 $ibo-input-select-icon--menu--z-index: 21 !default;
@@ -16,8 +18,8 @@ $ibo-input-select-icon--menu--icon--margin-right: 10px !default;
   display: inline-flex;
   text-align: left;
 	>img{
-		max-height: 100%;
-		max-width: 100%;
+		max-height: $ibo-input-select-icon--menu--icon--max-height;
+		max-width: $ibo-input-select-icon--menu--icon--max-width;
 		padding-right: $ibo-input-select-icon--icon--padding-right;
 	}
   >span{

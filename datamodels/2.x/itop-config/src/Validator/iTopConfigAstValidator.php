@@ -31,10 +31,10 @@ class iTopConfigAstValidator
 			$aInitialNodes = $oParser->parse($sConfig);
 		} catch (\Error $e) {
 			$sMessage = 'Invalid configuration: '. \Dict::Format('config-parse-error', $e->getMessage(), $e->getLine());
-			throw new \Exception($sMessage, 0, $e);
+			throw new \Exception($sMessage, iTopConfigValidator::CONFIG_ERROR, $e);
 		}catch (\Exception $e) {
 			$sMessage = 'Invalid configuration: '. \Dict::Format('config-parse-error', $e->getMessage(), $e->getLine());
-			throw new \Exception($sMessage, 0, $e);
+			throw new \Exception($sMessage, iTopConfigValidator::CONFIG_ERROR, $e);
 		}
 
 		$oTraverser = new NodeTraverser();

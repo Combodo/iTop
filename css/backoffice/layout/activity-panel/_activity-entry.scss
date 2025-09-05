@@ -18,6 +18,7 @@ $ibo-activity-entry--medallion--has-no-image--background-color: $ibo-color-blue-
 $ibo-activity-entry--medallion--has-no-image--text-color: $ibo-color-white-100 !default;
 $ibo-activity-entry--medallion--has-no-image--border: 1px solid $ibo-color-grey-200 !default;
 
+$ibo-activity-entry--information--margin-to-side: $ibo-spacing-0 !default;
 $ibo-activity-entry--information--margin-to-other-side: $ibo-activity-entry--medallion--diameter + $ibo-activity-entry--medallion--margin-with-information !default;
 
 $ibo-activity-entry--main-information--padding-x: $ibo-spacing-500 !default;
@@ -88,7 +89,7 @@ $ibo-activity-panel--load-all-entries--is-hover--margin-left: ($ibo-activity-pan
 			margin-left: $ibo-activity-entry--medallion--margin-with-information;
 		}
 		.ibo-activity-entry--information{
-			margin-right: 0;
+			margin-right: $ibo-activity-entry--information--margin-to-side;
 			margin-left: $ibo-activity-entry--information--margin-to-other-side;
 		}
 		.ibo-activity-entry--main-information{
@@ -109,7 +110,7 @@ $ibo-activity-panel--load-all-entries--is-hover--margin-left: ($ibo-activity-pan
 	&:not(.ibo-is-current-user){
 		.ibo-activity-entry--information{
 			margin-right: $ibo-activity-entry--information--margin-to-other-side;
-			margin-left: 0;
+			margin-left: $ibo-activity-entry--information--margin-to-side;
 		}
 		/* Bubble tip on the left for last entry of the group */
 		&:last-child{

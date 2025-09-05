@@ -1296,6 +1296,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:DashletHeaderStatic:Prop-Title' => 'Заголовок',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Контакты',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Иконка',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'Заголовок со статистикой',
 	'UI:DashletHeaderDynamic:Description' => 'Заголовок со статистикой (группировать по ...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Заголовок',

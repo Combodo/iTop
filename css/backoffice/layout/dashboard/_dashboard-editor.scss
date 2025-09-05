@@ -25,6 +25,10 @@ $ibo-dashboard-editor--delete-dashlet-icon--right: 9px !default;
 $ibo-dashboard-editor--delete-dashlet-icon--padding: $ibo-spacing-100 6px !default;
 $ibo-dashboard-editor--delete-dashlet-icon--z-index: 21 !default;
 
+$ibo-dashlet--properties--padding-bottom: 20px !default;
+$ibo-dashlet--properties--table--width: 100% !default;
+$ibo-dashlet--properties--table--cell--margin-bottom: 14px !default;
+
 
 .ibo-dashboard-editor--pane{
 	flex-grow: 1;
@@ -47,13 +51,13 @@ $ibo-dashboard-editor--delete-dashlet-icon--z-index: 21 !default;
 .ibo-dashlet--properties{
 	display: flex;
 	flex-direction: column;
-	padding-bottom: 20px;
+	padding-bottom: $ibo-dashlet--properties--padding-bottom;
 	table{
-    width: 100%;
+    width: $ibo-dashlet--properties--table--width;
     text-align: left;
 
     td, th {
-      margin-bottom: 14px;
+      margin-bottom: $ibo-dashlet--properties--table--cell--margin-bottom;
 
       .ibo-field {
         @extend %ibo-font-size-100;

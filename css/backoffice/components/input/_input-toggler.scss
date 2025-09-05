@@ -9,6 +9,8 @@ $ibo-toggler--wrapper--height: 20px !default;
 $ibo-toggler--slider--border-radius: $ibo-border-radius-900 !default;
 $ibo-toggler--slider--background-color: $ibo-color-secondary-600 !default;
 
+$ibo-toggler--slider--before--left: 3px !default;
+$ibo-toggler--slider--before--bottom: 3px !default;
 $ibo-toggler--slider--before--height: 15px !default;
 $ibo-toggler--slider--before--width: 15px !default;
 $ibo-toggler--slider--before--border-radius: $ibo-border-radius-full !default;
@@ -46,8 +48,8 @@ $ibo-toggler--label--margin-left: 4px !default;
 .ibo-toggler--slider:before {
   content: "";
   position: absolute;
-  left: 3px;
-  bottom: 3px;
+  left: $ibo-toggler--slider--before--left;
+  bottom: $ibo-toggler--slider--before--bottom;
   height: $ibo-toggler--slider--before--height;
   width: $ibo-toggler--slider--before--width;
   border-radius: $ibo-toggler--slider--before--border-radius;

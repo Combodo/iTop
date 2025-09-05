@@ -3,13 +3,17 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-medallion-with-blocklist--icon--image--margin-x: auto !default;
+$ibo-medallion-with-blocklist--icon--image--margin-y: 0 !default;
+$ibo-medallion-with-blocklist--icon--description--margin-top: $ibo-spacing-400 !default;
+
 .ibo-block-list--medallion{
   flex-direction: column;
   align-items: center;
   > .ibo-medallion-icon--image{
-    margin: 0 auto;
+    margin: $ibo-medallion-with-blocklist--icon--image--margin-y $ibo-medallion-with-blocklist--icon--image--margin-x;
     ~ .ibo-medallion-icon--description{
-      margin-top: 12px;
+      margin-top: $ibo-medallion-with-blocklist--icon--description--margin-top;
     }
   }
   > .ibo-medallion-icon--description{

@@ -7,7 +7,37 @@
 $ibo-dashboard--grid--width: 100% !default;
 $ibo-dashboard--grid--elements-spacing-x: $ibo-dashlet--elements-spacing-x !default;
 $ibo-dashboard--grid--elements-spacing-y: $ibo-dashlet--elements-spacing-y !default;
+$ibo-dashboard--grid--edit-mode--margin: 1px !default;
+$ibo-dashboard--grid--edit-mode--border-color: $ibo-color-grey-400 !default;
+$ibo-dashboard--grid--edit-mode--border: 2px $ibo-dashboard--grid--edit-mode--border-color dashed !default;
+$ibo-dashboard--grid--edit-mode--width: 100% !default;
+$ibo-dashboard--grid--edit-mode--min-height: 40px !default;
+
 $ibo-dashboard--top-bar-padding-bottom: 20px !default;
+
+$ibo-dashboard--selector--margin-left: $ibo-spacing-400 !default;
+$ibo-dashboard--selector--margin-right: 1 !default;
+$ibo-dashboard--selector--hover--background-color: $ibo-color-secondary-100 !default;
+$ibo-dashboard--selector--hover--border-radius: $ibo-button--border-radius !default;
+$ibo-dashboard--selector--selector-label--margin-x: 10px !default;
+
+$ibo-dashboard--switch--width: 30px !default;
+$ibo-dashboard--switch--height: $ibo-size-300 !default;
+
+$ibo-dashboard--slider--before--content: "\f007" !default;
+$ibo-dashboard--slider--before--font-size: $ibo-font-size-50 !default;
+$ibo-dashboard--slider--before--color: $ibo-color-secondary-800 !default;
+$ibo-dashboard--slider--before--right: 5px !default;
+$ibo-dashboard--slider--before--bottom: 3px !default;
+
+$ibo-dashboard--slider--after--content: "\f1ad" !default;
+$ibo-dashboard--slider--after--font-size: $ibo-font-size-150 !default;
+$ibo-dashboard--slider--after--color: $ibo-color-primary-600 !default;
+$ibo-dashboard--slider--after--left: 6px !default;
+$ibo-dashboard--slider--after--bottom: 1px !default;
+
+
+
 
 /* Rules */
 .ibo-dashboard--top-bar {
@@ -30,18 +60,18 @@ $ibo-dashboard--top-bar-padding-bottom: 20px !default;
 .ibo-dashboard--selector {
   display: flex;
   align-items: center;
-  margin-left: 12px;
-  margin-right: 1px;
+  margin-left: $ibo-dashboard--selector--margin-left;
+  margin-right: $ibo-dashboard--selector--margin-right;
 
   &:hover {
-    background-color: $ibo-color-secondary-100;
-    border-radius: $ibo-button--border-radius;
+    background-color: $ibo-dashboard--selector--hover--background-color;
+    border-radius: $ibo-dashboard--selector--hover--border-radius;
   }
 
   .selector-label {
     display: inline-block;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: $ibo-dashboard--selector--selector-label--margin-x;
+    margin-right: $ibo-dashboard--selector--selector-label--margin-x;
     vertical-align: super;
   }
 }
@@ -75,7 +105,7 @@ $ibo-dashboard--top-bar-padding-bottom: 20px !default;
   margin: calc(-1 * #{$ibo-dashboard--grid--elements-spacing-y} / 2) calc(-1 * #{$ibo-dashboard--grid--elements-spacing-x} / 2); /* Because of the margin all around the dashlets, we need to compensate it */
   min-width: 0;
 
-  /* Compensate negative margin on inner borders to simulate egal dashlets spacing between columns */
+  /* Compensate negative margin on inner borders to simulate equal dashlets spacing between columns */
   &:not(:last-child) {
     margin-right: 0;
   }
@@ -85,10 +115,10 @@ $ibo-dashboard--top-bar-padding-bottom: 20px !default;
   }
 
   &.edit_mode {
-    margin: 1px;
-    border: 2px #ccc dashed;
-    width: 100%;
-    min-height: 40px;
+    margin: $ibo-dashboard--grid--edit-mode--margin;
+    border: $ibo-dashboard--grid--edit-mode--border;
+    width: $ibo-dashboard--grid--edit-mode--width;
+    min-height: $ibo-dashboard--grid--edit-mode--min-height;
   }
 }
 
@@ -98,8 +128,8 @@ $ibo-dashboard--top-bar-padding-bottom: 20px !default;
 .ibo-dashboard--switch {
   position: relative;
   display: inline-block;
-  width: 30px;
-  height: 24px;
+  width: $ibo-dashboard--switch--width;
+  height: $ibo-dashboard--switch--height;
   vertical-align: baseline;
 }
 
@@ -119,31 +149,29 @@ $ibo-dashboard--top-bar-padding-bottom: 20px !default;
 }
 
 .ibo-dashboard--slider:before {
+  @extend %fa-solid-base;
+  content: $ibo-dashboard--slider--before--content;
+  font-size: $ibo-dashboard--slider--before--font-size;
+  color: $ibo-dashboard--slider--before--color;
   position: absolute;
-  right: 5px;
-  bottom: 3px;
-  color: $ibo-color-secondary-800;
-  content: "\f007";
-  font-family: "Font Awesome 5 Free", serif;
-  font-size: $ibo-font-size-50;
-  font-weight: 900;
+  right: $ibo-dashboard--slider--before--right;
+  bottom: $ibo-dashboard--slider--before--bottom;
 }
 
 .ibo-dashboard--slider:after {
+  @extend %fa-solid-base;
+  content: $ibo-dashboard--slider--after--content;
+  font-size: $ibo-dashboard--slider--after--font-size;
+  color: $ibo-dashboard--slider--after--color;
   position: absolute;
-  left: 6px;
-  bottom: 1px;
-  color: $ibo-color-primary-600;
-  content: "\f1ad";
-  font-family: "Font Awesome 5 Free", serif;
-  font-size: $ibo-font-size-150;
-  font-weight: 900;
+  left: $ibo-dashboard--slider--after--left;
+  bottom: $ibo-dashboard--slider--after--bottom;
 }
 
 input:checked + .ibo-dashboard--slider:before {
-  content: "\f1ad";
+  content: $ibo-dashboard--slider--after--content;
 }
 
 input:checked + .ibo-dashboard--slider:after {
-  content: "\f007";
+  content: $ibo-dashboard--slider--before--content;
 }

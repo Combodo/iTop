@@ -88,4 +88,24 @@ class DBSearchCommitTest extends ItopDataTestCase
 		static::assertEquals(0, $oSet->Count());
 	}
 
+	/**
+	 * @covers N°8511 - Enhance DBObjectSet to be able to order by id
+ */
+	public function testDbObjectSetFetchMethodWorksWithOptimizeColumnLoadOrderedById(){
+		$sUID=uniqid();
+		$oOrg1 = $this->CreateOrganization($sUID);
+		$oOrg2 = $this->CreateOrganization($sUID);
+
+		$oSearch = DBSearch::FromOQL("SELECT Organization WHERE name=\"$sUID\"", ['uuid' => $sUID]);
+		$oSet = new \DBObjectSet($oSearch, ['name' => true, 'id' => false ]);
+		$oSet->OptimizeColumnLoad(['Organization' => ['name']]);
+
+		static::assertEquals(2, $oSet->Count());
+		static::assertEquals($oOrg2->GetKey(), $oSet->Fetch()->GetKey());
+
+		$oSet = new \DBObjectSet($oSearch, ['name' => true, 'id' => true ]);
+		static::assertEquals(2, $oSet->Count());
+		static::assertEquals($oOrg1->GetKey(), $oSet->Fetch()->GetKey());
+	}
+
 }

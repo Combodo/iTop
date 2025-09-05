@@ -1967,7 +1967,10 @@ class DashletHeaderStatic extends Dashlet
 		$sIcon = $this->aProperties['icon'];
 
 		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
-		$sIconPath = utils::HtmlEntities($oIconSelect->MakeFileUrl($sIcon));
+		$sIconPath = '';
+		if (Utils::IsNotNullOrEmptyString($sIcon)) {
+			$sIconPath = utils::HtmlEntities($oIconSelect->MakeFileUrl($sIcon));
+		}
 
 		return DashletFactory::MakeForDashletHeaderStatic($this->oModelReflection->DictString($sTitle), $sIconPath);
 	}
@@ -1981,6 +1984,7 @@ class DashletHeaderStatic extends Dashlet
 		$oForm->AddField($oField);
 
 		$oField = $this->oModelReflection->GetIconSelectionField('icon', Dict::S('UI:DashletHeaderStatic:Prop-Icon'), $this->aProperties['icon']);
+		$oField->AddAllowedValue(['value' => '', 'label' => Dict::S('UI:DashletIcon:None'), 'icon' => '']);
 		$oForm->AddField($oField);
 	}
 
@@ -2093,7 +2097,10 @@ class DashletHeaderDynamic extends Dashlet
 		$sGroupBy = $this->aProperties['group_by'];
 
 		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
-		$sIconPath = $oIconSelect->MakeFileUrl($sIcon);
+		$sIconPath = '';
+		if (Utils::IsNotNullOrEmptyString($sIcon)) {
+			$sIconPath = $oIconSelect->MakeFileUrl($sIcon);
+		}
 
 		$aValues = $this->GetValues();
 		if (count($aValues) > 0) {
@@ -2223,6 +2230,7 @@ class DashletHeaderDynamic extends Dashlet
 		$oForm->AddField($oField);
 
 		$oField = $this->oModelReflection->GetIconSelectionField('icon', Dict::S('UI:DashletHeaderDynamic:Prop-Icon'), $this->aProperties['icon']);
+		$oField->AddAllowedValue(['value' => '', 'label' => Dict::S('UI:DashletIcon:None'), 'icon' => '']);
 		$oForm->AddField($oField);
 
 		$oField = new DesignerTextField('subtitle', Dict::S('UI:DashletHeaderDynamic:Prop-Subtitle'), $this->aProperties['subtitle']);

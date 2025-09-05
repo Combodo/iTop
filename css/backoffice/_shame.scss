@@ -39,6 +39,23 @@
 //
 // .site-nav a { color:#BADA55!important; }
 
+$ibo-shame--switch--width: 36px !default;
+$ibo-shame--switch--height: 20px !default;
+
+$ibo-shame--slider--background-color: $ibo-color-secondary-600 !default;
+
+$ibo-shame--slider--before--height: 15px !default;
+$ibo-shame--slider--before--width: 15px !default;
+$ibo-shame--slider--before--background-color: $ibo-color-secondary-300 !default;
+
+$ibo-shame--slider--is-checked--background-color: $ibo-color-primary-600 !default;
+
+$ibo-shame--slider--is-focus--box-shadow: 0 0 1px $ibo-color-primary-600 !default;
+
+$ibo-shame--slider--is-round--border-radius: 20px !default;
+$ibo-shame--slider--is-round--before--border-radius: 7px !default;
+
+
 // N°2847 - Recolor svg illustrations with iTop's primary color
 .ibo-svg-illustration--container > svg *[fill="#6c63ff"]{
 	fill: $ibo-svg-illustration--fill;
@@ -56,8 +73,8 @@
 .switch {
   position: relative;
   display: inline-block;
-  width: 36px;
-  height: 20px;
+  width: $ibo-shame--switch--width;
+  height: $ibo-shame--switch--height;
   vertical-align: baseline;
 }
 
@@ -74,27 +91,27 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: $ibo-color-secondary-600;
+  background-color: $ibo-shame--slider--background-color;
   transition: .4s;
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 15px;
-  width: 15px;
+  height: $ibo-shame--slider--before--height;
+  width: $ibo-shame--slider--before--width;
   left: 3px;
   bottom: 3px;
-  background-color: $ibo-color-secondary-300;
+  background-color: $ibo-shame--slider--before--background-color;
   transition: .4s;
 }
 
 input:checked + .slider {
-  background-color: $ibo-color-primary-600;
+  background-color: $ibo-shame--slider--is-checked--background-color;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px $ibo-color-primary-600;
+  box-shadow: $ibo-shame--slider--is-focus--box-shadow;
 }
 
 input:checked + .slider:before {
@@ -103,9 +120,9 @@ input:checked + .slider:before {
 
 /* Rounded sliders */
 .slider.round {
-  border-radius: 20px;
+  border-radius: $ibo-shame--slider--is-round--border-radius;
 }
 
 .slider.round:before {
-  border-radius: 7px;
+  border-radius: $ibo-shame--slider--is-round--before--border-radius;
 }

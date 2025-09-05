@@ -16,6 +16,8 @@ $ibo-object-details--icon--spacing--as-medallion--is-sticking: $ibo-object-detai
 $ibo-object-details--status-dot--size: 10px !default;
 $ibo-object-details--status-dot--spacing: $ibo-spacing-300 !default;
 $ibo-object-details--status-dot--border-radius: $ibo-border-radius-full !default;
+$ibo-object-details--status--class--before--content: "(" !default;
+$ibo-object-details--status--class--after--content: ")" !default;
 
 $ibo-object-details--tag--sibling-spacing: $ibo-spacing-400 !default;
 $ibo-object-details--tag--color: $ibo-panel--subtitle--color !default;
@@ -86,11 +88,11 @@ $ibo-object-details--header-right--padding-right--is-sticking: $ibo-spacing-300 
   display: inline-flex; /* To avoid having spaces around the class name due to the indentation */
 
   &::before {
-    content: "(";
+    content: $ibo-object-details--status--class--before--content;
   }
 
   &::after {
-    content: ")";
+    content: $ibo-object-details--status--class--after--content;
   }
 }
 

@@ -1307,6 +1307,7 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:DashletHeaderStatic:Prop-Title' => 'Tytuł',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kontakty',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Ikona',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'Nagłówek ze statystykami',
 	'UI:DashletHeaderDynamic:Description' => 'Nagłówek ze statystykami (pogrupowane według ...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Tytuł',

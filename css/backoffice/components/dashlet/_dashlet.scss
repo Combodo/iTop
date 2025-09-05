@@ -9,6 +9,12 @@ $ibo-dashlet--width--is-inline: auto !default;
 $ibo-dashlet--elements-spacing-x: $ibo-spacing-600 !default;
 $ibo-dashlet--elements-spacing-y: $ibo-spacing-600 !default;
 
+$ibo-dashlet-blocker--z-index: 9 !default; /* To be above calendar links & all, but below .close-box (9) */
+$ibo-dashlet-blocker--top: 0 !default;
+$ibo-dashlet-blocker--left: 0 !default;
+$ibo-dashlet-blocker--width: 100% !default;
+$ibo-dashlet-blocker--height: 100% !default;
+
 /* Rules */
 .ibo-dashlet {
   position: relative;
@@ -23,18 +29,13 @@ $ibo-dashlet--elements-spacing-y: $ibo-spacing-600 !default;
 .ibo-dashlet--is-inline {
   width: $ibo-dashlet--width--is-inline;
 }
-.ibo-details > .ibo-prop--apply {
-  display: table-column;
-}
-.ibo-details{
-  margin-top: 5px;
-}
+
 .ibo-dashlet-blocker{
   position: absolute;
-  z-index: 9; /* To be above calendar links & all, but below .close-box (9) */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  z-index: $ibo-dashlet-blocker--z-index;
+  top: $ibo-dashlet-blocker--top;
+  left: $ibo-dashlet-blocker--left;
+  width: $ibo-dashlet-blocker--width;
+  height: $ibo-dashlet-blocker--height;
   cursor: not-allowed;
 }
