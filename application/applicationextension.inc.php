@@ -57,12 +57,6 @@ require_once(APPROOT.'application/applicationextension/backoffice/SeparatorPopup
 require_once(APPROOT.'application/applicationextension/backoffice/URLButtonItem.php');
 require_once(APPROOT.'application/applicationextension/backoffice/URLPopupMenuItem.php');
 
-//deprecated class and interface
-require_once(APPROOT.'application/applicationextension/backoffice/iApplicationObjectExtension.php');
-require_once(APPROOT.'application/applicationextension/backoffice/AbstractApplicationObjectExtension.php');
-
-
-
 require_once(APPROOT.'application/applicationextension/iBackupExtraFilesExtension.php');
 require_once(APPROOT.'application/applicationextension/iKPILoggerExtension.php');
 require_once(APPROOT.'application/applicationextension/iModuleExtension.php');
