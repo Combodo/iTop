@@ -27,7 +27,7 @@ class ModuleFileReaderTest extends ItopDataTestCase
 		$this->assertEquals('Bridge - Request management ITIL + Incident management ITIL', $aRes[2]['label'] ?? null);
 	}
 
-	/*public function testAllReadModuleFileConfiguration()
+	public function testAllReadModuleFileConfiguration()
 	{
 		$_SERVER=[
 			'SERVER_NAME' => 'titi'
@@ -54,7 +54,7 @@ class ModuleFileReaderTest extends ItopDataTestCase
 		}
 
 		$this->assertEquals([], $aErrors, var_export($aErrors, true));
-	}*/
+	}
 
 	public static function ReadModuleFileConfigurationFileNameProvider()
 	{

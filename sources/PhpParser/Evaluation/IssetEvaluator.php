@@ -15,8 +15,12 @@ class IssetEvaluator extends AbstractExprEvaluator {
 		/** @var Isset_ $oExpr */
 
 		foreach ($oExpr->vars as $oVar){
-			$var = PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oVar);
-			if (! isset($var)){
+			try{
+				$var = PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oVar);
+				if (is_null($var)){
+					return false;
+				}
+			} catch (\Throwable $t) {
 				return false;
 			}
 		}

@@ -9,19 +9,20 @@ class VariableEvaluator extends AbstractExprEvaluator {
 	public function GetHandledExpressionType(): ?string {
 		return Variable::class;
 	}
-
 	public function Evaluate(Expr $oExpr): mixed {
 		/** @var Variable $oExpr */
-		if (is_null($oExpr->name)){
-			return null;
+		$sName = $oExpr->name;
+
+		if (array_key_exists($sName, get_defined_vars())) {
+			return $$sName;
 		}
 
-		if (! isset($oExpr->name)) {
-			return null;
+		if (array_key_exists($sName, $GLOBALS)) {
+			global $$sName;
+			return $$sName;
 		}
 
-		$sVarname=$oExpr->name;
-		global $$sVarname;
-		return $$sVarname;
+		return null;
 	}
+
 }
