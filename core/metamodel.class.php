@@ -399,7 +399,8 @@ abstract class MetaModel
 		return null;
 	}
 
-	final public static function GetDefaultWorkingTime(){
+	final public static function GetDefaultWorkingTime()
+	{
 		return 'DefaultWorkingTimeComputer';
 	}
 
