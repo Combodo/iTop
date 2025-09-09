@@ -355,22 +355,20 @@ class Response
             $replace = false;
 
             // As recommended by RFC 8297, PHP automatically copies headers from previous 103 responses, we need to deal with that if headers changed
-            if (103 === $statusCode) {
-                $previousValues = $this->sentHeaders[$name] ?? null;
-                if ($previousValues === $values) {
-                    // Header already sent in a previous response, it will be automatically copied in this response by PHP
-                    continue;
-                }
-
-                $replace = 0 === strcasecmp($name, 'Content-Type');
-
-                if (null !== $previousValues && array_diff($previousValues, $values)) {
-                    header_remove($name);
-                    $previousValues = null;
-                }
-
-                $newValues = null === $previousValues ? $values : array_diff($values, $previousValues);
+            $previousValues = $this->sentHeaders[$name] ?? null;
+            if ($previousValues === $values) {
+                // Header already sent in a previous response, it will be automatically copied in this response by PHP
+                continue;
             }
+
+            $replace = 0 === strcasecmp($name, 'Content-Type');
+
+            if (null !== $previousValues && array_diff($previousValues, $values)) {
+                header_remove($name);
+                $previousValues = null;
+            }
+
+            $newValues = null === $previousValues ? $values : array_diff($values, $previousValues);
 
             foreach ($newValues as $value) {
                 header($name.': '.$value, $replace, $this->statusCode);
@@ -497,7 +495,7 @@ class Response
      *
      * @final
      */
-    public function setStatusCode(int $code, string $text = null): static
+    public function setStatusCode(int $code, ?string $text = null): static
     {
         $this->statusCode = $code;
         if ($this->isInvalid()) {
@@ -762,7 +760,7 @@ class Response
      *
      * @final
      */
-    public function setExpires(\DateTimeInterface $date = null): static
+    public function setExpires(?\DateTimeInterface $date = null): static
     {
         if (1 > \func_num_args()) {
             trigger_deprecation('symfony/http-foundation', '6.2', 'Calling "%s()" without any arguments is deprecated, pass null explicitly instead.', __METHOD__);
@@ -943,7 +941,7 @@ class Response
      *
      * @final
      */
-    public function setLastModified(\DateTimeInterface $date = null): static
+    public function setLastModified(?\DateTimeInterface $date = null): static
     {
         if (1 > \func_num_args()) {
             trigger_deprecation('symfony/http-foundation', '6.2', 'Calling "%s()" without any arguments is deprecated, pass null explicitly instead.', __METHOD__);
@@ -981,7 +979,7 @@ class Response
      *
      * @final
      */
-    public function setEtag(string $etag = null, bool $weak = false): static
+    public function setEtag(?string $etag = null, bool $weak = false): static
     {
         if (1 > \func_num_args()) {
             trigger_deprecation('symfony/http-foundation', '6.2', 'Calling "%s()" without any arguments is deprecated, pass null explicitly instead.', __METHOD__);
@@ -1284,7 +1282,7 @@ class Response
      *
      * @final
      */
-    public function isRedirect(string $location = null): bool
+    public function isRedirect(?string $location = null): bool
     {
         return \in_array($this->statusCode, [201, 301, 302, 303, 307, 308]) && (null === $location ?: $location == $this->headers->get('Location'));
     }
