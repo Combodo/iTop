@@ -3,6 +3,7 @@
 namespace Combodo\iTop\Test\UnitTest\Setup;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use iTopCoreModuleDependencySort;
 use ModuleDiscovery;
 
 class ModuleDiscoveryTest extends ItopDataTestCase
@@ -257,7 +258,7 @@ MSG;
 		foreach (['c', 'b', 'a'] as $sModuleId){
 			$this->AddModule($aUnresolvedDependencyModules, $sModuleId, []);
 		}
-		ModuleDiscovery::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+		iTopCoreModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 		$this->assertEquals(['a', 'b', 'c'], array_keys($aUnresolvedDependencyModules));
 	}
 
@@ -268,7 +269,7 @@ MSG;
 		$this->AddModule($aUnresolvedDependencyModules, 'itop-config-mgmt/123', ['itop-structure/2.7.1']);
 		$this->AddModule($aUnresolvedDependencyModules, 'itop-structure/2.7.1', []);
 
-		ModuleDiscovery::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+		iTopCoreModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 		$this->assertEquals(
 			[
 				'itop-structure/2.7.1',
@@ -284,7 +285,7 @@ MSG;
 		$this->AddModule($aUnresolvedDependencyModules, 'itop-tickets/2.0.0', ['itop-structure/2.7.1']);
 		$this->AddModule($aUnresolvedDependencyModules, 'itop-config-mgmt/123', ['itop-structure/2.7.1']);
 
-		ModuleDiscovery::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+		iTopCoreModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 		$this->assertEquals(
 			[
 				'itop-config-mgmt/123',
@@ -301,7 +302,7 @@ MSG;
 		$this->AddModule($aUnresolvedDependencyModules, 'moduleB/1', ['moduleA/1']);
 		$this->AddModule($aUnresolvedDependencyModules, 'moduleC/1', []);
 
-		ModuleDiscovery::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+		iTopCoreModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 		$this->assertEquals(
 			[
 				'moduleA/1',
@@ -325,7 +326,7 @@ MSG;
 			$this->AddModule($aUnresolvedDependencyModules, $sModuleId, $aModuleData['dependencies']);
 		}
 
-		ModuleDiscovery::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+		iTopCoreModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 
 		$aExpected = json_decode(file_get_contents(__DIR__ . '/ressources/expected_ordered_module_ids.json'), true);
 		$this->assertEquals(

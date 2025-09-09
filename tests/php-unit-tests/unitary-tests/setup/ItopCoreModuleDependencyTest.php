@@ -5,11 +5,11 @@ namespace Combodo\iTop\Test\UnitTest\Setup;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use iTopCoreModuleDependency;
 
-class ModuleDependencyTest extends ItopTestCase
+class ItopCoreModuleDependencyTest extends ItopTestCase
 {
 	public function setUp(): void {
 		parent::setUp();
-		$this->RequireOnceItopFile('setup/modulediscovery.class.inc.php');
+		$this->RequireOnceItopFile('setup/module/ItopCoreModuleDependency.class.inc.php');
 	}
 
 	public function testModuleDependencyInit_Invalid()

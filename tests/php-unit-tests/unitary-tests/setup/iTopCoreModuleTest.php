@@ -3,17 +3,18 @@
 namespace Combodo\iTop\Test\UnitTest\Setup;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use iTopCoreModule;
 
-class ModuleTest extends ItopTestCase
+class iTopCoreModuleTest extends ItopTestCase
 {
 	public function setUp(): void {
 		parent::setUp();
-		$this->RequireOnceItopFile('setup/modulediscovery.class.inc.php');
+		$this->RequireOnceItopFile('setup/module/iTopCoreModule.class.inc.php');
 	}
 
 	public function testModuleInit()
 	{
-		$oModule = new \iTopCoreModule("itop-config-mgmt/2.4.0");
+		$oModule = new iTopCoreModule("itop-config-mgmt/2.4.0");
 		$this->assertEquals("itop-config-mgmt", $oModule->GetModuleName());
 		$this->assertEquals("2.4.0", $oModule->GetVersion());
 		$this->assertEquals("itop-config-mgmt/2.4.0", $oModule->GetModuleId());
@@ -21,7 +22,7 @@ class ModuleTest extends ItopTestCase
 
 	public function testModuleInit_NoVersion()
 	{
-		$oModule = new \iTopCoreModule("itop-config-mgmt");
+		$oModule = new iTopCoreModule("itop-config-mgmt");
 		$this->assertEquals("itop-config-mgmt", $oModule->GetModuleName());
 		$this->assertEquals("1.0.0", $oModule->GetVersion());
 		$this->assertEquals("itop-config-mgmt", $oModule->GetModuleId());
@@ -29,7 +30,7 @@ class ModuleTest extends ItopTestCase
 
 	public function testIsResolved_Unresolved()
 	{
-		$oModule = new \iTopCoreModule("itop-bridge-cmdb-ticket");
+		$oModule = new iTopCoreModule("itop-bridge-cmdb-ticket");
 		$oModule->SetDependencies(['itop-config-mgmt/2.7.1', 'itop-tickets/2.7.0']);
 		$this->assertEquals(['itop-config-mgmt', 'itop-tickets'], $oModule->GetUnresolvedDependencyModuleNames());
 
@@ -40,7 +41,7 @@ class ModuleTest extends ItopTestCase
 
 	public function testSetDependencies()
 	{
-		$oModule = new \iTopCoreModule("itop-bridge-datacenter-mgmt-services");
+		$oModule = new iTopCoreModule("itop-bridge-datacenter-mgmt-services");
 		$oModule->SetDependencies([
 			'itop-config-mgmt/2.7.1',
 			'itop-service-mgmt/2.7.1 || itop-service-mgmt-provider/2.7.1',
@@ -58,7 +59,7 @@ class ModuleTest extends ItopTestCase
 
 	public function testIsResolved_PartialResolution()
 	{
-		$oModule = new \iTopCoreModule("itop-bridge-cmdb-ticket");
+		$oModule = new iTopCoreModule("itop-bridge-cmdb-ticket");
 		$oModule->SetDependencies(['itop-config-mgmt/2.7.1', 'itop-tickets/2.7.0']);
 		$this->assertEquals(['itop-config-mgmt', 'itop-tickets'], $oModule->GetUnresolvedDependencyModuleNames());
 
@@ -69,7 +70,7 @@ class ModuleTest extends ItopTestCase
 
 	public function testIsResolved_OK()
 	{
-		$oModule = new \iTopCoreModule("itop-bridge-cmdb-ticket");
+		$oModule = new iTopCoreModule("itop-bridge-cmdb-ticket");
 		$oModule->SetDependencies(['itop-config-mgmt/2.7.1', 'itop-tickets/2.7.0']);
 		$this->assertEquals(['itop-config-mgmt', 'itop-tickets'], $oModule->GetUnresolvedDependencyModuleNames());
 
