@@ -85,12 +85,7 @@ class iTopCoreModule {
 
 		$this->aOngoingDependencies=$aNextDependencies;
 
-		if ($bDependenciesSolved)
-		{
-			return true;
-		}
-
-		return false;
+		return $bDependenciesSolved;
 	}
 
 	/**

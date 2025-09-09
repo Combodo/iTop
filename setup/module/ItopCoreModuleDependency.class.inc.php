@@ -1,9 +1,13 @@
 <?php
 
+use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+
 /**
  * Class that handles a module dependency
  */
 class iTopCoreModuleDependency {
+	private static PhpExpressionEvaluator $oPhpExpressionEvaluator;
+
 	private array $aPotentialPrerequisites;
 	private array $aParamsPerModuleId;
 	private string $sDepString;
@@ -41,6 +45,15 @@ class iTopCoreModuleDependency {
 		} else {
 			$this->bAlwaysUnresolved=true;
 		}
+	}
+
+	private static function GetPhpExpressionEvaluator(): PhpExpressionEvaluator
+	{
+		if (!isset(static::$oPhpExpressionEvaluator)) {
+			static::$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+		}
+
+		return static::$oPhpExpressionEvaluator;
 	}
 
 	/**
@@ -107,10 +120,10 @@ class iTopCoreModuleDependency {
 
 		$bResult=false;
 		$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $this->sDepString);
-		$bOk = @eval('$bResult = '.$sBooleanExpr.'; return true;');
-		if ($bOk == false)
-		{
-			SetupLog::Warning("Eval of '$sBooleanExpr' returned false");
+		try{
+			$bResult = self::GetPhpExpressionEvaluator()->ParseAndEvaluateBooleanExpression($sBooleanExpr);
+		} catch(ModuleFileReaderException $e){
+			//logged already
 			echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";
 		}
 		return $bResult;

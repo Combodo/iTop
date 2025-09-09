@@ -35,7 +35,7 @@ class iTopCoreModuleDependencySort {
 	 *
 	 * @return void
 	 */
-	public function SortModulesByCountOfDepencenciesDescending(array &$aUnresolvedDependencyModules) : void
+	public static function SortModulesByCountOfDepencenciesDescending(array &$aUnresolvedDependencyModules) : void
 	{
 		$aCountDepsByModuleId=[];
 		$aDependsOnModuleName=[];
@@ -125,7 +125,7 @@ class iTopCoreModuleDependencySort {
 	 * @return array
 	 * @throws \MissingDependencyException
 	 */
-	public function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null, ?int &$iLoopCount=0)
+	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null, ?int &$iLoopCount=0)
 	{
 		$iLoopCount=0;
 

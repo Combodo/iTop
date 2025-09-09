@@ -99,6 +99,7 @@ class ModuleDiscovery
 	protected static $m_sModulePath = null;
 
 	private static PhpExpressionEvaluator $oPhpExpressionEvaluator;
+	private static mixed $bNewFeedback = false;
 
 	protected static function SetModulePath($sModulePath)
 	{
@@ -174,7 +175,7 @@ class ModuleDiscovery
 			$sDir = dirname($sFilePath);
 			$aDirs = [
 				$sDir => self::$m_sModulePath,
-				$sDir.'/dictionaries' => self::$m_sModulePath.'/dictionaries'
+				$sDir.'/dictionaries' => self::$m_sModulePath.'/dictionaries',
 			];
 			foreach ($aDirs as $sRootDir => $sPath) {
 				if ($hDir = @opendir($sRootDir)) {
@@ -205,6 +206,9 @@ class ModuleDiscovery
 		return self::OrderModulesByDependencies(self::$m_aModules, $bAbortOnMissingDependency, $aModulesToLoad);
 	}
 
+	public static function UseNewUiFeedback($bNewFeedback){
+		self::$bNewFeedback=$bNewFeedback;
+	}
 	/**
 	 * Arrange an list of modules, based on their (inter) dependencies
 	 * @param array $aModules The list of modules to process: 'id' => $aModuleInfo
@@ -230,7 +234,7 @@ class ModuleDiscovery
 		ksort($aDependencies);
 		$aOrderedModules = [];
 		$iLoopCount = 1;
-		while(($iLoopCount < count($aModules)) && (count($aDependencies) > 0) )
+		while(($iLoopCount < count($aModules)+1) && (count($aDependencies) > 0) )
 		{
 			foreach($aDependencies as $sId => $aRemainingDeps)
 			{
@@ -252,6 +256,10 @@ class ModuleDiscovery
 		}
 		if ($bAbortOnMissingDependency && count($aDependencies) > 0)
 		{
+			if (self::$bNewFeedback){
+				iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, $bAbortOnMissingDependency, $aModulesToLoad);
+			}
+
 			$aModulesInfo = [];
 			$aModuleDeps = [];
 			foreach($aDependencies as $sId => $aDeps)

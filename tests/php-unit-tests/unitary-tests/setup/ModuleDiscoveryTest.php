@@ -13,7 +13,21 @@ class ModuleDiscoveryTest extends ItopDataTestCase
 		$this->RequireOnceItopFile('setup/modulediscovery.class.inc.php');
 	}
 
-	public function testOrderModulesByDependencies_CheckMissingDependenciesAreCorrectlyOrderedInTheException()
+	public function tearDown() : void {
+		ModuleDiscovery::UseNewUiFeedback(false);
+	}
+	public static function OrderModulesByDependenciesProvider(){
+		return [
+			'legacy computation' => [0],
+			'hybrid computation: order is legacy/ error is new usr friendly one' => [1],
+			'new computation' => [2],
+		];
+	}
+
+	/**
+	 * @dataProvider OrderModulesByDependenciesProvider
+	 */
+	public function testOrderModulesByDependencies_CheckMissingDependenciesAreCorrectlyOrderedInTheException(int $mode)
 	{
 		$aModules=[
 			"id1/123" => [
@@ -27,19 +41,40 @@ class ModuleDiscoveryTest extends ItopDataTestCase
 		];
 		$iLoopCount=0;
 		try{
-			ModuleDiscovery::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
+			if ($mode===2){
+				iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
+			} else {
+				if ($mode===1){
+					ModuleDiscovery::UseNewUiFeedback(true);
+				}
+				ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
+			}
 		} catch(\MissingDependencyException $e){
-			$sExpectedMessage = <<<MSG
+			if ($mode!==0) {
+				$sExpectedMessage = <<<MSG
 The following modules have unmet dependencies:
 label2 (id: id2/456) depends on: ❌ id3/666,
 label1 (id: id1/123) depends on: ❌ id3/666 + ❌ id4/666
 MSG;
+			} else {
+				$sExpectedMessage = <<<MSG
+The following modules have unmet dependencies:
+label1 (id: id1/123) depends on: ❌ id3/666 + ❌ id4/666,
+label2 (id: id2/456) depends on: ❌ id3/666
+MSG;
+			}
+
 			$this->assertEquals($sExpectedMessage, $e->getMessage());
-			$this->assertEquals(1, $iLoopCount);
+			if ($mode===2) {
+				$this->assertEquals(1, $iLoopCount);
+			}
 		}
 	}
 
-	public function testOrderModulesByDependencies_ValidateExceptionWithSomeDependenciesResolved()
+	/**
+	 * @dataProvider OrderModulesByDependenciesProvider
+	 */
+	public function testOrderModulesByDependencies_ValidateExceptionWithSomeDependenciesResolved(int $mode)
 	{
 		$aModules=[
 			"id1/123" => [
@@ -57,19 +92,39 @@ MSG;
 		];
 		$iLoopCount=0;
 		try{
-			ModuleDiscovery::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
+			if ($mode===2){
+				iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
+			} else {
+				if ($mode===1){
+					ModuleDiscovery::UseNewUiFeedback(true);
+				}
+				ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
+			}
 		} catch(\MissingDependencyException $e){
-			$sExpectedMessage = <<<MSG
+			if ($mode!==0) {
+				$sExpectedMessage = <<<MSG
 The following modules have unmet dependencies:
 label3 (id: id3/789) depends on: ✅ id2/456 + ❌ id4/666,
 label1 (id: id1/123) depends on: ✅ id2/456 + ❌ id4/666 + ❌ id3/789
 MSG;
+			} else {
+				$sExpectedMessage = <<<MSG
+The following modules have unmet dependencies:
+label1 (id: id1/123) depends on: ✅ id2/456 + ❌ id4/666 + ❌ id3/789,
+label3 (id: id3/789) depends on: ✅ id2/456 + ❌ id4/666
+MSG;
+			}
 			$this->assertEquals($sExpectedMessage, $e->getMessage());
-			$this->assertEquals(2, $iLoopCount);
+			if ($mode===2) {
+				$this->assertEquals(2, $iLoopCount);
+			}
 		}
 	}
 
-	public function testOrderModulesByDependencies_KeepGoingEvenWithFailure_WithSomeDependenciesResolved()
+	/**
+	 * @dataProvider OrderModulesByDependenciesProvider
+	 */
+	public function testOrderModulesByDependencies_KeepGoingEvenWithFailure_WithSomeDependenciesResolved(int $mode)
 	{
 		$aModules=[
 			"id1/123" => [
@@ -86,16 +141,28 @@ MSG;
 			],
 		];
 		$iLoopCount=0;
-		$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, false, null, $iLoopCount);
+		if ($mode===2){
+			$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, false, null, $iLoopCount);
+		} else {
+			if ($mode===1){
+				ModuleDiscovery::UseNewUiFeedback(true);
+			}
+			$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, false, null);
+		}
 
 		$aExpected = [
-			'id2/456'
+			'id2/456',
 		];
 		$this->assertEquals($aExpected, array_keys($aResult));
-		$this->assertEquals(2, $iLoopCount);
+		if ($mode===2) {
+			$this->assertEquals(2, $iLoopCount);
+		}
 	}
 
-	public function testOrderModulesByDependencies_UnResolveWithCircularDependency()
+	/**
+	 * @dataProvider OrderModulesByDependenciesProvider
+	 */
+	public function testOrderModulesByDependencies_UnResolveWithCircularDependency(int $mode)
 	{
 		$aModules=[
 			"id1/1" => [
@@ -118,21 +185,43 @@ MSG;
 		$iLoopCount=0;
 
 		try{
-			ModuleDiscovery::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
+			if ($mode===2){
+				iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
+			} else {
+				if ($mode===1){
+					ModuleDiscovery::UseNewUiFeedback(true);
+				}
+				ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
+			}
 		} catch(\MissingDependencyException $e){
-			$sExpectedMessage = <<<MSG
+			if ($mode!==0) {
+				$sExpectedMessage = <<<MSG
 The following modules have unmet dependencies:
 label1 (id: id1/1) depends on: ❌ id2/2,
 label4 (id: id4/4) depends on: ❌ id1/1,
 label3 (id: id3/3) depends on: ❌ id4/4,
 label2 (id: id2/2) depends on: ❌ id3/3
 MSG;
+			} else {
+				$sExpectedMessage = <<<MSG
+The following modules have unmet dependencies:
+label1 (id: id1/1) depends on: ❌ id2/2,
+label2 (id: id2/2) depends on: ❌ id3/3,
+label3 (id: id3/3) depends on: ❌ id4/4,
+label4 (id: id4/4) depends on: ❌ id1/1
+MSG;
+			}
 			$this->assertEquals($sExpectedMessage, $e->getMessage());
-			$this->assertEquals(1, $iLoopCount);
+			if ($mode===2) {
+				$this->assertEquals(1, $iLoopCount);
+			}
 		}
 	}
 
-	public function testOrderModulesByDependencies_ResolveOk()
+	/**
+	 * @dataProvider OrderModulesByDependenciesProvider
+	 */
+	public function testOrderModulesByDependencies_ResolveOk(int $mode)
 	{
 		$aModules=[
 			"id0/1" => [
@@ -157,7 +246,14 @@ MSG;
 			],
 		];
 		$iLoopCount=0;
-		$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
+		if ($mode===2){
+			$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
+		} else {
+			if ($mode===1){
+				ModuleDiscovery::UseNewUiFeedback(true);
+			}
+			$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
+		}
 
 		$aExpected = [
 			"id4/4",
@@ -167,10 +263,15 @@ MSG;
 			"id0/1",
 		];
 		$this->assertEquals($aExpected, array_keys($aResult));
-		$this->assertEquals(1, $iLoopCount);
+		if ($mode===2) {
+			$this->assertEquals(1, $iLoopCount);
+		}
 	}
 
-	public function testOrderModulesByDependencies_ResolveNoDependendenciesOrderByAlphabeticalOrder()
+	/**
+	 * @dataProvider OrderModulesByDependenciesProvider
+	 */
+	public function testOrderModulesByDependencies_ResolveNoDependendenciesOrderByAlphabeticalOrder(int $mode)
 	{
 		$aModules=[
 			"id2/2" => [
@@ -195,7 +296,14 @@ MSG;
 			],
 		];
 		$iLoopCount=0;
-		$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
+		if ($mode===2){
+			$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
+		} else {
+			if ($mode===1){
+				ModuleDiscovery::UseNewUiFeedback(true);
+			}
+			$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
+		}
 
 		$aExpected = [
 			"id0/1",
@@ -205,10 +313,15 @@ MSG;
 			"id4/4",
 		];
 		$this->assertEquals($aExpected, array_keys($aResult));
-		$this->assertEquals(1, $iLoopCount);
+		if ($mode===2) {
+			$this->assertEquals(1, $iLoopCount);
+		}
 	}
 
-	public function testOrderModulesByDependencies_ResolveOk_ModulesToLoadProvided()
+	/**
+	 * @dataProvider OrderModulesByDependenciesProvider
+	 */
+	public function testOrderModulesByDependencies_ResolveOk_ModulesToLoadProvided(int $mode)
 	{
 		$aModules=[
 			"id1/1" => [
@@ -231,7 +344,14 @@ MSG;
 
 		foreach(["id3", "id3-itil"] as $sLastModuleNameToLoad) {
 			$iLoopCount = 0;
-			$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, ['id1', 'id2', $sLastModuleNameToLoad], $iLoopCount);
+			if ($mode===2){
+				$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, ['id1', 'id2', $sLastModuleNameToLoad], $iLoopCount);
+			} else {
+				if ($mode===1){
+					ModuleDiscovery::UseNewUiFeedback(true);
+				}
+				$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, ['id1', 'id2', $sLastModuleNameToLoad]);
+			}
 
 			$aExpected = [
 				"$sLastModuleNameToLoad/3",
@@ -239,14 +359,24 @@ MSG;
 				"id1/1",
 			];
 			$this->assertEquals($aExpected, array_keys($aResult));
-			$this->assertEquals(1, $iLoopCount);
+			if ($mode===2) {
+				$this->assertEquals(1, $iLoopCount);
+			}
 		}
 	}
 
-	public function testOrderModulesByDependencies_RealExample(){
+	/*public function testOrderModulesByDependencies_RealExample(){
+		$aModules = json_decode(file_get_contents(__DIR__ . '/ressources/module_deps.json'), true);
+		$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
+
+		$aExpected = json_decode(file_get_contents(__DIR__ . '/ressources/expected_ordered_module_ids.json'), true);
+		$this->assertEquals($aExpected, array_keys($aResult));
+	}*/
+
+	public function testOrderModulesByDependenciesNewwComputation_RealExample(){
 		$aModules = json_decode(file_get_contents(__DIR__ . '/ressources/module_deps.json'), true);
 		$iLoopCount=0;
-		$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
+		$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
 
 		$aExpected = json_decode(file_get_contents(__DIR__ . '/ressources/expected_ordered_module_ids.json'), true);
 		$this->assertEquals($aExpected, array_keys($aResult));
