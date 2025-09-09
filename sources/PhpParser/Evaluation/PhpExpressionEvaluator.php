@@ -8,59 +8,28 @@ use PhpParser\ConstExprEvaluator;
 use PhpParser\Node\Expr;
 
 class PhpExpressionEvaluator {
+	const FUNC_CALL_WHITELIST=[
+		"function_exists",
+		"class_exists",
+		"method_exists"
+	];
+
+	const STATIC_CALLWHITELIST=[
+		"SetupInfo::ModuleIsSelected",
+		"utils::GetItopVersionWikiSyntax"
+	];
+
 	private static PhpExpressionEvaluator $oInstance;
 
-	/** @var iExprEvaluator[] $aPhpParserEvaluators */
-	private static array $aPhpParserEvaluators;
-	private int $iMode=self::ITOP_ALGO;
-
 	protected function __construct() {
-	}
-
-	const LIB_AND_FALLBACK=1;
-	const LIB_ONLY=2;
-	const ITOP_ALGO=3;
-	public function SetMode($iMode)
-	{
-		$this->iMode =$iMode;
 	}
 
 	final public static function GetInstance(): PhpExpressionEvaluator {
 		if (!isset(static::$oInstance)) {
 			static::$oInstance = new static();
-			static::$aPhpParserEvaluators=[];
-
-			foreach (glob(__DIR__ . "/**Evaluator.php") as $sFile){
-				require_once $sFile;
-				require_once $sFile;
-				$sNamespace = 'Combodo\\iTop\PhpParser\\Evaluation\\';
-				$sClass = $sNamespace. str_replace(".php", "", basename($sFile));
-				$oReflectionClass = new \ReflectionClass($sClass);
-				if ($oReflectionClass->isInstantiable()
-					&& $oReflectionClass->implementsInterface(iExprEvaluator::class)){
-					$oClass = new $sClass;
-
-					if (! is_null($oClass->GetHandledExpressionType())){
-						static::RegisterEvaluator($oClass, $oClass->GetHandledExpressionType());
-					}
-					if (! is_null($oClass->GetHandledExpressionTypes())) {
-						foreach ($oClass->GetHandledExpressionTypes() as $sHandledExpressionType){
-							static::RegisterEvaluator($oClass, $sHandledExpressionType);
-						}
-					}
-				}
-			}
 		}
 
 		return static::$oInstance;
-	}
-
-	private static function RegisterEvaluator(iExprEvaluator $oClass, string $sHandledExpressionType)
-	{
-		if (array_key_exists($sHandledExpressionType, static::$aPhpParserEvaluators)){
-			throw new \CoreException("Another Evaluator class already deals with $sHandledExpressionType");
-		}
-		static::$aPhpParserEvaluators[$sHandledExpressionType] = $oClass;
 	}
 
 	final public static function SetInstance(?PhpExpressionEvaluator $oInstance): void {
@@ -69,30 +38,10 @@ class PhpExpressionEvaluator {
 
 	public function EvaluateExpression(Expr $oExpression) : mixed
 	{
-		if ($this->iMode===self::ITOP_ALGO){
-			return $this->EvaluateExpressionLocally($oExpression);
-		}
-
-		if ($this->iMode==self::LIB_ONLY){
-			$oConstExprEvaluator = new ConstExprEvaluator();
-		} else {
-			$oConstExprEvaluator = new ConstExprEvaluator([$this, "EvaluateExpressionLocally"]);
-		}
-
-		$oConstExprEvaluator->setFunctionsWhitelist(FuncCallEvaluator::WHITELIST);
-		$oConstExprEvaluator->setStaticcallsWhitelist(StaticCallEvaluator::WHITELIST);
+		$oConstExprEvaluator = new ConstExprEvaluator();
+		$oConstExprEvaluator->setFunctionsWhitelist(self::FUNC_CALL_WHITELIST);
+		$oConstExprEvaluator->setStaticcallsWhitelist(self::STATIC_CALLWHITELIST);
 		return $oConstExprEvaluator->evaluateDirectly($oExpression);
-	}
-
-	public function EvaluateExpressionLocally(Expr $oExpression) : mixed
-	{
-		$sClass = get_class($oExpression);
-		$oPhpParserEvaluator = static::$aPhpParserEvaluators[$sClass] ?? null;
-		if (is_null($oPhpParserEvaluator)){
-			return $oExpression->value;
-		}
-
-		return $oPhpParserEvaluator->Evaluate($oExpression);
 	}
 
 	/**

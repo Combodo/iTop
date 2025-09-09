@@ -1024,12 +1024,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Combodo/PHP-Parser.git",
-                "reference": "fe64d1ac8a1332b9dcc1af05ec4fdfd9d8665f3a"
+                "reference": "8ffc1239ff48ed2476b2672dbcc939fcdc5b0f7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Combodo/PHP-Parser/zipball/fe64d1ac8a1332b9dcc1af05ec4fdfd9d8665f3a",
-                "reference": "fe64d1ac8a1332b9dcc1af05ec4fdfd9d8665f3a",
+                "url": "https://api.github.com/repos/Combodo/PHP-Parser/zipball/8ffc1239ff48ed2476b2672dbcc939fcdc5b0f7a",
+                "reference": "8ffc1239ff48ed2476b2672dbcc939fcdc5b0f7a",
                 "shasum": ""
             },
             "require": {
@@ -1078,7 +1078,7 @@
             "support": {
                 "source": "https://github.com/Combodo/PHP-Parser/tree/master"
             },
-            "time": "2025-09-05T13:41:49+00:00"
+            "time": "2025-09-09T09:14:16+00:00"
         },
         {
             "name": "paragonie/random_compat",

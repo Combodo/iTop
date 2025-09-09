@@ -27,73 +27,28 @@ class ModuleFileReaderTest extends ItopDataTestCase
 		$this->assertEquals('Bridge - Request management ITIL + Incident management ITIL', $aRes[2]['label'] ?? null);
 	}
 
-	public function testAllReadModuleFileConfiguration()
-	{
-		$_SERVER=[
-			'SERVER_NAME' => 'titi'
-		];
-
-		$aErrors=[];
-		foreach (glob(__DIR__.'/resources/all_designer/*.php') as $sModuleFilePath){
-			//var_dump($sModuleFilePath);
-			try{
-				$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
-			} catch(\Exception $e){
-				$aErrors[]=basename($sModuleFilePath);
-				continue;
-			}
-
-			$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileInformationUnsafe($sModuleFilePath);
-
-			if ($aExpected !== $aRes){
-				$aErrors[]=basename($sModuleFilePath);
-				continue;
-			}
-			//break;
-			//$this->assertEquals($aExpected, $aRes, $sModuleFilePath);
-		}
-
-		$this->assertEquals([], $aErrors, var_export($aErrors, true));
-	}
-
 	public static function ReadModuleFileConfigurationFileNameProvider()
 	{
-		return [
-			'nominal case : module.itop-full-itil.php' => ['module.itop-full-itil.php'],
-			'constant as value of a dict entry: module.authent-ldap.php' => ['module.authent-ldap.php'],
-			'int operation evaluation required: email-synchro' => ['module.combodo-email-synchro.php'],
-			'module.itop-admin-delegation-profiles-bridge-for-combodo-email-synchro.php' => ['module.itop-admin-delegation-profiles-bridge-for-combodo-email-synchro.php'],
-			'unknown class name to evaluation as installer: module.itop-global-requests-mgmt.php' => ['module.itop-global-requests-mgmt.php'],
-		];
+		$aUsecases=[];
+		foreach (glob(__DIR__.'/resources/*.php') as $sModuleFilePath){
+			if (false !== strpos($sModuleFilePath, "module.__MODULE__.php")){
+				continue;
+			}
+			$aUsecases[basename($sModuleFilePath)]=[$sModuleFilePath];
+		}
+
+		return $aUsecases;
 	}
 
 	/**
 	 * @dataProvider ReadModuleFileConfigurationFileNameProvider
 	 */
-	public function testReadModuleFileConfigurationVsLegacyMethod(string $sModuleBasename)
+	public function testReadModuleFileConfigurationVsLegacyMethod(string $sModuleFilePath)
 	{
-		$sModuleFilePath = __DIR__."/resources/$sModuleBasename";
-		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
-		$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileInformationUnsafe($sModuleFilePath);
+		$_SERVER=[
+			'SERVER_NAME' => 'titi'
+		];
 
-		$this->assertEquals($aExpected, $aRes);
-	}
-
-	/**
-	 * Covers below legacy usecase
-	 * 'dependencies' => array(
-	 * 'itop-config-mgmt/2.0.0'||'itop-structure/3.0.0',
-	 * 'itop-request-mgmt/2.0.0||itop-request-mgmt-itil/2.0.0||itop-incident-mgmt-itil/2.0.0',
-	 * ),
-	 *
-	 * @param string $sModuleBasename
-	 *
-	 * @return void
-	 * @throws \ModuleFileReaderException
-	 */
-	public function testReadModuleFileConfiguration_BadlyWrittenDependencies(){
-		//$sModuleFilePath = __DIR__."/resources/module.combodo-make-it-vip.php";
-		$sModuleFilePath = __DIR__."/resources/module.itop-admin-delegation-profiles.php";
 		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
 		$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileInformationUnsafe($sModuleFilePath);
 
