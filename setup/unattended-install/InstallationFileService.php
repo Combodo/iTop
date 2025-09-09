@@ -268,12 +268,14 @@ class InstallationFileService {
 	}
 
 	public function ProcessAutoSelectModules() : void {
+		$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+
 		foreach($this->GetAutoSelectModules() as $sModuleId => $aModule)
 		{
 			try {
 				SetupInfo::SetSelectedModules($this->aSelectedModules);
-				PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist(RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
-				$bSelected = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aModule['auto_select']);
+
+				$bSelected = $oPhpExpressionEvaluator->ParseAndEvaluateBooleanExpression($aModule['auto_select']);
 				if ($bSelected)
 				{
 					// Modules in data/production-modules/ are considered as mandatory and always installed

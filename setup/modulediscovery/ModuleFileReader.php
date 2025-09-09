@@ -9,6 +9,8 @@ class ModuleFileReader {
 	private static ModuleFileReader $oInstance;
 	private	static int $iDummyClassIndex = 0;
 
+	private	PhpExpressionEvaluator $oPhpExpressionEvaluator;
+
 	const FUNC_CALL_WHITELIST=[
 		"function_exists",
 		"class_exists",
@@ -20,6 +22,7 @@ class ModuleFileReader {
 	];
 
 	protected function __construct() {
+		$this->oPhpExpressionEvaluator = new PhpExpressionEvaluator(static::FUNC_CALL_WHITELIST, static::STATIC_CALLWHITELIST);
 	}
 
 	final public static function GetInstance(): ModuleFileReader {
@@ -50,9 +53,6 @@ class ModuleFileReader {
 		catch (PhpParser\Error $e) {
 			throw new \ModuleFileReaderException($e->getMessage(), 0, $e, $sModuleFilePath);
 		}
-
-		PhpExpressionEvaluator::GetInstance()->SetFunctionsWhitelist(static::FUNC_CALL_WHITELIST);
-		PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist(static::STATIC_CALLWHITELIST);
 
 		try {
 			foreach ($aNodes as $sKey => $oNode) {
@@ -221,7 +221,7 @@ class ModuleFileReader {
 			throw new ModuleFileReaderException("2nd parameter to SetupWebPage::AddModule not a string: " . get_class($oModuleId->value), 0, null, $sModuleFilePath);
 		}
 
-		$sModuleId = PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oModuleId->value);
+		$sModuleId = $this->oPhpExpressionEvaluator->EvaluateExpression($oModuleId->value);
 
 		$oModuleConfigInfo = $aArgs[2];
 		if (false === ($oModuleConfigInfo instanceof PhpParser\Node\Arg)) {
@@ -233,7 +233,7 @@ class ModuleFileReader {
 			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
 		}
 
-		$aModuleConfig = PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oModuleConfigInfo->value);
+		$aModuleConfig = $this->oPhpExpressionEvaluator->EvaluateExpression($oModuleConfigInfo->value);
 
 		if (! is_array($aModuleConfig)){
 			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
@@ -255,7 +255,7 @@ class ModuleFileReader {
 	 */
 	private function GetModuleInformationFromIf(string $sModuleFilePath, \PhpParser\Node\Stmt\If_ $oNode) : ?array
 	{
-		$bCondition = PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oNode->cond);
+		$bCondition = $this->oPhpExpressionEvaluator->EvaluateExpression($oNode->cond);
 		if ($bCondition) {
 			foreach ($oNode->stmts as $oSubNode) {
 				if ($oSubNode instanceof \PhpParser\Node\Stmt\Expression) {
@@ -272,7 +272,7 @@ class ModuleFileReader {
 		if (! is_null($oNode->elseifs)) {
 			foreach ($oNode->elseifs as $oElseIfSubNode) {
 				/** @var \PhpParser\Node\Stmt\ElseIf_ $oElseIfSubNode */
-				$bCondition = PhpExpressionEvaluator::GetInstance()->EvaluateExpression($oElseIfSubNode->cond);
+				$bCondition = $this->oPhpExpressionEvaluator->EvaluateExpression($oElseIfSubNode->cond);
 				if ($bCondition) {
 					return $this->GetModuleConfigurationFromStatement($sModuleFilePath, $oElseIfSubNode->stmts);
 				}

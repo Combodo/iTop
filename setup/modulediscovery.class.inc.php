@@ -95,6 +95,9 @@ class ModuleDiscovery
 
 	// ModulePath is used by AddModule to get the path of the module being included (in ListModuleFiles)
 	protected static $m_sModulePath = null;
+
+	private static PhpExpressionEvaluator $oPhpExpressionEvaluator;
+
 	protected static function SetModulePath($sModulePath)
 	{
 		self::$m_sModulePath = $sModulePath;
@@ -310,6 +313,15 @@ class ModuleDiscovery
 		return $aModules;
 	}
 
+	private static function GetPhpExpressionEvaluator(): PhpExpressionEvaluator
+	{
+		if (!isset(static::$oPhpExpressionEvaluator)) {
+			static::$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+		}
+
+		return static::$oPhpExpressionEvaluator;
+	}
+
 	protected static function DependencyIsResolved($sDepString, $aOrderedModules, $aSelectedModules)
 	{
 		$bResult = false;
@@ -393,7 +405,7 @@ class ModuleDiscovery
 			{
 				$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $sDepString);
 				try{
-					$bResult = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($sBooleanExpr);
+					$bResult = self::GetPhpExpressionEvaluator()->ParseAndEvaluateBooleanExpression($sBooleanExpr);
 				} catch(ModuleFileReaderException $e){
 					//logged already
 					echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";

@@ -114,9 +114,8 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 		global $oEvaluationFakeClass;
 		$oEvaluationFakeClass = new EvaluationFakeClass();
 
-		PhpExpressionEvaluator::GetInstance()->SetFunctionsWhitelist(ModuleFileReader::FUNC_CALL_WHITELIST);
-		PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist(ModuleFileReader::STATIC_CALLWHITELIST);
-		$res = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateExpression($sExpression);
+		$oPhpExpressionEvaluator = new PhpExpressionEvaluator(ModuleFileReader::FUNC_CALL_WHITELIST, ModuleFileReader::STATIC_CALLWHITELIST);
+		$res = $oPhpExpressionEvaluator->ParseAndEvaluateExpression($sExpression);
 		if ($forced_expected === "NOTPROVIDED"){
 			$this->assertEquals($this->UnprotectedComputeExpression($sExpression), $res, $sExpression);
 		} else {
@@ -164,9 +163,8 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 		$oEvaluationFakeClass = new EvaluationFakeClass();
 
 		$this->expectException(\ModuleFileReaderException::class);
-		PhpExpressionEvaluator::GetInstance()->SetFunctionsWhitelist([]);
-		PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist([]);
-		PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateExpression($sExpression);
+		$oPhpExpressionEvaluator = new PhpExpressionEvaluator();
+		$oPhpExpressionEvaluator->ParseAndEvaluateExpression($sExpression);
 	}
 
 
@@ -220,8 +218,8 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 	 */
 	public function testEvaluateBooleanExpression_Autoselect(string $sBooleanExpression, bool $expected){
 		\SetupInfo::SetSelectedModules(["itop-storage-mgmt" => "123"]);
-		PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist(["SetupInfo::ModuleIsSelected"]);
-		$this->assertEquals($expected, PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($sBooleanExpression), $sBooleanExpression);
+		$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], ["SetupInfo::ModuleIsSelected"]);
+		$this->assertEquals($expected, $oPhpExpressionEvaluator->ParseAndEvaluateBooleanExpression($sBooleanExpression), $sBooleanExpression);
 	}
 }
 

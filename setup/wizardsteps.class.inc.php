@@ -1312,6 +1312,8 @@ class WizStepModulesChoice extends WizardStep
 	 */
 	protected $oExtensionsMap;
 
+	protected PhpExpressionEvaluator $oPhpExpressionEvaluator;
+
 	/**
 	 * Whether we were able to load the choices from the database or not
 	 * @var bool
@@ -1737,6 +1739,15 @@ EOF
 		return $aRetScore;
 	}
 
+	private function GetPhpExpressionEvaluator(): PhpExpressionEvaluator
+	{
+		if (!isset($this->oPhpExpressionEvaluator)) {
+			$this->oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+		}
+
+		return $this->oPhpExpressionEvaluator;
+	}
+
 	/**
 	 * Converts the list of selected "choices" into a list of "modules": take into account the selected and the mandatory modules
 	 *
@@ -1788,8 +1799,7 @@ EOF
 								// Check the module selection
 								try {
 									SetupInfo::SetSelectedModules($aModules);
-									PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist(RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
-									$bSelected = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aInfo['auto_select']);
+									$bSelected = $this->GetPhpExpressionEvaluator()->ParseAndEvaluateBooleanExpression($aInfo['auto_select']);
 								}
 								catch (ModuleFileReaderException $e) {
 									//logged already
@@ -1867,8 +1877,7 @@ EOF
 						try
 						{
 							SetupInfo::SetSelectedModules($aModules);
-							PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist(RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
-							$bSelected = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aModule['auto_select']);
+							$bSelected = $this->GetPhpExpressionEvaluator()->ParseAndEvaluateBooleanExpression($aModule['auto_select']);
 							if ($bSelected)
 							{
 								$aModules[$sModuleId] = true; // store the Id of the selected module

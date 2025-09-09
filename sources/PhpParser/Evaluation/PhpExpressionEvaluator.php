@@ -12,33 +12,14 @@ use PhpParser\ParserFactory;
  * Used at runtime/setup time
  */
 class PhpExpressionEvaluator {
-	private static PhpExpressionEvaluator $oInstance;
 
 	/** @var ConstExprEvaluator $oConstExprEvaluator */
 	private $oConstExprEvaluator;
 
-	protected function __construct() {
+	public function __construct(array $functionsWhiteList=[], array $staticCallsWhitelist=[]) {
 		$this->oConstExprEvaluator = new ConstExprEvaluator();
-	}
-
-	public function SetFunctionsWhitelist(array $functionsWhiteList): void {
-		$this->oConstExprEvaluator->setFunctionsWhitelist($functionsWhiteList);
-	}
-
-	public function SetStaticCallsWhitelist(array $staticCallsWhitelist): void {
 		$this->oConstExprEvaluator->setStaticcallsWhitelist($staticCallsWhitelist);
-	}
-
-	final public static function GetInstance(): PhpExpressionEvaluator {
-		if (!isset(static::$oInstance)) {
-			static::$oInstance = new static();
-		}
-
-		return static::$oInstance;
-	}
-
-	final public static function SetInstance(?PhpExpressionEvaluator $oInstance): void {
-		static::$oInstance = $oInstance;
+		$this->oConstExprEvaluator->setFunctionsWhitelist($functionsWhiteList);
 	}
 
 	public function EvaluateExpression(Expr $oExpression) : mixed

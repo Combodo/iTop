@@ -454,6 +454,8 @@ class RunTimeEnvironment
 			}
 		}
 
+		$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+
 		// Now process the 'AutoSelect' modules
 		do
 		{
@@ -465,8 +467,7 @@ class RunTimeEnvironment
 				{
 					SetupInfo::SetSelectedModules($aRet);
 					try{
-						PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist(RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
-						$bSelected = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($oModule->GetAutoSelect());
+						$bSelected = $oPhpExpressionEvaluator->ParseAndEvaluateBooleanExpression($oModule->GetAutoSelect());
 						if ($bSelected)
 						{
 							$aRet[$oModule->GetName()] = $oModule; // store the Id of the selected module
