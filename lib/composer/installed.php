@@ -3,7 +3,7 @@
         'name' => 'combodo/itop',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '965c9dba1435ed8605dc3d05f6021e77654137c9',
+        'reference' => '9436a0221b1fda281dd098b54149127a7d3d23c3',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'combodo/itop' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '965c9dba1435ed8605dc3d05f6021e77654137c9',
+            'reference' => '9436a0221b1fda281dd098b54149127a7d3d23c3',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -143,12 +143,14 @@
             'dev_requirement' => false,
         ),
         'nikic/php-parser' => array(
-            'pretty_version' => 'v5.6.0',
-            'version' => '5.6.0.0',
-            'reference' => '221b0d0fdf1369c71047ad1d18bb5880017bbc56',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '8ffc1239ff48ed2476b2672dbcc939fcdc5b0f7a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nikic/php-parser',
-            'aliases' => array(),
+            'aliases' => array(
+                0 => '5.x-dev',
+            ),
             'dev_requirement' => false,
         ),
         'paragonie/random_compat' => array(
