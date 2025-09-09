@@ -4,6 +4,7 @@ namespace Combodo\iTop\Test\UnitTest\Sources\PhpParser\Evaluation;
 
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use ModuleFileReader;
 
 class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 	public static $STATIC_PROPERTY = 123;
@@ -113,6 +114,8 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 		global $oEvaluationFakeClass;
 		$oEvaluationFakeClass = new EvaluationFakeClass();
 
+		PhpExpressionEvaluator::GetInstance()->SetFunctionsWhitelist(ModuleFileReader::FUNC_CALL_WHITELIST);
+		PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist(ModuleFileReader::STATIC_CALLWHITELIST);
 		$res = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateExpression($sExpression);
 		if ($forced_expected === "NOTPROVIDED"){
 			$this->assertEquals($this->UnprotectedComputeExpression($sExpression), $res, $sExpression);
@@ -135,6 +138,8 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 				'forced_expected' => null,
 			],
 			'Variable: $oNonNullVar' => ['sExpression' => '$oNonNullVar', null],
+			'FuncCall: function_exists(\'ldap_connect\')' => [ 'sExpression' => 'function_exists(\'ldap_connect\')'],
+			'StaticCall utils::GetItopVersionWikiSyntax()' => ['sExpression' => 'utils::GetItopVersionWikiSyntax()'],
 		];
 	}
 	/**
@@ -159,6 +164,8 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 		$oEvaluationFakeClass = new EvaluationFakeClass();
 
 		$this->expectException(\ModuleFileReaderException::class);
+		PhpExpressionEvaluator::GetInstance()->SetFunctionsWhitelist([]);
+		PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist([]);
 		PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateExpression($sExpression);
 	}
 
@@ -208,12 +215,12 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 		];
 	}
 
-
 	/**
 	 * @dataProvider ParseAndEvaluateBooleanExpression_AutoselectProvider
 	 */
 	public function testEvaluateBooleanExpression_Autoselect(string $sBooleanExpression, bool $expected){
 		\SetupInfo::SetSelectedModules(["itop-storage-mgmt" => "123"]);
+		PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist(["SetupInfo::ModuleIsSelected"]);
 		$this->assertEquals($expected, PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($sBooleanExpression), $sBooleanExpression);
 	}
 }

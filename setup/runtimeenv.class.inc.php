@@ -41,6 +41,10 @@ define ('DATAMODEL_MODULE', 'datamodel'); // Convention to store the version of 
 
 class RunTimeEnvironment
 {
+	const STATIC_CALL_AUTOSELECT_WHITELIST=[
+		"SetupInfo::ModuleIsSelected"
+	];
+
 	/**
 	 * The name of the environment that the caller wants to build
 	 * @var string sFinalEnv
@@ -461,6 +465,7 @@ class RunTimeEnvironment
 				{
 					SetupInfo::SetSelectedModules($aRet);
 					try{
+						PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist(RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
 						$bSelected = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($oModule->GetAutoSelect());
 						if ($bSelected)
 						{

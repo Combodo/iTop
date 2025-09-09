@@ -6,22 +6,27 @@ use ModuleFileParser;
 use ModuleFileReaderException;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\Node\Expr;
+use PhpParser\ParserFactory;
 
+/**
+ * Used at runtime/setup time
+ */
 class PhpExpressionEvaluator {
-	const FUNC_CALL_WHITELIST=[
-		"function_exists",
-		"class_exists",
-		"method_exists"
-	];
-
-	const STATIC_CALLWHITELIST=[
-		"SetupInfo::ModuleIsSelected",
-		"utils::GetItopVersionWikiSyntax"
-	];
-
 	private static PhpExpressionEvaluator $oInstance;
 
+	/** @var ConstExprEvaluator $oConstExprEvaluator */
+	private $oConstExprEvaluator;
+
 	protected function __construct() {
+		$this->oConstExprEvaluator = new ConstExprEvaluator();
+	}
+
+	public function SetFunctionsWhitelist(array $functionsWhiteList): void {
+		$this->oConstExprEvaluator->setFunctionsWhitelist($functionsWhiteList);
+	}
+
+	public function SetStaticCallsWhitelist(array $staticCallsWhitelist): void {
+		$this->oConstExprEvaluator->setStaticcallsWhitelist($staticCallsWhitelist);
 	}
 
 	final public static function GetInstance(): PhpExpressionEvaluator {
@@ -38,10 +43,7 @@ class PhpExpressionEvaluator {
 
 	public function EvaluateExpression(Expr $oExpression) : mixed
 	{
-		$oConstExprEvaluator = new ConstExprEvaluator();
-		$oConstExprEvaluator->setFunctionsWhitelist(self::FUNC_CALL_WHITELIST);
-		$oConstExprEvaluator->setStaticcallsWhitelist(self::STATIC_CALLWHITELIST);
-		return $oConstExprEvaluator->evaluateDirectly($oExpression);
+		return $this->oConstExprEvaluator->evaluateDirectly($oExpression);
 	}
 
 	/**
@@ -62,7 +64,8 @@ class PhpExpressionEvaluator {
 $sExpr;
 PHP;
 		try{
-			$aNodes = ModuleFileParser::GetInstance()->ParsePhpCode($sPhpContent);
+			$oParser = (new ParserFactory())->createForNewestSupportedVersion();
+			$aNodes = $oParser->parse($sPhpContent);
 			$oExpr = $aNodes[0];
 			return $this->EvaluateExpression($oExpr->expr);
 		} catch (\Throwable $t) {

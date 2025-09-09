@@ -1788,6 +1788,7 @@ EOF
 								// Check the module selection
 								try {
 									SetupInfo::SetSelectedModules($aModules);
+									PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist(RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
 									$bSelected = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aInfo['auto_select']);
 								}
 								catch (ModuleFileReaderException $e) {
@@ -1866,6 +1867,7 @@ EOF
 						try
 						{
 							SetupInfo::SetSelectedModules($aModules);
+							PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist(RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
 							$bSelected = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aModule['auto_select']);
 							if ($bSelected)
 							{

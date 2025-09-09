@@ -272,6 +272,7 @@ class InstallationFileService {
 		{
 			try {
 				SetupInfo::SetSelectedModules($this->aSelectedModules);
+				PhpExpressionEvaluator::GetInstance()->SetStaticCallsWhitelist(RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
 				$bSelected = PhpExpressionEvaluator::GetInstance()->ParseAndEvaluateBooleanExpression($aModule['auto_select']);
 				if ($bSelected)
 				{
