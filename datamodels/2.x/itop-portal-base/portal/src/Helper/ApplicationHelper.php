@@ -50,45 +50,6 @@ class ApplicationHelper
 	const FORM_DEFAULT_ALWAYS_SHOW_SUBMIT = false;
 
 	/**
-	 * Loads classes from the base portal
-	 *
-	 * @param string $sScannedDir  Directory to load the files from
-	 * @param string $sFilePattern Pattern of files to load
-	 * @param string $sType        Type of files to load, used only in the Exception message, can be anything
-	 *
-	 * @throws \Exception
-	 * @deprecated Since 2.7.0
-	 *
-	 */
-	public static function LoadClasses($sScannedDir, $sFilePattern, $sType)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		@trigger_error(
-			sprintf(
-				'Usage of legacy LoadClasses is deprecated. You should rely on autoloading (and therefore follow PSR4).',
-				__FILE__
-			),
-			E_USER_DEPRECATED
-		);
-
-		// Loading classes from base portal
-		foreach (scandir($sScannedDir) as $sFile)
-		{
-			if (strpos($sFile, $sFilePattern) !== false && file_exists($sFilepath = $sScannedDir.'/'.$sFile))
-			{
-				try
-				{
-					require_once $sFilepath;
-				}
-				catch (Exception $e)
-				{
-					throw new Exception('Error while trying to load '.$sType.' '.$sFile);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Loads the brick's security from the OQL queries to profiles arrays
 	 *
 	 * @param \Combodo\iTop\Portal\Brick\AbstractBrick $oBrick

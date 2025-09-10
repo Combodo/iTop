@@ -197,7 +197,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// Tooltips
 		$this->LinkScriptFromAppRoot('node_modules/@popperjs/core/dist/umd/popper.min.js');
 		$this->LinkScriptFromAppRoot('node_modules/tippy.js/dist/tippy-bundle.umd.min.js');
-		
+
 		// Toasts
 		$this->LinkScriptFromAppRoot('node_modules/toastify-js/src/toastify.js');
 
@@ -1026,23 +1026,6 @@ HTML;
 	public function FindTab($sPattern, $sTabContainer = null)
 	{
 		return $this->m_oTabs->FindTab($sPattern, $sTabContainer);
-	}
-
-	/**
-	 * Make the given tab the active one, as if it were clicked
-	 * DOES NOT WORK: apparently in the *old* version of jquery
-	 * that we are using this is not supported... TO DO upgrade
-	 * the whole jquery bundle...
-	 *
-	 * @param string $sTabContainer
-	 * @param string $sTabCode
-	 *
-	 * @deprecated 3.0.0
-	 */
-	public function SelectTab($sTabContainer, $sTabCode)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabCode));
 	}
 
 	/**

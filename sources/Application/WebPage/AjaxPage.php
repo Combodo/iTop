@@ -24,7 +24,6 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 * @var array
 	 */
 	protected $m_oTabs;
-	private $m_sMenu; // If set, then the menu will be updated
 
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/ajaxpage/layout';
 	/** @var string  */
@@ -55,7 +54,6 @@ class AjaxPage extends WebPage implements iTabbedPage
 		$this->m_oTabs = new TabManager();
 		$this->sContentType = 'text/html';
 		$this->sContentDisposition = 'inline';
-		$this->m_sMenu = "";
 		$this->sPromiseId = utils::ReadParam('ajax_promise_id', uniqid('ajax_', true));
 
 		utils::InitArchiveMode();
@@ -171,17 +169,6 @@ class AjaxPage extends WebPage implements iTabbedPage
 	public function SelectTab($sTabContainer, $sTabCode)
 	{
 		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabCode));
-	}
-
-	/**
-	 * @param string $sHtml
-	 *
-	 * @deprecated Will be removed in 3.0.0
-	 */
-	public function AddToMenu($sHtml)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		$this->m_sMenu .= $sHtml;
 	}
 
 	/**
@@ -342,7 +329,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 	{
 		assert(false);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */

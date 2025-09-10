@@ -1281,29 +1281,6 @@ class ModelFactory
 	}
 
 	/**
-	 *    XML load errors (XML format and validation)
-	 *
-	 * @Deprecated Errors are now sent by Exception
-	 */
-	function HasLoadErrors()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Errors are now sent by Exception');
-
-		return (count(self::$aLoadErrors) > 0);
-	}
-
-	/**
-	 * @Deprecated Errors are now sent by Exception
-	 * @return array
-	 */
-	function GetLoadErrors()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Errors are now sent by Exception');
-
-		return self::$aLoadErrors;
-	}
-
-	/**
 	 * @param array $aErrors
 	 *
 	 * @return string
@@ -2124,7 +2101,7 @@ class MFElement extends Combodo\iTop\DesignElement
 	 */
 	public function IsInDefinition()
 	{
-		// Iterate through the parents: reset the flag if any of them has a flag set 
+		// Iterate through the parents: reset the flag if any of them has a flag set
 		for ($oParent = $this; $oParent instanceof MFElement; $oParent = $oParent->parentNode)
 		{
 			if ($oParent->GetAlteration() != '')

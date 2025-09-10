@@ -105,22 +105,4 @@ class Kernel extends BaseKernel
 		$routes->import($confDir.'/{routes}/*'.self::CONFIG_EXTS);
 		$routes->import($confDir.'/{routes}'.self::CONFIG_EXTS);
 	}
-
-
-	/**
-	 * Checks if a given class name belongs to an active bundle.
-	 *
-	 * @param string $class A class name
-	 *
-	 * @return void true if the class belongs to an active bundle, false otherwise
-	 *
-	 * @api
-	 *
-	 * @deprecated Deprecated since version 2.6, to be removed in 3.0.
-	 */
-	public function isClassInActiveBundle($class)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		// TODO: Implement isClassInActiveBundle() method.
-	}
 }

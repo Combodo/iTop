@@ -80,34 +80,6 @@ class TabManager
 	}
 
 	/**
-	 * @return int
-	 * @deprecated 3.0.0
-	 */
-	public function GetCurrentTabLength()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		return 0;
-	}
-
-	/**
-	 * Truncates the given tab to the specifed length and returns the truncated part
-	 *
-	 * @param string $sTabContainer The tab container in which to truncate the tab
-	 * @param string $sTab The name/identifier of the tab to truncate
-	 * @param integer $iLength The length/offset at which to truncate the tab
-	 *
-	 * @return string The truncated part
-	 * @deprecated 3.0.0
-	 */
-	public function TruncateTab(string $sTabContainer, string $sTab, int $iLength)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		return '';
-	}
-
-	/**
 	 * @param string $sTabContainer
 	 * @param string $sTab
 	 *
@@ -288,39 +260,6 @@ class TabManager
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Make the given tab the active one, as if it were clicked
-	 * DOES NOT WORK: apparently in the *old* version of jquery
-	 * that we are using this is not supported... TO DO upgrade
-	 * the whole jquery bundle...
-	 *
-	 * @param string $sTabContainer
-	 * @param string $sTabCode
-	 *
-	 * @return string
-	 * @deprecated 3.0.0
-	 */
-	public function SelectTab(string $sTabContainer, string $sTabCode)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		return '';
-	}
-
-	/**
-	 * @param string $sContent
-	 * @param WebPage $oPage
-	 *
-	 * @return mixed
-	 * @deprecated 3.0.0
-	 */
-	public function RenderIntoContent(string $sContent, WebPage $oPage)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		return '';
 	}
 
 	/**

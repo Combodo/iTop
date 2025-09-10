@@ -30,7 +30,7 @@ class BulkExportException extends Exception
 		parent::__construct($message, $code, $previous);
 		$this->sLocalizedMessage = $sLocalizedMessage;
 	}
-	
+
 	public function GetLocalizedMessage()
 	{
 		return $this->sLocalizedMessage;
@@ -42,7 +42,7 @@ class BulkExportMissingParameterException extends BulkExportException
 	{
 		parent::__construct('Missing parameter: '.$sFieldCode, Dict::Format('Core:BulkExport:MissingParameter_Param', $sFieldCode));
 	}
-		
+
 }
 
 /**
@@ -146,7 +146,7 @@ abstract class BulkExport
 	protected $oBulkExportResult;
 	protected $sTmpFile;
 	protected $bLocalizeOutput;
-	
+
 	public function __construct()
 	{
 		$this->oSearch = null;
@@ -247,7 +247,7 @@ abstract class BulkExport
 			fclose($hFile);
 		}
 	}
-	
+
 	public function GetTmpFilePath()
 	{
 		return $this->sTmpFile;
@@ -289,7 +289,7 @@ abstract class BulkExport
     {
         $this->bLocalizeOutput = $bLocalizeOutput;
     }
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see iBulkExport::SetObjectList()
@@ -299,12 +299,12 @@ abstract class BulkExport
 		$oSearch->SetShowObsoleteData($this->aStatusInfo['show_obsolete_data']);
 		$this->oSearch = $oSearch;
 	}
-	
+
 	public function SetFormat($sFormatCode)
 	{
-		$this->sFormatCode = $sFormatCode;	
+		$this->sFormatCode = $sFormatCode;
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see iBulkExport::IsFormatSupported()
@@ -322,7 +322,7 @@ abstract class BulkExport
 	{
 		return array(); // return array('csv' => Dict::S('UI:ExportFormatCSV'));
 	}
-	
+
 
 	public function SetHttpHeaders(WebPage $oPage)
 	{
@@ -344,7 +344,7 @@ abstract class BulkExport
 	{
 		return '';
 	}
-	
+
 	public function SaveState()
 	{
 		if ($this->oBulkExportResult === null)
@@ -362,7 +362,7 @@ abstract class BulkExport
 		utils::PopArchiveMode();
 		return $ret;
 	}
-	
+
 	public function Cleanup()
 	{
 		if (($this->oBulkExportResult &&  (!$this->oBulkExportResult->IsNew())))
@@ -384,16 +384,6 @@ abstract class BulkExport
 	}
 
 	/**
-	 * @deprecated 3.0.0 use GetFormPart instead
-	 */
-	public function DisplayFormPart(WebPage $oP, $sPartId)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetFormPart instead');
-		$oP->AddSubBlock($this->GetFormPart($oP, $sPartId));
-	}
-
-
-	/**
 	 * @param WebPage $oP
 	 * @param $sPartId
 	 *
@@ -412,14 +402,14 @@ abstract class BulkExport
 	{
 		$this->bLocalizeOutput = !((bool)utils::ReadParam('no_localize', 0, true, 'integer'));
 	}
-	
+
 	public function GetResultAsHtml()
 	{
-		
+
 	}
 	public function GetRawResult()
 	{
-		
+
 	}
 
 	/**
@@ -441,17 +431,17 @@ abstract class BulkExport
 	{
 		return 'UTF-8';
 	}
-	
+
 	public function GetStatistics()
 	{
-		
+
 	}
 
 	public function SetFields($sFields)
 	{
 
 	}
-	
+
 	public function GetDownloadFileName()
 	{
 		return Dict::Format('Core:BulkExportOf_Class', MetaModel::GetName($this->oSearch->GetClass())).'.'.$this->GetFileExtension();
@@ -461,7 +451,7 @@ abstract class BulkExport
 	{
 		$this->aStatusInfo = $aStatusInfo;
 	}
-	
+
 	public function GetStatusInfo()
 	{
 		return $this->aStatusInfo;
@@ -493,7 +483,7 @@ abstract class BulkExport
 			$hFile = @fopen($sFileName, 'x');
 		}
 		while($hFile === false);
-	
+
 		fclose($hFile);
 		return $sFileName;
 	}

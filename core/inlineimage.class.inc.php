@@ -110,7 +110,7 @@ class InlineImage extends DBObject
 		$aCallSpec = array($sClass, 'MapContextParam');
 		if (is_callable($aCallSpec))
 		{
-			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
+			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
 			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
 			{
 				$iOrgId = $oItem->Get($sAttCode);
@@ -146,7 +146,7 @@ class InlineImage extends DBObject
 		$aCallSpec = array($sClass, 'MapContextParam');
 		if (is_callable($aCallSpec))
 		{
-			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
+			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
 			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
 			{
 				// Second: check that the organization CAN be fetched from the current user
@@ -156,7 +156,7 @@ class InlineImage extends DBObject
 					$aCallSpec = array($sClass, 'MapContextParam');
 					if (is_callable($aCallSpec))
 					{
-						$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
+						$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
 						if (MetaModel::IsValidAttCode($sClass, $sAttCode))
 						{
 							// OK - try it
@@ -192,7 +192,7 @@ class InlineImage extends DBObject
 		if (!is_null($iTransactionId))
 		{
 			// Attach new (temporary) inline images
-			
+
 			$sTempId = utils::GetUploadTempId($iTransactionId);
 			// The object is being created from a form, check if there are pending inline images for this object
 			$sOQL = 'SELECT InlineImage WHERE temp_id = :temp_id';
@@ -366,10 +366,10 @@ CombodoInlineImage.FixImagesWidth();
 JS
 			;
 		}
-		
+
 		return $sJS;
 	}
-	
+
 	/**
 	 * Check if an the given mimeType is an image that can be processed by the system
 	 *
@@ -382,7 +382,7 @@ JS
 	public static function IsImage($sMimeType)
 	{
 		if (!function_exists('gd_info')) return false; // no image processing capability on this system
-	
+
 		$bRet = false;
 		$aInfo = gd_info(); // What are the capabilities
 		switch($sMimeType)
@@ -390,29 +390,17 @@ JS
 			case 'image/gif':
 				return $aInfo['GIF Read Support'];
 				break;
-					
+
 			case 'image/jpeg':
 				return $aInfo['JPEG Support'];
 				break;
-					
+
 			case 'image/png':
 				return $aInfo['PNG Support'];
 				break;
-	
+
 		}
 		return $bRet;
-	}
-	
-	/**
-	 * Resize an image so that it fits the maximum width/height defined in the config file
-	 * @param ormDocument $oImage The original image stored as an array (content / mimetype / filename)
-	 * @return ormDocument The resampled image (or the original one if it already fit)
-	 * @deprecated Replaced by ormDocument::ResizeImageToFit
-	 */
-	public static function ResizeImageToFit(ormDocument $oImage, &$aDimensions = null)
-	{
-		$iMaxImageSize = (int)MetaModel::GetConfig()->Get('inline_image_max_storage_width', 0);
-		return $oImage->ResizeImageToFit($iMaxImageSize, $iMaxImageSize, $aDimensions);
 	}
 
 	/**
@@ -444,7 +432,7 @@ JS
 		}
 		return $sRet;
 	}
-	
+
 	/**
 	 * Get the fragment of javascript needed to complete the initialization of
 	 * CKEditor when creating/modifying an object

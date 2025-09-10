@@ -241,25 +241,6 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	}
 
     /**
-     * @param bool $bWithId
-     * @return array
-     * @deprecated Since iTop 2.4, use foreach($this as $oItem){} instead
-     */
-    public function ToArray($bWithId = true)
-    {
-	    DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use foreach($this as $oItem){} instead');
-	    $aRet = array();
-	    foreach ($this as $oItem) {
-		    if ($bWithId) {
-			    $aRet[$oItem->GetKey()] = $oItem;
-		    } else {
-			    $aRet[] = $oItem;
-            }
-        }
-        return $aRet;
-    }
-
-    /**
      * @param string $sAttCode
      * @param bool $bWithId
      * @return array

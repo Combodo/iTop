@@ -54,27 +54,6 @@ try {
 	/**
 	 * Helper function to build a select from the list of valid classes for a given action
 	 *
-	 * @deprecated 3.0.0 use GetClassesSelectUIBlock
-	 *
-	 * @param $sDefaultValue
-	 * @param integer $iWidthPx The width (in pixels) of the drop-down list
-	 * @param integer $iActionCode The ActionCode (from UserRights) to check for authorization for the classes
-	 *
-	 * @param string $sName The name of the select in the HTML form
-	 *
-	 * @return string The HTML fragment corresponding to the select tag
-	 */
-	function GetClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetClassesSelectUIBlock');
-		$oSelectBlock = GetClassesSelectUIBlock($sName, $sDefaultValue, $iActionCode);
-
-		return BlockRenderer::RenderBlockTemplates($oSelectBlock);
-	}
-
-	/**
-	 * Helper function to build a select from the list of valid classes for a given action
-	 *
 	 * @param string $sName The name of the select in the HTML form
 	 * @param $sDefaultValue
 	 * @param integer $iWidthPx The width (in pixels) of the drop-down list

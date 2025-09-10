@@ -326,18 +326,6 @@ abstract class AttributeDefinition
 
 	// table, key field, name field
 
-	/**
-	 * @return string
-	 * @deprecated never used
-	 */
-	public function ListDBJoins()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		return "";
-		// e.g: return array("Site", "infrid", "name");
-	}
-
 	public function GetFinalAttDef()
 	{
 		return $this;
@@ -925,21 +913,6 @@ abstract class AttributeDefinition
 	public function GetMaxSize()
 	{
 		return null;
-	}
-
-	/**
-	 * @return mixed|null
-	 * @deprecated never used
-	 */
-	public function MakeValue()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		$sComputeFunc = $this->Get("compute_func");
-		if (empty($sComputeFunc)) {
-			return null;
-		}
-
-		return call_user_func($sComputeFunc);
 	}
 
 	abstract public function GetDefaultValue(DBObject $oHostObject = null);

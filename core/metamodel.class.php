@@ -2106,55 +2106,6 @@ abstract class MetaModel
 	private static $m_aRelationInfos = array();
 
 	/**
-	 * @deprecated Use EnumRelationsEx instead
-	 *
-	 * @param string $sClass
-	 *
-	 * @return array multitype:string unknown |Ambigous <string, multitype:>
-	 * @throws \CoreException
-	 * @throws \Exception
-	 * @throws \OQLException
-	 */
-	public static function EnumRelations($sClass = '')
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Use EnumRelationsEx instead');
-		$aResult = array_keys(self::$m_aRelationInfos);
-		if (!empty($sClass)) {
-			// Return only the relations that have a meaning (i.e. for which at least one query is defined)
-			// for the specified class
-			$aClassRelations = array();
-			foreach ($aResult as $sRelCode) {
-				$aQueriesDown = self::EnumRelationQueries($sClass, $sRelCode);
-				if (count($aQueriesDown) > 0) {
-					$aClassRelations[] = $sRelCode;
-				}
-				// Temporary patch: until the impact analysis GUI gets rewritten,
-				// let's consider that "depends on" is equivalent to "impacts/up"
-				// The current patch has been implemented in DBObject and MetaModel
-				if ($sRelCode == 'impacts') {
-					$aQueriesUp = self::EnumRelationQueries($sClass, 'impacts', false);
-					if (count($aQueriesUp) > 0)
-					{
-						$aClassRelations[] = 'depends on';
-					}
-				}
-			}
-
-			return $aClassRelations;
-		}
-
-		// Temporary patch: until the impact analysis GUI gets rewritten,
-		// let's consider that "depends on" is equivalent to "impacts/up"
-		// The current patch has been implemented in DBObject and MetaModel
-		if (in_array('impacts', $aResult))
-		{
-			$aResult[] = 'depends on';
-		}
-
-		return $aResult;
-	}
-
-	/**
 	 * @param string $sClass
 	 *
 	 * @return array
@@ -7507,42 +7458,6 @@ abstract class MetaModel
 
 		require_once(APPROOT.'setup/setuputils.class.inc.php');
 		SetupUtils::rrmdir(utils::GetCachePath($sEnvironment));
-	}
-
-	/**
-	 * @internal
-	 * @param string $sEnvironmentId
-	 * @deprecated 3.2.1
-	 */
-	public static function ResetCache($sEnvironmentId = null)
-	{
-		if (is_null($sEnvironmentId))
-		{
-			$sEnvironmentId = MetaModel::GetEnvironmentId();
-		}
-
-		$sAppIdentity = 'itop-'.$sEnvironmentId;
-		require_once(APPROOT.'/core/dict.class.inc.php');
-		Dict::ResetCache($sAppIdentity);
-
-		if (function_exists('apc_delete'))
-		{
-			foreach(self::GetCacheEntries($sEnvironmentId) as $sKey => $aAPCInfo)
-			{
-				$sAPCKey = $aAPCInfo['info'];
-				apc_delete($sAPCKey);
-			}
-		}
-
-		require_once(APPROOT.'core/userrights.class.inc.php');
-		UserRights::FlushPrivileges();
-
-		// Reset the opcache since otherwise the PHP "model" files may still be cached !!
-		if (function_exists('opcache_reset'))
-		{
-			// Zend opcode cache
-			opcache_reset();
-		}
 	}
 
 	/**

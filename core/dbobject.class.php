@@ -62,7 +62,7 @@ require_once('mutex.class.inc.php');
 
 
 /**
- * A persistent object, as defined by the metamodel 
+ * A persistent object, as defined by the metamodel
  *
  * @package     iTopORM
  * @api
@@ -314,9 +314,9 @@ abstract class DBObject implements iDisplay
 
     /**
      * Whether the object is already persisted in DB or not.
-     * 
+     *
      * @api
-     * 
+     *
      * @return bool
      */
 	public function IsNew()
@@ -326,9 +326,9 @@ abstract class DBObject implements iDisplay
 
     /**
      * Returns an Id for memory objects
-     * 
+     *
      * @internal
-     * 
+     *
      * @param string $sClass
      *
      * @return int
@@ -365,7 +365,7 @@ abstract class DBObject implements iDisplay
         $sRet .= "<b title=\"$sRootClass\">$sClass</b>::$iPKey ($sFriendlyname)<br/>\n";
         return $sRet;
 	}
-	
+
     /**
      * Alias of DBObject::Reload()
      *
@@ -388,7 +388,7 @@ abstract class DBObject implements iDisplay
      *
      * @internal
      * @see m_bFullyLoaded
-     * 
+     *
      * @return bool
      * @throws CoreException
      */
@@ -511,7 +511,7 @@ abstract class DBObject implements iDisplay
 		{
 			$aAttList = $aAttToLoad[$sClassAlias];
 		}
-		
+
 		foreach($aAttList as $sAttCode=>$oAttDef)
 		{
 			// Skip links (could not be loaded by the mean of this query)
@@ -571,7 +571,7 @@ abstract class DBObject implements iDisplay
 				$bFullyLoaded = false;
 			}
 		}
-		
+
 		// Load extended data
 		if ($aExtendedDataSpec != null)
 		{
@@ -595,7 +595,7 @@ abstract class DBObject implements iDisplay
      *
      * @internal
      * @see Set()
-     * 
+     *
      * @param string $sAttCode
      * @param mixed $value
      */
@@ -850,11 +850,11 @@ abstract class DBObject implements iDisplay
 
 	/**
      * Get the label of an attribute.
-     * 
+     *
      * Shortcut to the field's AttributeDefinition->GetLabel()
      *
      * @api
-     * 
+     *
      * @param string $sAttCode
      *
      * @return string
@@ -927,7 +927,7 @@ abstract class DBObject implements iDisplay
      *
      * @internal
      * @see Get
-     * 
+     *
      * @param string $sAttCode
      *
      * @return int|mixed|null
@@ -1032,7 +1032,7 @@ abstract class DBObject implements iDisplay
      * Returns the default value of the $sAttCode.
      *
      * Returns the default value of the given attribute.
-     * 
+     *
      * @internal
      *
      * @param string $sAttCode
@@ -1053,12 +1053,12 @@ abstract class DBObject implements iDisplay
      * @internal
      *
      * @return array|null
-	 */	 
+	 */
 	public function GetExtendedData()
 	{
 		return $this->m_aExtendedData;
 	}
-	
+
 	/**
      * Set the HighlightCode
      *
@@ -1080,7 +1080,7 @@ abstract class DBObject implements iDisplay
 		{
 			$fCurrentRank = $aHighlightScale[$this->m_sHighlightCode]['rank'];
 		}
-				
+
 		if (array_key_exists($sCode, $aHighlightScale))
 		{
 			$fRank = $aHighlightScale[$sCode]['rank'];
@@ -1090,13 +1090,13 @@ abstract class DBObject implements iDisplay
 			}
 		}
 	}
-	
+
 	/**
 	 * Get the current HighlightCode
-     * 
+     *
      * @internal
      * @used-by DBObject::ComputeHighlightCode()
-     * 
+     *
 	 * @return string|null The Hightlight code (null if none set, meaning rank = 0)
 	 */
 	protected function GetHighlightCode()
@@ -1145,7 +1145,7 @@ abstract class DBObject implements iDisplay
      * corresponding to the external key and getting the value from it
      *
      * UNUSED ?
-     * 
+     *
      * @internal
      * @todo: check if this is dead code.
      *
@@ -1216,7 +1216,7 @@ abstract class DBObject implements iDisplay
 
     /**
      * @api
-     * 
+     *
      * @param string $sAttCode
      * @param bool   $bLocalize
      *
@@ -1262,11 +1262,11 @@ abstract class DBObject implements iDisplay
 
     /**
      * Get the value as it must be in the edit areas (forms)
-     * 
+     *
      * Makes a raw text representation of the value.
      *
      * @internal
-     * 
+     *
      * @param string $sAttCode
      *
      * @return int|mixed|string
@@ -1296,7 +1296,7 @@ abstract class DBObject implements iDisplay
 				else
 				{
 					$sEditValue = 0;
-				}					
+				}
 			}
 			else
 			{
@@ -1312,14 +1312,14 @@ abstract class DBObject implements iDisplay
 
     /**
      * Get $sAttCode formatted as XML
-     * 
+     *
      * The returned value is a text that is suitable for insertion into an XML node.
      * Depending on the type of attribute, the returned text is either:
      *   * A literal, with XML entities already escaped,
      *   * XML
      *
      * @api
-     * 
+     *
      * @param string $sAttCode
      * @param bool   $bLocalize
      *
@@ -1357,10 +1357,10 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * 
+     *
      * @see GetAsHTML()
      * @see GetOriginal()
-     * 
+     *
      * @param string $sAttCode
      * @param bool   $bLocalize
      *
@@ -1535,7 +1535,7 @@ abstract class DBObject implements iDisplay
 
     /**
      * @internal
-     * 
+     *
      * @param string $sClass
      *
      * @return mixed
@@ -1590,7 +1590,7 @@ abstract class DBObject implements iDisplay
      * Get the id
      *
      * @api
-     * 
+     *
      * @return string|null
      */
 	public function GetKey()
@@ -1601,7 +1601,7 @@ abstract class DBObject implements iDisplay
     /**
      * Primary key Setter
      * Usable only for not yet persisted DBObjects
-     * 
+     *
      * @internal
      *
      * @param int $iNewKey the desired identifier
@@ -1614,7 +1614,7 @@ abstract class DBObject implements iDisplay
 		{
 			throw new CoreException("An object id must be an integer value ($iNewKey)");
 		}
-		
+
 		if ($this->m_bIsInDB && !empty($this->m_iKey) && ($this->m_iKey != $iNewKey))
 		{
 			throw new CoreException("Changing the key ({$this->m_iKey} to $iNewKey) on an object (class {".get_class($this).") wich already exists in the Database");
@@ -1624,7 +1624,7 @@ abstract class DBObject implements iDisplay
 
     /**
      * Get the icon representing this object
-     * 
+     *
      * @api
      *
      * @param boolean $bImgTag If true the result is a full IMG tag (or an empty string if no icon is defined)
@@ -1714,7 +1714,7 @@ abstract class DBObject implements iDisplay
 	 *
 	 * Returns the label as defined in the dictionary for the language of the current user
      *
-     * @api 
+     * @api
      *
 	 * @return string (empty for default name scheme)
 	 */
@@ -1781,7 +1781,7 @@ abstract class DBObject implements iDisplay
 
 	/**
      * Helper to get the state
-     * 
+     *
      * @api
      *
 	 * @return mixed|string '' if no state attribute, object representing its value otherwise
@@ -1803,9 +1803,9 @@ abstract class DBObject implements iDisplay
     /**
      * Get the label (raw text) of the current state
      * helper for MetaModel::GetStateLabel()
-     * 
+     *
      * @api
-     * 
+     *
      * @return mixed|string
      *
      * @throws ArchivedObjectException
@@ -1852,7 +1852,7 @@ abstract class DBObject implements iDisplay
 	 * Define attributes read-only from the end-user perspective
 	 *
 	 * @return array|null List of attcodes
-	 */	 	  	 	
+	 */
 	public static function GetReadOnlyAttributes()
 	{
 		return null;
@@ -1861,14 +1861,14 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Get predefined objects
-     * 
+     *
 	 * The predefined objects will be synchronized with the DB at each install/upgrade
      * As soon as a class has predefined objects, then nobody can create nor delete objects
      *
      * @internal
      *
 	 * @return array An array of id => array of attcode => php value(so-called "real value": integer, string, ormDocument, DBObjectSet, etc.)
-	 */	 	  	 	
+	 */
 	public static function GetPredefinedObjects()
 	{
 		return null;
@@ -1997,7 +1997,7 @@ abstract class DBObject implements iDisplay
      * Note: Attributes (and flags) from the target state and the transition are combined.
      *
      * @internal
-     * 
+     *
      * @param string $sStimulus
      * @param string $sOriginState Default is current state
      *
@@ -2197,7 +2197,7 @@ abstract class DBObject implements iDisplay
 
 	/**
      * @internal
-     * 
+     *
 	 * @throws \CoreException
 	 * @throws \OQLException
      *
@@ -5323,7 +5323,7 @@ abstract class DBObject implements iDisplay
 				// Keep track of link changes
 				//
 				if (($oLinkSet->GetTrackingLevel() & LINKSET_TRACKING_DETAILS) == 0) continue;
-				
+
 				$iLinkSetOwnerId  = $this->Get($sExtKeyAttCode);
 				$oMyChangeOp = $this->PrepareChangeOpLinkSet($iLinkSetOwnerId, $oLinkSet, 'CMDBChangeOpSetAttributeLinksTune');
 				if ($oMyChangeOp)
@@ -5518,27 +5518,6 @@ abstract class DBObject implements iDisplay
 			}
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
-	}
-
-	/**
-	 * Caching relying on an object set is not efficient since 2.0.3
-	 * Use GetSynchroData instead
-	 *
-	 * Get all the synchro replica related to this object
-     *
-     * @internal
-     * @deprecated
-	 *
-	 * @return DBObjectSet Set with two columns: R=SynchroReplica S=SynchroDataSource
-	 * @throws \OQLException
-	 */
-	public function GetMasterReplica()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		$sOQL = "SELECT replica,datasource FROM SynchroReplica AS replica JOIN SynchroDataSource AS datasource ON replica.sync_source_id=datasource.id WHERE replica.dest_class = :dest_class AND replica.dest_id = :dest_id";
-		$oReplicaSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('dest_class' => get_class($this), 'dest_id' => $this->GetKey()));
-
-		return $oReplicaSet;
 	}
 
 	/**

@@ -759,10 +759,10 @@ HTML
 			$oPage->SetCurrentTab($sTabCode, $oAttDef->GetLabel().$sCount, $sTabDescription);
 
 			$aArgs = array('this' => $this);
-			
+
 			$sEditWhen = $oAttDef->GetEditWhen();
 			// Calculate if edit_when allows to edit based on current $bEditMode
-			$bIsEditableBasedOnEditWhen =  ($sEditWhen === LINKSET_EDITWHEN_ALWAYS) || 
+			$bIsEditableBasedOnEditWhen =  ($sEditWhen === LINKSET_EDITWHEN_ALWAYS) ||
 				($bEditMode ? $sEditWhen === LINKSET_EDITWHEN_ON_HOST_EDITION : $sEditWhen === LINKSET_EDITWHEN_ON_HOST_DISPLAY);
 
 			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) || !$bIsEditableBasedOnEditWhen;
@@ -1219,35 +1219,6 @@ HTML
 	}
 
 	/**
-	 * Get the HTML fragment corresponding to the display of a table representing a set of objects
-	 *
-	 * @param WebPage $oPage The page object is used for out-of-band information (mostly scripts) output
-	 * @param \DBObjectSet $oSet The set of objects to display
-	 * @param array $aExtraParams key used :
-	 *      <ul>
-	 *          <li>view_link : if true then for extkey will display links with friendly name and make column sortable, default true
-	 *          <li>menu : if true prints DisplayBlock menu, default true
-	 *          <li>display_aliases : list of query aliases that will be printed, defaults to [] (displays all)
-	 *          <li>zlist : name of the zlist to use, false to disable zlist lookup, default to 'list'
-	 *          <li>extra_fields : list of <alias>.<attcode> to add to the result, separator ',', defaults to empty string
-	 *      </ul>
-	 *
-	 * @return String The HTML fragment representing the table of objects. <b>Warning</b> : no JS added to handled
-	 *     pagination or table sorting !
-	 *
-	 * @see DisplayBlock to get a similar table but with the JS for pagination & sorting
-	 *
-	 * @deprecated 3.0.0 use GetDisplaySetBlock
-	 */
-	public static function GetDisplaySet(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetDisplaySetBlock');
-		$oPage->AddUiBlock(static::GetDisplaySetBlock($oPage, $oSet, $aExtraParams));
-
-		return "";
-	}
-
-	/**
 	 * @param WebPage $oPage
 	 * @param \DBObjectSet $oSet
 	 * @param array $aExtraParams
@@ -1418,129 +1389,6 @@ HTML
 
 		return $oTable;
 		//DataTableUIBlockFactory::MakeForStaticData('', $aHeader, $aRows);
-	}
-
-	/**
-	 * @param WebPage $oPage
-	 * @param \CMDBObjectSet $oSet
-	 * @param array $aExtraParams key used :
-	 *      <ul>
-	 *          <li>view_link : if true then for extkey will display links with friendly name and make column sortable, default true
-	 *          <li>menu : if true prints DisplayBlock menu, default true
-	 *          <li>display_aliases : list of query aliases that will be printed, defaults to [] (displays all)
-	 *          <li>zlist : name of the zlist to use, false to disable zlist lookup, default to 'list'
-	 *          <li>extra_fields : list of <alias>.<attcode> to add to the result, separator ',', defaults to empty string
-	 *      </ul>
-	 *
-	 * @return string
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @deprecated 3.0.0
-	 */
-	public static function GetDisplayExtendedSet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		if (empty($aExtraParams['currentId'])) {
-			$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
-		} else {
-			$iListId = $aExtraParams['currentId'];
-		}
-		$aList = array();
-
-		// Initialize and check the parameters
-		$bViewLink = isset($aExtraParams['view_link']) ? $aExtraParams['view_link'] : true;
-		$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
-		// Check if there is a list of aliases to limit the display to...
-		$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',',
-			$aExtraParams['display_aliases']) : array();
-		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
-
-		$aExtraFieldsRaw = isset($aExtraParams['extra_fields']) ? explode(',',
-			trim($aExtraParams['extra_fields'])) : array();
-		$aExtraFields = array();
-		$sAttCode = '';
-		foreach($aExtraFieldsRaw as $sFieldName)
-		{
-			// Ignore attributes not of the main queried class
-			if (preg_match('/^(.*)\.(.*)$/', $sFieldName, $aMatches))
-			{
-				$sClassAlias = $aMatches[1];
-				$sAttCode = $aMatches[2];
-				if (array_key_exists($sClassAlias, $oSet->GetSelectedClasses()))
-				{
-					$aExtraFields[$sClassAlias][] = $sAttCode;
-				}
-			}
-			else
-			{
-				$aExtraFields['*'] = $sAttCode;
-			}
-		}
-
-		$aClasses = $oSet->GetFilter()->GetSelectedClasses();
-		$aAuthorizedClasses = array();
-		foreach($aClasses as $sAlias => $sClassName)
-		{
-			if ((UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO) &&
-				((count($aDisplayAliases) == 0) || (in_array($sAlias, $aDisplayAliases))))
-			{
-				$aAuthorizedClasses[$sAlias] = $sClassName;
-			}
-		}
-		foreach($aAuthorizedClasses as $sAlias => $sClassName)
-		{
-			if (array_key_exists($sAlias, $aExtraFields))
-			{
-				$aList[$sAlias] = $aExtraFields[$sAlias];
-			}
-			else
-			{
-				$aList[$sAlias] = array();
-			}
-			if ($sZListName !== false)
-			{
-				$aDefaultList = self::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
-
-				$aList[$sAlias] = array_merge($aDefaultList, $aList[$sAlias]);
-			}
-
-			// Filter the list to removed linked set since we are not able to display them here
-			foreach ($aList[$sAlias] as $index => $sAttCode)
-			{
-				$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-				if ($oAttDef instanceof AttributeLinkedSet)
-				{
-					// Removed from the display list
-					unset($aList[$sAlias][$index]);
-				}
-			}
-
-			if (empty($aList[$sAlias]))
-			{
-				unset($aList[$sAlias], $aAuthorizedClasses[$sAlias]);
-			}
-		}
-
-		$sSelectMode = 'none';
-
-		$oDataTable = new DataTable($iListId, $oSet, $aAuthorizedClasses);
-
-		$oSettings = DataTableSettings::GetDataModelSettings($aAuthorizedClasses, $bViewLink, $aList);
-
-		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
-		if ($bDisplayLimit)
-		{
-			$iDefaultPageSize = appUserPreferences::GetPref('default_page_size',
-				MetaModel::GetConfig()->GetMinDisplayLimit());
-			$oSettings->iDefaultPageSize = $iDefaultPageSize;
-		}
-
-		$oSettings->aSortOrder = MetaModel::GetOrderByDefault($sClassName);
-
-		return $oDataTable->Display($oPage, $oSettings, $bDisplayMenu, $sSelectMode, $bViewLink, $aExtraParams);
 	}
 
 	/**
@@ -1731,7 +1579,7 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \Exception
-	 * 
+	 *
 	 * @internal Only to be used by `/webservices/export.php` : this is a legacy method that produces wrong HTML (no TR on table body rows)
 	 */
 	public static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
@@ -2232,7 +2080,7 @@ JS
 						);
 
 						// test query link
-						$sTestResId = 'query_res_'.$sFieldPrefix.$sAttCode.$sNameSuffix; //$oPage->GetUniqueId();
+						$sTestResId = 'query_res_'.$sFieldPrefix.$sAttCode.$sNameSuffix;
 						$sBaseUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?expression=';
 						$sTestQueryLbl = Dict::S('UI:Edit:TestQuery');
 						$oTestQueryButton = ButtonUIBlockFactory::MakeIconAction(
@@ -2682,7 +2530,7 @@ HTML;
 					}
 					break;
 			}
-			$sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';			
+			$sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';
 			if (!empty($aEventsList))
 			{
 				if (!is_numeric($sNullValue))
@@ -3851,7 +3699,7 @@ HTML;
 	public function GetHilightClass()
 	{
 		// Possible return values are:
-		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE	
+		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE
 		$current = parent::GetHilightClass(); // Default computation
 
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
@@ -4799,66 +4647,6 @@ HTML;
 			$sHTMLValue = $sFieldAsHtml;
 			$oDivField->AddSubBlock(new Html($sHTMLValue));
 		}
-	}
-
-	/**
-	 * @param $sCurrentState
-	 * @param $sStimulus
-	 * @param $bOnlyNewOnes
-	 *
-	 * @return array
-	 * @throws \ApplicationException
-	 * @throws \CoreException
-	 * @deprecated Since iTop 2.4, use DBObject::GetTransitionAttributes() instead.
-	 */
-	public function GetExpectedAttributes($sCurrentState, $sStimulus, $bOnlyNewOnes)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Since iTop 2.4, use DBObject::GetTransitionAttributes() instead');
-		$aTransitions = $this->EnumTransitions();
-		if (!isset($aTransitions[$sStimulus])) {
-			// Invalid stimulus
-			throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus,
-				$this->GetName(), $this->GetStateLabel()));
-		}
-		$aTransition = $aTransitions[$sStimulus];
-		$sTargetState = $aTransition['target_state'];
-		$aTargetStates = MetaModel::EnumStates(get_class($this));
-		$aTargetState = $aTargetStates[$sTargetState];
-		$aCurrentState = $aTargetStates[$this->GetState()];
-		$aExpectedAttributes = $aTargetState['attribute_list'];
-		$aCurrentAttributes = $aCurrentState['attribute_list'];
-
-		$aComputedAttributes = array();
-		foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
-		{
-			if (!array_key_exists($sAttCode, $aCurrentAttributes))
-			{
-				$aComputedAttributes[$sAttCode] = $iExpectCode;
-			}
-			else
-			{
-				if (!($aCurrentAttributes[$sAttCode] & (OPT_ATT_HIDDEN | OPT_ATT_READONLY)))
-				{
-					$iExpectCode = $iExpectCode & ~(OPT_ATT_MUSTPROMPT | OPT_ATT_MUSTCHANGE); // Already prompted/changed, reset the flags
-				}
-				// Later: better check if the attribute is not *null*
-				if (($iExpectCode & OPT_ATT_MANDATORY) && ($this->Get($sAttCode) != ''))
-				{
-					$iExpectCode = $iExpectCode & ~(OPT_ATT_MANDATORY); // If the attribute is present, then no need to request its presence
-				}
-
-				$aComputedAttributes[$sAttCode] = $iExpectCode;
-			}
-
-			$aComputedAttributes[$sAttCode] = $aComputedAttributes[$sAttCode] & ~(OPT_ATT_READONLY | OPT_ATT_HIDDEN); // Don't care about this form now
-
-			if ($aComputedAttributes[$sAttCode] == 0)
-			{
-				unset($aComputedAttributes[$sAttCode]);
-			}
-		}
-
-		return $aComputedAttributes;
 	}
 
 	/**

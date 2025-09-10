@@ -238,78 +238,6 @@ abstract class DBSearch
 
 	/**
 	 * @internal
-	 * @deprecated use ToOQL() instead
-	 * @return string
-	 */
-	public function Describe()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
-
-		return 'deprecated - use ToOQL() instead';
-	}
-
-	/**
-	 * @internal
-	 * @deprecated use ToOQL() instead
-	 * @return string
-	 */
-	public function DescribeConditionPointTo($sExtKeyAttCode, $aPointingTo)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
-
-		return 'deprecated - use ToOQL() instead';
-	}
-
-	/**
-	 * @internal
-	 * @deprecated use ToOQL() instead
-	 * @return string
-	 */
-	public function DescribeConditionRefBy($sForeignClass, $sForeignExtKeyAttCode)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
-
-		return 'deprecated - use ToOQL() instead';
-	}
-
-	/**
-	 * @internal
-	 * @deprecated use ToOQL() instead
-	 * @return string
-	 */
-	public function DescribeConditionRelTo($aRelInfo)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
-
-		return 'deprecated - use ToOQL() instead';
-	}
-
-	/**
-	 * @internal
-	 * @deprecated use ToOQL() instead
-	 * @return string
-	 */
-	public function DescribeConditions()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
-
-		return 'deprecated - use ToOQL() instead';
-	}
-
-	/**
-	 * @internal
-	 * @deprecated use ToOQL() instead
-	 * @return string
-	 */
-	public function __DescribeHTML()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
-
-		return 'deprecated - use ToOQL() instead';
-	}
-
-	/**
-	 * @internal
 	 * @return mixed
 	 */
 	abstract public function ResetCondition();
@@ -1714,16 +1642,6 @@ abstract class DBSearch
 	public function __toString()
 	{
 		return $this->ToOQL(true);
-	}
-
-	/**
-	 * @return array{\VariableExpression}
-	 *
-	 * @deprecated use DBSearch::GetExpectedArguments() instead
-	 */
-	public function ListParameters(): array
-	{
-		return $this->GetExpectedArguments();
 	}
 
 	/**

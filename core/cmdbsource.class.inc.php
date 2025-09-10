@@ -364,15 +364,6 @@ class CMDBSource
 	}
 
 	/**
-	 * @deprecated Use `CMDBSource::GetDBVersion` instead.
-	 * @uses mysqli_get_server_info
-	 */
-	public static function GetServerInfo()
-	{
-		return mysqli_get_server_info(DbConnectionWrapper::GetDbConnection());
-	}
-
-	/**
 	 * Get the DB vendor between MySQL and its main forks
 	 * @return string
 	 *

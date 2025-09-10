@@ -86,8 +86,6 @@ abstract class PortalBrick extends AbstractBrick
 	protected $sDecorationClassHome;
 	/** @var string $sDecorationClassNavigationMenu */
 	protected $sDecorationClassNavigationMenu;
-	/** @var string $sTileTemplatePath @deprecated since 3.2.1 */
-	protected $sTileTemplatePath;
 	/** @var string|null $sTileControllerAction */
 	protected $sTileControllerAction;
 	/** @var string $sOpeningTarget */
@@ -136,9 +134,6 @@ abstract class PortalBrick extends AbstractBrick
 		$this->bVisibleNavigationMenu = static::DEFAULT_VISIBLE_NAVIGATION_MENU;
 		$this->sDecorationClassHome = static::DEFAULT_DECORATION_CLASS_HOME;
 		$this->sDecorationClassNavigationMenu = static::DEFAULT_DECORATION_CLASS_NAVIGATION_MENU;
-		// BEGIN cleaning 3.2.1 deprecated
-		$this->sTileTemplatePath = static::DEFAULT_TILE_TEMPLATE_PATH;
-		// END cleaning 3.2.1 deprecated
 		$this->sTileControllerAction = static::DEFAULT_TILE_CONTROLLER_ACTION;
 		$this->sOpeningTarget = static::DEFAULT_OPENING_TARGET;
 	}
@@ -261,18 +256,6 @@ abstract class PortalBrick extends AbstractBrick
 	public function GetTileControllerAction()
 	{
 		return $this->sTileControllerAction;
-	}
-
-	/**
-	 * Returns the brick tile template path
-	 *
-	 * @return string
-	 *
-	 * @deprecated since 3.2.1 use GetTemplatePath('tile') instead
-	 */
-	public function GetTileTemplatePath()
-	{
-		return  $this->GetTemplatePath('tile');
 	}
 
 	/**
@@ -435,23 +418,6 @@ abstract class PortalBrick extends AbstractBrick
 	public function SetTitleNavigationMenu($sTitleNavigationMenu)
 	{
 		$this->sTitleNavigationMenu = $sTitleNavigationMenu;
-
-		return $this;
-	}
-
-	/**
-	 * Sets the brick tile template path
-	 *
-	 * @param string $sTileTemplatePath
-	 *
-	 * @return \Combodo\iTop\Portal\Brick\PortalBrick
-	 *
-	 * @deprecated since 3.2.1 use SetTemplatePath('tile') instead
-	 */
-	public function SetTileTemplatePath($sTileTemplatePath)
-	{
-		$this->sTileTemplatePath = $sTileTemplatePath;
-		$this->SetTemplatePath('tile', $sTileTemplatePath);
 
 		return $this;
 	}

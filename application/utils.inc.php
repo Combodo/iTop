@@ -2425,19 +2425,6 @@ SQL;
 	}
 
 	/**
-	 * @param $sPath
-	 *
-	 * @return false|\ormDocument
-	 * @throws \Exception
-	 *
-	 * @deprecated 3.2.1 use utils::GetDocumentFromSelfURL instead
-	 */
-	public static function IsSelfURL($sPath)
-	{
-		return self::GetDocumentFromSelfURL($sPath);
-	}
-
-	/**
 	 * Check if the given URL is a link to download a document/image on the CURRENT iTop
 	 * In such a case we can read the content of the file directly in the database (if the users rights allow) and return the ormDocument
 	 *

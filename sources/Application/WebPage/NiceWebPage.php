@@ -60,11 +60,6 @@ class NiceWebPage extends WebPage
 		// - SearchForm
 		'js/searchformforeignkeys.js',
 	];
-	/** @inheritDoc */
-	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [
-		/** @deprecated 3.0.0 Not used in the backoffice since the introduction of the new tooltip lib. */
-		'js/hovertip.js',
-	];
 
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/nicewebpage/layout';
 
@@ -180,7 +175,7 @@ JS
     {
     	$this->m_sRootUrl = $sRootUrl;
     }
-    
+
 	public function small_p($sText)
 	{
 		$this->add("<p style=\"font-size:smaller\">$sText</p>\n");
@@ -206,7 +201,7 @@ JS
 	public function MakeClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null)
 	{
 		// $aTopLevelClasses = array('bizService', 'bizContact', 'logInfra', 'bizDocument');
-		// These are classes wich root class is cmdbAbstractObject ! 
+		// These are classes wich root class is cmdbAbstractObject !
 		$this->add("<select id=\"select_$sName\" name=\"$sName\">");
 		$aValidClasses = array();
 		foreach(MetaModel::GetClasses('bizmodel') as $sClassName)
@@ -221,7 +216,7 @@ JS
 		}
 		ksort($aValidClasses);
 		$this->add(implode("\n", $aValidClasses));
-		
+
 		$this->add("</select>");
 	}
 

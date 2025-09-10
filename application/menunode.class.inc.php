@@ -359,50 +359,6 @@ class ApplicationMenu
 	}
 
 	/**
-	 * Entry point to display the whole menu into the web page, used by iTopWebPage
-	 * @param WebPage $oPage
-	 * @param array $aExtraParams
-	 * @throws DictExceptionMissingString
-	 *
-	 * @deprecated Will be removed in 3.0.0, use static::GetMenuGroups() instead
-	 */
-	public static function DisplayMenu($oPage, $aExtraParams)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use static::GetMenuGroups() instead');
-		self::LoadAdditionalMenus();
-		// Sort the root menu based on the rank
-		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
-		$iAccordion = 0;
-		$iActiveAccordion = $iAccordion;
-		$iActiveMenu = self::GetMenuIndexById(self::GetActiveNodeId());
-		foreach (self::$aRootMenus as $aMenu) {
-			if (!self::CanDisplayMenu($aMenu)) {
-				continue;
-			}
-			$oMenuNode = self::GetMenuNode($aMenu['index']);
-			$oPage->AddToMenu('<h3 id="'.utils::GetSafeId('AccordionMenu_'.$oMenuNode->GetMenuID()).'" class="navigation-menu-group" data-menu-id="'.$oMenuNode->GetMenuId().'">'.$oMenuNode->GetTitle().'</h3>');
-			$oPage->AddToMenu('<div>');
-			$oPage->AddToMenu('<ul>');
-			$aChildren = self::GetChildren($aMenu['index']);
-			$bActive = self::DisplaySubMenu($oPage, $aChildren, $aExtraParams, $iActiveMenu);
-			$oPage->AddToMenu('</ul>');
-			if ($bActive)
-			{
-				$iActiveAccordion = $iAccordion;
-			}
-			$oPage->AddToMenu('</div>');
-			$iAccordion++;
-		}
-
-		$oPage->add_ready_script(
-<<<EOF
-	// Accordion Menu
-	$("#accordion").css({display:'block'}).accordion({ header: "h3", heightStyle: "content", collapsible: true,  active: $iActiveAccordion, icons: false, animate: true }); // collapsible will be enabled once the item will be selected
-EOF
-		);
-	}
-
-	/**
 	 * Recursively check if the menu and at least one of his sub-menu is enabled
 	 * @param array $aMenu menu entry
 	 * @return bool true if at least one menu is enabled
@@ -429,73 +385,6 @@ EOF
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Handles the display of the sub-menus (called recursively if necessary)
-	 *
-	 * @param WebPage $oPage
-	 * @param array $aMenus
-	 * @param array $aExtraParams
-	 * @param int $iActiveMenu
-	 *
-	 * @return bool True if the currently selected menu is one of the submenus
-	 * @throws DictExceptionMissingString
-	 * @throws \Exception
-	 * @deprecated Will be removed in 3.0.0, use static::GetSubMenuNodes() instead
-	 */
-	protected static function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use static::GetSubMenuNodes() instead');
-		// Sort the menu based on the rank
-		$bActive = false;
-		usort($aMenus, array('ApplicationMenu', 'CompareOnRank'));
-		foreach ($aMenus as $aMenu) {
-			if (!self::CanDisplayMenu($aMenu)) {
-				continue;
-			}
-			$index = $aMenu['index'];
-			$oMenu = self::GetMenuNode($index);
-			if ($oMenu->IsEnabled())
-			{
-				$aChildren = self::GetChildren($index);
-				$aCSSClasses = array('navigation-menu-item');
-				if (count($aChildren) > 0)
-				{
-					$aCSSClasses[] = 'submenu';
-				}
-				$sHyperlink = $oMenu->GetHyperlink($aExtraParams);
-				$sItemHtml = '<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'" class="'.implode(' ', $aCSSClasses).'" data-menu-id="'.$oMenu->GetMenuID().'">';
-				if ($sHyperlink != '')
-				{
-					$sLinkTarget = '';
-					if ($oMenu->IsHyperLinkInNewWindow())
-					{
-						$sLinkTarget .= ' target="_blank"';
-					}
-					$sURL = '"'.$oMenu->GetHyperlink($aExtraParams).'"'.$sLinkTarget;
-					$sTitle = utils::HtmlEntities($oMenu->GetTitle());
-					$sItemHtml .= "<a href={$sURL}>{$sTitle}</a>";
-				}
-				else
-				{
-					$sItemHtml .= $oMenu->GetTitle();
-				}
-				$sItemHtml .= '</li>';
-				$oPage->AddToMenu($sItemHtml);
-				if ($iActiveMenu == $index)
-				{
-					$bActive = true;
-				}
-				if (count($aChildren) > 0)
-				{
-					$oPage->AddToMenu('<ul>');
-					$bActive |= self::DisplaySubMenu($oPage, $aChildren, $aExtraParams, $iActiveMenu);
-					$oPage->AddToMenu('</ul>');
-				}
-			}
-		}
-		return $bActive;
 	}
 
 	/**

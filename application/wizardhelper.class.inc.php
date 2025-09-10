@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -31,7 +31,7 @@ require_once(APPROOT.'/application/uiwizard.class.inc.php');
 class WizardHelper
 {
 	protected $m_aData;
-	
+
 	public function __construct()
 	{
 	}
@@ -39,7 +39,7 @@ class WizardHelper
 	 * Constructs the PHP target object from the parameters sent to the web page by the wizard
 	 * @param boolean $bReadUploadedFiles True to also read any uploaded file (for blob/document fields)
 	 * @return object
-	 */	 	 	 	
+	 */
 	public function GetTargetObject($bReadUploadedFiles = false)
 	{
 		if (isset($this->m_aData['m_oCurrentValues']['id']))
@@ -207,7 +207,7 @@ class WizardHelper
 				else
 				{
 					$oObj->Set($sAttCode, $value);
-				}	
+				}
 			}
 		}
 		if (isset($this->m_aData['m_sState']) && !empty($this->m_aData['m_sState']))
@@ -217,12 +217,12 @@ class WizardHelper
 		$oObj->DoComputeValues();
 		return $oObj;
 	}
-	
+
 	public function GetFieldsForDefaultValue()
 	{
 		return $this->m_aData['m_aDefaultValueRequested'];
 	}
-	
+
 	public function SetDefaultValue($sAttCode, $value)
 	{
 		// Protect against a request for a non existing field
@@ -247,7 +247,7 @@ class WizardHelper
 					$aData[] = $aRow;
 				}
 				$this->m_aData['m_oDefaultValue'][$sAttCode] = json_encode($aData);
-				
+
 			}
 			else
 			{
@@ -256,12 +256,12 @@ class WizardHelper
 			}
 		}
 	}
-	
+
 	public function GetFieldsForAllowedValues()
 	{
 		return $this->m_aData['m_aAllowedValuesRequested'];
 	}
-	
+
 	public function SetAllowedValuesHtml($sAttCode, $sHtml)
 	{
 		// Protect against a request for a non existing field
@@ -270,12 +270,12 @@ class WizardHelper
 			$this->m_aData['m_oAllowedValues'][$sAttCode] = $sHtml;
 		}
 	}
-	
+
 	public function ToJSON()
 	{
 		return json_encode($this->m_aData);
 	}
-	
+
 	static public function FromJSON($sJSON)
 	{
 		$oWizHelper = new WizardHelper();
@@ -283,7 +283,7 @@ class WizardHelper
 		$oWizHelper->m_aData = $aData;
 		return $oWizHelper;
 	}
-	
+
 	protected function GetLinkedWizardStructure($oAttDef)
 	{
 		$oWizard = new UIWizard(null, $oAttDef->GetLinkedClass());
@@ -310,7 +310,7 @@ class WizardHelper
 		}
 		return $aFields;
 	}
-	
+
 	public function GetTargetClass()
 	{
 		return $this->m_aData['m_sClass'];
@@ -330,7 +330,7 @@ class WizardHelper
     {
         return isset($this->m_aData['m_sStimulus']) ? $this->m_aData['m_sStimulus'] : null;
     }
-	
+
 	public function GetIdForField($sFieldName)
 	{
 		$sResult = '';
@@ -374,32 +374,5 @@ if ({$sWizardHelperJsVar}.m_oDependenciesUpdatedPromiseResolve !== null){
 JS
 		);
 
-	}
-
-	/*
-	 * Function with an old pattern of code
-	 * @deprecated 3.1.0
-	*/
-	static function ParseJsonSet($oMe, $sLinkClass, $sExtKeyToMe, $sJsonSet)
-	{
-		$aSet = json_decode($sJsonSet, true); // true means hash array instead of object
-		$oSet = CMDBObjectSet::FromScratch($sLinkClass);
-		foreach ($aSet as $aLinkObj) {
-			$oLink = MetaModel::NewObject($sLinkClass);
-			foreach ($aLinkObj as $sAttCode => $value) {
-				$oAttDef = MetaModel::GetAttributeDef($sLinkClass, $sAttCode);
-				if (($oAttDef->IsExternalKey()) && ($value != '') && ($value > 0))
-				{
-					// For external keys: load the target object so that external fields
-					// get filled too
-					$oTargetObj = MetaModel::GetObject($oAttDef->GetTargetClass(), $value);
-					$oLink->Set($sAttCode, $oTargetObj);
-				}
-				$oLink->Set($sAttCode, $value);
-			}
-			$oLink->Set($sExtKeyToMe, $oMe->GetKey());
-			$oSet->AddObject($oLink);
-		}
-		return $oSet;
 	}
 }

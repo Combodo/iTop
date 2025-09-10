@@ -114,47 +114,6 @@ class ManageBrick extends PortalBrick
 		self::ENUM_TILE_MODE_TOP,
 	);
 
-	/** @var array $aPresentationData
-	 * @deprecated since 3.2.1
-	 */
-	public static $aPresentationData = array(
-		self::ENUM_TILE_MODE_BADGE => array(
-			'decorationCssClass' => 'fas fa-id-card fa-2x',
-			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-badge.html.twig',
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
-			'need_details' => true,
-		),
-		self::ENUM_TILE_MODE_TOP => array(
-			'decorationCssClass' => 'fas fa-signal fa-rotate-270 fa-2x',
-			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-top-list.html.twig',
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
-			'need_details' => true,
-		),
-		self::ENUM_TILE_MODE_PIE => array(
-			'decorationCssClass' => 'fas fa-chart-pie fa-2x',
-			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-chart.html.twig',
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_PIE,
-			'need_details' => false,
-		),
-		self::ENUM_TILE_MODE_BAR => array(
-			'decorationCssClass' => 'fas fa-chart-bar fa-2x',
-			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-chart.html.twig',
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_BAR,
-			'need_details' => false,
-		),
-		self::ENUM_TILE_MODE_TEXT => array(
-			'decorationCssClass' => 'fas fa-pen-square fa-2x',
-			'tileTemplate' => self::DEFAULT_TILE_TEMPLATE_PATH,
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
-			'need_details' => true,
-		),
-	);
-
 	/** @var array $aDefaultTileData */
 	private static array $aDefaultTileData = [
 		self::ENUM_TILE_MODE_BADGE => [
@@ -262,31 +221,6 @@ class ManageBrick extends PortalBrick
 	}
 
 	/**
-	 * Returns true if the $sDisplayMode need objects details for rendering.
-	 *
-	 * @deprecated since 3.2.1
-	 *
-	 * @param string $sDisplayMode
-	 *
-	 * @return bool
-	 */
-	static public function AreDetailsNeededForDisplayMode($sDisplayMode)
-	{
-		$bNeedDetails = false;
-		foreach (static::$aPresentationData as $aData)
-		{
-			if ($aData['layoutDisplayMode'] === $sDisplayMode)
-			{
-				$bNeedDetails = $aData['need_details'];
-				break;
-			}
-		}
-
-		return $bNeedDetails;
-	}
-
-
-	/**
 	 * Returns if the $sLayoutMode need objects details for rendering.
 	 *
 	 * @since 3.2.1
@@ -298,29 +232,6 @@ class ManageBrick extends PortalBrick
 	public function IsDetailsNeeded(string $sLayoutMode): bool
 	{
 		return static::$aDefaultLayoutData[$sLayoutMode]['need_details'];
-	}
-
-	/**
-	 * Returns the page template path for the $sDisplayMode
-	 *
-	 * @deprecated since 3.2.1
-	 *
-	 * @param string $sDisplayMode
-	 * @return string
-	 */
-	static public function GetPageTemplateFromDisplayMode($sDisplayMode)
-	{
-		$sTemplate = static::DEFAULT_PAGE_TEMPLATE_PATH;
-		foreach (static::$aPresentationData as $aData)
-		{
-			if ($aData['layoutDisplayMode'] === $sDisplayMode)
-			{
-				$sTemplate = $aData['layoutTemplate'];
-				break;
-			}
-		}
-
-		return $sTemplate;
 	}
 
 	/**
@@ -451,14 +362,6 @@ class ManageBrick extends PortalBrick
 	}
 
 	/**
-	 * @deprecated since 3.2.1
-	 */
-	public function GetDecorationCssClass()
-	{
-		return static::$aPresentationData[$this->sTileMode]['decorationCssClass'];
-	}
-
-	/**
 	 * @since 3.2.1
 	 *
 	 * @return mixed|string
@@ -480,23 +383,6 @@ class ManageBrick extends PortalBrick
 		$this->sTileMode = $sTileMode;
 
 		return $this;
-	}
-
-	/**
-	 * @deprecated since 3.2.1
-	 *
-	 * @param string $sTileMode
-	 *
-	 * @return string[] parameters for specified type, default parameters if type is invalid
-	 */
-	public function GetPresentationDataForTileMode($sTileMode)
-	{
-		if (isset(static::$aPresentationData[$sTileMode]))
-		{
-			return static::$aPresentationData[$sTileMode];
-		}
-
-		return static::$aPresentationData[static::DEFAULT_TILE_MODE];
 	}
 
 	/**
@@ -587,7 +473,7 @@ class ManageBrick extends PortalBrick
 
 	/**
 	 * Returns the default lists length to display
-	 * 
+	 *
 	 * @return int
 	 */
 	public function GetDefaultListLength()
@@ -597,9 +483,9 @@ class ManageBrick extends PortalBrick
 
 	/**
 	 * Sets the default lists length to display
-	 * 
+	 *
 	 * @param int $iDefaultListLength
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function SetDefaultListLength($iDefaultListLength) {

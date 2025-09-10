@@ -1642,19 +1642,6 @@ JS;
 	}
 
 	/**
-	 * Get an ID (for any kind of HTML tag) that is guaranteed unique in this page
-	 *
-	 * @return int The unique ID (in this page)
-	 * @deprecated 3.0.0 use utils::GetUniqueId() instead
-	 */
-	public function GetUniqueId()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use utils::GetUniqueId() instead');
-
-		return utils::GetUniqueId();
-	}
-
-	/**
 	 * Set the content-type (mime type) for the page's content
 	 *
 	 * @param $sContentType string

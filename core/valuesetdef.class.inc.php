@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -105,7 +105,7 @@ abstract class ValueSetDefinition
 
 
 /**
- * Set of existing values for an attribute, given a search filter 
+ * Set of existing values for an attribute, given a search filter
  *
  * @package     iTopORM
  */
@@ -125,7 +125,7 @@ class ValueSetObjects extends ValueSetDefinition
 
 	/**
 	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
-	 */	
+	 */
 	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = array(), $bAllowAllData = false, $aModifierProperties = array())
 	{
 		$this->m_sContains = '';
@@ -144,17 +144,6 @@ class ValueSetObjects extends ValueSetDefinition
 	{
 		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
 		$this->m_bIsLoaded = false;
-	}
-
-	/**
-	 * @deprecated use SetCondition instead
-	 *
-	 * @param \DBSearch $oFilter
-	 */
-	public function AddCondition(DBSearch $oFilter)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetCondition instead');
-		$this->SetCondition($oFilter);
 	}
 
 	public function SetCondition(DBSearch $oFilter)
@@ -457,7 +446,7 @@ class ValueSetObjects extends ValueSetDefinition
 
 
 /**
- * Fixed set values (could be hardcoded in the business model) 
+ * Fixed set values (could be hardcoded in the business model)
  *
  * @package     iTopORM
  */
@@ -542,7 +531,7 @@ class ValueSetEnum extends ValueSetDefinition
 			foreach (explode(",", $this->m_values) as $sVal)
 			{
 				$sVal = trim($sVal);
-				$sKey = $sVal; 
+				$sKey = $sVal;
 				$aValues[$sKey] = $sVal;
 			}
 		}
@@ -613,7 +602,7 @@ class ValueSetRange extends ValueSetDefinition
 
 
 /**
- * Data model classes 
+ * Data model classes
  *
  * @package     iTopORM
  */
@@ -631,7 +620,7 @@ class ValueSetEnumClasses extends ValueSetEnum
 	{
 		// Call the parent to parse the additional values...
 		parent::LoadValues($aArgs);
-		
+
 		// Translate the labels of the additional values
 		foreach($this->m_aValues as $sClass => $void)
 		{

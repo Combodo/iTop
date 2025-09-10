@@ -2222,15 +2222,6 @@ EOF
 				$oPage->add("</fieldset></div>");
 				break;
 
-			/**
-			 * @internal
-			 * @deprecated 3.2.0 N°7552 Use object.search_for_mentions route instead
-			 */
-			case 'cke_mentions':
-				$oController = new ObjectController();
-				$oPage = $oController->OperationSearchForMentions();
-				break;
-
 			case 'custom_fields_update':
 				$oPage = new JsonPage();
 				$sAttCode = utils::ReadParam('attcode', '');

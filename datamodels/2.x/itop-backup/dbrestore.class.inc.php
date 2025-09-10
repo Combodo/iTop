@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -84,7 +84,7 @@ class DBRestore extends DBBackup
 			{
 				$this->LogError("mysql said: $sLine");
 			}
-			if (count($aOutput) == 1) 
+			if (count($aOutput) == 1)
 			{
 				$sMoreInfo = trim($aOutput[0]);
 			}
@@ -94,18 +94,6 @@ class DBRestore extends DBBackup
 			}
 			throw new BackupException("Failed to execute mysql: ".$sMoreInfo);
 		}
-	}
-
-	/**
-	 * @deprecated Use RestoreFromCompressedBackup instead
-	 *
-	 * @param $sZipFile
-	 * @param string $sEnvironment
-	 */
-	public function RestoreFromZip($sZipFile, $sEnvironment = 'production')
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Use RestoreFromCompressedBackup instead');
-		$this->RestoreFromCompressedBackup($sZipFile, $sEnvironment);
 	}
 
 	/**
@@ -180,7 +168,7 @@ class DBRestore extends DBBackup
 				@chmod($sConfigFile, 0770); // Allow overwriting the file
 				rename($sDataDir.'/config-itop.php', $sConfigFile);
 				@chmod($sConfigFile, 0440); // Read-only
-				
+
 				$aExtraFiles = $this->ListExtraFiles($sDataDir);
 				foreach($aExtraFiles as $sSourceFilePath => $sDestinationFilePath) {
 					SetupUtils::builddir(dirname($sDestinationFilePath));
