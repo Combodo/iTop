@@ -5094,7 +5094,7 @@ abstract class MetaModel
 	 */
 	protected static function DBCreateViews()
 	{
-		[$aErrors, $aSugFix] = self::DBCheckViews();
+		[$aErrors, $aSugFix] = self::DBCleanLegacyViews();
 
 		foreach($aSugFix as $sClass => $aTarget)
 		{
@@ -5740,18 +5740,18 @@ abstract class MetaModel
 
 
 	/**
-	 * @deprecated 2.7.0 N°2369 Method will not be removed any time soon as we still need to drop view if the instance is migrating from an iTop 2.x to an iTop 3.0 or newer, even if they skip iTop 3.0.
-	 * @since 3.0.0 Does not recreate SQL views, only drops them. Method has not been renamed to avoid regressions
+	 * @internal
+	 * @deprecated will be remove when 2.7 will not be supported anymore
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 * @throws \Exception
 	 * @throws \MissingQueryArgument
 	 */
-	public static function DBCheckViews()
+	public static function DBCleanLegacyViews()
 	{
-		$aErrors = array();
-		$aSugFix = array();
+		$aErrors = [];
+		$aSugFix = [];
 
 		// Reporting views (must be created after any other table)
 		//
@@ -5766,7 +5766,7 @@ abstract class MetaModel
 			}
 		}
 
-		return array($aErrors, $aSugFix);
+		return [$aErrors, $aSugFix];
 	}
 
 	/**

@@ -698,12 +698,6 @@ class ApplicationInstaller
 		$oConfig = new Config();
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
 
-		if ($bOldAddon)
-		{
-			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons([]);
-		}
-
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
 
@@ -899,12 +893,6 @@ class ApplicationInstaller
 		$oConfig = new Config();
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
 
-		if ($bOldAddon)
-		{
-			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons([]);
-		}
-
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
@@ -965,12 +953,6 @@ class ApplicationInstaller
 
 		$oConfig = new Config();
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
-
-		if ($bOldAddon)
-		{
-			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons([]);
-		}
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 
@@ -1045,11 +1027,6 @@ class ApplicationInstaller
 		$oConfig->Set('access_mode', ACCESS_FULL);
 		// Final config update: add the modules
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir, $bPreserveModuleSettings);
-		if ($bOldAddon)
-		{
-			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons([]);
-		}
 
 		// Record which modules are installed...
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
