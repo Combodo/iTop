@@ -99,7 +99,6 @@ class ModuleDiscovery
 	protected static $m_sModulePath = null;
 
 	private static PhpExpressionEvaluator $oPhpExpressionEvaluator;
-	private static mixed $bNewFeedback = false;
 
 	protected static function SetModulePath($sModulePath)
 	{
@@ -206,9 +205,6 @@ class ModuleDiscovery
 		return self::OrderModulesByDependencies(self::$m_aModules, $bAbortOnMissingDependency, $aModulesToLoad);
 	}
 
-	public static function UseNewUiFeedback($bNewFeedback){
-		self::$bNewFeedback=$bNewFeedback;
-	}
 	/**
 	 * Arrange an list of modules, based on their (inter) dependencies
 	 * @param array $aModules The list of modules to process: 'id' => $aModuleInfo
@@ -216,7 +212,7 @@ class ModuleDiscovery
 	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
 	 * @return array
 	 * @throws \MissingDependencyException
-*/
+	*/
 	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		// Order the modules to take into account their inter-dependencies
@@ -256,10 +252,6 @@ class ModuleDiscovery
 		}
 		if ($bAbortOnMissingDependency && count($aDependencies) > 0)
 		{
-			if (self::$bNewFeedback){
-				iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, $bAbortOnMissingDependency, $aModulesToLoad);
-			}
-
 			$aModulesInfo = [];
 			$aModuleDeps = [];
 			foreach($aDependencies as $sId => $aDeps)

@@ -121,14 +121,11 @@ class iTopCoreModuleDependencySort {
 	 * @param array $aModules The list of modules to process: 'id' => $aModuleInfo
 	 * @param bool $bAbortOnMissingDependency ...
 	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
-	 * @param int $iLoopCount: used to count loop count for testing purpose (see if algo is optimized)
 	 * @return array
 	 * @throws \MissingDependencyException
 	 */
-	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null, ?int &$iLoopCount=0)
+	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
-		$iLoopCount=0;
-
 		// Order the modules to take into account their inter-dependencies
 		$aUnresolvedDependencyModules = [];
 		$aSelectedModules = [];
@@ -143,17 +140,13 @@ class iTopCoreModuleDependencySort {
 				$aSelectedModules[$sModuleName] = true;
 			}
 		}
-		self::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+
+		ksort($aUnresolvedDependencyModules);
 		$aOrderedModules = [];
 		$aModuleVersions=[];
-		$iPreviousLoopDepencyCount=-1;
-		$iNextLoopCount=count($aUnresolvedDependencyModules);
-		while(($iNextLoopCount!=$iPreviousLoopDepencyCount) //stop loop when no new dependency is resolved
-			&& ($iNextLoopCount > 0) //still remaining dependencies
-		)
+		$iLoopCount = 1;
+		while(($iLoopCount < count($aModules)+1) && (count($aUnresolvedDependencyModules) > 0) )
 		{
-			$iLoopCount++;
-			$iPreviousLoopDepencyCount=$iNextLoopCount;
 			foreach($aUnresolvedDependencyModules as $sModuleId => $oModule)
 			{
 				/** @var iTopCoreModule $oModule */
@@ -164,16 +157,15 @@ class iTopCoreModuleDependencySort {
 				}
 			}
 
-			$iNextLoopCount=count($aUnresolvedDependencyModules);
-			self::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+			$iLoopCount++;
 		}
 
 		if ($bAbortOnMissingDependency && count($aUnresolvedDependencyModules) > 0)
 		{
 			self::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+
 			$aModulesInfo = [];
 			$aModuleDeps = [];
-			/** @var iTopCoreModule $oModule */
 			foreach($aUnresolvedDependencyModules as $sModuleId => $oModule)
 			{
 				$aModule = $aModules[$sModuleId];
@@ -196,11 +188,12 @@ class iTopCoreModuleDependencySort {
 			$oException->aModulesInfo = $aModulesInfo;
 			throw $oException;
 		}
+
 		// Return the ordered list, so that the dependencies are met...
-		$aResult = array();
-		foreach($aOrderedModules as $sModuleId)
+		$aResult = [];
+		foreach($aOrderedModules as $sId)
 		{
-			$aResult[$sModuleId] = $aModules[$sModuleId];
+			$aResult[$sId] = $aModules[$sId];
 		}
 		return $aResult;
 	}

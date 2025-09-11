@@ -4,6 +4,7 @@ namespace Combodo\iTop\Test\UnitTest\Setup;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use iTopCoreModuleDependencySort;
+use MissingDependencyException;
 use ModuleDiscovery;
 
 class ModuleDiscoveryTest extends ItopDataTestCase
@@ -13,21 +14,29 @@ class ModuleDiscoveryTest extends ItopDataTestCase
 		$this->RequireOnceItopFile('setup/modulediscovery.class.inc.php');
 	}
 
-	public function tearDown() : void {
-		ModuleDiscovery::UseNewUiFeedback(false);
-	}
-	public static function OrderModulesByDependenciesProvider(){
+	public static function CheckMissingDependenciesAreCorrectlyOrderedInTheExceptionProvider()
+	{
+		$sLegacyExpectedMessage = <<<MSG
+The following modules have unmet dependencies:
+label1 (id: id1/123) depends on: ❌ id3/666 + ❌ id4/666,
+label2 (id: id2/456) depends on: ❌ id3/666
+MSG;
+		$sExpectedMessage = <<<MSG
+The following modules have unmet dependencies:
+label2 (id: id2/456) depends on: ❌ id3/666,
+label1 (id: id1/123) depends on: ❌ id3/666 + ❌ id4/666
+MSG;
+
 		return [
-			'legacy computation' => [0],
-			'hybrid computation: order is legacy/ error is new usr friendly one' => [1],
-			'new computation' => [2],
+			'legacy' => [ 'message' => $sLegacyExpectedMessage, 'is_legacy' => true ],
+			'new computation' => [ 'message' => $sExpectedMessage, 'is_legacy' => false ],
 		];
 	}
 
 	/**
-	 * @dataProvider OrderModulesByDependenciesProvider
+	 * @dataProvider CheckMissingDependenciesAreCorrectlyOrderedInTheExceptionProvider
 	 */
-	public function testOrderModulesByDependencies_CheckMissingDependenciesAreCorrectlyOrderedInTheException(int $mode)
+	public function testOrderModulesByDependencies_CheckMissingDependenciesAreCorrectlyOrderedInTheException(string $sMessage, bool $bIsLegacy)
 	{
 		$aModules=[
 			"id1/123" => [
@@ -39,92 +48,40 @@ class ModuleDiscoveryTest extends ItopDataTestCase
 				'label' => 'label2',
 			],
 		];
-		$iLoopCount=0;
-		try{
-			if ($mode===2){
-				iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
-			} else {
-				if ($mode===1){
-					ModuleDiscovery::UseNewUiFeedback(true);
-				}
-				ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
-			}
-		} catch(\MissingDependencyException $e){
-			if ($mode!==0) {
-				$sExpectedMessage = <<<MSG
-The following modules have unmet dependencies:
-label2 (id: id2/456) depends on: ❌ id3/666,
-label1 (id: id1/123) depends on: ❌ id3/666 + ❌ id4/666
-MSG;
-			} else {
-				$sExpectedMessage = <<<MSG
-The following modules have unmet dependencies:
-label1 (id: id1/123) depends on: ❌ id3/666 + ❌ id4/666,
-label2 (id: id2/456) depends on: ❌ id3/666
-MSG;
-			}
 
-			$this->assertEquals($sExpectedMessage, $e->getMessage());
-			if ($mode===2) {
-				$this->assertEquals(1, $iLoopCount);
-			}
+		$this->expectException(MissingDependencyException::class);
+		$this->expectExceptionMessage($sMessage);
+
+		if ($bIsLegacy){
+			ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
+		} else {
+			iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null);
 		}
 	}
 
-	/**
-	 * @dataProvider OrderModulesByDependenciesProvider
-	 */
-	public function testOrderModulesByDependencies_ValidateExceptionWithSomeDependenciesResolved(int $mode)
+	public static function ValidateExceptionWithSomeDependenciesResolvedProvider()
 	{
-		$aModules=[
-			"id1/123" => [
-				'dependencies' => [ 'id2/456', 'id4/666', 'id3/789'],
-				'label' => 'label1',
-			],
-			"id2/456" => [
-				'dependencies' => [],
-				'label' => 'label2',
-			],
-			"id3/789" => [
-				'dependencies' => [ 'id2/456', 'id4/666'],
-				'label' => 'label3',
-			],
-		];
-		$iLoopCount=0;
-		try{
-			if ($mode===2){
-				iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
-			} else {
-				if ($mode===1){
-					ModuleDiscovery::UseNewUiFeedback(true);
-				}
-				ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
-			}
-		} catch(\MissingDependencyException $e){
-			if ($mode!==0) {
-				$sExpectedMessage = <<<MSG
+		$sExpectedMessage = <<<MSG
 The following modules have unmet dependencies:
 label3 (id: id3/789) depends on: ✅ id2/456 + ❌ id4/666,
 label1 (id: id1/123) depends on: ✅ id2/456 + ❌ id4/666 + ❌ id3/789
 MSG;
-			} else {
-				$sExpectedMessage = <<<MSG
+		$sLegacyExpectedMessage = <<<MSG
 The following modules have unmet dependencies:
 label1 (id: id1/123) depends on: ✅ id2/456 + ❌ id4/666 + ❌ id3/789,
 label3 (id: id3/789) depends on: ✅ id2/456 + ❌ id4/666
 MSG;
-			}
-			$this->assertEquals($sExpectedMessage, $e->getMessage());
-			if ($mode===2) {
-				$this->assertEquals(2, $iLoopCount);
-			}
-		}
+
+		return [
+			'legacy' => [ 'message' => $sLegacyExpectedMessage, 'is_legacy' => true ],
+			'new computation' => [ 'message' => $sExpectedMessage, 'is_legacy' => false ],
+		];
 	}
 
 	/**
-	 * @dataProvider OrderModulesByDependenciesProvider
+	 * @dataProvider ValidateExceptionWithSomeDependenciesResolvedProvider
 	 */
-	public function testOrderModulesByDependencies_KeepGoingEvenWithFailure_WithSomeDependenciesResolved(int $mode)
+	public function testOrderModulesByDependencies_ValidateExceptionWithSomeDependenciesResolved(string $sMessage, bool $bIsLegacy)
 	{
 		$aModules=[
 			"id1/123" => [
@@ -140,29 +97,72 @@ MSG;
 				'label' => 'label3',
 			],
 		];
-		$iLoopCount=0;
-		if ($mode===2){
-			$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, false, null, $iLoopCount);
+
+		$this->expectException(MissingDependencyException::class);
+		$this->expectExceptionMessage($sMessage);
+
+		if ($bIsLegacy){
+			ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
 		} else {
-			if ($mode===1){
-				ModuleDiscovery::UseNewUiFeedback(true);
-			}
-			$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, false, null);
+			iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null);
 		}
+	}
+
+	public function testOrderModulesByDependencies_KeepGoingEvenWithFailure_WithSomeDependenciesResolved()
+	{
+		$aModules=[
+			"id1/123" => [
+				'dependencies' => [ 'id2/456', 'id4/666', 'id3/789'],
+				'label' => 'label1',
+			],
+			"id2/456" => [
+				'dependencies' => [],
+				'label' => 'label2',
+			],
+			"id3/789" => [
+				'dependencies' => [ 'id2/456', 'id4/666'],
+				'label' => 'label3',
+			],
+		];
+
+		$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, false, null);
+		$aLegacyResult = ModuleDiscovery::OrderModulesByDependencies($aModules, false, null);
 
 		$aExpected = [
 			'id2/456',
 		];
-		$this->assertEquals($aExpected, array_keys($aResult));
-		if ($mode===2) {
-			$this->assertEquals(2, $iLoopCount);
-		}
+
+		$this->assertEquals($aExpected, array_keys($aLegacyResult));
+		$this->assertEquals( $aLegacyResult, $aResult);
+	}
+
+	public static function UnResolveWithCircularDependencyProvider()
+	{
+		$sExpectedMessage = <<<MSG
+The following modules have unmet dependencies:
+label1 (id: id1/1) depends on: ❌ id2/2,
+label4 (id: id4/4) depends on: ❌ id1/1,
+label3 (id: id3/3) depends on: ❌ id4/4,
+label2 (id: id2/2) depends on: ❌ id3/3
+MSG;
+		$sLegacyExpectedMessage = <<<MSG
+The following modules have unmet dependencies:
+label1 (id: id1/1) depends on: ❌ id2/2,
+label2 (id: id2/2) depends on: ❌ id3/3,
+label3 (id: id3/3) depends on: ❌ id4/4,
+label4 (id: id4/4) depends on: ❌ id1/1
+MSG;
+
+		return [
+			'legacy' => [ 'message' => $sLegacyExpectedMessage, 'is_legacy' => true ],
+			'new computation' => [ 'message' => $sExpectedMessage, 'is_legacy' => false ],
+		];
 	}
 
 	/**
-	 * @dataProvider OrderModulesByDependenciesProvider
+	 * @dataProvider UnResolveWithCircularDependencyProvider
 	 */
-	public function testOrderModulesByDependencies_UnResolveWithCircularDependency(int $mode)
+	public function testOrderModulesByDependencies_UnResolveWithCircularDependency(string $sMessage, bool $bIsLegacy)
 	{
 		$aModules=[
 			"id1/1" => [
@@ -182,46 +182,18 @@ MSG;
 				'label' => 'label4',
 			],
 		];
-		$iLoopCount=0;
 
-		try{
-			if ($mode===2){
-				iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
-			} else {
-				if ($mode===1){
-					ModuleDiscovery::UseNewUiFeedback(true);
-				}
-				ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
-			}
-		} catch(\MissingDependencyException $e){
-			if ($mode!==0) {
-				$sExpectedMessage = <<<MSG
-The following modules have unmet dependencies:
-label1 (id: id1/1) depends on: ❌ id2/2,
-label4 (id: id4/4) depends on: ❌ id1/1,
-label3 (id: id3/3) depends on: ❌ id4/4,
-label2 (id: id2/2) depends on: ❌ id3/3
-MSG;
-			} else {
-				$sExpectedMessage = <<<MSG
-The following modules have unmet dependencies:
-label1 (id: id1/1) depends on: ❌ id2/2,
-label2 (id: id2/2) depends on: ❌ id3/3,
-label3 (id: id3/3) depends on: ❌ id4/4,
-label4 (id: id4/4) depends on: ❌ id1/1
-MSG;
-			}
-			$this->assertEquals($sExpectedMessage, $e->getMessage());
-			if ($mode===2) {
-				$this->assertEquals(1, $iLoopCount);
-			}
+		$this->expectException(MissingDependencyException::class);
+		$this->expectExceptionMessage($sMessage);
+
+		if ($bIsLegacy){
+			ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
+		} else {
+			iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null);
 		}
 	}
 
-	/**
-	 * @dataProvider OrderModulesByDependenciesProvider
-	 */
-	public function testOrderModulesByDependencies_ResolveOk(int $mode)
+	public function testOrderModulesByDependencies_ResolveOk()
 	{
 		$aModules=[
 			"id0/1" => [
@@ -245,15 +217,6 @@ MSG;
 				'label' => 'label4',
 			],
 		];
-		$iLoopCount=0;
-		if ($mode===2){
-			$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
-		} else {
-			if ($mode===1){
-				ModuleDiscovery::UseNewUiFeedback(true);
-			}
-			$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
-		}
 
 		$aExpected = [
 			"id4/4",
@@ -262,16 +225,15 @@ MSG;
 			"id1/1",
 			"id0/1",
 		];
-		$this->assertEquals($aExpected, array_keys($aResult));
-		if ($mode===2) {
-			$this->assertEquals(1, $iLoopCount);
-		}
+
+		$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null);
+		$aLegacyResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
+
+		$this->assertEquals($aExpected, array_keys($aLegacyResult));
+		$this->assertEquals( $aLegacyResult, $aResult);
 	}
 
-	/**
-	 * @dataProvider OrderModulesByDependenciesProvider
-	 */
-	public function testOrderModulesByDependencies_ResolveNoDependendenciesOrderByAlphabeticalOrder(int $mode)
+	public function testOrderModulesByDependencies_ResolveNoDependendenciesOrderByAlphabeticalOrder()
 	{
 		$aModules=[
 			"id2/2" => [
@@ -295,15 +257,6 @@ MSG;
 				'label' => 'label0',
 			],
 		];
-		$iLoopCount=0;
-		if ($mode===2){
-			$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
-		} else {
-			if ($mode===1){
-				ModuleDiscovery::UseNewUiFeedback(true);
-			}
-			$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
-		}
 
 		$aExpected = [
 			"id0/1",
@@ -312,16 +265,15 @@ MSG;
 			"id3/3",
 			"id4/4",
 		];
-		$this->assertEquals($aExpected, array_keys($aResult));
-		if ($mode===2) {
-			$this->assertEquals(1, $iLoopCount);
-		}
+
+		$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null);
+		$aLegacyResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
+
+		$this->assertEquals($aExpected, array_keys($aLegacyResult));
+		$this->assertEquals( $aLegacyResult, $aResult);
 	}
 
-	/**
-	 * @dataProvider OrderModulesByDependenciesProvider
-	 */
-	public function testOrderModulesByDependencies_ResolveOk_ModulesToLoadProvided(int $mode)
+	public function testOrderModulesByDependencies_ResolveOk_ModulesToLoadProvided()
 	{
 		$aModules=[
 			"id1/1" => [
@@ -343,44 +295,29 @@ MSG;
 		];
 
 		foreach(["id3", "id3-itil"] as $sLastModuleNameToLoad) {
-			$iLoopCount = 0;
-			if ($mode===2){
-				$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, ['id1', 'id2', $sLastModuleNameToLoad], $iLoopCount);
-			} else {
-				if ($mode===1){
-					ModuleDiscovery::UseNewUiFeedback(true);
-				}
-				$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, ['id1', 'id2', $sLastModuleNameToLoad]);
-			}
-
 			$aExpected = [
 				"$sLastModuleNameToLoad/3",
 				"id2/2",
 				"id1/1",
 			];
-			$this->assertEquals($aExpected, array_keys($aResult));
-			if ($mode===2) {
-				$this->assertEquals(1, $iLoopCount);
-			}
+
+			$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, ['id1', 'id2', $sLastModuleNameToLoad]);
+			$aLegacyResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, ['id1', 'id2', $sLastModuleNameToLoad]);
+
+			$this->assertEquals($aExpected, array_keys($aLegacyResult));
+			$this->assertEquals( $aLegacyResult, $aResult);
 		}
 	}
 
-	/*public function testOrderModulesByDependencies_RealExample(){
+	public function testOrderModulesByDependenciesNewComputation_RealExample(){
 		$aModules = json_decode(file_get_contents(__DIR__ . '/ressources/module_deps.json'), true);
-		$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
+
+		$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null);
+		$aLegacyResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
 
 		$aExpected = json_decode(file_get_contents(__DIR__ . '/ressources/expected_ordered_module_ids.json'), true);
-		$this->assertEquals($aExpected, array_keys($aResult));
-	}*/
-
-	public function testOrderModulesByDependenciesNewwComputation_RealExample(){
-		$aModules = json_decode(file_get_contents(__DIR__ . '/ressources/module_deps.json'), true);
-		$iLoopCount=0;
-		$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null, $iLoopCount);
-
-		$aExpected = json_decode(file_get_contents(__DIR__ . '/ressources/expected_ordered_module_ids.json'), true);
-		$this->assertEquals($aExpected, array_keys($aResult));
-		$this->assertEquals(1, $iLoopCount);
+		$this->assertEquals( $aLegacyResult, $aResult);
+		$this->assertEquals($aExpected, array_keys($aLegacyResult));
 	}
 
 	public function testSortModulesByCountOfDepencenciesDescending_NoDependencies(){
@@ -458,7 +395,7 @@ MSG;
 
 		iTopCoreModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 
-		$aExpected = json_decode(file_get_contents(__DIR__ . '/ressources/expected_ordered_module_ids.json'), true);
+		$aExpected = json_decode(file_get_contents(__DIR__ . '/ressources/expected_ordered_module_ids2.json'), true);
 		$this->assertEquals(
 			$aExpected,
 			array_keys($aUnresolvedDependencyModules));
