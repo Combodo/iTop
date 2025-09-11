@@ -1,7 +1,5 @@
 <?php
 
-namespace Combodo\iTop\Test\UnitTest;
-
 class XmlModule {
 	public string $sModuleName;
 	public array $aDependencyModulesNames=[];

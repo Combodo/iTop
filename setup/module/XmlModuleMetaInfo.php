@@ -1,7 +1,5 @@
 <?php
 
-namespace Combodo\iTop\Test\UnitTest;
-
 class XmlModuleMetaInfo {
 	public string $sLastNodeId;
 	public string $sNodeName;

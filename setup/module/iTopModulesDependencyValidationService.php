@@ -13,17 +13,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\Test\UnitTest\Integration;
-
-use ApplicationException;
-use Combodo\iTop\Test\UnitTest\XmlModule;
-use Combodo\iTop\Test\UnitTest\XmlModuleMetaInfo;
-use utils;
-
 require_once __DIR__ . '/XmlModuleMetaInfo.php';
 require_once __DIR__ . '/XmlModule.php';
-
-use ModuleInstallerAPI;
 
 /**
  * @group modulesDependencyValidation
@@ -44,7 +35,6 @@ class iTopModulesDependencyValidationService {
 	{
 		if (!isset(self::$oInstance)) {
 			self::$oInstance = new iTopModulesDependencyValidationService();
-			self::ReadModuleMetaInfo();
 		}
 
 		return self::$oInstance;
@@ -54,54 +44,21 @@ class iTopModulesDependencyValidationService {
 		self::$oInstance = $instance;
 	}
 
-
-	public static function ReadModuleMetaInfo(): void
-	{
-		require_once APPROOT."setup/modulediscovery.class.inc.php";
-		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
-
+	private static function GetModulesDataByModuleName() : array {
 		if (count(self::$aModulesDataByModuleName)>0){
-			return;
+			return self::$aModulesDataByModuleName;
 		}
 
 		$aDirsToScan = [
 			APPROOT.'datamodels/2.x',
 			APPROOT.'extensions',
-			APPROOT.'extensions/*',
+			APPROOT.'extensions',
 			APPROOT.'data/production-modules',
-			APPROOT.'data/production-modules/*',
+			APPROOT.'data/production-modules',
 		];
-		$aFilesToRemove=[];
-		foreach ($aDirsToScan as $sDir){
-			foreach (glob("$sDir/*/module.*.php") as $sFile) {
-				$sContent = file_get_contents($sFile);
-				$sContent=str_replace('SetupWebPage::AddModule', '$aModuleData=array', $sContent);
+		self::$aModulesDataByModuleName = ModuleDiscovery::GetAvailableModules($aDirsToScan, true);
 
-				$sTempFile = tempnam(sys_get_temp_dir(), 'modulefile_');
-				$aFilesToRemove[]=$sTempFile;
-				file_put_contents($sTempFile, $sContent);
-
-				require_once $sTempFile;
-
-				//replace tmp file by real module path
-				$aModuleData[0]=$sFile;
-				$sModuleId=$aModuleData[1];
-
-				list($sModuleName, $sVersion) = \ModuleDiscovery::GetModuleName($sModuleId);
-				self::$aModulesDataByModuleName[$sModuleName] = $aModuleData;
-			}
-
-			ksort(self::$aModulesDataByModuleName);
-
-			foreach ($aFilesToRemove as $sTmpFile){
-				@unlink($sTmpFile);
-			}
-		}
-	}
-
-	public function GetModuleMetainfo($sModuleId)
-	{
-		return self::$aModulesDataByModuleName[$sModuleId] ?? [];
+		return self::$aModulesDataByModuleName;
 	}
 
 	public function ListDatamodelFiles() : array
@@ -176,10 +133,10 @@ class iTopModulesDependencyValidationService {
 	public function FetchAllDependenciesViaModulesFiles()
 	{
 		$aFullnameClassesByModuleName=[];
-		foreach (self::$aModulesDataByModuleName as $sModuleName => $aModuleData){
+		foreach (self::GetModulesDataByModuleName() as $sModuleName => $aModuleData){
 			//echo "$sModuleName\n";
 			$aFiles = $aModuleData[2]['datamodel'] ?? [];
-			$sDir = dirname($aModuleData[0]);
+			$sDir = dirname($aModuleData['module_file_path']);
 
 			$aDeps=[];
 			foreach ($aFiles as $sFile){
@@ -194,12 +151,12 @@ class iTopModulesDependencyValidationService {
 		}
 
 		foreach ($aFullnameClassesByModuleName as $sModuleName => $aFullnameClasses){
-			foreach (self::$aModulesDataByModuleName as $sModuleName2 => $aModuleData){
+			foreach (self::GetModulesDataByModuleName() as $sModuleName2 => $aModuleData){
 				if ($sModuleName2 === $sModuleName){
 					continue;
 				}
 
-				$sDir = dirname($aModuleData[0]);
+				$sDir = dirname($aModuleData['module_file_path']);
 
 				if (count($aFullnameClassesByModuleName)==0){
 					continue;
