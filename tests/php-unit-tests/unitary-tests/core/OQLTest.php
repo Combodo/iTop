@@ -13,12 +13,14 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
+use DBObjectSet;
 use DBSearch;
 use Exception;
 use MetaModel;
 use OqlInterpreter;
 use QueryBuilderContext;
 use SQLObjectQueryBuilder;
+use UserRights;
 use utils;
 
 class OQLTest extends ItopDataTestCase
@@ -498,5 +500,79 @@ SELECT
 ) AS _union_alderaan_",
 			],
 		];
+	}
+
+	public function testOQLAllowedOrg()
+	{
+		$oOrg = MetaModel::NewObject('Organization');
+		$oOrg->Set('name', 'Test organization');
+		$oOrg->Set('status', 'active');
+		$oOrg->DBInsert();
+		$sOrgId = $oOrg->GetKey();
+
+		$oOsFamily = MetaModel::NewObject('OSFamily');
+		$oOsFamily->Set('name', 'Test OS Family');
+		$oOsFamily->DBInsert();
+
+		$oOsVersion = MetaModel::NewObject('OSVersion');
+		$oOsVersion->Set('name', 'Test OS Version');
+		$oOsVersion->Set('osfamily_id', $oOsFamily->GetKey());
+		$oOsVersion->DBInsert();
+
+		$oOsLicence = MetaModel::NewObject('OSLicence');
+		$oOsLicence->Set('name', 'Test OS Licence');
+		$oOsLicence->Set('osversion_id', $oOsVersion->GetKey());
+		$oOsLicence->Set('org_id', $sOrgId);
+		$oOsLicence->DBInsert();
+
+		$oVCluster = MetaModel::NewObject('Hypervisor');
+		$oVCluster->Set('name', 'Test Hypervisor');
+		$oVCluster->Set('org_id', $sOrgId);
+		$oVCluster->DBInsert();
+
+		$oVmWithOsLicence = MetaModel::NewObject('VirtualMachine');
+		$oVmWithOsLicence->Set('name', 'Test VM with OS Licence');
+		$oVmWithOsLicence->Set('org_id', $sOrgId);
+		$oVmWithOsLicence->Set('virtualhost_id', $oVCluster->GetKey());
+		$oVmWithOsLicence->Set('oslicence_id', $oOsLicence->GetKey());
+		$oVmWithOsLicence->DBInsert();
+
+		$oVmWithoutOsLicence = MetaModel::NewObject('VirtualMachine');
+		$oVmWithoutOsLicence->Set('name', 'Test VM without OS Licence');
+		$oVmWithoutOsLicence->Set('org_id', $sOrgId);
+		$oVmWithoutOsLicence->Set('virtualhost_id', $oVCluster->GetKey());
+		$oVmWithoutOsLicence->DBInsert();
+
+
+		$sLoginUserWithoutAllowedOrg = $this->GivenUserInDB('azerty', ['Configuration Manager']);
+		$sLoginUserWithAllowedOrg = $this->GivenUserRestrictedToAnOrganizationInDB($sOrgId, 3);
+
+		$aUsersLogin = [$sLoginUserWithoutAllowedOrg, $sLoginUserWithAllowedOrg];
+
+		$sQuery = <<<OQL
+			SELECT VM, OSL
+			FROM VirtualMachine AS VM
+			JOIN OSLicence AS OSL ON VM.oslicence_id = OSL.id
+		OQL;
+
+
+		foreach ($aUsersLogin as $sLogin) {
+			if (!UserRights::Login($sLogin)) {
+				self::fail("Could not log in with user $sLogin");
+			}
+
+			$oDbObjectSearch = DBObjectSearch::FromOQL($sQuery);
+
+			$oSet = new DBObjectSet($oDbObjectSearch);
+			$i = 0;
+			while ($oVM = $oSet->Fetch()) {
+				if ($oVM->GetKey() === $oVmWithOsLicence->GetKey() || ($oVM->GetKey() === $oVmWithoutOsLicence->GetKey())) {
+					$i++;
+				}
+			}
+			$sDisplayNameInError = ($sLogin === $sLoginUserWithAllowedOrg) ? "$sLogin (with allowed org)" : "$sLogin (without allowed org)";
+			self::assertEquals(2, $i, "The user $sDisplayNameInError should see 2 VMs (cf. PR #727)");
+			UserRights::Logoff();
+		}
 	}
 }
