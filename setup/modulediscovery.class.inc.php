@@ -230,7 +230,7 @@ class ModuleDiscovery
 		ksort($aDependencies);
 		$aOrderedModules = [];
 		$iLoopCount = 1;
-		while(($iLoopCount < count($aModules)) && (count($aDependencies) > 0) )
+		while(($iLoopCount < count($aModules)+1) && (count($aDependencies) > 0) )
 		{
 			foreach($aDependencies as $sId => $aRemainingDeps)
 			{
