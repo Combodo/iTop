@@ -411,11 +411,9 @@ abstract class DBObject implements iDisplay
      * This is mostly used after a lazy load (automatically performed by the framework)
      * This will erase any pending changes.
      *
-	 * @param bool $bAllowAllData @deprecated This parameter is ignored!!
-	 *
 	 * @throws CoreException
 	 */
-	public function Reload($bAllowAllData = false)
+	public function Reload()
 	{
 		assert($this->m_bIsInDB);
 		$this->FireEvent(EVENT_DB_OBJECT_RELOAD);
