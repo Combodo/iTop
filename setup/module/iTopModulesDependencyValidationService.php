@@ -50,20 +50,28 @@ class iTopModulesDependencyValidationService {
 			glob(APPROOT.'data/extensions/*', GLOB_ONLYDIR);
 
 
-		    $aDirsToScan = array_merge([
-			    APPROOT.'datamodels/2.x',
-			    APPROOT.'extensions',
-			    APPROOT.'data/production-modules',
-		        ],
-			    glob(APPROOT.'data/production-modules/*', GLOB_ONLYDIR),
-			    glob(APPROOT.'data/extensions/*', GLOB_ONLYDIR)
-		    );
+			$aMainFolders = [
+				APPROOT.'datamodels/2.x',
+				APPROOT.'extensions',
+				APPROOT.'data/production-modules',
+			];
 
-		foreach (ModuleDiscovery::GetAvailableModules($aDirsToScan, true) as $sModuleId => $aModuleData) {
-			list($sModuleName,) = \ModuleDiscovery::GetModuleName($sModuleId);
-			self::$aModulesDataByModuleName[$sModuleName] = $aModuleData;
+			$aDirsToScan = [];
+			foreach ($aMainFolders as $sDir){
+				if (is_dir($sDir)){
+					$aDirsToScan = array_merge(
+						$aDirsToScan,
+						[$sDir],
+						glob(APPROOT."$sDir/*", GLOB_ONLYDIR)
+					);
+				}
+			}
+
+			foreach (ModuleDiscovery::GetAvailableModules($aDirsToScan, true) as $sModuleId => $aModuleData) {
+				list($sModuleName,) = \ModuleDiscovery::GetModuleName($sModuleId);
+				self::$aModulesDataByModuleName[$sModuleName] = $aModuleData;
+			}
 		}
-	}
 
 		return self::$aModulesDataByModuleName;
 	}
