@@ -44,19 +44,26 @@ class iTopModulesDependencyValidationService {
 		self::$oInstance = $instance;
 	}
 
-	private static function GetModulesDataByModuleName() : array {
-		if (count(self::$aModulesDataByModuleName)>0){
-			return self::$aModulesDataByModuleName;
-		}
+	public static function GetModulesDataByModuleName() : array {
+		if (count(self::$aModulesDataByModuleName)==0){
+			glob(APPROOT.'data/production-modules/*', GLOB_ONLYDIR);
+			glob(APPROOT.'data/extensions/*', GLOB_ONLYDIR);
 
-		$aDirsToScan = [
-			APPROOT.'datamodels/2.x',
-			APPROOT.'extensions',
-			APPROOT.'extensions',
-			APPROOT.'data/production-modules',
-			APPROOT.'data/production-modules',
-		];
-		self::$aModulesDataByModuleName = ModuleDiscovery::GetAvailableModules($aDirsToScan, true);
+
+		    $aDirsToScan = array_merge([
+			    APPROOT.'datamodels/2.x',
+			    APPROOT.'extensions',
+			    APPROOT.'data/production-modules',
+		        ],
+			    glob(APPROOT.'data/production-modules/*', GLOB_ONLYDIR),
+			    glob(APPROOT.'data/extensions/*', GLOB_ONLYDIR)
+		    );
+
+		foreach (ModuleDiscovery::GetAvailableModules($aDirsToScan, true) as $sModuleId => $aModuleData) {
+			list($sModuleName,) = \ModuleDiscovery::GetModuleName($sModuleId);
+			self::$aModulesDataByModuleName[$sModuleName] = $aModuleData;
+		}
+	}
 
 		return self::$aModulesDataByModuleName;
 	}
@@ -135,7 +142,7 @@ class iTopModulesDependencyValidationService {
 		$aFullnameClassesByModuleName=[];
 		foreach (self::GetModulesDataByModuleName() as $sModuleName => $aModuleData){
 			//echo "$sModuleName\n";
-			$aFiles = $aModuleData[2]['datamodel'] ?? [];
+			$aFiles = $aModuleData['datamodel'] ?? [];
 			$sDir = dirname($aModuleData['module_file_path']);
 
 			$aDeps=[];

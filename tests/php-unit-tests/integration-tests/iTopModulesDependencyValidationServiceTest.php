@@ -68,7 +68,7 @@ class iTopModulesDependencyValidationServiceTest extends ItopDataTestCase {
 		$aErrors=[];
 		/** @var XmlModule $oXmlModule */
 		foreach (iTopModulesDependencyValidationService::GetInstance()->aModules as $sModuleName => $oXmlModule) {
-			$aCurrentDeps = iTopModulesDependencyValidationService::GetInstance()::$aModulesDataByModuleName[$sModuleName][2]['dependencies'] ?? [];
+			$aCurrentDeps = iTopModulesDependencyValidationService::GetModulesDataByModuleName()[$sModuleName]['dependencies'] ?? [];
 			$aModuleErrors=[];
 			foreach ($oXmlModule->aDependencyModulesNames as $sDepModuleName => $oXmlModule2){
 				$sXmlUIDs = implode('|', $oXmlModule->aXMlMetaInfosByModuleNames[$sDepModuleName]);
