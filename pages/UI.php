@@ -70,7 +70,7 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction)
 	}
 	// Get the list of missing mandatory fields for the target state, considering only the changes from the previous form (i.e don't prompt twice)
 	$aExpectedAttributes = $oObj->GetTransitionAttributes($sNextAction);
-	
+
 	if (count($aExpectedAttributes) == 0)
 	{
 		// If all the mandatory fields are already present, just apply the transition silently...
@@ -89,7 +89,7 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction)
 		// redirect to the 'stimulus' action
 		$oAppContext = new ApplicationContext();
 //echo "<p>Missing Attributes <pre>".print_r($aExpectedAttributes, true)."</pre></p>\n";
-		
+
 		$oP->add_header('Location: '.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=stimulus&class='.get_class($oObj).'&stimulus='.$sNextAction.'&id='.$oObj->getKey().$oAppContext->GetForLink(true));
 	}
 }
@@ -247,7 +247,7 @@ function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sN
 		$aExtraParams['surround_with_panel'] = true;
 		if(array_key_exists('icon', $aDisplayParams)){
 			$aExtraParams['panel_icon'] = $aDisplayParams['icon'];
-		}		
+		}
 		if(array_key_exists('title', $aDisplayParams)){
 			$aExtraParams['panel_title'] = $aDisplayParams['title'];
 		}
@@ -295,7 +295,7 @@ function DisplayNavigatorGroupTab($oP)
 }
 
 /***********************************************************************************
- * 
+ *
  * Main user interface page starts here
  *
  ***********************************************************************************/
@@ -1394,7 +1394,6 @@ try
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
-			case 'swf_navigator': /** @deprecated SWF was removed in iTop */
 			case 'view_relations': // Graphical display of the relations "impact" / "depends on"
 			require_once(APPROOT.'core/simplegraph.class.inc.php');
 			require_once(APPROOT.'core/relationgraph.class.inc.php');
