@@ -95,7 +95,7 @@ class Config
 	protected $m_aAppModules;
 	protected $m_aDataModels;
 	protected $m_aWebServiceCategories;
-	protected $m_aAddons = ['user rights' => 'addons/userrights/userrightsprofile.class.inc.php'];
+	protected $m_aAddons;
 
 	/** @var ConfigPlaceholdersResolver */
 	private $oConfigPlaceholdersResolver;
@@ -2259,6 +2259,26 @@ class Config
 		$this->m_aModuleSettings[$sModule][$sProperty] = $value;
 	}
 
+	/**
+	 * @deprecated 3.3.0 N°8190
+	 */
+	public function GetAddons()
+	{
+		if (array_key_exists("user rights", $this->m_aAddons))		{
+			return $this->m_aAddons;
+		} else {
+			return array_merge($this->m_aAddons,['user rights' => 'addons/userrights/userrightsprofile.class.inc.php']);
+		}
+	}
+
+	/**
+	 * @deprecated 3.3.0 N°8190
+	 */
+	public function SetAddons($aAddons)
+	{
+		$this->m_aAddons = $aAddons;
+	}
+
 	public function GetLogGlobal()
 	{
 		return $this->m_bLogGlobal;
@@ -2807,6 +2827,10 @@ class Config
 			return;
 		}
 
+		// Initialize the arrays below with default values for the application...
+		$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
+		$aAddOns = $oEmptyConfig->GetAddOns();
+
 		$aModules = ModuleDiscovery::GetAvailableModules(array(APPROOT.$sModulesDir));
 		foreach ($aModules as $sModuleId => $aModuleInfo)
 		{
@@ -2832,6 +2856,7 @@ class Config
 				RunTimeEnvironment::CallInstallerHandler($aModuleInfo, "BeforeWritingConfig", [$this]);
 			}
 		}
+		$this->SetAddOns($aAddOns);
 	}
 
 	/**
