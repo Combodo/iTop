@@ -404,6 +404,18 @@ JS
 	}
 
 	/**
+	 * Resize an image so that it fits the maximum width/height defined in the config file
+	 * @param ormDocument $oImage The original image stored as an array (content / mimetype / filename)
+	 * @return ormDocument The resampled image (or the original one if it already fit)
+	 * @deprecated Replaced by ormDocument::ResizeImageToFit
+	 */
+	public static function ResizeImageToFit(ormDocument $oImage, &$aDimensions = null)
+	{
+		$iMaxImageSize = (int)MetaModel::GetConfig()->Get('inline_image_max_storage_width', 0);
+		return $oImage->ResizeImageToFit($iMaxImageSize, $iMaxImageSize, $aDimensions);
+	}
+
+	/**
 	 * Get the (localized) textual representation of the max upload size
 	 * @return string
 	 */
