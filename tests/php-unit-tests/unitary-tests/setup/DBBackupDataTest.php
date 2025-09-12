@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
+use BackupException;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBBackup;
 use DBRestore;
@@ -124,5 +125,16 @@ class DBBackupDataTest extends ItopDataTestCase
 			'one extra file' => ['aFilesToCreate' => ['config-itop.php', 'itop-dump.sql', 'delta.xml', 'production-modules/test/module.test.php', 'collectors/ldap/conf/params.local.xml'], 'aExpectedExtraFiles' => ['collectors/ldap/conf/params.local.xml']],
 		];
 	}
-	
+
+	public function testRestoreFromCompressedBackup()
+	{
+		require_once(APPROOT.'/env-production/itop-backup/dbrestore.class.inc.php');
+
+		$oConfig = \utils::GetConfig();
+		$oRestore = new DBRestore($oConfig);
+
+		$this->expectException(BackupException::class);
+		$this->expectExceptionMessage('Failed to extract archive.');
+		$oRestore->RestoreFromCompressedBackup('nonexistent.tar.gz');
+	}
 }
