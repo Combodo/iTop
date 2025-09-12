@@ -3,7 +3,7 @@
         'name' => 'combodo/itop',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '1bf53bae2a481c76bba07e2f6d3447b4008efacd',
+        'reference' => '4e2a674e11e44e951a920602235ba63bf3ba7d66',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'combodo/itop' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '1bf53bae2a481c76bba07e2f6d3447b4008efacd',
+            'reference' => '4e2a674e11e44e951a920602235ba63bf3ba7d66',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -161,9 +161,9 @@
             'dev_requirement' => false,
         ),
         'pear/archive_tar' => array(
-            'pretty_version' => '1.4.14',
-            'version' => '1.4.14.0',
-            'reference' => '4d761c5334c790e45ef3245f0864b8955c562caa',
+            'pretty_version' => '1.6.0',
+            'version' => '1.6.0.0',
+            'reference' => 'dc3285537f1832da8ddbbe45f5a007248b6cc00e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../pear/archive_tar',
             'aliases' => array(),
@@ -232,8 +232,8 @@
         'psr/container-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '^1.0',
-                1 => '1.1|2.0',
+                0 => '1.1|2.0',
+                1 => '^1.0',
             ),
         ),
         'psr/event-dispatcher' => array(
