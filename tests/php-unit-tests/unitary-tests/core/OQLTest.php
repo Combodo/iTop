@@ -504,45 +504,43 @@ SELECT
 
 	public function testOQLAllowedOrg()
 	{
-		$oOrg = MetaModel::NewObject('Organization');
-		$oOrg->Set('name', 'Test organization');
-		$oOrg->Set('status', 'active');
-		$oOrg->DBInsert();
-		$sOrgId = $oOrg->GetKey();
+		$sOrgId = $this->GivenObjectInDB('Organization', [
+			'name' => 'Test organization',
+			'status' => 'active'
+		]);
 
-		$oOsFamily = MetaModel::NewObject('OSFamily');
-		$oOsFamily->Set('name', 'Test OS Family');
-		$oOsFamily->DBInsert();
+		$iOsFamilyId = $this->GivenObjectInDB('OSFamily', [
+			'name' => 'Test OS Family'
+		]);
 
-		$oOsVersion = MetaModel::NewObject('OSVersion');
-		$oOsVersion->Set('name', 'Test OS Version');
-		$oOsVersion->Set('osfamily_id', $oOsFamily->GetKey());
-		$oOsVersion->DBInsert();
+		$iOsVersionId = $this->GivenObjectInDB('OSVersion', [
+			'name' => 'Test OS Version',
+			'osfamily_id' => $iOsFamilyId
+		]);
 
-		$oOsLicence = MetaModel::NewObject('OSLicence');
-		$oOsLicence->Set('name', 'Test OS Licence');
-		$oOsLicence->Set('osversion_id', $oOsVersion->GetKey());
-		$oOsLicence->Set('org_id', $sOrgId);
-		$oOsLicence->DBInsert();
+		$iOsLicenceId = $this->GivenObjectInDB('OSLicence', [
+			'name' => 'Test OS Licence',
+			'osversion_id' => $iOsVersionId,
+			'org_id' => $sOrgId
+		]);
 
-		$oVCluster = MetaModel::NewObject('Hypervisor');
-		$oVCluster->Set('name', 'Test Hypervisor');
-		$oVCluster->Set('org_id', $sOrgId);
-		$oVCluster->DBInsert();
+		$iVClusterId = $this->GivenObjectInDB('Hypervisor', [
+			'name' => 'Test Hypervisor',
+			'org_id' => $sOrgId
+		]);
 
-		$oVmWithOsLicence = MetaModel::NewObject('VirtualMachine');
-		$oVmWithOsLicence->Set('name', 'Test VM with OS Licence');
-		$oVmWithOsLicence->Set('org_id', $sOrgId);
-		$oVmWithOsLicence->Set('virtualhost_id', $oVCluster->GetKey());
-		$oVmWithOsLicence->Set('oslicence_id', $oOsLicence->GetKey());
-		$oVmWithOsLicence->DBInsert();
+		$iVmWithOsLicenceId = $this->GivenObjectInDB('VirtualMachine', [
+			'name' => 'Test VM with OS Licence',
+			'org_id' => $sOrgId,
+			'virtualhost_id' => $iVClusterId,
+			'oslicence_id' => $iOsLicenceId
+		]);
 
-		$oVmWithoutOsLicence = MetaModel::NewObject('VirtualMachine');
-		$oVmWithoutOsLicence->Set('name', 'Test VM without OS Licence');
-		$oVmWithoutOsLicence->Set('org_id', $sOrgId);
-		$oVmWithoutOsLicence->Set('virtualhost_id', $oVCluster->GetKey());
-		$oVmWithoutOsLicence->DBInsert();
-
+		$iVmWithoutOsLicenceId = $this->GivenObjectInDB('VirtualMachine', [
+			'name' => 'Test VM without OS Licence',
+			'org_id' => $sOrgId,
+			'virtualhost_id' => $iVClusterId
+		]);
 
 		$sLoginUserWithoutAllowedOrg = $this->GivenUserInDB('azerty', ['Configuration Manager']);
 		$sLoginUserWithAllowedOrg = $this->GivenUserRestrictedToAnOrganizationInDB($sOrgId, 3);
@@ -566,7 +564,7 @@ SELECT
 			$oSet = new DBObjectSet($oDbObjectSearch);
 			$i = 0;
 			while ($oVM = $oSet->Fetch()) {
-				if ($oVM->GetKey() === $oVmWithOsLicence->GetKey() || ($oVM->GetKey() === $oVmWithoutOsLicence->GetKey())) {
+				if ($oVM->GetKey() === $iVmWithOsLicenceId || ($oVM->GetKey() === $iVmWithoutOsLicenceId)) {
 					$i++;
 				}
 			}
