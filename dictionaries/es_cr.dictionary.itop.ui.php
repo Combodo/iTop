@@ -520,6 +520,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Menu:Manage' => 'Administrar',
 	'UI:Menu:EMail' => 'Enviar por Correo Electrónico',
 	'UI:Menu:CSVExport' => 'Exportar a CSV...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Modificar',
 	'UI:Menu:Delete' => 'Borrar',
 	'UI:Menu:BulkDelete' => 'Borrar',

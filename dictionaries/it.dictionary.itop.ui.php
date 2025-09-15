@@ -524,6 +524,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Menu:Manage' => 'Gestisci...',
 	'UI:Menu:EMail' => 'eMail',
 	'UI:Menu:CSVExport' => 'Esporta CSV...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Modifica...',
 	'UI:Menu:Delete' => 'Cancella...',
 	'UI:Menu:BulkDelete' => 'Cancella...',

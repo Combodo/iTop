@@ -151,7 +151,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Change/Stimulus:ev_approve+' => '',
 	'Class:Change/Stimulus:ev_replan' => 'Replan',
 	'Class:Change/Stimulus:ev_replan+' => '',
-	'Class:Change/Stimulus:ev_notapprove' => 'Reject',
+	'Class:Change/Stimulus:ev_notapprove' => 'Reject approval',
 	'Class:Change/Stimulus:ev_notapprove+' => '',
 	'Class:Change/Stimulus:ev_implement' => 'Implement',
 	'Class:Change/Stimulus:ev_implement+' => '',

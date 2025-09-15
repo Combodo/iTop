@@ -252,7 +252,7 @@ class FilterBrick extends PortalBrick
 		// Checking that the brick has at least a target brick id
 		if (($this->GetTargetBrickId() === null) || ($this->GetTargetBrickId() === ''))
 		{
-			throw new DOMFormatException('FilterBrick : Must have a target brick id', null, null, $oMDElement);
+			throw new DOMFormatException('FilterBrick : Must have a target brick id', 0, null, $oMDElement);
 		}
 
 		return $this;

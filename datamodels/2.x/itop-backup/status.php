@@ -22,6 +22,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Spinner\SpinnerUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
@@ -409,6 +410,9 @@ JS
 
 	$sEnvironment = addslashes(utils::GetCurrentEnvironment());
 
+	$oModalSpinner = SpinnerUIBlockFactory::MakeMedium(null, $sPleaseWaitBackup);
+	$sModalSpinnerHtml = BlockRenderer::RenderBlockTemplates($oModalSpinner);
+
 	$oP->add_script(
 		<<<JS
 function LaunchBackupNow()
@@ -420,7 +424,7 @@ function LaunchBackupNow()
 	{
 		const oModal = CombodoModal.OpenModal({
 				title: '$sBackUpNow',
-				content: '<i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitBackup'
+				content: `$sModalSpinnerHtml`
 		});
 
 		var oParams = {};

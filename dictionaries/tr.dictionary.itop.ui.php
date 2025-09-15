@@ -525,6 +525,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Menu:Manage' => 'Yönet...',
 	'UI:Menu:EMail' => 'e-posta',
 	'UI:Menu:CSVExport' => 'CSV olarak dışarı ver...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Düzenle...',
 	'UI:Menu:Delete' => 'Sil...',
 	'UI:Menu:BulkDelete' => 'Sil...',

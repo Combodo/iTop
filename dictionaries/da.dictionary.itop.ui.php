@@ -522,6 +522,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Menu:Manage' => 'Administrer...',
 	'UI:Menu:EMail' => 'eMail',
 	'UI:Menu:CSVExport' => 'CSV Eksport...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Modificer...',
 	'UI:Menu:Delete' => 'Slet...',
 	'UI:Menu:BulkDelete' => 'Slet...',

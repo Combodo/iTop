@@ -256,6 +256,10 @@
           <code><![CDATA[
     public function OnBeforeWriteTicket(Combodo\iTop\Service\Events\EventData $oEventData)
     {
+        // do not update impacted items from portal
+        if(ContextTag::Check(ContextTag::TAG_PORTAL)){
+            return;
+        }
         $aChanges = $this->ListChanges();
         if ($this->IsNew() || array_key_exists('functionalcis_list', $aChanges) || array_key_exists('contacts_list', $aChanges)) {
             $this->UpdateImpactedItems();

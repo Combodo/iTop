@@ -490,7 +490,7 @@ EOF;
 					{
 						throw new DOMFormatException(
 							'Scope tag in class must have a not empty oql_view tag',
-							null,
+							0,
 							null,
 							$oScopeNode
 						);

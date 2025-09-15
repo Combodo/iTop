@@ -1,5 +1,9 @@
 <p align="center"><a href="https://www.combodo.com/itop-193" target="_blank">
-    <img src="https://www.combodo.com/logos/logo-itop-baseline.svg" width=350>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="/images/logos/logo-itop-baseline-light.svg">
+  <source media="(prefers-color-scheme: light)" srcset="/images/logos/logo-itop-baseline-dark.svg">
+  <img src="/images/logos/logo-itop-baseline-light.svg" width="350" alt="Logo iTop with baseline" />
+</picture>
 </a></p>
 
 

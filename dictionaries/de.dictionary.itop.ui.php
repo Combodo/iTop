@@ -521,6 +521,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Menu:Manage' => 'Verwalten...',
 	'UI:Menu:EMail' => 'E-Mail',
 	'UI:Menu:CSVExport' => 'CSV-Export...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Modifizieren...',
 	'UI:Menu:Delete' => 'Löschen...',
 	'UI:Menu:BulkDelete' => 'Löschen...',

@@ -41,8 +41,8 @@ class MacroNode extends Node
             trigger_deprecation('twig/twig', '3.15', \sprintf('Not passing a "%s" instance as the "arguments" argument of the "%s" constructor is deprecated ("%s" given).', ArrayExpression::class, static::class, $arguments::class));
 
             $args = new ArrayExpression([], $arguments->getTemplateLine());
-            foreach ($arguments as $name => $default) {
-                $args->addElement($default, new LocalVariable($name, $default->getTemplateLine()));
+            foreach ($arguments as $n => $default) {
+                $args->addElement($default, new LocalVariable($n, $default->getTemplateLine()));
             }
             $arguments = $args;
         }

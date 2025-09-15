@@ -302,9 +302,17 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	$iUnescapeSlashAndUnicode = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
 	$sJsonOuputWithPrettyPrinting = json_encode($oResult, $iUnescapeSlashAndUnicode | JSON_PRETTY_PRINT);
 	$sJsonOutputWithoutPrettyPrinting = json_encode($oResult, $iUnescapeSlashAndUnicode);
-	!$oLog->StringFitsInField('json_output', $sJsonOuputWithPrettyPrinting) ?
+	!StringFitsInLogField( $sJsonOuputWithPrettyPrinting) ?
 		$oLog->SetTrim('json_output', $sJsonOutputWithoutPrettyPrinting) : // too long, we don't make it pretty
 		$oLog->SetTrim('json_output', $sJsonOuputWithPrettyPrinting);
 
 	$oLog->DBInsertNoReload();
+}
+
+/**
+ * @deprecated - will be removed in 3.3.0
+ */
+function StringFitsInLogField(string $sLog): bool
+{
+	return mb_strlen($sLog) <= 16383; // hardcoded value, see N°8260
 }

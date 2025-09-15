@@ -522,6 +522,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Menu:Manage' => 'Spravovat...',
 	'UI:Menu:EMail' => 'Email',
 	'UI:Menu:CSVExport' => 'CSV export',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Upravit...',
 	'UI:Menu:Delete' => 'Odstranit...',
 	'UI:Menu:BulkDelete' => 'Odstranit...',

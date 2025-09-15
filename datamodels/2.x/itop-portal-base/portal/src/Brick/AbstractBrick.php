@@ -631,7 +631,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 		// Checking mandatory elements
 		if (!$oMDElement->hasAttribute('id'))
 		{
-			throw new DOMFormatException('Brick node must have both id and xsi:type attributes defined', null, null, $oMDElement);
+			throw new DOMFormatException('Brick node must have both id and xsi:type attributes defined', 0, null, $oMDElement);
 		}
 		$this->SetId($oMDElement->getAttribute('id'));
 

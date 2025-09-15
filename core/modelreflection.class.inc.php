@@ -77,7 +77,7 @@ abstract class ModelReflection
 			return $sFormatCode.' - '.implode(', ', $aArguments);
 		}
 
-		return vsprintf($sLocalizedFormat, $aArguments);
+		return utils::VSprintf($sLocalizedFormat, $aArguments);
 	}
 
 	/**

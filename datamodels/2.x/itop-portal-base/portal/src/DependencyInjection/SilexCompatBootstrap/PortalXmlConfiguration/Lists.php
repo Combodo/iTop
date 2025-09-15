@@ -50,7 +50,7 @@ class Lists extends AbstractConfiguration
 			$sClassId = $oClassNode->getAttribute('id');
 			if ($sClassId === null)
 			{
-				throw new DOMFormatException('Class tag must have an id attribute', null, null, $oClassNode);
+				throw new DOMFormatException('Class tag must have an id attribute', 0, null, $oClassNode);
 			}
 
 			// - Each lists

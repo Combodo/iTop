@@ -543,6 +543,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'UI:Menu:Manage' => 'Manage...',
 	'UI:Menu:EMail' => 'eMail',
 	'UI:Menu:CSVExport' => 'CSV Export...',
+	'UI:Menu:OpenOQL' => 'View the OQL query',
 	'UI:Menu:Modify' => 'Modify...',
 	'UI:Menu:Delete' => 'Delete...',
 	'UI:Menu:BulkDelete' => 'Delete...',

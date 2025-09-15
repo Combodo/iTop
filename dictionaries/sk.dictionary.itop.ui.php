@@ -528,6 +528,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Menu:Manage' => 'Manažovať...',
 	'UI:Menu:EMail' => 'eMail',
 	'UI:Menu:CSVExport' => 'CSV Export',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Upraviť...',
 	'UI:Menu:Delete' => 'Vymazať...',
 	'UI:Menu:BulkDelete' => 'Vymazať...',

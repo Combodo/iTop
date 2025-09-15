@@ -39,7 +39,7 @@ class DOMFormatException extends Exception
      * @param $previous
      * @param DesignElement|null $node DOMNode causing the DOMFormatException
      */
-    public function __construct($message, $code = null, $previous = null, DesignElement $node = null)
+    public function __construct($message, $code = 0, $previous = null, DesignElement $node = null)
     {
         if($node !== null)
         {
@@ -1826,7 +1826,7 @@ EOF;
 				// Search field in parent class
 				$oField = $this->GetFieldInParentClasses($oClass, $sStateAttCode);
 				if ($oField == null) {
-					throw new DOMFormatException("Non existing attribute '$sStateAttCode'", null, null, $oStateAttribute);
+					throw new DOMFormatException("Non existing attribute '$sStateAttCode'", 0, null, $oStateAttribute);
 				}
 			}
 			$oCodeNodes = $this->oFactory->GetNodes('values/value/code', $oField);

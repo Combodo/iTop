@@ -311,7 +311,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		{
 			$sParams .= $sName.'='.urlencode($value).'&'; // Always add a trailing &
 		}
-		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/'.$oObj->GetUIPage().'?'.$sParams.'class='.get_class($oObj).'&id='.$oObj->getKey().'&'.$oAppContext->GetForLink().'&a=1';
+		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/'.$oObj->GetUIPage().'?'.$sParams.'class='.get_class($oObj).'&id='.$oObj->getKey().$oAppContext->GetForLink(true).'&a=1';
 		$oPage->add_early_script(<<<JS
 	if (!sessionStorage.getItem('$sSessionStorageKey'))
 	{
@@ -1337,7 +1337,7 @@ HTML
 					}
 				}
 			}
-
+            $aHeader['friendlyname'] = ['label' => MetaModel::GetName($sClassName)];
 			foreach ($aList[$sAlias] as $sAttCodeEx => $oAttDef) {
 				$sColLabel = $bLocalize ? MetaModel::GetLabel($sClassName, $sAttCodeEx) : $sAttCodeEx;
 
@@ -1358,6 +1358,7 @@ HTML
 			$aRow = [];
 			foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
 				$oObj = $aObjects[$sAlias];
+                $aRow["friendlyname"] = $oObj->Get('friendlyname');
 				foreach ($aList[$sAlias] as $sAttCodeEx => $oAttDef) {
 					if (is_null($oObj)) {
 						$aRow[$oAttDef->GetCode()] = '';
@@ -3071,7 +3072,7 @@ JS
 		$oPage->add($oAppContext->GetForForm());
 
 		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
-		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search_form&class='.$sClass.'&'.$oAppContext->GetForLink();
+		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search_form&class='.$sClass.$oAppContext->GetForLink(true);
 
 		$sCancelButtonOnClickScript = "let fOnClick{$this->m_iFormId}CancelButton = ";
 		if(isset($aExtraParams['js_handlers']['cancel_button_on_click'])){
@@ -3079,7 +3080,7 @@ JS
 		} else {
 			$sCancelButtonOnClickScript .= "function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl', $sJSToken)};";
 		}
-		$sCancelButtonOnClickScript .= "$('#form_{$this->m_iFormId} button.cancel').on('click', fOnClick{$this->m_iFormId}CancelButton);";
+		$sCancelButtonOnClickScript .= "$('#form_{$this->m_iFormId} button.cancel').on('click.navigation.itop', fOnClick{$this->m_iFormId}CancelButton);";
 		$oPage->add_ready_script($sCancelButtonOnClickScript);
 
 		$iFieldsCount = count($aFieldsMap);

@@ -4351,7 +4351,6 @@
             </item>
             <item id="document_id">
               <rank>20</rank>
-              <rank>20</rank>
             </item>
           </items>
         </list>
@@ -5736,8 +5735,7 @@
           <duplicates/>
         </field>
       </fields>
-      <methods>
-			</methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -7230,7 +7228,12 @@
     </class>
     <class id="DocumentFile" _delta="must_exist">
       <presentation>
-        <details><items><item id="cis_list" _delta="define"><rank>70</rank></item></items>&gt;
+        <details>
+          <items>
+            <item id="cis_list" _delta="define">
+              <rank>70</rank>
+            </item>
+          </items>
         </details>
       </presentation>
     </class>

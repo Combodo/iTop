@@ -524,6 +524,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Menu:Manage' => 'Kezelés...',
 	'UI:Menu:EMail' => 'Email',
 	'UI:Menu:CSVExport' => 'CSV exportálás...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Módosítás...',
 	'UI:Menu:Delete' => 'Törlés...',
 	'UI:Menu:BulkDelete' => 'Törlés...',

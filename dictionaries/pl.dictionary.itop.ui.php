@@ -536,6 +536,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Menu:Manage' => 'Zarządzaj...',
 	'UI:Menu:EMail' => 'e-mail',
 	'UI:Menu:CSVExport' => 'Eksport CSV...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Zmień...',
 	'UI:Menu:Delete' => 'Usuń...',
 	'UI:Menu:BulkDelete' => 'Usuń...',

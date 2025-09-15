@@ -206,7 +206,7 @@ class Dict
 		}
 
 		try{
-			return vsprintf($sLocalizedFormat, $aArguments);
+			return utils::VSprintf($sLocalizedFormat, $aArguments);
 		} catch(\Throwable $e){
 			\IssueLog::Error("Cannot format dict key", null, ["sFormatCode" => $sFormatCode, "sLangCode" => $sLangCode, 'exception_msg' => $e->getMessage() ]);
 			return $sFormatCode.' - '.implode(', ', $aArguments);

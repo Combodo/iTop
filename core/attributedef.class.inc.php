@@ -4995,7 +4995,7 @@ class AttributeCaseLog extends AttributeLongText
 			}
 			else
 			{
-				if (strlen($proposedValue) > 0)
+				if (utils::StrLen($proposedValue) > 0)
 				{
 					//N°5135 - add impersonation information in caselog
 					if (UserRights::IsImpersonated()){
@@ -8165,7 +8165,7 @@ class AttributeURL extends AttributeString
 	 * @since 3.0.3 moved from Config to AttributeURL constant
 	 */
 	public const DEFAULT_VALIDATION_PATTERN = /** @lang RegExp */
-		'(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9:%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.,-]*)?(#[a-zA-Z0-9_.-][a-zA-Z0-9+\$_.-]*)?';
+		'(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9:%@+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.,-]*)?(#[a-zA-Z0-9_.-][a-zA-Z0-9+\$_.-]*)?';
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -10954,12 +10954,12 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			$sDescription = utils::EscapeHtml($this->GetValueDescription($sValue));
 			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sValue'");
 			$oAppContext = new ApplicationContext();
-			$sContext = $oAppContext->GetForLink();
+			$sContext = $oAppContext->GetForLink(true);
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
 			$sFilter = rawurlencode($oFilter->serialize());
 			$sLink = '';
 			if ($bWithLink && $this->bDisplayLink) {
-				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter.$sContext;
 				$sLink = ' href="'.$sUrl.'"';
 			}
 
@@ -12276,13 +12276,13 @@ class AttributeTagSet extends AttributeSet
 				$sTagDescription = $oTag->Get('description');
 				$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
 				$oAppContext = new ApplicationContext();
-				$sContext = $oAppContext->GetForLink();
+				$sContext = $oAppContext->GetForLink(true);
 				$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
 				$sFilter = rawurlencode($oFilter->serialize());
 
 				$sLink = '';
 				if ($bWithLink && $this->bDisplayLink) {
-					$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+					$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter.$sContext;
 					$sLink = ' href="'.$sUrl.'"';
 				}
 

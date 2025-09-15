@@ -90,7 +90,7 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction)
 		$oAppContext = new ApplicationContext();
 //echo "<p>Missing Attributes <pre>".print_r($aExpectedAttributes, true)."</pre></p>\n";
 		
-		$oP->add_header('Location: '.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=stimulus&class='.get_class($oObj).'&stimulus='.$sNextAction.'&id='.$oObj->getKey().'&'.$oAppContext->GetForLink());
+		$oP->add_header('Location: '.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=stimulus&class='.get_class($oObj).'&stimulus='.$sNextAction.'&id='.$oObj->getKey().$oAppContext->GetForLink(true));
 	}
 }
 
@@ -101,7 +101,7 @@ function ReloadAndDisplay($oPage, $oObj, $sMessageId = '', $sMessage = '', $sSev
 	{
 		cmdbAbstractObject::SetSessionMessage(get_class($oObj), $oObj->GetKey(), $sMessageId, $sMessage, $sSeverity, 0, true /* must not exist */);
 	}
-	$oPage->add_header('Location: '.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.get_class($oObj).'&id='.$oObj->getKey().'&'.$oAppContext->GetForLink());
+	$oPage->add_header('Location: '.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.get_class($oObj).'&id='.$oObj->getKey().$oAppContext->GetForLink(true));
 }
 
 /**
@@ -993,7 +993,7 @@ try
 				$oForm->AddHtml($oP->GetDetails($aDetails));
 				$oForm->AddHtml('</td></tr></table>');
 
-				$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
+				$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter).$oAppContext->GetForLink(true);
 				$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
 				$oCancelButton->SetOnClickJsCode("window.location.href='$sURL'");
 				$oForm->AddSubBlock($oCancelButton);
@@ -1165,7 +1165,7 @@ try
 				$oP->AddUiBlock($oBlock);
 
 				// Back to the list
-				$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
+				$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter).$oAppContext->GetForLink(true);
 				$oSubmitButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Done'), 'submit', 'submit', true);
 				$oSubmitButton->SetOnClickJsCode("window.location.href='$sURL'");
 				$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
@@ -1606,7 +1606,7 @@ class UI
 		// Add user filter
 		$oFullSetFilter->UpdateContextFromUser();
 		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
-		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
+		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter).$oAppContext->GetForLink(true);
 		$aContext = array('filter' => utils::EscapeHtml($sFilter));
 		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
 	}
@@ -1640,7 +1640,7 @@ class UI
 			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObj'));
 		}
 		$aSelectedObj = explode(',', $sSelectedObj);
-		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
+		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter).$oAppContext->GetForLink(true);
 		$aContext = array(
 			'filter'    => utils::EscapeHtml($sFilter),
 			'selectObj' => $sSelectedObj,

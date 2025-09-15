@@ -97,7 +97,7 @@ class BlockLinkSetDisplayAsProperty extends UIContentBlock
 		$this->oTwigEnv = TwigHelper::GetTwigEnvironment(TwigHelper::ENUM_TEMPLATES_BASE_PATH_BACKOFFICE);
 
 		$oAppContext = new ApplicationContext();
-		$this->sAppContext = $oAppContext->GetForLink();
+		$this->sAppContext = $oAppContext->GetForLink(true);
 		$this->sUIPage = cmdbAbstractObject::ComputeStandardUIPage($this->sTargetClass);
 	}
 
@@ -160,7 +160,7 @@ class BlockLinkSetDisplayAsProperty extends UIContentBlock
 	{
 		return ' href="'
 			.utils::GetAbsoluteUrlAppRoot()
-			."pages/$this->sUIPage?operation=details&class=$this->sTargetClass&id=$id&$this->sAppContext"
+			."pages/$this->sUIPage?operation=details&class=$this->sTargetClass&id=$id$this->sAppContext"
 			.'" target="_self"';
 	}
 }

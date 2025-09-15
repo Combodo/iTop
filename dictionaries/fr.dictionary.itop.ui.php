@@ -535,6 +535,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Menu:Manage' => 'Gérer...',
 	'UI:Menu:EMail' => 'Envoyer par eMail',
 	'UI:Menu:CSVExport' => 'Exporter en CSV...',
+	'UI:Menu:OpenOQL' => 'Voir la requête OQL',
 	'UI:Menu:Modify' => 'Modifier...',
 	'UI:Menu:Delete' => 'Supprimer...',
 	'UI:Menu:BulkDelete' => 'Supprimer...',

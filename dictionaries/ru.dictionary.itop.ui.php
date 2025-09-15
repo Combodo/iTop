@@ -522,6 +522,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Menu:Manage' => 'Управление...',
 	'UI:Menu:EMail' => 'Отправить ссылку по email',
 	'UI:Menu:CSVExport' => 'Экспорт в CSV...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Редактировать...',
 	'UI:Menu:Delete' => 'Удалить...',
 	'UI:Menu:BulkDelete' => 'Удалить...',

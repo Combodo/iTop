@@ -3,19 +3,21 @@
 namespace Combodo\iTop\Test\UnitTest\SessionTracker;
 
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\SessionTracker\iSessionHandlerExtension;
 use Combodo\iTop\SessionTracker\SessionHandler;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ContextTag;
 
 class SessionHandlerTest extends ItopDataTestCase
 {
-	private $aFiles ;
-	private $oTag ;
+	private $aFiles;
+	private $oTag;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->aFiles=[];
+		$this->RequireOnceUnitTestFile('./iSessionHandlerExtensionExamples.php');
+		$this->aFiles = [];
 		$this->oTag = new ContextTag(ContextTag::TAG_REST);
 	}
 
@@ -24,47 +26,53 @@ class SessionHandlerTest extends ItopDataTestCase
 		parent::tearDown();
 		$this->oTag = null;
 
-		foreach ($this->aFiles as $sFile){
-			if (is_file($sFile)){
+		foreach ($this->aFiles as $sFile) {
+			if (is_file($sFile)) {
 				@unlink($sFile);
 			}
 		}
 	}
 
-	private function CreateUserAndLogIn() : ? string {
+	private function CreateUserAndLogIn(): ?string
+	{
 		$_SESSION = [];
-		$oUser = $this->CreateContactlessUser("admin" . uniqid(), 1, "1234@Abcdefg");
+		$oUser = $this->CreateContactlessUser("admin".uniqid(), 1, "1234@Abcdefg");
 
 		\UserRights::Login($oUser->Get('login'));
+
 		return $oUser->GetKey();
 	}
 
-	private function GenerateSessionContent(SessionHandler $oSessionHandler, ?string $sPreviousFileVersionContent) : ?string {
+	private function GenerateSessionContent(SessionHandler $oSessionHandler, ?string $sPreviousFileVersionContent): ?string
+	{
 		return $this->InvokeNonPublicMethod(SessionHandler::class, "generate_session_content", $oSessionHandler, $aArgs = [$sPreviousFileVersionContent]);
 	}
 
 	/*
 	 * @covers SessionHandler::generate_session_content
 	 */
-	public function testGenerateSessionContentNoUserLoggedIn(){
+	public function testGenerateSessionContentNoUserLoggedIn()
+	{
 		$oSessionHandler = new SessionHandler();
 		$sContent = $this->GenerateSessionContent($oSessionHandler, null);
 		$this->assertNull($sContent, "Session content should be null when there is no user logged in");
 	}
 
-	public function GenerateSessionContentCorruptedPreviousFileContentProvider() {
+	public function GenerateSessionContentCorruptedPreviousFileContentProvider()
+	{
 		return [
-			'not a json' => [ "not a json" ],
-			'not an array' => [ json_encode("not an array") ],
-			'array without creation_time key' => [ json_encode([]) ],
+			'not a json'                      => ["not a json"],
+			'not an array'                    => [json_encode("not an array")],
+			'array without creation_time key' => [json_encode([])],
 		];
 	}
 
 	/**
-	 * @covers SessionHandler::generate_session_content
+	 * @covers       SessionHandler::generate_session_content
 	 * @dataProvider GenerateSessionContentCorruptedPreviousFileContentProvider
 	 */
-	public function testGenerateSessionContent_SessionFileRepairment(?string $sFileContent){
+	public function testGenerateSessionContent_SessionFileRepairment(?string $sFileContent)
+	{
 		$sUserId = $this->CreateUserAndLogIn();
 
 		$oSessionHandler = new SessionHandler();
@@ -84,7 +92,8 @@ class SessionHandlerTest extends ItopDataTestCase
 	/*
 	 * @covers SessionHandler::generate_session_content
 	 */
-	public function testGenerateSessionContent(){
+	public function testGenerateSessionContent()
+	{
 		$sUserId = $this->CreateUserAndLogIn();
 
 		$oSessionHandler = new SessionHandler();
@@ -105,33 +114,36 @@ class SessionHandlerTest extends ItopDataTestCase
 
 		// Switch context + change user id via impersonation
 		// check it is still tracked in session files
-		$oOtherUser = $this->CreateContactlessUser("admin" . uniqid(), 1, "1234@Abcdefg");
+		$oOtherUser = $this->CreateContactlessUser("admin".uniqid(), 1, "1234@Abcdefg");
 		$this->assertTrue(\UserRights::Impersonate($oOtherUser->Get('login')), "Failed to execute impersonate on: ".$oOtherUser->Get('login'));
 		$oTag2 = new ContextTag(ContextTag::TAG_SYNCHRO);
 		$sNewContent = $this->GenerateSessionContent($oSessionHandler, $sFirstContent);
 		$this->assertNotNull($sNewContent, 'Should not return null');
 		$aJson = json_decode($sNewContent, true);
 		$this->assertNotEquals(false, $aJson, 'Should return a valid json string, found: '.$sNewContent);
-		$this->assertEquals(ContextTag::TAG_REST . '|' . ContextTag::TAG_SYNCHRO, $aJson['context'] ?? '', "After impersonation, should report the new context tags in [context]: $sNewContent");
+		$this->assertEquals(ContextTag::TAG_REST.'|'.ContextTag::TAG_SYNCHRO, $aJson['context'] ?? '', "After impersonation, should report the new context tags in [context]: $sNewContent");
 		$this->assertEquals($iFirstSessionCreationTime, $aJson['creation_time'] ?? '', "After impersonation, should still report the the session start timestamp in [creation_time]: $sNewContent");
 		$this->assertEquals('foo_login_mode', $aJson['login_mode'] ?? '', "After impersonation, should still report the login mode in [login_mode]: $sNewContent");
 		$this->assertEquals($oOtherUser->GetKey(), $aJson['user_id'] ?? '', "Should report the impersonate user in [user_id]: $sNewContent");
 	}
 
-	private function touchSessionFile(SessionHandler $oSessionHandler, $session_id) : ?string {
+	private function touchSessionFile(SessionHandler $oSessionHandler, $session_id): ?string
+	{
 		$sRes = $this->InvokeNonPublicMethod(SessionHandler::class, "touch_session_file", $oSessionHandler, $aArgs = [$session_id]);
 		if (!is_null($sRes) && is_file($sRes)) {
 			// Record the file for cleanup on tearDown
 			$this->aFiles[] = $sRes;
 		}
 		clearstatcache();
+
 		return $sRes;
 	}
 
 	/*
 	 * @covers SessionHandler::touch_session_file
 	 */
-	public function testTouchSessionFile_NoUserLoggedIn(){
+	public function testTouchSessionFile_NoUserLoggedIn()
+	{
 		$oSessionHandler = new SessionHandler();
 		$session_id = uniqid();
 		$sFile = $this->touchSessionFile($oSessionHandler, $session_id);
@@ -143,7 +155,8 @@ class SessionHandlerTest extends ItopDataTestCase
 	/*
 	 * @covers SessionHandler::touch_session_file
 	 */
-	public function testTouchSessionFile_UserLoggedIn(){
+	public function testTouchSessionFile_UserLoggedIn()
+	{
 		$sUserId = $this->CreateUserAndLogIn();
 		Session::Set('login_mode', 'foo_login_mode');
 
@@ -174,7 +187,8 @@ class SessionHandlerTest extends ItopDataTestCase
 	/**
 	 * @covers SessionHandler::touch_session_file
 	 */
-	public function testTouchSessionFileWithEmptySessionId() {
+	public function testTouchSessionFileWithEmptySessionId()
+	{
 		$this->CreateUserAndLogIn();
 		Session::Set('login_mode', 'toto');
 
@@ -183,32 +197,36 @@ class SessionHandlerTest extends ItopDataTestCase
 		$this->assertNull($this->touchSessionFile($oSessionHandler, false), 'Should return null when session id (boolean) false');
 	}
 
-	private function GetFilePath(SessionHandler $oSessionHandler, $session_id) : string {
+	private function GetFilePath(SessionHandler $oSessionHandler, $session_id): string
+	{
 		$sFile = $this->InvokeNonPublicMethod(SessionHandler::class, "get_file_path", $oSessionHandler, $aArgs = [$session_id]);
 		// Record file for cleanup on tearDown
 		$this->aFiles[] = $sFile;
+
 		return $sFile;
 	}
 
-	public function GgcWithTimeLimitProvider(){
+	public function GgcWithTimeLimitProvider()
+	{
 		return [
-			'no cleanup time limit' => [
-				'iTimeLimit' => -1,
-				'iExpectedProcessed' => 2
+			'no cleanup time limit'                                     => [
+				'iTimeLimit'         => -1,
+				'iExpectedProcessed' => 2,
 			],
 			'cleanup time limit in the pass => first file removed only' => [
-				'iTimeLimit' => time() - 1,
-				'iExpectedProcessed' => 1
+				'iTimeLimit'         => time() - 1,
+				'iExpectedProcessed' => 1,
 			],
 		];
 	}
 
 	/**
-	 * @covers SessionHandler::gc_with_time_limit
-	 * @covers SessionHandler::list_session_files
+	 * @covers       SessionHandler::gc_with_time_limit
+	 * @covers       SessionHandler::list_session_files
 	 * @dataProvider GgcWithTimeLimitProvider
 	 */
-	public function testGgcWithTimeLimit($iTimeLimit, $iExpectedProcessed) {
+	public function testGgcWithTimeLimit($iTimeLimit, $iExpectedProcessed)
+	{
 		$oSessionHandler = new SessionHandler();
 		//remove all first
 		$oSessionHandler->gc_with_time_limit(-1);
@@ -218,11 +236,11 @@ class SessionHandlerTest extends ItopDataTestCase
 		$iNbExpiredFiles = 2;
 		$iNbFiles = 5;
 		$iExpiredTimeStamp = time() - $max_lifetime - 1;
-		for($i=0; $i<$iNbFiles; $i++) {
+		for ($i = 0; $i < $iNbFiles; $i++) {
 			$sFile = $this->GetFilePath($oSessionHandler, uniqid());
 			file_put_contents($sFile, "fakedata");
 
-			if ($iNbExpiredFiles > 0){
+			if ($iNbExpiredFiles > 0) {
 				$iNbExpiredFiles--;
 				touch($sFile, $iExpiredTimeStamp);
 			}
@@ -230,12 +248,81 @@ class SessionHandlerTest extends ItopDataTestCase
 
 		$aFoundSessionFiles = $oSessionHandler->list_session_files();
 		$this->assertEquals($iNbFiles, sizeof($aFoundSessionFiles), 'list_session_files should reports all files');
-		foreach ($aFoundSessionFiles as $sFile){
+		foreach ($aFoundSessionFiles as $sFile) {
 			$this->assertTrue(is_file($sFile), 'list_session_files should return a valid file paths, found: '.$sFile);
 		}
 
 		$iProcessed = $oSessionHandler->gc_with_time_limit($max_lifetime, $iTimeLimit);
 		$this->assertEquals($iExpectedProcessed, $iProcessed, 'gc_with_time_limit should report the count of expired files');
 		$this->assertEquals($iNbFiles - $iExpectedProcessed, sizeof($oSessionHandler->list_session_files()), 'gc_with_time_limit should actually remove all processed files');
+	}
+
+	public function testGetSessionHandlerExtension_NoExtension()
+	{
+		\utils::GetConfig()->Set('sessions_tracking.session_handler_extension', '');
+
+		$oSessionHandler = new SessionHandler();
+		$oSessionHandlerExtension = $this->InvokeNonPublicMethod(SessionHandler::class, "GetSessionHandlerExtension", $oSessionHandler);
+		$this->assertNull($oSessionHandlerExtension, "by default no extension");
+	}
+
+	public function testGetSessionHandlerExtension_InvalidClassExtension()
+	{
+		\utils::GetConfig()->Set('sessions_tracking.session_handler_extension', 'dddf');
+
+		$oSessionHandler = new SessionHandler();
+		$oSessionHandlerExtension = $this->InvokeNonPublicMethod(SessionHandler::class, "GetSessionHandlerExtension", $oSessionHandler);
+		$this->assertNull($oSessionHandlerExtension);
+	}
+
+	public function testGetSessionHandlerExtension_InvalidExtension()
+	{
+		\utils::GetConfig()->Set('sessions_tracking.session_handler_extension', Session::class);
+
+		$oSessionHandler = new SessionHandler();
+		$oSessionHandlerExtension = $this->InvokeNonPublicMethod(SessionHandler::class, "GetSessionHandlerExtension", $oSessionHandler);
+		$this->assertNull($oSessionHandlerExtension);
+	}
+
+	public function testGetSessionHandlerExtension_OK()
+	{
+		\utils::GetConfig()->Set('sessions_tracking.session_handler_extension', 'Combodo\iTop\Test\UnitTest\SessionTracker\BasicSessionHandlerExtension');
+
+		$oSessionHandler = new SessionHandler();
+		$oSessionHandlerExtension = $this->InvokeNonPublicMethod(SessionHandler::class, "GetSessionHandlerExtension", $oSessionHandler);
+		$this->assertNotNull($oSessionHandlerExtension, "by default no extension");
+		$this->assertTrue($oSessionHandlerExtension instanceof iSessionHandlerExtension);
+		$this->assertInstanceOf(BasicSessionHandlerExtension::class, $oSessionHandlerExtension);
+	}
+
+	public function testGenerateSessionContent_WithAdditionalDataProvidedBySessionHandlerExtension()
+	{
+		\utils::GetConfig()->Set('sessions_tracking.session_handler_extension', 'Combodo\iTop\Test\UnitTest\SessionTracker\BasicSessionHandlerExtension');
+		$sUserId = $this->CreateUserAndLogIn();
+
+		$oSessionHandler = new SessionHandler();
+		Session::Set('login_mode', 'foo_login_mode');
+
+		//first time
+		$sFirstContent = $this->GenerateSessionContent($oSessionHandler, null);
+		$this->assertNotNull($sFirstContent, 'Should not return null');
+		$aJson = json_decode($sFirstContent, true);
+		$this->assertNotEquals(false, $aJson, 'Should return a valid json string, found: '.$sFirstContent);
+
+		$this->assertEquals($sUserId, $aJson['user_id'] ?? '', "Should report the login of the logged in user in [user_id]: $sFirstContent");
+		$this->assertEquals(ContextTag::TAG_REST, $aJson['context'] ?? '', "Should report the context tag(s) in [context]: $sFirstContent");
+		$this->assertIsInt($aJson['creation_time'] ?? '', "Should report the session start timestamp in [creation_time]: $sFirstContent");
+		$this->assertEquals('foo_login_mode', $aJson['login_mode'] ?? '', "Should report the current login mode in [login_mode]: $sFirstContent");
+
+		$this->assertEquals('gabuzomeu', $aJson['shadok'] ?? '', "Should report the current login mode in [shadok]: $sFirstContent");
+	}
+
+	public function testGenerateSessionContentWithPreviousNonArrayContentAndWithAdditionalDataProvidedBySessionHandlerExtension()
+	{
+		\utils::GetConfig()->Set('sessions_tracking.session_handler_extension', 'Combodo\iTop\Test\UnitTest\SessionTracker\BasicSessionHandlerExtension');
+		$this->CreateUserAndLogIn();
+		$oSessionHandler = new SessionHandler();
+		$sContent = $this->GenerateSessionContent($oSessionHandler, json_encode(null));
+		$this->assertNotNull($sContent, "Call to CompleteSessionData should NOT fail due to Argument #1 (\$aJson) must be of type array, null given");
 	}
 }

@@ -255,6 +255,7 @@ JS
 								.then((oCKEditor) => {
 									oCKEditor.model.document.on("change:data", () => {
 										const oFieldElem = $("#{$this->oField->GetGlobalId()}");
+										oFieldElem.val(oCKEditor.getData());
 										oFieldElem.closest(".field_set").trigger("field_change", {
 											id: oFieldElem.attr("id"),
 											name: oFieldElem.closest(".form_field").attr("data-field-id"),

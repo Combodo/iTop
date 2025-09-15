@@ -640,7 +640,7 @@ class AjaxRenderController
 
 			$aResult = array();
 			$oAppContext = new ApplicationContext();
-			$sParams = $oAppContext->GetForLink();
+			$sParams = $oAppContext->GetForLink(true);
 			foreach ($aGroupBy as $iRow => $iCount) {
 				// Build the search for this subset
 				$oSubsetSearch = $oFilter->DeepClone();
@@ -655,7 +655,7 @@ class AjaxRenderController
 
 				$aResult[] = array(
 					'group' => $aLabels[$iRow],
-					'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>",
+					'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1$sParams&filter=$sFilter\">$iCount</a>",
 				); // TO DO: add the context information
 			}
 

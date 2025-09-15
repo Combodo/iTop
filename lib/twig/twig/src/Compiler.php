@@ -74,7 +74,7 @@ class Compiler
             $node->compile($this);
 
             if ($this->didUseEcho) {
-                trigger_deprecation('twig/twig', '3.9', 'Using "%s" is deprecated, use "yield" instead in "%s", then flag the class with #[\Twig\Attribute\YieldReady].', $this->didUseEcho, \get_class($node));
+                trigger_deprecation('twig/twig', '3.9', 'Using "%s" is deprecated, use "yield" instead in "%s", then flag the class with #[\Twig\Attribute\YieldReady].', $this->didUseEcho, $node::class);
             }
 
             return $this;
@@ -99,7 +99,7 @@ class Compiler
             $node->compile($this);
 
             if ($this->didUseEcho) {
-                trigger_deprecation('twig/twig', '3.9', 'Using "%s" is deprecated, use "yield" instead in "%s", then flag the class with #[\Twig\Attribute\YieldReady].', $this->didUseEcho, \get_class($node));
+                trigger_deprecation('twig/twig', '3.9', 'Using "%s" is deprecated, use "yield" instead in "%s", then flag the class with #[\Twig\Attribute\YieldReady].', $this->didUseEcho, $node::class);
             }
 
             return $this;
@@ -170,7 +170,7 @@ class Compiler
         } elseif (\is_bool($value)) {
             $this->raw($value ? 'true' : 'false');
         } elseif (\is_array($value)) {
-            $this->raw('array(');
+            $this->raw('[');
             $first = true;
             foreach ($value as $key => $v) {
                 if (!$first) {
@@ -181,7 +181,7 @@ class Compiler
                 $this->raw(' => ');
                 $this->repr($v);
             }
-            $this->raw(')');
+            $this->raw(']');
         } else {
             $this->string($value);
         }

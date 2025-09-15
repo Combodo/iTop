@@ -519,6 +519,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Menu:Manage' => 'Gerenciar...',
 	'UI:Menu:EMail' => 'Enviar via e-mail',
 	'UI:Menu:CSVExport' => 'Exportar para CSV...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Editar...',
 	'UI:Menu:Delete' => 'Excluir...',
 	'UI:Menu:BulkDelete' => 'Exclução em massa...',

@@ -41,7 +41,7 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 			],
 			'traduction that breaks expected nb of arguments' => [
 				'sTemplate' => 'toto %1$s titi %2$s',
-				'sExpectedTraduction' => 'ITOP::DICT:FORMAT:BROKEN:KEY - 1',
+				'sExpectedTraduction' => 'toto 1 titi %2$s',
 			],
 			'traduction ok' => [
 				'sTemplate' => 'toto %1$s titi',

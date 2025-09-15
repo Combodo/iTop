@@ -2138,7 +2138,7 @@ class DashletHeaderDynamic extends Dashlet
 		$oSet = new DBObjectSet($oFilter);
 		$iCount = $oSet->Count();
 		$oAppContext = new ApplicationContext();
-		$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($oFilter->serialize());
+		$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search'.$oAppContext->GetForLink(true).'&filter='.rawurlencode($oFilter->serialize());
 		$oSubTitle->AddHtml('<a class="summary" href="'.$sHyperlink.'">'.Dict::Format(str_replace('_', ':', $sSubtitle), $iCount).'</a>');
 
 		return $oPanel;

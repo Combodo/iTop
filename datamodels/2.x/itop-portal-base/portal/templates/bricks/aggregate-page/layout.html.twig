@@ -10,7 +10,7 @@
             {% if aTilesRendering[brick.GetId] is defined %}
                 {{ aTilesRendering[brick.GetId]|raw }}
             {% else %}
-                {% include '' ~ brick.GetTileTemplatePath with {brick: brick} %}
+                {% include '' ~ brick.GetTileTemplatePath with {brick: brick} only %}
             {% endif %}
         {% endfor %}
     </section>

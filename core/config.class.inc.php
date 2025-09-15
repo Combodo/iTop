@@ -1233,6 +1233,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'sessions_tracking.session_handler_extension' => [
+			'type' => 'string',
+			'description' => 'to store more data in itop session files, set your own iSessionHandlerExtension implementation class in this variable',
+			'default' => '',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'sessions_tracking.gc_threshold' => [
 			'type' => 'integer',
 			'description'         => 'fallback in case cron is not active: probability in percent that session files are cleanup during any itop request (100 means always)',

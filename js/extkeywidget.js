@@ -717,8 +717,11 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				window[sPromiseId].then(function () {
 					$('#ac_create_'+me.id).dialog('open');
 					$('#ac_create_'+me.id).dialog("option", "close", me.OnCloseCreateObject);
-					// Modify the action of the cancel button
-					$('#ac_create_'+me.id+' button.cancel').off('click').on('click', me.CloseCreateObject);
+					// Modify the action of the cancel button and the close button
+					$('#ac_create_'+me.id+' button.cancel').off('click.navigation.itop').on('click.navigation.itop', me.CloseCreateObject);
+					$('.ui-dialog-titlebar:has(+ #ac_create_'+me.id+') button.ui-dialog-titlebar-close').off('click').on('click', function() {
+						$('#ac_create_'+me.id+' button.cancel').trigger('click');
+					});
 					me.ajax_request = null;
 					me.sTargetClass = sLocalTargetClass;
 					// Adjust the dialog's size to fit into the screen

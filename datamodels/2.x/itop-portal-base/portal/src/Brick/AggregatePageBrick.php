@@ -93,7 +93,7 @@ class AggregatePageBrick extends PortalBrick
 					{
 						if (!$oAggregatePageBrickNode->hasAttribute('id'))
 						{
-							throw new DOMFormatException('AggregatePageBrick : must have an id attribute', null,
+							throw new DOMFormatException('AggregatePageBrick : must have an id attribute', 0,
 								null, $oAggregatePageBrickNode);
 						}
 						$sBrickName = $oAggregatePageBrickNode->getAttribute('id');

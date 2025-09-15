@@ -211,7 +211,7 @@ class UserProfileBrick extends PortalBrick
 
 								$this->aForm['fields'][$sFieldId] = $aField;
 							} else {
-								throw new DOMFormatException('Field tag must have an id attribute', null, null, $oFieldNode);
+								throw new DOMFormatException('Field tag must have an id attribute', 0, null, $oFieldNode);
 							}
 						}
 					}

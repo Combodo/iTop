@@ -521,6 +521,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Menu:Manage' => 'Beheer...',
 	'UI:Menu:EMail' => 'E-mail',
 	'UI:Menu:CSVExport' => 'CSV Export...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Bewerk...',
 	'UI:Menu:Delete' => 'Verwijder...',
 	'UI:Menu:BulkDelete' => 'Verwijder...',

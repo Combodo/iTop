@@ -53,13 +53,13 @@ class Forms extends AbstractConfiguration
 				$sFormId = $oFormNode->getAttribute('id');
 				if ($oFormNode->getAttribute('id') === '')
 				{
-					throw new DOMFormatException('form tag must have an id attribute', null, null, $oFormNode);
+					throw new DOMFormatException('form tag must have an id attribute', 0, null, $oFormNode);
 				}
 
 				// Parsing form object class
 				if ($oFormNode->GetUniqueElement('class')->GetText() === null)
 				{
-					throw new DOMFormatException('Class tag must be defined', null, null, $oFormNode);
+					throw new DOMFormatException('Class tag must be defined', 0, null, $oFormNode);
 				}
 
 				// Parsing class
@@ -149,7 +149,7 @@ class Forms extends AbstractConfiguration
 						$sModeId = $oModeNode->getAttribute('id');
 						if ($sModeId === '')
 						{
-							throw new DOMFormatException('mode tag must have an id attribute', null, null,
+							throw new DOMFormatException('mode tag must have an id attribute', 0, null,
 								$oFormNode);
 						}
 						$aModes[] = $sModeId;
@@ -225,7 +225,7 @@ class Forms extends AbstractConfiguration
 						}
 						else
 						{
-							throw new DOMFormatException('Field tag must have an id attribute', null, null,
+							throw new DOMFormatException('Field tag must have an id attribute', 0, null,
 								$oFormNode);
 						}
 					}

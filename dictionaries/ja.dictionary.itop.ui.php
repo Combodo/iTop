@@ -525,6 +525,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Menu:Manage' => '管理...',
 	'UI:Menu:EMail' => 'Eメール',
 	'UI:Menu:CSVExport' => 'CSVエクスポート...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => '修正...',
 	'UI:Menu:Delete' => '削除...',
 	'UI:Menu:BulkDelete' => '削除...',

@@ -99,7 +99,7 @@ class DataTable extends UIContentBlock
 		{
 			$oAppContext = new ApplicationContext();
 			if(strpos ($sAjaxUrl,'?')) {
-				$this->sAjaxUrl = $sAjaxUrl."&".$oAppContext->GetForLink();
+				$this->sAjaxUrl = $sAjaxUrl.$oAppContext->GetForLink(true);
 			} else {
 				$this->sAjaxUrl = $sAjaxUrl."?".$oAppContext->GetForLink();
 			}

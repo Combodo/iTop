@@ -937,7 +937,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:SynchroAttLinkSet' => 'Synchro niteliği (LinkSet)',
 	'Class:SynchroAttLinkSet/Attribute:row_separator' => 'Satır Ayırıcı',
 	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => 'Nitelik Ayırıcı',
-	'Class:SynchroLog' => 'Synchr log',
+	'Class:SynchroLog' => 'Synchro Log',
 	'Class:SynchroLog/Attribute:sync_source_id' => 'Synchro Veri Kaynağı',
 	'Class:SynchroLog/Attribute:start_date' => 'Başlangıç tarihi',
 	'Class:SynchroLog/Attribute:end_date' => 'Bitiş Tarihi',

@@ -1174,11 +1174,7 @@ EOF
 
 
 $oAppContext = new ApplicationContext();
-$sContext = $oAppContext->GetForLink();
-if (!empty($sContext))
-{
-	$sContext = '&'.$sContext;
-}
+$sContext = $oAppContext->GetForLink(true);
 $operation = utils::ReadParam('operation', '');
 
 $oLayout = new PageContentWithSideContent();

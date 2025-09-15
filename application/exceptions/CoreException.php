@@ -67,7 +67,7 @@ class CoreException extends Exception
 
 	public function getHtmlDesc($sHighlightHtmlBegin = '<b>', $sHighlightHtmlEnd = '</b>')
 	{
-		return $this->getMessage();
+		return utils::EscapeHtml($this->getMessage());
 	}
 
 	/**

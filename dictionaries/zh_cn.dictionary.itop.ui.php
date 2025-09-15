@@ -525,6 +525,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Menu:Manage' => '管理...',
 	'UI:Menu:EMail' => '邮件',
 	'UI:Menu:CSVExport' => 'CSV导出...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => '修改...',
 	'UI:Menu:Delete' => '删除...',
 	'UI:Menu:BulkDelete' => '删除...',

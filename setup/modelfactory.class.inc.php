@@ -70,7 +70,7 @@ class MFException extends Exception
 	 *
 	 * @inheritDoc
 	 */
-	public function __construct($message = null, $code = null, $iSourceLineNumber = 0, $sXPath = '', $sExtraInfo = '', $previous = null)
+	public function __construct($message = null, $code = 0, $iSourceLineNumber = 0, $sXPath = '', $sExtraInfo = '', $previous = null)
 	{
 		parent::__construct($message, $code, $previous);
 		$this->iSourceLineNumber = $iSourceLineNumber;
@@ -2040,7 +2040,7 @@ class MFElement extends Combodo\iTop\DesignElement
 						{
 							// Houston!
 							$sXPath = DesignDocument::GetItopNodePath($this);
-							throw new DOMFormatException("id '$key' already used in $sXPath", null, null, $oItem);
+							throw new DOMFormatException("id '$key' already used in $sXPath", 0, null, $oItem);
 						}
 						$res[$key] = $oItem->GetNodeAsArrayOfItems();
 					}

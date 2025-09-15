@@ -435,7 +435,7 @@ class EMailLaminas extends Email
 
 		// Add body content to as a new part
 		$oNewPart = new Part($sBody);
-		$oNewPart->encoding = Mime::ENCODING_8BIT;
+		$oNewPart->encoding = Mime::ENCODING_BASE64;
 		$oNewPart->type = $sMimeType;
 		$oNewPart->charset = 'UTF-8';
 		$oBody->addPart($oNewPart);
@@ -463,7 +463,7 @@ class EMailLaminas extends Email
 		}
 		$this->m_aData['parts'][] = array('text' => $sText, 'mimeType' => $sMimeType);
 		$oNewPart = new Part($sText);
-		$oNewPart->encoding = Mime::ENCODING_8BIT;
+		$oNewPart->encoding = Mime::ENCODING_BASE64;
 		$oNewPart->type = $sMimeType;
 
 		// setBody called only to refresh Content-Type to multipart/mixed

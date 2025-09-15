@@ -25,7 +25,7 @@ define('EXPORTER_DEFAULT_CHUNK_SIZE', 1000);
 class BulkExportException extends Exception
 {
 	protected $sLocalizedMessage;
-	public function __construct($message, $sLocalizedMessage, $code = null, $previous = null)
+	public function __construct($message, $sLocalizedMessage, $code = 0, $previous = null)
 	{
 		parent::__construct($message, $code, $previous);
 		$this->sLocalizedMessage = $sLocalizedMessage;

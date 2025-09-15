@@ -907,4 +907,94 @@ HTML,
 		$this->assertFalse(utils::GetDocumentFromSelfURL($sURL));
 	}
 
+	/**
+	 * @dataProvider VSprintfProvider
+	 */
+	public function testVSprintf($sFormat, $aArgs, $sExpected)
+	{
+		$sTested = utils::VSprintf($sFormat, $aArgs, false);
+		$this->assertEquals($sExpected, $sTested);
+	}
+
+	public function VSprintfProvider()
+	{
+		return [
+			// Basic positional specifier tests
+			'Basic positional with enough args' => [
+				'Format: %1$s, %2$d, %3$s',
+				['Hello', 42, 'World'],
+				'Format: Hello, 42, World'
+			],
+			'Basic positional with args in different order' => [
+				'Format: %2$s, %1$d, %3$s',
+				[42, 'Hello', 'World'],
+				'Format: Hello, 42, World'
+			],
+			'Positional with reused specifiers' => [
+				'Format: %1$s, %2$d, %1$s again',
+				['Hello', 42],
+				'Format: Hello, 42, Hello again'
+			],
+
+			// Missing arguments tests
+			'Missing one positional arg' => [
+				'Format: %1$s, %2$d, %3$s',
+				['Hello', 42],
+				'Format: Hello, 42, %3$s'
+			],
+			'Missing multiple positional args' => [
+				'Format: %1$s, %2$s, %3$s, %4$s',
+				['Hello'],
+				'Format: Hello, %2$s, %3$s, %4$s'
+			],
+			'Missing first positional arg' => [
+				'Format: %1$s, %2$s, %3$s',
+				[],
+				'Format: %1$s, %2$s, %3$s'
+			],
+			
+			// Edge cases
+			'Positional with larger numbers' => [
+				'Format: %2$s, %1$d, %3$s, %2$s again',
+				[123456, 'Hello', 'World'],
+				'Format: Hello, 123456, World, Hello again'
+			],
+			'Positional specifiers with non-sequential indexes' => [
+				'Format: %3$s then %1$s and %5$d',
+				['first', 'second', 'third', 'fourth', 42],
+				'Format: third then first and 42'
+			],
+
+			// More complex format specifiers
+			'Positional with format modifiers' => [
+				'Format: %1$\'*10s, %2$04d',
+				['Hello', 42],
+				'Format: *****Hello, 0042'
+			],
+			'Positional with various types' => [
+				'Format: String: %1$s, Integer: %2$d, Char: %3$c',
+				['Hello', 42, 65],
+				'Format: String: Hello, Integer: 42, Char: A'
+			],
+
+			// Testing with non-Latin characters
+			'Positional with UTF-8 characters' => [
+				'Format: %1$s %2$s %3$s',
+				['こんにちは', 'Здравствуйте', '你好'],
+				'Format: こんにちは Здравствуйте 你好'
+			],
+
+			// Mixed formats
+			'Mixed positional with complex specifiers' => [
+				'Format: %1$-10s | %2$+d',
+				['Hello', 42],
+				'Format: Hello      | +42'
+			],
+			'Reused positional indexes with some missing' => [
+				'Format: %1$s %2$d %1$s %3$s %2$d',
+				['Hello', 42],
+				'Format: Hello 42 Hello %3$s 42'
+			]
+		];
+	}
 }

@@ -375,7 +375,7 @@ class BrowseBrick extends PortalBrick
 								{
 									if (!$oModeNode->hasAttribute('id'))
 									{
-										throw new DOMFormatException('BrowseBrick: Browse mode must have a unique ID attribute', null,
+										throw new DOMFormatException('BrowseBrick: Browse mode must have a unique ID attribute', 0,
 											null, $oModeNode);
 									}
 
@@ -416,7 +416,7 @@ class BrowseBrick extends PortalBrick
 		// Checking that the brick has at least a browse mode
 		if (count($this->GetAvailablesBrowseModes()) === 0)
 		{
-			throw new DOMFormatException('BrowseBrick : Must have at least one browse mode', null, null, $oMDElement);
+			throw new DOMFormatException('BrowseBrick : Must have at least one browse mode', 0, null, $oMDElement);
 		}
 		// Checking that default browse mode in among the available
 		if (!in_array($this->sDefaultBrowseMode, array_keys($this->aAvailablesBrowseModes)))
@@ -427,7 +427,7 @@ class BrowseBrick extends PortalBrick
 		// Checking that the brick has at least a level
 		if (count($this->GetLevels()) === 0)
 		{
-			throw new DOMFormatException('BrowseBrick : Must have at least one level', null, null, $oMDElement);
+			throw new DOMFormatException('BrowseBrick : Must have at least one level', 0, null, $oMDElement);
 		}
 
 		return $this;

@@ -7081,7 +7081,7 @@ abstract class MetaModel
 	 * @param array $aParams
 	 * @param bool $bAllowAllData
 	 *
-	 * @return \DBObject
+	 * @return \DBObject|null
 	 * @throws \OQLException
 	 */
 	public static function GetObjectFromOQL($sQuery, $aParams = null, $bAllowAllData = false)

@@ -1963,6 +1963,15 @@ class UserRights
 	}
 
 	/**
+	 * Reset the cache of users
+	 * @return void
+	 */
+	public static function ResetCacheUsers()
+	{
+		self::$m_aCacheUsers = [ 'internal' => [], 'external' => [] ];
+	}
+	
+	/**
 	 * @param string$sClass
 	 * @param array $aAllowedOrgs
 	 * @param array $aSettings
@@ -2119,6 +2128,8 @@ class ActionChecker
 class StimulusChecker extends ActionChecker
 {
 	var $sState = null;
+
+	public mixed $iState = null;
 
 	public function __construct(DBSearch $oFilter, $sState, $iStimulusCode)
 	{
