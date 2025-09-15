@@ -196,4 +196,39 @@ class DBBackupTest extends ItopTestCase
 			],
 		];
 	}
+
+	/**
+	 * @covers DBBackup::GetTmpDir
+	 * @dataProvider GetTmpDirProvider
+	 */
+	public function testGetTmpDir(string $sTmpDir, string $sStartsWith): void
+	{
+		$this->RequireOnceItopFile('setup/setuputils.class.inc.php');
+		$oConfig = \utils::GetConfig(true);
+		$oConfig->SetModuleSetting('itop-backup', 'backup_tmpdir', $sTmpDir);
+
+		$sTestedTmpDir = \DBBackup::GetTmpDir($oConfig);
+		$this->assertStringStartsWith($sStartsWith, $sTestedTmpDir);
+		$this->assertDirectoryExists($sTestedTmpDir);
+
+		rmdir($sTestedTmpDir);
+	}
+
+	public function GetTmpDirProvider(): array
+	{
+		return [
+			'Default settings' => [
+				'data/',
+				static::GetAppRoot() . 'data/itop-backup',
+			],
+			'System temporary directory' => [
+				'',
+				sys_get_temp_dir() . '/itop-backup',
+			],
+			'System directory attempt' => [
+				'/lib',
+				static::GetAppRoot() . 'lib/itop-backup',
+			],
+		];
+	}
 }
