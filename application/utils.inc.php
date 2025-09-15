@@ -3045,9 +3045,9 @@ TXT
 		$oXpath = new \DOMXPath($oDom);
 		$oNodes = $oXpath->query('//a[@data-object-class and @data-object-key]');
 
-		foreach ($oNodes as $oNode) {
-			$sObjClass = $oNode->getAttribute('data-object-class');
-			$sObjId = $oNode->getAttribute('data-object-key');
+		foreach ($oNodes as $oObjNode) {
+			$sObjClass = $oObjNode->getAttribute('data-object-class');
+			$sObjId = $oObjNode->getAttribute('data-object-key');
 			$sText = $oNode->getText();
 
 			// Ensure that what we found is actually configured as a mention
