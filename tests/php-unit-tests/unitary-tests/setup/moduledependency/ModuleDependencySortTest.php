@@ -6,7 +6,7 @@ use Combodo\iTop\Setup\ModuleDependency\Module;
 use Combodo\iTop\Setup\ModuleDependency\ModuleDependencySort;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
-class ModuleDiscoveryTest extends ItopDataTestCase
+class ModuleDependencySortTest extends ItopDataTestCase
 {
 	public function setUp(): void {
 		parent::setUp();

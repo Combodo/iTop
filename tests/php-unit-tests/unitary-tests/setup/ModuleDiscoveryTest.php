@@ -277,11 +277,9 @@ MSG;
 	public function testOrderModulesByDependenciesNewComputation_RealExample(){
 		$aModules = json_decode(file_get_contents(__DIR__ . '/ressources/module_deps.json'), true);
 
-		//$aResult = iTopCoreModuleDependencySort::OrderModulesByDependencies($aModules, true, null);
-		$aLegacyResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
+		$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true, null);
 
 		$aExpected = json_decode(file_get_contents(__DIR__ . '/ressources/expected_ordered_module_ids.json'), true);
-		//$this->assertEquals( $aLegacyResult, $aResult);
-		$this->assertEquals($aExpected, array_keys($aLegacyResult));
+		$this->assertEquals($aExpected, array_keys($aResult));
 	}
 }

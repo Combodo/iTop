@@ -132,4 +132,11 @@ class ModuleDependency {
 		}
 		return $bResult;
 	}
+
+	public function IsDependencyRegexpInvalid(): bool
+	{
+		return $this->bInvalidDependencyRegexp;
+	}
+
+
 }
