@@ -25,7 +25,10 @@ use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
 require_once(APPROOT.'setup/modulediscovery/ModuleFileReader.php');
-require_once(__DIR__ . '/module/iTopCoreModuleDependencySort.class.inc.php');
+require_once(__DIR__ . '/moduledependency/moduledependencysort.class.inc.php');
+
+use \Combodo\iTop\Setup\ModuleDependency\Module;
+use Combodo\iTop\Setup\ModuleDependency\ModuleDependencySort;
 
 class MissingDependencyException extends CoreException
 {
@@ -216,85 +219,75 @@ class ModuleDiscovery
 	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		// Order the modules to take into account their inter-dependencies
-		$aDependencies = [];
+		$aUnresolvedDependencyModules = [];
 		$aSelectedModules = [];
-		foreach($aModules as $sId => $aModule)
+		foreach($aModules as $sModuleId => $aModule)
 		{
-			list($sModuleName, ) = self::GetModuleName($sId);
+			$oModule = new Module($sModuleId);
+			$sModuleName = $oModule->GetModuleName();
 			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad))
 			{
-				$aDependencies[$sId] = $aModule['dependencies'];
+				$oModule->SetDependencies($aModule['dependencies']);
+				$aUnresolvedDependencyModules[$sModuleId]=$oModule;
 				$aSelectedModules[$sModuleName] = true;
 			}
 		}
-		ksort($aDependencies);
+
+		ksort($aUnresolvedDependencyModules);
 		$aOrderedModules = [];
+		$aModuleVersions=[];
 		$iLoopCount = 1;
-		while(($iLoopCount < count($aModules)+1) && (count($aDependencies) > 0) )
+		while(($iLoopCount < count($aModules)+1) && (count($aUnresolvedDependencyModules) > 0) )
 		{
-			foreach($aDependencies as $sId => $aRemainingDeps)
+			foreach($aUnresolvedDependencyModules as $sModuleId => $oModule)
 			{
-				$bDependenciesSolved = true;
-				foreach($aRemainingDeps as $sDepId)
-				{
-					if (!self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules))
-					{
-						$bDependenciesSolved = false;
-					}
-				}
-				if ($bDependenciesSolved)
-				{
-					$aOrderedModules[] = $sId;
-					unset($aDependencies[$sId]);
+				/** @var Module $oModule */
+				if ($oModule->IsModuleResolved($aModuleVersions, $aSelectedModules)){
+					$aOrderedModules[] = $sModuleId;
+					$aModuleVersions[$oModule->GetModuleName()] = $oModule->GetVersion();
+					unset($aUnresolvedDependencyModules[$sModuleId]);
 				}
 			}
+
 			$iLoopCount++;
 		}
-		if ($bAbortOnMissingDependency && count($aDependencies) > 0)
+
+		if ($bAbortOnMissingDependency && count($aUnresolvedDependencyModules) > 0)
 		{
+			ModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+
 			$aModulesInfo = [];
 			$aModuleDeps = [];
-			foreach($aDependencies as $sId => $aDeps)
+			foreach($aUnresolvedDependencyModules as $sModuleId => $oModule)
 			{
-				$aModule = $aModules[$sId];
+				$aModule = $aModules[$sModuleId];
 				$aDepsWithIcons = [];
-				foreach($aDeps as $sIndex => $sDepId)
+				foreach($oModule->aInitialDependencies as $sIndex => $sDepId)
 				{
-					if (self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules))
-					{
-						$aDepsWithIcons[$sIndex] = '✅ ' . $sDepId;
-					} else
+					if (array_key_exists($sDepId, $oModule->aRemainingDependenciesToResolve))
 					{
 						$aDepsWithIcons[$sIndex] = '❌ ' .  $sDepId;
+					} else
+					{
+						$aDepsWithIcons[$sIndex] = '✅ ' . $sDepId;
 					}
 				}
-				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on: ".implode(' + ', $aDepsWithIcons);
-				$aModulesInfo[$sId] = array('module' => $aModule, 'dependencies' => $aDepsWithIcons);
+				$aModuleDeps[] = "{$aModule['label']} (id: $sModuleId) depends on: ".implode(' + ', $aDepsWithIcons);
+				$aModulesInfo[$sModuleId] = array('module' => $aModule, 'dependencies' => $aDepsWithIcons);
 			}
 			$sMessage = "The following modules have unmet dependencies:\n".implode(",\n", $aModuleDeps);
 			$oException = new MissingDependencyException($sMessage);
 			$oException->aModulesInfo = $aModulesInfo;
 			throw $oException;
 		}
+
 		// Return the ordered list, so that the dependencies are met...
-		$aResult = array();
+		$aResult = [];
 		foreach($aOrderedModules as $sId)
 		{
 			$aResult[$sId] = $aModules[$sId];
 		}
 		return $aResult;
-	}
-
-	/**
-	 * Remove the duplicate modules (i.e. modules with the same name but with a different version) from the supplied list of modules
-	 * @param array $aModules
-	 * @return array The ordered modules as a duplicate-free list of modules
-	 */
-	public static function RemoveDuplicateModules($aModules)
-	{
-		// No longer needed, kept only for compatibility
-		// The de-duplication is now done directly by the AddModule method
-		return $aModules;
 	}
 
 	private static function GetPhpExpressionEvaluator(): PhpExpressionEvaluator
@@ -304,73 +297,6 @@ class ModuleDiscovery
 		}
 
 		return static::$oPhpExpressionEvaluator;
-	}
-
-	protected static function DependencyIsResolved($sDepString, $aOrderedModules, $aSelectedModules)
-	{
-		$bResult = false;
-		$aModuleVersions = [];
-		// Separate the module names from their version for an easier comparison later
-		foreach ($aOrderedModules as $sModuleId) {
-			list($sModuleName, $sVersion) = self::GetModuleName($sModuleId);
-			$aModuleVersions[$sModuleName] = $sVersion;
-		}
-		if (preg_match_all('/([^\(\)&| ]+)/', $sDepString, $aMatches)) {
-			$aReplacements = [];
-			$aPotentialPrerequisites = [];
-			foreach ($aMatches as $aMatch) {
-				foreach ($aMatch as $sModuleId) {
-					// $sModuleId in the dependency string is made of a <name>/<optional_operator><version>
-					// where the operator is < <= = > >= (by default >=)
-					$aModuleMatches = [];
-					if (preg_match('|^([^/]+)/(<?>?=?)([^><=]+)$|', $sModuleId, $aModuleMatches)) {
-						$sModuleName = $aModuleMatches[1];
-						$aPotentialPrerequisites[$sModuleName] = true;
-						$sOperator = $aModuleMatches[2];
-						if ($sOperator == '') {
-							$sOperator = '>=';
-						}
-						$sExpectedVersion = $aModuleMatches[3];
-						if (array_key_exists($sModuleName, $aModuleVersions)) {
-							// module is present, check the version
-							$sCurrentVersion = $aModuleVersions[$sModuleName];
-							if (version_compare($sCurrentVersion, $sExpectedVersion, $sOperator)) {
-								$aReplacements[$sModuleId] = '(true)'; // Add parentheses to protect against invalid condition causing
-								// a function call that results in a runtime fatal error
-							} else {
-								$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
-								// a function call that results in a runtime fatal error
-							}
-						} else {
-							// module is not present
-							$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
-							// a function call that results in a runtime fatal error
-						}
-					}
-				}
-			}
-			$bMissingPrerequisite = false;
-			foreach (array_keys($aPotentialPrerequisites) as $sModuleName) {
-				if (array_key_exists($sModuleName, $aSelectedModules)) {
-					// This module is actually a prerequisite
-					if (!array_key_exists($sModuleName, $aModuleVersions)) {
-						$bMissingPrerequisite = true;
-					}
-				}
-			}
-			if ($bMissingPrerequisite) {
-				$bResult = false;
-			} else {
-				$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $sDepString);
-				try {
-					$bResult = self::GetPhpExpressionEvaluator()->ParseAndEvaluateBooleanExpression($sBooleanExpr);
-				} catch (ModuleFileReaderException $e) {
-					//logged already
-					echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";
-				}
-			}
-		}
-		return $bResult;
 	}
 
 	/**

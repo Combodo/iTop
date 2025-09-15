@@ -1,0 +1,267 @@
+{
+    "authent-cas\/3.2.1": {
+        "label": "CAS SSO",
+        "dependencies": []
+    },
+    "authent-external\/3.2.1": {
+        "label": "External user authentication",
+        "dependencies": []
+    },
+    "authent-ldap\/3.2.1": {
+        "label": "User authentication based on LDAP",
+        "dependencies": []
+    },
+    "authent-local\/3.2.1": {
+        "label": "User authentication based on the local DB",
+        "dependencies": []
+    },
+    "combodo-backoffice-darkmoon-theme\/3.2.1": {
+        "label": "Backoffice: Darkmoon theme",
+        "dependencies": []
+    },
+    "combodo-backoffice-fullmoon-high-contrast-theme\/3.2.1": {
+        "label": "Backoffice: Fullmoon with high contrast accessibility theme",
+        "dependencies": []
+    },
+    "combodo-backoffice-fullmoon-protanopia-deuteranopia-theme\/3.2.1": {
+        "label": "Backoffice: Fullmoon with protonopia & deuteranopia accessibility theme",
+        "dependencies": []
+    },
+    "combodo-backoffice-fullmoon-tritanopia-theme\/3.2.1": {
+        "label": "Backoffice: Fullmoon with tritanopia accessibility theme",
+        "dependencies": []
+    },
+    "combodo-db-tools\/3.2.1": {
+        "label": "Database maintenance tools",
+        "dependencies": [
+            "itop-structure\/3.0.0"
+        ]
+    },
+    "itop-attachments\/3.2.1": {
+        "label": "Tickets Attachments",
+        "dependencies": []
+    },
+    "itop-backup\/3.2.1": {
+        "label": "Backup utilities",
+        "dependencies": []
+    },
+    "itop-bridge-cmdb-services\/3.2.1": {
+        "label": "Bridge for CMDB and Services",
+        "dependencies": [
+            "itop-config-mgmt\/2.7.1",
+            "itop-service-mgmt\/2.7.1 || itop-service-mgmt-provider\/2.7.1"
+        ]
+    },
+    "itop-bridge-cmdb-ticket\/3.2.1": {
+        "label": "Bridge for CMDB and Ticket",
+        "dependencies": [
+            "itop-config-mgmt\/2.7.1",
+            "itop-tickets\/2.7.0"
+        ]
+    },
+    "itop-bridge-datacenter-mgmt-services\/3.2.1": {
+        "label": "Bridge for CMDB Virtualization objects and Services",
+        "dependencies": [
+            "itop-config-mgmt\/2.7.1",
+            "itop-service-mgmt\/2.7.1 || itop-service-mgmt-provider\/2.7.1",
+            "itop-datacenter-mgmt\/3.1.0"
+        ]
+    },
+    "itop-bridge-endusers-devices-services\/3.2.1": {
+        "label": "Bridge for CMDB endusers objects and Services",
+        "dependencies": [
+            "itop-config-mgmt\/2.7.1",
+            "itop-service-mgmt\/2.7.1 || itop-service-mgmt-provider\/2.7.1",
+            "itop-endusers-devices\/3.1.0"
+        ]
+    },
+    "itop-bridge-storage-mgmt-services\/3.2.1": {
+        "label": "Bridge for CMDB Virtualization objects and Services",
+        "dependencies": [
+            "itop-config-mgmt\/2.7.1",
+            "itop-service-mgmt\/2.7.1 || itop-service-mgmt-provider\/2.7.1",
+            "itop-storage-mgmt\/3.1.0"
+        ]
+    },
+    "itop-bridge-virtualization-mgmt-services\/3.2.1": {
+        "label": "Bridge for CMDB Virtualization objects and Services",
+        "dependencies": [
+            "itop-config-mgmt\/2.7.1",
+            "itop-service-mgmt\/2.7.1 || itop-service-mgmt-provider\/2.7.1",
+            "itop-virtualization-mgmt\/3.1.0"
+        ]
+    },
+    "itop-bridge-virtualization-storage\/3.2.1": {
+        "label": "Links between virtualization and storage",
+        "dependencies": [
+            "itop-storage-mgmt\/2.2.0",
+            "itop-virtualization-mgmt\/2.2.0"
+        ]
+    },
+    "itop-change-mgmt-itil\/3.2.1": {
+        "label": "Change Management ITIL",
+        "dependencies": [
+            "itop-config-mgmt\/2.2.0",
+            "itop-tickets\/2.0.0"
+        ]
+    },
+    "itop-change-mgmt\/3.2.1": {
+        "label": "Change Management",
+        "dependencies": [
+            "itop-config-mgmt\/2.2.0",
+            "itop-tickets\/2.0.0"
+        ]
+    },
+    "itop-config-mgmt\/3.2.1": {
+        "label": "Configuration Management (CMDB)",
+        "dependencies": [
+            "itop-structure\/2.7.1"
+        ]
+    },
+    "itop-config\/3.2.1": {
+        "label": "Configuration editor",
+        "dependencies": []
+    },
+    "itop-core-update\/3.2.1": {
+        "label": "iTop Core Update",
+        "dependencies": [
+            "itop-files-information\/2.7.0",
+            "combodo-db-tools\/2.7.0"
+        ]
+    },
+    "itop-datacenter-mgmt\/3.2.1": {
+        "label": "Datacenter Management",
+        "dependencies": [
+            "itop-config-mgmt\/2.2.0"
+        ]
+    },
+    "itop-endusers-devices\/3.2.1": {
+        "label": "End-user Devices Management",
+        "dependencies": [
+            "itop-config-mgmt\/2.2.0"
+        ]
+    },
+    "itop-faq-light\/3.2.1": {
+        "label": "Frequently Asked Questions Database",
+        "dependencies": [
+            "itop-structure\/3.0.0 || itop-portal\/3.0.0"
+        ]
+    },
+    "itop-files-information\/3.2.1": {
+        "label": "iTop files information",
+        "dependencies": []
+    },
+    "itop-full-itil\/3.2.1": {
+        "label": "Bridge - Request management ITIL + Incident management ITIL",
+        "dependencies": [
+            "itop-request-mgmt-itil\/2.3.0",
+            "itop-incident-mgmt-itil\/2.3.0"
+        ]
+    },
+    "itop-hub-connector\/3.2.1": {
+        "label": "iTop Hub Connector",
+        "dependencies": [
+            "itop-config-mgmt\/2.4.0"
+        ]
+    },
+    "itop-incident-mgmt-itil\/3.2.1": {
+        "label": "Incident Management ITIL",
+        "dependencies": [
+            "itop-config-mgmt\/2.4.0",
+            "itop-tickets\/2.4.0",
+            "itop-profiles-itil\/2.3.0"
+        ]
+    },
+    "itop-knownerror-mgmt\/3.2.1": {
+        "label": "Known Errors Database",
+        "dependencies": [
+            "itop-config-mgmt\/2.2.0"
+        ]
+    },
+    "itop-oauth-client\/3.2.1": {
+        "label": "OAuth 2.0 client",
+        "dependencies": [
+            "itop-welcome-itil\/3.1.0,"
+        ]
+    },
+    "itop-portal-base\/3.2.1": {
+        "label": "Portal Development Library",
+        "dependencies": []
+    },
+    "itop-portal\/3.2.1": {
+        "label": "Enhanced Customer Portal",
+        "dependencies": [
+            "itop-portal-base\/2.7.0"
+        ]
+    },
+    "itop-problem-mgmt\/3.2.1": {
+        "label": "Problem Management",
+        "dependencies": [
+            "itop-tickets\/2.0.0"
+        ]
+    },
+    "itop-profiles-itil\/3.2.1": {
+        "label": "Create standard ITIL profiles",
+        "dependencies": []
+    },
+    "itop-request-mgmt-itil\/3.2.1": {
+        "label": "User request Management ITIL",
+        "dependencies": [
+            "itop-tickets\/2.4.0"
+        ]
+    },
+    "itop-request-mgmt\/3.2.1": {
+        "label": "Simple Ticket Management",
+        "dependencies": [
+            "itop-tickets\/2.4.0"
+        ]
+    },
+    "itop-service-mgmt-provider\/3.2.1": {
+        "label": "Service Management for Service Providers",
+        "dependencies": [
+            "itop-tickets\/2.0.0"
+        ]
+    },
+    "itop-service-mgmt\/3.2.1": {
+        "label": "Service Management",
+        "dependencies": [
+            "itop-tickets\/2.0.0"
+        ]
+    },
+    "itop-sla-computation\/3.2.1": {
+        "label": "SLA Computation",
+        "dependencies": []
+    },
+    "itop-storage-mgmt\/3.2.1": {
+        "label": "Advanced Storage Management",
+        "dependencies": [
+            "itop-config-mgmt\/2.4.0"
+        ]
+    },
+    "itop-structure\/3.2.1": {
+        "label": "Core iTop Structure",
+        "dependencies": []
+    },
+    "itop-themes-compat\/3.2.1": {
+        "label": "Light grey and Test red themes compatibility",
+        "dependencies": [
+            "itop-structure\/3.1.0"
+        ]
+    },
+    "itop-tickets\/3.2.1": {
+        "label": "Tickets Management",
+        "dependencies": [
+            "itop-structure\/2.7.1"
+        ]
+    },
+    "itop-virtualization-mgmt\/3.2.1": {
+        "label": "Virtualization Management",
+        "dependencies": [
+            "itop-config-mgmt\/2.4.0"
+        ]
+    },
+    "itop-welcome-itil\/3.2.1": {
+        "label": "ITIL skin",
+        "dependencies": []
+    }
+}

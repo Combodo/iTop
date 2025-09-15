@@ -1,17 +1,20 @@
 <?php
 
-require_once(__DIR__ . '/ItopCoreModuleDependency.class.inc.php');
+namespace Combodo\iTop\Setup\ModuleDependency;
+
+require_once(__DIR__.'/moduledependency.class.inc.php');
+use ModuleDiscovery;
 
 /**
  * Class that handles a modules and all its dependencies
  */
-class iTopCoreModule {
+class Module {
 	private string $sModuleId;
 	private string $sModuleName;
 	private string $sVersion;
 
-	public array $aAllDependencies;
-	public array $aOngoingDependencies;
+	public array $aInitialDependencies;
+	public array $aRemainingDependenciesToResolve;
 
 	public function __construct(string $sModuleId)
 	{
@@ -54,11 +57,11 @@ class iTopCoreModule {
 	 */
 	public function SetDependencies(array $aAllDependencies): void
 	{
-		$this->aAllDependencies = $aAllDependencies;
-		$this->aOngoingDependencies = [];
+		$this->aInitialDependencies = $aAllDependencies;
+		$this->aRemainingDependenciesToResolve = [];
 
-		foreach ($aAllDependencies as $sDepString){
-			$this->aOngoingDependencies[$sDepString]= new iTopCoreModuleDependency($sDepString);
+		foreach ($aAllDependencies as $sDependencyExpression){
+			$this->aRemainingDependenciesToResolve[$sDependencyExpression]= new ModuleDependency($sDependencyExpression);
 		}
 	}
 
@@ -73,9 +76,9 @@ class iTopCoreModule {
 	{
 		$aNextDependencies=[];
 		$bDependenciesSolved = true;
-		foreach($this->aOngoingDependencies as $sDepId => $oModuleDependency)
+		foreach($this->aRemainingDependenciesToResolve as $sDepId => $oModuleDependency)
 		{
-			/** @var iTopCoreModuleDependency $oModuleDependency*/
+			/** @var ModuleDependency $oModuleDependency*/
 			if (!$oModuleDependency->IsDependencyResolved($aModuleVersions, $aSelectedModules))
 			{
 				$aNextDependencies[$sDepId]=$oModuleDependency;
@@ -83,7 +86,7 @@ class iTopCoreModule {
 			}
 		}
 
-		$this->aOngoingDependencies=$aNextDependencies;
+		$this->aRemainingDependenciesToResolve=$aNextDependencies;
 
 		return $bDependenciesSolved;
 	}
@@ -94,8 +97,8 @@ class iTopCoreModule {
 	public function GetUnresolvedDependencyModuleNames(): array
 	{
 		$aRes=[];
-		foreach($this->aOngoingDependencies as $sDepId => $oModuleDependency) {
-			/** @var iTopCoreModuleDependency $oModuleDependency */
+		foreach($this->aRemainingDependenciesToResolve as $sDepId => $oModuleDependency) {
+			/** @var ModuleDependency $oModuleDependency */
 			$aRes = array_merge($aRes, $oModuleDependency->GetPotentialPrerequisiteModuleNames());
 		}
 

@@ -1,25 +1,29 @@
 <?php
 
+namespace Combodo\iTop\Setup\ModuleDependency;
+
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+use ModuleFileReaderException;
+use RunTimeEnvironment;
 
 /**
  * Class that handles a module dependency
  */
-class iTopCoreModuleDependency {
+class ModuleDependency {
 	private static PhpExpressionEvaluator $oPhpExpressionEvaluator;
 
-	private array $aPotentialPrerequisites;
+	private string $sDependencyExpression;
+	private bool $bInvalidDependencyRegexp=false;
+	private array $aDepencyModuleNames;
 	private array $aParamsPerModuleId;
-	private string $sDepString;
-	private bool $bAlwaysUnresolved=false;
 
-	public function __construct(string $sDepString)
+	public function __construct(string $sDependencyExpression)
 	{
-		$this->sDepString = $sDepString;
+		$this->sDependencyExpression = $sDependencyExpression;
 		$this->aParamsPerModuleId = [];
-		$this->aPotentialPrerequisites = [];
+		$this->aDepencyModuleNames = [];
 
-		if (preg_match_all('/([^\(\)&| ]+)/', $sDepString, $aMatches))
+		if (preg_match_all('/([^\(\)&| ]+)/', $sDependencyExpression, $aMatches))
 		{
 			foreach($aMatches as $aMatch)
 			{
@@ -31,7 +35,7 @@ class iTopCoreModuleDependency {
 						$aModuleMatches = array();
 						if (preg_match('|^([^/]+)/(<?>?=?)([^><=]+)$|', $sModuleId, $aModuleMatches)) {
 							$sModuleName = $aModuleMatches[1];
-							$this->aPotentialPrerequisites[$sModuleName] = true;
+							$this->aDepencyModuleNames[$sModuleName] = true;
 							$sOperator = $aModuleMatches[2];
 							if ($sOperator == '') {
 								$sOperator = '>=';
@@ -43,7 +47,7 @@ class iTopCoreModuleDependency {
 				}
 			}
 		} else {
-			$this->bAlwaysUnresolved=true;
+			$this->bInvalidDependencyRegexp=true;
 		}
 	}
 
@@ -62,7 +66,7 @@ class iTopCoreModuleDependency {
 	 */
 	public function GetPotentialPrerequisiteModuleNames() : array
 	{
-		return array_keys($this->aPotentialPrerequisites);
+		return array_keys($this->aDepencyModuleNames);
 	}
 
 	/**
@@ -74,7 +78,7 @@ class iTopCoreModuleDependency {
 	 */
 	public function IsDependencyResolved(array $aModuleVersions, array $aSelectedModules) : bool
 	{
-		if ($this->bAlwaysUnresolved){
+		if ($this->bInvalidDependencyRegexp){
 			return false;
 		}
 
@@ -86,8 +90,8 @@ class iTopCoreModuleDependency {
 				$sCurrentVersion = $aModuleVersions[$sModuleName];
 				if (version_compare($sCurrentVersion, $sExpectedVersion, $sOperator))
 				{
-					if (array_key_exists($sModuleName, $this->aPotentialPrerequisites)) {
-						unset($this->aPotentialPrerequisites[$sModuleName]);
+					if (array_key_exists($sModuleName, $this->aDepencyModuleNames)) {
+						unset($this->aDepencyModuleNames[$sModuleName]);
 					}
 					$aReplacements[$sModuleId] = '(true)'; // Add parentheses to protect against invalid condition causing
 					// a function call that results in a runtime fatal error
@@ -106,7 +110,7 @@ class iTopCoreModuleDependency {
 			}
 		}
 
-		foreach ($this->aPotentialPrerequisites as $sModuleName)
+		foreach ($this->aDepencyModuleNames as $sModuleName => $c)
 		{
 			if (array_key_exists($sModuleName, $aSelectedModules))
 			{
@@ -119,7 +123,7 @@ class iTopCoreModuleDependency {
 		}
 
 		$bResult=false;
-		$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $this->sDepString);
+		$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $this->sDependencyExpression);
 		try{
 			$bResult = self::GetPhpExpressionEvaluator()->ParseAndEvaluateBooleanExpression($sBooleanExpr);
 		} catch(ModuleFileReaderException $e){
