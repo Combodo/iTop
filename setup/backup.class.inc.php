@@ -654,6 +654,7 @@ EOF;
 
 		$sTmpDir = tempnam(empty($sTmpDir) ? SetupUtils::getTmpDir() : APPROOT.$sTmpDir , 'itop-backup-');
 		unlink($sTmpDir); // I need a directory, not a file...
+		SetupUtils::builddir($sTmpDir);
 
 		return $sTmpDir;
 	}
