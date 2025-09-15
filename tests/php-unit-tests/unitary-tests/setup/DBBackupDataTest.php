@@ -83,7 +83,7 @@ class DBBackupDataTest extends ItopDataTestCase
 	 */
 	function testRestoreListExtraFiles($aFilesToCreate, $aExpectedRelativeExtraFiles)
 	{
-		require_once(APPROOT.'/env-production/itop-backup/dbrestore.class.inc.php');
+		$this->RequireOnceItopFile('/env-production/itop-backup/dbrestore.class.inc.php');
 
 		$sTmpDir = sys_get_temp_dir().'/testRestoreListExtraFiles-'.time();
 		
@@ -128,7 +128,7 @@ class DBBackupDataTest extends ItopDataTestCase
 
 	public function testRestoreFromCompressedBackup()
 	{
-		require_once(APPROOT.'/env-production/itop-backup/dbrestore.class.inc.php');
+		$this->RequireOnceItopFile('env-production/itop-backup/dbrestore.class.inc.php');
 
 		$oConfig = \utils::GetConfig();
 		$oRestore = new DBRestore($oConfig);
