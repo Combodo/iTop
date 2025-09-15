@@ -225,9 +225,17 @@ class DBBackupTest extends ItopTestCase
 				'',
 				sys_get_temp_dir() . '/itop-backup',
 			],
-			'System directory attempt' => [
+			'System directory attempt with existing root dir' => [
 				'/lib',
 				static::GetAppRoot() . 'lib/itop-backup',
+			],
+			'System directory attempt with non existing root dir' => [
+				'/etc',
+				static::GetAppRoot() . 'data/itop-backup',
+			],
+			'Breakout attempt' => [
+				'../../../var',
+				static::GetAppRoot() . 'data/itop-backup',
 			],
 		];
 	}
