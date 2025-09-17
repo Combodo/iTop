@@ -22,7 +22,7 @@ use Twig\Token;
  * Marks a section of a template as untrusted code that must be evaluated in the sandbox mode.
  *
  *    {% sandbox %}
- *        {% include 'user.html' %}
+ *        {% include 'user.html.twig' %}
  *    {% endsandbox %}
  *
  * @see https://twig.symfony.com/doc/api.html#sandbox-extension for details

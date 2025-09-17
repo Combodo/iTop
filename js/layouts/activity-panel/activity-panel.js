@@ -123,6 +123,9 @@ $(function()
 			_create: function () {
 				this.element.addClass('ibo-activity-panel');
 
+				// Should be initialized globally, but as we don't actually do it
+				moment.locale(GetUserLanguage());
+
 				this._bindEvents();
 
 				// Lock

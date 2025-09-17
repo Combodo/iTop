@@ -327,7 +327,8 @@ $(function()
 				oElem.popover_menu({
 					'toggler': '[data-role="ibo-navigation-menu--notifications-show-all-multiple"]',
 					'position': {
-						'horizontal': "(oTargetPos.left+parseInt(oTargetElem.css('marginLeft'), 10)+(oTargetElem.outerWidth() / 2)-(oElem.outerWidth() / 2))+'px'",
+						'horizontal': "(oTargetPos.left+parseInt(oTargetElem.css('marginLeft'), 10)+(oTargetElem.outerWidth() / 1.5)-(oElem.outerWidth() / 2))+'px'",
+						'vertical': 'above'
 					},
 				});
 

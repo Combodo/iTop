@@ -22,7 +22,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:KnownError/Attribute:problem_id+' => '',
 	'Class:KnownError/Attribute:problem_ref' => 'Rérérence problème lié',
 	'Class:KnownError/Attribute:problem_ref+' => '',
-	'Class:KnownError/Attribute:symptom' => 'Symptome',
+	'Class:KnownError/Attribute:symptom' => 'Symptôme',
 	'Class:KnownError/Attribute:symptom+' => '',
 	'Class:KnownError/Attribute:root_cause' => 'Cause première',
 	'Class:KnownError/Attribute:root_cause+' => '',
