@@ -94,11 +94,11 @@ gitGraph
     checkout support/2.7
     commit id: "2024-09-28" tag: "2.7.11"
     checkout support/2.7
-    commit id: "2025-02-25" tag: "2.7.12"
+    commit id: "2025-02-25a" tag: "2.7.12"
     checkout support/3.1
-    commit id: "2025-02-25 " tag: "3.1.3"
+    commit id: "2025-02-25b" tag: "3.1.3"
     checkout support/3.2
-    commit id: "2025-02-25  " tag: "3.2.1"
+    commit id: "2025-02-25c" tag: "3.2.1"
 ```
 
 To learn more, check the [iTop community versions history on the official wiki](https://www.itophub.io/wiki/page?id=latest:release:start).
