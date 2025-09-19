@@ -470,8 +470,13 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 			{
 				$oObject = RestUtils::FindObjectFromKey($sClass, $key);
 				RestUtils::UpdateObjectFromFields($oObject, $aFields);
-				$oObject->DBUpdate();
-				$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
+				$sMessage = 'unchanged';
+				if($oObject->IsModified())
+				{
+					$oObject->DBUpdate();
+					$sMessage = 'updated';
+				}
+				$oResult->AddObject(0, $sMessage, $oObject, $aShowFields, $bExtendedOutput);
 			}
 			break;
 	
