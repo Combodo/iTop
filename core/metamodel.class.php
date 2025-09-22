@@ -407,7 +407,7 @@ abstract class MetaModel
 	/**
 	 * @param string $sClass
 	 *
-	 * @return string the owrking time class
+	 * @return string the working time class
 	 * @throws \CoreException
 	 */
 	final public static function GetWorkingTime($sClass)
