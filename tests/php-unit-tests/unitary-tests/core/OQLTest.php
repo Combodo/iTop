@@ -502,50 +502,46 @@ SELECT
 		];
 	}
 
-	public function testOQLAllowedOrg()
+	private function GivenVMAndLicence(int $iVmOrgId, ?int $iLicenceOrgId): int
 	{
-		$sOrgId = $this->GivenObjectInDB('Organization', [
-			'name' => 'Test organization',
-			'status' => 'active'
-		]);
-
 		$iOsFamilyId = $this->GivenObjectInDB('OSFamily', [
-			'name' => 'Test OS Family'
+			'name' => 'Test OS Family',
 		]);
 
 		$iOsVersionId = $this->GivenObjectInDB('OSVersion', [
-			'name' => 'Test OS Version',
-			'osfamily_id' => $iOsFamilyId
+			'name'        => 'Test OS Version',
+			'osfamily_id' => $iOsFamilyId,
 		]);
 
-		$iOsLicenceId = $this->GivenObjectInDB('OSLicence', [
-			'name' => 'Test OS Licence',
+		$iOSLicenceId = $this->GivenObjectInDB('OSLicence', [
+			'name'         => 'Test OS Licence',
 			'osversion_id' => $iOsVersionId,
-			'org_id' => $sOrgId
+			'org_id'       => $iLicenceOrgId,
 		]);
 
 		$iVClusterId = $this->GivenObjectInDB('Hypervisor', [
-			'name' => 'Test Hypervisor',
-			'org_id' => $sOrgId
+			'name'   => 'Test Hypervisor',
+			'org_id' => $iVmOrgId,
 		]);
 
-		$iVmWithOsLicenceId = $this->GivenObjectInDB('VirtualMachine', [
-			'name' => 'Test VM with OS Licence',
-			'org_id' => $sOrgId,
+		return $this->GivenObjectInDB('VirtualMachine', [
+			'name'           => 'Test VM with OS Licence',
+			'org_id'         => $iVmOrgId,
 			'virtualhost_id' => $iVClusterId,
-			'oslicence_id' => $iOsLicenceId
+			'oslicence_id'   => $iOSLicenceId,
 		]);
+	}
 
-		$iVmWithoutOsLicenceId = $this->GivenObjectInDB('VirtualMachine', [
-			'name' => 'Test VM without OS Licence',
-			'org_id' => $sOrgId,
-			'virtualhost_id' => $iVClusterId
-		]);
+	public function testMultiColumnQueryBehaviorWithOrganizationRestrictions()
+	{
+		$sAllowedOrgId = $this->GivenObjectInDB('Organization', ['name' => 'Test organization']);
+		$sForbiddenOrgId = $this->GivenObjectInDB('Organization', ['name' => 'Test organization not allowed']);
 
-		$sLoginUserWithoutAllowedOrg = $this->GivenUserInDB('azerty', ['Configuration Manager']);
-		$sLoginUserWithAllowedOrg = $this->GivenUserRestrictedToAnOrganizationInDB($sOrgId, 3);
+		$iVmWithOsLicenceAllowed = $this->GivenVMAndLicence($sAllowedOrgId, $sAllowedOrgId);
+		$iVmWithOsLicenceForbidden = $this->GivenVMAndLicence($sAllowedOrgId, $sForbiddenOrgId);
+		$iVmWithoutOsLicence = $this->GivenVMAndLicence($sAllowedOrgId, null);
 
-		$aUsersLogin = [$sLoginUserWithoutAllowedOrg, $sLoginUserWithAllowedOrg];
+		$sLoginUserWithAllowedOrg = $this->GivenUserRestrictedToAnOrganizationInDB($sAllowedOrgId, 3);
 
 		$sQuery = <<<OQL
 			SELECT VM, OSL
@@ -553,24 +549,43 @@ SELECT
 			JOIN OSLicence AS OSL ON VM.oslicence_id = OSL.id
 		OQL;
 
+		UserRights::Login($sLoginUserWithAllowedOrg);
 
-		foreach ($aUsersLogin as $sLogin) {
-			if (!UserRights::Login($sLogin)) {
-				self::fail("Could not log in with user $sLogin");
-			}
+		$oDbObjectSearch = DBObjectSearch::FromOQL($sQuery);
 
-			$oDbObjectSearch = DBObjectSearch::FromOQL($sQuery);
+		$oSet = new DBObjectSet($oDbObjectSearch);
 
-			$oSet = new DBObjectSet($oDbObjectSearch);
-			$i = 0;
-			while ($oVM = $oSet->Fetch()) {
-				if ($oVM->GetKey() === $iVmWithOsLicenceId || ($oVM->GetKey() === $iVmWithoutOsLicenceId)) {
-					$i++;
-				}
-			}
-			$sDisplayNameInError = ($sLogin === $sLoginUserWithAllowedOrg) ? "$sLogin (with allowed org)" : "$sLogin (without allowed org)";
-			self::assertEquals(2, $i, "The user $sDisplayNameInError should see 2 VMs (cf. PR #727)");
-			UserRights::Logoff();
-		}
+		$aQueryResult = $oSet->ToArray();
+		$this->assertArrayHasKey($iVmWithOsLicenceAllowed, $aQueryResult, 'The VM with OS Licence in allowed org should be found');
+		$this->assertArrayNotHasKey($iVmWithOsLicenceForbidden, $aQueryResult, 'The VM with OS Licence in forbidden org should NOT be found');
+		$this->assertArrayHasKey($iVmWithoutOsLicence, $aQueryResult, 'The VM without OS Licence should be found (cf. #727)');
+		UserRights::Logoff();
+	}
+
+	public function testMultiColumnQueryBehaviorWithoutOrganizationRestrictions()
+	{
+		$sOrgId = $this->GivenObjectInDB('Organization', ['name' => 'Test organization']);
+
+		$iVmWithOsLicence = $this->GivenVMAndLicence($sOrgId, $sOrgId);
+		$iVmWithoutOsLicence = $this->GivenVMAndLicence($sOrgId, null);
+
+		$sLoginUserWithNoRestriction = $this->GivenUserInDB('azerty', ['Configuration Manager']);
+
+		$sQuery = <<<OQL
+			SELECT VM, OSL
+			FROM VirtualMachine AS VM
+			JOIN OSLicence AS OSL ON VM.oslicence_id = OSL.id
+		OQL;
+
+		UserRights::Login($sLoginUserWithNoRestriction);
+
+		$oDbObjectSearch = DBObjectSearch::FromOQL($sQuery);
+
+		$oSet = new DBObjectSet($oDbObjectSearch);
+
+		$aQueryResult = $oSet->ToArray();
+		$this->assertArrayHasKey($iVmWithOsLicence, $aQueryResult, 'The VM with OS Licence should be found');
+		$this->assertArrayHasKey($iVmWithoutOsLicence, $aQueryResult, 'The VM without OS Licence should be found');
+		UserRights::Logoff();
 	}
 }
