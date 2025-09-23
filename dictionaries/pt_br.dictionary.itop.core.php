@@ -192,7 +192,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:CMDBChangeOp' => 'Operações de alteração',
-	'Class:CMDBChangeOp+' => 'Operações de controle de alteração',
+	'Class:CMDBChangeOp+' => 'Controle de operações de alteração',
 	'Class:CMDBChangeOp/Attribute:change' => 'Alteração',
 	'Class:CMDBChangeOp/Attribute:change+' => '',
 	'Class:CMDBChangeOp/Attribute:date' => 'Data',
@@ -296,7 +296,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Event' => 'Registro de evento',
-	'Class:Event+' => 'Um evento interno do aplicativo',
+	'Class:Event+' => 'Um evento interno da aplicação',
 	'Class:Event/Attribute:message' => 'Mensagem',
 	'Class:Event/Attribute:message+' => 'Descrição curta deste evento',
 	'Class:Event/Attribute:date' => 'Data',
@@ -514,13 +514,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'A notificação de e-mail não será enviada',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinatário de teste',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Destinatário caso o status esteja definido como "teste"',
-	'Class:ActionEmail/Attribute:from' => 'De',
+	'Class:ActionEmail/Attribute:from' => 'De (e-mail)',
 	'Class:ActionEmail/Attribute:from+' => 'Endereço de e-mail do remetente enviado no cabeçalho do e-mail',
-	'Class:ActionEmail/Attribute:from_label' => 'De (campo)',
+	'Class:ActionEmail/Attribute:from_label' => 'De (nome)',
 	'Class:ActionEmail/Attribute:from_label+' => 'Nome de exibição enviado no cabeçalho do e-mail',
-	'Class:ActionEmail/Attribute:reply_to' => 'Responder para',
+	'Class:ActionEmail/Attribute:reply_to' => 'Responder para (e-mail)',
 	'Class:ActionEmail/Attribute:reply_to+' => 'Endereço de e-mail enviado no cabeçalho do e-mail',
-	'Class:ActionEmail/Attribute:reply_to_label' => 'Responder para (campo)',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Responder para (nome)',
 	'Class:ActionEmail/Attribute:reply_to_label+' => 'Nome de exibição enviado no cabeçalho do e-mail',
 	'Class:ActionEmail/Attribute:to' => 'Para',
 	'Class:ActionEmail/Attribute:to+' => 'Endereço(s) de e-mail do(s) destinatário(s)',
@@ -748,7 +748,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkTriggerAction' => 'Ação/Gatilho',
-	'Class:lnkTriggerAction+' => 'Link Gatilho / Ação',
+	'Class:lnkTriggerAction+' => 'Relação entre Gatilho / Ação',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Ação',
 	'Class:lnkTriggerAction/Attribute:action_id+' => 'Ação a ser executada',
 	'Class:lnkTriggerAction/Attribute:action_name' => 'Ação',
@@ -1193,7 +1193,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:ResourceSystemMenu' => 'Menu de Recursos do Sistema',
+	'Class:ResourceSystemMenu' => 'Recurso Menu do Sistema',
 	'Class:ResourceSystemMenu+' => '',
     'Class:EventNotification/Attribute:object_class' => 'Object class~~',
     'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',

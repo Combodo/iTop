@@ -17,7 +17,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratos por nível serviço',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos terminando em menos de 30 dias',
-	'Menu:ProviderContract' => 'Contratos de provedores',
+	'Menu:ProviderContract' => 'Contratos de provedores(as)',
 	'Menu:ProviderContract+' => '',
 	'Menu:CustomerContract' => 'Contratos de clientes',
 	'Menu:CustomerContract+' => '',

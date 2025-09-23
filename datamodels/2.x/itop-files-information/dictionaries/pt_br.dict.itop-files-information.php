@@ -12,7 +12,7 @@
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'FilesInformation:Error:MissingFile' => 'Arquivo ausente: %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'Arquivo %1$s está corrompido',
-	'FilesInformation:Error:ListCorruptedFile' => 'File(s) corrupted: %1$s ~~',
+	'FilesInformation:Error:ListCorruptedFile' => 'Arquivo(s) corrompido(s): %1$s ',
 	'FilesInformation:Error:CantWriteToFile' => 'Sem permissão de escrita no arquivo %1$s',
 ));
 

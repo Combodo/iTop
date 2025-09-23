@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Menu:ConfigFileEditor' => 'Plain text editor~~',
+	'Menu:ConfigFileEditor' => 'Configurações',
 	'config-edit-title' => 'Editor do arquivo de configuração',
 	'config-edit-intro' => 'Tenha cuidado ao editar o arquivo de configuração',
 	'Menu:ConfigEditor' => 'Configurações',
