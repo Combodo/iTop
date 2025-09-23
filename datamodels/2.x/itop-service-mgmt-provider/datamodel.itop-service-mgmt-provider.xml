@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="Organization">
       <fields>
@@ -46,7 +46,7 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,structure</category>
@@ -174,15 +174,19 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="production">
               <code>production</code>
+              <rank>20</rank>
             </value>
             <value id="implementation">
               <code>implementation</code>
+              <rank>10</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>30</rank>
             </value>
           </values>
           <sql>status</sql>
@@ -193,8 +197,7 @@
       </fields>
       <methods>
         <method id="PrefillSearchForm">
-          <code>
-<![CDATA[
+          <code><![CDATA[
 public function PrefillSearchForm(&$aContextParam)
 {
   if($aContextParam['dest_class'] == 'Service' || is_subclass_of($aContextParam['dest_class'], 'Service'))
@@ -217,8 +220,7 @@ public function PrefillSearchForm(&$aContextParam)
     }
   }
 }
-]]>
-          </code>
+]]></code>
         </method>
       </methods>
       <presentation>
@@ -278,6 +280,9 @@ public function PrefillSearchForm(&$aContextParam)
             </item>
             <item id="provider_id">
               <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
             </item>
           </items>
         </default_search>
@@ -454,50 +459,74 @@ public function PrefillSearchForm(&$aContextParam)
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
               <rank>10</rank>
+              <items>
+                <item id="fieldset:Contract:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="provider_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="contracttype_id">
+                      <rank>40</rank>
+                    </item>
+                    <item id="description">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
               <rank>20</rank>
+              <items>
+                <item id="fieldset:Contract:moreinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="status">
+                      <rank>10</rank>
+                    </item>
+                    <item id="start_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="end_date">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Contract:cost">
+                  <items>
+                    <item id="cost">
+                      <rank>40</rank>
+                    </item>
+                    <item id="cost_currency">
+                      <rank>50</rank>
+                    </item>
+                    <item id="cost_unit">
+                      <rank>60</rank>
+                    </item>
+                    <item id="billing_frequency">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
             <item id="contacts_list">
-              <rank>30</rank>
-            </item>
-            <item id="documents_list">
-              <rank>40</rank>
-            </item>
-            <item id="description">
-              <rank>50</rank>
-            </item>
-            <item id="start_date">
-              <rank>60</rank>
-            </item>
-            <item id="end_date">
-              <rank>70</rank>
-            </item>
-            <item id="cost">
-              <rank>80</rank>
-            </item>
-            <item id="cost_currency">
-              <rank>90</rank>
-            </item>
-            <item id="billing_frequency">
               <rank>100</rank>
             </item>
-            <item id="cost_unit">
+            <item id="documents_list">
               <rank>110</rank>
             </item>
-            <item id="provider_id">
-              <rank>120</rank>
-            </item>
-            <item id="status">
-              <rank>130</rank>
-            </item>
-            <item id="contracttype_id">
-              <rank>140</rank>
-            </item>
             <item id="services_list">
-              <rank>150</rank>
+              <rank>140</rank>
             </item>
             <item id="functionalcis_list">
               <rank>160</rank>
@@ -622,56 +651,80 @@ public function PrefillSearchForm(&$aContextParam)
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
               <rank>10</rank>
+              <items>
+                <item id="fieldset:Contract:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="provider_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="contracttype_id">
+                      <rank>40</rank>
+                    </item>
+                    <item id="description">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
               <rank>20</rank>
+              <items>
+                <item id="fieldset:Contract:moreinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="status">
+                      <rank>10</rank>
+                    </item>
+                    <item id="start_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="end_date">
+                      <rank>30</rank>
+                    </item>
+                    <item id="sla">
+                      <rank>40</rank>
+                    </item>
+                    <item id="coverage">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Contract:cost">
+                  <items>
+                    <item id="cost">
+                      <rank>40</rank>
+                    </item>
+                    <item id="cost_currency">
+                      <rank>50</rank>
+                    </item>
+                    <item id="cost_unit">
+                      <rank>60</rank>
+                    </item>
+                    <item id="billing_frequency">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
             <item id="contacts_list">
-              <rank>30</rank>
-            </item>
-            <item id="documents_list">
-              <rank>40</rank>
-            </item>
-            <item id="description">
-              <rank>50</rank>
-            </item>
-            <item id="start_date">
-              <rank>60</rank>
-            </item>
-            <item id="end_date">
-              <rank>70</rank>
-            </item>
-            <item id="cost">
-              <rank>80</rank>
-            </item>
-            <item id="cost_currency">
-              <rank>90</rank>
-            </item>
-            <item id="billing_frequency">
               <rank>100</rank>
             </item>
-            <item id="cost_unit">
+            <item id="documents_list">
               <rank>110</rank>
-            </item>
-            <item id="provider_id">
-              <rank>120</rank>
             </item>
             <item id="functionalcis_list">
               <rank>130</rank>
-            </item>
-            <item id="sla">
-              <rank>140</rank>
-            </item>
-            <item id="coverage">
-              <rank>150</rank>
-            </item>
-            <item id="status">
-              <rank>160</rank>
-            </item>
-            <item id="contracttype_id">
-              <rank>170</rank>
             </item>
           </items>
         </details>
@@ -763,8 +816,8 @@ public function PrefillSearchForm(&$aContextParam)
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="contract_id"/>
-            <attribute id="contact_id"/>
+            <attribute id="contact_name"/>
+            <attribute id="contract_name"/>
           </attributes>
         </naming>
         <style>
@@ -776,6 +829,17 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="contact_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="contact_id"/>
+              <attribute id="contract_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="contract_id" xsi:type="AttributeExternalKey">
@@ -788,9 +852,21 @@ public function PrefillSearchForm(&$aContextParam)
           <extkey_attcode>contract_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="customer_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="provider_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>provider_id</target_attcode>
+        </field>
         <field id="contact_id" xsi:type="AttributeExternalKey">
           <sql>contact_id</sql>
           <target_class>Contact</target_class>
+          <filter><![CDATA[SELECT Contact WHERE org_id IN (:this->customer_id, :this->provider_id)]]></filter>
+          <dependencies>
+            <attribute id="contract_id"/>
+          </dependencies>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
@@ -803,10 +879,10 @@ public function PrefillSearchForm(&$aContextParam)
       <presentation>
         <details>
           <items>
-            <item id="contract_id">
+            <item id="contact_id">
               <rank>10</rank>
             </item>
-            <item id="contact_id">
+            <item id="contract_id">
               <rank>20</rank>
             </item>
           </items>
@@ -845,8 +921,8 @@ public function PrefillSearchForm(&$aContextParam)
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="contract_id"/>
-            <attribute id="document_id"/>
+            <attribute id="contract_name"/>
+            <attribute id="document_name"/>
           </attributes>
         </naming>
         <style>
@@ -858,6 +934,17 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="document_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="contract_id"/>
+              <attribute id="document_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="contract_id" xsi:type="AttributeExternalKey">
@@ -870,9 +957,21 @@ public function PrefillSearchForm(&$aContextParam)
           <extkey_attcode>contract_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="customer_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="provider_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>provider_id</target_attcode>
+        </field>
         <field id="document_id" xsi:type="AttributeExternalKey">
           <sql>document_id</sql>
           <target_class>Document</target_class>
+          <filter><![CDATA[SELECT Document WHERE org_id IN (:this->customer_id, :this->provider_id)]]></filter>
+          <dependencies>
+            <attribute id="contract_id"/>
+          </dependencies>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
@@ -1015,6 +1114,10 @@ public function PrefillSearchForm(&$aContextParam)
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"/>
+            <attribute id="status"/>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <image_attribute>icon</image_attribute>
@@ -1079,15 +1182,19 @@ public function PrefillSearchForm(&$aContextParam)
           <duplicates/>
         </field>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="production">
               <code>production</code>
+              <rank>20</rank>
             </value>
             <value id="implementation">
               <code>implementation</code>
+              <rank>10</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>30</rank>
             </value>
           </values>
           <sql>status</sql>
@@ -1201,6 +1308,16 @@ public function PrefillSearchForm(&$aContextParam)
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="lnkDocumentToService" _delta="define">
@@ -1215,8 +1332,8 @@ public function PrefillSearchForm(&$aContextParam)
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="service_id"/>
-            <attribute id="document_id"/>
+            <attribute id="document_name"/>
+            <attribute id="service_name"/>
           </attributes>
         </naming>
         <style>
@@ -1228,6 +1345,17 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="document_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="document_id"/>
+              <attribute id="service_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="service_id" xsi:type="AttributeExternalKey">
@@ -1255,10 +1383,10 @@ public function PrefillSearchForm(&$aContextParam)
       <presentation>
         <details>
           <items>
-            <item id="service_id">
+            <item id="document_id">
               <rank>10</rank>
             </item>
-            <item id="document_id">
+            <item id="service_id">
               <rank>20</rank>
             </item>
           </items>
@@ -1297,8 +1425,8 @@ public function PrefillSearchForm(&$aContextParam)
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="service_id"/>
-            <attribute id="contact_id"/>
+            <attribute id="contact_name"/>
+            <attribute id="service_name"/>
           </attributes>
         </naming>
         <style>
@@ -1310,6 +1438,17 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="contact_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="contact_id"/>
+              <attribute id="service_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="service_id" xsi:type="AttributeExternalKey">
@@ -1337,10 +1476,10 @@ public function PrefillSearchForm(&$aContextParam)
       <presentation>
         <details>
           <items>
-            <item id="service_id">
+            <item id="contact_id">
               <rank>10</rank>
             </item>
-            <item id="contact_id">
+            <item id="service_id">
               <rank>20</rank>
             </item>
           </items>
@@ -1380,6 +1519,10 @@ public function PrefillSearchForm(&$aContextParam)
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="service_provider"/>
+            <attribute id="request_type"/>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
@@ -1440,15 +1583,19 @@ public function PrefillSearchForm(&$aContextParam)
           <display_style>radio_horizontal</display_style>
         </field>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="production">
               <code>production</code>
+              <rank>20</rank>
             </value>
             <value id="implementation">
               <code>implementation</code>
+              <rank>10</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>30</rank>
             </value>
           </values>
           <sql>status</sql>
@@ -1532,6 +1679,19 @@ public function PrefillSearchForm(&$aContextParam)
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="service_provider">
+              <rank>10</rank>
+            </item>
+            <item id="request_type">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="SLA" _delta="define">
@@ -1588,48 +1748,15 @@ public function PrefillSearchForm(&$aContextParam)
           <ext_key_to_remote>slt_id</ext_key_to_remote>
           <duplicates/>
         </field>
-        <field id="customercontracts_list" xsi:type="AttributeLinkedSetIndirect">
+        <field id="customercontracts_list" xsi:type="AttributeLinkedSet">
           <linked_class>lnkCustomerContractToService</linked_class>
           <ext_key_to_me>sla_id</ext_key_to_me>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <ext_key_to_remote>customercontract_id</ext_key_to_remote>
-          <duplicates>true</duplicates>
+          <edit_mode>none</edit_mode>
         </field>
       </fields>
-      <methods>
-	      <method id="DoCheckToWrite">
-		      <static>false</static>
-		      <access>public</access>
-		      <code><![CDATA[
-					public function DoCheckToWrite()
-	{
-		parent::DoCheckToWrite();
-
-		$aCustomerContracts = $this->Get("customercontracts_list");
-		foreach ($aCustomerContracts as $sAttCode => $oCustomerContracts)
-		{
-			// Recurse inside the subdirectories
-			$sOql = "SELECT lnkCustomerContractToService AS ccs WHERE ccs.customercontract_id=:customercontract_id AND ccs.service_id=:service_id";
-			$aQueryParams['customercontract_id'] = $oCustomerContracts->Get("customercontract_id");
-			$aQueryParams['service_id'] = $oCustomerContracts->Get("service_id");
-			if ($this->Get("id") != null)
-			{
-				$sOql = $sOql." AND ccs.sla_id!=:sla_id";
-				$aQueryParams['sla_id'] = $this->Get("id");
-			}
-			$oQuery = DBSearch::FromOQL($sOql, $aQueryParams);
-			$oResultSql = new DBObjectSet($oQuery);
-			$oResultSql->OptimizeColumnLoad(['ccs' => ['customercontract_name','service_name']]);
-			if ($aCurrentRow = $oResultSql->Fetch())
-			{
-				$this->m_aCheckIssues[] = Dict::Format('Class:SLA/Error:UniqueLnkCustomerContractToService',$aCurrentRow->Get('customercontract_name'),$aCurrentRow->Get('service_name'));
-			}
-		}
-	}
-			     ]]></code>
-	      </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -1854,8 +1981,8 @@ public function PrefillSearchForm(&$aContextParam)
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="sla_id"/>
-            <attribute id="slt_id"/>
+            <attribute id="sla_name"/>
+            <attribute id="slt_name"/>
           </attributes>
         </naming>
         <style>
@@ -1867,6 +1994,17 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="slt_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="sla_id"/>
+              <attribute id="slt_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="sla_id" xsi:type="AttributeExternalKey">
@@ -1976,8 +2114,8 @@ public function PrefillSearchForm(&$aContextParam)
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="customercontract_id"/>
-            <attribute id="service_id"/>
+            <attribute id="customercontract_name"/>
+            <attribute id="service_name"/>
           </attributes>
         </naming>
         <style>
@@ -1989,6 +2127,17 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="service_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="customercontract_id"/>
+              <attribute id="service_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="customercontract_id" xsi:type="AttributeExternalKey">
@@ -2001,9 +2150,17 @@ public function PrefillSearchForm(&$aContextParam)
           <extkey_attcode>customercontract_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="provider_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>customercontract_id</extkey_attcode>
+          <target_attcode>provider_id</target_attcode>
+        </field>
         <field id="service_id" xsi:type="AttributeExternalKey">
           <sql>service_id</sql>
           <target_class>Service</target_class>
+          <filter><![CDATA[SELECT Service WHERE org_id = :this->provider_id]]></filter>
+          <dependencies>
+            <attribute id="customercontract_id"/>
+          </dependencies>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
@@ -2074,8 +2231,8 @@ public function PrefillSearchForm(&$aContextParam)
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="customercontract_id"/>
-            <attribute id="providercontract_id"/>
+            <attribute id="customercontract_name"/>
+            <attribute id="providercontract_name"/>
           </attributes>
         </naming>
         <style>
@@ -2087,6 +2244,17 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="providercontract_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="customercontract_id"/>
+              <attribute id="providercontract_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="customercontract_id" xsi:type="AttributeExternalKey">
@@ -2156,8 +2324,8 @@ public function PrefillSearchForm(&$aContextParam)
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="customercontract_id"/>
-            <attribute id="functionalci_id"/>
+            <attribute id="customercontract_name"/>
+            <attribute id="functionalci_name"/>
           </attributes>
         </naming>
         <style>
@@ -2169,6 +2337,17 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="functionalci_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="customercontract_id"/>
+              <attribute id="functionalci_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="customercontract_id" xsi:type="AttributeExternalKey">
@@ -2344,8 +2523,8 @@ public function PrefillSearchForm(&$aContextParam)
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="deliverymodel_id"/>
-            <attribute id="contact_id"/>
+            <attribute id="deliverymodel_name"/>
+            <attribute id="contact_name"/>
           </attributes>
         </naming>
         <style>
@@ -2357,6 +2536,17 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="contact_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="deliverymodel_id"/>
+              <attribute id="contact_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="deliverymodel_id" xsi:type="AttributeExternalKey">
@@ -2479,9 +2669,9 @@ public function PrefillSearchForm(&$aContextParam)
   <menus>
     <menu id="ServiceManagement" xsi:type="MenuGroup" _delta="define">
       <rank>60</rank>
-	    <style>
-		    <decoration_classes>fas fa-hands-helping</decoration_classes>
-	    </style>
+      <style>
+        <decoration_classes>fas fa-hands-helping</decoration_classes>
+      </style>
     </menu>
     <menu id="Service:Overview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>

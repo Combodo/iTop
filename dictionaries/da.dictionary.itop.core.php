@@ -1,79 +1,54 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Core:DeletedObjectLabel' => '%1s (slettet)',
 	'Core:DeletedObjectTip' => 'Objektet er slettet på %1$s (%2$s)',
-
 	'Core:UnknownObjectLabel' => 'Objektet ikke fundet (klasse: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'Objektet kunne ikke findes. Det kan være slettet, uden at loggen er blevt tømt.',
-
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
 	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s~~',
 	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
-
 	'Core:AttributeLinkedSet' => 'Array af objekter',
 	'Core:AttributeLinkedSet+' => '',
-
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
-
 	'Core:AttributeDashboard' => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '',
-
 	'Core:AttributePhoneNumber' => 'Phone number~~',
 	'Core:AttributePhoneNumber+' => '',
-
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate+' => '',
-
 	'Core:AttributeTagSet' => 'List of tags~~',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
+	'Core:Placeholder:CannotBeResolved' => '(%1$s : cannot be resolved)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
-
 	'Core:AttributeCaseLog' => 'Log~~',
 	'Core:AttributeCaseLog+' => '',
-
 	'Core:AttributeMetaEnum' => 'Computed enum~~',
 	'Core:AttributeMetaEnum+' => '',
-
 	'Core:AttributeLinkedSetIndirect' => 'Array af objekter (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => '',
-
 	'Core:AttributeInteger' => 'Integer',
 	'Core:AttributeInteger+' => '',
-
 	'Core:AttributeDecimal' => 'Decimal',
 	'Core:AttributeDecimal+' => '',
-
 	'Core:AttributeBoolean' => 'Boolean',
 	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
 	'Core:AttributeBoolean/Value:no' => 'No~~',
-
 	'Core:AttributeArchiveFlag' => 'Archive flag~~',
 	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
 	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
@@ -82,7 +57,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Core:AttributeArchiveFlag/Label+' => '',
 	'Core:AttributeArchiveDate/Label' => 'Archive date~~',
 	'Core:AttributeArchiveDate/Label+' => '',
-
 	'Core:AttributeObsolescenceFlag' => 'Obsolescence flag~~',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Yes~~',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
@@ -91,54 +65,38 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Core:AttributeObsolescenceFlag/Label+' => 'Computed dynamically on other attributes~~',
 	'Core:AttributeObsolescenceDate/Label' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete~~',
-
 	'Core:AttributeString' => 'String',
 	'Core:AttributeString+' => '',
-
 	'Core:AttributeClass' => 'Class',
 	'Core:AttributeClass+' => '',
-
 	'Core:AttributeApplicationLanguage' => 'Bruger sprog',
 	'Core:AttributeApplicationLanguage+' => '',
-
 	'Core:AttributeFinalClass' => 'Klasse (auto)',
 	'Core:AttributeFinalClass+' => '',
-
 	'Core:AttributePassword' => 'Password',
 	'Core:AttributePassword+' => '',
-
 	'Core:AttributeEncryptedString' => 'Krypteret streng',
 	'Core:AttributeEncryptedString+' => '',
 	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
 	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
-
 	'Core:AttributeText' => 'Tekst',
 	'Core:AttributeText+' => '',
-
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => '',
-
 	'Core:AttributeEmailAddress' => 'Email adresse',
 	'Core:AttributeEmailAddress+' => '',
-
 	'Core:AttributeIPAddress' => 'IP adresse',
 	'Core:AttributeIPAddress+' => '',
-
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => '',
-
 	'Core:AttributeEnum' => 'Enum',
 	'Core:AttributeEnum+' => '',
-
 	'Core:AttributeTemplateString' => 'Template streng',
 	'Core:AttributeTemplateString+' => '',
-
 	'Core:AttributeTemplateText' => 'Template tekst',
 	'Core:AttributeTemplateText+' => '',
-
 	'Core:AttributeTemplateHTML' => 'Template HTML',
 	'Core:AttributeTemplateHTML+' => '',
-
 	'Core:AttributeDateTime' => 'Dato/tid',
 	'Core:AttributeDateTime+' => '',
 	'Core:AttributeDateTime?SmartSearch' => '
@@ -156,7 +114,6 @@ Operators:<br/>
 <p>
 If the time is omitted, it defaults to 00:00:00
 </p>~~',
-
 	'Core:AttributeDate' => 'Dato',
 	'Core:AttributeDate+' => '',
 	'Core:AttributeDate?SmartSearch' => '
@@ -171,43 +128,30 @@ Operators:<br/>
 	<b>&lt;</b><em>date</em><br/>
 	<b>[</b><em>date</em>,<em>date</em><b>]</b>
 </p>',
-
 	'Core:AttributeDeadline' => 'Deadline',
 	'Core:AttributeDeadline+' => '',
-
 	'Core:AttributeExternalKey' => 'Ekstern nøgle',
 	'Core:AttributeExternalKey+' => '',
-
 	'Core:AttributeHierarchicalKey' => 'Hierarchical Nøgle',
 	'Core:AttributeHierarchicalKey+' => '',
-
 	'Core:AttributeExternalField' => 'Eksternt felt',
 	'Core:AttributeExternalField+' => '',
-
 	'Core:AttributeURL' => 'URL',
 	'Core:AttributeURL+' => '',
-
 	'Core:AttributeBlob' => 'Blob',
 	'Core:AttributeBlob+' => '',
-
 	'Core:AttributeOneWayPassword' => 'En vejs password',
 	'Core:AttributeOneWayPassword+' => '',
-
 	'Core:AttributeTable' => 'Tabel',
 	'Core:AttributeTable+' => '',
-
 	'Core:AttributePropertySet' => 'Egenskaber',
 	'Core:AttributePropertySet+' => '',
-
 	'Core:AttributeFriendlyName' => 'Friendly navn',
 	'Core:AttributeFriendlyName+' => '',
-
 	'Core:FriendlyName-Label' => 'Friendly navn',
 	'Core:FriendlyName-Description' => 'Friendly navn',
-
 	'Core:AttributeTag' => 'Tags~~',
 	'Core:AttributeTag+' => '',
-	
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
 	'Core:Context=Setup' => 'Setup~~',
@@ -479,12 +423,48 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 ));
 
 //
+// Class: EventNotificationNewsroom
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:EventNotificationNewsroom' => 'News sent~~',
+	'Class:EventNotificationNewsroom+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:title' => 'Title~~',
+	'Class:EventNotificationNewsroom/Attribute:title+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:icon' => 'Icon~~',
+	'Class:EventNotificationNewsroom/Attribute:icon+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:priority' => 'Priority~~',
+	'Class:EventNotificationNewsroom/Attribute:priority+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1' => 'Critical~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1+' => 'Critical~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2' => 'Urgent~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2+' => 'Urgent~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3' => 'Important~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3+' => 'Important~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4' => 'Standard~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4+' => 'Standard~~',
+	'Class:EventNotificationNewsroom/Attribute:url' => 'URL~~',
+	'Class:EventNotificationNewsroom/Attribute:url+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:read' => 'Read~~',
+	'Class:EventNotificationNewsroom/Attribute:read+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no' => 'No~~',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no+' => 'No~~',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes' => 'Yes~~',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes+' => 'Yes~~',
+	'Class:EventNotificationNewsroom/Attribute:read_date' => 'Read date~~',
+	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact~~',
+	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
+));
+
+//
 // Class: Action
 //
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Action' => 'Brugerdefineret handling',
 	'Class:Action+' => '',
+	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => 'Navn',
 	'Class:Action/Attribute:name+' => '',
 	'Class:Action/Attribute:description' => 'Beskrivelse',
@@ -498,10 +478,19 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Action/Attribute:status/Value:disabled' => 'Inaktiv',
 	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Relaterede Triggere',
-	'Class:Action/Attribute:trigger_list+' => '',
+	'Class:Action/Attribute:trigger_list+' => 'Triggers linked to this action~~',
+	'Class:Action/Attribute:asynchronous' => 'Asynchronous~~',
+	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in the background or not~~',
+	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Use global setting~~',
+	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes~~',
+	'Class:Action/Attribute:asynchronous/Value:no' => 'No~~',
 	'Class:Action/Attribute:finalclass' => 'Type',
 	'Class:Action/Attribute:finalclass+' => '',
 	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
+	'Action:last_executions_tab' => 'Last executions~~',
+	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)~~',
+	'Action:last_executions_tab_limit_days' => 'past %1$s days~~',
+	'Action:last_executions_tab_limit_none' => 'no limit~~',
 ));
 
 //
@@ -520,20 +509,24 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ActionEmail' => 'Email besked',
 	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: 
+- Being tested: just the Test recipient, 
+- In production: all (To, cc and Bcc) 
+- Inactive: no-one~~',
 	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
 	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
 	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Test modtager',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
-	'Class:ActionEmail/Attribute:from' => 'Fra~~',
-	'Class:ActionEmail/Attribute:from+' => 'Afsender af emailen~~',
+	'Class:ActionEmail/Attribute:from' => 'Fra',
+	'Class:ActionEmail/Attribute:from+' => 'Afsender af emailen',
 	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
-	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
-	'Class:ActionEmail/Attribute:reply_to' => 'Svar til~~',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Svar sendes til~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Either a static label or a placeholder like $this->agent_id->friendlyname$~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Svar til',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Svar sendes til',
 	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
-	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Either a static label or a placeholder like $this->team_id->friendlyname$.
+If omitted the From (label) is used.~~',
 	'Class:ActionEmail/Attribute:to' => 'Til',
 	'Class:ActionEmail/Attribute:to+' => 'Modtager af emailen',
 	'Class:ActionEmail/Attribute:cc' => 'Cc',
@@ -552,6 +545,64 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Høj',
 	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:language' => 'Language~~',
+	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
+	'Class:ActionEmail/Attribute:html_template+' => 'Optional HTML template wrapping around the content of the \'Body\' attribute below, useful for tailored email layouts (in the template, content of the \'Body\' attribute will replace the $content$ placeholder)~~',
+	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignore the Notify flag~~',
+	'Class:ActionEmail/Attribute:ignore_notify+' => 'If set to \'Yes\' the \'Notify\' flag on Contacts has no effect.~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'No~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Yes~~',
+	'ActionEmail:main' => 'Message~~',
+	'ActionEmail:trigger' => 'Triggers~~',
+	'ActionEmail:recipients' => 'Contacts~~',
+	'ActionEmail:preview_tab' => 'Preview~~',
+	'ActionEmail:preview_tab+' => 'Preview of the eMail template~~',
+	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
+	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
+	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
+));
+
+
+//
+// Class: ActionNewsroom
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'ActionNewsroom:trigger' => 'Trigger~~',
+	'ActionNewsroom:content' => 'Message~~',
+	'ActionNewsroom:settings' => 'Settings~~',
+	'Class:ActionNewsroom' => 'Notification by Newsroom~~',
+	'Class:ActionNewsroom+' => '~~',
+	'Class:ActionNewsroom/Attribute:title' => 'Title~~',
+	'Class:ActionNewsroom/Attribute:title+' => 'Title of the news. Can contain placeholders like $this->attribute_code$~~',
+	'Class:ActionNewsroom/Attribute:message' => 'Message~~',
+	'Class:ActionNewsroom/Attribute:message+' => 'Contents of the news, in Markdown format not HTML. Can contain placeholders like:
+- $this->attribute_code$ any attribute of the object triggering the notification,
+- $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
+- $current_contact->attribute$ attribute of the Person who triggered the notification~~',
+	'Class:ActionNewsroom/Attribute:icon' => 'Icon~~',
+	'Class:ActionNewsroom/Attribute:icon+' => 'Icon to appear next to the news in the newsroom.
+- If filled, the custom icon will be used
+- Else the icon of the triggering object if there is one (e.g. picture of a Person),
+- Else the icon of the triggering object class,
+- Otherwise, the application compact logo will be used~~',
+	'Class:ActionNewsroom/Attribute:priority' => 'Priority~~',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by decreasing priority, when displayed in the Newsroom popup~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critical~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Critical~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgent~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:2+' => 'Urgent~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:3' => 'Important~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:3+' => 'Important~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:4' => 'Standard~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:4+' => 'Standard~~',
+	'Class:ActionNewsroom/Attribute:test_recipient_id' => 'Test recipient~~',
+	'Class:ActionNewsroom/Attribute:test_recipient_id+' => 'Person used instead of Recipients when notification is being tested~~',
+	'Class:ActionNewsroom/Attribute:recipients' => 'Recipients~~',
+	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects~~',
+	'Class:ActionNewsroom/Attribute:url' => 'URL~~',
+	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
 ));
 
 //
@@ -561,14 +612,22 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Trigger' => 'Triggere',
 	'Class:Trigger+' => '',
+	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Beskrivelse',
 	'Class:Trigger/Attribute:description+' => '',
 	'Class:Trigger/Attribute:action_list' => 'Triggerede handlinger',
-	'Class:Trigger/Attribute:action_list+' => '',
+	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated~~',
 	'Class:Trigger/Attribute:finalclass' => 'Type',
 	'Class:Trigger/Attribute:finalclass+' => '',
 	'Class:Trigger/Attribute:context' => 'Context~~',
 	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
+	'Class:Trigger/Attribute:complement' => 'Additional information~~',
+	'Class:Trigger/Attribute:complement+' => 'Computed automatically in english for triggers derived from TriggerOnObject~~',
+	'Class:Trigger/Attribute:subscription_policy' => 'Subscription policy~~',
+	'Class:Trigger/Attribute:subscription_policy+' => 'Allows users to unsubscribe from the trigger~~',
+	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription~~',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel (News or Email)~~',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Deny unsubscription~~',
 ));
 
 //
@@ -581,9 +640,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Target klasse',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
-	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~~',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
-	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \\"%1$s\\"~~',
+	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class "%1$s"~~',
 ));
 
 //
@@ -665,6 +724,17 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 ));
 
 //
+// Class: TriggerOnAttributeBlobDownload
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
+	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
+));
+
+//
 // Class: TriggerOnThresholdReached
 //
 
@@ -700,11 +770,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 // Synchro Data Source
 //
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:SynchroDataSource' => 'Synchro Data Kilde',
 	'Class:SynchroDataSource/Attribute:name' => 'Navn',
 	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Beskrivelse',
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Target klasse',
+	'Class:SynchroDataSource/Attribute:scope_class+' => 'A Synchro Data Source can only populate a single '.ITOP_APPLICATION_SHORT.' class~~',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Bruger',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Kontakt som skal adviseres',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => '',
@@ -713,6 +785,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:SynchroDataSource/Attribute:url_application' => 'Applikation\'s hyperlink',
 	'Class:SynchroDataSource/Attribute:url_application+' => '',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Afstemnings politik',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Use the attributes": '.ITOP_APPLICATION_SHORT.' object matches replica values for each Synchro attributes flagged for Reconciliation.
+"Use primary_key": the column primary_key of the replica is expected to contain the identifier of the '.ITOP_APPLICATION_SHORT.' object~~',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Full load interval',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => '',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Handling på nul',
@@ -732,6 +806,33 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => '',
 	'Class:SynchroDataSource/Attribute:database_table_name' => 'Data table',
 	'Class:SynchroDataSource/Attribute:database_table_name+' => '',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Implementering',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Forældet',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Produktion',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Scope restriction',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Brug attributterne',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Brug primær nøgle feltet',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Opret',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Fejl',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Fejl',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Opdater',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Opret',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Fejl',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Tag den første (vilkårlig?)',
+	'Class:SynchroDataSource/Attribute:delete_policy' => 'Slet Politik',
+	'Class:SynchroDataSource/Attribute:delete_policy+' => 'What to do when a replica becomes obsolete:
+"Ignore": do nothing, the associated object remains as is in iTop.
+"Delete": Delete the associated object in iTop (and the replica in the data table).
+"Update": Update the associated object as specified by the Update rules (see below).
+"Update then Delete": apply the "Update rules". When Retention Duration expires, execute a "Delete" ~~',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Slet',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignorer',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Opdater',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Opdater derefter Slet',
+	'Class:SynchroDataSource/Attribute:attribute_list' => 'Attribut Liste',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Kun Administratorer',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Enhver har tilladelse til at slette sådanne elementer',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Ingen',
 	'SynchroDataSource:Description' => 'Beskrivelse',
 	'SynchroDataSource:Reconciliation' => 'Søg &amp; afstemning',
 	'SynchroDataSource:Deletion' => 'Slette regler',
@@ -756,8 +857,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Core:Synchro:NeverRun' => 'Denne synkronisering har aldrig været kørt. Endnu ingen log.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Sidste synkronisering sluttede den %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Synkroniseringen der startede den %1$s kører stadig...',
-	'Menu:DataSources' => 'Synkroniserings Data Kilder', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Ignoreret (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Forsvundet (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Eksisterer (%1$s)',
@@ -821,29 +920,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Tidligere værdi',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Sags Log',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Sidste Entry',
-	'Class:SynchroDataSource' => 'Synchro Data Kilde',
-	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Implementering',
-	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Forældet',
-	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Produktion',
-	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Scope restriction',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Brug attributterne',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Brug primær nøgle feltet',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Opret',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Fejl',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Fejl',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Opdater',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Opret',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Fejl',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Tag den første (vilkårlig?)',
-	'Class:SynchroDataSource/Attribute:delete_policy' => 'Slet Politik',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Slet',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignorer',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Opdater',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Opdater derefter Slet',
-	'Class:SynchroDataSource/Attribute:attribute_list' => 'Attribut Liste',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Kun Administratorer',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Enhver har tilladelse til at slette sådanne elementer',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Ingen',
 	'Class:SynchroAttribute' => 'Synchro Attribute~~',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Synchro Data Kilde',
 	'Class:SynchroAttribute/Attribute:attcode' => 'Attribut Kode',
@@ -859,7 +935,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:SynchroAttLinkSet' => 'Synchro Attribut (Linksæt)',
 	'Class:SynchroAttLinkSet/Attribute:row_separator' => 'Række separator',
 	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => 'Attribut separator',
-	'Class:SynchroLog' => 'Synchr Log',
+	'Class:SynchroLog' => 'Synchro Log',
 	'Class:SynchroLog/Attribute:sync_source_id' => 'Synchro Data Kilde',
 	'Class:SynchroLog/Attribute:start_date' => 'Start Dato',
 	'Class:SynchroLog/Attribute:end_date' => 'Slut Dato',
@@ -904,21 +980,15 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Inst.',
 	'Core:ExecProcess:Code1' => 'Forkert kommando eller kommandoen afsluttede med fejl (f.eks. forkert script navn)',
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)',
-
-	// Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
-
-	// Explain working time computing
-	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \\"%1$s\\")~~',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \\"%1$s\\"~~',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \\"%1$s\\" at %2$d%%~~',
-
-	// Bulk export
-	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \\"%1$s\\"~~',
-	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \\"query\\". There is no Query Phrasebook corresponding to the id: \\"%1$s\\".~~',
+	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as "%1$s")~~',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for "%1$s"~~',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for "%1$s" at %2$d%%~~',
+	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter "%1$s"~~',
+	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter "query". There is no Query Phrasebook corresponding to the id: "%1$s".~~',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
 	'Core:BulkExportOf_Class' => '%1$s Export~~',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
@@ -968,24 +1038,26 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s~~',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
 	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
-	'Core:DateTime:Placeholder_d' => 'DD~~', // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'D~~', // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'MM~~', // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'M~~', // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'YYYY~~', // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'YY~~', // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'hh~~', // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'h~~', // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'hh~~', // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'h~~', // Hour 1..12
-	'Core:DateTime:Placeholder_a' => 'am/pm~~', // am/pm (lowercase)
-	'Core:DateTime:Placeholder_A' => 'AM/PM~~', // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'mm~~', // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss~~', // seconds, 2 digits 00..59
+	'Core:DateTime:Placeholder_d' => 'DD~~',
+	'Core:DateTime:Placeholder_j' => 'D~~',
+	'Core:DateTime:Placeholder_m' => 'MM~~',
+	'Core:DateTime:Placeholder_n' => 'M~~',
+	'Core:DateTime:Placeholder_Y' => 'YYYY~~',
+	'Core:DateTime:Placeholder_y' => 'YY~~',
+	'Core:DateTime:Placeholder_H' => 'hh~~',
+	'Core:DateTime:Placeholder_h' => 'h~~',
+	'Core:DateTime:Placeholder_G' => 'hh~~',
+	'Core:DateTime:Placeholder_g' => 'h~~',
+	'Core:DateTime:Placeholder_a' => 'am/pm~~',
+	'Core:DateTime:Placeholder_A' => 'AM/PM~~',
+	'Core:DateTime:Placeholder_i' => 'mm~~',
+	'Core:DateTime:Placeholder_s' => 'ss~~',
 	'Core:Validator:Default' => 'Wrong format~~',
 	'Core:Validator:Mandatory' => 'Please, fill this field~~',
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
 	'Core:Validator:MustSelectOne' => 'Please, select one~~',
+	'Menu:DataSources' => 'Synkroniserings Data Kilder',
+	'Menu:DataSources+' => ''
 ));
 
 //
@@ -994,7 +1066,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
 	'Class:TagSetFieldData+' => '',
-
 	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
 	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
 	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
@@ -1004,10 +1075,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
-
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters, starting with a letter.~~',
 	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',
@@ -1091,8 +1161,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //
@@ -1129,6 +1199,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '',
+    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 ));
 
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,9 +20,11 @@
 
 namespace Combodo\iTop\Renderer;
 
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Exception;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\Field\Field;
+use iFieldRendererMappingsExtension;
 
 /**
  * Description of FormRenderer
@@ -52,8 +54,27 @@ abstract class FormRenderer
 		{
 			$this->oForm = $oForm;
 		}
+		$this->aSupportedFields = [];
 		$this->sBaseLayout = '';
 		$this->InitOutputs();
+
+		/** @var iFieldRendererMappingsExtension $sImplementingClass */
+		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iFieldRendererMappingsExtension::class) as $sImplementingClass) {
+			$aFieldRendererMappings = $sImplementingClass::RegisterSupportedFields();
+			// For each mapping we need to check if it can be registered for the current form renderer or not
+			foreach ($aFieldRendererMappings as $aFieldRendererMapping) {
+				$sFieldClass = $aFieldRendererMapping['field'];
+				$sFormRendererClass = $aFieldRendererMapping['form_renderer'];
+				$sFieldRendererClass = $aFieldRendererMapping['field_renderer'];
+
+				// Mapping not concerning current form renderer, skip it
+				if (false === is_a(static::class, $sFormRendererClass, true)) {
+					continue;
+				}
+
+				$this->AddSupportedField($sFieldClass, $sFieldRendererClass);
+			}
+		}
 	}
 
 	/**

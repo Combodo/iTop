@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -16,35 +16,43 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+//@import 'common/main.scss';
+
 $bootstrap-sass-asset-helper: false !default;
 // Combodo Portal 1.0.0 (Based on Simplex 3.3.6)
 // Variables
 // --------------------------------------------------
 
+$media-mobile: 480px;
+$media-tablet: 768px;
+$media-table-landscape: 1024px;
+$media-laptop: 1600px;
+$media-desktop: 1600px;
 
 //== Colors
 //
 //## Gray and brand colors for use across Bootstrap.
 
-$gray-base:              #000 !default;
-$gray-darker:            lighten($gray-base, 13.5%) !default; // #222
-$gray-dark:              #444 !default;
-$gray:                   #777 !default;
-$gray-light:             #808080 !default;
-$gray-lighter:           #ddd !default;
+$gray-base:              $common-color-grey-900 !default;
+$gray-darker:            $common-color-grey-800 !default;
+$gray-dark:              $common-color-grey-700 !default;
+$gray:                   $common-color-grey-600 !default;
+$gray-light:             $common-color-grey-400 !default;
+$gray-lighter:           $common-color-grey-200 !default;
 
-$white:					#FFFFFF !default;
+$white:					$common-color-white-100 !default;
 
-$combodo-orange:		#EA7D1E !default;
-$combodo-dark-gray:		#585653 !default;
+$combodo-orange:		$common-color-orange-600 !default;
+$combodo-dark-gray:		$gray-dark !default;
 
-$combodo-orange-dark:		darken($combodo-orange, 13.8%) !default;
-$combodo-orange-darker:		darken($combodo-orange, 18%) !default;
-$combodo-dark-gray-dark:	darken($combodo-dark-gray, 13.5%) !default;
-$combodo-dark-gray-darker:	darken($combodo-dark-gray, 18%) !default;
+$combodo-orange-dark:		$common-color-orange-700 !default;
+$combodo-orange-darker:		$common-color-orange-800 !default;
+$combodo-dark-gray-dark:	$common-color-grey-800 !default;
+$combodo-dark-gray-darker:	$common-color-blue-grey-900 !default;
+$combodo-dark-blue-gray:	$common-color-blue-grey-700 !default;
 
-$brand-primary:         $combodo-orange !default;
-$brand-default:         #FFFFFF !default;
+$brand-primary:         $common-color-orange-600 !default;
+$brand-default:        $common-color-grey-100  !default;
 $brand-secondary:       $combodo-dark-gray !default;
 $brand-success:         #469408 !default;
 $brand-info:            #029ACF !default;
@@ -75,14 +83,14 @@ $brand-danger-darker:   darken($brand-danger, 10%) !default;
 //** Background color for `<body>`.
 $body-bg:               #EDECEC !default;
 //** Global text color on `<body>`.
-$text-color:            $gray !default;
+$text-color:            $gray-base !default;
 
 //** Global textual link color.
-$link-color:            darken($combodo-orange, 5%) !default;
+$link-color:            $common-hyperlink-color !default;
 //** Link hover color set via `darken()` function.
-$link-hover-color:      darken($link-color, 5%) !default;
+$link-hover-color:      $common-hyperlink-color--on-hover !default;
 //** Link hover decoration.
-$link-hover-decoration: underline !default;
+$link-hover-decoration: $common-hyperlink-text-decoration--on-hover !default;
 
 
 //== Typography
@@ -943,17 +951,24 @@ $hr-border:                   $gray-lighter !default;
 //
 //##
 
-$messaging-block-medallion-size: 40px !default;
-$messaging-block-entries-margin-x: 60px !default;
-$messaging-self-primary-color: $combodo-dark-gray !default;
-$messaging-self-secondary-color: $white !default;
-$messaging-1st-peer-primary-color: $white !default;
-$messaging-1st-peer-secondary-color: $gray-dark !default;
-$messaging-2nd-peer-primary-color: $white !default;
-$messaging-2nd-peer-secondary-color: $gray-dark !default;
-$messaging-3rd-peer-primary-color: $white !default;
-$messaging-3rd-peer-secondary-color: $gray-dark !default;
-$messaging-4th-peer-primary-color: $white !default;
-$messaging-4th-peer-secondary-color: $gray-dark !default;
-$messaging-5th-peer-primary-color: $white !default;
-$messaging-5th-peer-secondary-color: $gray-dark !default;
+
+// HighlightJS
+
+$ipb-vendors-highlightjs--padding: 0.9rem !default;
+$ipb-vendors-highlightjs--box-shadow: 0 0px 3px 2px inset rgba(0, 0, 0, 0.4) !default;
+$ipb-vendors-highlightjs--border-radius: 4px !default;
+$ipb-vendors-highlightjs--code--padding-x: 5px !default;
+$ipb-vendors-highlightjs--code--padding-y: 3px !default;
+
+$ipb-vendors-highlightjs--background-color: #282b2e !default;
+$ipb-vendors-highlightjs--color: #e0e2e4 !default;
+$ipb-vendors-highlightjs--keyword--color: #93c763 !default;
+$ipb-vendors-highlightjs--number--color: #ffcd22 !default;
+$ipb-vendors-highlightjs--attribute--color: #668bb0 !default;
+$ipb-vendors-highlightjs--regexp--color: #d39745 !default;
+$ipb-vendors-highlightjs--meta--color: #557182 !default;
+$ipb-vendors-highlightjs--tag--color: #8cbbad !default;
+$ipb-vendors-highlightjs--string--color: #ec7600 !default;
+$ipb-vendors-highlightjs--comment--color: #818e96 !default;
+$ipb-vendors-highlightjs--selector-class--color: #A082BD !default;
+$ipb-vendors-highlightjs--code--color: white !default;

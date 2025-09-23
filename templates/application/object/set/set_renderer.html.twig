@@ -1,0 +1,13 @@
+<span data-template-attr-title="friendlyname">
+
+    {# obsolescence #}
+    {% if obsolescence_flag %}
+    <span class="object-ref-icon text_decoration">
+        <span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>
+    </span>
+    {% endif %}
+
+    {# friendly name #}
+    <span data-template-text="friendlyname">{{ friendlyname }}</span>
+
+</span>

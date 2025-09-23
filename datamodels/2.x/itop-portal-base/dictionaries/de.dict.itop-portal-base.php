@@ -1,22 +1,14 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// Portal
+/**
+ *
+ */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Page:DefaultTitle' => '%1$s - Benutzer Portal',
 	'Page:PleaseWait' => 'Bitte warten...',
@@ -104,6 +96,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Alle expandieren',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Alle kollabieren',
 	'Brick:Portal:Browse:Filter:NoData' => 'Kein Eintrag',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Zurück',
 ));
 
 // ManageBrick brick
@@ -128,14 +121,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Object:Name' => 'Object',
 	'Brick:Portal:Object:Form:Create:Title' => 'Neue %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Wird aktualisiert %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Wird aktualisiert %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Bitte folgende Informationen eintragen:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'gespeichert',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s gespeichert',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Objektverknüpfung kopieren',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Kopiert'
 ));

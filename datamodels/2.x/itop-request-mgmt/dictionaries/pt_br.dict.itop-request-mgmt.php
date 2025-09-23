@@ -1,7 +1,13 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ *
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:RequestManagement' => 'Gerenciamento de Solicitações',
@@ -34,6 +40,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Solicitações abertas por tipo',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Solicitações abertas por organização',
 	'Class:UserRequest:KnownErrorList' => 'Erros conhecidos',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 	'Menu:UserRequest:MyWorkOrders' => 'Ordens de serviço atribuídas a mim',
 	'Menu:UserRequest:MyWorkOrders+' => 'Todas as ordens de serviço atribuídas a mim',
 	'Class:Problem:KnownProblemList' => 'Problemas conhecidos',
@@ -115,6 +122,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => '',
 	'Class:UserRequest/Attribute:origin' => 'Origem',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'E-mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => '',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoramento',
@@ -270,7 +281,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:SelectLanguage' => 'Alterar idioma',
 	'Portal:LanguageChangedTo_Lang' => 'Idioma alterado para',
 	'Portal:ChooseYourFavoriteLanguage' => 'Escolha seu idioma favorito',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Conecte a solução a pedidos filhos (ev_autoresolve) e alinhe as seguintes características da requisição: serviço, equipe, agente, info de solução',
 ));

@@ -1,51 +1,14 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//
-// Class: KnownError
-//
+/**
+ *
+ */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:KnownError' => 'Errori conosciuti',
 	'Class:KnownError+' => 'Errori documentati per problemi noti',
@@ -65,7 +28,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:KnownError/Attribute:root_cause+' => '',
 	'Class:KnownError/Attribute:workaround' => 'Soluzione temporanea',
 	'Class:KnownError/Attribute:workaround+' => '',
-	'Class:KnownError/Attribute:solution' => 'Solutione',
+	'Class:KnownError/Attribute:solution' => 'Soluzione',
 	'Class:KnownError/Attribute:solution+' => '',
 	'Class:KnownError/Attribute:error_code' => 'Codice di errore',
 	'Class:KnownError/Attribute:error_code+' => '',
@@ -86,9 +49,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:KnownError/Attribute:version' => 'Versione',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'CIs',
-	'Class:KnownError/Attribute:ci_list+' => '',
+	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
 	'Class:KnownError/Attribute:document_list' => 'Documenti',
-	'Class:KnownError/Attribute:document_list+' => '',
+	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
 ));
 
 //
@@ -97,14 +60,15 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkErrorToFunctionalCI' => 'Link Errore /CIFunzionale',
-	'Class:lnkErrorToFunctionalCI+' => 'Infra impattata dal errore conosciuto',
+	'Class:lnkErrorToFunctionalCI+' => 'Infra impattata dall\'errore conosciuto',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI Nome',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Errore',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Nome Errore',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Nome errore',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Ragione',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
@@ -117,26 +81,27 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkDocumentToError' => 'Link Documento / Errore',
 	'Class:lnkDocumentToError+' => 'Link tra il documento e l\'errore conosciuto',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Documenti',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Nome dei documenti',
 	'Class:lnkDocumentToError/Attribute:document_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:error_id' => 'Errore',
 	'Class:lnkDocumentToError/Attribute:error_id+' => '~~',
-	'Class:lnkDocumentToError/Attribute:error_name' => 'Nome Errore',
+	'Class:lnkDocumentToError/Attribute:error_name' => 'Nome errore',
 	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
 ));
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Menu:ProblemManagement' => 'Gestione dei Problemi',
-	'Menu:ProblemManagement+' => 'Gestione dei Problemi',
+	'Menu:ProblemManagement' => 'Gestione dei problemi',
+	'Menu:ProblemManagement+' => 'Gestione dei problemi',
 	'Menu:Problem:Shortcuts' => 'Scorciatoia',
 	'Menu:NewError' => 'Nuovo errore conosciuto',
-	'Menu:NewError+' => 'Creazione di un Nuovo Errore Conosciuto',
-	'Menu:SearchError' => 'Ricerca per Errori Conosciuti',
-	'Menu:SearchError+' => 'Ricerca per Errori Conosciuti',
+	'Menu:NewError+' => 'Creazione di un nuovo errore conosciuto',
+	'Menu:SearchError' => 'Ricerca per errori conosciuti',
+	'Menu:SearchError+' => 'Ricerca per errori conosciuti',
 	'Menu:Problem:KnownErrors' => 'Tutti gli errori conosciuti',
 	'Menu:Problem:KnownErrors+' => 'Tutti gli errori conosciuti',
 ));

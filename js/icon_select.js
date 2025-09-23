@@ -53,7 +53,7 @@ $(function()
 			});
 			this.element.after(this.oButton);
 			this.element.addClass( "itop-icon-select" ).button();
-			this.element.bind( "reverted.itop-icon-select", function(ev, data) {
+			this.element.on( "reverted.itop-icon-select", function(ev, data) {
 				var idx = me._find_item(data.previous_value);
 				if (idx != null)
 				{
@@ -68,7 +68,7 @@ $(function()
 				this.oButton.after(this.oUploadBtn);
 			}
 			var id = this.element.attr('id');
-			$('#event_bus').bind('tabshow.itop-icon-select'+id, function(event) {
+			$('#event_bus').on('tabshow.itop-icon-select'+id, function(event) {
 				// Compute the offsetX the first time the 'element' becomes visible...
 				var bVisible = me.element.parent().is(':visible');
 				if ((me.options.offsetX == null) && (bVisible))
@@ -143,7 +143,6 @@ $(function()
 		_destroy: function()
 		{
 			this.element.removeClass( "itop-icon-select" );
-			this.oButton.button( "destroy" );
 		},
 		
 		// _setOptions is called with a hash of all options that are changing
@@ -214,9 +213,9 @@ $(function()
 		_upload_dlg: function()
 		{
 			var me = this;
-			this.oUploadDlg = $('<div><p>'+this.options.labels['pick_icon_file']+'</p><p><input type="file" name="file" id="file"/></p></div>');
+			this.oUploadDlg = $('<div><p>'+this.options.labels['pick_icon_file']+'</p><p><input type="file" accept="image/*" name="file" id="file"/></p></div>');
 			this.element.after(this.oUploadDlg);
-			$('input[type=file]').bind('change', function() { me._do_upload(); });
+			$('input[type=file]').on('change', function(event) { me._do_upload(event); });
 			this.oUploadDlg.dialog({
 				width: 400,
 				modal: true,
@@ -235,7 +234,7 @@ $(function()
 			this.oUploadDlg.remove();
 			this.oUploadDlg = null;
 		},
-		_do_upload: function()
+		_do_upload: function(event)
 		{
 			var me = this;
 			var $element = this.oUploadDlg.find('#file');
@@ -244,23 +243,30 @@ $(function()
 			{
 				ReplaceWithAnimation($element);				
 			}
-			$.ajaxFileUpload
-			(
-				{
-					url: this.options.post_upload_to, 
-					secureuri:false,
-					fileElementId:'file',
-					dataType: 'json',
-					success: function (data, status)
-					{
-						me._on_upload_complete(data);
-					},
-					error: function (data, status, e)
-					{
-						me._on_upload_error(data, status, e);
+
+			var file = event.target.files[0];
+			var formData = new FormData();
+			formData.append('file', file);
+			CombodoHTTP.Fetch(this.options.post_upload_to, {
+				method: 'POST',
+				body: formData
+			})
+				.then(response => {
+					if (response.ok) {
+						return response.json();
 					}
-				}
-			);			
+					return response.text().then(text => Promise.reject({text, response}));
+				})
+				.then(data => {
+					// Handle the response data here
+					me._on_upload_complete(data);
+				})
+				.catch(error => {
+					let error_details = error.text === '' ? '' : ' (' + error.text + ')';
+					// Handle the error here
+					me._on_upload_error('Error: ' + error.response.status + ' ' + error.response.statusText + error_details);
+				});
+
 		},
 		_on_upload_complete: function(data)
 		{
@@ -279,18 +285,10 @@ $(function()
 			this.element.trigger('change');
 			this.oUploadDlg.dialog('close');
 		},
-		_on_upload_error: function(data, status, e)
+		_on_upload_error: function(e)
 		{
-			if(data.responseText.indexOf('login-body') !== false)
-			{
-				alert('Sorry, your session has expired. In order to continue, the whole page has to be loaded again.');
-				this.oUploadDlg.dialog('close');
-			}
-			else
-			{
-				alert(e);
-				this.oUploadDlg.closest('.ui-dialog').find('.ui-button').button('enable');
-			}
+			alert(e);
+			this.oUploadDlg.closest('.ui-dialog').find('.ui-button').button('enable');
 		}
 	});
 });

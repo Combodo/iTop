@@ -1,20 +1,7 @@
 <?php
 /*
- * Copyright (C) 2010-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 class MissingQueryArgument extends CoreException {
@@ -101,26 +88,6 @@ abstract class Expression {
 			$aRet[$sName] = Expression::FromOQL($sConditionExpr);
 		}
 		return $aRet;
-	}
-
-
-	/**
-	 * recursive rendering
-	 *
-	 * @deprecated 3.0.0 use RenderExpression
-	 *
-	 * @param array $aArgs used as input by default, or used as output if bRetrofitParams set to True
-	 * @param bool $bRetrofitParams
-	 *
-	 * @return array|string
-	 * @throws \MissingQueryArgument
-	 */
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
-	{
-		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use RenderExpression');
-
-		return $this->RenderExpression(false, $aArgs, $bRetrofitParams);
 	}
 
 	/**
@@ -588,6 +555,15 @@ class BinaryExpression extends Expression
 			case 'LIKE':
 				$sType = 'like';
 				break;
+			case 'NOT LIKE':
+				$sType = 'notlike';
+				break;
+			case 'IN':
+				$sType = 'in';
+				break;
+			case 'NOT IN':
+				$sType = 'notin';
+				break;
 			default:
 				throw new Exception("Operator '$sOperator' not yet supported");
 		}
@@ -652,7 +628,26 @@ class BinaryExpression extends Expression
 			case 'like':
 				$sEscaped = preg_quote($mRight, '/');
 				$sEscaped = str_replace(array('%', '_', '\\\\.*', '\\\\.'), array('.*', '.', '%', '_'), $sEscaped);
-				$result = (int) preg_match("/$sEscaped/i", $mLeft);
+				$pregRes = preg_match("/$sEscaped/i", $mLeft);
+				if ($pregRes === false) {
+					throw new Exception("Error in regular expression '$sEscaped'");
+				}
+				$result = ($pregRes === 1);
+				break;
+			case 'notlike':
+				$sEscaped = preg_quote($mRight, '/');
+				$sEscaped = str_replace(array('%', '_', '\\\\.*', '\\\\.'), array('.*', '.', '%', '_'), $sEscaped);
+				$pregRes = preg_match("/$sEscaped/i", $mLeft);
+				if ($pregRes === false) {
+					throw new Exception("Error in regular expression '$sEscaped'");
+				}
+				$result = ($pregRes !== 1);
+				break;
+			case 'in':
+				$result = in_array($mLeft, $mRight);
+				break;
+			case 'notin':
+				$result = !in_array($mLeft, $mRight);
 				break;
 		}
 		return $result;
@@ -2263,7 +2258,12 @@ class ListExpression extends Expression
 */
 	public function Evaluate(array $aArgs)
 	{
-		throw new Exception('list expression not yet supported');
+		//throw new Exception('list expression not yet supported');
+		$aResult = [];
+		foreach ($this->m_aExpressions as $oExpressions) {
+			$aResult[] = $oExpressions->Evaluate($aArgs);
+		}
+		return $aResult;
 	}
 
 	/**
@@ -2525,7 +2525,7 @@ class NestedQueryExpression extends Expression
 	}
 
 	public function ListParameters() {
-		return $this->m_oNestedQuery->ListParameters();
+		return $this->m_oNestedQuery->GetExpectedArguments();
 	}
 
 	public function RenameParam($sOldName, $sNewName) {
@@ -2860,9 +2860,26 @@ class FunctionExpression extends Expression
 				{
 					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
 				}
+
+				// N°5985 - Since PHP 8.1+, a bug fix on \DateTimeInterval for a date anterior to "1937-05-23" now returns a different number of days. The workaround below aim at making the code work with PHP 7.4 => 8.2+
+				//
+				// $oDate = new DateTimeImmutable('2020-01-02');
+				// $oZero = new DateTimeImmutable('1937-05-22');
+				// $iRet = (int) $oDate->diff($oZero)->format('%a');
+				// echo $iRet."\n"; // 30174 (PHP 8.0) vs 30175 (PHP 8.1+)
+				//
+				// $oDate = new DateTimeImmutable('2020-01-02');
+				// $oZero = new DateTimeImmutable('1937-05-23');
+				// $iRet = (int) $oDate->diff($oZero)->format('%a');
+				// echo $iRet."\n"; // 30174 (PHP 8.0) vs 30174 (PHP 8.1+)
+				//
+				// To work around that we take 1970-01-01 as "zero date" and we offset it with the number of days between 1582-01-01 and 1970-01-01.
+				// Note that as the "target" date could be between 1582-01-01 and 1970-01-01 we have to format the interval with the "-"/"+" sign in order to correct the number of days.
+
 				$oDate = new DateTime($this->m_aArgs[0]->Evaluate($aArgs));
-				$oZero = new DateTime('1582-01-01');
-				$iRet = (int) $oDate->diff($oZero)->format('%a') + 577815;
+				$oZero = new DateTime('1970-01-01');
+				$iDaysBetween19700101And15800101 = 141713;
+				$iRet = (int) $oZero->diff($oDate)->format('%R%a') + 577815 + $iDaysBetween19700101And15800101;
 				return $iRet;
 
 			case 'FROM_DAYS':
@@ -3522,6 +3539,7 @@ class CharConcatWSExpression extends CharConcatExpression
 		$aRes = array();
 		foreach ($this->m_aExpressions as $oExpr)
 		{
+			// TODO: Seems weird, this should rather be $aRes[] = $oExpr->Evaluate($aArgs);
 			$aRes .= $oExpr->Evaluate($aArgs);
 		}
 		return implode($this->m_separator, $aRes);

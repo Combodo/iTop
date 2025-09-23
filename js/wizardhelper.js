@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2021 Combodo SARL
+ * Copyright (C) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -65,6 +65,8 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 		'm_aAllowedValuesRequested': [],
 		'm_oDefaultValue': {},
 		'm_oAllowedValues': {},
+		/** {Object} m_aStaticValues Values of the object that are not meant to be changed by the user. Only there to be used in the workflow for dependencies or to be passed through. */
+		'm_aStaticValues' : {},
 		'm_iFieldsCount': 0,
 		'm_sFormPrefix': sFormPrefix,
 		'm_sState': sState,
@@ -72,6 +74,11 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 		'm_sWizHelperJsVarName': null // if set will use this name when server returns JS code in \WizardHelper::GetJsForUpdateFields
 	};
 	this.m_oData.m_sClass = sClass;
+	/**
+	 * Promise resolve callback when dependencies have been updated
+	 * @since 3.0.3-2 3.0.4 3.1.1 3.2.0 N°6766
+	 * */
+	this.m_oDependenciesUpdatedPromiseResolve = null;
 
 	// Setting optional transition data
 	if (sInitialState !== undefined)
@@ -113,6 +120,18 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 		this.m_oData.m_oCurrentValues[sFieldName] = currentValue;
 	};
 
+	/**
+	 * Set form object values for fields without field widget.
+	 *
+	 * @since 3.1
+	 *
+	 * @param values
+	 * @constructor
+	 */
+	this.SetStaticValues = function(values){
+		this.m_oData.m_aStaticValues = values;
+	};
+
 	this.SetReturnNotEditableFields = function (bReturnNotEditableFields) {
 		this.m_oData.m_bReturnNotEditableFields = bReturnNotEditableFields;
 	};
@@ -138,6 +157,7 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 	};
 
 	this.UpdateFields = function () {
+		const me = this;
 		var aRefreshed = [];
 		//console.log('** UpdateFields **');
 		// Set the full HTML for the input field
@@ -171,12 +191,19 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 			}
 		}
 		// For each "refreshed" field, asynchronously trigger a change in case there are dependent fields to update
-		for (i = 0; i < aRefreshed.length; i++)
-		{
+		for (i = 0; i < aRefreshed.length; i++) {
 			var sString = "$('#"+aRefreshed[i]+"').trigger('change').trigger('update');";
-			window.setTimeout(sString, 1); // Synchronous 'trigger' does nothing, call it asynchronously
+			const oPromise = new Promise(function (resolve) {
+				// Store the resolve callback so we can call it later from outside
+				me.m_oDependenciesUpdatedPromiseResolve = resolve;
+			});
+			oPromise.then(function () {
+				window.setTimeout(sString, 1); // Synchronous 'trigger' does nothing, call it asynchronously
+				// Resolve callback is reinitialized in case the redirection fails for any reason and we might need to retry
+				me.m_oDependenciesUpdatedPromiseResolve = null;
+			});
 		}
-		if($('.blockUI').length == 0) {
+		if($('[data-field-status="blocked"]').length === 0) {
 			$('.disabledDuringFieldLoading').prop("disabled", false).removeClass('disabledDuringFieldLoading');
 		}
 	};
@@ -203,9 +230,11 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 			{operation: 'wizard_helper', json_obj: this.ToJSON()},
 			function (html) {
 				$('#ajax_content').html(html);
-				$('.blockUI').parent().unblock();
+				$('[data-field-status="blocked"]')
+					.attr('data-field-status', 'ready')
+					.unblock();
 
-				if($('.blockUI').length == 0) {
+				if($('[data-field-status="blocked"]').length === 0) {
 					$('.disabledDuringFieldLoading').prop("disabled", false).removeClass('disabledDuringFieldLoading');
 				}
 			}
@@ -221,9 +250,15 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 				$('#wizStep'+G_iCurrentStep).unblock({fadeOut: 0});
 			});
 	};
-	
+
 	this.UpdateCurrentValue = function (sFieldCode) {
 		var $oField = $('#'+this.m_oData.m_oFieldsMap[sFieldCode]);
+		// Static values handling
+		if(this.m_oData.m_aStaticValues.hasOwnProperty(sFieldCode)){
+			const value = this.m_oData.m_aStaticValues[sFieldCode];
+			this.m_oData.m_oCurrentValues[sFieldCode] = value;
+			return value;
+		}
 		$oField.trigger('update_value'); // Give the widget a chance to update its value (if it is aware of this event)
 		var value = $oField.val();
 		if (value == '')
@@ -247,21 +282,22 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 		{
 			sAttCode = aFieldNames[index];
 			sFieldId = this.GetFieldId(sAttCode);
-			if (sFieldId !== undefined)
-			{
+			if (sFieldId !== undefined) {
 				nbOfFieldsToUpdate++;
-				$('#fstatus_'+sFieldId).html('<img src="../images/indicator.gif" />');
-				$('#field_'+sFieldId).find('div').block({
-					message: '',
-					overlayCSS: {backgroundColor: '#f1f1f1', opacity: 0.3}
+				$('#fstatus_' + sFieldId).html('<img src="../images/indicator.gif" />');
+				$('#field_' + sFieldId).find('div')
+					.attr('data-field-status', 'blocked')
+					.block({
+						message: '',
+						overlayCSS: {backgroundColor: '#f1f1f1', opacity: 0.3}
 				});
 				fieldForm = $('#field_' + sFieldId).closest('form');
 				this.RequestAllowedValues(sAttCode);
 			}
 			index++;
 		}
-
-		if ((fieldForm !== null) && ($('.blockUI').length > 0)) {
+		
+		if ((fieldForm !== null) && ($('[data-field-status="blocked"]').length > 0)) {
 			fieldForm.find('button[type=submit]:not(:disabled)').prop("disabled", true).addClass('disabledDuringFieldLoading');
 		}
 
@@ -282,11 +318,7 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 				// Delete any previous instances of CKEditor
 				$('#'+sFormId).find('.htmlEditor').each(function () {
 					var sId = $(this).attr('id');
-					var editorInst = CKEDITOR.instances[sId];
-					if (editorInst.status == 'ready')
-					{
-						editorInst.destroy(true);
-					}
+					CombodoCKEditorHandler.DeleteInstance(sId);
 				});
 
 				$('#'+sFormId).html(data);

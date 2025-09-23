@@ -1,8 +1,10 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+use Combodo\iTop\Application\WebPage\WebPage;
 
 define('ADMIN_PROFILE_NAME', 'Administrator');
 define('PORTAL_PROFILE_NAME', 'Portal user');
@@ -34,14 +36,15 @@ class URP_Profiles extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
-			"category" => "addon/userrights,grant_by_profile,filter",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_urp_profiles",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
+			"category"                   => "addon/userrights,grant_by_profile,filter",
+			"key_type"                   => "autoincrement",
+			"name_attcode"               => "name",
+			"complementary_name_attcode" => array('description'),
+			"state_attcode"              => "",
+			"reconc_keys"                => array(),
+			"db_table"                   => "priv_urp_profiles",
+			"db_key_field"               => "id",
+			"db_finalclass_field"        => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -219,24 +222,37 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
-			"category" => "addon/userrights,grant_by_profile,filter",
-			"key_type" => "autoincrement",
-			"name_attcode" => array("userlogin", "profile"),
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_urp_userprofile",
-			"db_key_field" => "id",
+			"category"            => "addon/userrights,grant_by_profile,filter",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => array("userlogin", "profile"),
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_urp_userprofile",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
+			"is_link" 			  => true, /** @since 3.1.0 N°6482 */
+			'uniqueness_rules'    => array(
+				'no_duplicate' => array(
+					'attributes'  => array(
+						0 => 'userid',
+						1 => 'profileid',
+					),
+					'filter'      => '',
+					'disabled'    => false,
+					'is_blocking' => true,
+				),
+			),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("userlogin", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass" => "User", "jointype" => "", "allowed_values" => null, "sql" => "userid", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("userlogin", array("allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "login")));
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid",
+			array("targetclass" => "URP_Profiles", "jointype" => "", "allowed_values" => null, "sql" => "profileid", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array(), "allow_target_creation" => false)));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("allowed_values" => null, "extkey_attcode" => 'profileid', "target_attcode" => "name")));
 
-		MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('userid', 'profileid', 'reason')); // Attributes to be displayed for the complete details
@@ -432,6 +448,12 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		UR_ACTION_BULK_DELETE => 'bd',
 	);
 
+    /**
+     * @var array $aUsersProfilesList Cache of users' profiles. Hash array of user ID => [profile ID => profile friendlyname, profile ID => profile friendlyname, ...]
+     * @since 2.7.10 3.0.4 3.1.1 3.2.0 N°6887
+     */
+	private $aUsersProfilesList = [];
+
 	// Installation: create the very first user
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
@@ -488,6 +510,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	}
 
 	protected $m_aUserOrgs = array(); // userid -> array of orgid
+	protected $m_aAdministrators = null; // [user id]
 
 	// Built on demand, could be optimized if necessary (doing a query for each attribute that needs to be read)
 	protected $m_aObjectActionGrants = array();
@@ -544,6 +567,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 		// Cache
 		$this->m_aObjectActionGrants = array();
+		$this->m_aAdministrators = null;
 	}
 
 	public function LoadCache()
@@ -686,12 +710,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	 */
 	private function GetAdministrators()
 	{
-		static $aAdministrators = null;
-
-		if ($aAdministrators === null)
+		if ($this->m_aAdministrators === null)
 		{
 			// Find all administrators
-			$aAdministrators = array();
+			$this->m_aAdministrators = array();
 			$oAdministratorsFilter = new DBObjectSearch('User');
 			$oLnkFilter = new DBObjectSearch('URP_UserProfile');
 			$oExpression = new FieldExpression('profileid', 'URP_UserProfile');
@@ -704,10 +726,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$oSet->OptimizeColumnLoad(array('User' => array('login')));
 			while($oUser = $oSet->Fetch())
 			{
-				$aAdministrators[] = $oUser->GetKey();
+				$this->m_aAdministrators[] = $oUser->GetKey();
 			}
 		}
-		return $aAdministrators;
+		return $this->m_aAdministrators;
 	}
 
 	/**
@@ -744,8 +766,12 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
 		$bStatus = null;
+        // Cache user's profiles
+		if(false === array_key_exists($iUser, $this->aUsersProfilesList)){
+		     $this->aUsersProfilesList[$iUser] = UserRights::ListProfiles($oUser);
+		}
 		// Call the API of UserRights because it caches the list for us
-		foreach(UserRights::ListProfiles($oUser) as $iProfile => $oProfile)
+		foreach($this->aUsersProfilesList[$iUser] as $iProfile => $oProfile)
 		{
 			$bGrant = $this->GetProfileActionGrant($iProfile, $sClass, $sAction);
 			if (!is_null($bGrant))
@@ -799,48 +825,37 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		{
 			// We are protected by GetSelectFilter: the object set contains objects allowed or shared for reading
 			// We have to answer NO for objects shared for reading purposes
-			if (self::HasSharing())
-			{
-				$aClassProps = SharedObject::GetSharedClassProperties($sClass);
-				if ($aClassProps)
-				{
-					// This class is shared, GetSelectFilter may allow some objects for read only
-					// But currently we are checking wether the objects might be written...
-					// Let's exclude the objects based on the relevant criteria
+			if (self::HasSharing() && SharedObject::GetSharedClassProperties($sClass)) {
+				// This class is shared, GetSelectFilter may allow some objects for read only
+				// But currently we are checking whether the objects might be written...
+				// Let's exclude the objects based on the relevant criteria
 
-					$sOrgAttCode = self::GetOwnerOrganizationAttCode($sClass);
-					if (!is_null($sOrgAttCode))
-					{
-						$aUserOrgs = $this->GetUserOrgs($oUser, $sClass);
-						if (!is_null($aUserOrgs) && count($aUserOrgs) > 0)
-						{
-							$iCountNO = 0;
-							$iCountYES = 0;
-							$oInstanceSet->Rewind();
-							while($oObject = $oInstanceSet->Fetch())
-							{
-								$iOrg = $oObject->Get($sOrgAttCode);
-								if (in_array($iOrg, $aUserOrgs))
-								{
-									$iCountYES++;
-								}
-								else
-								{
-									$iCountNO++;
-								}
+				// Use $oInstanceSet only if sClass is the main class
+				if (!is_a($oInstanceSet->GetClass(), $sClass, true)) {
+					/** @var \DBObjectSet $oInstanceSet */
+					throw new CoreException(__FUNCTION__.': Expecting object set to be of class '.$sClass.' but it is of class '.$oInstanceSet->GetClass(), ['OQL_Query' => $oInstanceSet->GetFilter()->ToOQL(), 'classes' => $oInstanceSet->GetSelectedClasses()]);
+				}
+				$sOrgAttCode = self::GetOwnerOrganizationAttCode($sClass);
+				if (!is_null($sOrgAttCode)) {
+					$aUserOrgs = $this->GetUserOrgs($oUser, $sClass);
+					if (!is_null($aUserOrgs) && count($aUserOrgs) > 0) {
+						$iCountNO = 0;
+						$iCountYES = 0;
+						$oInstanceSet->Rewind();
+						while ($oObject = $oInstanceSet->Fetch()) {
+							$iOrg = $oObject->Get($sOrgAttCode);
+							if (in_array($iOrg, $aUserOrgs)) {
+								$iCountYES++;
+							} else {
+								$iCountNO++;
 							}
-							if ($iCountNO == 0)
-							{
-								$iPermission = UR_ALLOWED_YES;
-							}
-							elseif ($iCountYES == 0)
-							{
-								$iPermission = UR_ALLOWED_NO;
-							}
-							else
-							{
-								$iPermission = UR_ALLOWED_DEPENDS;
-							}
+						}
+						if ($iCountNO == 0) {
+							$iPermission = UR_ALLOWED_YES;
+						} elseif ($iCountYES == 0) {
+							$iPermission = UR_ALLOWED_NO;
+						} else {
+							$iPermission = UR_ALLOWED_DEPENDS;
 						}
 					}
 				}
@@ -871,11 +886,16 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		// Note: this code is VERY close to the code of IsActionAllowed()
 		$iUser = $oUser->GetKey();
 
+        // Cache user's profiles
+		if(false === array_key_exists($iUser, $this->aUsersProfilesList)){
+			$this->aUsersProfilesList[$iUser] = UserRights::ListProfiles($oUser);
+		}
+
 		// Note: The object set is ignored because it was interesting to optimize for huge data sets
 		//       and acceptable to consider only the root class of the object set
 		$bStatus = null;
 		// Call the API of UserRights because it caches the list for us
-		foreach(UserRights::ListProfiles($oUser) as $iProfile => $oProfile)
+		foreach($this->aUsersProfilesList[$iUser] as $iProfile => $oProfile)
 		{
 			$bGrant = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
 			if (!is_null($bGrant))
@@ -904,8 +924,9 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	}
 
 	/**
-	 * Find out which attribute is corresponding the the dimension 'owner org'
-	 * returns null if no such attribute has been found (no filtering should occur)
+	 * @param string $sClass
+	 * @return string|null Find out which attribute is corresponding the dimension 'owner org'
+	 *                   returns null if no such attribute has been found (no filtering should occur)
 	 */
 	public static function GetOwnerOrganizationAttCode($sClass)
 	{
@@ -950,4 +971,3 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 UserRights::SelectModule('UserRightsProfile');
 
-?>

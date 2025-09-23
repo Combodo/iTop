@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+  <classes>
+    <class id="ClassWithCustomZlist">
+      <presentation>
+        <custom_presentations>
+          <custom_presentation id="my-custom-list" _delta="define">
+            <items>
+              <item id="foo">
+                <rank>10</rank>
+              </item>
+            </items>
+          </custom_presentation>
+        </custom_presentations>
+      </presentation>
+    </class>
+    <class id="ClassWithAttributeLinkedSetDisplayStyle">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <display_style>tab</display_style>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetIndirectDisplayStyle">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSetIndirect">
+          <display_style>tab</display_style>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetWithConstraint">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <with_php_constraint>true</with_php_constraint>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetIndirectWithConstraint">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSetIndirect">
+          <with_php_constraint>true</with_php_constraint>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeEnumSorted">
+      <fields>
+        <field id="enum_unsorted" xsi:type="AttributeEnum">
+          <values>
+            <value id="new">
+              <code>new</code>
+            </value>
+            <value id="assigned">
+              <code>assigned</code>
+            </value>
+            <value id="resolved">
+              <code>resolved</code>
+            </value>
+          </values>
+          <sql>enum_unsorted</sql>
+          <default_value>new</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="enum_sorted_by_code_explicitly" xsi:type="AttributeEnum">
+          <sort_type>code</sort_type>
+          <values>
+            <value id="new">
+              <code>new</code>
+            </value>
+            <value id="assigned">
+              <code>assigned</code>
+            </value>
+            <value id="resolved">
+              <code>resolved</code>
+            </value>
+          </values>
+          <sql>enum_sorted_by_code_explicitly</sql>
+          <default_value>new</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="enum_sorted_by_label" xsi:type="AttributeEnum">
+          <sort_type>label</sort_type>
+          <values>
+            <value id="new">
+              <code>new</code>
+            </value>
+            <value id="assigned">
+              <code>assigned</code>
+            </value>
+            <value id="resolved">
+              <code>resolved</code>
+            </value>
+          </values>
+          <sql>enum_sorted_by_label</sql>
+          <default_value>new</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="enum_sorted_by_rank_and_not_sorted_correctly_in_xml" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
+          <values>
+            <value id="assigned">
+              <code>assigned</code>
+              <rank>2</rank>
+            </value>
+            <value id="resolved">
+              <code>resolved</code>
+              <rank>3</rank>
+            </value>
+            <value id="new">
+              <code>new</code>
+              <rank>1</rank>
+            </value>
+          </values>
+          <sql>enum_sorted_by_rank_and_not_sorted_correctly_in_xml</sql>
+          <default_value>new</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithEventListeners">
+      <event_listeners>
+        <event_listener id="OnUserRequestUpdateDone" _delta="define">
+          <event>EVENT_DB_AFTER_UPDATE</event>
+          <callback>OnUpdateDone</callback>
+          <rank>0</rank>
+        </event_listener>
+      </event_listeners>
+      <methods>
+        <method id="OnUpdateDone" _delta="define">
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[
+  public function OnUserRequestUpdateDone(Combodo\iTop\Service\EventData $oEventData)
+	{
+	      $sEvent = $oEventData->GetEvent();
+	      $aChange = $oEventData->Get('changes');
+	}
+]]></code>
+        </method>
+      </methods>
+    </class>
+  </classes>
+  <events>
+    <event id="EVENT_DB_CHECK_TO_WRITE" _delta="define">
+      <description>Check an object before it is written into the database (no change possible). Call DBObject::AddCheckIssue() to signal an issue</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <replaces>cmdbAbstractObject::DoCheckToWrite</replaces>
+      <event_data>
+        <event_datum id="object">
+          <description>The object to check</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </event_datum>
+      </event_data>
+    </event>
+  </events>
+  <event_listeners>
+    <event_listener id="GlobalFAQRead" _delta="define">
+      <event>EVENT_SERVICE_DISPLAY_OBJECT_DETAILS</event>
+      <filters>
+        <filter>FAQ</filter>
+      </filters>
+      <rank>0</rank>
+      <code><![CDATA[
+      function(\Combodo\iTop\Service\EventData $oEventData)
+      {
+        $sUser = UserRights::GetUser();
+        $oObject = $oEventData->Get('object');
+        $sFaqTitle = $oObject->Get('title');
+        $sId = $oObject->GetKey();
+        IssueLog::Info("FAQ: '{$sFaqTitle}' (id:{$sId}) was read by {$sUser}");
+      }
+]]></code>
+    </event_listener>
+  </event_listeners>
+  <meta>
+    <presentation>
+      <custom_presentations>
+        <custom_presentation id="my-custom-list">
+          <description><![CDATA[Some description of the zlist]]></description>
+        </custom_presentation>
+      </custom_presentations>
+    </presentation>
+  </meta>
+</itop_design>

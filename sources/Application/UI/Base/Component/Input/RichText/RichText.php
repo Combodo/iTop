@@ -1,10 +1,13 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 namespace Combodo\iTop\Application\UI\Base\Component\Input\RichText;
+use Combodo\iTop\Application\Helper\CKEditorHelper;
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Dict;
 use utils;
 
 /**
@@ -19,15 +22,16 @@ class RichText extends UIBlock
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
-		'js/ckeditor/ckeditor.js',
-		'js/ckeditor/adapters/jquery.js',
-		'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js',
-		'js/ckeditor.on-init.js',
+		'js/highlight/highlight.min.js',
 	];
 	public const DEFAULT_CSS_FILES_REL_PATH = [
-		'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css',
 	];
 
+	/**
+	 * @var string|null
+	 * @since 3.2.0
+	 */
+	protected $sName;
 	/** @var string|null */
 	protected $sValue;
 	/** @var array Configuration parameters for the CKEditor instance used with Richtext block */
@@ -37,12 +41,28 @@ class RichText extends UIBlock
 	 * RichText constructor.
 	 *
 	 * @param string|null $sId
+	 * @param string|null $sName
 	 */
-	public function __construct(?string $sId = null)
+	public function __construct(?string $sId = null, ?string $sName = null)
 	{
 		parent::__construct($sId);
+		$this->sName = $sName;
 		$this->sValue = null;
-		$this->aConfig = utils::GetCkeditorPref();
+		$this->aConfig = CKEditorHelper::GetCkeditorConfiguration(true, $this->sValue);
+
+		foreach (CKEditorHelper::GetJSFilesRelPathsForCKEditor() as $sJSFile) {
+			$this->AddJsFileRelPath($sJSFile);
+		}
+	}
+
+	/**
+	 * @see static::$sName
+	 * @return string|null
+	 * @since 3.2.0
+	 */
+	public function GetName(): ?string
+	{
+		return $this->sName;
 	}
 
 	/**
@@ -63,6 +83,9 @@ class RichText extends UIBlock
 	public function SetValue(?string $sValue)
 	{
 		$this->sValue = $sValue;
+		if(is_array($this->aConfig)) {
+			$this->aConfig['detectChanges'] = ['initialValue' => $sValue];
+		}
 
 		return $this;
 	}

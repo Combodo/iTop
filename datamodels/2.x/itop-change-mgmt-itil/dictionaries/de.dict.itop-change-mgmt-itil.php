@@ -1,47 +1,35 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/*
-* @author ITOMIG GmbH <martin.raenker@itomig.de>
-
-* @copyright     Copyright (C) 2021 Combodo SARL
-* @licence	http://opensource.org/licenses/AGPL-3.0
-*		
-*/
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ * @author ITOMIG GmbH <martin.raenker@itomig.de>
+ *
+ */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ChangeManagement' => 'Change Management',
 	'Menu:Change:Overview' => 'Übersicht',
 	'Menu:Change:Overview+' => '',
 	'Menu:NewChange' => 'Neuer Change',
-	'Menu:NewChange+' => 'Ein neues Change Ticket erstellen',
-	'Menu:SearchChanges' => 'Nach Changes suchen',
-	'Menu:SearchChanges+' => 'Nach Change Tickets suchen',
+	'Menu:NewChange+' => 'Einen neuen Change erstellen',
+	'Menu:SearchChanges' => 'Suche nach Changes',
+	'Menu:SearchChanges+' => 'Unter den bestehenden Changes suchen',
 	'Menu:Change:Shortcuts' => 'Shortcuts',
 	'Menu:Change:Shortcuts+' => '',
 	'Menu:WaitingAcceptance' => 'Changes, die auf Annahme warten',
-	'Menu:WaitingAcceptance+' => '',
+	'Menu:WaitingAcceptance+' => 'Changes, die auf Annahme warten',
 	'Menu:WaitingApproval' => 'Changes, die auf Genehmigung warten',
-	'Menu:WaitingApproval+' => '',
+	'Menu:WaitingApproval+' => 'Changes, die auf Genehmigung warten',
 	'Menu:Changes' => 'Offene Changes',
-	'Menu:Changes+' => 'Alle Offene Changes',
-	'Menu:MyChanges' => 'Mir zugewiesene Changes',
-	'Menu:MyChanges+' => 'Mir zugewiesene Changes (als Bearbeiter)',
+	'Menu:Changes+' => 'Offene Changes',
+	'Menu:MyChanges' => 'Changes, die mir zugewiesen sind',
+	'Menu:MyChanges+' => 'Changes, die mir zugewiesen sind',
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes der letzten sieben Tage nach Kategorie',
-	'UI-ChangeManagementOverview-Last-7-days' => 'Anzahl der Changes der letzten sieben Tage',
+	'UI-ChangeManagementOverview-Last-7-days' => 'Zahl der Changes in den letzten sieben Tagen',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes der letzten sieben Tage nach Typ',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes der letzten sieben Tage nach Status',
 	'Tickets:Related:OpenChanges' => 'Offene Changes',
@@ -127,14 +115,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Attribute:parent_name' => 'Parent Change Ref',
 	'Class:Change/Attribute:parent_name+' => '',
 	'Class:Change/Attribute:related_request_list' => 'Verwandte Requests',
-	'Class:Change/Attribute:related_request_list+' => '',
+	'Class:Change/Attribute:related_request_list+' => 'Alle Benutzeranfragen, die mit diesem Change verknüpft sind',
 	'Class:Change/Attribute:related_problems_list' => 'Verwandte Probleme',
-	'Class:Change/Attribute:related_problems_list+' => '',
+	'Class:Change/Attribute:related_problems_list+' => 'Alle Probleme, die mit diesem Change verknüpft sind',
 	'Class:Change/Attribute:related_incident_list' => 'Verwandte Incidents',
-	'Class:Change/Attribute:related_incident_list+' => '',
+	'Class:Change/Attribute:related_incident_list+' => 'Alle Incidents, die mit diesem Change verknüpft sind',
 	'Class:Change/Attribute:child_changes_list' => 'Abgeleitete Changes',
-	'Class:Change/Attribute:child_changes_list+' => '',
-	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Friendly Name',
+	'Class:Change/Attribute:child_changes_list+' => 'Alle abgeleiteten Changes, die mit diesem Change verknüpft sind',
+	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Change Anzeigename',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Attribute:parent_id_finalclass_recall' => 'Change-Typ',
 	'Class:Change/Attribute:parent_id_finalclass_recall+' => '',

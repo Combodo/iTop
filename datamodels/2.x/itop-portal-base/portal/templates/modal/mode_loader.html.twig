@@ -3,7 +3,7 @@
 {% extends 'itop-portal-base/portal/templates/modal/layout.html.twig' %}
 
 {% block pModalContent %}
-	{% include 'itop-portal-base/portal/templates/helpers/loader.html.twig' %}
+    {% include template('loader') %}
 	
 	{% if redirection is defined and redirection.url is defined %}
 		<script type="text/javascript">

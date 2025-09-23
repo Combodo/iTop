@@ -1,0 +1,21 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-home--main-wrapper--before--background-image: url("../img/backgrounds/dots-left-top.svg") !default;
+$ipb-home--main-wrapper--before--background-size: 30% !default;
+
+$ipb-home--main-wrapper--after--background-image: url("../img/backgrounds/dots-right-bottom.svg") !default;
+$ipb-home--main-wrapper--after--background-size: 30% !default;
+
+.ipb-home .ipb-page--main-wrapper:before{
+  background-image: $ipb-home--main-wrapper--before--background-image;
+  background-size: $ipb-home--main-wrapper--before--background-size;
+}
+
+.ipb-home .ipb-page--main-wrapper:after{
+  background-image: $ipb-home--main-wrapper--after--background-image;
+  background-size: $ipb-home--main-wrapper--after--background-size;
+}

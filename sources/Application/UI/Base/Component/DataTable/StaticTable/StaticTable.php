@@ -8,7 +8,7 @@ use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
 use utils;
 
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -36,6 +36,7 @@ class StaticTable extends UIContentBlock
 		'js/dataTables.main.js',
 		'js/dataTables.settings.js',
 		'js/dataTables.pipeline.js',
+		'js/dataTables.row-actions.js',
 	];
 
 	/**
@@ -150,7 +151,10 @@ class StaticTable extends UIContentBlock
 		return "$.post('".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=refreshDashletList', ".json_encode($aParams).", 
 					function (data) {
 						$('#".$this->sId."').DataTable().clear();
-	                    $('#".$this->sId."').dataTable().fnAddData(data);
+						if (data.length>0)
+	                    {
+			                    $('#".$this->sId."').dataTable().fnAddData(data);
+						}
 					});";
 	}
 

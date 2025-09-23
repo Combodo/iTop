@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     https://www.combodo.com/documentation/combodo-software-license.html
  *
  */
@@ -49,6 +49,11 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnReadCredentials(&$iErrorCode)
 	{
+		if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+			// Not allowed if not already connected
+			return LoginWebPage::LOGIN_FSM_CONTINUE;
+		}
+
 		if (empty(Session::Get('login_mode')) || Session::Get('login_mode') == static::LOGIN_MODE)
 		{
 			static::InitCASClient();
@@ -114,6 +119,10 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		if (Session::Get('login_mode') == static::LOGIN_MODE)
 		{
 			Session::Unset('phpCAS');
+			if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+				// don't display the login page
+				return LoginWebPage::LOGIN_FSM_CONTINUE;
+			}
 			if ($iErrorCode != LoginWebPage::EXIT_CODE_MISSINGLOGIN)
 			{
 				$oLoginWebPage = new LoginWebPage();
@@ -151,9 +160,8 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 	private static function InitCASClient()
 	{
 		$bCASDebug = Config::Get('cas_debug');
-		if ($bCASDebug)
-		{
-			phpCAS::setDebug(APPROOT.'log/cas.log');
+		if ($bCASDebug) {
+			phpCAS::setLogger(new CASLogger(APPROOT.'log/cas.log'));
 		}
 
 		// Initialize phpCAS
@@ -161,20 +169,52 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		$sCASHost = Config::Get('cas_host');
 		$iCASPort = Config::Get('cas_port');
 		$sCASContext = Config::Get('cas_context');
-		phpCAS::client($sCASVersion, $sCASHost, $iCASPort, $sCASContext, false /* session already started */);
+		$sServiceBaseURL = Config::Get('service_base_url', self::GetServiceBaseURL());
+		if (!phpCAS::isInitialized()) {
+			phpCAS::client($sCASVersion, $sCASHost, $iCASPort, $sCASContext, $sServiceBaseURL, false /* session already started */);
+		}
 		$sCASCACertPath = Config::Get('cas_server_ca_cert_path');
-		if (empty($sCASCACertPath))
-		{
+		if (empty($sCASCACertPath)) {
 			// If no certificate authority is provided, do not attempt to validate
 			// the server's certificate
 			// THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION.
 			// VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL!
 			phpCAS::setNoCasServerValidation();
-		}
-		else
-		{
+		} else {
 			phpCAS::setCasServerCACert($sCASCACertPath);
 		}
+	}
+
+	private static function GetServiceBaseURL()
+	{
+		$protocol = $_SERVER['REQUEST_SCHEME'];
+		$protocol .= '://';
+		if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+			// explode the host list separated by comma and use the first host
+			$hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
+			// see rfc7239#5.3 and rfc7230#2.7.1: port is in HTTP_X_FORWARDED_HOST if non default
+			return $protocol . $hosts[0];
+		} else if (!empty($_SERVER['HTTP_X_FORWARDED_SERVER'])) {
+			$server_url = $_SERVER['HTTP_X_FORWARDED_SERVER'];
+		} else {
+			if (empty($_SERVER['SERVER_NAME'])) {
+				$server_url = $_SERVER['HTTP_HOST'];
+			} else {
+				$server_url = $_SERVER['SERVER_NAME'];
+			}
+		}
+		if (!strpos($server_url, ':')) {
+			if (empty($_SERVER['HTTP_X_FORWARDED_PORT'])) {
+				$server_port = $_SERVER['SERVER_PORT'];
+			} else {
+				$ports = explode(',', $_SERVER['HTTP_X_FORWARDED_PORT']);
+				$server_port = $ports[0];
+			}
+
+			$server_url .= ':';
+			$server_url .= $server_port;
+		}
+		return $protocol . $server_url;
 	}
 
 	private function DoUserProvisioning($sLogin)
@@ -446,7 +486,7 @@ class CASUserProvisioning
 		$aAllProfiles = array();
 		while($oProfile = $oProfilesSet->Fetch())
 		{
-			$aAllProfiles[strtolower($oProfile->GetName())] = $oProfile->GetKey();
+			$aAllProfiles[mb_strtolower($oProfile->GetName())] = $oProfile->GetKey();
 		}
 
 		// Translate the CAS/LDAP group names into iTop profile names
@@ -456,9 +496,9 @@ class CASUserProvisioning
 		{
 			if (preg_match($sPattern, $sGroupName, $aMatches))
 			{
-				if (array_key_exists(strtolower($aMatches[1]), $aAllProfiles))
+				if (array_key_exists(mb_strtolower($aMatches[1]), $aAllProfiles))
 				{
-					$aProfiles[] = $aAllProfiles[strtolower($aMatches[1])];
+					$aProfiles[] = $aAllProfiles[mb_strtolower($aMatches[1])];
 					phpCAS::log("Info: Adding the profile '{$aMatches[1]}' from CAS.");
 				}
 				else
@@ -480,10 +520,10 @@ class CASUserProvisioning
 			$aCASDefaultProfiles = explode(';', $sCASDefaultProfiles);
 			foreach($aCASDefaultProfiles as $sDefaultProfileName)
 			{
-				if (array_key_exists(strtolower($sDefaultProfileName), $aAllProfiles))
+				if (array_key_exists(mb_strtolower($sDefaultProfileName), $aAllProfiles))
 				{
-					$aProfiles[] = $aAllProfiles[strtolower($sDefaultProfileName)];
-					phpCAS::log("Info: Adding the default profile '".$aAllProfiles[strtolower($sDefaultProfileName)]."' from CAS.");
+					$aProfiles[] = $aAllProfiles[mb_strtolower($sDefaultProfileName)];
+					phpCAS::log("Info: Adding the default profile '".$aAllProfiles[mb_strtolower($sDefaultProfileName)]."' from CAS.");
 				}
 				else
 				{

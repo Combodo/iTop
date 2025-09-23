@@ -1,0 +1,17 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-panel--border-radius: $common-border-radius-300!default;
+
+.ipb-panel {
+  border-radius: 0 $common-border-radius-500 $common-border-radius-500 $common-border-radius-500;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+.panel-title {
+  @extend %common-font-ral-med-200;
+}

@@ -1,0 +1,96 @@
+.ace-eclipse .ace_gutter {
+  background: unset !important;
+  border-right: unset !important;
+  color: $ibo-color-grey-400 !important;
+}
+.ace-eclipse .ace_print-margin {
+  width: 1px !important;
+  background: $ibo-color-grey-500 !important;
+}
+.ace-eclipse {
+  background-color: $ibo-color-grey-800 !important;
+  color: $ibo-color-grey-200 !important;
+}
+.ace-eclipse .ace_entity.ace_other.ace_attribute-name,
+.ace-eclipse .ace_storage {
+  color: $ibo-color-grey-200 !important;
+}
+.ace-eclipse .ace_cursor {
+  color: $ibo-color-grey-200 !important;
+}
+.ace-eclipse .ace_string.ace_regexp {
+  color: $ibo-color-red-600 !important;
+}
+.ace-eclipse .ace_marker-layer .ace_active-line {
+  &:only-child {
+    background: $ibo-color-grey-600 !important;
+  }
+
+  &:not(:only-child) {
+    background: $ibo-color-grey-700 !important;
+  }
+}
+.ace-eclipse .ace_marker-layer .ace_selection {
+  background: $ibo-color-grey-500 !important;
+}
+.ace-eclipse.ace_multiselect .ace_selection.ace_start {
+  box-shadow: 0 0 3px 0px $ibo-color-grey-800 !important;
+}
+.ace-eclipse .ace_marker-layer .ace_step {
+  background: $nord13 !important;
+}
+.ace-eclipse .ace_marker-layer .ace_bracket {
+  margin: -1px 0 0 -1px !important;
+  border: 1px solid $ibo-color-primary-300 !important;
+}
+.ace-eclipse .ace_gutter-active-line {
+  background-color: $ibo-color-grey-600 !important;
+}
+.ace-eclipse .ace_marker-layer .ace_selected-word {
+  border: 1px solid $ibo-color-primary-300 !important;
+}
+.ace-eclipse .ace_invisible {
+  color: $ibo-color-grey-500 !important;
+}
+.ace-eclipse .ace_keyword,
+.ace-eclipse .ace_meta,
+.ace-eclipse .ace_support.ace_class,
+.ace-eclipse .ace_support.ace_type {
+  color: $ibo-color-primary-500 !important;
+}
+.ace-eclipse .ace_constant.ace_character,
+.ace-eclipse .ace_constant.ace_other {
+  color: $ibo-color-grey-200 !important;
+}
+.ace-eclipse .ace_constant.ace_language {
+  color: $ibo-color-primary-800 !important;
+}
+.ace-eclipse .ace_constant.ace_escape {
+  color: $nord13 !important;
+}
+.ace-eclipse .ace_constant.ace_numeric {
+  color: $nord15 !important;
+}
+.ace-eclipse .ace_fold {
+  background-color: $ibo-color-grey-500 !important;
+  border-color: $ibo-color-grey-200 !important;
+}
+.ace-eclipse .ace_entity.ace_name.ace_function,
+.ace-eclipse .ace_entity.ace_name.ace_tag,
+.ace-eclipse .ace_support.ace_function,
+.ace-eclipse .ace_variable,
+.ace-eclipse .ace_variable.ace_language {
+  color: #8fbcbb !important;
+}
+.ace-eclipse .ace_string {
+  color: $nord14 !important;
+}
+.ace-eclipse .ace_comment {
+  color: $nord7 !important;
+}
+.ace-eclipse .ace_indent-guide {
+  box-shadow: inset -1px 0 0 0 $ibo-color-grey-600 !important;
+}
+.ace-eclipse .ace_indent-guide-active {
+  box-shadow: inset -1px 0 0 0 $ibo-color-grey-400 !important;
+}

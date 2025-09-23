@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2010-2021 Combodo SARL
+ * Copyright (c) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -19,6 +19,12 @@
  *
  */
 
+use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
+
+require_once(APPROOT.'setup/modulediscovery/ModuleFileReader.php');
+
 class MissingDependencyException extends CoreException
 {
 	/**
@@ -31,7 +37,7 @@ class MissingDependencyException extends CoreException
 
 	/**
 	 * @return string HTML to print to the user the modules impacted
-	 * @since 2.7.7 3.0.2 3.1.0 PR #280
+	 * @since 2.7.7 3.0.2 3.1.0 N°5090 PR #280
 	 */
 	public function getHtmlDesc($sHighlightHtmlBegin = null, $sHighlightHtmlEnd = null)
 	{
@@ -40,15 +46,17 @@ class MissingDependencyException extends CoreException
 <ul>
 HTML;
 		foreach ($this->aModulesInfo as $sModuleId => $aModuleErrors) {
-			$sModuleLabel = $aModuleErrors['module']['label'];
+			$sModuleLabel = utils::EscapeHtml($aModuleErrors['module']['label']);
+			$sModuleId = utils::EscapeHtml($sModuleId);
 			$aModuleMissingDependencies = $aModuleErrors['dependencies'];
 			$sErrorMessage .= <<<HTML
-	<li><strong>{$sModuleLabel}</strong> ({$sModuleId}):
+	<li><strong>$sModuleLabel</strong> ($sModuleId):
 		<ul>
 HTML;
 
 			foreach ($aModuleMissingDependencies as $sMissingModule) {
-				$sErrorMessage .= "<li>{$sMissingModule}</li>";
+				$sMissingModule = utils::EscapeHtml($sMissingModule);
+				$sErrorMessage .= "<li>$sMissingModule</li>";
 			}
 			$sErrorMessage .= <<<HTML
 		</ul>
@@ -76,7 +84,7 @@ class ModuleDiscovery
 		'doc.manual_setup' => 'url',
 		'doc.more_information' => 'url',
 	);
-	
+
 
 	// Cache the results and the source directories
 	protected static $m_aSearchDirs = null;
@@ -89,6 +97,9 @@ class ModuleDiscovery
 
 	// ModulePath is used by AddModule to get the path of the module being included (in ListModuleFiles)
 	protected static $m_sModulePath = null;
+
+	private static PhpExpressionEvaluator $oPhpExpressionEvaluator;
+
 	protected static function SetModulePath($sModulePath)
 	{
 		self::$m_sModulePath = $sModulePath;
@@ -103,6 +114,9 @@ class ModuleDiscovery
 	 */
 	public static function AddModule($sFilePath, $sId, $aArgs)
 	{
+		if (is_null($aArgs)||! is_array($aArgs)){
+			throw new ModuleFileReaderException("Error parsing module file args", 0, null, $sFilePath);
+		}
 		if (!array_key_exists('itop_version', $aArgs))
 		{
 			// Assume 1.0.2
@@ -113,7 +127,7 @@ class ModuleDiscovery
 			if (!array_key_exists($sArgName, $aArgs))
 			{
 				throw new Exception("Module '$sId': missing argument '$sArgName'");
-		   }
+			}
 		}
 
 		$aArgs['root_dir'] = dirname($sFilePath);
@@ -148,7 +162,7 @@ class ModuleDiscovery
 			self::$m_aModuleVersionByName[$sModuleName]['version'] = $sModuleVersion;
 			self::$m_aModuleVersionByName[$sModuleName]['id'] = $sId;
 		}
-		
+
 		self::$m_aModules[$sId] = $aArgs;
 
 		// Now keep the relative paths, as provided
@@ -216,12 +230,12 @@ class ModuleDiscovery
 	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
 	 * @return array
 	 * @throws \MissingDependencyException
-*/
+	 */
 	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		// Order the modules to take into account their inter-dependencies
-		$aDependencies = array();
-		$aSelectedModules = array();
+		$aDependencies = [];
+		$aSelectedModules = [];
 		foreach($aModules as $sId => $aModule)
 		{
 			list($sModuleName, ) = self::GetModuleName($sId);
@@ -232,7 +246,7 @@ class ModuleDiscovery
 			}
 		}
 		ksort($aDependencies);
-		$aOrderedModules = array();
+		$aOrderedModules = [];
 		$iLoopCount = 1;
 		while(($iLoopCount < count($aModules)) && (count($aDependencies) > 0) )
 		{
@@ -256,15 +270,26 @@ class ModuleDiscovery
 		}
 		if ($bAbortOnMissingDependency && count($aDependencies) > 0)
 		{
-			$aModulesInfo = array();
-			$aModuleDeps = array();			
+			$aModulesInfo = [];
+			$aModuleDeps = [];
 			foreach($aDependencies as $sId => $aDeps)
 			{
 				$aModule = $aModules[$sId];
-				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on ".implode(' + ', $aDeps);
-				$aModulesInfo[$sId] = array('module' => $aModule, 'dependencies' => $aDeps);
+				$aDepsWithIcons = [];
+				foreach($aDeps as $sIndex => $sDepId)
+				{
+					if (self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules))
+					{
+						$aDepsWithIcons[$sIndex] = '✅ ' . $sDepId;
+					} else
+					{
+						$aDepsWithIcons[$sIndex] = '❌ ' .  $sDepId;
+					}
+				}
+				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on: ".implode(' + ', $aDepsWithIcons);
+				$aModulesInfo[$sId] = array('module' => $aModule, 'dependencies' => $aDepsWithIcons);
 			}
-			$sMessage = "The following modules have unmet dependencies: ".implode(', ', $aModuleDeps);
+			$sMessage = "The following modules have unmet dependencies:\n".implode(",\n", $aModuleDeps);
 			$oException = new MissingDependencyException($sMessage);
 			$oException->aModulesInfo = $aModulesInfo;
 			throw $oException;
@@ -289,7 +314,16 @@ class ModuleDiscovery
 		// The de-duplication is now done directly by the AddModule method
 		return $aModules;
 	}
-		
+
+	private static function GetPhpExpressionEvaluator(): PhpExpressionEvaluator
+	{
+		if (!isset(static::$oPhpExpressionEvaluator)) {
+			static::$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+		}
+
+		return static::$oPhpExpressionEvaluator;
+	}
+
 	protected static function DependencyIsResolved($sDepString, $aOrderedModules, $aSelectedModules)
 	{
 		$bResult = false;
@@ -336,19 +370,19 @@ class ModuleDiscovery
 							if (version_compare($sCurrentVersion, $sExpectedVersion, $sOperator))
 							{
 								$aReplacements[$sModuleId] = '(true)'; // Add parentheses to protect against invalid condition causing
-																	   // a function call that results in a runtime fatal error								
+								// a function call that results in a runtime fatal error
 							}
 							else
 							{
 								$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
-																	   // a function call that results in a runtime fatal error								
+								// a function call that results in a runtime fatal error
 							}
 						}
 						else
 						{
 							// module is not present
 							$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
-																    // a function call that results in a runtime fatal error
+							// a function call that results in a runtime fatal error
 						}
 					}
 				}
@@ -372,10 +406,10 @@ class ModuleDiscovery
 			else
 			{
 				$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $sDepString);
-				$bOk = @eval('$bResult = '.$sBooleanExpr.'; return true;');
-				if ($bOk == false)
-				{
-					SetupLog::Warning("Eval of '$sBooleanExpr' returned false");
+				try{
+					$bResult = self::GetPhpExpressionEvaluator()->ParseAndEvaluateBooleanExpression($sBooleanExpr);
+				} catch(ModuleFileReaderException $e){
+					//logged already
 					echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";
 				}
 			}
@@ -400,20 +434,20 @@ class ModuleDiscovery
 		{
 			self::ResetCache();
 		}
-		
+
 		if (is_null(self::$m_aSearchDirs))
 		{
 			self::$m_aSearchDirs = $aSearchDirs;
-			
+
 			// Not in cache, let's scan the disk
 			foreach($aSearchDirs as $sSearchDir)
 			{
-				$sLookupDir = realpath($sSearchDir);			
+				$sLookupDir = realpath($sSearchDir);
 				if ($sLookupDir == '')
 				{
 					throw new Exception("Invalid directory '$sSearchDir'");
 				}
-	
+
 				clearstatcache();
 				self::ListModuleFiles(basename($sSearchDir), dirname($sSearchDir));
 			}
@@ -425,7 +459,7 @@ class ModuleDiscovery
 			return self::GetModules($bAbortOnMissingDependency, $aModulesToLoad);
 		}
 	}
-	
+
 	public static function ResetCache()
 	{
 		self::$m_aSearchDirs = null;
@@ -437,7 +471,7 @@ class ModuleDiscovery
 	 * Helper function to interpret the name of a module
 	 * @param $sModuleId string Identifier of the module, in the form 'name/version'
 	 * @return array(name, version)
-	 */    
+	 */
 	public static function GetModuleName($sModuleId)
 	{
 		$aMatches = array();
@@ -466,7 +500,7 @@ class ModuleDiscovery
 	{
 		static $iDummyClassIndex = 0;
 		$sDirectory = $sRootDir.'/'.$sRelDir;
-		
+
 		if ($hDir = opendir($sDirectory))
 		{
 			// This is the correct way to loop over the directory. (according to the documentation)
@@ -483,42 +517,12 @@ class ModuleDiscovery
 				else if (preg_match('/^module\.(.*).php$/i', $sFile, $aMatches))
 				{
 					self::SetModulePath($sRelDir);
-					try
-					{
-						$sModuleFileContents = file_get_contents($sDirectory.'/'.$sFile);
-						$sModuleFileContents = str_replace(array('<?php', '?>'), '', $sModuleFileContents);
-						$sModuleFileContents = str_replace('__FILE__', "'".addslashes($sDirectory.'/'.$sFile)."'", $sModuleFileContents);
-						preg_match_all('/class ([A-Za-z0-9_]+) extends ([A-Za-z0-9_]+)/', $sModuleFileContents, $aMatches);
-						//print_r($aMatches);
-						$idx = 0;
-						foreach($aMatches[1] as $sClassName)
-						{
-							if (class_exists($sClassName))
-							{
-								// rename the class inside the code to prevent a "duplicate class" declaration
-								// and change its parent class as well so that nobody will find it and try to execute it
-								$sModuleFileContents = str_replace($sClassName.' extends '.$aMatches[2][$idx], $sClassName.'_'.($iDummyClassIndex++).' extends DummyHandler', $sModuleFileContents);
-							}
-							$idx++;
-						}
-						$bRet = eval($sModuleFileContents);
-						
-						if ($bRet === false)
-						{
-							SetupLog::Warning("Eval of $sRelDir/$sFile returned false");
-						}
-						
-						//echo "<p>Done.</p>\n";
-					}
-					catch(ParseError $e)
-					{
-					    // PHP 7
-						SetupLog::Warning("Eval of $sRelDir/$sFile caused an exception: ".$e->getMessage()." at line ".$e->getLine());
-					}
-					catch(Exception $e)
-					{
-						// Continue...
-						SetupLog::Warning("Eval of $sRelDir/$sFile caused an exception: ".$e->getMessage());
+					$sModuleFilePath = $sDirectory.'/'.$sFile;
+					try {
+						$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sDirectory.'/'.$sFile);
+						SetupWebPage::AddModule($sModuleFilePath, $aModuleInfo[1], $aModuleInfo[2]);
+					} catch(ModuleFileReaderException $e){
+						continue;
 					}
 				}
 			}
@@ -535,7 +539,7 @@ class ModuleDiscovery
 /** Alias for backward compatibility with old module files in which
  *  the declaration of a module invokes SetupWebPage::AddModule()
  *  whereas the new form is ModuleDiscovery::AddModule()
- */  
+ */
 class SetupWebPage extends ModuleDiscovery
 {
 	// For backward compatibility with old modules...
@@ -562,9 +566,9 @@ class SetupWebPage extends ModuleDiscovery
 	public static function log($sText)
 	{
 		SetupLog::Ok($sText);
-	}	
+	}
 }
-		
+
 /** Ugly patch !!!
  * In order to be able to analyse / load several times
  * the same module file, we rename the class (to avoid duplicate class definitions)

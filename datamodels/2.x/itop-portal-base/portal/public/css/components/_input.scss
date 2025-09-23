@@ -1,0 +1,37 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-form-control--border-radius: $common-border-radius-300 !default;
+$ipb-form-control--box-shadow: none !default;
+$ipb-form-control--input-group-addon--border-top-right-radius: 0 !default;
+$ipb-form-control--input-group-addon--border-bottom-right-radius: 0 !default;
+
+$ipb-input-group-addon--border-radius: $ipb-form-control--border-radius !default;
+
+$ipb-input-group-addon--form-control--border-top-left-radius: 0 !default;
+$ipb-input-group-addon--form-control--border-bottom-left-radius: 0 !default;
+
+$ipb-form-control--is-focused--box-shadow: none !default;
+
+.form-control {
+  border-radius: $ipb-form-control--border-radius;
+  -webkit-box-shadow: $ipb-form-control--box-shadow;
+  box-shadow: $ipb-form-control--box-shadow;
+  &:focus {
+    box-shadow: $ipb-form-control--is-focused--box-shadow;
+    -webkit-box-shadow: $ipb-form-control--is-focused--box-shadow;
+  }
+}
+
+.form-control:has(+ .input-group-addon) {
+  border-top-right-radius: $ipb-form-control--input-group-addon--border-top-right-radius;
+  border-bottom-right-radius: $ipb-form-control--input-group-addon--border-bottom-right-radius;
+}
+
+.form-control + .input-group-addon {
+  border-top-left-radius: $ipb-input-group-addon--form-control--border-top-left-radius;
+  border-bottom-left-radius: $ipb-input-group-addon--form-control--border-bottom-left-radius;
+}

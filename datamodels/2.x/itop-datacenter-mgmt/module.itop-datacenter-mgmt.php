@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-datacenter-mgmt/3.1.0',
+	'itop-datacenter-mgmt/3.3.0',
 	array(
 		// Identification
 		//
@@ -35,10 +35,7 @@ SetupWebPage::AddModule(
 
 		// Components
 		//
-		'datamodel' => array(
-			'model.itop-datacenter-mgmt.php',
-			
-		),
+		'datamodel' => array(),
 		'webservice' => array(
 			
 		),

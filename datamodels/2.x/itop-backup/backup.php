@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+use Combodo\iTop\Application\WebPage\Page;
+
 if (!defined('APPROOT'))
 {
 	if (file_exists(__DIR__.'/../../approot.inc.php'))
@@ -69,7 +70,7 @@ function Usage($oP)
 		$oP->p('auth_user: login, must be administrator');
 		$oP->p('auth_pwd: ...');
 	}
-	$oP->p('backup_file [optional]: name of the file to store the backup into. Follows the PHP strftime format spec. The following placeholders are available: __HOST__, __DB__, __SUBNAME__');
+	$oP->p('backup_file [optional]: name of the file to store the backup into. Follows the PHP strftime() format spec (https://www.php.net/manual/fr/function.strftime.php). The following placeholders are available: __HOST__, __DB__, __SUBNAME__');
 	$oP->p('simulate [optional]: set to check the name of the file that would be created');
 	$oP->p('mysql_bindir [optional]: specify the path for mysqldump');
 
@@ -85,7 +86,7 @@ function Usage($oP)
 }
 
 /**
- * @param \Page $oP
+ * @param Page $oP
  *
  * @throws \DictExceptionUnknownLanguage
  * @throws \OQLException
@@ -155,4 +156,4 @@ function ExecuteMainOperation($oP){
 	}
 }
 
-require_once(dirname(__FILE__).'/common.cli-execution.php');
+require_once(__DIR__.'/common.cli-execution.php');

@@ -24,11 +24,14 @@ class DateCaster
 {
     private const PERIOD_LIMIT = 3;
 
+    /**
+     * @return array
+     */
     public static function castDateTime(\DateTimeInterface $d, array $a, Stub $stub, bool $isNested, int $filter)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
-        $location = $d->getTimezone()->getLocation();
-        $fromNow = (new \DateTime())->diff($d);
+        $location = $d->getTimezone() ? $d->getTimezone()->getLocation() : null;
+        $fromNow = (new \DateTimeImmutable())->diff($d);
 
         $title = $d->format('l, F j, Y')
             ."\n".self::formatInterval($fromNow).' from now'
@@ -47,6 +50,9 @@ class DateCaster
         return $a;
     }
 
+    /**
+     * @return array
+     */
     public static function castInterval(\DateInterval $interval, array $a, Stub $stub, bool $isNested, int $filter)
     {
         $now = new \DateTimeImmutable('@0', new \DateTimeZone('UTC'));
@@ -76,10 +82,13 @@ class DateCaster
         return $i->format(rtrim($format));
     }
 
+    /**
+     * @return array
+     */
     public static function castTimeZone(\DateTimeZone $timeZone, array $a, Stub $stub, bool $isNested, int $filter)
     {
         $location = $timeZone->getLocation();
-        $formatted = (new \DateTime('now', $timeZone))->format($location ? 'e (P)' : 'P');
+        $formatted = (new \DateTimeImmutable('now', $timeZone))->format($location ? 'e (P)' : 'P');
         $title = $location && \extension_loaded('intl') ? \Locale::getDisplayRegion('-'.$location['country_code']) : '';
 
         $z = [Caster::PREFIX_VIRTUAL.'timezone' => new ConstStub($formatted, $title)];
@@ -87,22 +96,25 @@ class DateCaster
         return $filter & Caster::EXCLUDE_VERBOSE ? $z : $z + $a;
     }
 
+    /**
+     * @return array
+     */
     public static function castPeriod(\DatePeriod $p, array $a, Stub $stub, bool $isNested, int $filter)
     {
         $dates = [];
         foreach (clone $p as $i => $d) {
             if (self::PERIOD_LIMIT === $i) {
                 $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-                $dates[] = sprintf('%s more', ($end = $p->getEndDate())
+                $dates[] = \sprintf('%s more', ($end = $p->getEndDate())
                     ? ceil(($end->format('U.u') - $d->format('U.u')) / ((int) $now->add($p->getDateInterval())->format('U.u') - (int) $now->format('U.u')))
                     : $p->recurrences - $i
                 );
                 break;
             }
-            $dates[] = sprintf('%s) %s', $i + 1, self::formatDateTime($d));
+            $dates[] = \sprintf('%s) %s', $i + 1, self::formatDateTime($d));
         }
 
-        $period = sprintf(
+        $period = \sprintf(
             'every %s, from %s%s %s',
             self::formatInterval($p->getDateInterval()),
             $p->include_start_date ? '[' : ']',
@@ -122,6 +134,6 @@ class DateCaster
 
     private static function formatSeconds(string $s, string $us): string
     {
-        return sprintf('%02d.%s', $s, 0 === ($len = \strlen($t = rtrim($us, '0'))) ? '0' : ($len <= 3 ? str_pad($t, 3, '0') : $us));
+        return \sprintf('%02d.%s', $s, 0 === ($len = \strlen($t = rtrim($us, '0'))) ? '0' : ($len <= 3 ? str_pad($t, 3, '0') : $us));
     }
 }

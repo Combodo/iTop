@@ -1,37 +1,12 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * Localized data
- * @author      Benjamin Planque <benjamin.planque@combodo.com>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
+ * Spanish Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-//
-// Class: Organization
-//
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Organization' => 'Organización',
 	'Class:Organization+' => 'Organización',
@@ -64,6 +39,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 // Class: Location
 //
+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Location' => 'Localidad',
 	'Class:Location+' => 'Cualquier Tipo de Localidad: Región, País, Ciudad, Sitio, Edificio, Piso, Cuarto, Rack,...',
@@ -96,9 +72,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 // Class: Contact
 //
+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Contact' => 'Contacto',
 	'Class:Contact+' => 'Contacto',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:Contact/Attribute:name' => 'Nombre',
 	'Class:Contact/Attribute:name+' => 'Nombre del Contacto',
 	'Class:Contact/Attribute:status' => 'Estatus',
@@ -132,9 +110,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 // Class: Person
 //
+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Person' => 'Persona',
 	'Class:Person+' => 'Persona',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Apellidos',
 	'Class:Person/Attribute:name+' => 'Apellidos',
 	'Class:Person/Attribute:first_name' => 'Nombre',
@@ -155,6 +135,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Person/Attribute:team_list+' => 'Grupos',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
 	'Class:Person/Attribute:tickets_list+' => 'Tickets',
+	'Class:Person/Attribute:user_list' => 'Usuarios',
+	'Class:Person/Attribute:user_list+' => 'Todos los Usuarios asociados a esta persona',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Nombre del Jefe',
 	'Class:Person/Attribute:manager_id_friendlyname+' => 'Nombre del Jefe',
 	'Class:Person/Attribute:picture' => 'Fotografía',
@@ -163,14 +145,17 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Person/UniquenessRule:employee_number' => 'Ya existe una persona en la organiación \'$this->org_name$\', con el mismo número de empleado',
 	'Class:Person/UniquenessRule:name+' => 'El nombre del empleado debe ser único dentro de su Organización',
 	'Class:Person/UniquenessRule:name' => 'Ya existe una persona en la organiación \'$this->org_name$\', con el mismo nombre',
+	'Class:Person/Error:ChangingOrgDenied' => 'Es imposible mover a esta persona a la organización \'%1$s\' ya que interrumpiría su acceso al Portal de usuario y su usuario asociado no estaría permitido en esta organización.',
 ));
 
 //
 // Class: Team
 //
+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Team' => 'Grupo de Trabajo',
 	'Class:Team+' => 'Grupo de Trabajo',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Miembros',
 	'Class:Team/Attribute:persons_list+' => 'Miembros',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
@@ -180,9 +165,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 // Class: Document
 //
+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Document' => 'Documento',
 	'Class:Document+' => 'Documento',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Nombre',
 	'Class:Document/Attribute:name+' => 'Nombre del Documento',
 	'Class:Document/Attribute:org_id' => 'Organización',
@@ -214,9 +201,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 // Class: DocumentFile
 //
+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DocumentFile' => 'Documento de Archivo',
-	'Class:DocumentFile+' => '',
+	'Class:DocumentFile+' => 'Documento de Archivo',
 	'Class:DocumentFile/Attribute:file' => 'Archivo',
 	'Class:DocumentFile/Attribute:file+' => 'Archivo',
 ));
@@ -224,6 +212,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 // Class: DocumentNote
 //
+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DocumentNote' => 'Nota',
 	'Class:DocumentNote+' => 'Nota',
@@ -234,6 +223,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 // Class: DocumentWeb
 //
+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DocumentWeb' => 'Documento Web',
 	'Class:DocumentWeb+' => 'Documento disponible en otro servidor Web',
@@ -279,6 +269,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkPersonToTeam' => 'Relación Persona y Grupo',
 	'Class:lnkPersonToTeam+' => 'Relación Persona y Grupo',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
+	'Class:lnkPersonToTeam/Name+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Grupo',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => 'Grupo',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Grupo',
@@ -341,13 +333,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Person:info' => 'Información General',
-	'UserLocal:info' => 'Información General',
+	'User:info' => 'Información General',
+	'User:profiles' => 'Perfiles (mínimo uno)',
 	'Person:personal_info' => 'Información Personal',
 	'Person:notifiy' => 'Notificación',
 ));
 
 // Themes
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'theme:fullmoon' => 'Full moon~~',
-	'theme:test-red' => 'Test instance (Red)~~',
+	'theme:fullmoon' => 'Luna Llena',
+	'theme:test-red' => 'Instancia de Prueba (Red)',
 ));

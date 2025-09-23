@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -57,6 +57,9 @@ $progress-bar-error-bg-color: #F56565 !default;
 /* Helpers classes */
 .center {
   text-align: center;
+}
+.hidden {
+  display: none;
 }
 
 /* Animations */

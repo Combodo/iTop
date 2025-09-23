@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,6 +21,8 @@
 namespace Combodo\iTop\Portal\Brick;
 
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use Dict;
 use DOMFormatException;
 
@@ -38,6 +40,8 @@ class AggregatePageBrick extends PortalBrick
 	// Overloaded constants
 	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-tachometer-alt';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-tachometer-alt fa-2x';
+
+	/** @var string @deprecated since 3.2.1 */
 	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/aggregate-page/layout.html.twig';
 
 	// Overloaded variables
@@ -47,6 +51,15 @@ class AggregatePageBrick extends PortalBrick
 	 * @var string[] list of bricks to use, ordered by rank (key=id, value=rank)
 	 */
 	private $aAggregatePageBricks = array();
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'aggregate-page/layout.html.twig')
+		);
+	}
 
 	/**
 	 * AggregatePageBrick constructor.
@@ -80,7 +93,7 @@ class AggregatePageBrick extends PortalBrick
 					{
 						if (!$oAggregatePageBrickNode->hasAttribute('id'))
 						{
-							throw new DOMFormatException('AggregatePageBrick : must have an id attribute', null,
+							throw new DOMFormatException('AggregatePageBrick : must have an id attribute', 0,
 								null, $oAggregatePageBrickNode);
 						}
 						$sBrickName = $oAggregatePageBrickNode->getAttribute('id');

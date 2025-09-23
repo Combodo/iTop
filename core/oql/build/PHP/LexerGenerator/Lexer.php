@@ -182,14 +182,14 @@ class PHP_LexerGenerator_Lexer
             $this->token = self::COMMENTEND;
             return true;
         }
-        if (preg_match('/\G%([a-z]+)/', $this->data, $token, null, $this->N)) {
+        if (preg_match('/\G%([a-z]+)/', $this->data, $token, 0, $this->N)) {
             $this->value = $token[1];
             $this->N += strlen($token[1]) + 1;
             $this->state = 'DeclarePI';
             $this->token = self::PI;
             return true;
         }
-        if (preg_match('/\G[a-zA-Z_][a-zA-Z0-9_]*/', $this->data, $token, null, $this->N)) {
+        if (preg_match('/\G[a-zA-Z_][a-zA-Z0-9_]*/', $this->data, $token, 0, $this->N)) {
             $this->value = $token[0];
             $this->token = self::PATTERN;
             $this->N += strlen($token[0]);
@@ -216,7 +216,7 @@ class PHP_LexerGenerator_Lexer
         if ($this->data[$this->N] == '{') {
             return $this->lexCode();
         }
-        if (!preg_match("/\G[^\n]+/", $this->data, $token, null, $this->N)) {
+        if (!preg_match("/\G[^\n]+/", $this->data, $token, 0, $this->N)) {
             $this->error('Unexpected end of file');
             return false;
         }
@@ -242,7 +242,7 @@ class PHP_LexerGenerator_Lexer
         if ($this->data[$this->N] == '{') {
             return $this->lexCode();
         }
-        if (!preg_match("/\G[^\n]+/", $this->data, $token, null, $this->N)) {
+        if (!preg_match("/\G[^\n]+/", $this->data, $token, 0, $this->N)) {
             $this->error('Unexpected end of file');
             return false;
         }
@@ -406,7 +406,7 @@ class PHP_LexerGenerator_Lexer
         if ($this->data[$this->N] == '\'') {
             return $this->lexQuote('\'');
         }
-        if (preg_match('/\G%([a-zA-Z_]+)/', $this->data, $token, null, $this->N)) {
+        if (preg_match('/\G%([a-zA-Z_]+)/', $this->data, $token, 0, $this->N)) {
             $this->value = $token[1];
             $this->N += strlen($token[1]) + 1;
             $this->state = 'DeclarePIRule';
@@ -419,7 +419,7 @@ class PHP_LexerGenerator_Lexer
         if ($this->data[$this->N] == '"') {
             return $this->lexQuote();
         }
-        if (preg_match('/\G[a-zA-Z_][a-zA-Z0-9_]*/', $this->data, $token, null, $this->N)) {
+        if (preg_match('/\G[a-zA-Z_][a-zA-Z0-9_]*/', $this->data, $token, 0, $this->N)) {
             $this->value = $token[0];
             $this->N += strlen($token[0]);
             $this->token = self::SUBPATTERN;

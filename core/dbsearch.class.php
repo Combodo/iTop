@@ -1,49 +1,15 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 /**
- * An object search
- *
- * DBSearch provides an API that leverage the possibility to construct a search against iTop's persisted objects.
- * In order to do so, it let you declare the classes you want to fetch, the conditions you want to apply, ...
- *
- * Note: in the ancient times of iTop, a search was named after DBObjectSearch.
- * When the UNION has been introduced, it has been decided to:
- *   * declare a hierarchy of search classes : `DBObjectSearch` & `DBUnionSearch`
- *     * DBObjectSearch cope with single query (A JOIN B... WHERE...)
- *     * DBUnionSearch cope with several queries (query1 UNION query2)
- *   * in order to preserve forward/backward compatibility of the existing modules
- *     * keep the name of DBObjectSearch even if it a little bit confusing
- *     * do not provide a type-hint for function parameters defined in the modules
- *     * leave the statements DBObjectSearch::FromOQL in the modules, though DBSearch is more relevant
- *
- * @copyright   Copyright (C) 2015-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- *
- *
  * @package     iTopORM
  * @api
  * @see DBObjectSearch::__construct()
  * @see DBUnionSearch::__construct()
  */
- 
 abstract class DBSearch
 {
 	/** @internal */
@@ -272,78 +238,6 @@ abstract class DBSearch
 
 	/**
 	 * @internal
-	 * @deprecated use ToOQL() instead
-	 * @return string
-	 */
-	public function Describe()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
-
-		return 'deprecated - use ToOQL() instead';
-	}
-
-	/**
-	 * @internal
-	 * @deprecated use ToOQL() instead
-	 * @return string
-	 */
-	public function DescribeConditionPointTo($sExtKeyAttCode, $aPointingTo)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
-
-		return 'deprecated - use ToOQL() instead';
-	}
-
-	/**
-	 * @internal
-	 * @deprecated use ToOQL() instead
-	 * @return string
-	 */
-	public function DescribeConditionRefBy($sForeignClass, $sForeignExtKeyAttCode)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
-
-		return 'deprecated - use ToOQL() instead';
-	}
-
-	/**
-	 * @internal
-	 * @deprecated use ToOQL() instead
-	 * @return string
-	 */
-	public function DescribeConditionRelTo($aRelInfo)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
-
-		return 'deprecated - use ToOQL() instead';
-	}
-
-	/**
-	 * @internal
-	 * @deprecated use ToOQL() instead
-	 * @return string
-	 */
-	public function DescribeConditions()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
-
-		return 'deprecated - use ToOQL() instead';
-	}
-
-	/**
-	 * @internal
-	 * @deprecated use ToOQL() instead
-	 * @return string
-	 */
-	public function __DescribeHTML()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
-
-		return 'deprecated - use ToOQL() instead';
-	}
-
-	/**
-	 * @internal
 	 * @return mixed
 	 */
 	abstract public function ResetCondition();
@@ -406,7 +300,7 @@ abstract class DBSearch
      * @internal
      *
 	 * @param string $sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
-	 *                 Example: infra_list->ci_id->location_id->country	 
+	 *                 Example: infra_list->ci_id->location_id->country
 	 * @param mixed $value The value to match (can be an array => IN(val1, val2...)
 	 * @return void
 	 */
@@ -567,11 +461,9 @@ abstract class DBSearch
     /**
      * @internal
      *
-     * @param bool $bExcludeMagicParams
-     *
      * @return mixed
      */
-	abstract public function GetQueryParams($bExcludeMagicParams = true);
+	abstract public function GetQueryParams();
 
     /**
      * @internal
@@ -773,14 +665,14 @@ abstract class DBSearch
      * @see DBSearch::ToOQL()
      *
 	 * @param string $sQuery The OQL to convert to a DBSearch
-	 * @param mixed[string]  $aParams array of <mixed> params index by <string> name
+	 * @param array $aParams array of <mixed> params index by <string> name
 	 * @param ModelReflection|null $oMetaModel The MetaModel to use when checking the consistency of the OQL
      *
 	 * @return DBObjectSearch|DBUnionSearch
      *
 	 * @throws OQLException
 	 */
-	static public function FromOQL($sQuery, $aParams = null, ModelReflection $oMetaModel=null)
+	public static function FromOQL($sQuery, $aParams = null, ModelReflection $oMetaModel=null)
 	{
 		if (empty($sQuery))
 		{
@@ -805,7 +697,7 @@ abstract class DBSearch
 				$oKPI = new ExecutionKPI();
 				$result = apc_fetch($sAPCCacheId);
 				$oKPI->ComputeStats('Search APC (fetch)', $sQuery);
-	
+
 				if (is_object($result))
 				{
 					$oResultFilter = $result;
@@ -821,17 +713,17 @@ abstract class DBSearch
 
 			$oOql = new OqlInterpreter($sQuery);
 			$oOqlQuery = $oOql->ParseQuery();
-	
+
 			if ($oMetaModel === null)
 			{
 				$oMetaModel = new ModelReflectionRuntime();
 			}
 			$oOqlQuery->Check($oMetaModel, $sQuery); // Exceptions thrown in case of issue
-	
+
 			$oResultFilter = $oOqlQuery->ToDBSearch($sQuery);
 
 			$oKPI->ComputeStats('Parse OQL', $sQuery);
-	
+
 			if ($bOQLCacheEnabled)
 			{
 				self::$m_aOQLQueries[$sQueryId] = $oResultFilter->DeepClone();
@@ -885,11 +777,11 @@ abstract class DBSearch
 			return;
 		}
 
-		if (count($aColumns) == 0)
-		{
-			$aColumns = array_keys(MetaModel::ListAttributeDefs($this->GetClass()));
-			// Add the standard id (as first column)
-			array_unshift($aColumns, 'id');
+        if (count($aColumns) == 0)
+        {
+            $aColumns = array_keys(MetaModel::ListAttributeDefs($this->GetClass()));
+            // Add the standard id (as first column)
+            array_unshift($aColumns, 'id');
 		}
 
 		$aQueryCols = CMDBSource::GetColumns($resQuery, $sSQL);
@@ -918,6 +810,55 @@ abstract class DBSearch
 		CMDBSource::FreeResult($resQuery);
 		return $aRes;
 	}
+
+    /**
+     * Selects a column ($sAttCode) from the specified class ($sClassAlias - default main class) of the DBsearch object and gives the result as an array
+     * @param string $sAttCode
+     * @param string|null $sClassAlias
+     *
+     * @return array
+     * @throws ConfigException
+     * @throws CoreException
+     * @throws MissingQueryArgument
+     * @throws MySQLException
+     * @throws MySQLHasGoneAwayException
+     */
+    public function SelectAttributeToArray(string $sAttCode, ?string $sClassAlias = null):array
+    {
+       if(is_null($sClassAlias)) {
+           $sClassAlias = $this->GetClassAlias();
+       }
+
+       $sClass = $this->GetClass();
+       if($sAttCode === 'id'){
+           $aAttToLoad[$sClassAlias]=[];
+       } else {
+           $aAttToLoad[$sClassAlias][$sAttCode] = MetaModel::GetAttributeDef($sClass, $sAttCode);
+       }
+
+        $sSQL = $this->MakeSelectQuery([], [], $aAttToLoad);
+        $resQuery = CMDBSource::Query($sSQL);
+        if (!$resQuery)
+        {
+            return [];
+        }
+
+        $sColName = $sClassAlias.$sAttCode;
+
+        $aRes = [];
+        while ($aRow = CMDBSource::FetchArray($resQuery))
+        {
+            $aMappedRow = array();
+            if($sAttCode === 'id') {
+                $aMappedRow[$sAttCode] = $aRow[$sColName];
+            } else {
+                $aMappedRow[$sAttCode] = $aAttToLoad[$sClassAlias][$sAttCode]->FromSQLToValue($aRow, $sColName);
+            }
+            $aRes[] = $aMappedRow;
+        }
+        CMDBSource::FreeResult($resQuery);
+        return $aRes;
+    }
 
 	////////////////////////////////////////////////////////////////////////////
 	//
@@ -1017,11 +958,6 @@ abstract class DBSearch
 		return $sRes;
 	}
 
-	function GetExpectedArguments()
-	{
-		return $this->GetCriteria()->ListParameters();
-	}
-
 	/**
 	 * Generate a SQL query from the current search
 	 *
@@ -1079,17 +1015,17 @@ abstract class DBSearch
 				{
 					$aOrderSpec[$sSQLExpression] = $bAscending;
 				}
-			}
-			else
-			{
-				$aOrderSpec['`'.$sAttClassAlias.$sAttCode.'`'] = $bAscending;
-			}
 
 			// Make sure that the columns used for sorting are present in the loaded columns
 			if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sAttClassAlias][$sAttCode]))
 			{
 				$aAttToLoad[$sAttClassAlias][$sAttCode] = MetaModel::GetAttributeDef($sAttClass, $sAttCode);
-			}			
+			}
+		}
+			else
+			{
+				$aOrderSpec['`'.$sAttClassAlias.$sAttCode.'`'] = $bAscending;
+			}
 		}
 
 		$oSQLQuery = $this->GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount);
@@ -1247,7 +1183,7 @@ abstract class DBSearch
 			$oSQLQueryExt = new SQLObjectQuery($aExtendedDataSpec['table'], $sTableAlias, $aExtendedFields);
 			$oSQLQuery->AddInnerJoin($oSQLQueryExt, 'id', $aExtendedDataSpec['join_key'] /*, $sTableAlias*/);
 		}
-		
+
 		return $oSQLQuery;
 	}
 
@@ -1265,18 +1201,6 @@ abstract class DBSearch
 	public abstract function GetSQLQueryStructure(
 		$aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null
 	);
-
-	/**
-     * Get the current search conditions
-     *
-     * @internal
-     * @see DBSearch $m_oSearchCondition
-     *
-	 * @return \Expression
-	 */
-	public abstract function GetCriteria();
-
-	public abstract function ListParameters();
 
     /**
      * Shortcut to add efficient IN condition
@@ -1554,13 +1478,13 @@ abstract class DBSearch
 		}
 
 		$sLogFile = 'queries.latest';
-		file_put_contents(APPROOT.'data/'.$sLogFile.'.html', $sHtml);
+		file_put_contents(utils::GetDataPath().$sLogFile.'.html', $sHtml);
 
 		$sLog = "<?php\n\$aQueriesLog = ".var_export(self::$m_aQueriesLog, true).";";
-		file_put_contents(APPROOT.'data/'.$sLogFile.'.log', $sLog);
+		file_put_contents(utils::GetDataPath().$sLogFile.'.log', $sLog);
 
 		// Cumulate the queries
-		$sAllQueries = APPROOT.'data/queries.log';
+		$sAllQueries = utils::GetDataPath().'queries.log';
 		if (file_exists($sAllQueries))
 		{
 			// Merge the new queries into the existing log
@@ -1594,7 +1518,7 @@ abstract class DBSearch
 		}
 		$aBacktrace = debug_backtrace();
 		$iCallStackPos = count($aBacktrace) - self::$m_bDebugQuery;
-		$sIndent = ""; 
+		$sIndent = "";
 		for ($i = 0 ; $i < $iCallStackPos ; $i++)
 		{
 			$sIndent .= " .-=^=-. ";
@@ -1717,6 +1641,13 @@ abstract class DBSearch
 	 */
 	public function __toString()
 	{
-		return $this->ToOQL();
+		return $this->ToOQL(true);
 	}
+
+	/**
+	 * Get parameters from the condition expression(s)
+	 *
+	 * @return array{\VariableExpression}
+	 */
+	abstract function GetExpectedArguments(): array;
 }

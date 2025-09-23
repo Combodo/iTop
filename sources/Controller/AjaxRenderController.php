@@ -1,12 +1,12 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Controller;
 
-use AjaxPage;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 use ApplicationContext;
 use ApplicationMenu;
 use AttributeLinkedSet;
@@ -20,6 +20,7 @@ use CMDBObjectSet;
 use CMDBSource;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectSummary;
 use DBObjectSearch;
 use DBObjectSet;
 use DBSearch;
@@ -29,9 +30,11 @@ use ExecutionKPI;
 use Expression;
 use FieldExpression;
 use FunctionExpression;
+use IssueLog;
 use iTopExtension;
 use iTopExtensionsMap;
-use JsonPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
+use LogChannels;
 use MetaModel;
 use ormSet;
 use RunTimeEnvironment;
@@ -67,8 +70,14 @@ class AjaxRenderController
 			$bShowObsoleteData = utils::ShowObsoleteData();
 		}
 		$oSet->SetShowObsoleteData($bShowObsoleteData);
+		$iCount = 0;
+		if (isset($aExtraParams['object_count'])) {
+			$iCount = $aExtraParams['object_count'];
+		} else {
+			$iCount = $oSet->Count();
+		}
 		$aResult["draw"] = $iDrawNumber;
-		$aResult["recordsTotal"] = $oSet->Count();
+		$aResult["recordsTotal"] = $iCount;
 		$aResult["recordsFiltered"] = $aResult["recordsTotal"] ;
 		$aResult["data"] = [];
 		while ($aObject = $oSet->FetchAssoc()) {
@@ -78,6 +87,19 @@ class AjaxRenderController
 					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
 					$aObj[$sAlias."/_key_/raw"] = $aObject[$sAlias]->GetKey();
 					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink();
+					$aObj[$sAlias."/friendlyname"] = $aObject[$sAlias]->Get('friendlyname');
+
+					// N°5943 Protection against $aColumnsLoad having less class aliases than $aClassAliases, this is in case the method's consumer isn't passing data correctly
+					if (false === array_key_exists($sAlias, $aColumnsLoad)) {
+						IssueLog::Debug("Datatable: Attribute omitted as it was in \$aClassAliases but not among the loaded attributes (\$aColumnsLoad)", LogChannels::DATATABLE, [
+							'sClass' => $sClass,
+							'sAlias' => $sAlias,
+							'aClassAliases' => $aClassAliases,
+							'aColumnsLoad' => $aColumnsLoad,
+						]);
+						continue;
+					}
+
 					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {
 						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
 						$bExcludeRawValue = false;
@@ -101,7 +123,7 @@ class AjaxRenderController
 							}
 						}
 					}
-					$sObjHighlightClass = $aObject[$sAlias]->GetHilightClass();
+					$sObjHighlightClass = MetaModel::GetHilightClass($sClass, $aObject[$sAlias]);
 					if (!empty($sObjHighlightClass)) {
 						$aObj['@class'] = 'ibo-is-'.$sObjHighlightClass;
 					}
@@ -123,7 +145,7 @@ class AjaxRenderController
 	}
 
 	/**
-	 * @param \JsonPage $oPage
+	 * @param JsonPage $oPage
 	 * @param bool $bTokenOnly
 	 *
 	 * @throws \Exception
@@ -224,7 +246,7 @@ class AjaxRenderController
 	 * The resulting JSON is added to the page with the format:
 	 * {"code": "done or error", "counts": {"menu_id_1": count1, "menu_id_2": count2...}}
 	 *
-	 * @param \JsonPage $oPage
+	 * @param JsonPage $oPage
 	 */
 	public function GetMenusCount(JsonPage $oPage)
 	{
@@ -233,7 +255,7 @@ class AjaxRenderController
 		$oPage->SetData($aResult);
 	}
 
-	/**
+		/**
 	 * @param string $sFilter
 	 *
 	 * @return array
@@ -262,7 +284,7 @@ class AjaxRenderController
 		}
 
 		$sTableId = utils::ReadParam('list_id', '');
-		$iLength = utils::ReadParam('end', 10);
+		$iLength = utils::ReadParam('end', 10, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
 		$sSelectMode = utils::ReadParam('select_mode', '');
 		$aClassAliases = utils::ReadParam('class_aliases', array());
@@ -483,7 +505,7 @@ class AjaxRenderController
 	 */
 	public static function DatatableSaveSettings(): bool
 	{
-		$iPageSize = utils::ReadParam('page_size', 10);
+		$iPageSize = utils::ReadParam('page_size', 10, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 		$sTableId = utils::ReadParam('table_id', null, false, 'raw_data');
 		$bSaveAsDefaults = (utils::ReadParam('defaults', 'true') == 'true');
 		$aClassAliases = utils::ReadParam('class_aliases', array(), false, 'raw_data');
@@ -624,7 +646,7 @@ class AjaxRenderController
 
 			$aResult = array();
 			$oAppContext = new ApplicationContext();
-			$sParams = $oAppContext->GetForLink();
+			$sParams = $oAppContext->GetForLink(true);
 			foreach ($aGroupBy as $iRow => $iCount) {
 				// Build the search for this subset
 				$oSubsetSearch = $oFilter->DeepClone();
@@ -639,7 +661,7 @@ class AjaxRenderController
 
 				$aResult[] = array(
 					'group' => $aLabels[$iRow],
-					'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>",
+					'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1$sParams&filter=$sFilter\">$iCount</a>",
 				); // TO DO: add the context information
 			}
 
@@ -717,6 +739,7 @@ class AjaxRenderController
 		} else {
 			$oFullSetFilter = new DBObjectSearch($sRemoteClass);
 		}
+		$oFullSetFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 		$oWidget->DoAddObjects($oPage, $iMaxAddedId, $oFullSetFilter, $oObj);
 		$oKPI->ComputeAndReport('Data write');
 	}
@@ -747,12 +770,13 @@ class AjaxRenderController
 		} else {
 			$oFullSetFilter = new DBObjectSearch($sRemoteClass);
 		}
+		$oFullSetFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 		$oWidget->DoAddIndirectLinks($oPage, $iMaxAddedId, $oFullSetFilter, $oObj);
 		$oKPI->ComputeAndReport('Data write');
 	}
 
 	/**
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -774,7 +798,7 @@ class AjaxRenderController
 
 	/**
 	 * Display list of licenses in "About iTop" popup
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \Exception
 	 * @since 3.0.1
@@ -808,7 +832,7 @@ JS
 
 	/**
 	 * Display about iTop for all user non admin
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \Exception
 	 */
@@ -827,7 +851,7 @@ EOF
 		);
 		$sVersionString = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
 		$oPage->add('<div id="about_box"><div class="ibo-about-box--top-part">');
-		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
+		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="' . utils::GetAbsoluteUrlAppRoot() . 'images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
 		$oPage->add('<div>'.$sVersionString.'</div>');
 		$oPage->add("</div>");
 		self::DisplayAboutLicenses($oPage);
@@ -836,7 +860,7 @@ EOF
 
 	/**
 	 * Display about iTop for admin user
-	 * @param \AjaxPage $oPage
+	 * @param AjaxPage $oPage
 	 *
 	 * @throws \Exception
 	 */
@@ -880,7 +904,7 @@ EOF
 		if (file_exists(APPROOT.'extensions')) {
 			$aSearchDirs[] = APPROOT.'extensions';
 		}
-		$sExtraDir = APPROOT.'data/'.$sCurrEnv.'-modules/';
+		$sExtraDir = utils::GetDataPath().$sCurrEnv.'-modules/';
 		if (file_exists($sExtraDir)) {
 			$aSearchDirs[] = $sExtraDir;
 		}
@@ -909,7 +933,7 @@ EOF
 		// Display
 		//
 		$oPage->add('<div id="about_box"><div class="ibo-about-box--top-part">');
-		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
+		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="' . utils::GetAbsoluteUrlAppRoot() . 'images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
 		$oPage->add('<div>'.$sVersionString.'<br/>'.'MySQL: '.$sMySQLVersion.'<br/>'.'PHP: '.$sPHPVersion.'<br/></div>');
 		$oPage->add("</div>");
 

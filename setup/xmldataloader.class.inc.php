@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -20,11 +20,11 @@
 /**
  * Load XML data from a set of files
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-define ('KEYS_CACHE_FILE', APPROOT.'data/keyscache.tmp');
+define ('KEYS_CACHE_FILE', utils::GetDataPath().'keyscache.tmp');
 /**
  * Class to load sets of objects from XML files into the database
  * XML files can be produced by the 'export' web service or by any other means
@@ -189,14 +189,17 @@ class XMLDataLoader
 	function LoadFile($sFilePath, $bUpdateKeyCacheOnly = false, bool $bSearch = false)
 	{
 		global $aKeys;
-		
+
 		$oXml = simplexml_load_file($sFilePath);
-		
-		$aReplicas  = array();
-		foreach($oXml as $sClass => $oXmlObj)
-		{
-			if (!MetaModel::IsValidClass($sClass))
-			{
+
+		if (!$oXml) {
+			SetupLog::Error("Unable to load xml file - $sFilePath");
+			throw(new Exception("Unable to load xml file - $sFilePath"));
+		}
+
+		$aReplicas = array();
+		foreach ($oXml as $sClass => $oXmlObj) {
+			if (!MetaModel::IsValidClass($sClass)) {
 				SetupLog::Error("Unknown class - $sClass");
 				throw(new Exception("Unknown class - $sClass"));
 			}
@@ -275,10 +278,6 @@ class XMLDataLoader
 						$oDoc = new ormDocument($data, $sMimeType, $sFileName);
 						$oTargetObj->Set($sAttCode, $oDoc);
 					}
-					elseif ($oAttDef instanceof AttributeTagSet)
-					{
-						// TODO
-                    }
 					else
 					{
 						$value = (string)$oSubNode;
@@ -286,8 +285,9 @@ class XMLDataLoader
 						if ($value == '')
 						{
 							$value = $oAttDef->GetNullValue();
+						} else {
+							$value = $oAttDef->MakeRealValue($value, $oTargetObj);
 						}
-
 						$res = $oTargetObj->CheckValue($sAttCode, $value);
 						if ($res !== true)
 						{

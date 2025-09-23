@@ -1,16 +1,17 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Newsroom\iTopNewsroomProvider;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -20,10 +21,19 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Preferences\BlockShortcuts\BlockShortcuts;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Controller\Newsroom\iTopNewsroomController;
+use Combodo\iTop\Controller\Notifications\NotificationsCenterController;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
+use Combodo\iTop\Service\Router\Router;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
+
 
 /**
  * Displays the user's changeable preferences
@@ -96,11 +106,6 @@ function DisplayPreferences($oP)
 	$oTabsFieldset->AddSubBlock(GetTabsLayoutFieldBlock());
 	$oTabsFieldset->AddSubBlock(GetTabsNavigationFieldBlock());
 
-	// Rich text editor
-	$oRichTextFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:Preferences:RichText:Title'), 'ibo-fieldset-for-rich-text-preferences');
-	$oSecondColumn->AddSubBlock($oRichTextFieldset);
-	$oRichTextFieldset->AddSubBlock(GetRichTextToolbarExpandedFieldBlock());
-
 	// Activity panel
 	$oActivityPanelfieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:Preferences:ActivityPanel:Title'), 'ibo-fieldset-for-activity-panel');
 	$oSecondColumn->AddSubBlock($oActivityPanelfieldset);
@@ -110,6 +115,8 @@ function DisplayPreferences($oP)
 	$oMiscOptionsFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:FavoriteOtherSettings'), 'ibo-fieldset-for-misc-options');
 	$oSecondColumn->AddSubBlock($oMiscOptionsFieldset);
 	$oMiscOptionsFieldset->AddSubBlock(GetObsoleteDataFieldBlock());
+	$oMiscOptionsFieldset->AddSubBlock(GetSummaryCardsFieldBlock());
+	$oMiscOptionsFieldset->AddSubBlock(GetToastsPositionFieldBlock());
 
 	$oP->add_script(
 		<<<JS
@@ -125,13 +132,24 @@ function ValidateOtherSettings()
 	}
 	else
 	{
-		$('#v_default_page_size').html('<img src="../images/validation_error.png"/>');
+		$('#v_default_page_size').html('<img src="' + GetAbsoluteUrlAppRoot() + 'images/validation_error.png"/>');
 		$('#ibo-misc-settings-submit').prop('disabled', true);
 		return false;
 	}
 }
 JS
 	);
+
+	//////////////////////////////////////////////////////////////////////////
+	//
+	// Notifications
+	//
+	//////////////////////////////////////////////////////////////////////////
+	$oNotificationsBlock = new Panel(Dict::S('UI:Preferences:Notifications'), array(), Panel::ENUM_COLOR_SCHEME_GREY, 'ibo-notifications');
+	$sNotificationsCenterUrl = Router::GetInstance()->GenerateUrl(NotificationsCenterController::ROUTE_NAMESPACE.'.display_page', [], true);
+	$oNotificationsBlock->AddSubBlock(new Html('<p>'.Dict::Format('UI:Preferences:Notifications+', $sNotificationsCenterUrl).'</p>'));
+	$oContentLayout->AddMainBlock($oNotificationsBlock);
+
 
 	//////////////////////////////////////////////////////////////////////////
 	//
@@ -235,9 +253,11 @@ JS
 	//////////////////////////////////////////////////////////////////////////
 	$iCountProviders = 0;
 	$oUser = UserRights::GetUserObject();
-	$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-	foreach($aProviders as $oProvider)
+	/** @var iNewsroomProvider[] $aProviders */
+	$aProviders = InterfaceDiscovery::GetInstance()->FindItopClasses(iNewsroomProvider::class);
+	foreach($aProviders as $cProvider) 
 	{
+		$oProvider = new $cProvider();
 		if ($oProvider->IsApplicable($oUser))
 		{
 			$iCountProviders++;
@@ -251,10 +271,10 @@ JS
 
 		$sNewsroomHtml = '';
 		$sNewsroomHtml .= '<form method="post">';
-		$iNewsroomDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', 7);
+		$iNewsroomDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', iTopNewsroomController::DEFAULT_NEWSROOM_DISPLAY_SIZE);
 
-		if ($iNewsroomDisplaySize < 1) $iNewsroomDisplaySize = 1;
-		if ($iNewsroomDisplaySize > 20) $iNewsroomDisplaySize = 20;
+		if ($iNewsroomDisplaySize < iTopNewsroomController::DEFAULT_NEWSROOM_MIN_DISPLAY_SIZE) $iNewsroomDisplaySize = iTopNewsroomController::DEFAULT_NEWSROOM_MIN_DISPLAY_SIZE;
+		if ($iNewsroomDisplaySize > iTopNewsroomController::DEFAULT_NEWSROOM_MAX_DISPLAY_SIZE) $iNewsroomDisplaySize = iTopNewsroomController::DEFAULT_NEWSROOM_MAX_DISPLAY_SIZE;
 		$sInput = '<input min="1" max="20" id="newsroom_display_size" type="number" size="2" name="newsroom_display_size" value="'.$iNewsroomDisplaySize.'">';
 		$sIcon = '<i id="newsroom_menu_icon" class="top-right-icon icon-additional-arrow fas fa-bell" style="top: 0;"></i>';
 		$sNewsroomHtml .= Dict::Format('UI:Newsroom:DisplayAtMost_X_Messages', $sInput, $sIcon);
@@ -263,8 +283,9 @@ JS
 		 * @var iNewsroomProvider[] $aProviders
 		 */
 		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
-		foreach($aProviders as $oProvider)
+		foreach($aProviders as $cProvider) 
 		{
+			$oProvider = new $cProvider();
 			if ($oProvider->IsApplicable($oUser))
 			{
 				$sUrl = $oProvider->GetPreferencesUrl();
@@ -282,8 +303,12 @@ JS
 					}
 					$sPreferencesLink = ' - <a class=".newsroom-configuration-link" href="'.$sUrl.'"'.$sTarget.'>'.Dict::S('UI:Newsroom:ConfigurationLink').'</a>';
 				}
-				$sChecked = appUserPreferences::GetPref('newsroom_provider_'.$sProviderClass, true) ? ' checked="" ' : '';
-				$sNewsroomHtml .= '<div><input type="checkbox" id="newsroom_provider_'.$sProviderClass.'" value="on"'.$sChecked.'name="newsroom_provider_'.$sProviderClass.'"><label for="newsroom_provider_'.$sProviderClass.'">'.Dict::Format('UI:Newsroom:DisplayMessagesFor_Provider',
+
+				$sCheckedForHtml = appUserPreferences::GetPref('newsroom_provider_'.$sProviderClass, true) ? 'checked' : '';
+				// Forbid disabling internal newsroom provider
+				$sDisabledForHtml = $sProviderClass === iTopNewsroomProvider::class ? 'disabled' : '';
+
+				$sNewsroomHtml .= '<div><input type="checkbox" id="newsroom_provider_'.$sProviderClass.'" value="on" '.$sCheckedForHtml.' '.$sDisabledForHtml.' name="newsroom_provider_'.$sProviderClass.'"><label for="newsroom_provider_'.$sProviderClass.'">'.Dict::Format('UI:Newsroom:DisplayMessagesFor_Provider',
 						$oProvider->GetLabel()).'</label> '.$sPreferencesLink.'</div>';
 			}
 		}
@@ -294,7 +319,11 @@ JS
 
 		// - Reset button
 		$oNewsroomResetCacheButton = ButtonUIBlockFactory::MakeForAlternativeDestructiveAction(Dict::S('UI:Newsroom:ResetCache'));
-		$oNewsroomResetCacheButton->SetOnClickJsCode("$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')");
+		$oNewsroomResetCacheButton->SetOnClickJsCode(<<<JS
+$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')
+CombodoToast.OpenSuccessToast(Dict.S('UI:Newsroom:ResetCache:Success:Message'));
+JS
+		);
 		$oNewsroomToolbar->AddSubBlock($oNewsroomResetCacheButton);
 		// - Cancel button
 		$oNewsroomCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'));
@@ -396,11 +425,13 @@ JS
 
 	$oUserPicturePlaceHolderBlock = new Panel(Dict::S('UI:Preferences:ChooseAPlaceholder'), array(), 'grey', 'ibo-user-picture-placeholder');
 
-	$sUserPicturesFolder = '../images/user-pictures/';
+	$sUserPicturesFolderRelPath = 'images/user-pictures/';
+	$sUserPicturesFolderAbsPath = APPROOT . $sUserPicturesFolderRelPath;
+	$sUserPicturesFolderAbsUrl = utils::GetAbsoluteUrlAppRoot() . $sUserPicturesFolderRelPath;
 	$sUserDefaultPicture = appUserPreferences::GetPref('user_picture_placeholder', 'default-placeholder.png');
 	$sUserPicturePlaceHolderHtml = '';
 	$sUserPicturePlaceHolderHtml .= '<p>'.Dict::S('UI:Preferences:ChooseAPlaceholder+').'</p> <div class="ibo-preferences--user-preferences--picture-placeholder">';
-	foreach (scandir($sUserPicturesFolder) as $sUserPicture)
+	foreach (scandir($sUserPicturesFolderAbsPath) as $sUserPicture)
 	{
 		if ($sUserPicture === '.' || $sUserPicture === '..')
 		{
@@ -411,8 +442,9 @@ JS
 		{
 			$sAdditionalClass = ' ibo-is-active';
 		}
-		$sUserPicturePlaceHolderHtml .= '<a class="ibo-preferences--user-preferences--picture-placeholder--image'.$sAdditionalClass.'" data-image-name="'.$sUserPicture.'" data-role="ibo-preferences--user-preferences--picture-placeholder--image" href="#"> <img src="'.$sUserPicturesFolder.$sUserPicture.'"/> </a>';
+		$sUserPicturePlaceHolderHtml .= '<a class="ibo-preferences--user-preferences--picture-placeholder--image'.$sAdditionalClass.'" data-image-name="'.$sUserPicture.'" data-role="ibo-preferences--user-preferences--picture-placeholder--image" href="#"> <img src="'.$sUserPicturesFolderAbsUrl.$sUserPicture.'"/> </a>';
 	}
+	$sUserPictureChangedSuccessMessage = Dict::S('UI:Preferences:ChooseAPlaceholder:Success:Message');
 	$oP->add_ready_script(
 		<<<JS
 $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').on('click',function(){
@@ -422,7 +454,7 @@ $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]')
 	$.post(
 		GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 		{
-			'operation': 'preferences_set_user_picture',
+			'operation': 'preferences.set_user_picture',
 			'image_filename': $(this).attr('data-image-name')
 		}
 	)
@@ -437,6 +469,9 @@ $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]')
 		
 		// Update navigation menu
 		$('[data-role="ibo-navigation-menu--user-picture--image"]').attr('src', oData.data.image_url);
+		
+		// Display success message
+		CombodoToast.OpenSuccessToast('{$sUserPictureChangedSuccessMessage}');
 	});
 });
 JS
@@ -460,7 +495,6 @@ HTML
 	//
 	// Footer
 	//
-	$oP->add_ready_script("$('#fav_page_length').bind('keyup change', function(){ ValidateOtherSettings(); })");
 	$oP->SetContentLayout($oContentLayout);
 }
 
@@ -525,7 +559,7 @@ function GetThemeFieldBlock(): iUIBlock
  */
 function GetListPageSizeFieldBlock(): iUIBlock
 {
-	$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
+	$iDefaultPageSize = (int)appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
 
 	$sInputHtml = '<input id="default_page_size" name="default_page_size" type="text" size="3" value="'.$iDefaultPageSize.'"/><span id="v_default_page_size"></span>';
 	$sHtml = '<p>'.Dict::Format('UI:Favorites:Default_X_ItemsPerPage', $sInputHtml).'</p>';
@@ -595,34 +629,6 @@ function GetTabsNavigationFieldBlock(): iUIBlock
  * @throws \MySQLException
  * @since 3.0.0
  */
-function GetRichTextToolbarExpandedFieldBlock(): iUIBlock
-{
-	$bCurrentValue = isset(utils::GetCkeditorPref()['toolbarStartupExpanded']) ? (bool)utils::GetCkeditorPref()['toolbarStartupExpanded'] : false;
-	$sCurrentValueAsString = $bCurrentValue ? 'true' : 'false';
-
-	$aOptionsValues = [
-		'true' => 'Expanded',
-		'false' => 'Collapsed',
-	];
-	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('toolbarexpanded', Dict::S('UI:Preferences:RichText:ToolbarState'));
-	foreach ($aOptionsValues as $sValue => $sDictEntrySuffix) {
-		$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption(
-			$sValue,
-			Dict::S('UI:Preferences:RichText:ToolbarState:'.$sDictEntrySuffix),
-			$sValue === $sCurrentValueAsString)
-		);
-	}
-
-	return $oSelect;
-}
-
-/**
- * @return \Combodo\iTop\Application\UI\Base\iUIBlock
- * @throws \CoreException
- * @throws \CoreUnexpectedValue
- * @throws \MySQLException
- * @since 3.0.0
- */
 function GetActivityPanelEntryFormOpenedFieldBlock(): iUIBlock
 {
 	// First check if user has a pref.
@@ -672,6 +678,52 @@ function GetObsoleteDataFieldBlock(): iUIBlock
 HTML;
 
 	return new Html($sHtml);
+}
+
+
+/**
+ * @return \Combodo\iTop\Application\UI\Base\iUIBlock
+ * @throws \CoreException
+ * @throws \CoreUnexpectedValue
+ * @throws \MySQLException
+ * @since 3.1.0
+ */
+function GetSummaryCardsFieldBlock(): iUIBlock
+{
+	$bShow = appUserPreferences::GetPref('show_summary_cards', true);
+	$sSelectedForHtmlAttribute = $bShow ? 'checked="checked"' : '';
+
+	$sLabel = Dict::S('UI:Favorites:General:ShowSummaryCards');
+	$sLabelDescription = Dict::S('UI:Favorites:General:ShowSummaryCards+');
+	$sHtml = <<<HTML
+<p>
+	<label data-tooltip-content="{$sLabelDescription}">
+		<span>{$sLabel}</span>
+		<input type="checkbox" name="show_summary_cards" value="1" {$sSelectedForHtmlAttribute}>
+	</label>
+</p>
+HTML;
+
+	return new Html($sHtml);
+}
+
+/**
+ * @return \Combodo\iTop\Application\UI\Base\iUIBlock
+ * @throws \CoreException
+ * @throws \CoreUnexpectedValue
+ * @throws \MySQLException
+ * @since 3.2.0
+ */
+function GetToastsPositionFieldBlock(): iUIBlock
+{
+	$sPosition = appUserPreferences::GetPref('toasts_vertical_position', "bottom");
+
+	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('toasts_vertical_position', Dict::S('UI:Preferences:General:Toasts'));
+	
+	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("bottom", Dict::S('UI:Preferences:General:Toasts:Bottom'), $sPosition === "bottom"));
+	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("top", Dict::S('UI:Preferences:General:Toasts:Top'), $sPosition === "top"));
+
+	return $oSelect;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -766,20 +818,30 @@ try {
 				// - Obsolete data
 				$bShowObsoleteData = (bool)utils::ReadParam('show_obsolete_data', 0);
 				appUserPreferences::SetPref('show_obsolete_data', $bShowObsoleteData);
+				
+				// - Summary cards
+				$bShowSummaryCards = (bool)utils::ReadParam('show_summary_cards', 0);
+				appUserPreferences::SetPref('show_summary_cards', $bShowSummaryCards);
 
+				// - Toast notifications
+				$sToastsVerticalPosition = utils::ReadParam('toasts_vertical_position', "bottom");
+				if(utils::IsNotNullOrEmptyString($sToastsVerticalPosition) && in_array($sToastsVerticalPosition, ["bottom", "top"], true)) {
+					appUserPreferences::SetPref('toasts_vertical_position', $sToastsVerticalPosition);
+				}
+				
 				// Redirect to force a reload/display of the page in case language has been changed
 				$oAppContext = new ApplicationContext();
 				$sURL = utils::GetAbsoluteUrlAppRoot().'pages/preferences.php?'.$oAppContext->GetForLink();
 				$oPage->add_header('Location: '.$sURL);
 				break;
 			case 'apply_keyboard_shortcuts':
-				// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
-				$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]'));
+				/** @var iKeyboardShortcut[] $aShortcutClasses */
+				$aShortcutClasses = InterfaceDiscovery::GetInstance()->FindItopClasses(iKeyboardShortcut::class);
 				$aShortcutPrefs = [];
 				foreach ($aShortcutClasses as $cShortcutPlugin) {
 					foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {
 						$sKey = utils::ReadParam($aShortcutKey['id'], $aShortcutKey['key'], true, 'raw_data');
-						$aShortcutPrefs[$aShortcutKey['id']] = strtolower($sKey);
+						$aShortcutPrefs[$aShortcutKey['id']] = strtolower(utils::HtmlEntities($sKey));
 					}
 				}
 				appUserPreferences::SetPref('keyboard_shortcuts', $aShortcutPrefs);
@@ -792,32 +854,42 @@ try {
 				DisplayPreferences($oPage);
 				break;
 			case 'apply_newsroom_preferences':
+
+
 				$iCountProviders = 0;
 				$oUser = UserRights::GetUserObject();
-				$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-				foreach ($aProviders as $oProvider) {
+				/** @var iNewsroomProvider[] $aProviders */
+				$aProviders = InterfaceDiscovery::GetInstance()->FindItopClasses(iNewsroomProvider::class);
+				foreach ($aProviders as $cProvider) {
+					$oProvider = new $cProvider();
 					if ($oProvider->IsApplicable($oUser)) {
 						$iCountProviders++;
 					}
 				}
 				$bNewsroomEnabled = (MetaModel::GetConfig()->Get('newsroom_enabled') !== false);
 				if ($bNewsroomEnabled && ($iCountProviders > 0)) {
-					$iNewsroomDisplaySize = (int)utils::ReadParam('newsroom_display_size', 7);
-					if ($iNewsroomDisplaySize < 1) {
-						$iNewsroomDisplaySize = 1;
+					$iNewsroomDisplaySize = (int)utils::ReadParam('newsroom_display_size', iTopNewsroomController::DEFAULT_NEWSROOM_DISPLAY_SIZE);
+					if ($iNewsroomDisplaySize < iTopNewsroomController::DEFAULT_NEWSROOM_MIN_DISPLAY_SIZE) {
+						$iNewsroomDisplaySize = iTopNewsroomController::DEFAULT_NEWSROOM_MIN_DISPLAY_SIZE;
 					}
-					if ($iNewsroomDisplaySize > 20) {
-						$iNewsroomDisplaySize = 20;
+					if ($iNewsroomDisplaySize > iTopNewsroomController::DEFAULT_NEWSROOM_MAX_DISPLAY_SIZE) {
+						$iNewsroomDisplaySize = iTopNewsroomController::DEFAULT_NEWSROOM_MAX_DISPLAY_SIZE;
 					}
-					$iCurrentDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', $iNewsroomDisplaySize);
+					$iCurrentDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', iTopNewsroomController::DEFAULT_NEWSROOM_DISPLAY_SIZE);
 					if ($iCurrentDisplaySize != $iNewsroomDisplaySize) {
 						// Save the preference only if it differs from the current (or default) value
 						appUserPreferences::SetPref('newsroom_display_size', $iNewsroomDisplaySize);
 					}
 				}
 				$bProvidersModified = false;
-				foreach ($aProviders as $oProvider)
+				foreach ($aProviders as $cProvider)
 				{
+					// Forbid disabling internal newsroom provider
+					if ($cProvider === iTopNewsroomProvider::class) {
+						continue;
+					}
+
+					$oProvider = new $cProvider();
 					if ($oProvider->IsApplicable($oUser))
 					{
 						$sProviderClass = get_class($oProvider);
@@ -833,7 +905,12 @@ try {
 				}
 				if ($bProvidersModified)
 				{
-					$oPage->add_ready_script('$(".itop-newsroom_menu").newsroom_menu("clearCache");');
+					$oPage->add_ready_script(
+						<<<JS
+$('#ibo-navigation-menu--notifications-menu').newsroom_menu("clearCache");
+CombodoToast.OpenSuccessToast(Dict.S('UI:Newsroom:ResetCache:Success:Message'));
+JS
+					);
 				}
 				DisplayPreferences($oPage);
 				break;

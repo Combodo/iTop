@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,17 +17,20 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 define('EXPORTER_DEFAULT_CHUNK_SIZE', 1000);
 
 class BulkExportException extends Exception
 {
 	protected $sLocalizedMessage;
-	public function __construct($message, $sLocalizedMessage, $code = null, $previous = null)
+	public function __construct($message, $sLocalizedMessage, $code = 0, $previous = null)
 	{
 		parent::__construct($message, $code, $previous);
 		$this->sLocalizedMessage = $sLocalizedMessage;
 	}
-	
+
 	public function GetLocalizedMessage()
 	{
 		return $this->sLocalizedMessage;
@@ -39,13 +42,13 @@ class BulkExportMissingParameterException extends BulkExportException
 	{
 		parent::__construct('Missing parameter: '.$sFieldCode, Dict::Format('Core:BulkExport:MissingParameter_Param', $sFieldCode));
 	}
-		
+
 }
 
 /**
  * Class BulkExport
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -67,7 +70,7 @@ class BulkExportResult extends DBObject
 		);
 		MetaModel::Init_Params($aParams);
 
-		MetaModel::Init_AddAttribute(new AttributeDateTime("created", array("allowed_values"=>null, "sql"=>"created", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("created", array("allowed_values"=>null, "sql"=>"created", "default_value"=>"NOW()", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("user_id", array("allowed_values"=>null, "sql"=>"user_id", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("chunk_size", array("allowed_values"=>null, "sql"=>"chunk_size", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("format", array("allowed_values"=>null, "sql"=>"format", "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array())));
@@ -130,7 +133,7 @@ class BulkExportResultGC implements iBackgroundProcess
 /**
  * Class BulkExport
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -143,13 +146,15 @@ abstract class BulkExport
 	protected $oBulkExportResult;
 	protected $sTmpFile;
 	protected $bLocalizeOutput;
-	
+
 	public function __construct()
 	{
 		$this->oSearch = null;
 		$this->iChunkSize = 0;
 		$this->sFormatCode = null;
-		$this->aStatusInfo = array();
+		$this->aStatusInfo = [
+			'show_obsolete_data' => utils::ShowObsoleteData(),
+		];
 		$this->oBulkExportResult = null;
 		$this->sTmpFile = '';
 		$this->bLocalizeOutput = false;
@@ -203,15 +208,17 @@ abstract class BulkExport
 		if ($oInfo && ($oInfo->Get('user_id') == UserRights::GetUserId()))
 		{
 			$sFormatCode = $oInfo->Get('format');
-			$oSearch = DBObjectSearch::unserialize($oInfo->Get('search'));
+			$aStatusInfo = json_decode($oInfo->Get('status_info'),true);
 
+			$oSearch = DBObjectSearch::unserialize($oInfo->Get('search'));
+			$oSearch->SetShowObsoleteData($aStatusInfo['show_obsolete_data']);
 			$oBulkExporter = self::FindExporter($sFormatCode, $oSearch);
 			if ($oBulkExporter)
 			{
 				$oBulkExporter->SetFormat($sFormatCode);
 				$oBulkExporter->SetObjectList($oSearch);
 				$oBulkExporter->SetChunkSize($oInfo->Get('chunk_size'));
-				$oBulkExporter->SetStatusInfo(json_decode($oInfo->Get('status_info'), true));
+				$oBulkExporter->SetStatusInfo($aStatusInfo);
 
                 $oBulkExporter->SetLocalizeOutput($oInfo->Get('localize_output'));
 
@@ -240,7 +247,7 @@ abstract class BulkExport
 			fclose($hFile);
 		}
 	}
-	
+
 	public function GetTmpFilePath()
 	{
 		return $this->sTmpFile;
@@ -282,21 +289,22 @@ abstract class BulkExport
     {
         $this->bLocalizeOutput = $bLocalizeOutput;
     }
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see iBulkExport::SetObjectList()
 	 */
 	public function SetObjectList(DBSearch $oSearch)
 	{
+		$oSearch->SetShowObsoleteData($this->aStatusInfo['show_obsolete_data']);
 		$this->oSearch = $oSearch;
 	}
-	
+
 	public function SetFormat($sFormatCode)
 	{
-		$this->sFormatCode = $sFormatCode;	
+		$this->sFormatCode = $sFormatCode;
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see iBulkExport::IsFormatSupported()
@@ -314,7 +322,7 @@ abstract class BulkExport
 	{
 		return array(); // return array('csv' => Dict::S('UI:ExportFormatCSV'));
 	}
-	
+
 
 	public function SetHttpHeaders(WebPage $oPage)
 	{
@@ -336,7 +344,7 @@ abstract class BulkExport
 	{
 		return '';
 	}
-	
+
 	public function SaveState()
 	{
 		if ($this->oBulkExportResult === null)
@@ -354,7 +362,7 @@ abstract class BulkExport
 		utils::PopArchiveMode();
 		return $ret;
 	}
-	
+
 	public function Cleanup()
 	{
 		if (($this->oBulkExportResult &&  (!$this->oBulkExportResult->IsNew())))
@@ -376,17 +384,7 @@ abstract class BulkExport
 	}
 
 	/**
-	 * @deprecated 3.0.0 use GetFormPart instead
-	 */
-	public function DisplayFormPart(WebPage $oP, $sPartId)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetFormPart instead');
-		$oP->AddSubBlock($this->GetFormPart($oP, $sPartId));
-	}
-
-
-	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sPartId
 	 *
 	 * @return UIContentBlock
@@ -404,14 +402,14 @@ abstract class BulkExport
 	{
 		$this->bLocalizeOutput = !((bool)utils::ReadParam('no_localize', 0, true, 'integer'));
 	}
-	
+
 	public function GetResultAsHtml()
 	{
-		
+
 	}
 	public function GetRawResult()
 	{
-		
+
 	}
 
 	/**
@@ -433,17 +431,17 @@ abstract class BulkExport
 	{
 		return 'UTF-8';
 	}
-	
+
 	public function GetStatistics()
 	{
-		
+
 	}
 
 	public function SetFields($sFields)
 	{
 
 	}
-	
+
 	public function GetDownloadFileName()
 	{
 		return Dict::Format('Core:BulkExportOf_Class', MetaModel::GetName($this->oSearch->GetClass())).'.'.$this->GetFileExtension();
@@ -453,7 +451,7 @@ abstract class BulkExport
 	{
 		$this->aStatusInfo = $aStatusInfo;
 	}
-	
+
 	public function GetStatusInfo()
 	{
 		return $this->aStatusInfo;
@@ -466,14 +464,14 @@ abstract class BulkExport
 	 */
 	protected function MakeTmpFile($sExtension)
 	{
-		if(!is_dir(APPROOT."data/bulk_export"))
+		if(!is_dir(utils::GetDataPath()."bulk_export"))
 		{
-			@mkdir(APPROOT."data/bulk_export", 0777, true /* recursive */);
+			@mkdir(utils::GetDataPath()."bulk_export", 0777, true /* recursive */);
 			clearstatcache();
 		}
-		if (!is_writable(APPROOT."data/bulk_export"))
+		if (!is_writable(utils::GetDataPath()."bulk_export"))
 		{
-			throw new Exception('Data directory "'.APPROOT.'data/bulk_export" could not be written.');
+			throw new Exception('Data directory "'.utils::GetDataPath().'bulk_export" could not be written.');
 		}
 
 		$iNum = rand();
@@ -481,11 +479,11 @@ abstract class BulkExport
 		{
 			$iNum++;
 			$sToken = sprintf("%08x", $iNum);
-			$sFileName = APPROOT."data/bulk_export/$sToken.".$sExtension;
+			$sFileName = utils::GetDataPath()."bulk_export/$sToken.".$sExtension;
 			$hFile = @fopen($sFileName, 'x');
 		}
 		while($hFile === false);
-	
+
 		fclose($hFile);
 		return $sFileName;
 	}

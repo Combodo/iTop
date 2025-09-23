@@ -2,7 +2,7 @@
 /**
  * Class SQLObjectQueryBuilder
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -218,8 +218,8 @@ class SQLObjectQueryBuilder
 					continue;
 				}
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				// Skip this attribute if not made of SQL columns
-				if (count($oAttDef->GetSQLExpressions()) == 0)
+				// Skip this attribute if not made of SQL columns nor in current table
+				if (count($oAttDef->GetSQLExpressions()) == 0 || $oAttDef->IsExternalField())
 				{
 					continue;
 				}

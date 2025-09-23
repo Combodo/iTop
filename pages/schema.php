@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -12,13 +12,16 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent;
-use Combodo\iTop\Service\EventService;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\Events\EventService;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('DataModelMenu');
 
@@ -132,16 +135,16 @@ EOF
 		$oOpenAllButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Open All', '', '', false, 'lifecycleOpenAll');
 		$oOpenAllButton->SetOnClickJsCode(
 			<<<JS
-				$('#LifeCycleList').find('.expandable-hitarea').click();
-				$('#LifeCycleAttrOptList').find('.expandable-hitarea').click();
+				$('#LifeCycleList').find('.expandable-hitarea').trigger('click');
+				$('#LifeCycleAttrOptList').find('.expandable-hitarea').trigger('click');
 JS
 
 		);
 		$oCloseAllButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Close All', '', '', false, 'lifecycleCloseAll');
 		$oCloseAllButton->SetOnClickJsCode(
 			<<<JS
-				$('#LifeCycleList').find('.collapsable-hitarea').click();
-				$('#LifeCycleAttrOptList').find('.collapsable-hitarea').click();
+				$('#LifeCycleList').find('.collapsable-hitarea').trigger('click');
+				$('#LifeCycleAttrOptList').find('.collapsable-hitarea').trigger('click');
 JS
 
 		);
@@ -269,15 +272,16 @@ function DisplayEvents(WebPage $oPage, $sClass)
 {
 	$aEvents = EventService::GetEventsByClass($sClass);
 	$aColumns = [
-		'event'       => ['label' => 'Event'],
-		'description' => ['label' => 'Description'],
+		'event'       => ['label' => Dict::S('UI:Schema:Events:Event')],
+		'description' => ['label' => Dict::S('UI:Schema:Events:Description')],
 	];
 	$aRows = [];
 	foreach ($aEvents as $sEvent => $aEventInfo) {
-		$aDesc = $aEventInfo['description'];
+		/** @var \Combodo\iTop\Service\Events\Description\EventDescription $oDesc */
+		$oDesc = $aEventInfo['description'];
 		$aRows[] = [
 			'event'       => $sEvent,
-			'description' => $aDesc['description'] ?? '',
+			'description' => $oDesc->GetDescription(),
 		];
 	}
 	$oTable = DataTableUIBlockFactory::MakeForStaticData(Dict::S('UI:Schema:Events:Defined'), $aColumns, $aRows);
@@ -288,7 +292,6 @@ function DisplayEvents(WebPage $oPage, $sClass)
 		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass) {
 			if (!MetaModel::IsAbstract($sChildClass)) {
 				$oObject = MetaModel::NewObject($sChildClass);
-				$aSources[] = $oObject->GetObjectUniqId();
 				break;
 			}
 		}
@@ -297,7 +300,6 @@ function DisplayEvents(WebPage $oPage, $sClass)
 		}
 	} else {
 		$oObject = MetaModel::NewObject($sClass);
-		$aSources[] = $oObject->GetObjectUniqId();
 		foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
 				$aSources[] = $sParentClass;
 		}
@@ -317,31 +319,40 @@ function DisplayEvents(WebPage $oPage, $sClass)
 		return ($a['event'] > $b['event']) ? 1 : -1;
 	});
 	$aColumns = [
-		'event'    => ['label' => 'Event'],
-		'listener' => ['label' => 'Listener'],
-		'priority' => ['label' => 'Priority'],
-		'module'   => ['label' => 'Module'],
+		'event'    => ['label' => Dict::S('UI:Schema:Events:Event')],
+		'callback' => ['label' => Dict::S('UI:Schema:Events:Listener')],
+		'priority' => ['label' => Dict::S('UI:Schema:Events:Rank')],
+		'module'   => ['label' => Dict::S('UI:Schema:Events:Module')],
 	];
+	// Get the object listeners first
 	$aRows = [];
 	$oReflectionClass = new ReflectionClass($sClass);
+	if ($oReflectionClass->isInstantiable()) {
+		/** @var DBObject $oClass */
+		$oClass = new $sClass();
+		$aRows = $oClass->GetListeners();
+	}
+
 	foreach ($aListeners as $aListener) {
 		if (is_object($aListener['callback'][0])) {
 			$sListenerClass = $sClass;
 			if ($aListener['callback'][0] != $sClass) {
 				$oListenerReflectionClass = new ReflectionClass(get_class($aListener['callback'][0]));
 				if (!$oListenerReflectionClass->isSubclassOf($sClass)) {
-					$sListenerClass = get_class($aListener['callback'][0]);
+					$sListenerClass = $oListenerReflectionClass->getName();
 				} elseif (!$oReflectionClass->hasMethod($aListener['callback'][1])) {
 					continue;
 				}
 			}
-			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(\Combodo\iTop\Service\EventData $oEventData)';
+			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
+		} else if (is_array($aListener['callback'])) {
+			$sListener = $aListener['callback'][0].'::'.$aListener['callback'][1];
 		} else {
-			$sListener = $aListener['callback'][0].'::'.$aListener['callback'][1].'(\Combodo\iTop\Service\EventData $oEventData)';
+			$sListener = $aListener['callback'].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
 		}
 		$aRows[] = [
 			'event'    => $aListener['event'],
-			'listener' => $sListener,
+			'callback' => $sListener,
 			'priority' => $aListener['priority'],
 			'module'   => $aListener['module'],
 		];
@@ -959,7 +970,7 @@ JS
 /**
  * Display the details of a given class of objects
  *
- * @param \iTopWebPage $oPage
+ * @param iTopWebPage $oPage
  * @param string $sClass
  * @param string $sContext
  *
@@ -1163,11 +1174,7 @@ EOF
 
 
 $oAppContext = new ApplicationContext();
-$sContext = $oAppContext->GetForLink();
-if (!empty($sContext))
-{
-	$sContext = '&'.$sContext;
-}
+$sContext = $oAppContext->GetForLink(true);
 $operation = utils::ReadParam('operation', '');
 
 $oLayout = new PageContentWithSideContent();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -16,8 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
-// Global search
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => '上一页',
 ));

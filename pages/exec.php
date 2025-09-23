@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -24,6 +24,7 @@ require_once('../approot.inc.php');
 // Needed to read the parameters (with sanitization)
 require_once(APPROOT.'application/utils.inc.php');
 require_once(APPROOT.'core/metamodel.class.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 utils::InitTimeZone();
 
@@ -37,15 +38,17 @@ utils::InitTimeZone();
  */
 function CheckPageExists(string $sPagePath, array $aPossibleBasePaths)
 {
-	$sTargetPage = false;
 	foreach ($aPossibleBasePaths as $sBasePath) {
 		$sTargetPage = utils::RealPath($sPagePath, $sBasePath);
-		if ($sTargetPage !== false) {
+		if (
+			($sTargetPage !== false)
+			&& (strtolower(pathinfo($sTargetPage, PATHINFO_EXTENSION)) === "php")
+		) {
 			return $sTargetPage;
 		}
 	}
 
-	return $sTargetPage;
+	return false;
 }
 
 
@@ -78,8 +81,8 @@ if (is_link($sPageEnvFullPath)) {
 	$aPossibleBasePaths = [
 		APPROOT.$sSourceDir,
 		APPROOT.'extensions',
-		APPROOT.'data/'.$sEnvironment.'-modules',
-		APPROOT.'data/downloaded-extensions', // Hub connector
+		utils::GetDataPath().$sEnvironment.'-modules',
+		utils::GetDataPath().'downloaded-extensions', // Hub connector
 	];
 } else {
 	$aPossibleBasePaths = [$sEnvFullPath];

@@ -1,51 +1,14 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//
-// Class: KnownError
-//
+/**
+ *
+ */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:KnownError' => 'Erro Conhecido',
 	'Class:KnownError+' => 'Erro documentado de um problema conhecido',
@@ -86,9 +49,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:KnownError/Attribute:version' => 'Versão',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'ICs',
-	'Class:KnownError/Attribute:ci_list+' => 'Todos os Itens de Configuração (ICs) associados à este Erro conhecido',
+	'Class:KnownError/Attribute:ci_list+' => 'Todos os itens de configuração associados a este erro conhecido',
 	'Class:KnownError/Attribute:document_list' => 'Documentos',
-	'Class:KnownError/Attribute:document_list+' => 'Todos os Documentos associados à este Erro conhecido',
+	'Class:KnownError/Attribute:document_list+' => 'Todos os documentos associados a este erro conhecido',
 ));
 
 //
@@ -96,8 +59,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkErrorToFunctionalCI' => 'Relação entre Erro conhecido / IC',
-	'Class:lnkErrorToFunctionalCI+' => 'Itens de configuração (IC) associados à este Erro conhecido',
+	'Class:lnkErrorToFunctionalCI' => 'Link Erro Conhecido / IC',
+	'Class:lnkErrorToFunctionalCI+' => 'Infraestrutura associada a este erro conhecido',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'ICs',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Nome do IC',
@@ -115,8 +79,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkDocumentToError' => 'Relação entre Documento / Erro',
+	'Class:lnkDocumentToError' => 'Link Documentos / Erros',
 	'Class:lnkDocumentToError+' => 'Uma ligação entre um documento e um erro conhecido',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Documento',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Nome do documento',

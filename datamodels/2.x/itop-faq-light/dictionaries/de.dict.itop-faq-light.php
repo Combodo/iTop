@@ -1,30 +1,15 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/*
-* @author ITOMIG GmbH <martin.raenker@itomig.de>
-
-* @copyright     Copyright (C) 2021 Combodo SARL
-* @licence	http://opensource.org/licenses/AGPL-3.0
-*		
-*/
-//
-// Class: FAQ
-//
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ * @author ITOMIG GmbH <martin.raenker@itomig.de>
+ *
+ */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => '',
@@ -55,7 +40,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:FAQCategory/Attribute:name' => 'Name',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory/Attribute:faq_list+' => 'Alle FAQ-Einträge (frequently asked questions) verknüpft mit dieser Kategorie',
 ));
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ProblemManagement' => 'Problem Management',

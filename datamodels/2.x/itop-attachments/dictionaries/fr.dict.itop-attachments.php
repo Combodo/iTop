@@ -1,20 +1,13 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Attachments:TabTitle_Count' => 'Pièces jointes (%1$d)',
@@ -68,6 +61,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Attachments:File:Uploader' => 'Chargé par',
 	'Attachments:File:Size' => 'Taille',
 	'Attachments:File:MimeType' => 'Type',
+	'Attachments:File:DownloadsCount' => 'Téléchargements',
 ));
 //
 // Class: Attachment
@@ -80,4 +74,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Contact',
 	'Class:Attachment/Attribute:contact_id+' => '',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:TriggerOnAttachmentDownload' => 'Déclencheur sur le téléchargement d\'une pièce jointe d\'un objet',
+	'Class:TriggerOnAttachmentDownload+' => '',
+	'Class:TriggerOnAttachmentCreate'                         => 'Déclencheur sur la création d\'une pièce jointe',
+	'Class:TriggerOnAttachmentCreate+'                        => '',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Ajoute le fichier dans l\'email',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'Si coché, le fichier sera automatiquement attaché à l\'email quand l\'action email est lancée',
+	'Class:TriggerOnAttachmentDelete'                         => 'Déclencheur sur la suppression d\'une pièce jointe',
+	'Class:TriggerOnAttachmentDelete+'                        => '',
+    'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Les Triggers sur les objets ne sont pas autorisés sur la classe Attachement. Veuillez utiliser les triggers spécifiques pour cette classe',
 ));

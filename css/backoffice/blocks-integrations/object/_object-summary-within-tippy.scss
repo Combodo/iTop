@@ -1,0 +1,15 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-vendors-tippy--object-summary--background-color: $ibo-color-transparent !default;
+$ibo-vendors-tippy--object-summary--color: $ibo-body-text-color !default;
+
+.tippy-box[data-theme~='object-summary'] {
+  background-color: $ibo-vendors-tippy--object-summary--background-color;
+  color: $ibo-vendors-tippy--object-summary--color;
+  .tippy-arrow {
+    display: none;
+  }
+}

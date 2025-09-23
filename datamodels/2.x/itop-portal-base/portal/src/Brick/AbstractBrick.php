@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -23,9 +23,13 @@ namespace Combodo\iTop\Portal\Brick;
 require_once APPROOT.'/core/moduledesign.class.inc.php';
 require_once APPROOT.'/setup/compiler.class.inc.php';
 
+use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use DOMFormatException;
 use ModuleDesign;
-use Combodo\iTop\DesignElement;
 
 /**
  * Description of AbstractBrick
@@ -36,7 +40,7 @@ use Combodo\iTop\DesignElement;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since  2.3.0
  */
-abstract class AbstractBrick
+abstract class AbstractBrick implements TemplatesProviderInterface
 {
 	/** @var string ENUM_DATA_LOADING_LAZY */
 	const ENUM_DATA_LOADING_LAZY = 'lazy';
@@ -53,7 +57,7 @@ abstract class AbstractBrick
 	const DEFAULT_VISIBLE = true;
 	/** @var float DEFAULT_RANK */
 	const DEFAULT_RANK = 1.0;
-	/** @var string|null DEFAULT_PAGE_TEMPLATE_PATH */
+	/** @var string|null DEFAULT_PAGE_TEMPLATE_PATH @deprecated since 3.2.1 */
 	const DEFAULT_PAGE_TEMPLATE_PATH = null;
 	/** @var string DEFAULT_TITLE */
 	const DEFAULT_TITLE = '';
@@ -65,6 +69,8 @@ abstract class AbstractBrick
 	const DEFAULT_ALLOWED_PROFILES_OQL = '';
 	/** @var string DEFAULT_DENIED_PROFILES_OQL */
 	const DEFAULT_DENIED_PROFILES_OQL = '';
+	/** @var string TEMPLATES_BASE_PATH */
+	const TEMPLATES_BASE_PATH = 'itop-portal-base/portal/templates/bricks/';
 
 	/** @var string $sId */
 	protected $sId;
@@ -76,7 +82,7 @@ abstract class AbstractBrick
 	protected $bVisible;
 	/** @var float $fRank */
 	protected $fRank;
-	/** @var string|null $sPageTemplatePath */
+	/** @var string|null $sPageTemplatePath @deprecated since 3.2.1 */
 	protected $sPageTemplatePath;
 	/** @var string $sTitle */
 	protected $sTitle;
@@ -92,6 +98,37 @@ abstract class AbstractBrick
 	protected $sAllowedProfilesOql;
 	/** @var string $sDeniedProfilesOql */
 	protected $sDeniedProfilesOql;
+
+	/** @var \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService Templating provider service for registering default templates paths */
+	private static TemplatesProviderService $oTemplatesProviderService;
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		$oTemplatesRegister->RegisterTemplates(self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig'),
+		);
+	}
+
+	/**
+	 * @param \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService $oTemplateProviderService
+	 *
+	 * @return void
+	 */
+	public static function SetTemplatesProviderService(TemplatesProviderService $oTemplateProviderService): void
+	{
+		self::$oTemplatesProviderService = $oTemplateProviderService;
+	}
+
+	/**
+	 * Return the templates provider service.
+	 *
+	 * @return \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService
+	 */
+	protected static function GetTemplatesProviderService(): TemplatesProviderService
+	{
+		return self::$oTemplatesProviderService;
+	}
 
 	/**
 	 * Returns all enum values for the data loading modes in an array.
@@ -112,7 +149,9 @@ abstract class AbstractBrick
 		$this->bActive = static::DEFAULT_ACTIVE;
 		$this->bVisible = static::DEFAULT_VISIBLE;
 		$this->fRank = static::DEFAULT_RANK;
+		// BEGIN cleaning 3.2.1 deprecated
 		$this->sPageTemplatePath = static::DEFAULT_PAGE_TEMPLATE_PATH;
+		// END cleaning 3.2.1 deprecated
 		$this->sTitle = static::DEFAULT_TITLE;
 		$this->sDescription = static::DEFAULT_DESCRIPTION;
 		$this->sDataLoading = static::DEFAULT_DATA_LOADING;
@@ -176,10 +215,12 @@ abstract class AbstractBrick
 	 * Returns the brick page template path
 	 *
 	 * @return string
+	 *
+	 * @deprecated since 3.2.1 use GetTemplatePath('page') instead
 	 */
 	public function GetPageTemplatePath()
 	{
-		return $this->sPageTemplatePath;
+		return $this->GetTemplatePath('page');
 	}
 
 	/**
@@ -323,10 +364,13 @@ abstract class AbstractBrick
 	 * @param string $sPageTemplatePath
      *
      * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @deprecated since 3.2.1 use SetTemplatePath('page') instead
 	 */
 	public function SetPageTemplatePath($sPageTemplatePath)
 	{
 		$this->sPageTemplatePath = $sPageTemplatePath;
+		$this->SetTemplatePath( 'page', $sPageTemplatePath);
 		return $this;
 	}
 
@@ -587,7 +631,7 @@ abstract class AbstractBrick
 		// Checking mandatory elements
 		if (!$oMDElement->hasAttribute('id'))
 		{
-			throw new DOMFormatException('Brick node must have both id and xsi:type attributes defined', null, null, $oMDElement);
+			throw new DOMFormatException('Brick node must have both id and xsi:type attributes defined', 0, null, $oMDElement);
 		}
 		$this->SetId($oMDElement->getAttribute('id'));
 
@@ -616,7 +660,7 @@ abstract class AbstractBrick
 					{
 						/** @var \Combodo\iTop\DesignElement $oTemplateNode */
 						$oTemplateNode = $oTemplateNodeList->item(0);
-						$this->SetPageTemplatePath($oTemplateNode->GetText(static::DEFAULT_PAGE_TEMPLATE_PATH));
+						$this->SetTemplatePath('page', $oTemplateNode->GetText(static::DEFAULT_PAGE_TEMPLATE_PATH));
 					}
 					break;
 				case 'title':
@@ -659,4 +703,49 @@ abstract class AbstractBrick
 		return $this;
 	}
 
+	/**
+	 * Override the brick default template path.
+	 * Template is managed by the TemplatesProviderService.
+	 *
+	 * @since 3.2.1
+	 *
+	 * @param string $sTemplateId
+	 * @param string $sTileTemplatePath
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\PortalBrick
+	 */
+	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath): AbstractBrick
+	{
+		static::GetTemplatesProviderService()->OverrideInstanceTemplatePath($this, $sTemplateId, $sTileTemplatePath);
+		return $this;
+	}
+
+	/**
+	 * Returns the brick template path.
+	 * Template is managed by the TemplatesProviderService.
+	 *
+	 * @since 3.2.1
+	 *
+	 * @param string $sTemplateId template identifier
+	 *
+	 * @return string template path
+	 */
+	public function GetTemplatePath(string $sTemplateId): string
+	{
+		return static::GetTemplatesProviderService()->GetProviderInstanceTemplatePath($this, $sTemplateId);
+	}
+
+	/**
+	 * Returns true if this brick template path is overridden.
+	 *
+	 * @since 3.2.1
+	 *
+	 * @param string $sTemplateId template identifier
+	 *
+	 * @return string|null
+	 */
+	public function HasInstanceOverriddenTemplate(string $sTemplateId): ?string
+	{
+		return static::GetTemplatesProviderService()->HasInstanceOverriddenTemplate($this, $sTemplateId);
+	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -53,18 +53,6 @@ class ThemeHandler
 				]
 			],
 		];
-	}
-
-	/**
-	 * Return the ID of the theme currently defined in the config. file
-	 *
-	 * @deprecated 3.0.0, will be removed in 3.1, see N°3898
-	 * @return string
-	 */
-	public static function GetCurrentThemeId()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		static::GetCurrentUserThemeId();
 	}
 
 	/**
@@ -536,7 +524,7 @@ CSS;
 			if (static::HasImageExtension($sImg)
 				&& ! array_key_exists($sImg, $aImages))
 			{
-				$sFilePath = realpath($sImg);
+				$sFilePath = utils::RealPath($sImg, APPROOT);
 				if ($sFilePath !== false) {
 					$sFilePathWithSlashes = str_replace('\\', '/', $sFilePath);
 					$aImages[$sImg] = $sFilePathWithSlashes;
@@ -544,7 +532,7 @@ CSS;
 				}
 
 				$sCanonicalPath = static::CanonicalizePath($sTargetThemeFolderPath.'/'.$sImg);
-				$sFilePath = realpath($sCanonicalPath);
+				$sFilePath = utils::RealPath($sCanonicalPath, APPROOT);
 				if ($sFilePath !== false) {
 					$sFilePathWithSlashes = str_replace('\\', '/', $sFilePath);
 					$aImages[$sImg] = $sFilePathWithSlashes;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -19,15 +19,17 @@
 
 namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 
-use CaptureWebPage;
+use Combodo\iTop\Application\WebPage\CaptureWebPage;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Form\Field\SelectObjectField;
+use Combodo\iTop\Form\Validator\AbstractRegexpValidator;
 use Combodo\iTop\Form\Validator\MandatoryValidator;
+use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\FieldRenderer;
 use DBObjectSet;
@@ -245,16 +247,19 @@ JS
 		$oOutput->AddHtml((BlockRenderer::RenderBlockTemplates($oBlock)));
 		// JS Form field widget construct
 		$aValidators = array();
-		foreach ($this->oField->GetValidators() as $oValidator)
-		{
-			if ($oValidator::GetName() == 'notemptyextkey')
-			{
+		foreach ($this->oField->GetValidators() as $oValidator) {
+			if (false === ($oValidator instanceof AbstractRegexpValidator)) {
+				// no JS counterpart, so skipping !
+				continue;
+			}
+
+			if ($oValidator instanceof NotEmptyExtKeyValidator) {
 				// The autocomplete widget returns an empty string if the value is undefined (and the select has been aligned with this behavior)
 				$oValidator = new MandatoryValidator();
 			}
 			$aValidators[$oValidator::GetName()] = array(
 				'reg_exp' => $oValidator->GetRegExp(),
-				'message' => Dict::S($oValidator->GetErrorMessage())
+				'message' => Dict::S($oValidator->GetErrorMessage()),
 			);
 		}
 		$sValidators = json_encode($aValidators);

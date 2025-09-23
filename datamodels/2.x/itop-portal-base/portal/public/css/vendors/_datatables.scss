@@ -1,0 +1,31 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-vendors-datatables--cell--padding-x: $common-spacing-400 !default;
+$ipb-vendors-datatables--cell--padding-y: 10px !default;
+
+$ipb-vendors-datatables--row-highlight--first-cell--width: 3px !default;
+
+.table {
+  > thead, tbody, tfoot {
+    > tr {
+      > th, td {
+        position: relative;
+        padding: $ipb-vendors-datatables--cell--padding-y $ipb-vendors-datatables--cell--padding-x;
+        border: none;
+      }
+    }
+  }
+}
+
+.table-striped > tbody > tr{
+  cursor: pointer;
+}
+
+
+.dataTables_length, .dataTables_filter, .dataTables_info {
+  @extend %common-font-ral-nor-150;
+}

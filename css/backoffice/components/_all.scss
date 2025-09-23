@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -19,9 +19,9 @@
 @import "input/all";
 @import "pill";
 @import "prop";
-
+@import "spinner";
 @import "title";
-@import "datatable";
+@import "datatable/all";
 @import "form";
 @import "fieldset";
 @import "field";
@@ -33,3 +33,4 @@
 @import "field-badge";
 @import "file-select";
 @import "medallion-icon";
+@import "toast";

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Form\Field;
 
 use Closure;
+use Combodo\iTop\Form\Validator\MultipleChoicesValidator;
 
 /**
  * Description of MultipleChoicesField
@@ -30,7 +31,7 @@ use Closure;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since 2.3.0
  */
-abstract class MultipleChoicesField extends Field
+abstract class MultipleChoicesField extends AbstractSimpleField
 {
 	/** @var bool DEFAULT_MULTIPLE_VALUES_ENABLED */
 	const DEFAULT_MULTIPLE_VALUES_ENABLED = false;
@@ -49,6 +50,8 @@ abstract class MultipleChoicesField extends Field
 		$this->bMultipleValuesEnabled = static::DEFAULT_MULTIPLE_VALUES_ENABLED;
 		$this->aChoices = array();
 		$this->currentValue = array();
+
+		$this->InitValidators();
 	}
 
 	/**
@@ -177,60 +180,68 @@ abstract class MultipleChoicesField extends Field
 	public function SetChoices(array $aChoices)
 	{
 		$this->aChoices = $aChoices;
+
+		$this->InitValidators();
+
 		return $this;
 	}
 
 	/**
 	 * @param string $sId
-	 * @param null   $choice
+	 * @param null $choice choice value (eg label)
 	 *
 	 * @return $this
 	 */
 	public function AddChoice(string $sId, $choice = null)
 	{
-		if ($choice === null)
-		{
+		if ($choice === null) {
 			$choice = $sId;
 		}
 		$this->aChoices[$sId] = $choice;
-		return $this;
-	}
 
-	/**
-	 * @param string $sId
-	 *
-	 * @return $this
-	 */
-	public function RemoveChoice(string $sId)
-	{
-		if (in_array($sId, $this->aChoices))
-		{
-			unset($this->aChoices[$sId]);
-		}
-		return $this;
-	}
+        $this->InitValidators();
 
-	/**
-	 * @inheritDoc
-	 */
-	public function Validate()
-	{
-		$this->SetValid(true);
-		$this->EmptyErrorMessages();
+        return $this;
+    }
 
-		foreach ($this->GetValidators() as $oValidator)
-		{
-			foreach ($this->currentValue as $value)
-			{
-				if (!preg_match($oValidator->GetRegExp(true), $value))
-				{
-					$this->SetValid(false);
-					$this->AddErrorMessage($oValidator->GetErrorMessage());
-				}
-			}
-		}
+    /**
+     * @param string $sId
+     *
+     * @return $this
+     */
+    public function RemoveChoice(string $sId)
+    {
+        if (in_array($sId, $this->aChoices)) {
+            unset($this->aChoices[$sId]);
+        }
 
-		return $this->GetValid();
-	}
+        return $this;
+    }
 
+    /**
+     * @param bool $bReadOnly
+     * @return MultipleChoicesField
+     * @since 3.1.0 N°6414
+     */
+    public function SetReadOnly(bool $bReadOnly)
+    {
+        if ($bReadOnly) {
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
+            $this->SetValidationDisabled(true);
+        } else {
+            $this->SetValidationDisabled(false);
+        }
+
+        return parent::SetReadOnly($bReadOnly);
+    }
+
+    /**
+     * @return void
+     * @since 3.1.0 N°6414
+     */
+    protected function InitValidators(): void
+    {
+        $this->RemoveValidatorsOfClass(MultipleChoicesValidator::class);
+        $this->AddValidator(new MultipleChoicesValidator($this->aChoices));
+    }
 }

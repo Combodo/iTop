@@ -1,31 +1,15 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
 /**
- * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
- *
- * @author      Vladimir Kunin <v.b.kunin@gmail.com>
- * @link        http://community.itop-itsm.ru  iTop Russian Community
- * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-// Portal
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Page:DefaultTitle' => 'Пользовательский портал %1$s',
 	'Page:PleaseWait' => 'Пожалуйста, подождите...',
@@ -76,8 +60,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
 	'Portal:Form:Close:Warning' => 'Вы действительно хотите закрыть эту форму? Введённые данные могут быть утеряны.',
-	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.~~',
-	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.~~',
+	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting this form again.~~',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting this form again.~~',
 ));
 
 // UserProfile brick
@@ -113,6 +97,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Развернуть все',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Свернуть все',
 	'Brick:Portal:Browse:Filter:NoData' => 'Нет элементов',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Назад',
 ));
 
 // ManageBrick brick
@@ -137,14 +122,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:Object:Name' => 'Object',
 	'Brick:Portal:Object:Form:Create:Title' => 'Создать %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Обновление %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Обновление %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Пожалуйста, укажите следующую информацию:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Сохранено',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s сохранено',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Выбрать %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Выбрать %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Выбрать %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Выбрать %1$s',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Скопировать ссылку на объект',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Ссылка скопирована'
 ));

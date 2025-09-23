@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,6 +21,7 @@
 namespace Combodo\iTop\Form\Field;
 
 use Closure;
+use Combodo\iTop\Form\Validator\LinkedSetValidator;
 
 /**
  * Description of LinkedSetField
@@ -28,17 +29,19 @@ use Closure;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since 2.3.0
  */
-class LinkedSetField extends Field
+class LinkedSetField extends AbstractSimpleField
 {
 	/** @var bool DEFAULT_INDIRECT */
 	const DEFAULT_INDIRECT = false;
 	/** @var bool DEFAULT_DISPLAY_OPENED */
 	const DEFAULT_DISPLAY_OPENED = false;
 	/** @var bool DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS */
-	const DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS = false; 
-	
+	const DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS = false;
+
 	/** @var string $sTargetClass */
 	protected $sTargetClass;
+	/** @var string $sLinkedClass */
+	protected $sLinkedClass;
 	/** @var string $sExtKeyToRemote */
 	protected $sExtKeyToRemote;
 	/** @var bool $bIndirect */
@@ -51,6 +54,8 @@ class LinkedSetField extends Field
 	protected $aLimitedAccessItemIDs;
 	/** @var array $aAttributesToDisplay */
 	protected $aAttributesToDisplay;
+	/** @var array $aLnkAttributesToDisplay attcode as key */
+	protected $aLnkAttributesToDisplay;
 	/** @var string $sSearchEndpoint */
 	protected $sSearchEndpoint;
 	/** @var string $sInformationEndpoint */
@@ -68,6 +73,7 @@ class LinkedSetField extends Field
 		$this->bDisplayLimitedAccessItems = static::DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS;
 		$this->aLimitedAccessItemIDs = array();
 		$this->aAttributesToDisplay = array();
+		$this->aLnkAttributesToDisplay = array();
 		$this->sSearchEndpoint = null;
 		$this->sInformationEndpoint = null;
 
@@ -92,6 +98,31 @@ class LinkedSetField extends Field
 	public function SetTargetClass(string $sTargetClass)
 	{
 		$this->sTargetClass = $sTargetClass;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 * @since 3.1
+	 *
+	 */
+	public function GetLinkedClass()
+	{
+		return $this->sLinkedClass;
+	}
+
+	/**
+	 *
+	 * @since 3.1
+	 *
+	 * @param string $sLinkedClass
+	 *
+	 * @return $this
+	 */
+	public function SetLinkedClass(string $sLinkedClass)
+	{
+		$this->sLinkedClass = $sLinkedClass;
 
 		return $this;
 	}
@@ -238,7 +269,36 @@ class LinkedSetField extends Field
 	}
 
 	/**
-	 * @return string|null
+	 * Returns a hash array of attributes to be displayed in the linkedset in the form $sAttCode => $sAttLabel
+	 *
+	 * @since 3.1
+	 *
+	 * @param boolean $bAttCodesOnly If set to true, will return only the attcodes
+	 *
+	 * @return array
+	 */
+	public function GetLnkAttributesToDisplay(bool $bAttCodesOnly = false)
+	{
+		return ($bAttCodesOnly) ? array_keys($this->aLnkAttributesToDisplay) : $this->aLnkAttributesToDisplay;
+    }
+
+    /**
+     * @param array $aAttributesToDisplay
+     * @return $this
+     * @since 3.1.0 N°803
+     */
+    public function SetLnkAttributesToDisplay(array $aAttributesToDisplay)
+    {
+        $this->aLnkAttributesToDisplay = $aAttributesToDisplay;
+
+        $this->RemoveValidatorsOfClass(LinkedSetValidator::class);
+        $this->AddValidator(new LinkedSetValidator($aAttributesToDisplay));
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
 	 */
 	public function GetSearchEndpoint()
 	{

@@ -739,7 +739,7 @@ class PHP_ParserGenerator
             while (isset($errmsg[$restart]) && $errmsg[$restart] == ' ') {
                 $restart++;
             }
-            printf("%s%.${end}s\n", $prefix, $errmsg);
+            printf("%s%.{$end}s\n", $prefix, $errmsg);
             $errmsg = substr($errmsg, $restart);
         }
     }
@@ -771,7 +771,7 @@ class PHP_ParserGenerator
             for ($j = $i; $j < $this->nsymbol; $j += $skip) {
                 $sp = $this->symbols[$j];
                 //assert( sp->index==j );
-                printf(" %3d %-${maxlen}.${maxlen}s", $j, $sp->name);
+                printf(" %3d %-{$maxlen}.{$maxlen}s", $j, $sp->name);
             }
             print "\n";
         }

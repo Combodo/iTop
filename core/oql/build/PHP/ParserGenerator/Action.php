@@ -231,19 +231,19 @@ class PHP_ParserGenerator_Action
         switch ($this->type)
         {
         case self::SHIFT:
-            fprintf($fp, "%${indent}s shift  %d", $this->sp->name, $this->x->statenum);
+            fprintf($fp, "%{$indent}s shift  %d", $this->sp->name, $this->x->statenum);
             break;
         case self::REDUCE:
-            fprintf($fp, "%${indent}s reduce %d", $this->sp->name, $this->x->index);
+            fprintf($fp, "%{$indent}s reduce %d", $this->sp->name, $this->x->index);
             break;
         case self::ACCEPT:
-            fprintf($fp, "%${indent}s accept", $this->sp->name);
+            fprintf($fp, "%{$indent}s accept", $this->sp->name);
             break;
         case self::ERROR:
-            fprintf($fp, "%${indent}s error", $this->sp->name);
+            fprintf($fp, "%{$indent}s error", $this->sp->name);
             break;
         case self::CONFLICT:
-            fprintf($fp, "%${indent}s reduce %-3d ** Parsing conflict **", $this->sp->name, $this->x->index);
+            fprintf($fp, "%{$indent}s reduce %-3d ** Parsing conflict **", $this->sp->name, $this->x->index);
             break;
         case self::SH_RESOLVED:
         case self::RD_RESOLVED:

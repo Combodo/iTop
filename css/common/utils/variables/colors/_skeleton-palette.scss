@@ -1,0 +1,17 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* Skeleton palette */
+/* - Colors used by skeletons svg to display placeholders */
+
+$common-skeleton-start-color: $common-color-grey-200 !default;
+$common-skeleton-stop-color: $common-color-blue-grey-100 !default;
+
+/* CSS variables */
+/* Skeleton CSS3 variables are not common prefixed as they are not iTop backoffice exclusives*/
+:root {
+  --skeleton-start-color: #{$common-skeleton-start-color};
+  --skeleton-stop-color: #{$common-skeleton-stop-color};
+}

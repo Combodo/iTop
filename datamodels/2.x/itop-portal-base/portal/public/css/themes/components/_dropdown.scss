@@ -1,0 +1,33 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-dropdown--background-color: $ipb-color-white-100 !default;
+$ipb-dropdown--border-color:  $ipb-color-grey-300 !default;
+$ipb-dropdown--border:  1px solid $ipb-dropdown--border-color !default;
+
+$ipb-dropdown--li--background-color:  $ipb-dropdown--background-color !default;
+
+$ipb-dropdown--a--color:  $ipb-color-grey-900 !default;
+
+$ipb-dropdown--li--hover--background-color:  $ipb-color-grey-200 !default;
+$ipb-dropdown--li--hover--a--color:  $ipb-color-grey-800 !default;
+
+ipb-dropdown {
+  background-color: $ipb-dropdown--background-color;
+  border: $ipb-dropdown--border;
+  li {
+    background-color: $ipb-dropdown--li--background-color;
+    a {
+      color: $ipb-dropdown--a--color;
+    }
+    &:hover {
+      background: $ipb-dropdown--li--hover--background-color;
+      a {
+        color: $ipb-dropdown--li--hover--a--color;
+      }
+    }
+  }
+}

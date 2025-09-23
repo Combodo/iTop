@@ -1,29 +1,27 @@
 <?php
 /**
- * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
+ * Localized data
  *
- * @author      Vladimir Kunin <v.b.kunin@gmail.com>
- * @link        http://community.itop-itsm.ru  iTop Russian Community
- * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-//////////////////////////////////////////////////////////////////////
-// Relations for iTop version >= 2.2.0
-//////////////////////////////////////////////////////////////////////
-//
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Relation:impacts/Description' => 'Элементы, на которые влияет',
 	'Relation:impacts/DownStream' => 'Влияет на...',
 	'Relation:impacts/DownStream+' => 'Элементы, на которые влияет',
 	'Relation:impacts/UpStream' => 'Зависит от...',
 	'Relation:impacts/UpStream+' => 'Элементы, от которых зависит',
-	// Legacy entries
 	'Relation:depends on/Description' => 'Элементы, от которых зависит',
 	'Relation:depends on/DownStream' => 'Зависит от...',
 	'Relation:depends on/UpStream' => 'Влияет на...',
-	'Relation:impacts/LoadData'       => 'Load data~~',
-	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
+	'Relation:impacts/LoadData' => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
+	'Relation:impacts/FilteredData' => 'Filtered data~~',
 ));
 
 
@@ -71,6 +69,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkContactToFunctionalCI' => 'Связь Контакт/Функциональная КЕ',
 	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'Функциональная КЕ',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Функциональная КЕ',
@@ -117,6 +116,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:FunctionalCI/Attribute:finalclass' => 'Тип',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Активные тикеты',
+	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI~~',
 ));
 
 //
@@ -126,6 +126,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:PhysicalDevice' => 'Физические устройства',
 	'Class:PhysicalDevice+' => '',
+	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Серийный номер',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
 	'Class:PhysicalDevice/Attribute:location_id' => 'Расположение',
@@ -165,6 +166,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Rack' => 'Стойка',
 	'Class:Rack+' => '',
+	'Class:Rack/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Rack/Attribute:nb_u' => 'Высота (U)',
 	'Class:Rack/Attribute:nb_u+' => 'Количество юнитов',
 	'Class:Rack/Attribute:device_list' => 'Устройства',
@@ -231,6 +233,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ConnectableCI' => 'Подключаемые КЕ',
 	'Class:ConnectableCI+' => 'Подключаемые КЕ',
+	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Сетевые устройства',
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Связанные сетевые устройства',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Сетевые интерфейсы',
@@ -244,6 +247,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:DatacenterDevice' => 'Устройства дата-центра',
 	'Class:DatacenterDevice+' => 'Устройства дата-центра',
+	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Стойка',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '',
 	'Class:DatacenterDevice/Attribute:rack_name' => 'Стойка',
@@ -270,7 +274,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:DatacenterDevice/Attribute:san_list+' => 'Устройства сети хранения данных (Storage Area Network)',
 	'Class:DatacenterDevice/Attribute:redundancy' => 'Резервирование',
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'Устройство в работе, если по крайней мере один источник питания (А или Б) в работе',
-	// Unused yet
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'Устройство в работе, если все источники питания в работе',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'Устройство в работе, если по крайней мере %1$s %% источников питания в работе',
 ));
@@ -282,6 +285,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:NetworkDevice' => 'Сетевое устройство',
 	'Class:NetworkDevice+' => 'Сетевое устройство',
+	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Тип устройства',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Тип устройства',
@@ -303,6 +307,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Server' => 'Сервер',
 	'Class:Server+' => 'Сервер',
+	'Class:Server/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Server/Attribute:osfamily_id' => 'Семейство ОС',
 	'Class:Server/Attribute:osfamily_id+' => 'Семейство операционной системы',
 	'Class:Server/Attribute:osfamily_name' => 'Семейство ОС',
@@ -330,6 +335,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:StorageSystem' => 'Система хранения',
 	'Class:StorageSystem+' => 'Система хранения',
+	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Логические тома',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Логические тома',
 ));
@@ -341,6 +347,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SANSwitch' => 'SAN коммутатор',
 	'Class:SANSwitch+' => 'SAN коммутатор',
+	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Устройства',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Подключенные устройства',
 ));
@@ -352,6 +359,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:TapeLibrary' => 'Ленточная библиотека',
 	'Class:TapeLibrary+' => 'Ленточная библиотека',
+	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Ленты',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Ленты',
 ));
@@ -363,6 +371,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:NAS' => 'Сетевое хранилище',
 	'Class:NAS+' => 'Сетевое хранилище',
+	'Class:NAS/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Файловые системы',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Файловые системы',
 ));
@@ -374,6 +383,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:PC' => 'Персональный компьютер',
 	'Class:PC+' => 'Персональный компьютер',
+	'Class:PC/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PC/Attribute:osfamily_id' => 'Семейство ОС',
 	'Class:PC/Attribute:osfamily_id+' => 'Семейство операционной системы',
 	'Class:PC/Attribute:osfamily_name' => 'Семейство ОС',
@@ -401,6 +411,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Printer' => 'Принтер',
 	'Class:Printer+' => 'Принтер',
+	'Class:Printer/ComplementaryName' => '%1$s - %2$s~~',
 ));
 
 //
@@ -410,6 +421,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:PowerConnection' => 'Электропитание',
 	'Class:PowerConnection+' => 'Подключения электропитания',
+	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s~~',
 ));
 
 //
@@ -419,6 +431,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:PowerSource' => 'Источник электропитания',
 	'Class:PowerSource+' => 'Источник электропитания',
+	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PowerSource/Attribute:pdus_list' => 'Распределители',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Распределители электропитания (PDU)',
 ));
@@ -430,6 +443,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:PDU' => 'Распределитель ЭП',
 	'Class:PDU+' => 'Распределитель электропитания',
+	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s~~',
 	'Class:PDU/Attribute:rack_id' => 'Стойка',
 	'Class:PDU/Attribute:rack_id+' => '',
 	'Class:PDU/Attribute:rack_name' => 'Стойка',
@@ -447,6 +461,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Peripheral' => 'Периферийное устройство',
 	'Class:Peripheral+' => 'Периферийное устройство',
+	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s~~',
 ));
 
 //
@@ -456,6 +471,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Enclosure' => 'Крейт',
 	'Class:Enclosure+' => 'Крейт, шасси и т.п.',
+	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Enclosure/Attribute:rack_id' => 'Стойка',
 	'Class:Enclosure/Attribute:rack_id+' => '',
 	'Class:Enclosure/Attribute:rack_name' => 'Стойка',
@@ -593,6 +609,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:MiddlewareInstance' => 'Экземпляр промежуточного ПО',
 	'Class:MiddlewareInstance+' => 'Экземпляр промежуточного ПО',
+	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Промежуточное ПО',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Промежуточное ПО',
@@ -606,6 +623,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:DatabaseSchema' => 'Схема базы данных',
 	'Class:DatabaseSchema+' => 'Схема базы данных',
+	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Сервер БД',
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
 	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Сервер БД',
@@ -619,6 +637,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:WebApplication' => 'Веб-приложение',
 	'Class:WebApplication+' => 'Веб-приложение',
+	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:WebApplication/Attribute:webserver_id' => 'Веб-сервер',
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Веб-сервер',
@@ -699,6 +718,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:VirtualMachine' => 'Виртуальная машина',
 	'Class:VirtualMachine+' => 'Виртуальная машина',
+	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Виртуальный хост',
 	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
 	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Виртуальный хост',
@@ -759,6 +779,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkServerToVolume' => 'Связь Сервер/Том',
 	'Class:lnkServerToVolume+' => 'Связь Сервер/Том',
+	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
 	'Class:lnkServerToVolume/Attribute:volume_id' => 'Том',
 	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
 	'Class:lnkServerToVolume/Attribute:volume_name' => 'Том',
@@ -778,6 +799,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkVirtualDeviceToVolume' => 'Связь Виртуальное устройство/Том',
 	'Class:lnkVirtualDeviceToVolume+' => 'Связь Виртуальное устройство/Том',
+	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Том',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Том',
@@ -797,6 +819,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkSanToDatacenterDevice' => 'Связь SAN коммутатор/Устройство дата-центра',
 	'Class:lnkSanToDatacenterDevice+' => 'Связь SAN коммутатор/Устройство дата-центра',
+	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN коммутатор',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'SAN коммутатор',
@@ -858,6 +881,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Software' => 'Программное обеспечение',
 	'Class:Software+' => 'Программное обеспечение',
+	'Class:Software/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Software/Attribute:name' => 'Название',
 	'Class:Software/Attribute:name+' => '',
 	'Class:Software/Attribute:vendor' => 'Вендор',
@@ -975,6 +999,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:OSLicence' => 'Лицензия ОС',
 	'Class:OSLicence+' => 'Лицензия ОС',
+	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'Версия ОС',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'Версия ОС',
@@ -992,6 +1017,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SoftwareLicence' => 'Лицензия ПО',
 	'Class:SoftwareLicence+' => 'Лицензия ПО',
+	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SoftwareLicence/Attribute:software_id' => 'ПО',
 	'Class:SoftwareLicence/Attribute:software_id+' => '',
 	'Class:SoftwareLicence/Attribute:software_name' => 'ПО',
@@ -1007,6 +1033,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkDocumentToLicence' => 'Связь Документ/Лицензия',
 	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Лицензия',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
 	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Лицензия',
@@ -1046,6 +1073,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Brand' => 'Бренд',
 	'Class:Brand+' => '',
+	'Class:Brand/Attribute:logo' => 'Logo~~',
+	'Class:Brand/Attribute:logo+' => '~~',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Устройства',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Все устройства этого бренда',
 	'Class:Brand/UniquenessRule:name+' => 'Название должно быть уникальным',
@@ -1059,10 +1088,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Model' => 'Модель',
 	'Class:Model+' => '',
+	'Class:Model/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Model/Attribute:brand_id' => 'Бренд',
 	'Class:Model/Attribute:brand_id+' => '',
 	'Class:Model/Attribute:brand_name' => 'Бренд',
 	'Class:Model/Attribute:brand_name+' => '',
+	'Class:Model/Attribute:picture' => 'Picture~~',
+	'Class:Model/Attribute:picture+' => '~~',
 	'Class:Model/Attribute:type' => 'Тип устройства',
 	'Class:Model/Attribute:type+' => '',
 	'Class:Model/Attribute:type/Value:PowerSource' => 'Источник электропитания',
@@ -1138,6 +1170,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkDocumentToPatch' => 'Связь Документ/Патч',
 	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Патч',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
 	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Патч',
@@ -1155,6 +1188,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Связь Экземпляр ПО/Патч ПО',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Патч ПО',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'Патч ПО',
@@ -1172,6 +1206,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkFunctionalCIToOSPatch' => 'Связь Функциональная КЕ/Патч ОС',
 	'Class:lnkFunctionalCIToOSPatch+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'Патч ОС',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'Патч ОС',
@@ -1189,6 +1224,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkDocumentToSoftware' => 'Связь Документ/ПО',
 	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'ПО',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
 	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'ПО',
@@ -1206,6 +1242,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Subnet' => 'Подсеть',
 	'Class:Subnet+' => '',
+	'Class:Subnet/Name' => '%1$s/%2$s~~',
+	'Class:Subnet/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Subnet/Attribute:description' => 'Описание',
 	'Class:Subnet/Attribute:description+' => '',
 	'Class:Subnet/Attribute:subnet_name' => 'Имя подсети',
@@ -1250,6 +1288,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkSubnetToVLAN' => 'Связь Подсеть/VLAN',
 	'Class:lnkSubnetToVLAN+' => '',
+	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Подсеть',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => 'IP-адрес подсети',
@@ -1284,8 +1323,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP-адрес',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
-
-
 	'Class:IPInterface/Attribute:macaddress' => 'MAC-адрес',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => 'Комментарий',
@@ -1305,6 +1342,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:PhysicalInterface' => 'Физический интерфейс',
 	'Class:PhysicalInterface+' => '',
+	'Class:PhysicalInterface/Name' => '%2$s %1$s~~',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Устройства',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Устройства',
@@ -1320,6 +1358,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Связь Физический интерфейс/VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Физический интерфейс',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => 'Физический интерфейс',
@@ -1374,6 +1413,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkConnectableCIToNetworkDevice' => 'Связь Подключаемая КЕ/Сетевое устройство',
 	'Class:lnkConnectableCIToNetworkDevice+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Сетевое устройство',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'Сетевое устройство',
@@ -1401,6 +1441,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Связь Прикладное решение/Функциональная КЕ',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Прикладное решение',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Прикладное решение',
@@ -1418,6 +1459,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Связь Прикладное решение/Бизнес-процесс',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Бизнес-процесс',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'Бизнес-процесс',
@@ -1435,6 +1477,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Group' => 'Группа',
 	'Class:Group+' => '',
+	'Class:Group/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Group/Attribute:name' => 'Название',
 	'Class:Group/Attribute:name+' => '',
 	'Class:Group/Attribute:status' => 'Статус',
@@ -1454,7 +1497,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Group/Attribute:type' => 'Тип',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => 'Родительская группа',
-
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => 'Родительская группа',
 	'Class:Group/Attribute:parent_name+' => '',
@@ -1471,6 +1513,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkGroupToCI' => 'Связь Группа/КЕ',
 	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Группа',
 	'Class:lnkGroupToCI/Attribute:group_id+' => '',
 	'Class:lnkGroupToCI/Attribute:group_name' => 'Группа',
@@ -1492,6 +1535,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Server:otherinfo' => 'Дополнительно',
 	'Server:power' => 'Электропитание',
 	'Class:Subnet/Tab:IPUsage' => 'Использование IP-адресов',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',
 	'Class:Subnet/Tab:IPUsage-explain' => 'Интерфейсы с IP-адресом в диапазоне: <em>%1$s</em> - <em>%2$s</em>',
 	'Class:Subnet/Tab:FreeIPs' => 'Свободные IP-адреса',
 	'Class:Subnet/Tab:FreeIPs-count' => 'Свободных IP-адресов: %1$s',
@@ -1507,6 +1551,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkDocumentToFunctionalCI' => 'Связь Документ/Функциональная КЕ',
 	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Функциональная КЕ',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Функциональная КЕ',
@@ -1567,4 +1612,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:Software' => 'Каталог ПО',
 	'Menu:Software+' => 'Каталог ПО',
 ));
-?>
+
+//
+// Class: PhysicalInterface
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
+	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
+));

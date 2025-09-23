@@ -1,0 +1,79 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-alert--message--color: $ipb-body-text-color !default;
+$ipb-alert--icon--font-size: $common-font-size-300 !default;
+$ipb-alert--icon--width: 24px !default;
+$ipb-alert--icon--margin-right: 30px !default;
+$ipb-alert--background-color: $ipb-color-white-100 !default;
+$ipb-alert--border-width: 1px !default;
+$ipb-alert--border-color: $ipb-color-grey-400 !default;
+$ipb-alert--border-accent-width: 3px !default;
+$ipb-alert--border-radius: $common-border-radius-300 !default;
+$ipb-alert--margin-x: $common-spacing-400 !default;
+$ipb-alert--margin-bottom: $common-spacing-200 !default;
+$ipb-alerts-colors: (
+        "info": (
+                "color": $common-color-information-700,
+                "icon": '\f129',
+        ),
+        "success": (
+                "color": $common-color-success-700,
+                "icon": '\f00c',
+        ),
+        "warning": (
+                "color": $common-color-warning-700,
+                "icon": '\f12a',
+        ),
+        "danger": (
+                "color": $common-color-danger-700,
+                "icon": '\f071',
+        )
+) !default;
+
+.ipb-alert {
+  margin-bottom: $ipb-alert--margin-bottom;
+  background-color: $ipb-alert--background-color;
+  color: $ipb-alert--message--color;
+  border-radius: $ipb-alert--border-radius;
+  border-top: $ipb-alert--border-width $ipb-alert--border-color solid;
+  border-right: $ipb-alert--border-width $ipb-alert--border-color solid;
+  border-bottom: $ipb-alert--border-width $ipb-alert--border-color solid;
+  border-radius: $ipb-alert--border-accent-width;
+
+  &:before {
+    @extend %fa-solid-base;
+    font-size: $ipb-alert--icon--font-size;
+    margin-right: $ipb-alert--icon--margin-right;
+    width: $ipb-alert--icon--width;
+    text-align: center;
+  }
+}
+
+.ipb-page--session-messages .ipb-alert {
+  margin-left: $ipb-alert--margin-x;
+  margin-right: $ipb-alert--margin-x;
+}
+
+// for each alert level....
+@each $name, $alert-color in $ipb-alerts-colors {
+
+  // variables
+  $color: map-get($alert-color, "color");
+  $icon: map-get($alert-color, "icon");
+  $background-color: common-adjust-alpha($color, .1);
+
+  .ipb-alert.alert-#{$name}, .ipb-alert.ipb-is-#{$name} {
+    background: linear-gradient(113deg, $background-color 0px, $background-color 60px, transparent 60px), $ipb-alert--background-color;
+    border-left-color: $color;
+
+    &:before {
+      content: $icon;
+      color: $color;
+    }
+  }
+
+}

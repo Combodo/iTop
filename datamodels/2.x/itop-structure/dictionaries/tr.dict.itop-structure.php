@@ -1,37 +1,16 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * Localized data
- * @author      Benjamin Planque <benjamin.planque@combodo.com>
- * @author      Izzet Sirin <izzet.sirin@htr.com.tr>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-//
-// Class: Organization
-//
+/**
+ * @author Benjamin Planque <benjamin.planque@combodo.com>
+ * @author Izzet Sirin <izzet.sirin@htr.com.tr>
+ *
+ */
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Organization' => 'Kurum',
 	'Class:Organization+' => '',
@@ -101,6 +80,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Contact' => 'İrtibat',
 	'Class:Contact+' => '',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Adı',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => 'Durumu',
@@ -118,7 +98,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Contact/Attribute:phone' => 'Telefon',
 	'Class:Contact/Attribute:phone+' => '',
 	'Class:Contact/Attribute:notify' => 'Bildirim',
-	'Class:Contact/Attribute:notify+' => '~~',
+	'Class:Contact/Attribute:notify+' => 'Flag which can be used by each notification~~',
 	'Class:Contact/Attribute:notify/Value:no' => 'hayır',
 	'Class:Contact/Attribute:notify/Value:no+' => 'hayır',
 	'Class:Contact/Attribute:notify/Value:yes' => 'evet',
@@ -138,6 +118,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Person' => 'Kişi',
 	'Class:Person+' => '',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Soyad',
 	'Class:Person/Attribute:name+' => '~~',
 	'Class:Person/Attribute:first_name' => 'Adı',
@@ -158,6 +139,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Person/Attribute:team_list+' => 'Bu kişinin ait olduğu tüm ekipler',
 	'Class:Person/Attribute:tickets_list' => 'Çağrı kayıtları',
 	'Class:Person/Attribute:tickets_list+' => 'Bu kişinin oluşturduğu tüm çağrı kayıtları',
+	'Class:Person/Attribute:user_list' => 'Users~~',
+	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Yöneticinin kullandığı adı',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '~~',
 	'Class:Person/Attribute:picture' => 'Picture~~',
@@ -166,6 +149,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
+	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
 ));
 
 //
@@ -175,6 +159,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Team' => 'Ekip',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Üyeler',
 	'Class:Team/Attribute:persons_list+' => 'Bu ekibe ait tüm kişiler',
 	'Class:Team/Attribute:tickets_list' => 'Çağrı Kayıtları',
@@ -188,6 +173,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Document' => 'Doküman',
 	'Class:Document+' => '',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Adı',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => 'Kurum',
@@ -287,16 +273,18 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkPersonToTeam' => 'Bağlantılı Kişi / Ekip',
 	'Class:lnkPersonToTeam+' => '~~',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
+	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Ekip',
-	'Class:lnkPersonToTeam/Attribute:team_id+' => '~~',
+	'Class:lnkPersonToTeam/Attribute:team_id+' => 'A team to which the person belongs~~',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Ekip adı',
 	'Class:lnkPersonToTeam/Attribute:team_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:person_id' => 'Kişi',
-	'Class:lnkPersonToTeam/Attribute:person_id+' => '~~',
+	'Class:lnkPersonToTeam/Attribute:person_id+' => 'A member of the team~~',
 	'Class:lnkPersonToTeam/Attribute:person_name' => 'Kişi Adı',
 	'Class:lnkPersonToTeam/Attribute:person_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:role_id' => 'Rol',
-	'Class:lnkPersonToTeam/Attribute:role_id+' => '~~',
+	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles~~',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Rol Adı',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
 ));
@@ -306,8 +294,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Menu:DataAdministration' => 'Veri Yönetimi',
-	'Menu:DataAdministration+' => 'Veri Yönetimi',
+	'Menu:DataAdministration' => 'Veri yönetimi',
+	'Menu:DataAdministration+' => 'Veri yönetimi',
 	'Menu:Catalogs' => 'Kataloglar',
 	'Menu:Catalogs+' => 'Veri tipleri',
 	'Menu:Audit' => 'Denetleme',
@@ -316,10 +304,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:CSVImport+' => 'Çoklu yaratım veya güncelleme',
 	'Menu:Organization' => 'Kurumlar',
 	'Menu:Organization+' => 'Tüm Kurumlar',
-	'Menu:ConfigManagement' => 'Konfigürasyon Yönetimi',
-	'Menu:ConfigManagement+' => 'Konfigürasyon Yönetimi',
-	'Menu:ConfigManagementCI' => 'Konfigürasyon Kalemleri',
-	'Menu:ConfigManagementCI+' => 'Konfigürasyon Kalemleri',
+	'Menu:ConfigManagement' => 'Konfigürasyon yönetimi',
+	'Menu:ConfigManagement+' => 'Konfigürasyon yönetimi',
+	'Menu:ConfigManagementCI' => 'Konfigürasyon kalemleri',
+	'Menu:ConfigManagementCI+' => 'Konfigürasyon kalemleri',
 	'Menu:ConfigManagementOverview' => 'Özet',
 	'Menu:ConfigManagementOverview+' => 'Özet',
 	'Menu:Contact' => 'İrtibatlar',
@@ -332,7 +320,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Document' => 'Dokümanlar',
 	'Menu:Document+' => 'Tüm dokümanlar',
 	'Menu:Location' => 'Yerleşkeler',
-	'Menu:Location+' => 'Tüm Yerleşkeler',
+	'Menu:Location+' => 'Tüm yerleşkeler',
 	'Menu:NewContact' => 'Yeni İrtibat',
 	'Menu:NewContact+' => 'Yeni İrtibat',
 	'Menu:SearchContacts' => 'İrtibat ara',
@@ -349,7 +337,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Person:info' => 'Genel Bilgi',
-	'UserLocal:info' => 'Genel Bilgi',
+	'User:info' => 'Genel Bilgi',
+	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Bildirim',
 ));

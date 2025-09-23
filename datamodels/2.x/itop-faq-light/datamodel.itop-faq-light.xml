@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="FAQ" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -217,7 +217,6 @@
     <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define_if_not_exists">
       <rank>5</rank>
       <parent>ProblemManagement</parent>
-      <template_file/>
     </menu>
     <menu id="FAQCategory" xsi:type="OQLMenuNode" _delta="define">
       <rank>4.5</rank>
@@ -240,7 +239,7 @@
           <rank>
             <default>40</default>
           </rank>
-          <width>12</width>
+          <width>400px</width>
           <title>
             <navigation_menu>Brick:Portal:FAQ:Menu</navigation_menu>
             <home>Brick:Portal:FAQ:Title</home>
@@ -305,15 +304,15 @@
           <twig>
             <div class="row">
               <div class="col-sm-4">
-                <div class="form_field" data-field-id="category_name"></div>
-                <div class="form_field" data-field-id="title"></div>
-                <div class="form_field" data-field-id="error_code"></div>
-                <div class="form_field" data-field-id="key_words"></div>
-                <div class="form_field" data-field-id="domains"></div>
-                <div class="form_field" data-field-id="summary"></div>
+                <div class="form_field" data-field-id="category_name"/>
+                <div class="form_field" data-field-id="title"/>
+                <div class="form_field" data-field-id="error_code"/>
+                <div class="form_field" data-field-id="key_words"/>
+                <div class="form_field" data-field-id="domains"/>
+                <div class="form_field" data-field-id="summary"/>
               </div>
               <div class="col-sm-8">
-                <div class="form_field" data-field-id="description"></div>
+                <div class="form_field" data-field-id="description"/>
               </div>
             </div>
           </twig>

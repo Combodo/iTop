@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -16,12 +16,16 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+namespace Combodo\iTop\Application\WebPage;
+
+use DBSearch;
+use ExecutionKPI;
 
 /**
  * Simple web page with no includes or fancy formatting, useful to generateXML documents
  * The page adds the content-type text/XML and the encoding into the headers
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -34,7 +38,7 @@ class CSVPage extends WebPage
 	    parent::__construct($s_title);
 	    $this->add_header("Content-type: text/plain; charset=".self::PAGES_CHARSET);
 	    $this->no_cache();
-	    $this->add_xframe_options();
+	    $this->add_http_headers();
 	    //$this->add_header("Content-Transfer-Encoding: binary");
 	    $oKpi->ComputeStats(get_class($this).' creation', 'CSVPage');
     }	

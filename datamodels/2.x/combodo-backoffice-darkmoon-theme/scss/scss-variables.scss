@@ -21,6 +21,29 @@ $ibo-color-red-600: $nord11;
 $ibo-color-red-700: darken($nord11, 7%);
 $ibo-color-red-800: darken($nord11, 15%);
 $ibo-color-red-900: darken($nord11, 22%);
+$ibo-color-red-950: darken($nord11, 25%);
+
+$ibo-color-error-100: $ibo-color-red-100;
+$ibo-color-error-200: $ibo-color-red-200;
+$ibo-color-error-300: $ibo-color-red-300;
+$ibo-color-error-400: $ibo-color-red-400;
+$ibo-color-error-500: $ibo-color-red-500;
+$ibo-color-error-600: $ibo-color-red-600;
+$ibo-color-error-700: $ibo-color-red-700;
+$ibo-color-error-800: $ibo-color-red-800;
+$ibo-color-error-900: $ibo-color-red-900;
+$ibo-color-error-950: $ibo-color-red-950;
+
+$ibo-color-danger-100: $ibo-color-red-100;
+$ibo-color-danger-200: $ibo-color-red-200;
+$ibo-color-danger-300: $ibo-color-red-300;
+$ibo-color-danger-400: $ibo-color-red-400;
+$ibo-color-danger-500: $ibo-color-red-500;
+$ibo-color-danger-600: $ibo-color-red-600;
+$ibo-color-danger-700: $ibo-color-red-700;
+$ibo-color-danger-800: $ibo-color-red-800;
+$ibo-color-danger-900: $ibo-color-red-900;
+$ibo-color-danger-950: $ibo-color-red-950;
 
 $ibo-color-primary-100: lighten($nord8, 15%);
 $ibo-color-primary-200: darken($ibo-color-primary-100, 7%);
@@ -50,8 +73,8 @@ $text    : $ibo-color-grey-100;
 $text-invert: $ibo-color-grey-800;
 $text-light : $ibo-color-grey-200;
 $text-strong: inherit;
-$code: $ibo-color-primary-800;
-$code-background: $ibo-color-grey-300;
+$code: $ibo-color-primary-400;
+$code-background: $ibo-color-grey-700;
 $pre-background: $ibo-color-grey-600;
 
 $ibo-scrollbar--scrollbar-track-background-color: $ibo-color-grey-700;
@@ -145,6 +168,10 @@ $ibo-vendors-datatables--row--background-color--is-even: $ibo-color-grey-800;
 $ibo-datatable--row--background-color--is-hover: $ibo-color-blue-900;
 $ibo-datatable--row--background-color--is-selected: $ibo-color-blue-700;
 
+$ibo-fieldsorter--selected--background-color: $ibo-color-blue-800;
+
+$ibo-table-preview--header-cell--background-color: $ibo-color-grey-500;
+
 $ibo-field--value--color: $ibo-body-text-color;
 $ibo-title--text-color: $ibo-body-text-color;
 
@@ -172,9 +199,14 @@ $ibo-input-select--action-button--color: $ibo-input-select-wrapper--after--color
 $ibo-input-select-selectize--item--active--text-color: $ibo-color-grey-100;
 $ibo-input-select-selectize--item--active--background-color: $ibo-color-grey-500;
 $ibo-vendors-selectize-input--color: $ibo-body-text-color;
+$ibo-vendors-selectize-input--background-color: $ibo-input--background-color;
+$ibo-vendors-selectize--input--border-color: $ibo-input--border-color;
+$ibo-vendors-selectize--element--active--background: $ibo-color-grey-400;
+$ibo-vendors-selectize--element--active--color: $ibo-body-text-color;
 
-$ibo-popover-menu--separator--background-color: $ibo-color-grey-500;
+$ibo-popover-menu--item-separator--background-color: $ibo-color-grey-500;
 $ibo-popover-menu--item--text-color: $ibo-color-grey-200;
+$ibo-popover-menu--item--icon--color: $ibo-color-grey-300;
 $ibo-popover-menu--background-color: $ibo-color-grey-700;
 $ibo-popover-menu--item--hover-background-color: $ibo-color-grey-500;
 
@@ -189,8 +221,16 @@ $ibo-tab-container--extra-tab-toggler--background-color--on-hover: $ibo-color-gr
 $ibo-activity-panel--header--background-color: $ibo-color-grey-400;
 $ibo-activity-panel--tab-toggler--is-active--background-color: $ibo-color-grey-200;
 $ibo-activity-panel--tab-toolbar--background-color: $ibo-activity-panel--tab-toggler--is-active--background-color;
+$ibo-activity-panel--load-entries-button--background-color: $ibo-color-grey-500;
 $ibo-caselog-entry-form--background-color: $ibo-activity-panel--tab-toolbar--background-color;
 $ibo-object-details--tag--separator--background-color: $ibo-color-grey-300;
+
+$ibo-skeleton-start-color: $ibo-color-grey-500;
+$ibo-skeleton-stop-color: $ibo-color-grey-400;
+
+$ibo-tab--temporary-remote-content--button--color: $ibo-color-grey-200;
+$ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200;
+$ibo-tab--temporary-remote-content--button--hover--background-color: $ibo-color-grey-800;
 
 $ibo-activity-panel--tab-toolbar--text-color: $ibo-color-grey-800;
 $ibo-activity-panel--tab-toolbar-action--color: $ibo-color-grey-800;
@@ -216,7 +256,7 @@ $ibo-search-form-panel--criteria--color: $ibo-color-grey-100;
 $ibo-search-form-panel--more-criteria--background-color: $ibo-color-grey-800;
 $ibo-search-form-panel--more-criteria--color: $ibo-color-grey-100;
 $ibo-search-form-panel--more-criteria--icon--color: $ibo-color-primary-500;
-$ibo-search-form-panel--criteria--border-color: $ibo-color-grey-500;
+$ibo-search-form-panel--criteria--border-color: $ibo-color-grey-900;
 $ibo-search-form-panel--multiple-choice--hover--color: $ibo-color-grey-500;
 $ibo-search-form-panel--items--hover--color: $ibo-search-form-panel--multiple-choice--hover--color;
 
@@ -252,3 +292,22 @@ $ibo-vendors-c3--legend-item--fill: $ibo-color-grey-100;
 $ibo-vendors-c3--axis--fill: $ibo-color-grey-200;
 
 $ibo-run-query--highlight--background-color: $ibo-color-primary-700;
+
+$ibo-datamodel-viewer--classes-list--selectize-input--background-color: $ibo-color-grey-700;
+$ibo-datamodel-viewer--classes-list--selectize-input--border-color: $ibo-color-grey-500;
+$ibo-datamodel-viewer--classes-list--selectize-input--color: $ibo-color-grey-200;
+$ibo-datamodel-viewer--lifecycle--code--color: $ibo-color-grey-300;
+$ibo-datamodel-viewer--lifecycle--stimuli--color: $ibo-color-blue-300;
+$ibo-datamodel-viewer--lifecycle--attribute-option--color: $ibo-color-pink-300;
+$ibo-datamodel-viewer--schema--tooltip--fill: $ibo-color-grey-600;
+
+$ibo-csv-import--row-error--background-color: $ibo-color-red-950;
+$ibo-csv-import--cell-error--color: $ibo-color-red-500;
+$ibo-csv-import--cell-modified--color: $ibo-color-blue-500;
+
+$ibo-welcome-popup--messages-stack--background-color: $ibo-color-grey-700;
+$ibo-welcome-popup--stack-item--background-color: $ibo-color-grey-600;
+$ibo-welcome-popup--stack-item--border-color: $ibo-color-grey-800;
+$ibo-welcome-popup--stack-item--is-active--border-color: $ibo-color-grey-900;
+
+$ibo-vendors-ckeditor--ck-content--text-color: $ibo-color-grey-900;

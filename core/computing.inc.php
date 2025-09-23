@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010-2021 Combodo SARL
+ * Copyright (C) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -22,7 +22,7 @@
 /**
  * Any extension to compute things like a stop watch deadline or working hours
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -108,7 +108,7 @@ class DefaultWorkingTimeComputer implements iWorkingTimeComputer
 		// Default implementation: 24x7, no holidays: to compute the deadline, just add
 		// the specified duration to the given date/time
 		$oResult = clone $oStartDate;
-		$oResult->modify('+'.$iDuration.' seconds');
+		$oResult->modify($iDuration.' seconds');
 		if (class_exists('WorkingTimeRecorder'))
 		{
 			WorkingTimeRecorder::SetValues($oStartDate->format('U'), $oResult->format('U'), $iDuration, WorkingTimeRecorder::COMPUTED_END);

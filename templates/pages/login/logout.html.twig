@@ -1,4 +1,4 @@
-{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 {% extends "base.html.twig" %}
@@ -21,6 +21,6 @@
 {% block ready_script %}
     {{ parent() }}
 
-    // Redirect after 1s so the user has time to read the message
-    setTimeout(function() { window.location.href = '{{ sUrl }}'; }, 1000);
+    // Redirect after 7s so the user has time to read the message
+    setTimeout(function() { window.location.href = '{{ sUrl }}'; }, 7000);
 {% endblock %}

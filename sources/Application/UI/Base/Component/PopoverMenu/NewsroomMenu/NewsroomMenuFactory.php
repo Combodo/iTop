@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,6 +20,8 @@
 namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu\NewsroomMenu;
 
 use appUserPreferences;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
+use iNewsroomProvider;
 use MetaModel;
 use UserRights;
 use utils;
@@ -62,11 +64,10 @@ class NewsroomMenuFactory
 	{
 		$aProviderParams=[];
 		$oUser = UserRights::GetUserObject();
-		/**
-		 * @var \iNewsroomProvider[] $aProviders
-		 */
-		$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-		foreach($aProviders as $oProvider) {
+		/** @var iNewsroomProvider[] $aProviders */
+		$aProviders = InterfaceDiscovery::GetInstance()->FindItopClasses(iNewsroomProvider::class);
+		foreach($aProviders as $cProvider) {
+			$oProvider = new $cProvider();
 			$oConfig = MetaModel::GetConfig();
 			$oProvider->SetConfig($oConfig);
 			$bProviderEnabled = appUserPreferences::GetPref('newsroom_provider_'.get_class($oProvider), true);
@@ -86,7 +87,7 @@ class NewsroomMenuFactory
 		$sPlaceholderImageUrl= 'far fa-envelope';
 		$aParams = array(
 			'image_icon' => $sImageUrl,
-			'no_message_icon' => file_get_contents(APPROOT.'images/illustrations/undraw_empty.svg'),
+			'no_message_icon' => file_get_contents(APPROOT.'images/illustrations/undraw_social_serenity.svg'),
 			'placeholder_image_icon' => $sPlaceholderImageUrl,
 			'cache_uuid' => 'itop-newsroom-'.UserRights::GetUserId().'-'.md5(APPROOT),
 			'providers' => $aProviderParams,

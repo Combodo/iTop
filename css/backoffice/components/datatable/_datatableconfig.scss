@@ -1,0 +1,42 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-datatableconfig--attributes-panel--first-column--margin-x: $ibo-spacing-0 !default;
+$ibo-datatableconfig--attributes-panel--first-column--margin-y: $ibo-spacing-300 !default;
+$ibo-datatableconfig--attributes-panel--first-column--max-height: 150px !default;
+
+$ibo-datatableconfig--attributes-panel--per-page--input--margin-x: $ibo-spacing-200 !default;
+$ibo-datatableconfig--attributes-panel--per-page--input--margin-y: $ibo-spacing-0 !default;
+
+$ibo-datatableconfig--settings-panel--option--margin-right: $ibo-spacing-200 !default;
+
+.ibo-datatableconfig--attributes-panel .ibo-panel--body{
+  @extend %ibo-font-ral-nor-100;
+}
+.ibo-datatableconfig--attributes-panel .ibo-multi-column .ibo-column:first-child{
+  margin: $ibo-datatableconfig--attributes-panel--first-column--margin-y $ibo-datatableconfig--attributes-panel--first-column--margin-x;
+  max-height: $ibo-datatableconfig--attributes-panel--first-column--max-height;
+  overflow-y: scroll;
+}
+.ibo-datatableconfig--attributes-panel--per-page--input{
+  margin: $ibo-datatableconfig--attributes-panel--per-page--input--margin-y $ibo-datatableconfig--attributes-panel--per-page--input--margin-x;
+  max-width: 4em;
+  @extend .ibo-input;
+  display: initial;
+}
+
+.ibo-datatableconfig--settings-panel .ibo-panel--body{
+  display: flex;
+  flex-direction: row;
+}
+.ibo-datatableconfig--settings-panel--options-container{
+  flex-grow: 1;
+}
+.ibo-datatableconfig--settings-panel--option{
+  display: flex;
+  flex-direction: row;
+  align-items: first baseline;
+  margin-right: $ibo-datatableconfig--settings-panel--option--margin-right;
+}

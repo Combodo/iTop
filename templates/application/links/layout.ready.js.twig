@@ -1,0 +1,8 @@
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+{{ oUIBlock.GetWidgetName() }} = $('#{{ oUIBlock.GetId() }}').links_view_table({
+    link_class: '{{ oUIBlock.GetLinkedClass() }}',
+    external_key_to_me: '{{ oUIBlock.GetExternalKeyToMe() }}'
+});
+{% endapply %}

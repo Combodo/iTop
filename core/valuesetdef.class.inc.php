@@ -1,9 +1,9 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -20,7 +20,7 @@
 /**
  * Value set definitions (from a fixed list or from a query, etc.)
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -53,7 +53,13 @@ abstract class ValueSetDefinition
 		return $sAllowedValues;
 	}
 
-
+	/**
+	 * @param array  $aArgs
+	 * @param string $sContains
+	 * @param string $sOperation for the values {@see static::LoadValues()}
+	 *
+	 * @return array hash array of keys => values
+	 */
 	public function GetValues($aArgs, $sContains = '', $sOperation = 'contains')
 	{
 		if (!$this->m_bIsLoaded)
@@ -78,9 +84,20 @@ abstract class ValueSetDefinition
 				}
 			}
 		}
-		// Sort on the display value
-		asort($aRet);
+		$this->SortValues($aRet);
 		return $aRet;
+	}
+
+	/**
+	 * @param array $aValues Values to sort in the form keys => values
+	 *
+	 * @return void
+	 * @since 3.1.0 N°1646 Create method
+	 */
+	public function SortValues(array &$aValues): void
+	{
+		// Sort alphabetically on values
+		natcasesort($aValues);
 	}
 
 	abstract protected function LoadValues($aArgs);
@@ -88,7 +105,7 @@ abstract class ValueSetDefinition
 
 
 /**
- * Set of existing values for an attribute, given a search filter 
+ * Set of existing values for an attribute, given a search filter
  *
  * @package     iTopORM
  */
@@ -108,7 +125,7 @@ class ValueSetObjects extends ValueSetDefinition
 
 	/**
 	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
-	 */	
+	 */
 	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = array(), $bAllowAllData = false, $aModifierProperties = array())
 	{
 		$this->m_sContains = '';
@@ -127,17 +144,6 @@ class ValueSetObjects extends ValueSetDefinition
 	{
 		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
 		$this->m_bIsLoaded = false;
-	}
-
-	/**
-	 * @deprecated use SetCondition instead
-	 *
-	 * @param \DBSearch $oFilter
-	 */
-	public function AddCondition(DBSearch $oFilter)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetCondition instead');
-		$this->SetCondition($oFilter);
 	}
 
 	public function SetCondition(DBSearch $oFilter)
@@ -189,11 +195,7 @@ class ValueSetObjects extends ValueSetDefinition
 	}
 
     /**
-     * @param        $aArgs
-     * @param string $sContains
-     * @param string $sOperation for the values @see self::LoadValues()
-     *
-     * @return array
+     * @inheritDoc
      * @throws CoreException
      * @throws OQLException
      */
@@ -225,108 +227,106 @@ class ValueSetObjects extends ValueSetDefinition
 
 		$this->m_aValues = array();
 
-		if ($this->m_bAllowAllData)
-		{
-			$oFilter = DBObjectSearch::FromOQL_AllData($this->m_sFilterExpr);
+		$oFilter = $this->GetFilter($sOperation, $sContains);
+
+		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs, null, $this->m_iLimit, 0, $this->m_bSort);
+		if (empty($this->m_sValueAttCode)) {
+			$aAttToLoad = array($oFilter->GetClassAlias() => array('friendlyname'));
+		} else {
+			$aAttToLoad = array($oFilter->GetClassAlias() => array($this->m_sValueAttCode));
 		}
-		else
-		{
+		$oObjects->OptimizeColumnLoad($aAttToLoad);
+		while ($oObject = $oObjects->Fetch()) {
+			if (empty($this->m_sValueAttCode)) {
+				$this->m_aValues[$oObject->GetKey()] = $oObject->GetName();
+			} else {
+				$this->m_aValues[$oObject->GetKey()] = $oObject->Get($this->m_sValueAttCode);
+			}
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Get filter for functions LoadValues and LoadValuesForAutocomplete
+	 *
+	 * @param $sOperation
+	 * @param $sContains
+	 *
+	 * @return \DBObjectSearch|\DBSearch|\DBUnionSearch|false|mixed
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 * @since 3.0.3 3.1.0
+	 */
+	protected function GetFilter($sOperation, $sContains)
+	{
+		$this->m_sContains = $sContains;
+		$this->m_sOperation = $sOperation;
+
+		if ($this->m_bAllowAllData) {
+			$oFilter = DBObjectSearch::FromOQL_AllData($this->m_sFilterExpr);
+		} else {
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
 			$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 		}
-		if (!$oFilter) return false;
-		if (!is_null($this->m_oExtraCondition))
-		{
+		if (!$oFilter) {
+			return false;
+		}
+		if (!is_null($this->m_oExtraCondition)) {
 			$oFilter = $oFilter->Intersect($this->m_oExtraCondition);
 		}
-		foreach($this->m_aModifierProperties as $sPluginClass => $aProperties)
-		{
-			foreach ($aProperties as $sProperty => $value)
-			{
+		foreach ($this->m_aModifierProperties as $sPluginClass => $aProperties) {
+			foreach ($aProperties as $sProperty => $value) {
 				$oFilter->SetModifierProperty($sPluginClass, $sProperty, $value);
 			}
 		}
 
-		$oExpression = DBObjectSearch::GetPolymorphicExpression($oFilter->GetClass(), 'friendlyname');
-		$aFields = $oExpression->ListRequiredFields();
 		$sClass = $oFilter->GetClass();
-		/*foreach($aFields as $sField)
-		{
-			$aFieldItems = explode('.', $sField);
-			if ($aFieldItems[0] != $sClass)
-			{
-				$sOperation = 'contains';
-				break;
-			}
-		}*/
 
-		switch ($sOperation)
-		{
+		switch ($this->m_sOperation) {
 			case 'equals':
-				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
-				$sClassAlias = $oFilter->GetClassAlias();
-				$aFilters = array();
-				$oValueExpr = new ScalarExpression($sContains);
-				foreach($aAttributes as $sAttribute)
-				{
-					$oNewFilter = $oFilter->DeepClone();
-					$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
-					$oCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
-					$oNewFilter->AddConditionExpression($oCondition);
-					$aFilters[] = $oNewFilter;
+			case 'start_with':
+				if ($this->m_sOperation === 'start_with') {
+					$this->m_sContains .= '%';
+					$sOperator = 'LIKE';
+				} else {
+					$sOperator = '=';
 				}
-                // Unions are much faster than OR conditions
-				$oFilter = new DBUnionSearch($aFilters);
+
+				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
+				if (count($aAttributes) > 0) {
+					$sClassAlias = $oFilter->GetClassAlias();
+					$aFilters = array();
+					$oValueExpr = new ScalarExpression($this->m_sContains);
+					foreach ($aAttributes as $sAttribute) {
+						$oNewFilter = $oFilter->DeepClone();
+						$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
+						$oCondition = new BinaryExpression($oNameExpr, $sOperator, $oValueExpr);
+						$oNewFilter->AddConditionExpression($oCondition);
+						$aFilters[] = $oNewFilter;
+					}
+					// Unions are much faster than OR conditions
+					$oFilter = new DBUnionSearch($aFilters);
+				} else {
+					$oValueExpr = new ScalarExpression($this->m_sContains);
+					$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
+					$oNewCondition = new BinaryExpression($oNameExpr, $sOperator, $oValueExpr);
+					$oFilter->AddConditionExpression($oNewCondition);
+				}
 				break;
-            case 'start_with':
-                $aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
-                $sClassAlias = $oFilter->GetClassAlias();
-                $aFilters = array();
-                $oValueExpr = new ScalarExpression($sContains.'%');
-                foreach($aAttributes as $sAttribute)
-                {
-                    $oNewFilter = $oFilter->DeepClone();
-                    $oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
-                    $oCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
-                    $oNewFilter->AddConditionExpression($oCondition);
-                    $aFilters[] = $oNewFilter;
-                }
-                // Unions are much faster than OR conditions
-                $oFilter = new DBUnionSearch($aFilters);
-                break;
 
 			default:
-				$oValueExpr = new ScalarExpression('%'.$sContains.'%');
+				$oValueExpr = new ScalarExpression('%'.$this->m_sContains.'%');
 				$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
 				$oNewCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
 				$oFilter->AddConditionExpression($oNewCondition);
 				break;
 		}
 
-		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs, null, $this->m_iLimit, 0, $this->m_bSort);
-		if (empty($this->m_sValueAttCode))
-		{
-			$aAttToLoad = array($oFilter->GetClassAlias() => array('friendlyname'));
-		}
-		else
-		{
-			$aAttToLoad = array($oFilter->GetClassAlias() => array($this->m_sValueAttCode));
-		}
-		$oObjects->OptimizeColumnLoad($aAttToLoad);
-		while ($oObject = $oObjects->Fetch())
-		{
-			if (empty($this->m_sValueAttCode))
-			{
-				$this->m_aValues[$oObject->GetKey()] = $oObject->GetName();
-			}
-			else
-			{
-				$this->m_aValues[$oObject->GetKey()] = $oObject->Get($this->m_sValueAttCode);
-			}
-		}
-		return true;
+		return $oFilter;
 	}
-	
+
 	public function GetValuesDescription()
 	{
 		return 'Filter: '.$this->m_sFilterExpr;
@@ -376,72 +376,11 @@ class ValueSetObjects extends ValueSetDefinition
 	 */
 	protected function LoadValuesForAutocomplete($aArgs, $sContains = '', $sOperation = 'contains')
 	{
-		$this->m_sContains = $sContains;
-		$this->m_sOperation = $sOperation;
-
 		$this->m_aValues = array();
 
-		if ($this->m_bAllowAllData) {
-			$oFilter = DBObjectSearch::FromOQL_AllData($this->m_sFilterExpr);
-		} else {
-			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
-			$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
-		}
-
-		if (!$oFilter) {
-			return false;
-		}
-		if (!is_null($this->m_oExtraCondition)) {
-			$oFilter = $oFilter->Intersect($this->m_oExtraCondition);
-		}
-		foreach ($this->m_aModifierProperties as $sPluginClass => $aProperties) {
-			foreach ($aProperties as $sProperty => $value) {
-				$oFilter->SetModifierProperty($sPluginClass, $sProperty, $value);
-			}
-		}
-
-		//$oExpression = DBObjectSearch::GetPolymorphicExpression($oFilter->GetClass(), 'friendlyname');
+		$oFilter = $this->GetFilter($sOperation, $sContains);
 		$sClass = $oFilter->GetClass();
 		$sClassAlias = $oFilter->GetClassAlias();
-
-		switch ($sOperation) {
-			case 'equals':
-				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
-				$aFilters = array();
-				$oValueExpr = new ScalarExpression($sContains);
-				foreach ($aAttributes as $sAttribute) {
-					$oNewFilter = $oFilter->DeepClone();
-					$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
-					$oCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
-					$oNewFilter->AddConditionExpression($oCondition);
-					$aFilters[] = $oNewFilter;
-				}
-				// Unions are much faster than OR conditions
-				$oFilter = new DBUnionSearch($aFilters);
-				break;
-			case 'start_with':
-				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
-				$aFilters = array();
-				$oValueExpr = new ScalarExpression($sContains.'%');
-				foreach($aAttributes as $sAttribute)
-				{
-					$oNewFilter = $oFilter->DeepClone();
-					$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
-					$oCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
-					$oNewFilter->AddConditionExpression($oCondition);
-					$aFilters[] = $oNewFilter;
-				}
-				// Unions are much faster than OR conditions
-				$oFilter = new DBUnionSearch($aFilters);
-				break;
-
-			default:
-				$oValueExpr = new ScalarExpression('%'.$sContains.'%');
-				$oNameExpr = new FieldExpression('friendlyname', $sClassAlias);
-				$oNewCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
-				$oFilter->AddConditionExpression($oNewCondition);
-				break;
-		}
 
 		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs, null, $this->m_iLimit, 0, $this->m_bSort);
 		if (empty($this->m_sValueAttCode)) {
@@ -485,7 +424,7 @@ class ValueSetObjects extends ValueSetDefinition
 				foreach ($aAdditionalField as $sAdditionalField) {
 					array_push($aArguments, $oObject->Get($sAdditionalField));
 				}
-				$aData['additional_field'] = vsprintf($sFormatAdditionalField, $aArguments);
+				$aData['additional_field'] = utils::VSprintf($sFormatAdditionalField, $aArguments);
 			} else {
 				$aData['additional_field'] = '';
 			}
@@ -507,17 +446,41 @@ class ValueSetObjects extends ValueSetDefinition
 
 
 /**
- * Fixed set values (could be hardcoded in the business model) 
+ * Fixed set values (could be hardcoded in the business model)
  *
  * @package     iTopORM
  */
 class ValueSetEnum extends ValueSetDefinition
 {
 	protected $m_values;
+	/**
+	 * @var bool $bSortByValues If true, values will be sorted at runtime (on their values, not their keys), otherwise it is sorted at compile time in a predefined order.
+	 *                         {@see \MFCompiler::CompileAttributeEnumValues()} for complete reasons.
+	 * @since 3.1.0 N°1646
+	 */
+	protected bool $bSortByValues;
 
-	public function __construct($Values)
+	/**
+	 * @param array|string $Values
+	 * @param bool $bLocalizedSort
+	 *
+	 * @since 3.1.0 N°1646 Add $bLocalizedSort parameter
+	 * @since 3.2.0 N°7157 $Values can be an array of backed-enum cases
+	 */
+	public function __construct($Values, bool $bSortByValues = false)
 	{
 		$this->m_values = $Values;
+		$this->bSortByValues = $bSortByValues;
+	}
+
+	/**
+	 * @see \ValueSetEnum::$bSortByValues
+	 * @return bool
+	 * @since 3.1.0 N°1646
+	 */
+	public function IsSortedByValues(): bool
+	{
+		return $this->bSortByValues;
 	}
 
 	// Helper to export the data model
@@ -527,25 +490,54 @@ class ValueSetEnum extends ValueSetDefinition
 		return $this->m_aValues;
 	}
 
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0 N°1646 Overload method
+	 */
+	public function SortValues(array &$aValues): void
+	{
+		// Force sort by values only if necessary
+		if ($this->bSortByValues) {
+			natcasesort($aValues);
+			return;
+		}
+
+		// Don't sort values as we rely on the order defined during compilation
+		return;
+	}
+
+	/**
+	 * @param array|string $aArgs
+	 *
+	 * @return true
+	 */
 	protected function LoadValues($aArgs)
 	{
+		$aValues = [];
 		if (is_array($this->m_values))
 		{
-			$aValues = $this->m_values;
+			foreach ($this->m_values as $key => $value) {
+				// Handle backed-enum case
+				if (is_object($value) && enum_exists(get_class($value))) {
+					$aValues[$value->value] = $value->value;
+					continue;
+				}
+
+				$aValues[$key] = $value;
+			}
 		}
 		elseif (is_string($this->m_values) && strlen($this->m_values) > 0)
 		{
-			$aValues = array();
 			foreach (explode(",", $this->m_values) as $sVal)
 			{
 				$sVal = trim($sVal);
-				$sKey = $sVal; 
+				$sKey = $sVal;
 				$aValues[$sKey] = $sVal;
 			}
 		}
 		else
 		{
-			$aValues = array();
+			$aValues = [];
 		}
 		$this->m_aValues = $aValues;
 		return true;
@@ -554,9 +546,13 @@ class ValueSetEnum extends ValueSetDefinition
 
 class ValueSetEnumPadded extends ValueSetEnum
 {
-	public function __construct($Values)
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0 N°6448 Add $bSortByValues parameter
+	 */
+	public function __construct($Values, bool $bSortByValues = false)
 	{
-		parent::__construct($Values);
+		parent::__construct($Values, $bSortByValues);
 		if (is_string($Values))
 		{
 			$this->LoadValues(null);
@@ -568,6 +564,7 @@ class ValueSetEnumPadded extends ValueSetEnum
 		$aPaddedValues = array();
 		foreach ($this->m_aValues as $sKey => $sVal)
 		{
+			// Pad keys to the min. length required by the \AttributeSet
 			$sKey = str_pad($sKey, 3, '_', STR_PAD_LEFT);
 			$aPaddedValues[$sKey] = $sVal;
 		}
@@ -605,7 +602,7 @@ class ValueSetRange extends ValueSetDefinition
 
 
 /**
- * Data model classes 
+ * Data model classes
  *
  * @package     iTopORM
  */
@@ -616,14 +613,14 @@ class ValueSetEnumClasses extends ValueSetEnum
 	public function __construct($sCategories = '', $sAdditionalValues = '')
 	{
 		$this->m_sCategories = $sCategories;
-		parent::__construct($sAdditionalValues);
+		parent::__construct($sAdditionalValues, true /* Classes are always sorted alphabetically */);
 	}
 
 	protected function LoadValues($aArgs)
 	{
 		// Call the parent to parse the additional values...
 		parent::LoadValues($aArgs);
-		
+
 		// Translate the labels of the additional values
 		foreach($this->m_aValues as $sClass => $void)
 		{

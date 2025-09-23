@@ -24,9 +24,9 @@ use Twig\Environment;
  */
 class TemplateManager
 {
-    protected $twig;
-    protected $templates;
-    protected $profiler;
+    protected Environment $twig;
+    protected array $templates;
+    protected Profiler $profiler;
 
     public function __construct(Profiler $profiler, Environment $twig, array $templates)
     {
@@ -38,16 +38,14 @@ class TemplateManager
     /**
      * Gets the template name for a given panel.
      *
-     * @return mixed
-     *
      * @throws NotFoundHttpException
      */
-    public function getName(Profile $profile, string $panel)
+    public function getName(Profile $profile, string $panel): mixed
     {
         $templates = $this->getNames($profile);
 
         if (!isset($templates[$panel])) {
-            throw new NotFoundHttpException(sprintf('Panel "%s" is not registered in profiler or is not present in viewed profile.', $panel));
+            throw new NotFoundHttpException(\sprintf('Panel "%s" is not registered in profiler or is not present in viewed profile.', $panel));
         }
 
         return $templates[$panel];
@@ -79,7 +77,7 @@ class TemplateManager
             }
 
             if (!$loader->exists($template.'.html.twig')) {
-                throw new \UnexpectedValueException(sprintf('The profiler template "%s.html.twig" for data collector "%s" does not exist.', $template, $name));
+                throw new \UnexpectedValueException(\sprintf('The profiler template "%s.html.twig" for data collector "%s" does not exist.', $template, $name));
             }
 
             $templates[$name] = $template.'.html.twig';

@@ -31,9 +31,9 @@ class Token
     public const TYPE_NUMBER = 'number';
     public const TYPE_STRING = 'string';
 
-    private $type;
-    private $value;
-    private $position;
+    private ?string $type;
+    private ?string $value;
+    private ?int $position;
 
     public function __construct(?string $type, ?string $value, ?int $position)
     {
@@ -68,7 +68,7 @@ class Token
             return false;
         }
 
-        if (empty($values)) {
+        if (!$values) {
             return true;
         }
 
@@ -103,9 +103,9 @@ class Token
     public function __toString(): string
     {
         if ($this->value) {
-            return sprintf('<%s "%s" at %s>', $this->type, $this->value, $this->position);
+            return \sprintf('<%s "%s" at %s>', $this->type, $this->value, $this->position);
         }
 
-        return sprintf('<%s at %s>', $this->type, $this->position);
+        return \sprintf('<%s at %s>', $this->type, $this->position);
     }
 }

@@ -1,22 +1,14 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// Portal
+/**
+ *
+ */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Page:DefaultTitle' => 'Portal do Usuário do '.ITOP_APPLICATION_SHORT,
 	'Page:PleaseWait' => 'Aguarde...',
@@ -104,6 +96,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Expandir todos',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Recolher todos',
 	'Brick:Portal:Browse:Filter:NoData' => 'Sem dados',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Voltar',
 ));
 
 // ManageBrick brick
@@ -128,14 +121,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Object:Name' => 'Objeto',
 	'Brick:Portal:Object:Form:Create:Title' => 'Novo %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Alterar %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Alterar %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Por favor, preencha as seguintes informações:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Salvo',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s salvo',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Selecionar %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecinar %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Selecionar %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecionar %1$s',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Copiar',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copiado'
 ));

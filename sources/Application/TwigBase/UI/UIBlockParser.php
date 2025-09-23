@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -55,7 +55,7 @@ class UIBlockParser extends AbstractTokenParser
 
 		$sType = $oStream->expect(Token::NAME_TYPE)->getValue();
 
-		$oParams = $this->parser->getExpressionParser()->parseExpression();
+		$oParams = $this->parser->parseExpression();
 
 		$oStream->expect(Token::BLOCK_END_TYPE);
 

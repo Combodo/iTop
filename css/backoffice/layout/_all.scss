@@ -1,16 +1,17 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 @import "navigation-menu";
 @import "top-bar";
 @import "content";
+@import "details";
 @import "tab-container/tab-container";
 @import "tab-container/tab";
 @import "multi-column/multi-column";
 @import "multi-column/column";
 @import "dashboard/all";
 @import "wizard-container/wizard-container";
-@import "object/object-details";
+@import "object/all";
 @import "activity-panel/all";

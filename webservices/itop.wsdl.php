@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,19 +17,15 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-if (isset($_REQUEST['debug']))
-{
-	if ($_REQUEST['debug'] == 'text')
-	{
+if (isset($_REQUEST['debug'])) {
+	if ($_REQUEST['debug'] == 'text') {
 		header('Content-Type: text/plain; charset=UTF-8');
 	}
-	else
-	{
+	else {
 		header('Content-Type: application/xml; charset=UTF-8');
 	}
 }
-else
-{
+else {
 	// This is to make sure that the client will accept it....
 	//
 	header('Content-Type: application/xml; charset=UTF-8');
@@ -48,19 +44,17 @@ require_once(APPROOT.'/application/startup.inc.php');
 
 require_once(APPROOT.'webservices/webservices.basic.php');
 
-if (isset($_REQUEST['service_category']) && (!empty($_REQUEST['service_category'])))
-{
-	$sRawFile = WebServicesBase::GetWSDLContents($_REQUEST['service_category']);
+$sServiceCategory = utils::ReadParam('service_category');
+if (!empty($sServiceCategory)) {
+	$sRawFile = WebServicesBase::GetWSDLContents($sServiceCategory);
 }
-else
-{
+else {
 	$sRawFile = WebServicesBase::GetWSDLContents();
 }
 
 $sServerURI = utils::GetAbsoluteUrlAppRoot().'webservices/soapserver.php';
-if (isset($_REQUEST['service_category']) && (!empty($_REQUEST['service_category'])))
-{
-	$sServerURI .= "?service_category=".$_REQUEST['service_category'];
+if (!empty($sServiceCategory)) {
+	$sServerURI .= "?service_category=".$sServiceCategory;
 }
 
 $sFinalFile = str_replace(

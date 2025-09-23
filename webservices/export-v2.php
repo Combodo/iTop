@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -11,15 +11,18 @@ use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\DownloadPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\WebPage;
 
-if (!defined('__DIR__')) {
-	define('__DIR__', dirname(__FILE__));
-}
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/excelexporter.class.inc.php');
@@ -27,27 +30,23 @@ require_once(APPROOT.'/core/bulkexport.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
-
-
 const EXIT_CODE_ERROR = -1;
 const EXIT_CODE_FATAL = -2;
-
-
 
 function ReportErrorAndExit($sErrorMessage)
 {
 	if (utils::IsModeCLI())
 	{
 		$oP = new CLIPage("iTop - Export");
-		$oP->p('ERROR: '.$sErrorMessage);
+		$oP->p('ERROR: '.utils::HtmlEntities($sErrorMessage));
 		$oP->output();
 		exit(EXIT_CODE_ERROR);
 	}
 	else
 	{
 		$oP = new WebPage("iTop - Export");
-		$oP->add_xframe_options();
-		$oP->p('ERROR: '.$sErrorMessage);
+		$oP->add_http_headers();
+		$oP->p('ERROR: '.utils::HtmlEntities($sErrorMessage));
 		$oP->output();
 		exit(EXIT_CODE_ERROR);
 	}
@@ -65,7 +64,7 @@ function ReportErrorAndUsage($sErrorMessage)
 	}
 	else {
 		$oP = new WebPage("iTop - Export");
-		$oP->add_xframe_options();
+		$oP->add_http_headers();
 		$oP->p('ERROR: '.$sErrorMessage);
 		Usage($oP);
 		$oP->output();
@@ -187,7 +186,7 @@ $('#export-form').on('submit', function() {
 		var sOQL = $('#textarea_oql').val();
 		if (sOQL == '')
 		{
-			alert($sJSEmptyOQL);
+			CombodoModal.OpenErrorModal($sJSEmptyOQL);
 			return false;
 		}
 	}
@@ -196,7 +195,7 @@ $('#export-form').on('submit', function() {
 		var sQueryId = $('#select_phrasebook').val();
 		if (sQueryId == '')
 		{
-			alert($sJSEmptyQueryId);
+			CombodoModal.OpenErrorModal($sJSEmptyQueryId);
 			return false;
 		}
 	}
@@ -236,9 +235,9 @@ function FormatDatesInPreview(sRadioSelector, sPreviewSelector)
 }
 EOF
 	);
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-	$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
+	$oP->LinkScriptFromAppRoot('js/tabularfieldsselector.js');
+	$oP->LinkScriptFromAppRoot('js/jquery.dragtable.js');
+	$oP->LinkStylesheetFromAppRoot('css/dragtable.css');
 
 	$oForm = FormUIBlockFactory::MakeStandard("export-form");
 	$oForm->SetAction($sAction);
@@ -267,14 +266,14 @@ EOF
 	}
 
 	if ($sExpression !== '') {
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("expression", utils::EscapeHtml($sExpression)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("expression", $sExpression));
 		$oExportSearch = DBObjectSearch::FromOQL($sExpression);
 		$oExportSearch->UpdateContextFromUser();
 	} else {
 		$oQuery = MetaModel::GetObject('QueryOQL', $sQueryId);
 		$oExportSearch = DBObjectSearch::FromOQL($oQuery->Get('oql'));
 		$oExportSearch->UpdateContextFromUser();
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("query", utils::EscapeHtml($sQueryId)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("query", $sQueryId));
 	}
 	$aFormPartsByFormat = array();
 	$aAllFormParts = array();
@@ -556,6 +555,12 @@ function DoExport(WebPage $oP, BulkExport $oExporter, $bInteractive = false)
 // Command Line mode
 //
 /////////////////////////////////////////////////////////////////////////////
+///
+/**
+ * @since 3.1.0 N°6047
+ */
+$oCtx = new ContextTag(ContextTag::TAG_EXPORT);
+
 if (utils::IsModeCLI()) {
 	SetupUtils::CheckPhpAndExtensionsForCli(new CLIPage('iTop - Export'));
 
@@ -700,13 +705,13 @@ try
 			// Note: Using NiceWebPage only for HTML export as it includes JS scripts & files, which makes no sense in other export formats. More over, it breaks Excel spreadsheet import.
 			if ($oExporter instanceof HTMLBulkExport) {
 				$oP = new NiceWebPage('iTop export');
-				$oP->add_xframe_options();
+				$oP->add_http_headers();
 				$oP->add_ready_script("$('table.listResults').tablesorter({widgets: ['MyZebra']});");
-				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
+				$oP->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
+				$oP->LinkStylesheetFromAppRoot('css/font-awesome/css/v4-shims.min.css');
 			} else {
 				$oP = new WebPage('iTop export');
-				$oP->add_xframe_options();
+				$oP->add_http_headers();
 				$oP->add_style("table br { mso-data-placement:same-cell; }"); // Trick for Excel: keep line breaks inside the same cell !
 			}
 			$oP->add_style("body { overflow: auto; }");
@@ -726,7 +731,7 @@ catch (BulkExportMissingParameterException $e) {
 }
 catch (Exception $e) {
 	$oP = new WebPage('iTop Export');
-	$oP->add_xframe_options();
+	$oP->add_http_headers();
 	$oP->add('Error: '.utils::HtmlEntities($e->getMessage()));
 	IssueLog::Error(utils::HtmlEntities($e->getMessage())."\n".$e->getTraceAsString());
 	$oP->output();

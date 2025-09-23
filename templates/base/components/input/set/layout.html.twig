@@ -1,0 +1,29 @@
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{# Set ui block #}
+<select
+    id="{{ oUIBlock.GetId() }}"
+    name="{{ oUIBlock.GetName() }}"
+    multiple
+    style="display: none;"
+    {% if oUIBlock.IsDisabled() == true %}
+        disabled
+    {% endif %}
+>
+</select>
+
+{# Options template #}
+{% if oUIBlock.HasOptionsTemplate() %}
+    <template id="{{ oUIBlock.GetId() }}_options_template">
+        {% include oUIBlock.GetOptionsTemplate() %}
+    </template>
+{% endif %}
+
+{# Items template #}
+{% if oUIBlock.HasItemsTemplate() %}
+    <template id="{{ oUIBlock.GetId() }}_items_template">
+        {% include oUIBlock.GetItemsTemplate() %}
+    </template>
+{% endif %}
+

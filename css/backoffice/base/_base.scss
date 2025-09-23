@@ -1,24 +1,20 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-scrollbar--scrollbar-width: 8px !default;
-$ibo-scrollbar--scrollbar-height: $ibo-scrollbar--scrollbar-width !default; /* For horizontal scrollbars */
-$ibo-scrollbar--scrollbar-track-background-color: $ibo-color-transparent !default;
-$ibo-scrollbar--scrollbar-track-border-radius: $ibo-border-radius-500 !default;
-$ibo-scrollbar--scrollbar-thumb-background-color: $ibo-color-grey-300 !default;
+$ibo-scrollbar--scrollbar-width: $common-scrollbar--scrollbar-width !default;
+$ibo-scrollbar--scrollbar-height: $common-scrollbar--scrollbar-height !default; /* For horizontal scrollbars */
+$ibo-scrollbar--scrollbar-track-background-color: $common-scrollbar--scrollbar-track-background-color !default;
+$ibo-scrollbar--scrollbar-track-border-radius: $common-scrollbar--scrollbar-track-border-radius !default;
+$ibo-scrollbar--scrollbar-thumb-background-color: $common-scrollbar--scrollbar-thumb-background-color !default;
 $ibo-scrollbar--scrollbar-thumb-border: none !default;
-$ibo-scrollbar--scrollbar-thumb-border-radius: $ibo-border-radius-500 !default;
+$ibo-scrollbar--scrollbar-thumb-border-radius: $common-scrollbar--scrollbar-thumb-border-radius !default;
 
-$ibo-hyperlink-color: $ibo-color-primary-700 !default;
-$ibo-hyperlink-color--on-hover: $ibo-color-primary-800 !default;
-$ibo-hyperlink-color--on-active: $ibo-color-primary-900 !default;
+$ibo-svg-illustration--fill: $common-svg-illustration--fill !default;
 
-$ibo-svg-illustration--fill: $ibo-color-primary-500 !default;
-
-$ibo-content-block--background-color: $ibo-color-white-100 !default;
-$ibo-content-block--border: 1px solid $ibo-color-grey-400 !default;
+$ibo-content-block--background-color: $common-content-block--background-color !default;
+$ibo-content-block--border: $common-content-block--border !default;
 
 /* CSS variables */
 :root{
@@ -29,10 +25,6 @@ $ibo-content-block--border: 1px solid $ibo-color-grey-400 !default;
 	--ibo-scrollbar--scrollbar-thumb-background-color: #{$ibo-scrollbar--scrollbar-thumb-background-color};
 	--ibo-scrollbar--scrollbar-thumb-border: #{$ibo-scrollbar--scrollbar-thumb-border};
 	--ibo-scrollbar--scrollbar-thumb-border-radius: #{$ibo-scrollbar--scrollbar-thumb-border-radius};
-
-	--ibo-hyperlink-color: #{$ibo-hyperlink-color};
-	--ibo-hyperlink-color--on-hover: #{$ibo-hyperlink-color--on-hover};
-	--ibo-hyperlink-color--on-active: #{$ibo-hyperlink-color--on-active};
 }
 
 /* Box sizing reset */
@@ -73,17 +65,19 @@ html{
 /* Hyperlinks reset, ensure that they are of the right color and without decoration everywhere (of course this can be overloaded in some components) */
 a{
 	color: var(--ibo-hyperlink-color);
-	text-decoration: none;
+	text-decoration: var(--ibo-hyperlink-text-decoration);
 
 	&:hover,
 	&:active,
 	&:visited{
-		text-decoration: none;
+    text-decoration: var(--ibo-hyperlink-text-decoration);
 	}
 	&:hover{
 		color: var(--ibo-hyperlink-color--on-hover);
+		text-decoration: var(--ibo-hyperlink-text-decoration--on-hover);
 	}
 	&:active{
 		color: var(--ibo-hyperlink-color--on-active);
+		text-decoration: var(--ibo-hyperlink-text-decoration--on-active);
 	}
 }

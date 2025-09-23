@@ -1,29 +1,19 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExtension
+use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventService;
+use Combodo\iTop\Service\Events\iEventServiceSetup;
+
+class AttachmentPlugIn implements iApplicationUIExtension, iEventServiceSetup
 {
 	const ENUM_GUI_ALL = 'all';
 	const ENUM_GUI_BACKOFFICE = 'backoffice';
 	const ENUM_GUI_PORTALS = 'portals';
-
-	protected static $m_bIsModified = false;
 
 	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
 	{
@@ -73,6 +63,25 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		}
 
 		return $result;
+	}
+
+	/**
+	 * @param cmdbAbstractObject $oObject
+	 *
+	 * @return bool
+	 * @since 3.2.1 N°7534
+	 */
+	public static function IsAttachmentAllowedForObject(cmdbAbstractObject $oObject) : bool
+	{
+		$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
+		foreach ($aAllowedClasses as $sAllowedClass)
+		{
+			if ($oObject instanceof $sAllowedClass)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -150,45 +159,39 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		return array();
 	}
 
-	public function OnIsModified($oObject)
+	public function RegisterEventsAndListeners() : void
 	{
-		return self::$m_bIsModified;
+		EventService::RegisterListener(EVENT_DB_AFTER_WRITE, [$this, 'OnDBAfterWrite']);
+		EventService::RegisterListener(EVENT_DB_AFTER_DELETE, [$this, 'OnDBAfterDelete']);
 	}
 
-	public function OnCheckToWrite($oObject)
+	public function OnDBAfterWrite(EventData $oEventData)
 	{
-		return array();
-	}
+		$oObject = $oEventData->Get('object');
+		$oCMDBChange = $oEventData->Get('cmdb_change');
+		$bIsNew = $oEventData->Get('is_new');
 
-	public function OnCheckToDelete($oObject)
-	{
-		return array();
-	}
-
-	public function OnDBUpdate($oObject, $oChange = null)
-	{
 		if ($this->IsTargetObject($oObject))
 		{
-			// Get all current attachments
-			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
-			$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
-			while ($oAttachment = $oSet->Fetch())
-			{
-				$oAttachment->SetItem($oObject, true /*updateonchange*/);
+			if($bIsNew){
+				self::UpdateAttachments($oObject, $oCMDBChange);
+			}
+			else{
+				// Get all current attachments
+				$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
+				$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
+				while ($oAttachment = $oSet->Fetch())
+				{
+					$oAttachment->SetItem($oObject, true /*updateonchange*/);
+				}
 			}
 		}
 	}
 
-	public function OnDBInsert($oObject, $oChange = null)
+	public function OnDBAfterDelete(EventData $oEventData)
 	{
-		if ($this->IsTargetObject($oObject))
-		{
-			self::UpdateAttachments($oObject, $oChange);
-		}
-	}
+		$oObject = $oEventData->Get('object');
 
-	public function OnDBDelete($oObject, $oChange = null)
-	{
 		if ($this->IsTargetObject($oObject))
 		{
 			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
@@ -234,7 +237,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 
 	/**
 	 * @param \DBObject $oObject
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode
 	 *
 	 * @throws \CoreException
@@ -275,14 +278,28 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		else
 		{
 			$oAttachmentsRenderer->RenderViewAttachmentsList();
-
 		}
 	}
 
-	protected static function UpdateAttachments($oObject, $oChange = null)
+	/**
+	 *
+	 * @see ObjectFormManager::FinalizeAttachments() for the portal version
+	 *
+	 * @param $oObject
+	 * @param $oCMDBChange
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	protected static function UpdateAttachments($oObject, $oCMDBChange = null)
 	{
-		self::$m_bIsModified = false;
-
 		if (utils::ReadParam('attachment_plugin', 'not-in-form') == 'not-in-form')
 		{
 			// Workaround to an issue in iTop < 2.0
@@ -293,19 +310,19 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		if (!is_null($sTransactionId))
 		{
 			$aActions = array();
-			$aAttachmentIds = utils::ReadParam('attachments', array());
 			$aRemovedAttachmentIds = utils::ReadParam('removed_attachments', array());
 
 			// Get all current attachments
 			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
+			$oSearch->AllowAllData();
 			$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
 			while ($oAttachment = $oSet->Fetch())
 			{
 				// Remove attachments that are no longer attached to the current object
 				if (in_array($oAttachment->GetKey(), $aRemovedAttachmentIds))
 				{
-					$aData = ['target_object' => $oObject];
-					$oAttachment->FireEvent(EVENT_SERVICE_REMOVE_ATTACHMENT_FROM_OBJECT, $aData);
+					$aData = ['attachment' => $oAttachment];
+					$oObject->FireEvent(EVENT_REMOVE_ATTACHMENT_FROM_OBJECT, $aData);
 					$oAttachment->DBDelete();
 					$aActions[] = self::GetActionChangeOp($oAttachment, false /* false => deletion */);
 				}
@@ -317,35 +334,32 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 			// for this object, but deleting the "new" ones that were already removed from the form
 			$sOQL = 'SELECT Attachment WHERE temp_id = :temp_id';
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
-			foreach ($aAttachmentIds as $iAttachmentId)
+			$oSearch->AllowAllData();
+			$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
+			while ($oAttachment = $oSet->Fetch())
 			{
-				$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
-				while ($oAttachment = $oSet->Fetch())
+				if (in_array($oAttachment->GetKey(), $aRemovedAttachmentIds))
 				{
-					if (in_array($oAttachment->GetKey(), $aRemovedAttachmentIds))
-					{
-						$oAttachment->DBDelete();
-						// temporary attachment removed, don't even mention it in the history
-					}
-					else
-					{
-						$oAttachment->SetItem($oObject);
-						$oAttachment->Set('temp_id', '');
-						$oAttachment->DBUpdate();
-						// temporary attachment confirmed, list it in the history
-						$aActions[] = self::GetActionChangeOp($oAttachment, true /* true => creation */);
-						$aData = ['target_object' => $oObject];
-						$oAttachment->FireEvent(EVENT_SERVICE_ADD_ATTACHMENT_TO_OBJECT, $aData);
-					}
+					$oAttachment->DBDelete();
+					// temporary attachment removed, don't even mention it in the history
+				} else {
+					$oAttachment->SetItem($oObject);
+					$oAttachment->Set('temp_id', '');
+					$oAttachment->DBUpdate();
+					// temporary attachment confirmed, list it in the history
+					$aActions[] = self::GetActionChangeOp($oAttachment, true /* true => creation */);
+					$aData = ['attachment' => $oAttachment];
+					$oObject->FireEvent(EVENT_ADD_ATTACHMENT_TO_OBJECT, $aData);
 				}
 			}
 			if (count($aActions) > 0)
 			{
 				foreach ($aActions as $oChangeOp)
 				{
-					self::RecordHistory($oChange, $oObject, $oChangeOp);
+					self::RecordHistory($oCMDBChange, $oObject, $oChangeOp);
 				}
-				self::$m_bIsModified = true;
+
+				$oObject->MarkObjectAsModified();
 			}
 		}
 	}
@@ -359,6 +373,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		while ($oAttachment = $oSet->Fetch())
 		{
 			$oTempAttachment = clone $oAttachment;
+			$oTempAttachment->Set('expire', time() + utils::GetConfig()->Get('draft_attachments_lifetime'));
 			$oTempAttachment->Set('item_id', null);
 			$oTempAttachment->Set('temp_id', $sTempId);
 			$oTempAttachment->DBInsert();
@@ -535,11 +550,11 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 	}
 
 	/////////////////////////////////////////////////////////////////////////
-	private static function RecordHistory($oChange, $oTargetObject, $oMyChangeOp)
+	private static function RecordHistory($oCMDBChange, $oTargetObject, $oMyChangeOp)
 	{
-		if (!is_null($oChange))
+		if (!is_null($oCMDBChange))
 		{
-			$oMyChangeOp->Set("change", $oChange->GetKey());
+			$oMyChangeOp->Set("change", $oCMDBChange->GetKey());
 		}
 		$oMyChangeOp->Set("objclass", get_class($oTargetObject));
 		$oMyChangeOp->Set("objkey", $oTargetObject->GetKey());
@@ -627,6 +642,8 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 
 		return $bReadonly;
 	}
+
+
 }
 
 /**
@@ -643,13 +660,13 @@ class CMDBChangeOpAttachmentAdded extends CMDBChangeOp
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_attachment_added",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_attachment_added",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -711,13 +728,13 @@ class CMDBChangeOpAttachmentRemoved extends CMDBChangeOp
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_attachment_removed",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_attachment_removed",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -747,7 +764,6 @@ class CMDBChangeOpAttachmentRemoved extends CMDBChangeOp
 		return $sResult;
 	}
 }
-
 
 class AttachmentsHelper
 {

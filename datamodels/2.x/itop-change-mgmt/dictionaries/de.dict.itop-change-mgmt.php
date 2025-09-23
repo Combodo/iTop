@@ -1,45 +1,33 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/*
-* @author ITOMIG GmbH <martin.raenker@itomig.de>
-
-* @copyright     Copyright (C) 2021 Combodo SARL
-* @licence	http://opensource.org/licenses/AGPL-3.0
-*
-*/
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ * @author ITOMIG GmbH <martin.raenker@itomig.de>
+ *
+ */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ChangeManagement' => 'Change Management',
 	'Menu:Change:Overview' => 'Übersicht',
 	'Menu:Change:Overview+' => '',
 	'Menu:NewChange' => 'Neuer Change',
-	'Menu:NewChange+' => '',
+	'Menu:NewChange+' => 'Einen neuen Change erstellen',
 	'Menu:SearchChanges' => 'Suche nach Changes',
-	'Menu:SearchChanges+' => '',
+	'Menu:SearchChanges+' => 'Unter den bestehenden Changes suchen',
 	'Menu:Change:Shortcuts' => 'Shortcuts',
 	'Menu:Change:Shortcuts+' => '',
 	'Menu:WaitingAcceptance' => 'Changes, die auf Annahme warten',
-	'Menu:WaitingAcceptance+' => '',
+	'Menu:WaitingAcceptance+' => 'Changes, die auf Annahme warten',
 	'Menu:WaitingApproval' => 'Changes, die auf Genehmigung warten',
-	'Menu:WaitingApproval+' => '',
+	'Menu:WaitingApproval+' => 'Changes, die auf Genehmigung warten',
 	'Menu:Changes' => 'Offene Changes',
-	'Menu:Changes+' => '',
+	'Menu:Changes+' => 'Offene Changes',
 	'Menu:MyChanges' => 'Changes, die mir zugewiesen sind',
-	'Menu:MyChanges+' => '',
+	'Menu:MyChanges+' => 'Changes, die mir zugewiesen sind',
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes der letzten sieben Tage nach Kategorie',
 	'UI-ChangeManagementOverview-Last-7-days' => 'Zahl der Changes in den letzten sieben Tagen',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes der letzten sieben Tage nach Typ',
@@ -83,17 +71,17 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Attribute:category' => 'Kategorie',
 	'Class:Change/Attribute:category+' => '',
 	'Class:Change/Attribute:category/Value:application' => 'Applikation',
-	'Class:Change/Attribute:category/Value:application+' => '',
+	'Class:Change/Attribute:category/Value:application+' => 'Applikation',
 	'Class:Change/Attribute:category/Value:hardware' => 'Hardware',
-	'Class:Change/Attribute:category/Value:hardware+' => '',
+	'Class:Change/Attribute:category/Value:hardware+' => 'Hardware',
 	'Class:Change/Attribute:category/Value:network' => 'Netzwerk',
-	'Class:Change/Attribute:category/Value:network+' => '',
+	'Class:Change/Attribute:category/Value:network+' => 'Netzwerk',
 	'Class:Change/Attribute:category/Value:other' => 'Andere',
-	'Class:Change/Attribute:category/Value:other+' => '',
+	'Class:Change/Attribute:category/Value:other+' => 'Andere',
 	'Class:Change/Attribute:category/Value:software' => 'Software',
-	'Class:Change/Attribute:category/Value:software+' => '',
+	'Class:Change/Attribute:category/Value:software+' => 'Software',
 	'Class:Change/Attribute:category/Value:system' => 'System',
-	'Class:Change/Attribute:category/Value:system+' => '',
+	'Class:Change/Attribute:category/Value:system+' => 'System',
 	'Class:Change/Attribute:reject_reason' => 'Ablehnungsgrund',
 	'Class:Change/Attribute:reject_reason+' => '',
 	'Class:Change/Attribute:changemanager_id' => 'Change Manager',
@@ -111,14 +99,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Attribute:fallback_plan' => 'Fallback-Plan',
 	'Class:Change/Attribute:fallback_plan+' => '',
 	'Class:Change/Attribute:related_request_list' => 'Verwandte Requests',
-	'Class:Change/Attribute:related_request_list+' => '',
+	'Class:Change/Attribute:related_request_list+' => 'Alle Benutzeranfragen, die mit diesem Change verknüpft sind',
 	'Class:Change/Attribute:related_incident_list' => 'Verwandte Incidents',
-	'Class:Change/Attribute:related_incident_list+' => '',
+	'Class:Change/Attribute:related_incident_list+' => 'Alle Incidents, die mit diesem Change verknüpft sind',
 	'Class:Change/Attribute:related_problems_list' => 'Verwandte Probleme',
-	'Class:Change/Attribute:related_problems_list+' => '',
+	'Class:Change/Attribute:related_problems_list+' => 'Alle Probleme, die mit diesem Change verknüpft sind',
 	'Class:Change/Attribute:child_changes_list' => 'Abgeleitete Changes',
-	'Class:Change/Attribute:child_changes_list+' => '',
-	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Change',
+	'Class:Change/Attribute:child_changes_list+' => 'Alle abgeleiteten Changes, die mit diesem Change verknüpft sind',
+	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Change Anzeigename',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Stimulus:ev_assign' => 'Zuweisen',
 	'Class:Change/Stimulus:ev_assign+' => '',

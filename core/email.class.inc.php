@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2022 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Send an email (abstraction for synchronous/asynchronous modes)
  *
- * @copyright   Copyright (C) 2010-2022 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -46,6 +46,15 @@ class EMail implements iEMail
 	const ORIGINAL_FORMAT = 1; // Original format, consisting in serializing the whole object, inculding the Swift Mailer's object.
 	// Did not work with attachements since their binary representation cannot be stored as a valid UTF-8 string
 	const FORMAT_V2 = 2; // New format, only the raw data are serialized (base64 encoded if needed)
+	
+	/** @var int ENUM_SEND_DEFAULT This option can be used when sending an e-mail to respect the default configuration parameter. */
+	const ENUM_SEND_DEFAULT = 0;
+	
+	/** @var int ENUM_SEND_FORCE_SYNCHRONOUS This option can be used when sending an e-mail to ignore the default and force synchronous sending instead. Example of a use case: instant e-mail test. */
+	const ENUM_SEND_FORCE_SYNCHRONOUS = 1;
+	
+	/** @var int ENUM_SEND_FORCE_ASYNCHRONOUS This option can be used when sending an e-mail to ignore the default and force synchronous sending instead. Example of a use case: Bulk mails. */
+	const ENUM_SEND_FORCE_ASYNCHRONOUS = 2;
 
 	public function __construct()
 	{
@@ -105,9 +114,6 @@ class EMail implements iEMail
 	 * @param string $sSerializedMessage The serialized representation of the message
 	 *
 	 * @return \Email
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \Symfony\Component\CssSelector\Exception\SyntaxErrorException
 	 */
 	public static function UnSerializeV2($sSerializedMessage)
 	{
@@ -145,7 +151,7 @@ class EMail implements iEMail
 	 */
 	public function SetInReplyTo(string $sMessageId)
 	{
-		$this->AddToHeader('In-Reply-To', $sMessageId);
+		$this->oMailer->SetInReplyTo($sMessageId);
 	}
 
 	public function SetBody($sBody, $sMimeType = 'text/html', $sCustomStyles = null)

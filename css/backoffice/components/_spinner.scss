@@ -1,0 +1,61 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-spinner--is-small-medium-large--icon--color: $ibo-color-grey-600 !default;
+$ibo-spinner--is-small-medium-large--description--color: $ibo-color-grey-800 !default;
+
+$ibo-spinner--is-small--description--margin-top: $ibo-spacing-200 !default;
+
+$ibo-spinner--is-medium--description--margin-top: $ibo-spacing-300 !default;
+
+$ibo-spinner--is-large--description--margin-top: $ibo-spacing-500 !default;
+
+.ibo-spinner{
+  &.ibo-is-inline{
+    display: inline-block;
+    >*{
+      display: inline-block;
+    }
+  }
+  &.ibo-is-small, &.ibo-is-medium, &.ibo-is-large{
+    display: flex;
+    flex-direction: column;
+    >.ibo-spinner--icon{
+      align-self: center;
+      color: $ibo-spinner--is-small-medium-large--icon--color;
+    }
+    >.ibo-spinner--description{
+      align-self: center;
+      color: $ibo-spinner--is-small-medium-large--description--color;
+    }
+  }
+  &.ibo-is-small{
+    >.ibo-spinner--icon{
+      @extend %ibo-font-size-250;
+    }
+    >.ibo-spinner--description{
+      margin-top: $ibo-spinner--is-small--description--margin-top;
+      @extend %ibo-font-size-150;
+    }
+  }
+  &.ibo-is-medium{
+    >.ibo-spinner--icon{
+      @extend %ibo-font-size-500;
+    }
+    >.ibo-spinner--description{
+      margin-top: $ibo-spinner--is-medium--description--margin-top;
+      @extend %ibo-font-size-250;
+    }
+  }
+  &.ibo-is-large{
+    >.ibo-spinner--icon{
+      @extend %ibo-font-size-550;
+    }
+    >.ibo-spinner--description{
+      margin-top: $ibo-spinner--is-large--description--margin-top;
+      @extend %ibo-font-size-400;
+    }
+  }
+}

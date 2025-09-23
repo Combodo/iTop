@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use DOMFormatException;
 use Exception;
 use UserRights;
@@ -52,10 +53,15 @@ class BrickCollection
 	 * BrickCollection constructor.
 	 *
 	 * @param \ModuleDesign $oModuleDesign
+	 * @param \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService $oTemplatesProviderService
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 3.2.1 Added $oTemplatesProviderService parameter
+	 * Important: The service is not directly used, but the injection ensure that the service is initialized.
+	 * Bricks may need to use the service to get the templates.
 	 */
-	public function __construct(ModuleDesign $oModuleDesign)
+	public function __construct(ModuleDesign $oModuleDesign, TemplatesProviderService $oTemplatesProviderService)
 	{
 		$this->oModuleDesign = $oModuleDesign;
 		$this->aAllowedBricks = null;
@@ -196,6 +202,8 @@ class BrickCollection
 				{
 					/** @var \Combodo\iTop\Portal\Brick\PortalBrick $oBrick */
 					$oBrick = new $sBrickClass();
+					
+					// Load the brick specific properties from its XML definition
 					$oBrick->LoadFromXml($oBrickNode);
 
 					$aBricks[] = $oBrick;

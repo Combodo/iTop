@@ -1,0 +1,172 @@
+{# template for the navigation menu custom element #}
+<template id="navigation-menu-template">
+
+    {# TOP PART #}
+    <div class="ipb-navigation-menu--top-part">
+
+        {# logo #}
+        {% if app['combodo.portal.instance.conf'].properties.logo is not null %}
+            <div class="ipb-navigation-menu--top-part--logo">
+                {% block pNavigationSideMenuLogo %}
+                    <a class="ipb-navigation-menu--top-part--logo--hyperlink" href="{{ app['combodo.app_icon_url'].GetAppIconUrl() }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
+                        <img class="ipb-navigation-menu--top-part--logo--image" src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}"/>
+                    </a>
+                {% endblock %}
+            </div>
+        {% endif %}
+
+        {# toggle mobile menu #}
+        <a class="ipb-navigation-menu--menu-entry ipb-navigation-menu--top-part--toggle--expand-menu ipb-not-focusable"
+           data-role="ipb-navigation-menu--expand-toggle"
+           aria-label="{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}"
+           data-tooltip-content="{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}"
+           data-tooltip-placement="right"
+           data-tooltip-distance-offset="20"
+           href="#">
+            <span class="ipb-navigation-menu--toggle-icon">
+                <span class="ipb-navigation-menu--toggle-bar"></span>
+                <span class="ipb-navigation-menu--toggle-bar"></span>
+                <span class="ipb-navigation-menu--toggle-bar"></span>
+            </span>
+        </a>
+
+    </div>
+
+    {# SEPARATOR #}
+    <div class="ipb-navigation-menu--separator"></div>
+
+    {# MIDDLE PART #}
+    <div class="ipb-navigation-menu--middle-part menu">
+        {% block pNavigationSideMenu %}
+            <ul class="ipb-navigation-menu--menu-entries">
+                {# home menu #}
+                <li class="brick_menu_item ipb-navigation-menu--menu-entry--wrapper {% if oBrick is not defined %}active{% endif %}"
+                    data-tooltip-content="{{ 'Page:Home'|dict_s }}"
+                    data-tooltip-placement="right" data-tooltip-instantiated="true">
+                    <a href="{{ app.url_generator.generate('p_home') }}" class="ipb-navigation-menu--menu-entry ipb-navigation-menu--menu-entry--brick-item">
+                        <span class="ipb-navigation-menu--menu-entry--icon brick_icon fas fa-home fa-2x"></span>
+                        <span class="ipb-navigation-menu--menu-entry--title">{{ 'Page:Home'|dict_s }}</span>
+                    </a>
+                </li>
+                {# others... #}
+                {% for brick in app['brick_collection'].navigation_menu_ordering %}
+                    {% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
+                        <li class="brick_menu_item ipb-navigation-menu--menu-entry--wrapper {% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}"
+                            data-brick-id="{{ brick.GetId }}"
+                            data-tooltip-content="{{ brick.GetTitleNavigationMenu|dict_s }}"
+                            data-tooltip-placement="right" data-tooltip-instantiated="true">
+                            <a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}"
+                            {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %}
+                            {% if brick.GetModal %}data-toggle="modal"
+                                data-target="#modal-for-all"{% endif %}
+                            class="ipb-navigation-menu--menu-entry ipb-navigation-menu--menu-entry--brick-item"
+                            >
+                            <span class="ipb-navigation-menu--menu-entry--icon brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
+                            <span class="ipb-navigation-menu--menu-entry--title">{{ brick.GetTitleNavigationMenu|dict_s }}</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endblock %}
+    </div>
+
+    {# items remainder drop down #}
+    <div class="ipb-dropdown--items-remainder dropdown">
+        <a id="menu_items_remainder" href="#"
+           class="ipb-navigation-menu--menu-entry ipb-navigation-menu--menu-entry--more ipb-is-hidden"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="ipb-navigation-menu--menu-entry--icon brick_icon fas fa-ellipsis-h"></span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-right ipb-dropdown-menu--items-remainder"
+            aria-labelledby="menu_items_remainder">
+            {% for brick in app['brick_collection'].navigation_menu_ordering %}
+                {% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
+                    <li class="brick_menu_item ipb-navigation-menu--menu-entry--wrapper {% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}" data-brick-id="{{ brick.GetId }}">
+                        <a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}"
+                        {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %}
+                        {% if brick.GetModal %}data-toggle="modal"
+                            data-target="#modal-for-all"{% endif %}
+                        class="ipb-navigation-menu--menu-entry ipb-navigation-menu--menu-entry--brick-item"
+                        >
+                        <span class="ipb-navigation-menu--menu-entry--icon brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
+                        <span class="ipb-navigation-menu--menu-entry--title">{{ brick.GetTitleNavigationMenu|dict_s }}</span>
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+
+    {# extensibility #}
+    {% block pPageUIExtensionNavigationMenuSidebar %}
+        {% if app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')] is defined %}
+            {{ app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')]|raw }}
+        {% endif %}
+    {% endblock %}
+
+    {# USER PART #}
+    <div class="ipb-navigation-menu--user-part dropup">
+
+        {# user card #}
+        <a class="ipb-navigation-menu--user-card" href="#" data-toggle="ipb-dropdown" aria-haspopup="true" aria-expanded="false" id="user_options">
+            <div class="user_photo ipb-navigation-menu--user-card--photo" style="background-image: url('{{ sUserPhotoUrl }}');">
+            </div>
+            <div class="ipb-navigation-menu--user-card--infos">
+                <div class="ipb-navigation-menu--user-card--name">
+                    <div class="user_fullname ipb-navigation-menu--user-card--fullname">{{ sUserFullname }}</div>
+                    <div class="user_email dropdown ipb-navigation-menu--user-card--email">
+                        {{ sPortalName }}
+                    </div>
+                </div>
+                <div class="ipb-navigation-menu--user-card--toggle">
+                    <span class="fas fa-angle-down"></span>
+                </div>
+            </div>
+        </a>
+
+        {# user drop down #}
+        <ipb-dropdown class="ipb-dropdown user_options" data-role="ipb-user-dropdown" aria-labelledby="user_options"
+                      data-container="body">
+            <li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="ipb-dropdown--icon fas fa-user fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
+            {% for aPortal in allowed_portals %}
+                {% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
+                    {% set sGlyphiconClass = (aPortal.id == 'backoffice') ? 'far fa-list-alt' : 'fas fa-external-link-alt' %}
+                    <li><a href="{{ aPortal.url }}" {% if app['combodo.portal.instance.conf'].properties.allowed_portals.opening_mode == 'tab' %}target="_blank"{% endif %} title="{{ aPortal.label|dict_s }}"><span class="ipb-dropdown--icon {{ sGlyphiconClass }} fa-lg fa-fw"></span>{{ aPortal.label|dict_s }}
+                        </a></li>
+                {% endif %}
+            {% endfor %}
+            {% if bUserCanLogOff %}
+                {# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
+                {% if allowed_portals|length > 1 %}
+                    <div role="separator" class="divider"></div>
+                {% endif %}
+                <li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="ipb-dropdown--icon fas fa-sign-out-alt fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
+            {% endif %}
+        </ipb-dropdown>
+
+        {# toggle mobile menu #}
+        <a class="ipb-navigation-menu--menu-entry ipb-navigation-menu--user-part--toggle--open-mobile-menu" data-role="ipb-navigation-menu--mobile--toggle"
+           aria-label="Open/Close mobile menu"
+           data-tooltip-content="Open/Close mobile menu"
+           data-tooltip-placement="right"
+           data-tooltip-distance-offset="20"
+           href="#">
+            <span class="ipb-navigation-menu--toggle-icon">
+                <span class="ipb-navigation-menu--toggle-bar"></span>
+                <span class="ipb-navigation-menu--toggle-bar"></span>
+                <span class="ipb-navigation-menu--toggle-bar"></span>
+            </span>
+        </a>
+    </div>
+
+    {# overlay #}
+    <div class="ipb-navigation-menu-overlay ipb-is-hidden" data-role="navigation-menu-overlay"></div>
+
+</template>
+
+{# navigation menu custom element #}
+<nav id="sidebar" is="ipb-navigation-menu"
+     {% if user_preferences['portal.navigation_menu.expanded'] is defined %}data-expanded-state="{{ user_preferences['portal.navigation_menu.expanded'] }}"{% endif %}
+        {% if ui_settings is defined %}data-position="{{ ui_settings['navigation_menu'] }}"{% endif %}>
+</nav>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -50,7 +50,7 @@ class Lists extends AbstractConfiguration
 			$sClassId = $oClassNode->getAttribute('id');
 			if ($sClassId === null)
 			{
-				throw new DOMFormatException('Class tag must have an id attribute', null, null, $oClassNode);
+				throw new DOMFormatException('Class tag must have an id attribute', 0, null, $oClassNode);
 			}
 
 			// - Each lists

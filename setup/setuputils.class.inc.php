@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -16,11 +16,13 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * The standardized result of any pass/fail check performed by the setup
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class CheckResult {
@@ -88,13 +90,13 @@ class CheckResult {
 /**
  * All of the functions/utilities needed by both the setup wizard and the installation process
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class SetupUtils
 {
 	// -- Minimum versions (requirements : forbids installation if not met)
-	const PHP_MIN_VERSION             = '7.4.0';
+	const PHP_MIN_VERSION             = '8.1.0';
 	const MYSQL_MIN_VERSION           = '5.7.0'; // 5.6 is no longer supported
 	const MYSQL_NOT_VALIDATED_VERSION = ''; // MySQL 8 is now OK (N°2010 in 2.7.0) but has no query cache so mind the perf on large volumes !
 
@@ -102,7 +104,7 @@ class SetupUtils
 	const PHP_NEXT_MIN_VERSION   = ''; // No new PHP requirement for next iTop version yet
 	const MYSQL_NEXT_MIN_VERSION = ''; // No new MySQL requirement for next iTop version yet
 	// -- First recent version that is not yet validated by Combodo (warning)
-	const PHP_NOT_VALIDATED_VERSION = '8.2.0';
+	const PHP_NOT_VALIDATED_VERSION = '8.4.0';
 
 	const MIN_MEMORY_LIMIT             = '32M';
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
@@ -410,12 +412,12 @@ class SetupUtils
 	/**
 	 * Call the platform checks. If those checks return CheckResult::ERROR, then output and log them, then exit. Otherwise just return.
 	 *
-	 * @param \CLIPage $oCliPage
+	 * @param CLIPage $oCliPage
 	 * @param int $iExitCode
 	 *
 	 * @uses CheckPhpAndExtensions
 	 * @uses \CheckResult::FilterCheckResultArray()
-	 * @uses \CLIPage::output()
+	 * @uses CLIPage::output()
 	 * @uses \IssueLog::Error()
 	 * @uses \exit()
 	 *
@@ -550,14 +552,15 @@ class SetupUtils
 		if (empty($sMySQLBinDir) && null != MetaModel::GetConfig()) {
 			$sMySQLBinDir = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', '');
 		}
-
-		if (empty($sMySQLBinDir)) {
-			$sMySQLDump = 'mysqldump';
+		try {
+			$sMySQLDump = DBBackup::MakeSafeMySQLCommand($sMySQLBinDir, 'mysqldump');
+		} catch (Exception $e) {
+			$aResult[] = new CheckResult(CheckResult::ERROR, $e->getMessage());
+			return $aResult;
 		}
-		else {
-			$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - Found mysql_bindir: '.$sMySQLBinDir);
-			$sMySQLDump = '"'.$sMySQLBinDir.'/mysqldump"';
-		}
+        if (!empty($sMySQLBinDir)) {
+	        $aResult[] = new CheckResult(CheckResult::TRACE, 'Info - Found mysql_bindir: '.$sMySQLBinDir);
+        }
 		$sCommand = "$sMySQLDump -V 2>&1";
 
 		$aOutput = array();
@@ -739,22 +742,20 @@ class SetupUtils
 			throw new Exception("Attempting to delete directory: '$dir'");
 		}
 
-		$aFiles = scandir($dir); // Warning glob('.*') does not seem to return the broken symbolic links, thus leaving a non-empty directory
-		if ($aFiles !== false) {
-			foreach ($aFiles as $file) {
-				if (($file != '.') && ($file != '..')) {
-					if (is_dir($dir.'/'.$file)) {
-						self::tidydir($dir.'/'.$file);
-						self::rmdir_safe($dir.'/'.$file);
-					}
-					else {
-						if (!unlink($dir.'/'.$file))
-						{
-							SetupLog::Ok("Warning - FAILED to remove file '$dir/$file'");
-						}
-						else if (file_exists($dir.'/'.$file))
-						{
-							SetupLog::Ok("Warning - FAILED to remove file '$dir/.$file'");
+		if (is_dir($dir)) {
+			$aFiles = scandir($dir); // Warning glob('.*') does not seem to return the broken symbolic links, thus leaving a non-empty directory
+			if ($aFiles !== false) {
+				foreach ($aFiles as $file) {
+					if (($file != '.') && ($file != '..')) {
+						if (is_dir($dir.'/'.$file)) {
+							self::tidydir($dir.'/'.$file);
+							self::rmdir_safe($dir.'/'.$file);
+						} else {
+							if (!unlink($dir.'/'.$file)) {
+								SetupLog::Ok("Warning - FAILED to remove file '$dir/$file'");
+							} else if (file_exists($dir.'/'.$file)) {
+								SetupLog::Ok("Warning - FAILED to remove file '$dir/.$file'");
+							}
 						}
 					}
 				}
@@ -788,16 +789,19 @@ class SetupUtils
 		// avoid unnecessary warning
 		// Try 100 times...
 		$i = 100;
-		while ((@rmdir($dir) === false) && $i > 0)
-		{
-			// Magic trick for windows
-			// sometimes the folder is empty but rmdir fails
-			closedir(opendir($dir));
-			$i--;
-		}
-		if ($i == 0)
-		{
-			rmdir($dir);
+		if (is_dir($dir)) {
+			while ((@rmdir($dir) === false) && $i > 0) {
+				// Magic trick for windows
+				// sometimes the folder is empty but rmdir fails
+				$oDir = opendir($dir);
+				if ($oDir !== false) {
+					closedir($oDir);
+				}
+				$i--;
+			}
+			if ($i == 0) {
+				rmdir($dir);
+			}
 		}
 	}
 
@@ -816,7 +820,7 @@ class SetupUtils
 		{
 			if (!is_dir($sDest))
 			{
-				mkdir($sDest);
+				mkdir($sDest, 0777 /* Default */, true);
 			}
 			$aFiles = scandir($sSource);
 			if(sizeof($aFiles) > 0 )
@@ -988,9 +992,18 @@ class SetupUtils
 		return $f;
 	}
 
+    /**
+     * @param float $fBytes size in raw bytes, for example 162594750464.0
+     * @return string formatted string, for example "161.62 GB"
+     *
+     * @link https://en.wiktionary.org/wiki/byte byte and not Byte
+     * @link https://en.wikipedia.org/wiki/Kilobyte kB and not KB (IEC 80000-13)
+     * @link https://en.wiktionary.org/wiki/petabyte petabyte PB
+     * @link https://en.wiktionary.org/wiki/exabyte exabyte EB
+     */
 	public static function HumanReadableSize($fBytes)
 	{
-		$aSizes = array('bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'HB');
+		$aSizes = array('bytes', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB');
 		$index = 0;
 		while (($fBytes > 1000) && ($index < count($aSizes))) {
 			$index++;
@@ -1006,7 +1019,7 @@ class SetupUtils
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param boolean $bIsItopInstall true if we are installing, false if we're upgrading
 	 * @param string $sDBServer
 	 * @param string $sDBUser
@@ -1286,6 +1299,12 @@ EOF
 				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_connections is set to $iMaxConnections.");
 			}
 
+            $iClusters = $oDBSource->GetClusterNb();
+            if ($iClusters > 0) {
+                SetupLog::Warning('Warning - Using Galera will cause malfunctions and data corruptions. Combodo does not support this type of infrastructure.');
+                $aResult['checks'][] = new CheckResult(CheckResult::WARNING, 'Using Galera will cause malfunctions and data corruptions. Combodo does not support this type of infrastructure.');
+            }
+
 			try {
 				$aResult['databases'] = $oDBSource->ListDB();
 			}
@@ -1498,7 +1517,7 @@ JS
 					$sDBNameInput .= '</select>';
 				}
 				$oPage->add_ready_script('$("#db_name_container").html("'.addslashes($sDBNameInput).'");');
-				$oPage->add_ready_script('$("#db_name").bind("click keyup change", function() { $("#existing_db").prop("checked", true); WizardUpdateButtons(); });');
+				$oPage->add_ready_script('$("#db_name").on("click keyup change", function() { $("#existing_db").prop("checked", true); WizardUpdateButtons(); });');
 
 			}
 		}
@@ -1547,8 +1566,7 @@ JS
 	}
 
 	/**
-	 *
-	 * @param $oWizard
+	 * @param \WizardController $oWizard
 	 * @param bool $bAbortOnMissingDependency ...
 	 * @param array $aModulesToLoad List of modules to search for, defaults to all if ommitted
 	 *
@@ -1561,42 +1579,26 @@ JS
 		$oConfig = new Config();
 		$sSourceDir = $oWizard->GetParameter('source_dir', '');
 
-		if (strpos($sSourceDir, APPROOT) !== false)
-		{
+		if (strpos($sSourceDir, APPROOT) !== false) {
 			$sRelativeSourceDir = str_replace(APPROOT, '', $sSourceDir);
-		}
-		else if (strpos($sSourceDir, $oWizard->GetParameter('previous_version_dir')) !== false)
-		{
+		} else if (strpos($sSourceDir, $oWizard->GetParameter('previous_version_dir')) !== false) {
 			$sRelativeSourceDir = str_replace($oWizard->GetParameter('previous_version_dir'), '', $sSourceDir);
-		}
-		else
-		{
+		} else {
 			throw(new Exception('Internal error: AnalyzeInstallation: source_dir is neither under APPROOT nor under previous_installation_dir ???'));
 		}
 
-
-		$aParamValues = array(
-			'db_server' => $oWizard->GetParameter('db_server', ''),
-			'db_user' => $oWizard->GetParameter('db_user', ''),
-			'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
-			'db_name' => $oWizard->GetParameter('db_name', ''),
-			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
-			'db_tls_enabled' => $oWizard->GetParameter('db_tls_enabled', false),
-			'db_tls_ca' => $oWizard->GetParameter('db_tls_ca', ''),
-			'source_dir' => $sRelativeSourceDir,
-		);
+		$aParamValues = $oWizard->GetParamForConfigArray();
+		$aParamValues['source_dir'] = $sRelativeSourceDir;
 		$oConfig->UpdateFromParams($aParamValues, null);
 		$aDirsToScan = array($sSourceDir);
 
-		if (is_dir(APPROOT.'extensions'))
-		{
+		if (is_dir(APPROOT.'extensions')) {
 			$aDirsToScan[] = APPROOT.'extensions';
 		}
-		if (is_dir($oWizard->GetParameter('copy_extensions_from')))
-		{
+		if (is_dir($oWizard->GetParameter('copy_extensions_from'))) {
 			$aDirsToScan[] = $oWizard->GetParameter('copy_extensions_from');
 		}
-		$sExtraDir = APPROOT.'data/production-modules/';
+		$sExtraDir = utils::GetDataPath().'production-modules/';
 		if (is_dir($sExtraDir))
 		{
 			$aDirsToScan[] = $sExtraDir;
@@ -1627,16 +1629,8 @@ JS
 		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
 		$oConfig = new Config();
 
-		$aParamValues = array(
-			'db_server' => $oWizard->GetParameter('db_server', ''),
-			'db_user' => $oWizard->GetParameter('db_user', ''),
-			'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
-			'db_name' => $oWizard->GetParameter('db_name', ''),
-			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
-			'db_tls_enabled' => $oWizard->GetParameter('db_tls_enabled', false),
-			'db_tls_ca' => $oWizard->GetParameter('db_tls_ca', ''),
-			'source_dir' => '',
-		);
+		$aParamValues = $oWizard->GetParamForConfigArray();
+		$aParamValues['source_dir'] = '';
 		$oConfig->UpdateFromParams($aParamValues, null);
 
 		$oProductionEnv = new RunTimeEnvironment();
@@ -1652,6 +1646,18 @@ JS
 	public static function IsProductVersion($aModules)
 	{
 		return array_key_exists('itsm-designer-connector', $aModules);
+	}
+
+	/**
+	 * @param array $aModules List of available module codes
+	 *
+	 * @return bool true if the Hub connector is installed
+	 *
+	 * @since 2.7.8 3.0.3 3.1.0 N°5758 method creation
+	 */
+	public static function IsConnectableToITopHub($aModules)
+	{
+		return array_key_exists('itop-hub-connector', $aModules);
 	}
 
 	/**
@@ -1946,7 +1952,7 @@ JS
 		if (empty($sEnv)) {
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'datamodels/*/*/license.*.xml'));
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/{*,*/*}/license.*.xml', GLOB_BRACE));
-			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'data/*-modules/{*,*/*}/license.*.xml', GLOB_BRACE));
+			$aLicenceFiles = array_merge($aLicenceFiles, glob(utils::GetDataPath().'*-modules/{*,*/*}/license.*.xml', GLOB_BRACE));
 		}
 		else
 		{
@@ -2078,11 +2084,11 @@ JS
 		if (!is_dir(APPROOT.'data')) {
 			mkdir(APPROOT.'data');
 		}
-		if (!is_dir(APPROOT.'data/setup')) {
-			mkdir(APPROOT.'data/setup');
+		if (!is_dir(utils::GetDataPath().'setup')) {
+			mkdir(utils::GetDataPath().'setup');
 		}
 		$sUID = hash('sha256', rand());
-		file_put_contents(APPROOT.'data/setup/authent', $sUID);
+		file_put_contents(utils::GetDataPath().'setup/authent', $sUID);
 		Session::Set('setup_token', $sUID);
 		return $sUID;
 	}
@@ -2098,7 +2104,7 @@ JS
 	final public static function CheckSetupToken($bRemoveToken = false)
 	{
 		$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
-		$sTokenFile = APPROOT.'data/setup/authent';
+		$sTokenFile = utils::GetDataPath().'setup/authent';
 		if (!file_exists($sTokenFile) || $sAuthent !== file_get_contents($sTokenFile)) {
 			throw new SecurityException('Setup operations are not allowed outside of the setup');
 		}
@@ -2117,7 +2123,7 @@ JS
 	{
 		if (Session::IsSet('setup_token')) {
 			$sAuth = Session::Get('setup_token');
-			$sTokenFile = APPROOT.'data/setup/authent';
+			$sTokenFile = utils::GetDataPath().'setup/authent';
 			if (file_exists($sTokenFile) && $sAuth === file_get_contents($sTokenFile)) {
 				return true;
 			}
@@ -2131,7 +2137,7 @@ JS
 	 */
 	public static function EraseSetupToken()
 	{
-		$sTokenFile = APPROOT.'data/setup/authent';
+		$sTokenFile = utils::GetDataPath().'setup/authent';
 		if (is_file($sTokenFile)) {
 			unlink($sTokenFile);
 		}
@@ -2171,6 +2177,7 @@ JS
 				'sodium' => 'Strong encryption will not be used.',
 				'openssl' => 'Strong encryption will not be used.',
 			],
+			'apcu' => 'Performances will be slightly degraded.',
 			'ldap' => 'LDAP authentication will be disabled.',
 		];
 

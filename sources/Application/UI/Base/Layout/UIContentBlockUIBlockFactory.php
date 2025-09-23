@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -15,7 +15,8 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
  * Class UIContentBlockUIBlockFactory
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Layout
+ * @package UIBlockAPI
+ * @api
  * @since 3.0.0
  */
 class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
@@ -28,6 +29,7 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an empty UIContentBlock which can be used to embed anything or to surround another block with specific CSS classes.
 	 *
+	 * @api
 	 * @param string|null $sId
 	 * @param array $aContainerClasses
 	 *
@@ -42,32 +44,46 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	 * Used to display a block of code like <pre> but allows line break.
 	 * The \n are replaced by <br>
 	 *
-	 * @param string $sCode
+	 * @api
+	 * @param string $sCode plain text code
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 */
 	public static function MakeForCode(string $sCode, string $sId = null)
 	{
-		$oCode = new UIContentBlock($sId, ['ibo-is-code']);
-		$sCode = str_replace("\n", '<br>', $sCode);
-		$oCode->AddSubBlock(new Html($sCode));
+		$sCode = str_replace("\n", '<br>', \utils::HtmlEntities($sCode));
 
-		return $oCode;
+		return self::MakeFromHTMLCode($sId, $sCode);
 	}
 
 	/**
 	 * Used to display a block of preformatted text in a <pre> tag.
 	 *
-	 * @param string $sCode
+	 * @api
+	 * @param string $sCode plain text code
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 */
 	public static function MakeForPreformatted(string $sCode, string $sId = null)
 	{
-		$sCode = '<pre>'.$sCode.'</pre>';
+		$sCode = '<pre>'.\utils::HtmlEntities($sCode).'</pre>';
 
-		return static::MakeForCode($sCode, $sId);
+		return self::MakeFromHTMLCode($sId, $sCode);
+	}
+
+	/**
+	 * @param string|null $sId
+	 * @param string $sCode
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
+	 */
+	private static function MakeFromHTMLCode(?string $sId, string $sCode): UIContentBlock
+	{
+		$oCode = new UIContentBlock($sId, ['ibo-is-code']);
+		$oCode->AddSubBlock(new Html($sCode));
+
+		return $oCode;
 	}
 }

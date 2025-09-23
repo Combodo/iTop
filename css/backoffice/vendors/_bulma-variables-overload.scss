@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -12,6 +12,9 @@ $body-weight: $ibo-font-weight-500 !default;
 $body-overflow-x: hidden !default;
 $body-overflow-y: auto !default;
 
+
+/*N°5786 - Avoid strong text to always be grey (default Bulma color for this var.) so strong text can keep its color. This  is mostly for text within the .ibo-is-html-content. */
+$text-strong: inherit !default;
 
 /**
  * customize Bulma content variables

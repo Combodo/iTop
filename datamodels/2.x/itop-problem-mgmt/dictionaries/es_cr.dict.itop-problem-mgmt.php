@@ -1,63 +1,26 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
- /**
+/**
  * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:ProblemManagement' => 'Administración de Problemas',
 	'Menu:ProblemManagement+' => 'Administración de Problemas',
-	'Menu:Problem:Overview' => 'Resumen de Problemas',
-	'Menu:Problem:Overview+' => 'Resumen de Problemas',
-	'Menu:NewProblem' => 'Nuevo Problema',
-	'Menu:NewProblem+' => 'Nuevo Problema',
-	'Menu:SearchProblems' => 'Búsqueda de Problemas',
-	'Menu:SearchProblems+' => 'Búsqueda de Problemas',
-	'Menu:Problem:Shortcuts' => 'Acceso Rápido',
-	'Menu:Problem:MyProblems' => 'Problemas Asignados a Mí',
-	'Menu:Problem:MyProblems+' => 'Problemas Asignados a Mí',
-	'Menu:Problem:OpenProblems' => 'Problemas Abiertos',
-	'Menu:Problem:OpenProblems+' => 'Problemas Abiertos',
+	'Menu:Problem:Overview' => 'Resumen de problemas',
+	'Menu:Problem:Overview+' => 'Resumen de problemas',
+	'Menu:NewProblem' => 'Nuevo problema',
+	'Menu:NewProblem+' => 'Nuevo problema',
+	'Menu:SearchProblems' => 'Búsqueda de problemas',
+	'Menu:SearchProblems+' => 'Búsqueda de problemas',
+	'Menu:Problem:Shortcuts' => 'Acceso rápido',
+	'Menu:Problem:MyProblems' => 'Problemas asignados a Mí',
+	'Menu:Problem:MyProblems+' => 'Problemas asignados a Mí',
+	'Menu:Problem:OpenProblems' => 'Problemas abiertos',
+	'Menu:Problem:OpenProblems+' => 'Problemas abiertos',
 	'UI-ProblemManagementOverview-ProblemByService' => 'Problemas por Servicio',
 	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemas por Servicio',
 	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemas por Prioridad',

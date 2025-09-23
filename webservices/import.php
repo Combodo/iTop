@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -27,7 +27,9 @@
 // - not outputing xml when a wrong input is given (class, attribute names)
 //
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\CSVPage;
+
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
@@ -207,6 +209,10 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 /////////////////////////////////
 // Main program
 
+/**
+ * @since 3.1.0 N°6047
+ */
+$oCtx = new ContextTag(ContextTag::TAG_IMPORT);
 if (utils::IsModeCLI())
 {
 	$oP = new CLIPage("iTop - Bulk import");
@@ -259,7 +265,36 @@ if (utils::IsModeCLI())
 else
 {
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+    LoginWebPage::ResetSession(true);
+	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
+    if ($iRet !== LoginWebPage::EXIT_CODE_OK) {
+        switch ($iRet) {
+            case LoginWebPage::EXIT_CODE_MISSINGLOGIN:
+                $oP->p("Missing parameter 'auth_user'");
+                break;
+
+            case LoginWebPage::EXIT_CODE_MISSINGPASSWORD:
+                $oP->p("Missing parameter 'auth_pwd'");
+                break;
+
+            case LoginWebPage::EXIT_CODE_WRONGCREDENTIALS:
+                $oP->p('Invalid login');
+                break;
+
+            case LoginWebPage::EXIT_CODE_PORTALUSERNOTAUTHORIZED:
+                $oP->p('Portal user is not allowed');
+                break;
+
+            case LoginWebPage::EXIT_CODE_NOTAUTHORIZED:
+                $oP->p('This user is not authorized to use the web services. (The profile REST Services User is required to access the REST web services)');
+                break;
+
+            default:
+                $oP->p("Unknown authentication error (retCode=$iRet)");
+        }
+        $oP->output();
+        exit -1;
+    }
 
 	$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
 }
@@ -384,7 +419,7 @@ try
 	// Note: it may happen that an external field has the same label as the external key
 	//       in that case, we consider that the external key has precedence
 	//
-	$aKnownColumnNames = array();
+	$aKnownColumnNames = ['id'=>['id']];
 	foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 	{
 		if ($bLocalize)
@@ -451,7 +486,7 @@ try
 	$iColCount = count($aRawFieldList);
 
 	// Translate into internal names
-	$aFieldList = array();
+	$aFieldList = [];
 	foreach($aRawFieldList as $iFieldId => $sFieldName)
 	{
 		$sFieldName = trim($sFieldName);
@@ -634,29 +669,29 @@ try
 		}
 		else
 		{
-			if (!MetaModel::IsValidAttCode($sClass, $sReconcKey))
+			if (!MetaModel::IsValidAttCode($sClass, $sReconcKey) && $sReconcKey != 'id')
 			{
 				// Safety net - should not happen now that column names are checked against known names
 				throw new BulkLoadException("Unknown reconciliation attribute '$sReconcKey' (class: '$sClass')");
 			}
-			$oAtt = MetaModel::GetAttributeDef($sClass, $sReconcKey);
-			if ($oAtt->IsExternalKey())
-			{
-				$aFinalReconcilKeys[] = $sReconcKey;
-				$aReconcilKeysReport[$sReconcKey][] = 'id';
-			}
-			elseif ($oAtt->IsExternalField())
-			{
-				$sReconcAttCode = $oAtt->GetKeyAttCode();
-				$sReconcKeyReport = "$sReconcAttCode ($sReconcKey)";
-
-				$aFinalReconcilKeys[] = $sReconcAttCode;
-				$aReconcilKeysReport[$sReconcAttCode][] = $sReconcKeyReport;
-			}
-			else
-			{
+			if ($sReconcKey == 'id') {
 				$aFinalReconcilKeys[] = $sReconcKey;
 				$aReconcilKeysReport[$sReconcKey] = array();
+			} else {
+				$oAtt = MetaModel::GetAttributeDef($sClass, $sReconcKey);
+				if ($oAtt->IsExternalKey()) {
+					$aFinalReconcilKeys[] = $sReconcKey;
+					$aReconcilKeysReport[$sReconcKey][] = 'id';
+				} elseif ($oAtt->IsExternalField()) {
+					$sReconcAttCode = $oAtt->GetKeyAttCode();
+					$sReconcKeyReport = "$sReconcAttCode ($sReconcKey)";
+
+					$aFinalReconcilKeys[] = $sReconcAttCode;
+					$aReconcilKeysReport[$sReconcAttCode][] = $sReconcKeyReport;
+				} else {
+					$aFinalReconcilKeys[] = $sReconcKey;
+					$aReconcilKeysReport[$sReconcKey] = array();
+				}
 			}
 		}
 	}
@@ -704,7 +739,8 @@ try
 		null, // synchro scope
 		null, // on delete
 		$sDateFormat,
-		$bLocalize
+		$bLocalize,
+		count($aFieldList)
 	);
 
 	if ($bSimulate)
@@ -849,7 +885,7 @@ try
 			if (isset($aRowData["finalclass"]) && isset($aRowData["id"]))
 			{
 				$aRowDisp["__OBJECT_CLASS__"] = $aRowData["finalclass"];
-				$aRowDisp["__OBJECT_ID__"] = $aRowData["id"]->GetDisplayableValue();
+				$aRowDisp["__OBJECT_ID__"] = $aRowData["id"]->GetCLIValue();
 			}
 			else
 			{
@@ -868,7 +904,7 @@ try
 
 				if (is_object($value))
 				{
-					$aRowDisp["$sKey"] = $value->GetDisplayableValueAndDescription();
+					$aRowDisp["$sKey"] = $value->GetCLIValueAndDescription();
 				}
 				else
 				{

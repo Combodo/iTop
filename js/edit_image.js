@@ -71,7 +71,7 @@ $(function()
 				let sMarkup = `
 				<input type="hidden" id="do_remove_${this.options.input_name}" name="${this.options.input_name}[remove]" value="0"/>
 				<div id="preview_${this.options.input_name}" class="${sCssClasses}" data-role="ibo-input-image--image-view" style="max-width: ${this.options.max_width_px}px; max-height: ${this.options.max_height_px}px; aspect-ratio: ${this.options.max_width_px} / ${this.options.max_height_px};">
-					<img src="${sImageUrl}" data-original-src="${sImageUrl}" data-default-src="${this.options.default_image_url}" style="max-width: ${this.options.max_width_px}px; max-height: ${this.options.max_height_px}px">
+					<img src="${sImageUrl}" data-original-src="${sImageUrl}" data-default-src="${this.options.default_image_url}" style="max-width: min(${this.options.max_width_px}px,100%); max-height: min(${this.options.max_height_px}px,100%)">
 					<input id="file_${this.options.input_name}" name="${this.options.input_name}[fcontents]" type="file" />
 				</div>
 				<div id="buttons_${this.options.input_name}" class="ibo-input-image--edit-buttons" data-role="ibo-input-image--edit-buttons">

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
+// Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Reflection API for the MetaModel (partial) 
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -77,7 +77,7 @@ abstract class ModelReflection
 			return $sFormatCode.' - '.implode(', ', $aArguments);
 		}
 
-		return vsprintf($sLocalizedFormat, $aArguments);
+		return utils::VSprintf($sLocalizedFormat, $aArguments);
 	}
 
 	/**

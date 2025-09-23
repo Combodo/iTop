@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Input
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'UI:Component:Input:ChangeNotAllowed' => 'This change is not allowed~~',
 	'UI:Component:Input:Password:DoesNotMatch' => '密码不匹配',
+	'UI:Component:Input:Set:MinimumItems' => 'Minimum %1$s item(s) required~~',
 ));

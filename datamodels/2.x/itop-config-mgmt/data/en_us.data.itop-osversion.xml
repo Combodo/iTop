@@ -1,0 +1,114 @@
+<Set>
+    <OSVersion alias="OSVersion" id="1">
+        <name>10</name>
+        <osfamily_id>8</osfamily_id>
+        <osfamily_id_friendlyname>Windows</osfamily_id_friendlyname>
+        <osfamily_name>Windows</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>10</friendlyname>
+    </OSVersion>
+    <OSVersion alias="OSVersion" id="2">
+        <name>11</name>
+        <osfamily_id>8</osfamily_id>
+        <osfamily_id_friendlyname>Windows</osfamily_id_friendlyname>
+        <osfamily_name>Windows</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>11</friendlyname>
+    </OSVersion>
+    <OSVersion alias="OSVersion" id="3">
+        <name>11.5</name>
+        <osfamily_id>2</osfamily_id>
+        <osfamily_id_friendlyname>Debian</osfamily_id_friendlyname>
+        <osfamily_name>Debian</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>11.5</friendlyname>
+    </OSVersion>
+    <OSVersion alias="OSVersion" id="4">
+        <name>18.04 LTS</name>
+        <osfamily_id>6</osfamily_id>
+        <osfamily_id_friendlyname>Ubuntu server</osfamily_id_friendlyname>
+        <osfamily_name>Ubuntu server</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>18.04 LTS</friendlyname>
+    </OSVersion>
+    <OSVersion alias="OSVersion" id="5">
+        <name>20.04 LTS</name>
+        <osfamily_id>5</osfamily_id>
+        <osfamily_id_friendlyname>Ubuntu</osfamily_id_friendlyname>
+        <osfamily_name>Ubuntu</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>20.04 LTS</friendlyname>
+    </OSVersion>
+    <OSVersion alias="OSVersion" id="6">
+        <name>20.04 LTS</name>
+        <osfamily_id>6</osfamily_id>
+        <osfamily_id_friendlyname>Ubuntu server</osfamily_id_friendlyname>
+        <osfamily_name>Ubuntu server</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>20.04 LTS</friendlyname>
+    </OSVersion>
+    <OSVersion alias="OSVersion" id="7">
+        <name>2019</name>
+        <osfamily_id>9</osfamily_id>
+        <osfamily_id_friendlyname>Windows server</osfamily_id_friendlyname>
+        <osfamily_name>Windows server</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>2019</friendlyname>
+    </OSVersion>
+    <OSVersion alias="OSVersion" id="8">
+        <name>2022</name>
+        <osfamily_id>9</osfamily_id>
+        <osfamily_id_friendlyname>Windows server</osfamily_id_friendlyname>
+        <osfamily_name>Windows server</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>2022</friendlyname>
+    </OSVersion>
+    <OSVersion alias="OSVersion" id="9">
+        <name>22.04 LTS</name>
+        <osfamily_id>5</osfamily_id>
+        <osfamily_id_friendlyname>Ubuntu</osfamily_id_friendlyname>
+        <osfamily_name>Ubuntu</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>22.04 LTS</friendlyname>
+    </OSVersion>
+    <OSVersion alias="OSVersion" id="10">
+        <name>22.04 LTS</name>
+        <osfamily_id>6</osfamily_id>
+        <osfamily_id_friendlyname>Ubuntu server</osfamily_id_friendlyname>
+        <osfamily_name>Ubuntu server</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>22.04 LTS</friendlyname>
+    </OSVersion>
+    <OSVersion alias="OSVersion" id="11">
+        <name>6.7</name>
+        <osfamily_id>7</osfamily_id>
+        <osfamily_id_friendlyname>vCenter Server</osfamily_id_friendlyname>
+        <osfamily_name>vCenter Server</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>6.7</friendlyname>
+    </OSVersion>
+    <OSVersion alias="OSVersion" id="12">
+        <name>9</name>
+        <osfamily_id>4</osfamily_id>
+        <osfamily_id_friendlyname>Red Hat</osfamily_id_friendlyname>
+        <osfamily_name>Red Hat</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>9</friendlyname>
+    </OSVersion>
+    <OSVersion alias="OSVersion" id="13">
+        <name>9.1</name>
+        <osfamily_id>3</osfamily_id>
+        <osfamily_id_friendlyname>Oracle Linux</osfamily_id_friendlyname>
+        <osfamily_name>Oracle Linux</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>9.1</friendlyname>
+    </OSVersion>
+    <OSVersion alias="OSVersion" id="14">
+        <name>Roling release</name>
+        <osfamily_id>1</osfamily_id>
+        <osfamily_id_friendlyname>Arch</osfamily_id_friendlyname>
+        <osfamily_name>Arch</osfamily_name>
+        <finalclass>OS Version</finalclass>
+        <friendlyname>Roling release</friendlyname>
+    </OSVersion>
+</Set>

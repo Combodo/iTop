@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
+// Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -16,14 +16,20 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\iTopPDF;
+use Combodo\iTop\Application\WebPage\PDFPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 /**
  * Special kind of Graph for producing some nice output
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -31,6 +37,7 @@ class DisplayableNode extends GraphNode
 {
 	public $x;
 	public $y;
+	public bool $bFiltered;
 
 	/**
 	 * Create a new node inside a graph
@@ -59,7 +66,7 @@ class DisplayableNode extends GraphNode
 
 	public function GetWidth()
 	{
-		return max(32, 5*strlen($this->GetProperty('label'))); // approximation of the text's bounding box
+		return max(32, 5 * mb_strlen($this->GetProperty('label'))); // approximation of the text's bounding box
 	}
 
 	public function GetHeight()
@@ -488,7 +495,7 @@ class DisplayableNode extends GraphNode
 		if ($bNoLabel)
 		{
 			// simulate a fake label with the approximate same size as the true label
-			$sLabel = str_repeat('x',strlen($this->GetProperty('label', $this->GetId())));
+			$sLabel = str_repeat('x', mb_strlen($this->GetProperty('label', $this->GetId())));
 			$sDot = 'label="'.$sLabel.'"';
 		}
 		else
@@ -1410,10 +1417,9 @@ class DisplayableGraph extends SimpleGraph
 	}
 
 	/**
-	 * Display the graph inside the given page, with the "filter" drawer above it
+	 * Display only the graph inside the given page, with the parameters of filter box draw with DisplayFilterBox
 	 *
 	 * @param WebPage $oP
-	 * @param array $aResults
 	 * @param string $sRelation
 	 * @param ApplicationContext $oAppContext
 	 * @param array $aExcludedObjects
@@ -1421,14 +1427,16 @@ class DisplayableGraph extends SimpleGraph
 	 * @param int $iObjKey
 	 * @param string $sContextKey
 	 * @param array $aContextParams
-	 * @param bool $bLazyLoading since 2.7.7 3.0.1
+	 * @param bool $bLazyLoading
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.1.1 3.2.0 N°3767
 	 */
-	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false)
+	function DisplayGraph(WebPage $oP, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false): void
 	{
-		list($aExcludedByClass, $aAdditionalContexts) = $this->DisplayFiltering($sContextKey, $aContextParams, $aExcludedObjects, $oP, $aResults, $bLazyLoading);
+		list($aExcludedByClass, $aAdditionalContexts) = $this->GetFilteringData($sContextKey, $aContextParams, $aExcludedObjects);
 
 		$iGroupingThreshold = utils::ReadParam('g', 5);
 
@@ -1436,8 +1444,8 @@ class DisplayableGraph extends SimpleGraph
 		try {
 			$this->InitFromGraphviz();
 			$sExportAsPdfURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
-			$sContext = $oAppContext->GetForLink();
-			$sDrillDownURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=%1$s&id=%2$s&'.$sContext;
+			$sContext = $oAppContext->GetForLink(true);
+			$sDrillDownURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=%1$s&id=%2$s'.$sContext;
 			$sExportAsDocumentURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_attachment&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
 			$sLoadFromURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_json&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
 			$sAttachmentExportTitle = '';
@@ -1462,6 +1470,7 @@ class DisplayableGraph extends SimpleGraph
 				'excluded'             => $aExcludedByClass,
 				'grouping_threshold'   => $iGroupingThreshold,
 				'export_as_pdf'        => array('url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')),
+				'transaction_id'        => utils::GetNewTransactionId(),
 				'export_as_attachment' => array('url' => $sExportAsDocumentURL, 'label' => Dict::S('UI:Relation:ExportAsAttachment'), 'obj_class' => $sObjClass, 'obj_key' => $iObjKey),
 				'drill_down'           => array('url' => $sDrillDownURL, 'label' => Dict::S('UI:Relation:DrillDown')),
 				'labels'               => array(
@@ -1513,12 +1522,10 @@ class DisplayableGraph extends SimpleGraph
 				$oP->add_ready_script(" $('#$sId').simple_graph(".json_encode($aParams).");");
 			} else {
 				$oP->add_script("function Load(){var aExcluded = [];	$('input[name^=excluded]').each( function() {if (!$(this).prop('checked'))	{	aExcluded.push($(this).val());		}} ); var params= $.extend(".json_encode($aParams).",  {excluded_classes: aExcluded}); $('#$sId').simple_graph(params);}");
-				$oP->add_ready_script("$('#impacted_objects_lists').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_groups').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');");
-
+				$oP->add_ready_script("$('#graph').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_objects_lists').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_groups').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');");
 			}
 		}
-		catch(Exception $e)
-		{
+		catch (Exception $e) {
 			$oP->add('<div>'.$e->getMessage().'</div>');
 		}
 		$oP->add_script(
@@ -1541,7 +1548,7 @@ class DisplayableGraph extends SimpleGraph
 		}
 		catch(err)
 		{
-			alert(err);
+			CombodoModal.OpenErrorModal(err);
 		}
 	}
 EOF
@@ -1549,37 +1556,30 @@ EOF
 	}
 
 	/**
-	 * @param string $sContextKey
-	 * @param array $aContextParams
-	 * @param array $aExcludedObjects
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param array $aResults
 	 * @param bool $bLazyLoading
 	 *
-	 * @return array
+	 * @return UIContentBlock
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 * @throws \ReflectionException
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
+	 *
+	 * @since 3.1.1 3.2.0 N°3767
 	 */
-	public function DisplayFiltering(string $sContextKey, array $aContextParams, array $aExcludedObjects, WebPage $oP, array $aResults, bool $bLazyLoading = false): array
+	public function DisplayFilterBox(WebPage $oP, array $aResults, bool $bLazyLoading = false): UIContentBlock
 	{
-		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
-		$aExcludedByClass = array();
-		foreach ($aExcludedObjects as $oObj) {
-			if (!array_key_exists(get_class($oObj), $aExcludedByClass)) {
-				$aExcludedByClass[get_class($oObj)] = array();
-			}
-			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
-		}
 		$sSftShort = Dict::S('UI:ElementsDisplayed');
-		$oP->add("<div class=\"not-printable\">\n");
+		$oBlock = UIContentBlockUIBlockFactory::MakeStandard(null, ['not-printable']);
+
 		$oUiSearchBlock = new Panel($sSftShort, [], Panel::ENUM_COLOR_SCHEME_CYAN, 'dh_flash');
-		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
-		$oUiSearchBlock->SetIsCollapsible(true);
-		$oUiHtmlBlock = new Combodo\iTop\Application\UI\Base\Component\Html\Html(
+		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"])
+			->SetIsCollapsible(true);
+
+		$oUiHtmlBlock = new Html(
 			<<<EOF
 		
     <div id="ds_flash" class="search_box ibo-display-graph--search-box">
@@ -1626,11 +1626,23 @@ EOF
 			$oUiHtmlBlock->AddHtml("<button type=\"button\" id=\"ReloadMovieBtn\" class=\"ibo-button ibo-is-neutral ibo-is-regular\" onClick=\"$sOnCLick\">".Dict::S('UI:Button:Refresh')."</button></div></form>");
 		}
 		$oUiHtmlBlock->AddHtml("</div>\n");
-		$oUiHtmlBlock->AddHtml("</div>\n"); // class="not-printable"
 
 		$oUiSearchBlock->AddSubBlock($oUiHtmlBlock);
-		$oP->AddUiBlock($oUiSearchBlock);
+		$oBlock->AddSubBlock($oUiSearchBlock);
 
+		return $oBlock;
+	}
+
+	public function GetFilteringData(string $sContextKey, array $aContextParams, array $aExcludedObjects): array
+	{
+		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
+		$aExcludedByClass = array();
+		foreach ($aExcludedObjects as $oObj) {
+			if (!array_key_exists(get_class($oObj), $aExcludedByClass)) {
+				$aExcludedByClass[get_class($oObj)] = array();
+			}
+			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
+		}
 		$aAdditionalContexts = array();
 		foreach ($aContextDefs as $sKey => $aDefinition) {
 			$aAdditionalContexts[] = array('key' => $sKey, 'label' => Dict::S($aDefinition['dict']), 'oql' => $aDefinition['oql'], 'default' => (array_key_exists('default', $aDefinition) && ($aDefinition['default'] == 'yes')));

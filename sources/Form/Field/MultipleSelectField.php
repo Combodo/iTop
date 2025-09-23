@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -28,5 +28,4 @@ class MultipleSelectField extends SelectField
 {
 	/** @inheritDoc */
 	const DEFAULT_MULTIPLE_VALUES_ENABLED = true;
-
 }

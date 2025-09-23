@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,8 +20,10 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use DOMFormatException;
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
+use DOMFormatException;
 
 /**
  * Description of BrowseBrick
@@ -32,6 +34,23 @@ use Combodo\iTop\DesignElement;
  */
 class BrowseBrick extends PortalBrick
 {
+	/**
+	 * @var string DEFAULT_PAGE_TEMPLATE_PATH 
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_MODE_LIST_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_list.html.twig';
+	/**
+	 * @var string  DEFAULT_MODE_MOSAIC_TEMPLATE_PATH
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_MODE_MOSAIC_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_mosaic.html.twig';
+	/**
+	 * @var string DEFAULT_MODE_TREE_TEMPLATE_PATH
+	 * @deprecated 3.2.1
+	 */
+	const DEFAULT_MODE_TREE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_tree.html.twig';
+
+
 	/** @var string ENUM_BROWSE_MODE_LIST */
 	const ENUM_BROWSE_MODE_LIST = 'list';
 	/** @var string ENUM_BROWSE_MODE_TREE */
@@ -96,6 +115,18 @@ class BrowseBrick extends PortalBrick
 	protected $sDefaultBrowseMode;
 	/** @var int $iDefaultListLength */
 	protected $iDefaultListLength;
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'browse/layout.html.twig'),
+			TemplateDefinitionDto::Create('page_list', static::TEMPLATES_BASE_PATH . 'browse/mode_list.html.twig'),
+			TemplateDefinitionDto::Create('page_tree', static::TEMPLATES_BASE_PATH . 'browse/mode_tree.html.twig'),
+			TemplateDefinitionDto::Create('page_mosaic', static::TEMPLATES_BASE_PATH . 'browse/mode_mosaic.html.twig'),
+		);
+	}
 
 	/**
 	 * BrowseBrick constructor.
@@ -344,7 +375,7 @@ class BrowseBrick extends PortalBrick
 								{
 									if (!$oModeNode->hasAttribute('id'))
 									{
-										throw new DOMFormatException('BrowseBrick: Browse mode must have a unique ID attribute', null,
+										throw new DOMFormatException('BrowseBrick: Browse mode must have a unique ID attribute', 0,
 											null, $oModeNode);
 									}
 
@@ -355,13 +386,8 @@ class BrowseBrick extends PortalBrick
 									$oTemplateNode = $oModeNode->GetOptionalElement('template');
 									if (($oTemplateNode !== null) && ($oTemplateNode->GetText() !== null))
 									{
-										$sTemplatePath = $oTemplateNode->GetText();
+										$this->SetTemplatePath('page_'.$sModeId, $oTemplateNode->GetText());
 									}
-									else
-									{
-										$sTemplatePath = 'itop-portal-base/portal/templates/bricks/browse/mode_'.$sModeId.'.html.twig';
-									}
-									$aModeData['template'] = $sTemplatePath;
 
 									$this->AddAvailableBrowseMode($sModeId, $aModeData);
 								}
@@ -390,7 +416,7 @@ class BrowseBrick extends PortalBrick
 		// Checking that the brick has at least a browse mode
 		if (count($this->GetAvailablesBrowseModes()) === 0)
 		{
-			throw new DOMFormatException('BrowseBrick : Must have at least one browse mode', null, null, $oMDElement);
+			throw new DOMFormatException('BrowseBrick : Must have at least one browse mode', 0, null, $oMDElement);
 		}
 		// Checking that default browse mode in among the available
 		if (!in_array($this->sDefaultBrowseMode, array_keys($this->aAvailablesBrowseModes)))
@@ -401,7 +427,7 @@ class BrowseBrick extends PortalBrick
 		// Checking that the brick has at least a level
 		if (count($this->GetLevels()) === 0)
 		{
-			throw new DOMFormatException('BrowseBrick : Must have at least one level', null, null, $oMDElement);
+			throw new DOMFormatException('BrowseBrick : Must have at least one level', 0, null, $oMDElement);
 		}
 
 		return $this;
@@ -600,7 +626,7 @@ class BrowseBrick extends PortalBrick
 									null, null, $oActionNode);
 							}
 						}
-						uasort($aLevel[$sTagName], "static::CompareActionsByRank");
+						uasort($aLevel[$sTagName], [$this, 'CompareActionsByRank']);
 					}
 					break;
 

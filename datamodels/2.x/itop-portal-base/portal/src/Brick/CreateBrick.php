@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,8 +20,10 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use DOMFormatException;
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
+use DOMFormatException;
 
 /**
  * Description of CreateBrick
@@ -35,8 +37,6 @@ class CreateBrick extends PortalBrick
 	// Overloaded constants
 	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-plus';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-plus fa-2x';
-	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/create/modal.html.twig';
-
 	/** @var string DEFAULT_CLASS */
 	const DEFAULT_CLASS = '';
 
@@ -47,6 +47,17 @@ class CreateBrick extends PortalBrick
 	protected $sClass;
 	/** @var array $aRules */
 	protected $aRules;
+
+	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/create/modal.html.twig';
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'create/modal.html.twig')
+		);
+	}
 
 	/**
 	 * Constructor

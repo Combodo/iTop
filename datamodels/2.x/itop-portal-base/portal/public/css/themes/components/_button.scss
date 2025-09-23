@@ -1,0 +1,299 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-button-colors: (
+        '' : (
+                'primary': (
+                        '': (
+                                $ipb-color-blue-800,
+                                $ipb-color-white-100,
+                                $ipb-color-blue-900
+                        ),
+                        ':hover': (
+                                $ipb-color-blue-700,
+                                $ipb-color-white-100,
+                                $ipb-color-blue-800
+                        ),
+                        ':active': (
+                                $ipb-color-blue-900,
+                                $ipb-color-white-100,
+                                $ipb-color-blue-950
+                        ),
+                        ':disabled': (
+                                $ipb-color-blue-200,
+                                $ipb-color-blue-600,
+                                $ipb-color-blue-300
+                        ),
+                ),
+                'default': (
+                        '': (
+                                $ipb-color-white-100,
+                                $ipb-color-grey-800,
+                                $ipb-color-grey-600
+                        ),
+                        ':hover': (
+                                $ipb-color-grey-100,
+                                $ipb-color-grey-900,
+                                $ipb-color-grey-700
+                        ),
+                        ':active': (
+                                $ipb-color-grey-200,
+                                $ipb-color-grey-900,
+                                $ipb-color-grey-700
+                        ),
+                        ':disabled': (
+                                $ipb-color-grey-200,
+                                $ipb-color-grey-700,
+                                $ipb-color-grey-300
+                        ),
+                ),
+                'success': (
+                        '': (
+                                $ipb-color-success-900,
+                                $ipb-color-white-100,
+                                $ipb-color-success-900
+                        ),
+                        ':hover': (
+                                $ipb-color-success-800,
+                                $ipb-color-green-100,
+                                $ipb-color-success-900
+                        ),
+                        ':active': (
+                                $ipb-color-success-950,
+                                $ipb-color-green-100,
+                                $ipb-color-success-950
+                        ),
+                        ':disabled': (
+                                $ipb-color-grey-200,
+                                $ipb-color-grey-700,
+                                $ipb-color-grey-300
+                        ),
+                ),
+                'warning': (
+                        '': (
+                                $ipb-color-warning-700,
+                                $ipb-color-white-100,
+                                $ipb-color-warning-900
+                        ),
+                        ':hover': (
+                                $ipb-color-warning-600,
+                                $ipb-color-warning-100,
+                                $ipb-color-warning-700
+                        ),
+                        ':active': (
+                                $ipb-color-warning-800,
+                                $ipb-color-warning-100,
+                                $ipb-color-warning-900
+                        ),
+                        ':disabled': (
+                                $ipb-color-grey-200,
+                                $ipb-color-grey-700,
+                                $ipb-color-grey-300
+                        ),
+                ),
+                'danger': (
+                        '': (
+                                $ipb-color-danger-800,
+                                $ipb-color-white-100,
+                                $ipb-color-danger-900
+                        ),
+                        ':hover': (
+                                $ipb-color-danger-700,
+                                $ipb-color-danger-100,
+                                $ipb-color-danger-800
+                        ),
+                        ':active': (
+                                $ipb-color-danger-900,
+                                $ipb-color-danger-100,
+                                $ipb-color-danger-950
+                        ),
+                        ':disabled': (
+                                $ipb-color-grey-200,
+                                $ipb-color-grey-700,
+                                $ipb-color-grey-300
+                        ),
+                ),
+                'info': (
+                        '': (
+                                $ipb-color-information-800,
+                                $ipb-color-white-100,
+                                $ipb-color-information-900
+                        ),
+                        ':hover': (
+                                $ipb-color-information-700,
+                                $ipb-color-information-100,
+                                $ipb-color-information-800
+                        ),
+                        ':active': (
+                                $ipb-color-information-900,
+                                $ipb-color-information-100,
+                                $ipb-color-information-950
+                        ),
+                        ':disabled': (
+                                $ipb-color-grey-200,
+                                $ipb-color-grey-700,
+                                $ipb-color-grey-300
+                        ),
+                ),
+        ),
+        'alternative' : (
+                'primary': (
+                        '': (
+                                $ipb-color-transparent,
+                                $ipb-color-blue-800,
+                                $ipb-color-transparent
+                        ),
+                        ':hover': (
+                                $ipb-color-blue-100,
+                                $ipb-color-blue-900,
+                                $ipb-color-blue-100
+                        ),
+                        ':active': (
+                                $ipb-color-blue-200,
+                                $ipb-color-blue-900,
+                                $ipb-color-blue-200
+                        ),
+                        ':disabled': (
+                                $ipb-color-blue-200,
+                                $ipb-color-blue-600,
+                                $ipb-color-blue-300
+                        ),
+                ),
+                'default': (
+                        '': (
+                                $ipb-color-transparent,
+                                $ipb-color-grey-800,
+                                $ipb-color-transparent
+                        ),
+                        ':hover': (
+                                $ipb-color-grey-200,
+                                $ipb-color-grey-900,
+                                $ipb-color-grey-200
+                        ),
+                        ':active': (
+                                $ipb-color-grey-300,
+                                $ipb-color-grey-900,
+                                $ipb-color-grey-300
+                        ),
+                        ':disabled': (
+                                $ipb-color-transparent,
+                                $ipb-color-grey-500,
+                                $ipb-color-transparent
+                        ),
+                ),
+                'success': (
+                        '': (
+                                $ipb-color-transparent,
+                                $ipb-color-success-900,
+                                $ipb-color-transparent
+                        ),
+                        ':hover': (
+                                $ipb-color-success-100,
+                                $ipb-color-success-900,
+                                $ipb-color-success-100
+                        ),
+                        ':active': (
+                                $ipb-color-success-200,
+                                $ipb-color-success-900,
+                                $ipb-color-success-200
+                        ),
+                        ':disabled': (
+                                $ipb-color-grey-200,
+                                $ipb-color-grey-700,
+                                $ipb-color-grey-300
+                        ),
+                ),
+                'warning': (
+                        '': (
+                                $ipb-color-transparent,
+                                $ipb-color-warning-800,
+                                $ipb-color-transparent
+                        ),
+                        ':hover': (
+                                $ipb-color-warning-100,
+                                $ipb-color-warning-900,
+                                $ipb-color-warning-100
+                        ),
+                        ':active': (
+                                $ipb-color-warning-200,
+                                $ipb-color-warning-900,
+                                $ipb-color-warning-200
+                        ),
+                        ':disabled': (
+                                $ipb-color-grey-200,
+                                $ipb-color-grey-700,
+                                $ipb-color-grey-300
+                        ),
+                ),
+                'danger': (
+                        '': (
+                                $ipb-color-transparent,
+                                $ipb-color-danger-800,
+                                $ipb-color-transparent
+                        ),
+                        ':hover': (
+                                $ipb-color-danger-100,
+                                $ipb-color-danger-800,
+                                $ipb-color-danger-100
+                        ),
+                        ':active': (
+                                $ipb-color-danger-200,
+                                $ipb-color-danger-800,
+                                $ipb-color-danger-200
+                        ),
+                        ':disabled': (
+                                $ipb-color-grey-200,
+                                $ipb-color-grey-700,
+                                $ipb-color-grey-300
+                        ),
+                ),
+                'info': (
+                        '': (
+                                $ipb-color-transparent,
+                                $ipb-color-information-800,
+                                $ipb-color-transparent
+                        ),
+                        ':hover': (
+                                $ipb-color-information-100,
+                                $ipb-color-information-800,
+                                $ipb-color-information-100
+                        ),
+                        ':active': (
+                                $ipb-color-information-200,
+                                $ipb-color-information-800,
+                                $ipb-color-information-200
+                        ),
+                        ':disabled': (
+                                $ipb-color-grey-200,
+                                $ipb-color-grey-700,
+                                $ipb-color-grey-300
+                        ),
+                ),
+        ),
+) !default;
+$ipb-button--background-color: $ipb-color-white-100 !default;
+$ipb-button--color: $ipb-color-blue-800 !default;
+$ipb-button--border-color:$ipb-color-blue-700 !default;
+$ipb-button--border: solid 1px $ipb-button--border-color !default;
+
+.ipb-button, .btn{
+  background-color: $ipb-button--background-color !important;
+  color: $ipb-button--color !important;
+  border: $ipb-button--border;
+  
+  @each $sType, $aColors in $ipb-button-colors {
+    @each $sColor, $sPseudoClasses in $aColors {
+      @each $sPseudoClass, $sAttributes in $sPseudoClasses {
+        &.ipb-is-#{$sColor}#{if($sType != '', ".ipb-is-#{$sType}", '')}#{$sPseudoClass}, &.btn-#{$sColor}#{if($sType != '', ".#{$sType}", '')}#{$sPseudoClass} {
+          background-color: nth($sAttributes, 1) !important;
+          color: nth($sAttributes, 2) !important;
+          border-color: nth($sAttributes, 3) !important;
+        }
+      }
+    }
+  }
+}
+

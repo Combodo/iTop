@@ -1,11 +1,15 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 class CoreException extends Exception
 {
+	protected $m_sIssue;
+	protected $m_sImpact;
+	protected $m_aContextData;
+
 	/**
 	 * CoreException constructor.
 	 *
@@ -63,7 +67,7 @@ class CoreException extends Exception
 
 	public function getHtmlDesc($sHighlightHtmlBegin = '<b>', $sHighlightHtmlEnd = '</b>')
 	{
-		return $this->getMessage();
+		return utils::EscapeHtml($this->getMessage());
 	}
 
 	/**

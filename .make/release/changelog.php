@@ -25,11 +25,33 @@
 
 
 if (count($argv) === 1) {
-	echo '⚠ You must pass the base tag/sha1 as parameter';
+	echo "⚠ You must pass the base tag/sha1 as parameter\n";
 	exit(1);
 }
 $sBaseReference = $argv[1];
 
+
+/**
+ * Replace the Github emojis codes by their UTF-8 character equivalent
+ */
+function ReplaceGitmojis(string $sLine)
+{
+	static $aGitmojis = null;
+
+	if ($aGitmojis === null) {
+		$aRawGitmojis = json_decode(trim(file_get_contents(__DIR__.'/gitmojis.json')), true);
+		if ($aRawGitmojis === false) {
+			echo "\nFailed to parse ".__DIR__."/gitmojis.json, emoji codes will not be replaced by their unicode equivalent.\n";
+		} else {
+			foreach($aRawGitmojis["gitmojis"] as $aGitmoji) {
+				$aGitmojis[$aGitmoji['code']] = $aGitmoji['emoji'];
+			}
+		}
+	}
+	if (is_array($aGitmojis)) {
+		return str_replace(array_keys($aGitmojis), array_values($aGitmojis), $sLine);
+	}
+}
 
 //--- Get log
 $sGitLogCommand = 'git log --decorate --pretty="%h;%s" --date-order --no-merges '.$sBaseReference.'..HEAD';
@@ -73,5 +95,5 @@ echo "\n";
 echo "# Logs line without bug referenced\n";
 echo "sha1;subject\n";
 foreach ($aLogLineNoBug as $sLogLine) {
-	echo "$sLogLine\n";
+	echo ReplaceGitmojis($sLogLine)."\n";
 }

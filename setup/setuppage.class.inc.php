@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,6 +20,7 @@
 use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
 
 require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 require_once(APPROOT.'setup/runtimeenv.class.inc.php');
@@ -38,14 +39,15 @@ class SetupPage extends NiceWebPage
 	public function __construct($sTitle)
 	{
 		parent::__construct($sTitle);
-		$this->add_linked_script("../js/jquery.blockUI.js");
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.js');
-		$this->add_linked_script("../setup/setup.js");
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
+		$this->LinkScriptFromAppRoot("js/jquery.blockUI.js");
+		$this->LinkScriptFromAppRoot('node_modules/@popperjs/core/dist/umd/popper.js');
+		$this->LinkScriptFromAppRoot('node_modules/tippy.js/dist/tippy-bundle.umd.js');
+		$this->LinkScriptFromAppRoot("setup/setup.js");
+		$this->LinkScriptFromAppRoot("setup/csp-detection.js?itop_version_wiki_syntax=" . utils::GetItopVersionWikiSyntax());
+		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
+		$this->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
+		$this->LinkStylesheetFromAppRoot('node_modules/tippy.js/dist/tippy.css');
+		$this->LinkStylesheetFromAppRoot('node_modules/tippy.js/animations/shift-away-subtle.css');
 
 		$this->LoadTheme();
 		$this->add_saas("css/setup.scss");
@@ -75,28 +77,28 @@ class SetupPage extends NiceWebPage
 		return '';
 	}
 
-	public function info($sText)
+	public function info($sText, $sTextForLog = null)
 	{
-		$this->add("<p class=\"info\">$sText</p>\n");
-		SetupLog::Info($sText);
+		$this->add("<p class=\"info ibo-is-html-content\">$sText</p>\n");
+		SetupLog::Info($sTextForLog ?? $sText);
 	}
 
-	public function ok($sText)
+	public function ok($sText, $sTextForLog = null)
 	{
-		$this->add("<div class=\"message message-valid\"><span class=\"message-title\">Success:</span>$sText</div>");
-		SetupLog::Ok($sText);
+		$this->add("<div class=\"message message-valid ibo-is-html-content\"><span class=\"message-title\">Success:</span>$sText</div>");
+		SetupLog::Ok($sTextForLog ?? $sText);
 	}
 
-	public function warning($sText)
+	public function warning($sText, $sTextForLog = null)
 	{
-		$this->add("<div class=\"message message-warning\"><span class=\"message-title\">Warning:</span>$sText</div>");
-		SetupLog::Warning($sText);
+		$this->add("<div class=\"message message-warning ibo-is-html-content\"><span class=\"message-title\">Warning:</span>$sText</div>");
+		SetupLog::Warning($sTextForLog ?? $sText);
 	}
 
-	public function error($sText)
+	public function error($sText, $sTextForLog = null)
 	{
-		$this->add("<div class=\"message message-error\">$sText</div>");
-		SetupLog::Error($sText);
+		$this->add("<div class=\"message message-error ibo-is-html-content\">$sText</div>");
+		SetupLog::Error($sTextForLog ?? $sText);
 	}
 
 	public function form($aData)

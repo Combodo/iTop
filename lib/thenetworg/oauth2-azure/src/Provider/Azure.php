@@ -11,6 +11,7 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use TheNetworg\OAuth2\Client\Grant\JwtBearer;
 use TheNetworg\OAuth2\Client\Token\AccessToken;
@@ -44,6 +45,20 @@ class Azure extends AbstractProvider
 
     public $authWithResource = true;
 
+    public $defaultAlgorithm = null;
+
+    /**
+     * The contents of the private key used for app authentication
+     * @var string
+     */
+    protected $clientCertificatePrivateKey = '';
+
+    /**
+     * The hexadecimal certificate thumbprint as displayed in the azure portal
+     * @var string
+     */
+    protected $clientCertificateThumbprint = '';
+
     public function __construct(array $options = [], array $collaborators = [])
     {
         parent::__construct($options, $collaborators);
@@ -53,6 +68,9 @@ class Azure extends AbstractProvider
         if (isset($options['defaultEndPointVersion']) &&
             in_array($options['defaultEndPointVersion'], self::ENDPOINT_VERSIONS, true)) {
             $this->defaultEndPointVersion = $options['defaultEndPointVersion'];
+        }
+        if (isset($options['defaultAlgorithm'])) {
+            $this->defaultAlgorithm = $options['defaultAlgorithm'];
         }
         $this->grantFactory->setGrant('jwt_bearer', new JwtBearer());
     }
@@ -103,6 +121,32 @@ class Azure extends AbstractProvider
         return $openIdConfiguration['token_endpoint'];
     }
 
+    protected function getAccessTokenRequest(array $params): RequestInterface
+    {
+      if ($this->clientCertificatePrivateKey && $this->clientCertificateThumbprint) {
+        $header = [
+          'x5t' => base64_encode(hex2bin($this->clientCertificateThumbprint)),
+        ];
+        $now = time();
+        $payload = [
+          'aud' => "https://login.microsoftonline.com/{$this->tenant}/oauth2/v2.0/token",
+          'exp' => $now + 360,
+          'iat' => $now,
+          'iss' => $this->clientId,
+          'jti' => bin2hex(random_bytes(20)),
+          'nbf' => $now,
+          'sub' => $this->clientId,
+        ];
+        $jwt = JWT::encode($payload, str_replace('\n', "\n", $this->clientCertificatePrivateKey), 'RS256', null, $header);
+
+        unset($params['client_secret']);
+        $params['client_assertion_type'] = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer';
+        $params['client_assertion'] = $jwt;
+      }
+
+      return parent::getAccessTokenRequest($params);
+    }
+
     /**
      * @inheritdoc
      */
@@ -134,7 +178,8 @@ class Azure extends AbstractProvider
      */
     public function getResourceOwnerDetailsUrl(\League\OAuth2\Client\Token\AccessToken $token): string
     {
-        return ''; // shouldn't that return such a URL?
+        $openIdConfiguration = $this->getOpenIdConfiguration($this->tenant, $this->defaultEndPointVersion);
+        return $openIdConfiguration['userinfo_endpoint'];
     }
 
     public function getObjects($tenant, $ref, &$accessToken, $headers = [])
@@ -178,8 +223,8 @@ class Azure extends AbstractProvider
             $version = $this->defaultEndPointVersion;
         } else {
             $idTokenClaims = $accessToken->getIdTokenClaims();
-            $tenant = array_key_exists('tid', $idTokenClaims) ? $idTokenClaims['tid'] : $this->tenant;
-            $version = array_key_exists('ver', $idTokenClaims) ? $idTokenClaims['ver'] : $this->defaultEndPointVersion;
+            $tenant = is_array($idTokenClaims) && array_key_exists('tid', $idTokenClaims) ? $idTokenClaims['tid'] : $this->tenant;
+            $version = is_array($idTokenClaims) && array_key_exists('ver', $idTokenClaims) ? $idTokenClaims['ver'] : $this->defaultEndPointVersion;
         }
         $openIdConfiguration = $this->getOpenIdConfiguration($tenant, $version);
         return 'https://' . $openIdConfiguration['msgraph_host'];
@@ -295,7 +340,7 @@ class Azure extends AbstractProvider
     public function validateAccessToken($accessToken)
     {
         $keys        = $this->getJwtVerificationKeys();
-        $tokenClaims = (array)JWT::decode($accessToken, $keys, ['RS256']);
+        $tokenClaims = (array)JWT::decode($accessToken, $keys);
 
         $this->validateTokenClaims($tokenClaims);
 
@@ -376,13 +421,18 @@ class Azure extends AbstractProvider
                     $keys[$keyinfo['kid']] = new Key($publicKey, 'RS256');
                 }
             } else if (isset($keyinfo['n']) && isset($keyinfo['e'])) {
-                $pkey_object = JWK::parseKey($keyinfo);
+                $alg = $this->defaultAlgorithm;
+                if (is_null($alg) && isset($keyinfo['kty'])) {
+                    $alg = $keyinfo['kty'];
+                }
+
+                $pkey_object = JWK::parseKey($keyinfo, $alg);
 
                 if ($pkey_object === false) {
                     throw new \RuntimeException('An attempt to read a public key from a ' . $keyinfo['n'] . ' certificate failed.');
                 }
 
-                $pkey_array = openssl_pkey_get_details($pkey_object);
+                $pkey_array = openssl_pkey_get_details($pkey_object->getKeyMaterial());
 
                 if ($pkey_array === false) {
                     throw new \RuntimeException('An attempt to get a public key as an array from a ' . $keyinfo['n'] . ' certificate failed.');

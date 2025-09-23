@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -500,17 +500,17 @@ EOF
 		if (file_exists($sDotExecutable))
 		{
 			// create the file with Graphviz
-			if (!is_dir(APPROOT."data"))
+			if (!is_dir(utils::GetDataPath()))
 			{
-				@mkdir(APPROOT."data");
+				@mkdir(utils::GetDataPath());
 			}
-			if (!is_dir(APPROOT."data/tmp"))
+			if (!is_dir(utils::GetDataPath()."tmp"))
 			{
-				@mkdir(APPROOT."data/tmp");
+				@mkdir(utils::GetDataPath()."tmp");
 			}
-			$sImageFilePath = tempnam(APPROOT."data/tmp", 'png-');
+			$sImageFilePath = tempnam(utils::GetDataPath()."tmp", 'png-');
 			$sDotDescription = $this->GetDotDescription();
-			$sDotFilePath = tempnam(APPROOT."data/tmp", 'dot-');
+			$sDotFilePath = tempnam(utils::GetDataPath()."tmp", 'dot-');
 		
 			$rFile = @fopen($sDotFilePath, "w");
 			@fwrite($rFile, $sDotDescription);
@@ -537,7 +537,7 @@ EOF
 		}
 		else
 		{
-			throw new Exception('graphviz not found (executable path: '.$sDotExecutable.')');
+            throw new Exception('graphviz not found');
 		}
 		return $sHtml;
 	}
@@ -556,17 +556,17 @@ EOF
 		if (file_exists($sDotExecutable))
 		{
 			// create the file with Graphviz
-			if (!is_dir(APPROOT."data"))
+			if (!is_dir(utils::GetDataPath()))
 			{
-				@mkdir(APPROOT."data");
+				@mkdir(utils::GetDataPath());
 			}
-			if (!is_dir(APPROOT."data/tmp"))
+			if (!is_dir(utils::GetDataPath()."tmp"))
 			{
-				@mkdir(APPROOT."data/tmp");
+				@mkdir(utils::GetDataPath()."tmp");
 			}
-			$sXdotFilePath = tempnam(APPROOT."data/tmp", 'xdot-');
+			$sXdotFilePath = tempnam(utils::GetDataPath()."tmp", 'xdot-');
 			$sDotDescription = $this->GetDotDescription(true); // true => don't put (localized) labels in the file, since it makes it harder to parse
-			$sDotFilePath = tempnam(APPROOT."data/tmp", 'dot-');
+			$sDotFilePath = tempnam(utils::GetDataPath()."tmp", 'dot-');
 	
 			$rFile = @fopen($sDotFilePath, "w");
 			@fwrite($rFile, $sDotDescription);
@@ -592,7 +592,7 @@ EOF
 		}
 		else
 		{
-			throw new Exception('graphviz not found (executable path: '.$sDotExecutable.')');
+            throw new Exception('graphviz not found');
 		}
 		return $sHtml;
 	}

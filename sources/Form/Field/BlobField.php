@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -19,15 +19,15 @@
 
 namespace Combodo\iTop\Form\Field;
 
-use utils;
 use Dict;
+use utils;
 
 /**
  * Description of BlobField
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class BlobField extends Field
+class BlobField extends AbstractSimpleField
 {
 	/** @var string */
 	protected $sDownloadUrl;
@@ -70,7 +70,7 @@ class BlobField extends Field
 		else
 		{
 			$sFilename = $this->currentValue->GetFileName();
-			$iSize = utils::BytesToFriendlyFormat(strlen($this->currentValue->GetData()));
+			$iSize = utils::BytesToFriendlyFormat(utils::Strlen($this->currentValue->GetData()));
 			$sOpenLink = $this->GetDisplayUrl();
 			$sDownloadLink = $this->GetDownloadUrl();
 

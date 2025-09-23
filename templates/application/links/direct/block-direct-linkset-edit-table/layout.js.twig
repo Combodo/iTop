@@ -1,0 +1,12 @@
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+oWidget{{ oUIBlock.oUILinksDirectWidget.GetInputId() }} = $('#{{ oUIBlock.oUILinksDirectWidget.GetInputId() }}').directlinks({
+    class_name: '{{ oUIBlock.oUILinksDirectWidget.GetClass() }}',
+    att_code: '{{ oUIBlock.oUILinksDirectWidget.GetAttCode() }}',
+    input_name: '{{ oUIBlock.sInputName }}',
+    submit_to: '{{ oUIBlock.sSubmitUrl }}',
+    oWizardHelper: {{ oUIBlock.sWizHelper }},
+    do_search: '{{ oUIBlock.sJSDoSearch }}'
+});
+{% endapply %}

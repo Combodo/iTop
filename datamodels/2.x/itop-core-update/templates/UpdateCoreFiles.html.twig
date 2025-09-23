@@ -1,0 +1,68 @@
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% apply spaceless %}
+
+    {% UIContentBlock Standard {aContainerClasses: ['ibo-update-core', 'ibo-setup--wizard']} %}
+
+        {% UIContentBlock Standard {'aContainerClasses': ['ibo-setup--wizard--content']} %}
+            {% UIFieldSet Standard {sLegend:'iTopUpdate:UI:Progress'|dict_s, sId:'installation_progress'} %}
+                {#  Todo 3.0 Add Progress bar UIBlock  #}
+                <div id="progress_content">
+                    <span id="setup_msg">{{ 'iTopUpdate:UI:SetupMessage:Ready'|dict_s }}</span>
+                    <div id="progress">0%</div>
+                </div>
+            {% EndUIFieldSet %}
+
+            {% UIFieldSet Standard {sLegend:'iTopUpdate:UI:Status'|dict_s} %}
+                {% UIAlert ForSuccess {sId:'new_version', sTitle:'iTopUpdate:UI:NewVersion'|dict_s, IsHidden:true, IsCollapsible:false, IsClosable:false} %}
+                    {% UIContentBlock Standard {aContainerClasses:['ibo-update-core--current-version']} %}
+                        {{ sCurrentVersion }}
+                    {% EndUIContentBlock %}
+                {% EndUIAlert %}
+                {% UIAlert ForInformation {sId:'current_version', IsCollapsible:false, IsClosable:false} %}
+                    {% UIContentBlock Standard {aContainerClasses:['ibo-update-core--current-version']} %}
+                        {{ sCurrentVersion }}
+                    {% EndUIContentBlock %}
+                {% EndUIAlert %}
+
+                {% if bDoBackup %}
+                    {% UIAlert ForInformation {sId:'do_backup_done', sTitle:'iTopUpdate:UI:WithDBBackup'|dict_s, sContent:sBackupFile, IsHidden:true} %}{% EndUIAlert %}
+                {% endif %}
+
+                {% if bDoFilesArchive %}
+                    {% UIAlert ForInformation {sId:'do_files_archive_done', sTitle:'iTopUpdate:UI:WithFilesBackup'|dict_s, sContent:sItopArchive, IsHidden:true} %}{% EndUIAlert %}
+                {% endif %}
+            {% EndUIFieldSet %}
+
+            {% UIFieldSet Standard {sLegend:''} %}
+                {% UIAlert ForFailure {sId:'setup_error_outer', sContent:'', IsCollapsible:false, IsClosable:false, IsHidden:true} %}
+                    {% UIContentBlock Standard {sId:'setup_error',aContainerClasses:['ibo-update-core--error']} %}{% EndUIContentBlock %}
+                    {% if bDoFilesArchive %}
+                        {{ 'iTopUpdate:UI:RestoreArchive'|dict_format(sItopArchive) }}
+                    {% endif %}
+                    {% if bDoBackup %}
+                        {{ 'iTopUpdate:UI:RestoreBackup'|dict_format(sBackupFile) }}
+                    {% endif %}
+                        {{ 'iTopUpdate:UI:MaintenanceModeActive'|dict_s }}
+                {% EndUIAlert %}
+            {% EndUIFieldSet %}
+        {% EndUIContentBlock %}
+
+        {% UIToolbar ForButton {'AddCSSClass':'ibo-setup--wizard--buttons-container'} %}
+                {% UIContentBlock Standard {sId:'run_setup',aContainerClasses:['ibo-update-core--run-setup'], IsHidden:true} %}
+                    {% UIForm Standard {CSSClasses:['form-inline']} %}
+                        {% UIInput ForHidden {sName:'route', sValue:'core_update.run_setup'} %}
+                        {% UIInput ForHidden {sName:'authent', sValue:sSetupToken} %}
+                        {% UIInput ForHidden {sName:'', sValue:''} %}
+                        {% UIButton ForPrimaryAction {sLabel:'iTopUpdate:UI:RunSetup'|dict_s, sId:'run_setup', bIsSubmit:true, IsDisabled:false} %}
+                    {% EndUIForm %}
+                {% EndUIContentBlock %}
+                {% UIToolbarSpacer Standard {} %}
+                {% UIForm Standard {CSSClasses:['form-inline']} %}
+                    {% UIButton ForPrimaryAction {sLabel:'iTopUpdate:UI:Continue'|dict_s, sId:'setup_continue', bIsSubmit:true, IsDisabled:true} %}
+                {% EndUIForm %}
+        {% EndUIToolbar %}
+
+    {% EndUIContentBlock %}
+{% endapply %}

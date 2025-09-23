@@ -22,7 +22,7 @@ final class Header
         foreach ((array) $header as $value) {
             foreach (self::splitList($value) as $val) {
                 $part = [];
-                foreach (preg_split('/;(?=([^"]*"[^"]*")*[^"]*$)/', $val) as $kvp) {
+                foreach (preg_split('/;(?=([^"]*"[^"]*")*[^"]*$)/', $val) ?: [] as $kvp) {
                     if (preg_match_all('/<[^>]+>|[^=]+/', $kvp, $matches)) {
                         $m = $matches[0];
                         if (isset($m[1])) {
@@ -62,7 +62,7 @@ final class Header
     }
 
     /**
-     * Splits a HTTP header defined to contain comma-separated list into
+     * Splits a HTTP header defined to contain a comma-separated list into
      * each individual value. Empty values will be removed.
      *
      * Example headers include 'accept', 'cache-control' and 'if-none-match'.
@@ -89,7 +89,7 @@ final class Header
             $v = '';
             $isQuoted = false;
             $isEscaped = false;
-            for ($i = 0, $max = \strlen($value); $i < $max; $i++) {
+            for ($i = 0, $max = \strlen($value); $i < $max; ++$i) {
                 if ($isEscaped) {
                     $v .= $value[$i];
                     $isEscaped = false;

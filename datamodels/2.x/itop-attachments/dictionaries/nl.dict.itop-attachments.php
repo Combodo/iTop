@@ -1,29 +1,15 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @author	LinProfs <info@linprofs.com>
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  * 
- * Linux & Open Source Professionals
- * http://www.linprofs.com
- * 
+ */
+/**
+ * @author LinProfs <info@linprofs.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Attachments:TabTitle_Count' => 'Bijlagen (%1$d)',
@@ -77,6 +63,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Attachments:File:Uploader' => 'Geüpload door',
 	'Attachments:File:Size' => 'Grootte',
 	'Attachments:File:MimeType' => 'Type',
+	'Attachments:File:DownloadsCount' => 'Downloads',
 ));
 //
 // Class: Attachment
@@ -89,4 +76,20 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'ID Contact',
 	'Class:Attachment/Attribute:contact_id+' => '',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (Bij het downloaden van een bijlage)',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger bij het downloaden van een bijlage van een object van de opgegeven klasse (of subklasse ervan)',
+    'Class:TriggerOnAttachmentCreate'                         => 'Trigger (Bij het toevoegen van een bijlage)',
+    'Class:TriggerOnAttachmentCreate+'                        => 'Trigger bij het toevoegen van een bijlage aan een object van de opgegeven klasse (of subklasse ervan)',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Bestand toevoegen in e-mail',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+'=> 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
+	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (Bij het verwijderen van een bijlage)',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger bij het verwijderen van een bijlage van een object van de opgegeven klasse (of subklasse ervan)',
+    'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
 ));

@@ -2,26 +2,14 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	// Dictionary entries go here
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Połącz się z iTop Hub',
 	'Menu:iTopHub:Register+' => 'Przejdź do iTop Hub, aby zaktualizować swoją instancję '.ITOP_APPLICATION_SHORT,
@@ -38,7 +26,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'iTopHub:AutoSubmit' => 'Nie pytaj mnie ponownie. Następnym razem przejdź automatycznie do iTop Hub.',
 	'UI:About:RemoteExtensionSource' => 'iTop Hub',
 	'iTopHub:Explanation' => 'Kliknięcie tego przycisku spowoduje przekierowanie do iTop Hub.',
-
 	'iTopHub:BackupFreeDiskSpaceIn' => '%1$s wolne miejsce na dysku w %2$s.',
 	'iTopHub:FailedToCheckFreeDiskSpace' => 'Nie udało się sprawdzić wolnego miejsca na dysku.',
 	'iTopHub:BackupOk' => 'Kopia zapasowa Ok.',
@@ -48,7 +35,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'iTopHub:CompiledOK' => 'Kompilacja pomyślna.',
 	'iTopHub:ConfigurationSafelyReverted' => 'Wykryto błąd podczas wdrażania!<br/>Konfiguracja '.ITOP_APPLICATION_SHORT.' NIE została zmodyfikowana.',
 	'iTopHub:FailAuthent' => 'Uwierzytelnianie nie powiodło się dla tej akcji.',
-
 	'iTopHub:InstalledExtensions' => 'Rozszerzenia wdrożone w tej instancji',
 	'iTopHub:ExtensionCategory:Manual' => 'Rozszerzenia wdrażane ręcznie',
 	'iTopHub:ExtensionCategory:Manual+' => 'Następujące rozszerzenia zostały wdrożone przez ręczne skopiowanie ich do katalogu %1$s programu '.ITOP_APPLICATION_SHORT.':',
@@ -58,7 +44,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'iTopHub:NoExtensionInThisCategory+' => '',
 	'iTopHub:ExtensionNotInstalled' => 'Nie zainstalowane',
 	'iTopHub:GetMoreExtensions' => 'Pobierz rozszerzenia z iTop Hub...',
-
 	'iTopHub:LandingWelcome' => 'Gratulacje! Następujące rozszerzenia zostały pobrane z iTop Hub i wdrożone w '.ITOP_APPLICATION_SHORT.'.',
 	'iTopHub:GoBackToITopBtn' => 'Wróć do '.ITOP_APPLICATION_SHORT,
 	'iTopHub:Uncompressing' => 'Rozpakowywanie rozszerzeń...',
@@ -67,7 +52,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'iTopHub:DBBackupSentence' => 'Przed aktualizacją wykonaj kopię zapasową bazy danych i konfiguracji '.ITOP_APPLICATION_SHORT,
 	'iTopHub:DeployBtn' => 'Wykonaj !',
 	'iTopHub:DatabaseBackupProgress' => 'Kopia zapasowa instancji...',
-
 	'iTopHub:InstallationEffect:Install' => 'Wersja: %1$s zostanie zainstalowana.',
 	'iTopHub:InstallationEffect:NoChange' => 'Wersja: %1$s jest zainstalowana. Nic się nie zmieni.',
 	'iTopHub:InstallationEffect:Upgrade' => 'Zostanie <b>uaktualniony</b> z wersji %1$s do wersji %2$s.',
@@ -77,7 +61,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'iTopHub:InstallationEffect:MissingDependencies' => 'Nie można zainstalować tego rozszerzenia z powodu niespełnionych zależności.',
 	'iTopHub:InstallationEffect:MissingDependencies_Details' => 'Rozszerzenie wymaga modułu(ów): %1$s',
 	'iTopHub:InstallationProgress:InstallationSuccessful' => 'Instalacja zakończyła się sukcesem!',
-
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s wersja: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Zainstalowana',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Wersja %1$s <b>NIE</b> zainstalowana.',

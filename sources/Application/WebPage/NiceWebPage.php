@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -16,6 +16,15 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
+namespace Combodo\iTop\Application\WebPage;
+
+use ApplicationContext;
+use ExecutionKPI;
+use MetaModel;
+use ThemeHandler;
+use UserRights;
+use utils;
 
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
@@ -46,20 +55,10 @@ class NiceWebPage extends WebPage
 		'js/field_sorter.js',
 		'js/table-selectable-lines.js',
 		// - Not used internally or by extensions yet
-		'js/clipboard.min.js',
+		'js/clipboard.min.js', // 3.2.0 N°5261 moved to NPM
 		'js/clipboardwidget.js',
 		// - SearchForm
 		'js/searchformforeignkeys.js',
-	];
-	/** @inheritDoc */
-	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [
-		/** @deprecated 3.0.0 Not used in the backoffice since the introduction of the new tooltip lib. */
-		'js/hovertip.js',
-		/** @deprecated 3.0.0 N°2737 - Migrate table to DataTables plugin to be iso with the end-users portal, will be removed in 3.x */
-		'js/datatable.js',
-		'js/jquery.tablesorter.js',
-		'js/jquery.tablesorter.pager.js',
-		'js/jquery.tablehover.js',
 	];
 
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/nicewebpage/layout';
@@ -143,20 +142,21 @@ JS
 		parent::InitializeLinkedScripts();
 
 		// Used throughout the app.
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.blockUI.js');
+		$this->LinkScriptFromAppRoot('node_modules/jquery/dist/jquery.min.js');
+		$this->LinkScriptFromAppRoot('js/ajax_hook.js');
+		$this->LinkScriptFromAppRoot('js/jquery.blockUI.js');
 		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
 		{
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev-params.js');
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev.js');
+			$this->LinkScriptFromAppRoot('js/jquery-migrate.dev-params.js');
+			$this->LinkScriptFromAppRoot('node_modules/jquery-migrate/dist/jquery-migrate.js');
 		} else {
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
+			$this->LinkScriptFromAppRoot('node_modules/jquery-migrate/dist/jquery-migrate.min.js');
 		}
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
+		$this->LinkScriptFromAppRoot('node_modules/jquery-ui-dist/jquery-ui.min.js');
 
 		// Used throughout the app.
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/latinise/latinise.min.js');
+		$this->LinkScriptFromAppRoot('js/utils.js');
+		$this->LinkScriptFromAppRoot('js/latinise/latinise.min.js');
 	}
 
 	/**
@@ -175,7 +175,7 @@ JS
     {
     	$this->m_sRootUrl = $sRootUrl;
     }
-    
+
 	public function small_p($sText)
 	{
 		$this->add("<p style=\"font-size:smaller\">$sText</p>\n");
@@ -201,7 +201,7 @@ JS
 	public function MakeClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null)
 	{
 		// $aTopLevelClasses = array('bizService', 'bizContact', 'logInfra', 'bizDocument');
-		// These are classes wich root class is cmdbAbstractObject ! 
+		// These are classes wich root class is cmdbAbstractObject !
 		$this->add("<select id=\"select_$sName\" name=\"$sName\">");
 		$aValidClasses = array();
 		foreach(MetaModel::GetClasses('bizmodel') as $sClassName)
@@ -216,7 +216,7 @@ JS
 		}
 		ksort($aValidClasses);
 		$this->add(implode("\n", $aValidClasses));
-		
+
 		$this->add("</select>");
 	}
 
@@ -241,27 +241,20 @@ JS
 		// TODO 3.0.0: Remove light-grey when development of Full Moon is done.
 		// TODO 3.0.0: Reuse theming mechanism for Full Moon
 		$sCssThemeUrl = ThemeHandler::GetCurrentThemeUrl();
-		$this->add_linked_stylesheet($sCssThemeUrl);
-
-		$sCssRelPath = utils::GetCSSFromSASS(
-			'css/backoffice/main.scss',
-			array(
-				APPROOT.'css/backoffice/',
-			)
-		);
+		$this->LinkStylesheetFromURI($sCssThemeUrl);
 	}
 
 	protected function GetReadyScriptsStartedTrigger(): ?string
 	{
 		return <<<JS
-$("body").attr("data-ready-scripts", "start");
+CombodoJsActivity.AddOngoingScript();
 JS;
 	}
 
 	protected function GetReadyScriptsFinishedTrigger(): ?string
 	{
 		return <<<JS
-$("body").attr("data-ready-scripts", "done");
+CombodoJsActivity.RemoveOngoingScript();
 JS;
 	}
 }

@@ -1,0 +1,940 @@
+<?php
+/**
+ * Copyright (C) 2018 Dennis Lassiter
+ *
+ * This file is part of iTop.
+ *
+ *  iTop is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ *
+ */
+
+namespace Combodo\iTop\Test\UnitTest\Application;
+
+use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use ormDocument;
+use utils;
+
+/**
+ * @covers utils
+ */
+class utilsTest extends ItopTestCase
+{
+	protected function setUp(): void
+	{
+		parent::setUp();
+		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', 'https://localhost/itop/');
+	}
+
+	protected function tearDown(): void
+	{
+		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', null);
+		parent::tearDown();
+	}
+
+
+	public function testEndsWith()
+	{
+		$this->assertFalse(utils::EndsWith('a', 'bbbb'));
+	}
+
+	/**
+	 * @dataProvider memoryLimitDataProvider
+	 */
+	public function testIsMemoryLimit($expected, $memoryLimit, $requiredMemory)
+	{
+		$this->assertSame($expected, utils::IsMemoryLimitOk($memoryLimit, $requiredMemory));
+	}
+
+	/**
+	 * DataProvider for testIsMemoryLimitOk
+	 *
+	 * @return array
+	 */
+	public function memoryLimitDataProvider()
+	{
+		return [
+			'current -1, required 1024' => [true, -1, 1024],
+			'current 1024, required 1024' => [true, 1024, 1024],
+			'current 2048, required 1024' => [true, 2048, 1024],
+			'current 1024, required 2048' => [false, 1024, 2048],
+		];
+	}
+
+	/**
+	 * @dataProvider realPathDataProvider
+	 * @covers       utils::RealPath()
+	 */
+	public function testRealPath($sPath, $sBasePath, $expected)
+	{
+		$this->assertSame($expected, utils::RealPath($sPath, $sBasePath), "utils::RealPath($sPath, $sBasePath) does not match $expected");
+	}
+
+	public function realPathDataProvider()
+	{
+		$sAppRoot = static::GetAppRoot();
+
+		$sSep = DIRECTORY_SEPARATOR;
+		$sItopRootRealPath = realpath($sAppRoot).$sSep;
+		$sLicenseFileName = 'license.txt';
+		if (!is_file($sAppRoot.$sLicenseFileName))
+		{
+			$sLicenseFileName = 'LICENSE';
+		}
+
+		return [
+			$sLicenseFileName => [$sAppRoot.$sLicenseFileName, $sAppRoot, $sItopRootRealPath.$sLicenseFileName],
+			'unexisting file' => [$sAppRoot.'license_DOES_NOT_EXIST.txt', $sAppRoot, false],
+			'/'.$sLicenseFileName => [$sAppRoot.$sSep.$sLicenseFileName, $sAppRoot, $sItopRootRealPath.$sLicenseFileName],
+			'%2f'.$sLicenseFileName => [$sAppRoot.'%2f'. $sLicenseFileName, $sAppRoot, false],
+			'../'.$sLicenseFileName => [$sAppRoot.'..'.$sSep.$sLicenseFileName, $sAppRoot, false],
+			'%2e%2e%2f'.$sLicenseFileName => [$sAppRoot.'%2e%2e%2f'.$sLicenseFileName, $sAppRoot, false],
+			'application/utils.inc.php with basepath=APPROOT' => [
+				$sAppRoot.'application/utils.inc.php',
+				$sAppRoot,
+				$sItopRootRealPath.'application'.$sSep.'utils.inc.php',
+			],
+			'application/utils.inc.php with basepath=APPROOT/application' => [
+				$sAppRoot.'application/utils.inc.php',
+				$sAppRoot.'application',
+				$sItopRootRealPath.'application'.$sSep.'utils.inc.php',
+			],
+			'basepath containing / and \\' => [
+				$sAppRoot.'sources/Form/Form.php',
+				$sAppRoot.'sources/Form\\Form.php',
+				$sItopRootRealPath.'sources'.$sSep.'Form'.$sSep.'Form.php',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider LocalPathProvider
+	 *
+	 * @param $sAbsolutePath
+	 * @param $expected
+	 */
+	public function testLocalPath($sAbsolutePath, $expected)
+	{
+		$this->assertSame($expected, utils::LocalPath($sAbsolutePath));
+
+	}
+
+	public function LocalPathProvider()
+	{
+		$sAppRoot = static::GetAppRoot();
+		return array(
+			'index.php' => array(
+				'sAbsolutePath' => $sAppRoot.'index.php',
+				'expected' => 'index.php',
+			),
+			'non existing' => array(
+				'sAbsolutePath' => $sAppRoot.'nonexisting/nonexisting',
+				'expected' => false,
+			),
+			'outside' => array(
+				'sAbsolutePath' => '/tmp',
+				'expected' => false,
+			),
+			'application/cmdbabstract.class.inc.php' => array(
+				'sAbsolutePath' => $sAppRoot.'application/cmdbabstract.class.inc.php',
+				'expected' => 'application/cmdbabstract.class.inc.php',
+			),
+			'dir' => array(
+				'sAbsolutePath' => $sAppRoot.'application/.',
+				'expected' => 'application',
+			),
+			'root' => array(
+				'sAbsolutePath' => $sAppRoot.'.',
+				'expected' => '',
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider appRootUrlProvider
+	 * @covers utils::GetAppRootUrl
+	 */
+	public function testGetAppRootUrl($sReturnValue, $sCurrentScript, $sAppRoot, $sAbsoluteUrl)
+	{
+		$this->assertEquals($sReturnValue, utils::GetAppRootUrl($sCurrentScript, $sAppRoot, $sAbsoluteUrl));
+	}
+
+	public function appRootUrlProvider()
+	{
+		return array(
+			'Setup index (windows antislash)' => array('http://localhost/', 'C:\Dev\wamp64\www\itop-dev\setup\index.php', 'C:\Dev\wamp64\www\itop-dev', 'http://localhost/setup/'),
+			'Setup index (windows slash)' => array('http://127.0.0.1/', 'C:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'),
+			'Setup index (windows slash, drive letter case difference)' => array('http://127.0.0.1/', 'c:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'),
+		);
+	}
+
+	public function GetAbsoluteUrlAppRootPersistency() {
+		$this->setUp();
+
+		return [
+			'ForceTrustProxy 111' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => true,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 101' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => true,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => false,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 011' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 110' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => true,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 010' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 001' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => false,
+				'sExpectedAppRootUrl2' => 'http://example.com/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 000' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => false,
+				'sExpectedAppRootUrl2' => 'http://example.com/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'http://example.com/',
+			],
+			'BehindReverseProxy ForceTrustProxy 010' => [
+				'bBehindReverseProxy' => true,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider GetAbsoluteUrlAppRootPersistency
+	 */
+	public function testGetAbsoluteUrlAppRootPersistency($bBehindReverseProxy,$bForceTrustProxy1 ,$sExpectedAppRootUrl1,$bForceTrustProxy2 , $sExpectedAppRootUrl2,$bForceTrustProxy3 , $sExpectedAppRootUrl3)
+	{
+		// resetting static property for each test pass
+		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', null);
+
+		utils::GetConfig()->Set('behind_reverse_proxy', $bBehindReverseProxy);
+		utils::GetConfig()->Set('app_root_url', '');
+
+		//should match http://example.com/ when not trusting the proxy
+		//should match https://proxy.com:4443/ when  trusting the proxy
+		$_SERVER = [
+			'REMOTE_ADDR' => '127.0.0.1', //is not set, disable IsProxyTrusted
+			'SERVER_NAME' => 'example.com',
+			'SERVER_PORT' => '80',
+			'REQUEST_URI' => '/index.php?baz=1',
+			'SCRIPT_NAME' => '/index.php',
+			'SCRIPT_FILENAME' => APPROOT.'index.php',
+			'QUERY_STRING' => 'baz=1',
+			'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+			'HTTP_X_FORWARDED_PORT' => '4443',
+			'HTTP_X_FORWARDED_PROTO' => 'https',
+			'HTTPS' => null,
+		];
+
+		$this->assertEquals($sExpectedAppRootUrl1, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy1));
+
+		$this->assertEquals($sExpectedAppRootUrl2, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy2));
+
+		$this->assertEquals($sExpectedAppRootUrl3, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy3));
+	}
+
+
+	/**
+	 * @dataProvider GetDefaultUrlAppRootProvider
+	 */
+	public function testGetDefaultUrlAppRoot($bForceTrustProxy, $bConfTrustProxy, $aServerVars, $sExpectedAppRootUrl)
+	{
+		$_SERVER = $aServerVars;
+		utils::GetConfig()->Set('behind_reverse_proxy', $bConfTrustProxy);
+		$sAppRootUrl = utils::GetDefaultUrlAppRoot($bForceTrustProxy);
+		$this->assertEquals($sExpectedAppRootUrl, $sAppRootUrl);
+	}
+
+	public function GetDefaultUrlAppRootProvider()
+	{
+		$sAppRoot = static::GetAppRoot();
+
+		$baseServerVar = [
+			'REMOTE_ADDR' => '127.0.0.1', //is not set, disable IsProxyTrusted
+			'SERVER_NAME' => 'example.com',
+			'HTTP_X_FORWARDED_HOST' => null,
+			'SERVER_PORT' => '80',
+			'HTTP_X_FORWARDED_PORT' => null,
+			'REQUEST_URI' => '/index.php?baz=1',
+			'SCRIPT_NAME' => '/index.php',
+			'SCRIPT_FILENAME' => $sAppRoot.'index.php',
+			'QUERY_STRING' => 'baz=1',
+			'HTTP_X_FORWARDED_PROTO' => null,
+			'HTTP_X_FORWARDED_PROTOCOL' => null,
+			'HTTPS' => null,
+		];
+
+		return [
+			'no proxy, http' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, []),
+				'sExpectedAppRootUrl' => 'http://example.com/',
+			],
+			'no proxy, subPath, http' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'REQUEST_URI' => '/foo/index.php?baz=1',
+				]),
+				'sExpectedAppRootUrl' => 'http://example.com/foo/',
+			],
+			'IIS lack REQUEST_URI' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'REQUEST_URI' => null,
+					'SCRIPT_NAME' => '/foo/index.php',
+				]),
+				'sExpectedAppRootUrl' => 'http://example.com/foo/',
+			],
+			'no proxy, https' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'SERVER_PORT' => '443',
+					'HTTPS' => 'on',
+				]),
+				'sExpectedAppRootUrl' => 'https://example.com/',
+			],
+			'no proxy, https on 4443' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'SERVER_PORT' => '4443',
+					'HTTPS' => 'on',
+				]),
+				'sExpectedAppRootUrl' => 'https://example.com:4443/',
+			],
+			'with proxy, not enabled' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'http://example.com/',
+			],
+			'with proxy, enabled HTTP_X_FORWARDED_PROTO' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => true,
+				'aServerVars' => array_merge($baseServerVar, [
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+			'with proxy, enabled - alt HTTP_X_FORWARDED_PROTO COL' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => true,
+				'aServerVars' => array_merge($baseServerVar, [
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTOCOL' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+			'with proxy, disabled, forced' => [
+				'bForceTrustProxy' => true,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+			'with proxy, enabled, forced' => [
+				'bForceTrustProxy' => true,
+				'bConfTrustProxy' => true,
+				'aServerVars' => array_merge($baseServerVar, [
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+
+			'with proxy, disabled, forced, no remote addr' => [
+				'bForceTrustProxy' => true,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'REMOTE_ADDR' => null,
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+			'with proxy, enabled, no remote addr' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => true,
+				'aServerVars' => array_merge($baseServerVar, [
+					'REMOTE_ADDR' => null,
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'http://example.com/',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider StrftimeFormatToDateTimeFormatProvider
+	 * @covers \utils::StrftimeFormatToDateTimeFormat
+	 *
+	 * @param string $sInput
+	 * @param string $sExpectedFormat
+	 *
+	 * @return void
+	 */
+	public function testStrftimeFormatToDateTimeFormat(string $sInput, string $sExpectedFormat)
+	{
+		$sTestedFormat = utils::StrftimeFormatToDateTimeFormat($sInput);
+		$this->assertEquals($sExpectedFormat, $sTestedFormat, "DateTime format transformation for '$sInput' doesn't match. Got '$sTestedFormat', expected '$sExpectedFormat'.");
+	}
+
+	public function StrftimeFormatToDateTimeFormatProvider(): array
+	{
+		return [
+			'Standard date time' => [
+				'%Y-%m-%d %H:%M:%S',
+				'Y-m-d H:i:s',
+			],
+			'All placeholders' => [
+				'%d | %m | %y | %Y | %H | %M | %S | %a | %A | %e | %j | %u | %w | %U | %V | %W | %b | %B | %h | %C | %g | %G | %k | %I | %l | %p | %P | %r | %R | %T | %X | %z | %Z | %c | %D | %F | %s | %x | %n | %t | %%',
+				'd | m | y | Y | H | i | s | D | l | j | z | N | w | %U | W | %W | M | F | M | %C | y | Y | G | h | g | A | a | h:i:s A | H:i | H:i:s | %X | O | T | %c | m/d/y | Y-m-d | U | %x | %n | %t | %',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider ToCamelCaseProvider
+	 * @covers       utils::ToCamelCase
+	 *
+	 * @param string $sInput
+	 * @param string $sExpectedOutput
+	 *
+	 * @return void
+	 */
+	public function testToCamelCase(string $sInput, string $sExpectedOutput)
+	{
+		$sTestedOutput = utils::ToCamelCase($sInput);
+		$this->assertEquals($sExpectedOutput, $sTestedOutput, "Camel case transformation for '$sInput' doesn't match. Got '$sTestedOutput', expected '$sExpectedOutput'.");
+	}
+
+	/**
+	 * @since 3.1.0
+	 * @return \string[][]
+	 */
+	public function ToCamelCaseProvider(): array
+	{
+		return [
+			'One word' => [
+				'hello',
+				'Hello',
+			],
+			'Two words separated with space' => [
+				'hello world',
+				'HelloWorld',
+			],
+			'Two words separated with underscore' => [
+				'hello_world',
+				'HelloWorld',
+			],
+			'Two words separated with dash' => [
+				'hello-world',
+				'HelloWorld',
+			],
+			'Two words separated with dot' => [
+				'hello.world',
+				'Hello.world',
+			],
+			'Three words separated with underscore and space' => [
+				'hello_there world',
+				'HelloThereWorld',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider ToSnakeCaseProvider
+	 * @covers       utils::ToSnakeCase
+	 *
+	 * @param string $sInput
+	 * @param string $sExpectedOutput
+	 *
+	 * @return void
+	 */
+	public function testToSnakeCase(string $sInput, string $sExpectedOutput)
+	{
+		$sTestedOutput = utils::ToSnakeCase($sInput);
+		$this->assertEquals($sExpectedOutput, $sTestedOutput, "Snake case transformation for '$sInput' doesn't match. Got '$sTestedOutput', expected '$sExpectedOutput'.");
+	}
+
+	/**
+	 * @since 3.1.0
+	 * @return \string[][]
+	 */
+	public function ToSnakeCaseProvider(): array
+	{
+		return [
+			'One word lowercase' => [
+				'hello',
+				'hello',
+			],
+			'One word uppercase' => [
+				'HELLO',
+				'hello',
+			],
+			'One word capitalize' => [
+				'Hello',
+				'hello',
+			],
+			'Two words separated with space' => [
+				'hello world',
+				'hello_world',
+			],
+			'Two words separated with underscore' => [
+				'hello_world',
+				'hello_world',
+			],
+			'Two words separated with dash' => [
+				'hello-world',
+				'hello_world',
+			],
+			'Two words separated with dot' => [
+				'hello.world',
+				'hello_world',
+			],
+			'Two words camel cased' => [
+				'HelloWorld',
+				'hello_world',
+			],
+			'Two words camel cased with acronym' => [
+				'HTMLWorld',
+				'html_world',
+			],
+			'Three words separated with underscore and space' => [
+				'hello_there world',
+				'hello_there_world',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider ToAcronymProvider
+	 * @covers       utils::ToAcronym
+	 *
+	 * @param string $sInput
+	 * @param string $sExceptedAcronym
+	 */
+	public function testToAcronym(string $sInput, string $sExceptedAcronym)
+	{
+		$sTestedAcronym = utils::ToAcronym($sInput);
+		$this->assertEquals($sExceptedAcronym, $sTestedAcronym, "Acronym for '$sInput' doesn't match. Got '$sTestedAcronym', expected '$sExceptedAcronym'.");
+	}
+
+	/**
+	 * @since 3.0.0
+	 */
+	public function ToAcronymProvider()
+	{
+		return [
+			'One word, upper case letter' => [
+				'Carrie',
+				'C',
+			],
+			'One word, lower case letter' => [
+				'carrie',
+				'C',
+			],
+			'Application name' => [
+				'iTop',
+				'I',
+			],
+			'Several words, upper case letters' => [
+				'Carrie Ann Moss',
+				'CAM',
+			],
+			'Several words, mixed case letters' => [
+				'My name My name',
+				'MM',
+			],
+			'Several words, upper case letters, two first hyphened' => [
+				'Lily-Rose Depp',
+				'LRD',
+			],
+			'Several words, mixed case letters, two first hyphened' => [
+				'Lily-rose Depp',
+				'LD',
+			],
+			'Several words, upper case letetrs, two last hypened' => [
+				'Jada Pinkett-Smith',
+				'JPS',
+			],
+			'Several words, mixed case letters, two last hyphened' => [
+				'Jada Pinkett-smith',
+				'JP',
+			],
+			'Several words, cyrillic alphabet' => [
+				'Денис Александра',
+				'ДА',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider FormatInitialsForMedallionProvider
+	 * @covers utils::FormatInitialsForMedallion
+	 *
+	 * @param string $sInput
+	 * @param string $sExpected
+	 */
+	public function testFormatInitialsForMedallion(string $sInput, string $sExpected)
+	{
+		$sTested = utils::FormatInitialsForMedallion($sInput);
+		$this->assertEquals($sExpected, $sTested);
+	}
+
+	/**
+	 * @since 3.0.1
+	 */
+	public function FormatInitialsForMedallionProvider()
+	{
+		return [
+			'All letters kept (2)' => [
+				'AB',
+				'AB',
+			],
+			'All letters kept (3)' => [
+				'ABC',
+				'ABC',
+			],
+			'Only 3 first letters kept (4)' => [
+				'ABCD',
+				'ABC',
+			],
+		];
+	}
+
+	/**
+	 * @param string $sExpressionToConvert
+	 * @param int $iExpectedConvertedValue
+	 *
+	 * @dataProvider ConvertToBytesProvider
+	 */
+	public function testConvertToBytes($sExpressionToConvert, $iExpectedConvertedValue)
+	{
+		$iCurrentConvertedValue = utils::ConvertToBytes($sExpressionToConvert);
+		self::assertEquals($iExpectedConvertedValue, $iCurrentConvertedValue, 'Converted value wasn\'t the one expected !');
+		self::assertSame($iExpectedConvertedValue, $iCurrentConvertedValue, 'Value was converted but not of the expected type');
+	}
+
+	public function ConvertToBytesProvider()
+	{
+		return [
+			'123 int value' => ['123', 123],
+			'-1 no limit'   => ['-1', -1],
+			'56k'           => ['56k', 56 * 1024],
+			'512M'          => ['512M', 512 * 1024 * 1024],
+			'2G'            => ['2G', 2 * 1024 * 1024 * 1024],
+		];
+	}
+
+	/**
+	 * @param string|null $sString
+	 * @param int $iExpected
+	 *
+	 * @dataProvider StrLenProvider
+	 */
+	public function testStrLen(?string $sString, int $iExpected)
+	{
+		$iComputed = utils::StrLen($sString);
+		self::assertEquals($iExpected, $iComputed, 'Length was not as expected');
+	}
+
+	public function StrLenProvider(): array
+	{
+		return [
+			'null value' => [null, 0],
+			'0 character' => ['', 0],
+			'1 character' => ['a', 1],
+			'5 characters' => ['abcde', 5],
+		];
+	}
+
+	/**
+	 * Test sanitizer.
+	 *
+	 */
+	public function testSanitizer()
+	{
+		// Emulate the "Case provider mechanism" (reason: the data provider requires utils constants not available before the application startup)
+		foreach ($this->sanitizerDataProvider() as $sCase => list($type, $valueToSanitize, $expectedResult)) {
+			$this->assertEquals($expectedResult, utils::Sanitize($valueToSanitize, null, $type), "Case '$sCase': url sanitize failed");
+		}
+	}
+
+	/**
+	 * DataProvider for testSanitizer
+	 *
+	 * @return array
+	 */
+	public function sanitizerDataProvider()
+	{
+		return [
+			'good integer'            => [utils::ENUM_SANITIZATION_FILTER_INTEGER, '2565', '2565'],
+			'bad integer'             => [utils::ENUM_SANITIZATION_FILTER_INTEGER, 'a2656', '2656'],
+			/**
+			 * 'class' filter needs a loaded datamodel... and is only an indirection to \MetaModel::IsValidClass so might very important to test !
+			 * If we switch this class to ItopDataTestCase then we are seeing :
+			 *   - the class now takes 18s to process instead of... 459ms when using ItopTestCase !!!
+			 *   - multiple errors are thrown in testGetAbsoluteUrlAppRootPersistency :(
+			 * We decided it wasn't worse the effort to test the 'class' filter !
+			 */
+			//			'good class' => ['class', 'UserRequest', 'UserRequest'],
+			//			'bad class' => ['class', 'MyUserRequest',null],
+			'good string'             => [utils::ENUM_SANITIZATION_FILTER_STRING, 'Is Peter smart and funny?', 'Is Peter smart and funny?'],
+			'bad string'              => [utils::ENUM_SANITIZATION_FILTER_STRING, 'Is Peter <smart> & funny?', 'Is Peter &#60;smart&#62; &#38; funny?'],
+			'good transaction_id'     => [utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID, '8965.-dd', '8965.-dd'],
+			'bad transaction_id'      => [utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID, '8965.-dd+', null],
+			'good route'              => [utils::ENUM_SANITIZATION_FILTER_ROUTE, 'object.modify', 'object.modify'],
+			'good route with underscore' => [utils::ENUM_SANITIZATION_FILTER_ROUTE, 'object.apply_modify', 'object.apply_modify'],
+			'bad route with space'    => [utils::ENUM_SANITIZATION_FILTER_ROUTE, 'object modify', null],
+			'good operation'          => [utils::ENUM_SANITIZATION_FILTER_OPERATION, 'modify', 'modify'],
+			'good operation with underscore' => [utils::ENUM_SANITIZATION_FILTER_OPERATION, 'apply_modify', 'apply_modify'],
+			'bad operation with space' => [utils::ENUM_SANITIZATION_FILTER_OPERATION, 'apply modify', null],
+			'good parameter'          => [utils::ENUM_SANITIZATION_FILTER_PARAMETER, 'JU8965-dd=_', 'JU8965-dd=_'],
+			'bad parameter'           => [utils::ENUM_SANITIZATION_FILTER_PARAMETER, '8965.-dd+', null],
+			'good field_name'         => [utils::ENUM_SANITIZATION_FILTER_FIELD_NAME, 'Name->bUzz38', 'Name->bUzz38'],
+			'bad field_name'          => [utils::ENUM_SANITIZATION_FILTER_FIELD_NAME, 'name-buzz', null],
+			'good context_param'      => [utils::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM, '%dssD25_=%:+-', '%dssD25_=%:+-'],
+			'bad context_param'       => [utils::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM, '%dssD,25_=%:+-', null],
+			'good element_identifier' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, 'AD05nb', 'AD05nb'],
+			'bad element_identifier' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, 'AD05nb+', 'AD05nb'],
+			'array' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, ['AD05nb+','apply_modify'], ['AD05nb','apply_modify']],
+			'good url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://www.w3schools.com', 'https://www.w3schools.com'],
+			'bad url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https//www.w3schools.com', null],
+			'url with injection' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://demo.combodo.com/simple/pages/UI.php?operation=full_text&text=<img zzz src=x onerror=alert(1) //>', 'https://demo.combodo.com/simple/pages/UI.php?operation=full_text&text=<imgzzzsrc=xonerror=alert(1)//>'],
+			'raw_data' => ['raw_data', '<Test>\s😃😃😃', '<Test>\s😃😃😃'],
+		];
+	}
+
+	/**
+	 * @return void
+	 *
+	 * @dataProvider escapeHtmlProvider
+	 */
+	public function testEscapeHtml($sInput, $sExpectedEscaped, $bDoubleEncode = false)
+	{
+		if (is_null($sExpectedEscaped)) {
+			$sExpectedEscaped = $sInput;
+		}
+
+		$sEscaped = utils::EscapeHtml($sInput, $bDoubleEncode);
+		self::assertSame($sExpectedEscaped, $sEscaped);
+
+		$sEscapedDecoded = utils::EscapedHtmlDecode($sEscaped);
+		if (false === $bDoubleEncode) {
+			self::assertSame($sInput, $sEscapedDecoded);
+		}
+	}
+
+	public function escapeHtmlProvider()
+	{
+		return [
+			'no escape' => ['abcdefghijklmnop', null],
+			'&amp;'     => ['abcdefghijklmnop&0123456789', 'abcdefghijklmnop&amp;0123456789'],
+			'double quotes' => ['"double quotes"', '&quot;double quotes&quot;'],
+			'simple quotes' => ["'simple quotes'", '&apos;simple quotes&apos;'],
+			'no double encode' => [
+				'<root><title>Foo & Bar</title></root>',
+				'&lt;root&gt;&lt;title&gt;Foo &amp; Bar&lt;/title&gt;&lt;/root&gt;',
+			],
+			'double encode forced (for XML mostly)' => [
+				'<root><title>Foo &amp; Bar</title></root>',
+				'&lt;root&gt;&lt;title&gt;Foo &amp;amp; Bar&lt;/title&gt;&lt;/root&gt;',
+				true,
+			],
+		];
+	}
+
+	public function testFileGetContentsAndMIMETypeOnEmptyPathReturnsEmptyDocument()
+	{
+		$oExpectedEmptyDocument = new ormDocument('', '', '');
+		$this->assertEquals($oExpectedEmptyDocument, utils::FileGetContentsAndMIMEType(''));
+		$this->assertEquals($oExpectedEmptyDocument, utils::FileGetContentsAndMIMEType(null));
+	}
+
+	public function testFileGetContentsAndMIMETypeOnLocalURL()
+	{
+		$sURL = utils::GetAbsoluteUrlAppRoot().'env-production/itop-request-mgmt/images/user-request.svg';
+		$sPath = APPROOT.'env-production/itop-request-mgmt/images/user-request.svg';
+		$oExpectedDocument = new ormDocument(file_get_contents($sPath), 'image/svg+xml; charset=us-ascii', 'user-request.svg');
+		$this->assertEquals($oExpectedDocument, utils::FileGetContentsAndMIMEType($sURL));
+		// Read local URL directly on disk
+		$this->assertEquals($oExpectedDocument, utils::GetDocumentFromSelfURL($sURL));
+	}
+
+	public function testFileGetContentsAndMIMETypeOnRemoteURL()
+	{
+		$sURL = 'https://www.itophub.io/bundles/combodosharedknpmenu/images/logos/logo-header.png';
+		$oExpectedDocument = new ormDocument(file_get_contents($sURL), 'image/png', 'logo-header.png');
+		$this->assertEquals($oExpectedDocument, utils::FileGetContentsAndMIMEType($sURL));
+		// only for local URLs
+		$this->assertFalse(utils::GetDocumentFromSelfURL($sURL));
+	}
+
+	/**
+	 * @dataProvider VSprintfProvider
+	 */
+	public function testVSprintf($sFormat, $aArgs, $sExpected)
+	{
+		$sTested = utils::VSprintf($sFormat, $aArgs, false);
+		$this->assertEquals($sExpected, $sTested);
+	}
+
+	public function VSprintfProvider()
+	{
+		return [
+			// Basic positional specifier tests
+			'Basic positional with enough args' => [
+				'Format: %1$s, %2$d, %3$s',
+				['Hello', 42, 'World'],
+				'Format: Hello, 42, World'
+			],
+			'Basic positional with args in different order' => [
+				'Format: %2$s, %1$d, %3$s',
+				[42, 'Hello', 'World'],
+				'Format: Hello, 42, World'
+			],
+			'Positional with reused specifiers' => [
+				'Format: %1$s, %2$d, %1$s again',
+				['Hello', 42],
+				'Format: Hello, 42, Hello again'
+			],
+
+			// Missing arguments tests
+			'Missing one positional arg' => [
+				'Format: %1$s, %2$d, %3$s',
+				['Hello', 42],
+				'Format: Hello, 42, %3$s'
+			],
+			'Missing multiple positional args' => [
+				'Format: %1$s, %2$s, %3$s, %4$s',
+				['Hello'],
+				'Format: Hello, %2$s, %3$s, %4$s'
+			],
+			'Missing first positional arg' => [
+				'Format: %1$s, %2$s, %3$s',
+				[],
+				'Format: %1$s, %2$s, %3$s'
+			],
+			
+			// Edge cases
+			'Positional with larger numbers' => [
+				'Format: %2$s, %1$d, %3$s, %2$s again',
+				[123456, 'Hello', 'World'],
+				'Format: Hello, 123456, World, Hello again'
+			],
+			'Positional specifiers with non-sequential indexes' => [
+				'Format: %3$s then %1$s and %5$d',
+				['first', 'second', 'third', 'fourth', 42],
+				'Format: third then first and 42'
+			],
+
+			// More complex format specifiers
+			'Positional with format modifiers' => [
+				'Format: %1$\'*10s, %2$04d',
+				['Hello', 42],
+				'Format: *****Hello, 0042'
+			],
+			'Positional with various types' => [
+				'Format: String: %1$s, Integer: %2$d, Char: %3$c',
+				['Hello', 42, 65],
+				'Format: String: Hello, Integer: 42, Char: A'
+			],
+
+			// Testing with non-Latin characters
+			'Positional with UTF-8 characters' => [
+				'Format: %1$s %2$s %3$s',
+				['こんにちは', 'Здравствуйте', '你好'],
+				'Format: こんにちは Здравствуйте 你好'
+			],
+
+			// Mixed formats
+			'Mixed positional with complex specifiers' => [
+				'Format: %1$-10s | %2$+d',
+				['Hello', 42],
+				'Format: Hello      | +42'
+			],
+			'Reused positional indexes with some missing' => [
+				'Format: %1$s %2$d %1$s %3$s %2$d',
+				['Hello', 42],
+				'Format: Hello 42 Hello %3$s 42'
+			]
+		];
+	}
+}

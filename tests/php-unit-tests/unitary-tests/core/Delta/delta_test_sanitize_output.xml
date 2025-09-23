@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <classes>
+    <class id="TestServer" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>test_server</db_table>
+        <db_key_field>id</db_key_field>
+      </properties>
+      <presentation/>
+      <methods/>
+      <fields>
+        <field id="contact_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContactTestToServer</linked_class>
+          <ext_key_to_me>test_server_id</ext_key_to_me>
+          <ext_key_to_remote>contact_test_id</ext_key_to_remote>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="password_list" xsi:type="AttributeLinkedSet">
+          <linked_class>PasswordTest</linked_class>
+          <ext_key_to_me>server_test_id</ext_key_to_me>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+    </class>
+
+
+    <class id="ContactTest" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>contact_test</db_table>
+        <db_key_field>id</db_key_field>
+      </properties>
+      <presentation/>
+      <methods/>
+      <fields>
+        <field id="password" xsi:type="AttributeEncryptedString">
+          <sql>password</sql>
+        </field>
+        <field id="server_test_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContactTestToServer</linked_class>
+          <ext_key_to_me>contact_test_id</ext_key_to_me>
+          <ext_key_to_remote>test_server_id</ext_key_to_remote>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+    </class>
+
+
+    <class id="lnkContactTestToServer" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnk_contact_server_test</db_table>
+        <db_key_field>id</db_key_field>
+      </properties>
+      <presentation/>
+      <methods/>
+      <fields>
+        <field id="contact_test_password" xsi:type="AttributeExternalField" _delta="define">
+          <extkey_attcode>contact_test_id</extkey_attcode>
+          <target_attcode>password</target_attcode>
+        </field>
+        <field id="test_server_id" xsi:type="AttributeExternalKey" _delta="define">
+          <target_class>TestServer</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <sql>test_server</sql>
+          <is_null_allowed>false</is_null_allowed>
+
+        </field>
+        <field id="contact_test_id" xsi:type="AttributeExternalKey" _delta="define">
+          <target_class>ContactTest</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <sql>contact_test</sql>
+          <is_null_allowed>false</is_null_allowed>
+
+        </field>
+      </fields>
+    </class>
+    <class id="PasswordTest" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>password_test</db_table>
+        <db_key_field>id</db_key_field>
+      </properties>
+      <presentation/>
+      <methods/>
+      <fields>
+        <field id="server_test_id" xsi:type="AttributeExternalKey" _delta="define">
+          <target_class>TestServer</target_class>
+          <sql>server_test_id</sql>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="password" xsi:type="AttributeEncryptedString" _delta="define">
+          <sql>password</sql>
+        </field>
+      </fields>
+    </class>
+  </classes>
+</itop_design>

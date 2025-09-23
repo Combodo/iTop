@@ -1,10 +1,14 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 $ibo-datamodel-viewer--parent--spacer--padding-y: $ibo-spacing-0 !default;
 $ibo-datamodel-viewer--parent--spacer--padding-x: $ibo-spacing-300 !default;
+
+$ibo-datamodel-viewer--classes-list--selectize-input--background-color: $ibo-color-white-100 !default;
+$ibo-datamodel-viewer--classes-list--selectize-input--color: $ibo-color-grey-800 !default;
+$ibo-datamodel-viewer--classes-list--selectize-input--border-color: $ibo-color-grey-500 !default;
 
 $ibo-datamodel-viewer--attributes-table--first-column--width: 3px !default;
 
@@ -25,12 +29,14 @@ $ibo-datamodel-viewer--schema--self-referencing--hover--fill: $ibo-datamodel-vie
 $ibo-datamodel-viewer--schema--tooltip--fill: $ibo-color-white-100 !default;
 $ibo-datamodel-viewer--schema--tooltip--background-color: $ibo-color-grey-900 !default;
 $ibo-datamodel-viewer--schema--tooltip--border-color: $ibo-color-grey-700 !default;
+$ibo-datamodel-viewer--schema--tooltip--border: 1px solid $ibo-datamodel-viewer--schema--tooltip--border-color !default;
 $ibo-datamodel-viewer--schema--tooltip--border-radius: $ibo-border-radius-300 !default;
 
 $ibo-datamodel-viewer--schema--tooltip--icon--font-size: $ibo-font-size-100 !default;
 $ibo-datamodel-viewer--schema--tooltip--span--margin: 3px !default;
 
 $ibo-datamodel-viewer--schema--tooltip-top--border-color: $ibo-color-grey-700 !default;
+$ibo-datamodel-viewer--schema--tooltip-top--border: 1px solid $ibo-datamodel-viewer--schema--tooltip-top--border-color !default;
 $ibo-datamodel-viewer--schema--tooltip-top--padding: 3px !default;
 
 $ibo-datamodel-viewer--lifecycle-image--margin-bottom: $ibo-spacing-500 !default;
@@ -43,6 +49,15 @@ $ibo-datamodel-viewer--lifecycle-image--margin-bottom: $ibo-spacing-500 !default
 
 .ibo-datamodel-viewer--parent--spacer{
   padding: $ibo-datamodel-viewer--parent--spacer--padding-y $ibo-datamodel-viewer--parent--spacer--padding-x;
+}
+
+// Overwrite selectize rules with !important
+.ibo-datamodel-viewer--classes-list .selectize-input{
+  background-color: $ibo-datamodel-viewer--classes-list--selectize-input--background-color !important;
+  background-image: none !important;
+  color: $ibo-datamodel-viewer--classes-list--selectize-input--color;
+  box-shadow: none !important;
+  border-color: $ibo-datamodel-viewer--classes-list--selectize-input--border-color !important;
 }
 
 #ibo-datamodel-viewer--attributes-table{
@@ -103,7 +118,7 @@ $ibo-datamodel-viewer--lifecycle-image--margin-bottom: $ibo-spacing-500 !default
   position: fixed;
   text-align: center;
   background: $ibo-datamodel-viewer--schema--tooltip--fill;
-  border: 1px solid $ibo-datamodel-viewer--schema--tooltip--border-color;
+  border: $ibo-datamodel-viewer--schema--tooltip--border;
   border-radius: $ibo-datamodel-viewer--schema--tooltip--border-radius;
   pointer-events: none;
   fill: $ibo-datamodel-viewer--schema--tooltip--background-color;
@@ -119,7 +134,7 @@ $ibo-datamodel-viewer--lifecycle-image--margin-bottom: $ibo-spacing-500 !default
 
 #tooltipD3_top {
   @extend %ibo-font-ral-bol-100;
-  border-bottom: 1px solid $ibo-datamodel-viewer--schema--tooltip-top--border-color;
+  border-bottom: $ibo-datamodel-viewer--schema--tooltip-top--border;
   padding: $ibo-datamodel-viewer--schema--tooltip-top--padding;
 }
 

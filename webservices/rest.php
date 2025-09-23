@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,7 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+use Combodo\iTop\Application\WebPage\JsonPage;
+use Combodo\iTop\Application\WebPage\JsonPPage;
+
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
@@ -64,7 +66,6 @@ if (!function_exists('json_last_error_msg')) {
 //
 // Main
 //
-$oP = new AjaxPage('rest');
 $oCtx = new ContextTag(ContextTag::TAG_REST);
 
 $sVersion = utils::ReadParam('version', null, false, 'raw_data');
@@ -97,10 +98,12 @@ try
         
 	$oKPI->ComputeAndReport('Data model loaded');
 
-	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN); // Starting with iTop 2.2.0 portal users are no longer allowed to access the REST/JSON API
-        $oKPI->ComputeAndReport('User login');
-        
-        if ($iRet == LoginWebPage::EXIT_CODE_OK)
+    // N°6358 - force credentials for REST calls
+    LoginWebPage::ResetSession(true);
+	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
+    $oKPI->ComputeAndReport('User login');
+
+    if ($iRet == LoginWebPage::EXIT_CODE_OK)
 	{
 		// Extra validation of the profile
 		if ((MetaModel::GetConfig()->Get('secure_rest_services') == true) && !UserRights::HasProfile('REST Services User'))
@@ -111,7 +114,7 @@ try
 	}
 	if ($iRet != LoginWebPage::EXIT_CODE_OK)
 	{
-		switch($iRet)
+        switch($iRet)
 		{
 			case LoginWebPage::EXIT_CODE_MISSINGLOGIN:
 			throw new Exception("Missing parameter 'auth_user'", RestResult::MISSING_AUTH_USER);
@@ -224,7 +227,11 @@ try
 		/** @var iRestServiceProvider $oRS */
 		$oRS = $aOpToRestService[$sOperation]['service_provider'];
 		$sProvider = get_class($oRS);
-	
+
+		if ($oRS instanceof iRestInputSanitizer) {
+			$sSanitizedJsonInput = $oRS->SanitizeJsonInput($sJsonString);
+		}
+
 		CMDBObject::SetTrackOrigin('webservice-rest');
 		$oResult = $oRS->ExecOperation($sVersion, $sOperation, $aJsonData);
 	}
@@ -249,6 +256,7 @@ catch(Exception $e)
 //
 $sResponse = json_encode($oResult);
 
+
 if ($sResponse === false)
 {
 	$oJsonIssue = new RestResult();
@@ -257,19 +265,19 @@ if ($sResponse === false)
 	$sResponse = json_encode($oJsonIssue);
 }
 
-$oP->add_header('Access-Control-Allow-Origin: *');
 
 $sCallback = utils::ReadParam('callback', null);
 if ($sCallback == null)
 {
-	$oP->SetContentType('application/json');
-	$oP->add($sResponse);
+	$oP = new JsonPage();
 }
 else
 {
-	$oP->SetContentType('application/javascript');
-	$oP->add($sCallback.'('.$sResponse.')');
+	$oP = new JsonPPage($sCallback);
 }
+$oP->add_header('Access-Control-Allow-Origin: *');
+$oP->SetData(json_decode($sResponse, true));
+$oP->SetOutputDataOnly(true);
 $oP->Output();
 
 // Log usage
@@ -280,7 +288,7 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	$oLog->SetTrim('userinfo', UserRights::GetUser());
 	$oLog->Set('version', $sVersion);
 	$oLog->Set('operation', $sOperation);
-	$oLog->SetTrim('json_input', $sJsonString);
+    $oLog->SetTrim('json_input', $sSanitizedJsonInput ?? $sJsonString);
 
 	$oLog->Set('provider', $sProvider);
 	$sMessage = $oResult->message;
@@ -290,7 +298,21 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	}
 	$oLog->SetTrim('message', $sMessage);
 	$oLog->Set('code', $oResult->code);
-	$oLog->SetTrim('json_output', $sResponse);
+	$oResult->SanitizeContent();
+	$iUnescapeSlashAndUnicode = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+	$sJsonOuputWithPrettyPrinting = json_encode($oResult, $iUnescapeSlashAndUnicode | JSON_PRETTY_PRINT);
+	$sJsonOutputWithoutPrettyPrinting = json_encode($oResult, $iUnescapeSlashAndUnicode);
+	!StringFitsInLogField( $sJsonOuputWithPrettyPrinting) ?
+		$oLog->SetTrim('json_output', $sJsonOutputWithoutPrettyPrinting) : // too long, we don't make it pretty
+		$oLog->SetTrim('json_output', $sJsonOuputWithPrettyPrinting);
 
 	$oLog->DBInsertNoReload();
+}
+
+/**
+ * @deprecated - will be removed in 3.3.0
+ */
+function StringFitsInLogField(string $sLog): bool
+{
+	return mb_strlen($sLog) <= 16383; // hardcoded value, see N°8260
 }

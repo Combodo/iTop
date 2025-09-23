@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -22,11 +22,9 @@
 // - reconciliation is made on the column primary_key
 //
 
-if (!defined('__DIR__'))
-{
-	/** @noinspection DirectoryConstantCanBeUsedInspection */
-	define('__DIR__', dirname(__FILE__));
-}
+use Combodo\iTop\Application\WebPage\CLILikeWebPage;
+use Combodo\iTop\Application\WebPage\CLIPage;
+
 require_once __DIR__.'/../approot.inc.php';
 require_once APPROOT.'/application/application.inc.php';
 require_once APPROOT.'/application/startup.inc.php';
@@ -255,7 +253,7 @@ if (utils::IsModeCLI())
 {
 	// Next steps:
 	//   specific arguments: 'csvfile'
-	//   
+	//
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
 	$sCsvFile = ReadMandatoryParam($oP, 'csvfile', 'raw_data');
@@ -282,7 +280,38 @@ if (utils::IsModeCLI())
 else
 {
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
-	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+	//N°6022 - Make synchro scripts work by http via token authentication with SYNCHRO scopes
+	$oCtx = new ContextTag(ContextTag::TAG_SYNCHRO);
+	LoginWebPage::ResetSession(true);
+    $iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
+    if ($iRet !== LoginWebPage::EXIT_CODE_OK) {
+        switch ($iRet) {
+            case LoginWebPage::EXIT_CODE_MISSINGLOGIN:
+                $oP->p("Missing parameter 'auth_user'");
+                break;
+
+            case LoginWebPage::EXIT_CODE_MISSINGPASSWORD:
+                $oP->p("Missing parameter 'auth_pwd'");
+                break;
+
+            case LoginWebPage::EXIT_CODE_WRONGCREDENTIALS:
+                $oP->p('Invalid login');
+                break;
+
+            case LoginWebPage::EXIT_CODE_PORTALUSERNOTAUTHORIZED:
+                $oP->p('Portal user is not allowed');
+                break;
+
+            case LoginWebPage::EXIT_CODE_NOTAUTHORIZED:
+                $oP->p('This user is not authorized to use the web services. (The profile REST Services User is required to access the REST web services)');
+                break;
+
+            default:
+                $oP->p("Unknown authentication error (retCode=$iRet)");
+        }
+        $oP->output();
+        exit -1;
+    }
 
 	$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
 }
@@ -438,6 +467,8 @@ try
 	$aIsBinaryToTransform = array();
 	foreach ($aInputColumns as $iFieldId => $sInputColumn)
 	{
+		$aIsBinaryToTransform[$iFieldId] = false;
+
 		if (array_key_exists($sInputColumn, $aDateColumns))
 		{
 			$aIsDateToTransform[$iFieldId] = $aDateColumns[$sInputColumn]; // either DATE or DATETIME
@@ -451,13 +482,15 @@ try
 		if ($sInputColumn === 'primary_key')
 		{
 			$iPrimaryKeyCol = $iFieldId;
+			$aIsBinaryToTransform[$iFieldId] = false;
 			continue;
 		}
 		if (!array_key_exists($sInputColumn, $aColumns))
 		{
 			throw new ExchangeException("Unknown column '$sInputColumn' (class: '$sClass')");
 		}
-		$aIsBinaryToTransform[$iFieldId] = $aColumns[$sInputColumn] === 'LONGBLOB';
+
+		$aIsBinaryToTransform[$iFieldId] = ($aColumns[$sInputColumn] === 'LONGBLOB');
 	}
 	if (!isset($iPrimaryKeyCol))
 	{
@@ -742,7 +775,7 @@ try
 			$oP->add_comment('Objects updated: '.$oStatLog->Get('stats_nb_obj_updated').' ('.$oStatLog->Get('stats_nb_obj_updated_warnings')." warnings)");
 			$oP->add_comment('Objects update errors: '.$oStatLog->Get('stats_nb_obj_updated_errors'));
 			$oP->add_comment('Objects reconciled (updated): '.$oStatLog->Get('stats_nb_obj_new_updated').' ('.$oStatLog->Get('stats_nb_obj_new_updated_warnings').' warnings)');
-			$oP->add_comment('Objects reconciled (unchanged): '.$oStatLog->Get('stats_nb_obj_new_unchanged').' ('.$oStatLog->Get('stats_nb_obj_new_updated_warnings').' warnings)');
+			$oP->add_comment('Objects reconciled (unchanged): '.$oStatLog->Get('stats_nb_obj_new_unchanged').' ('.$oStatLog->Get('stats_nb_obj_new_unchanged_warnings').' warnings)');
 			$oP->add_comment('Objects reconciliation errors: '.$oStatLog->Get('stats_nb_replica_reconciled_errors'));
 			$oP->add_comment('Replica disappeared, no action taken: '.$oStatLog->Get('stats_nb_replica_disappeared_no_action'));
 		}

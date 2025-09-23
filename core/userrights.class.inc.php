@@ -1,6 +1,8 @@
 <?php
 
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\Events\EventData;
 
 define('UR_ALLOWED_NO', 0);
 define('UR_ALLOWED_YES', 1);
@@ -161,7 +163,7 @@ abstract class UserRightsAddOnAPI
 				$oSearchSharers->AllowAllData();
 				$oSearchSharers->AddCondition_ReferencedBy($oShareSearch, 'sharing_org_id');
 				$aSharers = array();
-				foreach($oSearchSharers->ToDataArray(array('id')) as $aRow)
+				foreach($oSearchSharers->SelectAttributeToArray('id') as $aRow)
 				{
 					$aSharers[] = $aRow['id'];
 				}
@@ -186,7 +188,7 @@ abstract class UserRightsAddOnAPI
 				$oOrgField = new FieldExpression('org_id', $sShareClass);
 				$oSearchShares->AddConditionExpression(new BinaryExpression($oOrgField, 'IN', $oListExpr));
 				$aShared = array();
-				foreach($oSearchShares->ToDataArray(array($sShareAttCode)) as $aRow)
+				foreach($oSearchShares->SelectAttributeToArray($sShareAttCode) as $aRow)
 				{
 					$aShared[] = $aRow[$sShareAttCode];
 				}
@@ -214,45 +216,68 @@ abstract class User extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "core,grant_by_profile,silo",
-			"key_type" => "autoincrement",
-			"name_attcode" => "login",
-			"state_attcode" => "status",
-			"reconc_keys" => array(),
-			"db_table" => "priv_user",
-			"db_key_field" => "id",
+			"category"            => "core,grant_by_profile,silo",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "login",
+			"state_attcode"       => "status",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_user",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-			"style" =>  new ormStyle("ibo-dm-class--User", "ibo-dm-class-alt--User", "var(--ibo-dm-class--User--main-color)", "var(--ibo-dm-class--User--complementary-color)", null, "itop-structure/../../images/icons/icons8-security-pass.svg"),
+			"style"               => new ormStyle("ibo-dm-class--User", "ibo-dm-class-alt--User", "var(--ibo-dm-class--User--main-color)", "var(--ibo-dm-class--User--complementary-color)", null, "itop-structure/../../images/icons/icons8-security-pass.svg"),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("contactid", array("targetclass"=>"Person", "allowed_values"=>null, "sql"=>"contactid", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("last_name", array("allowed_values"=>null, "extkey_attcode"=> 'contactid', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("first_name", array("allowed_values"=>null, "extkey_attcode"=> 'contactid', "target_attcode"=>"first_name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("email", array("allowed_values"=>null, "extkey_attcode"=> 'contactid', "target_attcode"=>"email")));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("org_id", array("allowed_values"=>null, "extkey_attcode"=> 'contactid', "target_attcode"=>"org_id")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("contactid", array("targetclass" => "Person", "allowed_values" => null, "sql" => "contactid", "is_null_allowed" => true, "on_target_delete" => DEL_MANUAL, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("last_name", array("allowed_values" => null, "extkey_attcode" => 'contactid', "target_attcode" => "name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("first_name", array("allowed_values" => null, "extkey_attcode" => 'contactid', "target_attcode" => "first_name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("email", array("allowed_values" => null, "extkey_attcode" => 'contactid', "target_attcode" => "email")));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("org_id", array("allowed_values" => null, "extkey_attcode" => 'contactid', "target_attcode" => "org_id")));
 
-		MetaModel::Init_AddAttribute(new AttributeString("login", array("allowed_values"=>null, "sql"=>"login", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("login", array("allowed_values" => null, "sql" => "login", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 
-		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>"EN US", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values" => new ValueSetEnum('enabled,disabled'), "styled_values"=>['enabled' =>  new ormStyle('ibo-dm-enum--User-status-enabled', 'ibo-dm-enum-alt--User-status-enabled', 'var(--ibo-dm-enum--User-status-enabled--main-color)', 'var(--ibo-dm-enum--User-status-enabled--complementary-color)', null, null),'disabled' =>  new ormStyle('ibo-dm-enum--User-status-disabled', 'ibo-dm-enum-alt--User-status-disabled', 'var(--ibo-dm-enum--User-status-disabled--main-color)', 'var(--ibo-dm-enum--User-status-disabled--complementary-color)', null, null)], "sql"=>"status", "default_value"=>"enabled", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql" => "language", "default_value" => "EN US", "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array(
+			"allowed_values"  => new ValueSetEnum('enabled,disabled'),
+			"styled_values"   => [
+				'enabled'  => new ormStyle('ibo-dm-enum--User-status-enabled', 'ibo-dm-enum-alt--User-status-enabled', 'var(--ibo-dm-enum--User-status-enabled--main-color)', 'var(--ibo-dm-enum--User-status-enabled--complementary-color)', null, null),
+				'disabled' => new ormStyle('ibo-dm-enum--User-status-disabled', 'ibo-dm-enum-alt--User-status-disabled', 'var(--ibo-dm-enum--User-status-disabled--main-color)', 'var(--ibo-dm-enum--User-status-disabled--complementary-color)', null, null),
+			],
+			"sql"             => "status",
+			"default_value"   => "enabled",
+			"is_null_allowed" => false,
+			"depends_on"      => array(),
+		)));
 
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list", array("linked_class"=>"URP_UserProfile", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"profileid", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("allowed_org_list", array("linked_class"=>"URP_UserOrg", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"allowed_org_id", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list",array("linked_class" => "URP_UserProfile", "ext_key_to_me" => "userid", "ext_key_to_remote" => "profileid", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), "display_style" => 'property', "with_php_constraint" => true, "with_php_computation" => true)));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("allowed_org_list", array("linked_class" => "URP_UserOrg", "ext_key_to_me" => "userid", "ext_key_to_remote" => "allowed_org_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), 'with_php_constraint' => true)));
+		MetaModel::Init_AddAttribute(new AttributeCaseLog("log", array("sql" => 'log', "is_null_allowed" => true, "default_value" => '', "allowed_values" => null, "depends_on" => array(), "always_load_in_tables" => false)));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'language', 'status', 'profile_list', 'allowed_org_list')); // Unused as it's an abstract class !
+		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'language', 'status', 'profile_list', 'allowed_org_list', 'log')); // Unused as it's an abstract class !
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'status', 'org_id')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'email', 'language', 'status', 'org_id')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('default_search', array('login', 'contactid', 'org_id')); // Default criteria of the search banner
+		MetaModel::Init_SetZListItems('default_search', array('login', 'contactid', 'status', 'org_id')); // Default criteria of the search banner
+	}
+
+	protected function RegisterEventListeners()
+	{
+		if ($this->IsCurrentUser() && !UserRights::IsAdministrator()) {
+			$this->RegisterCRUDListener(EVENT_DB_SET_ATTRIBUTES_FLAGS, 'SetAllowedOrgListReadOnly');
+		}
 	}
 
 	abstract public function CheckCredentials($sPassword);
 	abstract public function TrustWebServerContext();
 	abstract public function CanChangePassword();
 	abstract public function ChangePassword($sOldPassword, $sNewPassword);
+
+	protected function SetAllowedOrgListReadOnly(EventData $oEventData)
+	{
+		$this->AddAttributeFlags('allowed_org_list', OPT_ATT_READONLY);
+	}
 
 	/*
 	* Compute a name in best effort mode
@@ -373,6 +398,12 @@ abstract class User extends cmdbAbstractObject
 			/** @var \DBObjectSet $oSet */
 			$oSet = $this->Get('profile_list');
 			if ($oSet->Count() == 0) {
+				if (ContextTag::Check(ContextTag::TAG_SETUP)) {
+					// During setup, if a profile is no more part of iTop, it will be deleted
+					// But if it is the only profile assigned to a user, we don't want this to stop the setup
+					SetupLog::Warning("The user with id: ".$this->GetKey()." is no more usable as its last profile was removed during setup");
+					return;
+				}
 				$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AtLeastOneProfileIsNeeded');
 			}
 
@@ -424,8 +455,12 @@ abstract class User extends cmdbAbstractObject
 			&& empty($this->Get('contactid'))) {
 			$this->m_aCheckIssues[] = Dict::S('Class:User/Error:PersonIsMandatory');
 		}
+		// Warning if the user has no associated contact
+		elseif (empty($this->Get('contactid'))) {
+		    $this->AddCheckWarning(Dict::S('Class:User/Warning:NoContactHasImpact'));
+		}
 
-		// Allowed orgs must contains the user org (if any)
+		// Allowed orgs must contain the user org (if any)
 		if (!empty($this->Get('org_id')) && !UserRights::IsAdministrator($this)) {
 			// Get the user org and all its parent orgs
 			$aUserOrgs = [$this->Get('org_id')];
@@ -452,6 +487,11 @@ abstract class User extends cmdbAbstractObject
 					$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AllowedOrgsMustContainUserOrg');
 				}
 			}
+		}
+
+		// Modified User is not administrator and has no allowed orgs, warn about the consequences
+		if (!UserRights::IsAdministrator($this) && ($this->get('allowed_org_list')->Count() == 0)) {
+			$this->AddCheckWarning(Dict::S('Class:User/Warning:NoOrganizationMeansFullAccess'));
 		}
 
 		if (!UserRights::IsAdministrator()) {
@@ -639,23 +679,23 @@ abstract class UserInternal extends User
 	{
 		$aParams = array
 		(
-			"category" => "core,grant_by_profile,silo",
-			"key_type" => "autoincrement",
-			"name_attcode" => "login",
-			"state_attcode" => "",
-			"reconc_keys" => array('login'),
-			"db_table" => "priv_internaluser",
-			"db_key_field" => "id",
+			"category"            => "core,grant_by_profile,silo",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "login",
+			"state_attcode"       => "",
+			"reconc_keys"         => array('login'),
+			"db_table"            => "priv_internaluser",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
 		// When set, this token allows for password reset
-		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("reset_pwd_token", array("allowed_values"=>null, "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("reset_pwd_token", array("allowed_values" => null, "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'status', 'language', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'status', 'language', 'profile_list', 'allowed_org_list', 'log')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'status', 'org_id')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the std search form
@@ -750,13 +790,24 @@ class UserRights
 	protected static $m_aCacheContactPictureAbsUrl = [];
 	/** @var UserRightsAddOnAPI $m_oAddOn */
 	protected static $m_oAddOn;
-	protected static $m_oUser;
-	protected static $m_oRealUser;
+	protected static $m_oUser = null;
+	protected static $m_oRealUser = null;
 	protected static $m_sSelfRegisterAddOn = null;
 	protected static $m_aAdmins = array();
 	protected static $m_aPortalUsers = array();
 	/** @var array array('sName' => $sName, 'bSuccess' => $bSuccess); */
 	private static $m_sLastLoginStatus = null;
+
+	/**
+	 * @return void
+	 * @since 3.0.4 3.1.1 3.2.0
+	 */
+	protected static function ResetCurrentUserData()
+	{
+		self::$m_oUser = null;
+		self::$m_oRealUser = null;
+		self::$m_sLastLoginStatus = null;
+	}
 
 	/**
 	 * @param string $sModuleName
@@ -776,8 +827,7 @@ class UserRights
 		}
 		self::$m_oAddOn = new $sModuleName;
 		self::$m_oAddOn->Init();
-		self::$m_oUser = null;
-		self::$m_oRealUser = null;
+		self::ResetCurrentUserData();
 	}
 
 	/**
@@ -835,6 +885,8 @@ class UserRights
 	}
 
 	/**
+	 * Set the current user (as part of the login process)
+	 *
 	 * @param string $sLogin Login of the concerned user
 	 * @param string $sAuthentication
 	 *
@@ -844,6 +896,8 @@ class UserRights
 	 */
 	public static function Login($sLogin, $sAuthentication = 'any')
 	{
+		self::ResetCurrentUserData();
+
 		$oUser = self::FindUser($sLogin, $sAuthentication);
 		if (is_null($oUser))
 		{
@@ -859,6 +913,19 @@ class UserRights
 
 		Dict::SetUserLanguage(self::GetUserLanguage());
 		return true;
+	}
+
+	/**
+	 * Reset current user and cleanup associated SESSION data
+	 *
+	 * @return void
+	 * @since 3.0.4 3.1.1 3.2.0
+	 */
+	public static function Logoff()
+	{
+		self::ResetCurrentUserData();
+		Dict::SetUserLanguage(null);
+		self::_ResetSessionCache();
 	}
 
 	/**
@@ -1085,9 +1152,7 @@ class UserRights
 	}
 
 	/**
-	 * Return the current user login or an empty string if nobody connected.
-	 *
-	 * @return string
+	 * @return string connected {@see User} login field value, otherwise empty string
 	 */
 	public static function GetUser()
 	{
@@ -1199,17 +1264,11 @@ class UserRights
 	{
 		$sUserPicturesFolder = 'images/user-pictures/';
 		$sUserPicturePlaceholderPrefKey = 'user_picture_placeholder';
+		$sPictureUrl = null;
 
 		// First, check cache
 		if (array_key_exists($sLogin, static::$m_aCacheContactPictureAbsUrl)) {
 			return static::$m_aCacheContactPictureAbsUrl[$sLogin];
-		}
-
-		// Then, the default picture
-		if ($bAllowDefaultPicture === true) {
-			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.'user-profile-default-256px.png';
-		} else {
-			$sPictureUrl = null;
 		}
 
 		// Then check if the user has a contact attached and if it has an picture defined
@@ -1257,6 +1316,11 @@ class UserRights
 			}
 		}
 		// Else, no contact and no login, then it's for an unknown origin (system, extension, ...)
+
+		// Then, the default picture
+		if (utils::IsNullOrEmptyString($sPictureUrl) && $bAllowDefaultPicture === true) {
+			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.'user-profile-default-256px.png';
+		}
 
 		// Update cache
 		static::$m_aCacheContactPictureAbsUrl[$sLogin] = $sPictureUrl;
@@ -1535,9 +1599,9 @@ class UserRights
 
 	/**
 	 * @param string $sClass
-	 * @param int $iActionCode
-	 * @param \DBObjectSet $oInstanceSet
-	 * @param \User $oUser
+	 * @param int $iActionCode see UR_ACTION_* constants
+	 * @param DBObjectSet $oInstanceSet
+	 * @param User $oUser
 	 *
 	 * @return int (UR_ALLOWED_YES|UR_ALLOWED_NO|UR_ALLOWED_DEPENDS)
 	 * @throws \CoreException
@@ -1857,52 +1921,56 @@ class UserRights
 	 */
 	protected static function FindUser($sLogin, $sAuthentication = 'any', $bAllowDisabledUsers = false)
 	{
-		if ($sAuthentication == 'any')
-		{
-			$oUser = self::FindUser($sLogin, 'internal');
-			if ($oUser == null)
-			{
-				$oUser = self::FindUser($sLogin, 'external');
+		if ($sAuthentication === 'any') {
+			$oUser = self::FindUser($sLogin, 'internal', $bAllowDisabledUsers);
+			if ($oUser !== null) {
+				return $oUser;
 			}
+
+			return self::FindUser($sLogin, 'external', $bAllowDisabledUsers);
 		}
-		else
-		{
-			if (!isset(self::$m_aCacheUsers))
-			{
-				self::$m_aCacheUsers = array('internal' => array(), 'external' => array());
-			}
 
-			if (!isset(self::$m_aCacheUsers[$sAuthentication][$sLogin]))
-			{
-				switch($sAuthentication)
-				{
-					case 'external':
-					$sBaseClass = 'UserExternal';
-					break;
-
-					case 'internal':
-					$sBaseClass = 'UserInternal';
-					break;
-
-					default:
-					echo "<p>sAuthentication = $sAuthentication</p>\n";
-					assert(false); // should never happen
-				}
-				$oSearch = DBObjectSearch::FromOQL("SELECT $sBaseClass WHERE login = :login");
-				$oSearch->AllowAllData();
-				if (!$bAllowDisabledUsers)
-				{
-					$oSearch->AddCondition('status', 'enabled');
-				}
-				$oSet = new DBObjectSet($oSearch, array(), array('login' => $sLogin));
-				$oUser = $oSet->fetch();
-				self::$m_aCacheUsers[$sAuthentication][$sLogin] = $oUser;
-			}
-			$oUser = self::$m_aCacheUsers[$sAuthentication][$sLogin];
+		if (!isset(self::$m_aCacheUsers)) {
+			self::$m_aCacheUsers = [ 'internal' => [], 'external' => [] ];
 		}
-		return $oUser;
+
+		if (! isset(self::$m_aCacheUsers[$sAuthentication]) || ! array_key_exists($sLogin, self::$m_aCacheUsers[$sAuthentication])) {
+			switch($sAuthentication) {
+				case 'external':
+				$sBaseClass = 'UserExternal';
+				break;
+
+				case 'internal':
+				$sBaseClass = 'UserInternal';
+				break;
+
+				default:
+				echo "<p>sAuthentication = $sAuthentication</p>\n";
+				assert(false); // should never happen
+			}
+			$oSearch = DBObjectSearch::FromOQL("SELECT $sBaseClass WHERE login = :login");
+			$oSearch->AllowAllData();
+			if (!$bAllowDisabledUsers) {
+				$oSearch->AddCondition('status', 'enabled');
+			}
+			$oSet = new DBObjectSet($oSearch, array(), array('login' => $sLogin));
+			$oUser = $oSet->fetch();
+
+			self::$m_aCacheUsers[$sAuthentication][$sLogin] = $oUser;
+		}
+
+		return self::$m_aCacheUsers[$sAuthentication][$sLogin];
 	}
 
+	/**
+	 * Reset the cache of users
+	 * @return void
+	 */
+	public static function ResetCacheUsers()
+	{
+		self::$m_aCacheUsers = [ 'internal' => [], 'external' => [] ];
+	}
+	
 	/**
 	 * @param string$sClass
 	 * @param array $aAllowedOrgs
@@ -1936,7 +2004,7 @@ class UserRights
 			// The bug has been fixed in PHP 7.2, but in case session_regenerate_id()
 			// fails we just silently ignore the error and keep the same session id...
 			$old_error_handler = set_error_handler(array(__CLASS__, 'VoidErrorHandler'));
-			session_regenerate_id(true);
+			Session::RegenerateId(true);
 			if ($old_error_handler !== null) {
 				set_error_handler($old_error_handler);
 			}
@@ -2060,6 +2128,8 @@ class ActionChecker
 class StimulusChecker extends ActionChecker
 {
 	var $sState = null;
+
+	public mixed $iState = null;
 
 	public function __construct(DBSearch $oFilter, $sState, $iStimulusCode)
 	{

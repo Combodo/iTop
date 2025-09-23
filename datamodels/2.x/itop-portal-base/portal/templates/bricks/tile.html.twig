@@ -1,22 +1,155 @@
-{# itop-portal-base/portal/templates/bricks/tile.html.twig #}
-{# Base brick tile layout #}
+{#
+Brick tile base layout
+Tile base layout eather for static|link|modal usages.
 
-<div class="col-xs-12 col-sm-{{ brick.GetWidth }}">
-	{% block pTileWrapper %}
-		<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}"
-			{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %}
-			{% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}
-			 class="tile{# vertical-center#}" id="brick-{{ brick.GetId }}" data-brick-id="{{ brick.GetId }}">
-		<div class="tile_decoration">
-			<span class="icon {{ brick.GetDecorationClassHome }}"></span>
-			
-		</div>
-			<div class="tile_body">
-				<div class="tile_title">{{ brick.GetTitleHome|dict_s }}</div>
-				{% if brick.HasDescription %}
-					<div class="tile_description">{{ brick.GetDescription|dict_s|raw }}</div>
-				{% endif %}
-			</div>
-		</a>
-	{% endblock %}
-</div>
+Extendable blocks:
+    - pTileWrapper: whole tile wrapper
+    - pTileDecoration: tile decoration
+    - pTileBody: tile body
+    - pTileTitle: tile title
+    - pTileDescription: tile description
+    - pTileExtraContent: extra content
+
+CSS classes:
+    - .ipb-tile: tile wrapper
+    - .ipb-tile--decoration: tile decoration
+    - .ipb-tile--decoration--icon: tile decoration icon
+    - .ipb-tile--body: tile body
+    - .ipb-tile--title: tile title
+    - .ipb-tile--description: tile description
+
+Options:
+    - classes: string, optional
+    - hasInlineTitle: boolean, default false
+#}
+
+{# handle brick var name compatibility #}
+{% if oBrick is not defined %}
+    {% set oBrick = brick %}
+{% endif %}
+
+{% set id = "brick-" ~ oBrick.GetId %}
+
+{# tile name #}
+{% if name is not defined %}
+    {% set name = 'name-undefined' %}
+{% endif %}
+
+{# element name #}
+{% if html_element is not defined %}
+    {% set html_element = 'ipb-tile' %}
+{% endif %}
+
+{# tile attributes #}
+{% if attr is not defined %}
+    {% set attr = '' %}
+{% endif %}
+{% set urlHash = '' %}
+
+{# inline title option #}
+{% if hasInlineTitle is not defined %}
+    {% set hasInlineTitle = false %}
+{% endif %}
+
+{# retrieve brick route data #}
+{% if app['combodo.portal.instance.routes'] is defined %}
+
+    {# brick route data #}
+    {% set routeData = app['combodo.portal.instance.routes'][oBrick.GetRouteName] %}
+
+    {# url hash #}
+    {% if routeData['hash'] is defined %}
+        {% set urlHash = '#%s'|format(routeData['hash']) %}
+    {% endif %}
+
+    {# navigation attributes #}
+    {% if routeData['navigation_menu_attr'] is defined %}
+        {% for key, value in routeData['navigation_menu_attr'] %}
+            {% set attr = attr ~ ' %s="%s"'|format(key, value) %}
+        {% endfor %}
+    {% endif %}
+
+{% endif %}
+
+{# brick route #}
+{% if oBrick.GetRouteName %}
+    {% set url = app.url_generator.generate(oBrick.GetRouteName, {sBrickId: oBrick.GetId}) %}
+    {% set attr = attr ~ ' data-role="%s" data-tile-navigation-url="%s"'|format('navigation-trigger', url ~ urlHash) %}
+{% endif %}
+
+{# modal attributes #}
+{% if oBrick.GetModal %}
+    {% set attr = attr ~ ' data-toggle="%s" data-target="%s"'|format('modal', '#modal-for-all') %}
+{% endif %}
+
+{% block pTileWrapper %}
+
+    {# wrapper #}
+    <{{ html_element }}
+            id="{{ id }}"
+        data-brick-id="{{ oBrick.GetId }}"
+            class="ipb-tile ipb-tile--{{ name }} {% if classes is defined %}{{ classes }}{% endif %}"
+    {{ attr|raw }}
+            style="width: {% if oBrick.bIsWidthPixel %}{{ oBrick.GetWidth }}px{% else %}{{ oBrick.GetWidth * 90 / 12 }}%{% endif %};"
+    >
+
+        {# body #}
+        {% block pTileBody %}
+            <div class="ipb-tile--body">
+
+                <div class="ipb-tile--header {% if hasInlineTitle %}ipb-tile--header--inline{% endif %}">
+
+                    {# decoration #}
+                    {% block pTileDecoration %}
+                        {% if oBrick.GetDecorationClassHome %}
+                            <div class="ipb-tile--decoration">
+                                <span class="ipb-tile--decoration--icon icon {{ oBrick.GetDecorationClassHome }}"></span>
+                            </div>
+                        {% endif %}
+                    {% endblock %}
+
+                    {# title #}
+                    {% block pTileTitle %}
+                        <div class="ipb-tile--title">
+                            {{ oBrick.GetTitleHome|dict_s }}
+                        </div>
+                    {% endblock %}
+
+                    {# actions #}
+                    <div class="ipb-tile--actions">
+                        {% block pTileActions %}
+                        {% endblock %}
+                    </div>
+
+                </div>
+
+                {# description #}
+                {% block pTileDescription %}
+                    {% if oBrick.HasDescription %}
+                        <div class="ipb-tile--description">
+                            {{ oBrick.GetDescription|dict_s|raw }}
+                        </div>
+                    {% endif %}
+                {% endblock %}
+
+                {# extra content #}
+                {% block pTileExtraContent %}
+                {% endblock %}
+
+        </div>
+        {% endblock %}
+
+    </{{ html_element }}>
+
+{% endblock %}
+
+{% block pTileModal %}
+{% endblock %}
+
+<script>
+    BaseElement.PageReady(function () {
+        {% block pTileLiveScriptHelpers %}
+        {% endblock %}
+    });
+</script>
+

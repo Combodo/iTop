@@ -2,27 +2,14 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// Database inconsistencies
+/**
+ *
+ */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	// Dictionary entries go here
 	'Menu:DBToolsMenu' => 'Ferramentas de Banco de Dados',
 	'DBTools:Class' => 'Classe',
 	'DBTools:Title' => 'Manutenção do Banco de Dados',
@@ -41,14 +28,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'DBTools:IntegrityCheck' => 'Verificação de integridade',
 	'DBTools:FetchCheck' => 'Verificação de consulta (longa)',
 	'DBTools:SelectAnalysisType' => 'Selecione o tipo de análise',
-
 	'DBTools:Analyze' => 'Analisar',
 	'DBTools:Details' => 'Exibir detalhes',
 	'DBTools:ShowAll' => 'Exibir todos os erros',
-
 	'DBTools:Inconsistencies' => 'Inconsistências no banco de dados',
 	'DBTools:DetailedErrorTitle' => '%2$s erro(s) na classe %1$s: %3$s',
-
+	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors~~',
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Item orfão em `%1$s`, ele deveria ter seu registro irmão na tabela `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Chave externa inválida %1$s (coluna: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Chave externa ausente %1$s (coluna: `%2$s.%3$s`)',
@@ -71,24 +56,19 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'DBTools:LostAttachments' => 'Anexos perdidos',
 	'DBTools:LostAttachments:Disclaimer' => 'Aqui você procurará no seu banco de dados por anexos perdidos. Isto NÃO é uma ferramenta de recuperação de dados, pois não busca dados apagados',
-
 	'DBTools:LostAttachments:Button:Analyze' => 'Analisar',
 	'DBTools:LostAttachments:Button:Restore' => 'Recuperar',
 	'DBTools:LostAttachments:Button:Restore:Confirm' => 'Esta ação não pode ser desfeita, você confirma que quer recuperar os arquivos selecionados?',
 	'DBTools:LostAttachments:Button:Busy' => 'Aguarde...',
-
 	'DBTools:LostAttachments:Step:Analyze' => 'Primeiro, vamos procurar por anexos perdidos através da análise do banco de dados',
-
 	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Resultado da análise:',
 	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Ótimo! Tudo parece estar nos seus devidos lugares (Nenhum anexo perdido foi encontrado)',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Alguns anexos (%1$d) parecem estar perdidos. Verifique a lista abaixo e escolha os que você deseja mover',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Nome do arquivo',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Local atual',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Mover para',
-
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Resultado da restauração:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d anexo(s) recuperado(s)',
-
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Armazenar como imagem embutida',
 	'DBTools:LostAttachments:History' => 'Anexo "%1$s" recuperado com as Ferramentas de Banco de Dados'
 ));

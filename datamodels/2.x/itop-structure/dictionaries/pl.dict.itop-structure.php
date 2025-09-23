@@ -2,48 +2,16 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// Dictionnary conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-//
-// Class: Organization
-//
+/**
+ *
+ */
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Organization' => 'Organizacja',
-	'Class:Organization+' => '~~',
+	'Class:Organization+' => '',
 	'Class:Organization/Attribute:name' => 'Nazwa',
 	'Class:Organization/Attribute:name+' => 'Nazwa zwyczajowa',
 	'Class:Organization/Attribute:code' => 'Kod',
@@ -110,6 +78,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Contact' => 'Kontakt',
 	'Class:Contact+' => '',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:Contact/Attribute:name' => 'Nazwa',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => 'Status',
@@ -147,6 +116,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Person' => 'Osoba',
 	'Class:Person+' => '',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Nazwisko',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'Imię',
@@ -167,6 +137,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Person/Attribute:team_list+' => 'Wszystkie zespoły, do których należy ta osoba',
 	'Class:Person/Attribute:tickets_list' => 'Zgłoszenia',
 	'Class:Person/Attribute:tickets_list+' => 'Wszystkie zgłoszenia, które ta osoba założyła',
+	'Class:Person/Attribute:user_list' => 'Użytkownicy',
+	'Class:Person/Attribute:user_list+' => 'Wszyscy Użytkownicy powiązani z tą osobą',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Przyjazna nazwa menedżera',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Zdjęcie',
@@ -175,6 +147,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Person/UniquenessRule:employee_number' => 'W organizacji \'$this->org_name$\' istnieje już osoba o tym samym numerze pracownika',
 	'Class:Person/UniquenessRule:name+' => 'Imię i nazwisko pracownika powinno być unikalne w jego organizacji',
 	'Class:Person/UniquenessRule:name' => 'W organizacji \'$this->org_name$\' istnieje już osoba o takiej samej nazwie',
+	'Class:Person/Error:ChangingOrgDenied' => 'Nie można przenieść tej osoby do organizacji \'%1$s\', ponieważ uniemożliwiłoby to jej dostęp do Portalu użytkowników, a powiązany z nią użytkownik nie byłby dozwolony w tej organizacji',
 ));
 
 //
@@ -184,6 +157,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Team' => 'Zespół',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Członkowie',
 	'Class:Team/Attribute:persons_list+' => 'Wszystkie osoby należące do tego zespołu',
 	'Class:Team/Attribute:tickets_list' => 'Zgłoszenia',
@@ -197,6 +171,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Document' => 'Dokument',
 	'Class:Document+' => '',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Nazwa',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => 'Organizacja',
@@ -296,6 +271,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkPersonToTeam' => 'Połączenie osoba / zespół',
 	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
+	'Class:lnkPersonToTeam/Name+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Zespół',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Nazwa zespołu',
@@ -358,7 +335,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Person:info' => 'Informacje ogólne',
-	'UserLocal:info' => 'Informacje ogólne',
+	'User:info' => 'Informacje ogólne',
+	'User:profiles' => 'Profile (minimum jeden)',
 	'Person:personal_info' => 'Informacje osobiste',
 	'Person:notifiy' => 'Powiadomienie',
 ));

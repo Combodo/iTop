@@ -1,0 +1,97 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+@import "../node_modules/bulma-scss/utilities/mixins";
+
+$ipb-page--main-wrapper--padding: $common-spacing-600 $common-spacing-700 !default;
+$ipb-page--main-header--margin-bottom: $common-size-250 !default;
+$ipb-page--main-header--information--title--font-size: $common-font-size-450 !default;
+$ipb-page--main-header--information--subtitle--padding: $common-spacing-200 !default;
+$ipb-page--main-header--information--subtitle--font-size: $common-font-size-250 !default;
+
+html {
+  font-size: 12px;
+}
+body{
+  overflow: hidden;
+}
+
+/* container */
+
+.ipb-main--main-container{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+/* wrapper */
+
+.ipb-page--main-wrapper{
+  flex-grow: 1;
+  padding: $ipb-page--main-wrapper--padding;
+}
+
+/* header */
+
+.ipb-page--main-header{
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  margin-bottom: $ipb-page--main-header--margin-bottom;
+}
+
+.ipb-page--main-header--information{
+  flex-grow: 1;
+}
+
+.ipb-page--main-header--information--title{
+  font-size: $ipb-page--main-header--information--title--font-size;
+  font-weight: bold;
+}
+
+.ipb-page--main-header--information--subtitle{
+  font-size: $ipb-page--main-header--information--subtitle--font-size;
+  padding: $ipb-page--main-header--information--subtitle--padding;
+  max-width: 1400px;
+}
+
+.ipb-page--main-header--actions{
+  flex-shrink: 0;
+}
+
+/* files flex wrapper */
+
+.ipb-page--tiles-flex-wrapper{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ipb-copyright {
+  text-decoration: none !important;
+}
+
+@include mobile {
+
+  .ipb-page--main-header {
+    flex-direction: column;
+  }
+
+  .ipb-page--main-wrapper {
+    width: 100%;
+    padding: 0;
+  }
+
+  .ipb-page--tiles-flex-wrapper{
+    padding: 0;
+
+    .ipb-page--tile{
+      width: 100%;
+    }
+  }
+}
+

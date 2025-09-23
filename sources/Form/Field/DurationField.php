@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -19,13 +19,13 @@
 
 namespace Combodo\iTop\Form\Field;
 
-use Str;
 use AttributeDuration;
+use Str;
 
 /**
  * Description of StringField
  */
-class DurationField extends Field
+class DurationField extends AbstractSimpleField
 {
 
 	/**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -26,9 +26,10 @@ require_once(APPROOT.'/application/startup.inc.php');
 
 // this file is generated dynamically with location = here
 $sWsdlUri = utils::GetAbsoluteUrlAppRoot().'webservices/itop.wsdl.php';
-if (isset($_REQUEST['service_category']) && (!empty($_REQUEST['service_category'])))
+$sServiceCategory = utils::ReadParam('service_category');
+if (!empty($sServiceCategory))
 {
-	$sWsdlUri .= "?service_category=".$_REQUEST['service_category'];
+	$sWsdlUri .= "?service_category=".$sServiceCategory;
 }
 
 
@@ -43,9 +44,9 @@ $oSoapServer = new SoapServer
 	)
 );
 // $oSoapServer->setPersistence(SOAP_PERSISTENCE_SESSION);
-if (isset($_REQUEST['service_category']) && (!empty($_REQUEST['service_category'])))
+if (!empty($sServiceCategory))
 {
-	$sServiceClass = $_REQUEST['service_category'];
+	$sServiceClass = $sServiceCategory;
 	if (!class_exists($sServiceClass))
 	{
 		// not a valid class name (not a PHP class at all)

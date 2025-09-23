@@ -1,0 +1,37 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-button--padding-y: 6px !default;
+$ipb-button--padding-x: 9px !default;
+
+
+.ipb-button, .btn{
+  --ibp-button-border-radius-top-left: 4px;
+  --ibp-button-border-radius-top-right: 4px;
+  --ibp-button-border-radius-bottom-right: 4px;
+  --ibp-button-border-radius-bottom-left: 4px;
+  border-radius: var(--ibp-button-border-radius-top-left) var(--ibp-button-border-radius-top-right) var(--ibp-button-border-radius-bottom-right) var(--ibp-button-border-radius-bottom-left);
+  padding: $ipb-button--padding-y $ipb-button--padding-x;
+  cursor: pointer;
+
+    @extend %common-font-size-150;
+}
+
+.ipb-button--group {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 -5px;
+  .ipb-button:not(:last-child) {
+    --ibp-button-border-radius-top-right: 0px;
+    --ibp-button-border-radius-bottom-right: 0px;
+  }
+  .ipb-button:not(:first-child) {
+    --ibp-button-border-radius-top-left: 0px;
+    --ibp-button-border-radius-bottom-left: 0px;
+    border-left: none;
+  }
+}

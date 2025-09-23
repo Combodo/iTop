@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -30,6 +30,7 @@ use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator\ToolbarSeparatorUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\DBTools\Service\DBAnalyzerUtils;
 
 @include_once('../../approot.inc.php');
@@ -43,7 +44,7 @@ const MAX_RESULTS = 10;
  * @param iTopWebPage $oP
  * @param ApplicationContext $oAppContext
  *
- * @return \iTopWebPage
+ * @return iTopWebPage
  * @throws \CoreException
  * @throws \DictExceptionMissingString
  * @throws \MySQLException
@@ -207,9 +208,13 @@ function DisplayErrorList($aResults)
 
 	foreach ($aResults as $sClass => $aErrorList) {
 		foreach ($aErrorList as $sErrorLabel => $aError) {
+			$iCount = $aError['count'];
+			if ($iCount === DatabaseAnalyzer::LIMIT) {
+				$iCount = "$iCount(+)";
+			}
 			$aRows[] = [
 				'class' => MetaModel::GetName($sClass).' ('.$sClass.')',
-				'count' => $aError['count'],
+				'count' => $iCount,
 				'error' => $sErrorLabel,
 			];
 		}
@@ -227,9 +232,18 @@ function DisplayErrorDetails($aResults, $bVerbose)
 
 	foreach ($aResults as $sClass => $aErrorList) {
 		foreach ($aErrorList as $sErrorLabel => $aError) {
-			$sErrorTitle = Dict::Format('DBTools:DetailedErrorTitle', MetaModel::GetName($sClass).' ('.$sClass.')', $aError['count'], $sErrorLabel);
+			$iCount = $aError['count'];
+			if ($iCount === DatabaseAnalyzer::LIMIT) {
+				$iCount = "$iCount(+)";
+			}
+			$sErrorTitle = Dict::Format('DBTools:DetailedErrorTitle', MetaModel::GetName($sClass).' ('.$sClass.')',	$iCount, $sErrorLabel);
 			$oCollapsible = CollapsibleSectionUIBlockFactory::MakeStandard($sErrorTitle);
 			$oBlock->AddSubBlock($oCollapsible);
+
+			if ($aError['count'] === DatabaseAnalyzer::LIMIT) {
+				$oHTML = new Combodo\iTop\Application\UI\Base\Component\Html\Html('<p>'.Dict::format('DBTools:DetailedErrorLimit', DatabaseAnalyzer::LIMIT).'</p>');
+				$oCollapsible->AddSubBlock($oHTML);
+			}
 
 			$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:SQLquery'));
 			$oCollapsible->AddSubBlock($oFieldSet);
@@ -281,7 +295,7 @@ function DisplayErrorDetails($aResults, $bVerbose)
  * @param iTopWebPage $oP
  * @param ApplicationContext $oAppContext
  *
- * @return \iTopWebPage
+ * @return iTopWebPage
  * @throws CoreException
  * @throws MySQLException
  * @throws \Exception

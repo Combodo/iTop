@@ -222,7 +222,7 @@
       if(numChecked === 0) {
         value = o.noneSelectedText;
       } else {
-        if($.isFunction(o.selectedText)) {
+        if(typeof o.selectedText === 'function') {
           value = o.selectedText.call(this, numChecked, $inputs.length, $checked.get());
         } else if(/\d/.test(o.selectedList) && o.selectedList > 0 && numChecked <= o.selectedList) {
           value = $checked.map(function() { return $(this).next().html(); }).get().join(', ');

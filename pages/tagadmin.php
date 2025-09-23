@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,10 +17,14 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'application/application.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 require_once(APPROOT.'application/loginwebpage.class.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 try
 {
@@ -33,13 +37,10 @@ try
 	// Main program
 	//
 	$oP = new iTopWebPage(Dict::S('Menu:TagAdminMenu+'));
-	$oP->add_linked_script("../js/json.js");
-	$oP->add_linked_script("../js/forms-json-utils.js");
-	$oP->add_linked_script("../js/wizardhelper.js");
-	$oP->add_linked_script("../js/wizard.utils.js");
-	$oP->add_linked_script("../js/linkswidget.js");
-	$oP->add_linked_script("../js/extkeywidget.js");
-	$oP->add_linked_script("../js/jquery.blockUI.js");
+	$oP->LinkScriptFromAppRoot("js/forms-json-utils.js");
+	$oP->LinkScriptFromAppRoot("js/wizardhelper.js");
+	$oP->LinkScriptFromAppRoot("js/extkeywidget.js");
+	$oP->LinkScriptFromAppRoot("js/jquery.blockUI.js");
 
 	$sBaseClass = 'TagSetFieldData';
 	$sClass = utils::ReadParam('class', '', false, 'class');
@@ -53,7 +54,7 @@ try
 
 	$oP->SetBreadCrumbEntry('ui-tool-tag-admin', Dict::S('Menu:TagAdminMenu'), Dict::S('Menu:TagAdminMenu+'), '', 'fas fa-tags', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-	$sSearchHeaderForceDropdown = '<select  id="select_class" name="class" onChange="this.form.submit();">';
+	$sSearchHeaderForceDropdown = '<select  id="select_class" name="class" onChange="this.form.trigger(\'submit\');">';
 	$aClassLabels = array();
 	foreach(MetaModel::EnumChildClasses($sBaseClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sCurrentClass)
 	{
@@ -99,6 +100,8 @@ try
 
 	if (!empty($oFilter))
 	{
+		$oSearchContext = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
+
 		$oSet = new CMDBObjectSet($oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$aExtraParams = $oAppContext->GetAsHash();
@@ -107,6 +110,7 @@ try
 		$aExtraParams['action'] = utils::GetAbsoluteUrlAppRoot().'pages/tagadmin.php';
 		$aExtraParams['table_id'] = '1';
 		$aExtraParams['search_header_force_dropdown'] = $sSearchHeaderForceDropdown;
+		$aExtraParams['submit_on_load'] = false;
 		$oBlock->Display($oP, 0, $aExtraParams);
 
 		// Search results

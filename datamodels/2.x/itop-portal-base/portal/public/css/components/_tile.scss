@@ -1,0 +1,216 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+@import "../node_modules/bulma-scss/utilities/mixins";
+
+$ipb-tile--width: 450px !default;
+$ipb-tile--min-width: 150px !default;
+$ipb-tile--padding: $common-spacing-500 !default;
+$ipb-tile--margin: $common-spacing-400 !default;
+$ipb-tile--border-radius: $common-border-radius-500 !default;
+
+$ipb-tile--decoration--size: 44px !default;
+$ipb-tile--decoration--padding: $common-spacing-400 !default;
+$ipb-tile--decoration--icon--font-size: $common-font-size-250 !default;
+
+$ipb-tile--title--font-size: $common-font-size-400 !default;
+
+$ipb-tile--manage-brick--chart--margin-top: $common-spacing-500 !default;
+$ipb-tile--manage-brick--badge--margin-top: $common-font-size-400 !default;
+$ipb-tile--manage-brick--badge--count--padding: 0 $common-spacing-300 !default;
+$ipb-tile--manage-brick--badge--count--font-size: $common-font-size-300 !default;
+$ipb-tile--manage-brick--badge--label--font-size: $common-font-size-100 !default;
+$ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
+
+.ipb-tile{
+  position: relative;
+  display: block;
+  width: $ipb-tile--width;
+  min-width: $ipb-tile--min-width;
+  margin: $ipb-tile--margin;
+  padding: $ipb-tile--padding;
+  border-radius: $ipb-tile--border-radius;
+  white-space: normal;
+  flex-grow: 1;
+
+  &[data-role="navigation-trigger"] {
+    cursor: pointer;
+  }
+}
+
+.ipb-tile--body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  column-gap: 8px;
+}
+
+/* header */
+
+.ipb-tile--header {
+  display: flex;
+  flex-direction: column;
+  column-gap: 8px;
+  row-gap: 5px;
+
+  &.ipb-tile--header--inline {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* decoration */
+
+.ipb-tile--decoration{
+  display: inline-block;
+  width: $ipb-tile--decoration--size;
+  height: $ipb-tile--decoration--size;
+  padding: $ipb-tile--decoration--padding;
+  border-radius: $ipb-tile--border-radius;
+  text-align: center;
+  transition: background-color 1s ease;
+
+  // font combodo size correction
+  &:has(> .fc){
+    padding: 7px;
+    > span{
+      font-size: 2.5rem;
+    }
+  }
+}
+
+.ipb-tile--decoration--icon {
+  &.icon {
+    font-size: $ipb-tile--decoration--icon--font-size;
+  }
+
+  &.class-icon {
+    width: 20px;
+  }
+}
+
+/* title */
+
+.ipb-tile--title{
+  flex-grow: 1;
+  font-size: $ipb-tile--title--font-size;
+  font-weight: bold;
+  @include ipb-text-overflow-ellipsis;
+}
+
+/* actions */
+
+.ipb-tile--actions {
+  flex-shrink: 0;
+  position: absolute;
+  right: 16px;
+  top: 20px;
+  white-space: nowrap;
+
+  > .ipb-button-group {
+    display: inline-block;
+  }
+
+}
+
+/* description */
+
+.ipb-tile--description{
+  @extend %common-font-ral-nor-150;
+}
+
+/* extra content */
+
+.ipb-tile--extra-content {
+  flex-grow: 1;
+  position: relative;
+
+  @extend %common-font-ral-nor-150;
+}
+
+/****************************/
+/* ManageBrick tile display */
+/****************************/
+
+/* title */
+
+.ipb-tile--manage .ipb-tile--title {
+  display: flex;
+  align-items: center;
+
+  > span:nth-child(2) {
+    > .class-icon {
+      width: 20px;
+      margin-left: 5px;
+      vertical-align: baseline;
+    }
+  }
+}
+
+/* chart */
+
+.ipb-tile--manage-brick--chart{
+
+}
+
+/* badge */
+
+.ipb-tile--manage-brick--badge{
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 8px;
+  row-gap: 5px;
+}
+
+.ipb-tile--manage-brick--badge--item{
+  display: flex;
+  align-items: center;
+}
+
+.ipb-tile--manage-brick--badge--count {
+  padding: $ipb-tile--manage-brick--badge--count--padding;
+	font-size: $ipb-tile--manage-brick--badge--count--font-size;
+}
+
+.ipb-tile--manage-brick--badge--label {
+  font-size: $ipb-tile--manage-brick--badge--label--font-size;
+}
+
+
+
+/***********************/
+/* Filter tile display */
+/***********************/
+
+.ipb-tile--filter-brick--filter-box .form-inline{
+  display: table;
+  > .form-group{
+    display: table-cell;
+    width: 100%;
+    > input{
+      width: 100%;
+    }
+  }
+  > button{
+    margin-left: $common-spacing-200;
+  }
+}
+
+@include mobile {
+  .ipb-tile--header {
+    flex-direction: column;
+  }
+  .ipb-tile--title {
+    align-self: stretch;
+  }
+  .ipb-tile--header.ipb-tile--header--inline {
+    flex-direction: column;
+    align-items: start;
+  }
+}
+

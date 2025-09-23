@@ -2,26 +2,15 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Menu:IncidentManagement' => 'Getione incidente',
+	'Menu:IncidentManagement' => 'Gestione incidente',
 	'Menu:IncidentManagement+' => 'Gestione incidente',
 	'Menu:Incident:Overview' => 'Overview',
 	'Menu:Incident:Overview+' => 'Overview',
@@ -81,7 +70,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Incident/Attribute:status/Value:closed' => 'Chiuso',
 	'Class:Incident/Attribute:status/Value:closed+' => '~~',
 	'Class:Incident/Attribute:impact' => 'Impatto',
-	'Class:Incident/Attribute:impact+' => '~~',
+	'Class:Incident/Attribute:impact+' => 'Impact is the severity of the incident, how many end users are affected~~',
 	'Class:Incident/Attribute:impact/Value:1' => 'Un dipartimento',
 	'Class:Incident/Attribute:impact/Value:1+' => '~~',
 	'Class:Incident/Attribute:impact/Value:2' => 'Un servizio',
@@ -89,7 +78,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Incident/Attribute:impact/Value:3' => 'Una persona',
 	'Class:Incident/Attribute:impact/Value:3+' => '~~',
 	'Class:Incident/Attribute:priority' => 'Priorità',
-	'Class:Incident/Attribute:priority+' => '~~',
+	'Class:Incident/Attribute:priority+' => 'Order in which tickets need to be handled~~',
 	'Class:Incident/Attribute:priority/Value:1' => 'Critica',
 	'Class:Incident/Attribute:priority/Value:1+' => 'Critica',
 	'Class:Incident/Attribute:priority/Value:2' => 'Alta',
@@ -99,7 +88,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Incident/Attribute:priority/Value:4' => 'Bassa',
 	'Class:Incident/Attribute:priority/Value:4+' => 'Bassa',
 	'Class:Incident/Attribute:urgency' => 'Urgenza',
-	'Class:Incident/Attribute:urgency+' => '~~',
+	'Class:Incident/Attribute:urgency+' => 'How quickly the fault needs to be resolved~~',
 	'Class:Incident/Attribute:urgency/Value:1' => 'Critica',
 	'Class:Incident/Attribute:urgency/Value:1+' => 'Critica',
 	'Class:Incident/Attribute:urgency/Value:2' => 'Alta',
@@ -109,7 +98,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Incident/Attribute:urgency/Value:4' => 'Bassa',
 	'Class:Incident/Attribute:urgency/Value:4+' => 'Bassa',
 	'Class:Incident/Attribute:origin' => 'Origine',
-	'Class:Incident/Attribute:origin+' => '~~',
+	'Class:Incident/Attribute:origin+' => 'What\'s the trigger of this incident ticket creation~~',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
 	'Class:Incident/Attribute:origin/Value:mail' => 'Mail',
 	'Class:Incident/Attribute:origin/Value:mail+' => 'Mail',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'Monitoring',
@@ -143,9 +136,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Incident/Attribute:cumulatedpending' => 'Attesa totale',
 	'Class:Incident/Attribute:cumulatedpending+' => '~~',
 	'Class:Incident/Attribute:tto' => 'tto',
-	'Class:Incident/Attribute:tto+' => '~~',
+	'Class:Incident/Attribute:tto+' => 'Time To Own~~',
 	'Class:Incident/Attribute:ttr' => 'ttr',
-	'Class:Incident/Attribute:ttr+' => '~~',
+	'Class:Incident/Attribute:ttr+' => 'Time To Resolve~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'tto deadline',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => '~~',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA tto superato',
@@ -161,7 +154,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Incident/Attribute:time_spent' => 'Tempo di risoluzione',
 	'Class:Incident/Attribute:time_spent+' => '~~',
 	'Class:Incident/Attribute:resolution_code' => 'Codice di risoluzione',
-	'Class:Incident/Attribute:resolution_code+' => '~~',
+	'Class:Incident/Attribute:resolution_code+' => 'What was done to resolve the incident?~~',
 	'Class:Incident/Attribute:resolution_code/Value:assistance' => 'Assistenza',
 	'Class:Incident/Attribute:resolution_code/Value:assistance+' => 'Assistenza',
 	'Class:Incident/Attribute:resolution_code/Value:bug fixed' => 'Bug risolto',
@@ -185,7 +178,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Incident/Attribute:parent_incident_ref' => 'Ref Indicente padre',
 	'Class:Incident/Attribute:parent_incident_ref+' => 'Ref.',
 	'Class:Incident/Attribute:parent_change_id' => 'Richiesta evoluzione padre',
-	'Class:Incident/Attribute:parent_change_id+' => 'Richeista figlia',
+	'Class:Incident/Attribute:parent_change_id+' => 'Richiesta figlia',
 	'Class:Incident/Attribute:parent_change_ref' => 'ref evoluzione',
 	'Class:Incident/Attribute:parent_change_ref+' => 'Log Pubblico',
 	'Class:Incident/Attribute:parent_problem_id' => 'Parent problem id~~',
@@ -231,7 +224,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Ri-Apri',
 	'Class:Incident/Stimulus:ev_reopen+' => '~~',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Non si può assegnare una richiesta padre a se stesso',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Risoluzione a cascata delle richieste figlie (ev_autoresolve), e allineare le seguenti caratteristiche: servizio, team, agente e risoluzione',
 	'Tickets:Related:OpenIncidents' => 'Incidenti aperti',

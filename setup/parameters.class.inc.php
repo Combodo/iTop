@@ -22,7 +22,7 @@ abstract class Parameters
 	}
 
 	/**
-	 * @return array to use with {@see Config::UpdateFromParams}
+	 * @return array Allow to update config using {@see Config::UpdateFromParams()}
 	 */
 	public function GetParamForConfigArray()
 	{

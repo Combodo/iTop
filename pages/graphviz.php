@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -24,6 +24,7 @@ require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 /**
@@ -110,17 +111,17 @@ $sDotExecutable = MetaModel::GetConfig()->Get('graphviz_path');
 if (file_exists($sDotExecutable))
 {
 	// create the file with Graphviz
-	$sImageFilePath = APPROOT."data/lifecycle/".$sClass.".svg";
-	if (!is_dir(APPROOT."data"))
+	$sImageFilePath = utils::GetDataPath()."lifecycle/".$sClass.".svg";
+	if (!is_dir(utils::GetDataPath()))
 	{
-		@mkdir(APPROOT."data");
+		@mkdir(utils::GetDataPath());
 	}
-	if (!is_dir(APPROOT."data/lifecycle"))
+	if (!is_dir(utils::GetDataPath()."lifecycle"))
 	{
-		@mkdir(APPROOT."data/lifecycle");
+		@mkdir(utils::GetDataPath()."lifecycle");
 	}
 	$sDotDescription = GraphvizLifecycle($sClass);
-	$sDotFilePath = APPROOT."data/lifecycle/{$sClass}.dot";
+	$sDotFilePath = utils::GetDataPath()."lifecycle/{$sClass}.dot";
 	
 	$rFile = @fopen($sDotFilePath, "w");
 	@fwrite($rFile, $sDotDescription);
@@ -154,5 +155,3 @@ else
 	header('Content-Disposition: inline; filename="'.$sClass.'.png"');
 	readfile($sImageFilePath);
 }
-
-?>

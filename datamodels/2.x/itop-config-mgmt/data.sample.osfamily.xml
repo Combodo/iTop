@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Set>
-<OSFamily alias="OSFamily" id="7">
-<name>Linux</name>
-</OSFamily>
-<OSFamily alias="OSFamily" id="3">
-<name>Windows</name>
-</OSFamily>
-</Set>

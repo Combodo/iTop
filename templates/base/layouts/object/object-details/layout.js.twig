@@ -1,4 +1,4 @@
-{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% extends 'base/components/panel/layout.js.twig' %}
 
@@ -15,12 +15,12 @@
         $('#{{ oUIBlock.GetId() }}').on('edit_object', function(){
             let oFavoriteButton = $(this).find('#UIMenuModify');
             if(oFavoriteButton[0]){
-                oFavoriteButton[0].click();
+                oFavoriteButton[0].trigger('click');
             }
             else{
                 let oPopupItemButton = $('[data-role="ibo-popover-menu"]').find('[data-resource-id="UI:Menu:Modify"]');
                 if(oPopupItemButton[0]){
-                    oPopupItemButton[0].click();
+                    oPopupItemButton[0].trigger('click');
                 }
             }
         });
@@ -28,12 +28,12 @@
         $('#{{ oUIBlock.GetId() }}').on('delete_object', function(){
             let oFavoriteButton = $(this).find('#UIMenuDelete');
             if(oFavoriteButton[0]){
-                oFavoriteButton[0].click();
+                oFavoriteButton[0].trigger('click');
             }
             else{
                 let oPopupItemButton = $('[data-role="ibo-popover-menu"]').find('[data-resource-id="UI:Menu:Delete"]');
                 if(oPopupItemButton[0]){
-                    oPopupItemButton[0].click();
+                    oPopupItemButton[0].trigger('click');
                 }
             }
         });
@@ -41,22 +41,22 @@
         $('#{{ oUIBlock.GetId() }}').on('new_object', function(){
             let oFavoriteButton = $(this).find('#UIMenuNew');
             if(oFavoriteButton[0]){
-                oFavoriteButton[0].click();
+                oFavoriteButton[0].trigger('click');
             }
             else{
                 let oPopupItemButton = $('[data-role="ibo-popover-menu"]').find('[data-resource-id="UI:Menu:New"]');
                 if(oPopupItemButton[0]){
-                    oPopupItemButton[0].click();
+                    oPopupItemButton[0].trigger('click');
                 }
             }
         });
         {% if oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_DISPLAY_MODE_EDIT') or oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE') %}
             $('#{{ oUIBlock.GetId() }}').on('save_object', function(){
-                $(this).find('button[type="submit"][name=""][value=""]').click();
+                $(this).find('button[type="submit"][name=""][value=""]').trigger('click');
             });
         {% elseif oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_DISPLAY_MODE_STIMULUS') %}
             $('#{{ oUIBlock.GetId() }}').on('save_object', function(){
-                $(this).find('button[type="submit"][name="submit"][value="submit"]').click();
+                $(this).find('button[type="submit"][name="submit"][value="submit"]').trigger('click');
             });
         {% endif %}
     {% endblock %}

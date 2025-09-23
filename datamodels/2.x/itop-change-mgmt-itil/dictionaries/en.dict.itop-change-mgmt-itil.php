@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -151,7 +151,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Change/Stimulus:ev_approve+' => '',
 	'Class:Change/Stimulus:ev_replan' => 'Replan',
 	'Class:Change/Stimulus:ev_replan+' => '',
-	'Class:Change/Stimulus:ev_notapprove' => 'Reject',
+	'Class:Change/Stimulus:ev_notapprove' => 'Reject approval',
 	'Class:Change/Stimulus:ev_notapprove+' => '',
 	'Class:Change/Stimulus:ev_implement' => 'Implement',
 	'Class:Change/Stimulus:ev_implement+' => '',

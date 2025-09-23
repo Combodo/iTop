@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -78,7 +78,7 @@ class ExpressionCache
 			{
 				$content = <<<EOF
 <?php
-// Copyright (c) 2010-2021 Combodo SARL
+// Copyright (c) 2010-2024 Combodo SAS
 // Generated Expression Cache file for $sLang
 
 class $sCacheClass
@@ -101,7 +101,7 @@ EOF;
 EOF;
 
 				SetupUtils::builddir(dirname($sFilePath));
-				file_put_contents($sFilePath, $content);
+				file_put_contents($sFilePath, $content, LOCK_EX);
 			}
 		}
 		Dict::SetUserLanguage($sUserLang);

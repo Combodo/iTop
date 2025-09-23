@@ -1,11 +1,14 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
 namespace Combodo\iTop\Application\Helper;
+
+use Combodo\iTop\SessionTracker\SessionHandler;
+use utils;
 
 /**
  * Session management
@@ -22,17 +25,25 @@ class Session
 	protected static $bIsInitialized = false;
 	/** @var bool */
 	protected static $bSessionStarted = false;
+	/** @var bool */
+	public static $bAllowCLI = false;
 
 	public static function Start()
 	{
+		if (self::IsModeCLI()) {
+			return;
+		}
+
 		if (!self::$bIsInitialized) {
+			SessionHandler::session_set_save_handler();
 			session_name('itop-'.md5(APPROOT));
 		}
+
 		self::$bIsInitialized = true;
 		if (!self::$bSessionStarted) {
 			if (!is_null(self::$iSessionId)) {
 				if (session_id(self::$iSessionId) === false) {
-					session_regenerate_id();
+					session_regenerate_id(true);
 				}
 			}
 			self::$bSessionStarted = session_start();
@@ -40,8 +51,26 @@ class Session
 		}
 	}
 
+	public static function RegenerateId($bDeleteOldSession = false)
+	{
+		if (self::IsModeCLI()) {
+			return;
+		}
+
+		session_regenerate_id($bDeleteOldSession);
+		if (self::$bSessionStarted) {
+			self::WriteClose();
+		}
+		self::$bSessionStarted = session_start();
+		self::$iSessionId = session_id();
+	}
+
 	public static function WriteClose()
 	{
+		if (self::IsModeCLI()) {
+			return;
+		}
+
 		if (self::$bSessionStarted) {
 			session_write_close();
 			self::$bSessionStarted = false;
@@ -176,5 +205,15 @@ class Session
 	public static function GetLog()
 	{
 		return print_r($_SESSION, true);
+	}
+
+	private static function IsModeCLI(): bool
+	{
+		if (self::$bAllowCLI) {
+
+			return false;
+		}
+
+		return utils::IsModeCLI();
 	}
 }

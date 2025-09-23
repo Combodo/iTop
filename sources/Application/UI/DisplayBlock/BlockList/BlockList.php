@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -42,6 +42,8 @@ class BlockList extends UIContentBlock
 	public $sDefault = '';
 	/** @var string */
 	public $sEventAttachedData = '';
+	/** @var string */
+	public $sAbsoluteUrlAppRoot;
 	/** @var array */
 	public $aExtraParams;
 	/** @var string */
@@ -51,7 +53,7 @@ class BlockList extends UIContentBlock
 	{
 		return '$("#'.$this->sId.'").block();
 			$.post("ajax.render.php?operation=refreshDashletList",
-			{ style: "list", filter: "'.$this->sFilter.'", extra_params: '.json_encode($this->aExtraParams).' },
+			{ style: "list", filter: '.json_encode($this->sFilter).', extra_params: '.json_encode($this->aExtraParams).' },
 			function(data){
 				$("#'.$this->sId.'")
 				.empty()

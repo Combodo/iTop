@@ -1,21 +1,8 @@
 <?php
 
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Portal\Helper;
@@ -24,16 +11,19 @@ use BinaryExpression;
 use Combodo\iTop\Portal\Brick\BrickCollection;
 use CorePortalInvalidActionRuleException;
 use DBObject;
+use DBObjectSearch;
 use DBObjectSet;
+use DBProperty;
 use DBSearch;
-use DeprecatedCallsLog;
 use DOMFormatException;
 use DOMNodeList;
 use Exception;
 use FieldExpression;
 use IssueLog;
+use MetaModel;
 use ModuleDesign;
 use ScalarExpression;
+use SimpleCrypt;
 use Symfony\Component\Routing\RouterInterface;
 use TrueExpression;
 use UserRights;
@@ -50,8 +40,6 @@ class ContextManipulatorHelper
 {
 	/** @var string ENUM_RULE_CALLBACK_BACK */
 	const ENUM_RULE_CALLBACK_BACK = 'back';
-	/** @var string ENUM_RULE_CALLBACK_GOTO */
-	const ENUM_RULE_CALLBACK_GOTO = 'goto';
 	/** @var string ENUM_RULE_CALLBACK_OPEN */
 	const ENUM_RULE_CALLBACK_OPEN = 'open';
 	/** @var string ENUM_RULE_CALLBACK_OPEN_VIEW */
@@ -61,6 +49,8 @@ class ContextManipulatorHelper
 	/** @var string DEFAULT_RULE_CALLBACK_OPEN */
 	const DEFAULT_RULE_CALLBACK_OPEN = self::ENUM_RULE_CALLBACK_OPEN_VIEW;
 
+	const PRIVATE_KEY = 'portal-priv-key';
+
 	/** @var array $aRules */
 	protected $aRules;
 	/** @var \Symfony\Component\Routing\RouterInterface */
@@ -69,6 +59,9 @@ class ContextManipulatorHelper
 	private $oBrickCollection;
 	/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper */
 	private $oScopeValidator;
+
+	/** @var string $sPrivateKey private key for encoding rules */
+	private static $sPrivateKey;
 
 	/**
 	 * ContextManipulatorHelper constructor.
@@ -188,16 +181,7 @@ class ContextManipulatorHelper
 
 								$aRule[$sSubNodeName]['refresh'] = $sRefresh;
 								break;
-							case static::ENUM_RULE_CALLBACK_GOTO:
-								// Retrieving value
-								$sBrickId = $oSubNode->GetUniqueElement('brick')->GetText();
-								if ($sBrickId === null)
-								{
-									throw new DOMFormatException('Brick tag value must not be empty.', null, null, $oSubNode);
-								}
 
-								$aRule[$sSubNodeName]['brick_id'] = $sBrickId;
-								break;
 							case static::ENUM_RULE_CALLBACK_OPEN:
 								// Default value
 								$sMode = static::ENUM_RULE_CALLBACK_OPEN_VIEW;
@@ -330,7 +314,13 @@ class ContextManipulatorHelper
 		if ($aRule['source_oql'] !== null)
 		{
 			// Preparing query to retrieve source object(s)
+			/** @var \DBObjectSearch $oSearch */
 			$oSearch = DBSearch::FromOQL($aRule['source_oql']);
+			if (!$oSearch instanceof DBObjectSearch) {
+				$sErrMsg = "Portal query was stopped: action_rule '$sRuleId' source_oql does not allow UNION";
+				IssueLog::Error($sErrMsg);
+				throw new CorePortalInvalidActionRuleException($sErrMsg);
+			}
 			$sSearchClass = $oSearch->GetClass();
 			$aSearchParams = $oSearch->GetInternalParams();
 
@@ -423,75 +413,6 @@ class ContextManipulatorHelper
 	}
 
 	/**
-	 * Returns a hash array of urls for each type of callback
-	 *
-	 * eg :
-	 * array(
-	 *     'submit' => 'http://localhost/',
-	 *     'cancel' => null
-	 * );
-	 *
-	 * @since 2.3.0
-	 * @deprecated 2.7.0 N°1192 Use navigation rules for form callbacks
-	 *
-	 * @param array     $aData
-	 * @param \DBObject $oObject
-	 * @param boolean   $bModal
-	 *
-	 * @return array
-	 *
-	 * @throws \Exception
-	 */
-	public function GetCallbackUrls(array $aData, DBObject $oObject, $bModal = false)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Use navigation rules for form callbacks');
-		$aResults = array(
-			'submit' => null,
-			'cancel' => null,
-		);
-
-		if (isset($aData['rules'])) {
-			foreach ($aData['rules'] as $sId) {
-				// Retrieving current rule
-				$aRule = $this->GetRule($sId);
-
-				// For each type of callbacks, we check if there is a rule to apply
-				foreach (array('submit', 'cancel') as $sCallbackName)
-				{
-					if (is_array($aRule[$sCallbackName]))
-					{
-						// Previously declared rule on a callback is overwritten by the last
-						$sCallbackUrl = null;
-						switch ($aRule[$sCallbackName]['type'])
-						{
-							case static::ENUM_RULE_CALLBACK_BACK:
-								if (!$bModal)
-								{
-									$sCallbackUrl = ($_SERVER['HTTP_REFERER'] !== '') ? $_SERVER['HTTP_REFERER'] : null;
-								}
-								break;
-
-							case static::ENUM_RULE_CALLBACK_GOTO:
-								$oBrick = $this->oBrickCollection->GetBrickById($aRule[$sCallbackName]['brick_id']);
-								$sCallbackUrl = $this->oRouter->generate($oBrick->GetRouteName(), array('sBrickId' => $oBrick->GetId()));
-								break;
-
-							case static::ENUM_RULE_CALLBACK_OPEN:
-								$sCallbackUrl = ($oObject->IsNew()) ? null : $this->oRouter->generate('p_object_'.$aRule[$sCallbackName]['mode'],
-									array('sObjectClass' => get_class($oObject), 'sObjectId' => $oObject->GetKey()));
-								break;
-						}
-
-						$aResults[$sCallbackName] = $sCallbackUrl;
-					}
-				}
-			}
-		}
-
-		return $aResults;
-	}
-
-	/**
 	 * Prepares the rules as an array of rules and source objects so it can be tokenized
 	 *
 	 * @param array $aRules
@@ -530,8 +451,11 @@ class ContextManipulatorHelper
 	 */
 	public static function EncodeRulesToken($aTokenRules)
 	{
-		// Returning tokenised data
-		return base64_encode(json_encode($aTokenRules));
+		$aTokenRules['salt'] = base64_encode(random_bytes(8));
+
+		$sPPrivateKey = self::GetPrivateKey();
+		$oCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
+		return self::base64url_encode($oCrypt->Encrypt($sPPrivateKey, json_encode($aTokenRules)));
 	}
 
 	/**
@@ -555,9 +479,49 @@ class ContextManipulatorHelper
 	 * @param string $sToken
 	 *
 	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public static function DecodeRulesToken($sToken)
 	{
-		return json_decode(base64_decode($sToken), true);
+		$sPrivateKey = self::GetPrivateKey();
+		$oCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
+		$sDecryptedToken = $oCrypt->Decrypt($sPrivateKey, self::base64url_decode($sToken));
+
+		$aTokenRules = json_decode($sDecryptedToken, true);
+		if (!is_array($aTokenRules))
+		{
+			throw new Exception('DecodeRulesToken not a proper json structure.');
+		}
+
+		return $aTokenRules;
+	}
+
+	private static function base64url_encode($sData) {
+		return rtrim(strtr(base64_encode($sData), '+/', '-_'), '=');
+	}
+
+	private static function base64url_decode($sData) {
+		return base64_decode(str_pad(strtr($sData, '-_', '+/'), strlen($sData) % 4, '=', STR_PAD_RIGHT));
+	}
+
+	/**
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	private static function GetPrivateKey()
+	{
+		if(self::$sPrivateKey === null) {
+			self::$sPrivateKey = DBProperty::GetProperty(self::PRIVATE_KEY);
+			if (is_null(self::$sPrivateKey)) {
+				self::$sPrivateKey = bin2hex(random_bytes(32));
+				DBProperty::SetProperty(self::PRIVATE_KEY, self::$sPrivateKey);
+			}
+		}
+		return self::$sPrivateKey;
 	}
 }

@@ -33,17 +33,19 @@ class PHP_LexerGenerator_ParseryyToken implements ArrayAccess
         return $this->_string;
     }
 
-    function offsetExists($offset)
+    function offsetExists($offset): bool
     {
         return isset($this->metadata[$offset]);
     }
 
+	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
     function offsetGet($offset)
     {
         return $this->metadata[$offset];
     }
 
-    function offsetSet($offset, $value)
+    function offsetSet($offset, $value): void
     {
         if ($offset === null) {
             if (isset($value[0])) {
@@ -66,7 +68,7 @@ class PHP_LexerGenerator_ParseryyToken implements ArrayAccess
         }
     }
 
-    function offsetUnset($offset)
+    function offsetUnset($offset): void
     {
         unset($this->metadata[$offset]);
     }
@@ -278,7 +280,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
                     $match = false;
                     foreach ($yy_yymore_patterns[' . $this->token . '] as $index => $rule) {
                         if (preg_match(\'/\' . $rule . \'/' . $this->patternFlags . '\',
-                                ' . $this->input . ', $yymatches, null, ' . $this->counter . ')) {
+                                ' . $this->input . ', $yymatches, 0, ' . $this->counter . ')) {
                             $yymatches = array_filter($yymatches, \'strlen\'); // remove empty sub-patterns
                             if ($match) {
                                 if (strlen($yymatches[0]) > strlen($match[0][0])) {
@@ -350,7 +352,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
             $pattern . '\';' . "\n");
         fwrite($this->out, '
         do {
-            if (preg_match($yy_global_pattern,' . $this->input . ', $yymatches, null, ' .
+            if (preg_match($yy_global_pattern,' . $this->input . ', $yymatches, 0, ' .
              $this->counter .
                     ')) {
                 $yysubmatches = $yymatches;
@@ -408,7 +410,7 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
                         }
                         $yysubmatches = array();
                         if (preg_match(\'/\' . $yy_yymore_patterns[' . $this->token . '][1] . \'/' . $this->patternFlags . '\',
-                              ' . $this->input . ', $yymatches, null, ' . $this->counter .')) {
+                              ' . $this->input . ', $yymatches, 0, ' . $this->counter .')) {
                             $yysubmatches = $yymatches;
                             $yymatches = array_filter($yymatches, \'strlen\'); // remove empty sub-patterns
                             next($yymatches); // skip global match

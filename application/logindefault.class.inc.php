@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -53,6 +53,12 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 		{
 			// Force login mode
 			LoginWebPage::SetLoginModeAndReload($sProposedLoginMode);
+		} else {
+			$sRawLoginMode = utils::ReadParam('login_mode', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+			if ($sProposedLoginMode !== $sRawLoginMode) {
+				IssueLog::Error("Authentication issue due to login_mode parameter sanitization. Please avoid special characters", null, ['sRawLoginMode' => $sRawLoginMode]);
+				//IssueLog::Error("Authentication issue due to login_mode parameter sanitization. Please avoid special characters", null, ['sRawLoginMode' => utils::HtmlEntities($sRawLoginMode)]);
+			}
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
@@ -79,7 +85,7 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	{
 		self::ResetLoginSession();
 		$iOnExit = LoginWebPage::getIOnExit();
-		if ($iOnExit == LoginWebPage::EXIT_RETURN)
+		if ($iOnExit === LoginWebPage::EXIT_RETURN)
 		{
 			return LoginWebPage::LOGIN_FSM_RETURN; // Error, exit FSM
 		}
@@ -95,6 +101,12 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	{
 		if (!Session::IsSet('login_mode'))
 		{
+            // N°6358 - if EXIT_RETURN was asked, send an error
+            if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+                $iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
+                return LoginWebPage::LOGIN_FSM_ERROR;
+            }
+
 			// If no plugin validated the user, exit
 			self::ResetLoginSession();
 			exit();
@@ -113,6 +125,11 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	protected function OnConnected(&$iErrorCode)
 	{
 		Session::Unset('login_temp_auth_user');
+		if (is_null(UserRights::GetUserObject())){
+			//N°7085 avoid infinite loop
+			IssueLog::Error("No user logged in. exit");
+			exit(-1);
+		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 

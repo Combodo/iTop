@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2010-2021 Combodo SARL
+ *  Copyright (c) 2010-2024 Combodo SAS
  *
  *    This file is part of iTop.
  *
@@ -110,7 +110,7 @@ $.widget('itop.set_widget',
 			var dataArray = JSON.parse(originalFieldValue),
 			    setWidget = this;
 			this.possibleValues = dataArray[this.POSSIBLE_VAL_KEY];
-			this.partialValues = ($.isArray(dataArray[this.PARTIAL_VAL_KEY])) ? dataArray[this.PARTIAL_VAL_KEY] : [];
+			this.partialValues = (Array.isArray(dataArray[this.PARTIAL_VAL_KEY])) ? dataArray[this.PARTIAL_VAL_KEY] : [];
 			this.originalValue = dataArray[this.ORIG_VAL_KEY];
 			this.maxItemsAllowed = dataArray[this.MAX_ITEMS_ALLOWED_KEY];
 			this.setItemsCodesStatus = {};
@@ -176,7 +176,7 @@ $.widget('itop.set_widget',
 
         _bindEvents: function($widgetElement) {
             var setWidget = this;
-			$widgetElement.bind("update", function() {
+			$widgetElement.on("update", function() {
 				if (setWidget.options.isDebug) {
 					console.debug("update event in Selectize !", this);
 				}

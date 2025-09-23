@@ -1,12 +1,16 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+namespace Combodo\iTop\Application\WebPage;
 
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
+use DeprecatedCallsLog;
+use Dict;
 
 
 /**
@@ -76,34 +80,6 @@ class TabManager
 	}
 
 	/**
-	 * @return int
-	 * @deprecated 3.0.0
-	 */
-	public function GetCurrentTabLength()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		return 0;
-	}
-
-	/**
-	 * Truncates the given tab to the specifed length and returns the truncated part
-	 *
-	 * @param string $sTabContainer The tab container in which to truncate the tab
-	 * @param string $sTab The name/identifier of the tab to truncate
-	 * @param integer $iLength The length/offset at which to truncate the tab
-	 *
-	 * @return string The truncated part
-	 * @deprecated 3.0.0
-	 */
-	public function TruncateTab(string $sTabContainer, string $sTab, int $iLength)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		return '';
-	}
-
-	/**
 	 * @param string $sTabContainer
 	 * @param string $sTab
 	 *
@@ -170,11 +146,13 @@ class TabManager
 	 * @param string $sTabCode
 	 *
 	 * @param string|null $sTabTitle
+	 * @param string|null $sTabDescription {@see \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab::$sDescription}
 	 *
 	 * @return string
 	 * @throws \Combodo\iTop\Application\UI\Base\UIException
+	 * @since 3.1.0 N°5920 Add $sTabDescription argument
 	 */
-	public function SetCurrentTab(string $sTabCode = '', string $sTabTitle = null): ?string
+	public function SetCurrentTab(string $sTabCode = '', ?string $sTabTitle = null, ?string $sTabDescription = null): ?string
 	{
 		$sPreviousTabCode = $this->m_sCurrentTab;
 		$this->m_sCurrentTab = $sTabCode;
@@ -182,7 +160,7 @@ class TabManager
 		if ($sTabCode != '') {
 			// Init tab to HTML tab if not existing
 			if (!$this->TabExists($this->GetCurrentTabContainer(), $sTabCode)) {
-				$this->InitTab($this->GetCurrentTabContainer(), $sTabCode, static::ENUM_TAB_TYPE_HTML, $sTabTitle);
+				$this->InitTab($this->GetCurrentTabContainer(), $sTabCode, static::ENUM_TAB_TYPE_HTML, $sTabTitle, null, $sTabDescription);
 			}
 		}
 
@@ -193,7 +171,7 @@ class TabManager
 	 * Add a tab which content will be loaded asynchronously via the supplied URL
 	 *
 	 * Limitations:
-	 * Cross site scripting is not not allowed for security reasons. Use a normal tab with an IFRAME if you want to
+	 * Cross site scripting is not allowed for security reasons. Use a normal tab with an IFRAME if you want to
 	 * pull content from another server. Static content cannot be added inside such tabs.
 	 *
 	 * @param string $sTabCode The (localised) label of the tab
@@ -202,18 +180,20 @@ class TabManager
 	 *     the tab to be reloaded upon each activation.
 	 *
 	 * @param string|null $sTabTitle
-	 * @param string $sPlaceholder
+	 * @param string|null $sPlaceholder
+	 * @param string|null $sTabDescription {@see \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab::$sDescription}
 	 *
 	 * @return string
 	 *
 	 * @throws \Combodo\iTop\Application\UI\Base\UIException
 	 * @since 2.0.3
+	 * @since 3.1.0 N°5920 Add $sTabDescription argument
 	 */
-	public function AddAjaxTab(string $sTabCode, string $sUrl, bool $bCache = true, string $sTabTitle = null, string $sPlaceholder = null): string
+	public function AddAjaxTab(string $sTabCode, string $sUrl, bool $bCache = true, ?string $sTabTitle = null, ?string $sPlaceholder = null, ?string $sTabDescription = null): string
 	{
 		// Set the content of the tab
 		/** @var \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab $oTab */
-		$oTab = $this->InitTab($this->m_sCurrentTabContainer, $sTabCode, static::ENUM_TAB_TYPE_AJAX, $sTabTitle, $sPlaceholder);
+		$oTab = $this->InitTab($this->m_sCurrentTabContainer, $sTabCode, static::ENUM_TAB_TYPE_AJAX, $sTabTitle, $sPlaceholder, $sTabDescription);
 		$oTab->SetUrl($sUrl)
 			->SetCache($bCache);
 
@@ -283,50 +263,19 @@ class TabManager
 	}
 
 	/**
-	 * Make the given tab the active one, as if it were clicked
-	 * DOES NOT WORK: apparently in the *old* version of jquery
-	 * that we are using this is not supported... TO DO upgrade
-	 * the whole jquery bundle...
-	 *
-	 * @param string $sTabContainer
-	 * @param string $sTabCode
-	 *
-	 * @return string
-	 * @deprecated 3.0.0
-	 */
-	public function SelectTab(string $sTabContainer, string $sTabCode)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		return '';
-	}
-
-	/**
-	 * @param string $sContent
-	 * @param \WebPage $oPage
-	 *
-	 * @return mixed
-	 * @deprecated 3.0.0
-	 */
-	public function RenderIntoContent(string $sContent, WebPage $oPage)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		return '';
-	}
-
-	/**
 	 * @param string $sTabContainer
 	 * @param string $sTabCode
 	 * @param string $sTabType
 	 * @param string|null $sTabTitle
 	 * @param string|null $sPlaceholder
+	 * @param string|null $sTabDescription {@see \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab::$sDescription}
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab
 	 * @throws \Combodo\iTop\Application\UI\Base\UIException
 	 * @since 2.7.0
+	 * @since 3.1.0 N°5920 Add $sTabDescription argument
 	 */
-	protected function InitTab(string $sTabContainer, string $sTabCode, string $sTabType = self::DEFAULT_TAB_TYPE, string $sTabTitle = null, string $sPlaceholder = null): Tab
+	protected function InitTab(string $sTabContainer, string $sTabCode, string $sTabType = self::DEFAULT_TAB_TYPE, ?string $sTabTitle = null, ?string $sPlaceholder = null, ?string $sTabDescription = null): Tab
 	{
 		$oTab = null;
 		if (!$this->TabExists($sTabContainer, $sTabCode)) {
@@ -336,16 +285,29 @@ class TabManager
 				$oTabContainer = $this->m_aTabs[$sTabContainer];
 			}
 
+			// For title, if none given, try to fallback on a dict entry by convention (dict entry code = tab code)
 			$sTitle = ($sTabTitle !== null) ? Dict::S($sTabTitle) : Dict::S($sTabCode);
+
+			// For description, if none given, try to fallback on a dict entry by convention (dict entry code = tab code followed by a "+" sign) but only if an entry exists, otherwise it would display a tooltip with a dict entry code which is not slick (eg. "Tab:Title:Foo+")
+			$sDescription = null;
+			if ($sTabDescription !== null) {
+				$sDescription = Dict::S($sTabDescription);
+			} else {
+				$sFallbackDescriptionDictEntryCode = $sTabCode."+";
+				$sFallbackDescription = Dict::S($sFallbackDescriptionDictEntryCode);
+				if ($sFallbackDescriptionDictEntryCode !== $sFallbackDescription) {
+					$sDescription = $sFallbackDescription;
+				}
+			}
 
 			switch ($sTabType) {
 				case static::ENUM_TAB_TYPE_AJAX:
-					$oTab = $oTabContainer->AddAjaxTab($sTabCode, $sTitle, $sPlaceholder);
+					$oTab = $oTabContainer->AddAjaxTab($sTabCode, $sTitle, $sPlaceholder, $sDescription);
 					break;
 
 				case static::ENUM_TAB_TYPE_HTML:
 				default:
-					$oTab = $oTabContainer->AddTab($sTabCode, $sTitle);
+					$oTab = $oTabContainer->AddTab($sTabCode, $sTitle, $sDescription);
 					break;
 			}
 		} else {

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2021 Combodo SARL
+// Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -21,6 +21,8 @@ use Combodo\iTop\Core\MetaModel\HierarchicalKey;
 
 class DatabaseAnalyzer
 {
+	const LIMIT = 100;
+
 	var $iTimeLimitPerOperation;
 
 	public function __construct($iTimeLimitPerOperation = null)
@@ -45,7 +47,7 @@ class DatabaseAnalyzer
 			set_time_limit(intval($this->iTimeLimitPerOperation));
 		}
 
-		$aWrongRecords = CMDBSource::QueryToArray($sSelWrongRecs);
+		$aWrongRecords = CMDBSource::QueryToArray($sSelWrongRecs.' limit '.self::LIMIT);
 		if (count($aWrongRecords) > 0)
 		{
 			foreach($aWrongRecords as $aRes)
@@ -168,9 +170,9 @@ class DatabaseAnalyzer
 						$this->CheckHK($sClass, $sAttCode, $aErrorsAndFixes);
 					}
 				}
-				elseif ($oAttDef->IsDirectField() && !($oAttDef instanceof AttributeTagSet))
+				elseif ($oAttDef->IsDirectField() && !($oAttDef instanceof AttributeSet))
 				{
-					$this->CheckEnums($sClass, $sAttCode, $oAttDef, $sTable, $sKeyField, $aErrorsAndFixes);
+					$this->CheckAllowedValues($sClass, $sAttCode, $oAttDef, $sTable, $sKeyField, $aErrorsAndFixes);
 				}
 			}
 		}
@@ -449,7 +451,7 @@ class DatabaseAnalyzer
 	 * @throws \MySQLException
 	 * @throws \Exception
 	 */
-	private function CheckEnums($sClass, $sAttCode, AttributeDefinition $oAttDef, $sTable, $sKeyField, &$aErrorsAndFixes)
+	private function CheckAllowedValues($sClass, $sAttCode, AttributeDefinition $oAttDef, $sTable, $sKeyField, &$aErrorsAndFixes)
 	{
 		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode);
 		if (!is_null($aAllowedValues) && count($aAllowedValues) > 0)
@@ -458,8 +460,17 @@ class DatabaseAnalyzer
 			$sExpectedValues = implode(",", CMDBSource::Quote($aAllowedValues, true));
 
 			$aCols = $oAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
+			if (empty($aCols)) {
+				return;
+			}
 			$sMyAttributeField = current($aCols); // get the first column for the moment
 			$sFilter = "FROM `$sTable` WHERE `$sTable`.`$sMyAttributeField` NOT IN ($sExpectedValues)";
+			if ($oAttDef->IsNullAllowed()) {
+				// NotEmptyToSql should have been in AttributeDefinition, as a workaround the search type is used
+				$sSearchType = $oAttDef->GetSearchType();
+				$sCondition = $this->NotEmptyToSql("`$sTable`.`$sMyAttributeField`", $sSearchType);
+				$sFilter .= " AND $sCondition";
+			}
 			$sDelete = "DELETE `$sTable`";
 			$sSelect = "SELECT DISTINCT `$sTable`.`$sKeyField` AS id, `$sTable`.`$sMyAttributeField` AS value";
 			$sSelWrongRecs = "$sSelect $sFilter";
@@ -488,6 +499,26 @@ class DatabaseAnalyzer
 				$aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'] = $aFixIt;
 			}
 		}
+	}
+
+	/**
+	 * @param $sRef
+	 * @param string $sSearchType
+	 *
+	 * @return string
+	 * @since 3.1.0 N°6442
+	 */
+	private function NotEmptyToSql($sRef, string $sSearchType)
+	{
+		switch ($sSearchType) {
+			case AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC:
+			case AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD:
+			case AttributeDefinition::SEARCH_WIDGET_TYPE_DATE:
+			case AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME:
+				return "ISNULL({$sRef}) = 0";
+		}
+
+		return "({$sRef} != '')";
 	}
 
 	/**

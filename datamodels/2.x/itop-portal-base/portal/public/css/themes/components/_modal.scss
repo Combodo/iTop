@@ -1,0 +1,62 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-modal--header--background-color: $ipb-color-white-100 !default;
+$ipb-modal--header--color: $ipb-color-grey-900 !default;
+
+$ipb-modal--header--close--color: $ipb-color-grey-900 !default;
+$ipb-modal--header--close--opacity: 1 !default;
+$ipb-modal--header--close--hover--color: $ipb-color-grey-700 !default;
+
+$ipb-modal--backdrop--opacity: 0.6 !default;
+$ipb-modal--backdrop--background-color: $ipb-color-blue-grey-800 !default;
+$ipb-modal--backdrop--backdrop-filter: blur(2px) !default;
+
+$ipb-modal--content--border-color: $ipb-color-grey-400 !default;
+$ipb-modal--content--border: 1px solid $ipb-modal--content--border-color !default;
+
+$ipb-modal--title--color: $ipb-modal--header--color !default;
+
+$ipb-modal--title--span--separator--background-color: $ipb-color-grey-800 !default;
+
+
+
+.modal .modal-dialog{
+
+  .modal-header {
+    background-color: $ipb-modal--header--background-color;
+    color: $ipb-modal--header--color;
+  }
+}
+
+.modal-backdrop.in {
+  background-color: common-adjust-alpha($ipb-modal--backdrop--background-color, $ipb-modal--backdrop--opacity);
+  backdrop-filter: $ipb-modal--backdrop--backdrop-filter;
+}
+
+.modal-content {
+  border: $ipb-modal--content--border;
+}
+
+.modal-header {
+  .close {
+    color: $ipb-modal--header--close--color;
+    opacity: $ipb-modal--header--close--opacity;
+    &:hover {
+      color: $ipb-modal--header--close--hover--color;
+    }
+  }
+}
+
+.modal-title {
+  color: $ipb-modal--title--color !important;
+
+  span ~ span {
+    &:before {
+      background-color: $ipb-modal--title--span--separator--background-color;
+    }
+  }
+}

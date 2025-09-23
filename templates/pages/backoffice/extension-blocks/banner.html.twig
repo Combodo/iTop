@@ -1,10 +1,7 @@
-{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
 	<div id="ibo-page-banner" data-role="ibo-page-banner">
-		{% if aLayouts.sBanner is not empty %}
-			{{ aLayouts.sBanner|raw }}
-		{% endif %}
 		{{ render_block(aLayouts.oBanner, {aPage: aPage}) }}
 	</div>
 {% endapply %}

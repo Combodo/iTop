@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -22,11 +22,12 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel;
 
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
-use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryFormFactory\CaseLogEntryFormFactory;
+use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryFormFactory;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
 use Exception;
+use ExecutionKPI;
 use IssueLog;
 use MetaModel;
 
@@ -58,6 +59,7 @@ class ActivityPanelFactory
 	 */
 	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE)
 	{
+		$oKPI = new ExecutionKPI();
 		$sObjClass = get_class($oObject);
 		$sObjId = $oObject->GetKey();
 
@@ -170,6 +172,8 @@ class ActivityPanelFactory
 				}
 			}
 		}
+
+		$oKPI->ComputeStatsForExtension(new ActivityPanelFactory(), 'MakeForObjectDetails');
 
 		return $oActivityPanel;
 	}

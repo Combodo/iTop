@@ -2,42 +2,31 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:ChangeManagement' => 'Manažment zmien',
 	'Menu:Change:Overview' => 'Prehľad',
-	'Menu:Change:Overview+' => '',
+	'Menu:Change:Overview+' => '~~',
 	'Menu:NewChange' => 'Nová zmena',
-	'Menu:NewChange+' => '',
+	'Menu:NewChange+' => 'Create a new change ticket~~',
 	'Menu:SearchChanges' => 'Vyhľadať zmeny',
-	'Menu:SearchChanges+' => '',
+	'Menu:SearchChanges+' => 'Search for change tickets~~',
 	'Menu:Change:Shortcuts' => 'Skratky',
-	'Menu:Change:Shortcuts+' => '',
+	'Menu:Change:Shortcuts+' => '~~',
 	'Menu:WaitingAcceptance' => 'Zmeny očakávajúce prijatie',
-	'Menu:WaitingAcceptance+' => '',
+	'Menu:WaitingAcceptance+' => '~~',
 	'Menu:WaitingApproval' => 'Zmeny očakávajúce schválenie',
-	'Menu:WaitingApproval+' => '',
+	'Menu:WaitingApproval+' => '~~',
 	'Menu:Changes' => 'Otvorené zmeny',
-	'Menu:Changes+' => '',
+	'Menu:Changes+' => 'All open changes~~',
 	'Menu:MyChanges' => 'Zmeny pridelené mne',
-	'Menu:MyChanges+' => '',
+	'Menu:MyChanges+' => 'Changes assigned to me (as Agent)~~',
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Zmeny podľa kategórie za posledných 7 dní',
 	'UI-ChangeManagementOverview-Last-7-days' => 'Počet zmien za posledných 7 dní',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Zmeny podľa domény za posledných 7 dní',
@@ -63,21 +52,21 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Change' => 'Zmena',
-	'Class:Change+' => '',
+	'Class:Change+' => '~~',
 	'Class:Change/Attribute:status' => 'Stav',
-	'Class:Change/Attribute:status+' => '',
+	'Class:Change/Attribute:status+' => '~~',
 	'Class:Change/Attribute:status/Value:new' => 'Nová',
-	'Class:Change/Attribute:status/Value:new+' => '',
+	'Class:Change/Attribute:status/Value:new+' => '~~',
 	'Class:Change/Attribute:status/Value:validated' => 'Validated~~',
 	'Class:Change/Attribute:status/Value:validated+' => '~~',
 	'Class:Change/Attribute:status/Value:rejected' => 'Zamietnutá',
-	'Class:Change/Attribute:status/Value:rejected+' => '',
+	'Class:Change/Attribute:status/Value:rejected+' => '~~',
 	'Class:Change/Attribute:status/Value:assigned' => 'Pridelená',
-	'Class:Change/Attribute:status/Value:assigned+' => '',
+	'Class:Change/Attribute:status/Value:assigned+' => '~~',
 	'Class:Change/Attribute:status/Value:plannedscheduled' => 'Planned and scheduled~~',
 	'Class:Change/Attribute:status/Value:plannedscheduled+' => '~~',
 	'Class:Change/Attribute:status/Value:approved' => 'Schválená',
-	'Class:Change/Attribute:status/Value:approved+' => '',
+	'Class:Change/Attribute:status/Value:approved+' => '~~',
 	'Class:Change/Attribute:status/Value:notapproved' => 'Not approved~~',
 	'Class:Change/Attribute:status/Value:notapproved+' => '~~',
 	'Class:Change/Attribute:status/Value:implemented' => 'Implemented~~',
@@ -85,7 +74,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Change/Attribute:status/Value:monitored' => 'Monitored~~',
 	'Class:Change/Attribute:status/Value:monitored+' => '~~',
 	'Class:Change/Attribute:status/Value:closed' => 'Zatvorená',
-	'Class:Change/Attribute:status/Value:closed+' => '',
+	'Class:Change/Attribute:status/Value:closed+' => '~~',
 	'Class:Change/Attribute:reason' => 'Reject reason~~',
 	'Class:Change/Attribute:reason+' => '~~',
 	'Class:Change/Attribute:requestor_id' => 'Requestor~~',
@@ -93,7 +82,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Change/Attribute:requestor_email' => 'Requestor email~~',
 	'Class:Change/Attribute:requestor_email+' => '~~',
 	'Class:Change/Attribute:creation_date' => 'Dátum vytvorenia',
-	'Class:Change/Attribute:creation_date+' => '',
+	'Class:Change/Attribute:creation_date+' => '~~',
 	'Class:Change/Attribute:impact' => 'Impact~~',
 	'Class:Change/Attribute:impact+' => '~~',
 	'Class:Change/Attribute:supervisor_group_id' => 'Supervisor team~~',
@@ -121,43 +110,43 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Change/Attribute:fallback' => 'Fallback plan~~',
 	'Class:Change/Attribute:fallback+' => '~~',
 	'Class:Change/Attribute:parent_id' => 'Nadradená zmena',
-	'Class:Change/Attribute:parent_id+' => '',
+	'Class:Change/Attribute:parent_id+' => '~~',
 	'Class:Change/Attribute:parent_name' => 'Referencia na rodičovskú zmenu',
-	'Class:Change/Attribute:parent_name+' => '',
+	'Class:Change/Attribute:parent_name+' => '~~',
 	'Class:Change/Attribute:related_request_list' => 'Súvisiace požiadavky',
-	'Class:Change/Attribute:related_request_list+' => '',
+	'Class:Change/Attribute:related_request_list+' => 'All the user requests linked to this change~~',
 	'Class:Change/Attribute:related_problems_list' => 'Súvisiace problémy',
-	'Class:Change/Attribute:related_problems_list+' => '',
+	'Class:Change/Attribute:related_problems_list+' => 'All the problems linked to this change~~',
 	'Class:Change/Attribute:related_incident_list' => 'Súvisiace incidenty',
-	'Class:Change/Attribute:related_incident_list+' => '',
+	'Class:Change/Attribute:related_incident_list+' => 'All the incidents linked to this change~~',
 	'Class:Change/Attribute:child_changes_list' => 'Podriadené zmeny',
-	'Class:Change/Attribute:child_changes_list+' => '',
+	'Class:Change/Attribute:child_changes_list+' => 'All the sub changes linked to this change~~',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Priateľské meno rodičovskej zmeny',
-	'Class:Change/Attribute:parent_id_friendlyname+' => '',
+	'Class:Change/Attribute:parent_id_friendlyname+' => '~~',
 	'Class:Change/Attribute:parent_id_finalclass_recall' => 'Change type~~',
 	'Class:Change/Attribute:parent_id_finalclass_recall+' => '~~',
 	'Class:Change/Stimulus:ev_validate' => 'Validate~~',
 	'Class:Change/Stimulus:ev_validate+' => '~~',
 	'Class:Change/Stimulus:ev_reject' => 'Zamietnúť',
-	'Class:Change/Stimulus:ev_reject+' => '',
+	'Class:Change/Stimulus:ev_reject+' => '~~',
 	'Class:Change/Stimulus:ev_assign' => 'Prideiť',
-	'Class:Change/Stimulus:ev_assign+' => '',
+	'Class:Change/Stimulus:ev_assign+' => '~~',
 	'Class:Change/Stimulus:ev_reopen' => 'Znova otvoriť',
-	'Class:Change/Stimulus:ev_reopen+' => '',
+	'Class:Change/Stimulus:ev_reopen+' => '~~',
 	'Class:Change/Stimulus:ev_plan' => 'Naplánuj',
-	'Class:Change/Stimulus:ev_plan+' => '',
+	'Class:Change/Stimulus:ev_plan+' => '~~',
 	'Class:Change/Stimulus:ev_approve' => 'Schváliť',
-	'Class:Change/Stimulus:ev_approve+' => '',
+	'Class:Change/Stimulus:ev_approve+' => '~~',
 	'Class:Change/Stimulus:ev_replan' => 'Replan~~',
 	'Class:Change/Stimulus:ev_replan+' => '~~',
-	'Class:Change/Stimulus:ev_notapprove' => 'Reject~~',
+	'Class:Change/Stimulus:ev_notapprove' => 'Reject approval~~',
 	'Class:Change/Stimulus:ev_notapprove+' => '~~',
 	'Class:Change/Stimulus:ev_implement' => 'Implement~~',
 	'Class:Change/Stimulus:ev_implement+' => '~~',
 	'Class:Change/Stimulus:ev_monitor' => 'Monitor~~',
 	'Class:Change/Stimulus:ev_monitor+' => '~~',
 	'Class:Change/Stimulus:ev_finish' => 'Zatvoriť',
-	'Class:Change/Stimulus:ev_finish+' => '',
+	'Class:Change/Stimulus:ev_finish+' => '~~',
 ));
 
 //

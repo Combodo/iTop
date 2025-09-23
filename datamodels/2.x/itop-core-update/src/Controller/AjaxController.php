@@ -1,31 +1,71 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
 namespace Combodo\iTop\CoreUpdate\Controller;
 
+require_once APPROOT.'setup/runtimeenv.class.inc.php';
 
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\CoreUpdate\Service\CoreUpdater;
 use Combodo\iTop\DBTools\Service\DBToolsUtils;
 use Combodo\iTop\FilesInformation\Service\FileNotExistException;
 use Combodo\iTop\FilesInformation\Service\FilesInformation;
+use Config;
+use ContextTag;
 use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
+use RunTimeEnvironment;
 use SecurityException;
 use SetupUtils;
 use utils;
 
 class AjaxController extends Controller
 {
+	public const ROUTE_NAMESPACE = 'core_update_ajax';
+	protected $oCtxCoreUpdate;
+
+	/**
+	 * @param $sViewPath
+	 * @param $sModuleName
+	 * @param $aAdditionalPaths
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MySQLException
+	 */
+	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
+	{
+		if (!defined('MODULESROOT'))
+		{
+			define('MODULESROOT', APPROOT.'env-production/');
+		}
+
+		require_once(MODULESROOT.'itop-core-update/src/Service/RunTimeEnvironmentCoreUpdater.php');
+		require_once(MODULESROOT.'itop-core-update/src/Service/CoreUpdater.php');
+		require_once(MODULESROOT.'itop-core-update/src/Controller/AjaxController.php');
+
+		MetaModel::LoadConfig(utils::GetConfig());
+
+		$sViewPath = MODULESROOT.'itop-core-update/templates';
+		$sModuleName = 'itop-core-update';
+		parent::__construct($sViewPath, $sModuleName, $aAdditionalPaths);
+
+		$this->DisableInDemoMode();
+		$this->AllowOnlyAdmin();
+		$this->CheckAccess();
+		$this->oCtxCoreUpdate = new ContextTag(ContextTag::TAG_SETUP);
+	}
+
 	public function OperationCanUpdateCore()
 	{
-		$aParams = array();
+		$aParams = [];
 
 		try
 		{
@@ -58,7 +98,7 @@ class AjaxController extends Controller
 
 	public function OperationGetItopDiskSpace()
 	{
-		$aParams = array();
+		$aParams = [];
 		$aParams['iItopDiskSpace'] = FilesInformation::GetItopDiskSpace();
 		$aParams['sItopDiskSpace'] = utils::BytesToFriendlyFormat($aParams['iItopDiskSpace']);
 		$this->DisplayJSONPage($aParams);
@@ -66,7 +106,7 @@ class AjaxController extends Controller
 
 	public function OperationGetDBDiskSpace()
 	{
-		$aParams = array();
+		$aParams = [];
 		$aParams['iDBDiskSpace'] = DBToolsUtils::GetDatabaseSize();
 		$aParams['sDBDiskSpace'] = utils::BytesToFriendlyFormat($aParams['iDBDiskSpace']);
 		$this->DisplayJSONPage($aParams);
@@ -74,14 +114,14 @@ class AjaxController extends Controller
 
 	public function OperationGetCurrentVersion()
 	{
-		$aParams = array();
+		$aParams = [];
 		$aParams['sVersion'] = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
 		$this->DisplayJSONPage($aParams);
 	}
 
 	public function OperationEnterMaintenance()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
@@ -98,7 +138,7 @@ class AjaxController extends Controller
 
 	public function OperationExitMaintenance()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken(true);
@@ -115,7 +155,7 @@ class AjaxController extends Controller
 
 	public function OperationBackup()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
@@ -132,7 +172,7 @@ class AjaxController extends Controller
 
 	public function OperationFilesArchive()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
@@ -149,7 +189,7 @@ class AjaxController extends Controller
 
 	public function OperationCopyFiles()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
@@ -167,7 +207,7 @@ class AjaxController extends Controller
 
 	public function OperationCheckCompile()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
@@ -186,7 +226,7 @@ class AjaxController extends Controller
 
 	public function OperationCompile()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
@@ -205,7 +245,7 @@ class AjaxController extends Controller
 
 	public function OperationUpdateDatabase()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
@@ -218,6 +258,30 @@ class AjaxController extends Controller
 			$iResponseCode = 500;
 		}
 
+		$this->DisplayJSONPage($aParams, $iResponseCode);
+	}
+
+	function OperationRebuildToolkitEnvironment()
+	{
+		$sTransactionId = utils::GetNewTransactionId();
+		$aParams = [];
+		$aParams['sTransactionId'] = $sTransactionId;
+		$aParams['bStatus'] = true;
+
+		$iResponseCode = 200;
+		try {
+			$aParams['sAjaxURL'] = utils::GetAbsoluteUrlAppRoot().'/pages/UI.php';
+			$oConfig = new Config(APPCONF.'production'.'/'.ITOP_CONFIG_FILE);
+			$oEnvironment = new RunTimeEnvironment('production');
+			$oEnvironment->WriteConfigFileSafe($oConfig);
+			$oEnvironment->CompileFrom('production');
+		}
+		catch (Exception $e) {
+			IssueLog::Error('RebuildToolkitEnvironment: '.$e->getMessage());
+			$aParams['sError'] = $e->getMessage();
+			$iResponseCode = 500;
+			$aParams['bStatus'] = false;
+		}
 		$this->DisplayJSONPage($aParams, $iResponseCode);
 	}
 

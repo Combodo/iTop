@@ -1,0 +1,30 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-copyright--color: $ipb-color-secondary-800 !default;
+
+$ipb-page--main-header--information--title--color: $common-base-variable--text-color !default;
+$ipb-page--main-header--information--subtitle--color: $common-base-variable--text-color !default;
+
+
+body{
+  @extend %common-font-ral-med-100;
+}
+
+.ipb-copyright {
+  text-decoration: none !important;
+}
+
+.ipb-page--main-header--information--title{
+  color: $ipb-page--main-header--information--title--color;
+    > span ~ span {
+      @include ipb-following-dot;
+    }
+}
+
+.ipb-page--main-header--information--subtitle {
+  color: $ipb-page--main-header--information--subtitle--color;
+}

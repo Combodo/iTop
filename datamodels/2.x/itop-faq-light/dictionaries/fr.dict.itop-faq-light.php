@@ -1,27 +1,14 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-//
-// Class: FAQ
-//
+/**
+ *
+ */
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Question fréquement posée',
@@ -52,7 +39,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FAQCategory/Attribute:name' => 'Nom',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory/Attribute:faq_list+' => 'Toutes les questions fréquemment posées liées à cette catégorie',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s'
 ));
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ProblemManagement' => 'Gestion des problèmes',

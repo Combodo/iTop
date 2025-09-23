@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2017-2021 Combodo SARL
+// Copyright (C) 2017-2024 Combodo SAS
 //
 // This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * iTop Hub Launch Page
  * Collect the information to be posted to iTopHub
  *
- * @copyright Copyright (c) 2017-2021 Combodo SARL
+ * @copyright Copyright (c) 2017-2024 Combodo SAS
  * @license http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -99,6 +99,9 @@
  *
  *
  */
+
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
 
 /**
  * Return a cleaned (i.e.
@@ -228,7 +231,7 @@ function MakeDataToPost($sTargetRoute)
 			'itop_hub_target_route' => $sTargetRoute,
 			'itop_stack' => array(
 				"uuidBdd" => (string)trim(DBProperty::GetProperty('database_uuid', ''), '{}'), // TODO check if empty and... regenerate a new UUID ??
-				"uuidFile" => (string)trim(@file_get_contents(APPROOT."data/instance.txt"), "{} \n"), // TODO check if empty and... regenerate a new UUID ??
+				"uuidFile" => (string)trim(@file_get_contents(utils::GetDataPath()."instance.txt"), "{} \n"), // TODO check if empty and... regenerate a new UUID ??
 				'instance_friendly_name' => (string)$_SERVER['SERVER_NAME'],
 				'instance_host' => (string)utils::GetAbsoluteUrlAppRoot(),
 				'application_name' => (string)ITOP_APPLICATION,
@@ -263,6 +266,7 @@ try {
 	require_once('hubconnectorpage.class.inc.php');
 
 	require_once(APPROOT.'/application/startup.inc.php');
+	require_once('TokenValidation.php');
 
 	$sTargetRoute = utils::ReadParam('target', ''); // ||browse_extensions|deploy_extensions|
 
@@ -278,13 +282,21 @@ try {
 
 	switch ($sTargetRoute) {
 		case 'inform_after_setup':
-			// Hidden IFRAME at the end of the setup
-			$oPage = new NiceWebPage('');
-			$aDataToPost = MakeDataToPost($sTargetRoute);
-			$oPage->add('<form id="hub_launch_form" action="'.$sHubUrlStateless.'" method="post">');
-			$oPage->add('<input type="hidden" name="json" value="'.utils::EscapeHtml(json_encode($aDataToPost)).'">');
-			$oPage->add_ready_script('$("#hub_launch_form").submit();');
-			break;
+		// Hidden IFRAME at the end of the setup
+        $sParamToken = utils::ReadParam('setup_token');
+        $oTokenValidation = new TokenValidation();
+        $bIsTokenValid = $oTokenValidation->isSetupTokenValid($sParamToken);
+        if (UserRights::IsAdministrator() || $bIsTokenValid) {
+	        $oPage = new NiceWebPage('');
+	        $aDataToPost = MakeDataToPost($sTargetRoute);
+	        $oPage->add('<form id="hub_launch_form" action="'.$sHubUrlStateless.'" method="post">');
+	        $oPage->add('<input type="hidden" name="json" value="'.utils::EscapeHtml(json_encode($aDataToPost)).'">');
+	        $oPage->add_ready_script('$("#hub_launch_form").trigger(\'submit\');');
+        } else {
+            IssueLog::Error('TokenValidation failed on inform_after_setup page');
+            throw new Exception("Not allowed");
+        }
+		break;
 
 		default:
 			// All other cases, special "Hub like" web page
@@ -302,9 +314,9 @@ try {
 			$sCloseUrl = utils::GetAbsoluteUrlModulesRoot().'/itop-hub-connector/images/black-close.svg';
 
 			$oPage = new HubConnectorPage(Dict::S('iTopHub:Connect'));
-			$oPage->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/js/hub.js');
-			$oPage->add_linked_stylesheet('../css/font-combodo/font-combodo.css');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/css/hub.css');
+			$oPage->LinkScriptFromModule('itop-hub-connector/js/hub.js');
+			$oPage->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
+			$oPage->LinkStylesheetFromModule('itop-hub-connector/css/hub.css');
 
 			$aDataToPost = MakeDataToPost($sTargetRoute);
 
@@ -366,7 +378,7 @@ $("#GoToHubBtn").on("click", function() {
 	window.setTimeout(function () {
 		var bNewWindow = $('#itophub_open_in_new_window').prop("checked");
 		if(bNewWindow) { $("#hub_launch_form").attr("target", "_blank"); } else { $("#hub_launch_form").removeAttr("target"); }
-		$('#hub_launch_form').submit();
+		$('#hub_launch_form').trigger('submit');
 		window.setTimeout(function () {
 			$("#GoToHubBtn").prop('disabled', false);
 			$("#hub_launch_image").removeClass("animate");

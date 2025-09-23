@@ -1,0 +1,100 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* Semantic palettes */
+/* - Primary color of the brand */
+$ipb-color-primary-100: $common-color-primary-100 !default;
+$ipb-color-primary-200: $common-color-primary-200 !default;
+$ipb-color-primary-300: $common-color-primary-300 !default;
+$ipb-color-primary-400: $common-color-primary-400 !default;
+$ipb-color-primary-500: $common-color-primary-500 !default;
+$ipb-color-primary-600: $common-color-primary-600 !default;
+$ipb-color-primary-700: $common-color-primary-700 !default;
+$ipb-color-primary-800: $common-color-primary-800 !default;
+$ipb-color-primary-900: $common-color-primary-900 !default;
+$ipb-color-primary-950: $common-color-primary-950 !default;
+
+/* - Secondary color of the brand */
+$ipb-color-secondary-100: $common-color-secondary-100 !default;
+$ipb-color-secondary-200: $common-color-secondary-200 !default;
+$ipb-color-secondary-300: $common-color-secondary-300 !default;
+$ipb-color-secondary-400: $common-color-secondary-400 !default;
+$ipb-color-secondary-500: $common-color-secondary-500 !default;
+$ipb-color-secondary-600: $common-color-secondary-600 !default;
+$ipb-color-secondary-700: $common-color-secondary-700 !default;
+$ipb-color-secondary-800: $common-color-secondary-800 !default;
+$ipb-color-secondary-900: $common-color-secondary-900 !default;
+$ipb-color-secondary-950: $common-color-secondary-950 !default;
+
+/* - Information: messages / actions that should neither seem as success, warning or failure  */
+$ipb-color-information-100: $common-color-information-100 !default;
+$ipb-color-information-200: $common-color-information-200 !default;
+$ipb-color-information-300: $common-color-information-300 !default;
+$ipb-color-information-400: $common-color-information-400 !default;
+$ipb-color-information-500: $common-color-information-500 !default;
+$ipb-color-information-600: $common-color-information-600 !default;
+$ipb-color-information-700: $common-color-information-700 !default;
+$ipb-color-information-800: $common-color-information-800 !default;
+$ipb-color-information-900: $common-color-information-900 !default;
+$ipb-color-information-950: $common-color-information-950 !default;
+
+/* Success: messages of success, safe actions, ... */
+$ipb-color-success-100: $common-color-success-100 !default;
+$ipb-color-success-200: $common-color-success-200 !default;
+$ipb-color-success-300: $common-color-success-300 !default;
+$ipb-color-success-400: $common-color-success-400 !default;
+$ipb-color-success-500: $common-color-success-500 !default;
+$ipb-color-success-600: $common-color-success-600 !default;
+$ipb-color-success-700: $common-color-success-700 !default;
+$ipb-color-success-800: $common-color-success-800 !default;
+$ipb-color-success-900: $common-color-success-900 !default;
+$ipb-color-success-950: $common-color-success-950 !default;
+
+/* Warning: messages of warning, actions that would be done carefully, ... */
+$ipb-color-warning-100: $common-color-warning-100 !default;
+$ipb-color-warning-200: $common-color-warning-200 !default;
+$ipb-color-warning-300: $common-color-warning-300 !default;
+$ipb-color-warning-400: $common-color-warning-400 !default;
+$ipb-color-warning-500: $common-color-warning-500 !default;
+$ipb-color-warning-600: $common-color-warning-600 !default;
+$ipb-color-warning-700: $common-color-warning-700 !default;
+$ipb-color-warning-800: $common-color-warning-800 !default;
+$ipb-color-warning-900: $common-color-warning-900 !default;
+$ipb-color-warning-950: $common-color-warning-950 !default;
+
+/* Danger: messages of failure, error, ... */
+$ipb-color-error-100: $common-color-error-100 !default;
+$ipb-color-error-200: $common-color-error-200 !default;
+$ipb-color-error-300: $common-color-error-300 !default;
+$ipb-color-error-400: $common-color-error-400 !default;
+$ipb-color-error-500: $common-color-error-500 !default;
+$ipb-color-error-600: $common-color-error-600 !default;
+$ipb-color-error-700: $common-color-error-700 !default;
+$ipb-color-error-800: $common-color-error-800 !default;
+$ipb-color-error-900: $common-color-error-900 !default;
+$ipb-color-error-950: $common-color-error-950 !default;
+
+/* Danger: messages of danger, actions that cannot be undone, ... */
+$ipb-color-danger-100: $common-color-danger-100 !default;
+$ipb-color-danger-200: $common-color-danger-200 !default;
+$ipb-color-danger-300: $common-color-danger-300 !default;
+$ipb-color-danger-400: $common-color-danger-400 !default;
+$ipb-color-danger-500: $common-color-danger-500 !default;
+$ipb-color-danger-600: $common-color-danger-600 !default;
+$ipb-color-danger-700: $common-color-danger-700 !default;
+$ipb-color-danger-800: $common-color-danger-800 !default;
+$ipb-color-danger-900: $common-color-danger-900 !default;
+$ipb-color-danger-950: $common-color-danger-950 !default;
+
+$ipb-semantic-colors: $common-semantic-colors !default;
+
+$ipb-caselog-highlight-color-1: $common-caselog-highlight-color-1 !default;
+$ipb-caselog-highlight-color-2: $common-caselog-highlight-color-2 !default;
+$ipb-caselog-highlight-color-3: $common-caselog-highlight-color-3 !default;
+$ipb-caselog-highlight-color-4: $common-caselog-highlight-color-4 !default;
+$ipb-caselog-highlight-color-5: $common-caselog-highlight-color-5 !default;
+$ipb-caselog-highlight-color-6: $common-caselog-highlight-color-6 !default;
+$ipb-caselog-highlight-color-7: $common-caselog-highlight-color-7 !default;
+$ipb-caselog-highlight-colors: $common-caselog-highlight-colors !default;

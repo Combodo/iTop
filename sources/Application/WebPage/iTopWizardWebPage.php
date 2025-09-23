@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -16,11 +16,15 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+namespace Combodo\iTop\Application\WebPage;
+
+use ExecutionKPI;
+use utils;
 
 /**
  * Class iTopWizardWebPage
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -50,7 +54,7 @@ class iTopWizardWebPage extends iTopWebPage
     		$sStyle = ($iIndex == $this->m_iCurrentStep) ? 'wizActiveStep' : 'wizStep';
     		$aSteps[] = "<div class=\"$sStyle\"><span>$sStepTitle</span></div>";
     	}
-    	$sWizardHeader = "<div class=\"wizHeader\"><h1>".utils::EscapeHtml($this->s_title)."</h1>\n".implode("<div class=\"wizSeparator\"><img align=\"bottom\" src=\"../images/wizArrow.gif\"></div>", $aSteps)."<br style=\"clear:both;\"/></div>\n";
+    	$sWizardHeader = "<div class=\"wizHeader\"><h1>".utils::EscapeHtml($this->s_title)."</h1>\n".implode("<div class=\"wizSeparator\"><img align=\"bottom\" src=\"" . utils::GetAbsoluteUrlAppRoot() . "images/wizArrow.gif\"></div>", $aSteps)."<br style=\"clear:both;\"/></div>\n";
     	$this->s_content = "$sWizardHeader<div class=\"wizContainer\">".$this->s_content."</div>";
     	parent::output();
 	}

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2013-2021 Combodo SARL
+// Copyright (C) 2013-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@
  * Definition of common structures + the very minimum service provider (manage objects)
  *
  * @package     REST Services
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @api
  */
@@ -30,18 +30,42 @@
 /**
  * Element of the response formed by RestResultWithObjects
  *
- * @package     REST Services
+ * @package     RESTAPI
+ * @api
  */
 class ObjectResult
 {
+	/**
+	 * @var int
+	 * @api
+	 */
 	public $code;
+	/**
+	 * @var string
+	 * @api
+	 */
+    use SanitizeTrait;
+
 	public $message;
+	/**
+	 * @var mixed|null
+	 * @api
+	 */
 	public $class;
+	/**
+	 * @var mixed|null
+	 * @api
+	 */
 	public $key;
+	/**
+	 * @var array
+	 * @api
+	 */
 	public $fields;
 	
 	/**
 	 * Default constructor
+	 * @api
 	 */
 	public function __construct($sClass = null, $iId = null)
 	{
@@ -53,12 +77,64 @@ class ObjectResult
 	}
 
 	/**
+	 * Creates an ObjectResult from a DBObject.
+	 *
+	 * @param DBObject $oObj The object.
+	 * @param array|null $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
+	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
+	 * @param integer $iCode An error code (RestResult::OK is no issue has been found)
+	 * @param string $sMessage Description of the error if any, an empty string otherwise
+	 * 
+	 * @return ObjectResult
+	 */
+	public static function FromDBObject(DBObject $oObj, ?array $aFieldSpec = null, $bExtendedOutput = false, $iCode = 0, $sMessage = '') : ObjectResult {
+
+		$oObjRes = new ObjectResult($oObj::class, $oObj->GetKey());
+		$oObjRes->code = $iCode;
+		$oObjRes->message = $sMessage;
+
+		$aFields = null;
+		if (!is_null($aFieldSpec))
+		{
+			// Enum all classes in the hierarchy, starting with the current one
+			foreach (MetaModel::EnumParentClasses($oObj::class, ENUM_PARENT_CLASSES_ALL, false) as $sRefClass)
+			{
+				if (array_key_exists($sRefClass, $aFieldSpec))
+				{
+					$aFields = $aFieldSpec[$sRefClass];
+					break;
+				}
+			}
+		}
+		if (is_null($aFields))
+		{
+			// No fieldspec given, or not found...
+			$aFields = array('id', 'friendlyname');
+		}
+
+		foreach ($aFields as $sAttCode)
+		{
+			$oObjRes->AddField($oObj, $sAttCode, $bExtendedOutput);
+		}
+
+		return $oObjRes;
+
+	}
+
+
+	/**
 	 * Helper to make an output value for a given attribute
-	 * 	 
+	 *
+	 * @api
 	 * @param DBObject $oObject The object being reported
 	 * @param string $sAttCode The attribute code (must be valid)
 	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
+	 *
 	 * @return string A scalar representation of the value
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	protected function MakeResultValue(DBObject $oObject, $sAttCode, $bExtendedOutput = false)
 	{
@@ -112,15 +188,33 @@ class ObjectResult
 
 	/**
 	 * Report the value for the given object attribute
-	 * 	 
+	 *
+	 * @api
 	 * @param DBObject $oObject The object being reported
 	 * @param string $sAttCode The attribute code (must be valid)
 	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
+	 *
 	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function AddField(DBObject $oObject, $sAttCode, $bExtendedOutput = false)
 	{
 		$this->fields[$sAttCode] = $this->MakeResultValue($oObject, $sAttCode, $bExtendedOutput);
+	}
+
+	public function SanitizeContent()
+	{
+		foreach($this->fields as $sFieldAttCode => $fieldValue) {
+            try {
+			$oAttDef = MetaModel::GetAttributeDef($this->class, $sFieldAttCode);
+            } catch (Exception $e) { // for special cases like ID
+                continue;
+            }
+			$this->SanitizeFieldIfSensitive($this->fields, $sFieldAttCode, $fieldValue, $oAttDef);
+		}
 	}
 }
 
@@ -129,8 +223,7 @@ class ObjectResult
 /**
  * REST response for services managing objects. Derive this structure to add information and/or constants
  *
- * @package     Extensibility
- * @package     REST Services
+ * @package RESTAPI
  * @api
  */
 class RestResultWithObjects extends RestResult
@@ -140,60 +233,63 @@ class RestResultWithObjects extends RestResult
 
 	/**
 	 * Report the given object
-	 * 	 
-	 * @param int An error code (RestResult::OK is no issue has been found)
+	 *
+	 * @api
+	 * @param int $iCode An error code (RestResult::OK is no issue has been found)
 	 * @param string $sMessage Description of the error if any, an empty string otherwise
 	 * @param DBObject $oObject The object being reported
-	 * @param array $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
+	 * @param array|null $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
 	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
+	 *
 	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function AddObject($iCode, $sMessage, $oObject, $aFieldSpec = null, $bExtendedOutput = false)
 	{
-		$sClass = get_class($oObject);
-		$oObjRes = new ObjectResult($sClass, $oObject->GetKey());
-		$oObjRes->code = $iCode;
-		$oObjRes->message = $sMessage;
-
-		$aFields = null;
-		if (!is_null($aFieldSpec))
-		{
-			// Enum all classes in the hierarchy, starting with the current one
-			foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sRefClass)
-			{
-				if (array_key_exists($sRefClass, $aFieldSpec))
-				{
-					$aFields = $aFieldSpec[$sRefClass];
-					break;
-				}
-			}
-		}
-		if (is_null($aFields))
-		{
-			// No fieldspec given, or not found...
-			$aFields = array('id', 'friendlyname');
-		}
-
-		foreach ($aFields as $sAttCode)
-		{
-			$oObjRes->AddField($oObject, $sAttCode, $bExtendedOutput);
-		}
+		$oObjRes = ObjectResult::FromDBObject($oObject, $aFieldSpec, $bExtendedOutput, $iCode, $sMessage);
 
 		$sObjKey = get_class($oObject).'::'.$oObject->GetKey();
 		$this->objects[$sObjKey] = $oObjRes;
 	}
+
+public function SanitizeContent()
+	{
+		parent::SanitizeContent();
+
+		foreach($this->objects as $sObjKey => $oObjRes)
+		{
+			$oObjRes->SanitizeContent();
+		}
+	}
 }
 
+/**
+ * @package RESTAPI
+ * @api
+ */
 class RestResultWithRelations extends RestResultWithObjects
 {
 	public $relations;
-	
+
+	/**
+	 * @api
+	 */
 	public function __construct()
 	{
 		parent::__construct();
 		$this->relations = array();
 	}
-	
+
+	/**
+	 * @param $sSrcKey
+	 * @param $sDestKey
+	 *
+	 * @return void
+	 * @api
+	 */
 	public function AddRelation($sSrcKey, $sDestKey)
 	{
 		if (!array_key_exists($sSrcKey, $this->relations))
@@ -207,7 +303,7 @@ class RestResultWithRelations extends RestResultWithObjects
 /**
  * Deletion result codes for a target object (either deleted or updated)
  *
- * @package     Extensibility
+ * @package     RESTAPI
  * @api
  * @since 2.0.1  
  */
@@ -215,30 +311,37 @@ class RestDelete
 {
 	/**
 	 * Result: Object deleted as per the initial request
+	 * @api
 	 */
 	const OK = 0;
 	/**
-	 * Result: general issue (user rights or ... ?) 
+	 * Result: general issue (user rights or ... ?)
+	 * @api
 	 */
 	const ISSUE = 1;
 	/**
-	 * Result: Must be deleted to preserve database integrity 
+	 * Result: Must be deleted to preserve database integrity
+	 * @api
 	 */
 	const AUTO_DELETE = 2;
 	/**
-	 * Result: Must be deleted to preserve database integrity, but that is NOT possible 
+	 * Result: Must be deleted to preserve database integrity, but that is NOT possible
+	 * @api
 	 */
 	const AUTO_DELETE_ISSUE = 3;
 	/**
-	 * Result: Must be deleted to preserve database integrity, but this must be requested explicitely 
+	 * Result: Must be deleted to preserve database integrity, but this must be requested explicitly
+	 * @api
 	 */
 	const REQUEST_EXPLICITELY = 4;
 	/**
 	 * Result: Must be updated to preserve database integrity
+	 * @api
 	 */
 	const AUTO_UPDATE = 5;
 	/**
 	 * Result: Must be updated to preserve database integrity, but that is NOT possible
+	 * @api
 	 */
 	const AUTO_UPDATE_ISSUE = 6;
 }
@@ -248,9 +351,10 @@ class RestDelete
  *
  * @package     Core
  */
-class CoreServices implements iRestServiceProvider
+class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 {
-	/**
+    use SanitizeTrait;
+    /**
 	 * Enumerate services delivered by this class
 	 * 	 
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
@@ -468,18 +572,18 @@ class CoreServices implements iRestServiceProvider
             }
 			else
 			{
-                                if (!$bExtendedOutput && RestUtils::GetOptionalParam($aParams, 'output_fields', '*') != '*') 
+                                if (!$bExtendedOutput && RestUtils::GetOptionalParam($aParams, 'output_fields', '*') != '*')
                                 {
                                         $aFields = $aShowFields[$sClass];
                                         //Id is not a valid attribute to optimize
-                                        if (in_array('id', $aFields)) 
+                                        if (in_array('id', $aFields))
                                         {
                                             unset($aFields[array_search('id', $aFields)]);
                                         }
                                         $aAttToLoad = array($oObjectSet->GetClassAlias() => $aFields);
                                         $oObjectSet->OptimizeColumnLoad($aAttToLoad);
                                 }
-                                
+
 				while ($oObject = $oObjectSet->Fetch())
 				{
 					$oResult->AddObject(0, '', $oObject, $aShowFields, $bExtendedOutput);
@@ -575,7 +679,7 @@ class CoreServices implements iRestServiceProvider
 					$oObject = $oElement->GetProperty('object');
 					if ($oObject)
 					{
-						if ($bEnableRedundancy)
+						if ($bEnableRedundancy && $sDirection == 'down')
 						{
 							// Add only the "reached" objects
 							if ($oElement->GetProperty('is_reached'))
@@ -675,6 +779,33 @@ class CoreServices implements iRestServiceProvider
 			// unknown operation: handled at a higher level
 		}
 		return $oResult;
+	}
+
+	public function SanitizeJsonInput(string $sJsonInput): string
+	{
+        $sSanitizedJsonInput = $sJsonInput;
+        $aJsonData = json_decode($sSanitizedJsonInput, true);
+        $sOperation = $aJsonData['operation'];
+
+        switch ($sOperation) {
+            case 'core/check_credentials':
+                if (isset($aJsonData['password'])) {
+                    $aJsonData['password'] = '*****';
+                }
+                break;
+            case 'core/update':
+            case 'core/create':
+            default :
+            $sClass = $aJsonData['class'];
+            if (isset($aJsonData['fields'])) {
+                foreach ($aJsonData['fields'] as $sFieldAttCode => $fieldValue) {
+                    $oAttDef = MetaModel::GetAttributeDef($sClass, $sFieldAttCode);
+                    $this->SanitizeFieldIfSensitive($aJsonData['fields'], $sFieldAttCode, $fieldValue, $oAttDef);
+                }
+            }
+            break;
+        }
+		return json_encode($aJsonData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 	}
 
 	/**
@@ -814,4 +945,54 @@ class CoreServices implements iRestServiceProvider
 	{
 		return $iLimit * max(0, $iPage - 1);
 	}
+}
+
+/**
+ * Sanitizes sensitive fields on a "json ready" representation of a DBObject
+ * Useful for logging purposes
+ */
+trait SanitizeTrait
+{
+    /**
+     * Sanitize a field if it is sensitive.
+     *
+     * @param array $fields The fields array
+     * @param string $sFieldAttCode The attribute code
+     * @param mixed $oAttDef The attribute definition
+     * @throws Exception
+     */
+    private function SanitizeFieldIfSensitive(array &$fields, string $sFieldAttCode, $fieldValue, $oAttDef): void
+    {
+        // for simple attribute
+        if ($oAttDef instanceof iAttributeNoGroupBy) { // iAttributeNoGroupBy is equivalent to sensitive attribute
+            $fields[$sFieldAttCode] = '*****';
+            return;
+        }
+        // for 1-n / n-n relation
+        if ($oAttDef instanceof AttributeLinkedSet) {
+            foreach ($fieldValue as $i => $aLnkValues) {
+                foreach ($aLnkValues as $sLnkAttCode => $sLnkValue) {
+                    $oLnkAttDef = MetaModel::GetAttributeDef($oAttDef->GetLinkedClass(), $sLnkAttCode);
+                    if ($oLnkAttDef instanceof iAttributeNoGroupBy) { // 1-n relation
+                        $fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
+                    }
+                    elseif ($oAttDef instanceof AttributeLinkedSetIndirect && $oLnkAttDef instanceof AttributeExternalField) { // for n-n relation
+                        $oExtKeyAttDef = MetaModel::GetAttributeDef($oLnkAttDef->GetTargetClass(), $oLnkAttDef->GetExtAttCode());
+                        if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) {
+                            $fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
+                        }
+                    }
+                }
+            }
+            return;
+        }
+
+        // for external attribute
+        if ($oAttDef instanceof AttributeExternalField) {
+            $oExtKeyAttDef = MetaModel::GetAttributeDef($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
+            if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) {
+                $fields[$sFieldAttCode] = '*****';
+            }
+        }
+    }
 }

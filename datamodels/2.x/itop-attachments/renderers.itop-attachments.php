@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -29,8 +29,10 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 
+define('ATTACHMENT_DISPLAY_URL', 'pages/ajax.render.php?operation=display_document&class=Attachment&field=contents&id=');
 define('ATTACHMENT_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_document&class=Attachment&field=contents&id=');
 define('ATTACHMENTS_RENDERER', 'TableDetailsAttachmentsRenderer');
 
@@ -41,7 +43,7 @@ define('ATTACHMENTS_RENDERER', 'TableDetailsAttachmentsRenderer');
 class AttachmentsRendererFactory
 {
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sObjClass class name of the objects holding the attachments
 	 * @param int $iObjKey key of the objects holding the attachments
 	 * @param string $sTransactionId CSRF token
@@ -84,7 +86,7 @@ abstract class AbstractAttachmentsRenderer
 	 */
 	const ATTACHMENTS_LIST_CONTAINER_ID = 'AttachmentsListContainer';
 
-	/** @var \WebPage */
+	/** @var WebPage */
 	protected $oPage;
 	/**
 	 * @var string CSRF token, must be provided cause when getting content from AJAX we need the one from the original page, not the
@@ -101,14 +103,14 @@ abstract class AbstractAttachmentsRenderer
 	protected $oAttachmentsSet;
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sObjClass class name of the objects holding the attachments
 	 * @param int $iObjKey key of the objects holding the attachments
 	 * @param string $sTransactionId CSRF token
 	 *
 	 * @throws \OQLException
 	 */
-	public function __construct(\WebPage $oPage, $sObjClass, $iObjKey, $sTransactionId)
+	public function __construct(WebPage $oPage, $sObjClass, $iObjKey, $sTransactionId)
 	{
 		$this->oPage = $oPage;
 		$this->sObjClass = $sObjClass;
@@ -116,9 +118,11 @@ abstract class AbstractAttachmentsRenderer
 		$this->sTransactionId = $sTransactionId;
 
 		$oSearch = DBObjectSearch::FromOQL('SELECT Attachment WHERE item_class = :class AND item_id = :item_id');
+		$oSearch->AllowAllData();
 		$this->oAttachmentsSet = new DBObjectSet($oSearch, array(), array('class' => $sObjClass, 'item_id' => $iObjKey));
 
 		$oSearchTemp = DBObjectSearch::FromOQL('SELECT Attachment WHERE temp_id = :temp_id');
+		$oSearchTemp->AllowAllData();
 		$this->oTempAttachmentsSet = new DBObjectSet($oSearchTemp, array(), array('temp_id' => $this->sTransactionId));
 	}
 
@@ -181,6 +185,7 @@ abstract class AbstractAttachmentsRenderer
 	{
 		$sClass = $this->sObjClass;
 		$sId = $this->iObjKey;
+		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
 		$iMaxUploadInBytes = AttachmentPlugIn::GetMaxUploadSize();
 		$sMaxUploadLabel = AttachmentPlugIn::GetMaxUpload();
 		$sFileTooBigLabel = Dict::Format('Attachments:Error:FileTooLarge', $sMaxUploadLabel);
@@ -191,15 +196,15 @@ abstract class AbstractAttachmentsRenderer
 		$oAddButton = FileSelectUIBlockFactory::MakeStandard('file', 'file');
 		$oAddButton->SetShowFilename(false);
 		$this->oPage->AddUiBlock($oAddButton);
-		$this->oPage->add('<span style="display:none;" id="attachment_loading"><img src="../images/indicator.gif"></span> '.$sMaxUploadLabel);
+		$this->oPage->add('<span style="display:none;" id="attachment_loading"><img src="' . $sAppRootUrl . 'images/indicator.gif"></span> ' . $sMaxUploadLabel);
 		$this->oPage->add('</div>');
 		$this->oPage->add('<div class="ibo-attachment--upload-file--drop-zone-hint ibo-svg-illustration--container">');
 		$this->oPage->add(file_get_contents(APPROOT.'images/illustrations/undraw_upload.svg'));
 		$this->oPage->add(Dict::S('UI:Attachments:DropYourFileHint').'</div>');
 		
 
-		$this->oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
-		$this->oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
+		$this->oPage->LinkScriptFromAppRoot('node_modules/blueimp-file-upload/js/jquery.iframe-transport.js');
+		$this->oPage->LinkScriptFromAppRoot('node_modules/blueimp-file-upload/js/jquery.fileupload.js');
 
 		$this->oPage->add_ready_script(
 			<<<JS
@@ -271,7 +276,7 @@ abstract class AbstractAttachmentsRenderer
     e.stopPropagation();
   })
   
-	$(document).bind('dragover', function (e) {
+	$(document).on('dragover', function (e) {
 		var bFiles = false;
 		if (e.dataTransfer && e.dataTransfer.types)
 		{
@@ -312,7 +317,7 @@ abstract class AbstractAttachmentsRenderer
         window.dropZoneCnt++;
     });
     
-	$(document).bind('dragend dragleave drop', function(event){
+	$(document).on('dragend dragleave drop', function(event){
         window.dropZoneCnt--;
 		if(window.dropZone && window.dropZoneCnt === 0){
 			window.dropZone.removeClass('ibo-drag-in');
@@ -329,16 +334,16 @@ abstract class AbstractAttachmentsRenderer
 				$(this).addClass('image-in-use').find('img').wrap('<div class="image-in-use-wrapper" style="position:relative;display:inline-block;"></div>');
 			}
 		});
-		$('.htmlEditor').each(function() {
-			var oEditor = $(this).ckeditorGet();
-			var sHtml = oEditor.getData();
-			var jElement = $('<div/>').html(sHtml).contents();
-			jElement.find('img').each(function() {
-				var sSrc = $(this).attr('src');
-				$('.attachment a[href="'+sSrc+'"]').parent().addClass('image-in-use').find('img').wrap('<div class="image-in-use-wrapper" style="position:relative;display:inline-block;"></div>');
-			});
-		});
-		$('.image-in-use-wrapper').append('<div style="position:absolute;top:0;left:0;"><img src="../images/transp-lock.png"></div>');
+		// $('.htmlEditor').each(function() {
+		// 	var oEditor = $(this).ckeditorGet();
+		// 	var sHtml = oEditor.getData();
+		// 	var jElement = $('<div/>').html(sHtml).contents();
+		// 	jElement.find('img').each(function() {
+		// 		var sSrc = $(this).attr('src');
+		// 		$('.attachment a[href="'+sSrc+'"]').parent().addClass('image-in-use').find('img').wrap('<div class="image-in-use-wrapper" style="position:relative;display:inline-block;"></div>');
+		// 	});
+		// });
+		$('.image-in-use-wrapper').append('<div style="position:absolute;top:0;left:0;"><img src="' + GetAbsoluteUrlModulesRoot() + 'images/transp-lock.png"></div>');
 	}, 200 );
 JS
 		);
@@ -416,6 +421,7 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$sFileDate = Dict::S('Attachments:File:Date');
 		$sFileUploader = Dict::S('Attachments:File:Uploader');
 		$sFileType = Dict::S('Attachments:File:MimeType');
+		$sFileDownloadsCount = Dict::S('Attachments:File:DownloadsCount');
 
 		if ($bWithDeleteButton)
 		{
@@ -443,6 +449,7 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 			'upload-date' => array('label' => $sFileDate, 'description' => $sFileDate),
 			'uploader' => array('label' => $sFileUploader, 'description' => $sFileUploader),
 			'type' => array('label' => $sFileType, 'description' => $sFileType),
+			'downloads-count' => array('label' => $sFileDownloadsCount, 'description' => $sFileDownloadsCount),
 		);
 
 		if ($bWithDeleteButton) {
@@ -496,6 +503,7 @@ JS
 		/** @var \ormDocument $oDoc */
 		$oDoc = $oAttachment->Get('contents');
 
+		$sDocDisplayUrl = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DISPLAY_URL.$iAttachmentId;
 		$sDocDownloadUrl = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL.$iAttachmentId;
 		$sFileName = utils::HtmlEntities($oDoc->GetFileName());
 		$sTrId = $this->GetAttachmentContainerId($iAttachmentId);
@@ -521,6 +529,7 @@ JS
 		$sFileType = $oDoc->GetMimeType();
 
 		$sAttachmentThumbUrl = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
+		$sAttachmentPreviewUrl = '';
 		$sIconClass = '';
 		$iMaxWidth = MetaModel::GetModuleSetting('itop-attachments', 'preview_max_width', 290);
 		$iMaxSizeForPreview = MetaModel::GetModuleSetting('itop-attachments', 'icon_preview_max_size', self::DEFAULT_MAX_SIZE_FOR_PREVIEW);
@@ -530,23 +539,25 @@ JS
 		if ($oDoc->IsPreviewAvailable())
 		{
 			$sIconClass = ' preview';
+			$sAttachmentPreviewUrl = $sDocDisplayUrl;
 			if ($oDoc->GetSize() <= $iMaxSizeForPreview)
 			{
-				$sAttachmentThumbUrl = $sDocDownloadUrl;
+				$sAttachmentThumbUrl = $sDocDisplayUrl;
 			}
-			$sPreviewMarkup = utils::HtmlEntities('<img src="'.$sDocDownloadUrl.'" style="max-width: '.$iMaxWidth.'"/>');
+			$sPreviewMarkup = utils::HtmlEntities('<img src="'.$sDocDisplayUrl.'" style="max-width: '.$iMaxWidth.'"/>');
 		}
 
 		
 		$aAttachmentLine = array(
 			'@id' => $sTrId,
 			'@meta' => 'data-file-type="'.utils::HtmlEntities($sFileType).'" data-file-size-raw="'.utils::HtmlEntities($iFileSize).'" data-file-size-formatted="'.utils::HtmlEntities($sFileFormattedSize).'" data-file-uploader="'.utils::HtmlEntities($sAttachmentUploader).'"',
-			'icon' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="trigger-preview '.$sIconClass.'"><img class="ibo-attachment--datatable--icon-preview '.$sIconClass.'" data-tooltip-content="'.$sPreviewMarkup.'" data-tooltip-html-enabled="true" src="'.$sAttachmentThumbUrl.'"></a>',
+			'icon' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="'.$sIconClass.'"><img class="ibo-attachment--datatable--icon-preview '.$sIconClass.'" data-tooltip-content="'.$sPreviewMarkup.'" data-tooltip-html-enabled="true" src="'.$sAttachmentThumbUrl.'"></a>',
 			'filename' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="$sIconClass">'.$sFileName.'</a>'.$sAttachmentMeta,
 			'formatted-size' => $sFileFormattedSize,
 			'upload-date' => $sAttachmentDateFormatted,
 			'uploader' => $sAttachmentUploaderForHtml,
 			'type' => $sFileType,
+			'downloads-count' => $oDoc->GetDownloadsCount(),
 			'js' => '',
 		);
 

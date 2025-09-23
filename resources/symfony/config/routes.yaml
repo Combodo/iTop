@@ -1,0 +1,5 @@
+controllers:
+    resource:
+        path: ../../../sources/Controller/
+        namespace: Combodo\iTop\Controller
+    type: attribute

@@ -24,32 +24,29 @@ use Twig\TwigFunction;
  */
 final class WebLinkExtension extends AbstractExtension
 {
-    private $requestStack;
+    private RequestStack $requestStack;
 
     public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('link', [$this, 'link']),
-            new TwigFunction('preload', [$this, 'preload']),
-            new TwigFunction('dns_prefetch', [$this, 'dnsPrefetch']),
-            new TwigFunction('preconnect', [$this, 'preconnect']),
-            new TwigFunction('prefetch', [$this, 'prefetch']),
-            new TwigFunction('prerender', [$this, 'prerender']),
+            new TwigFunction('link', $this->link(...)),
+            new TwigFunction('preload', $this->preload(...)),
+            new TwigFunction('dns_prefetch', $this->dnsPrefetch(...)),
+            new TwigFunction('preconnect', $this->preconnect(...)),
+            new TwigFunction('prefetch', $this->prefetch(...)),
+            new TwigFunction('prerender', $this->prerender(...)),
         ];
     }
 
     /**
      * Adds a "Link" HTTP header.
      *
-     * @param string $rel        The relation type (e.g. "preload", "prefetch", "prerender" or "dns-prefetch")
+     * @param string $rel        The relation type (e.g. "preload", "prefetch", or "dns-prefetch")
      * @param array  $attributes The attributes of this link (e.g. "['as' => true]", "['pr' => 0.5]")
      *
      * @return string The relation URI
@@ -120,7 +117,11 @@ final class WebLinkExtension extends AbstractExtension
     }
 
     /**
-     * Indicates to the client that it should prerender this resource .
+     * Indicates to the client that it should prerender this resource.
+     *
+     * This feature is deprecated and superseded by the Speculation Rules API.
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel/prerender
      *
      * @param array $attributes The attributes of this link (e.g. "['as' => true]", "['pr' => 0.5]")
      *

@@ -1,15 +1,15 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
 /**
- * @author    LinProfs <info@linprofs.com>
- *
- * Linux & Open Source Professionals
- * http://www.linprofs.com
- *
+ * @author LinProfs <info@linprofs.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:RequestManagement' => 'Helpdesk',
@@ -42,6 +42,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Open verzoeken per soort',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Open verzoeken per organisatie',
 	'Class:UserRequest:KnownErrorList' => 'Gekende fouten',
+	'Class:UserRequest:KnownErrorList+' => 'Gekende fouten gerelateerd aan configuratie-items gekoppeld aan het huidige verzoek',
 	'Menu:UserRequest:MyWorkOrders' => 'Werkopdrachten toegewezen aan mij',
 	'Menu:UserRequest:MyWorkOrders+' => 'Alle werkopdrachten toegewezen aan mij',
 	'Class:Problem:KnownProblemList' => 'Gekende fouten',
@@ -282,7 +283,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:SelectLanguage' => 'Verander je taal',
 	'Portal:LanguageChangedTo_Lang' => 'Taal veranderd naar',
 	'Portal:ChooseYourFavoriteLanguage' => 'Kies je voorkeurstaal',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Los subverzoeken op',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem de kenmerken over wat betreft service, team, agent, oplossing',
 ));

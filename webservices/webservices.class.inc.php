@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Implementation of iTop SOAP services
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -298,9 +298,8 @@ abstract class WebServicesBase
 		if (is_object($oAttDef))
 		{
 			$iMaxSize = $oAttDef->GetMaxSize();
-			if ($iMaxSize && (strlen($sValue) > $iMaxSize))
-			{
-				$sValue = substr($sValue, 0, $iMaxSize);
+			if ($iMaxSize && (mb_strlen($sValue) > $iMaxSize)) {
+				$sValue = mb_substr($sValue, 0, $iMaxSize);
 			}
 			$oLog->Set($sAttCode, $sValue);
 		}

@@ -1,0 +1,389 @@
+$base-width: 1.25em;
+$base-width-half: $base-width / 2;
+
+/*
+ * BACKGROUND COLORS
+ * For glow and masking effects
+ */
+
+$bg-default-color: #fff;
+$bg-default-active-color: #f5f5f5;
+
+$bg-danger-color: #f2dede;
+$bg-danger-active-color: #ebcccc;
+
+$bg-warning-color: #fcf8e3;
+$bg-warning-active-color: #faf2cc;
+
+$bg-success-color: #dff0d8;
+$bg-success-active-color: #d0e9c6;
+
+$bg-info-color: #d9edf7;
+$bg-info-active-color: #c4e3f3;
+
+$bg-btn-default-hover-color:  #e6e6e6;
+$bg-btn-default-active-color: #d4d4d4;
+
+$bg-btn-success-color: #5cb85c;
+$bg-btn-success-hover-color: #449d44;
+$bg-btn-success-active-color: #398439;
+
+$bg-btn-warning-color: #f0ad4e;
+$bg-btn-warning-hover-color: #ec971f;
+$bg-btn-warning-active-color: #d58512;
+
+$bg-nav-pills-hover-color: #eeeeee;
+$bg-nav-pills-active-color: #337ab7;
+
+/**
+ * fa-layers
+ * - supports up, down, left, right
+ */
+
+.fa-layers {
+	position: relative;
+	display: inline-block;
+	width: $base-width;
+	height: $base-width;
+	line-height: $base-width;
+	text-align: center;
+	vertical-align: middle;
+
+	&.fa-fw > * {
+		width: 100%;
+		height: 100%;
+	}
+
+	& > .fa,
+	& > .fa-layers-text,
+	& > .fab,
+	& > .fad,
+	& > .fal,
+	& > .far,
+	& > .fas {
+		position: absolute;
+		left: 0;
+		width: 100%;
+		line-height: inherit;
+		text-align: center;
+	}
+	/*
+	 * SHIFTING
+	 */
+	@for $i from 1 through 8 {
+		& [data-fa-transform*='up-#{$i}'] {
+			top: -($i / 8 * 50%);
+		}
+	}
+	@for $i from 1 through 8 {
+		& [data-fa-transform*='down-#{$i}'] {
+			top: ($i / 8 * 50%);
+		}
+	}
+	@for $i from 1 through 8 {
+		& [data-fa-transform*='right-#{$i}'] {
+			left: ($i / 8 * 50%);
+		}
+	}
+	@for $i from 1 through 8 {
+		& [data-fa-transform*='left-#{$i}'] {
+			left: -($i / 8 * 50%);
+		}
+	}
+}
+
+.fa,
+.fa-layers-text,
+.fab,
+.fad,
+.fal,
+.far,
+.fas {
+	/*
+	 * ROTATE
+	 */
+	@for $i from 1 through 71 {
+		&[data-fa-transform*='rotate-#{$i * 5}'],
+		&[data-fa-transform*='rotate-#{$i * 5 - 360}'] {
+			transform: rotate(5deg * $i);
+		}
+	}
+	/*
+	 * FLIP
+	 */
+	&[data-fa-transform*='flip-h'] {
+		transform: scale(-1, 1);
+	}
+
+	&[data-fa-transform*='flip-v'] {
+		transform: scale(1, -1);
+	}
+
+	&[data-fa-transform*='flip-h'][data-fa-transform*='flip-v'] {
+		transform: scale(-1, -1);
+	}
+	/*
+	 * SHRINK
+	 */
+	@for $i from 1 through 16 {
+		&[data-fa-transform*='shrink-#{$i}'] {
+			font-size: 1em - $i / 16;
+		}
+	}
+	/*
+	 * GROW
+	 */
+	@for $i from 1 through 16 {
+		&[data-fa-transform*='grow-#{$i}'] {
+			font-size: 1em + $i / 16;
+		}
+	}
+
+	/*
+	 * MASKING
+	 */
+
+	&[data-fa-mask] {
+
+		color: $bg-default-color;
+
+		a.list-group-item:hover &,
+		a.list-group-item:focus &,
+		button.list-group-item:hover &,
+		button.list-group-item:focus & {
+			color: $bg-default-active-color;
+		}
+
+		.alert-danger &,
+		.bg-danger &,
+		.list-group-item-danger &,
+		tr.danger &,
+		td.danger & {
+			color: $bg-danger-color;
+		}
+
+		a.list-group-item-danger:hover &,
+		a.list-group-item-danger:focus &,
+		button.list-group-item-danger:hover &,
+		button.list-group-item-danger:focus & {
+			color: $bg-danger-active-color;
+		}
+
+		.alert-warning &,
+		.bg-warning &,
+		.list-group-item-warning &,
+		tr.warning &,
+		td.warning & {
+			color: $bg-warning-color;
+		}
+
+		a.list-group-item-warning:hover &,
+		a.list-group-item-warning:focus &,
+		button.list-group-item-warning:hover &,
+		button.list-group-item-warning:focus & {
+			color: $bg-warning-active-color;
+		}
+
+		.alert-success &,
+		.bg-success &,
+		.list-group-item-success &,
+		tr.success &,
+		td.success & {
+			color: $bg-success-color;
+		}
+
+		a.list-group-item-success:hover &,
+		a.list-group-item-success:focus &,
+		button.list-group-item-success:hover &,
+		button.list-group-item-success:focus & {
+			color: $bg-success-active-color;
+		}
+
+		.alert-info &,
+		.bg-info &,
+		.list-group-item-info &,
+		tr.info &,
+		td.info & {
+			color: $bg-info-color;
+		}
+
+		a.list-group-item-info:hover &,
+		a.list-group-item-info:focus &,
+		button.list-group-item-info:hover &,
+		button.list-group-item-info:focus & {
+			color: $bg-info-active-color;
+		}
+	}
+
+	/*
+	 * GLOWING
+	 */
+
+	&[data-fa-glow] {
+		text-shadow: -2px 0 0 $bg-default-color, 2px 0 $bg-default-color, 0 2px 0 $bg-default-color, 0 -2px 0 $bg-default-color, 1.5px 1.5px 0 $bg-default-color, -1.5px -1.5px 0 $bg-default-color, -1.5px 1.5px 0 $bg-default-color, 1.5px -1.5px 0 $bg-default-color;
+		-webkit-text-stroke-width: 4px;
+		-webkit-text-stroke-color: $bg-default-color;
+		paint-order: stroke fill;
+
+		@for $i from 1 through 9 {
+			&[data-fa-glow*='#{$i}px'] {
+				-webkit-text-stroke-width: #{$i}px;
+			}
+		}
+
+		a.list-group-item:hover &,
+		a.list-group-item:focus &,
+		button.list-group-item:hover &,
+		button.list-group-item:focus & {
+			text-shadow: -2px 0 0 $bg-default-active-color, 2px 0 $bg-default-active-color, 0 2px 0 $bg-default-active-color, 0 -2px 0 $bg-default-active-color, 1.5px 1.5px 0 $bg-default-active-color, -1.5px -1.5px 0 $bg-default-active-color, -1.5px 1.5px 0 $bg-default-active-color, 1.5px -1.5px 0 $bg-default-active-color;
+			-webkit-text-stroke-color: $bg-default-active-color;
+		}
+
+		.alert-danger &,
+		.bg-danger &,
+		.list-group-item-danger &,
+		tr.danger &,
+		td.danger &,
+		&[data-fa-glow*='danger'] {
+			text-shadow: -2px 0 0 $bg-danger-color, 2px 0 $bg-danger-color, 0 2px 0 $bg-danger-color, 0 -2px 0 $bg-danger-color, 1.5px 1.5px 0 $bg-danger-color, -1.5px -1.5px 0 $bg-danger-color, -1.5px 1.5px 0 $bg-danger-color, 1.5px -1.5px 0 $bg-danger-color;
+			-webkit-text-stroke-color: $bg-danger-color;
+		}
+
+		a.list-group-item-danger:hover &,
+		a.list-group-item-danger:focus &,
+		button.list-group-item-danger:hover &,
+		button.list-group-item-danger:focus & {
+			text-shadow: -2px 0 0 $bg-danger-active-color, 2px 0 $bg-danger-active-color, 0 2px 0 $bg-danger-active-color, 0 -2px 0 $bg-danger-active-color, 1.5px 1.5px 0 $bg-danger-active-color, -1.5px -1.5px 0 $bg-danger-active-color, -1.5px 1.5px 0 $bg-danger-active-color, 1.5px -1.5px 0 $bg-danger-active-color;
+			-webkit-text-stroke-color: $bg-danger-active-color;
+		}
+
+		.alert-warning &,
+		.bg-warning &,
+		.list-group-item-warning &,
+		tr.warning &,
+		td.warning &,
+		&[data-fa-glow*='warning'] {
+			text-shadow: -2px 0 0 $bg-warning-color, 2px 0 $bg-warning-color, 0 2px 0 $bg-warning-color, 0 -2px 0 $bg-warning-color, 1.5px 1.5px 0 $bg-warning-color, -1.5px -1.5px 0 $bg-warning-color, -1.5px 1.5px 0 $bg-warning-color, 1.5px -1.5px 0 $bg-warning-color;
+			-webkit-text-stroke-color: $bg-warning-color;
+		}
+
+		a.list-group-item-warning:hover &,
+		a.list-group-item-warning:focus &,
+		button.list-group-item-warning:hover &,
+		button.list-group-item-warning:focus & {
+			text-shadow: -2px 0 0 $bg-warning-active-color, 2px 0 $bg-warning-active-color, 0 2px 0 $bg-warning-active-color, 0 -2px 0 $bg-warning-active-color, 1.5px 1.5px 0 $bg-warning-active-color, -1.5px -1.5px 0 $bg-warning-active-color, -1.5px 1.5px 0 $bg-warning-active-color, 1.5px -1.5px 0 $bg-warning-active-color;
+			-webkit-text-stroke-color: $bg-warning-active-color;
+		}
+
+		.alert-success &,
+		.bg-success &,
+		.list-group-item-success &,
+		tr.success &,
+		td.success &,
+		&[data-fa-glow*='success'] {
+			text-shadow: -2px 0 0 $bg-success-color, 2px 0 $bg-success-color, 0 2px 0 $bg-success-color, 0 -2px 0 $bg-success-color, 1.5px 1.5px 0 $bg-success-color, -1.5px -1.5px 0 $bg-success-color, -1.5px 1.5px 0 $bg-success-color, 1.5px -1.5px 0 $bg-success-color;
+			-webkit-text-stroke-color: $bg-success-color;
+		}
+
+		a.list-group-item-success:hover &,
+		a.list-group-item-success:focus &,
+		button.list-group-item-success:hover &,
+		button.list-group-item-success:focus & {
+			text-shadow: -2px 0 0 $bg-success-active-color, 2px 0 $bg-success-active-color, 0 2px 0 $bg-success-active-color, 0 -2px 0 $bg-success-active-color, 1.5px 1.5px 0 $bg-success-active-color, -1.5px -1.5px 0 $bg-success-active-color, -1.5px 1.5px 0 $bg-success-active-color, 1.5px -1.5px 0 $bg-success-active-color;
+			-webkit-text-stroke-color: $bg-success-active-color;
+		}
+
+		.alert-info &,
+		.bg-info &,
+		.list-group-item-info &,
+		tr.info &,
+		td.info &,
+		&[data-fa-glow*='info'] {
+			text-shadow: -2px 0 0 $bg-info-color, 2px 0 $bg-info-color, 0 2px 0 $bg-info-color, 0 -2px 0 $bg-info-color, 1.5px 1.5px 0 $bg-info-color, -1.5px -1.5px 0 $bg-info-color, -1.5px 1.5px 0 $bg-info-color, 1.5px -1.5px 0 $bg-info-color;
+			-webkit-text-stroke-color: $bg-info-color;
+		}
+
+		a.list-group-item-info:hover &,
+		a.list-group-item-info:focus &,
+		button.list-group-item-info:hover &,
+		button.list-group-item-info:focus & {
+			text-shadow: -2px 0 0 $bg-info-active-color, 2px 0 $bg-info-active-color, 0 2px 0 $bg-info-active-color, 0 -2px 0 $bg-info-active-color, 1.5px 1.5px 0 $bg-info-active-color, -1.5px -1.5px 0 $bg-info-active-color, -1.5px 1.5px 0 $bg-info-active-color, 1.5px -1.5px 0 $bg-info-active-color;
+			-webkit-text-stroke-color: $bg-info-active-color;
+		}
+
+
+		.btn-default:hover &,
+		.btn-default:focus &,
+		.btn-default:active & {
+			text-shadow: -2px 0 0 $bg-btn-default-hover-color, 2px 0 $bg-btn-default-hover-color, 0 2px 0 $bg-btn-default-hover-color, 0 -2px 0 $bg-btn-default-hover-color, 1.5px 1.5px 0 $bg-btn-default-hover-color, -1.5px -1.5px 0 $bg-btn-default-hover-color, -1.5px 1.5px 0 $bg-btn-default-hover-color, 1.5px -1.5px 0 $bg-btn-default-hover-color;
+			-webkit-text-stroke-color: $bg-btn-default-hover-color;
+		}
+
+		.btn-default:active:hover &,
+		.btn-default:active:focus & {
+			text-shadow: -2px 0 0 $bg-btn-default-active-color, 2px 0 $bg-btn-default-active-color, 0 2px 0 $bg-btn-default-active-color, 0 -2px 0 $bg-btn-default-active-color, 1.5px 1.5px 0 $bg-btn-default-active-color, -1.5px -1.5px 0 $bg-btn-default-active-color, -1.5px 1.5px 0 $bg-btn-default-active-color, 1.5px -1.5px 0 $bg-btn-default-active-color;
+			-webkit-text-stroke-color: $bg-btn-default-active-color;
+		}
+
+
+		.btn-success & {
+			text-shadow: -2px 0 0 $bg-btn-success-color, 2px 0 $bg-btn-success-color, 0 2px 0 $bg-btn-success-color, 0 -2px 0 $bg-btn-success-color, 1.5px 1.5px 0 $bg-btn-success-color, -1.5px -1.5px 0 $bg-btn-success-color, -1.5px 1.5px 0 $bg-btn-success-color, 1.5px -1.5px 0 $bg-btn-success-color;
+			-webkit-text-stroke-color: $bg-btn-success-color;
+		}
+
+		.btn-success:hover &,
+		.btn-success:focus &,
+		.btn-success:active & {
+			text-shadow: -2px 0 0 $bg-btn-success-hover-color, 2px 0 $bg-btn-success-hover-color, 0 2px 0 $bg-btn-success-hover-color, 0 -2px 0 $bg-btn-success-hover-color, 1.5px 1.5px 0 $bg-btn-success-hover-color, -1.5px -1.5px 0 $bg-btn-success-hover-color, -1.5px 1.5px 0 $bg-btn-success-hover-color, 1.5px -1.5px 0 $bg-btn-success-hover-color;
+			-webkit-text-stroke-color: $bg-btn-success-hover-color;
+		}
+
+		.btn-success:active:hover &,
+		.btn-success:active:focus & {
+			text-shadow: -2px 0 0 $bg-btn-success-active-color, 2px 0 $bg-btn-success-active-color, 0 2px 0 $bg-btn-success-active-color, 0 -2px 0 $bg-btn-success-active-color, 1.5px 1.5px 0 $bg-btn-success-active-color, -1.5px -1.5px 0 $bg-btn-success-active-color, -1.5px 1.5px 0 $bg-btn-success-active-color, 1.5px -1.5px 0 $bg-btn-success-active-color;
+			-webkit-text-stroke-color: $bg-btn-success-active-color;
+		}
+
+
+		.btn-warning & {
+			text-shadow: -2px 0 0 $bg-btn-warning-color, 2px 0 $bg-btn-warning-color, 0 2px 0 $bg-btn-warning-color, 0 -2px 0 $bg-btn-warning-color, 1.5px 1.5px 0 $bg-btn-warning-color, -1.5px -1.5px 0 $bg-btn-warning-color, -1.5px 1.5px 0 $bg-btn-warning-color, 1.5px -1.5px 0 $bg-btn-warning-color;
+			-webkit-text-stroke-color: $bg-btn-warning-color;
+		}
+
+		.btn-warning:hover &,
+		.btn-warning:focus &,
+		.btn-warning:active & {
+			text-shadow: -2px 0 0 $bg-btn-warning-hover-color, 2px 0 $bg-btn-warning-hover-color, 0 2px 0 $bg-btn-warning-hover-color, 0 -2px 0 $bg-btn-warning-hover-color, 1.5px 1.5px 0 $bg-btn-warning-hover-color, -1.5px -1.5px 0 $bg-btn-warning-hover-color, -1.5px 1.5px 0 $bg-btn-warning-hover-color, 1.5px -1.5px 0 $bg-btn-warning-hover-color;
+			-webkit-text-stroke-color: $bg-btn-warning-hover-color;
+		}
+
+		.btn-warning:active:hover &,
+		.btn-warning:active:focus & {
+			text-shadow: -2px 0 0 $bg-btn-warning-active-color, 2px 0 $bg-btn-warning-active-color, 0 2px 0 $bg-btn-warning-active-color, 0 -2px 0 $bg-btn-warning-active-color, 1.5px 1.5px 0 $bg-btn-warning-active-color, -1.5px -1.5px 0 $bg-btn-warning-active-color, -1.5px 1.5px 0 $bg-btn-warning-active-color, 1.5px -1.5px 0 $bg-btn-warning-active-color;
+			-webkit-text-stroke-color: $bg-btn-warning-active-color;
+		}
+
+
+		.nav-pills [data-toggle='tab']:hover &,
+		.nav-pills [data-toggle='tab']:focus & {
+			text-shadow: -2px 0 0 $bg-nav-pills-hover-color, 2px 0 $bg-nav-pills-hover-color, 0 2px 0 $bg-nav-pills-hover-color, 0 -2px 0 $bg-nav-pills-hover-color, 1.5px 1.5px 0 $bg-nav-pills-hover-color, -1.5px -1.5px 0 $bg-nav-pills-hover-color, -1.5px 1.5px 0 $bg-nav-pills-hover-color, 1.5px -1.5px 0 $bg-nav-pills-hover-color;
+			-webkit-text-stroke-color: $bg-nav-pills-hover-color;
+		}
+
+		.nav-pills > .active > [data-toggle='tab'] & {
+			text-shadow: -2px 0 0 $bg-nav-pills-active-color, 2px 0 $bg-nav-pills-active-color, 0 2px 0 $bg-nav-pills-active-color, 0 -2px 0 $bg-nav-pills-active-color, 1.5px 1.5px 0 $bg-nav-pills-active-color, -1.5px -1.5px 0 $bg-nav-pills-active-color, -1.5px 1.5px 0 $bg-nav-pills-active-color, 1.5px -1.5px 0 $bg-nav-pills-active-color;
+			-webkit-text-stroke-color: $bg-nav-pills-active-color;
+		}
+
+		&[data-fa-glow*='black'] {
+			text-shadow: -2px 0 0 #000, 2px 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1.5px 1.5px 0 #000, -1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px -1.5px 0 #000;
+			-webkit-text-stroke-color: #000;
+		}
+
+		&[data-fa-glow*='1px'],
+		&[data-fa-glow*='2px'],
+		&[data-fa-glow*='3px'] {
+			text-shadow: none;
+		}
+	}
+}

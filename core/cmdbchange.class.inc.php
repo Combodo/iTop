@@ -2,7 +2,7 @@
 /**
  * Persistent class (internal) cmdbChange
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -19,21 +19,21 @@ class CMDBChange extends DBObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "date",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_change",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "date",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_change",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-			'indexes' => array(
+			'indexes'             => array(
 				array('origin'),
-			)
+			),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeDateTime("date", array("allowed_values"=>null, "sql"=>"date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("date", array("allowed_values"=>null, "sql"=>"date", "default_value"=>"NOW()", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", array("allowed_values"=>null, "sql"=>"user_id", "targetclass"=>"User", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("origin", array("allowed_values"=>new ValueSetEnum(implode(',', [CMDBChangeOrigin::INTERACTIVE, CMDBChangeOrigin::CSV_INTERACTIVE, CMDBChangeOrigin::CSV_IMPORT, CMDBChangeOrigin::WEBSERVICE_SOAP, CMDBChangeOrigin::WEBSERVICE_REST, CMDBChangeOrigin::SYNCHRO_DATA_SOURCE, CMDBChangeOrigin::EMAIL_PROCESSING, CMDBChangeOrigin::CUSTOM_EXTENSION])), "sql"=>"origin", "default_value"=>CMDBChangeOrigin::INTERACTIVE, "is_null_allowed"=>true, "depends_on"=>array())));

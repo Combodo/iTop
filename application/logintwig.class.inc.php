@@ -2,13 +2,14 @@
 
 /**
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\TwigBase\Twig\Extension;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
 use Twig\Environment;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
@@ -51,12 +52,13 @@ class LoginTwigContext
 	/**
 	 * Set the absolute path on disk of the folder containing the twig templates
 	 *
-	 * @param string $sPath absolute path of twig templates directory
 	 * @api
+	 *
+	 *@param string $sAbsPath Absolute path of twig templates directory
 	 */
-	public function SetLoaderPath($sPath)
+	public function SetLoaderPath($sAbsPath)
 	{
-		$this->sTwigLoaderPath = $sPath;
+		$this->sTwigLoaderPath = $sAbsPath;
 	}
 
 	/**
@@ -83,24 +85,27 @@ class LoginTwigContext
 	}
 
 	/**
-	 * Add the URL of a CSS file to link to the login screen
+	 * Add the absolute URL of a CSS file to link to the login screen
 	 *
-	 * @param string $sFile URL of the CSS file to link
 	 * @api
+	 *
+	 * @param string $sFileAbsURL Absolute URL of the CSS file to link
 	 */
-	public function AddCSSFile($sFile)
+	public function AddCSSFile($sFileAbsURL)
 	{
-		$this->aCSSFiles[] = $sFile;
+		$this->aCSSFiles[] = $sFileAbsURL;
 	}
 
 	/**
-	 * Add the URL of a javascript file to link to the login screen
-	 * @param string $sFile URL of the javascript file to link
+	 * Add the absolute URL of a javascript file to link to the login screen
+	 *
 	 * @api
+	 *
+	 * @param string $sFileAbsURL Absolute URL of the javascript file to link
 	 */
-	public function AddJsFile($sFile)
+	public function AddJsFile($sFileAbsURL)
 	{
-		$this->aJsFiles[] = $sFile;
+		$this->aJsFiles[] = $sFileAbsURL;
 	}
 
 	/**
@@ -132,7 +137,7 @@ class LoginTwigContext
 	}
 
 	/**
-	 * @return array
+	 * @return array Absolute URLs of the CSS files
 	 */
 	public function GetCSSFiles()
 	{
@@ -140,7 +145,7 @@ class LoginTwigContext
 	}
 
 	/**
-	 * @return array
+	 * @return array Absolute URLs of the JS files
 	 */
 	public function GetJsFiles()
 	{
@@ -273,12 +278,12 @@ class LoginTwigRenderer
 			$aCSSFiles = $oFormData->GetCSSFiles();
 			foreach ($aCSSFiles as $sCSSFile)
 			{
-				$oPage->add_linked_stylesheet($sCSSFile);
+				$oPage->LinkStylesheetFromURI($sCSSFile);
 			}
 			$aJsFiles = $oFormData->GetJsFiles();
 			foreach ($aJsFiles as $sJsFile)
 			{
-				$oPage->add_linked_script($sJsFile);
+				$oPage->LinkScriptFromURI($sJsFile);
 
 			}
 		}

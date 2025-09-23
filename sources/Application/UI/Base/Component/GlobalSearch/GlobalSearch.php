@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,7 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\GlobalSearch;
 
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
-use iKeyboardShortcut;
+use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use MetaModel;
 use utils;
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,15 +8,18 @@ use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
+use Combodo\iTop\Application\Helper\ExportHelper;
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Bulk export: CSV export
  *
- * @copyright   Copyright (C) 2015-2021 Combodo SARL
+ * @copyright   Copyright (C) 2015-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class CSVBulkExport extends TabularBulkExport
@@ -100,7 +103,7 @@ class CSVBulkExport extends TabularBulkExport
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sPartId
 	 *
 	 * @return UIContentBlock
@@ -114,6 +117,7 @@ class CSVBulkExport extends TabularBulkExport
 
 			case 'csv_options':
 				$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:CSVOptions'));
+				$oPanel->AddSubBlock(ExportHelper::GetAlertForExcelMaliciousInjection());
 
 				$oMulticolumn = MultiColumnUIBlockFactory::MakeStandard();
 				$oPanel->AddSubBlock($oMulticolumn);
@@ -137,7 +141,7 @@ class CSVBulkExport extends TabularBulkExport
 				$aSep['other'] = Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" name="other-separator" value="'.utils::EscapeHtml($sOtherSeparator).'"/>';
 
 				foreach ($aSep as $sVal => $sLabel) {
-					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "separator", utils::EscapeHtml($sVal), $sLabel, "radio");
+					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "separator", $sVal, $sLabel, "radio");
 					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawSeparator));
 					$oRadio->SetBeforeInput(false);
 					$oRadio->GetInput()->AddCSSClass('ibo-input--label-right');
@@ -163,8 +167,8 @@ class CSVBulkExport extends TabularBulkExport
 				$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" name="other-text-qualifier" value="'.utils::EscapeHtml($sOtherQualifier).'"/>';
 
 				foreach ($aQualifiers as $sVal => $sLabel) {
-					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text-qualifier", utils::EscapeHtml($sVal), $sLabel, "radio");
-					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawSeparator));
+					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text-qualifier", $sVal, $sLabel, "radio");
+					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawQualifier));
 					$oRadio->SetBeforeInput(false);
 					$oRadio->GetInput()->AddCSSClass('ibo-input--label-right');
 					$oRadio->GetInput()->AddCSSClass('ibo-input-checkbox');

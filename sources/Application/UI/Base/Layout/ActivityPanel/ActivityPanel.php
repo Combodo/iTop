@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -51,6 +51,7 @@ class ActivityPanel extends UIBlock
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/jquery.ba-bbq.min.js',
+		'js/leave_handler.js',
 		'js/layouts/activity-panel/activity-panel.js',
 	];
 
@@ -90,6 +91,17 @@ class ActivityPanel extends UIBlock
 	protected $oComposeMenu;
 	/** @var bool Whether a confirmation dialog should be prompt when multiple entries are about to be submitted at once */
 	protected $bShowMultipleEntriesSubmitConfirmation;
+	/** @var int */
+	protected $iDatetimesReformatLimit;
+	/** @var int */
+	protected $iLockWatcherPeriod;
+	/** @var bool */
+	protected $bPrefilterOnlyCurrentLog;
+	/** @var bool */
+	protected $bPrefilterStateChangesOnLogs;
+	/** @var bool */
+	protected $bPrefilterEditsOnLogs;
+
 
 	/**
 	 * ActivityPanel constructor.
@@ -105,16 +117,21 @@ class ActivityPanel extends UIBlock
 	{
 		parent::__construct($sId);
 
+		$oConfig = MetaModel::GetConfig();
 		$this->InitializeCaseLogTabs();
 		$this->InitializeCaseLogTabsEntryForms();
 		$this->InitializeComposeMenu();
 		$this->SetObjectMode(cmdbAbstractObject::DEFAULT_DISPLAY_MODE);
 		$this->SetObject($oObject);
 		$this->SetEntries($aEntries);
+		$this->SetDatetimesReformatLimit($oConfig->Get('activity_panel.datetimes_reformat_limit'));
+		$this->SetLockWatcherPeriod($oConfig->Get('activity_panel.lock_watcher_period'));
+		$this->SetPrefilterOnlyCurrentLog($oConfig->Get('activity_panel.prefilter_only_current_log'));
+		$this->SetPrefilterStateChangesOnLogs($oConfig->Get('activity_panel.prefilter_state_changes_on_logs'));
+		$this->SetPrefilterEditsOnLogs($oConfig->Get('activity_panel.prefilter_edits_on_logs'));
 		$this->bAreEntriesSorted = false;
 		$this->bHasMoreEntriesToLoad = false;
 		$this->aLastLoadedEntriesIds = [];
-		$this->ComputedShowMultipleEntriesSubmitConfirmation();
 	}
 
 	/**
@@ -745,7 +762,7 @@ class ActivityPanel extends UIBlock
 	 */
 	public function IsComposeButtonEnabled(): bool
 	{
-		return $this->HasAnEditableCaseLogTab() && $this->IsCaseLogsSubmitAutonomous();
+		return $this->HasAnEditableCaseLogTab() && $this->IsCaseLogsSubmitAutonomous() && $this->HasUserModifyRights();
 	}
 
 	/**
@@ -847,6 +864,86 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
+	 * @return int
+	 */
+	public function GetDatetimesReformatLimit(): int
+	{
+		return $this->iDatetimesReformatLimit;
+	}
+
+	/**
+	 * @param int $iDatetimesReformatLimit
+	 */
+	public function SetDatetimesReformatLimit(int $iDatetimesReformatLimit): void
+	{
+		$this->iDatetimesReformatLimit = $iDatetimesReformatLimit;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function GetLockWatcherPeriod(): int
+	{
+		return $this->iLockWatcherPeriod;
+	}
+
+	/**
+	 * @param int $iLockWatcherPeriod
+	 */
+	public function SetLockWatcherPeriod(int $iLockWatcherPeriod): void
+	{
+		$this->iLockWatcherPeriod = $iLockWatcherPeriod;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function GetPrefilterOnlyCurrentLog(): bool
+	{
+		return $this->bPrefilterOnlyCurrentLog;
+	}
+
+	/**
+	 * @param bool $bPrefilterOnlyCurrentLog
+	 */
+	public function SetPrefilterOnlyCurrentLog(bool $bPrefilterOnlyCurrentLog): void
+	{
+		$this->bPrefilterOnlyCurrentLog = $bPrefilterOnlyCurrentLog;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function GetPrefilterStateChangesOnLogs(): bool
+	{
+		return $this->bPrefilterStateChangesOnLogs;
+	}
+
+	/**
+	 * @param bool $bPrefilterStateChangesOnLogs
+	 */
+	public function SetPrefilterStateChangesOnLogs(bool $bPrefilterStateChangesOnLogs): void
+	{
+		$this->bPrefilterStateChangesOnLogs = $bPrefilterStateChangesOnLogs;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function GetPrefilterEditsOnLogs(): bool
+	{
+		return $this->bPrefilterEditsOnLogs;
+	}
+
+	/**
+	 * @param bool $bPrefilterEditsOnLogs
+	 */
+	public function SetPrefilterEditsOnLogs(bool $bPrefilterEditsOnLogs): void
+	{
+		$this->bPrefilterEditsOnLogs = $bPrefilterEditsOnLogs;
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function GetSubBlocks(): array
@@ -863,17 +960,11 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
-	 * @see static::$bShowMultipleEntriesSubmitConfirmation
-	 * @return $this
+	 * @return bool
 	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
 	 */
-	protected function ComputedShowMultipleEntriesSubmitConfirmation()
+	protected function HasUserModifyRights(): bool
 	{
-		// Note: Test on a string is necessary as we can only store strings from the JS API, not booleans.
-		// Note 2: Do not invert the test to "=== 'true'" as it won't work. Default value is a bool ("true"), values from the DB are strings (true|false)
-		$this->bShowMultipleEntriesSubmitConfirmation = appUserPreferences::GetPref('activity_panel.show_multiple_entries_submit_confirmation', static::DEFAULT_SHOW_MULTIPLE_ENTRIES_SUBMI_CONFIRMATION) !== 'false';
-		return $this;
+		return \UserRights::IsActionAllowed($this->GetObjectClass(), UR_ACTION_MODIFY);
 	}
 }

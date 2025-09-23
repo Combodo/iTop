@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -15,9 +15,9 @@ use Combodo\iTop\Application\UI\Base\Component\Field\Field;
  * Class InputUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Input
+ * @package UIBlockAPI
+ * @api
  * @since 3.0.0
- * @internal
  */
 class InputUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -26,6 +26,14 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Input::class;
 
+	/**
+	 * @api
+	 * @param string $sName
+	 * @param string $sValue
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Input
+	 */
 	public static function MakeForHidden(string $sName, string $sValue, ?string $sId = null)
 	{
 		$oInput = new Input($sId);
@@ -37,6 +45,15 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 		return $oInput;
 	}
 
+	/**
+	 * @api
+	 * @param string $sType
+	 * @param string $sName
+	 * @param string $sValue
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Input
+	 */
 	public static function MakeStandard(string $sType, string $sName, string $sValue, ?string $sId = null)
 	{
 		$oInput = new Input($sId);
@@ -49,6 +66,7 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 	}
 
 	/**
+	 * @api
 	 * @see Field component that is better adapter when dealing with a standard iTop form
 	 *
 	 * @param string $sLabel
@@ -71,7 +89,17 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 		return static::MakeInputWithLabel($sInputName, $sLabel, $oInput, $sInputId);
 	}
 
-	private static function MakeInputWithLabel(string $sName, string $sLabel, Input $oInput, ?string $sId = null)
+	/**
+	 * @api
+	 * @param string $sName
+	 * @param string $sLabel
+	 * @param \Combodo\iTop\Application\UI\Base\Component\Input\Input $oInput
+	 * @param string|null $sId
+	 * @since 3.2.0 method is now public
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\InputWithLabel
+	 */
+	public static function MakeInputWithLabel(string $sName, string $sLabel, Input $oInput, ?string $sId = null)
 	{
 		$oInput->SetName($sName);
 

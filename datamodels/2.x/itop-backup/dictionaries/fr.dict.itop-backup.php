@@ -2,14 +2,16 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2021 Combodo
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ *
  */
 Dict::Add('FR FR', 'French', 'Français', array(
-
 	'bkp-backup-running' => 'Une sauvegarde est en cours. Veuillez patienter...',
 	'bkp-restore-running' => 'Une restauration des données est en cours. Veuillez patienter...',
-
 	'Menu:BackupStatus' => 'Sauvegardes',
 	'bkp-status-title' => 'Sauvegardes',
 	'bkp-status-checks' => 'Réglages et vérifications',

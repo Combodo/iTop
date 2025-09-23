@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -138,4 +138,8 @@ class InputWithLabel extends UIBlock
 		return utils::IsNotNullOrEmptyString($this->sDescription);
 	}
 
+	public function GetSubBlocks(): array
+	{
+		return [$this->oInput->GetId() => $this->oInput];
+	}
 }

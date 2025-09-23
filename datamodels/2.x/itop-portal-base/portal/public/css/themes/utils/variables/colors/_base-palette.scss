@@ -1,0 +1,127 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* 
+Base color palette 
+CSS variables 
+These are defined in themes/ as utils/ is included thrice and each time these variables are redeclared in the stylesheets
+*/
+:root {
+  --ipb-color-white-100: #{$ipb-color-white-100};
+  --ipb-color-white-200: #{$ipb-color-white-200};
+  --ipb-color-transparent: #{$ipb-color-transparent};
+
+  --ipb-color-grey-50: #{$ipb-color-grey-50};
+  --ipb-color-grey-100: #{$ipb-color-grey-100};
+  --ipb-color-grey-200: #{$ipb-color-grey-200};
+  --ipb-color-grey-300: #{$ipb-color-grey-300};
+  --ipb-color-grey-400: #{$ipb-color-grey-400};
+  --ipb-color-grey-500: #{$ipb-color-grey-500};
+  --ipb-color-grey-600: #{$ipb-color-grey-600};
+  --ipb-color-grey-700: #{$ipb-color-grey-700};
+  --ipb-color-grey-800: #{$ipb-color-grey-800};
+  --ipb-color-grey-900: #{$ipb-color-grey-900};
+  --ipb-color-grey-950: #{$ipb-color-grey-950};
+
+  --ipb-color-blue-grey-50: #{$ipb-color-blue-grey-50};
+  --ipb-color-blue-grey-100: #{$ipb-color-blue-grey-100};
+  --ipb-color-blue-grey-200: #{$ipb-color-blue-grey-200};
+  --ipb-color-blue-grey-300: #{$ipb-color-blue-grey-300};
+  --ipb-color-blue-grey-400: #{$ipb-color-blue-grey-400};
+  --ipb-color-blue-grey-500: #{$ipb-color-blue-grey-500};
+  --ipb-color-blue-grey-600: #{$ipb-color-blue-grey-600};
+  --ipb-color-blue-grey-700: #{$ipb-color-blue-grey-700};
+  --ipb-color-blue-grey-800: #{$ipb-color-blue-grey-800};
+  --ipb-color-blue-grey-900: #{$ipb-color-blue-grey-900};
+  --ipb-color-blue-grey-950: #{$ipb-color-blue-grey-950};
+
+  --ipb-color-blue-100: #{$ipb-color-blue-100};
+  --ipb-color-blue-200: #{$ipb-color-blue-200};
+  --ipb-color-blue-300: #{$ipb-color-blue-300};
+  --ipb-color-blue-400: #{$ipb-color-blue-400};
+  --ipb-color-blue-500: #{$ipb-color-blue-500};
+  --ipb-color-blue-600: #{$ipb-color-blue-600};
+  --ipb-color-blue-700: #{$ipb-color-blue-700};
+  --ipb-color-blue-800: #{$ipb-color-blue-800};
+  --ipb-color-blue-900: #{$ipb-color-blue-900};
+  --ipb-color-blue-950: #{$ipb-color-blue-950};
+
+  --ipb-color-cyan-100: #{$ipb-color-cyan-100};
+  --ipb-color-cyan-200: #{$ipb-color-cyan-200};
+  --ipb-color-cyan-300: #{$ipb-color-cyan-300};
+  --ipb-color-cyan-400: #{$ipb-color-cyan-400};
+  --ipb-color-cyan-500: #{$ipb-color-cyan-500};
+  --ipb-color-cyan-600: #{$ipb-color-cyan-600};
+  --ipb-color-cyan-700: #{$ipb-color-cyan-700};
+  --ipb-color-cyan-800: #{$ipb-color-cyan-800};
+  --ipb-color-cyan-900: #{$ipb-color-cyan-900};
+  --ipb-color-cyan-950: #{$ipb-color-cyan-950};
+
+  --ipb-color-green-100: #{$ipb-color-green-100};
+  --ipb-color-green-200: #{$ipb-color-green-200};
+  --ipb-color-green-300: #{$ipb-color-green-300};
+  --ipb-color-green-400: #{$ipb-color-green-400};
+  --ipb-color-green-500: #{$ipb-color-green-500};
+  --ipb-color-green-600: #{$ipb-color-green-600};
+  --ipb-color-green-700: #{$ipb-color-green-700};
+  --ipb-color-green-800: #{$ipb-color-green-800};
+  --ipb-color-green-900: #{$ipb-color-green-900};
+  --ipb-color-green-950: #{$ipb-color-green-950};
+
+  --ipb-color-orange-100: #{$ipb-color-orange-100};
+  --ipb-color-orange-200: #{$ipb-color-orange-200};
+  --ipb-color-orange-300: #{$ipb-color-orange-300};
+  --ipb-color-orange-400: #{$ipb-color-orange-400};
+  --ipb-color-orange-500: #{$ipb-color-orange-500};
+  --ipb-color-orange-600: #{$ipb-color-orange-600};
+  --ipb-color-orange-700: #{$ipb-color-orange-700};
+  --ipb-color-orange-800: #{$ipb-color-orange-800};
+  --ipb-color-orange-900: #{$ipb-color-orange-900};
+  --ipb-color-orange-950: #{$ipb-color-orange-950};
+
+  --ipb-color-red-100: #{$ipb-color-red-100};
+  --ipb-color-red-200: #{$ipb-color-red-200};
+  --ipb-color-red-300: #{$ipb-color-red-300};
+  --ipb-color-red-400: #{$ipb-color-red-400};
+  --ipb-color-red-500: #{$ipb-color-red-500};
+  --ipb-color-red-600: #{$ipb-color-red-600};
+  --ipb-color-red-700: #{$ipb-color-red-700};
+  --ipb-color-red-800: #{$ipb-color-red-800};
+  --ipb-color-red-900: #{$ipb-color-red-900};
+  --ipb-color-red-950: #{$ipb-color-red-950};
+
+  --ipb-color-pink-100: #{$ipb-color-pink-100};
+  --ipb-color-pink-200: #{$ipb-color-pink-200};
+  --ipb-color-pink-300: #{$ipb-color-pink-300};
+  --ipb-color-pink-400: #{$ipb-color-pink-400};
+  --ipb-color-pink-500: #{$ipb-color-pink-500};
+  --ipb-color-pink-600: #{$ipb-color-pink-600};
+  --ipb-color-pink-700: #{$ipb-color-pink-700};
+  --ipb-color-pink-800: #{$ipb-color-pink-800};
+  --ipb-color-pink-900: #{$ipb-color-pink-900};
+  --ipb-color-pink-950: #{$ipb-color-pink-950};
+
+  --ipb-color-yellow-100: #{$ipb-color-yellow-100};
+  --ipb-color-yellow-200: #{$ipb-color-yellow-200};
+  --ipb-color-yellow-300: #{$ipb-color-yellow-300};
+  --ipb-color-yellow-400: #{$ipb-color-yellow-400};
+  --ipb-color-yellow-500: #{$ipb-color-yellow-500};
+  --ipb-color-yellow-600: #{$ipb-color-yellow-600};
+  --ipb-color-yellow-700: #{$ipb-color-yellow-700};
+  --ipb-color-yellow-800: #{$ipb-color-yellow-800};
+  --ipb-color-yellow-900: #{$ipb-color-yellow-900};
+  --ipb-color-yellow-950: #{$ipb-color-yellow-950};
+
+  --ipb-color-purple-100: #{$ipb-color-purple-100};
+  --ipb-color-purple-200: #{$ipb-color-purple-200};
+  --ipb-color-purple-300: #{$ipb-color-purple-300};
+  --ipb-color-purple-400: #{$ipb-color-purple-400};
+  --ipb-color-purple-500: #{$ipb-color-purple-500};
+  --ipb-color-purple-600: #{$ipb-color-purple-600};
+  --ipb-color-purple-700: #{$ipb-color-purple-700};
+  --ipb-color-purple-800: #{$ipb-color-purple-800};
+  --ipb-color-purple-900: #{$ipb-color-purple-900};
+  --ipb-color-purple-950: #{$ipb-color-purple-950};
+}

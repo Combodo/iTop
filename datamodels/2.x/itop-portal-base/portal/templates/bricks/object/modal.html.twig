@@ -1,23 +1,21 @@
-{# itop-portal-base/portal/templates/bricks/object/modal.html.twig #}
-{# Object brick base layout #}
-{% extends 'itop-portal-base/portal/templates/modal/layout.html.twig' %}
+{% extends template('modal') %}
 
 {% block pModalTitle %}
-	{% if form.title_clipboard_text is defined %}
-		<i class="url-to-clipboard url-to-clipboard-icon fas fa-link fa-xs" 
-		   data-clipboard-text="{{ form.title_clipboard_text }}"
-          data-toggle="tooltip"
-		   data-tooltip-content="{{ 'Brick:Portal:Object:Copy:Tooltip' | dict_s }}"
+    {% if form.title_clipboard_text is defined %}
+        <i class="url-to-clipboard url-to-clipboard-icon fas fa-link fa-xs"
+           data-clipboard-text="{{ form.title_clipboard_text }}"
+           data-toggle="tooltip"
+           data-tooltip-content="{{ 'Brick:Portal:Object:Copy:Tooltip' | dict_s }}"
            data-tooltip-html-enabled="true"
-		   data-copied-title="{{ 'Brick:Portal:Object:Copy:CopiedTooltip' | dict_s }}"
-		   data-copied-icon="fas fa-check">
-		</i>
-	{% endif %}
+           data-copied-title="{{ 'Brick:Portal:Object:Copy:CopiedTooltip' | dict_s }}"
+           data-copied-icon="fas fa-check">
+        </i>
+    {% endif %}
 	{% if form.title is defined %}
-		{{ form.title|raw }}
+        <span>{{ form.title|raw }}</span>{% if form.title_complement is defined %}<span>{{ form.title_complement|raw }}</span>{% endif %}
 	{% endif %}
 {% endblock %}
 
 {% block pModalBody %}
-	{% include 'itop-portal-base/portal/templates/bricks/object/mode_' ~ sMode ~ '.html.twig' with {tIsModal: true} %}
+    {% include template(sMode, 'Combodo\\iTop\\Portal\\Controller\\ObjectController') with {tIsModal: true} %}
 {% endblock %}

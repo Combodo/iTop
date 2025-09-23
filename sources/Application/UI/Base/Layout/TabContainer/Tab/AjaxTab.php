@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -23,7 +23,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIException;
 use Dict;
-use TabManager;
+use Combodo\iTop\Application\WebPage\TabManager;
 use utils;
 
 /**
@@ -77,10 +77,13 @@ class AjaxTab extends Tab
 	 * @param string $sTabCode
 	 * @param string $sTitle
 	 * @param string $sPlaceholderRelPath
+	 * @param string|null $sDescription {@see \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab::$sDescription}
+	 *
+	 * @since 3.1.0 N°5920 Add $sDescription argument
 	 */
-	public function __construct(string $sTabCode, string $sTitle, string $sPlaceholderRelPath = AjaxTab::DEFAULT_TAB_PLACEHOLDER)
+	public function __construct(string $sTabCode, string $sTitle, string $sPlaceholderRelPath = AjaxTab::DEFAULT_TAB_PLACEHOLDER, ?string $sDescription = null)
 	{
-		parent::__construct($sTabCode, $sTitle);
+		parent::__construct($sTabCode, $sTitle, $sDescription);
 		$this->sPlaceholderRelPath = $sPlaceholderRelPath;
 	}
 

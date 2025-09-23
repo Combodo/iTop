@@ -110,7 +110,7 @@ class PHP_LexerGenerator_Regex_Lexer
         $yy_global_pattern = '/\G(\\\\\\\\)|\G([^[\\\\^$.|()?*+{}]+)|\G(\\\\[][{}*.^$|?()+])|\G(\\[)|\G(\\|)|\G(\\\\[frnt]|\\\\x[0-9a-fA-F][0-9a-fA-F]?|\\\\[0-7][0-7][0-7]|\\\\x\\{[0-9a-fA-F]+\\})|\G(\\\\[0-9][0-9])|\G(\\\\[abBGcedDsSwW0C]|\\\\c\\\\)|\G(\\^)|\G(\\\\A)|\G(\\))|\G(\\$)|\G(\\*\\?|\\+\\?|[*?+]|\\{[0-9]+\\}|\\{[0-9]+,\\}|\\{[0-9]+,[0-9]+\\})|\G(\\\\[zZ])|\G(\\(\\?)|\G(\\()|\G(\\.)|\G(\\\\[1-9])|\G(\\\\p\\{\\^?..?\\}|\\\\P\\{..?\\}|\\\\X)|\G(\\\\p\\{C[cfnos]?|L[lmotu]?|M[cen]?|N[dlo]?|P[cdefios]?|S[ckmo]?|Z[lps]?\\})|\G(\\\\p\\{\\^C[cfnos]?|L[lmotu]?|M[cen]?|N[dlo]?|P[cdefios]?|S[ckmo]?|Z[lps]?\\})|\G(\\\\p[CLMNPSZ])|\G(\\\\)/';
 
         do {
-            if (preg_match($yy_global_pattern,$this->input, $yymatches, null, $this->N)) {
+            if (preg_match($yy_global_pattern,$this->input, $yymatches, 0, $this->N)) {
                 $yysubmatches = $yymatches;
                 $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
                 if (!count($yymatches)) {
@@ -180,7 +180,7 @@ class PHP_LexerGenerator_Regex_Lexer
                         }
                         $yysubmatches = array();
                         if (preg_match('/' . $yy_yymore_patterns[$this->token][1] . '/',
-                              $this->input, $yymatches, null, $this->N)) {
+                              $this->input, $yymatches, 0, $this->N)) {
                             $yysubmatches = $yymatches;
                             $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
                             next($yymatches); // skip global match
@@ -360,7 +360,7 @@ class PHP_LexerGenerator_Regex_Lexer
         $yy_global_pattern = '/\G(\\^)|\G(\\])|\G(.)/';
 
         do {
-            if (preg_match($yy_global_pattern,$this->input, $yymatches, null, $this->N)) {
+            if (preg_match($yy_global_pattern,$this->input, $yymatches, 0, $this->N)) {
                 $yysubmatches = $yymatches;
                 $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
                 if (!count($yymatches)) {
@@ -410,7 +410,7 @@ class PHP_LexerGenerator_Regex_Lexer
                         }
                         $yysubmatches = array();
                         if (preg_match('/' . $yy_yymore_patterns[$this->token][1] . '/',
-                              $this->input, $yymatches, null, $this->N)) {
+                              $this->input, $yymatches, 0, $this->N)) {
                             $yysubmatches = $yymatches;
                             $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
                             next($yymatches); // skip global match
@@ -497,7 +497,7 @@ class PHP_LexerGenerator_Regex_Lexer
         $yy_global_pattern = '/\G(\\\\\\\\)|\G(\\])|\G(\\\\[frnt]|\\\\x[0-9a-fA-F][0-9a-fA-F]?|\\\\[0-7][0-7][0-7]|\\\\x\\{[0-9a-fA-F]+\\})|\G(\\\\[bacedDsSwW0C]|\\\\c\\\\|\\\\x\\{[0-9a-fA-F]+\\}|\\\\[0-7][0-7][0-7]|\\\\x[0-9a-fA-F][0-9a-fA-F]?)|\G(\\\\[0-9][0-9])|\G(\\\\[1-9])|\G(\\\\[]\.\-\^])|\G(-(?!]))|\G([^\-\\\\])|\G(\\\\)|\G(.)/';
 
         do {
-            if (preg_match($yy_global_pattern,$this->input, $yymatches, null, $this->N)) {
+            if (preg_match($yy_global_pattern,$this->input, $yymatches, 0, $this->N)) {
                 $yysubmatches = $yymatches;
                 $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
                 if (!count($yymatches)) {
@@ -555,7 +555,7 @@ class PHP_LexerGenerator_Regex_Lexer
                         }
                         $yysubmatches = array();
                         if (preg_match('/' . $yy_yymore_patterns[$this->token][1] . '/',
-                              $this->input, $yymatches, null, $this->N)) {
+                              $this->input, $yymatches, 0, $this->N)) {
                             $yysubmatches = $yymatches;
                             $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
                             next($yymatches); // skip global match
@@ -678,7 +678,7 @@ class PHP_LexerGenerator_Regex_Lexer
         $yy_global_pattern = '/\G(\\\\\\\\)|\G(\\\\\\])|\G(\\\\[bacedDsSwW0C]|\\\\c\\\\|\\\\x\\{[0-9a-fA-F]+\\}|\\\\[0-7][0-7][0-7]|\\\\x[0-9a-fA-F][0-9a-fA-F]?)|\G(\\\\[0-9][0-9])|\G(\\\\[1-9])|\G([^\-\\\\])|\G(\\\\)/';
 
         do {
-            if (preg_match($yy_global_pattern,$this->input, $yymatches, null, $this->N)) {
+            if (preg_match($yy_global_pattern,$this->input, $yymatches, 0, $this->N)) {
                 $yysubmatches = $yymatches;
                 $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
                 if (!count($yymatches)) {
@@ -732,7 +732,7 @@ class PHP_LexerGenerator_Regex_Lexer
                         }
                         $yysubmatches = array();
                         if (preg_match('/' . $yy_yymore_patterns[$this->token][1] . '/',
-                              $this->input, $yymatches, null, $this->N)) {
+                              $this->input, $yymatches, 0, $this->N)) {
                             $yysubmatches = $yymatches;
                             $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
                             next($yymatches); // skip global match
@@ -842,7 +842,7 @@ class PHP_LexerGenerator_Regex_Lexer
         $yy_global_pattern = '/\G([imsxUX]+-[imsxUX]+|[imsxUX]+|-[imsxUX]+)|\G(:)|\G(\\))|\G(P<[^>]+>)|\G(<=)|\G(<!)|\G(=)|\G(!)|\G(>)|\G(\\(\\?)|\G(#[^)]+)|\G(R)|\G(.)/';
 
         do {
-            if (preg_match($yy_global_pattern,$this->input, $yymatches, null, $this->N)) {
+            if (preg_match($yy_global_pattern,$this->input, $yymatches, 0, $this->N)) {
                 $yysubmatches = $yymatches;
                 $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
                 if (!count($yymatches)) {
@@ -902,7 +902,7 @@ class PHP_LexerGenerator_Regex_Lexer
                         }
                         $yysubmatches = array();
                         if (preg_match('/' . $yy_yymore_patterns[$this->token][1] . '/',
-                              $this->input, $yymatches, null, $this->N)) {
+                              $this->input, $yymatches, 0, $this->N)) {
                             $yysubmatches = $yymatches;
                             $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
                             next($yymatches); // skip global match

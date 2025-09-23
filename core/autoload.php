@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
+// Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -21,8 +21,10 @@ MetaModel::IncludeModule('application/menunode.class.inc.php');
 MetaModel::IncludeModule('application/user.preferences.class.inc.php');
 MetaModel::IncludeModule('application/user.dashboard.class.inc.php');
 MetaModel::IncludeModule('application/audit.rule.class.inc.php');
+MetaModel::IncludeModule('application/audit.domain.class.inc.php');
 MetaModel::IncludeModule('application/query.class.inc.php');
 MetaModel::IncludeModule('setup/moduleinstallation.class.inc.php');
+
 
 MetaModel::IncludeModule('core/event.class.inc.php');
 MetaModel::IncludeModule('core/action.class.inc.php');
@@ -34,6 +36,7 @@ MetaModel::IncludeModule('synchro/synchrodatasource.class.inc.php');
 MetaModel::IncludeModule('core/backgroundtask.class.inc.php');
 MetaModel::IncludeModule('core/inlineimage.class.inc.php');
 MetaModel::IncludeModule('core/counter.class.inc.php');
+MetaModel::IncludeModule('core/TemporaryObjectDescriptor.php');
 
 MetaModel::IncludeModule('webservices/webservices.basic.php');
 

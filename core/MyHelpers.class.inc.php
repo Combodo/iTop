@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Various dev/debug helpers
  * TODO: cleanup or at least re-organize
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -419,6 +419,7 @@ class MyHelpers
 		//}
 		return $sOutput;
 	}
+
 }
 
 /**
@@ -520,8 +521,6 @@ class Str
 
 	public static function islowcase($sString)
 	{
-		return (strtolower($sString) == $sString);
+		return (mb_strtolower($sString) == $sString);
 	}
 }
-
-?>

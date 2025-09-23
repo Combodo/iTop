@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -490,7 +490,7 @@ EOF;
 					{
 						throw new DOMFormatException(
 							'Scope tag in class must have a not empty oql_view tag',
-							null,
+							0,
 							null,
 							$oScopeNode
 						);

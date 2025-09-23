@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@ require_once(APPROOT.'setup/setuppage.class.inc.php');
  * Class ModuleInstaller
  * Defines the API to implement module specific actions during the setup 
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -242,11 +242,16 @@ abstract class ModuleInstallerAPI
 	 * @param $sOrigColumn
 	 * @param $sDstTable
 	 * @param $sDstColumn
+	 * @param bool $bIgnoreExistingDstColumn
 	 *
-	 * @throws \MySQLException
 	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 *
+	 * @since 3.2.0 N°7130 Add parameter $bIgnoreExistingDstColumn
+	 * @since 3.2.0 No longer copy NULL data in order to avoid writing over existing data
 	 */
-	public static function MoveColumnInDB($sOrigTable, $sOrigColumn, $sDstTable, $sDstColumn)
+	public static function MoveColumnInDB($sOrigTable, $sOrigColumn, $sDstTable, $sDstColumn, bool $bIgnoreExistingDstColumn = false)
 	{
 		if (!MetaModel::DBExists(false))
 		{
@@ -259,20 +264,34 @@ abstract class ModuleInstallerAPI
 			// Original field is not present
 			return;
 		}
-
-		if (!CMDBSource::IsTable($sDstTable) || CMDBSource::IsField($sDstTable, $sDstColumn))
+		
+		$bDstTableFieldExists = CMDBSource::IsField($sDstTable, $sDstColumn);
+		if (!CMDBSource::IsTable($sDstTable) || ($bDstTableFieldExists && !$bIgnoreExistingDstColumn))
 		{
-			// Destination field is already created
+			// Destination field is already created, and we are not ignoring it
 			return;
 		}
 
-		// Create the destination field
-		$sSpec = CMDBSource::GetFieldSpec($sOrigTable, $sOrigColumn);
-		$sQueryAdd = "ALTER TABLE `{$sDstTable}` ADD `{$sDstColumn}` {$sSpec}";
-		CMDBSource::Query($sQueryAdd);
+		// Simple rename
+		if ($sOrigTable === $sDstTable && !$bDstTableFieldExists)
+		{
+			$sFieldSpec = CMDBSource::GetFieldSpec($sOrigTable, $sOrigColumn);
+			$sQueryRename = /** @lang MariaDB */ "ALTER TABLE `{$sOrigTable}` CHANGE `{$sOrigColumn}` `{$sDstColumn}` {$sFieldSpec};";
+			CMDBSource::Query($sQueryRename);
+
+			CMDBSource::CacheReset($sOrigTable);
+			return;
+		}
+
+		// Create the destination field if necessary
+		if($bDstTableFieldExists === false){
+			$sSpec = CMDBSource::GetFieldSpec($sOrigTable, $sOrigColumn);
+			$sQueryAdd = "ALTER TABLE `{$sDstTable}` ADD `{$sDstColumn}` {$sSpec}";
+			CMDBSource::Query($sQueryAdd);	
+		}
 
 		// Copy the data
-		$sQueryUpdate = "UPDATE `{$sDstTable}` AS d LEFT JOIN `{$sOrigTable}` AS o ON d.id = o.id SET d.`{$sDstColumn}` = o.`{$sOrigColumn}` WHERE 1";
+		$sQueryUpdate = "UPDATE `{$sDstTable}` AS d LEFT JOIN `{$sOrigTable}` AS o ON d.id = o.id SET d.`{$sDstColumn}` = o.`{$sOrigColumn}` WHERE o.`{$sOrigColumn}` IS NOT NULL";
 		CMDBSource::Query($sQueryUpdate);
 
 		// Drop original field
@@ -283,4 +302,47 @@ abstract class ModuleInstallerAPI
 		CMDBSource::CacheReset($sDstTable);
 	}
 
+	/**
+	 * Rename a table providing:
+	 * - The original name exists
+	 * - The destination name does not exist
+	 *
+	 * @param string $sOrigTable
+	 * @param string $sDstTable
+	 *
+	 * @return void
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 * @throws MySQLException
+	 */
+	public static function RenameTableInDB(string $sOrigTable, string $sDstTable)
+	{
+		if ($sOrigTable == $sDstTable)
+		{
+			throw new CoreUnexpectedValue("Origin table and destination table are the same");
+		}
+
+		if (!MetaModel::DBExists(false))
+		{
+			// Install from scratch, no migration
+			return;
+		}
+
+		if (!CMDBSource::IsTable($sOrigTable))
+		{
+			SetupLog::Warning(sprintf('Rename table in DB - Origin table %s doesn\'t exist', $sOrigTable));
+			return;
+		}
+
+		if (CMDBSource::IsTable($sDstTable))
+		{
+			SetupLog::Warning(sprintf('Rename table in DB - Destination table %s already exists', $sDstTable));
+			return;
+		}
+
+		$sQueryRename = sprintf(/** @lang MariaDB */ "RENAME TABLE `%s` TO `%s`;", $sOrigTable, $sDstTable);
+		CMDBSource::Query($sQueryRename);
+
+		CMDBSource::CacheReset($sOrigTable);
+	}
 }

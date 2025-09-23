@@ -1,0 +1,255 @@
+
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{# SET WIDGET #}
+{% set oDataProvider = oUIBlock.GetDataProvider() %}
+let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
+
+    {# Global options #}
+    {% if oDataProvider.IsAjaxProviderType %}
+    preload: true, {# call ajax directly #}
+    loadingClass: '',
+    {% endif %}
+    itemClass: 'item attribute-set-item',
+    hasError: {{ oUIBlock.HasError()|var_export() }},
+    placeholder: '{{ oUIBlock.GetPlaceholder() }}',
+
+    {# Remove button plugin #}
+    plugins: {
+        {# PLUGIN update operations  #}
+        'combodo_update_operations' : {
+            initial: {{ oUIBlock.GetInitialValue()|raw }}
+        },
+        {# PLUGIN combodo auto position  #}
+        'combodo_auto_position' : {
+            maxDropDownHeight: 300, {# in px #}
+        },
+        {# PLUGIN combodo add button #}
+        {% if oUIBlock.HasAddOptionButton() %}
+        'combodo_add_button' : {
+            title: '{{ oUIBlock.GetAddButtonTitle() }}'
+        },
+        {% endif %}
+        {% if oUIBlock.IsMultiValuesSynthesis() %}
+        'combodo_multi_values_synthesis' : {
+
+            tooltip_links_will_be_created_for_all_objects: '{{ 'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'|dict_s }}',
+            tooltip_links_will_be_deleted_from_all_objects: '{{ 'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects'|dict_s }}',
+            tooltip_links_will_be_created_for_one_object: '{{ 'UI:Links:Bulk:LinkWillBeCreatedFor1Object'|dict_s }}',
+            tooltip_links_will_be_deleted_from_one_object: '{{ 'UI:Links:Bulk:LinkWillBeDeletedFrom1Object'|dict_s }}',
+            tooltip_links_will_be_created_for_x_objects: '{{ 'UI:Links:Bulk:LinkWillBeCreatedForXObjects'|dict_s }}',
+            tooltip_links_will_be_deleted_from_x_objects: '{{ 'UI:Links:Bulk:LinkWillBeDeletedFromXObjects'|dict_s }}',
+            tooltip_links_exist_for_all_objects: '{{ 'UI:Links:Bulk:LinkExistForAllObjects'|dict_s }}',
+            tooltip_links_exist_for_one_object: '{{ 'UI:Links:Bulk:LinkExistForOneObject'|dict_s }}',
+            tooltip_links_exist_for_x_objects: '{{ 'UI:Links:Bulk:LinkExistForXObjects'|dict_s }}'
+        },
+        {% endif %}
+        {# PLUGIN remove button  #}
+        {% if oUIBlock.HasRemoveItemButton() %}
+        'remove_button' : {},
+        {% endif %}
+
+        {# PLUGIN min items #}
+        {% if oUIBlock.GetMinItems() is not empty %}
+        'combodo_min_items' : {
+            minItems: {{ oUIBlock.GetMinItems() }},
+            errorTitle: '{{ 'UI:Component:Input:ChangeNotAllowed'|dict_s()|escape('js') }}',
+            errorMessage: '{{ 'UI:Component:Input:Set:MinimumItems'|dict_format(oUIBlock.GetMinItems())|escape('js') }}'
+        },
+        {% endif %}
+    },
+
+    {# Max items you can select #}
+    {% if oUIBlock.GetMaxItems() is not empty %}
+    maxItems: {{ oUIBlock.GetMaxItems() }},
+    {% endif %}
+
+    {# Max options available #}
+    {% if oUIBlock.GetMaxOptions() is not empty %}
+    maxOptions: {{ oUIBlock.GetMaxOptions() }},
+    {% endif %}
+
+    {# Data fields #}
+    valueField: '{{ oDataProvider.GetDataValueField() }}',
+    labelField: '{{ oDataProvider.GetDataLabelField() }}',
+    searchField: {{ oDataProvider.GetDataSearchFields()|json_encode()|raw }},
+    optgroupField: '{{ oDataProvider.GetGroupField() }}',
+    tooltipField: '{{ oDataProvider.GetTooltipField() }}',
+
+    {# Initial options data, may be oveeride by ajax load method #}
+    options: {{ oDataProvider.GetOptions()|json_encode()|raw  }},
+
+    {# Groups data #}
+    optgroups: {{ oDataProvider.GetOptionsGroups()|json_encode()|raw  }},
+
+    {# Items data #}
+    items: {{ oUIBlock.GetValue()|raw }},
+
+    inputClass: 'ibo-input ibo-input-selectize ibo-input-set attribute-set selectize-input',
+
+    {# Ajax data load #}
+    {% if oDataProvider.IsAjaxProviderType %}
+    load: function (query, callback) {
+        let me = this;
+        $.ajax({
+            url: '{{ get_absolute_url_app_root() }}pages/ajax.render.php?route={{ oDataProvider.GetRoute() }}&search=' + query + '{{ oDataProvider.GetParamsAsQueryString|e('js') }}',
+            type: 'POST',
+            dataType: 'json',
+            data: me.convertParamArray('{{ oDataProvider.GetPostParamsAsJsonString()|raw }}'),
+            error: function (e) {
+                callback();
+                console.error(e);
+                if(!me.settings.hasError) {
+                    me.toggleErrorClass(true);
+                }
+            },
+            success: function (res) {
+
+                // Handle errors
+                if(!me.settings.hasError){
+                    me.toggleErrorClass(!res.success);
+                    if(!res.success) return;
+                }
+
+                // Retrieve current input value
+                let aSelectedItems = me.getValue();
+                // Filter old options data to keep selected values
+                // (options with force flag will be kept event if they doesn't be part of the current value)
+                let options = Object.values(me.options);
+                me.optionsBeforeFilter = options;
+                options = options.filter(item => (typeof(item.force) !== "undefined" && item.force === true) || aSelectedItems.includes(item['{{ oDataProvider.GetDataValueField() }}']));
+                // Merge kept and new values
+                options = $.merge(options, res.search_data);
+                // Compute groups
+                $.each(options, function(index, value) {
+                    me.addOptionGroup(value['{{ oDataProvider.GetGroupField() }}'], {
+                        label: value['{{ oDataProvider.GetGroupField() }}'],
+                        value: value['{{ oDataProvider.GetGroupField() }}']
+                    });
+                });
+                // Clear all options
+                me.clearOptions();
+                // Add merged values
+                callback(options);
+                // Restore input value
+                aSelectedItems.forEach(function(item) {
+                    me.addItem(item, true);
+                });
+            }
+        });
+    },
+    {% endif %}
+
+    {# Renderers #}
+    render: {
+
+        {# Options #}
+        {% if oUIBlock.HasOptionsTemplate() %}
+        option: function(option) {
+            return CombodoGlobalToolbox.RenderTemplate('#{{ oUIBlock.GetId() }}_options_template', option, this.settings.optionClass)[0].outerHTML;
+        },
+        {% endif %}
+
+        {# Items #}
+        {% if oUIBlock.HasItemsTemplate() %}
+        item: function (item) {
+            return CombodoGlobalToolbox.RenderTemplate('#{{ oUIBlock.GetId() }}_items_template', item, this.settings.itemClass)[0].outerHTML;
+        },
+        {% endif %}
+
+    },
+
+    onInitialize: function(){
+
+        /**
+         * Function to convert param array.
+         *
+         * EVAL_JAVASCRIPT{code_to_eval}
+         */
+        this.convertParamArray = function(paramArray){
+            let postParam = JSON.parse(paramArray);
+            let data = {};
+            Object.entries(postParam).forEach(([key, value]) => {
+                let matches = null;
+                if(typeof(value) === 'string'){
+                    matches = value.match(/^EVAL_JAVASCRIPT{(.*)}$/);
+                }
+                if(matches != null){
+                    data[key] = eval(matches[1]);
+                }
+                else{
+                    data[key] = value;
+                }
+            });
+            return data;
+        };
+
+        /**
+         * Function to show error.
+         *
+         */
+        this.toggleErrorClass = function(bValue){
+            this.$control.toggleClass('selectize-input-error', bValue);
+        };
+
+        {# Error #}
+        this.toggleErrorClass(this.settings.hasError);
+    },
+
+    onDropdownOpen: function (oDropdownElem) {
+        oDropdownElem.addClass('set-dropdown');
+    },
+
+    {# On item add #}
+    onItemAdd: function(value, $item){
+        $item.addClass(this.settings.itemClass);
+        $item.attr({
+            'data-tooltip-content': this.options[value][this.settings.tooltipField],
+            'data-tooltip-html-enabled': true
+        });
+        CombodoTooltip.InitTooltipFromMarkup($item);
+
+        {% if oUIBlock.GetOnItemAddJs() is not null %}
+            {{ oUIBlock.GetOnItemAddJs()|raw }}
+        {% endif %}
+    },
+
+    {# On item remove #}
+    onItemRemove: function(value, $item){
+        {% if oUIBlock.GetOnItemRemoveJs() is not null %}
+            {{ oUIBlock.GetOnItemRemoveJs()|raw }}
+        {% endif %}
+    },
+    
+    {# On option remove #}
+    onOptionRemove: function(value, $item){
+        {% if oUIBlock.GetOnOptionRemoveJs() is not null %}
+            {{ oUIBlock.GetOnOptionRemoveJs()|raw }}
+        {% endif %}
+    },
+
+    {# On option add #}
+    onOptionAdd: function(value, $item){
+        {% if oUIBlock.GetOnOptionAddJs() is not null %}
+            {{ oUIBlock.GetOnOptionAddJs()|raw }}
+        {% endif %}
+    },
+
+    onBlur: function(){
+        this.clearOptionGroups()
+        this.addOption(this.optionsBeforeFilter)
+    },
+
+    {# plugin combodo_add_button #}
+    {% if oUIBlock.HasAddOptionButton() and oUIBlock.HasAddOptionButtonJsOnClick() %}
+    onAdd: function(){
+        {{ oUIBlock.GetAddOptionButtonJsOnClick()|raw }}
+
+    },
+    {% endif %}
+
+});
+
+
+

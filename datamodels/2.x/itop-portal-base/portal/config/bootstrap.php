@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -41,16 +41,11 @@ if (!defined('MODULESROOT'))
 	require_once APPROOT.'/application/startup.inc.php';
 }
 
-// Load cached env vars if the .env.local.php file exists
-// Run "composer dump-env prod" to create it (requires symfony/flex >=1.2)
-if (file_exists(dirname(__DIR__).'/.env.local.php')) {
-	if (is_array($sEnv = @include dirname(__DIR__).'/.env.local.php')) {
-		$_ENV += $sEnv;
-	}
-} elseif (!class_exists(Dotenv::class)) {
+// Load cached env vars if the .env.local file exists
+if (!class_exists(Dotenv::class)) {
 	throw new RuntimeException('Please run "composer require symfony/dotenv" to load the ".env" files configuring the application.');
 } else {
-	$sPath = dirname(__DIR__).'/.env';
+	$sPath = file_exists(dirname(__DIR__).'/.env.local') ? dirname(__DIR__).'/.env.local' : dirname(__DIR__).'/.env';
 	$oDotenv = new Dotenv();
 	$oDotenv->usePutenv();
 
@@ -138,8 +133,12 @@ if (!defined('PORTAL_ID'))
 
 // Env. vars to be used in templates and others
 $_ENV['COMBODO_CURRENT_ENVIRONMENT'] = utils::GetCurrentEnvironment();
+$_ENV['COMBODO_APPROOT'] = APPROOT;
 $_ENV['COMBODO_ABSOLUTE_URL'] = utils::GetAbsoluteUrlAppRoot();
+$_ENV['COMBODO_CONF_APP_ICON_URL'] = MetaModel::GetConfig()->Get('app_icon_url');
 $_ENV['COMBODO_MODULES_ABSOLUTE_URL'] = utils::GetAbsoluteUrlModulesRoot();
 $_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_URL'] = utils::GetAbsoluteUrlModulesRoot().'itop-portal-base/portal/public/';
 $_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'] = MODULESROOT.'/itop-portal-base/portal/public/';
 $_ENV['COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL'] = utils::GetAbsoluteUrlModulesRoot().$_ENV['PORTAL_ID'].'/';
+$_ENV['COMBODO_PORTAL_LANGUAGE'] = UserRights::GetUserLanguage();
+$_ENV['COMBODO_PORTAL_METADATA_LANGUAGE'] = strtolower(substr($_ENV['COMBODO_PORTAL_LANGUAGE'], 0, 2));;

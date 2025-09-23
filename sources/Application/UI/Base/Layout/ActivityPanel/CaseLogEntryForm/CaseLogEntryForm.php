@@ -1,10 +1,11 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm;
 
+use AttributeCaseLog;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Input\RichText\RichText;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
@@ -23,10 +24,11 @@ class CaseLogEntryForm extends UIContentBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-caselog-entry-form';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/caselog-entry-form/layout';
-	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/caselog-entry-form/layout';
+	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/caselog-entry-form/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/layouts/activity-panel/caselog-entry-form.js',
 	];
+	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = true;
 
 	/** @var string Form is autonomous and can send data on its own */
 	public const ENUM_SUBMIT_MODE_AUTONOMOUS = 'autonomous';
@@ -103,6 +105,15 @@ class CaseLogEntryForm extends UIContentBlock
 	public function GetAttCode(): string
 	{
 		return $this->sAttCode;
+	}
+
+	/**
+	 * @return string
+	 * @since 3.0.4 3.1.0 N°6139
+	 */
+	public function GetAttType(): string
+	{
+		return AttributeCaseLog::class;
 	}
 
 	/**
@@ -206,12 +217,23 @@ class CaseLogEntryForm extends UIContentBlock
 		$this->oTextInput = new RichText();
 
 		// Add the "host_class" to the mention endpoints so it can filter objects regarding the triggers
+		// Mind that `&needle=` must be ending the endpoint URL in order for the JS plugin to append the needle string
 		$aConfig = $this->oTextInput->GetConfig();
-		if (isset($aConfig['mentions'])) {
-			foreach ($aConfig['mentions'] as $iIdx => $aData) {
-				$sFeed = $aConfig['mentions'][$iIdx]['feed'];
+		if (isset($aConfig['mention']['feeds'])) {
+			foreach ($aConfig['mention']['feeds'] as $iIdx => $aData) {
+				$sFeed = $aConfig['mention']['feeds'][$iIdx]['feed_ajax_options']['url'];
+
+				// Remove existing "needle" parameter
+				$sFeed = str_replace('&needle=', '', $sFeed);
+
+				// Add new parameters
 				$sFeed = utils::AddParameterToUrl($sFeed, 'host_class', $this->GetObjectClass());
-				$aConfig['mentions'][$iIdx]['feed'] = utils::AddParameterToUrl($sFeed, 'host_id', $this->GetObjectId());
+				$sFeed = utils::AddParameterToUrl($sFeed, 'host_id', $this->GetObjectId());
+
+				// Re-append "needle" parameter
+				$sFeed = utils::AddParameterToUrl($sFeed, 'needle', '');
+
+				$aConfig['mention']['feeds'][$iIdx]['feed_ajax_options']['url'] = $sFeed;
 			}
 		}
 		$this->oTextInput->SetConfig($aConfig);

@@ -1,42 +1,17 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @author  Benjamin Planque <benjamin.planque@combodo.com>
- * @author	LinProfs <info@linprofs.com>
- * Linux & Open Source Professionals
- * http://www.linprofs.com
+ * Localized data
  *
- * @author Hipska (2018, 2019)
- * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
- *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-//
-// Class: Organization
-//
+/**
+ * @author Benjamin Planque <benjamin.planque@combodo.com>
+ * @author LinProfs <info@linprofs.com>
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Organization' => 'Organisatie',
 	'Class:Organization+' => '',
@@ -106,6 +81,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Contact' => 'Contact',
 	'Class:Contact+' => '',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:Contact/Attribute:name' => 'Naam',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => 'Status',
@@ -143,6 +119,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Person' => 'Persoon',
 	'Class:Person+' => '',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Achternaam',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'Voornaam',
@@ -163,6 +140,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Person/Attribute:team_list+' => 'Alle teams waarvan deze persoon lid is',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
 	'Class:Person/Attribute:tickets_list+' => 'Alle tickets waarvan deze persoon de aanvrager is',
+	'Class:Person/Attribute:user_list' => 'Gebruikers',
+	'Class:Person/Attribute:user_list+' => 'Alle gebruikersaccounts van deze persoon',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Herkenbare naam manager',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Foto',
@@ -171,6 +150,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Person/UniquenessRule:employee_number' => 'Er is al een persoon in de organisatie \'$this->org_name$\' met hetzelfde identificatienummer',
 	'Class:Person/UniquenessRule:name+' => 'De naam moet uniek zijn binnen een organisatie',
 	'Class:Person/UniquenessRule:name' => 'Er is al een persoon in de organisatie \'$this->org_name$\' met dezelfde naam',
+	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
 ));
 
 //
@@ -180,6 +160,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Leden',
 	'Class:Team/Attribute:persons_list+' => 'Alle personen die lid zijn van dit team',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
@@ -193,6 +174,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Document' => 'Document',
 	'Class:Document+' => '',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Naam',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => 'Organisatie',
@@ -292,6 +274,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkPersonToTeam' => 'Link Persoon / Team',
 	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
+	'Class:lnkPersonToTeam/Name+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Team',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Naam team',
@@ -354,7 +338,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Person:info' => 'Globale informatie',
-	'UserLocal:info' => 'Globale informatie',
+	'User:info' => 'Globale informatie',
+	'User:profiles' => 'Profielen (minimaal één)',
 	'Person:personal_info' => 'Persoonlijke informatie',
 	'Person:notifiy' => 'Notificeer',
 ));
@@ -362,5 +347,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Themes
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'theme:fullmoon' => 'Full moon',
-	'theme:test-red' => 'Test instance (Red)',
+	'theme:test-red' => 'Test instance (Rood)',
 ));

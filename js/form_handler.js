@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -45,10 +45,10 @@ $(function()
 			.addClass('form_handler');
 
 			// Binding events
-			this.element.bind('update_fields', function(oEvent, oData){
+			this.element.on('update_fields', function(oEvent, oData){
 				me._onUpdateFields(oEvent, oData);
 			});
-			this.element.bind('fields_touched', function(oEvent){
+			this.element.on('fields_touched', function(oEvent){
 				me._onFieldsTouched(oEvent);
 			});
 

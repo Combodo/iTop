@@ -1,8 +1,11 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
+/**
+ * Spanish Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:RequestManagement' => 'Administración de Requerimientos',
@@ -35,6 +38,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Requerimientos Abiertos por Tipo',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requerimientos Abiertos por Cliente',
 	'Class:UserRequest:KnownErrorList' => 'Errores Conocidos',
+	'Class:UserRequest:KnownErrorList+' => 'Errores conocidos relacionados con el EC funcional vinculado al ticket actual',
 ));
 
 // Dictionnay conventions
@@ -110,6 +114,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'Baja',
 	'Class:UserRequest/Attribute:origin' => 'Origen',
 	'Class:UserRequest/Attribute:origin+' => 'Origen',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'En persona',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Requerimiento creado siguiendo una discusión cara a cara',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Requerimiento creado después de una discusión en chat',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'Correo-e',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'Correo-e',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoreo',
@@ -199,7 +207,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Ref. Cambio',
 	'Class:UserRequest/Attribute:parent_change_ref+' => 'Ref. Cambio',
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Ref. Inciente Padre',
-	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => 'Ref. Inciente Padre',
 	'Class:UserRequest/Attribute:related_request_list' => 'Requerimientos Hijo',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Requerimientos Hijo',
 	'Class:UserRequest/Attribute:public_log' => 'Bitácora Pública',
@@ -243,7 +251,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Esperando Aprobación',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => 'Esperando Aprobación',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'No puede asignarse el requerimiento Padre a si mismo',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Resolver tickets hijos',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascadear la solución a los tickets hijos (ev_autoresolve), y alinear las siguientes características: servicio, equipo, agente, información de solución',
 ));

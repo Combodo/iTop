@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010-2021 Combodo SARL
+ * Copyright (C) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -22,14 +22,13 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Spinner\SpinnerUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 
-if (!defined('__DIR__')) {
-	define('__DIR__', dirname(__FILE__));
-}
 if (!defined('APPROOT')) {
 	require_once(__DIR__.'/../../approot.inc.php');
 }
@@ -97,12 +96,7 @@ try {
 	//
 	$sMySQLBinDir = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', '');
 	$sMySQLBinDir = utils::ReadParam('mysql_bindir', $sMySQLBinDir, true);
-	if (empty($sMySQLBinDir)) {
-		$sMySQLDump = 'mysqldump';
-	} else {
-		//echo 'Info - Found mysql_bindir: '.$sMySQLBinDir;
-		$sMySQLDump = '"'.$sMySQLBinDir.'/mysqldump"';
-	}
+	$sMySQLDump = DBBackup::MakeSafeMySQLCommand($sMySQLBinDir, 'mysqldump');
 	$sCommand = "$sMySQLDump -V 2>&1";
 
 	$aOutput = array();
@@ -133,7 +127,7 @@ try {
 	// Destination directory
 	//
 	// Make sure the target directory exists and is writeable
-	$sBackupDir = realpath(APPROOT.'data/backups/');
+	$sBackupDir = realpath(utils::GetDataPath().'backups/');
 	SetupUtils::builddir($sBackupDir);
 	if (!is_dir($sBackupDir)) {
 		$oBlockForChecks->AddSubBlock(
@@ -416,6 +410,9 @@ JS
 
 	$sEnvironment = addslashes(utils::GetCurrentEnvironment());
 
+	$oModalSpinner = SpinnerUIBlockFactory::MakeMedium(null, $sPleaseWaitBackup);
+	$sModalSpinnerHtml = BlockRenderer::RenderBlockTemplates($oModalSpinner);
+
 	$oP->add_script(
 		<<<JS
 function LaunchBackupNow()
@@ -425,11 +422,10 @@ function LaunchBackupNow()
 
 	if (confirm('$sConfirmBackup'))
 	{
-		if(!$('#waitbackup').length)
-		{
-			$('body').append($('<div class="mt-5 text-nowrap" title="$sBackUpNow" id="waitbackup"><i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitBackup</div>'));
-		}
-		$('#waitbackup').dialog();
+		const oModal = CombodoModal.OpenModal({
+				title: '$sBackUpNow',
+				content: `$sModalSpinnerHtml`
+		});
 
 		var oParams = {};
 		oParams.operation = 'backup';
@@ -444,7 +440,7 @@ function LaunchBackupNow()
 			{
 				window.location.reload();
 			}
-			$('#waitbackup').dialog('close');
+			oModal.dialog('close');
 		});
 	}
 }
@@ -454,11 +450,11 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 	{
 		return;
 	}
-	if(!$('#waitrestore').length)
-		{
-			$('body').append($('<div class="mt-5 text-nowrap" title="$sRestore" id="waitrestore"><i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitRestore</div>'));
-		}
-	$('#waitrestore').dialog();
+
+	const oModal = CombodoModal.OpenModal({
+		title: '$sRestore',
+		content: '<i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitRestore'
+	});
 
 	$('#backup_success').addClass('ibo-is-hidden');
 	$('#backup_errors').addClass('ibo-is-hidden');
@@ -470,7 +466,7 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 	$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
 
 		// Get the value of restore_token
-		$('#backup_errors').append(data);
+		$('#restore_token').val(data.token);
 
 		var oParams = {};
 		oParams.operation = 'restore_exec';
@@ -488,11 +484,11 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 					$('#backup_success').html('$sRestoreDone');
 					$('#backup_success').removeClass('ibo-is-hidden');
 				}
-				$('#waitrestore').dialog('close');
+				oModal.dialog('close');
 			});
 		} else {
 			$('button.restore').prop('disabled', true);
-			$('#waitrestore').dialog('close');
+			oModal.dialog('close');
 		}
 	});
 }

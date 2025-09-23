@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="AbstractResource" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -40,6 +40,36 @@
       <presentation/>
       <methods/>
     </class>
+    <class id="WelcomePopupAcknowledge" _delta="define">
+      <parent>DBObject</parent>
+      <properties>
+        <comment>/** Acknowledge welcome popup messages */</comment>
+        <abstract>false</abstract>
+        <category/>
+        <key_type>autoincrement</key_type>
+        <db_table>priv_welcome_popup_acknowledge</db_table>
+      </properties>
+      <fields>
+        <field id="message_uuid" xsi:type="AttributeString">
+          <sql>message_uuid</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="user_id" xsi:type="AttributeExternalKey">
+          <sql>user_id</sql>
+          <target_class>User</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_SILENT</on_target_delete>
+        </field>
+        <field id="acknowledge_date" xsi:type="AttributeDateTime">
+          <sql>acknowledge_date</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <presentation/>
+      <methods/>
+    </class>
   </classes>
   <portals>
     <portal id="backoffice" _delta="define">
@@ -55,9 +85,9 @@
   <menus>
     <menu id="WelcomeMenu" xsi:type="MenuGroup" _delta="define">
       <rank>10</rank>
-	    <style>
-		    <decoration_classes>fas fa-home</decoration_classes>
-	    </style>
+      <style>
+        <decoration_classes>fas fa-home</decoration_classes>
+      </style>
     </menu>
     <menu id="WelcomeMenuPage" xsi:type="DashboardMenuNode" _delta="define">
       <rank>10</rank>
@@ -81,7 +111,6 @@
     <menu id="UserManagement" xsi:type="TemplateMenuNode" _delta="define">
       <rank>10</rank>
       <parent>AdminTools</parent>
-      <template_file/>
     </menu>
     <menu id="UserAccountsMenu" xsi:type="OQLMenuNode" _delta="define">
       <rank>11</rank>
@@ -111,7 +140,6 @@
     <menu id="Queries" xsi:type="TemplateMenuNode" _delta="define">
       <rank>30</rank>
       <parent>AdminTools</parent>
-      <template_file/>
     </menu>
     <menu id="RunQueriesMenu" xsi:type="WebPageMenuNode" _delta="define">
       <rank>31</rank>
@@ -151,9 +179,13 @@
     </menu>
     <menu id="ConfigurationTools" xsi:type="MenuGroup" _delta="define_if_not_exists">
       <rank>90</rank>
-	    <style>
-		    <decoration_classes>fas fa-cog</decoration_classes>
-	    </style>
+      <style>
+        <decoration_classes>fas fa-cog</decoration_classes>
+      </style>
+    </menu>
+    <menu id="Integrations" xsi:type="TemplateMenuNode" _delta="define">
+      <rank>50</rank>
+      <parent>ConfigurationTools</parent>
     </menu>
     <menu id="DataSources" xsi:type="OQLMenuNode" _delta="define">
       <rank>20</rank>
@@ -172,22 +204,24 @@
     </menu>
     <menu id="AdminTools" xsi:type="MenuGroup" _delta="define">
       <rank>80</rank>
-	    <style>
-		    <decoration_classes>fas fa-tools</decoration_classes>
-	    </style>
+      <style>
+        <decoration_classes>fas fa-tools</decoration_classes>
+      </style>
     </menu>
     <menu id="SystemTools" xsi:type="MenuGroup" _delta="define">
       <rank>100</rank>
       <enable_class>ResourceSystemMenu</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
-	    <style>
-		    <decoration_classes>fas fa-terminal</decoration_classes>
-	    </style>
+      <style>
+        <decoration_classes>fas fa-terminal</decoration_classes>
+      </style>
     </menu>
   </menus>
   <events>
-    <event id="EVENT_SERVICE_DB_INSERT_REQUESTED" _delta="define">
-      <description>An object insert in the database has been requested. All changes to the object will be persisted automatically.</description>
+    <event id="EVENT_DB_BEFORE_WRITE" _delta="define">
+      <name>Before create or update</name>
+      <description><![CDATA[An object is about to be written into the database.
+The object can be modified.]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -197,22 +231,42 @@
           <description>The object inserted</description>
           <type>DBObject</type>
         </event_datum>
+        <event_datum id="is_new">
+          <description>Creation flag</description>
+          <type>boolean</type>
+        </event_datum>
+        <event_datum id="stimulus_applied">
+          <description>Life cycle stimulus applied (null if not within a transition)</description>
+          <type>string</type>
+        </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_DB_ABOUT_TO_INSERT" _delta="define">
-      <description>An object is about to be inserted in the database (no change possible)</description>
+    <event id="EVENT_DB_CHECK_TO_WRITE" _delta="define">
+      <name>Check to write</name>
+      <description><![CDATA[Check an object before it is written into the database (no change possible).
+Call $this->AddCheckIssue($sErrorMessage) to report a blocking issue.
+Call $this->AddCheckWarning($sWarningMessage) to display a warning.
+      ]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
-      <replaces>DBObject::OnInsert</replaces>
+      <replaces>cmdbAbstractObject::DoCheckToWrite</replaces>
       <event_data>
         <event_datum id="object">
-          <description>The object inserted</description>
+          <description>The object to check</description>
           <type>DBObject</type>
+        </event_datum>
+        <event_datum id="is_new">
+          <description>Creation flag</description>
+          <type>boolean</type>
+        </event_datum>
+        <event_datum id="stimulus_applied">
+          <description>Life cycle stimulus applied (null if not within a transition)</description>
+          <type>string</type>
         </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
@@ -220,8 +274,10 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_DB_INSERT_DONE" _delta="define">
-      <description>An object has been inserted into the database (but not reloaded). All changes to the object will be persisted automatically.</description>
+    <event id="EVENT_DB_AFTER_WRITE" _delta="define">
+      <name>After create or update</name>
+      <description><![CDATA[An object has been written into the database.
+The modifications can be propagated to other objects.]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -231,21 +287,35 @@
           <description>The object inserted</description>
           <type>DBObject</type>
         </event_datum>
+        <event_datum id="is_new">
+          <description>Creation flag</description>
+          <type>boolean</type>
+        </event_datum>
+        <event_datum id="changes">
+          <description><![CDATA[For updates, the list of changes done during this operation]]></description>
+          <type>array</type>
+        </event_datum>
+        <event_datum id="stimulus_applied">
+          <description>Life cycle stimulus applied (null if not within a transition)</description>
+          <type>string</type>
+        </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_DB_UPDATE_REQUESTED" _delta="define">
-      <description>An object update has been requested. All changes to the object will be persisted automatically.</description>
+    <event id="EVENT_DB_CHECK_TO_DELETE" _delta="define">
+      <name>Check to delete</name>
+      <description><![CDATA[Check an object before it is deleted from the database.
+Call $this->AddDeleteIssue($sIssueMessage) to signal an issue.]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
-      <replaces>DBObject::OnUpdate, DBObject::DoComputeValues</replaces>
+      <replaces>cmdbAbstractObject::DoCheckToDelete</replaces>
       <event_data>
         <event_datum id="object">
-          <description>The object updated</description>
+          <description>The object to check</description>
           <type>DBObject</type>
         </event_datum>
         <event_datum id="debug_info">
@@ -254,15 +324,16 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_DB_ABOUT_TO_UPDATE" _delta="define">
-      <description>An object is about to be updated in the database (no change possible)</description>
+    <event id="EVENT_DB_ABOUT_TO_DELETE" _delta="define">
+      <name>Before delete</name>
+      <description><![CDATA[An object is about to be deleted from the database]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
-      <replaces>DBObject::OnUpdate</replaces>
+      <replaces>cmdbAbstractObject::OnDelete</replaces>
       <event_data>
         <event_datum id="object">
-          <description>The object updated</description>
+          <description>The object about to be deleted</description>
           <type>DBObject</type>
         </event_datum>
         <event_datum id="debug_info">
@@ -271,42 +342,9 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_DB_UPDATE_DONE" _delta="define">
-      <description>An object has been updated into the database and reloaded. All changes to the object will be persisted automatically.</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>DBObject::AfterUpdate</replaces>
-      <event_data>
-        <event_datum id="object">
-          <description>The object updated</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_SERVICE_DB_ABOUT_TO_DELETE" _delta="define">
-      <description>An object is about to be deleted in the database</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>DBObject::OnDelete</replaces>
-      <event_data>
-        <event_datum id="object">
-          <description>The object deleted</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_SERVICE_DB_DELETE_DONE" _delta="define">
-      <description>An object has been deleted into the database</description>
+    <event id="EVENT_DB_AFTER_DELETE" _delta="define">
+      <name>After delete</name>
+      <description><![CDATA[An object has been deleted into the database]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -322,8 +360,10 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_DB_BEFORE_APPLY_STIMULUS" _delta="define">
-      <description>A stimulus is about to be applied to an object</description>
+    <event id="EVENT_ENUM_TRANSITIONS" _delta="define">
+      <name>Enum transitions</name>
+      <description><![CDATA[Manage the allowed transitions in current object state.
+The only action allowed is to deny transitions with $this->DenyTransition($sTransitionCode)]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -332,21 +372,9 @@
           <description>The object where the stimulus is targeted</description>
           <type>DBObject</type>
         </event_datum>
-        <event_datum id="stimulus">
-          <description>Current stimulus applied</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="previous_state">
-          <description>Object previous state</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="new_state">
-          <description>Object new state</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="save_object">
-          <description>The object must be saved in the database</description>
-          <type>boolean</type>
+        <event_datum id="allowed_stimuli">
+          <description>The list of available stimuli in the current state</description>
+          <type>array</type>
         </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
@@ -354,31 +382,16 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_DB_AFTER_APPLY_STIMULUS" _delta="define">
-      <description>A stimulus has been applied to an object</description>
+    <event id="EVENT_DB_LINKS_CHANGED" _delta="define">
+      <name>Links on object have changed</name>
+      <description><![CDATA[At least one link class was changed]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
       <event_data>
         <event_datum id="object">
-          <description>The object where the stimulus is targeted</description>
+          <description>The object where the link is or was pointing to</description>
           <type>DBObject</type>
-        </event_datum>
-        <event_datum id="stimulus">
-          <description>Current stimulus applied</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="previous_state">
-          <description>Object previous state</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="new_state">
-          <description>Object new state</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="save_object">
-          <description>The object is asked to be saved in the database</description>
-          <type>boolean</type>
         </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
@@ -386,44 +399,10 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_DB_APPLY_STIMULUS_FAILED" _delta="define">
-      <description>A stimulus has failed</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <event_data>
-        <event_datum id="action">
-          <description>The action that failed to apply the stimulus</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="object">
-          <description>The object where the stimulus is targeted</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="stimulus">
-          <description>Current stimulus applied</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="previous_state">
-          <description>Object previous state</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="new_state">
-          <description>Object new state</description>
-          <type>string</type>
-        </event_datum>
-        <event_datum id="save_object">
-          <description>The object must be saved in the database</description>
-          <type>boolean</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_SERVICE_DB_OBJECT_RELOAD" _delta="define">
-      <description>An object has been re-loaded from the database</description>
+    <event id="EVENT_DB_OBJECT_RELOAD" _delta="define">
+      <name>Object reload</name>
+      <internal>true</internal>
+      <description><![CDATA[An object has been re-loaded from the database]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -438,8 +417,9 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_DB_COMPUTE_VALUES" _delta="define">
-      <description>An object needs to be recomputed after changes</description>
+    <event id="EVENT_DB_COMPUTE_VALUES" _delta="define">
+      <name>Recompute object values</name>
+      <description><![CDATA[An object needs to be recomputed after changes]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -449,26 +429,13 @@
           <description>The object inserted</description>
           <type>DBObject</type>
         </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
+        <event_datum id="is_new">
+          <description>Creation flag</description>
+          <type>boolean</type>
+        </event_datum>
+        <event_datum id="stimulus_applied">
+          <description>Life cycle stimulus applied (null if not within a transition)</description>
           <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_SERVICE_DB_CHECK_TO_WRITE" _delta="define">
-      <description>Check an object before it is written into the database (no change possible)</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>cmdbAbstractObject::DoCheckToWrite</replaces>
-      <event_data>
-        <event_datum id="object">
-          <description>The object to check</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="error_messages">
-          <description>Array of strings where all the errors found during the object checking are added</description>
-          <type>array</type>
         </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
@@ -476,29 +443,9 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_DB_CHECK_TO_DELETE" _delta="define">
-      <description>Check an object before it is deleted from the database (no change possible)</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>cmdbAbstractObject::DoCheckToDelete</replaces>
-      <event_data>
-        <event_datum id="object">
-          <description>The object to check</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="error_messages">
-          <description>Array of strings where all the errors found during the object checking are added</description>
-          <type>array</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_SERVICE_DB_ARCHIVE" _delta="define">
-      <description>An object has been archived</description>
+    <event id="EVENT_DB_ARCHIVE" _delta="define">
+      <name>Object archived</name>
+      <description><![CDATA[An object has been archived]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -513,8 +460,9 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_DB_UNARCHIVE" _delta="define">
-      <description>An object has been unarchived</description>
+    <event id="EVENT_DB_UNARCHIVE" _delta="define">
+      <name>Object unarchived</name>
+      <description><![CDATA[An object has been unarchived]]></description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -529,8 +477,49 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_DOWNLOAD_DOCUMENT" _delta="define">
-      <description>A document has been downloaded from the GUI</description>
+    <event id="EVENT_DB_SET_ATTRIBUTES_FLAGS" _delta="define">
+      <name>Set attributes flags</name>
+      <description><![CDATA[Set object attributes flags.
+Call $this->AddAttributeFlags($sAttCode, $iFlags) for all the attributes to be set for this target state.]]></description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
+          <description>The current object</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="target_state">
+          <description>The target state in which to evaluate the flags</description>
+          <type>string</type>
+        </event_datum>
+        <event_datum id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </event_datum>
+      </event_data>
+    </event>
+    <event id="EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS" _delta="define">
+      <name>Set initial attributes flags</name>
+      <description><![CDATA[Set object initial attributes flags.
+Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial attributes to be set initially.]]></description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
+          <description>The current object</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </event_datum>
+      </event_data>
+    </event>
+    <event id="EVENT_DOWNLOAD_DOCUMENT" _delta="define">
+      <name>Document downloaded</name>
+      <description><![CDATA[A document has been downloaded from the GUI]]></description>
       <sources>
         <source id="Document">Document</source>
       </sources>
@@ -539,9 +528,17 @@
           <description>The object containing the document</description>
           <type>DBObject</type>
         </event_datum>
+        <event_datum id="att_code">
+          <description>The optional object attribute code hosting the document</description>
+          <type>string</type>
+        </event_datum>
         <event_datum id="document">
           <description>The document downloaded</description>
           <type>ormDocument</type>
+        </event_datum>
+        <event_datum id="content_disposition">
+          <description>The content disposition of the document ("inline" or "attachment")</description>
+          <type>string</type>
         </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
@@ -549,8 +546,10 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_LOGIN" _delta="define">
-      <description>Inform the listeners about the connection states</description>
+    <event id="EVENT_LOGIN" _delta="define">
+      <name>Login</name>
+      <internal>true</internal>
+      <description><![CDATA[Inform the listeners about the connection states]]></description>
       <event_data>
         <event_datum id="code">
           <description>The login step result code (LoginWebPage::EXIT_CODE_...) </description>

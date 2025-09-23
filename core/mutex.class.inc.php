@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2013-2021 Combodo SARL
+// Copyright (C) 2013-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -22,9 +22,11 @@
  * A class to serialize the execution of some code sections
  * Emulates the API of PECL Mutex class
  * Relies on MySQL locks because the API sem_get is not always present in the
- * installed PHP.    
+ * installed PHP.
  *
- * @copyright   Copyright (C) 2013-2021 Combodo SARL
+ * @link https://dev.mysql.com/doc/refman/5.7/en/locking-functions.html MySQL locking functions documentation
+ *
+ * @copyright   Copyright (C) 2013-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class iTopMutex
@@ -257,7 +259,7 @@ class iTopMutex
 		$this->hDBLink = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, false);
 
 		if (!$this->hDBLink) {
-			throw new Exception("Could not connect to the DB server (host=$sServer, user=$sUser): ".mysqli_connect_error().' (mysql errno: '.mysqli_connect_errno().')');
+            throw new MySQLException('Could not connect to the DB server '.mysqli_connect_error().' (mysql errno: '.mysqli_connect_errno(), array('host' => $sDBHost, 'user' => $sDBUser));
 		}
 
 		// Make sure that the server variable `wait_timeout` is at least 86400 seconds for this connection,

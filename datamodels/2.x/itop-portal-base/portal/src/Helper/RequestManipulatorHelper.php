@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -90,26 +90,27 @@ class RequestManipulatorHelper
 	 * @param string $sKey
 	 * @param mixed  $default
 	 * @param int    $iFilter Default is FILTER_SANITIZE_SPECIAL_CHARS
+     * @param int    $aFilterOptions @since 3.2.0 - N°6934 - Symfony 6.4 - upgrade Symfony bundles to 6.4
 	 *
 	 * @return mixed|null
 	 *
 	 * @since 2.5.1
 	 */
-	public function ReadParam($sKey, $default = null, $iFilter = FILTER_SANITIZE_SPECIAL_CHARS)
+	public function ReadParam($sKey, $default = null, $iFilter = FILTER_SANITIZE_SPECIAL_CHARS, $aFilterOptions = [])
 	{
 		if ($this->GetCurrentRequest()->query->has($sKey))
 		{
-			return $this->GetCurrentRequest()->query->filter($sKey, $default, $iFilter);
+			return $this->GetCurrentRequest()->query->filter($sKey, $default, $iFilter, $aFilterOptions);
 		}
 
 		if ($this->GetCurrentRequest()->attributes->has($sKey))
 		{
-			return $this->GetCurrentRequest()->attributes->filter($sKey, $default, $iFilter);
+			return $this->GetCurrentRequest()->attributes->filter($sKey, $default, $iFilter, $aFilterOptions);
 		}
 
 		if ($this->GetCurrentRequest()->request->has($sKey))
 		{
-			return $this->GetCurrentRequest()->request->filter($sKey, $default, $iFilter);
+			return $this->GetCurrentRequest()->request->filter($sKey, $default, $iFilter, $aFilterOptions);
 		}
 
 		return $default;

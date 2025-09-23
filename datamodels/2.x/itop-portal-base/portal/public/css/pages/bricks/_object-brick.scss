@@ -1,0 +1,24 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-object-brick--url-to-clipboard--opacity: 0.5 !default;
+$ipb-object-brick--url-to-clipboard-tooltip-copied--margin-right: $common-spacing-200!default;
+
+
+.url-to-clipboard{
+  &.url-to-clipboard-icon {
+    opacity: $ipb-object-brick--url-to-clipboard--opacity;
+    cursor: pointer;
+    transition: opacity 0.2s linear;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+// Used for clipboard's tooltip, which is not part of .url-to-clipboard element
+.url-to-clipboard-tooltip-copied {
+  margin-right: $ipb-object-brick--url-to-clipboard-tooltip-copied--margin-right;
+}

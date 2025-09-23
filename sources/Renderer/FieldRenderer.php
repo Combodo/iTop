@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,6 +21,7 @@
 namespace Combodo\iTop\Renderer;
 
 use Combodo\iTop\Form\Field\Field;
+use Combodo\iTop\Form\Validator\AbstractRegexpValidator;
 use Dict;
 use utils;
 
@@ -84,9 +85,14 @@ abstract class FieldRenderer
 		$aValidators = array();
 		foreach ($this->oField->GetValidators() as $oValidator)
 		{
+			if (false === ($oValidator instanceof AbstractRegexpValidator)) {
+				// no JS counterpart, so skipping !
+				continue;
+			}
+
 			$aValidators[$oValidator::GetName()] = array(
 				'reg_exp' => $oValidator->GetRegExp(),
-				'message' => Dict::S($oValidator->GetErrorMessage())
+				'message' => Dict::S($oValidator->GetErrorMessage()),
 			);
 		}
 		// - Formatting options

@@ -1,0 +1,285 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$messaging-self-primary-color: $ipb-color-blue-100 !default;
+$messaging-self-secondary-color: $ipb-color-blue-800 !default;
+$messaging-1st-peer-primary-color: $ipb-color-white-100 !default;
+$messaging-1st-peer-secondary-color: $ipb-color-grey-400 !default;
+$messaging-2nd-peer-primary-color: $ipb-color-white-100 !default;
+$messaging-2nd-peer-secondary-color: $ipb-color-grey-400 !default;
+$messaging-2nd-peer-secondary-color: $ipb-color-grey-400 !default;
+$messaging-3rd-peer-primary-color: $ipb-color-white-100 !default;
+$messaging-3rd-peer-secondary-color: $ipb-color-grey-300 !default;
+$messaging-4th-peer-primary-color: $ipb-color-white-100 !default;
+$messaging-4th-peer-secondary-color: $ipb-color-grey-400 !default;
+$messaging-5th-peer-primary-color: $ipb-color-white-100 !default;
+$messaging-5th-peer-secondary-color: $ipb-color-grey-400 !default;
+
+$ipb-caselog-thread--border-color: $ipb-color-grey-400 !default;
+$ipb-caselog-thread--border: 1px solid $ipb-caselog-thread--border-color !default;
+
+$ipb-caselog-thread--header--background-color:  $ipb-color-white-100 !default;
+$ipb-caselog-thread--header--span--color: $ipb-color-grey-800 !default;
+
+$ipb-caselog-thread--header-toggler--color: inherit !default;
+
+$ipb-caselog-thread--header-toggler--hover--active-focus--color: inherit !default;
+
+$ipb-caselog-thread--content--background-color: $ipb-color-grey-100 !default;
+
+$ipb-caselog-thread--date--color: $ipb-color-grey-800 !default;
+
+$ipb-caselog-thread--block-medallion--block-entries--border-color: $ipb-color-grey-200 !default;
+$ipb-caselog-thread--block-medallion--block-entries--border: 1px solid $ipb-caselog-thread--block-medallion--block-entries--border-color !default;
+
+$ipb-caselog-thread--block-medallion--color: $ipb-color-blue-800 !default;
+$ipb-caselog-thread--block-medallion--background-color: $ipb-color-blue-100 !default;
+
+$ipb-caselog-thread--block-user--color: $ipb-caselog-thread--block-medallion--color !default;
+
+$ipb-caselog-thread--block-entries--background-color: $ipb-caselog-thread--block-medallion--background-color !default;
+$ipb-caselog-thread--block-entries--color: $ipb-caselog-thread--block-medallion--color !default;
+
+$ipb-caselog-thread--block-entry--border-bottom-color: $ipb-color-grey-200 !default;
+$ipb-caselog-thread--block-entry--border-bottom: 1px solid $ipb-caselog-thread--block-entry--border-bottom-color !default;
+
+$ipb-caselog-thread--block-entry-toggler--background-color: $ipb-caselog-thread--block-medallion--background-color !default;
+
+$ipb-caselog-thread--block-me--block-entry--first--content--border-left-color: transparent !default;
+$ipb-caselog-thread--block-me--block-entry--first--content--border-right-color: $ipb-caselog-thread--block-medallion--background-color !default;
+
+$ipb-caselog-thread--block-colors: (
+        1: ($ipb-color-white-100, $ipb-color-grey-700),
+        2: ($ipb-color-white-100, $ipb-color-grey-700),
+        3: ($ipb-color-white-100, $ipb-color-grey-700),
+        4: ($ipb-color-white-100, $ipb-color-grey-700),
+        5: ($ipb-color-white-100, $ipb-color-grey-700)
+);
+
+.ipb-caselog-thread {
+  border: $ipb-caselog-thread--border;
+}
+
+.ipb-caselog-thread--header{
+  background-color: $ipb-caselog-thread--header--background-color;
+  span{
+    color: $ipb-caselog-thread--header--span--color;
+  }
+}
+
+.ipb-caselog-thread--header-toggler{
+  color: $ipb-caselog-thread--header-toggler--color;
+
+  &:hover,
+  &:active,
+  &:focus{
+    color: $ipb-caselog-thread--header-toggler--hover--active-focus--color;
+  }
+}
+
+.ipb-caselog-thread--block-medallion,
+.ipb-caselog-thread--block-entries{
+  border: $ipb-caselog-thread--block-medallion--block-entries--border;
+}
+
+.ipb-caselog-thread--content{
+  background-color: $ipb-caselog-thread--content--background-color;
+}
+
+.ipb-caselog-thread--date {
+  color: $ipb-caselog-thread--date--color;
+}
+
+.ipb-caselog-thread--block-medallion{
+  color: $ipb-caselog-thread--block-medallion--color; /* .ipb-caselog-thread--block-entries color */
+  background-color: $ipb-caselog-thread--block-medallion--background-color; /* .ipb-caselog-thread--block-entries background-color */
+}
+
+.ipb-caselog-thread--block-user{
+  color: $ipb-caselog-thread--block-user--color; /* .ipb-caselog-thread--block-entries background-color */
+}
+
+.ipb-caselog-thread--block-entries{
+  background-color: $ipb-caselog-thread--block-entries--background-color;
+  color: $ipb-caselog-thread--block-entries--color;
+}
+
+.ipb-caselog-thread--block-entry {
+  border-bottom: $ipb-caselog-thread--block-entry--border-bottom;
+}
+
+.ipb-caselog-thread--block-entry-toggler{
+  background-color: $ipb-caselog-thread--block-entry-toggler--background-color; /* .ipb-caselog-thread--block-entries background-color */
+}
+
+
+.ipb-caselog-thread--block-me{
+  .ipb-caselog-thread--block-entries{
+    .ipb-caselog-thread--block-entry:first-child{
+      .ipb-caselog-thread--block-entry-content:before{
+        border-right-color: $ipb-caselog-thread--block-me--block-entry--first--content--border-left-color;
+        border-left-color: $ipb-caselog-thread--block-me--block-entry--first--content--border-right-color; /* .ipb-caselog-thread--block-entries background-color */
+      }
+    }
+  }
+}
+
+
+.ipb-caselog-thread--block-color-1{
+  .ipb-caselog-thread--block-medallion{
+    color: $messaging-1st-peer-secondary-color;
+    background-color: $messaging-1st-peer-primary-color;
+  }
+  .ipb-caselog-thread--block-user{
+    color: $messaging-1st-peer-primary-color;
+  }
+  .ipb-caselog-thread--block-entries{
+    color: $messaging-1st-peer-secondary-color;
+    background-color: $messaging-1st-peer-primary-color;
+
+    .ipb-caselog-thread--block-entry{
+      .ipb-caselog-thread--block-entry-toggler{
+        background-color: $messaging-1st-peer-primary-color;
+      }
+    }
+    .ipb-caselog-thread--block-entry:first-child{
+      .ipb-caselog-thread--block-entry-content:before{
+        border-top-color: $messaging-1st-peer-primary-color;
+        border-right-color: $messaging-1st-peer-primary-color;
+      }
+    }
+  }
+}
+.ipb-caselog-thread--block-color-2{
+  .ipb-caselog-thread--block-medallion{
+    color: $messaging-2nd-peer-secondary-color;
+    background-color: $messaging-2nd-peer-primary-color;
+  }
+  .ipb-caselog-thread--block-user{
+    color: $messaging-2nd-peer-primary-color;
+  }
+  .ipb-caselog-thread--block-entries{
+    color: $messaging-2nd-peer-secondary-color;
+    background-color: $messaging-2nd-peer-primary-color;
+
+    .ipb-caselog-thread--block-entry{
+      .ipb-caselog-thread--block-entry-toggler{
+        background-color: $messaging-2nd-peer-primary-color;
+      }
+    }
+    .ipb-caselog-thread--block-entry:first-child{
+      .ipb-caselog-thread--block-entry-content:before{
+        border-top-color: $messaging-2nd-peer-primary-color;
+        border-right-color: $messaging-2nd-peer-primary-color;
+      }
+    }
+  }
+}
+.ipb-caselog-thread--block-color-3{
+  .ipb-caselog-thread--block-medallion{
+    color: $messaging-3rd-peer-secondary-color;
+    background-color: $messaging-3rd-peer-primary-color;
+  }
+  .ipb-caselog-thread--block-user{
+    color: $messaging-3rd-peer-primary-color;
+  }
+  .ipb-caselog-thread--block-entries{
+    color: $messaging-3rd-peer-secondary-color;
+    background-color: $messaging-3rd-peer-primary-color;
+
+    .ipb-caselog-thread--block-entry{
+      .ipb-caselog-thread--block-entry-toggler{
+        background-color: $messaging-3rd-peer-primary-color;
+      }
+    }
+    .ipb-caselog-thread--block-entry:first-child{
+      .ipb-caselog-thread--block-entry-content:before{
+        border-top-color: $messaging-3rd-peer-primary-color;
+        border-right-color: $messaging-3rd-peer-primary-color;
+      }
+    }
+  }
+}
+.ipb-caselog-thread--block-color-4{
+  .ipb-caselog-thread--block-medallion{
+    color: $messaging-4th-peer-secondary-color;
+    background-color: $messaging-4th-peer-primary-color;
+  }
+  .ipb-caselog-thread--block-user{
+    color: $messaging-4th-peer-primary-color;
+  }
+  .ipb-caselog-thread--block-entries{
+    color: $messaging-4th-peer-secondary-color;
+    background-color: $messaging-4th-peer-primary-color;
+
+    .ipb-caselog-thread--block-entry{
+      .ipb-caselog-thread--block-entry-toggler{
+        background-color: $messaging-4th-peer-primary-color;
+      }
+    }
+    .ipb-caselog-thread--block-entry:first-child{
+      .ipb-caselog-thread--block-entry-content:before{
+        border-top-color: $messaging-4th-peer-primary-color;
+        border-right-color: $messaging-4th-peer-primary-color;
+      }
+    }
+  }
+}
+.ipb-caselog-thread--block-color-5{
+  .ipb-caselog-thread--block-medallion{
+    color: $messaging-5th-peer-secondary-color;
+    background-color: $messaging-5th-peer-primary-color;
+  }
+  .ipb-caselog-thread--block-user{
+    color: $messaging-5th-peer-primary-color;
+  }
+  .ipb-caselog-thread--block-entries{
+    color: $messaging-5th-peer-secondary-color;
+    background-color: $messaging-5th-peer-primary-color;
+
+
+    .ipb-caselog-thread--block-entry{
+      .ipb-caselog-thread--block-entry-toggler{
+        background-color: $messaging-5th-peer-primary-color;
+      }
+    }
+    .ipb-caselog-thread--block-entry:first-child{
+      .ipb-caselog-thread--block-entry-content:before{
+        border-top-color: $messaging-5th-peer-primary-color;
+        border-right-color: $messaging-5th-peer-primary-color;
+      }
+    }
+  }
+}
+
+
+@each $index, $colors in $ipb-caselog-thread--block-colors {
+  .ipb-caselog-thread--block-color-#{$index} {
+    .ipb-caselog-thread--block-medallion {
+      color: nth($colors, 2);
+      background-color: nth($colors, 1);
+    }
+    .ipb-caselog-thread--block-user {
+      color: nth($colors, 1);
+    }
+    .ipb-caselog-thread--block-entries {
+      color: nth($colors, 2);
+      background-color: nth($colors, 1);
+
+      .ipb-caselog-thread--block-entry {
+        .ipb-caselog-thread--block-entry-toggler {
+          background-color: nth($colors, 1);
+        }
+      }
+      .ipb-caselog-thread--block-entry:first-child {
+        .ipb-caselog-thread--block-entry-content:before {
+          border-top-color: nth($colors, 1);
+          border-right-color: nth($colors, 1);
+        }
+      }
+    }
+  }
+}

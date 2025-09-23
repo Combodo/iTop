@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -18,12 +18,14 @@
  */
 
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 $oAppContext = new ApplicationContext();
 $currentOrganization = utils::ReadParam('org_id', '');
 $operation = utils::ReadParam('operation', '');
@@ -94,6 +96,12 @@ if ($bLoginDebug)
 		IssueLog::Info("SESSION: $sSessionLog");
 	}
 	IssueLog::Info("--> Display logout page");
+}
+
+LoginWebPage::ResetSession(true);
+if ($bLoginDebug) {
+    $sSessionLog = session_id().' '.utils::GetSessionLog();
+    IssueLog::Info("SESSION: $sSessionLog");
 }
 
 $oPage = LoginWebPage::NewLoginWebPage();

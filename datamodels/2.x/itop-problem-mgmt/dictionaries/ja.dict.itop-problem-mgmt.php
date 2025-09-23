@@ -1,23 +1,13 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ *
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:ProblemManagement' => '問題管理',
@@ -107,9 +97,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Problem/Attribute:resolution_date' => '解決日',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => '既知のエラー',
-	'Class:Problem/Attribute:knownerrors_list+' => '',
+	'Class:Problem/Attribute:knownerrors_list+' => 'All the known errors that are linked to this problem~~',
 	'Class:Problem/Attribute:related_request_list' => '関連する要求',
-	'Class:Problem/Attribute:related_request_list+' => '',
+	'Class:Problem/Attribute:related_request_list+' => 'All the requests that are related to this problem~~',
 	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
 	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 	'Class:Problem/Stimulus:ev_assign' => '割り当て',

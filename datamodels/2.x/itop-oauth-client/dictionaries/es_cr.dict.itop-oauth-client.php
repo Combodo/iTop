@@ -1,0 +1,121 @@
+<?php
+/**
+ * Spanish Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
+ */
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'Menu:CreateMailbox' => 'Crear un buzón...',
+	'Menu:OAuthClient' => 'OAuth Mail Access~~',
+	'Menu:OAuthClient+' => 'Cliente OAuth',
+	'Menu:GenerateTokens' => 'Generar token de acceso...',
+	'Menu:RegenerateTokens' => 'Regenerar token de acceso...',
+	'itop-oauth-client/Operation:CreateMailBox/Title' => 'Creación de Buzón',
+	'itop-oauth-client:UsedForSMTP' => 'Este cliente OAuth client es usado para SMTP',
+	'itop-oauth-client:TestSMTP' => 'Prueba de envío de correo-e',
+	'itop-oauth-client:MissingOAuthClient' => 'Falta cliente Oauth para usuario %1$s',
+	'itop-oauth-client:Message:MissingToken' => 'Generar token de acceso antes de usar este cliente OAuth',
+	'itop-oauth-client:Message:RegenerateToken' => 'Regenerar token de acceso para sea considerado en los cambios en la cuenta',
+	'itop-oauth-client:Message:TokenCreated' => 'Token de acceso creado',
+	'itop-oauth-client:Message:TokenRecreated' => 'Token de acceso regenerado',
+	'itop-oauth-client:Message:TokenError' => 'Token de acceso no generado debido a un error del servidor',
+	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'La combinación Inicio de sesión (%1$s) y Uso para SMTP (%2$s) ya se ha utilizado para el Cliente OAuth',
+	'OAuthClient:baseinfo' => 'Información Base',
+	'OAuthClient:scope' => 'Alcance',
+]);
+
+//
+// Class: OAuthClient
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'Class:OAuthClient' => 'OAuth Mail Access~~',
+	'Class:OAuthClient/Attribute:provider' => 'Proveedor',
+	'Class:OAuthClient/Attribute:provider+' => 'Proveedor',
+	'Class:OAuthClient/Attribute:name' => 'Usuario',
+	'Class:OAuthClient/Attribute:name+' => 'En general, esta es tu dirección de correo electrónico.',
+	'Class:OAuthClient/Attribute:status' => 'Estatus',
+	'Class:OAuthClient/Attribute:status+' => 'Después de la creación, use la acción "Generar token de acceso" para poder usar este cliente OAuth',
+	'Class:OAuthClient/Attribute:status/Value:active' => 'Token de acceso generado',
+	'Class:OAuthClient/Attribute:status/Value:inactive' => 'Sin token de acceso',
+	'Class:OAuthClient/Attribute:description' => 'Descripción',
+	'Class:OAuthClient/Attribute:description+' => 'Descripción',
+	'Class:OAuthClient/Attribute:client_id' => 'Id Cliente',
+	'Class:OAuthClient/Attribute:client_id+' => 'Una cadena larga de caracteres proporcionada por su proveedor de OAuth2',
+	'Class:OAuthClient/Attribute:client_secret' => 'Secreto del Cliente',
+	'Class:OAuthClient/Attribute:client_secret+' => 'Otra cadena larga de caracteres proporcionada por su proveedor de OAuth2',
+	'Class:OAuthClient/Attribute:refresh_token' => 'Actualizar token',
+	'Class:OAuthClient/Attribute:refresh_token+' => 'Actualizar token',
+	'Class:OAuthClient/Attribute:refresh_token_expiration' => 'Actualizar expiración de token',
+	'Class:OAuthClient/Attribute:refresh_token_expiration+' => 'Actualizar expiración de token',
+	'Class:OAuthClient/Attribute:scope' => 'Alcance',
+	'Class:OAuthClient/Attribute:scope+' => 'Alcance',
+	'Class:OAuthClient/Attribute:token' => 'Token de acceso',
+	'Class:OAuthClient/Attribute:token+' => 'Token de acceso',
+	'Class:OAuthClient/Attribute:token_expiration' => 'Expiración de token de acceso',
+	'Class:OAuthClient/Attribute:token_expiration+' => 'Expiración de token de acceso',
+	'Class:OAuthClient/Attribute:redirect_url' => 'Redireccionar URL',
+	'Class:OAuthClient/Attribute:redirect_url+' => 'Esta url debe copiarse en la configuración OAuth2 del proveedor
+Borre el campo para recalcular el valor predeterminado',
+	'Class:OAuthClient/Attribute:mailbox_list' => 'Lista de Buzones',
+	'Class:OAuthClient/Attribute:mailbox_list+' => 'Lista de Buzones'
+]);
+
+//
+// Class: OAuthClientAzure
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:OAuthClientAzure' => 'Cliente OAuth para Microsoft Azure',
+	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
+	'Class:OAuthClientAzure/Attribute:scope' => 'Alcance',
+	'Class:OAuthClientAzure/Attribute:scope+' => 'Por lo general, la selección predeterminada es apropiada',
+	'Class:OAuthClientAzure/Attribute:scope/Value:SMTP' => 'SMTP',
+	'Class:OAuthClientAzure/Attribute:scope/Value:SMTP+' => 'SMTP',
+	'Class:OAuthClientAzure/Attribute:scope/Value:IMAP' => 'IMAP',
+	'Class:OAuthClientAzure/Attribute:scope/Value:IMAP+' => 'IMAP',
+	'Class:OAuthClientAzure/Attribute:advanced_scope' => 'Alcance avanzado',
+	'Class:OAuthClientAzure/Attribute:advanced_scope+' => 'Tan pronto como ingrese algo aquí, tiene prioridad sobre la selección "Alcance", que luego se ignora',
+	'Class:OAuthClientAzure/Attribute:used_scope' => 'Used scope~~',
+	'Class:OAuthClientAzure/Attribute:used_scope+' => '~~',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple' => 'Simple~~',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple+' => '~~',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced' => 'Advanced~~',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced+' => '~~',
+	'Class:OAuthClientAzure/Attribute:used_for_smtp' => 'Usado para SMTP',
+	'Class:OAuthClientAzure/Attribute:used_for_smtp+' => 'Al menos un cliente OAuth debe tener este indicador en "Sí", si desea que iTop lo use para enviar correos electrónicos.',
+	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:yes' => 'Si',
+	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'No',
+	'Class:OAuthClientAzure/Attribute:tenant' => 'Inquilino',
+	'Class:OAuthClientAzure/Attribute:tenant+' => 'ID de inquilino de la aplicación configurada. Para aplicaciones multiinquilino, utilice "common".',
+));
+
+//
+// Class: OAuthClientGoogle
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:OAuthClientGoogle' => 'Cliente OAuth para Google',
+	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
+	'Class:OAuthClientGoogle/Attribute:scope' => 'Alcance',
+	'Class:OAuthClientGoogle/Attribute:scope+' => 'Por lo general, la selección predeterminada es apropiada',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:SMTP' => 'SMTP',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:SMTP+' => 'SMTP',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:IMAP' => 'IMAP',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:IMAP+' => 'IMAP',
+	'Class:OAuthClientGoogle/Attribute:advanced_scope' => 'Alcance avanzado',
+	'Class:OAuthClientGoogle/Attribute:advanced_scope+' => 'Tan pronto como ingrese algo aquí, tiene prioridad sobre la selección "Alcance", que luego se ignora',
+	'Class:OAuthClientGoogle/Attribute:used_scope' => 'Alcance usado',
+	'Class:OAuthClientGoogle/Attribute:used_scope+' => 'Alcance usado',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:simple' => 'Simple',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:simple+' => 'Simple',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced' => 'Avanzado',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced+' => 'Avanzado',
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp' => 'Usado para SMTP',
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => 'Al menos un cliente OAuth debe tener este indicador en "Sí", si desea que iTop lo use para enviar correos electrónicos.',
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => 'Si',
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => 'No',
+));

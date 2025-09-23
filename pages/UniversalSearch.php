@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/applicationcontext.class.inc.php');
@@ -24,19 +26,17 @@ require_once(APPROOT.'/application/applicationcontext.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('UniversalSearchMenu');
 
 $oAppContext = new ApplicationContext();
 
 $oP = new iTopWebPage(Dict::S('UI:UniversalSearchTitle'));
-$oP->add_linked_script("../js/json.js");
-$oP->add_linked_script("../js/forms-json-utils.js");
-$oP->add_linked_script("../js/wizardhelper.js");
-$oP->add_linked_script("../js/wizard.utils.js");
-$oP->add_linked_script("../js/linkswidget.js");
-$oP->add_linked_script("../js/extkeywidget.js");
-$oP->add_linked_script("../js/jquery.blockUI.js");
+$oP->LinkScriptFromAppRoot("js/forms-json-utils.js");
+$oP->LinkScriptFromAppRoot("js/wizardhelper.js");
+$oP->LinkScriptFromAppRoot("js/extkeywidget.js");
+$oP->LinkScriptFromAppRoot("js/jquery.blockUI.js");
 		
 // From now on the context is limited to the the selected organization ??
 
@@ -52,11 +52,13 @@ $oP->SetBreadCrumbEntry('ui-tool-universalsearch', Dict::S('Menu:UniversalSearch
 
 
 //$sSearchHeaderForceDropdown
-$sSearchHeaderForceDropdown = '<select  id="select_class" name="baseClass" onChange="this.form.submit();">';
+$sSearchHeaderForceDropdown = '<select  id="select_class" name="baseClass" onChange="this.form.trigger(\'submit\');">';
 $aClassLabels = array();
-foreach(MetaModel::GetClasses('bizmodel') as $sCurrentClass)
-{
-	$aClassLabels[$sCurrentClass] = MetaModel::GetName($sCurrentClass);
+foreach (MetaModel::GetClasses('bizmodel, grant_by_profile') as $sCurrentClass) {
+	if ((MetaModel::HasCategory($sCurrentClass, 'grant_by_profile') && UserRights::IsActionAllowed($sCurrentClass, UR_ACTION_BULK_MODIFY))
+		|| (MetaModel::HasCategory($sCurrentClass, 'bizmodel') && UserRights::IsActionAllowed($sCurrentClass, UR_ACTION_BULK_READ))) {
+		$aClassLabels[$sCurrentClass] = MetaModel::GetName($sCurrentClass);
+	}
 }
 asort($aClassLabels);
 foreach($aClassLabels as $sCurrentClass => $sLabel)
@@ -105,7 +107,7 @@ if ($oFilter != null)
 	$aExtraParams['action'] = utils::GetAbsoluteUrlAppRoot().'pages/UniversalSearch.php';
 	$aExtraParams['table_id'] = '1';
 	$aExtraParams['search_header_force_dropdown'] = $sSearchHeaderForceDropdown;
-	//$aExtraParams['class'] = $sClassName;
+	$aExtraParams['submit_on_load'] = false;
 	$oBlock->Display($oP, 0, $aExtraParams);
 
 	// Search results	
@@ -124,4 +126,3 @@ if ($oFilter != null)
 }
 $oP->add("</div>\n");
 $oP->output();
-?>

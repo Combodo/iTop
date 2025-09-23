@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -19,26 +19,28 @@
 
 namespace Combodo\iTop\Application\TwigBase\Controller;
 
-use AjaxPage;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 use ApplicationMenu;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Controller\AbstractController;
 use Dict;
-use ErrorPage;
+use Combodo\iTop\Application\WebPage\ErrorPage;
 use Exception;
 use ExecutionKPI;
 use IssueLog;
-use iTopWebPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 use LoginWebPage;
 use MetaModel;
 use ReflectionClass;
 use SetupPage;
 use SetupUtils;
 use Twig\Error\Error;
+use Twig\Error\SyntaxError;
 use utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use ZipArchive;
 
-abstract class Controller
+abstract class Controller extends AbstractController
 {
 	const ENUM_PAGE_TYPE_HTML = 'html';
 	const ENUM_PAGE_TYPE_BASIC_HTML = 'basic_html';
@@ -48,10 +50,10 @@ abstract class Controller
 	/** @var \Twig\Environment */
 	private $m_oTwig;
 	/** @var string */
-	private $m_sOperation;
+	protected $m_sOperation;
 	/** @var string */
 	private $m_sModule;
-	/** @var iTopWebPage|\AjaxPage */
+	/** @var iTopWebPage|AjaxPage */
 	private $m_oPage;
 	/** @var bool */
 	private $m_bCheckDemoMode = false;
@@ -85,7 +87,7 @@ abstract class Controller
 	 * @param string $sViewPath Path of the twig files
 	 * @param string $sModuleName name of the module (or 'core' if not a module)
 	 */
-	public function __construct($sViewPath, $sModuleName = 'core', $aAdditionalPaths = [])
+	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
 	{
 		$this->m_aLinkedScripts = [];
 		$this->m_aLinkedStylesheets = [];
@@ -93,14 +95,16 @@ abstract class Controller
 		$this->m_aAjaxTabs = [];
 		$this->m_aDefaultParams = [];
 		$this->m_aBlockParams = [];
-		$this->SetViewPath($sViewPath, $aAdditionalPaths);
 		$this->SetModuleName($sModuleName);
-		if ($sModuleName != 'core') {
-			try {
-				$this->m_aDefaultParams = ['sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php')];
-			}
-			catch (Exception $e) {
-				IssueLog::Error($e->getMessage());
+		if (strlen($sViewPath) > 0) {
+			$this->SetViewPath($sViewPath, $aAdditionalPaths);
+			if ($sModuleName != 'core') {
+				try {
+					$this->m_aDefaultParams = ['sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php')];
+				}
+				catch (Exception $e) {
+					IssueLog::Error($e->getMessage());
+				}
 			}
 		}
 	}
@@ -165,17 +169,19 @@ abstract class Controller
 			$this->CheckAccess();
 			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
 
-			$sMethodName = 'Operation'.$this->m_sOperation;
 			$oKPI = new ExecutionKPI();
 			$oKPI->ComputeAndReport('Starting operation '.$this->m_sOperation);
-			if (method_exists($this, $sMethodName))
-			{
-				$this->$sMethodName();
+
+			if ($this->CallOperation(utils::ToCamelCase($this->m_sOperation))) {
+				return;
 			}
-			else
-			{
-				$this->DisplayBadRequest();
+
+			// Fallback to unchanged names for compatibility
+			if ($this->CallOperation($this->m_sOperation)) {
+				return;
 			}
+
+			$this->DisplayBadRequest();
 		}
 		catch (Exception $e)
 		{
@@ -201,15 +207,16 @@ abstract class Controller
 			$this->CheckAccess();
 			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
 
-			$sMethodName = 'Operation'.$this->m_sOperation;
-			if (method_exists($this, $sMethodName))
-			{
-				$this->$sMethodName();
+			if ($this->CallOperation(utils::ToCamelCase($this->m_sOperation))) {
+				return;
 			}
-			else
-			{
-				$this->DisplayPageNotFound();
+
+			// Fallback to unchanged names for compatibility
+			if ($this->CallOperation($this->m_sOperation)) {
+				return;
 			}
+
+			$this->DisplayPageNotFound();
 		}
 		catch (Exception $e)
 		{
@@ -217,6 +224,17 @@ abstract class Controller
 			$aResponse = array('sError' => $e->getMessage());
 			echo json_encode($aResponse);
 		}
+	}
+
+	private function CallOperation($sOperation): bool
+	{
+		$sMethodName = 'Operation'.$sOperation;
+		if (!method_exists($this, $sMethodName)) {
+			return false;
+		}
+
+		$this->$sMethodName();
+		return true;
 	}
 
 	/**
@@ -238,9 +256,10 @@ abstract class Controller
 	}
 
 	/**
+	 * @since 3.0.0 N°3606 - Adapt TwigBase Controller for combodo-monitoring extension
 	 * @throws \Exception
 	 */
-	private function CheckAccess()
+	protected function CheckAccess()
 	{
 		if ($this->m_bCheckDemoMode && MetaModel::GetConfig()->Get('demo_mode'))
 		{
@@ -253,12 +272,23 @@ abstract class Controller
 
 		if (empty($sExecModule) || empty($sConfiguredAccessTokenValue)){
 			LoginWebPage::DoLogin($this->m_bMustBeAdmin);
-		}else {
+		} else {
 			//token mode without login required
-			$sPassedToken = utils::ReadParam($this->m_sAccessTokenConfigParamId, null);
-			if ($sPassedToken !== $sConfiguredAccessTokenValue){
+			//N°7147 - Error HTTP 500 due to access_token not URL decoded
+			$sPassedToken = utils::ReadPostedParam($this->m_sAccessTokenConfigParamId, null, false, 'raw_data');
+			if (is_null($sPassedToken)){
+				$sPassedToken = utils::ReadParam($this->m_sAccessTokenConfigParamId, null, false, 'raw_data');
+			}
+
+			$sDecodedPassedToken = urldecode($sPassedToken);
+			if ($sDecodedPassedToken !== $sConfiguredAccessTokenValue){
 				$sMsg = "Invalid token passed under '$this->m_sAccessTokenConfigParamId' http param to reach '$sExecModule' page.";
-				IssueLog::Error($sMsg);
+				IssueLog::Error($sMsg, null,
+					[
+						'sHtmlDecodedToken' => $sDecodedPassedToken,
+						'conf param ID' => $this->m_sAccessTokenConfigParamId
+					]
+				);
 				throw new Exception("Invalid token");
 			}
 		}
@@ -360,7 +390,7 @@ abstract class Controller
 	}
 
 	/**
-	 * Display an AJAX page (AjaxPage)
+	 * Display an Setup page (SetupPage)
 	 *
 	 * @api
 	 *
@@ -553,6 +583,7 @@ abstract class Controller
 	 * @api
 	 *
 	 * @param string $sScript Script path to link
+	 * @since 3.2.0 $sScript must be absolute URI
 	 */
 	public function AddLinkedScript($sScript)
 	{
@@ -565,6 +596,7 @@ abstract class Controller
 	 * @api
 	 *
 	 * @param string $sStylesheet Stylesheet path to link
+	 * @since 3.2.0 $sScript must be absolute URI
 	 */
 	public function AddLinkedStylesheet($sStylesheet)
 	{
@@ -645,6 +677,9 @@ abstract class Controller
 		{
 			return $this->m_oTwig->render($sName.'.'.$sTemplateFileExtension.'.twig', $aParams);
 		}
+		catch (SyntaxError $e) {
+			IssueLog::Error($e->getMessage().' - file: '.$e->getFile().'('.$e->getLine().')');
+		}
 		catch (Error $e) {
 			if (strpos($e->getMessage(), 'Unable to find template') === false)
 			{
@@ -666,7 +701,7 @@ abstract class Controller
 		{
 			case self::ENUM_PAGE_TYPE_HTML:
 				$this->m_oPage = new iTopWebPage($this->GetOperationTitle(), false);
-				$this->m_oPage->add_xframe_options();
+				$this->m_oPage->add_http_headers();
 
 				if ($this->m_bIsBreadCrumbEnabled) {
 					if (count($this->m_aBreadCrumbEntry) > 0) {
@@ -736,12 +771,12 @@ abstract class Controller
 
 	private function AddLinkedScriptToPage($sLinkedScript)
 	{
-		$this->m_oPage->add_linked_script($sLinkedScript);
+		$this->m_oPage->LinkScriptFromURI($sLinkedScript);
 	}
 
 	private function AddLinkedStylesheetToPage($sLinkedStylesheet)
 	{
-		$this->m_oPage->add_linked_stylesheet($sLinkedStylesheet);
+		$this->m_oPage->LinkStylesheetFromURI($sLinkedStylesheet);
 	}
 
 	private function AddStyleToPage($sStyle)

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -40,6 +40,17 @@
  */
 class iTopDesignFormat
 {
+	/**
+	 * @var array{
+	 *     string,
+	 *     array{
+	 *          previous: string,
+	 *          go_to_previous: string,
+	 *          next: string,
+	 *          go_to_next: string
+	 *     }
+	 *  }
+	 */
 	public static $aVersions = array(
 		'1.0' => array(
 			'previous' => null,
@@ -60,34 +71,34 @@ class iTopDesignFormat
 			'go_to_next' => 'From12To13',
 		),
 		'1.3' => array( // iTop >= 2.2.0
-			'previous' => '1.2',
-			'go_to_previous' => 'From13To12',
-			'next' => '1.4',
-			'go_to_next' => 'From13To14',
+		                'previous' => '1.2',
+		                'go_to_previous' => 'From13To12',
+		                'next' => '1.4',
+		                'go_to_next' => 'From13To14',
 		),
 		'1.4' => array( // iTop >= 2.4.0
-			'previous' => '1.3',
-			'go_to_previous' => 'From14To13',
-			'next' => '1.5',
-			'go_to_next' => 'From14To15',
+		                'previous' => '1.3',
+		                'go_to_previous' => 'From14To13',
+		                'next' => '1.5',
+		                'go_to_next' => 'From14To15',
 		),
 		'1.5' => array( // iTop >= 2.5.0
-			'previous' => '1.4',
-			'go_to_previous' => 'From15To14',
-			'next' => '1.6',
-			'go_to_next' => 'From15To16',
+		                'previous' => '1.4',
+		                'go_to_previous' => 'From15To14',
+		                'next' => '1.6',
+		                'go_to_next' => 'From15To16',
 		),
 		'1.6' => array( // iTop >= 2.6.0
-			'previous' => '1.5',
-			'go_to_previous' => 'From16To15',
-			'next' => '1.7',
-			'go_to_next' => 'From16To17',
+		                'previous' => '1.5',
+		                'go_to_previous' => 'From16To15',
+		                'next' => '1.7',
+		                'go_to_next' => 'From16To17',
 		),
 		'1.7' => array( // iTop >= 2.7.0
-			'previous' => '1.6',
-			'go_to_previous' => 'From17To16',
-			'next' => '3.0',
-			'go_to_next' => 'From17To30',
+		                'previous' => '1.6',
+		                'go_to_previous' => 'From17To16',
+		                'next' => '3.0',
+		                'go_to_next' => 'From17To30',
 		),
 		'3.0' => array(
 			'previous' => '1.7',
@@ -98,6 +109,18 @@ class iTopDesignFormat
 		'3.1' => array(
 			'previous' => '3.0',
 			'go_to_previous' => 'From31To30',
+			'next' => '3.2',
+			'go_to_next' => 'From31To32',
+		),
+		'3.2' => array(
+			'previous' => '3.1',
+			'go_to_previous' => 'From32To31',
+			'next' => '3.3',
+			'go_to_next' => 'From32To33',
+		),
+		'3.3' => array(
+			'previous' => '3.2',
+			'go_to_previous' => 'From33To32',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -163,6 +186,29 @@ class iTopDesignFormat
 	}
 
 	/**
+	 * @param string $sCurrentDesignVersion A design version like 3.0
+	 *
+	 * @return ?string the previous design version from the one passed, null if passed version unknown or 1.0
+	 * @since 3.1.0 N°5779
+	 */
+	public static function GetPreviousDesignVersion(string $sCurrentDesignVersion): ?string
+	{
+		$aDesignVersions = array_keys(self::$aVersions);
+
+		$iCurrentDesignVersionIndex = array_search($sCurrentDesignVersion, $aDesignVersions, true);
+		if (false === $iCurrentDesignVersionIndex) {
+			return null;
+		}
+
+		$iPreviousDesignVersionIndex = $iCurrentDesignVersionIndex - 1;
+		if ($iPreviousDesignVersionIndex < 0) {
+			return null;
+		}
+
+		return $aDesignVersions[$iPreviousDesignVersionIndex];
+	}
+
+	/**
 	 * Get all the errors in one single array
 	 */
 	public function GetErrors()
@@ -191,6 +237,7 @@ class iTopDesignFormat
 				$aErrors[] = $aLogEntry['msg'];
 			}
 		}
+
 		return $aErrors;
 	}
 
@@ -203,39 +250,73 @@ class iTopDesignFormat
 	}
 
 	/**
+	 * @throws \iTopXmlException if root node not found
+	 */
+	public function GetITopDesignNode(): DOMNode
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+		// Retrieve the version number
+		$oNodeList = $oXPath->query('/itop_design');
+		if ($oNodeList->length === 0) {
+			throw new iTopXmlException('File format: no root <itop_design> tag found');
+		}
+
+		return $oNodeList->item(0);
+	}
+
+	/**
+	 * @return string
+	 * @throws \iTopXmlException
+	 */
+	public function GetVersion()
+	{
+		$oITopDesignNode = $this->GetITopDesignNode();
+
+		$sVersion = $oITopDesignNode->getAttribute('version');
+		if (utils::IsNullOrEmptyString($sVersion)) {
+			// Originally, the information was missing: default to 1.0
+			$sVersion = '1.0';
+		}
+
+		return $sVersion;
+	}
+
+	/**
 	 * An alternative to getNodePath, that gives the id of nodes instead of the position within the children
+	 *
 	 * @param $oNode
+	 *
 	 * @return string
 	 */
 	public static function GetItopNodePath($oNode)
 	{
 		if ($oNode instanceof DOMDocument) return '';
-	
+
 		$sId = $oNode->getAttribute('id');
 		$sNodeDesc = ($sId != '') ? $oNode->nodeName.'['.$sId.']' : $oNode->nodeName;
 		return self::GetItopNodePath($oNode->parentNode).'/'.$sNodeDesc;
-	}	 	
+	}
 
 	/**
 	 * Test the conversion without altering the DOM
-	 * 	 
+	 *
 	 * @param string $sTargetVersion The desired version (or the latest possible version if not specified)
 	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
 	 *     whole data model)
 	 *
-	 * @return bool True on success	 
+	 * @return bool True on success
 	 */
 	public function CheckConvert($sTargetVersion = ITOP_DESIGN_LATEST_VERSION, $oFactory = null)
 	{
 		// Clone the document
-		$this->oDocument = $this->oDocument->cloneNode(true);		
+		$this->oDocument = $this->oDocument->cloneNode(true);
 		return $this->Convert($sTargetVersion, $oFactory);
 	}
 
 	/**
 	 * Make adjustements to the DOM to migrate it to the specified version (default is latest)
 	 * For now only the conversion from version 1.0 to 1.1 is supported.
-	 * 	 
+	 *
 	 * @param string $sTargetVersion The desired version (or the latest possible version if not specified)
 	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
 	 *     whole data model)
@@ -247,36 +328,38 @@ class iTopDesignFormat
 		$this->aLog = array();
 		$this->bStatus = true;
 
-		$oXPath = new DOMXPath($this->oDocument);
-		// Retrieve the version number
-		$oNodeList = $oXPath->query('/itop_design');
-		if ($oNodeList->length == 0)
-		{
-			// Hmm, not an iTop Data Model file...
-			$this->LogError('File format, no root <itop_design> tag found');
+		try {
+			$sVersion = $this->GetVersion();
 		}
-		else
-		{
-			$sVersion = $oNodeList->item(0)->getAttribute('version');
-			if ($sVersion == '')
-			{
-				// Originaly, the information was missing: default to 1.0
-				$sVersion = '1.0';
-			}
-			$this->LogInfo("Converting from $sVersion to $sTargetVersion");
+		catch (iTopXmlException $e) {
+			$this->LogError($e->getMessage());
+
+			return $this->bStatus;
+		}
+
+		$this->LogInfo("Converting from $sVersion to $sTargetVersion");
+		try {
 			$this->DoConvert($sVersion, $sTargetVersion, $oFactory);
-			if ($this->bStatus)
-			{
-				// Update the version number
-				$oNodeList->item(0)->setAttribute('version', $sTargetVersion);
-			}
 		}
+		catch (Exception|Error $e) {
+			$this->LogError($e->getMessage());
+
+			return false;
+		}
+
+		if ($this->bStatus) {
+			/** @noinspection PhpUnhandledExceptionInspection already called earlier so should not crash */
+			$oITopDesignNode = $this->GetITopDesignNode();
+			// Update the version number
+			$oITopDesignNode->setAttribute('version', $sTargetVersion);
+		}
+
 		return $this->bStatus;
 	}
 
 	/**
 	 * Does the conversion, eventually in a recursive manner
-	 * 	 
+	 *
 	 * @param string $sFrom The source format version
 	 * @param string $sTo The desired format version
 	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
@@ -298,7 +381,7 @@ class iTopDesignFormat
 			$this->LogError("Unknown target format version: $sTo");
 			return; // unknown versions are not supported
 		}
-		
+
 		$aVersionIds = array_keys(self::$aVersions);
 		$iFrom = array_search($sFrom, $aVersionIds);
 		$iTo = array_search($sTo, $aVersionIds);
@@ -318,22 +401,39 @@ class iTopDesignFormat
 		}
 		// Transform to the intermediate format
 		$aCallSpec = array($this, $sTransform);
-		try
-		{
+		try {
 			call_user_func($aCallSpec, $oFactory);
 
 			// Recurse
 			$this->DoConvert($sIntermediate, $sTo, $oFactory);
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			$this->LogError($e->getMessage());
 		}
 	}
 
 	/**
+	 * @param \DOMNode|null $node
+	 * @param bool $bFormatOutput
+	 * @param bool $bPreserveWhiteSpace
+	 *
+	 * @return false|string
+	 *
+	 * @uses \DOMDocument::saveXML()
+	 */
+	public function GetXmlAsString($node = null, $bFormatOutput = true, $bPreserveWhiteSpace = false)
+	{
+		$this->oDocument->formatOutput = $bFormatOutput;
+		$this->oDocument->preserveWhiteSpace = $bPreserveWhiteSpace;
+
+		return $this->oDocument->saveXML($node = null);
+	}
+
+	/**
 	 * Upgrade the format from version 1.0 to 1.1
+	 *
 	 * @param \ModelFactory $oFactory
+	 *
 	 * @return void (Errors are logged)
 	 */
 	protected function From10To11($oFactory)
@@ -347,7 +447,7 @@ class iTopDesignFormat
 			$oNode->parentNode->SetAttribute('id', $oNode->textContent);
 			$this->DeleteNode($oNode);
 		}
-		
+
 		// Adjust the XML to transparently add an id (=percent) on all thresholds of stopwatches
 		// which don't already have one
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeStopWatch']/thresholds/threshold/percent");
@@ -356,7 +456,7 @@ class iTopDesignFormat
 			$oNode->parentNode->SetAttribute('id', $oNode->textContent);
 			$this->DeleteNode($oNode);
 		}
-		
+
 		// Adjust the XML to transparently add an id (=action:<type>) on all allowed actions (profiles)
 		// which don't already have one
 		$oNodeList = $oXPath->query('/itop_design/user_rights/profiles/profile/groups/group/actions/action');
@@ -373,7 +473,7 @@ class iTopDesignFormat
 				$oNode->removeAttribute('xsi:type');
 			}
 		}
-		
+
 		// Adjust the XML to transparently add an id (=value) on all values of an enum which don't already have one.
 		// This enables altering an enum for just adding/removing one value, intead of redefining the whole list of values.
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
@@ -406,7 +506,7 @@ class iTopDesignFormat
 			$oNode->appendChild($oStimulus);
 			$oNode->removeAttribute('id');
 		}
-		
+
 		// Move the id down to a percent node on all thresholds
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeStopWatch']/thresholds/threshold[@id]");
 		foreach ($oNodeList as $oNode)
@@ -419,8 +519,8 @@ class iTopDesignFormat
 			$oNode->appendChild($oStimulus);
 			$oNode->removeAttribute('id');
 		}
-		
-		// Restore the type and id on profile/actions 
+
+		// Restore the type and id on profile/actions
 		$oNodeList = $oXPath->query('/itop_design/user_rights/profiles/profile/groups/group/actions/action');
 		foreach ($oNodeList as $oNode)
 		{
@@ -443,7 +543,7 @@ class iTopDesignFormat
 				$oNode->setAttribute('xsi:type', 'stimulus');
 			}
 		}
-		
+
 		// Remove the id on all enum values
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value[@id]");
 		foreach ($oNodeList as $oNode)
@@ -602,7 +702,7 @@ class iTopDesignFormat
 	protected function From14To13($oFactory)
 	{
 		$oXPath = new DOMXPath($this->oDocument);
-		
+
 		// Transform _delta="force" into _delta="define"
 		//
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@_delta='force']");
@@ -617,15 +717,15 @@ class iTopDesignFormat
 			$this->LogWarning('The attribute _delta="force" is not supported, converted to _delta="define" ('.$iCount.' instances processed).');
 		}
 
-        // Remove attribute flags on transitions
-        //
-        $oNodeList = $oXPath->query("/itop_design/classes//class/lifecycle/states/state/transitions/transition/flags");
-        $this->LogWarning('Before removing flags nodes');
-        foreach ($oNodeList as $oNode)
-        {
-            $this->LogWarning('Attribute flags '.self::GetItopNodePath($oNode).' is irrelevant on transition and must be removed.');
-            $this->DeleteNode($oNode);
-        }
+		// Remove attribute flags on transitions
+		//
+		$oNodeList = $oXPath->query("/itop_design/classes//class/lifecycle/states/state/transitions/transition/flags");
+		$this->LogWarning('Before removing flags nodes');
+		foreach ($oNodeList as $oNode)
+		{
+			$this->LogWarning('Attribute flags '.self::GetItopNodePath($oNode).' is irrelevant on transition and must be removed.');
+			$this->DeleteNode($oNode);
+		}
 	}
 
 	/**
@@ -804,7 +904,12 @@ class iTopDesignFormat
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field/values/value");
 		foreach ($oNodeList as $oNode) {
 			$sCode = $oNode->textContent;
-			$oNode->textContent = '';
+			// N°6562 textContent is readonly, see https://www.php.net/manual/en/class.domnode.php#95545
+			// $oNode->textContent = '';
+			// N°6562 to update text node content we must use the node methods !
+			if ($oNode->firstChild) {
+				$oNode->removeChild($oNode->firstChild);
+			}
 			$oCodeNode = $oNode->ownerDocument->createElement("code", $sCode);
 			$oNode->appendChild($oCodeNode);
 		}
@@ -813,8 +918,8 @@ class iTopDesignFormat
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-background-color"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--background-color');
-		}		
-		
+		}
+
 		$oNodeList = $oXPath->query( '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-color"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--text-color');
@@ -894,7 +999,14 @@ class iTopDesignFormat
 				if ($oStyleNode) {
 					$this->DeleteNode($oStyleNode);
 				}
-				$oNode->textContent = $sCode;
+
+				// N°6562 textContent is readonly, see https://www.php.net/manual/en/class.domnode.php#95545
+				// $oNode->textContent = $sCode;
+				// N°6562 to update text node content we must use the node methods !
+				// we are using DOMDocument::createTextNode instead of new DOMText because elements created using the constructor are read only
+				// see https://www.php.net/manual/en/domelement.construct.php
+				$oTextContentNode = $this->oDocument->createTextNode($sCode);
+				$oNode->appendChild($oTextContentNode);
 			}
 		}
 		// - Style
@@ -926,12 +1038,12 @@ class iTopDesignFormat
 		}
 
 		// Add new attribute to theme import nodes
-		
+
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme/imports/import');
 		foreach ($oNodeList as $oNode) {
 			$oNode->removeAttribute('xsi:type');
 		}
-		
+
 		// Remove class style
 		$oNodeList = $oXPath->query("/itop_design/classes//class/properties");
 		foreach ($oNodeList as $oNode) {
@@ -948,12 +1060,14 @@ class iTopDesignFormat
 	}
 	/**
 	 * Upgrade the format from version 3.0 to 3.1
+	 *
 	 * @param \ModelFactory $oFactory
+	 *
 	 * @return void (Errors are logged)
 	 */
 	protected function From30To31($oFactory)
 	{
-		//nothing
+
 	}
 	/**
 	 * Downgrade the format from version 3.1 to 3.0
@@ -962,7 +1076,70 @@ class iTopDesignFormat
 	 */
 	protected function From31To30($oFactory)
 	{
-		//nothing
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// N°4756 - Ease extensibility for CRUD operations : Event Service
+		$this->RemoveNodeFromXPath('/itop_design/events');
+		$this->RemoveNodeFromXPath('/itop_design/event_listeners');
+		$this->RemoveNodeFromXPath('/itop_design/classes//class/event_listeners');
+
+		// N°3190 - Edit n:n LinkedSetIndirect in object details using a tagset-like widget
+		// - Remove display style
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/display_style");
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/display_style");
+
+		// N°2783 - Custom zlists
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/presentation/custom_presentations");
+		$this->RemoveNodeFromXPath("/itop_design/meta/presentation/custom_presentations");
+
+		// N°1646 - Enum: logical ordering defined in datamodel (dashlet, list, transition menu...)
+		// - Remove sort type
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field/sort_type");
+		// - Remove rank in values
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field/values/value/rank");
+	}
+
+	/**
+	 * Upgrade the format from version 3.1 to 3.2
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From31To32($oFactory)
+	{
+		// Nothing for now...
+	}
+
+	/**
+	 * Downgrade the format from version 3.2 to 3.1
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From32To31($oFactory)
+	{
+		// N°3363 - Add favicon in branding
+		$this->RemoveNodeFromXPath('/itop_design/branding/main_favicon');
+		$this->RemoveNodeFromXPath('/itop_design/branding/portal_favicon');
+		$this->RemoveNodeFromXPath('/itop_design/branding/login_favicon');
+	}
+
+	/**
+	 * Upgrade the format from version 3.2 to 3.3
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From32To33($oFactory)
+	{
+		$this->RemoveNodeFromXPath("/itop_design/menus/menu[@xsi:type='TemplateMenuNode']/template_file");
+	}
+
+	/**
+	 * Downgrade the format from version 3.3 to 3.2
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From33To32($oFactory)
+	{
+		// Nothing for now...
 	}
 
 	/**
@@ -978,9 +1155,9 @@ class iTopDesignFormat
 		foreach ($oNodeList as $oNode)
 		{
 			$this->LogWarning('Node '.self::GetItopNodePath($oNode).' is irrelevant in this version, it will be removed.');
-				$this->DeleteNode($oNode);
-			}
+			$this->DeleteNode($oNode);
 		}
+	}
 
 	/**
 	 * Clean a collection node by removing the _delta="define" on it and moving it to the item nodes.

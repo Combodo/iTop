@@ -1,0 +1,94 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-object-summary--header--margin-top: $ibo-panel--highlight--height!default;
+$ibo-object-summary--header--margin-bottom: $ibo-spacing-0!default;
+$ibo-object-summary--header--margin-x: $ibo-spacing-0 !default;
+
+$ibo-object-summary--header--padding-y: $ibo-spacing-300 !default;
+$ibo-object-summary--header--padding-x: $ibo-spacing-0 !default;
+
+$ibo-object-summary--header--background-color: $ibo-tab-container--tabs-list--background-color !default;
+$ibo-object-summary--header--border: solid 1px $ibo-color-grey-400 !default;
+
+$ibo-object-summary--icon--background-color--as-medallion: $ibo-panel--icon--background-color--as-medallion !default;
+$ibo-object-summary--icon--border--as-medallion: 1px solid $ibo-color-blue-grey-300;
+$ibo-object-summary--icon--border-radius--as-medallion: $ibo-panel--icon--border-radius--as-medallion !default;
+
+$ibo-object-summary--titles--padding-left: $ibo-panel--icon--spacing !default;
+
+$ibo-object-summary--header-left--margin-left: $ibo-panel--icon--spacing--as-medallion !default;
+
+$ibo-object-summary--header-right--margin-right: $ibo-panel--icon--spacing--as-medallion !default;
+$ibo-object-summary--header-right--margin-left: $ibo-spacing-300 !default;
+
+$ibo-object-summary--panel--body--padding: $ibo-spacing-0 !default;
+$ibo-object-summary--panel--body--padding-box-shadow: $ibo-elevation-300 !default;
+$ibo-object-summary--panel--body--max-height: 40vh !default;
+$ibo-object-summary--panel--body--padding-box-shadow: $ibo-elevation-300 !default;
+
+$ibo-object-summary--content--attributes--width: calc(100% - (2 *  #{$ibo-panel--body--padding-x})) !default;
+$ibo-object-summary--content--attributes--margin: $ibo-spacing-500 $ibo-panel--body--padding-x $ibo-panel--body--padding-bottom $ibo-panel--body--padding-x !default;
+
+$ibo-object-summary--content--attributes--code--padding-right: $ibo-spacing-500 !default;
+
+.ibo-object-summary{
+  // We duplicate this rule from _panel.scss as a protection was added and disallow titles and header that are not direct child of panel
+  &.ibo-has-medallion-icon{
+    .ibo-panel--titles{
+      padding-left: $ibo-object-summary--titles--padding-left;
+    }
+  }
+
+  > .ibo-panel--body{
+    display: flex;
+    flex-direction: column;
+    padding: $ibo-object-summary--panel--body--padding;
+    max-height: $ibo-object-summary--panel--body--max-height;
+    box-shadow: $ibo-object-summary--panel--body--padding-box-shadow;
+  }
+}
+
+.ibo-object-summary--header{
+  margin: $ibo-object-summary--header--margin-top $ibo-object-summary--header--margin-x $ibo-object-summary--header--margin-bottom $ibo-object-summary--header--margin-x;
+  padding: $ibo-object-summary--header--padding-y $ibo-object-summary--header--padding-x;
+  background-color: $ibo-object-summary--header--background-color;
+  border-bottom:  $ibo-object-summary--header--border;
+  @extend .ibo-panel--header;
+  .ibo-panel--icon {
+    overflow: hidden;
+    background-color: $ibo-panel--icon--background-color--as-medallion;
+    border: $ibo-object-summary--icon--border--as-medallion;
+    border-radius: $ibo-panel--icon--border-radius--as-medallion;
+  }
+
+  // We duplicate this rule from _panel.scss as a protection was added and disallow titles and header that are not direct child of panel
+  .ibo-panel--header-left{
+    margin-left: $ibo-object-summary--header-left--margin-left;
+  }
+  .ibo-panel--header-right{
+    align-self: start;
+    margin-right: $ibo-object-summary--header-right--margin-right;
+    margin-left: $ibo-object-summary--header-right--margin-left;
+  }
+}
+
+.ibo-object-summary--body{
+  overflow: auto;
+}
+
+.ibo-object-summary--content--attributes {
+  display: table;
+  width: $ibo-object-summary--content--attributes--width;
+  margin: $ibo-object-summary--content--attributes--margin;
+}
+
+.ibo-object-summary--content--attributes--code, .ibo-object-summary--content--attributes--value {
+  display: table-cell;
+}
+
+.ibo-object-summary--content--attributes--code{
+  @extend .ibo-font-ral-bol-150;
+}

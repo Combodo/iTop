@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -21,11 +21,11 @@
  * Persistent class ModuleInstallation to record the installed modules
  * Log of module installations
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class ModuleInstallation extends cmdbAbstractObject
+class ModuleInstallation extends DBObject
 {
 	public static function Init()
 	{
@@ -63,7 +63,7 @@ class ModuleInstallation extends cmdbAbstractObject
  * Persistent class ExtensionInstallation to record the installed extensions
  * Log of extensions installations
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class ExtensionInstallation extends cmdbAbstractObject
@@ -87,7 +87,7 @@ class ExtensionInstallation extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("label", array("allowed_values"=>null, "sql"=>"label", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("version", array("allowed_values"=>null, "sql"=>"version", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("source", array("allowed_values"=>null, "sql"=>"source", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDateTime("installed", array("allowed_values"=>null, "sql"=>"installed", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("installed", array("allowed_values"=>null, "sql"=>"installed", "default_value"=>'NOW()', "is_null_allowed"=>false, "depends_on"=>array())));
 		
 		
 		// Display lists

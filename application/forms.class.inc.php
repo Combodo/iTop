@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -15,12 +15,13 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Helper class to build interactive forms to be used either in stand-alone
  * modal dialog or in "property-sheet" panes.
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class DesignerForm
@@ -60,7 +61,7 @@ class DesignerForm
 		$this->sHierarchySelector = '';
 		$this->StartFieldSet($this->sCurrentFieldSet);
 		$this->bDisplayed = true;
-		$this->aDefaultvalues = array();
+		$this->aDefaultValues = array();
 	}
 	
 	public function AddField(DesignerFormField $oField)
@@ -208,7 +209,7 @@ class DesignerForm
 	public function RenderAsPropertySheet($oP, $bReturnHTML = false, $sNotifyParentSelector = null)
 	{
 		$sReturn = '';
-		$sActionUrl = addslashes($this->sSubmitTo);
+		$sActionUrl = addslashes($this->sSubmitTo ?? '');
 		$sJSSubmitParams = json_encode($this->aSubmitParams);
 		$sFormId = $this->GetFormId();
 		if ($this->oParentForm == null) {
@@ -362,7 +363,7 @@ $('#$sDialogId').dialog({
 		buttons: [
 		{ text: "$sOkButtonLabel", click: function() {
 			var oForm = $(this).closest('.ui-dialog').find('form');
-			oForm.submit();
+			oForm.trigger('submit');
 			if (AnimateDlgButtons)
 			{
 				sFormId = oForm.attr('id');
@@ -828,7 +829,7 @@ class DesignerFormField
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param string $sFormId
 	 * @param string $sRenderMode
 	 *
@@ -1110,12 +1111,40 @@ $('#$sId').on('change keyup validate', function() { ValidateWithPattern('$sId', 
 }
 EOF
 			);
-			$sValue = "<textarea $sCSSClasses id=\"$sId\" name=\"$sName\">".utils::EscapeHtml($this->defaultValue)."</textarea>";
+			$sValue = "<textarea $sCSSClasses id=\"$sId\" name=\"$sName\">".$this->PrepareValueForRendering()."</textarea>";
 		}
 		else {
-			$sValue = "<div $sCSSClasses id=\"$sId\">".utils::EscapeHtml($this->defaultValue)."</div>";
+			$sValue = "<div $sCSSClasses id=\"$sId\">".$this->PrepareValueForRendering()."</div>";
 		}
 		return array('label' => $this->sLabel, 'value' => $sValue);
+	}
+
+	/**
+	 * @return string|null The value itself as expected for rendering. May it be encoded, escaped or else.
+	 * @since 3.1.0 N°6405
+	 */
+	protected function PrepareValueForRendering(): ?string
+	{
+		return utils::EscapeHtml($this->defaultValue);
+	}
+}
+
+/**
+ * Class DesignerXMLField
+ *
+ * Field to display XML content
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 3.1.0 N°6405
+ */
+class DesignerXMLField extends DesignerLongTextField
+{
+	/**
+	 * @inheritDoc
+	 */
+	protected function PrepareValueForRendering(): ?string
+	{
+		return utils::EscapeHtml($this->defaultValue, true);
 	}
 }
 
@@ -1301,7 +1330,8 @@ class DesignerComboField extends DesignerFormField
 		{
 			if ($this->bMultipleSelection)
 			{
-				$sHtml = "<span><select $sCSSClasses multiple size=\"8\"id=\"$sId\" name=\"$sName\">";
+				$iSize = max(1, min(8, count($this->aAllowedValues)));
+				$sHtml = "<span><select $sCSSClasses multiple size=\"$iSize\" id=\"$sId\" name=\"$sName\">";
 			}
 			else
 			{
@@ -1471,6 +1501,11 @@ class DesignerIconSelectionField extends DesignerFormField
 		$this->aAllowedValues = $aAllowedValues;
 	}
 
+	public function AddAllowedValue($aValue)
+	{
+		// Add a null value to the list of allowed values
+		$this->aAllowedValues = array_merge([$aValue], $this->aAllowedValues);
+	}
 	public function EnableUpload($sIconUploadUrl)
 	{
 		$this->sUploadUrl = $sIconUploadUrl;

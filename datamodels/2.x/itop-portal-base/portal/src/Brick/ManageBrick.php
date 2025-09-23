@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,11 +20,14 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use Exception;
-use DOMFormatException;
-use DBSearch;
-use MetaModel;
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
+use DBSearch;
+use DOMFormatException;
+use Exception;
+use MetaModel;
+use ModuleDesign;
 
 class ManageBrick extends PortalBrick
 {
@@ -51,16 +54,26 @@ class ManageBrick extends PortalBrick
 	/** @var string ENUM_DISPLAY_MODE_BAR */
 	const ENUM_DISPLAY_MODE_BAR = 'bar-chart';
 
-	/** @var string ENUM_PAGE_TEMPLATE_PATH_TABLE */
+	/** @var string ENUM_PAGE_TEMPLATE_PATH_TABLE
+	 * @deprecated since 3.2.1
+	 * */
 	const ENUM_PAGE_TEMPLATE_PATH_TABLE = 'itop-portal-base/portal/templates/bricks/manage/layout-table.html.twig';
-	/** @var string ENUM_PAGE_TEMPLATE_PATH_CHART */
+	/** @var string ENUM_PAGE_TEMPLATE_PATH_CHART
+	 * @deprecated since 3.2.1
+	 * */
 	const ENUM_PAGE_TEMPLATE_PATH_CHART = 'itop-portal-base/portal/templates/bricks/manage/layout-chart.html.twig';
 
-	// Overloaded constants
-	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-pen-square';
-	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-pen-square fa-2x';
+	/** Overloaded constants */
+	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-tag';
+	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-tag fa-2x';
+	/**
+	 * @deprecated 3.2.1
+	 */
 	const DEFAULT_PAGE_TEMPLATE_PATH = self::ENUM_PAGE_TEMPLATE_PATH_TABLE;
 	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_LAZY;
+	/**
+	 * @deprecated 3.2.1
+	 */
 	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/tile-default.html.twig';
 	const DEFAULT_TILE_CONTROLLER_ACTION = 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::TileAction';
 
@@ -82,59 +95,61 @@ class ManageBrick extends PortalBrick
 	const DEFAULT_GROUP_LIMIT = 0;
 	/** @var bool DEFAULT_GROUP_SHOW_OTHERS */
 	const DEFAULT_GROUP_SHOW_OTHERS = true;
+	/** @var int DEFAULT_WIDTH */
+	const DEFAULT_WIDTH = 500;
 
 	/** @var array $aDisplayModes */
-	static $aDisplayModes = array(
+	public static array $aDisplayModes = array(
 		self::ENUM_DISPLAY_MODE_LIST,
 		self::ENUM_DISPLAY_MODE_PIE,
 		self::ENUM_DISPLAY_MODE_BAR,
 	);
+
 	/** @var array $aTileModes */
-	public static $aTileModes = array(
+	public static array $aTileModes = array(
 		self::ENUM_TILE_MODE_TEXT,
 		self::ENUM_TILE_MODE_BADGE,
 		self::ENUM_TILE_MODE_PIE,
 		self::ENUM_TILE_MODE_BAR,
 		self::ENUM_TILE_MODE_TOP,
 	);
-	/** @var array $aPresentationData */
-	public static $aPresentationData = array(
-		self::ENUM_TILE_MODE_BADGE => array(
-			'decorationCssClass' => 'fas fa-id-card fa-2x',
-			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-badge.html.twig',
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
-			'need_details' => true,
-		),
-		self::ENUM_TILE_MODE_TOP => array(
-			'decorationCssClass' => 'fas fa-signal fa-rotate-270 fa-2x',
-			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-top-list.html.twig',
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
-			'need_details' => true,
-		),
-		self::ENUM_TILE_MODE_PIE => array(
+
+	/** @var array $aDefaultTileData */
+	private static array $aDefaultTileData = [
+		self::ENUM_TILE_MODE_BADGE => [
+			'decorationCssClass' => 'fas fa-tags fa-2x',
+			'width'              => self::DEFAULT_WIDTH,
+		],
+		self::ENUM_TILE_MODE_TOP => [
+			'decorationCssClass' => 'fas fa-list-ol fa-2x',
+			'width' => self::DEFAULT_WIDTH,
+		],
+		self::ENUM_TILE_MODE_PIE => [
 			'decorationCssClass' => 'fas fa-chart-pie fa-2x',
-			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-chart.html.twig',
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_PIE,
-			'need_details' => false,
-		),
-		self::ENUM_TILE_MODE_BAR => array(
+			'width' => 600,
+		],
+		self::ENUM_TILE_MODE_TEXT => [
+			'decorationCssClass' => 'fas fa-tag fa-2x',
+			'width'              => self::DEFAULT_WIDTH,
+		],
+		self::ENUM_TILE_MODE_BAR => [
 			'decorationCssClass' => 'fas fa-chart-bar fa-2x',
-			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-chart.html.twig',
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_BAR,
-			'need_details' => false,
-		),
-		self::ENUM_TILE_MODE_TEXT => array(
-			'decorationCssClass' => 'fas fa-pen-square fa-2x',
-			'tileTemplate' => self::DEFAULT_TILE_TEMPLATE_PATH,
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
+			'width' => 600,
+		],
+	];
+
+	/** @var array $aDefaultLayoutData */
+	private static array $aDefaultLayoutData = [
+		self::ENUM_DISPLAY_MODE_LIST => [
 			'need_details' => true,
-		),
-	);
+		],
+		self::ENUM_DISPLAY_MODE_PIE => [
+			'need_details' => false,
+		],
+		self::ENUM_DISPLAY_MODE_BAR => [
+			'need_details' => false,
+		],
+	];
 
 	// Overloaded variables
 	public static $sRouteName = 'p_manage_brick';
@@ -164,48 +179,21 @@ class ManageBrick extends PortalBrick
 	/** @var int $iDefaultListLength */
 	protected $iDefaultListLength;
 
-	/**
-	 * Returns true if the $sDisplayMode need objects details for rendering.
-	 *
-	 * @param string $sDisplayMode
-	 *
-	 * @return bool
-	 */
-	static public function AreDetailsNeededForDisplayMode($sDisplayMode)
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
-		$bNeedDetails = false;
-		foreach (static::$aPresentationData as $aData)
-		{
-			if ($aData['layoutDisplayMode'] === $sDisplayMode)
-			{
-				$bNeedDetails = $aData['need_details'];
-				break;
-			}
-		}
-
-		return $bNeedDetails;
-	}
-
-	/**
-	 * Returns the page template path for the $sDisplayMode
-	 *
-	 * @param string $sDisplayMode
-	 *
-	 * @return string
-	 */
-	static public function GetPageTemplateFromDisplayMode($sDisplayMode)
-	{
-		$sTemplate = static::DEFAULT_PAGE_TEMPLATE_PATH;
-		foreach (static::$aPresentationData as $aData)
-		{
-			if ($aData['layoutDisplayMode'] === $sDisplayMode)
-			{
-				$sTemplate = $aData['layoutTemplate'];
-				break;
-			}
-		}
-
-		return $sTemplate;
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
+			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'manage/tile-default.html.twig'),
+			TemplateDefinitionDto::Create('tile_badge', static::TEMPLATES_BASE_PATH. 'manage/tile-badge.html.twig'),
+			TemplateDefinitionDto::Create('tile_chart',  static::TEMPLATES_BASE_PATH . 'manage/tile-chart.html.twig'),
+			TemplateDefinitionDto::Create('tile_top_list', static::TEMPLATES_BASE_PATH . 'manage/tile-top-list.html.twig'),
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'manage/layout.html.twig'),
+			TemplateDefinitionDto::Create('page_table', static::TEMPLATES_BASE_PATH . 'manage/layout-table.html.twig'),
+			TemplateDefinitionDto::Create('page_chart',  static::TEMPLATES_BASE_PATH . 'manage/layout-chart.html.twig'),
+			TemplateDefinitionDto::Create('mode_chart_bar', static::TEMPLATES_BASE_PATH . 'manage/mode-bar-chart.html.twig', true, self::ENUM_DISPLAY_MODE_BAR),
+			TemplateDefinitionDto::Create('mode_chart_pie',  static::TEMPLATES_BASE_PATH . 'manage/mode-pie-chart.html.twig', true,self::ENUM_DISPLAY_MODE_PIE),
+		);
 	}
 
 	/**
@@ -230,6 +218,53 @@ class ManageBrick extends PortalBrick
 
 		// This is hardcoded for now, we might allow area grouping on another attribute in the future
 		$this->AddGrouping('areas', array('attribute' => 'finalclass'));
+	}
+
+	/**
+	 * Returns if the $sLayoutMode need objects details for rendering.
+	 *
+	 * @since 3.2.1
+	 *
+	 * @param string $sLayoutMode
+	 *
+	 * @return bool
+	 */
+	public function IsDetailsNeeded(string $sLayoutMode): bool
+	{
+		return static::$aDefaultLayoutData[$sLayoutMode]['need_details'];
+	}
+
+	/**
+	 * Returns the page template path for the $sDisplayMode
+	 *
+	 * @since 3.2.1
+	 *
+	 * @param string $sDisplayMode
+	 *
+	 * @return string
+	 */
+	public function GetPageTemplate(string $sDisplayMode): string
+	{
+		return match ($sDisplayMode) {
+			self::ENUM_DISPLAY_MODE_BAR, self::ENUM_DISPLAY_MODE_PIE => $this->GetTemplatePath('page_chart'),
+			default => $this->GetTemplatePath('page_table'),
+		};
+	}
+
+	/**
+	 * Returns the page template path for the $sDisplayMode
+	 * @since 3.2.1
+	 *
+	 * @return string
+	 */
+	public function GetTileTemplate(): string
+	{
+		return match ($this->GetTileMode()) {
+			self::ENUM_TILE_MODE_BADGE => $this->GetTemplatePath('tile_badge'),
+			self::ENUM_TILE_MODE_PIE, self::ENUM_TILE_MODE_BAR => $this->GetTemplatePath('tile_chart'),
+			self::ENUM_TILE_MODE_TOP => $this->GetTemplatePath('tile_top_list'),
+			default => $this->GetTemplatePath('tile'),
+		};
 	}
 
 	/**
@@ -326,10 +361,16 @@ class ManageBrick extends PortalBrick
 		return $this->sTileMode;
 	}
 
-	public function GetDecorationCssClass()
+	/**
+	 * @since 3.2.1
+	 *
+	 * @return mixed|string
+	 */
+	public function GetDecoration()
 	{
-		return static::$aPresentationData[$this->sTileMode]['decorationCssClass'];
+		return static::$aDefaultTileData[$this->sTileMode]['decorationCssClass'];
 	}
+
 	/**
 	 * Sets the tile mode (display)
 	 *
@@ -342,21 +383,6 @@ class ManageBrick extends PortalBrick
 		$this->sTileMode = $sTileMode;
 
 		return $this;
-	}
-
-	/**
-	 * @param string $sTileMode
-	 *
-	 * @return string[] parameters for specified type, default parameters if type is invalid
-	 */
-	public function GetPresentationDataForTileMode($sTileMode)
-	{
-		if (isset(static::$aPresentationData[$sTileMode]))
-		{
-			return static::$aPresentationData[$sTileMode];
-		}
-
-		return static::$aPresentationData[static::DEFAULT_TILE_MODE];
 	}
 
 	/**
@@ -447,7 +473,7 @@ class ManageBrick extends PortalBrick
 
 	/**
 	 * Returns the default lists length to display
-	 * 
+	 *
 	 * @return int
 	 */
 	public function GetDefaultListLength()
@@ -457,16 +483,16 @@ class ManageBrick extends PortalBrick
 
 	/**
 	 * Sets the default lists length to display
-	 * 
+	 *
 	 * @param int $iDefaultListLength
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function SetDefaultListLength($iDefaultListLength) {
 		$this->iDefaultListLength = $iDefaultListLength;
 		return $this;
 	}
-	
+
 	/**
 	 * Adds a grouping.
 	 *
@@ -760,7 +786,7 @@ class ManageBrick extends PortalBrick
 									if (!$oModeNode->hasAttribute('id'))
 									{
 										throw new DOMFormatException('ManageBrick: Display mode must have a unique ID attribute',
-											null, null, $oModeNode);
+											0, null, $oModeNode);
 									}
 
 									$sModeId = $oModeNode->getAttribute('id');
@@ -781,10 +807,12 @@ class ManageBrick extends PortalBrick
 
 							case 'tile';
 								$this->SetTileMode($oDisplayNode->GetText(static::DEFAULT_TILE_MODE));
-
-								$aTileParametersForType = $this->GetPresentationDataForTileMode($this->sTileMode);
-								$this->SetTileTemplatePath($aTileParametersForType['tileTemplate']);
-								$this->SetPageTemplatePath($aTileParametersForType['layoutTemplate']);
+								if($this->sDecorationClassHome === static::DEFAULT_DECORATION_CLASS_HOME){
+									$this->sDecorationClassHome = static::$aDefaultTileData[$this->GetTileMode()]['decorationCssClass'];
+									$this->SetDecorationClassNavigationMenu(static::$aDefaultTileData[$this->GetTileMode()]['decorationCssClass']);
+									$this->SetDecorationClassHome(static::$aDefaultTileData[$this->GetTileMode()]['decorationCssClass']);
+									$this->SetWidth(static::$aDefaultTileData[$this->GetTileMode()]['width']);
+								}
 								break;
 						}
 					}
@@ -796,7 +824,7 @@ class ManageBrick extends PortalBrick
 					{
 						if (!$oFieldNode->hasAttribute('id'))
 						{
-							throw new DOMFormatException('ManageBrick : Field must have a unique ID attribute', null,
+							throw new DOMFormatException('ManageBrick : Field must have a unique ID attribute', 0,
 								null, $oFieldNode);
 						}
 						$this->AddField($oFieldNode->getAttribute('id'));
@@ -816,7 +844,7 @@ class ManageBrick extends PortalBrick
 									if (!$oFieldNode->hasAttribute('id'))
 									{
 										throw new DOMFormatException('ManageBrick : Field must have a unique ID attribute',
-											null,
+											0,
 											null, $oFieldNode);
 									}
 									$this->AddExportField($oFieldNode->getAttribute('id'));
@@ -878,7 +906,7 @@ class ManageBrick extends PortalBrick
 									if (!$oGroupNode->hasAttribute('id'))
 									{
 										throw new DOMFormatException('ManageBrick : Group must have a unique ID attribute',
-											null, null, $oGroupNode);
+											0, null, $oGroupNode);
 									}
 									$sGroupId = $oGroupNode->getAttribute('id');
 
@@ -904,17 +932,30 @@ class ManageBrick extends PortalBrick
 									if (!isset($aGroup['title']) || $aGroup['title'] === '')
 									{
 										throw new DOMFormatException('ManageBrick : Group must have a title tag and it must not be empty',
-											null, null, $oGroupNode);
+											0, null, $oGroupNode);
 									}
 									if (!isset($aGroup['condition']) || $aGroup['condition'] === '')
 									{
 										throw new DOMFormatException('ManageBrick : Group must have a condition tag and it must not be empty',
-											null, null, $oGroupNode);
+											0, null, $oGroupNode);
 									}
 									$aGroups[] = $aGroup;
 								}
 								$this->AddGrouping('tabs', array('groups' => $aGroups));
 								break;
+						}
+					}
+					break;
+
+				case 'templates':
+					$aTemplatesIds = static::GetTemplatesProviderService()->GetRegister()->GetProviderTemplatesIds(self::class);
+					/** @var TemplateDefinitionDto $oTemplateDefinition */
+					foreach ($aTemplatesIds as $sTemplateId) {
+						$oTemplateNodeList = $oBrickSubNode->GetNodes('template[@id='.ModuleDesign::XPathQuote($sTemplateId).']');
+						if ($oTemplateNodeList->length > 0) {
+							/** @var \Combodo\iTop\DesignElement $oTemplateNode */
+							$oTemplateNode = $oTemplateNodeList->item(0);
+							$this->SetTemplatePath($sTemplateId, $oTemplateNode->GetText(static::DEFAULT_TILE_TEMPLATE_PATH));
 						}
 					}
 					break;
@@ -965,10 +1006,10 @@ class ManageBrick extends PortalBrick
 
 		// Checking the navigation icon
 		$sDecorationClassNavigationMenu = $this->GetDecorationClassNavigationMenu();
-		if (empty($sDecorationClassNavigationMenu) && isset(static::$aPresentationData[$this->sTileMode]))
+		if (empty($sDecorationClassNavigationMenu) && isset(static::$aDefaultTileData[$this->sTileMode]))
 		{
 			/** @var string $sDecorationClassNavigationMenu */
-			$sDecorationClassNavigationMenu = static::$aPresentationData[$this->sTileMode]['decorationCssClass'];
+			$sDecorationClassNavigationMenu = static::$aDefaultTileData[$this->sTileMode]['decorationCssClass'];
 			if (!empty($sDecorationClassNavigationMenu))
 			{
 				$this->SetDecorationClassNavigationMenu($sDecorationClassNavigationMenu);

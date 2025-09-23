@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -18,6 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Dumper\Preloader;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
+use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 
 /**
  * Warmup the cache.
@@ -26,12 +28,10 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
  *
  * @final
  */
+#[AsCommand(name: 'cache:warmup', description: 'Warm up an empty cache')]
 class CacheWarmupCommand extends Command
 {
-    protected static $defaultName = 'cache:warmup';
-    protected static $defaultDescription = 'Warm up an empty cache';
-
-    private $cacheWarmer;
+    private CacheWarmerAggregate $cacheWarmer;
 
     public function __construct(CacheWarmerAggregate $cacheWarmer)
     {
@@ -40,52 +40,47 @@ class CacheWarmupCommand extends Command
         $this->cacheWarmer = $cacheWarmer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDefinition([
                 new InputOption('no-optional-warmers', '', InputOption::VALUE_NONE, 'Skip optional cache warmers (faster)'),
             ])
-            ->setDescription(self::$defaultDescription)
             ->setHelp(<<<'EOF'
 The <info>%command.name%</info> command warms up the cache.
 
 Before running this command, the cache must be empty.
-
-This command does not generate the classes cache (as when executing this
-command, too many classes that should be part of the cache are already loaded
-in memory). Use <comment>curl</comment> or any other similar tool to warm up
-the classes cache if you want.
 
 EOF
             )
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
         $kernel = $this->getApplication()->getKernel();
-        $io->comment(sprintf('Warming up the cache for the <info>%s</info> environment with debug <info>%s</info>', $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
+        $io->comment(\sprintf('Warming up the cache for the <info>%s</info> environment with debug <info>%s</info>', $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
 
         if (!$input->getOption('no-optional-warmers')) {
             $this->cacheWarmer->enableOptionalWarmers();
         }
+        $cacheDir = $kernel->getContainer()->getParameter('kernel.cache_dir');
 
-        $preload = $this->cacheWarmer->warmUp($cacheDir = $kernel->getContainer()->getParameter('kernel.cache_dir'));
+        if ($kernel instanceof WarmableInterface) {
+            $kernel->warmUp($cacheDir);
+        }
 
-        if ($preload && file_exists($preloadFile = $cacheDir.'/'.$kernel->getContainer()->getParameter('kernel.container_class').'.preload.php')) {
+        $buildDir = $kernel->getContainer()->getParameter('kernel.build_dir');
+
+        $preload = $this->cacheWarmer->warmUp($cacheDir, $buildDir);
+
+        if ($preload && $cacheDir === $buildDir && file_exists($preloadFile = $buildDir.'/'.$kernel->getContainer()->getParameter('kernel.container_class').'.preload.php')) {
             Preloader::append($preloadFile, $preload);
         }
 
-        $io->success(sprintf('Cache for the "%s" environment (debug=%s) was successfully warmed.', $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
+        $io->success(\sprintf('Cache for the "%s" environment (debug=%s) was successfully warmed.', $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
 
         return 0;
     }

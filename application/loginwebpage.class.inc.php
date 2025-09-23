@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -20,14 +20,16 @@
 /**
  * Class LoginWebPage
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\Helper\Session;
-use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventService;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\NiceWebPage;
+use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventService;
 
 /**
  * Web page used for displaying the login form
@@ -80,7 +82,7 @@ class LoginWebPage extends NiceWebPage
 	}
 
 	protected static $m_sLoginFailedMessage = '';
-	
+
 	public function __construct($sTitle = null)
 	{
 		if ($sTitle === null) {
@@ -90,13 +92,22 @@ class LoginWebPage extends NiceWebPage
 		parent::__construct($sTitle);
 		$this->SetStyleSheet();
 		$this->no_cache();
-		$this->add_xframe_options();
+		$this->add_http_headers();
 	}
 	
 	public function SetStyleSheet()
 	{
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/login.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+		$this->LinkStylesheetFromAppRoot('css/login.css');
+		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.2.0
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		return Branding::GetLoginFavIconAbsoluteUrl();
 	}
 
 	public static function SetLoginFailedMessage($sMessage)
@@ -248,6 +259,7 @@ class LoginWebPage extends NiceWebPage
 				$oEmail = new Email();
 				$oEmail->SetRecipientTO($sTo);
 				$sFrom = MetaModel::GetConfig()->Get('forgot_password_from');
+				$sFrom = utils::IsNullOrEmptyString($sFrom) ? MetaModel::GetConfig()->Get('email_default_sender_address') : $sFrom;
 				$oEmail->SetRecipientFrom($sFrom);
 				$oEmail->SetSubject(Dict::S('UI:ResetPwd-EmailSubject', $oUser->Get('login')));
 				$sResetUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=reset_pwd&auth_user='.urlencode($oUser->Get('login')).'&token='.urlencode($sToken);
@@ -391,6 +403,11 @@ class LoginWebPage extends NiceWebPage
 		Session::Unset('can_logoff');
 		Session::Unset('archive_mode');
 		Session::Unset('impersonate_user');
+		Session::Unset('PluginProperties');
+		Session::Unset('UrlMakerClass');
+		Session::Unset('itop_env');
+		Session::Unset('obj_messages');
+		Session::Unset('profile_list');
 		UserRights::_ResetSessionCache();
 		// If it's desired to kill the session, also delete the session cookie.
 		// Note: This will destroy the session, and not just the session data!
@@ -481,13 +498,13 @@ class LoginWebPage extends NiceWebPage
 					$iResponse = $oLoginFSMExtensionInstance->LoginAction($sLoginState, $iErrorCode);
 					if ($iResponse == self::LOGIN_FSM_RETURN)
 					{
-						EventService::FireEvent(new EventData(EVENT_SERVICE_LOGIN, null, ['code' => $iErrorCode, 'state' => $sLoginState]));
+						EventService::FireEvent(new EventData(EVENT_LOGIN, null, ['code' => $iErrorCode, 'state' => $sLoginState]));
 						Session::WriteClose();
 						return $iErrorCode; // Asked to exit FSM, generally login OK
 					}
 					if ($iResponse == self::LOGIN_FSM_ERROR)
 					{
-						EventService::FireEvent(new EventData(EVENT_SERVICE_LOGIN, null, ['code' => $iErrorCode, 'state' => $sLoginState]));
+						EventService::FireEvent(new EventData(EVENT_LOGIN, null, ['code' => $iErrorCode, 'state' => $sLoginState]));
 						$sLoginState = self::LOGIN_STATE_SET_ERROR; // Next state will be error
 						// An error was detected, skip the other plugins turn
 						break;
@@ -501,7 +518,7 @@ class LoginWebPage extends NiceWebPage
 			}
 			catch (Exception $e)
 			{
-				EventService::FireEvent(new EventData(EVENT_SERVICE_LOGIN, null, ['state' => $_SESSION['login_state']]));
+				EventService::FireEvent(new EventData(EVENT_LOGIN, null, ['state' => $_SESSION['login_state']]));
 				IssueLog::Error($e->getTraceAsString());
 				static::ResetSession();
 				die($e->getMessage());
@@ -902,13 +919,13 @@ class LoginWebPage extends NiceWebPage
 			$aAllProfiles = array();
 			while ($oProfile = $oProfilesSet->Fetch())
 			{
-				$aAllProfiles[strtolower($oProfile->GetName())] = $oProfile->GetKey();
+				$aAllProfiles[mb_strtolower($oProfile->GetName())] = $oProfile->GetKey();
 			}
 
 			$aProfiles = array();
 			foreach ($aRequestedProfiles as $sRequestedProfile)
 			{
-				$sRequestedProfile = strtolower($sRequestedProfile);
+				$sRequestedProfile = mb_strtolower($sRequestedProfile);
 				if (isset($aAllProfiles[$sRequestedProfile]))
 				{
 					$aProfiles[] = $aAllProfiles[$sRequestedProfile];
@@ -954,7 +971,7 @@ class LoginWebPage extends NiceWebPage
 		}
 		else if($ret === false)
 		{
-			throw new Exception('Nowhere to go??');
+			throw new Exception('Nowhere to go: Your combination of user Profiles denies you access to any '.ITOP_APPLICATION_SHORT.' portal. Please contact your administrator');
 		}
 		else
 		{

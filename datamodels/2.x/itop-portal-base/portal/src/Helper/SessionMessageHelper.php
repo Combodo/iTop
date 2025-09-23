@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -140,7 +140,7 @@ class SessionMessageHelper implements IteratorAggregate
 				$aRanks = array();
 				foreach ($aMessageObjectData as $sMessageId => $aMessageData)
 				{
-					$sMsgClass = 'alert alert-dismissible alert-';
+					$sMsgClass = 'ipb-alert alert alert-dismissible alert-';
 					switch ($aMessageData['severity'])
 					{
 						case static::ENUM_SEVERITY_INFO:

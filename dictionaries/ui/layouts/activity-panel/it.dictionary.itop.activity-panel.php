@@ -1,58 +1,38 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// Activity panel
+/**
+ *
+ */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand~~',
-	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce~~',
-	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close~~',
-	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load more entries~~',
-	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Load all previous entries~~',
-
-	// Tabs
-	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity~~',
-	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Draft entry~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Show / hide logs entries on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Choose which logs to display on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'State changes~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Show / hide state changes on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Edits~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Show / hide fields edits on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Open all entries~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Close all entries~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Number of persons interacting in the visible entries~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Number of messages in the visible log(s)~~',
-
-	// Compose button
-	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Compose a new log entry~~',
-
-	// Case log entry
-	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Multiple logs save~~',
-	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'By pressing the "save" button, you will submit entries for all the edited logs at once.~~',
-
-	// Notification entry
-	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Click to open the notifications tab and get more information~~',
-
-	// Placeholder
-	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'It\'s calm up here, no activity yet~~',
-
-	// Closed cover
-	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activity panel~~',
-	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Click to open the activity panel~~',
+	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Espandi',
+	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Riduci',
+	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Chiudi',
+	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Carica più voci',
+	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Carica tutte le voci precedenti',
+	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Attività',
+	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Bozza voce',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Mostra / nascondi voci di log in questa scheda',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Scegli quali log mostrare in questa scheda',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'Cambiamenti di stato',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Mostra / nascondi cambiamenti di stato in questa scheda',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Modifiche',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Mostra / nascondi modifiche ai campi in questa scheda',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Apri tutte le voci',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Chiudi tutte le voci',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Numero di persone che interagiscono nelle voci visibili',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Numero di messaggi nei log(s) visibili',
+	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Componi una nuova voce di log',
+	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Salva log multipli',
+	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'Premendo il pulsante "salva", invierai le voci per tutti i log modificati contemporaneamente.',
+	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Clicca per aprire la scheda delle notifiche e ottenere ulteriori informazioni',
+	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'È tranquillo qui, nessuna attività ancora',
+	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Pannello di attività',
+	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Clicca per aprire il pannello di attività',
 ));

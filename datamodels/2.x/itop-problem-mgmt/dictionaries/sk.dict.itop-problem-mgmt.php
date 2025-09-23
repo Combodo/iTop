@@ -2,49 +2,16 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
+/**
+ *
+ */
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Menu:ProblemManagement' => 'Problem Management~~',
-	'Menu:ProblemManagement+' => 'Problem Management~~',
+	'Menu:ProblemManagement' => 'Problem management~~',
+	'Menu:ProblemManagement+' => 'Problem management~~',
 	'Menu:Problem:Overview' => 'Overview~~',
 	'Menu:Problem:Overview+' => 'Overview~~',
 	'Menu:NewProblem' => 'New problem~~',
@@ -94,7 +61,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Problem/Attribute:product' => 'Product~~',
 	'Class:Problem/Attribute:product+' => '~~',
 	'Class:Problem/Attribute:impact' => 'Impact~~',
-	'Class:Problem/Attribute:impact+' => '~~',
+	'Class:Problem/Attribute:impact+' => 'Impact is the severity of the problem, how many end users are affected~~',
 	'Class:Problem/Attribute:impact/Value:1' => 'A Department~~',
 	'Class:Problem/Attribute:impact/Value:1+' => '~~',
 	'Class:Problem/Attribute:impact/Value:2' => 'A Service~~',
@@ -102,25 +69,25 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Problem/Attribute:impact/Value:3' => 'A person~~',
 	'Class:Problem/Attribute:impact/Value:3+' => '~~',
 	'Class:Problem/Attribute:urgency' => 'Urgency~~',
-	'Class:Problem/Attribute:urgency+' => '~~',
-	'Class:Problem/Attribute:urgency/Value:1' => 'critical~~',
-	'Class:Problem/Attribute:urgency/Value:1+' => 'critical~~',
-	'Class:Problem/Attribute:urgency/Value:2' => 'high~~',
-	'Class:Problem/Attribute:urgency/Value:2+' => 'high~~',
-	'Class:Problem/Attribute:urgency/Value:3' => 'medium~~',
-	'Class:Problem/Attribute:urgency/Value:3+' => 'medium~~',
-	'Class:Problem/Attribute:urgency/Value:4' => 'low~~',
-	'Class:Problem/Attribute:urgency/Value:4+' => 'low~~',
+	'Class:Problem/Attribute:urgency+' => 'How quickly the problem needs to be resolved~~',
+	'Class:Problem/Attribute:urgency/Value:1' => 'Critical~~',
+	'Class:Problem/Attribute:urgency/Value:1+' => '~~',
+	'Class:Problem/Attribute:urgency/Value:2' => 'High~~',
+	'Class:Problem/Attribute:urgency/Value:2+' => '~~',
+	'Class:Problem/Attribute:urgency/Value:3' => 'Medium~~',
+	'Class:Problem/Attribute:urgency/Value:3+' => '~~',
+	'Class:Problem/Attribute:urgency/Value:4' => 'Low~~',
+	'Class:Problem/Attribute:urgency/Value:4+' => '~~',
 	'Class:Problem/Attribute:priority' => 'Priority~~',
-	'Class:Problem/Attribute:priority+' => '~~',
+	'Class:Problem/Attribute:priority+' => 'Order in which problems need to be handled~~',
 	'Class:Problem/Attribute:priority/Value:1' => 'Critical~~',
-	'Class:Problem/Attribute:priority/Value:1+' => 'Critical~~',
+	'Class:Problem/Attribute:priority/Value:1+' => '~~',
 	'Class:Problem/Attribute:priority/Value:2' => 'High~~',
-	'Class:Problem/Attribute:priority/Value:2+' => 'High~~',
+	'Class:Problem/Attribute:priority/Value:2+' => '~~',
 	'Class:Problem/Attribute:priority/Value:3' => 'Medium~~',
-	'Class:Problem/Attribute:priority/Value:3+' => 'Medium~~',
+	'Class:Problem/Attribute:priority/Value:3+' => '~~',
 	'Class:Problem/Attribute:priority/Value:4' => 'Low~~',
-	'Class:Problem/Attribute:priority/Value:4+' => 'Low~~',
+	'Class:Problem/Attribute:priority/Value:4+' => '~~',
 	'Class:Problem/Attribute:related_change_id' => 'Related Change~~',
 	'Class:Problem/Attribute:related_change_id+' => '~~',
 	'Class:Problem/Attribute:related_change_ref' => 'Related Change ref~~',

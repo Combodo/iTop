@@ -1,0 +1,13 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* Skeleton palette
+CSS variables
+These are defined in themes/ as utils/ is included thrice and each time these variables are redeclared in the stylesheets
+*/
+:root {
+  --skeleton-start-color: #{$ipb-skeleton-start-color};
+  --skeleton-stop-color: #{$ipb-skeleton-stop-color};
+}

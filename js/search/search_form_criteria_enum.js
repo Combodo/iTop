@@ -439,8 +439,6 @@ $(function()
 
 									return;
 								}
-
-								me._onACSearchContainsSuccess(oResponse);
 							})
 							.fail(function(oResponse, sStatus, oXHR){  me._onACSearchFail(oResponse, sStatus); })
 							.always(function(oResponse, sStatus, oXHR){
@@ -872,13 +870,13 @@ $(function()
 		// - Make a jQuery element for a list item
 		_makeListItemElement: function(sLabel, sValue, bInitChecked, bInitHidden,bObsolete, sAdditionalField)
 		{
-			var sEscapedLabel = $('<div />').text(sLabel).html();
+			var sEscapedLabel = CombodoSanitizer.EscapeHtml(sLabel, false);
 			if (bObsolete == 1)	{
 				sEscapedLabel = '<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+sEscapedLabel;
 			}
 
 			if (sAdditionalField != undefined )	{
-				sEscapedLabel = sEscapedLabel+'<br><i>'+sAdditionalField+'</i>';
+				sEscapedLabel = sEscapedLabel+'<br><i>'+CombodoSanitizer.EscapeHtml(sAdditionalField, false)+'</i>';
 			}
 
 			var oItemElem = $('<div></div>')

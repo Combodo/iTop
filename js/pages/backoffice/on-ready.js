@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -9,10 +9,6 @@
 
 $(document).ready(function () {
 	// AJAX calls handling
-	// - Custom headers
-	$(document).ajaxSend(function (event, jqxhr, options) {
-		jqxhr.setRequestHeader('X-Combodo-Ajax', 'true');
-	});
 	// - Error messages regarding the error code
 	$(document).ajaxError(function (event, jqxhr, options) {
 		// User is not logged in
@@ -79,4 +75,12 @@ $(document).ready(function () {
 		let oDialogElem = $(this).dialog('instance').uiDialog;
 		oDialogElem.next('.ui-widget-overlay').css('z-index', oDialogElem.css('z-index') - 1);
 	} );
+
+	// Initialize leave handler when a form with touched fields is about to be closed
+	$('body').leave_handler({
+		'message': Dict.S('UI:NavigateAwayConfirmationMessage'),
+		'extra_events': {
+			'body': ['dialogbeforeclose'] // jQueryUI dialog
+		}
+	});
 });

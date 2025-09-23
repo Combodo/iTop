@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,9 +20,11 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
+use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use DOMFormatException;
 use ModuleDesign;
-use Combodo\iTop\DesignElement;
 
 /**
  * Description of PortalBrick
@@ -43,9 +45,9 @@ abstract class PortalBrick extends AbstractBrick
 	const ENUM_OPENING_TARGET_NEW = 'new';
 
 	/** @var int DEFAULT_WIDTH */
-	const DEFAULT_WIDTH = 6;
+	const DEFAULT_WIDTH = 400;
 	/** @var int DEFAULT_HEIGHT */
-	const DEFAULT_HEIGHT = 1;
+	const DEFAULT_HEIGHT = null;
 	/** @var bool DEFAULT_MODAL */
 	const DEFAULT_MODAL = false;
 	/** @var bool DEFAULT_VISIBLE_HOME */
@@ -70,6 +72,8 @@ abstract class PortalBrick extends AbstractBrick
 
 	/** @var int $iWidth */
 	protected $iWidth;
+	/** @var bool width in pixel flag */
+	public bool $bIsWidthPixel = true;
 	/** @var int $iHeight */
 	protected $iHeight;
 	/** @var bool $bModal */
@@ -82,8 +86,6 @@ abstract class PortalBrick extends AbstractBrick
 	protected $sDecorationClassHome;
 	/** @var string $sDecorationClassNavigationMenu */
 	protected $sDecorationClassNavigationMenu;
-	/** @var string $sTileTemplatePath */
-	protected $sTileTemplatePath;
 	/** @var string|null $sTileControllerAction */
 	protected $sTileControllerAction;
 	/** @var string $sOpeningTarget */
@@ -98,6 +100,17 @@ abstract class PortalBrick extends AbstractBrick
 	protected $sTitleHome;
 	/** @var string $sTitleNavigationMenu */
 	protected $sTitleNavigationMenu;
+
+
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
+			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'tile.html.twig'),
+		);
+	}
 
 	/**
 	 * @return string|null
@@ -121,7 +134,6 @@ abstract class PortalBrick extends AbstractBrick
 		$this->bVisibleNavigationMenu = static::DEFAULT_VISIBLE_NAVIGATION_MENU;
 		$this->sDecorationClassHome = static::DEFAULT_DECORATION_CLASS_HOME;
 		$this->sDecorationClassNavigationMenu = static::DEFAULT_DECORATION_CLASS_NAVIGATION_MENU;
-		$this->sTileTemplatePath = static::DEFAULT_TILE_TEMPLATE_PATH;
 		$this->sTileControllerAction = static::DEFAULT_TILE_CONTROLLER_ACTION;
 		$this->sOpeningTarget = static::DEFAULT_OPENING_TARGET;
 	}
@@ -244,16 +256,6 @@ abstract class PortalBrick extends AbstractBrick
 	public function GetTileControllerAction()
 	{
 		return $this->sTileControllerAction;
-	}
-
-	/**
-	 * Returns the brick tile template path
-	 *
-	 * @return string
-	 */
-	public function GetTileTemplatePath()
-	{
-		return $this->sTileTemplatePath;
 	}
 
 	/**
@@ -421,20 +423,6 @@ abstract class PortalBrick extends AbstractBrick
 	}
 
 	/**
-	 * Sets the brick tile template path
-	 *
-	 * @param string $sTileTemplatePath
-	 *
-	 * @return \Combodo\iTop\Portal\Brick\PortalBrick
-	 */
-	public function SetTileTemplatePath($sTileTemplatePath)
-	{
-		$this->sTileTemplatePath = $sTileTemplatePath;
-
-		return $this;
-	}
-
-	/**
 	 * Sets the brick tile controller action
 	 *
 	 * @param string $sTileControllerAction
@@ -483,7 +471,9 @@ abstract class PortalBrick extends AbstractBrick
 			switch ($oBrickSubNode->nodeName)
 			{
 				case 'width':
-					$this->SetWidth((int)$oBrickSubNode->GetText(static::DEFAULT_WIDTH));
+					$sWidth = $oBrickSubNode->GetText(static::DEFAULT_WIDTH);
+					$this->bIsWidthPixel = str_contains($sWidth, 'px');
+					$this->SetWidth((int)$sWidth);
 					break;
 
 				case 'height':
@@ -526,7 +516,7 @@ abstract class PortalBrick extends AbstractBrick
 					{
 						/** @var \Combodo\iTop\DesignElement $oTemplateNode */
 						$oTemplateNode = $oTemplateNodeList->item(0);
-						$this->SetTileTemplatePath($oTemplateNode->GetText(static::DEFAULT_TILE_TEMPLATE_PATH));
+						$this->SetTemplatePath('tile', $oTemplateNode->GetText(static::DEFAULT_TILE_TEMPLATE_PATH));
 					}
 					break;
 

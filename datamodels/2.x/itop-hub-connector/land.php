@@ -1,4 +1,8 @@
 <?php
+
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 function DisplayStatus(WebPage $oPage)
 {
 	$oPage->set_title(Dict::S('iTopHub:Landing:Status'));
@@ -11,7 +15,7 @@ function DisplayStatus(WebPage $oPage)
 
 	$oPage->add('<div class="module-selection-body">');
 	// Now scan the extensions and display a report of the extensions brought by the hub
-	$sPath = APPROOT.'data/downloaded-extensions/';
+	$sPath = utils::GetDataPath().'downloaded-extensions/';
 	$aExtraDirs = array();
 	if (is_dir($sPath)) {
 		$aExtraDirs[] = $sPath; // Also read the extra downloaded-modules directory
@@ -53,7 +57,7 @@ function DisplayStatus(WebPage $oPage)
 
 function DoLanding(WebPage $oPage)
 {
-	$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/css/hub.css');
+	$oPage->LinkStylesheetFromModule('itop-hub-connector/css/hub.css');
 	$oPage->add('<table class="module-selection-banner"><tr>');
 	$sBannerUrl = utils::GetAbsoluteUrlModulesRoot().'/itop-hub-connector/images/landing-extension.png';
 	$oPage->add('<td><img style="max-height:72px; margin-right: 10px;" src="'.$sBannerUrl.'"/><td>');
@@ -80,7 +84,7 @@ function DoLanding(WebPage $oPage)
 		throw new Exception("Inconsistent version '$sVersion', expecting ".ITOP_VERSION."'");
 	}
 
-	$sFileUUID = (string)trim(@file_get_contents(APPROOT."data/instance.txt"), "{} \n");
+	$sFileUUID = (string)trim(@file_get_contents(utils::GetDataPath()."instance.txt"), "{} \n");
 	if ($sInstanceUUID != $sFileUUID) {
 		throw new Exception("Inconsistent file UUID '$sInstanceUUID', expecting ".$sFileUUID."'");
 	}
@@ -93,7 +97,7 @@ function DoLanding(WebPage $oPage)
 	// Uncompression of extensions in data/downloaded-extensions
 	// only newly downloaded extensions reside in this folder
 	$i = 0;
-	$sPath = APPROOT.'data/downloaded-extensions/';
+	$sPath = utils::GetDataPath().'downloaded-extensions/';
 	if (!is_dir($sPath)) {
 		if (!mkdir($sPath)) {
 			throw new Exception("ERROR: Unable to create the directory '$sPath'. Cannot download any extension. Check the access rights on '".dirname('data/downloaded-extensions/')."'");
@@ -108,7 +112,7 @@ function DoLanding(WebPage $oPage)
 
 		$sZipArchiveFile = $sPath."/extension-{$i}.zip";
 		file_put_contents($sZipArchiveFile, $sArchive);
-		// Expand the content of extension-x.zip into  APPROOT.'data/downloaded-extensions/'
+		// Expand the content of extension-x.zip into  utils::GetDataPath().'downloaded-extensions/'
 		// where the installation will load the extension automatically
 		$oZip = new ZipArchive();
 		if (!$oZip->open($sZipArchiveFile)) {
@@ -132,9 +136,9 @@ function DoLanding(WebPage $oPage)
 function DoInstall(WebPage $oPage)
 {
 	$sUID = hash('sha256', rand());
-	file_put_contents(APPROOT.'data/hub/compile_authent', $sUID);
+	file_put_contents(utils::GetDataPath().'hub/compile_authent', $sUID);
 
-	$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/css/hub.css');
+	$oPage->LinkStylesheetFromModule('itop-hub-connector/css/hub.css');
 	$oPage->add('<table class="module-selection-banner"><tr>');
 	$sBannerUrl = utils::GetAbsoluteUrlModulesRoot().'/itop-hub-connector/images/landing-extension.png';
 	$oPage->add('<td><img style="max-height:72px; margin-right: 10px;" src="'.$sBannerUrl.'"/><td>');
@@ -147,7 +151,7 @@ function DoInstall(WebPage $oPage)
 
 	// Now scan the extensions and display a report of the extensions brought by the hub
 	// Now scan the extensions and display a report of the extensions brought by the hub
-	$sPath = APPROOT.'data/downloaded-extensions/';
+	$sPath = utils::GetDataPath().'downloaded-extensions/';
 	$aExtraDirs = array();
 	if (is_dir($sPath)) {
 		$aExtraDirs[] = $sPath; // Also read the extra downloaded-modules directory
@@ -202,15 +206,15 @@ function DoInstall(WebPage $oPage)
 		}
 	}
 
+	$oPage->add('</div>');
 	$oPage->add('<div id="hub-installation-feedback">');
 	$oPage->add('<div id="hub-installation-progress-text">'.Dict::S('iTopHub:DatabaseBackupProgress').'</div>');
 	$oPage->add('<div id="hub-installation-progress"></div>');
-	$oPage->add('</div>');
 
 	$oPage->add('</div>'); // module-selection-body
 
 
-	$oPage->add_linked_stylesheet('../css/font-awesome/css/all.min.css');
+	$oPage->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
 
 
 	$oPage->add('<div id="hub_installation_widget"></div>');
@@ -259,8 +263,8 @@ try {
 	}
 
 	$oPage = new SetupPage(''); // Title will be set later, depending on $sOperation
-	$oPage->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/js/hub.js');
-	$oPage->add_linked_stylesheet('../css/font-combodo/font-combodo.css');
+	$oPage->LinkScriptFromModule('itop-hub-connector/js/hub.js');
+	$oPage->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
 
 	$oPage->add_style(<<<CSS
 div.choice { margin: 0.5em;}
@@ -279,8 +283,8 @@ CSS
 			break;
 
 		case 'install':
-			if (!file_exists(APPROOT.'data/hub')) {
-				mkdir(APPROOT.'data/hub');
+			if (!file_exists(utils::GetDataPath().'hub')) {
+				mkdir(utils::GetDataPath().'hub');
 			}
 			DoInstall($oPage);
 			break;

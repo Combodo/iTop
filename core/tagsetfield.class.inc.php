@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -16,6 +16,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
+use Combodo\iTop\Application\WebPage\WebPage;
 
 
 /**
@@ -296,7 +298,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	/**
 	 * Display Tag Usage
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode
 	 *
 	 * @throws \CoreException

@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (C) 2010-2021 Combodo SARL
+ * Copyright (C) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,6 +20,8 @@
  *
  */
 
+
+use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 
@@ -60,7 +62,7 @@ class UISearchFormForeignKeys
 
 		$oPage->add(<<<HTML
 <form id="ObjectsAddForm_{$this->m_iInputId}">
-    <div id="SearchResultsToAdd_{$this->m_iInputId}" style="vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;">
+    <div id="SearchResultsToAdd_{$this->m_iInputId}" style="vertical-align:top;height:100%;overflow:auto;padding:0;border:0;">
         <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
     </div>
     <input type="hidden" id="count_{$this->m_iInputId}" value="0"/>
@@ -97,7 +99,7 @@ HTML
  });
 $('#dlg_{$this->m_iInputId}').dialog('option', {title:'$sTitle'});
 $('#SearchFormToAdd_{$this->m_iInputId} form').on('submit.uilinksWizard', oForeignKeysWidget{$this->m_iInputId}.SearchObjectsToAdd);
-$('#SearchFormToAdd_{$this->m_iInputId}').resize(oForeignKeysWidget{$this->m_iInputId}.UpdateSizes);
+$('#SearchFormToAdd_{$this->m_iInputId}').on('resize', oForeignKeysWidget{$this->m_iInputId}.UpdateSizes);
 JS
 );
 	}

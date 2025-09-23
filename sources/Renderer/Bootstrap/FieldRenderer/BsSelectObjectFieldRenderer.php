@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,6 +21,7 @@
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
 use ApplicationContext;
+use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
 use Combodo\iTop\Renderer\RenderingOutput;
 use ContextTag;
 use CoreException;
@@ -29,6 +30,7 @@ use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
+use ModuleDesign;
 use utils;
 
 /**
@@ -103,8 +105,15 @@ class BsSelectObjectFieldRenderer extends BsFieldRenderer
 					$oOutput->AddHtml('<div class="col-xs-' . ( $this->oField->GetHierarchical() ? 10 : 12 ) . ' col-sm-' . ( $this->oField->GetHierarchical() ? 9 : 12 ) . ' col-md-' . ( $this->oField->GetHierarchical() ? 10 : 12 ) . '">');
 					$oOutput->AddHtml('<select id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" class="form-control">');
 					$oOutput->AddHtml('<option value="">')->AddHtml(Dict::S('UI:SelectOne'), false)->AddHtml('</option>');
-					// - Retrieving choices
-					$oChoicesSet = new DBObjectSet($oSearch);
+
+                     if (defined('PORTAL_ID'))
+                    {
+                        $oModuleDesign = new ModuleDesign(PORTAL_ID);
+                        $oScopeValidatorHelper = new ScopeValidatorHelper($oModuleDesign, PORTAL_ID);
+                        $oScopeValidatorHelper->AddScopeToQuery($oSearch, $oSearch->GetClass());
+                    }
+
+                    $oChoicesSet = new DBObjectSet($oSearch);
 					$oChoicesSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 					while ($oChoice = $oChoicesSet->Fetch())
 					{
@@ -320,12 +329,19 @@ EOF
 			if ($this->oField->GetCurrentValue() !== null && $this->oField->GetCurrentValue() !== 0 && $this->oField->GetCurrentValue() !== '')
 			{
 				// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
-				$oFieldValue = MetaModel::GetObject($sFieldValueClass, $this->oField->GetCurrentValue(), true, true);
+				$oFieldValue = MetaModel::GetObjectWithArchive($sFieldValueClass, $this->oField->GetCurrentValue(), true, true);
 				$sFieldHtmlValue = $oFieldValue->GetName();
-				$sFieldUrl = ApplicationContext::MakeObjectUrl($sFieldValueClass, $this->oField->GetCurrentValue());
-				if(!empty($sFieldUrl))
+				if($oFieldValue->IsArchived())
 				{
-					$sFieldHtmlValue = '<a href="'.$sFieldUrl.'" data-toggle="itop-portal-modal">'.$sFieldHtmlValue.'</a>';
+					$sFieldHtmlValue = '<span class="text_decoration"><span class="fas fa-archive"></span></span>' . $sFieldHtmlValue;
+				}
+				else
+				{
+					$sFieldUrl = ApplicationContext::MakeObjectUrl($sFieldValueClass, $this->oField->GetCurrentValue());
+					if (!empty($sFieldUrl))
+					{
+						$sFieldHtmlValue = '<a href="' . $sFieldUrl . '" data-toggle="itop-portal-modal">' . $sFieldHtmlValue . '</a>';
+					}
 				}
 			}
 			else
@@ -381,7 +397,7 @@ EOF
 <<<JS
 				$('#{$sHierarchicalButtonId}').off('click').on('click', function(){
 					// Creating a new modal
-					CombodoPortalToolbox.OpenModal({
+					CombodoModal.OpenModal({
 						attributes: {
 							'data-source-element': '{$sHierarchicalButtonId}',
 						},
@@ -438,10 +454,10 @@ JS
 				{
 					oOptions['base_modal'] = {
 						'usage': 'replace',
-						'selector': '.modal[data-source-element="{$sSearchButtonId}"]:first'
+						'selector': '.modal[data-source-element="{$sSearchButtonId}"]'
 					};
 				}
-				CombodoPortalToolbox.OpenModal(oOptions);
+				CombodoModal.OpenModal(oOptions);
 			});
 JS
 		);

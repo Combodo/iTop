@@ -1,0 +1,94 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/*
+ Semantic palettes 
+ CSS variables
+ These are defined in themes/ as utils/ is included thrice and each time these variables are redeclared in the stylesheets 
+ */
+:root {
+  --ipb-color-primary-100: #{$ipb-color-primary-100};
+  --ipb-color-primary-200: #{$ipb-color-primary-200};
+  --ipb-color-primary-300: #{$ipb-color-primary-300};
+  --ipb-color-primary-400: #{$ipb-color-primary-400};
+  --ipb-color-primary-500: #{$ipb-color-primary-500};
+  --ipb-color-primary-600: #{$ipb-color-primary-600};
+  --ipb-color-primary-700: #{$ipb-color-primary-700};
+  --ipb-color-primary-800: #{$ipb-color-primary-800};
+  --ipb-color-primary-900: #{$ipb-color-primary-900};
+  --ipb-color-primary-950: #{$ipb-color-primary-950};
+
+  --ipb-color-secondary-100: #{$ipb-color-secondary-100};
+  --ipb-color-secondary-200: #{$ipb-color-secondary-200};
+  --ipb-color-secondary-300: #{$ipb-color-secondary-300};
+  --ipb-color-secondary-400: #{$ipb-color-secondary-400};
+  --ipb-color-secondary-500: #{$ipb-color-secondary-500};
+  --ipb-color-secondary-600: #{$ipb-color-secondary-600};
+  --ipb-color-secondary-700: #{$ipb-color-secondary-700};
+  --ipb-color-secondary-800: #{$ipb-color-secondary-800};
+  --ipb-color-secondary-900: #{$ipb-color-secondary-900};
+  --ipb-color-secondary-950: #{$ipb-color-secondary-950};
+
+  --ipb-color-information-100: #{$ipb-color-information-100};
+  --ipb-color-information-200: #{$ipb-color-information-200};
+  --ipb-color-information-300: #{$ipb-color-information-300};
+  --ipb-color-information-400: #{$ipb-color-information-400};
+  --ipb-color-information-500: #{$ipb-color-information-500};
+  --ipb-color-information-600: #{$ipb-color-information-600};
+  --ipb-color-information-700: #{$ipb-color-information-700};
+  --ipb-color-information-800: #{$ipb-color-information-800};
+  --ipb-color-information-900: #{$ipb-color-information-900};
+  --ipb-color-information-950: #{$ipb-color-information-950};
+
+  --ipb-color-success-100: #{$ipb-color-success-100};
+  --ipb-color-success-200: #{$ipb-color-success-200};
+  --ipb-color-success-300: #{$ipb-color-success-300};
+  --ipb-color-success-400: #{$ipb-color-success-400};
+  --ipb-color-success-500: #{$ipb-color-success-500};
+  --ipb-color-success-600: #{$ipb-color-success-600};
+  --ipb-color-success-700: #{$ipb-color-success-700};
+  --ipb-color-success-800: #{$ipb-color-success-800};
+  --ipb-color-success-900: #{$ipb-color-success-900};
+  --ipb-color-success-950: #{$ipb-color-success-950};
+
+  --ipb-color-warning-100: #{$ipb-color-warning-100};
+  --ipb-color-warning-200: #{$ipb-color-warning-200};
+  --ipb-color-warning-300: #{$ipb-color-warning-300};
+  --ipb-color-warning-400: #{$ipb-color-warning-400};
+  --ipb-color-warning-500: #{$ipb-color-warning-500};
+  --ipb-color-warning-600: #{$ipb-color-warning-600};
+  --ipb-color-warning-700: #{$ipb-color-warning-700};
+  --ipb-color-warning-800: #{$ipb-color-warning-800};
+  --ipb-color-warning-900: #{$ipb-color-warning-900};
+  --ipb-color-warning-950: #{$ipb-color-warning-950};
+
+  --ipb-color-danger-100: #{$ipb-color-danger-100};
+  --ipb-color-danger-200: #{$ipb-color-danger-200};
+  --ipb-color-danger-300: #{$ipb-color-danger-300};
+  --ipb-color-danger-400: #{$ipb-color-danger-400};
+  --ipb-color-danger-500: #{$ipb-color-danger-500};
+  --ipb-color-danger-600: #{$ipb-color-danger-600};
+  --ipb-color-danger-700: #{$ipb-color-danger-700};
+  --ipb-color-danger-800: #{$ipb-color-danger-800};
+  --ipb-color-danger-900: #{$ipb-color-danger-900};
+  --ipb-color-danger-950: #{$ipb-color-danger-950};
+
+  --ipb-color-error-100: #{$ipb-color-error-100};
+  --ipb-color-error-200: #{$ipb-color-error-200};
+  --ipb-color-error-300: #{$ipb-color-error-300};
+  --ipb-color-error-400: #{$ipb-color-error-400};
+  --ipb-color-error-500: #{$ipb-color-error-500};
+  --ipb-color-error-600: #{$ipb-color-error-600};
+  --ipb-color-error-700: #{$ipb-color-error-700};
+  --ipb-color-error-800: #{$ipb-color-error-800};
+  --ipb-color-error-900: #{$ipb-color-error-900};
+  --ipb-color-error-950: #{$ipb-color-error-950};
+
+  --ipb-caselog-color-highlight-1: #{$ipb-caselog-highlight-color-1};
+  --ipb-caselog-color-highlight-2: #{$ipb-caselog-highlight-color-2};
+  --ipb-caselog-color-highlight-3: #{$ipb-caselog-highlight-color-3};
+  --ipb-caselog-color-highlight-4: #{$ipb-caselog-highlight-color-4};
+  --ipb-caselog-color-highlight-5: #{$ipb-caselog-highlight-color-5};
+}

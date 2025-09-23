@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010-2021 Combodo SARL
+ * Copyright (C) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,7 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 if (!defined('APPROOT')) require_once(__DIR__.'/../../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
@@ -117,7 +120,7 @@ try
 			try
 			{
 				set_time_limit(0);
-				$oBB = new BackupExec(APPROOT.'data/backups/manual/', 0 /*iRetentionCount*/);
+				$oBB = new BackupExec(utils::GetDataPath().'backups/manual/', 0 /*iRetentionCount*/);
 				$sRes = $oBB->Process(time() + 36000); // 10 hours to complete should be sufficient!
 			}
 			catch (Exception $e)
@@ -137,6 +140,9 @@ try
 		 *  As a result we're setting a token file to make sure the restore is called by an authenticated user with the correct rights !
 		 */
 		case 'restore_get_token':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
+
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
 			$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
 			if ($oRestoreMutex->IsLocked())
@@ -149,12 +155,7 @@ try
 			$sTokenFile = APPROOT.'/data/restore.'.$sToken.'.tok';
 			file_put_contents($sTokenFile, $sFile);
 
-			$oPage->add_ready_script(
-				<<<JS
-$("#restore_token").val('$sToken');
-JS
-			);
-
+			$oPage->SetData(['token' => $sToken]);
 			$oPage->output();
 			break;
 
@@ -166,7 +167,7 @@ JS
 			require_once(APPROOT."setup/runtimeenv.class.inc.php");
 			require_once(APPROOT.'/application/utils.inc.php');
 			require_once(APPROOT.'/setup/backup.class.inc.php');
-			require_once(dirname(__FILE__).'/dbrestore.class.inc.php');
+			require_once(__DIR__.'/dbrestore.class.inc.php');
 
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
 			try
@@ -184,7 +185,7 @@ JS
 				$oDBRS = new DBRestore($oItopConfig);
 				$oDBRS->SetMySQLBinDir($sMySQLBinDir);
 
-				$sBackupDir = APPROOT.'data/backups/';
+				$sBackupDir = utils::GetDataPath().'backups/';
 				$sBackupFile = $sBackupDir.$sFile;
 				$sRes = $oDBRS->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
 
@@ -209,7 +210,7 @@ JS
 			}
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oBackup = new DBBackupScheduled();
-			$sBackupDir = APPROOT.'data/backups/';
+			$sBackupDir = utils::GetDataPath().'backups/';
 			$sBackupFilePath = utils::RealPath($sBackupDir.$sFile, $sBackupDir);
 			if ($sBackupFilePath === false)
 			{

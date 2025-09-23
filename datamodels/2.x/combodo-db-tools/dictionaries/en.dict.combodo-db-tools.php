@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -49,6 +49,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'DBTools:Inconsistencies' => 'Database inconsistencies',
 	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s',
+	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Orphan record in `%1$s`, it should have its counterpart in table `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Invalid external key %1$s (column: `%2$s.%3$s`)',
@@ -58,7 +59,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'DBAnalyzer-Integrity-HKInvalid' => 'Broken hierarchical key `%1$s`',
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted',
 	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value as `%3$s`.`%1$s`',
-	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contains a valid class',
+	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contain a valid class',
 ));
 
 // Database Info
@@ -71,7 +72,7 @@ Dict::Add('EN US', 'English', 'English', array(
 // Lost attachments
 Dict::Add('EN US', 'English', 'English', array(
 	'DBTools:LostAttachments' => 'Lost attachments',
-	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, is does not retrieve deleted data.',
+	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, it does not retrieve deleted data.',
 
 	'DBTools:LostAttachments:Button:Analyze' => 'Analyze',
 	'DBTools:LostAttachments:Button:Restore' => 'Restore',

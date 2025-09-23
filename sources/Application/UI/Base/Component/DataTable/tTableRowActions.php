@@ -1,10 +1,12 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2022 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
+
+use Combodo\iTop\Application\UI\Base\Component\Dialog\DialogUIBlockFactory;
 
 /**
  * Trait tTableRowActions
@@ -17,15 +19,24 @@ namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
  */
 trait tTableRowActions
 {
+	/** @var bool static dialog initialized flag to avoid multiple html markups */
+	static public bool $bDialogInitialized = false;
+
 	/**
 	 * @var $aRowActions array array of row actions
 	 * action => {
+	 *      label: string,
 	 *      tooltip: string,
 	 *      icon_classes: string,
-	 *      js_row_action: string
+	 *      js_row_action: string,
+	 *      confirmation => {
+	 *          message: string,
+	 *          message_row_data: string,
+	 *          do_not_show_again_pref_key: string
+	 *      }
 	 * }
 	 */
-	protected $aRowActions;
+	protected $aRowActions = [];
 
 	/**
 	 * Set row actions.
@@ -44,9 +55,9 @@ trait tTableRowActions
 	/**
 	 * Get row actions.
 	 *
-	 * @return array
+	 * @return array|null
 	 */
-	public function GetRowActions(): array
+	public function GetRowActions(): ?array
 	{
 		return $this->aRowActions;
 	}

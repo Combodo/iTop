@@ -1,26 +1,11 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
- /**
+/**
  * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:IncidentManagement' => 'Administración de Incidentes',
@@ -112,6 +97,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => 'Baja',
 	'Class:Incident/Attribute:origin' => 'Origen',
 	'Class:Incident/Attribute:origin+' => 'Origen',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'En persona',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incidente creado después de una discusión cara a cara',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incidente creado después de un',
 	'Class:Incident/Attribute:origin/Value:mail' => 'Correo-e',
 	'Class:Incident/Attribute:origin/Value:mail+' => 'Correo-e',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'Monitoreo',
@@ -137,9 +126,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Attribute:escalation_reason' => 'Motivo de Escalamiento',
 	'Class:Incident/Attribute:escalation_reason+' => 'Motivo de Escalamiento',
 	'Class:Incident/Attribute:assignment_date' => 'Fecha de Asignación',
-	'Class:Incident/Attribute:assignment_date+' => '',
+	'Class:Incident/Attribute:assignment_date+' => 'Fecha de Asignación',
 	'Class:Incident/Attribute:resolution_date' => 'Fecha de Solución',
-	'Class:Incident/Attribute:resolution_date+' => '',
+	'Class:Incident/Attribute:resolution_date+' => 'Fecha de Solución',
 	'Class:Incident/Attribute:last_pending_date' => 'Última Fecha de Espera',
 	'Class:Incident/Attribute:last_pending_date+' => 'Última Fecha de Espera',
 	'Class:Incident/Attribute:cumulatedpending' => 'Espera Acumulada',
@@ -193,7 +182,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Attribute:parent_problem_id' => 'Problema Padre',
 	'Class:Incident/Attribute:parent_problem_id+' => 'Problema Padre',
 	'Class:Incident/Attribute:parent_problem_ref' => 'Ref. Problema Padre',
-	'Class:Incident/Attribute:parent_problem_ref+' => '',
+	'Class:Incident/Attribute:parent_problem_ref+' => 'Ref. Problema Padre',
 	'Class:Incident/Attribute:related_request_list' => 'Requerimientos Relacionados',
 	'Class:Incident/Attribute:related_request_list+' => 'Requerimientos Relacionados',
 	'Class:Incident/Attribute:child_incidents_list' => 'Incidentes Hijos',
@@ -233,7 +222,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Reabrir',
 	'Class:Incident/Stimulus:ev_reopen+' => 'Reabrir',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'No puede asignarse el incidente Padre a si mismo',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'Resolver tickets hijos',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascadear la solución a los tickets hijos (ev_autoresolve), y alinear las siguientes características: servicio, equipo, agente, información de solución',
 	'Tickets:Related:OpenIncidents' => 'Incidentes Abiertos',

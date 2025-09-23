@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2012-2021 Combodo SARL
+// Copyright (C) 2012-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -23,13 +23,14 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'application/forms.class.inc.php');
 
 /**
  * Base class for all 'dashlets' (i.e. widgets to be inserted into a dashboard)
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 abstract class Dashlet
@@ -222,7 +223,7 @@ abstract class Dashlet
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param bool $bEnclosingDiv
 	 * @param array $aExtraParams
@@ -298,7 +299,7 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
 	 *
@@ -309,7 +310,7 @@ EOF
 	/**
 	 * Rendering without the real data
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
 	 *
@@ -667,7 +668,7 @@ class DashletUnknown extends Dashlet
 	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
-		$oField = new DesignerLongTextField('xml', Dict::S('UI:DashletUnknown:Prop-XMLConfiguration'), $this->sOriginalDashletXML);
+		$oField = new DesignerXMLField('xml', Dict::S('UI:DashletUnknown:Prop-XMLConfiguration'), $this->sOriginalDashletXML);
 		$oForm->AddField($oField);
 	}
 
@@ -869,7 +870,7 @@ class DashletPlainText extends Dashlet
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sText = $this->aProperties['text'];
-		$sText = utils::EscapeHtml($sText);
+		$sText = utils::EscapeHtml(Dict::S($sText));
 		$sText = str_replace(array("\r\n", "\n", "\r"), "<br/>", $sText);
 
 		$sId = 'plaintext_'.($bEditMode ? 'edit_' : '').$this->sId;
@@ -1966,7 +1967,10 @@ class DashletHeaderStatic extends Dashlet
 		$sIcon = $this->aProperties['icon'];
 
 		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
-		$sIconPath = utils::HtmlEntities($oIconSelect->MakeFileUrl($sIcon));
+		$sIconPath = '';
+		if (Utils::IsNotNullOrEmptyString($sIcon)) {
+			$sIconPath = utils::HtmlEntities($oIconSelect->MakeFileUrl($sIcon));
+		}
 
 		return DashletFactory::MakeForDashletHeaderStatic($this->oModelReflection->DictString($sTitle), $sIconPath);
 	}
@@ -1980,6 +1984,7 @@ class DashletHeaderStatic extends Dashlet
 		$oForm->AddField($oField);
 
 		$oField = $this->oModelReflection->GetIconSelectionField('icon', Dict::S('UI:DashletHeaderStatic:Prop-Icon'), $this->aProperties['icon']);
+		$oField->AddAllowedValue(['value' => '', 'label' => Dict::S('UI:DashletIcon:None'), 'icon' => '']);
 		$oForm->AddField($oField);
 	}
 
@@ -2092,7 +2097,10 @@ class DashletHeaderDynamic extends Dashlet
 		$sGroupBy = $this->aProperties['group_by'];
 
 		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
-		$sIconPath = $oIconSelect->MakeFileUrl($sIcon);
+		$sIconPath = '';
+		if (Utils::IsNotNullOrEmptyString($sIcon)) {
+			$sIconPath = $oIconSelect->MakeFileUrl($sIcon);
+		}
 
 		$aValues = $this->GetValues();
 		if (count($aValues) > 0) {
@@ -2137,7 +2145,7 @@ class DashletHeaderDynamic extends Dashlet
 		$oSet = new DBObjectSet($oFilter);
 		$iCount = $oSet->Count();
 		$oAppContext = new ApplicationContext();
-		$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($oFilter->serialize());
+		$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search'.$oAppContext->GetForLink(true).'&filter='.rawurlencode($oFilter->serialize());
 		$oSubTitle->AddHtml('<a class="summary" href="'.$sHyperlink.'">'.Dict::Format(str_replace('_', ':', $sSubtitle), $iCount).'</a>');
 
 		return $oPanel;
@@ -2222,6 +2230,7 @@ class DashletHeaderDynamic extends Dashlet
 		$oForm->AddField($oField);
 
 		$oField = $this->oModelReflection->GetIconSelectionField('icon', Dict::S('UI:DashletHeaderDynamic:Prop-Icon'), $this->aProperties['icon']);
+		$oField->AddAllowedValue(['value' => '', 'label' => Dict::S('UI:DashletIcon:None'), 'icon' => '']);
 		$oForm->AddField($oField);
 
 		$oField = new DesignerTextField('subtitle', Dict::S('UI:DashletHeaderDynamic:Prop-Subtitle'), $this->aProperties['subtitle']);

@@ -1,44 +1,32 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/*
-* @author ITOMIG GmbH <martin.raenker@itomig.de>
-
-* @copyright     Copyright (C) 2021 Combodo SARL
-* @licence	http://opensource.org/licenses/AGPL-3.0
-*		
-*/
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ * @author ITOMIG GmbH <martin.raenker@itomig.de>
+ *
+ */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:IncidentManagement' => 'Incident Management',
 	'Menu:IncidentManagement+' => '',
 	'Menu:Incident:Overview' => 'Übersicht',
 	'Menu:Incident:Overview+' => '',
 	'Menu:NewIncident' => 'Neuer Incident',
-	'Menu:NewIncident+' => '',
+	'Menu:NewIncident+' => 'Einen neuen Incident dokumentieren',
 	'Menu:SearchIncidents' => 'Nach Incidents suchen',
-	'Menu:SearchIncidents+' => '',
+	'Menu:SearchIncidents+' => 'Suche nach einem bestehendem Incident',
 	'Menu:Incident:Shortcuts' => 'Shortcuts',
 	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => 'Mir zugewiesene Incidents',
-	'Menu:Incident:MyIncidents+' => '',
+	'Menu:Incident:MyIncidents+' => 'Incidents die mir als Bearbeiter zugewiesen sind',
 	'Menu:Incident:EscalatedIncidents' => 'Eskalierte Incidents',
-	'Menu:Incident:EscalatedIncidents+' => '',
+	'Menu:Incident:EscalatedIncidents+' => 'Incidents die eskaliert sind',
 	'Menu:Incident:OpenIncidents' => 'Alle offenen Incidents',
-	'Menu:Incident:OpenIncidents+' => '',
+	'Menu:Incident:OpenIncidents+' => 'Alle offenen Incidents',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Incidents der letzten 14 Tage nach Priorität',
 	'UI-IncidentManagementOverview-Last-14-days' => 'Anzahl Incidents der letzten 14 Tage',
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Offene Incidents nach Status',
@@ -83,7 +71,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:status/Value:closed' => 'Geschlossen',
 	'Class:Incident/Attribute:status/Value:closed+' => '',
 	'Class:Incident/Attribute:impact' => 'Auswirkung',
-	'Class:Incident/Attribute:impact+' => '',
+	'Class:Incident/Attribute:impact+' => 'Die Auswirkung gibt die Schwere des Vorfalls an, oft geschätzt durch die Anzahl der Betroffenen',
 	'Class:Incident/Attribute:impact/Value:1' => 'Eine Abteilung',
 	'Class:Incident/Attribute:impact/Value:1+' => '',
 	'Class:Incident/Attribute:impact/Value:2' => 'Ein Service',
@@ -101,7 +89,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:priority/Value:4' => 'Niedrig',
 	'Class:Incident/Attribute:priority/Value:4+' => '',
 	'Class:Incident/Attribute:urgency' => 'Dringlichkeit',
-	'Class:Incident/Attribute:urgency+' => '',
+	'Class:Incident/Attribute:urgency+' => 'Wie schnell der Vorfall behandelt werden muss',
 	'Class:Incident/Attribute:urgency/Value:1' => 'Kritisch',
 	'Class:Incident/Attribute:urgency/Value:1+' => '',
 	'Class:Incident/Attribute:urgency/Value:2' => 'Hoch',
@@ -112,14 +100,18 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => '',
 	'Class:Incident/Attribute:origin' => 'Herkunft',
 	'Class:Incident/Attribute:origin+' => '',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'Persönlich',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident auf Basis einer Diskussion im direkten Gespräch',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident auf Basis einer Diskussion in einem Chat',
 	'Class:Incident/Attribute:origin/Value:mail' => 'Mail',
-	'Class:Incident/Attribute:origin/Value:mail+' => '',
+	'Class:Incident/Attribute:origin/Value:mail+' => 'Incident auf Basis einer empfangenen Mail',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'Monitoring',
-	'Class:Incident/Attribute:origin/Value:monitoring+' => '',
+	'Class:Incident/Attribute:origin/Value:monitoring+' => 'Incident auf Basis eines Monitoring-Events',
 	'Class:Incident/Attribute:origin/Value:phone' => 'Telefon',
-	'Class:Incident/Attribute:origin/Value:phone+' => '',
+	'Class:Incident/Attribute:origin/Value:phone+' => 'Incident auf Basis eines Telefonanrufs',
 	'Class:Incident/Attribute:origin/Value:portal' => 'Portal',
-	'Class:Incident/Attribute:origin/Value:portal+' => '',
+	'Class:Incident/Attribute:origin/Value:portal+' => 'Incident, der über das Portal erstellt wurde',
 	'Class:Incident/Attribute:service_id' => 'Service',
 	'Class:Incident/Attribute:service_id+' => '',
 	'Class:Incident/Attribute:service_name' => 'Service-Name',
@@ -165,7 +157,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:resolution_code' => 'Lösungs-Code',
 	'Class:Incident/Attribute:resolution_code+' => '',
 	'Class:Incident/Attribute:resolution_code/Value:assistance' => 'Unterstützung',
-	'Class:Incident/Attribute:resolution_code/Value:assistance+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:assistance+' => 'Was wurde unternommen, um den Incident zu beheben?',
 	'Class:Incident/Attribute:resolution_code/Value:bug fixed' => 'Bugfix',
 	'Class:Incident/Attribute:resolution_code/Value:bug fixed+' => '',
 	'Class:Incident/Attribute:resolution_code/Value:hardware repair' => 'Hardware-Reparatur',
@@ -197,7 +189,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:related_request_list' => 'Kind-Requests',
 	'Class:Incident/Attribute:related_request_list+' => '',
 	'Class:Incident/Attribute:child_incidents_list' => 'Abgeleitete Incidents',
-	'Class:Incident/Attribute:child_incidents_list+' => '',
+	'Class:Incident/Attribute:child_incidents_list+' => 'Alle abgeleiteten Incidents, die mit diesem Incident verknüpft sind',
 	'Class:Incident/Attribute:public_log' => 'Öffentliches Log',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'Benutzerzufriedenheit',
@@ -212,7 +204,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:user_satisfaction/Value:4+' => '',
 	'Class:Incident/Attribute:user_comment' => 'Benutzer-Kommentar',
 	'Class:Incident/Attribute:user_comment+' => '',
-	'Class:Incident/Attribute:parent_incident_id_friendlyname' => 'Parent-Incident-Friendly Name',
+	'Class:Incident/Attribute:parent_incident_id_friendlyname' => 'Parent-Incident Anzeigename',
 	'Class:Incident/Attribute:parent_incident_id_friendlyname+' => '',
 	'Class:Incident/Stimulus:ev_assign' => 'Zuweisen',
 	'Class:Incident/Stimulus:ev_assign+' => '',
@@ -233,7 +225,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Wiedereröffnen',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Kann Incident-Ticket nicht als eigenes Parent-Ticket verwenden',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
 	'Tickets:Related:OpenIncidents' => 'Offene Incidents',

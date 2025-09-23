@@ -1,12 +1,10 @@
-{# itop-portal-base/portal/templates/bricks/manage/layout-table.html.twig #}
-{# Manage brick base layout #}
-{% extends 'itop-portal-base/portal/templates/bricks/manage/layout.html.twig' %}
+{% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\ManageBrick', oBrick) %}
 
 {% block pPageBodyClass %}{{ parent() }} page_manage_brick{% endblock %}
 
 {% block pMainContentHolder %}
     {% if aGroupingTabsValues|length > 1 %}
-        <ul class="nav nav-pills grouping_tabs">
+        <ul class="ipb-manage-brick--tabs ipb-tabs nav nav-pills grouping_tabs">
             {% for aGroupingTab in aGroupingTabsValues %}
                 <li{% if sGroupingTab is defined and sGroupingTab == aGroupingTab.value %} class="active"{% endif %} data-id="{{ aGroupingTab.value }}" data-label="{{ aGroupingTab.label }}" data-item-count="{{ aGroupingTab.count }}">
                     <a href="{{ app.url_generator.generate('p_manage_brick_display_as', {'sBrickId': sBrickId, 'sDisplayMode': sDisplayMode, 'sGroupingTab': aGroupingTab.value}) }}"
@@ -23,32 +21,32 @@
     {% set iTableCount = 0 %}
     {% if aGroupingAreasData|length > 0 %}
         {% for aAreaData in aGroupingAreasData %}
-            {% if aAreaData.iItemsCount > 0 %}
-                {% set iTableCount = iTableCount + 1 %}
-                <div class="panel panel-default">
-                    <div class="panel-heading clearfix">
-                        <h3 class="panel-title" style="float: left;">{{ aAreaData.sTitle }}</h3>
-                        {% if bCanExport %}
-                            <a href="{{ app.url_generator.generate('p_manage_brick_excel_export_start', {'sBrickId': sBrickId, 'sGroupingTab': sGroupingTab, 'sGroupingArea': aAreaData.sId})|raw }}"
-                               id="btn_export_excel_for_{{ aAreaData.sId }}"
-                               data-toggle="modal" data-target="#modal-for-all">
-                                <span class="fas fa-download fa-lg" style="float: right;"
-                                  data-tooltip-content="{{ 'ExcelExporter:ExportMenu'|dict_s }}"></span>
-                            </a>
-                        {% endif %}
-                    </div>
-                    <div class="panel-body">
-                        <table id="table-{{ aAreaData.sId }}" class="object-list table table-striped table-bordered responsive" width="100%"></table>
-                    </div>
+            {% set iTableCount = iTableCount + 1 %}
+            <div class="ipb-panel ipb-manage-brick--panel panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title" style="float: left;">{{ aAreaData.sTitle }}</h3>
+                    {% if bCanExport %}
+                        <a href="{{ app.url_generator.generate('p_manage_brick_excel_export_start', {'sBrickId': sBrickId, 'sGroupingTab': sGroupingTab, 'sGroupingArea': aAreaData.sId})|raw }}"
+                           id="btn_export_excel_for_{{ aAreaData.sId }}"
+                           class="ipb-manage-brick--export-action"
+                           data-toggle="modal" data-target="#modal-for-all">
+                            <span class="ipb-manage-brick--export-action--icon fas fa-download fa-lg"
+                              data-tooltip-content="{{ 'ExcelExporter:ExportMenu'|dict_s }}"></span>
+                        </a>
+                    {% endif %}
                 </div>
-            {% endif %}
+                <div class="ipb-manage-brick--panel--body panel-body">
+                        <table id="table-{{ aAreaData.sId }}" class="ipb-manage-brick--panel--body--table object-list table table-striped responsive" width="100%"></table>
+                </div>
+            </div>
         {% endfor %}
     {% endif %}
 
     {% if iTableCount == 0 %}
-        <div class="panel panel-default">
+        <div class="ipb-panel panel panel-default">
             <div class="panel-body">
-                <h3 class="text-center">{{ 'Brick:Portal:Manage:Table:NoData'|dict_s }}</h3>
+                <div class="ipb-manage-brick--no-result--illustration ipb-svg-illustration--container">{{ source("illustrations/undraw_empty.svg") }}</div>
+                <h3 class="ipb-manage-brick--no-result--text text-center">{{ 'Brick:Portal:Manage:Table:NoData'|dict_s }}</h3>
             </div>
         </div>
     {% endif %}
@@ -160,8 +158,17 @@
 		                        return row.attributes[attribute_code].sort_value;
 							},
 	                        filter: function (attribute_code, type, row) {
-                        		return $.text($.parseHTML(row.attributes[attribute_code]['value_html']));
-	                        },
+                                // Check if the attribute and value_html exist
+                                if (!row.attributes[attribute_code] || !row.attributes[attribute_code]['value_html']) {
+                                    return '';
+                                }
+
+                                // Create a temporary div outside the DOM to filter out XSS
+                                const tempDiv = document.createElement('div');
+                                tempDiv.textContent = row.attributes[attribute_code]['value_html'];
+
+                                return tempDiv.textContent;
+                            },
 						},
                     });
                 }
@@ -272,21 +279,21 @@
                     "rowCallback": function (oRow, oData) {
                         if (oData.highlight_class !== undefined) {
                             var sHighlightClass = oData.highlight_class;
-                            var sBSHiglightClass = '';
+                            var sCSSHiglightClass = '';
 
                             // Adding classic iTop class
                             $(oRow).addClass(sHighlightClass);
-                            // Adding mapped BS class
+                            // Adding mapped ipb class
                             if (sHighlightClass === '{{ constant('HILIGHT_CLASS_CRITICAL') }}') {
-                                sBSHiglightClass = 'danger';
+                                sCSSHiglightClass = 'ipb-is-danger';
                             }
                             else if (sHighlightClass === '{{ constant('HILIGHT_CLASS_WARNING') }}') {
-                                sBSHiglightClass = 'warning';
+                                sCSSHiglightClass = 'ipb-is-warning';
                             }
                             else if (sHighlightClass === '{{ constant('HILIGHT_CLASS_OK') }}') {
-                                sBSHiglightClass = 'success';
+                                sCSSHiglightClass = 'ipb-is-success';
                             }
-                            $(oRow).addClass(sBSHiglightClass);
+                            $(oRow).addClass(sCSSHiglightClass);
                         }
                     },
                     "drawCallback": function (settings) {

@@ -1,4 +1,7 @@
 <?php
+
+use Combodo\iTop\Application\WebPage\NiceWebPage;
+
 require_once(APPROOT."/application/user.preferences.class.inc.php");
 
 class HubConnectorPage extends NiceWebPage
@@ -8,13 +11,13 @@ class HubConnectorPage extends NiceWebPage
 		parent::__construct($sTitle);
 
 		$this->no_cache();
-		$this->add_xframe_options();
+		$this->add_http_headers();
 
 		$sImagesDir = utils::GetAbsoluteUrlAppRoot().'images';
 		$sModuleImagesDir = utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/images';
 
 		$sUserPrefs = appUserPreferences::GetAsJSON();
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
+		$this->LinkScriptFromAppRoot('js/utils.js');
 		$this->add_script(<<<JS
 		var oUserPreferences = $sUserPrefs;
 JS

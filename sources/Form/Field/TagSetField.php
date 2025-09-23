@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -24,7 +24,7 @@ namespace Combodo\iTop\Form\Field;
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class TagSetField extends Field
+class TagSetField extends AbstractSimpleField
 {
 
 }

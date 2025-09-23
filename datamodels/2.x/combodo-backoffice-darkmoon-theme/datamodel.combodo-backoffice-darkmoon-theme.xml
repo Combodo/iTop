@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <branding>
     <themes>
       <theme id="darkmoon" _delta="define">
@@ -12,6 +12,7 @@
         <stylesheets>
           <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
           <stylesheet id="editor">combodo-backoffice-darkmoon-theme/scss/editor.scss</stylesheet>
+          <stylesheet id="ace_editor">combodo-backoffice-darkmoon-theme/scss/ace_editor.scss</stylesheet>
         </stylesheets>
         <precompiled_stylesheet>combodo-backoffice-darkmoon-theme/precompiled-themes/main.css</precompiled_stylesheet>
       </theme>

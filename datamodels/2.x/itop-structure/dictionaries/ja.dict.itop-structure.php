@@ -1,35 +1,15 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @author      Benjamin Planque <benjamin.planque@combodo.com>
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-//
-// Class: Organization
-//
+/**
+ * @author Benjamin Planque <benjamin.planque@combodo.com>
+ *
+ */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Organization' => '組織',
 	'Class:Organization+' => '',
@@ -87,9 +67,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Location/Attribute:country' => '国',
 	'Class:Location/Attribute:country+' => '',
 	'Class:Location/Attribute:physicaldevice_list' => 'デバイス',
-	'Class:Location/Attribute:physicaldevice_list+' => '',
+	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
 	'Class:Location/Attribute:person_list' => '連絡先',
-	'Class:Location/Attribute:person_list+' => '',
+	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
 ));
 
 //
@@ -99,6 +79,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Contact' => '連絡先',
 	'Class:Contact+' => '',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => '名前',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => '状態',
@@ -124,7 +105,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Contact/Attribute:function' => '機能',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => 'CI',
-	'Class:Contact/Attribute:cis_list+' => '',
+	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
 	'Class:Contact/Attribute:finalclass' => '連絡先タイプ',
 	'Class:Contact/Attribute:finalclass+' => '',
 ));
@@ -136,6 +117,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Person' => '人物',
 	'Class:Person+' => '',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => '姓',
 	'Class:Person/Attribute:name+' => '~~',
 	'Class:Person/Attribute:first_name' => 'ファーストネーム',
@@ -153,9 +135,11 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Person/Attribute:manager_name' => 'マネージャ名',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => 'チーム',
-	'Class:Person/Attribute:team_list+' => '',
+	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to~~',
 	'Class:Person/Attribute:tickets_list' => 'チケット',
-	'Class:Person/Attribute:tickets_list+' => '',
+	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
+	'Class:Person/Attribute:user_list' => 'Users~~',
+	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'マネージャーフレンドリ名',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Picture~~',
@@ -164,6 +148,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
+	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
 ));
 
 //
@@ -173,10 +158,11 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Team' => 'チーム',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'メンバー',
-	'Class:Team/Attribute:persons_list+' => '',
+	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
 	'Class:Team/Attribute:tickets_list' => 'チケット',
-	'Class:Team/Attribute:tickets_list+' => '',
+	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
 ));
 
 //
@@ -186,6 +172,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Document' => '文書',
 	'Class:Document+' => '',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => '名前',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => '組織',
@@ -209,7 +196,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Document/Attribute:status/Value:published' => '公開済み',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CI',
-	'Class:Document/Attribute:cis_list+' => '',
+	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
 	'Class:Document/Attribute:finalclass' => '文書タイプ',
 	'Class:Document/Attribute:finalclass+' => '',
 ));
@@ -285,6 +272,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkPersonToTeam' => 'リンク 人物/チーム',
 	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
+	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'チーム',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'チーム名',
@@ -347,7 +336,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Person:info' => '情報',
-	'UserLocal:info' => 'General information~~',
+	'User:info' => '情報',
+	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => '通知',
 ));

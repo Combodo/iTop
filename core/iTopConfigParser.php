@@ -37,7 +37,7 @@ class iTopConfigParser
 	 */
 	public function __construct($sConfig)
 	{
-		$oParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+		$oParser = (new ParserFactory())->createForNewestSupportedVersion();
 
 		$this->aVarsMap = array(
 			'MySettings' => array(),

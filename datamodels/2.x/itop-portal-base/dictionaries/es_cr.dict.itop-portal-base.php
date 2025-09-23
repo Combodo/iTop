@@ -2,25 +2,11 @@
 /**
  * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
-// Portal
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Page:DefaultTitle' => '%1$s - Portal de Usuario',
 	'Page:PleaseWait' => 'Por favor espere...',
@@ -108,6 +94,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Expandir todo',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Desplegar todo',
 	'Brick:Portal:Browse:Filter:NoData' => 'Sin elementos',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Volver',
 ));
 
 // ManageBrick brick
@@ -132,14 +119,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Object:Name' => 'Objecto',
 	'Brick:Portal:Object:Form:Create:Title' => 'Nuevo %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Actualizando %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Actualizando %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Por favor, proporcione la siguiente información:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Guardado',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s guardado',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Selección %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selección %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Selección %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selección %1$s',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Copiar liga al objeto',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copiado'
 ));
@@ -152,7 +139,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 // Filter brick
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Brick:Portal:Filter:Name' => 'Prefiltre un bloquek',
+	'Brick:Portal:Filter:Name' => 'Prefiltrar bloque',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'Ej.:. Conectar a WiFi',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Buscar',
 ));

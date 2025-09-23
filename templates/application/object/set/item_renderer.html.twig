@@ -1,0 +1,15 @@
+<div class="friendlyname">
+
+    {# Obsolescence #}
+    <span class="object-ref-icon text_decoration" data-template-condition="obsolescence_flag">
+        <span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>
+    </span>
+
+    {# Friendly name #}
+    <span data-template-text="friendlyname"></span>
+
+    {# Additional content #}
+    {% block additional_content %}
+    {% endblock %}
+
+</div>

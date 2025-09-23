@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,9 +8,11 @@ use Combodo\iTop\Application\Search\AjaxSearchException;
 use Combodo\iTop\Application\Search\CriterionParser;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSectionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 try
 {
@@ -18,10 +20,7 @@ try
 	$oKPI->ComputeAndReport('Data model loaded');
 	$oKPI = new ExecutionKPI();
 
-	if (LoginWebPage::EXIT_CODE_OK != LoginWebPage::DoLoginEx('backoffice', false, LoginWebPage::EXIT_RETURN))
-	{
-		throw new SecurityException('You must be logged in');
-	}
+	LoginWebPage::DoLogin();
 
 	$sParams = utils::ReadParam('params', '', false, 'raw_data');
 	if (!$sParams)
@@ -29,6 +28,7 @@ try
 		throw new AjaxSearchException("Invalid query (empty filter)", 400);
 	}
 
+	$oSearchContext = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
 	$oPage = new AjaxPage("");
 	$oPage->SetContentType('text/html');
 
@@ -54,7 +54,7 @@ try
 
     if (array_key_exists('table_inner_id', $aListParams))
     {
-        $sListId = $aListParams['table_inner_id'];
+        $sListId = utils::Sanitize($aListParams['table_inner_id'], '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
     }
 
 	if (array_key_exists('json', $aListParams))

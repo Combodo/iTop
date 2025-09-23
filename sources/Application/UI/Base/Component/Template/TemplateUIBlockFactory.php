@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2022 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Template;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 
 /**
  * Class TemplateUIBlockFactory
@@ -27,7 +28,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * @api
  *
  * @author Benjamin Dalsass <benjamin.dalsass@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Template
+ * @package UIBlockAPI
  * @since 3.1.0
  * @link
  */
@@ -46,5 +47,18 @@ class TemplateUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeStandard(string $sId)
 	{
 		return new Template($sId);
+	}
+
+	/**
+	 * Make a Template component with a block inside.
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Template\Template
+	 */
+	public static function MakeForBlock(string $sId, UIContentBlock $oContentBlock)
+	{
+		$oBlock = TemplateUIBlockFactory::MakeStandard($sId);
+		$oBlock->AddSubBlock($oContentBlock);
+
+		return $oBlock;
 	}
 }

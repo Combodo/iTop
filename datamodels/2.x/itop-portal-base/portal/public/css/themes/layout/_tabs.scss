@@ -1,0 +1,51 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-tabs--tab--border-color: $ipb-color-grey-400 !default;
+$ipb-tabs--tab--border: solid 1px $ipb-tabs--tab--border-color !default;
+
+$ipb-tabs--tab--background-color: $ipb-color-grey-100 !default;
+$ipb-tabs--tab--color: $ipb-color-grey-900 !default;
+$ipb-tabs--tab--badge--background-color: transparent !default;
+$ipb-tabs--tab--badge--color: $ipb-color-grey-900 !default;
+$ipb-tabs--tab--hover--background-color: $ipb-color-grey-300 !default;
+$ipb-tabs--tab--hover--color: $ipb-color-grey-900 !default;
+$ipb-tabs--tab--badge--hover--background-color: $ipb-tabs--tab--hover--background-color !default;
+$ipb-tabs--tab--active--background-color: $ipb-color-white-100 !default;
+$ipb-tabs--tab--active--badge--background-color: $ipb-color-grey-200 !default;
+$ipb-tabs--tab--active--indicator--background-color: $ipb-color-primary-600 !default;
+
+.ipb-tabs.nav-pills > li{
+  > a {
+    background-color: $ipb-tabs--tab--background-color;
+    color: $ipb-tabs--tab--color;
+
+    > .badge {
+      background-color: $ipb-tabs--tab--badge--background-color;
+      color: $ipb-tabs--tab--badge--color;
+    }
+
+    border: $ipb-tabs--tab--border;
+    border-bottom: none;
+  }
+
+  &.active > a {
+    background-color: $ipb-tabs--tab--active--background-color;
+    &:before {
+      background-color: $ipb-tabs--tab--active--indicator--background-color;
+    }
+    > .badge {
+      background-color: $ipb-tabs--tab--active--badge--background-color;
+    }
+  }
+  &:hover > a, & > a:focus {
+    background-color: $ipb-tabs--tab--hover--background-color;
+    color:  $ipb-tabs--tab--hover--color;
+    > .badge {
+      background-color: $ipb-tabs--tab--badge--hover--background-color;
+    }
+  }
+}

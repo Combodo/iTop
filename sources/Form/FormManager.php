@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,6 +21,7 @@
 namespace Combodo\iTop\Form;
 
 use Combodo\iTop\Renderer\FormRenderer;
+use CoreException;
 
 /**
  * Description of formmanager
@@ -59,6 +60,12 @@ abstract class FormManager
 		$oFormManager = new static();
 
 		$sFormRendererClass = $aJson['formrenderer_class'];
+        // N°7455 - Ensure form renderer class extends FormRenderer
+        if (false === is_a($sFormRendererClass, FormRenderer::class, true))
+        {
+            throw new CoreException('Form renderer class must extend '.FormRenderer::class);
+        }
+
 		/** @var \Combodo\iTop\Renderer\FormRenderer $oFormRenderer */
 		$oFormRenderer = new $sFormRendererClass();
 		$oFormRenderer->SetEndpoint($aJson['formrenderer_endpoint']);

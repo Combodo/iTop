@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -16,6 +16,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
+use Combodo\iTop\Application\WebPage\DownloadPage;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'application/utils.inc.php');
@@ -34,6 +36,7 @@ try
 	require_once(APPROOT.'/application/startup.inc.php');
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+	IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 	$oPage = new DownloadPage("");
 
@@ -61,7 +64,7 @@ try
 					$oPage->set_cache($iCacheSec);
 					// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 					// so we're resetting its value ! (see N°3416)
-					$oPage->add_xframe_options('');
+					$oPage->add_http_headers('');
 				}
 			}
 			break;
@@ -80,7 +83,7 @@ try
 
 				// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 				// so we're resetting its value ! (see N°3416)
-				$oPage->add_xframe_options('');
+				$oPage->add_http_headers('');
 
 				$oPage->add_header("Last-Modified: Wed, 15 Jun 2016 13:21:15 GMT"); // An arbitrary date in the past is ok
 			}
@@ -93,7 +96,7 @@ try
 
 			// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 			// so we're resetting its value ! (see N°3416)
-			$oPage->add_xframe_options('');
+			$oPage->add_http_headers('');
 
 			$oPage->add(file_get_contents(Utils::GetCachePath().$sSignature.'.js'));
 			break;

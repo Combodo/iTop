@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
+// Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -15,11 +15,13 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Bulk export: HTML export
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -37,7 +39,7 @@ class HTMLBulkExport extends TabularBulkExport
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sPartId
 	 *
 	 * @return UIContentBlock
@@ -127,6 +129,7 @@ class HTMLBulkExport extends TabularBulkExport
 		$this->OptimizeColumnLoad($oSet);
 
 		$sFirstAlias = $this->oSearch->GetClassAlias();
+		$sClass = $this->oSearch->GetClass();
 
 		$iCount = 0;
 		$sData = '';
@@ -139,7 +142,7 @@ class HTMLBulkExport extends TabularBulkExport
 			$sHilightClass = '';
 			if ($oMainObj)
 			{
-				$sHilightClass = $aRow[$sFirstAlias]->GetHilightClass();
+				$sHilightClass = MetaModel::GetHilightClass($sClass, $aRow[$sFirstAlias]);
 			}
 			if ($sHilightClass != '')
 			{

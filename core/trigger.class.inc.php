@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -16,6 +16,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 
 /**
  * A user defined trigger, to customize the application
@@ -33,26 +35,31 @@ abstract class Trigger extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "description",
-			"state_attcode" => "",
-			"reconc_keys" => array('description'),
-			"db_table" => "priv_trigger",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "realclass",
-			'style' =>  new ormStyle(null, null, null, null, null, '../images/icons/icons8-conflict.svg'),
+			"category"                   => "grant_by_profile,core/cmdb",
+			"key_type"                   => "autoincrement",
+			"name_attcode"               => "description",
+			"complementary_name_attcode" => ['finalclass', 'complement'],
+			"state_attcode"              => "",
+			"reconc_keys"                => ['description'],
+			"db_table"                   => "priv_trigger",
+			"db_key_field"               => "id",
+			"db_finalclass_field"        => "realclass",
+			'style'                      => new ormStyle(null, null, null, null, null, '../images/icons/icons8-conflict.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("action_list", array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "trigger_id", "ext_key_to_remote" => "action_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("action_list",
+			array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "trigger_id", "ext_key_to_remote" => "action_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array())));
 		$aTags = ContextTag::GetTags();
-		MetaModel::Init_AddAttribute( new AttributeEnumSet("context", array("allowed_values" => null, "possible_values" => new ValueSetEnumPadded($aTags), "sql" => "context", "depends_on" => array(), "is_null_allowed" => true, "max_items" => 12)));
+		MetaModel::Init_AddAttribute(new AttributeEnumSet("context", array("allowed_values" => null, "possible_values" => new ValueSetEnumPadded($aTags, true), "sql" => "context", "depends_on" => array(), "is_null_allowed" => true, "max_items" => 12)));
+		// "complement" is a computed field, fed by Trigger sub-classes, in general in ComputeValues method, for eg. the TriggerOnObject fed it with target_class info
+		MetaModel::Init_AddAttribute(new AttributeString("complement", array("allowed_values" => null, "sql" => "complement", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("subscription_policy", array("allowed_values" => new ValueSetEnum(Combodo\iTop\Core\Trigger\Enum\SubscriptionPolicy::cases()),  "sql" => "subscription_policy", "default_value" => \Combodo\iTop\Core\Trigger\Enum\SubscriptionPolicy::AllowNoChannel->value, "is_null_allowed" => false, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('finalclass', 'description', 'context', 'action_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('finalclass', 'description', 'context', 'subscription_policy', 'action_list', 'complement')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'complement')); // Attributes to be displayed for a list
 		// Search criteria
 		//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
@@ -107,17 +114,31 @@ abstract class Trigger extends cmdbAbstractObject
 			return;
 		}
 
+		$aContextArgs['trigger->object()'] = $this;
+
 		// Find the related actions
 		$oLinkedActions = $this->Get('action_list');
-		while ($oLink = $oLinkedActions->Fetch())
-		{
-			/** @var \DBObject $oLink */
-			$iActionId = $oLink->Get('action_id');
-			/** @var \Action $oAction */
-			$oAction = MetaModel::GetObject('Action', $iActionId);
-			if ($oAction->IsActive())
-			{
-				$oAction->DoExecute($this, $aContextArgs);
+
+		// Order actions as expected
+		$aActionListOrdered = [];
+		while ($oLink = $oLinkedActions->Fetch()) {
+			$aActionListOrdered[(int) $oLink->Get('order')][] = $oLink;
+		}
+		ksort($aActionListOrdered);
+
+		// Execute actions
+		foreach ($aActionListOrdered as $aActionSubList) {
+			foreach ($aActionSubList as $oLink) /** @var \DBObject $oLink */ {
+				/** @var \DBObject $oLink */
+				$iActionId = $oLink->Get('action_id');
+				/** @var \Action $oAction */
+				$oAction = MetaModel::GetObject('Action', $iActionId);
+				if ($oAction->IsActive()) {
+					$oKPI = new ExecutionKPI();
+					$aContextArgs['action->object()'] = $oAction;
+					$oAction->DoExecute($this, $aContextArgs);
+					$oKPI->ComputeStatsForExtension($oAction, 'DoExecute');
+				}
 			}
 		}
 	}
@@ -151,22 +172,24 @@ abstract class TriggerOnObject extends Trigger
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "description",
-			"state_attcode" => "",
-			"reconc_keys" => array('description'),
-			"db_table" => "priv_trigger_onobject",
-			"db_key_field" => "id",
+			"category"            => "grant_by_profile,core/cmdb",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "description",
+			"complementary_name_attcode" => ['finalclass', 'complement'],
+			"state_attcode"       => "",
+			"reconc_keys" => ['description'],
+			"db_table"            => "priv_trigger_onobject",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeClass("target_class", array("class_category" => "bizmodel", "more_values" => "User,UserExternal,UserInternal,UserLDAP,UserLocal", "sql" => "target_class", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("target_class",
+			array("class_category" => "bizmodel", "more_values" => "User,UserExternal,UserInternal,UserLDAP,UserLocal", "sql" => "target_class", "default_value" => null, "is_null_allowed" => false, "depends_on" => array(), "class_exclusion_list" => "Attachment")));
 		MetaModel::Init_AddAttribute(new AttributeOQL("filter", array("allowed_values" => null, "sql" => "filter", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'description')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('default_search', array('description', 'target_class'));  // Default criteria of the search banner
@@ -180,7 +203,7 @@ abstract class TriggerOnObject extends Trigger
 	{
 		parent::DoCheckToWrite();
 
-		$sFilter = trim($this->Get('filter'));
+		$sFilter = trim($this->Get('filter') ?? '');
 		if (strlen($sFilter) > 0)
 		{
 			try
@@ -197,6 +220,21 @@ abstract class TriggerOnObject extends Trigger
 			}
 		}
 	}
+
+	/**
+	 * @throws \CoreException
+	 */
+	public function ComputeValues()
+	{
+		parent::ComputeValues();
+
+		// Complementary name of a Trigger is manually built
+		//   - the Trigger finalclass code not translated
+		//   - an hardcoded text in english
+		//   - the target class code not translated for TriggerOnObject subclasses
+		$this->Set('complement', 'class restriction: '.$this->Get('target_class'));
+	}
+
 
 	/**
 	 * Check whether the given object is in the scope of this trigger
@@ -235,6 +273,68 @@ abstract class TriggerOnObject extends Trigger
 		}
 	}
 
+    /**
+     * if the target class is Attachment, then the trigger is read-only
+     * @param $sAttCode
+     * @param $aReasons
+     * @param $sTargetState
+     * @return int
+     * @throws ArchivedObjectException
+     * @throws CoreException
+     */
+    public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState='')
+	{
+       // Force the computed field to be read-only, preventing it to be written
+       if ($this->Get('target_class') == 'Attachment' ) {
+           return OPT_ATT_READONLY;
+       }
+       return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
+
+
+    public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
+    {
+        $aHeaderBlocks = parent::DisplayBareHeader($oPage, $bEditMode);
+        if ($this->Get('target_class') == 'Attachment' ) {
+            $oPage->AddUiBlock(AlertUIBlockFactory::MakeForWarning('', Dict::S('Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage')));
+            $oPage->add_ready_script("$('#UIMenuModify').hide();");
+        }
+
+        return $aHeaderBlocks;
+    }
+
+	/**
+	 * Activate trigger based on attribute list given instead of changed attributes
+	 *
+	 * @param array $aContextArgs
+	 * @param array|null $aAttributes if null default to changed attributes
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @since 3.1.1 3.2.0 N°6228
+	 */
+	public function DoActivateForSpecificAttributes(array $aContextArgs, ?array $aAttributes)
+	{
+		if (isset($aContextArgs['this->object()']))
+		{
+			/** @var \DBObject $oObject */
+			$oObject = $aContextArgs['this->object()'];
+			if (is_null($aAttributes)) {
+				$aChanges = $oObject->ListPreviousValuesForUpdatedAttributes();
+			} else {
+				$aChanges = array_fill_keys($aAttributes, true);
+			}
+			if (false === $this->IsTargetObject($oObject->GetKey(), $aChanges)) {
+				return;
+			}
+		}
+		parent::DoActivate($aContextArgs);
+	}
+
 	/**
 	 * @param $iObjectId
 	 * @param array $aChanges
@@ -249,21 +349,48 @@ abstract class TriggerOnObject extends Trigger
 	 */
 	public function IsTargetObject($iObjectId, $aChanges = array())
 	{
-		$sFilter = trim($this->Get('filter'));
-		if (strlen($sFilter) > 0)
-		{
+		$sFilter = trim($this->Get('filter') ?? '');
+		if (strlen($sFilter) > 0) {
 			$oSearch = DBObjectSearch::FromOQL($sFilter);
 			$oSearch->AddCondition('id', $iObjectId, '=');
 			$oSearch->AllowAllData();
 			$oSet = new DBObjectSet($oSearch);
 			$bRet = ($oSet->Count() > 0);
-		}
-		else
-		{
+		} else {
 			$bRet = true;
 		}
 
 		return $bRet;
+	}
+
+	/**
+	 * @param Exception $oException
+	 * @param \DBObject $oObject
+	 *
+	 * @return void
+	 *
+	 * @uses \IssueLog::Error()
+	 *
+	 * @since 2.7.9 3.0.3 3.1.0 N°5893
+	 */
+	public function LogException($oException, $oObject)
+	{
+		$sObjectKey = $oObject->GetKey(); // if object wasn't persisted yet, then we'll have a negative value
+
+		$aContext = [
+			'exception.class'      => get_class($oException),
+			'exception.message'    => $oException->getMessage(),
+			'trigger.class'        => get_class($this),
+			'trigger.id'           => $this->GetKey(),
+			'trigger.friendlyname' => $this->GetRawName(),
+			'object.class'         => get_class($oObject),
+			'object.id'            => $sObjectKey,
+			'object.friendlyname'  => $oObject->GetRawName(),
+			'current_user'         => UserRights::GetUser(),
+			'exception.stack'      => $oException->getTraceAsString(),
+		];
+
+		IssueLog::Error('A trigger did throw an exception', null, $aContext);
 	}
 }
 
@@ -282,8 +409,9 @@ class TriggerOnPortalUpdate extends TriggerOnObject
 			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
+			"complementary_name_attcode" => ['finalclass', 'complement'],
 			"state_attcode" => "",
-			"reconc_keys" => array('description'),
+			"reconc_keys" => ['description'],
 			"db_table" => "priv_trigger_onportalupdate",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -292,7 +420,7 @@ class TriggerOnPortalUpdate extends TriggerOnObject
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'description')); // Attributes to be displayed for a list
 		// Search criteria
 	}
@@ -314,8 +442,9 @@ abstract class TriggerOnStateChange extends TriggerOnObject
 			"category" => "grant_by_profile,core/cmdb",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
+			"complementary_name_attcode" => ['finalclass', 'complement'],
 			"state_attcode" => "",
-			"reconc_keys" => array('description'),
+			"reconc_keys" => ['description'],
 			"db_table" => "priv_trigger_onstatechange",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -325,7 +454,7 @@ abstract class TriggerOnStateChange extends TriggerOnObject
 		MetaModel::Init_AddAttribute(new AttributeClassState("state", array("class_field" => 'target_class', "allowed_values" => null, "sql" => "state", "default_value" => null, "is_null_allowed" => false, "depends_on" => array('target_class'))));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'state', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'state', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'state')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class', 'state')); // Criteria of the std search form
@@ -348,8 +477,9 @@ class TriggerOnStateEnter extends TriggerOnStateChange
 			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
+			"complementary_name_attcode" => ['finalclass', 'complement'],
 			"state_attcode" => "",
-			"reconc_keys" => array('description'),
+			"reconc_keys" => ['description'],
 			"db_table" => "priv_trigger_onstateenter",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -358,7 +488,7 @@ class TriggerOnStateEnter extends TriggerOnStateChange
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'state', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'state', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('target_class', 'state')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class', 'state')); // Criteria of the std search form
@@ -381,8 +511,9 @@ class TriggerOnStateLeave extends TriggerOnStateChange
 			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
+			"complementary_name_attcode" => ['finalclass', 'complement'],
 			"state_attcode" => "",
-			"reconc_keys" => array('description'),
+			"reconc_keys" => ['description'],
 			"db_table" => "priv_trigger_onstateleave",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -391,7 +522,7 @@ class TriggerOnStateLeave extends TriggerOnStateChange
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'state', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'state', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('target_class', 'state')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class', 'state')); // Criteria of the std search form
@@ -414,8 +545,9 @@ class TriggerOnObjectCreate extends TriggerOnObject
 			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
+			"complementary_name_attcode" => ['finalclass', 'complement'],
 			"state_attcode" => "",
-			"reconc_keys" => array('description'),
+			"reconc_keys" => ['description'],
 			"db_table" => "priv_trigger_onobjcreate",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -424,12 +556,13 @@ class TriggerOnObjectCreate extends TriggerOnObject
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
 		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
+
 }
 
 /**
@@ -447,8 +580,9 @@ class TriggerOnObjectDelete extends TriggerOnObject
 			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
+			"complementary_name_attcode" => ['finalclass', 'complement'],
 			"state_attcode" => "",
-			"reconc_keys" => array('description'),
+			"reconc_keys" => ['description'],
 			"db_table" => "priv_trigger_onobjdelete",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -457,7 +591,7 @@ class TriggerOnObjectDelete extends TriggerOnObject
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
@@ -481,8 +615,9 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
+			"complementary_name_attcode" => ['finalclass', 'complement'],
 			"state_attcode" => "",
-			"reconc_keys" => array('description'),
+			"reconc_keys" => ['description'],
 			"db_table" => "priv_trigger_onobjupdate",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -492,7 +627,7 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 		MetaModel::Init_AddAttribute(new AttributeClassAttCodeSet('target_attcodes', array("allowed_values" => null, "class_field" => "target_class", "sql" => "target_attcodes", "default_value" => null, "is_null_allowed" => true, "max_items" => 20, "min_items" => 0, "attribute_definition_exclusion_list" => "AttributeDashboard,AttributeExternalField,AttributeFinalClass,AttributeFriendlyName,AttributeObsolescenceDate,AttributeObsolescenceFlag,AttributeSubItem", "attribute_definition_list" => null, "depends_on" => array('target_class'))));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'target_attcodes', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'target_attcodes', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
@@ -576,8 +711,9 @@ class TriggerOnObjectMention extends TriggerOnObject
 			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
+			"complementary_name_attcode" => ['finalclass', 'complement'],
 			"state_attcode" => "",
-			"reconc_keys" => array('description'),
+			"reconc_keys" => ['description'],
 			"db_table" => "priv_trigger_onobjmention",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -588,7 +724,7 @@ class TriggerOnObjectMention extends TriggerOnObject
 		MetaModel::Init_AddAttribute(new AttributeOQL("mentioned_filter", array("allowed_values" => null, "sql" => "mentioned_filter", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'mentioned_filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'mentioned_filter', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
@@ -638,6 +774,38 @@ class TriggerOnObjectMention extends TriggerOnObject
 }
 
 /**
+ * Class TriggerOnAttributeBlobDownload
+ *
+ * @since 3.1.0
+ */
+class TriggerOnAttributeBlobDownload extends TriggerOnObject
+{
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "grant_by_profile,core/cmdb,application",
+			"key_type" => "autoincrement",
+			"name_attcode" => "description",
+			"complementary_name_attcode" => ['finalclass', 'complement'],
+			"state_attcode" => "",
+			"reconc_keys" => ['description'],
+			"db_table" => "priv_trigger_onattblobdownload",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+	}
+}
+
+/**
  * Class lnkTriggerAction
  */
 class lnkTriggerAction extends cmdbAbstractObject
@@ -650,15 +818,26 @@ class lnkTriggerAction extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb,application",
-			"key_type" => "autoincrement",
-			"name_attcode" => "",
-			"state_attcode" => "",
-			"reconc_keys" => array('action_id', 'trigger_id'),
-			"db_table" => "priv_link_action_trigger",
-			"db_key_field" => "link_id",
+			"category"            => "grant_by_profile,core/cmdb,application",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "",
+			"state_attcode"       => "",
+			"reconc_keys"         => array('action_id', 'trigger_id'),
+			"db_table"            => "priv_link_action_trigger",
+			"db_key_field"        => "link_id",
 			"db_finalclass_field" => "",
-			"is_link" => true,
+			"is_link"             => true,
+			'uniqueness_rules'    => array(
+				'no_duplicate' => array(
+					'attributes'  => array(
+						0 => 'action_id',
+						1 => 'trigger_id',
+					),
+					'filter'      => '',
+					'disabled'    => false,
+					'is_blocking' => true,
+				),
+			),
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("action_id", array("targetclass" => "Action", "jointype" => '', "allowed_values" => null, "sql" => "action_id", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array())));
@@ -692,8 +871,9 @@ class TriggerOnThresholdReached extends TriggerOnObject
 			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
+			"complementary_name_attcode" => ['finalclass', 'complement'],
 			"state_attcode" => "",
-			"reconc_keys" => array('description'),
+			"reconc_keys" => ['description'],
 			"db_table" => "priv_trigger_threshold",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -705,7 +885,7 @@ class TriggerOnThresholdReached extends TriggerOnObject
 		MetaModel::Init_AddAttribute(new AttributeString("threshold_index", array("allowed_values" => null, "sql" => "threshold_index", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'stop_watch_code', 'threshold_index', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'stop_watch_code', 'threshold_index', 'filter', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('target_class', 'threshold_index', 'threshold_index')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form

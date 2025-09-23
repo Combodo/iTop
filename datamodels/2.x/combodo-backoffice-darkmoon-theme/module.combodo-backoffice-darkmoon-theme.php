@@ -5,7 +5,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'combodo-backoffice-darkmoon-theme/3.1.0',
+	'combodo-backoffice-darkmoon-theme/3.3.0',
 	array(
 		// Identification
 		//
@@ -23,7 +23,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.combodo-backoffice-darkmoon-theme.php'
 		),
 		'webservice' => array(
 			

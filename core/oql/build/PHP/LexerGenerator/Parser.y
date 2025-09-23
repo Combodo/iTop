@@ -187,7 +187,7 @@ require_once 'PHP/LexerGenerator/Exception.php';
                     $match = false;
                     foreach ($yy_yymore_patterns[' . $this->token . '] as $index => $rule) {
                         if (preg_match(\'/\' . $rule . \'/' . $this->patternFlags . '\',
-                                ' . $this->input . ', $yymatches, null, ' . $this->counter . ')) {
+                                ' . $this->input . ', $yymatches, 0, ' . $this->counter . ')) {
                             $yymatches = array_filter($yymatches, \'strlen\'); // remove empty sub-patterns
                             if ($match) {
                                 if (strlen($yymatches[0]) > strlen($match[0][0])) {
@@ -259,7 +259,7 @@ require_once 'PHP/LexerGenerator/Exception.php';
             $pattern . '\';' . "\n");
         fwrite($this->out, '
         do {
-            if (preg_match($yy_global_pattern,' . $this->input . ', $yymatches, null, ' .
+            if (preg_match($yy_global_pattern,' . $this->input . ', $yymatches, 0, ' .
              $this->counter .
                     ')) {
                 $yysubmatches = $yymatches;
@@ -317,7 +317,7 @@ require_once 'PHP/LexerGenerator/Exception.php';
                         }
                         $yysubmatches = array();
                         if (preg_match(\'/\' . $yy_yymore_patterns[' . $this->token . '][1] . \'/' . $this->patternFlags . '\',
-                              ' . $this->input . ', $yymatches, null, ' . $this->counter .')) {
+                              ' . $this->input . ', $yymatches, 0, ' . $this->counter .')) {
                             $yysubmatches = $yymatches;
                             $yymatches = array_filter($yymatches, \'strlen\'); // remove empty sub-patterns
                             next($yymatches); // skip global match

@@ -1,80 +1,51 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:DeletedObjectLabel' => '%1s (eliminado)',
-	'Core:DeletedObjectTip'   => 'Elemento ha sido Eliminado en %1$s (%2$s)',
-
+	'Core:DeletedObjectTip' => 'Elemento ha sido Eliminado en %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => 'Elemento No Encontrado (Clase: %1$s, Identificador: %2$d)',
-	'Core:UnknownObjectTip'   => 'El Elemento no pudo ser encontrado.  Pudo haber sido eliminado hace tiempo y purgado de la Bitácora.',
-
+	'Core:UnknownObjectTip' => 'El Elemento no pudo ser encontrado.  Pudo haber sido eliminado hace tiempo y purgado de la Bitácora.',
 	'Core:UniquenessDefaultError' => 'Regla de unicidad \'%1$s\' en error',
-	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
-	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
-
-	'Core:AttributeLinkedSet'  => 'Arreglo de objetos',
+	'Core:CheckConsistencyError' => 'No se siguieron las reglas de consistencia: %1$s',
+	'Core:CheckValueError' => 'Valor inesperado para el atributo \'%1$s\' (%2$s): %3$s',
+	'Core:AttributeLinkedSet' => 'Arreglo de objetos',
 	'Core:AttributeLinkedSet+' => 'Cualquier tipo de objetos [subclass] de la misma clase',
-
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicados en el campo \'%1$s\': %2$s',
-
-	'Core:AttributeDashboard'  => 'Panel de Control',
+	'Core:AttributeDashboard' => 'Panel de Control',
 	'Core:AttributeDashboard+' => 'Panel de control y supervisión',
-
-	'Core:AttributePhoneNumber'  => 'Número telefónico',
+	'Core:AttributePhoneNumber' => 'Número telefónico',
 	'Core:AttributePhoneNumber+' => '',
-
 	'Core:AttributeObsolescenceDate' => 'Fecha de Obsolescencia',
 	'Core:AttributeObsolescenceDate+' => '',
-
 	'Core:AttributeTagSet' => 'Lista de etiquetas',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'Click to agregar',
+	'Core:Placeholder:CannotBeResolved' => '(%1$s: no se puede resolver)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s de %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s de clases hijas)',
-
 	'Core:AttributeCaseLog' => 'Bitácora',
 	'Core:AttributeCaseLog+' => '',
-
 	'Core:AttributeMetaEnum' => 'Enumeración Calculada',
 	'Core:AttributeMetaEnum+' => '',
-
 	'Core:AttributeLinkedSetIndirect' => 'Arreglo de objetos (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Cualquier tipo de objetos [subclass] de la misma clase',
-
 	'Core:AttributeInteger' => 'Entero',
 	'Core:AttributeInteger+' => 'Valor numérico (puede ser negativo)',
-
 	'Core:AttributeDecimal' => 'Decimal',
 	'Core:AttributeDecimal+' => 'Valor decimal (puede ser negativo)',
-
 	'Core:AttributeBoolean' => 'Booleano',
 	'Core:AttributeBoolean+' => 'Booleano',
 	'Core:AttributeBoolean/Value:null' => 'Nulo',
 	'Core:AttributeBoolean/Value:yes' => 'Si',
 	'Core:AttributeBoolean/Value:no' => 'No',
-
 	'Core:AttributeArchiveFlag' => 'Bandera de Archivado',
 	'Core:AttributeArchiveFlag/Value:yes' => 'Si',
 	'Core:AttributeArchiveFlag/Value:yes+' => 'Este objeto es solo visible en modo Archivado',
@@ -83,7 +54,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:AttributeArchiveFlag/Label+' => '',
 	'Core:AttributeArchiveDate/Label' => 'Fecha de Archivado',
 	'Core:AttributeArchiveDate/Label+' => '',
-
 	'Core:AttributeObsolescenceFlag' => 'Bandera de Obsolescencia',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Si',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Este objeto está excluido del análisis de impacto, y oculto de los resultados de búsqueda',
@@ -92,54 +62,38 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:AttributeObsolescenceFlag/Label+' => 'Calculado dinamicamente en otros atributos',
 	'Core:AttributeObsolescenceDate/Label' => 'Fecha de Obsolescencia',
 	'Core:AttributeObsolescenceDate/Label+' => 'Fecha aproximada cuando el objeto fue considerado obsoleto',
-
 	'Core:AttributeString' => 'Cadena de caracteres',
 	'Core:AttributeString+' => 'Cadena de caracteres alfanumerico',
-
 	'Core:AttributeClass' => 'Clase',
 	'Core:AttributeClass+' => 'Clase',
-
 	'Core:AttributeApplicationLanguage' => 'Lenguaje del usuario',
 	'Core:AttributeApplicationLanguage+' => 'Lenguaje y país (EN US)',
-
 	'Core:AttributeFinalClass' => 'Clase (auto)',
 	'Core:AttributeFinalClass+' => 'Clase real del objeto (automaticamente creada por el core)',
-
 	'Core:AttributePassword' => 'Contraseña',
 	'Core:AttributePassword+' => 'Contraseña para dispositivo externo',
-
 	'Core:AttributeEncryptedString' => 'Cadena encriptada',
 	'Core:AttributeEncryptedString+' => 'Cadena encriptada con llave local',
 	'Core:AttributeEncryptUnknownLibrary' => 'Librería de Encriptación especificada (%1$s) es desconocida',
 	'Core:AttributeEncryptFailedToDecrypt' => '** Error de Desencripción **',
-
 	'Core:AttributeText' => 'Texto',
 	'Core:AttributeText+' => 'Cadena de Múltiples Líneas de Caracteres',
-
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'Cadena HTML',
-
 	'Core:AttributeEmailAddress' => 'Correo Electrónico',
 	'Core:AttributeEmailAddress+' => 'Correo Electrónico',
-
 	'Core:AttributeIPAddress' => 'Dirección IP',
 	'Core:AttributeIPAddress+' => 'Dirección IP',
-
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Object Query Language expresion',
-
 	'Core:AttributeEnum' => 'Enum',
 	'Core:AttributeEnum+' => 'Lista de cadenas alfanumericas predefinidas',
-
 	'Core:AttributeTemplateString' => 'Cadena de plantilla',
 	'Core:AttributeTemplateString+' => 'Cadena conteniendo lugares',
-
 	'Core:AttributeTemplateText' => 'Texto de plantilla',
 	'Core:AttributeTemplateText+' => 'Texto conteniendo lugares',
-
 	'Core:AttributeTemplateHTML' => 'Plantilla HTML',
 	'Core:AttributeTemplateHTML+' => 'HTML conteniendo lugares',
-
 	'Core:AttributeDateTime' => 'Fecha/hora',
 	'Core:AttributeDateTime+' => 'Fecha y horae (año-mes-dia hh:mm:ss)',
 	'Core:AttributeDateTime?SmartSearch' => '
@@ -157,7 +111,6 @@ Operadores:<br/>
 <p>
 Si se omite el tiempo, por omisión es 00:00:00
 </p>',
-
 	'Core:AttributeDate' => 'Fecha',
 	'Core:AttributeDate+' => 'Fecha (año-mes-dia)',
 	'Core:AttributeDate?SmartSearch' => '
@@ -172,43 +125,30 @@ Operadores:<br/>
 	<b>&lt;</b><em>fecha</em><br/>
 	<b>[</b><em>fecha</em>,<em>fecha</em><b>]</b>
 </p>',
-
 	'Core:AttributeDeadline' => 'Fecha límite',
 	'Core:AttributeDeadline+' => 'Fecha, desplegada relativamente al tiempo actual',
-
 	'Core:AttributeExternalKey' => 'Llave externa',
 	'Core:AttributeExternalKey+' => 'Llave external o foránea',
-
 	'Core:AttributeHierarchicalKey' => 'Llave jerárquica',
 	'Core:AttributeHierarchicalKey+' => 'Llave externa o foránea al padre',
-
 	'Core:AttributeExternalField' => 'Campo externo',
 	'Core:AttributeExternalField+' => 'Campo mapeado de una llave externa',
-
 	'Core:AttributeURL' => 'URL',
 	'Core:AttributeURL+' => 'URL absoluto o relativo',
-
 	'Core:AttributeBlob' => 'Blob',
 	'Core:AttributeBlob+' => 'Cualquier contenido binario (documento)',
-
 	'Core:AttributeOneWayPassword' => 'Contraseña de una sola vía',
 	'Core:AttributeOneWayPassword+' => 'Contraseña encriptada de una sola vía (hashed)',
-
 	'Core:AttributeTable' => 'Tabla',
 	'Core:AttributeTable+' => 'Arreglo indexado con dos dimensiones',
-
 	'Core:AttributePropertySet' => 'Propiedades',
 	'Core:AttributePropertySet+' => 'Lista de propiedades sin tipo (nombre y valor)',
-
 	'Core:AttributeFriendlyName' => 'Nombre común',
 	'Core:AttributeFriendlyName+' => 'Atributo creado automáticamente; el nombre común es obtenido de varios atributos',
-
 	'Core:FriendlyName-Label' => 'Nombre común',
 	'Core:FriendlyName-Description' => 'Nombre común',
-
 	'Core:AttributeTag' => 'Etiquetas',
 	'Core:AttributeTag+' => '',
-
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Configuración',
@@ -480,12 +420,48 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 //
+// Class: EventNotificationNewsroom
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:EventNotificationNewsroom' => 'Noticias enviadas',
+	'Class:EventNotificationNewsroom+' => 'Noticias enviadas',
+	'Class:EventNotificationNewsroom/Attribute:title' => 'Título',
+	'Class:EventNotificationNewsroom/Attribute:title+' => 'Título',
+	'Class:EventNotificationNewsroom/Attribute:icon' => 'Icono',
+	'Class:EventNotificationNewsroom/Attribute:icon+' => 'Icono',
+	'Class:EventNotificationNewsroom/Attribute:priority' => 'Prioridad',
+	'Class:EventNotificationNewsroom/Attribute:priority+' => 'Prioridad',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1' => 'Crítico',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1+' => 'Crítico',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2' => 'Urgente',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2+' => 'Urgente',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3' => 'Importante',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3+' => 'Importante',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4' => 'Estandar',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4+' => 'Estandar',
+	'Class:EventNotificationNewsroom/Attribute:url' => 'URL',
+	'Class:EventNotificationNewsroom/Attribute:url+' => 'URL',
+	'Class:EventNotificationNewsroom/Attribute:read' => 'Leído',
+	'Class:EventNotificationNewsroom/Attribute:read+' => 'Leído',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no' => 'No',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no+' => 'No',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes' => 'Si',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes+' => 'Si',
+	'Class:EventNotificationNewsroom/Attribute:read_date' => 'Fecha lectura',
+	'Class:EventNotificationNewsroom/Attribute:read_date+' => 'Fecha lectura',
+	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contacto',
+	'Class:EventNotificationNewsroom/Attribute:contact_id+' => 'Contacto',
+));
+
+//
 // Class: Action
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Action' => 'Acción Personalizada',
 	'Class:Action+' => 'Acción definida por el usuario',
+	'Class:Action/ComplementaryName' => '%1$s: %2$s',
 	'Class:Action/Attribute:name' => 'Nombre',
 	'Class:Action/Attribute:name+' => 'Nombre de la Acción',
 	'Class:Action/Attribute:description' => 'Descripción',
@@ -500,9 +476,18 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Action/Attribute:status/Value:disabled+' => 'Inactivo',
 	'Class:Action/Attribute:trigger_list' => 'Disparadores Relacionados',
 	'Class:Action/Attribute:trigger_list+' => 'Disparadores Asociados a esta Acción',
+	'Class:Action/Attribute:asynchronous' => 'Asincróno',
+	'Class:Action/Attribute:asynchronous+' => 'Si esta acción debe ejecutarse en segundo plano o no',
+	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Usar configuración global',
+	'Class:Action/Attribute:asynchronous/Value:yes' => 'Si',
+	'Class:Action/Attribute:asynchronous/Value:no' => 'No',
 	'Class:Action/Attribute:finalclass' => 'Clase',
 	'Class:Action/Attribute:finalclass+' => 'Clase',
 	'Action:WarningNoTriggerLinked' => 'Advertencia, ningún disparador está ligado a esta acción.  No se activara hasta que tenga al menos una acción.',
+	'Action:last_executions_tab' => 'Últimas ejecuciones',
+	'Action:last_executions_tab_panel_title' => 'Ejecuciones de esta acción (%1$s)',
+	'Action:last_executions_tab_limit_days' => 'últimos %1$s días',
+	'Action:last_executions_tab_limit_none' => 'Sin límite',
 ));
 
 //
@@ -553,6 +538,59 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'Normal',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Alta',
 	'Class:ActionEmail/Attribute:importance/Value:high+' => 'Alta',
+	'Class:ActionEmail/Attribute:language' => 'Idioma',
+	'Class:ActionEmail/Attribute:language+' => 'Idioma a utilizar para los marcadores de posición ($xxx$) dentro del mensaje (estado, importancia, prioridad, etc.)',
+	'Class:ActionEmail/Attribute:html_template' => 'Plantilla HTML',
+	'Class:ActionEmail/Attribute:html_template+' => 'Plantilla HTML opcional que envuelve el contenido del atributo \'Body\' a continuación, útil para diseños de correo electrónico personalizados (en la plantilla, el contenido del atributo \'Body\' reemplazará el marcador de posición $content$)',
+	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignorar la bandera Notificación',
+	'Class:ActionEmail/Attribute:ignore_notify+' => 'Si se establece en \'Sí\', el indicador \'Notificar\' en Contactos no tiene ningún efecto.',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'No',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Si',
+	'ActionEmail:main' => 'Mensaje',
+	'ActionEmail:trigger' => 'Disparadores',
+	'ActionEmail:recipients' => 'Contactos',
+	'ActionEmail:preview_tab' => 'Vista previa',
+	'ActionEmail:preview_tab+' => 'Vista previa de la plantilla de correo electrónico',
+	'ActionEmail:preview_warning' => 'El correo electrónico real puede verse diferente en el cliente de correo electrónico que esta vista previa en su navegador.',
+	'ActionEmail:preview_more_info' => 'Para obtener más información sobre las funciones CSS admitidas por los diferentes clientes de correo electrónico, consulte %1$s',
+	'ActionEmail:content_placeholder_missing' => 'El marcador de posición "%1$s" no se encontró en la plantilla HTML. El contenido del campo "%2$s" no se incluirá en los correos electrónicos generados.',
+));
+
+
+//
+// Class: ActionNewsroom
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'ActionNewsroom:trigger' => 'Disparador',
+	'ActionNewsroom:content' => 'Mensaje',
+	'ActionNewsroom:settings' => 'Configuración',
+	'Class:ActionNewsroom' => 'Notificación por sala de noticias',
+	'Class:ActionNewsroom+' => 'Notificación por sala de noticias',
+	'Class:ActionNewsroom/Attribute:title' => 'Título',
+	'Class:ActionNewsroom/Attribute:title+' => 'Título',
+	'Class:ActionNewsroom/Attribute:message' => 'Mensaje',
+	'Class:ActionNewsroom/Attribute:message+' => 'Mensaje',
+	'Class:ActionNewsroom/Attribute:icon' => 'Icono',
+	'Class:ActionNewsroom/Attribute:icon+' => 'Icono',
+	'Class:ActionNewsroom/Attribute:language' => 'Idioma',
+	'Class:ActionNewsroom/Attribute:language+' => 'Idioma',
+	'Class:ActionNewsroom/Attribute:priority' => 'Prioridad',
+	'Class:ActionNewsroom/Attribute:priority+' => 'Prioridad',
+	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critico',
+	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Critico',
+	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgente',
+	'Class:ActionNewsroom/Attribute:priority/Value:2+' => 'Urgente',
+	'Class:ActionNewsroom/Attribute:priority/Value:3' => 'Importante',
+	'Class:ActionNewsroom/Attribute:priority/Value:3+' => 'Importante',
+	'Class:ActionNewsroom/Attribute:priority/Value:4' => 'Estandar',
+	'Class:ActionNewsroom/Attribute:priority/Value:4+' => 'Estandar',
+	'Class:ActionNewsroom/Attribute:test_recipient_id' => 'Probar destinatario',
+	'Class:ActionNewsroom/Attribute:test_recipient_id+' => 'Persona utilizada en lugar de Destinatarios cuando se prueba la notificación',
+	'Class:ActionNewsroom/Attribute:recipients' => 'Destinatarios',
+	'Class:ActionNewsroom/Attribute:recipients+' => 'Destinatarios',
+	'Class:ActionNewsroom/Attribute:url' => 'URL',
+	'Class:ActionNewsroom/Attribute:url+' => 'URL'
 ));
 
 //
@@ -562,6 +600,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Trigger' => 'Disparador',
 	'Class:Trigger+' => 'Disparador',
+	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
 	'Class:Trigger/Attribute:description' => 'Descripción',
 	'Class:Trigger/Attribute:description+' => 'Descripción',
 	'Class:Trigger/Attribute:action_list' => 'Acciones',
@@ -570,6 +609,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Trigger/Attribute:finalclass+' => 'Clase',
 	'Class:Trigger/Attribute:context' => 'Contexto',
 	'Class:Trigger/Attribute:context+' => 'Contexto para permitir el inicio del disparador',
+	'Class:Trigger/Attribute:complement' => 'Información adicional',
+	'Class:Trigger/Attribute:complement+' => 'Más información proporcionada en inglés, mediante este disparador',
+	'Class:Trigger/Attribute:subscription_policy' => 'Política de suscripción',
+	'Class:Trigger/Attribute:subscription_policy+' => 'Permite a los usuarios darse de baja del disparador',
+	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Permitir baja completa',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Forzar al menos un canal (Noticias o Correo electrónico)',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Denegar baja de suscripción',
 ));
 
 //
@@ -666,6 +712,17 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 //
+// Class: TriggerOnAttributeBlobDownload
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:TriggerOnAttributeBlobDownload' => 'Disparador (al descargar el documento del objeto)',
+	'Class:TriggerOnAttributeBlobDownload+' => 'Disparador en la descarga del campo de documento del objeto de [una clase secundaria de] la clase dada',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Campos de destino',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => 'Campos de destino',
+));
+
+//
 // Class: TriggerOnThresholdReached
 //
 
@@ -701,11 +758,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Synchro Data Source
 //
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:SynchroDataSource' => 'Fuente de Datos Sincronizable',
 	'Class:SynchroDataSource/Attribute:name' => 'Nombre',
 	'Class:SynchroDataSource/Attribute:name+' => 'Nombre de la Fuente de Datos',
 	'Class:SynchroDataSource/Attribute:description' => 'Descripción',
 	'Class:SynchroDataSource/Attribute:status' => 'Estatus',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Clase',
+	'Class:SynchroDataSource/Attribute:scope_class+' => 'Una fuente de datos sincronizada solo puede completar una única clase '.ITOP_APPLICATION_SHORT.'',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Usuario',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contacto a Notificar',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contact a Notificar en Caso de Error',
@@ -714,6 +773,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:SynchroDataSource/Attribute:url_application' => 'URL a la Aplicación',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'URL a la Aplicación (Si aplica). Posibles lugares: $this->attribute$ y $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Política de Reconciliación',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Utilice los atributos": '.ITOP_APPLICATION_SHORT.' El objeto coincide con los valores de réplica para cada atributo Synchro marcado para reconciliación.
+"Usar clave_primaria": se espera que la columna clave_primaria de la réplica contenga el identificador de '.ITOP_APPLICATION_SHORT.' objeto',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Interválo de Carga',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Una recarga completa de datos debe ocurrir en el intervalo especificado aquí',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Accíón con NADA',
@@ -733,6 +794,33 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Cuanto tiempo un objeto obsoleto es conservado antes de borrarse',
 	'Class:SynchroDataSource/Attribute:database_table_name' => 'Tabla de Datos',
 	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Dónde se guardan los datos sincronizados. Si se deja vacía, un nombre será asignado automáticamente.',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'No Productivo',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Obsoleto',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Productivo',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Alcance de la restricción',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Usar los Atributos',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Usar el Campo Primary_Key',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Crear',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Error',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Error',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Actualizar',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Crear',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Error',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Tomar el primero(¿random?)',
+	'Class:SynchroDataSource/Attribute:delete_policy' => 'Política de Borrado',
+	'Class:SynchroDataSource/Attribute:delete_policy+' => 'Qué hacer cuando una réplica queda obsoleta:
+"Ignorar": no hacer nada, el objeto asociado permanece tal cual en iTop.
+"Eliminar": Elimina el objeto asociado en iTop (y la réplica en la tabla de datos).
+"Actualizar": actualiza el objeto asociado según lo especificado en las reglas de actualización (ver más abajo).
+"Actualizar y luego Eliminar": aplica las "Reglas de actualización". Cuando expire la duración de retención, ejecute "Eliminar"',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Borrar',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignorar',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Actualizar',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Actualizar y después Borrar',
+	'Class:SynchroDataSource/Attribute:attribute_list' => 'Lista de Atributos',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Sólo Administradores',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Todos tienen permitido borrar esos objetos',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Ninguno',
 	'SynchroDataSource:Description' => 'Descripción',
 	'SynchroDataSource:Reconciliation' => 'Búsqueda y Reconciliación',
 	'SynchroDataSource:Deletion' => 'Reglas de Borrado',
@@ -757,8 +845,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:Synchro:NeverRun' => 'Esta Sincronización no ha sido ejecutada. No hay bitácora todavía.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'La última Sincronización terminó en %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'La Sincronización iniciada en %1$s está todavía en ejecución.',
-	'Menu:DataSources' => 'Fuentes de Datos Sincronizables', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => 'Fuentes de Datos Sincronizables', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Ignorados (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Desaparecieron (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Existen (%1$s)',
@@ -822,29 +908,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Valor Anterior',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Bitácora de Caso',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Última Entrada',
-	'Class:SynchroDataSource' => 'Fuente de Datos Sincronizable',
-	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'No Productivo',
-	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Obsoleto',
-	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Productivo',
-	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Alcance de la restricción',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Usar los Atributos',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Usar el Campo Primary_Key',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Crear',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Error',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Error',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Actualizar',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Crear',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Error',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Tomar el primero(¿random?)',
-	'Class:SynchroDataSource/Attribute:delete_policy' => 'Política de Borrado',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Borrar',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignorar',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Actualizar',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Actualizar y después Borrar',
-	'Class:SynchroDataSource/Attribute:attribute_list' => 'Lista de Atributos',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Sólo Administradores',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Todos tienen permitido borrar esos objetos',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Ninguno',
 	'Class:SynchroAttribute' => 'Atributos de Sincronización',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Fuente de Datos Sincronizable',
 	'Class:SynchroAttribute/Attribute:attcode' => 'Código de Atributo',
@@ -905,19 +968,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Preferencias',
 	'Core:ExecProcess:Code1' => 'Comando equivocado o comando terminó con errores (ejem. nombre incorrecto de script)',
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)',
-
-	// Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
-
-	// Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Tiempo transcurrido (almacenado como \\"%1$s\\")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tiempo invertido para \\"%1$s\\"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Límite para \\"%1$s\\" at %2$d%%',
-
-	// Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Parámetro faltante \\"%1$s\\"',
 	'Core:BulkExport:InvalidParameter_Query' => 'Valor inválido para parámetro \\"query\\". No existe en la libreta de consulta el Id: \\"%1$s\\".',
 	'Core:BulkExport:ExportFormatPrompt' => 'Formato de Exportación:',
@@ -969,24 +1026,26 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Formato por omisión (%1$s), ej. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Formato personalizado: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Página %1$s',
-	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'AAAA', // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'AA', // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'hh', // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'h', // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'hh', // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'h', // Hour 1..12
-	'Core:DateTime:Placeholder_a' => 'am/pm', // am/pm (lowercase)
-	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
+	'Core:DateTime:Placeholder_d' => 'DD',
+	'Core:DateTime:Placeholder_j' => 'D',
+	'Core:DateTime:Placeholder_m' => 'MM',
+	'Core:DateTime:Placeholder_n' => 'M',
+	'Core:DateTime:Placeholder_Y' => 'AAAA',
+	'Core:DateTime:Placeholder_y' => 'AA',
+	'Core:DateTime:Placeholder_H' => 'hh',
+	'Core:DateTime:Placeholder_h' => 'h',
+	'Core:DateTime:Placeholder_G' => 'hh',
+	'Core:DateTime:Placeholder_g' => 'h',
+	'Core:DateTime:Placeholder_a' => 'am/pm',
+	'Core:DateTime:Placeholder_A' => 'AM/PM',
+	'Core:DateTime:Placeholder_i' => 'mm',
+	'Core:DateTime:Placeholder_s' => 'ss',
 	'Core:Validator:Default' => 'Formato incorrecto',
 	'Core:Validator:Mandatory' => 'Por favor, ingrese este campo',
 	'Core:Validator:MustBeInteger' => 'Debe ser un entero',
 	'Core:Validator:MustSelectOne' => 'Por favor, seleccione uno',
+	'Menu:DataSources' => 'Fuentes de Datos Sincronizables',
+	'Menu:DataSources+' => 'Fuentes de Datos Sincronizables'
 ));
 
 //
@@ -995,7 +1054,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TagSetFieldData' => '%2$s para la clase %1$s',
 	'Class:TagSetFieldData+' => 'Datos de campo',
-
 	'Class:TagSetFieldData/Attribute:code' => 'Código',
 	'Class:TagSetFieldData/Attribute:code+' => 'Código interno. Debe contener al menos tres caracteres alfanuméricos',
 	'Class:TagSetFieldData/Attribute:label' => 'Etiqueta',
@@ -1005,7 +1063,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Clase',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Clase de objeto',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Código de campo',
-
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Etiquetas es uso no pueden ser borradas',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Los códigos o las etiquetas deben ser únicos',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'El código de la etiqueta debe contener entre 3 y %1$d caracteres alfanuméricos',
@@ -1102,7 +1159,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:AbstractResource' => 'Recurso abstracto',
-	'Class:AbstractResource+' => '',
+	'Class:AbstractResource+' => 'Recurso abstracto',
 ));
 
 //
@@ -1130,6 +1187,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ResourceSystemMenu' => 'Recurso Menú de Sistema',
 	'Class:ResourceSystemMenu+' => '',
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 ));
 
 

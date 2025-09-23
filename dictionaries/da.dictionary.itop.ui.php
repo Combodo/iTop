@@ -1,7 +1,13 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ *
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:AuditCategory' => 'Audit-kategori',
@@ -14,6 +20,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:AuditCategory/Attribute:definition_set+' => 'OQL begreber, der definerer omfanget af objekter, der skal auditeres',
 	'Class:AuditCategory/Attribute:rules_list' => 'Audit-regler',
 	'Class:AuditCategory/Attribute:rules_list+' => 'Audit-regler for denne kategori',
+	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Warning threshold~~',
+	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Percentage of invalid objects below which the result is a warning (orange)~~',
+	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error threshold~~',
+	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
+	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
 ));
 
 //
@@ -27,9 +39,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:AuditRule/Attribute:name+' => 'Kort navn for denne regel',
 	'Class:AuditRule/Attribute:description' => 'Audit-regel beskrivelse',
 	'Class:AuditRule/Attribute:description+' => 'Udførlig beskrivelse af denne Audit-regel',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
 	'Class:AuditRule/Attribute:query' => 'Søgning at udføre',
 	'Class:AuditRule/Attribute:query+' => 'Den OQL forespørgsel, der skal udføres',
 	'Class:AuditRule/Attribute:valid_flag' => 'Gyldige objekter?',
@@ -42,6 +51,41 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:AuditRule/Attribute:category_id+' => 'Kategori for denne regel',
 	'Class:AuditRule/Attribute:category_name' => 'Kategori',
 	'Class:AuditRule/Attribute:category_name+' => 'Kategorinavn for denne regel',
+));
+
+//
+// Class: AuditDomain
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:AuditDomain' => 'Audit Domain~~',
+	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
+Domain usually correspond to who is responsible for checking and fixing errors~~',
+	'Class:AuditDomain/Attribute:name' => 'Name~~',
+	'Class:AuditDomain/Attribute:name+' => 'Its a segmentation of the Audit by who is in charge of fixing it or just interested~~',
+	'Class:AuditDomain/Attribute:description' => 'Description~~',
+	'Class:AuditDomain/Attribute:description+' => '~~',
+	'Class:AuditDomain/Attribute:icon' => 'Icon~~',
+	'Class:AuditDomain/Attribute:icon+' => '~~',
+	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
+	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
+));
+
+//
+// Class: lnkAuditCategoryToAuditDomain
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
+	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id+' => 'Audit Category~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name' => 'Category name~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name+' => 'Audit category name~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id' => 'Domain~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
 ));
 
 //
@@ -59,6 +103,16 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
 	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
 	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
+	'Class:Query/Attribute:export_count' => 'Export counter~~',
+	'Class:Query/Attribute:export_count+' => 'Counter reflecting the number of time this query has been executed~~',
+	'Class:Query/Attribute:export_last_date' => 'Last export~~',
+	'Class:Query/Attribute:export_last_date+' => 'Date and time of the last export execution~~',
+	'Class:Query/Attribute:export_last_user_id' => 'User~~',
+	'Class:Query/Attribute:export_last_user_id+' => 'The user who executed the last export~~',
+	'Class:Query/Attribute:export_last_user_contact' => 'Contact~~',
+	'Class:Query/Attribute:export_last_user_contact+' => 'The contact who executed the last export~~',
+	'Query:baseinfo' => 'General information~~',
+	'Query:exportInfo' => 'Export information~~',
 	'Class:QueryOQL/Attribute:fields' => 'Felter',
 	'Class:QueryOQL/Attribute:fields+' => '',
 	'Class:QueryOQL' => 'OQL forespørgsel',
@@ -107,17 +161,19 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:User/Attribute:status+' => 'Whether the user account is enabled or disabled.~~',
 	'Class:User/Attribute:status/Value:enabled' => 'Enabled~~',
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled~~',
-
 	'Class:User/Error:LoginMustBeUnique' => 'Login skal være entydig - "%1s" er allerede i brug.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Mindst en profil skal knyttes til denne bruger.',
 	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
+	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
 	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
+	'Class:User/Warning:NoOrganizationMeansFullAccess' => 'No "Allowed Organizations" defined for this user, this means they have access to all organizations~~',
+	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'User Internal~~',
 	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT.'~~',
 ));
@@ -307,15 +363,27 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 ));
 
 //
-// Expression to Natural language
+// Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
+	'Menu:WelcomeMenu' => 'Velkomen',
+	'Menu:WelcomeMenu+' => 'Velkommen til '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage' => 'Velkomen',
+	'Menu:WelcomeMenuPage+' => 'Velkommen til '.ITOP_APPLICATION_SHORT, 'Menu:AdminTools' => 'Admin værktøjer',
+	'Menu:AdminTools+' => 'Administration tools~~',
+	'Menu:AdminTools?' => 'Værktøjer kun tilgængelige for brugere med administrator profil',
+	'Menu:CSVImportMenu' => 'CSV import',
+	'Menu:CSVImportMenu+' => '',
+	'Menu:DataModelMenu' => 'Data model~~',
+	'Menu:DataModelMenu+' => 'Overview of the data model~~',
+	'Menu:ExportMenu' => 'Export~~',
+	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML~~',
+	'Menu:NotificationsMenu' => 'Notifikationer',
+	'Menu:NotificationsMenu+' => 'Configuration of the Notifications~~',
+	'Menu:MyShortcuts' => 'Mine Genveje',
+	'Menu:Notifications:Title' => 'Audit Kategorier',
+	'Menu:DataAdministration' => 'Data administration~~',
+	'Menu:DataAdministration+' => '~~'
 ));
-
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -325,59 +393,20 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'BooleanLabel:yes' => 'yes~~',
 	'BooleanLabel:no' => 'no~~',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
-	'Menu:WelcomeMenu' => 'Velkomen',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'Velkommen til '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Velkomen',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'Velkommen til '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:WelcomeMenu:Title' => 'Velkommen til '.ITOP_APPLICATION_SHORT,
-
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' er en komplet, OpenSource, webbaseret IT-Service-Management-Værktøj.</p>
-<ul>Den inkluderer:
-<li>En komplet CMDB (Configuration management database) til at dokumentere og styre IT-portfolioen.</li>
-<li>Et Incident management modul til brug for sporing og kommunikation omkring alle spørgsmål vedrørende IT.</li>
-<li>Et change management modul til planlægning og sporing af ændringer i IT miljøet.</li>
-<li>En "known error database" til brug for at mindske tiden for løsning af hændelser.</li>
-<li>Et outage modul til dokumentation for planlagt nedetid og advisering af relevante kontakter.</li>
-<li>Dashboards for hurtigt overblik over IT.</li>
-</ul>
-<p>Alle moduler kan installeres, step by step, uafhængigt af hinanden.</p>',
-
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' er service udbyder orienteret, det tillader let IT teknikere at administrere flere kunder eller organisationer.
-<ul>iTop, leverer et feature-rich sæt af forretnings processer som:
-<li>Forøger IT administrationens effektivitet</li> 
-<li>Drives IT operations performance</li> 
-<li>Improves customer satisfaction and provides executives with insights into business performance.</li>
-</ul>
-</p>
-<p>'.ITOP_APPLICATION_SHORT.' is completely open to be integrated within your current IT Management infrastructure.</p>
-<p>
-<ul>Adopting this new generation of IT Operational portal will help you to:
-<li>Better manage a more and more complex IT environment.</li>
-<li>Implement ITIL processes at your own pace.</li>
-<li>Manage the most important asset of your IT: Documentation.</li>
-</ul>
-</p>~~',
-	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>This version features a brand new modern and accessible backoffice design.</div>
-
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
-
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
-	'UI:WelcomeMenu:AllOpenRequests' => 'Åbne anmodninger: %1$d',
+	'UI:WelcomeMenu:Title' => 'Velkommen til '.ITOP_APPLICATION_SHORT, 'UI:WelcomeMenu:AllOpenRequests' => 'Åbne anmodninger: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mine brugerhenvendelser',
 	'UI:WelcomeMenu:OpenIncidents' => 'Åbne Incidents: %1$d',
 	'UI:WelcomeMenu:AllConfigItems' => 'Configuration Items: %1$d',
 	'UI:WelcomeMenu:MyIncidents' => 'Incidents tildelt mig',
 	'UI:AllOrganizations' => ' Alle Organisationer',
 	'UI:YourSearch' => 'Din Søgning',
-	'UI:LoggedAsMessage' => 'Logget ind som %1$s (%2$s)~~',
-	'UI:LoggedAsMessage+Admin' => 'Logget ind som %1$s (%2$s, Administrator)~~',
+	'UI:LoggedAsMessage' => 'Logget ind som %1$s (%2$s)',
+	'UI:LoggedAsMessage+Admin' => 'Logget ind som %1$s (%2$s, Administrator)',
 	'UI:Button:Logoff' => 'Log ud',
 	'UI:Button:GlobalSearch' => 'Søg',
 	'UI:Button:Search' => ' Søg ',
 	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:Confirm' => ' Confirm ~~',
 	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => ' Forespørgsel ',
 	'UI:Button:Ok' => 'Ok',
@@ -405,7 +434,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => ' Fjern >> ',
 	'UI:Button:FilterList' => ' Filter... ',
 	'UI:Button:Create' => ' Opret ',
-	'UI:Button:Delete' => ' Slet! ',
+	'UI:Button:Delete' => ' Slet ',
 	'UI:Button:Rename' => ' Omdøb... ',
 	'UI:Button:ChangePassword' => ' Skift Password ',
 	'UI:Button:ResetPassword' => ' Reset Password ',
@@ -418,9 +447,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
 	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
 	'UI:InputFile:SelectFile' => 'Select a file~~',
-
 	'UI:SearchToggle' => 'Søg',
-	'UI:ClickToCreateNew' => 'Opret nyt objekt af typen %1$s~~',
+	'UI:ClickToCreateNew' => 'Opret nyt objekt af typen %1$s',
 	'UI:SearchFor_Class' => 'Søg efter objekter af typen %1$s',
 	'UI:NoObjectToDisplay' => 'Ingen objekter at vise.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
@@ -438,7 +466,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:CannotWriteToTmp_Dir' => 'Kan ikke skrive den midlertidige fil til disken: upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Upload stoppet på grund af filtype. (Original fil navn = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Fil upload fejlede, ukendt årsag. (Fejl kode = "%1$s").',
-
 	'UI:Error:1ParametersMissing' => 'Fejl: følgende parameter skal angives for denne operation: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Fejl: følgende parametre skal angives for denne operation: %1$s and %2$s.',
 	'UI:Error:3ParametersMissing' => 'Fejl: følgende parametre skal angives for denne operation: %1$s, %2$s and %3$s.',
@@ -460,9 +487,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
-
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
-
 	'UI:GroupBy:Count' => 'Antal',
 	'UI:GroupBy:Count+' => 'Antal af elementer',
 	'UI:CountOfObjects' => '%1$d objekter opfylder kriteriet.',
@@ -491,14 +516,19 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:OtherActions' => 'Andre handlinger',
 	'UI:Menu:Transitions' => 'Transitions~~',
 	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
+	'UI:Menu:View' => 'View this object~~',
 	'UI:Menu:New' => 'Ny...',
 	'UI:Menu:Add' => 'Tilføj...',
 	'UI:Menu:Manage' => 'Administrer...',
 	'UI:Menu:EMail' => 'eMail',
 	'UI:Menu:CSVExport' => 'CSV Eksport...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Modificer...',
 	'UI:Menu:Delete' => 'Slet...',
 	'UI:Menu:BulkDelete' => 'Slet...',
+	'UI:Menu:BulkDelete_Class' => 'Delete %1$s objects...~~',
+	'UI:Menu:BulkDelete_Link' => 'Delete %1$s...~~',
+	'UI:Menu:BulkDelete_Remote' => 'Delete %1$s...~~',
 	'UI:UndefinedObject' => 'Ikke defineret',
 	'UI:Document:OpenInNewWindow:Download' => 'Åben i nyt vindue: %1$s, Download: %2$s',
 	'UI:SplitDateTime-Date' => 'Dato',
@@ -531,7 +561,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
 	'UI:Login:SeparatorOr' => 'Or~~',
-
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
 	'UI:ResetPwd-Error-FixedPwd' => 'the account does not allow password reset.~~',
@@ -542,50 +571,47 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Reset your '.ITOP_APPLICATION_SHORT.' password~~',
 	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your '.ITOP_APPLICATION_SHORT.' password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
-
 	'UI:ResetPwd-Title' => 'Reset password~~',
 	'UI:ResetPwd-Error-InvalidToken' => 'Sorry, either the password has already been reset, or you have received several emails. Please make sure that you use the link provided in the very last email received.~~',
 	'UI:ResetPwd-Error-EnterPassword' => 'Enter a new password for the account \'%1$s\'.~~',
 	'UI:ResetPwd-Ready' => 'The password has been changed.~~',
 	'UI:ResetPwd-Login' => 'Click here to login...~~',
-
-	'UI:Login:About'                               => 'Om',
-	'UI:Login:ChangeYourPassword'                  => 'Skift Adgangskode',
-	'UI:Login:OldPasswordPrompt'                   => 'Gammel Adgangskode',
-	'UI:Login:NewPasswordPrompt'                   => 'Ny Adgangskode',
-	'UI:Login:RetypeNewPasswordPrompt'             => 'Gentag ny adgangskode',
-	'UI:Login:IncorrectOldPassword'                => 'Fejl: den gamle adgangskode er forkert',
-	'UI:LogOffMenu'                                => 'Log ud',
-	'UI:LogOff:ThankYou' => 'Tak for at du brugte '.ITOP_APPLICATION_SHORT,
-	'UI:LogOff:ClickHereToLoginAgain'              => 'Klik her for at logge ind igen...',
-	'UI:ChangePwdMenu'                             => 'Skift Adgangskode...',
-	'UI:Login:PasswordChanged'                     => 'Adgangskode oprettet med success!',
+	'UI:Login:About' => 'Om',
+	'UI:Login:ChangeYourPassword' => 'Skift Adgangskode',
+	'UI:Login:OldPasswordPrompt' => 'Gammel Adgangskode',
+	'UI:Login:NewPasswordPrompt' => 'Ny Adgangskode',
+	'UI:Login:RetypeNewPasswordPrompt' => 'Gentag ny adgangskode',
+	'UI:Login:IncorrectOldPassword' => 'Fejl: den gamle adgangskode er forkert',
+	'UI:LogOffMenu' => 'Log ud',
+	'UI:LogOff:ThankYou' => 'Tak for at du brugte '.ITOP_APPLICATION_SHORT, 'UI:LogOff:ClickHereToLoginAgain' => 'Klik her for at logge ind igen...',
+	'UI:ChangePwdMenu' => 'Skift Adgangskode...',
+	'UI:Login:PasswordChanged' => 'Adgangskode oprettet med success!',
+	'UI:Login:PasswordNotChanged' => 'Error: Password is the same!~~',
 	'UI:AccessRO-All' => ITOP_APPLICATION_SHORT.' er skrivebeskyttet',
 	'UI:AccessRO-Users' => ITOP_APPLICATION_SHORT.' er skrivebeskyttet for slutbrugere',
-	'UI:ApplicationEnvironment'                    => 'Applikations miljø: %1$s',
-	'UI:Login:RetypePwdDoesNotMatch'               => 'Ny adgangskode og gentaget adgangskode passer ikke sammen!',
-	'UI:Button:Login' => 'Enter '.ITOP_APPLICATION_SHORT,
-	'UI:Login:Error:AccessRestricted' => ITOP_APPLICATION_SHORT.' adgang er begrænset. Venligst, kontakt en '.ITOP_APPLICATION_SHORT.' administrator.',
+	'UI:ApplicationEnvironment' => 'Applikations miljø: %1$s',
+	'UI:Login:RetypePwdDoesNotMatch' => 'Ny adgangskode og gentaget adgangskode passer ikke sammen!',
+	'UI:Button:Login' => 'Enter '.ITOP_APPLICATION_SHORT, 'UI:Login:Error:AccessRestricted' => ITOP_APPLICATION_SHORT.' adgang er begrænset. Venligst, kontakt en '.ITOP_APPLICATION_SHORT.' administrator.',
 	'UI:Login:Error:AccessAdmin' => 'Adgang er begrænset til administratorer. Venligst, kontakt en '.ITOP_APPLICATION_SHORT.' administrator.',
-	'UI:Login:Error:WrongOrganizationName'         => 'Unknown organization~~',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
-	'UI:Login:Error:NoValidProfiles'               => 'No valid profile provided~~',
-	'UI:CSVImport:MappingSelectOne'                => '-- Vælg venligst --',
-	'UI:CSVImport:MappingNotApplicable'            => '-- ignorer dette felt --',
-	'UI:CSVImport:NoData'                          => 'Tomt data sæt..., venligst angiv nogle data!',
-	'UI:Title:DataPreview'                         => 'Data Preview',
-	'UI:CSVImport:ErrorOnlyOneColumn'              => 'Fejl: Data indeholder kun en kolonne. Har du valgt den korrekte separator?',
-	'UI:CSVImport:FieldName'                       => 'Felt %1$d',
-	'UI:CSVImport:DataLine1'                       => 'Data Linje 1',
-	'UI:CSVImport:DataLine2'                       => 'Data Linje 2',
-	'UI:CSVImport:idField'                         => 'id (Primær Nøgle)',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
+	'UI:CSVImport:MappingSelectOne' => '-- Vælg venligst --',
+	'UI:CSVImport:MappingNotApplicable' => '-- ignorer dette felt --',
+	'UI:CSVImport:NoData' => 'Tomt data sæt..., venligst angiv nogle data!',
+	'UI:Title:DataPreview' => 'Data Preview',
+	'UI:CSVImport:ErrorOnlyOneColumn' => 'Fejl: Data indeholder kun en kolonne. Har du valgt den korrekte separator?',
+	'UI:CSVImport:FieldName' => 'Felt %1$d',
+	'UI:CSVImport:DataLine1' => 'Data Linje 1',
+	'UI:CSVImport:DataLine2' => 'Data Linje 2',
+	'UI:CSVImport:idField' => 'id (Primær Nøgle)',
 	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - Bulk import',
-	'UI:Title:BulkImport+'                         => 'CSV-Import assistent',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => 'Synchronisering af %1$d objekter af klasse %2$s',
-	'UI:CSVImport:ClassesSelectOne'                => '-- Vælg venligst --~~',
-	'UI:CSVImport:ErrorExtendedAttCode'            => 'Intern fejl: "%1$s" er en ukorrekt kode fordi "%2$s" er IKKE en fremmed nøgle af klassen "%3$s"',
-	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d objekt(er) vil forblive uændrede.',
-	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d objekt(er) vil blive ændret.',
+	'UI:Title:BulkImport+' => 'CSV-Import assistent',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronisering af %1$d objekter af klasse %2$s',
+	'UI:CSVImport:ClassesSelectOne' => '-- Vælg venligst --',
+	'UI:CSVImport:ErrorExtendedAttCode' => 'Intern fejl: "%1$s" er en ukorrekt kode fordi "%2$s" er IKKE en fremmed nøgle af klassen "%3$s"',
+	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objekt(er) vil forblive uændrede.',
+	'UI:CSVImport:ObjectsWillBeModified' => '%1$d objekt(er) vil blive ændret.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d objekt(er) vil blive tilføjet.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d objekt(er) har fejl.',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objekt(er) forbliver uændrede.',
@@ -608,6 +634,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:TreatFirstLineAsHeader' => 'Betragt første linje som overskrift (kolonnenavne)',
 	'UI:CSVImport:Skip_N_LinesAtTheBeginning' => 'Spring %1$s linje(r) over i begyndelsen af filen.',
 	'UI:CSVImport:CSVDataPreview' => 'CSV Data eksempel',
+	'UI:CSVImport:Column' => 'Column %1$s~~',
 	'UI:CSVImport:SelectFile' => 'Vælg den fil , der skal importeres:',
 	'UI:CSVImport:Tab:LoadFromFile' => 'Indlæs fra fil',
 	'UI:CSVImport:Tab:CopyPaste' => 'Kopier og indsæt data',
@@ -628,14 +655,19 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.~~',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Vælg venligst mindst et søgekriterie',
 	'UI:CSVImport:Encoding' => 'Karakter encoding',
+	'UI:CSVImport:ViewAllPossibleValues' => 'View all possible values~~',
+	'UI:CSVImport:ViewAllAmbiguousValues' => 'View all ambiguous values~~',
 	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Universal Søgning',
 	'UI:UniversalSearch:Error' => 'Fejl: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Vælg klasse at søge efter: ',
-
 	'UI:CSVReport-Value-Modified' => 'Ændret',
-	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
+	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
+	'UI:CSVReport-Value-NoMatch-NoObject' => 'There are no \'%1$s\' objects~~',
+	'UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser' => 'There are no \'%1$s\' objects found with your current profile~~',
+	'UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser' => 'There are some \'%1$s\' objects not visible with your current profile~~',
 	'UI:CSVReport-Value-Missing' => 'Mangler obligatorisk værdi',
 	'UI:CSVReport-Value-Ambiguous' => 'Tvetydig: fandt %1$s objekter',
 	'UI:CSVReport-Row-Unchanged' => 'Uændret',
@@ -649,15 +681,16 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVReport-Value-Issue-Readonly' => 'Attributten \'%1$s\' er skrivebeskyttet og kan ikke ændres (nuværende værdi: %2$s, foreslået værdi: %3$s)',
 	'UI:CSVReport-Value-Issue-Format' => 'Fejl i behandling af input: %1$s',
 	'UI:CSVReport-Value-Issue-NoMatch' => 'Uventet værdi for attribut \'%1$s\': ingen emner fundet, tjek stavningen',
+	'UI:CSVReport-Value-Issue-AllowedValues' => 'Allowed \'%1$s\' value(s): %2$s~~',
 	'UI:CSVReport-Value-Issue-Unknown' => 'Uventet værdi for attribut \'%1$s\': %2$s',
 	'UI:CSVReport-Row-Issue-Inconsistent' => 'Attributterne er ikke i overensstemmelse med hinanden: %1$s',
 	'UI:CSVReport-Row-Issue-Attribute' => 'Uventet attribut værdi(er)',
 	'UI:CSVReport-Row-Issue-MissingExtKey' => 'Kunne ikke oprettes, på grund af manglende fremmednøgle(r): %1$s',
 	'UI:CSVReport-Row-Issue-DateFormat' => 'Forkert dato format',
+	'UI:CSVReport-Row-Issue-ExpectedDateFormat' => 'Expected format: %1$s~~',
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'Fejl ved forening',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'Tvetydig forening',
 	'UI:CSVReport-Row-Issue-Internal' => 'Intern fejl: %1$s, %2$s',
-
 	'UI:CSVReport-Icon-Unchanged' => 'Uændret',
 	'UI:CSVReport-Icon-Modified' => 'Ændret',
 	'UI:CSVReport-Icon-Missing' => 'Mangler',
@@ -672,14 +705,32 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVReport-Stats-Errors' => '%1$.0f %% af de hentede objekter har fejl og vil blive ignoreret',
 	'UI:CSVReport-Stats-Created' => '%1$.0f %% af de hentede objekter vil blive oprettet.',
 	'UI:CSVReport-Stats-Modified' => '%1$.0f %% af de hentede objekter vil blive ændret.',
-
 	'UI:CSVExport:AdvancedMode' => 'Advanceret tilstand',
 	'UI:CSVExport:AdvancedMode+' => '',
 	'UI:CSVExport:LostChars' => 'Encoding problem',
 	'UI:CSVExport:LostChars+' => '',
-
 	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB Audit',
+	'UI:Audit:Interactive:All:Title' => 'Audit results~~',
+	'UI:Audit:Interactive:All:SubTitle' => 'Full audit: includes all rules, all categories, all domains~~',
+	'UI:Audit:Interactive:All:BreadCrumb' => 'Full audit~~',
+	'UI:Audit:Interactive:All:BreadCrumb+' => 'Audit results for all rules~~',
+	'UI:Audit:Interactive:Categories:Title' => 'Audit results for categories: %1$s~~',
+	'UI:Audit:Interactive:Categories:SubTitle' => 'Audit results for all the rules belonging to one of those %1$s categories~~',
+	'UI:Audit:Interactive:Categories:BreadCrumb' => 'Categories~~',
+	'UI:Audit:Interactive:Categories:BreadCrumb+' => 'Audit categories: %1$s~~',
+	'UI:Audit:Interactive:Domain:Title' => 'Audit results for Domain: %1$s~~',
+	'UI:Audit:Interactive:Domain:SubTitle' => 'Audit results for all the rules belonging to a category related to the domain: %1$s~~',
+	'UI:Audit:Interactive:Domain:BreadCrumb' => '%1$s~~',
+	'UI:Audit:Interactive:Domain:BreadCrumb+' => 'Audit for Domain: %1$s~~',
+	'UI:Audit:Interactive:Selection:Title' => 'Selection of an audit~~',
 	'UI:Audit:InteractiveAudit' => 'Interaktiv Audit',
+	'UI:Audit:Interactive:Selection:SubTitle' => 'Select a domain to get the results limited to this domain or select "All categories" to get a full audit (can take time or even fail if too much data to audit)~~',
+	'UI:Audit:Interactive:Selection:BreadCrumb' => 'Selection~~',
+	'UI:Audit:Interactive:Selection:BreadCrumb+' => 'Selection of an Audit to run~~',
+	'UI:Audit:Interactive:Selection:BadgeAll' => 'All categories~~',
+	'UI:Audit:Interactive:Button:Back' => 'Back to the audit~~',
+	'UI:Audit:Interactive:Button:Configuration' => 'Audit configuration~~',
+	'UI:Audit:ViewRules' => 'Check the rules~~',
 	'UI:Audit:HeaderAuditRule' => 'Audit Regel',
 	'UI:Audit:HeaderNbObjects' => '# Objekt(er)',
 	'UI:Audit:HeaderNbErrors' => '# Fejl',
@@ -694,9 +745,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
-	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
-
-
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%% of the object are valid~~',
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQL Query Evaluering',
 	'UI:RunQuery:QueryExamples' => 'Query Eksempler',
 	'UI:RunQuery:QueryResults' => 'Query Results~~',
@@ -715,9 +764,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Der opstod en fejl under afviklingen af forespøgrslen',
 	'UI:Query:UrlForExcel' => 'URL til brug for MS-Excel web forespøgrsler',
-	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
+	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' objekt skema',
-	'UI:Schema:TitleForClass' => '%1$s skema~~',
+	'UI:Schema:TitleForClass' => '%1$s skema',
 	'UI:Schema:CategoryMenuItem' => 'Kategori <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relationer',
 	'UI:Schema:AbstractClass' => 'Abstrakt klasse: intet objekt fra denne klasse kan instantieres.',
@@ -735,7 +784,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:Label' => 'Label',
 	'UI:Schema:Label+' => 'Label for attributten',
 	'UI:Schema:Type' => 'Type',
-
 	'UI:Schema:Type+' => 'Datatype for attributten',
 	'UI:Schema:Origin' => 'Oprindelse',
 	'UI:Schema:Origin+' => 'Basisklasse, hvor denne attribut er defineret',
@@ -783,6 +831,16 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
+	'UI:Schema:Events' => 'Events~~',
+	'UI:Schema:Events:Defined' => 'Defined events~~',
+	'UI:Schema:Events:NoEvent' => 'No event defined~~',
+	'UI:Schema:Events:Listeners' => 'Event listeners~~',
+	'UI:Schema:Events:NoListener' => 'No event listener~~',
+	'UI:Schema:Events:Event' => 'Event~~',
+	'UI:Schema:Events:Description' => 'Description~~',
+	'UI:Schema:Events:Listener' => 'Listener~~',
+	'UI:Schema:Events:Rank' => 'Rank~~',
+	'UI:Schema:Events:Module' => 'Module~~',
 	'UI:LinksWidget:Autocomplete+' => '',
 	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Test forespørgsel',
@@ -794,7 +852,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Tilføj %1$s objekter kædet til %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Tilføj %1$s objekter til kæden til %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Administrer %1$s objekter kædet til %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Tilføj %1$s objekter...',
+	'UI:AddLinkedObjectsOf_Class' => 'Tilføj %1$s objekter',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Fjern valgte objekter',
 	'UI:Message:EmptyList:UseAdd' => 'Listen er tom, brug "Tilføj..." knappen for at tilføje elementer.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Brug søgeformularen ovenfor, til søgning efter objekters som skal tilføjes.',
@@ -833,8 +891,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Delete:PleaseDoTheManualOperations' => 'Venligst foretag den manuelle opreration som er nævnt ovenfor, før sletning af objektet',
 	'UI:Delect:Confirm_Object' => 'Venligst bekræft at du ønsker at slette %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Venligst bekræft at du ønsker at slette følgende %1$d objekter af klassen %2$s.',
-	'UI:WelcomeToITop' => 'Velkommen til '.ITOP_APPLICATION_SHORT,
-	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s detaljer',
+	'UI:WelcomeToITop' => 'Velkommen til '.ITOP_APPLICATION_SHORT, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s detaljer',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Fejl',
 	'UI:ObjectDoesNotExist' => 'Beklager, dette objekt eksisterer ikke (eller du har ikke tilladelse til at se det).',
 	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
@@ -849,8 +906,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:SearchResultsTitle' => 'Søge Resultater',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => 'Intet at søge efter',
-	'UI:Search:NeedleTooShort' => 'The search string \\"%1$s\\" is too short. Please type at least %2$d characters.~~',
-	'UI:Search:Ongoing' => 'Searching for \\"%1$s\\"~~',
+	'UI:Search:NeedleTooShort' => 'The search string "%1$s" is too short. Please type at least %2$d characters.~~',
+	'UI:Search:Ongoing' => 'Searching for "%1$s"~~',
 	'UI:Search:Enlarge' => 'Broaden the search~~',
 	'UI:FullTextSearchTitle_Text' => 'Resultater for "%1$s":',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d objekt(er) af klasse %2$s fundet.',
@@ -858,7 +915,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ModificationPageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s ændring',
 	'UI:ModificationTitle_Class_Object' => 'Ændring af %1$s: <span class=\\"hilite\\">%2$s</span>',
 	'UI:ClonePageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - Clone %1$s - %2$s ændring',
-	'UI:CloneTitle_Class_Object' => 'Clone af %1$s: <span class=\\"hilite\\">%2$s</span>~~',
+	'UI:CloneTitle_Class_Object' => 'Clone af %1$s: <span class=\\"hilite\\">%2$s</span>',
 	'UI:CreationPageTitle_Class' => ITOP_APPLICATION_SHORT.' - Oprettelse af ny %1$s ',
 	'UI:CreationTitle_Class' => 'Oprettelse af ny %1$s',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Vælg type af %1$s for oprettelse:',
@@ -868,13 +925,14 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:BulkDeleteTitle' => 'Vælg objekt som ønskes slettet:',
 	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.' Objekt Oprettet.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s oprettet.',
+	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:StandardDashboard' => 'Standard~~',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Anvender %1$s på objekt: %2$s i tilstand %3$s for sluttilstand: %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'Objektet kunne ikke skrives: %1$s',
 	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Fatal Fejl',
 	'UI:SystemIntrusion' => 'Adgang nægtet. Du prøver at udføre en handling som du ikke har tilladelse til.',
 	'UI:FatalErrorMessage' => 'Fatal fejl, '.ITOP_APPLICATION_SHORT.' kan ikke fortsætte.',
 	'UI:Error_Details' => 'Fejl: %1$s.',
-
 	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' bruger styring - profil projection',
 	'UI:UserManagement:Class' => 'Klasse',
 	'UI:UserManagement:Class+' => '',
@@ -909,67 +967,43 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => '',
 	'UI:UserManagement:GrantMatrix' => 'Grant Matrix',
-
-	'Menu:AdminTools' => 'Admin værktøjer',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => 'Administration tools~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Værktøjer kun tilgængelige for brugere med administrator profil',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'System~~',
-
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => '',
 	'UI:ChangeManagementMenu:Title' => 'Changes Overblik',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changes efter type',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes efter status',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes endnu ikke tildelt',
-
 	'UI:ConfigurationManagementMenu' => 'Configuration Management',
 	'UI:ConfigurationManagementMenu+' => '',
 	'UI:ConfigurationManagementMenu:Title' => 'Infrastruktur Overblik',
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Infrastruktur objekter efter type',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Infrastruktur objekter efter status',
-
 	'UI:ConfigMgmtMenuOverview:Title' => 'Dashboard for Configuration Management',
 	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Configuration Items efter status',
 	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Configuration Items efter type',
-
 	'UI:RequestMgmtMenuOverview:Title' => 'Dashboard for Anmodnings styring',
 	'UI-RequestManagementOverview-RequestByService' => 'Bruger anmodninger efter service',
 	'UI-RequestManagementOverview-RequestByPriority' => 'Bruger anmodninger efter prioritet',
 	'UI-RequestManagementOverview-RequestUnassigned' => 'Bruger anmodninger endnu ikke tildelt',
-
 	'UI:IncidentMgmtMenuOverview:Title' => 'Dashboard for Incident Management',
 	'UI-IncidentManagementOverview-IncidentByService' => 'Incidents efter service',
 	'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents efter prioritet',
 	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents endnu ikke tildelt',
-
 	'UI:ChangeMgmtMenuOverview:Title' => 'Dashboard for Change Management~~',
 	'UI-ChangeManagementOverview-ChangeByType' => 'Changes efter type',
 	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes endnu ikke tildelt',
 	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Udfald på grund af changes (ændringer)',
-
 	'UI:ServiceMgmtMenuOverview:Title' => 'Dashboard for Service Management',
 	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Kunde kontrakter til fornyelse indenfor 30 dage',
 	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Leverandør kontrakter til fornyelse indenfor 30 dage',
-
 	'UI:ContactsMenu' => 'Kontakter',
 	'UI:ContactsMenu+' => '',
 	'UI:ContactsMenu:Title' => 'Kontakter Overblik',
 	'UI-ContactsMenu-ContactsByLocation' => 'Kontakter efter lokation',
 	'UI-ContactsMenu-ContactsByType' => 'Kontakter efter type',
 	'UI-ContactsMenu-ContactsByStatus' => 'Kontakter efter status',
-
-	'Menu:CSVImportMenu' => 'CSV import',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:DataModelMenu' => 'Data Model~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Overview of the Data Model~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:ExportMenu' => 'Export~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:NotificationsMenu' => 'Notifikationer',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => 'Configuration of the Notifications~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Konfiguration af Notifikationer~~',
+	'UI:NotificationsMenu:Title' => 'Konfiguration af Notifikationer',
 	'UI:NotificationsMenu:Help' => 'Hjælp',
 	'UI:NotificationsMenu:HelpContent' => '<p>I '.ITOP_APPLICATION_SHORT.' er notifikationer fuldt modificerbare. De er baseret på to sæt af objekter: <i>triggers og handlinger</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of '.ITOP_APPLICATION_SHORT.' core, but others can be brought by extensions:
@@ -984,11 +1018,12 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 <ol>
 	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
 	En speciel side: <a href="../setup/email.test.php" target="_blank">email.test.php</a> er til rådighed for test og problemløsning af PHP mail konfigurationen.</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
 </ol>
 </p>
 <p>For udførelse, handlinger skal være knyttet til triggers.
-Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge" nummer, der specificerer i hvilken rækkefølge handlingerne udføres.</p>~~',
+Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge" nummer, der specificerer i hvilken rækkefølge handlingerne udføres.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Triggers',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Tilgængelige triggers',
 	'UI:NotificationsMenu:OnCreate' => 'Når et objekt oprettes',
@@ -999,53 +1034,18 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
 	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Tilgængelige handlinger',
-
 	'Menu:TagAdminMenu' => 'Tags configuration~~',
 	'Menu:TagAdminMenu+' => 'Tags values management~~',
 	'UI:TagAdminMenu:Title' => 'Tags configuration~~',
 	'UI:TagAdminMenu:NoTags' => 'No Tag field configured~~',
 	'UI:TagSetFieldData:Error' => 'Error: %1$s~~',
-
-	'Menu:AuditCategories' => 'Audit Kategorier',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => 'Audit Categories~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Audit Kategorier',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:RunQueriesMenu' => 'Kør forespørgsler',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Run any query~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:QueryMenu' => 'Query parlør',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'Query phrasebook~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:DataAdministration' => 'Data administration',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:UniversalSearchMenu' => 'Universal Søgning',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => 'Search for anything...~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:UserManagementMenu' => 'Bruger styring',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'User management~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:ProfilesMenu' => 'Profiler',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => 'Profiles~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profiler',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:UserAccountsMenu' => 'Bruger konti',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'User Accounts~~',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Bruger konti',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => 'Egenskaber',
-
-	'UI:OpenDocumentInNewWindow_' => 'Åben~~',
-	'UI:DownloadDocument_' => 'Hent~~',
+	'UI:OpenDocumentInNewWindow_' => 'Åben',
+	'UI:DownloadDocument_' => 'Hent',
 	'UI:Document:NoPreview' => 'Forhåndsvisning er ikke tilgængelig for denne dokumenttype',
 	'UI:Download-CSV' => 'Download %1$s',
-
 	'UI:DeadlineMissedBy_duration' => 'Overskredet med %1$s',
 	'UI:Deadline_LessThan1Min' => '< 1 min',
 	'UI:Deadline_Minutes' => '%1$d min',
@@ -1088,7 +1088,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# of impacted items: %1$d / %2$d~~',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Critical threshold: %1$d / %2$d~~',
 	'Portal:Title' => ITOP_APPLICATION_SHORT.' bruger portal',
-	'Portal:NoRequestMgmt' => 'Kære %1$s, du er blevet omdirigeret til denne side, fordi din konto er konfigureret med profilen \'Portal user\'. Desværre er '.ITOP_APPLICATION_SHORT.' ikke installeret med denne funktionalitet \'Request Management\'. Venligst kontakt din administrator.',
+	'Portal:NoRequestMgmt' => 'Kære %1$s, du er blevet omdirigeret til denne side, fordi din konto er konfigureret med profilen \'Portal user\'.Desværre er '.ITOP_APPLICATION_SHORT.' ikke installeret med denne funktionalitet \'Request Management\'.Venligst kontakt din administrator.',
 	'Portal:Refresh' => 'Opdater',
 	'Portal:Back' => 'Tilbage',
 	'Portal:WelcomeUserOrg' => 'Velkommen %1$s, fra %2$s',
@@ -1124,9 +1124,13 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'Enum:Undefined' => 'Udefineret',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s Dage %2$s Timer %3$s Minutter %4$s Sekunder',
 	'UI:ModifyAllPageTitle' => 'Modificer Alle',
+	'UI:Modify_ObjectsOf_Class' => 'Modifying objects of class %1$s~~',
 	'UI:Modify_N_ObjectsOf_Class' => 'Ændrer %1$d objekter af klasse %2$s',
 	'UI:Modify_M_ObjectsOf_Class_OutOf_N' => 'Ændrer %1$d objekter af klasse %2$s ud af %3$d',
 	'UI:Menu:ModifyAll' => 'Modificer...',
+	'UI:Menu:ModifyAll_Class' => 'Modify %1$s objects...~~',
+	'UI:Menu:ModifyAll_Link' => 'Modify %1$s...~~',
+	'UI:Menu:ModifyAll_Remote' => 'Modify %1$s...~~',
 	'UI:Button:ModifyAll' => 'Modificer Alle',
 	'UI:Button:PreviewModifications' => 'Preview Ændringer >>',
 	'UI:ModifiedObject' => 'Objekt Ændret',
@@ -1164,10 +1168,10 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Favorit Organisationer',
 	'UI:FavoriteOrganizations+' => '',
-	'UI:FavoriteLanguage' => 'Sprog i brugergrænseflade~~',
+	'UI:FavoriteLanguage' => 'Sprog i brugergrænseflade',
 	'UI:Favorites:SelectYourLanguage' => 'Vælg dit foretrukne sprog',
 	'UI:FavoriteOtherSettings' => 'Andre indstillinger',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Default længde for lister:  %1$s emner per side~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Default længde for lister:  %1$s emner per side',
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data~~',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => 'Enhver ændring vil blive kasseret.',
@@ -1186,7 +1190,6 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
 	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
 	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
-
 	'UI:ConfigureThisList' => 'Konfigurer denne liste...',
 	'UI:ListConfigurationTitle' => 'Liste Konfiguration',
 	'UI:ColumnsAndSortOrder' => 'Kolonner og sortering:',
@@ -1202,13 +1205,12 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',
 	'UI:Button:MoveUp' => 'Ryk Op',
 	'UI:Button:MoveDown' => 'Ryk Ned',
-
 	'UI:OQL:UnknownClassAndFix' => 'Ukendt klasse "%1$s". Forsøg "%2$s" i stedet for.',
 	'UI:OQL:UnknownClassNoFix' => 'Ukendt klasse "%1$s"',
-
 	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
 	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
 	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
+	'UI:Dashboard:Edit' => 'Rediger denne side...',
 	'UI:Dashboard:RevertConfirm' => 'Enhver ændring foretaget i den oprindelige version vil blive tabt. Bekræft venligst at du ønsker dette.',
 	'UI:ExportDashBoard' => 'Exporter til fil',
 	'UI:ImportDashBoard' => 'Importer fra fil...',
@@ -1216,13 +1218,11 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:ImportDashboardText' => 'Vælg en dashboard fil til import:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
-
-
+	'UI:Dashboard:Revert' => 'Tilbage til original version...',
 	'UI:DashletCreation:Title' => 'Opret en ny Dashlet',
 	'UI:DashletCreation:Dashboard' => 'Dashboard',
 	'UI:DashletCreation:DashletType' => 'Dashlet Type',
 	'UI:DashletCreation:EditNow' => 'Rediger Dashboard',
-
 	'UI:DashboardEdit:Title' => 'Dashboard Editor',
 	'UI:DashboardEdit:DashboardTitle' => 'Titel',
 	'UI:DashboardEdit:AutoReload' => 'Automatic refresh~~',
@@ -1230,38 +1230,31 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:DashboardEdit:AutoReloadSec+' => 'The minimum allowed is %1$d seconds~~',
 	'UI:DashboardEdit:Revert' => 'Revert~~',
 	'UI:DashboardEdit:Apply' => 'Apply~~',
-
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Dashboard Egenskaber',
 	'UI:DashboardEdit:Dashlets' => 'Tilgængelige Dashlets',
 	'UI:DashboardEdit:DashletProperties' => 'Dashlet Egenskaber',
-
 	'UI:Form:Property' => 'Egenskab',
 	'UI:Form:Value' => 'Værdi',
-
 	'UI:DashletUnknown:Label' => 'Unknown~~',
 	'UI:DashletUnknown:Description' => 'Unknown dashlet (might have been uninstalled)~~',
 	'UI:DashletUnknown:RenderText:View' => 'Unable to render this dashlet.~~',
 	'UI:DashletUnknown:RenderText:Edit' => 'Unable to render this dashlet (class "%1$s"). Check with your administrator if it is still available.~~',
 	'UI:DashletUnknown:RenderNoDataText:Edit' => 'No preview available for this dashlet (class "%1$s").~~',
 	'UI:DashletUnknown:Prop-XMLConfiguration' => 'Configuration (shown as raw XML)~~',
-
 	'UI:DashletProxy:Label' => 'Proxy~~',
 	'UI:DashletProxy:Description' => 'Proxy dashlet~~',
 	'UI:DashletProxy:RenderNoDataText:Edit' => 'No preview available for this third-party dashlet (class "%1$s").~~',
 	'UI:DashletProxy:Prop-XMLConfiguration' => 'Configuration (shown as raw XML)~~',
-
 	'UI:DashletPlainText:Label' => 'Tekst',
 	'UI:DashletPlainText:Description' => 'Plain text (ingen formatering)',
 	'UI:DashletPlainText:Prop-Text' => 'Tekst',
 	'UI:DashletPlainText:Prop-Text:Default' => 'Indtast venligst noget tekst her...',
-
 	'UI:DashletObjectList:Label' => 'Objekt liste',
 	'UI:DashletObjectList:Description' => 'Objekt liste dashlet',
 	'UI:DashletObjectList:Prop-Title' => 'Titel',
 	'UI:DashletObjectList:Prop-Query' => 'Forespørgsel',
 	'UI:DashletObjectList:Prop-Menu' => 'Menu',
-
 	'UI:DashletGroupBy:Prop-Title' => 'Titel',
 	'UI:DashletGroupBy:Prop-Query' => 'Forespørgsel',
 	'UI:DashletGroupBy:Prop-Style' => 'Style',
@@ -1275,24 +1268,19 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (ugedag)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (dag i måned)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Vælg venligst det felt, somobjekterne skal grupperes efter',
-
 	'UI:DashletGroupByPie:Label' => 'Pie Chart',
 	'UI:DashletGroupByPie:Description' => 'Pie Chart',
 	'UI:DashletGroupByBars:Label' => 'Bar Chart',
 	'UI:DashletGroupByBars:Description' => 'Bar Chart',
 	'UI:DashletGroupByTable:Label' => 'Grupper Efter (tabel)',
 	'UI:DashletGroupByTable:Description' => 'Liste (Grupperet efter felt)',
-
-	// New in 2.5
 	'UI:DashletGroupBy:Prop-Function' => 'Aggregation function~~',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute~~',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction~~',
 	'UI:DashletGroupBy:Prop-OrderField' => 'Order by~~',
 	'UI:DashletGroupBy:Prop-Limit' => 'Limit~~',
-
 	'UI:DashletGroupBy:Order:asc' => 'Ascending~~',
 	'UI:DashletGroupBy:Order:desc' => 'Descending~~',
-
 	'UI:GroupBy:count' => 'Count~~',
 	'UI:GroupBy:count+' => 'Number of elements~~',
 	'UI:GroupBy:sum' => 'Sum~~',
@@ -1303,14 +1291,12 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:GroupBy:min+' => 'Minimum of %1$s~~',
 	'UI:GroupBy:max' => 'Maximum~~',
 	'UI:GroupBy:max+' => 'Maximum of %1$s~~',
-	// ---
-
 	'UI:DashletHeaderStatic:Label' => 'Header',
 	'UI:DashletHeaderStatic:Description' => 'Vis en horisontal separator',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Titel',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kontakter',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Ikon',
-
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'Header med statistik',
 	'UI:DashletHeaderDynamic:Description' => 'Header med stats (grupperet efter...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Titel',
@@ -1321,11 +1307,9 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:DashletHeaderDynamic:Prop-Query' => 'Forespørgsel',
 	'UI:DashletHeaderDynamic:Prop-GroupBy' => 'Gruper efter',
 	'UI:DashletHeaderDynamic:Prop-Values' => 'Værdier',
-
 	'UI:DashletBadge:Label' => 'Badge',
 	'UI:DashletBadge:Description' => 'Objekt Ikon med ny/søg',
 	'UI:DashletBadge:Prop-Class' => 'Klasse',
-
 	'DayOfWeek-Sunday' => 'Søndag',
 	'DayOfWeek-Monday' => 'Mandag',
 	'DayOfWeek-Tuesday' => 'Tirsdag',
@@ -1345,8 +1329,6 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'Month-10' => 'October~~',
 	'Month-11' => 'November~~',
 	'Month-12' => 'December~~',
-
-	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Su~~',
 	'DayOfWeek-Monday-Min' => 'Mo~~',
 	'DayOfWeek-Tuesday-Min' => 'Tu~~',
@@ -1366,13 +1348,13 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'Month-10-Short' => 'Oct~~',
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
-	'Calendar-FirstDayOfWeek' => '0~~',// 0 = Sunday, 1 = Monday, etc...
-
+	'Calendar-FirstDayOfWeek' => '0~~',
 	'UI:Menu:ShortcutList' => 'Opret Genvej...',
+	'UI:Menu:FilterList' => 'Display list with search criteria~~',
 	'UI:ShortcutRenameDlg:Title' => 'Omdøb genvej',
 	'UI:ShortcutListDlg:Title' => 'Opret en genvej for denne liste',
 	'UI:ShortcutDelete:Confirm' => 'Bekræft venligst at du ønsker at slette genvej(e).',
-	'Menu:MyShortcuts' => 'Mine Genveje',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:ObjectShortcutInsert' => 'Insert Object Shortcut~~',
 	'Class:Shortcut' => 'Genvej',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => 'Navn',
@@ -1381,17 +1363,18 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'Class:ShortcutOQL+' => '',
 	'Class:ShortcutOQL/Attribute:oql' => 'Søgning',
 	'Class:ShortcutOQL/Attribute:oql+' => '',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Automatic refresh~~',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Disabled~~',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Custom rate~~',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Automatic refresh interval (seconds)~~',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'The minimum allowed is %1$d seconds~~',
-
 	'UI:FillAllMandatoryFields' => 'Venligst udfyld alle obligatoriske felter.',
 	'UI:ValueMustBeSet' => 'Please specify a value~~',
 	'UI:ValueMustBeChanged' => 'Please change the value~~',
 	'UI:ValueInvalidFormat' => 'Invalid format~~',
-
 	'UI:CSVImportConfirmTitle' => 'Please confirm the operation~~',
 	'UI:CSVImportConfirmMessage' => 'Are you sure you want to do this?~~',
 	'UI:CSVImportError_items' => 'Errors: %1$d~~',
@@ -1417,11 +1400,9 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 <tr><td>i</td><td>minutes (2 digits, e.g. 00..59)</td></tr>
 <tr><td>s</td><td>seconds (2 digits, e.g. 00..59)</td></tr>
 </table>~~',
-
 	'UI:Button:Remove' => 'Remove~~',
 	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...~~',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s~~',
-
 	'UI:AboutBox' => 'About '.ITOP_APPLICATION_SHORT.'...~~',
 	'UI:About:Title' => 'About '.ITOP_APPLICATION_SHORT.'~~',
 	'UI:About:DataModel' => 'Data model~~',
@@ -1431,12 +1412,10 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:About:ManualExtensionSource' => 'Extension~~',
 	'UI:About:Extension_Version' => 'Version: %1$s~~',
 	'UI:About:RemoteExtensionSource' => 'Data~~',
-
 	'UI:DisconnectedDlgMessage' => 'You are disconnected. You must identify yourself to continue using the application.~~',
 	'UI:DisconnectedDlgTitle' => 'Warning!~~',
 	'UI:LoginAgain' => 'Login again~~',
 	'UI:StayOnThePage' => 'Stay on this page~~',
-
 	'ExcelExporter:ExportMenu' => 'Excel Export...~~',
 	'ExcelExporter:ExportDialogTitle' => 'Excel Export~~',
 	'ExcelExporter:ExportButton' => 'Export~~',
@@ -1449,7 +1428,6 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'ExcelExport:Statistics' => 'Statistics~~',
 	'portal:legacy_portal' => 'End-User Portal~~',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office User Interface~~',
-
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.~~',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.~~',
 	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they have finished.~~',
@@ -1457,43 +1435,31 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.~~',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !~~',
-
 	'UI:Menu:ExportPDF' => 'Export as PDF...~~',
 	'UI:Menu:PrintableVersion' => 'Printer friendly version~~',
-
 	'UI:BrowseInlineImages' => 'Browse images...~~',
 	'UI:UploadInlineImageLegend' => 'Upload a new image~~',
 	'UI:SelectInlineImageToUpload' => 'Select the image to upload~~',
 	'UI:AvailableInlineImagesLegend' => 'Available images~~',
 	'UI:NoInlineImage' => 'There is no image available on the server. Use the "Browse" button above to select an image from your computer and upload it to the server.~~',
-
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',
 	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
-
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
-
-	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
 	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
-	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used~~',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular~~',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others~~',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.~~',
-
-	// - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:Criteria:Remove' => 'Remove~~',
 	'UI:Search:Criteria:Locked' => 'Locked~~',
-
-	// - Criteria titles
-	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty~~',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty~~',
@@ -1515,53 +1481,38 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s from %2$s~~',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s up to %2$s~~',
-	//   - Numeric widget
-	//   None yet
-	//   - DateTime widget
-	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s~~',
-	//   - Enum widget
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s~~',
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any~~',
-	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
-	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
-	//   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
-
-	// - Criteria operators
-	//   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty~~',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty~~',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals~~',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Between~~',
-	//   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contains~~',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with~~',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
-	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',// => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',// => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',// > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',// => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',// > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',// => '≠',
-	//   - Tag Set Widget
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
-
-	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...~~',
 	'UI:Search:Value:Search:Placeholder' => 'Search...~~',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Start typing for possible values.~~',
@@ -1569,8 +1520,6 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:Search:Value:Autocomplete:NoResult' => 'No result.~~',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none~~',
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Check all / none visibles~~',
-
-	// - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'From~~',
 	'UI:Search:Criteria:Numeric:Until' => 'To~~',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Any~~',
@@ -1584,11 +1533,9 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Any date~~',
 	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Any date~~',
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Children of the selected objects will be included.~~',
-
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
-
-	'UI:StateChanged' => 'State changed~~',
+	'UI:StateChanged' => 'State changed~~'
 ));
 
 //
@@ -1598,16 +1545,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Expression:Operator:AND' => ' AND ~~',
 	'Expression:Operator:OR' => ' OR ~~',
 	'Expression:Operator:=' => ': ~~',
-
 	'Expression:Unit:Short:DAY' => 'd~~',
 	'Expression:Unit:Short:WEEK' => 'w~~',
 	'Expression:Unit:Short:MONTH' => 'm~~',
 	'Expression:Unit:Short:YEAR' => 'y~~',
-
 	'Expression:Unit:Long:DAY' => 'day(s)~~',
 	'Expression:Unit:Long:HOUR' => 'hour(s)~~',
 	'Expression:Unit:Long:MINUTE' => 'minute(s)~~',
-
 	'Expression:Verb:NOW' => 'now~~',
 	'Expression:Verb:ISNULL' => ': undefined~~',
 ));
@@ -1623,54 +1567,42 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration~~',
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
 ));
 
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:DataSources' => 'Synkroniserings Data Kilder',
-	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
-	'Menu:WelcomeMenu' => 'Velkomen',
-	'Menu:WelcomeMenu+' => 'Velkommen til '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => 'Velkomen',
-	'Menu:WelcomeMenuPage+' => 'Velkommen til '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => 'Admin værktøjer',
-	'Menu:AdminTools+' => 'Administration tools~~',
-	'Menu:AdminTools?' => 'Værktøjer kun tilgængelige for brugere med administrator profil',
-	'Menu:DataModelMenu' => 'Data Model~~',
-	'Menu:DataModelMenu+' => 'Overview of the Data Model~~',
-	'Menu:ExportMenu' => 'Export~~',
-	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML~~',
-	'Menu:NotificationsMenu' => 'Notifikationer',
-	'Menu:NotificationsMenu+' => 'Configuration of the Notifications~~',
+	'Menu:DataSources+' => 'Data synchro used for batch import of external data~~',
 	'Menu:AuditCategories' => 'Audit Kategorier',
-	'Menu:AuditCategories+' => 'Audit Categories~~',
-	'Menu:Notifications:Title' => 'Audit Kategorier',
-	'Menu:RunQueriesMenu'         => 'Kør forespørgsler',
-	'Menu:RunQueriesMenu+'        => 'Run any query~~',
-	'Menu:QueryMenu'              => 'Query parlør',
-	'Menu:QueryMenu+'             => 'Query phrasebook~~',
-	'Menu:UniversalSearchMenu'    => 'Universal Søgning',
-	'Menu:UniversalSearchMenu+'   => 'Search for anything...~~',
-	'Menu:UserManagementMenu'     => 'Bruger styring',
-	'Menu:UserManagementMenu+'    => 'User management~~',
-	'Menu:ProfilesMenu'           => 'Profiler',
-	'Menu:ProfilesMenu+'          => 'Profiles~~',
-	'Menu:ProfilesMenu:Title'     => 'Profiler',
-	'Menu:UserAccountsMenu'       => 'Bruger konti',
-	'Menu:UserAccountsMenu+'      => 'User Accounts~~',
+	'Menu:AuditCategories+' => 'Define rules to audit the quality of '.ITOP_APPLICATION_SHORT.' data~~',
+	'Menu:AuditCategories:Title' => 'Audit configuration~~',
+	'Menu:RunQueriesMenu' => 'Kør forespørgsler',
+	'Menu:RunQueriesMenu+' => 'Write and execute any OQL query~~',
+	'Menu:QueryMenu' => 'Query parlør',
+	'Menu:QueryMenu+' => 'Reusable stored queries~~',
+	'Menu:UniversalSearchMenu' => 'Universal Søgning',
+	'Menu:UniversalSearchMenu+' => 'Search objects of any class including abstract~~',
+	'Menu:UserManagementMenu' => 'Bruger styring',
+	'Menu:UserManagementMenu+' => 'Who can connect to '.ITOP_APPLICATION_SHORT.' and what can they do?~~',
+	'Menu:ProfilesMenu' => 'Profiler',
+	'Menu:ProfilesMenu+' => 'View existing Profiles~~',
+	'Menu:ProfilesMenu:Title' => 'Profiler',
+	'Menu:UserAccountsMenu' => 'Bruger konti',
+	'Menu:UserAccountsMenu+' => 'Handling '.ITOP_APPLICATION_SHORT.' users and their access rights~~',
 	'Menu:UserAccountsMenu:Title' => 'Bruger konti',
-	'Menu:MyShortcuts'            => 'Mine Genveje',
-	'Menu:UserManagement'         => 'User Management~~',
-	'Menu:Queries'                => 'Queries~~',
-	'Menu:ConfigurationTools'     => 'Configuration~~',
-));
+	'Menu:UserManagement' => 'User management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
+	'Menu:ConfigEditor' => 'General configuration~~',
+	'Menu:ConfigEditor+' => 'Configuration File editor~~',
+	'Menu:Integrations' => 'Integrations~~',
+	'Menu:Integrations+' => '~~',
 
-// Additional language entries not present in English dict
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard'   => 'Custom~~',
-	'UI:Dashboard:Edit'           => 'Rediger denne side...',
-	'UI:Dashboard:Revert'         => 'Tilbage til original version...',
 ));

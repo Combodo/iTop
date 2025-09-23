@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -53,13 +53,22 @@ $(document).ready(function()
 	}, 1000);
 
 	// Hide tooltips when a modal is opening, otherwise it might be overlapping it
-	oBodyElem.on('show.bs.modal', function ()
+	oBodyElem.on('show.bs.modal', '.modal', function ()
 	{
+		// We'll probably never have this kind of tooltip anymore, but just in case
 		$(this).find('.tooltip.in').tooltip('hide');
+
+		// Set the z-index of the modal and its backdrop in case we have several modals opened
+		let zIndex = 1050 + (10 * $('.modal:visible').length);
+		$(this).css('z-index', zIndex);
+		// Set the z-index of the backdrop later because it is created after the modal
+		setTimeout(function() {
+			$('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+		}, 10);
 	});
 
 	/*
-	 * Display a error message on modal if the content could not be loaded.
+	 * Display an error message on modal if the content could not be loaded.
 	 *
 	 * Note : As of now, we can't display a more detailed message based on the response because Bootstrap doesn't pass response data with the loaded event.
 	 */
@@ -100,6 +109,6 @@ $(document).ready(function()
 			};
 		}
 
-		CombodoPortalToolbox.OpenModal(oOptions);
+		CombodoModal.OpenModal(oOptions);
 	});
 });

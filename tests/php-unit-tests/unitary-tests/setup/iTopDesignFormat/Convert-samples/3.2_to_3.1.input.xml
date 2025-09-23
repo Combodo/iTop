@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+  <branding>
+    <main_favicon  _delta="define">
+      <fileref ref="logo_rvb"/>
+    </main_favicon>
+    <login_favicon  _delta="define">
+      <fileref ref="logo_log"/>
+    </login_favicon>
+    <portal_favicon  _delta="define">
+      <fileref ref="logo_log"/>
+    </portal_favicon>
+  </branding>
+</itop_design>

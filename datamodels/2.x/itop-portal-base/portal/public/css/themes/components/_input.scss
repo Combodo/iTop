@@ -1,0 +1,27 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-form-control--color: $common-color-grey-800 !default;
+$ipb-form-control--is-focused--border-color: $common-color-primary-700 !default;
+
+$ipb-input-group-addon--border-color: $ipb-color-grey-300 !default;
+$ipb-input-group-addon--border: 1px solid $ipb-input-group-addon--border-color !default;
+$ipb-input-group-addon--background-color: $common-color-grey-100 !default;
+$ipb-input-group-addon--color: $common-color-grey-800 !default;
+
+
+.form-control {
+  color: $ipb-form-control--color;
+  &:focus {
+    border-color: $ipb-form-control--is-focused--border-color;
+  }
+}
+
+.input-group-addon {
+  border: $ipb-input-group-addon--border;
+  background-color: $ipb-input-group-addon--background-color;
+  color: $ipb-input-group-addon--color;
+}

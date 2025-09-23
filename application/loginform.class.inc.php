@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -44,6 +44,10 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 					exit;
 				}
 
+                if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+                    return LoginWebPage::LOGIN_FSM_CONTINUE;
+                }
+
 				// No credentials yet, display the form
 				$oPage = LoginWebPage::NewLoginWebPage();
 				$oPage->DisplayLoginForm($this->bForceFormOnError);
@@ -68,7 +72,6 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 			$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
 			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal'))
 			{
-				$_SESSION['auth_user'] = $sAuthUser;
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
@@ -137,7 +140,11 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 		$oLoginContext->AddBlockExtension('login_form_footer', new LoginBlockExtension('extensionblock/loginformfooter.html.twig'));
 
 		$bEnableResetPassword = MetaModel::GetConfig()->Get('forgot_password');
-		$sResetPasswordUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php?loginop=forgot_pwd';
+		$sResetPasswordUrl = MetaModel::GetConfig()->Get('forgot_password.url');
+		if ($sResetPasswordUrl == '')
+		{
+			$sResetPasswordUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php?loginop=forgot_pwd';
+		}
 		$aData = array(
 			'bEnableResetPassword' => $bEnableResetPassword,
 			'sResetPasswordUrl' => $sResetPasswordUrl,

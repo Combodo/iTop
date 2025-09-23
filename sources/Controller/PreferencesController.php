@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -22,7 +22,7 @@ use utils;
  * @since 3.0.0
  * @package Combodo\iTop\Controller
  */
-class PreferencesController
+class PreferencesController extends AbstractController
 {
 	/**
 	 * @return string[]
@@ -31,12 +31,9 @@ class PreferencesController
 	 * @throws \MySQLException
 	 * @throws \Exception
 	 */
-	public static function SetUserPicture(): array
+	public function SetUserPicture(): array
 	{
 		$sImageFilename = utils::ReadPostedParam('image_filename', null, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
-
-		// Set preference for the user
-		appUserPreferences::SetPref('user_picture_placeholder', $sImageFilename);
 
 		$sUserPicturesFolder = 'images/user-pictures/';
 		$sImageAbsPath = utils::RealPath(APPROOT.$sUserPicturesFolder.$sImageFilename, APPROOT.$sUserPicturesFolder);
@@ -52,6 +49,9 @@ class PreferencesController
 		if (false === $sImageData) {
 			throw new Exception('Error while updating user image, could not open file "'.$sImageAbsPath.'"');
 		}
+
+		// Set preference for the user
+		appUserPreferences::SetPref('user_picture_placeholder', $sImageFilename);
 
 		// Check if user has a contact with an image attribute, so we put the image in it also
 		$sPersonClass = 'Person';

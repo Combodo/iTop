@@ -1,27 +1,15 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
 require_once('dbobjectiterator.php');
 
 /**
  * Object set management
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -53,6 +41,18 @@ class DBObjectSet implements iDBObjectSetIterator
 	 * @var array
 	 */
 	protected $m_aAttToLoad;
+	/**
+	 * @var null|array
+	 */
+	protected $m_aExtendedDataSpec;
+	/**
+	 * @var int Maximum number of elements to retrieve
+	 */
+	protected $m_iLimitCount;
+	/**
+	 * @var int Offset from which elements should be retrieved
+	 */
+	protected $m_iLimitStart;
 	/**
 	 * @var array
 	 */
@@ -141,7 +141,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	{
 		$sRet = '';
 		$this->Rewind();
-		$sRet .= "Set (".$this->m_oFilter->ToOQL().")<br/>\n";
+		$sRet .= "Set (".$this->m_oFilter->ToOQL(true).")<br/>\n";
         $sRet .= "Query: <pre style=\"font-size: smaller; display:inline;\">".$this->m_oFilter->MakeSelectQuery().")</pre>\n";
 		
 		$sRet .= $this->Count()." records<br/>\n";
@@ -154,6 +154,7 @@ class DBObjectSet implements iDBObjectSetIterator
 			}
 			$sRet .= "</ul>\n";
 		}
+		$this->Rewind();
 		return $sRet;
 	}
 
@@ -766,7 +767,10 @@ class DBObjectSet implements iDBObjectSetIterator
 
 		try
 		{
+            $oKPI = new ExecutionKPI();
 			$this->m_oSQLResult = CMDBSource::Query($sSQL);
+            $sOQL = $this->GetPseudoOQL($this->m_oFilter, $this->GetRealSortOrder(), $this->m_iLimitCount, $this->m_iLimitStart, false);
+            $oKPI->ComputeStats('OQL Query Exec', $sOQL);
 		} catch (MySQLException $e)
 		{
 			// 1116 = ER_TOO_MANY_TABLES
@@ -846,8 +850,11 @@ class DBObjectSet implements iDBObjectSetIterator
 	{
 		if (is_null($this->m_iNumTotalDBRows))
 		{
+            $oKPI = new ExecutionKPI();
 			$sSQL = $this->m_oFilter->MakeSelectQuery(array(), $this->m_aArgs, null, null, 0, 0, true);
 			$resQuery = CMDBSource::Query($sSQL);
+            $sOQL = $this->GetPseudoOQL($this->m_oFilter, array(), 0, 0, true);
+            $oKPI->ComputeStats('OQL Query Exec', $sOQL);
 			if (!$resQuery) return 0;
 
 			$aRow = CMDBSource::FetchArray($resQuery);
@@ -857,6 +864,42 @@ class DBObjectSet implements iDBObjectSetIterator
 
 		return $this->m_iNumTotalDBRows + count($this->m_aAddedObjects); // Does it fix Trac #887 ??
 	}
+
+    /**
+     * @param \DBSearch $oFilter
+     * @param array $aOrder
+     * @param int $iLimitCount
+     * @param int $iLimitStart
+     * @param bool $bCount
+     *
+     * @return string
+     */
+    private function GetPseudoOQL($oFilter, $aOrder, $iLimitCount, $iLimitStart, $bCount)
+    {
+        $sOQL = '';
+        if ($bCount) {
+            $sOQL .= 'COUNT ';
+        }
+        $sOQL .= $oFilter->ToOQL();
+
+        if ($iLimitCount > 0) {
+            $sOQL .= ' LIMIT ';
+            if ($iLimitStart > 0) {
+                $sOQL .= "$iLimitStart, ";
+            }
+            $sOQL .= "$iLimitCount";
+        }
+
+        if (count($aOrder) > 0) {
+            $sOQL .= ' ORDER BY ';
+            $aOrderBy = [];
+            foreach ($aOrder as $sAttCode => $bAsc) {
+                $aOrderBy[] = $sAttCode.' '.($bAsc ? 'ASC' : 'DESC');
+            }
+            $sOQL .= implode(', ', $aOrderBy);
+        }
+        return $sOQL;
+    }
 
 	/**
 	 * Check if the count exceeds a given limit
@@ -874,8 +917,11 @@ class DBObjectSet implements iDBObjectSetIterator
 	{
 		if (is_null($this->m_iNumTotalDBRows))
 		{
+            $oKPI = new ExecutionKPI();
 			$sSQL = $this->m_oFilter->MakeSelectQuery(array(), $this->m_aArgs, null, null, $iLimit + 2, 0, true);
 			$resQuery = CMDBSource::Query($sSQL);
+            $sOQL = $this->GetPseudoOQL($this->m_oFilter, array(), $iLimit + 2, 0, true);
+            $oKPI->ComputeStats('OQL Query Exec', $sOQL);
 			if ($resQuery)
 			{
 				$aRow = CMDBSource::FetchArray($resQuery);
@@ -886,7 +932,7 @@ class DBObjectSet implements iDBObjectSetIterator
 			{
 				$iCount = 0;
 			}
-		}
+        }
 		else
 		{
 			$iCount = $this->m_iNumTotalDBRows;
@@ -911,8 +957,11 @@ class DBObjectSet implements iDBObjectSetIterator
 	{
 		if (is_null($this->m_iNumTotalDBRows))
 		{
+            $oKPI = new ExecutionKPI();
 			$sSQL = $this->m_oFilter->MakeSelectQuery(array(), $this->m_aArgs, null, null, $iLimit + 2, 0, true);
 			$resQuery = CMDBSource::Query($sSQL);
+            $sOQL = $this->GetPseudoOQL($this->m_oFilter, array(), $iLimit + 2, 0, true);
+            $oKPI->ComputeStats('OQL Query Exec', $sOQL);
 			if ($resQuery)
 			{
 				$aRow = CMDBSource::FetchArray($resQuery);
@@ -923,7 +972,7 @@ class DBObjectSet implements iDBObjectSetIterator
 			{
 				$iCount = 0;
 			}
-		}
+        }
 		else
 		{
 			$iCount = $this->m_iNumTotalDBRows;
@@ -1469,7 +1518,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	public function ListConstantFields()
 	{
 		// The complete list of arguments will include magic arguments (e.g. current_user->attcode)
-		$aScalarArgs = MetaModel::PrepareQueryArguments($this->m_oFilter->GetInternalParams(), $this->m_aArgs, $this->m_oFilter->ListParameters());
+		$aScalarArgs = MetaModel::PrepareQueryArguments($this->m_oFilter->GetInternalParams(), $this->m_aArgs, $this->m_oFilter->GetExpectedArguments());
 		$aConst = $this->m_oFilter->ListConstantFields();
 				
 		foreach($aConst as $sClassAlias => $aVals)

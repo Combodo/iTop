@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+  <menus>
+    <menu id="Change:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
+      <rank>3</rank>
+      <parent>ChangeManagement</parent>
+      <template_file/>
+    </menu>
+  </menus>
+</itop_design>

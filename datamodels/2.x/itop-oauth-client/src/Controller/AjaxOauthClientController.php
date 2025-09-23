@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2022 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -10,10 +10,12 @@ use cmdbAbstractObject;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
 use Dict;
+use Exception;
 use IssueLog;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use MetaModel;
 use utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 class AjaxOauthClientController extends Controller
 {
@@ -31,8 +33,13 @@ class AjaxOauthClientController extends Controller
 
 		$aResult = ['status' => 'success', 'data' => []];
 
-		$sAuthorizationUrl = OAuthClientProviderFactory::GetAuthorizationUrl($oOAuthClient);
-		$aResult['data']['authorization_url'] = $sAuthorizationUrl;
+        try {
+            $sAuthorizationUrl = OAuthClientProviderFactory::GetAuthorizationUrl($oOAuthClient);
+            $aResult['data']['authorization_url'] = $sAuthorizationUrl;
+        } catch (Exception $oException) {
+            $aResult['status'] = 'error';
+            $aResult['error_description'] = $oException->getMessage();
+        }
 
 		$this->DisplayJSONPage($aResult);
 	}
@@ -65,13 +72,15 @@ class AjaxOauthClientController extends Controller
 			}
 			if (isset($aQuery['code'])) {
 				$sCode = $aQuery['code'];
-				$oAccessToken = OAuthClientProviderFactory::GetAccessTokenFromCode($oOAuthClient, $sCode);
-
-				$oOAuthClient->SetAccessToken($oAccessToken);
-
-
-
-				$aResult['status'] = 'success';
+				try {
+					$oAccessToken = OAuthClientProviderFactory::GetAccessTokenFromCode($oOAuthClient, $sCode);
+					$oOAuthClient->SetAccessToken($oAccessToken);
+					$aResult['status'] = 'success';
+				}
+				catch (IdentityProviderException $e) {
+					$aResult['status'] = 'error';
+					$aResult['error_description'] = $e->getMessage();
+				}
 			}
 		} else {
 			$aResult['status'] = 'error';

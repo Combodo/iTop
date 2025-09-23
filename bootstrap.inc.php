@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -45,6 +45,7 @@ define('MAINTENANCE_MODE_FILE', APPROOT.'data/.maintenance');
 define('READONLY_MODE_FILE', APPROOT.'data/.readonly');
 
 $fItopStarted = microtime(true);
+$iItopInitialMemory = memory_get_usage(true);
 
 if (!isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false) {
 	require_once APPROOT.'/lib/autoload.php';
@@ -67,7 +68,7 @@ if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance)
 	http_response_code(503);
 	// Display message depending on the request
 	include(APPROOT.'application/maintenancemsg.php');
-	$sSAPIName = strtoupper(trim(php_sapi_name()));
+	$sSAPIName = strtoupper(trim(PHP_SAPI));
 
 	switch (true)
 	{

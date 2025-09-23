@@ -1,17 +1,19 @@
 <?php
 /**
- * Localized data.
+ * Localized data
  *
- * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
- * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
+ * @author Daniel Rokos <daniel.rokos@itopportal.cz>
+ *
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-
 	'bkp-backup-running' => 'Probíhá záloha. Vyčkejte prosím...',
 	'bkp-restore-running' => 'Probíhá obnova ze zálohy. Vyčkejte prosím...',
-
 	'Menu:BackupStatus' => 'Plánované zálohování',
 	'bkp-status-title' => 'Plánované zálohování',
 	'bkp-status-checks' => 'Nastavení testy',
@@ -36,7 +38,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'bkp-status-backups-manual' => 'Manuální zálohy',
 	'bkp-status-backups-none' => 'Žádné zálohy',
 	'bkp-next-backup' => 'Další záloha bude provedena dne <b>%1$s</b> (%2$s) v %3$s',
-	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
+	'bkp-next-backup-unknown' => 'Další záloha <b>není naplánována.</b>',
 	'bkp-button-backup-now' => 'Zálohovat nyní!',
 	'bkp-button-restore-now' => 'Obnovit ze zálohy!',
 	'bkp-confirm-backup' => 'Potvrďte prosím, že chcete provést zálohu nyní.',

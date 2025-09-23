@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -22,4 +22,13 @@
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	// Dictionary entries go here
+));
+
+//
+// Class: LogicalInterface
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:LogicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:LogicalInterface/Attribute:org_id+' => '~~',
 ));

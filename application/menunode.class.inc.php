@@ -1,13 +1,15 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT.'/application/template.class.inc.php');
 require_once(APPROOT."/application/user.dashboard.class.inc.php");
 
 
@@ -103,7 +105,7 @@ class ApplicationMenu
 	{
 		self::$sFavoriteSiloQuery = $sOQL;
 	}
-	
+
 	/**
 	 * Get the query used to limit the list of displayed organizations in the drop-down menu
 	 * @return string The OQL query returning a list of Organization objects
@@ -122,9 +124,7 @@ class ApplicationMenu
 	 */
 	public static function CheckMenuIdEnabled($sMenuId)
 	{
-		self::LoadAdditionalMenus();
-		$oMenuNode = self::GetMenuNode(self::GetMenuIndexById($sMenuId));
-		if (is_null($oMenuNode) || !$oMenuNode->IsEnabled())
+		if (self::IsMenuIdEnabled($sMenuId) === false)
 		{
 			require_once(APPROOT.'/setup/setuppage.class.inc.php');
 			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
@@ -133,6 +133,19 @@ class ApplicationMenu
 			$oP->output();
 			exit;
 		}
+	}
+
+	/**
+	 * @param $sMenuId
+	 *
+	 * @return bool true if the menu exists and current user is allowed to see the menu
+	 * @since 3.2.0
+	 */
+	public static function IsMenuIdEnabled($sMenuId):bool
+	{
+		self::LoadAdditionalMenus();
+		$oMenuNode = self::GetMenuNode(self::GetMenuIndexById($sMenuId));
+		return is_null($oMenuNode) === false && $oMenuNode->IsEnabled();
 	}
 
 	/**
@@ -266,9 +279,11 @@ class ApplicationMenu
 			$oMenuNode = static::GetMenuNode($sMenuGroupIdx);
 
 			if (!($oMenuNode instanceof MenuGroup)) {
-				IssueLog::Error('Menu node was not displayed as a menu group as it is actually not a menu group', LogChannels::CONSOLE, [
+				IssueLog::Error('Menu node without parent (root menu) must be of type menu group. Parent menu is missing or not visible to user.', LogChannels::CONSOLE, [
 					'menu_node_class' => get_class($oMenuNode),
+					'menu_node_id' => $oMenuNode->GetMenuID(),
 					'menu_node_label' => $oMenuNode->GetLabel(),
+					'current_user_id' => UserRights::GetUserId(),
 				]);
 				continue;
 			}
@@ -291,7 +306,17 @@ class ApplicationMenu
 	 * @param string $sMenuGroupIdx
 	 * @param array $aExtraParams
 	 *
-	 * @return array
+	 * @return array{
+	 *     array{
+	 *        sId: string,
+	 *        sTitle: string,
+	 *        sLabel: string,
+	 *        bHasCount: boolean,
+	 *        sUrl: string,
+	 *        bOpenInNewWindow: boolean,
+	 *        aSubMenuNodes: array
+	 *     }
+	 * } The aSubMenuNodes key contains the same structure recursively
 	 * @throws \DictExceptionMissingString
 	 * @throws \Exception
 	 * @since 3.0.0
@@ -320,60 +345,17 @@ class ApplicationMenu
 			}
 
 			$aSubMenuNodes[] = [
-				'sId' => $oSubMenuNode->GetMenuId(),
-				'sTitle' => $oSubMenuNode->GetTitle(),
-				'bHasCount' => $oSubMenuNode->HasCount(),
-				'sUrl' => $oSubMenuNode->GetHyperlink($aExtraParams),
+				'sId'              => $oSubMenuNode->GetMenuId(),
+				'sTitle'           => $oSubMenuNode->GetTitle(),
+				'sLabel'           => $oSubMenuNode->GetLabel(),
+				'bHasCount'        => $oSubMenuNode->HasCount(),
+				'sUrl'             => $oSubMenuNode->GetHyperlink($aExtraParams),
 				'bOpenInNewWindow' => $oSubMenuNode->IsHyperLinkInNewWindow(),
-				'aSubMenuNodes' => static::GetSubMenuNodes($sSubMenuItemIdx, $aExtraParams),
+				'aSubMenuNodes'    => static::GetSubMenuNodes($sSubMenuItemIdx, $aExtraParams),
 			];
 		}
 
 		return $aSubMenuNodes;
-	}
-
-	/**
-	 * Entry point to display the whole menu into the web page, used by iTopWebPage
-	 * @param \WebPage $oPage
-	 * @param array $aExtraParams
-	 * @throws DictExceptionMissingString
-	 *
-	 * @deprecated Will be removed in 3.0.0, use static::GetMenuGroups() instead
-	 */
-	public static function DisplayMenu($oPage, $aExtraParams)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use static::GetMenuGroups() instead');
-		self::LoadAdditionalMenus();
-		// Sort the root menu based on the rank
-		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
-		$iAccordion = 0;
-		$iActiveAccordion = $iAccordion;
-		$iActiveMenu = self::GetMenuIndexById(self::GetActiveNodeId());
-		foreach (self::$aRootMenus as $aMenu) {
-			if (!self::CanDisplayMenu($aMenu)) {
-				continue;
-			}
-			$oMenuNode = self::GetMenuNode($aMenu['index']);
-			$oPage->AddToMenu('<h3 id="'.utils::GetSafeId('AccordionMenu_'.$oMenuNode->GetMenuID()).'" class="navigation-menu-group" data-menu-id="'.$oMenuNode->GetMenuId().'">'.$oMenuNode->GetTitle().'</h3>');
-			$oPage->AddToMenu('<div>');
-			$oPage->AddToMenu('<ul>');
-			$aChildren = self::GetChildren($aMenu['index']);
-			$bActive = self::DisplaySubMenu($oPage, $aChildren, $aExtraParams, $iActiveMenu);
-			$oPage->AddToMenu('</ul>');
-			if ($bActive)
-			{
-				$iActiveAccordion = $iAccordion;
-			}
-			$oPage->AddToMenu('</div>');
-			$iAccordion++;
-		}
-
-		$oPage->add_ready_script(
-<<<EOF
-	// Accordion Menu
-	$("#accordion").css({display:'block'}).accordion({ header: "h3", heightStyle: "content", collapsible: true,  active: $iActiveAccordion, icons: false, animate: true }); // collapsible will be enabled once the item will be selected
-EOF
-		);
 	}
 
 	/**
@@ -403,73 +385,6 @@ EOF
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Handles the display of the sub-menus (called recursively if necessary)
-	 *
-	 * @param \WebPage $oPage
-	 * @param array $aMenus
-	 * @param array $aExtraParams
-	 * @param int $iActiveMenu
-	 *
-	 * @return bool True if the currently selected menu is one of the submenus
-	 * @throws DictExceptionMissingString
-	 * @throws \Exception
-	 * @deprecated Will be removed in 3.0.0, use static::GetSubMenuNodes() instead
-	 */
-	protected static function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use static::GetSubMenuNodes() instead');
-		// Sort the menu based on the rank
-		$bActive = false;
-		usort($aMenus, array('ApplicationMenu', 'CompareOnRank'));
-		foreach ($aMenus as $aMenu) {
-			if (!self::CanDisplayMenu($aMenu)) {
-				continue;
-			}
-			$index = $aMenu['index'];
-			$oMenu = self::GetMenuNode($index);
-			if ($oMenu->IsEnabled())
-			{
-				$aChildren = self::GetChildren($index);
-				$aCSSClasses = array('navigation-menu-item');
-				if (count($aChildren) > 0)
-				{
-					$aCSSClasses[] = 'submenu';
-				}
-				$sHyperlink = $oMenu->GetHyperlink($aExtraParams);
-				$sItemHtml = '<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'" class="'.implode(' ', $aCSSClasses).'" data-menu-id="'.$oMenu->GetMenuID().'">';
-				if ($sHyperlink != '')
-				{
-					$sLinkTarget = '';
-					if ($oMenu->IsHyperLinkInNewWindow())
-					{
-						$sLinkTarget .= ' target="_blank"';
-					}
-					$sURL = '"'.$oMenu->GetHyperlink($aExtraParams).'"'.$sLinkTarget;
-					$sTitle = utils::HtmlEntities($oMenu->GetTitle());
-					$sItemHtml .= "<a href={$sURL}>{$sTitle}</a>";
-				}
-				else
-				{
-					$sItemHtml .= $oMenu->GetTitle();
-				}
-				$sItemHtml .= '</li>';
-				$oPage->AddToMenu($sItemHtml);
-				if ($iActiveMenu == $index)
-				{
-					$bActive = true;
-				}
-				if (count($aChildren) > 0)
-				{
-					$oPage->AddToMenu('<ul>');
-					$bActive |= self::DisplaySubMenu($oPage, $aChildren, $aExtraParams, $iActiveMenu);
-					$oPage->AddToMenu('</ul>');
-				}
-			}
-		}
-		return $bActive;
 	}
 
 	/**
@@ -525,7 +440,7 @@ EOF
 
 		return -1;
 	}
-	
+
 	/**
 	 * Retrieves the currently active menu (if any, otherwise the first menu is the default)
 	 * @return string The Id of the currently active menu
@@ -533,7 +448,7 @@ EOF
 	public static function GetActiveNodeId()
 	{
 		$oAppContext = new ApplicationContext();
-		$sMenuId = $oAppContext->GetCurrentValue('menu', null);		
+		$sMenuId = $oAppContext->GetCurrentValue('menu', null);
 		if ($sMenuId  === null)
 		{
 			$sMenuId = self::GetDefaultMenuId();
@@ -643,7 +558,7 @@ abstract class MenuNode
 
 	/**
 	 * Stimulus to check: if the user can 'apply' this stimulus, then she/he can see this menu
-	 */	
+	 */
 	protected $m_aEnableStimuli;
 
 	/**
@@ -746,7 +661,7 @@ abstract class MenuNode
 	}
 
 	/**
-	 * @return string
+	 * @return string The "+" dictionary entry for this menu if exists, otherwise the Title (if we have a parent title, will output parentTitle / currentTitle)
 	 */
 	public function GetLabel()
 	{
@@ -758,7 +673,6 @@ abstract class MenuNode
 			} else {
 				$sRet = $this->GetTitle();
 			}
-			//$sRet = $this->GetTitle();
 		}
 		return $sRet;
 	}
@@ -804,7 +718,7 @@ abstract class MenuNode
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Add a limiting display condition for the same menu node. The conditions will be combined with a AND
 	 * @param $oMenuNode MenuNode Another definition of the same menu node, with potentially different access restriction
@@ -973,15 +887,11 @@ class MenuGroup extends MenuNode
  */
 class TemplateMenuNode extends MenuNode
 {
-	/**
-	 * @var string
-	 */
-	protected $sTemplateFile;
-	
+
 	/**
 	 * Create a menu item based on a custom template and inserts it into the application's main menu
 	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
-	 * @param string $sTemplateFile Path (or URL) to the file that will be used as a template for displaying the page's content
+	 * @param string $sTemplateFile unused deprecated
 	 * @param integer $iParentIndex ID of the parent menu
 	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
 	 * @param string $sEnableClass Name of class of object
@@ -992,17 +902,6 @@ class TemplateMenuNode extends MenuNode
 	public function __construct($sMenuId, $sTemplateFile, $iParentIndex, $fRank = 0.0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
-		$this->sTemplateFile = $sTemplateFile;
-		$this->aReflectionProperties['template_file'] = $sTemplateFile;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function GetHyperlink($aExtraParams)
-	{
-		if ($this->sTemplateFile == '') return '';
-		return parent::GetHyperlink($aExtraParams);
 	}
 
 	/**
@@ -1011,18 +910,7 @@ class TemplateMenuNode extends MenuNode
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
-		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
-		$sTemplate = @file_get_contents($this->sTemplateFile);
-		if ($sTemplate !== false)
-		{
-			$aExtraParams['table_id'] = 'Menu_'.$this->GetMenuId();
-			$oTemplate = new DisplayTemplate($sTemplate);
-			$oTemplate->Render($oPage, $aExtraParams);
-		}
-		else
-		{
-			$oPage->p("Error: failed to load template file: '{$this->sTemplateFile}'"); // No need to translate ?
-		}
+		//DO NOTHING this type of menu is only used for title not clickable
 	}
 }
 
@@ -1048,7 +936,7 @@ class OQLMenuNode extends MenuNode
 	 * @var bool|null
 	 */
 	protected $bSearchFormOpen;
-	
+
 	/**
 	 * Extra parameters to be passed to the display block to fine tune its appearence
 	 */
@@ -1081,7 +969,7 @@ class OQLMenuNode extends MenuNode
 		// Enhancement: we could set as the "enable" condition that the user has enough rights to "read" the objects
 		// of the class specified by the OQL...
 	}
-	
+
 	/**
 	 * Set some extra parameters to be passed to the display block to fine tune its appearence
 	 * @param array $aParams paramCode => value. See DisplayBlock::GetDisplay for the meaning of the parameters
@@ -1101,6 +989,7 @@ class OQLMenuNode extends MenuNode
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
+		$oTag = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
 		OQLMenuNode::RenderOQLSearch
 		(
@@ -1109,7 +998,7 @@ class OQLMenuNode extends MenuNode
 			'Menu_'.$this->GetMenuId(),
 			$this->bSearch, // Search pane
 			$this->bSearchFormOpen, // Search open
-			$oPage, 
+			$oPage,
 			array_merge($this->m_aParams, $aExtraParams),
 			true
 		);
@@ -1132,11 +1021,11 @@ class OQLMenuNode extends MenuNode
 	{
 		$sUsageId = utils::GetSafeId($sUsageId);
 		$oSearch = DBObjectSearch::FromOQL($sOql);
-		$sClass= 	$oSearch->GetClass();
+		$sClass= $oSearch->GetClass();
 		$sIcon = MetaModel::GetClassIcon($sClass, false);
 		if ($bSearchPane) {
 			$aParams = array_merge(['open' => $bSearchOpen, 'table_id' => $sUsageId, 'submit_on_load' => false], $aExtraParams);
-			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
+			$oBlock = new DisplayBlock($oSearch, DisplayBlock::ENUM_STYLE_SEARCH, false /* Asynchronous */, $aParams);
 			$oBlock->Display($oPage, 0);
 			$oPage->add("<div class='sf_results_area ibo-add-margin-top-250' data-target='search_results'>");
 		}
@@ -1343,10 +1232,10 @@ class NewObjectMenuNode extends MenuNode
 	{
 		// Enable this menu, only if the current user has enough rights to create such an object, or an object of
 		// any child class
-	
+
 		$aSubClasses = MetaModel::EnumChildClasses($this->sClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
 		$bActionIsAllowed = false;
-	
+
 		foreach($aSubClasses as $sCandidateClass)
 		{
 			if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
@@ -1355,7 +1244,7 @@ class NewObjectMenuNode extends MenuNode
 				break; // Enough for now
 			}
 		}
-		return $bActionIsAllowed;		
+		return $bActionIsAllowed;
 	}
 
 	/**
@@ -1497,7 +1386,7 @@ class DashboardMenuNode extends MenuNode
 			throw new Exception("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
 		}
 	}
-	
+
 }
 
 /**
@@ -1538,7 +1427,7 @@ class ShortcutContainerMenuNode extends MenuNode
 			$sName = $this->GetMenuId().'_'.$oShortcut->GetKey();
 			new ShortcutMenuNode($sName, $oShortcut, $this->GetIndex(), $fRank++);
 		}
-	
+
 		// Complete the tree
 		//
 		parent::PopulateChildMenus();

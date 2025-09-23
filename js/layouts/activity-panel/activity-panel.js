@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -32,7 +32,6 @@ $(function()
 					lock_token: null,
 					lock_watcher_period: 30,        // Period (in seconds) between lock status update, uses the "activity_panel.lock_watcher_period" config. param.
 					lock_endpoint: null,
-					show_multiple_entries_submit_confirmation: true,
 					save_state_endpoint: null,
 					last_loaded_entries_ids: {},
 					load_more_entries_endpoint: null,
@@ -117,10 +116,14 @@ $(function()
 					locked_by_someone_else: 'locked_by_someone_else',
 				},
 			},
+			release_lock_promise_resolve: null,	// N°4494 - Resolve callback of the Promise used for the action following the log entry send, which must be done only once the lock is released
 
 			// the constructor
 			_create: function () {
 				this.element.addClass('ibo-activity-panel');
+
+				// Should be initialized globally, but as we don't actually do it
+				moment.locale(GetUserLanguage());
 
 				this._bindEvents();
 
@@ -234,16 +237,7 @@ $(function()
 					me._onLoadAllEntriesButtonClick(oEvent);
 				});
 
-				// Page exit
-				// - Show confirm dialog if draft entries
-				if (window.onbeforeunload === null) {
-					window.onbeforeunload = function (oEvent) {
-						if (true === me._HasDraftEntries()) {
-							return true;
-						}
-					};
-				}
-				// - Processing / cleanup when the leaving page
+				// Processing / cleanup when the leaving page
 				$(window).on('unload', function() {
 					if (true === me._HasDraftEntries()) {
 						return me._onUnload();
@@ -376,7 +370,7 @@ $(function()
 					oEvent.stopImmediatePropagation();
 
 					// Simulate click on the only menu item
-					this.element.find(this.js_selectors.compose_menu_item+':first').trigger('click');
+					this.element.find(this.js_selectors.compose_menu_item).first().trigger('click');
 				}
 
 				// Else, the compose menu will open automatically
@@ -428,6 +422,9 @@ $(function()
 				// Put draft indicator
 				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').addClass(this.css_classes.is_draft);
 
+				// Register leave handler blockers
+				this._RegisterLeaveHandlerBlockers();
+
 				if (this.options.lock_enabled === true) {
 					// Request lock
 					this._RequestLock();
@@ -445,6 +442,11 @@ $(function()
 			_onEmptyEntryForm: function (sCaseLogAttCode) {
 				// Remove draft indicator
 				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').removeClass(this.css_classes.is_draft);
+
+				// Unregister leave handler blockers (only in view mode, otherwise it would remove blocker on main form fields as well)
+				if (this._GetHostObjectMode() === 'view') {
+					this._UnregisterLeaveHandlerBlockers();
+				}
 
 				if (this.options.lock_enabled === true) {
 					// Cancel lock if all forms empty
@@ -465,7 +467,7 @@ $(function()
 			 * been edited and the user hasn't dismiss the dialog.
 			 * @private
 			 */
-			_onRequestSubmission: function (oEvent, oData) {
+			_onRequestSubmission: async function (oEvent, oData) {
 				// Check lock state
 				if ((this.options.lock_enabled === true) && (this.enums.lock_status.locked_by_myself !== this.options.lock_status)) {
 					CombodoJSConsole.Debug('ActivityPanel: Could not submit entries, current user does not have the lock on the object');
@@ -473,8 +475,10 @@ $(function()
 				}
 
 				let sStimulusCode = (undefined !== oData.stimulus_code) ? oData.stimulus_code : null
-				// If several entry forms filled, show a confirmation message
-				if ((true === this.options.show_multiple_entries_submit_confirmation) && (Object.keys(this._GetEntriesFromAllForms()).length > 1)) {
+                // If several entry forms filled, show a confirmation message
+                if ((GetUserPreference('activity_panel.show_multiple_entries_submit_confirmation',true) === true
+                    || GetUserPreference('activity_panel.show_multiple_entries_submit_confirmation', true) === "true")
+                    && (Object.keys(await this._GetEntriesFromAllForms()).length > 1)) {
 					this._ShowEntriesSubmitConfirmation(sStimulusCode);
 				}
 				// Else push data directly to the server
@@ -501,7 +505,7 @@ $(function()
 			{
 				// Hide all filters' options only if click wasn't on one of them
 				if(($(oEvent.target).closest(this.js_selectors.activity_filter_options_toggler).length === 0)
-				&& $(oEvent.target).closest(this.js_selectors.activity_filter_options).length === 0) {
+					&& $(oEvent.target).closest(this.js_selectors.activity_filter_options).length === 0) {
 					this._HideAllFiltersOptions();
 				}
 			},
@@ -547,7 +551,7 @@ $(function()
 				$.post(
 					this.options.save_state_endpoint,
 					{
-						'operation': 'activity_panel_save_state',
+						'operation': 'activity_panel.save_state',
 						'object_class': this._GetHostObjectClass(),
 						'object_mode': this._GetHostObjectMode(),
 						'is_expanded': this.element.hasClass(this.css_classes.is_expanded),
@@ -807,22 +811,41 @@ $(function()
 			 * @returns {Object} The case logs having a new entry and their values, format is {<ATT_CODE_1>: <HTML_VALUE_1>, <ATT_CODE_2>: <HTML_VALUE_2>}
 			 * @private
 			 */
-			_GetEntriesFromAllForms: function () {
+			_GetEntriesFromAllForms: async function () {
 				const me = this;
-
 				let oEntries = {};
-				this.element.find(this.js_selectors.caselog_entry_form).each(function () {
-					const oEntryFormElem = $(this);
-					const sEntryFormValue = oEntryFormElem.triggerHandler('get_entry.caselog_entry_form.itop');
+				// this.element.find(this.js_selectors.caselog_entry_form).each(async function () {
+				// 	const oEntryFormElem = $(this);
+				// 	const sEntryFormValue = await oEntryFormElem.triggerHandler('get_entry.caselog_entry_form.itop');
+				// 	console.log('huhu');
+				//
+				// 	if ('' !== sEntryFormValue) {
+				// 		const sCaseLogAttCode = oEntryFormElem.attr('data-attribute-code');
+				// 		oEntries[sCaseLogAttCode] = {
+				// 			value: sEntryFormValue,
+				// 			rank: me.element.find(me.js_selectors.tab_toggler+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').attr('data-caselog-rank'),
+				// 		};
+				// 	}
+				// });
+
+				const aFormElements = this.element.find(this.js_selectors.caselog_entry_form);
+
+				// Create an array of promises for each form element
+				const aEntryPromises = aFormElements.map(async (index, element) => {
+					const oEntryFormElem = $(element);
+					const sEntryFormValue = await oEntryFormElem.triggerHandler('get_entry.caselog_entry_form.itop');
 
 					if ('' !== sEntryFormValue) {
 						const sCaseLogAttCode = oEntryFormElem.attr('data-attribute-code');
 						oEntries[sCaseLogAttCode] = {
 							value: sEntryFormValue,
-							rank: me.element.find(me.js_selectors.tab_toggler+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').attr('data-caselog-rank'),
+							rank: this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="caselog"][data-caselog-attribute-code="' + sCaseLogAttCode + '"]').attr('data-caselog-rank'),
 						};
 					}
-				});
+				}).get(); // convert jQuery object to array
+
+				// Wait for all promises to resolve
+				await Promise.all(aEntryPromises);
 
 				return oEntries;
 			},
@@ -924,9 +947,9 @@ $(function()
 			 * @return {void}
 			 * @private
 			 */
-			_SendEntriesToServer: function (sStimulusCode = null) {
+			_SendEntriesToServer: async function (sStimulusCode = null) {
 				const me = this;
-				const oEntries = this._GetEntriesFromAllForms();
+				const oEntries = await this._GetEntriesFromAllForms();
 				const oExtraInputs = this._GetExtraInputsFromAllForms();
 
 				// Proceed only if entries to send
@@ -936,7 +959,7 @@ $(function()
 
 				// Prepare parameters
 				let oParams = $.extend(oExtraInputs, {
-					operation: 'activity_panel_add_caselog_entries',
+					operation: 'activity_panel.add_caselog_entries',
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					transaction_id: this.options.transaction_id,
@@ -948,18 +971,16 @@ $(function()
 
 				// Send request to server
 				$.post(
-					GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-					oParams,
-					'json'
+						GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+						oParams,
+						'json'
 					)
 					.fail(function (oXHR, sStatus, sErrorThrown) {
-						// TODO 3.0.0: Maybe we could have a centralized dialog to display error messages?
-						alert(sErrorThrown);
+						CombodoModal.OpenErrorModal(sErrorThrown);
 					})
 					.done(function (oData) {
 						if (false === oData.data.success) {
-							// TODO 3.0.0: Same comment as the fail() callback
-							alert(oData.data.error_message);
+							CombodoModal.OpenErrorModal(oData.data.error_message);
 							return false;
 						}
 
@@ -975,12 +996,24 @@ $(function()
 
 						// For now, we don't hide the forms as the user may want to add something else
 						me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
-
 						// Redirect to stimulus
 						// - Convert undefined, null and empty string to null
 						sStimulusCode = ((sStimulusCode ?? '') === '') ? null : sStimulusCode;
 						if (null !== sStimulusCode) {
-							window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
+							if (me.options.lock_enabled) {
+								// Use a Promise to ensure that we redirect to the stimulus page ONLY when the lock is released, otherwise we might lock ourselves
+								const oPromise = new Promise(function (resolve) {
+									// Store the resolve callback so we can call it later from outside
+									me.release_lock_promise_resolve = resolve;
+								});
+								oPromise.then(function () {
+									window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
+									// Resolve callback is reinitialized in case the redirection fails for any reason and we might need to retry
+									me.release_lock_promise_resolve = null;
+								});
+							} else {
+								window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
+							}
 						}
 					})
 					.always(function () {
@@ -998,7 +1031,7 @@ $(function()
 			_IncreaseTabTogglerMessagesCounter: function(sCaseLogAttCode){
 				let oTabTogglerCounter = this._GetTabTogglerFromCaseLogAttCode(sCaseLogAttCode).find('[data-role="ibo-activity-panel--tab-title-messages-count"]');
 				let iNewCounterValue = parseInt(oTabTogglerCounter.attr('data-messages-count')) + 1;
-				
+
 				oTabTogglerCounter.attr('data-messages-count', iNewCounterValue).text(iNewCounterValue);
 			},
 			/**
@@ -1012,6 +1045,53 @@ $(function()
 			{
 				return this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]')
 			},
+
+			// - Helpers on leave handler
+			/**
+			 * Register leave handler blockers for the activity panel
+			 * @see js/leave_handler.js
+			 * @since 3.1.0
+			 */
+			_RegisterLeaveHandlerBlockers: function () {
+				const sBlockerId = this._GetLeaveHandlerBlockerID();
+
+				// On page leave
+				$('body').trigger('register_blocker.itop', {
+					'sBlockerId': sBlockerId,
+					'sTargetElemSelector': 'document',
+					'oTargetElemSelector': document,
+					'sEventName': 'beforeunload'
+				});
+
+				// On modal close if we are in one
+				const oModalElem = this.element.closest('[data-role="ibo-modal"]');
+				if (oModalElem.length !== 0) {
+					$('body').trigger('register_blocker.itop', {
+						'sBlockerId': sBlockerId,
+						'sTargetElemSelector': '#' + oModalElem.attr('id'),
+						'oTargetElemSelector': '#' + oModalElem.attr('id'),
+						'sEventName': 'dialogbeforeclose'
+					});
+				}
+			},
+			/**
+			 * Unregister leave handler blockers for the activity panel
+			 * @see js/leave_handler.js
+			 * @since 3.1.0
+			 */
+			_UnregisterLeaveHandlerBlockers: function () {
+				$('body').trigger('unregister_blocker.itop', {
+					'sBlockerId': this._GetLeaveHandlerBlockerID()
+				});
+			},
+			/**
+			 * @returns {String} The leave blocker identifier to use with {@see leave_handler.js} for the activity panel
+			 * @since 3.1.0
+			 */
+			_GetLeaveHandlerBlockerID: function () {
+				return this._GetHostObjectClass() + ':' + this._GetHostObjectID();
+			},
+
 			// - Helpers on object lock
 			/**
 			 * Initialize the lock watcher on a regular basis
@@ -1099,11 +1179,10 @@ $(function()
 				else {
 					oParams.operation = 'check_lock_state';
 				}
-
 				$.post(
-					this.options.lock_endpoint,
-					oParams,
-					'json'
+						this.options.lock_endpoint,
+						oParams,
+						'json'
 					)
 					.fail(function (oXHR, sStatus, sErrorThrown) {
 						// In case of HTTP request failure (not lock request), put the details in the JS console
@@ -1142,8 +1221,7 @@ $(function()
 									sNewLockStatus = me.enums.lock_status.locked_by_someone_else;
 								} else if ('expired' === oData.operation) {
 									sNewLockStatus = me.enums.lock_status.unknown;
-									// TODO 3.0.0: Maybe we could use a centralized dialog to display error message?
-									alert(oData.popup_message);
+									CombodoModal.OpenErrorModal(oData.popup_message);
 								}
 							} else {
 								sNewLockStatus = me.enums.lock_status.locked_by_myself;
@@ -1153,6 +1231,9 @@ $(function()
 						// Tried to release our lock
 						else if ('release_lock' === oParams.operation) {
 							sNewLockStatus = me.enums.lock_status.unknown;
+							if (me.release_lock_promise_resolve !== null) {
+								me.release_lock_promise_resolve();
+							}
 						}
 
 						// Just checked if object was locked
@@ -1380,25 +1461,23 @@ $(function()
 
 				// Send XHR request
 				let oParams = {
-					operation: 'activity_panel_load_more_entries',
+					operation: 'activity_panel.load_more_entries',
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					last_loaded_entries_ids: this.options.last_loaded_entries_ids,
 					limit_results_length: bLimitResultsLength,
 				};
 				$.post(
-					this.options.load_more_entries_endpoint,
-					oParams,
-					'json'
+						this.options.load_more_entries_endpoint,
+						oParams,
+						'json'
 					)
 					.fail(function (oXHR, sStatus, sErroThrown) {
-						// TODO 3.0.0: Maybe we could have a centralized dialog to display error messages?
-						alert(sErrorThrown);
+						CombodoModal.OpenErrorModal(sErrorThrown);
 					})
 					.done(function (oData) {
 						if (false === oData.data.success) {
-							// TODO 3.0.0: Same comment as the fail() callback
-							alert(oData.data.error_message);
+							CombodoModal.OpenErrorModal(oData.data.error_message);
 							return false;
 						}
 
@@ -1474,7 +1553,7 @@ $(function()
 			 */
 			_CreateEntryGroup: function (sAuthorLogin, sOrigin, sPosition = 'start') {
 				// Note: When using the ActivityPanel, there should always be at least one entry group already, the one from the object creation
-				let oEntryGroupElem = this.element.find(this.js_selectors.entry_group+':first')
+				let oEntryGroupElem = this.element.find(this.js_selectors.entry_group).first()
 					.clone()
 					.attr('data-entry-author-login', sAuthorLogin)
 					.attr('data-entry-group-origin', sOrigin)

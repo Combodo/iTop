@@ -1,17 +1,26 @@
 <?php
 /**
- * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
+ * Localized data
  *
- * @author      Vladimir Kunin <v.b.kunin@gmail.com>
- * @link        http://community.itop-itsm.ru  iTop Russian Community
- * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-//
-// Class: UserLDAP
-//
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserLDAP' => 'Пользователь LDAP',
 	'Class:UserLDAP+' => 'Пользователь, аутентифицируемый через LDAP',
+	'UserLDAP:server' => 'LDAP specifics~~',
+));
+
+//
+// Class: UserLDAP
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
+	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
 ));

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -19,5 +19,7 @@
 
 // Input
 Dict::Add('EN US', 'English', 'English', array(
+	'UI:Component:Input:ChangeNotAllowed' => 'This change is not allowed',
 	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match',
+	'UI:Component:Input:Set:MinimumItems' => 'Minimum %1$s item(s) required',
 ));

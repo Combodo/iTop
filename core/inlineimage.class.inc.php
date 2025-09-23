@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -54,7 +54,7 @@ class InlineImage extends DBObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeDateTime("expire", array("allowed_values"=>null, "sql"=>'expire', "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("expire", array("allowed_values" => null, "sql" => 'expire', "default_value" => 'DATE_ADD(NOW(), INTERVAL 1 DAY)', "is_null_allowed" => false, "depends_on" => array(), "always_load_in_tables" => false)));
 		MetaModel::Init_AddAttribute(new AttributeString("temp_id", array("allowed_values"=>null, "sql"=>'temp_id', "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
 		MetaModel::Init_AddAttribute(new AttributeString("item_class", array("allowed_values"=>null, "sql"=>'item_class', "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
 		MetaModel::Init_AddAttribute(new AttributeObjectKey("item_id", array("class_attcode"=>'item_class', "allowed_values"=>null, "sql"=>'item_id', "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
@@ -110,7 +110,7 @@ class InlineImage extends DBObject
 		$aCallSpec = array($sClass, 'MapContextParam');
 		if (is_callable($aCallSpec))
 		{
-			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
+			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
 			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
 			{
 				$iOrgId = $oItem->Get($sAttCode);
@@ -146,7 +146,7 @@ class InlineImage extends DBObject
 		$aCallSpec = array($sClass, 'MapContextParam');
 		if (is_callable($aCallSpec))
 		{
-			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
+			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
 			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
 			{
 				// Second: check that the organization CAN be fetched from the current user
@@ -156,7 +156,7 @@ class InlineImage extends DBObject
 					$aCallSpec = array($sClass, 'MapContextParam');
 					if (is_callable($aCallSpec))
 					{
-						$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
+						$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
 						if (MetaModel::IsValidAttCode($sClass, $sAttCode))
 						{
 							// OK - try it
@@ -192,7 +192,7 @@ class InlineImage extends DBObject
 		if (!is_null($iTransactionId))
 		{
 			// Attach new (temporary) inline images
-			
+
 			$sTempId = utils::GetUploadTempId($iTransactionId);
 			// The object is being created from a form, check if there are pending inline images for this object
 			$sOQL = 'SELECT InlineImage WHERE temp_id = :temp_id';
@@ -242,7 +242,7 @@ class InlineImage extends DBObject
 	public static function OnFormCancel($sTempId): bool
 	{
 		// Protection against unfortunate massive delete of inline images when a null temp ID is passed
-		if (strlen($sTempId) === 0) {
+		if (utils::IsNullOrEmptyString($sTempId)) {
 			IssueLog::Trace('OnFormCancel "error" $sTempId is null or empty', LogChannels::INLINE_IMAGE, array(
 				'$sTempId' => $sTempId,
 				'$sUser' => UserRights::GetUser(),
@@ -366,10 +366,10 @@ CombodoInlineImage.FixImagesWidth();
 JS
 			;
 		}
-		
+
 		return $sJS;
 	}
-	
+
 	/**
 	 * Check if an the given mimeType is an image that can be processed by the system
 	 *
@@ -382,7 +382,7 @@ JS
 	public static function IsImage($sMimeType)
 	{
 		if (!function_exists('gd_info')) return false; // no image processing capability on this system
-	
+
 		$bRet = false;
 		$aInfo = gd_info(); // What are the capabilities
 		switch($sMimeType)
@@ -390,103 +390,29 @@ JS
 			case 'image/gif':
 				return $aInfo['GIF Read Support'];
 				break;
-					
+
 			case 'image/jpeg':
 				return $aInfo['JPEG Support'];
 				break;
-					
+
 			case 'image/png':
 				return $aInfo['PNG Support'];
 				break;
-	
+
 		}
 		return $bRet;
 	}
-	
+
 	/**
 	 * Resize an image so that it fits the maximum width/height defined in the config file
 	 * @param ormDocument $oImage The original image stored as an array (content / mimetype / filename)
 	 * @return ormDocument The resampled image (or the original one if it already fit)
+	 * @deprecated Replaced by ormDocument::ResizeImageToFit
 	 */
 	public static function ResizeImageToFit(ormDocument $oImage, &$aDimensions = null)
 	{
-		$img = false;
-		switch($oImage->GetMimeType())
-		{
-			case 'image/gif':
-			case 'image/jpeg':
-			case 'image/png':
-				$img = @imagecreatefromstring($oImage->GetData());
-				break;
-					
-			default:
-				// Unsupported image type, return the image as-is
-				$aDimensions = null;
-				return $oImage;
-		}
-		if ($img === false)
-		{
-			$aDimensions = null;
-			return $oImage;
-		}
-		else
-		{
-			// Let's scale the image, preserving the transparency for GIFs and PNGs
-			$iWidth = imagesx($img);
-			$iHeight = imagesy($img);
-			$aDimensions = array('width' => $iWidth, 'height' => $iHeight);
-			$iMaxImageSize = (int)MetaModel::GetConfig()->Get('inline_image_max_storage_width', 0);
-						
-			if (($iMaxImageSize > 0) && ($iWidth <= $iMaxImageSize) && ($iHeight <= $iMaxImageSize))
-			{
-				// No need to resize
-				return $oImage;
-			}
-				
-			$fScale = min($iMaxImageSize / $iWidth, $iMaxImageSize / $iHeight);
-	
-			$iNewWidth = $iWidth * $fScale;
-			$iNewHeight = $iHeight * $fScale;
-			
-			$aDimensions['width'] = $iNewWidth;
-			$aDimensions['height'] = $iNewHeight;
-				
-			$new = imagecreatetruecolor($iNewWidth, $iNewHeight);
-				
-			// Preserve transparency
-			if(($oImage->GetMimeType() == "image/gif") || ($oImage->GetMimeType() == "image/png"))
-			{
-				imagecolortransparent($new, imagecolorallocatealpha($new, 0, 0, 0, 127));
-				imagealphablending($new, false);
-				imagesavealpha($new, true);
-			}
-				
-			imagecopyresampled($new, $img, 0, 0, 0, 0, $iNewWidth, $iNewHeight, $iWidth, $iHeight);
-				
-			ob_start();
-			switch ($oImage->GetMimeType())
-			{
-				case 'image/gif':
-					imagegif($new); // send image to output buffer
-					break;
-	
-				case 'image/jpeg':
-					imagejpeg($new, null, 80); // null = send image to output buffer, 80 = good quality
-					break;
-						
-				case 'image/png':
-					imagepng($new, null, 5); // null = send image to output buffer, 5 = medium compression
-					break;
-			}
-			$oNewImage = new ormDocument(ob_get_contents(), $oImage->GetMimeType(), $oImage->GetFileName());
-			@ob_end_clean();
-				
-			imagedestroy($img);
-			imagedestroy($new);
-	
-			return $oNewImage;
-		}
-	
+		$iMaxImageSize = (int)MetaModel::GetConfig()->Get('inline_image_max_storage_width', 0);
+		return $oImage->ResizeImageToFit($iMaxImageSize, $iMaxImageSize, $aDimensions);
 	}
 
 	/**
@@ -518,7 +444,7 @@ JS
 		}
 		return $sRet;
 	}
-	
+
 	/**
 	 * Get the fragment of javascript needed to complete the initialization of
 	 * CKEditor when creating/modifying an object
@@ -536,75 +462,13 @@ JS
 
 		$sAbsoluteUrlAppRoot = utils::GetAbsoluteUrlAppRoot();
 		$sToggleFullScreen = utils::EscapeHtml(Dict::S('UI:ToggleFullScreen'));
-
-		return
-			<<<JS
-		// Hook the file upload of all CKEditor instances
+		return <<<JS
 		$('.htmlEditor').each(function() {
-			var oEditor = $(this).ckeditorGet();
-			oEditor.config.filebrowserBrowseUrl = '$sAbsoluteUrlAppRoot'+'pages/ajax.render.php?operation=cke_browse&temp_id=$sTempId&obj_class=$sObjClass&obj_key=$iObjKey';
-			oEditor.on( 'fileUploadResponse', function( evt ) {
-				var fileLoader = evt.data.fileLoader;
-				var xhr = fileLoader.xhr;
-				var data = evt.data;
-				try {
-			        var response = JSON.parse( xhr.responseText );
-		
-			        // Error message does not need to mean that upload finished unsuccessfully.
-			        // It could mean that ex. file name was changes during upload due to naming collision.
-			        if ( response.error && response.error.message ) {
-			            data.message = response.error.message;
-			        }
-		
-			        // But !uploaded means error.
-			        if ( !response.uploaded ) {
-			            evt.cancel();
-			        } else {
-			            data.fileName = response.fileName;
-			           	data.url = response.url;
-						
-			            // Do not call the default listener.
-			            evt.stop();
-			        }
-			    } catch ( err ) {
-			        // Response parsing error.
-			        data.message = fileLoader.lang.filetools.responseError;
-			        window.console && window.console.log( xhr.responseText );
-		
-			        evt.cancel();
-			    }
-			} );
-	
-			oEditor.on( 'fileUploadRequest', function( evt ) {
-				evt.data.fileLoader.uploadUrl += '?operation=cke_img_upload&temp_id=$sTempId&obj_class=$sObjClass';
-			}, null, null, 4 ); // Listener with priority 4 will be executed before priority 5.
-		
-			oEditor.on( 'instanceReady', function() {
-				if(!CKEDITOR.env.iOS && $('#'+oEditor.id+'_toolbox .ibo-vendors-ckeditor--toolbar-fullscreen-button').length == 0)
-				{
-					$('#'+oEditor.id+'_toolbox').append('<span class="ibo-vendors-ckeditor--toolbar-fullscreen-button editor-fullscreen-button" data-role="ibo-vendors-ckeditor--toolbar-fullscreen-button" title="$sToggleFullScreen">&nbsp;</span>');
-					$('#'+oEditor.id+'_toolbox .ibo-vendors-ckeditor--toolbar-fullscreen-button').on('click', function() {
-							oEditor.execCommand('maximize');
-							if ($(this).closest('.cke_maximized').length != 0)
-							{
-								$('#'+oEditor.id+'_toolbar_collapser').trigger('click');
-							}
-					});
-				}
-				if (oEditor.widgets.registered.uploadimage)
-				{
-					oEditor.widgets.registered.uploadimage.onUploaded = function( upload ) {
-					var oData = JSON.parse(upload.xhr.responseText);
-				    	this.replaceWith( '<img src="' + upload.url + '" ' +
-				    		'width="' + oData.width + '" ' +
-							'height="' + oData.height + '">' );
-				    }
-				}
-			});
+			CombodoCKEditorHandler.EnableImageUpload('#' + $(this).attr('id'), '$sAbsoluteUrlAppRoot'+'pages/ajax.render.php?operation=cke_img_upload&temp_id=$sTempId&obj_class=$sObjClass&obj_key=$iObjKey');
 		});
-JS
-		;
+JS;
 	}
+
 
 	/**
 	 * @inheritDoc

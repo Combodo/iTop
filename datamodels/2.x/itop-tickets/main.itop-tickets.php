@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -16,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 
 /**
@@ -131,7 +132,23 @@ class ResponseTicketTTR extends ResponseTicketSLT implements iMetricComputer
 
 class _Ticket extends cmdbAbstractObject
 {
+	/**
+	 * used to limit the depth of analysis in the UpdateImpactedItems function
+	 * @return int
+	 */
+	public function GetImpactAnalysisMaxDepth()
+	{
+		return 10;
+	}
 
+	/**
+	 * @param int $iMaxDepth maximum depth of impact analysis
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
 	public function UpdateImpactedItems()
 	{
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
@@ -140,7 +157,7 @@ class _Ticket extends cmdbAbstractObject
 		$aCIsToImpactCode = array();
 		$aSources = array();
 		$aExcluded = array();
-		if (MetaModel::IsValidClass('FunctionalCI'))
+		if (MetaModel::IsValidClass('FunctionalCI') && MetaModel::IsValidAttCode('Ticket', 'functionalcis_list'))
 		{
 			/** @var ormLinkSet $oCIsSet */
 			$oCIsSet = $this->Get('functionalcis_list');
@@ -187,7 +204,7 @@ class _Ticket extends cmdbAbstractObject
 		}
 		// Merge the directly impacted items with the "new" ones added by the "context" queries
         $aGraphObjects = array();
-        $oRawGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, 10, true /* bEnableRedundancy */, $aExcluded);
+        $oRawGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, $this->GetImpactAnalysisMaxDepth(), true /* bEnableRedundancy */, $aExcluded);
         $oIterator = new RelationTypeIterator($oRawGraph, 'Node');
         foreach ($oIterator as $oNode)
         {
@@ -199,7 +216,7 @@ class _Ticket extends cmdbAbstractObject
         }
         if (count($aDefaultContexts) > 0)
 		{
-			$oAnnotatedGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, 10, true /* bEnableRedundancy */, $aExcluded, $aDefaultContexts);
+			$oAnnotatedGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, $this->GetImpactAnalysisMaxDepth(), true /* bEnableRedundancy */, $aExcluded, $aDefaultContexts);
 			$oIterator = new RelationTypeIterator($oAnnotatedGraph, 'Node');
 			foreach ($oIterator as $oNode)
 			{

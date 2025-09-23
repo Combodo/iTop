@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 /*
@@ -321,6 +321,11 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	 * @return {void}
 	 */
 	this.UpdateDropdownPosition = function (oControlElem, oDropdownElem) {
+		// First fix width to ensure it's not too long
+		const fControlWidth = oControlElem.outerWidth();
+		oDropdownElem.css('width', fControlWidth);
+
+		// Then, fix height / position to ensure it's within the viewport
 		const fWindowHeight = window.innerHeight;
 
 		const fControlTopY = oControlElem.offset().top;
@@ -433,7 +438,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					me.UpdateSizes();
 					me.UpdateButtons();
 					me.ajax_request = null;
-					$('#count_'+me.id+'_results').change(function () {
+					$('#count_'+me.id+'_results').on('change', function () {
 						me.UpdateButtons();
 					});
 					if (me.bDoSearch) {
@@ -457,7 +462,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		if (dlg.height() > ($(window).height()-70)) {
 			dlg.height($(window).height()-70);
 		}
-		var searchForm = dlg.find('div.display_block:first'); // Top search form, enclosing display_block
+		var searchForm = dlg.find('div.display_block').first(); // Top search form, enclosing display_block
 		var results = $('#dr_'+me.id);
 		var oPadding = {};
 		var aKeys = ['top', 'right', 'bottom', 'left'];
@@ -586,9 +591,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				}
 
 				if ($('#label_'+me.id).length) {
-					$('#label_'+me.id).focus();
+					$('#label_'+me.id).trigger('focus');
 				} else {
-					$('#'+me.id).focus();
+					$('#'+me.id).trigger('focus');
 				}
 
 				me.ajax_request = null;
@@ -600,12 +605,16 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	};
 
 	this.Clear = function () {
-		$('#'+me.id).val('');
-		$('#label_'+me.id).val('');
-		$('#label_'+me.id).data('selected_value', '');
-		$('#'+me.id).trigger('validate');
-		$('#'+me.id).trigger('extkeychange');
-		$('#'+me.id).trigger('change');
+		if (me.bSelectMode) {
+			$('#'+me.id)[0].selectize.clear();
+		} else {
+			$('#'+me.id).val('');
+			$('#label_'+me.id).val('');
+			$('#label_'+me.id).data('selected_value', '');
+			$('#'+me.id).trigger('validate');
+			$('#'+me.id).trigger('extkeychange');
+			$('#'+me.id).trigger('change');
+		}
 	};
 
 // Workaround for a ui.jquery limitation: if the content of
@@ -624,7 +633,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			$('#dr_'+me.id).html(me.emptyHtml);
 		}
 		$('#label_'+me.id).removeClass('ac_dlg_loading');
-		$('#label_'+me.id).focus();
+		$('#label_'+me.id).trigger('focus');
 		me.ajax_request = null;
 	};
 
@@ -634,7 +643,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		// will force it be of the same class as the previous call)
 		me.sTargetClass = me.sOriginalTargetClass;
 
-		me.CreateObject(oWizHelper);
+		me.CreateObject();
 	};
 
 	this.DoSelectObjectClass = function () {
@@ -646,13 +655,31 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 
 		// Setting new target class
 		me.sTargetClass = oSelectedClass.val();
-
 		// Opening real creation form
+		me.CreateObject(true);
 		$('#ac_create_'+me.id).dialog('close');
-		me.CreateObject();
 	};
 
-	this.CreateObject = function (oWizHelper) {
+	/**
+	 * Extract transaction id of the root object edited.
+	 * When create/update a new object via external key,
+	 * this transaction id reflects the root form transaction id an not the current form transaction id.
+	 *
+	 * @constructor
+	 */
+	this.GetRootTransactionId = function(){
+		// Retrieve the object form
+		const oForm = $(`#${me.id}`).closest('form');
+		// If root transaction id exist, then use it
+		let oFieldTransaction = $('input[name=root_transaction_id]', oForm);
+		if(oFieldTransaction.length === 0){
+			// otherwise, use the object form transaction id
+			oFieldTransaction = $('input[name=transaction_id]', oForm);
+		}
+		return oFieldTransaction.val();
+	}
+
+	this.CreateObject = function (bTargetClassSelected) {
 		if ($('#'+me.id).prop('disabled')) {
 			return;
 		} // Disabled, do nothing
@@ -670,7 +697,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			sAttCode: me.sAttCode,
 			'json': me.oWizardHelper.ToJSON(),
 			operation: 'objectCreationForm',
-			ajax_promise_id: sPromiseId
+			ajax_promise_id: sPromiseId,
+			bTargetClassSelected: bTargetClassSelected
 		};
 
 		// Make sure that we cancel any pending request before issuing another
@@ -678,15 +706,24 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		me.StopPendingRequest();
 
 		// Run the query and get the result back directly in HTML
+		var sLocalTargetClass = me.sTargetClass; // Remember the target class since it will be reset when closing the dialog
+
+		// Handle transaction id
+		const sRootFormTransactionId = me.GetRootTransactionId();
+
 		me.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
 			function (data) {
 				$('#ajax_'+me.id).html(data);
 				window[sPromiseId].then(function () {
 					$('#ac_create_'+me.id).dialog('open');
 					$('#ac_create_'+me.id).dialog("option", "close", me.OnCloseCreateObject);
-					// Modify the action of the cancel button
-					$('#ac_create_'+me.id+' button.cancel').off('click').on('click', me.CloseCreateObject);
+					// Modify the action of the cancel button and the close button
+					$('#ac_create_'+me.id+' button.cancel').off('click.navigation.itop').on('click.navigation.itop', me.CloseCreateObject);
+					$('.ui-dialog-titlebar:has(+ #ac_create_'+me.id+') button.ui-dialog-titlebar-close').off('click').on('click', function() {
+						$('#ac_create_'+me.id+' button.cancel').trigger('click');
+					});
 					me.ajax_request = null;
+					me.sTargetClass = sLocalTargetClass;
 					// Adjust the dialog's size to fit into the screen
 					if ($('#ac_create_'+me.id).width() > ($(window).width()-40)) {
 						$('#ac_create_'+me.id).width($(window).width()-40);
@@ -694,6 +731,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					if ($('#ac_create_'+me.id).height() > ($(window).height()-70)) {
 						$('#ac_create_'+me.id).height($(window).height()-70);
 					}
+					// Add root_transaction_id
+					$('#ac_create_'+me.id+' form').append(`<input type="hidden" name="root_transaction_id" value="${sRootFormTransactionId}"/>`)
 				});
 			},
 			'html'
@@ -710,10 +749,14 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		} else {
 			$('#label_'+me.id).removeClass('ac_dlg_loading');
 		}
-		$('#label_'+me.id).focus();
+		$('#label_'+me.id).trigger('focus');
 		$('#ac_create_'+me.id).dialog("destroy");
 		$('#ac_create_'+me.id).remove();
 		$('#ajax_'+me.id).html('');
+		// Resetting target class to its original value
+		// (If not done, closing the dialog and trying to create a object again
+		// will force it be of the same class as the previous call)
+		me.sTargetClass = me.sOriginalTargetClass;
 	};
 
 	this.DoCreateObject = function () {
@@ -734,10 +777,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					if (this.name != '') {
 						if ($(this).hasClass('htmlEditor')) {
 							var sId = $(this).attr('id');
-							var editorInst = CKEDITOR.instances[sId];
-							if (editorInst) {
-								editorInst.destroy();
-							}
+							CombodoCKEditorHandler.DeleteInstance(sId);
 							if ($('#'+sId).data('timeout_validate') != undefined) {
 								clearInterval($('#'+sId).data('timeout_validate'));
 							}
@@ -763,7 +803,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					$('#fstatus_'+me.id).html('');
 					if (data.id == 0) {
 						$('#label_'+me.id).removeClass('ac_dlg_loading');
-						alert(data.error);
+						CombodoModal.OpenErrorModal(data.error);
 					} else if (me.bSelectMode) {
 						// Add the newly created object to the drop-down list and select it
 						/*$('<option/>', { value : data.id }).html(data.name).appendTo('#'+me.id);
@@ -780,7 +820,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 						$('#label_'+me.id).val(txt);
 						$('#label_'+me.id).data('selected_value',txt);
 						$('#label_'+me.id).removeClass('ac_dlg_loading');
-						$('#label_'+me.id).focus();
+						$('#label_'+me.id).trigger('focus');
 					}
 					$('#'+me.id).trigger('validate');
 					$('#'+me.id).trigger('extkeychange');
@@ -869,7 +909,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		} else {
 			$('#label_'+me.id).removeClass('ac_dlg_loading');
 		}
-		$('#label_'+me.id).focus();
+		$('#label_'+me.id).trigger('focus');
 		$('#dlg_tree_'+me.id).dialog("destroy");
 		$('#dlg_tree_'+me.id).remove();
 	};
@@ -919,7 +959,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 						});
 						$('#'+me.id).multiselect('refresh');
 					}
-					$('#label_'+me.id).focus();
+					$('#label_'+me.id).trigger('focus');
 					me.ajax_request = null;
 				},
 				'json'

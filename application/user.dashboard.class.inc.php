@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Store and retrieve user custom dashboards
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 require_once(APPROOT.'/core/dbobject.class.php');
@@ -35,7 +35,7 @@ class UserDashboard extends DBObject
 		(
 			"category" => "gui",
 			"key_type" => "autoincrement",
-			"name_attcode" => "user_id",
+			"name_attcode" => array('user_id', 'menu_code'),
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_app_dashboards",
@@ -47,6 +47,15 @@ class UserDashboard extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", array("targetclass"=>"User", "allowed_values"=>null, "sql"=>"user_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("menu_code", array("allowed_values"=>null, "sql"=>"menu_code", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("contents", array("allowed_values"=>null, "sql"=>"contents", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+
+		MetaModel::Init_SetZListItems('default_search', array (
+			0 => 'user_id',
+			1 => 'menu_code',
+		));
+		MetaModel::Init_SetZListItems('list', array (
+			0 => 'user_id',
+			1 => 'menu_code',
+		));
 	}
 
 	/**

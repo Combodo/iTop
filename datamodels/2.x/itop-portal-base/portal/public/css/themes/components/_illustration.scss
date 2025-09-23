@@ -1,0 +1,11 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-svg-illustration--fill: $ipb-color-primary-700 !default;
+
+.ipb-svg-illustration--container > svg *[fill="#6c63ff"]{
+  fill: $ipb-svg-illustration--fill;
+}

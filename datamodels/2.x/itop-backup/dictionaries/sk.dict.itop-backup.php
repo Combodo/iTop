@@ -2,31 +2,18 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-
 	'bkp-backup-running' => 'A backup is running. Please wait...~~',
 	'bkp-restore-running' => 'A restore is running. Please wait...~~',
-
-	'Menu:BackupStatus' => 'Scheduled Backups~~',
-	'bkp-status-title' => 'Scheduled Backups~~',
+	'Menu:BackupStatus' => 'Backups~~',
+	'bkp-status-title' => 'Backups~~',
 	'bkp-status-checks' => 'Settings and checks~~',
 	'bkp-mysqldump-ok' => 'mysqldump is present: %1$s~~',
 	'bkp-mysqldump-notfound' => 'mysqldump could not be found: %1$s - Please make sure it is installed and in the path, or edit the configuration file to tune mysql_bindir.~~',
@@ -48,7 +35,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'bkp-status-backups-auto' => 'Scheduled backups~~',
 	'bkp-status-backups-manual' => 'Manual backups~~',
 	'bkp-status-backups-none' => 'No backup yet~~',
-	'bkp-next-backup' => 'The next backup will occur on <b>%1$s</b> (%2$s) at %3$s~~',
+	'bkp-next-backup' => 'The next backup will occur on <b>%1$s</b> (%2$s) at %3$s.~~',
 	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
 	'bkp-button-backup-now' => 'Backup now!~~',
 	'bkp-button-restore-now' => 'Restore!~~',

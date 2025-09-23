@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,9 +21,10 @@ namespace Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXml
 
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\DesignElement;
-use Combodo\iTop\Portal\Helper\UIExtensionsHelper;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface;
 use DOMFormatException;
 use Exception;
+use ReflectionClass;
 use Symfony\Component\DependencyInjection\Container;
 use utils;
 
@@ -52,6 +53,8 @@ class Basic extends AbstractConfiguration
 			$aPortalConf = $this->ParseGlobalProperties($aPortalConf);
 			// - Rectifying portal logo url
 			$aPortalConf = $this->AppendLogoUri($aPortalConf);
+			// - Rectifying portal favicon url
+			$aPortalConf = $this->AppendFavIconUri($aPortalConf);
 		}
 		catch (Exception $oException)
 		{
@@ -71,12 +74,18 @@ class Basic extends AbstractConfiguration
 	{
 		$aPortalConf = array(
 			'properties' => array(
-				'id' => $_ENV['PORTAL_ID'],
-				'name' => 'Page:DefaultTitle',
-				'logo' => Branding::GetPortalLogoAbsoluteUrl(),
-				'themes' => array(
+				'id'              => $_ENV['PORTAL_ID'],
+				'ui_version' => 'v3',
+				'ui_settings' => [
+					'navigation_menu' => 'vertical',
+				],
+				'name'            => 'Page:DefaultTitle',
+				'logo'            => Branding::GetPortalLogoAbsoluteUrl(),
+				'favicon'         => Branding::GetPortalFavIconAbsoluteUrl(),
+				'themes'          => array(
 					'bootstrap' => 'itop-portal-base/portal/public/css/bootstrap-theme-combodo.scss',
 					'portal' => 'itop-portal-base/portal/public/css/portal.scss',
+					'main' => 'itop-portal-base/portal/public/css/main.scss',
 					'others' => array(),
 				),
 				'templates' => array(
@@ -113,17 +122,20 @@ class Basic extends AbstractConfiguration
 		{
 			switch ($oPropertyNode->nodeName)
 			{
+				case 'ui_version':
 				case 'name':
 				case 'urlmaker_class':
 				case 'triggers_query':
-					$aPortalConf['properties'][$oPropertyNode->nodeName] = $oPropertyNode->GetText(
-						$aPortalConf['properties'][$oPropertyNode->nodeName]
-					);
-					break;
 				case 'logo':
+				case 'favicon':
 					$aPortalConf['properties'][$oPropertyNode->nodeName] = $oPropertyNode->GetText(
 						$aPortalConf['properties'][$oPropertyNode->nodeName]
 					);
+				break;
+				case 'ui_settings':
+					foreach ($oPropertyNode->GetNodes('*') as $oSubNode) {
+						$aPortalConf['properties'][$oPropertyNode->nodeName][$oSubNode->nodeName] = $oSubNode->GetText();
+					}
 					break;
 				case 'themes':
 				case 'templates':
@@ -185,11 +197,22 @@ class Basic extends AbstractConfiguration
 							$aPortalConf['properties']['templates'][$sNodeId] = $oSubNode->GetText(null);
 							break;
 						default:
+							$aMatches = [];
+							// allowed format is: <class implementing TemplatesProviderInterface>:<template_id>
+							if(preg_match('#([\w\\\d_]+):(\w+)#', $sNodeId, $aMatches)){
+								try{
+									$oClass = new ReflectionClass($aMatches[1]);
+									if($oClass->implementsInterface(TemplatesProviderInterface::class)){
+										$aPortalConf['properties']['templates'][$aMatches[1]][$aMatches[2]] = $oSubNode->GetText(null);
+										break;
+									}
+								}
+								catch(Exception){}
+							}
 							throw new DOMFormatException(
-								'Value "'.$sNodeId.'" is not handled for template[@id]',
+								'Template ID "'.$sNodeId.'" is not handled in module design templates property',
 								null, null, $oSubNode
 							);
-							break;
 					}
 					break;
 			}
@@ -263,12 +286,30 @@ class Basic extends AbstractConfiguration
 	private function AppendLogoUri(array $aPortalConf)
 	{
 		$sLogoUri = $aPortalConf['properties']['logo'];
-		if (!preg_match('/^http/', $sLogoUri))
-		{
+		if (!preg_match('/^http/', $sLogoUri)) {
 			// We prefix it with the server base url
 			$sLogoUri = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/'.$sLogoUri;
 		}
 		$aPortalConf['properties']['logo'] = $sLogoUri;
+
+		return $aPortalConf;
+	}
+
+	/**
+	 * @param array $aPortalConf
+	 *
+	 * @return array
+	 * @throws \Exception
+	 * @since 3.2.0 N°3363
+	 */
+	private function AppendFaviconUri(array $aPortalConf)
+	{
+		$sFaviconUri = $aPortalConf['properties']['favicon'];
+		if (!preg_match('/^http/', $sFaviconUri)) {
+			// We prefix it with the server base url
+			$sFaviconUri = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/'.$sFaviconUri;
+		}
+		$aPortalConf['properties']['favicon'] = $sFaviconUri;
 
 		return $aPortalConf;
 	}

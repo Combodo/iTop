@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -23,8 +23,14 @@ namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeText;
+use Combodo\iTop\Application\Helper\CKEditorHelper;
+use Combodo\iTop\Form\Field\DateField;
+use Combodo\iTop\Form\Field\DateTimeField;
+use Combodo\iTop\Form\Field\Field;
 use Combodo\iTop\Form\Field\MultipleChoicesField;
 use Combodo\iTop\Form\Field\TextAreaField;
+use Combodo\iTop\Form\Validator\AbstractRegexpValidator;
+use Combodo\iTop\Form\Validator\MandatoryValidator;
 use Combodo\iTop\Renderer\RenderingOutput;
 use Dict;
 use InlineImage;
@@ -50,6 +56,9 @@ class BsSimpleFieldRenderer extends BsFieldRenderer
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
 		$sFieldDescriptionForHTMLTag = ($this->oField->HasDescription()) ? 'data-tooltip-content="'.utils::HtmlEntities($this->oField->GetDescription()).'"' : '';
 
+		// Prepare input validations tags
+		$sInputTags = $this->ComputeInputValidationTags($this->oField);
+
 		// Rendering field in edition mode
 		if (!$this->oField->GetReadOnly() && !$this->oField->GetHidden()) {
 			// HTML content
@@ -63,57 +72,68 @@ class BsSimpleFieldRenderer extends BsFieldRenderer
 				case 'Combodo\\iTop\\Form\\Field\\SelectField':
 				case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
 					// Opening container
-					$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldMandatoryClass . '">');
+				$oOutput->AddHtml('<div class="form-group form_group_small '.$sFieldMandatoryClass.'">');
 
-					// Label
-					$oOutput->AddHtml('<div class="form_field_label">');
-					if ($this->oField->GetLabel() !== '') {
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
-					}
-					$oOutput->AddHtml('</div>');
+				// Label
+				$oOutput->AddHtml('<div class="form_field_label">');
+				if ($this->oField->GetLabel() !== '') {
+					$oOutput->AddHtml('<label for="'.$this->oField->GetGlobalId().'" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+				}
+				$oOutput->AddHtml('</div>');
 
-					// Value
-					$oOutput->AddHtml('<div class="form_field_control">');
-					// - Help block
-					$oOutput->AddHtml('<div class="help-block"></div>');
-					// - Value regarding the field type
-					switch($sFieldClass) {
-						case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
-							$oOutput->AddHtml('<div class="input-group date" id="datepicker_' . $this->oField->GetGlobalId() . '">');
-							$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
-							$oOutput->AddHtml('<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>');
-							$oOutput->AddHtml('</div>');
-							$sJSFormat = json_encode($this->oField->GetJSDateTimeFormat());
-							$sLocale = Dict::S('Portal:Calendar-FirstDayOfWeek');
-							$oOutput->AddJs(
-								<<<EOF
-                                					$('#datepicker_{$this->oField->GetGlobalId()}').datetimepicker({format: $sJSFormat, locale: '$sLocale'});
+				// Value
+				$oOutput->AddHtml('<div class="form_field_control">');
+				// - Help block
+				$oOutput->AddHtml('<div class="help-block"></div>');
+
+				// - Value regarding the field type
+				switch ($sFieldClass) {
+					case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+
+						/* @see N°803 - Allow display & edition of attributes on n:n relations on Portal
+						 * LinkedSetFieldRenderer allow modification of link attributes, the default widget positioning truncates the popup.
+						 */
+						$sParent = '';
+						if ($this->oField->GetDateTimePickerWidgetParent() != null) {
+							$sParent = ", widgetParent: '{$this->oField->GetDateTimePickerWidgetParent()}'";
+						}
+
+						$oOutput->AddHtml('<div class="input-group date" id="datepicker_'.$this->oField->GetGlobalId().'">');
+						$oOutput->AddHtml('<input type="text" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" value="')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('" class="form-control" maxlength="255" '.$sInputTags.'/>');
+						$oOutput->AddHtml('<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>');
+						$oOutput->AddHtml('</div>');
+						$sJSFormat = json_encode($this->oField->GetJSDateTimeFormat());
+						$sLocale = Dict::S('Portal:Calendar-FirstDayOfWeek');
+						$oOutput->AddJs(
+							<<<EOF
+                                					$('#datepicker_{$this->oField->GetGlobalId()}').datetimepicker({format: $sJSFormat, locale: '$sLocale' $sParent});
 EOF
-							);
-							break;
+						);
+						break;
 
-						case 'Combodo\\iTop\\Form\\Field\\PasswordField':
-							$oOutput->AddHtml('<input type="password" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" autocomplete="off" />');
-							break;
+					case 'Combodo\\iTop\\Form\\Field\\PasswordField':
+						$oOutput->AddHtml('<input type="password" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" autocomplete="off" '.$sInputTags.'/>');
+						break;
 
-						case 'Combodo\\iTop\\Form\\Field\\StringField':
-						case 'Combodo\\iTop\\Form\\Field\\UrlField':
-						case 'Combodo\\iTop\\Form\\Field\\EmailField':
-						case 'Combodo\\iTop\\Form\\Field\\PhoneField':
-							$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
-							break;
+					case 'Combodo\\iTop\\Form\\Field\\StringField':
+					case 'Combodo\\iTop\\Form\\Field\\UrlField':
+					case 'Combodo\\iTop\\Form\\Field\\EmailField':
+					case 'Combodo\\iTop\\Form\\Field\\PhoneField':
+						$oOutput->AddHtml('<input type="text" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" value="')->AddHtml($this->oField->GetCurrentValue(),
+							true)->AddHtml('" class="form-control" maxlength="255" '.$sInputTags.'/>');
+						break;
 
-						case 'Combodo\\iTop\\Form\\Field\\SelectField':
-						case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
-							$oOutput->AddHtml('<select id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" ' . ( ($this->oField->GetMultipleValuesEnabled()) ? 'multiple' : '' ) . ' class="form-control">');
-							foreach ($this->oField->GetChoices() as $sChoice => $sLabel) {
-								// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
-								$sSelectedAtt = ($this->oField->GetCurrentValue() == $sChoice) ? 'selected' : '';
-								$oOutput->AddHtml('<option value="' . $sChoice . '" ' . $sSelectedAtt . ' >')->AddHtml($sLabel)->AddHtml('</option>');
-							}
-							$oOutput->AddHtml('</select>');
-							break;
-					}
+					case 'Combodo\\iTop\\Form\\Field\\SelectField':
+					case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
+					$oOutput->AddHtml('<select id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" '.(($this->oField->GetMultipleValuesEnabled()) ? 'multiple' : '').' class="form-control"  '.$sInputTags.'>');
+						foreach ($this->oField->GetChoices() as $sChoice => $sLabel) {
+							// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
+							$sSelectedAtt = ($this->oField->GetCurrentValue() == $sChoice) ? 'selected' : '';
+							$oOutput->AddHtml('<option value="'.$sChoice.'" '.$sSelectedAtt.' >')->AddHtml($sLabel)->AddHtml('</option>');
+						}
+						$oOutput->AddHtml('</select>');
+						break;
+				}
 					$oOutput->AddHtml('</div>');
 
 					// Closing container
@@ -129,42 +149,35 @@ EOF
 
 					// Label
 					$oOutput->AddHtml('<div class="form_field_label">');
-					if ($this->oField->GetLabel() !== '') {
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
-					}
-					$oOutput->AddHtml('</div>');
+				if ($this->oField->GetLabel() !== '') {
+					$oOutput->AddHtml('<label for="'.$this->oField->GetGlobalId().'" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+				}
+				$oOutput->AddHtml('</div>');
 
-					// Value
-					$oOutput->AddHtml('<div class="form_field_control">');
-					// - Help block
-					$oOutput->AddHtml('<div class="help-block"></div>');
-					// First the edition area
-					$oOutput->AddHtml('<div>');
-					$oOutput->AddHtml('<textarea id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" class="form-control" rows="8">' . $this->oField->GetCurrentValue() . '</textarea>');
-					$oOutput->AddHtml('</div>');
-					// Then the previous entries if necessary
-					if ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\CaseLogField') {
-						$this->PreparingCaseLogEntries($oOutput);
-					}
-					$oOutput->AddHtml('</div>');
+				// Value
+				$oOutput->AddHtml('<div class="form_field_control">');
+				// - Help block
+				$oOutput->AddHtml('<div class="help-block"></div>');
+				// First the edition area
+				$oOutput->AddHtml('<div>');
+				$sEditorClasses = $bRichEditor ? 'htmlEditor' : '';
+				$oOutput->AddHtml('<textarea id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" class="' . $sEditorClasses . ' form-control" rows="8"  '.$sInputTags.'>'. CKEditorHelper::PrepareCKEditorValueTextEncodingForTextarea($this->oField->GetCurrentValue()) .'</textarea>');
+				$oOutput->AddHtml('</div>');
+				// Then the previous entries if necessary
+				if ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\CaseLogField') {
+					$this->PreparingCaseLogEntries($oOutput);
+				}
+				$oOutput->AddHtml('</div>');
 
-					// Closing container
-					$oOutput->AddHtml('</div>');
+				// Closing container
+				$oOutput->AddHtml('</div>');
 
-					// Some additional stuff if we are displaying it with a rich editor
+				// Some additional stuff if we are displaying it with a rich editor
 					if ($bRichEditor) {
-						$aConfig = utils::GetCkeditorPref();
-						$aConfig['extraPlugins'] = 'codesnippet';
-						$sJsConfig = json_encode($aConfig);
-						
-						$oOutput->AddJs(
-<<<EOF
-							$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
-							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, $sJsConfig).editor.on("change", function(){
-                                	$('#{$this->oField->GetGlobalId()}').trigger("change");
-                              });
-EOF
-						);
+
+						// Enable CKEditor
+						CKEditorHelper::ConfigureCKEditorElementForRenderingOutput($oOutput, $this->oField->GetGlobalId(), $this->oField->GetCurrentValue(), false, false, ['maximize' => []]);
+
 						if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null)) {
 							$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));
 						}
@@ -217,25 +230,57 @@ EOF
 				case 'Combodo\\iTop\\Form\\Field\\UrlField':
 				case 'Combodo\\iTop\\Form\\Field\\EmailField':
 				case 'Combodo\\iTop\\Form\\Field\\PhoneField':
-				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
-				case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
 				case 'Combodo\\iTop\\Form\\Field\\SelectField':
 				case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
 				case 'Combodo\\iTop\\Form\\Field\\HiddenField':
-					$oOutput->AddJs(
-						<<<EOF
-                        					$("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
-						var me = this;
-
-						$(this).closest(".field_set").trigger("field_change", {
-							id: $(me).attr("id"),
-							name: $(me).closest(".form_field").attr("data-field-id"),
-							value: $(me).val()
-						});
-					}).on("mouseup", function(){this.focus();});
-EOF
+					$oOutput->AddJs(<<<JS
+	                    $("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+							var me = this;
+	
+							$(this).closest(".field_set").trigger("field_change", {
+								id: $(me).attr("id"),
+								name: $(me).closest(".form_field").attr("data-field-id"),
+								value: $(me).val()
+							});
+						}).on("mouseup", function(){this.trigger('focus');});
+JS
 					);
 					break;
+
+				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+				case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
+					if ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML) {
+						$oOutput->AddJs(<<<JS
+							CombodoCKEditorHandler.GetInstance("#{$this->oField->GetGlobalId()}")
+								.then((oCKEditor) => {
+									oCKEditor.model.document.on("change:data", () => {
+										const oFieldElem = $("#{$this->oField->GetGlobalId()}");
+										oFieldElem.val(oCKEditor.getData());
+										oFieldElem.closest(".field_set").trigger("field_change", {
+											id: oFieldElem.attr("id"),
+											name: oFieldElem.closest(".form_field").attr("data-field-id"),
+											value: oCKEditor.getData()
+										});
+									});
+								});
+JS
+						);
+					} else {
+						$oOutput->AddJs(<<<JS
+                            $("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+								var me = this;
+		
+								$(this).closest(".field_set").trigger("field_change", {
+									id: $(me).attr("id"),
+									name: $(me).closest(".form_field").attr("data-field-id"),
+									value: $(me).val()
+								});
+							}).on("mouseup", function(){this.trigger('focus');});
+JS
+						);
+					}
+					break;
+
 				case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
 					// We need the focusout event has the datepicker widget seems to override the change event
 					$oOutput->AddJs(
@@ -331,7 +376,7 @@ EOF
 
 							// Value
 							$oOutput->AddHtml('<div class="form_field_control">');
-							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), false)->AddHtml('</div>');
+							$oOutput->AddHtml('<div class="form-control-static ipb-is-html-content">')->AddHtml($this->oField->GetDisplayValue(), false)->AddHtml('</div>');
 							$oOutput->AddHtml('</div>');
 						}
 
@@ -439,9 +484,14 @@ EOF
 			// JS Form field widget construct
 			$aValidators = array();
 			foreach ($this->oField->GetValidators() as $oValidator) {
+				if (false === ($oValidator instanceof AbstractRegexpValidator)) {
+					// no JS counterpart, so skipping !
+					continue;
+				}
+
 				$aValidators[$oValidator::GetName()] = array(
 					'reg_exp' => $oValidator->GetRegExp(),
-					'message' => Dict::S($oValidator->GetErrorMessage())
+					'message' => Dict::S($oValidator->GetErrorMessage()),
 				);
 			}
 
@@ -546,26 +596,26 @@ JS
 
 			// Opening thread
 			$oOutput->AddHtml(<<<HTML
-<div class="caselog-thread">
+<div class="ipb-caselog-thread ipb-is-html-content">
 HTML
 			);
 			// - Header
 			$oOutput->AddHtml(<<<HTML
-    <div class="caselog-thread--header">
-        <span class="caselog-thread--header-togglers">
-            <a href="#" class="caselog-thread--header-toggler caselog-thread--open-all-toggler" data-tooltip-content="{$sOpenAllEntriesTooltip}"><span class="fas fa-book-open"></span></a>
-            <a href="#" class="caselog-thread--header-toggler caselog-thread--close-all-toggler" data-tooltip-content="{$sCloseAllEntriesTooltip}"><span class="fas fa-book"></span></a>
+    <div class="ipb-caselog-thread--header">
+        <span class="ipb-caselog-thread--header-togglers">
+            <a href="#" class="ipb-caselog-thread--header-toggler ipb-caselog-thread--open-all-toggler" data-tooltip-content="{$sOpenAllEntriesTooltip}"><span class="fas fa-book-open"></span></a>
+            <a href="#" class="ipb-caselog-thread--header-toggler ipb-caselog-thread--close-all-toggler" data-tooltip-content="{$sCloseAllEntriesTooltip}"><span class="fas fa-book"></span></a>
         </span>
-        <span class="caselog-thread--header-info pull-right">
-	        <span class="caselog-thread--participants-count" data-tooltip-content="{$sUsersCountTooltip}">{$iNbUsers}<span class="fas fa-users"></span></span>
-	        <span class="caselog-thread--messages-count" data-tooltip-content="{$sEntriesCountTooltip}">{$iNbEntries}<span class="fas fa-comment-alt"></span></span>
+        <span class="ipb-caselog-thread--header-info pull-right">
+	        <span class="ipb-caselog-thread--participants-count" data-tooltip-content="{$sUsersCountTooltip}">{$iNbUsers}<span class="fas fa-users"></span></span>
+	        <span class="ipb-caselog-thread--messages-count" data-tooltip-content="{$sEntriesCountTooltip}">{$iNbEntries}<span class="fas fa-comment-alt"></span></span>
 		</span>
     </div>
 HTML
 			);
 			// - Content
 			$oOutput->AddHtml(<<<HTML
-	<div class="caselog-thread--content">
+	<div class="ipb-caselog-thread--content">
 HTML
 			);
 
@@ -624,24 +674,24 @@ HTML
 				if (($iEntryUserId !== $sLastUserId) || ($sEntryDate !== $sLastDate)) {
 					if ($sEntryDate !== $sLastDate) {
 						$oOutput->AddHtml(<<<HTML
-		<div class="caselog-thread--date">{$sEntryDate}</div>
+		<div class="ipb-caselog-thread--date">{$sEntryDate}</div>
 HTML
 						);
 					}
 
 					// Open block
 					if ($iEntryUserId === $iCurrentUserId) {
-						$sEntryBlockClass = 'caselog-thread--block-me';
+						$sEntryBlockClass = 'ipb-caselog-thread--block-me';
 					}
 					else {
 						if (!array_key_exists($iEntryUserId, $aPeerColorClassCache)) {
 							$iPeerClassNumber = (count($aPeerColorClassCache) % 5) + 1;
-							$aPeerColorClassCache[$iEntryUserId] = 'caselog-thread--block-color-'.$iPeerClassNumber;
+							$aPeerColorClassCache[$iEntryUserId] = 'ipb-caselog-thread--block-color-'.$iPeerClassNumber;
 						}
 						$sEntryBlockClass = $aPeerColorClassCache[$iEntryUserId];
 					}
 					$oOutput->AddHtml(<<<HTML
-		<div class="caselog-thread--block {$sEntryBlockClass}">
+		<div class="ipb-caselog-thread--block {$sEntryBlockClass}">
 HTML
 					);
 
@@ -653,31 +703,31 @@ HTML
 					$sEntryMedallionTooltip = utils::HtmlEntities($sEntryUserLogin);
 					$sEntryMedallionTooltipPlacement = ($iEntryUserId === $iCurrentUserId) ? 'left' : 'right';
 					$oOutput->AddHtml(<<<HTML
-	    <div class="caselog-thread--block-medallion" style="{$sEntryMedallionStyle}" data-tooltip-content="{$sEntryMedallionTooltip}" data-placement="{$sEntryMedallionTooltipPlacement}">
+	    <div class="ipb-caselog-thread--block-medallion" style="{$sEntryMedallionStyle}" data-tooltip-content="{$sEntryMedallionTooltip}" data-placement="{$sEntryMedallionTooltipPlacement}">
 	        $sEntryMedallionContent
 	    </div>
-	    <div class="caselog-thread--block-user">{$sEntryUserLogin}</div>
+	    <div class="ipb-caselog-thread--block-user">{$sEntryMedallionTooltip}</div>
 HTML
 					);
 
 					// Open entries
 					$oOutput->AddHtml(<<<HTML
-			<div class="caselog-thread--block-entries">
+			<div class="ipb-caselog-thread--block-entries">
 HTML
 					);
 				}
 
 				// Prepare entry content
-				$sEntryId = 'caselog-thread--block-entry-'.$sThreadUniqueId.'-'.$i;
+				$sEntryId = 'ipb-caselog-thread--block-entry-'.$sThreadUniqueId.'-'.$i;
 				$sEntryHtml = AttributeText::RenderWikiHtml($aEntries[$i]['message_html'], true /* wiki only */);
 				$sEntryHtml = InlineImage::FixUrls($sEntryHtml);
 
 				// Add entry
 				$oOutput->AddHtml(<<<HTML
-			    <div class="caselog-thread--block-entry" id="{$sEntryId}">
-			        <div class="caselog-thread--block-entry-content">{$sEntryHtml}</div>
-			        <div class="caselog-thread--block-entry-date">{$sEntryDatetime}</div>
-			        <div class="caselog-thread--block-entry-toggler"><span class="fas fa-caret-up" title="{$sCloseEntryTooltip}"></span></div>
+			    <div class="ipb-caselog-thread--block-entry" id="{$sEntryId}">
+			        <div class="ipb-caselog-thread--block-entry-content">{$sEntryHtml}</div>
+			        <div class="ipb-caselog-thread--block-entry-date">{$sEntryDatetime}</div>
+			        <div class="ipb-caselog-thread--block-entry-toggler"><span class="fas fa-caret-up" title="{$sCloseEntryTooltip}"></span></div>
 			    </div>
 HTML
 				);
@@ -709,20 +759,50 @@ HTML
 			// Add JS handlers
 			$oOutput->AddJs(<<<JS
 $('[data-field-id="{$this->oField->GetId()}"][data-form-path="{$this->oField->GetFormPath()}"]')
-	.on('click', '.caselog-thread--block-entry-toggler, .caselog-thread--block-entry.closed', function(){
-		$(this).closest('.caselog-thread--block-entry').toggleClass('closed');
+	.on('click', '.ipb-caselog-thread--block-entry-toggler, .ipb-caselog-thread--block-entry.closed', function(){
+		$(this).closest('.ipb-caselog-thread--block-entry').toggleClass('closed');
 	})
-	.on('click', '.caselog-thread--open-all-toggler', function(oEvent){
+	.on('click', '.ipb-caselog-thread--open-all-toggler', function(oEvent){
 		oEvent.preventDefault()
-		$('[data-field-id="{$this->oField->GetId()}"][data-form-path="{$this->oField->GetFormPath()}"]').find('.caselog-thread--block-entry').removeClass('closed');
+		$('[data-field-id="{$this->oField->GetId()}"][data-form-path="{$this->oField->GetFormPath()}"]').find('.ipb-caselog-thread--block-entry').removeClass('closed');
 	})
-	.on('click', '.caselog-thread--close-all-toggler', function(oEvent){
+	.on('click', '.ipb-caselog-thread--close-all-toggler', function(oEvent){
 		oEvent.preventDefault()
-		$('[data-field-id="{$this->oField->GetId()}"][data-form-path="{$this->oField->GetFormPath()}"]').find('.caselog-thread--block-entry').addClass('closed');
+		$('[data-field-id="{$this->oField->GetId()}"][data-form-path="{$this->oField->GetFormPath()}"]').find('.ipb-caselog-thread--block-entry').addClass('closed');
 	});
 JS
 			);
 		}
+	}
+
+	/**
+	 * @param \Combodo\iTop\Form\Field\Field $oField
+	 *
+	 * @return string
+	 */
+	private function ComputeInputValidationTags(Field $oField): string
+	{
+		// Result tags
+		$sTags = '';
+
+		// Iterate throw validators...
+		foreach ($oField->GetValidators() as $oValidator) {
+
+			// Validator
+			if ($oValidator instanceof AbstractRegexpValidator) {
+				if (!($oField instanceof DateField || $oField instanceof DateTimeField)) { // unrecognized regular expression
+					$sTags .= ' pattern="'.$oValidator->GetRegExp().'" ';
+				}
+			}
+
+			// Mandatory validator
+			if ($oValidator instanceof MandatoryValidator) {
+				$sTags .= ' required ';
+			}
+
+		}
+
+		return $sTags;
 	}
 
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2010-2021 Combodo SARL
+ * Copyright (C) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,6 +21,7 @@ use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 abstract class Query extends cmdbAbstractObject
 {
@@ -74,6 +75,7 @@ abstract class Query extends cmdbAbstractObject
 			"default_value" => 0,
 			"is_null_allowed" => false,
 			"depends_on" => array(),
+			"tracking_level" => ATTRIBUTE_TRACKING_NONE,
 		)));
 
 		MetaModel::Init_AddAttribute(new AttributeDateTime("export_last_date", array(
@@ -82,6 +84,7 @@ abstract class Query extends cmdbAbstractObject
 			"default_value" => null,
 			"is_null_allowed" => true,
 			"depends_on" => array(),
+			"tracking_level" => ATTRIBUTE_TRACKING_NONE,
 		)));
 
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("export_last_user_id",
@@ -93,14 +96,16 @@ abstract class Query extends cmdbAbstractObject
 				"depends_on"=>array(),
 				"display_style"=>'select',
 				"always_load_in_tables"=>false,
-				"on_target_delete"=>DEL_SILENT
+				"on_target_delete"=>DEL_SILENT,
+				"tracking_level" => ATTRIBUTE_TRACKING_NONE,
 			)));
 
 		MetaModel::Init_AddAttribute(new AttributeExternalField("export_last_user_contact",
 			array(
 				"allowed_values"=>null,
 				"extkey_attcode"=> "export_last_user_id",
-				"target_attcode"=>"contactid"
+				"target_attcode"=>"contactid",
+				"tracking_level" => ATTRIBUTE_TRACKING_NONE,
 			)));
 
 		// Display lists
@@ -216,17 +221,10 @@ class QueryOQL extends Query
 	{
 		try{
 			// retrieve attributes
-			$sFields = trim($this->Get('fields'));
 			$sOql = $this->Get('oql');
 
 			// construct base url depending on version
-			$bExportV1Recommended = ($sFields == '');
-			if ($bExportV1Recommended) {
-				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?format=spreadsheet&login_mode=basic&query='.$this->GetKey();
-			}
-			else{
-				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&date_format='.urlencode((string)AttributeDateTime::GetFormat()).'&query='.$this->GetKey();
-			}
+			$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&date_format='.urlencode((string)AttributeDateTime::GetFormat()).'&query='.$this->GetKey();
 
 			// search object from OQL
 			$oSearch = DBObjectSearch::FromOQL($sOql);
@@ -251,22 +249,9 @@ class QueryOQL extends Query
 		$oPage->add_script("$('[name=\"attr_oql\"]').addClass('ibo-query-oql ibo-is-code'); $('[data-attribute-code=\"oql\"]').addClass('ibo-query-oql ibo-is-code');");
 
 		if (!$bEditMode) {
-			$sFields = trim($this->Get('fields'));
-			$bExportV1Recommended = ($sFields == '');
-			if ($bExportV1Recommended) {
-				$oFieldAttDef = MetaModel::GetAttributeDef('QueryOQL', 'fields');
-				$oAlert = AlertUIBlockFactory::MakeForFailure()
-					->SetIsClosable(false)
-					->SetIsCollapsible(false);
-				$oAlert->AddCSSClass('mb-5');
-				$oAlert->AddSubBlock(new Html(Dict::Format('UI:Query:UrlV1', '')));
-				$oPage->AddSubBlock($oAlert);
-				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?format=spreadsheet&login_mode=basic&query='.$this->GetKey();
-			} else {
-				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&date_format='.urlencode((string)AttributeDateTime::GetFormat()).'&query='.$this->GetKey();
-			}
+			$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&date_format='.urlencode((string)AttributeDateTime::GetFormat()).'&query='.$this->GetKey();
+
 			$sOql = $this->Get('oql');
-			$sMessage = null;
 			try {
 				$oSearch = DBObjectSearch::FromOQL($sOql);
 				$aParameters = $oSearch->GetQueryParams();
@@ -292,7 +277,7 @@ class QueryOQL extends Query
 			}
 			catch
 			(OQLException $e) {
-				$oAlert = AlertUIBlockFactory::MakeForFailure(Dict::Format('UI:RunQuery:Error'), $e->getHtmlDesc())
+				$oAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:RunQuery:Error'), $e->getHtmlDesc())
 					->SetIsClosable(false)
 					->SetIsCollapsible(false);
 				$oAlert->AddCSSClass('mb-5');

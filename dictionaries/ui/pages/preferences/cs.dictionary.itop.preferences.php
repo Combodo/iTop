@@ -1,48 +1,49 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// Navigation menu
+/**
+ *
+ */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'UI:Preferences:Title'                                             => 'Preferences~~',
-	'UI:Preferences:UserInterface:Title'                               => 'User interface~~',
-	'UI:Preferences:General:Title'                                     => 'General~~',
-	'UI:Preferences:General:Theme'                                     => 'Theme~~',
-	'UI:Preferences:General:Theme:DefaultThemeLabel'                   => '%1$s (default)~~',
-	'UI:Preferences:Lists:Title'                                       => 'Lists~~',
-	'UI:Preferences:RichText:Title'                                    => 'Rich text editor~~',
-	'UI:Preferences:RichText:ToolbarState'                             => 'Toolbar default state~~',
-	'UI:Preferences:RichText:ToolbarState:Expanded'                    => 'Expanded~~',
-	'UI:Preferences:RichText:ToolbarState:Collapsed'                   => 'Collapsed~~',
-	'UI:Preferences:ActivityPanel:Title'                               => 'Activity panel~~',
-	'UI:Preferences:ActivityPanel:EntryFormOpened'                     => 'Entry form opened by default~~',
-	'UI:Preferences:ActivityPanel:EntryFormOpened+'                    => 'Whether the entry form will be opened when displaying an object. If unchecked, you will still be able to open it by clicking the compose button~~',
-	'UI:Preferences:PersonalizeKeyboardShortcuts:Title'                => 'Application keyboard shortcuts~~',
-	'UI:Preferences:PersonalizeKeyboardShortcuts:Input:Hint'           => 'Type a keyboard shortcut~~',
-	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Tooltip'       => 'Record a keyboard shortcut~~',
-	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset'         => 'Reset~~',
-	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset:Tooltip' => 'Back to default keyboard shortcut~~',
-	'UI:Preferences:Tabs:Title'                                        => 'Tabs~~',
-	'UI:Preferences:Tabs:Layout:Label'                                 => 'Layout~~',
-	'UI:Preferences:Tabs:Layout:Horizontal'                            => 'Horizontal~~',
-	'UI:Preferences:Tabs:Layout:Vertical'                              => 'Vertical~~',
-	'UI:Preferences:Tabs:Scrollable:Label'                             => 'Navigation~~',
-	'UI:Preferences:Tabs:Scrollable:Classic'                           => 'Classic~~',
-	'UI:Preferences:Tabs:Scrollable:Scrollable'                        => 'Scrollable~~',
-	'UI:Preferences:ChooseAPlaceholder'                                => 'User placeholder image~~',
-	'UI:Preferences:ChooseAPlaceholder+'                               => 'Choose a placeholder image that will be displayed if the contact linked to your user doesn\'t have one~~',
+	'UI:Preferences:Title' => 'Předvolby',
+	'UI:Preferences:UserInterface:Title' => 'Uživatelské rozhraní',
+	'UI:Preferences:General:Title' => 'Obecné',
+	'UI:Preferences:General:Theme' => 'Téma',
+	'UI:Preferences:General:Theme:DefaultThemeLabel' => '%1$s (defaultní)',
+	'UI:Favorites:General:ShowSummaryCards' => 'Zobrazit karty shrnutí',
+	'UI:Favorites:General:ShowSummaryCards+' => 'Při najetí na hypertextový odkaz cílený na objekt se zobrazí krátké shrnutí tohoto objektu, pokud je pro danou třídu k dispozici.',
+	'UI:Preferences:Lists:Title' => 'Seznamy',
+	'UI:Preferences:RichText:Title' => 'Editor formátovaného textu',
+	'UI:Preferences:RichText:ToolbarState' => 'Výchozí stav panelu nástrojů',
+	'UI:Preferences:RichText:ToolbarState:Expanded' => 'Rozbalený',
+	'UI:Preferences:RichText:ToolbarState:Collapsed' => 'Sbalený',
+	'UI:Preferences:ActivityPanel:Title' => 'Panel aktivit',
+	'UI:Preferences:ActivityPanel:EntryFormOpened' => 'Defaultně otevřít formulář',
+	'UI:Preferences:ActivityPanel:EntryFormOpened+' => 'Zda se při zobrazení objektu otevře automaticky formulář v panelu aktivit. Pokud zde není zaškrtnuto, můžete jej otevřít kliknutím na tlačítko.',
+	'UI:Preferences:PersonalizeKeyboardShortcuts:Title' => 'Klávesové zkratky aplikací',
+	'UI:Preferences:PersonalizeKeyboardShortcuts:Input:Hint' => 'Zadejte klávesovou zkratku',
+	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Tooltip' => 'Záznam klávesové zkratky',
+	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset' => 'Reset',
+	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset:Tooltip' => 'Zpět na výchozí klávesovou zkratku',
+	'UI:Preferences:Tabs:Title' => 'Záložky',
+	'UI:Preferences:Tabs:Layout:Label' => 'Rozložení',
+	'UI:Preferences:Tabs:Layout:Horizontal' => 'Horizontální',
+	'UI:Preferences:Tabs:Layout:Vertical' => 'Vertikální',
+	'UI:Preferences:Tabs:Scrollable:Label' => 'Navigace',
+	'UI:Preferences:Tabs:Scrollable:Classic' => 'Klasická',
+	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'Rolovací',
+	'UI:Preferences:General:Toasts' => 'Pozice toastové notifikace',
+	'UI:Preferences:General:Toasts:Bottom' => 'Dole',
+	'UI:Preferences:General:Toasts:Top' => 'Nahoře',
+	'UI:Preferences:ChooseAPlaceholder' => 'Zástupný obrázek uživatele',
+	'UI:Preferences:ChooseAPlaceholder+' => 'Vyberte zástupný obrázek, který se zobrazí, pokud kontakt spojený s vaším uživatelem žádný obrázek nemá',
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Váš zástupný obrázek byl úspěšně aktualizován',
+	'UI:Preferences:Notifications' => 'Upozornění',
+	'UI:Preferences:Notifications+' => 'Nastavení upozornění, která chcete dostávat <a href="%1$s">na této stránce</a>.',
+	
 ));

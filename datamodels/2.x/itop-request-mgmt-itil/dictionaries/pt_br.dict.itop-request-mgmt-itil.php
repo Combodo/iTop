@@ -1,7 +1,13 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ *
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:RequestManagement' => 'Gerenciamento de Solicitações',
@@ -18,8 +24,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:SearchUserRequests+' => 'Pesquisar por solicitações',
 	'Menu:UserRequest:Shortcuts' => 'Atalhos',
 	'Menu:UserRequest:Shortcuts+' => '',
-	'Menu:UserRequest:MyRequests' => 'Solicitações atribuídas a mim',
-	'Menu:UserRequest:MyRequests+' => 'Solicitações atribuídas a mim (como Agente)',
+	'Menu:UserRequest:MyRequests' => 'Solicitações abertas por mim',
+	'Menu:UserRequest:MyRequests+' => 'Solicitações abertas por mim (como Agente)',
 	'Menu:UserRequest:MySupportRequests' => 'Minhas solicitações de suporte',
 	'Menu:UserRequest:MySupportRequests+' => 'Minhas solicitações de suporte',
 	'Menu:UserRequest:EscalatedRequests' => 'Solicitações escalonados',
@@ -34,6 +40,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Solicitações abertas por tipo',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Solicitações abertas por cliente',
 	'Class:UserRequest:KnownErrorList' => 'Erros conhecidos',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 ));
 
 // Dictionnay conventions
@@ -109,6 +116,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => '',
 	'Class:UserRequest/Attribute:origin' => 'Origem',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'E-mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => '',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoramento',
@@ -242,9 +253,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Aguardar por aprovação',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Não é possível atribuir a solicitação pai a própria solicitação',
-
-	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (resolver solicitações filhas)',
-	'Class:UserRequest/Method:ResolveChildTickets+' => 'Conecte a solução a solicitações filhas (ev_autoresolve) e alinhe as seguintes características da requisição: serviço, equipe, agente, info de solução',
+	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Conecte a solução a pedidos filhos (ev_autoresolve) e alinhe as seguintes características da requisição: serviço, equipe, agente, info de solução',
 ));
 
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -24,7 +24,7 @@ require_once('dbobjectiterator.php');
  * The value for an attribute representing a set of links between the host object and "remote" objects
  *
  * @package     iTopORM
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -145,18 +145,6 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$this->bHasDelta = true;
 	}
 
-    /**
-     * @param DBObject $oObject
-     * @param string $sClassAlias
-     *
-     * @deprecated Since iTop 2.4, use {@link \ormLinkSet::AddItem()} instead.
-     */
-	public function AddObject(DBObject $oObject, $sClassAlias = '')
-    {
-	    DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use \ormLinkSet::AddItem() instead');
-	    $this->AddItem($oObject);
-    }
-
 	/**
 	 * @param $iObjectId
 	 */
@@ -251,25 +239,6 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		}
 		return $aRet;
 	}
-
-    /**
-     * @param bool $bWithId
-     * @return array
-     * @deprecated Since iTop 2.4, use foreach($this as $oItem){} instead
-     */
-    public function ToArray($bWithId = true)
-    {
-	    DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use foreach($this as $oItem){} instead');
-	    $aRet = array();
-	    foreach ($this as $oItem) {
-		    if ($bWithId) {
-			    $aRet[$oItem->GetKey()] = $oItem;
-		    } else {
-			    $aRet[] = $oItem;
-            }
-        }
-        return $aRet;
-    }
 
     /**
      * @param string $sAttCode
@@ -544,6 +513,15 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			{
 				$bUpdateFromDelta = true;
 			}
+		} else {
+			//@since 3.2.2 N°2364 - API : remove old linkedset persistance
+			/* Goo pattern to use:
+			* $oCISet = $oTicket->Get(‘functioncis_list’);
+			* $oCISet->AddItem(MetaModel::NewObject(‘lnkFunctionCIToTicket’, array(‘ci_id’=> 12345));
+			* $oCISet->RemoveItem(123456);
+			* $oTicket->Set(‘functionalcis_list’, $oCISet);
+			 */
+			DeprecatedCallsLog::NotifyDeprecatedPhpMethod('old pattern - please get previous value of the linked set, modify it and set it back to the host object');
 		}
 
 		if ($bUpdateFromDelta)
@@ -559,7 +537,6 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		else
 		{
 			// For backward compatibility reasons, let's rebuild a delta...
-
 			// Reset the delta
 			$this->iCursor = 0;
 			$this->aAdded = array();
@@ -845,13 +822,45 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			}
 			$oLinkSearch->SetSelectedClasses([self::LINK_ALIAS, self::REMOTE_ALIAS]);
 		}
+		if (count($this->aRemoved) !== 0) {
+			$sConditionExpr = '`'.self::LINK_ALIAS.'`.id NOT IN ('.implode(',', $this->aRemoved).')';
+			$oRemovedExpression = Expression::FromOQL($sConditionExpr);
+			$oLinkSearch->AddConditionExpression($oRemovedExpression);
+		}
 		$oLinkSet = new DBObjectSet($oLinkSearch);
 		$oLinkSet->SetShowObsoleteData($bShowObsolete);
-		if ($this->HasDelta())
-		{
+		if ($this->HasDelta()) {
 			$oLinkSet->AddObjectArray($this->aAdded);
 		}
 
 		return $oLinkSet;
+	}
+
+	/**
+	 * GetValues.
+	 *
+	 * @return array of tag codes
+	 */
+	public function GetValues()
+	{
+		$aValues = array();
+		foreach ($this->aPreserved as $sTagCode => $oTag) {
+			$aValues[] = $sTagCode;
+		}
+		foreach ($this->aAdded as $sTagCode => $oTag) {
+			$aValues[] = $sTagCode;
+		}
+
+		sort($aValues);
+
+		return $aValues;
+	}
+
+	/**
+	 * @return \DBObjectSet|null
+	 */
+	public function GetOriginalSet(): ?DBObjectSet
+	{
+		return $this->oOriginalSet;
 	}
 }

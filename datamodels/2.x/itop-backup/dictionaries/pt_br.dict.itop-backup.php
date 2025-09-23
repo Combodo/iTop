@@ -2,15 +2,17 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2021 Combodo
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ *
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-
 	'bkp-backup-running' => 'Um backup está sendo executado. Por favor, espere...',
 	'bkp-restore-running' => 'Uma restauração está sendo executada. Por favor, espere...',
-
-	'Menu:BackupStatus' => 'Backups Agendados',
+	'Menu:BackupStatus' => 'Backups agendados',
 	'bkp-status-title' => 'Backups Agendados',
 	'bkp-status-checks' => 'Configurações e verificações',
 	'bkp-mysqldump-ok' => 'mysqldump está presente: %1$s',

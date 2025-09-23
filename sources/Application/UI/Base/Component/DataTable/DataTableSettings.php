@@ -10,14 +10,36 @@ use cmdbAbstract;
 use cmdbAbstractObject;
 use Dict;
 use Metamodel;
-use Serializable;
 
+/**
+ * Class DataTableSettings
+ *
+ * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Component\DataTable
+ * @since 3.0.0
+ */
 class DataTableSettings
 {
+	/**
+	 * @var array
+	 */
     public $aClassAliases;
+	/**
+	 * @var null|string
+	 */
     public $sTableId;
+	/**
+	 * @var int
+	 */
     public $iDefaultPageSize;
+	/**
+	 * @var array
+	 */
     public $aColumns;
+	/**
+	 * @var array
+	 */
+	public $aSortOrder;
 
 
     /**
@@ -144,7 +166,8 @@ class DataTableSettings
         $oSettings = new DataTableSettings($aClassAliases);
         // Retrieve the class specific settings for each class/alias based on the 'list' ZList
         //TODO let the caller pass some other default settings (another Zlist, extre fields...)
-        $aColumns = array();
+        $aColumns = [];
+	    $aSortOrder = [];
         foreach ($aClassAliases as $sAlias => $sClass) {
             if ($aDefaultLists == null) {
                 $aList = cmdbAbstractObject::FlattenZList(MetaModel::GetZListItems($sClass, 'list'));

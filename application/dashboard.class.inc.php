@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -9,6 +9,8 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');
@@ -294,21 +296,21 @@ abstract class Dashboard
 	public function FromParams($aParams)
 	{
 		$this->sLayoutClass = $aParams['layout_class'];
+		if (!is_subclass_of($this->sLayoutClass,DashboardLayout::class)) {
+			throw new InvalidParameterException('Invalid parameter layout_class "'.$aParams['layout_class'].'"');
+		}
 		$this->sTitle = $aParams['title'];
 		$this->bAutoReload = $aParams['auto_reload'] == 'true';
 		$this->iAutoReloadSec = max(MetaModel::GetConfig()->Get('min_reload_interval'), (int) $aParams['auto_reload_sec']);
 		
-		foreach($aParams['cells'] as $aCell)
-		{
+		foreach($aParams['cells'] as $aCell) {
 			$aCellDashlets = array();
-			foreach($aCell as $aDashletParams)
-			{
+			foreach($aCell as $aDashletParams) {
 				$sDashletClass = $aDashletParams['dashlet_class'];
 				$sId = $aDashletParams['dashlet_id'];
 				/** @var \Dashlet $oNewDashlet */
 				$oNewDashlet = new $sDashletClass($this->oMetaModel, $sId);
-				if (isset($aDashletParams['dashlet_type']))
-				{
+				if (isset($aDashletParams['dashlet_type'])) {
 					$oNewDashlet->SetDashletType($aDashletParams['dashlet_type']);
 				}
 				$oForm = $oNewDashlet->GetForm();
@@ -422,7 +424,7 @@ abstract class Dashboard
 	}
 
 	/**
-	 * @param \WebPage $oPage *
+	 * @param WebPage $oPage *
 	 * @param array $aExtraParams
 	 *
 	 * @throws \ReflectionException
@@ -478,7 +480,7 @@ abstract class Dashboard
 	CombodoTooltip.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
 	$("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
 	
-	$('#attr_auto_reload').change( function(ev) {
+	$('#attr_auto_reload').on('change', function(ev) {
 		$("#attr_auto_reload_sec").prop('disabled', !$(this).is(':checked'));
 	} );
 
@@ -513,7 +515,7 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
 	 * @param bool $bCanEdit
@@ -522,9 +524,7 @@ EOF
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
 	{
-		if (!array_key_exists('dashboard_div_id', $aExtraParams)) {
-			$aExtraParams['dashboard_div_id'] = utils::Sanitize($this->GetId(), '', 'element_identifier');
-		}
+		$aExtraParams['dashboard_div_id'] = utils::Sanitize($aExtraParams['dashboard_div_id'] ?? null, $this->GetId(), utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 
 		/** @var \DashboardLayoutMultiCol $oLayout */
 		$oLayout = new $this->sLayoutClass();
@@ -561,15 +561,15 @@ JS
 		}
 
 		if (!$bEditMode) {
-			$oPage->add_linked_script('../js/dashlet.js');
-			$oPage->add_linked_script('../js/dashboard.js');
+			$oPage->LinkScriptFromAppRoot('js/dashlet.js');
+			$oPage->LinkScriptFromAppRoot('js/dashboard.js');
 		}
 
 		return $oDashboard;
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 * @throws \ReflectionException
 	 * @throws \Exception
@@ -592,7 +592,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 */
 	public function RenderDashletsProperties(WebPage $oPage, $aExtraParams = array())
@@ -918,6 +918,11 @@ class RuntimeDashboard extends Dashboard
 	{
 		$bCustomized = false;
 
+		$sDashboardFileSanitized = utils::RealPath(APPROOT.$sDashboardFile, APPROOT);
+		if (false === $sDashboardFileSanitized) {
+			throw new SecurityException('Invalid dashboard file !');
+		}
+
 		// Search for an eventual user defined dashboard
 		$oUDSearch = new DBObjectSearch('UserDashboard');
 		$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
@@ -929,7 +934,7 @@ class RuntimeDashboard extends Dashboard
 			$sDashboardDefinition = $oUserDashboard->Get('contents');
 			$bCustomized = true;
 		} else {
-			$sDashboardDefinition = @file_get_contents($sDashboardFile);
+			$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
 		}
 
 
@@ -937,7 +942,7 @@ class RuntimeDashboard extends Dashboard
 			$oDashboard = new RuntimeDashboard($sDashBoardId);
 			$oDashboard->FromXml($sDashboardDefinition);
 			$oDashboard->SetCustomFlag($bCustomized);
-			$oDashboard->SetDefinitionFile($sDashboardFile);
+			$oDashboard->SetDefinitionFile($sDashboardFileSanitized);
 		} else {
 			$oDashboard = null;
 		}
@@ -1045,7 +1050,7 @@ EOF
 		$sSelectorHtml .= '</div>';
 
 		$sFile = addslashes($this->GetDefinitionFile());
-		$sReloadURL = $this->GetReloadURL();
+		$sReloadURL = json_encode($this->GetReloadURL());
 
 		$bFromDashboardPage = isset($aAjaxParams['from_dashboard_page']) ? isset($aAjaxParams['from_dashboard_page']) : false;
 		if ($bFromDashboardPage) {
@@ -1104,15 +1109,15 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 *
 	 * @throws \Exception
 	 */
 	protected function RenderEditionTools(WebPage $oPage, DashboardLayoutUIBlock $oDashboard, $aExtraParams)
 	{
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
+		$oPage->LinkScriptFromAppRoot('node_modules/blueimp-file-upload/js/jquery.iframe-transport.js');
+		$oPage->LinkScriptFromAppRoot('node_modules/blueimp-file-upload/js/jquery.fileupload.js');
 		$sId = utils::Sanitize($this->GetId(), '', 'element_identifier');
 
 		$sMenuTogglerId = "ibo-dashboard-menu-toggler-{$sId}";
@@ -1134,9 +1139,8 @@ JS
 			->AddCSSClass('ibo-action-button');
 
 		$oToolbar->AddSubBlock($oActionButton);
-
 		$aActions = array();
-		$sFile = addslashes($this->sDefinitionFile);
+		$sFile = addslashes(utils::LocalPath($this->sDefinitionFile));
 		$sJSExtraParams = json_encode($aExtraParams);
 		if ($this->HasCustomDashboard()) {
 			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:EditCustom'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
@@ -1159,7 +1163,7 @@ JS
 		$oToolbar->AddSubBlock($oActionButton)
 			->AddSubBlock($oActionsMenu);
 
-		$sReloadURL = $this->GetReloadURL();
+		$sReloadURL = json_encode($this->GetReloadURL());
 		$oPage->add_script(
 			<<<EOF
 function EditDashboard(sId, sDashboardFile, aExtraParams)
@@ -1223,7 +1227,7 @@ EOF
 
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 * @param array $aExtraParams
 	 *
@@ -1259,14 +1263,14 @@ EOF
 		$sOkButtonLabel = Dict::S('UI:Button:Save');
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		
-		$sId = addslashes($this->sId);
-		$sLayoutClass = addslashes($this->sLayoutClass);
+		$sId = json_encode($this->sId);
+		$sLayoutClass = json_encode($this->sLayoutClass);
 		$sAutoReload = $this->bAutoReload ? 'true' : 'false';
 		$sAutoReloadSec = (string) $this->iAutoReloadSec;
-		$sTitle = addslashes($this->sTitle);
-		$sFile = addslashes($this->GetDefinitionFile());
+		$sTitle = json_encode($this->sTitle);
+		$sFile = json_encode($this->GetDefinitionFile());
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
-		$sReloadURL = $this->GetReloadURL();
+		$sReloadURL = json_encode($this->GetReloadURL());
 
 		$sExitConfirmationMessage = addslashes(Dict::S('UI:NavigateAwayConfirmationMessage'));
 		$sCancelConfirmationMessage = addslashes(Dict::S('UI:CancelConfirmationMessage'));
@@ -1320,15 +1324,15 @@ $('#dashboard_editor').dialog({
 });
 
 $('#dashboard_editor .ui-layout-center').runtimedashboard({
-	dashboard_id: '$sId', 
-	layout_class: '$sLayoutClass', 
-	title: '$sTitle',
+	dashboard_id: $sId, 
+	layout_class: $sLayoutClass, 
+	title: $sTitle,
 	auto_reload: $sAutoReload, 
 	auto_reload_sec: $sAutoReloadSec,
 	submit_to: '$sUrl', 
-	submit_parameters: {operation: 'save_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	submit_parameters: {operation: 'save_dashboard', file: $sFile, extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 	render_to: '$sUrl', 
-	render_parameters: {operation: 'render_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	render_parameters: {operation: 'render_dashboard', file: $sFile, extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 	new_dashlet_parameters: {operation: 'new_dashlet'}
 });
 
@@ -1483,7 +1487,7 @@ JS
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $sOQL
 	 *
 	 * @throws \DictExceptionMissingString
@@ -1547,6 +1551,29 @@ JS
 	public function GetDefinitionFile()
 	{
 		return $this->sDefinitionFile;
+	}
+
+	/**
+	 * @param string $sDashboardFileRelative can also be an absolute path (compatibility with old URL)
+	 *
+	 * @return string full path to the Dashboard file
+	 * @throws \SecurityException if path isn't under approot
+	 * @uses utils::RealPath()
+	 * @since 2.7.8 3.0.3 3.1.0 N°4449 remove FPD
+	 */
+	public static function GetDashboardFileFromRelativePath($sDashboardFileRelative)
+	{
+		if (utils::RealPath($sDashboardFileRelative, APPROOT)) {
+			// compatibility with old URL containing absolute path !
+			return $sDashboardFileRelative;
+		}
+
+		$sDashboardFile = APPROOT.$sDashboardFileRelative;
+		if (false === utils::RealPath($sDashboardFile, APPROOT)) {
+			throw new SecurityException('Invalid dashboard file !');
+		}
+
+		return $sDashboardFile;
 	}
 
 	/**

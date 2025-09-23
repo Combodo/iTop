@@ -1,39 +1,27 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/*
-* @author ITOMIG GmbH <martin.raenker@itomig.de>
-
-* @copyright     Copyright (C) 2021 Combodo SARL
-* @licence	http://opensource.org/licenses/AGPL-3.0
-*		
-*/
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ * @author ITOMIG GmbH <martin.raenker@itomig.de>
+ *
+ */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ProblemManagement' => 'Problem Management',
-	'Menu:ProblemManagement+' => 'Problem Management',
+	'Menu:ProblemManagement+' => '',
 	'Menu:Problem:Overview' => 'Übersicht',
-	'Menu:Problem:Overview+' => 'Übersicht',
+	'Menu:Problem:Overview+' => '',
 	'Menu:NewProblem' => 'Neues Problem',
-	'Menu:NewProblem+' => 'Neues Problem',
+	'Menu:NewProblem+' => '',
 	'Menu:SearchProblems' => 'Nach Problemen suchen',
-	'Menu:SearchProblems+' => 'Nach Problemen suchen',
+	'Menu:SearchProblems+' => '',
 	'Menu:Problem:Shortcuts' => 'Shortcuts',
 	'Menu:Problem:MyProblems' => 'Meine Probleme',
-	'Menu:Problem:MyProblems+' => 'Meine Probleme',
+	'Menu:Problem:MyProblems+' => '',
 	'Menu:Problem:OpenProblems' => 'Alle offenen Probleme',
 	'Menu:Problem:OpenProblems+' => 'Alle offenen (noch nicht geschlossenen) Probleme',
 	'UI-ProblemManagementOverview-ProblemByService' => 'Probleme nach Service',
@@ -110,11 +98,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Problem/Attribute:resolution_date' => 'Datum der Lösung',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => 'Bekannte Fehler',
-	'Class:Problem/Attribute:knownerrors_list+' => '',
+	'Class:Problem/Attribute:knownerrors_list+' => 'Alle bekannten Fehler verknüpft mit diesem Problem',
 	'Class:Problem/Attribute:related_request_list' => 'Verwandte Requests',
-	'Class:Problem/Attribute:related_request_list+' => '',
+	'Class:Problem/Attribute:related_request_list+' => 'Alle Benutzeranfragen verknüpft mit diesem Problem',
 	'Class:Problem/Attribute:related_incident_list' => 'Verknüpfte Incidents',
-	'Class:Problem/Attribute:related_incident_list+' => 'Alle Incidents, die mit diesem Problem verknüpft sind',
+	'Class:Problem/Attribute:related_incident_list+' => 'Alle Incidents verknüpft mit diesem Problem',
 	'Class:Problem/Stimulus:ev_assign' => 'Zuweisen',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => 'Neu zuweisen',

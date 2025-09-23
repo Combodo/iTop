@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,8 +20,10 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use DOMFormatException;
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
+use DOMFormatException;
 
 /**
  * Description of FilterBrick
@@ -34,10 +36,12 @@ class FilterBrick extends PortalBrick
 {
 	// Overloaded constants
 	const DEFAULT_VISIBLE_NAVIGATION_MENU = false;
-	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/filter/tile.html.twig';
+    /**
+     * @deprecated 3.2.1
+     */
+    const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/filter/tile.html.twig';
     const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-search';
     const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-search fa-2x';
-
     /** @var string DEFAULT_TARGET_BRICK_CLASS */
 	const DEFAULT_TARGET_BRICK_CLASS = 'Combodo\\iTop\\Portal\\Brick\\BrowseBrick';
 	/** @var string DEFAULT_SEARCH_PLACEHOLDER_VALUE */
@@ -59,6 +63,15 @@ class FilterBrick extends PortalBrick
 	protected $sSearchSubmitLabel;
 	/** @var string $sSearchSubmitClass */
 	protected $sSearchSubmitClass;
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(self::class,
+			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'filter/tile.html.twig')
+		);
+	}
 
 	/**
 	 * FilterBrick constructor.
@@ -239,7 +252,7 @@ class FilterBrick extends PortalBrick
 		// Checking that the brick has at least a target brick id
 		if (($this->GetTargetBrickId() === null) || ($this->GetTargetBrickId() === ''))
 		{
-			throw new DOMFormatException('FilterBrick : Must have a target brick id', null, null, $oMDElement);
+			throw new DOMFormatException('FilterBrick : Must have a target brick id', 0, null, $oMDElement);
 		}
 
 		return $this;

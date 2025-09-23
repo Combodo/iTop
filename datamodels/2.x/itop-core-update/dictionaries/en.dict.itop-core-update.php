@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -83,6 +83,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup',
 	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?',
+	'iTopUpdate:UI:FastSetupLaunch' => 'Fast Setup',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Ready to start',
@@ -113,8 +114,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'iTopUpdate:UI:RestoreArchive' => 'You can restore your application from the archive \'%1$s\'',
 	'iTopUpdate:UI:RestoreBackup' => 'You can restore the database from \'%1$s\'',
 	'iTopUpdate:UI:UpdateDone' => 'Upgrade successful',
-	'Menu:iTopUpdate' => 'Application Upgrade',
-	'Menu:iTopUpdate+' => 'Application Upgrade',
+	'Menu:iTopUpdate' => 'Application upgrade',
+	'Menu:iTopUpdate+' => 'Application upgrade',
 
     // Missing itop entries
     'Class:ModuleInstallation/Attribute:installed' => 'Installed on',

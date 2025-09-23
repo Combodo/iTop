@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@ require_once('backgroundprocess.inc.php');
  * ormStopWatch
  * encapsulate the behavior of a stop watch that will be stored as an attribute of class AttributeStopWatch 
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -217,7 +217,7 @@ class ormStopWatch
 		}
 		else
 		{
-			$aProperties['Elapsed'] = 'running <img src="../images/indicator.gif">';
+			$aProperties['Elapsed'] = 'running <img src="' . utils::GetAbsoluteUrlAppRoot() . 'images/indicator.gif">';
 		}
 
 		$aProperties['Started'] = $oAttDef->SecondsToDate($this->iStarted);

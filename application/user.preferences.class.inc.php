@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Store and retrieve user's preferences (i.e persistent per user settings)
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 require_once(APPROOT.'/core/dbobject.class.php');
@@ -249,9 +249,9 @@ class appUserPreferences extends DBObject
 		(
 			"category" => "gui",
 			"key_type" => "autoincrement",
-			"name_attcode" => "userid",
+			"name_attcode" => "login",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => array("userid","login"),
 			"db_table" => "priv_app_preferences",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -260,6 +260,10 @@ class appUserPreferences extends DBObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributePropertySet("preferences", array("allowed_values"=>null, "sql"=>"preferences", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("org_id", array("allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "org_id")));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("login", array("allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "login")));
+		MetaModel::Init_SetZListItems('list', array('org_id','preferences'));
+		MetaModel::Init_SetZListItems('default_search', array('userid','login','org_id'));
 	}
 
 	/**

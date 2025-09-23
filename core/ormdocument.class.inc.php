@@ -1,32 +1,25 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * ormDocument
- * encapsulate the behavior of a binary data set that will be stored an attribute of class AttributeBlob 
+ * Copyright (C) 2013-2024 Combodo SAS
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventService;
+use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventService;
 
 
 /**
@@ -35,21 +28,118 @@ use Combodo\iTop\Service\EventService;
  *
  * @package     itopORM
  */
-
 class ormDocument
 {
+	/**
+	 * @var string For content that should be displayed in the browser
+	 * @link https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Content-Disposition#syntaxe
+	 * @since 3.1.0
+	 */
+	public const ENUM_CONTENT_DISPOSITION_INLINE = 'inline';
+	/**
+	 * @var string For content that should be downloaded on the device. Mind that "attachment" Content-Disposition has nothing to do with the "Attachment" class from the DataModel.
+	 * @link https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Content-Disposition#syntaxe
+	 * @since 3.1.0
+	 */
+	public const ENUM_CONTENT_DISPOSITION_ATTACHMENT = 'attachment';
+
+	/**
+	 * @var int Default downloads count of the document, should always be 0.
+	 * @since 3.1.0
+	 */
+	public const DEFAULT_DOWNLOADS_COUNT = 0;
+	private static $aKnownExtensions = [
+		'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+		'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
+		'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+		'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+		'sldx' => 'application/vnd.openxmlformats-officedocument.presentationml.slide',
+		'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+		'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
+		'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+		'jpg'  => 'image/jpeg',
+		'jpeg' => 'image/jpeg',
+		'gif'  => 'image/gif',
+		'png'  => 'image/png',
+		'pdf'  => 'application/pdf',
+		'doc'  => 'application/msword',
+		'dot'  => 'application/msword',
+		'xls'  => 'application/vnd.ms-excel',
+		'ppt'  => 'application/vnd.ms-powerpoint',
+		'vsd'  => 'application/x-visio',
+		'vdx'  => 'application/visio.drawing',
+		'odt'  => 'application/vnd.oasis.opendocument.text',
+		'ods'  => 'application/vnd.oasis.opendocument.spreadsheet',
+		'odp'  => 'application/vnd.oasis.opendocument.presentation',
+		'zip'  => 'application/zip',
+		'txt'  => 'text/plain',
+		'htm'  => 'text/html',
+		'html' => 'text/html',
+		'exe'  => 'application/octet-stream',
+	];
+
+	public static function GetKnownExtensions(): array
+	{
+		return self::$aKnownExtensions;
+	}
+
 	protected $m_data;
 	protected $m_sMimeType;
 	protected $m_sFileName;
-	
+	/**
+	 * @var int $m_iDownloadsCount Number of times the document has been downloaded (through the standard API!). Note that download from the browser's cache won't appear.
+	 * @since 3.1.0
+	 */
+	private $m_iDownloadsCount;
+
 	/**
 	 * Constructor
+	 *
+	 * @param null $data
+	 * @param string $sMimeType
+	 * @param string $sFileName
+	 * @param int $iDownloadsCount
+	 *
+	 * @since 3.1.0 N°2889 Add $iDownloadsCount parameter
 	 */
-	public function __construct($data = null, $sMimeType = 'text/plain', $sFileName = '')
+	public function __construct($data = null, $sMimeType = 'text/plain', $sFileName = '', $iDownloadsCount = self::DEFAULT_DOWNLOADS_COUNT)
 	{
 		$this->m_data = $data;
 		$this->m_sMimeType = $sMimeType;
 		$this->m_sFileName = $sFileName;
+		$this->m_iDownloadsCount = $iDownloadsCount;
+	}
+
+	/**
+	 * @param string $sPath Absolute path of the document to read
+	 *
+	 * @return \ormDocument
+	 * @throws \Exception
+	 */
+	public static function FromFile(string $sPath): ormDocument
+	{
+		$sPath = utils::RealPath($sPath, APPROOT);
+		if (false === $sPath) {
+			throw new Exception("Failed to load the file '$sPath'. The file does not exist or the current process is not allowed to access it.");
+		}
+		$sData = @file_get_contents($sPath);
+		if (false === $sData) {
+			throw new Exception("Failed to load the file '$sPath'. The file does not exist or the current process is not allowed to access it.");
+		}
+		$sExtension = strtolower(pathinfo($sPath, PATHINFO_EXTENSION));
+		$sFileName = basename($sPath);
+
+		$sMimeType = 'text/plain';
+		if (array_key_exists($sExtension, ormDocument::$aKnownExtensions)) {
+			$sMimeType = ormDocument::$aKnownExtensions[$sExtension];
+		} else if (extension_loaded('fileinfo')) {
+			$fInfo = new finfo(FILEINFO_MIME);
+			$sMimeType = $fInfo->file($sPath);
+		}
+
+		return new ormDocument($sData, $sMimeType, $sFileName);
 	}
 
 	public function __toString()
@@ -62,6 +152,33 @@ class ormDocument
 	public function IsEmpty()
 	{
 		return ($this->m_data == null);
+	}
+
+	/**
+	 * @param \ormDocument $oCompared
+	 *
+	 * @return bool True if the current ormDocument is equals to $oCompared EXCEPT for its download count. False if any other property is different OR if count is the same.
+	 * @since 3.1.0 N°6502
+	 */
+	public function EqualsExceptDownloadsCount(ormDocument $oCompared): bool
+	{
+		// First checking equality on others properties
+		if ($oCompared->GetData() !== $this->GetData()) {
+			return false;
+		}
+		if ($oCompared->GetMimeType() !== $this->GetMimeType()) {
+			return false;
+		}
+		if ($oCompared->GetFileName() !== $this->GetFileName()) {
+			return false;
+		}
+
+		// Finally check equality of the download count
+		if ($oCompared->GetDownloadsCount() === $this->GetDownloadsCount()) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
 	public function GetMimeType()
@@ -109,6 +226,30 @@ class ormDocument
 		return $this->m_sFileName;
 	}
 
+	/**
+	 * @see static::DownloadDocument()
+	 * @see static::$m_iDownloadsCount
+	 * @return int Number of times the document has been downloaded (through the standard API!)
+	 * @since 3.1.0
+	 */
+	public function GetDownloadsCount(): int
+	{
+		// Force cast to get 0 instead of null on fields prior to the features that have never been downloaded.
+		return (int) $this->m_iDownloadsCount;
+	}
+
+	/**
+	 * Increase the number of downloads of the document by $iNumber
+	 *
+	 * @param int $iNumber Step to increase the counter with, default is 1.
+	 * @return void
+	 * @since 3.1.0
+	 */
+	public function IncreaseDownloadsCount($iNumber = 1): void
+	{
+		$this->m_iDownloadsCount += $iNumber;
+	}
+
 	public function GetAsHTML()
 	{
 		$sResult = '';
@@ -119,7 +260,10 @@ class ormDocument
 		} else {
 			$data = $this->GetData();
 			$sSize = utils::BytesToFriendlyFormat(strlen($data));
-			$sResult = utils::EscapeHtml($this->GetFileName()).' ('.$sSize.')<br/>';
+			$iDownloadsCount = $this->GetDownloadsCount();
+			$sDownloadsCountForHtml = utils::HtmlEntities(Dict::Format('Core:ormValue:ormDocument:DownloadsCount', $iDownloadsCount));
+			$sDownloadsCountTooltipForHtml = utils::HtmlEntities(Dict::Format('Core:ormValue:ormDocument:DownloadsCount+', $iDownloadsCount));
+			$sResult = utils::EscapeHtml($this->GetFileName()).' ('.$sSize.' / '.$sDownloadsCountForHtml.' <i class="fas fa-cloud-download-alt" data-tooltip-content="'.$sDownloadsCountTooltipForHtml.'"></i>)<br/>';
 		}
 		return $sResult;
 	}
@@ -196,6 +340,8 @@ class ormDocument
 	 * @param string $sContentDisposition Either 'inline' or 'attachment'
 	 * @param string $sSecretField The attcode of the field containing a "secret" to be provided in order to retrieve the file
 	 * @param string $sSecretValue The value of the secret to be compared with the value of the attribute $sSecretField
+	 *
+	 * @return void
 	 */
 	public static function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment', $sSecretField = null, $sSecretValue = null)
 	{
@@ -204,26 +350,53 @@ class ormDocument
 			$oObj = MetaModel::GetObject($sClass, $id, false, false);
 			if (!is_object($oObj))
 			{
-				throw new Exception("Invalid id ($id) for class '$sClass' - the object does not exist or you are not allowed to view it");
+				// If access to the document is not granted, check if the access to the host object is allowed
+				$oObj = MetaModel::GetObject($sClass, $id, false, true);
+				if ($oObj instanceof Attachment) {
+					$sItemClass = $oObj->Get('item_class');
+					$sItemId = $oObj->Get('item_id');
+					$oHost = MetaModel::GetObject($sItemClass, $sItemId, false, false);
+					if (!is_object($oHost)) {
+						$oObj = null;
+					}
+				}
+				if (!is_object($oObj)) {
+					throw new Exception("Invalid id ($id) for class '$sClass' - the object does not exist or you are not allowed to view it");
+				}
 			}
 			if (($sSecretField != null) && ($oObj->Get($sSecretField) != $sSecretValue))
 			{
 				usleep(200);
 				throw new Exception("Invalid secret for class '$sClass' - the object does not exist or you are not allowed to view it");
 			}
+			/** @var \ormDocument $oDocument */
 			$oDocument = $oObj->Get($sAttCode);
 			if (is_object($oDocument))
 			{
 				$aEventData = array(
 					'debug_info' => $oDocument->GetFileName(),
 					'object' => $oObj,
+					'att_code' => $sAttCode,
 					'document' => $oDocument,
+					'content_disposition' => $sContentDisposition,
 					);
-				EventService::FireEvent(new EventData(EVENT_SERVICE_DOWNLOAD_DOCUMENT, $sClass, $aEventData));
+				EventService::FireEvent(new EventData(\EVENT_DOWNLOAD_DOCUMENT, $sClass, $aEventData));
 				$oPage->TrashUnexpectedOutput();
 				$oPage->SetContentType($oDocument->GetMimeType());
 				$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());
 				$oPage->add($oDocument->GetData());
+
+				// Update downloads count only when content disposition is set to "attachment" as other disposition are to display the document within the page
+				if($sContentDisposition === static::ENUM_CONTENT_DISPOSITION_ATTACHMENT) {
+					$oDocument->IncreaseDownloadsCount();
+					$oObj->Set($sAttCode, $oDocument);
+					// $oObj can be a \DBObject or \cmdbAbstractObject so we ahve to protect it
+					if (method_exists($oObj, 'AllowWrite')) {
+						// AllowWrite method is implemented in cmdbAbstractObject, but $oObject could be a DBObject or CMDBObject
+						$oObj->AllowWrite();
+					}
+					$oObj->DBUpdate();
+				}
 			}
 		}
 		catch(Exception $e)
@@ -233,10 +406,107 @@ class ormDocument
 	}
 
 	/**
+	 * Resize an image so that it fits in the given dimensions
+	 * @param int $iMaxImageWidth Maximum width for the resized image
+	 * @param int $iMaxImageHeight Maximum height for the resized image
+	 * @param array|null $aFinalDimensions Image dimensions after resizing or null if unable to read the image
+	 * @return ormDocument The resampled image
+	 *
+	 */
+	public function ResizeImageToFit(int $iMaxWidth, int $iMaxHeight, array|null &$aFinalDimensions = null) : static
+	{
+		$aFinalDimensions = null;
+		// If gd extension is not loaded, we put a warning in the log and return the image as is
+		if (extension_loaded('gd') === false) {
+			IssueLog::Warning('Image could not be resized as the "gd" extension does not seem to be loaded. Its dimensions will remain the same instead of ' . $iMaxWidth . 'x' . $iMaxHeight);
+			return $this;
+		}
+		$oGdImage = false;
+		switch($this->GetMimeType()) {
+			case 'image/gif':
+			case 'image/jpeg':
+			case 'image/png':
+				$oGdImage = @imagecreatefromstring($this->GetData());
+				break;
+			default:
+				// Unsupported image type, return the image as-is
+				return $this;
+		}
+
+		if ($oGdImage === false) {
+			IssueLog::Warning('Image could not be resized as . It will remain as imagecreatefromstring could not read its data.Its dimensions will remain the same instead of ' . $iMaxWidth . 'x' . $iMaxHeight);
+			return $this;
+		}
+
+		$iWidth = imagesx($oGdImage);
+		$iHeight = imagesy($oGdImage);
+
+		if ( ($iMaxWidth === 0 || $iWidth <= $iMaxWidth) && ($iMaxHeight === 0 || $iHeight <= $iMaxHeight)) {
+			// No need to resize
+			$aFinalDimensions = [
+				'width' => $iWidth,
+				'height' =>$iHeight
+			];
+			return $this;
+		}
+
+		$fScale = 1.0;
+		if ($iMaxWidth > 0) {
+			$fScale = min($fScale, $iMaxWidth / $iWidth);
+		}
+		if ($iMaxHeight > 0) {
+			$fScale = min($fScale, $iMaxHeight / $iHeight);
+		}
+		$iNewWidth = (int)($iWidth * $fScale);
+		$iNewHeight = (int)($iHeight * $fScale);
+
+		$oNewGdImage = imagecreatetruecolor($iNewWidth, $iNewHeight);
+
+
+		$aFinalDimensions = [
+			'width' => $iNewWidth,
+			'height' =>$iNewHeight
+		];
+
+		// Preserve transparency
+		if($this->GetMimeType() == "image/gif" || $this->GetMimeType() == "image/png") {
+			imagecolortransparent($oNewGdImage, imagecolorallocatealpha($oNewGdImage, 0, 0, 0, 127));
+			imagealphablending($oNewGdImage, false);
+			imagesavealpha($oNewGdImage, true);
+		}
+		imagecopyresampled($oNewGdImage, $oGdImage, 0, 0, 0, 0, $iNewWidth, $iNewHeight, $iWidth, $iHeight);
+
+		ob_start();
+		switch ($this->GetMimeType()) {
+			case 'image/gif':
+			imagegif($oNewGdImage); // send image to output buffer
+			break;
+
+			case 'image/jpeg':
+			imagejpeg($oNewGdImage, null, 80); // null = send image to output buffer, 80 = good quality
+			break;
+
+			case 'image/png':
+			imagepng($oNewGdImage, null, 5); // null = send image to output buffer, 5 = medium compression
+			break;
+		}
+		$oResampledImage = new ormDocument(ob_get_contents(), $this->GetMimeType(), $this->GetFileName());
+		@ob_end_clean();
+
+		imagedestroy($oGdImage);
+		imagedestroy($oNewGdImage);
+
+		return $oResampledImage;
+
+	}
+
+	/**
 	 * @return string
 	 */
 	public function GetSignature(): string
 	{
-		return md5($this->GetData());
+		return md5($this->GetData() ?? '');
 	}
+
+
 }

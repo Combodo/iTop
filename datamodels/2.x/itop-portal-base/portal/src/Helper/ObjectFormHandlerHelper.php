@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -31,7 +31,6 @@ use iPopupMenuExtension;
 use IssueLog;
 use JSButtonItem;
 use MetaModel;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -125,17 +124,15 @@ class ObjectFormHandlerHelper
 	 * @throws \OQLException
 	 * @throws \Exception
 	 */
-	public function HandleForm(Request $oRequest, $sMode, $sObjectClass, $sObjectId = null, $aFormProperties = null)
+	public function HandleForm(Request $oRequest, $sMode, $sObjectClass, $sObjectId = null, array $aFormProperties = null)
 	{
 		$aFormData = array();
 		$sOperation = $this->oRequestManipulator->ReadParam('operation', '');
 		$bModal = ($oRequest->isXmlHttpRequest() && empty($sOperation));
 
 		// - Retrieve form properties
-		if ($aFormProperties === null)
-		{
-			$aFormProperties = ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
-		}
+		$aFormProperties = $aFormProperties ?? ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
+
 		// - Create and
 		if (empty($sOperation))
 		{
@@ -223,7 +220,7 @@ class ObjectFormHandlerHelper
 				$aPrefillFormParam = array(
 					'user' => UserRights::GetUser(),
 					'origin' => 'portal',
-					'stimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null)['code'],
+					'stimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY)['code'],
 				);
 				$oObject->PrefillForm('state_change', $aPrefillFormParam);
 			}
@@ -243,13 +240,17 @@ class ObjectFormHandlerHelper
 				case static::ENUM_MODE_CREATE:
 				case static::ENUM_MODE_EDIT:
 				case static::ENUM_MODE_VIEW:
-					$sFormEndpoint = $this->oUrlGenerator->generate(
-						'p_object_'.$sMode,
-						array(
-							'sObjectClass' => $sObjectClass,
-							'sObjectId' => $sObjectId,
-						)
-					);
+                    if(array_key_exists('submit_endpoint', $aFormProperties)) {
+                        $sFormEndpoint = $aFormProperties['submit_endpoint'];
+                    } else {
+                        $sFormEndpoint = $this->oUrlGenerator->generate(
+                                'p_object_' . $sMode,
+                                array(
+                                        'sObjectClass' => $sObjectClass,
+                                        'sObjectId' => $sObjectId,
+                                )
+                        );
+                    }
 					break;
 
 				case static::ENUM_MODE_APPLY_STIMULUS:
@@ -282,7 +283,8 @@ class ObjectFormHandlerHelper
 				->SetActionRulesToken($sActionRulesToken)
 				->SetRenderer($oFormRenderer)
 				->SetFormProperties($aFormProperties);
-
+			$oFormManager->PrepareFormAndHTMLDocument();
+			$oFormManager->PrepareFields();
 			$oFormManager->Build();
 			$aFormData['hidden_fields'] = $oFormManager->GetHiddenFieldsId();
 			// Check the number of editable fields
@@ -316,10 +318,10 @@ class ObjectFormHandlerHelper
 					// Applying modification to object
 					$aFormData['validation'] = $oFormManager->OnSubmit(
 						array(
-							'currentValues' => $this->oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
-							'attachmentIds' => $this->oRequestManipulator->ReadParam('attachment_ids', array(), FILTER_UNSAFE_RAW),
+							'currentValues' => $this->oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
+							'attachmentIds' => $this->oRequestManipulator->ReadParam('attachment_ids', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
 							'formProperties' => $aFormProperties,
-							'applyStimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null),
+							'applyStimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
 						)
 					);
 					if ($aFormData['validation']['valid'] === true)
@@ -334,11 +336,13 @@ class ObjectFormHandlerHelper
 								'modal' => true,
 							);
 						}
+					} else {
+						throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, implode('<br/>', $aFormData['validation']['messages']['error']['_main']));
 					}
 					break;
 
 				case 'update':
-					$oFormManager->OnUpdate(array('currentValues' => $this->oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW), 'formProperties' => $aFormProperties));
+					$oFormManager->OnUpdate(array('currentValues' => $this->oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY), 'formProperties' => $aFormProperties));
 					break;
 
 				case 'cancel':
@@ -357,7 +361,7 @@ class ObjectFormHandlerHelper
 		// Preparing fields list regarding the operation
 		if ($sOperation === 'update')
 		{
-			$aRequestedFields = $this->oRequestManipulator->ReadParam('requested_fields', array(), FILTER_UNSAFE_RAW);
+			$aRequestedFields = $this->oRequestManipulator->ReadParam('requested_fields', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 			$sFormPath = $this->oRequestManipulator->ReadParam('form_path', '');
 
 			// Checking if the update was on a subform, if so we need to make the rendering for that part only
@@ -400,7 +404,7 @@ class ObjectFormHandlerHelper
 				ApplicationContext::MakeObjectUrl($sObjectClass, $sObjectId)
 			);
 		}
-		
+
 		return $aFormData;
 	}
 
@@ -481,7 +485,7 @@ class ObjectFormHandlerHelper
 	 * @since 3.1
 	 *
 	 */
-	public function getUrlGenerator()
+	public function GetUrlGenerator()
 	{
 		return $this->oUrlGenerator;
 	}
@@ -491,7 +495,7 @@ class ObjectFormHandlerHelper
 	 * @since 3.1
 	 *
 	 */
-	public function getSecurityHelper(): SecurityHelper
+	public function GetSecurityHelper(): SecurityHelper
 	{
 		return $this->oSecurityHelper;
 	}

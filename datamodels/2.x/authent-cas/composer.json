@@ -1,0 +1,11 @@
+{
+  "name": "combodo/authent-cas",
+  "config" : {
+    "classmap-authoritative" : true
+  },
+  "autoload" : {
+    "psr-4" : {
+      "Combodo\\iTop\\Cas\\" : "src"
+    }
+  }
+}

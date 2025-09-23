@@ -2,30 +2,40 @@
 {# Home layout #}
 {% extends app['combodo.portal.instance.conf'].properties.templates.layout %}
 
-{% block pPageBodyClass %}home{% endblock %}
+{% block pPageBodyClass %}ipb-home home{% endblock %}
 
 {% block pMainWrapper %}
 {% set iCurrentTileIndex = 0 %}
-<div class="container-fluid" id="main-wrapper">
-	<div class="row">
-		<div class="col-xs-12 col-sm-9 col-md-10 col-sm-offset-3 col-md-offset-2">
-			<section class="row">
-				<div class="col-xs-12">
-					{% include 'itop-portal-base/portal/templates/helpers/session_messages/session_messages.html.twig' %}
-				</div>
-			</section>
-			<section class="row tiles_wrapper">
-				{% for brick in app['brick_collection'].home_ordering %}
-					{% if brick.GetVisibleHome %}
-						{% if aTilesRendering[brick.GetId] is defined %}
-							{{ aTilesRendering[brick.GetId]|raw }}
-						{% else %}
-							{% include '' ~ brick.GetTileTemplatePath with {brick: brick} %}
-						{% endif %}
-					{% endif %}
-				{% endfor %}
-			</section>
-		</div>
-	</div>
+<div class="ipb-page--main-wrapper">
+
+    {# session messages #}
+    <section class="ipb-page--session-messages">
+        {% block pEnvBannerWrapper %}
+            {% if app['combodo.current_environment'] != 'production' %}
+                <div id="envbanner" class="ipb-alert alert alert-danger" role="alert">
+                    {{ 'Portal:EnvironmentBanner:Title'|dict_format( app['combodo.current_environment']|upper )|raw }}
+                    <button class="ipb-button ipb-is-regular ipb-is-default" type="button" onclick="window;location.href='{{ app['url_generator'].generate('p_home', {'switch_env': 'production'}) }}'">
+                        {{ 'Portal:EnvironmentBanner:GoToProduction'|dict_s|raw }}
+                    </button>
+                </div>
+            {% endif %}
+        {% endblock %}
+        {% include template('session_messages') %}
+    </section>
+
+    {# tiles wrapper #}
+    <section class="ipb-page--tiles-flex-wrapper">
+        {% for brick in app['brick_collection'].home_ordering %}
+            {% if brick.GetVisibleHome %}
+                {% if aTilesRendering[brick.GetId] is defined %}
+                    {{ aTilesRendering[brick.GetId]|raw }}
+                {% else %}
+                    {% set twigPath = brick.GetTemplatePath('tile') %}
+                    {% include '' ~ twigPath with {brick: brick} %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </section>
+
 </div>
 {% endblock %}

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014-2021 Combodo SARL
+// Copyright (C) 2014-2024 Combodo SAS
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -109,7 +109,7 @@ class BackupExec extends AbstractWeeklyScheduledProcess
 	{
 		if (is_null($sBackupDir))
 		{
-			$this->sBackupDir = APPROOT.'data/backups/auto/';
+			$this->sBackupDir = utils::GetDataPath().'backups/auto/';
 		}
 		else
 		{
@@ -163,8 +163,7 @@ class BackupExec extends AbstractWeeklyScheduledProcess
 			//
 			$oBackup->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting($this->GetModuleName(), 'mysql_bindir', ''));
 
-			$sBackupFileFormat = MetaModel::GetConfig()->GetModuleSetting($this->GetModuleName(), 'file_name_format',
-				'__DB__-%Y-%m-%d_%H_%M');
+			$sBackupFileFormat = MetaModel::GetConfig()->GetModuleSetting($this->GetModuleName(), 'file_name_format', '__DB__-%Y-%m-%d_%H_%M');
 			$sName = $oBackup->MakeName($sBackupFileFormat);
 			if ($sName == '')
 			{

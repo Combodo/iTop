@@ -1,5 +1,5 @@
 /**
- * @copyright   Copyright (C) 2010-2022 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -50,13 +50,13 @@ const oOpenSignInWindow = function (url, name) {
 		 then we load it in the already opened secondary window, and then
 		 we bring such window back on top/in front of its parent window. */
 		oWindowObjectReference = window.open(url, name, sWindowFeatures);
-		oWindowObjectReference.focus();
+		oWindowObjectReference.trigger('focus');
 	} else {
 		/* Else the window reference must exist and the window
 		 is not closed; therefore, we can bring it back on top of any other
 		 window with the focus() method. There would be no need to re-create
 		 the window or to reload the referenced resource. */
-		oWindowObjectReference.focus();
+		oWindowObjectReference.trigger('focus');
 	}
 	/* Let know every second our child window that we're waiting for it to complete,
 	once we reach our landing page, it'll send us a reply
@@ -77,11 +77,10 @@ const oOpenSignInWindow = function (url, name) {
 };
 
 
-const OAuthConnect = function(sClass, sId, sAjaxUri, sReturnUri) {
+const OAuthConnect = function(sClass, sId, sAjaxUri) {
 	sOAuthAjaxURI = sAjaxUri;
 	sOAuthObjClass = sClass;
 	sOAuthObjKey = sId;
-	sOAuthReturnURI = sReturnUri;
 
 	$.post(
 		sOAuthAjaxURI,
@@ -93,6 +92,8 @@ const OAuthConnect = function(sClass, sId, sAjaxUri, sReturnUri) {
 		function (oData) {
 			if (oData.status === 'success') {
 				oOpenSignInWindow(oData.data.authorization_url, 'OAuth authorization')
+			} else {
+				CombodoModal.OpenErrorModal(oData.error_description);
 			}
 		}
 	);

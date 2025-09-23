@@ -319,9 +319,9 @@ $(function()
 			// - Open it first
 			this.elements.more_criterion.addClass('opened');
 			// - Focus filter
-			this.elements.more_criterion.find('.sf_filter:first input[type="text"]')
+			this.elements.more_criterion.find('.sf_filter').first().find('input[type="text"]')
 				.val('')
-				.focus();
+				.trigger('focus');
 			// - Then only check if more menu is to close to the right side (otherwise we might not have the right element's position)
 			var iFormWidth = this.element.outerWidth();
 			var iFormLeftPos = this.element.offset().left;
@@ -436,11 +436,11 @@ $(function()
 			// DOM
 			this.elements.more_criterion = $('<div></div>')
 				.addClass('sf_more_criterion')
-				.appendTo(this.elements.criterion_area.find('.sf_criterion_row:first'));
+				.appendTo(this.elements.criterion_area.find('.sf_criterion_row').first());
 
 			// Header part
 			var oHeaderElem = $('<div class="sfm_header"></div>')
-				.append('<a class="sfm_toggler" aria-label="' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '" data-tooltip-content="' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '" href="#"><span class="sfm_tg_title">' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '</span><span class="sfm_tg_icon fas fa-plus"></span></a>')
+				.append('<a class="sfm_toggler" aria-label="' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '" data-tooltip-content="' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '" href="#"><span class="sfm_tg_title">' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '</span><span class="sfm_tg_icon fas fa-filter"><span class="sfm_tg_icon fas fa-plus fa-xs"></span></a>')
 				.appendTo(this.elements.more_criterion);
 
 			// Content part
@@ -705,7 +705,7 @@ $(function()
 			this.elements.submit_button = $('<div></div>')
 				.addClass('sf_button')
 				.addClass('sf_submit')
-				.appendTo(this.elements.criterion_area.find('.sf_criterion_row:first'));
+				.appendTo(this.elements.criterion_area.find('.sf_criterion_row').first());
 
 			var sButtonText = (this.options.auto_submit === true) ? Dict.S('UI:Button:Refresh') : Dict.S('UI:Button:Search');
 			var sButtonIcon = (this.options.auto_submit === true) ? 'fas fa-sync-alt' : 'fas fa-search';
@@ -871,7 +871,7 @@ $(function()
 			// Add to first OR condition if not specified
 			if(oCriterionGroupElem === undefined)
 			{
-				oCriterionGroupElem = this.elements.criterion_area.find('.sf_criterion_row:first .sf_criterion_group');
+				oCriterionGroupElem = this.elements.criterion_area.find('.sf_criterion_row').first().find('.sf_criterion_group');
 			}
 
 			// Protection against bad initialization data
@@ -1209,9 +1209,15 @@ $(function()
 		{
 			const me = this;
 			const oFormPanelHeaderElem = this._getFormPanelHeaderElem();
+			const oResultsPanelBodyElem = this._getResultsPanelElem().find('.ibo-panel--body').first();
+
+			// Ensure result body panel has been created
+			if (oResultsPanelBodyElem.length === 0) {
+				return;
+			}
 
 			// Note: As offset() starts from the very top of the window, we need to take into account the top container height!
-			let fOffset = this._getResultsPanelElem().find('.ibo-panel--body:first').offset().top - $('#ibo-top-container').outerHeight() - this._getFormPanelBodyElem().outerHeight();
+			let fOffset = oResultsPanelBodyElem.offset().top - $('#ibo-top-container').outerHeight() - this._getFormPanelBodyElem().outerHeight();
 			if (this._isInAModal()) {
 				fOffset = fOffset - this.element.closest('[role="dialog"]').offset().top;
 			}
@@ -1308,7 +1314,7 @@ $(function()
 			if(this._isElementSticking(oFormPanelBodyElem)) {
 				const oFormPanelElem = this._getFormPanelElem();
 				oFormPanelBodyElem.css({
-					'top': $(this.options.viewport_elem).offset().top,
+					'top': $(this.options.viewport_elem).offset()?.top, // N°7402 - In case viewport is the document, offset() will return undefined
 					'left': oFormPanelElem.offset().left,
 					'width': oFormPanelElem.outerWidth(),
 				});
@@ -1412,7 +1418,7 @@ $(function()
 				return null;
 			}
 
-			return oFormPanelElem.find('[data-role="ibo-panel--header"]:first');
+			return oFormPanelElem.find('[data-role="ibo-panel--header"]').first();
 		},
 		/**
 		 * @return {null|Object} The jQuery object representing the body of the search form panel; or null if none found
@@ -1425,7 +1431,7 @@ $(function()
 				return null;
 			}
 
-			return oFormPanelElem.find('[data-role="ibo-panel--body"]:first');
+			return oFormPanelElem.find('[data-role="ibo-panel--body"]').first();
 		},
 		/**
 		 * @return {Object} The jQuery object representing the complete results panel
@@ -1433,7 +1439,7 @@ $(function()
 		 */
 		_getResultsPanelElem: function()
 		{
-			return this.elements.results_area === null ? null : this.elements.results_area.find('[data-role="ibo-panel"]:first')
+			return this.elements.results_area === null ? null : this.elements.results_area.find('[data-role="ibo-panel"]').first();
 		},
 		/**
 		 * @return {Object} The jQuery object representing the top toolbar of the results (pagination, ...)
@@ -1441,7 +1447,7 @@ $(function()
 		 */
 		_getResultsToolbarTopElem: function()
 		{
-			return this.elements.results_area === null ? null : this.elements.results_area.find('.ibo-datatable--toolbar:first');
+			return this.elements.results_area === null ? null : this.elements.results_area.find('.ibo-datatable--toolbar').first();
 		},
 		/**
 		 * @return {Object} The jQuery object representing the columns headers of the results
@@ -1449,7 +1455,7 @@ $(function()
 		 */
 		_getResultsTableHeaders: function()
 		{
-			return this.elements.results_area === null ? null : this.elements.results_area.find('.dataTables_scrollHead:first');
+			return this.elements.results_area === null ? null : this.elements.results_area.find('.dataTables_scrollHead').first();
 		},
 
 

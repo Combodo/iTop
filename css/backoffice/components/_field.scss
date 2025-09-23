@@ -1,14 +1,10 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
 $ibo-field--value--color: $ibo-color-grey-800 !default;
-
-$ibo-field--label--description--content: "?" !default;
-$ibo-field--label--description--padding-left: $ibo-spacing-200 !default;
-$ibo-field--label--description--color: $ibo-color-grey-600 !default;
 
 $ibo-field--background-color--is-fullscreen: $ibo-color-white-100 !default;
 
@@ -54,6 +50,8 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
     [data-attribute-type="AttributeCustomFields"],
     [data-attribute-type="AttributeTagSet"],
     [data-attribute-type="AttributeEnumSet"],
+    [data-attribute-type="AttributeLinkedSet"],
+    [data-attribute-type="AttributeLinkedSetIndirect"],
     [data-attribute-type="AttributeClassAttCodeSet"],
     [data-attribute-type="AttributeQueryAttCodeSet"],
     .ibo-input-file-select--container
@@ -66,21 +64,45 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
         word-break: break-word;
         white-space: inherit;
       }
+
       & pre {
         white-space: break-spaces;
       }
     }
   }
+  /* We need the rule to keep picture inside the column */
+  &[data-attribute-type="AttributeImage"] {
+    > .ibo-field--value {
+      display: grid;
+
+      > span {
+        display: inherit;
+      }
+    }
+  }
+
+  /*N°6543 - We need the rule to keep text inside the column when width is defined */
+  &[data-attribute-type="AttributeHTML"],
+  &[data-attribute-type="AttributeText"] {
+    &[data-attribute-flag-read-only="true"] {
+      display: grid;
+
+      > .ibo-field--value {
+        max-width: 100%;
+        overflow: auto;
+      }
+    }
+  }
 }
 
-/* Large field = Label on top, value below */
-.ibo-field-large {
-  display: block;
+  /* Large field = Label on top, value below */
+  .ibo-field-large {
+    display: block;
 
-  .ibo-field--label {
-    position: relative; /* Necessary for fullscreen toggler */
-    display: flex;
-    align-items: center;
+    .ibo-field--label {
+      position: relative; /* Necessary for fullscreen toggler */
+      display: flex;
+      align-items: center;
     max-width: initial;
     width: 100%;
   }
@@ -162,18 +184,6 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
   width: 30%;
   word-break: break-word; /* We want labels to wrap if it is very long if it has no spaces */
   @extend %ibo-font-weight-600;
-
-  > .ibo-has-description {
-    &::after {
-      content: $ibo-field--label--description--content;
-      padding-left: $ibo-field--label--description--padding-left;
-      vertical-align: top;
-
-      cursor: pointer;
-      color: $ibo-field--label--description--color;
-      @extend %ibo-font-ral-bol-50;
-    }
-  }
 }
 .ibo-field--label-small .ibo-field--label{
   width: 20em;
@@ -185,8 +195,6 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
   /* Hack to force a table to fit its container without overflow (see N°2127) */
   /* Note that along with with, we now display a "expand" icon on large fields so we can have a better view of its content */
   .HTML {
-    @extend .ibo-vendors-ckeditor--display-content;
-
     table {
       table-layout: fixed;
       width: 100%;
@@ -253,3 +261,6 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
   margin-left: $ibo-field--enable-bulk--checkbox--margin-left;
 }
 
+.ibo-input-select--action-buttons a  {
+  @extend %ibo-hyperlink-inherited-colors;
+}

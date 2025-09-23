@@ -1,11 +1,15 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-/*
- * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
- * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
+/**
+ * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
+ * @author Daniel Rokos <daniel.rokos@itopportal.cz>
+ *
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:RequestManagement' => 'Helpdesk',
@@ -38,6 +42,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Otevřené požadavky podle typu',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Otevřené požadavky podle organizace',
 	'Class:UserRequest:KnownErrorList' => 'Známé chyby',
+	'Class:UserRequest:KnownErrorList+' => 'Známé chyby související s funkční konfigurační položkou spojenou s daným tiketem',
 	'Menu:UserRequest:MyWorkOrders' => 'Pracovní příkazy přidělené mně',
 	'Menu:UserRequest:MyWorkOrders+' => 'Všechny pracovní příkazy přidělené mně',
 	'Class:Problem:KnownProblemList' => 'Známé problémy',
@@ -119,6 +124,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => '',
 	'Class:UserRequest/Attribute:origin' => 'Původ',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'Osobně',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Požadavek vytvořený po osobní diskuzi',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Požadavek vytvořený v návaznosti na chat',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'email',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => '',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'monitoring',
@@ -274,14 +283,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Portal:SelectLanguage' => 'Změnit jazyk',
 	'Portal:LanguageChangedTo_Lang' => 'Jazyk změněn na',
 	'Portal:ChooseYourFavoriteLanguage' => 'Vyberte svůj jazyk',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Vyřešit podřízené tikety',
-	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Kaskádovat vyřešení do podřízeného požadavku (ev_autoresolve) a sjednotit následující vlastnosti: služba, tým, řešitel, informace o vyřešení',
 ));
 
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+	'Organization:Overview:UserRequests' => 'Uživatelské požadavky z této organizace',
+	'Organization:Overview:MyUserRequests' => 'Moje uživatelské požadavky pro tuto organizaci',
+	'Organization:Overview:Tickets' => 'Tikety pro tuto organizaci',
 ));

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,11 +17,14 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
+
 require_once('../../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
 /**
- * @param \AjaxPage $oPage
+ * @param \Combodo\iTop\Application\WebPage\AjaxPage $oPage
  * @param int $iTransactionId
  *
  * @throws \ArchivedObjectException
@@ -98,8 +101,6 @@ try
 					$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime'));
 					$oAttachment->Set('temp_id', $sTempId);
 					$oAttachment->Set('item_class', $sClass);
-					$oAttachment->Set('creation_date', time());
-					$oAttachment->Set('user_id', UserRights::GetUserObject());
 					$oAttachment->SetDefaultOrgId();
 					$oAttachment->Set('contents', $oDoc);
 					$iAttId = $oAttachment->DBInsert();

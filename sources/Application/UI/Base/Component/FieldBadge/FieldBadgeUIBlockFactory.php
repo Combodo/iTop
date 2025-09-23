@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -16,7 +16,7 @@ use utils;
  * Class FieldBadgeUIBlockFactory
  *
  * @author Eric espie <eric.espie@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\FieldBadge
+ * @package UIBlockAPI
  * @since 3.0.0
  * @internal
  */

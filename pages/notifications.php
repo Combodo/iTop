@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,17 +21,19 @@
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled("NotificationsMenu");
 
 /**
- * @param \iTopWebPage $oP
+ * @param iTopWebPage $oP
  * @param string $sClassToDisplay
  * @param array $aClassesToExclude
  *
@@ -70,26 +72,14 @@ function DisplayActionsTab(iTopWebPage &$oP, string $sClassToDisplay, array $aCl
 	}
 
 	$oP->SetCurrentTab('UI:NotificationsMenu:Actions:'.$sClassToDisplay);
-	$sNbOfActionClassesTitle = '';
-	if (count($aActionClasses) == 1)
-	{
-		// Preserve old style
-		$sNbOfActionClassesTitle = Dict::S('UI:NotificationsMenu:AvailableActions');
-	}
 
 	$iBlock = 0;
 	foreach($aActionClasses as $sActionClass)
 	{
-		if (count($aActionClasses) > 1)
-		{
-			// New style
-			$sNbOfActionClassesTitle = MetaModel::GetName($sActionClass);
-		}
-
 		$oFilter = new DBObjectSearch($sActionClass);
 		$oFilter->AddCondition('finalclass', $sActionClass); // derived classes will be further processed
 
-		$aParams = array('panel_title' => $sNbOfActionClassesTitle);
+		$aParams = array('panel_title' => MetaModel::GetName($sActionClass));
 
 		$sBlockId = 'block_'.utils::Sanitize($sClassToDisplay, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER).'_'.$iBlock;
 		$oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);

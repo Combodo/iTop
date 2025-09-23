@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -20,9 +20,11 @@
  * Class UIPasswordWidget
  * UI wdiget for displaying and editing one-way encrypted passwords
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 

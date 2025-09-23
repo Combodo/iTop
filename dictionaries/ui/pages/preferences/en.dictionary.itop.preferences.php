@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -24,6 +24,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Preferences:General:Title'                                     => 'General',
 	'UI:Preferences:General:Theme'                                     => 'Theme',
 	'UI:Preferences:General:Theme:DefaultThemeLabel'                   => '%1$s (default)',
+	'UI:Favorites:General:ShowSummaryCards'                            => 'Show summary cards',
+	'UI:Favorites:General:ShowSummaryCards+'                           => 'When hovering an hyperlink targeting an object, display a short summary of the object, if available for that class',
 	'UI:Preferences:Lists:Title'                                       => 'Lists',
 	'UI:Preferences:RichText:Title'                                    => 'Rich text editor',
 	'UI:Preferences:RichText:ToolbarState'                             => 'Toolbar default state',
@@ -44,6 +46,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Preferences:Tabs:Scrollable:Label'                             => 'Navigation',
 	'UI:Preferences:Tabs:Scrollable:Classic'                           => 'Classic',
 	'UI:Preferences:Tabs:Scrollable:Scrollable'                        => 'Scrollable',
+	'UI:Preferences:General:Toasts'                                     => 'Toast notifications position',
+	'UI:Preferences:General:Toasts:Bottom'                              => 'Bottom',
+	'UI:Preferences:General:Toasts:Top'                                 => 'Top',
 	'UI:Preferences:ChooseAPlaceholder'                                => 'User placeholder image',
 	'UI:Preferences:ChooseAPlaceholder+'                               => 'Choose a placeholder image that will be displayed if the contact linked to your user doesn\'t have one',
+	'UI:Preferences:ChooseAPlaceholder:Success:Message'                => 'Your placeholder image has been successfully updated',
+	'UI:Preferences:Notifications' 								       => 'Notifications',
+	'UI:Preferences:Notifications+' 								   => 'Configure the notifications you want to receive <a href="%1$s">on this page</a>.',
+	
 ));

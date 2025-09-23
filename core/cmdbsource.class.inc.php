@@ -1,9 +1,9 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -20,7 +20,7 @@
 /**
  * DB Server abstraction
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -41,6 +41,12 @@ class CMDBSource
 	const ENUM_DB_VENDOR_MYSQL = 'MySQL';
 	const ENUM_DB_VENDOR_MARIADB = 'MariaDB';
 	const ENUM_DB_VENDOR_PERCONA = 'Percona';
+
+	/**
+	 * @since 2.7.10 3.0.4 3.1.2 3.0.2 N°6889 constant creation
+	 * @internal will be removed in a future version
+	 */
+	const MYSQL_DEFAULT_PORT = 3306;
 
 	/**
 	 * Error: 1205 SQLSTATE: HY000 (ER_LOCK_WAIT_TIMEOUT)
@@ -212,36 +218,31 @@ class CMDBSource
 	/**
 	 * @param string $sDbHost initial value ("p:domain:port" syntax)
 	 * @param string $sServer server variable to update
-	 * @param int $iPort port variable to update
+	 * @param int|null $iPort port variable to update, will return null if nothing is specified in $sDbHost
+	 *
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889 will return null in $iPort if port isn't present in $sDbHost. Use {@see MYSQL_DEFAULT_PORT} if needed
+	 *
+	 * @link http://php.net/manual/en/mysqli.persistconns.php documentation for the "p:" prefix (persistent connexion)
 	 */
 	public static function InitServerAndPort($sDbHost, &$sServer, &$iPort)
 	{
-		$aConnectInfo = explode(':', $sDbHost);
+		if ($sDbHost != null) {
+			$aConnectInfo = explode(':', $sDbHost);
 
-		$bUsePersistentConnection = false;
-		if (strcasecmp($aConnectInfo[0], 'p') == 0)
-		{
-			// we might have "p:" prefix to use persistent connections (see http://php.net/manual/en/mysqli.persistconns.php)
-			$bUsePersistentConnection = true;
-			$sServer = $aConnectInfo[0].':'.$aConnectInfo[1];
-		}
-		else
-		{
-			$sServer = $aConnectInfo[0];
-		}
+			$bUsePersistentConnection = false;
+			if (strcasecmp($aConnectInfo[0], 'p') === 0) {
+				$bUsePersistentConnection = true;
+				$sServer = $aConnectInfo[0].':'.$aConnectInfo[1];
+			} else {
+				$sServer = $aConnectInfo[0];
+			}
 
-		$iConnectInfoCount = count($aConnectInfo);
-		if ($bUsePersistentConnection && ($iConnectInfoCount == 3))
-		{
-			$iPort = (int)($aConnectInfo[2]);
-		}
-		else if (!$bUsePersistentConnection && ($iConnectInfoCount == 2))
-		{
-			$iPort = (int)($aConnectInfo[1]);
-		}
-		else
-		{
-			$iPort = 3306;
+			$iConnectInfoCount = count($aConnectInfo);
+			if ($bUsePersistentConnection && ($iConnectInfoCount == 3)) {
+				$iPort = (int)($aConnectInfo[2]);
+			} else if (!$bUsePersistentConnection && ($iConnectInfoCount == 2)) {
+				$iPort = (int)($aConnectInfo[1]);
+			}
 		}
 	}
 
@@ -363,15 +364,6 @@ class CMDBSource
 	}
 
 	/**
-	 * @deprecated Use `CMDBSource::GetDBVersion` instead.
-	 * @uses mysqli_get_server_info
-	 */
-	public static function GetServerInfo()
-	{
-		return mysqli_get_server_info(DbConnectionWrapper::GetDbConnection());
-	}
-
-	/**
 	 * Get the DB vendor between MySQL and its main forks
 	 * @return string
 	 *
@@ -380,7 +372,7 @@ class CMDBSource
 	public static function GetDBVendor()
 	{
 		$sDBVendor = static::ENUM_DB_VENDOR_MYSQL;
-		
+
 		$sVersionComment = static::GetServerVariable('version') .  ' - ' . static::GetServerVariable('version_comment');
 		if(preg_match('/mariadb/i', $sVersionComment) === 1)
 		{
@@ -390,7 +382,7 @@ class CMDBSource
 		{
 			$sDBVendor = static::ENUM_DB_VENDOR_PERCONA;
 		}
-		
+
 		return $sDBVendor;
 	}
 
@@ -431,6 +423,7 @@ class CMDBSource
 		{
 			self::$m_sDBName = '';
 		}
+		self::_TablesInfoCacheReset(); // reset the table info cache!
 	}
 
 	public static function CreateTable($sQuery)
@@ -543,10 +536,9 @@ class CMDBSource
 	/**
 	 * @param string $sSQLQuery
 	 *
-	 * @return \mysqli_result|null
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \CoreException
+     * @return mysqli_result|null
+     * @throws MySQLException
+     * @throws MySQLHasGoneAwayException
 	 *
 	 * @since 2.7.0 N°679 handles nested transactions
 	 */
@@ -607,8 +599,9 @@ class CMDBSource
 		{
 			self::LogDeadLock($e, true);
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
-		}
-		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
+		} finally {
+            $oKPI->ComputeStats('Query exec (mySQL)', $sSql);
+        }
 		if ($oResult === false) {
 			$aContext = array('query' => $sSql);
 
@@ -626,18 +619,24 @@ class CMDBSource
 	}
 
 	/**
-	 * @param \Exception $e
+	 * @param Exception $e
 	 * @param bool $bForQuery to get the proper DB connection
+	 * @param bool $bCheckMysqliErrno if false won't try to check for mysqli::errno value
 	 *
 	 * @since 2.7.1
 	 * @since 3.0.0 N°4325 add new optional parameter to use the correct DB connection
+	 * @since 3.0.4 3.1.1 3.2.0 N°6643 new bCheckMysqliErrno parameter as a workaround for mysqli::errno cannot be mocked
 	 */
-	private static function LogDeadLock(Exception $e, $bForQuery = false)
+	private static function LogDeadLock(Exception $e, $bForQuery = false, $bCheckMysqliErrno = true)
 	{
 		// checks MySQL error code
-		$iMySqlErrorNo = DbConnectionWrapper::GetDbConnection($bForQuery)->errno;
-		if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK))) {
-			return;
+		if ($bCheckMysqliErrno) {
+			$iMySqlErrorNo = DbConnectionWrapper::GetDbConnection($bForQuery)->errno;
+			if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK))) {
+				return;
+			}
+		} else {
+			$iMySqlErrorNo = "N/A";
 		}
 
 		// Get error info
@@ -664,7 +663,10 @@ class CMDBSource
 		);
 		DeadLockLog::Info($sMessage, $iMySqlErrorNo, $aLogContext);
 
-		IssueLog::Error($sMessage, LogChannels::DEADLOCK, $e->getMessage());
+		IssueLog::Error($sMessage, LogChannels::DEADLOCK, [
+			'exception.class' => get_class($e),
+			'exception.message' => $e->getMessage(),
+		]);
 	}
 
 	/**
@@ -923,7 +925,7 @@ class CMDBSource
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
-				
+
 		while ($aRow = $oResult->fetch_array($iMode))
 		{
 			$aData[] = $aRow;
@@ -1077,7 +1079,7 @@ class CMDBSource
 		if (!array_key_exists($iKey, $aTableInfo["Fields"])) return false;
 		$aFieldData = $aTableInfo["Fields"][$iKey];
 		if (!array_key_exists("Key", $aFieldData)) return false;
-		return ($aFieldData["Key"] == "PRI"); 
+		return ($aFieldData["Key"] == "PRI");
 	}
 
 	public static function IsAutoIncrement($sTable, $sField)
@@ -1088,7 +1090,7 @@ class CMDBSource
 		$aFieldData = $aTableInfo["Fields"][$sField];
 		if (!array_key_exists("Extra", $aFieldData)) return false;
 		//MyHelpers::debug_breakpoint($aFieldData);
-		return (strstr($aFieldData["Extra"], "auto_increment")); 
+		return (strstr($aFieldData["Extra"], "auto_increment"));
 	}
 
 	public static function IsField($sTable, $sField)
@@ -1154,8 +1156,8 @@ class CMDBSource
 	 */
 	public static function IsSameFieldTypes($sItopGeneratedFieldType, $sDbFieldType)
 	{
-		list($sItopFieldDataType, $sItopFieldTypeOptions, $sItopFieldOtherOptions) = static::GetFieldDataTypeAndOptions($sItopGeneratedFieldType);
-		list($sDbFieldDataType, $sDbFieldTypeOptions, $sDbFieldOtherOptions) = static::GetFieldDataTypeAndOptions($sDbFieldType);
+		[$sItopFieldDataType, $sItopFieldTypeOptions, $sItopFieldOtherOptions] = static::GetFieldDataTypeAndOptions($sItopGeneratedFieldType);
+		[$sDbFieldDataType, $sDbFieldTypeOptions, $sDbFieldOtherOptions] = static::GetFieldDataTypeAndOptions($sDbFieldType);
 
 		if (strcasecmp($sItopFieldDataType, $sDbFieldDataType) !== 0)
 		{
@@ -1355,13 +1357,13 @@ class CMDBSource
 	public static function GetTableFieldsList($sTable)
 	{
 		assert(!empty($sTable));
-		
+
 		$aTableInfo = self::GetTableInfo($sTable);
 		if (empty($aTableInfo)) return array(); // #@# or an error ?
 
 		return array_keys($aTableInfo["Fields"]);
 	}
-	
+
 	// Cache the information about existing tables, and their fields
 	private static $m_aTablesInfo = array();
 	private static function _TablesInfoCacheReset($sTableName = null)
@@ -1494,7 +1496,7 @@ class CMDBSource
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
-		
+
 		$aRows = array();
 		while ($aRow = $oResult->fetch_array(MYSQLI_ASSOC))
 		{
@@ -1503,7 +1505,7 @@ class CMDBSource
 		$oResult->free();
 		return $aRows;
 	}
-	
+
 	/**
 	 * Returns the value of the specified server variable
 	 * @param string $sVarName Name of the server variable
@@ -1519,7 +1521,7 @@ class CMDBSource
 	/**
 	 * Returns the privileges of the current user
 	 * @return string privileges in a raw format
-	 */	   	
+	 */
 	public static function GetRawPrivileges()
 	{
 		try
@@ -1545,8 +1547,8 @@ class CMDBSource
 
 	/**
 	 * Determine the slave status of the server
-	 * @return bool true if the server is slave 
-	 */	   	
+	 * @return bool true if the server is slave
+	 */
 	public static function IsSlaveServer()
 	{
 		try
@@ -1588,7 +1590,19 @@ class CMDBSource
 		return false;
 	}
 
-	/**
+    public static function GetClusterNb()
+    {
+        $result = 0;
+        $sSql = "SHOW STATUS LIKE 'wsrep_cluster_size';";
+        $aRows = self::QueryToArray($sSql);
+        if (count($aRows) > 0)
+        {
+            $result = $aRows[0]['Value'];
+        }
+        return intval($result);
+    }
+
+    /**
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-database.html
 	 * @return string query to upgrade database charset and collation if needed, null if not
 	 * @throws \MySQLException
@@ -1610,5 +1624,23 @@ class CMDBSource
 		}
 
 		return 'ALTER DATABASE'.CMDBSource::GetSqlStringColumnDefinition().';';
+	}
+
+	/**
+	 * Check which mysql client option (--ssl or --ssl-mode) to be used for encrypted connection
+	 *
+	 * @return bool true if --ssl-mode should be used, false otherwise
+	 * @throws \MySQLException
+	 *
+	 * @link https://dev.mysql.com/doc/refman/5.7/en/connection-options.html#encrypted-connection-options "Command Options for Encrypted Connections"
+	 */
+	public static function IsSslModeDBVersion()
+	{
+		if (static::GetDBVendor() === static::ENUM_DB_VENDOR_MYSQL)
+		{
+			//Mysql 5.7.0 and upper deprecated --ssl and uses --ssl-mode instead
+			return version_compare(static::GetDBVersion(), '5.7.11', '>=');
+		}
+		return false;
 	}
 }

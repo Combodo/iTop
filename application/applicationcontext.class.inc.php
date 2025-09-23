@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class ApplicationContext
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -195,16 +195,31 @@ class ApplicationContext
 	/**
 	 * Returns the context as string with the format name1=value1&name2=value2....
 	 * @return string The context as a string to be appended to an href property
+	 *
 	 */
-	public function GetForLink()
+	public function GetForLink(bool $bWithLeadingAmpersand = false)
 	{
+		// If there are no parameters, return an empty string
+		if(empty($this->aValues)){
+			return '';
+		}
+
+		// Build the query string with ampersand separated parameters
 		$aParams = array();
 		foreach($this->aValues as $sName => $sValue)
 		{
 			$aParams[] = "c[$sName]".'='.urlencode($sValue);
 		}
-		return implode("&", $aParams);
+		$sReturnValue = implode('&', $aParams);
+
+		// add the leading ampersand if requested
+		if($bWithLeadingAmpersand){
+			$sReturnValue = '&' . $sReturnValue;
+		}
+
+		return $sReturnValue;
 	}
+
 	/**
 	 * @since 3.0.0 N°2534 - dashboard: bug with autorefresh that deactivates filtering on organisation
 	 * Returns the params as c[menu]:..., c[org_id]:....
@@ -238,7 +253,7 @@ class ApplicationContext
 	{
 		$aContextInputBlocks = [];
 		foreach ($this->aValues as $sName => $sValue) {
-			$aContextInputBlocks[] = InputUIBlockFactory::MakeForHidden("c[$sName]", utils::EscapeHtml($sValue));
+			$aContextInputBlocks[] = InputUIBlockFactory::MakeForHidden("c[$sName]", $sValue);
 		}
 		return $aContextInputBlocks;
 	}
@@ -382,7 +397,7 @@ class ApplicationContext
 		$sUrl = call_user_func(array($sUrlMakerClass, 'MakeObjectUrl'), $sObjClass, $sObjKey);
 	   if (utils::StrLen($sUrl) > 0) {
 		   if ($bWithNavigationContext) {
-			   return $sUrl."&".$oAppContext->GetForLink();
+			   return $sUrl.$oAppContext->GetForLink(true);
 		   } else {
 			   return $sUrl;
 		   }

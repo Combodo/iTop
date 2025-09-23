@@ -7,24 +7,49 @@ use Sabberworm\CSS\Parsing\ParserState;
 use Sabberworm\CSS\Parsing\UnexpectedEOFException;
 use Sabberworm\CSS\Parsing\UnexpectedTokenException;
 
+/**
+ * A `Size` consists of a numeric `size` value and a unit.
+ */
 class Size extends PrimitiveValue
 {
     /**
      * vh/vw/vm(ax)/vmin/rem are absolute insofar as they don’t scale to the immediate parent (only the viewport)
      *
      * @var array<int, string>
+     *
+     * @internal
      */
-    const ABSOLUTE_SIZE_UNITS = ['px', 'cm', 'mm', 'mozmm', 'in', 'pt', 'pc', 'vh', 'vw', 'vmin', 'vmax', 'rem'];
+    const ABSOLUTE_SIZE_UNITS = [
+        'px',
+        'pt',
+        'pc',
+        'cm',
+        'mm',
+        'mozmm',
+        'in',
+        'vh',
+        'dvh',
+        'svh',
+        'lvh',
+        'vw',
+        'vmin',
+        'vmax',
+        'rem',
+    ];
 
     /**
      * @var array<int, string>
+     *
+     * @internal
      */
     const RELATIVE_SIZE_UNITS = ['%', 'em', 'ex', 'ch', 'fr'];
 
     /**
      * @var array<int, string>
+     *
+     * @internal
      */
-    const NON_SIZE_UNITS = ['deg', 'grad', 'rad', 's', 'ms', 'turns', 'Hz', 'kHz'];
+    const NON_SIZE_UNITS = ['deg', 'grad', 'rad', 's', 'ms', 'turn', 'Hz', 'kHz'];
 
     /**
      * @var array<int, array<string, string>>|null
@@ -67,6 +92,8 @@ class Size extends PrimitiveValue
      *
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
+     *
+     * @internal since V8.8.0
      */
     public static function parse(ParserState $oParserState, $bIsColorComponent = false)
     {
@@ -74,9 +101,16 @@ class Size extends PrimitiveValue
         if ($oParserState->comes('-')) {
             $sSize .= $oParserState->consume('-');
         }
-        while (is_numeric($oParserState->peek()) || $oParserState->comes('.')) {
+        while (is_numeric($oParserState->peek()) || $oParserState->comes('.') || $oParserState->comes('e', true)) {
             if ($oParserState->comes('.')) {
                 $sSize .= $oParserState->consume('.');
+            } elseif ($oParserState->comes('e', true)) {
+                $sLookahead = $oParserState->peek(1, 1);
+                if (is_numeric($sLookahead) || $sLookahead === '+' || $sLookahead === '-') {
+                    $sSize .= $oParserState->consume(2);
+                } else {
+                    break; // Reached the unit part of the number like "em" or "ex"
+                }
             } else {
                 $sSize .= $oParserState->consume(1);
             }
@@ -188,6 +222,8 @@ class Size extends PrimitiveValue
 
     /**
      * @return string
+     *
+     * @deprecated in V8.8.0, will be removed in V9.0.0. Use `render` instead.
      */
     public function __toString()
     {
@@ -195,14 +231,16 @@ class Size extends PrimitiveValue
     }
 
     /**
+     * @param OutputFormat|null $oOutputFormat
+     *
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
+    public function render($oOutputFormat)
     {
         $l = localeconv();
         $sPoint = preg_quote($l['decimal_point'], '/');
         $sSize = preg_match("/[\d\.]+e[+-]?\d+/i", (string)$this->fSize)
-            ? preg_replace("/$sPoint?0+$/", "", sprintf("%f", $this->fSize)) : $this->fSize;
+            ? preg_replace("/$sPoint?0+$/", "", sprintf("%f", $this->fSize)) : (string)$this->fSize;
         return preg_replace(["/$sPoint/", "/^(-?)0\./"], ['.', '$1.'], $sSize)
             . ($this->sUnit === null ? '' : $this->sUnit);
     }

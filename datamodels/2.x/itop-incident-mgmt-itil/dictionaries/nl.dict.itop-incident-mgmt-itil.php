@@ -2,10 +2,14 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @author      Thomas Casteleyn <info@super-visions.com>
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ * @author Thomas Casteleyn <info@super-visions.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ *
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:IncidentManagement' => 'Incident Management',
@@ -222,7 +226,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Heropen',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Kan het incident niet aan zichzelf toewijzen als hoofdincident',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem deze kenmerken over: service, team, agent, oplossing',
 	'Tickets:Related:OpenIncidents' => 'Open incidenten',

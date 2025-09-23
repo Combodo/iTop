@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -12,7 +12,7 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Helper\UIHelper;
 use DBObject;
 use Dict;
-use iKeyboardShortcut;
+use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use MetaModel;
 
 /**
@@ -103,6 +103,17 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 		return $this->sClassName;
 	}
 
+	/**
+	 * @see self::$sClassLabel
+	 * @return $this
+	 */
+	public function SetClassLabel($sClassLabel)
+	{
+		$this->sClassLabel = $sClassLabel;
+
+		return $this;
+	}
+	
 	/**
 	 * @see self::$sClassLabel
 	 * @return string

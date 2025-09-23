@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2010-2021 Combodo SARL
+ *  Copyright (c) 2010-2024 Combodo SAS
  *
  *    This file is part of iTop.
  *
@@ -47,7 +47,7 @@ $(document).ready(function () {
 		if (($cellClickedInput.length === 1)
 			&& ($cellClickedInput.is("input:radio") || $cellClickedInput.is("input:checkbox"))
 		) {
-			$cellClickedInput.click();
+			$cellClickedInput.trigger('click');
 
 			if ($cellClicked.not(":first-child")) {
 				return;
@@ -56,7 +56,7 @@ $(document).ready(function () {
 
 		var $lineClicked = $eventTarget.closest("tr");
 		var $lineClickedInput = $lineClicked.find(FIRST_CELL_WITH_INPUT_SELECTOR);
-		$lineClickedInput.click();
+		$lineClickedInput.trigger('click');
 	});
 
 	$(document).on('change', TABLE_SELECTOR, function (event) {

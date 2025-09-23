@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -71,16 +71,11 @@ class OQLActualClassTreeResolver
 			}
 			// Attributes can be stored in attributes list or for magic ones into filter codes list.
 			$sOriginClass = null;
-			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
+			if (MetaModel::IsValidAttCode($sClass, $sAttCode)) {
 				$sOriginClass = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
-			}
-			else if (MetaModel::IsValidFilterCode($sClass, $sAttCode))
-			{
-				$sOriginClass = MetaModel::GetFilterCodeOrigin($sClass, $sAttCode);
-			}
-			else
-			{
+			} else if ($sAttCode == 'id') {
+				$sOriginClass = $sClass;
+			} else {
 				continue;
 			}
 			if (!isset($aClassAndAncestorsNodes[$sOriginClass]) || is_null($aClassAndAncestorsNodes[$sOriginClass]))

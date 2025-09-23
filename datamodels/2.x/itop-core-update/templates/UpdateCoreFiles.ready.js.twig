@@ -1,0 +1,127 @@
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+function UpdateProgress(sMessage, iPercent) {
+    $('#setup_msg').html(sMessage);
+    $('#progress').progression({
+        Current: iPercent,
+        Maximum: 100,
+        aBackgroundImg: "{{ sProgressImage }}",
+        aTextColor: '#000000'
+    });
+}
+
+var oGetCurrentVersion = {
+    method: "POST",
+    url: "{{ sAjaxURL|raw }}",
+    data: {
+        route: "core_update_ajax.get_current_version",
+        maintenance: true
+    },
+    dataType: "json",
+    success: function(data)
+    {
+        var oCurrentVersion = $(".ibo-update-core--current-version");
+        if (oCurrentVersion)
+        {
+            oCurrentVersion.html(data.sVersion);
+        }
+    }
+}
+
+function GetAjaxRequest(sOperation)
+{
+    oAjaxRequest = {
+        method: "POST",
+        url: "{{ sAjaxURL|raw }}",
+        data: {
+            route: sOperation,
+            authent: "{{ sSetupToken }}",
+            maintenance: true
+        },
+        dataType: "json"
+    };
+
+    if (sOperation === "core_update_ajax.backup")
+    {
+        oAjaxRequest.success = function() {
+            $("#do_backup_done").removeClass("ibo-is-hidden");
+        };
+    }
+
+    if (sOperation === "core_update_ajax.files_archive")
+    {
+        oAjaxRequest.success = function() {
+            $("#do_files_archive_done").removeClass("ibo-is-hidden");
+        };
+    }
+
+    return oAjaxRequest;
+}
+
+{% set aSteps = ['EnterMaintenance', 'Backup', 'FilesArchive', 'CopyFiles', 'CheckCompile', 'Compile', 'UpdateDatabase', 'ExitMaintenance', 'UpdateDone'] %}
+
+aStepsName = [];
+
+{% for sStep in aSteps %}
+aStepsName.push({{ ('iTopUpdate:UI:SetupMessage:' ~ sStep)|dict_s|json_encode|raw }});
+{% endfor %}
+
+var sBackupStep;
+{% if bDoBackup %}
+sBackupStep = "backup";
+{% endif %}
+
+var sFilesArchiveStep;
+{% if bDoFilesArchive %}
+sFilesArchiveStep = "files_archive";
+{% endif %}
+
+var aStepsAjaxOperation = ["enter_maintenance", sBackupStep, sFilesArchiveStep, "copy_files", "check_compile", "compile", "update_database", "exit_maintenance", null];
+
+var iNextStep = 0;
+var oInstallationProgress = $('#installation_progress')
+function ExecNextStep() {
+    if (iNextStep < aStepsAjaxOperation.length)
+    {
+        var sAjaxOperation = aStepsAjaxOperation[iNextStep];
+        var iPercent = (iNextStep + 1) * 100 / aStepsAjaxOperation.length;
+        UpdateProgress(aStepsName[iNextStep], iPercent);
+        iNextStep++;
+        if (sAjaxOperation) {
+            $.ajax(GetAjaxRequest("core_update_ajax." + sAjaxOperation))
+                .done(function () {
+                    setTimeout(ExecNextStep, 500);
+                })
+                .fail(function ( jqXHR) {
+                    if (jqXHR && jqXHR.responseJSON) {
+                        $("#setup_error").html({{ 'iTopUpdate:Error:UpdateFailed'|dict_s|json_encode|raw }}+" "+jqXHR.responseJSON.sError);
+                    }
+                    else
+                    {
+                        $("#setup_error").html({{ 'iTopUpdate:Error:UpdateFailed'|dict_s|json_encode|raw }});
+                    }
+                    $('#progress').addClass("ibo-is-hidden");
+                    $("#setup_error_outer").removeClass("ibo-is-hidden");
+                    $("#run_setup").removeClass("ibo-is-hidden");
+                    $("#setup_continue").addClass("ibo-is-hidden");
+                });
+        }
+        else
+        {
+            setTimeout(ExecNextStep, 500);
+        }
+    }
+    else
+    {
+        $.ajax(oGetCurrentVersion);
+        $("#setup_continue").prop("disabled", false);
+        oInstallationProgress.hide(300);
+        $('#new_version').removeClass("ibo-is-hidden");
+        $('#current_version').addClass("ibo-is-hidden");
+    }
+}
+
+oInstallationProgress.show();
+ExecNextStep();
+

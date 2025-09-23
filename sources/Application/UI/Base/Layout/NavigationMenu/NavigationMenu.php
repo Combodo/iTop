@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -19,7 +19,6 @@
 
 namespace Combodo\iTop\Application\UI\Base\Layout\NavigationMenu;
 
-
 use ApplicationContext;
 use ApplicationMenu;
 use appUserPreferences;
@@ -28,9 +27,10 @@ use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\NewsroomMenu\NewsroomMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Combodo\iTop\Application\WebPage\CaptureWebPage;
 use DBObjectSearch;
 use Dict;
-use iKeyboardShortcut;
+use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use MetaModel;
 use UIExtKeyWidget;
 use UserRights;
@@ -86,6 +86,9 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	protected $bIsExpanded;
 	/** @var bool Whether the hint on how the menu filter works shoudl be displayed or not */
 	protected $bShowMenuFilterHint;
+	/** @var bool */
+	protected $bShowMenusCount;
+
 
 	/**
 	 * NavigationMenu constructor.
@@ -106,10 +109,13 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	) {
 		parent::__construct($sId);
 
+		$oConfig = MetaModel::GetConfig();
+
 		$this->sAppRevisionNumber = utils::GetAppRevisionNumber();
 		$this->sAppSquareIconUrl = Branding::GetCompactMainLogoAbsoluteUrl();
 		$this->sAppFullIconUrl = Branding::GetFullMainLogoAbsoluteUrl();
-		$this->sAppIconLink = MetaModel::GetConfig()->Get('app_icon_url');
+		$this->sAppIconLink = $oConfig->Get('app_icon_url');
+		$this->SetShowMenusCount($oConfig->Get('navigation_menu.show_menus_count'));
 		$this->aSiloSelection = array();
 		$this->aMenuGroups = ApplicationMenu::GetMenuGroups($oAppContext->GetAsHash());
 		$this->oUserMenu = $oUserMenu;
@@ -196,7 +202,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		}
 		return '';
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -291,6 +297,14 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	}
 
 	/**
+	 * @return True if the silo selection is enabled, false otherwise
+	 * @since 3.1.0
+	 */
+	public function IsSiloSelectionEnabled() : bool {
+		return MetaModel::GetConfig()->Get('navigation_menu.show_organization_filter');
+	}
+
+	/**
 	 * @return void
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -300,6 +314,10 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	{
 		$this->bHasSiloSelected = false;
 		$this->sSiloLabel = null;
+
+		if (! $this->IsSiloSelectionEnabled()){
+			return;
+		}
 
 		//TODO 3.0 Use components if we have the time to build select/autocomplete components before release
 		// List of visible Organizations
@@ -342,8 +360,8 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 
 				$this->aSiloSelection['html'] = '<form data-role="ibo-navigation-menu--silo-selection--form" action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
 
-				$oPage = new \CaptureWebPage();
-				
+				$oPage = new CaptureWebPage();
+
 				$oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
 				$iMaxComboLength = MetaModel::GetConfig()->Get('max_combo_length');
 				$this->aSiloSelection['html'] .= $oWidget->DisplaySelect($oPage, $iMaxComboLength, false, Dict::S('UI:Layout:NavigationMenu:Silo:Label'), $oSet, $iCurrentOrganization, false, 'c[org_id]', '',
@@ -370,13 +388,21 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 					<<<JS
 $sPageJS
 $sPageReadyJS
-$('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').on('extkeychange', function() { $('[data-role="ibo-navigation-menu--silo-selection--form"]').submit(); } )
-$('[data-role="ibo-navigation-menu--silo-selection--form"] #label_org_id').on('click', function() { if ($('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').val() == '') { $(this).val(''); } } );
+$(document).ready(function() {
+	$('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').on('extkeychange', function() { 
+		$('[data-role="ibo-navigation-menu--silo-selection--form"]').trigger('submit');
+	});
+	$('[data-role="ibo-navigation-menu--silo-selection--form"] #label_org_id').on('click', function() { 
+		if ($('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').val() == '') { 
+			$(this).val(''); 
+		}
+	});
+});
 $sAddClearButton
 JS;
 		}
 	}
-	
+
 	/**
 	 * Compute if the menu is expanded or collapsed
 	 *
@@ -436,10 +462,7 @@ JS;
 	protected function ComputeUserData()
 	{
 		// Use a picture set in the preferences is there is none in the user's contact
-		$sPictureUrl = UserRights::GetUserPictureAbsUrl('', false);
-		if (empty($sPictureUrl)) {
-			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/'.appUserPreferences::GetPref('user_picture_placeholder', 'user-profile-default-256px.png');
-		}
+		$sPictureUrl = UserRights::GetUserPictureAbsUrl();
 
 		// TODO 3.0.0 : what do we show if no contact is linked to the user ?
 		$aData = [
@@ -479,4 +502,21 @@ JS;
 	{
 		return "[data-role='".static::BLOCK_CODE."']";
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function GetShowMenusCount(): bool
+	{
+		return $this->bShowMenusCount;
+	}
+
+	/**
+	 * @param bool $bShowMenusCount
+	 */
+	public function SetShowMenusCount(bool $bShowMenusCount): void
+	{
+		$this->bShowMenusCount = $bShowMenusCount;
+	}
+
 }

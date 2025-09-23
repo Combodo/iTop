@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
+// Copyright (C) 2024 Combodo SAS
 //
 // This file is part of iTop.
 //
@@ -19,12 +19,11 @@
 /**
  * Handles various ajax requests - called through pages/exec.php
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license http://opensource.org/licenses/AGPL-3.0
  */
-if (!defined('__DIR__')) {
-	define('__DIR__', dirname(__FILE__));
-}
+
+use Combodo\iTop\Application\WebPage\JsonPage;
 
 require_once(APPROOT.'application/utils.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');
@@ -111,14 +110,15 @@ function DoBackup($sTargetFile)
  */
 function ReportStatus($sMessage, $bSuccess, $iErrorCode = 0, $aMoreFields = array())
 {
-	$oPage = new AjaxPage("");
-	$oPage->SetContentType('application/json');
+	// Do not use AjaxPage during setup phases, because it uses InterfaceDiscovery in Twig compilation
+	$oPage = new JsonPage();
 	$aResult = array(
 		'code' => $iErrorCode,
 		'message' => $sMessage,
 		'fields' => $aMoreFields
 	);
-	$oPage->add(json_encode($aResult));
+	$oPage->SetData($aResult);
+	$oPage->SetOutputDataOnly(true);
 	$oPage->output();
 }
 
@@ -186,7 +186,7 @@ try
 			require_once (APPROOT.'/application/loginwebpage.class.inc.php');
 			LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
 
-			$sDBBackupPath = APPROOT.'data/backups/manual';
+			$sDBBackupPath = utils::GetDataPath().'backups/manual';
 			$aChecks = SetupUtils::CheckBackupPrerequisites($sDBBackupPath);
 			$bFailed = false;
 			foreach ($aChecks as $oCheckResult)
@@ -259,7 +259,7 @@ try
 		case 'compile':
 			SetupLog::Info('Deployment starts...');
 			$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
-			if (!file_exists(APPROOT.'data/hub/compile_authent') || $sAuthent !== file_get_contents(APPROOT.'data/hub/compile_authent'))
+			if (!file_exists(utils::GetDataPath().'hub/compile_authent') || $sAuthent !== file_get_contents(utils::GetDataPath().'hub/compile_authent'))
 			{
 					throw new SecurityException(Dict::S('iTopHub:FailAuthent'));
 			}
@@ -302,11 +302,11 @@ try
 			{
 				SetupLog::Info('Move to production starts...');
 			    $sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
-				if (!file_exists(APPROOT.'data/hub/compile_authent') || $sAuthent !== file_get_contents(APPROOT.'data/hub/compile_authent'))
+				if (!file_exists(utils::GetDataPath().'hub/compile_authent') || $sAuthent !== file_get_contents(utils::GetDataPath().'hub/compile_authent'))
 				{
 					throw new SecurityException(Dict::S('iTopHub:FailAuthent'));
 				}
-				unlink(APPROOT.'data/hub/compile_authent');
+				unlink(utils::GetDataPath().'hub/compile_authent');
 				// Load the "production" config file to clone & update it
 				$oConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
 				SetupUtils::EnterReadOnlyMode($oConfig);
@@ -371,9 +371,9 @@ try
 			}
 			catch (Exception $e)
 			{
-				if(file_exists(APPROOT.'data/hub/compile_authent'))
+				if(file_exists(utils::GetDataPath().'hub/compile_authent'))
 				{
-					unlink(APPROOT.'data/hub/compile_authent');
+					unlink(utils::GetDataPath().'hub/compile_authent');
 				}
 				// Note: at this point, the dictionnary is not necessarily loaded
 				SetupLog::Error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted')."\n".$e->getMessage());

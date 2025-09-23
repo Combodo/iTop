@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -150,7 +150,7 @@ $(function()
 			{
 				if(this._getActiveMenuGroupId() === null)
 				{
-					const sFirstMenuGroupId = this.element.find(this.js_selectors.menu_group+':first').attr('data-menu-group-id');
+					const sFirstMenuGroupId = this.element.find(this.js_selectors.menu_group).first().attr('data-menu-group-id');
 					this._openDrawer(sFirstMenuGroupId);
 				}
 
@@ -310,7 +310,7 @@ $(function()
 				// Show matching menu node
 				this.element.find('[data-role="ibo-navigation-menu--menu-node"]').each(function () {
 					// Note: We don't filter on data-role="ibo-navigation-menu--menu-node-label" on purpose so we can also filter the counters
-					const sNodeValue = me._formatValueForFilterComparison($(this).children('[data-role="ibo-navigation-menu--menu-node-title"]:first').text());
+					const sNodeValue = me._formatValueForFilterComparison($(this).children('[data-role="ibo-navigation-menu--menu-node-title"]').first().text());
 					let bMatches = true;
 
 					// On first non matching part, we consider that the menu node is not a match

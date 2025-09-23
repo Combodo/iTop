@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -20,12 +20,15 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('RunQueriesMenu');
@@ -40,9 +43,9 @@ function ShowExamples($oP, $sExpression)
 
 	$aExamples = array(
 		'Pedagogic examples' => array(
-			"Web applications" => "SELECT WebApplication",
+			"Person" => "SELECT Person",
 			"Person having an 'A' in their name" => "SELECT Person AS B WHERE B.name LIKE '%A%'",
-			"Servers having a name like dbserver1.demo.com or dbserver023.foo.fr" => "SELECT Server WHERE name REGEXP '^dbserver[0-9]+\\\\..+\\\\.[a-z]{2,3}$'",
+			"Organization having a name beginning by 'My'" => "SELECT Organization WHERE name REGEXP '^My .*$'",
 			"Changes planned on new year's day" => "SELECT Change AS ch WHERE ch.start_date >= '2009-12-31' AND ch.end_date <= '2010-01-01'",
 			"IPs in a range" => "SELECT DatacenterDevice AS dev WHERE INET_ATON(dev.managementip) > INET_ATON('10.22.32.224') AND INET_ATON(dev.managementip) < INET_ATON('10.22.32.255')",
 			"Persons below a given root organization" => "SELECT Person AS P JOIN Organization AS Node ON P.org_id = Node.id JOIN Organization AS Root ON Node.parent_id BELOW Root.id WHERE Root.id=1",
@@ -177,13 +180,14 @@ try
 	$oQueryTextArea->AddCSSClasses(['ibo-input-text', 'ibo-query-oql', 'ibo-is-code']);
 	$oQueryForm->AddSubBlock($oQueryTextArea);
 
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot()."/js/jquery.hotkeys.js");
-	$oP->add_ready_script(<<<EOF
-$("#expression").select();
-$("#expression").on("keydown", null, "ctrl+return", function() {
-	$(this).closest("form").submit();
+	$oP->add_ready_script(<<<JS
+$("#expression").trigger('select');
+$("#expression").on('keyup', function (oEvent) {
+    if ((oEvent.ctrlKey || oEvent.metaKey) && oEvent.key === 'Enter') {
+        $(this).closest('form').trigger('submit');
+    }
 });
-EOF
+JS
 	);
 
 	if (count($aArgs) > 0) {
@@ -243,11 +247,11 @@ EOF
 		$aMoreInfoBlocks = [];
 
 		$oDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedQuery'));
-		$oDevelopedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode(utils::EscapeHtml($oFilter->ToOQL())));
+		$oDevelopedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($oFilter->ToOQL()));
 		$aMoreInfoBlocks[] = $oDevelopedQuerySet;
 
 		$oSerializedQuerySet = new FieldSet(Dict::S('UI:RunQuery:SerializedFilter'));
-		$oSerializedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode(utils::EscapeHtml($oFilter->serialize())));
+		$oSerializedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($oFilter->serialize()));
 		$aMoreInfoBlocks[] = $oSerializedQuerySet;
 
 
@@ -322,8 +326,8 @@ EOF
 					$oUseSuggestedQueryButton->SetOnClickJsCode(
 <<<JS
 let \$oQueryTextarea = $('textarea[name=expression]');
-\$oQueryTextarea.val($sEscapedExpression).focus();
-\$oQueryTextarea.closest('form').submit();
+\$oQueryTextarea.val($sEscapedExpression).trigger('focus');
+\$oQueryTextarea.closest('form').trigger('submit');
 JS
 					);
 						$oSyntaxErrorPanel->AddSubBlock($oUseSuggestedQueryButton);

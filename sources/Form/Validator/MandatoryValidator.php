@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -26,10 +26,10 @@ namespace Combodo\iTop\Form\Validator;
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class MandatoryValidator extends Validator
+class MandatoryValidator extends AbstractRegexpValidator
 {
-	const VALIDATOR_NAME = 'mandatory';
-	const DEFAULT_REGEXP = '.*\S.*';
-	const DEFAULT_ERROR_MESSAGE = 'Core:Validator:Mandatory';
+	public const VALIDATOR_NAME = 'mandatory';
+	public const DEFAULT_REGEXP = '.*\S.*';
+	public const DEFAULT_ERROR_MESSAGE = 'Core:Validator:Mandatory';
 
 }

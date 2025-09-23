@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-attachments/3.1.0',
+	'itop-attachments/3.3.0',
 	array(
 		// Identification
 		//
@@ -36,8 +36,11 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-attachments.php',
+			'vendor/autoload.php',
 			'main.itop-attachments.php',
+			'src/Trigger/TriggerOnAttachmentCreate.php',
+			'src/Trigger/TriggerOnAttachmentDelete.php',
+			'src/Trigger/TriggerOnAttachmentDownload.php',
 			'renderers.itop-attachments.php',
 		),
 		'webservice' => array(
@@ -194,14 +197,25 @@ SQL;
 
 				$oContainer = MetaModel::GetObject($oAttachment->Get('item_class'), $oAttachment->Get('item_id'), false /* must be found */, true /* allow all data */);
 
-				if ($oContainer)
-				{
+				if ($oContainer) {
 					$oAttachment->SetItem($oContainer, true /*updateonchange*/);
 					$iUpdated++;
 				}
 			}
-
 			SetupLog::Info("Initializing attachment/item_org_id - $iUpdated records have been adjusted");
+
+			if (MetaModel::GetAttributeDef('Attachment', 'contact_id') instanceof AttributeExternalKey && version_compare($sPreviousVersion, '3.2.0', '<')) {
+				SetupLog::Info("Upgrading itop-attachment from '$sPreviousVersion' to '$sCurrentVersion'. Starting with 3.2.0, contact_id will be added into the DB...");
+				$sUserTableName = MetaModel::DBGetTable('User');
+				$sUserFieldContactId = MetaModel::GetAttributeDef('User', 'contactid')->Get('sql');
+				$sAttachmentFieldUserId = MetaModel::GetAttributeDef('Attachment', 'user_id')->Get('sql');
+				$sAttachmentFieldContactId = MetaModel::GetAttributeDef('Attachment', 'contact_id')->Get('sql');
+				$sAddContactId = "UPDATE `$sTableName` att, `$sUserTableName` us SET att.`$sAttachmentFieldContactId` = us.`$sUserFieldContactId` WHERE att.`$sAttachmentFieldUserId` = us.id AND att.`$sAttachmentFieldContactId` = 0";
+
+				CMDBSource::Query($sAddContactId);
+				$iNbProcessed = CMDBSource::AffectedRows();
+				SetupLog::Info("|  | ".$iNbProcessed." attachment processed.");
+			}
 		}
 	}
 }

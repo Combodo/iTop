@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,14 +20,14 @@
 
 namespace Combodo\iTop\Form\Field;
 
-use BinaryExpression;
 use Closure;
+use Combodo\iTop\Form\Helper\FieldHelper;
+use Combodo\iTop\Form\Validator\AbstractValidator;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
-use DBObjectSet;
+use Combodo\iTop\Form\Validator\SelectObjectValidator;
 use DBSearch;
-use FieldExpression;
+use DeprecatedCallsLog;
 use MetaModel;
-use ScalarExpression;
 
 /**
  * Description of SelectObjectField
@@ -35,7 +35,7 @@ use ScalarExpression;
  * @author Romain Quetiez <romain.quetiez@combodo.com>
  * @since 2.3.0
  */
-class SelectObjectField extends Field
+class SelectObjectField extends AbstractSimpleField
 {
 	/** @var int CONTROL_SELECT */
 	const CONTROL_SELECT = 1;
@@ -90,6 +90,9 @@ class SelectObjectField extends Field
 	public function SetSearch(DBSearch $oSearch)
 	{
 		$this->oSearch = $oSearch;
+
+		$this->RemoveValidatorsOfClass(SelectObjectValidator::class);
+		$this->AddValidator(new SelectObjectValidator($oSearch));
 
 		return $this;
 	}
@@ -165,38 +168,15 @@ class SelectObjectField extends Field
 		return $this;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function SetMandatory(bool $bMandatory)
+	protected function GetMandatoryValidatorInstance(): AbstractValidator
 	{
-		// Before changing the property, we check if it was already mandatory. If not, we had the mandatory validator
-		if ($bMandatory && !$this->bMandatory)
-		{
-			$this->AddValidator(new NotEmptyExtKeyValidator());
-		}
-
-		if (!$bMandatory)
-		{
-			foreach ($this->aValidators as $iKey => $oValue)
-			{
-				if ($oValue::Getname() === NotEmptyExtKeyValidator::GetName())
-				{
-					unset($this->aValidators[$iKey]);
-				}
-			}
-		}
-
-		$this->bMandatory = $bMandatory;
-
-		return $this;
+		return new NotEmptyExtKeyValidator();
 	}
 
 	/**
 	 * @return \DBSearch
 	 */
-	public function GetSearch()
-	{
+	public function GetSearch() {
 		return $this->oSearch;
 	}
 
@@ -237,16 +217,14 @@ class SelectObjectField extends Field
 	/**
 	 * @return int
 	 */
-	public function GetControlType()
-	{
+	public function GetControlType() {
 		return $this->iControlType;
 	}
 
 	/**
 	 * @return string|null
 	 */
-	public function GetSearchEndpoint()
-	{
+	public function GetSearchEndpoint() {
 		return $this->sSearchEndpoint;
 	}
 
@@ -254,22 +232,20 @@ class SelectObjectField extends Field
 	 * Resets current value if not among allowed ones.
 	 * By default, reset is done ONLY when the field is not read-only.
 	 *
+	 * Called conditionally from {@see \Combodo\iTop\Portal\Form\ObjectFormManager::Build}
+	 * This check isn't in the Validate method as we don't want to check for untouched and invalid values (value was set in the past, it is now invalid, but the user didn't change it)
+	 *
 	 * @param boolean $bAlways Set to true to verify even when the field is read-only.
 	 *
 	 * @throws \CoreException
+	 *
+	 * @since 3.1.0 N°6414 replaces VerifyCurrentValue$
 	 */
-	public function VerifyCurrentValue(bool $bAlways = false)
-	{
-		if (!$this->GetReadOnly() || $bAlways)
-		{
-			$oValuesScope = $this->GetSearch()->DeepClone();
-			$oBinaryExp = new BinaryExpression(new FieldExpression('id', $oValuesScope->GetClassAlias()), '=',
-				new ScalarExpression($this->currentValue));
-			$oValuesScope->AddConditionExpression($oBinaryExp);
-			$oValuesSet = new DBObjectSet($oValuesScope);
+	public function ResetCurrentValueIfNotAmongAllowedValues(bool $bAlways = false) {
+		if (!$this->GetReadOnly() || $bAlways) {
+			$oValuesSet = FieldHelper::GetObjectsSetFromSearchAndCurrentValueId($this->oSearch, $this->currentValue);
 
-			if ($oValuesSet->Count() === 0)
-			{
+			if ($oValuesSet->Count() === 0) {
 				$this->currentValue = null;
 			}
 		}

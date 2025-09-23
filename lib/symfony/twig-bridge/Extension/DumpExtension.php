@@ -26,28 +26,22 @@ use Twig\TwigFunction;
  */
 final class DumpExtension extends AbstractExtension
 {
-    private $cloner;
-    private $dumper;
+    private ClonerInterface $cloner;
+    private ?HtmlDumper $dumper;
 
-    public function __construct(ClonerInterface $cloner, HtmlDumper $dumper = null)
+    public function __construct(ClonerInterface $cloner, ?HtmlDumper $dumper = null)
     {
         $this->cloner = $cloner;
         $this->dumper = $dumper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('dump', [$this, 'dump'], ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]),
+            new TwigFunction('dump', $this->dump(...), ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]),
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTokenParsers(): array
     {
         return [new DumpTokenParser()];
@@ -74,7 +68,7 @@ final class DumpExtension extends AbstractExtension
         }
 
         $dump = fopen('php://memory', 'r+');
-        $this->dumper = $this->dumper ?? new HtmlDumper();
+        $this->dumper ??= new HtmlDumper();
         $this->dumper->setCharset($env->getCharset());
 
         foreach ($vars as $value) {

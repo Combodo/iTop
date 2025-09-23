@@ -1,4 +1,4 @@
-{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% set sListId = oUIBlock.GetOption('sListId') %}
 {% set sListIDForVarSuffix = ('' ~ sListId)|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
@@ -362,10 +362,19 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
 
 oTable{{ sListIDForVarSuffix }}.select();
 
+$('#{{ oUIBlock.GetId() }}').on('refresh.datatable.itop', function (){
+    oTable{{ sListIDForVarSuffix }}.clearPipeline();
+    oTable{{ sListIDForVarSuffix }}.ajax.reload(null, false);
+});
 
+{% if oUIBlock.GetModalCreationHandler() is not empty %}
+$('body').on('open_creation_modal.object.itop','#{{ oUIBlock.GetId() }}', function (){
+    {{ oUIBlock.GetModalCreationHandler() | raw}}
+});
+{% endif %}
 
 {% if oUIBlock.GetOption('sCountSelector') is not empty %}
-$('#{{ sListId }} [name="selectionCount"]').bind('change', function () {
+$('#{{ sListId }} [name="selectionCount"]').on('change', function () {
     $('{{ oUIBlock.GetOption('sCountSelector') }}').val($('#{{ sListId }} [name="selectionCount"]').val());
     $('{{ oUIBlock.GetOption('sCountSelector') }}').trigger('change');
 });
@@ -385,7 +394,23 @@ $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog(
                 {
                     $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('onDlgCancel');
                 }
-            }
+            },
+            buttons: [
+                {
+                    text: "{{ 'UI:Button:Cancel'|dict_s }}",
+                    class: "ibo-is-alternative ibo-is-neutral",
+                    click: function() {
+                        $(this).dialog( "close" );
+                    }
+                },
+                {
+                    text: "{{ 'UI:Button:Ok'|dict_s }}",
+                    class: "ibo-is-regular ibo-is-primary",
+                    click: function() {
+                        $(this).DataTableSettings('onDlgOk');
+                    }
+                }
+            ]
         });
 
 var aOptions{{ sListIDForVarSuffix }} = {
@@ -394,13 +419,14 @@ var aOptions{{ sListIDForVarSuffix }} = {
     sSelectMode: "{{ oUIBlock.GetOption("select_mode") }}",
     sSelectedItemsName: "oSelectedItems{{ sListIDForVarSuffix }}",
     sViewLink: '{{ oUIBlock.GetOption("bViewLink") }}',
-    iPageSize: ' {{ iPageSize }}',
+    iPageSize: {{ iPageSize }},
     oClassAliases: JSON.parse('{{ oUIBlock.GetOption("oClassAliases") |raw }}'),
     sTableId: '{{ oUIBlock.GetOption("sTableId") }}',
     sRenderUrl: "{{ oUIBlock.GetAjaxUrl() }}",
     oData: {{ oUIBlock.GetJsonAjaxData() |raw }},
     oDefaultSettings: {{ oUIBlock.GetOption("oDefaultSettings")|raw }},
     oLabels: {moveup: "{{ 'UI:Button:MoveUp'|dict_s }}", movedown: "{{ 'UI:Button:MoveDown'|dict_s }}"},
+    bHasRowActions: {{ oUIBlock.HasRowActions()|var_export }},
 };
 
 if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable'))
@@ -420,4 +446,6 @@ if(window.ResizeObserver){
         oTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
 }
 
-{% include 'base/components/datatable/row-actions/handler.js.twig' %}
+{% if oUIBlock.HasRowActions() %}
+    {% include 'base/components/datatable/row-actions/handler.js.twig' %}
+{% endif %}

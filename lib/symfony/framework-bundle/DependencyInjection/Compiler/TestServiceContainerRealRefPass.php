@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler;
 
+use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -20,6 +21,9 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class TestServiceContainerRealRefPass implements CompilerPassInterface
 {
+    /**
+     * @return void
+     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition('test.private_services_locator')) {
@@ -29,15 +33,38 @@ class TestServiceContainerRealRefPass implements CompilerPassInterface
         $privateContainer = $container->getDefinition('test.private_services_locator');
         $definitions = $container->getDefinitions();
         $privateServices = $privateContainer->getArgument(0);
+        $renamedIds = [];
 
         foreach ($privateServices as $id => $argument) {
             if (isset($definitions[$target = (string) $argument->getValues()[0]])) {
                 $argument->setValues([new Reference($target)]);
+                if ($id !== $target) {
+                    $renamedIds[$id] = $target;
+                }
+                if ($inner = $definitions[$target]->getTag('container.decorator')[0]['inner'] ?? null) {
+                    $renamedIds[$id] = $inner;
+                }
             } else {
                 unset($privateServices[$id]);
             }
         }
 
+        foreach ($container->getAliases() as $id => $target) {
+            while ($container->hasAlias($target = (string) $target)) {
+                $target = $container->getAlias($target);
+            }
+
+            if ($definitions[$target]->hasTag('container.private')) {
+                $privateServices[$id] = new ServiceClosureArgument(new Reference($target));
+            }
+
+            $renamedIds[$id] = $target;
+        }
+
         $privateContainer->replaceArgument(0, $privateServices);
+
+        if ($container->hasDefinition('test.service_container') && $renamedIds) {
+            $container->getDefinition('test.service_container')->setArgument(2, $renamedIds);
+        }
     }
 }

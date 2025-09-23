@@ -1,0 +1,27 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-panel--border-color: $ipb-color-grey-400 !default;
+$ipb-panel--border: 1px solid $ipb-panel--border-color !default;
+$ipb-panel--background-color: $ipb-color-white-100 !default;
+
+$ipb-panel--heading--border-color: $ipb-color-grey-400 !default;
+$ipb-panel--heading--background-color: $ipb-color-grey-100 !default;
+$ipb-panel--heading--color: $ipb-color-grey-800 !default;
+
+
+
+.ipb-panel, .panel{
+  box-shadow: none;
+  border: $ipb-panel--border;
+  background-color: $ipb-panel--background-color;
+  &.panel-default .panel-heading {
+    border-color: $ipb-panel--heading--border-color;
+    background-color: $ipb-panel--heading--background-color;
+    color: $ipb-panel--heading--color;
+  }
+}
+

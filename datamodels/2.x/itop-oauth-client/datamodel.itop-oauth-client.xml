@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <constants/>
   <classes>
     <class id="OAuthClient" _delta="define">
@@ -67,12 +67,12 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
-        <field id="client_id" xsi:type="AttributeText">
+        <field id="client_id" xsi:type="AttributeString">
           <sql>client_id</sql>
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
-        <field id="client_secret" xsi:type="AttributeText">
+        <field id="client_secret" xsi:type="AttributePassword">
           <sql>client_secret</sql>
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
@@ -230,6 +230,7 @@ HTML
             $this->Set('refresh_token', $oAccessToken->getRefreshToken());
         }
         $this->Set('status', 'active');
+        $this->AllowWrite();
         $this->DBUpdate();
     }
             ]]></code>
@@ -319,7 +320,6 @@ HTML
             <attributes>
               <attribute id="provider"/>
               <attribute id="client_id"/>
-              <attribute id="client_secret"/>
             </attributes>
             <is_blocking>true</is_blocking>
           </rule>
@@ -380,6 +380,11 @@ HTML
           <default_value>no</default_value>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="tenant" xsi:type="AttributeString">
+          <sql>tenant</sql>
+          <default_value>common</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
       </fields>
       <presentation>
         <details>
@@ -405,14 +410,17 @@ HTML
                     <item id="redirect_url">
                       <rank>50</rank>
                     </item>
-                    <item id="client_id">
+                    <item id="tenant">
                       <rank>60</rank>
                     </item>
-                    <item id="client_secret">
+                    <item id="client_id">
                       <rank>70</rank>
                     </item>
-                    <item id="mailbox_list">
+                    <item id="client_secret">
                       <rank>80</rank>
+                    </item>
+                    <item id="mailbox_list">
+                      <rank>90</rank>
                     </item>
                   </items>
                 </item>
@@ -491,15 +499,13 @@ HTML
 		parent::DoCheckToWrite();
 
 		$aChanges = $this->ListChanges();
-		if (array_key_exists('name', $aChanges) || array_key_exists('used_for_smtp', $aChanges))
-		{
+		if (array_key_exists('name', $aChanges) || array_key_exists('used_for_smtp', $aChanges)) {
 			$sNewName = $this->Get('name');
 			$sNewUseForSMTP = $this->Get('used_for_smtp');
 			if ($sNewUseForSMTP == 'yes') {
         $oSearch = DBObjectSearch::FromOQL_AllData("SELECT OAuthClientGoogle WHERE name = :newname AND used_for_smtp = :newuseforsmtp AND id != :id UNION SELECT OAuthClientAzure WHERE name = :newname AND used_for_smtp = :newuseforsmtp AND id != :id");
         $oSet = new DBObjectSet($oSearch, array(), ['id' => $this->GetKey(), 'newname' => $sNewName, 'newuseforsmtp' => $sNewUseForSMTP]);
-        if ($oSet->Count() > 0)
-        {
+        if ($oSet->Count() > 0) {
             $this->m_aCheckIssues[] = Dict::Format('OAuthClient:Name/UseForSMTPMustBeUnique', $sNewName, $sNewUseForSMTP);
         }
 			}
@@ -529,6 +535,12 @@ HTML
 		    $this->Set('used_scope', 'advanced');
 		    $this->Set('scope', '');
 		}
+    $aChanges = $this->ListChanges();
+    if (array_key_exists('client_id', $aChanges) || array_key_exists('client_secret', $aChanges) || array_key_exists('redirect_url', $aChanges)) {
+        $sMessage = Dict::S('itop-oauth-client:Message:RegenerateToken');
+        self::SetSessionMessage(get_class($this), $this->GetKey(), 'RegenerateToken', $sMessage, 'info', 1);
+        $this->Set('status', 'inactive');
+    }
   }
             ]]></code>
         </method>
@@ -541,7 +553,6 @@ HTML
   {
     switch ($sAttCode) {
         case 'provider':
-        case 'redirect_url':
         case 'used_scope':
             return OPT_ATT_READONLY;
     }
@@ -559,7 +570,6 @@ HTML
   {
     switch ($sAttCode) {
         case 'provider':
-        case 'redirect_url':
         case 'used_scope':
             return OPT_ATT_READONLY;
     }
@@ -632,7 +642,6 @@ HTML
             <attributes>
               <attribute id="provider"/>
               <attribute id="client_id"/>
-              <attribute id="client_secret"/>
             </attributes>
             <is_blocking>true</is_blocking>
           </rule>
@@ -842,6 +851,12 @@ HTML
 		    $this->Set('used_scope', 'advanced');
 		    $this->Set('scope', '');
 		}
+    $aChanges = $this->ListChanges();
+    if (array_key_exists('client_id', $aChanges) || array_key_exists('client_secret', $aChanges) || array_key_exists('redirect_url', $aChanges)) {
+        $sMessage = Dict::S('itop-oauth-client:Message:RegenerateToken');
+        self::SetSessionMessage(get_class($this), $this->GetKey(), 'RegenerateToken', $sMessage, 'info', 1);
+        $this->Set('status', 'inactive');
+    }
 	}
             ]]></code>
         </method>
@@ -854,7 +869,6 @@ HTML
 	{
     switch ($sAttCode) {
         case 'provider':
-        case 'redirect_url':
         case 'used_scope':
             return OPT_ATT_READONLY;
     }
@@ -872,7 +886,6 @@ HTML
 	{
     switch ($sAttCode) {
         case 'provider':
-        case 'redirect_url':
         case 'used_scope':
             return OPT_ATT_READONLY;
     }
@@ -923,7 +936,7 @@ HTML
   <menus>
     <menu id="OAuthClient" xsi:type="OQLMenuNode" _delta="define">
       <rank>100</rank>
-      <parent>ConfigurationTools</parent>
+      <parent>Integrations</parent>
       <oql><![CDATA[SELECT OAuthClient]]></oql>
       <do_search>1</do_search>
       <enable_admin_only>0</enable_admin_only>
@@ -939,5 +952,22 @@ HTML
         </classes>
       </group>
     </groups>
+    <profiles>
+      <profile id="117" _delta="if_exists">
+        <!-- SuperUser -->
+        <groups>
+          <group id="OauthConnection">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:bulk read">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:bulk delete">allow</action>
+            </actions>
+          </group>
+        </groups>
+      </profile>
+    </profiles>
   </user_rights>
 </itop_design>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+    <Brand alias="Brand" id="1">
+        <name>Acer</name>
+    </Brand>
+    <Brand alias="Brand" id="2">
+        <name>Apple</name>
+    </Brand>
+    <Brand alias="Brand" id="3">
+        <name>Asus</name>
+    </Brand>
+    <Brand alias="Brand" id="4">
+        <name>Cisco</name>
+    </Brand>
+    <Brand alias="Brand" id="5">
+        <name>Dell</name>
+    </Brand>
+    <Brand alias="Brand" id="6">
+        <name>HP Inc</name>
+    </Brand>
+    <Brand alias="Brand" id="7">
+        <name>HPE</name>
+    </Brand>
+    <Brand alias="Brand" id="8">
+        <name>IBM</name>
+    </Brand>
+    <Brand alias="Brand" id="9">
+        <name>Lenovo</name>
+    </Brand>
+    <Brand alias="Brand" id="10">
+        <name>Razer</name>
+    </Brand>
+    <Brand alias="Brand" id="11">
+        <name>Samsung</name>
+    </Brand>
+    <Brand alias="Brand" id="12">
+        <name>Sony</name>
+    </Brand>
+    <Brand alias="Brand" id="13">
+        <name>Toshiba</name>
+    </Brand>
+</Set>

@@ -1,12 +1,18 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2022 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
-use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventService;
+use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventException;
+use Combodo\iTop\Service\Events\EventService;
+use Combodo\iTop\Service\Events\EventServiceLog;
+use Combodo\iTop\Service\Module\ModuleService;
+use Combodo\iTop\Service\SummaryCard\SummaryCardService;
+use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectManager;
 
 /**
  * All objects to be displayed in the application (either as a list or as details)
@@ -46,7 +52,7 @@ interface iDisplay
 /**
  * Class dbObject: the root of persistent classes
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -56,7 +62,7 @@ require_once('mutex.class.inc.php');
 
 
 /**
- * A persistent object, as defined by the metamodel 
+ * A persistent object, as defined by the metamodel
  *
  * @package     iTopORM
  * @api
@@ -64,6 +70,32 @@ require_once('mutex.class.inc.php');
  */
 abstract class DBObject implements iDisplay
 {
+	/**
+	 * @var string For sorting based on the XML order (like in iTop 3.0 and older)
+	 * @since 3.1.0 N°1345
+	 */
+	public const ENUM_TRANSITIONS_SORT_TYPE_XML = 'xml';
+	/**
+	 * @var string For sorting based on the transitions labels
+	 * @since 3.1.0 N°1345
+	 */
+	public const ENUM_TRANSITIONS_SORT_TYPE_ALPHABETICAL = 'alphabetical';
+	/**
+	 * @var string For sorting based on the arrival states rank, ascending sort
+	 * @since 3.1.0 N°1345
+	 */
+	public const ENUM_TRANSITIONS_SORT_TYPE_FIXED = 'fixed';
+	/**
+	 * @var string For sorting based on the arrival states rank but depending on the current state (first transitions to states with higher ranks, then transitions to states with lower ranks)
+	 * @since 3.1.0 N°1345
+	 */
+	public const ENUM_TRANSITIONS_SORT_TYPE_RELATIVE = 'relative';
+	/**
+	 * @var string Default sort type of the transitions
+	 * @since 3.1.0 N°1345
+	 */
+	public const DEFAULT_TRANSITIONS_SORT_TYPE = self::ENUM_TRANSITIONS_SORT_TYPE_RELATIVE;
+
 	private static $m_aMemoryObjectsByClass = array();
 
 	/** @var array class => array of ('table' => array of (array of <sql_value>)) */
@@ -157,31 +189,58 @@ abstract class DBObject implements iDisplay
 	protected $m_oLinkHostObject = null;
 
 	/**
-     * DBObject constructor.
-     *
-     * You should preferably use MetaModel::NewObject() instead of this constructor.
-     * The whole collection of parameters is [*optional*] please refer to DBObjectSet::FromRow()
-     *
-     * @internal The availability of this method is not guaranteed in the long term, you should preferably use MetaModel::NewObject().
-     * @see MetaModel::NewObject()
-     *
-     * @param null|array   $aRow                If given : DBObjectSet::FromRow() will be used to fetch the object
-     * @param string       $sClassAlias
-     * @param null|array   $aAttToLoad
-     * @param null|array   $aExtendedDataSpec
-     *
-     * @throws CoreException
-     */
+	 * @var array{array{
+	 *      type: string,
+	 *      class: string,
+	 *      id: string,
+	 * }} List all the CRUD stack in progress, with :
+	 *      - type: CRUD operation (INSERT, UPDATE, DELETE)',
+	 *      - class: class of the object in the CRUD process, leaf (object finalclass) if we have a hierarchy
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	protected static array $m_aCrudStack = [];
+
+	/** @var array Context for update insert operations */
+	private array $aContext = [];
+
+	// Protect DBUpdate against infinite loop
+	protected $iUpdateLoopCount;
+
+	const MAX_UPDATE_LOOP_COUNT = 10;
+
+	private $aEventListeners = [];
+	private array $aAllowedTransitions = [];
+
+	private ?string $sStimulusBeingApplied = null;
+
+	/**
+	 * DBObject constructor.
+	 *
+	 * You should preferably use MetaModel::NewObject() instead of this constructor.
+	 * The whole collection of parameters is [*optional*] please refer to DBObjectSet::FromRow()
+	 *
+	 * @internal The availability of this method is not guaranteed in the long term, you should preferably use MetaModel::NewObject().
+	 * @see MetaModel::NewObject()
+	 *
+	 * @param null|array $aRow If given : DBObjectSet::FromRow() will be used to fetch the object
+	 * @param string $sClassAlias
+	 * @param null|array $aAttToLoad
+	 * @param null|array $aExtendedDataSpec
+	 *
+	 * @throws CoreException
+	 */
 	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
+		$this->iUpdateLoopCount = 0;
 		if (!empty($aRow))
 		{
 			$this->FromRow($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
 			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
-			$this->m_sObjectUniqId = get_class($this).'::'.$this->GetKey().'_'.utils::GetUniqId();
-			$this->RegisterEvents();
+			$this->m_sObjectUniqId = get_class($this).'::'.$this->GetKey().'_'.uniqId('', true);
+			$this->RegisterEventListeners();
 			return;
 		}
 		// Creation of a brand new object
@@ -203,11 +262,15 @@ abstract class DBObject implements iDisplay
 
 		$this->UpdateMetaAttributes();
 
-		$this->m_sObjectUniqId = get_class($this).'::0'.'_'.utils::GetUniqId();
-		$this->RegisterEvents();
+		$this->m_sObjectUniqId = get_class($this).'::0'.'_'.uniqId('', true);
+		$this->RegisterEventListeners();
 	}
 
-	protected function RegisterEvents()
+	/**
+	 * @see RegisterCRUDListener
+	 * @see EventService::RegisterListener()
+	 */
+	protected function RegisterEventListeners()
 	{
 	}
 
@@ -251,9 +314,9 @@ abstract class DBObject implements iDisplay
 
     /**
      * Whether the object is already persisted in DB or not.
-     * 
+     *
      * @api
-     * 
+     *
      * @return bool
      */
 	public function IsNew()
@@ -263,9 +326,9 @@ abstract class DBObject implements iDisplay
 
     /**
      * Returns an Id for memory objects
-     * 
+     *
      * @internal
-     * 
+     *
      * @param string $sClass
      *
      * @return int
@@ -302,7 +365,7 @@ abstract class DBObject implements iDisplay
         $sRet .= "<b title=\"$sRootClass\">$sClass</b>::$iPKey ($sFriendlyname)<br/>\n";
         return $sRet;
 	}
-	
+
     /**
      * Alias of DBObject::Reload()
      *
@@ -325,7 +388,7 @@ abstract class DBObject implements iDisplay
      *
      * @internal
      * @see m_bFullyLoaded
-     * 
+     *
      * @return bool
      * @throws CoreException
      */
@@ -348,14 +411,12 @@ abstract class DBObject implements iDisplay
      * This is mostly used after a lazy load (automatically performed by the framework)
      * This will erase any pending changes.
      *
-	 * @param bool $bAllowAllData @deprecated This parameter is ignored!!
-	 *
 	 * @throws CoreException
 	 */
-	public function Reload($bAllowAllData = false)
+	public function Reload()
 	{
 		assert($this->m_bIsInDB);
-		$this->FireEvent(EVENT_SERVICE_DB_OBJECT_RELOAD);
+		$this->FireEvent(EVENT_DB_OBJECT_RELOAD);
 		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false /* must be found */, true /* AllowAllData */);
 		if (empty($aRow))
 		{
@@ -411,6 +472,8 @@ abstract class DBObject implements iDisplay
 		$this->m_aOrigValues = array();
 		$this->m_aLoadedAtt = array();
 		$this->m_bCheckStatus = true;
+		$this->m_aCheckIssues = [];
+		$this->m_bSecurityIssue = [];
 
 		// Get the key
 		//
@@ -446,17 +509,18 @@ abstract class DBObject implements iDisplay
 		{
 			$aAttList = $aAttToLoad[$sClassAlias];
 		}
-		
+
 		foreach($aAttList as $sAttCode=>$oAttDef)
 		{
 			// Skip links (could not be loaded by the mean of this query)
+			/** @var \AttributeDefinition $oAttDef */
 			if ($oAttDef->IsLinkSet()) continue;
 
 			if (!$oAttDef->LoadInObject()) continue;
 
 			unset($value);
 			$bIsDefined = false;
-			if ($oAttDef->LoadFromDB())
+			if ($oAttDef->LoadFromClassTables())
 			{
 				// Note: we assume that, for a given attribute, if it can be loaded,
 				// then one column will be found with an empty suffix, the others have a suffix
@@ -482,8 +546,7 @@ abstract class DBObject implements iDisplay
 			}
 			else
 			{
-				/** @var \AttributeCustomFields $oAttDef */
-				$value = $oAttDef->ReadValue($this);
+				$value = $oAttDef->ReadExternalValues($this);
 				$bIsDefined = true;
 			}
 
@@ -506,7 +569,7 @@ abstract class DBObject implements iDisplay
 				$bFullyLoaded = false;
 			}
 		}
-		
+
 		// Load extended data
 		if ($aExtendedDataSpec != null)
 		{
@@ -530,7 +593,7 @@ abstract class DBObject implements iDisplay
      *
      * @internal
      * @see Set()
-     * 
+     *
      * @param string $sAttCode
      * @param mixed $value
      */
@@ -546,11 +609,10 @@ abstract class DBObject implements iDisplay
      * Attributes setter
      *
      * Set $sAttCode to $value.
-     * The value must be valid according to the type of attribute.
+     * The value must be valid according to the type of attribute : see the different {@see AttributeDefinition::MakeRealValue()} implementations
      * The value will not be recorded into the DB until DBObject::DBWrite() is called.
      *
      * @api
-     * @see DBWrite()
      *
      * @param string $sAttCode
      * @param mixed $value
@@ -558,9 +620,19 @@ abstract class DBObject implements iDisplay
      * @return bool
      * @throws CoreException
      * @throws CoreUnexpectedValue
+     *
+     * @see DBWrite()
      */
 	public function Set($sAttCode, $value)
 	{
+		if (!utils::StartsWith(get_class($this), 'CMDBChange') && $this->GetKey() > 0) {
+			if (is_object($value) || is_array($value)) {
+				$this->LogCRUDEnter(__METHOD__, "$sAttCode => object or array");
+			} else {
+				$this->LogCRUDEnter(__METHOD__, "$sAttCode => ".print_r($value, true));
+			}
+		}
+
 		$sMessage = $this->IsReadOnly();
 		if ($sMessage !== false) {
 			throw new CoreException($sMessage);
@@ -582,6 +654,9 @@ abstract class DBObject implements iDisplay
 			// First time Set is called... ensure that the object gets fully loaded
 			// Otherwise we would lose the values on a further Reload
 			//           + consistency does not make sense !
+			$sFullyLoaded = $this->m_bFullyLoaded ? 'true' : 'false';
+			$sDirty = $this->m_bDirty ? 'true' : 'false';
+			$this->LogCRUDDebug(__METHOD__, "IsInDB: $this->m_bIsInDB, FullyLoaded: $sFullyLoaded, Dirty: $sDirty");
 			$this->Reload();
 		}
 
@@ -685,11 +760,60 @@ abstract class DBObject implements iDisplay
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 		$iMaxSize = $oAttDef->GetMaxSize();
-		if ($iMaxSize && (strlen($sValue) > $iMaxSize))
-		{
-			$sValue = substr($sValue, 0, $iMaxSize);
+		$sLength = mb_strlen($sValue);
+		if ($iMaxSize && ($sLength > $iMaxSize)) {
+			$sMessage = " -truncated ($sLength chars)";
+			$sValue = mb_substr($sValue, 0, $iMaxSize - mb_strlen($sMessage)).$sMessage;
 		}
 		$this->Set($sAttCode, $sValue);
+	}
+
+	/**
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 */
+	protected function PreDeleteActions(): void
+	{
+		$this->SetReadOnly('No modification allowed before delete');
+		$this->FireEventAboutToDelete();
+		$oKPI = new ExecutionKPI();
+		$this->OnDelete();
+		$oKPI->ComputeStatsForExtension($this, 'OnDelete');
+
+		// Activate any existing trigger
+		$sClass = get_class($this);
+		$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectDelete AS t WHERE t.target_class IN (:class_list)'), array(),
+			$aParams);
+		while ($oTrigger = $oSet->Fetch()) {
+			/** @var \TriggerOnObjectDelete $oTrigger */
+			try {
+				$oKPI = new ExecutionKPI();
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+			catch (Exception $e) {
+				$oTrigger->LogException($e, $this);
+				utils::EnrichRaisedException($oTrigger, $e);
+			}
+			finally {
+				$oKPI->ComputeStatsForExtension($this, 'TriggerOnObjectDelete');
+			}
+		}
+	}
+
+	/**
+	 * @return void
+	 * @throws \ReflectionException
+	 */
+	protected function PostDeleteActions(): void
+	{
+		$this->FireEventAfterDelete();
+		$oKPI = new ExecutionKPI();
+		$this->AfterDelete();
+		$oKPI->ComputeStatsForExtension($this, 'AfterDelete');
 	}
 
 	/**
@@ -724,11 +848,11 @@ abstract class DBObject implements iDisplay
 
 	/**
      * Get the label of an attribute.
-     * 
+     *
      * Shortcut to the field's AttributeDefinition->GetLabel()
      *
      * @api
-     * 
+     *
      * @param string $sAttCode
      *
      * @return string
@@ -801,7 +925,7 @@ abstract class DBObject implements iDisplay
      *
      * @internal
      * @see Get
-     * 
+     *
      * @param string $sAttCode
      *
      * @return int|mixed|null
@@ -906,7 +1030,7 @@ abstract class DBObject implements iDisplay
      * Returns the default value of the $sAttCode.
      *
      * Returns the default value of the given attribute.
-     * 
+     *
      * @internal
      *
      * @param string $sAttCode
@@ -927,12 +1051,12 @@ abstract class DBObject implements iDisplay
      * @internal
      *
      * @return array|null
-	 */	 
+	 */
 	public function GetExtendedData()
 	{
 		return $this->m_aExtendedData;
 	}
-	
+
 	/**
      * Set the HighlightCode
      *
@@ -954,7 +1078,7 @@ abstract class DBObject implements iDisplay
 		{
 			$fCurrentRank = $aHighlightScale[$this->m_sHighlightCode]['rank'];
 		}
-				
+
 		if (array_key_exists($sCode, $aHighlightScale))
 		{
 			$fRank = $aHighlightScale[$sCode]['rank'];
@@ -964,13 +1088,13 @@ abstract class DBObject implements iDisplay
 			}
 		}
 	}
-	
+
 	/**
 	 * Get the current HighlightCode
-     * 
+     *
      * @internal
      * @used-by DBObject::ComputeHighlightCode()
-     * 
+     *
 	 * @return string|null The Hightlight code (null if none set, meaning rank = 0)
 	 */
 	protected function GetHighlightCode()
@@ -1019,7 +1143,7 @@ abstract class DBObject implements iDisplay
      * corresponding to the external key and getting the value from it
      *
      * UNUSED ?
-     * 
+     *
      * @internal
      * @todo: check if this is dead code.
      *
@@ -1082,13 +1206,15 @@ abstract class DBObject implements iDisplay
 			if ($aCallInfo["function"] != "ComputeValues") continue;
 			return; //skip!
 		}
-		$this->EventComputeValues();
+		$this->FireEventComputeValues($this->sStimulusBeingApplied);
+		$oKPI = new ExecutionKPI();
 		$this->ComputeValues();
+		$oKPI->ComputeStatsForExtension($this, 'ComputeValues');
 	}
 
     /**
      * @api
-     * 
+     *
      * @param string $sAttCode
      * @param bool   $bLocalize
      *
@@ -1134,11 +1260,11 @@ abstract class DBObject implements iDisplay
 
     /**
      * Get the value as it must be in the edit areas (forms)
-     * 
+     *
      * Makes a raw text representation of the value.
      *
      * @internal
-     * 
+     *
      * @param string $sAttCode
      *
      * @return int|mixed|string
@@ -1168,7 +1294,7 @@ abstract class DBObject implements iDisplay
 				else
 				{
 					$sEditValue = 0;
-				}					
+				}
 			}
 			else
 			{
@@ -1184,14 +1310,14 @@ abstract class DBObject implements iDisplay
 
     /**
      * Get $sAttCode formatted as XML
-     * 
+     *
      * The returned value is a text that is suitable for insertion into an XML node.
      * Depending on the type of attribute, the returned text is either:
      *   * A literal, with XML entities already escaped,
      *   * XML
      *
      * @api
-     * 
+     *
      * @param string $sAttCode
      * @param bool   $bLocalize
      *
@@ -1229,10 +1355,10 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * 
+     *
      * @see GetAsHTML()
      * @see GetOriginal()
-     * 
+     *
      * @param string $sAttCode
      * @param bool   $bLocalize
      *
@@ -1301,7 +1427,7 @@ abstract class DBObject implements iDisplay
      * @throws \CoreException
      * @throws \DictExceptionMissingString
      */
-	public static function MakeHyperLink($sObjClass, $sObjKey, $sHtmlLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true, $bArchived = false, $bObsolete = false)
+	public static function MakeHyperLink($sObjClass, $sObjKey, $sHtmlLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true, $bArchived = false, $bObsolete = false, $bIgnorePreview = false)
 	{
 		if ($sObjKey <= 0) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
 
@@ -1371,7 +1497,11 @@ abstract class DBObject implements iDisplay
 		{
 			$sHLink = $sIcon.$sHtmlLabel;
 		}
-		$sRet = "<span class=\"object-ref $sSpanClass\" title=\"$sHint\">$sHLink</span>";
+		$sPreview = '';
+		if(SummaryCardService::IsAllowedForClass($sObjClass) && $bIgnorePreview === false){
+			$sPreview = SummaryCardService::GetHyperlinkMarkup($sObjClass, $sObjKey);
+		}
+		$sRet = "<span class=\"object-ref $sSpanClass\" $sPreview title=\"$sHint\">$sHLink</span>";
 		return $sRet;
 	}
 
@@ -1390,7 +1520,7 @@ abstract class DBObject implements iDisplay
      * @throws CoreException
      * @throws DictExceptionMissingString
      */
-	public function GetHyperlink($sUrlMakerClass = null, $bWithNavigationContext = true, $sLabel = null)
+	public function GetHyperlink($sUrlMakerClass = null, $bWithNavigationContext = true, $sLabel = null, $bIgnorePreview = false)
 	{
 	    if($sLabel === null)
         {
@@ -1398,12 +1528,12 @@ abstract class DBObject implements iDisplay
         }
 		$bArchived = $this->IsArchived();
 		$bObsolete = $this->IsObsolete();
-		return self::MakeHyperLink(get_class($this), $this->GetKey(), $sLabel, $sUrlMakerClass, $bWithNavigationContext, $bArchived, $bObsolete);
+		return self::MakeHyperLink(get_class($this), $this->GetKey(), $sLabel, $sUrlMakerClass, $bWithNavigationContext, $bArchived, $bObsolete, $bIgnorePreview);
 	}
 
     /**
      * @internal
-     * 
+     *
      * @param string $sClass
      *
      * @return mixed
@@ -1458,8 +1588,8 @@ abstract class DBObject implements iDisplay
      * Get the id
      *
      * @api
-     * 
-     * @return int|null
+     *
+     * @return string|null
      */
 	public function GetKey()
 	{
@@ -1469,7 +1599,7 @@ abstract class DBObject implements iDisplay
     /**
      * Primary key Setter
      * Usable only for not yet persisted DBObjects
-     * 
+     *
      * @internal
      *
      * @param int $iNewKey the desired identifier
@@ -1482,7 +1612,7 @@ abstract class DBObject implements iDisplay
 		{
 			throw new CoreException("An object id must be an integer value ($iNewKey)");
 		}
-		
+
 		if ($this->m_bIsInDB && !empty($this->m_iKey) && ($this->m_iKey != $iNewKey))
 		{
 			throw new CoreException("Changing the key ({$this->m_iKey} to $iNewKey) on an object (class {".get_class($this).") wich already exists in the Database");
@@ -1492,7 +1622,7 @@ abstract class DBObject implements iDisplay
 
     /**
      * Get the icon representing this object
-     * 
+     *
      * @api
      *
      * @param boolean $bImgTag If true the result is a full IMG tag (or an empty string if no icon is defined)
@@ -1582,7 +1712,7 @@ abstract class DBObject implements iDisplay
 	 *
 	 * Returns the label as defined in the dictionary for the language of the current user
      *
-     * @api 
+     * @api
      *
 	 * @return string (empty for default name scheme)
 	 */
@@ -1612,14 +1742,13 @@ abstract class DBObject implements iDisplay
 	/**
 	 * Helper to get the friendly name in a safe manner for displaying inside a web page
 	 *
-	 * @internal
 	 * @return string
 	 * @throws \CoreException
-	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
+	 * @since 3.0.0 N°4106 Method should not be overloaded anymore for performances reasons. It will be set final in 3.1.0 (N°4107)
 	 * @since 3.0.0 N°580 New $sType parameter
-	 *
+	 * @since 3.3.0 N°4107 Should never be overriden
 	 */
-	public function GetName($sType = FriendlyNameType::SHORT)
+	public final function GetName($sType = FriendlyNameType::SHORT)
 	{
 		return utils::EscapeHtml($this->GetRawName($sType));
 	}
@@ -1650,7 +1779,7 @@ abstract class DBObject implements iDisplay
 
 	/**
      * Helper to get the state
-     * 
+     *
      * @api
      *
 	 * @return mixed|string '' if no state attribute, object representing its value otherwise
@@ -1672,9 +1801,9 @@ abstract class DBObject implements iDisplay
     /**
      * Get the label (raw text) of the current state
      * helper for MetaModel::GetStateLabel()
-     * 
+     *
      * @api
-     * 
+     *
      * @return mixed|string
      *
      * @throws ArchivedObjectException
@@ -1721,7 +1850,7 @@ abstract class DBObject implements iDisplay
 	 * Define attributes read-only from the end-user perspective
 	 *
 	 * @return array|null List of attcodes
-	 */	 	  	 	
+	 */
 	public static function GetReadOnlyAttributes()
 	{
 		return null;
@@ -1730,14 +1859,14 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Get predefined objects
-     * 
+     *
 	 * The predefined objects will be synchronized with the DB at each install/upgrade
      * As soon as a class has predefined objects, then nobody can create nor delete objects
      *
      * @internal
      *
 	 * @return array An array of id => array of attcode => php value(so-called "real value": integer, string, ormDocument, DBObjectSet, etc.)
-	 */	 	  	 	
+	 */
 	public static function GetPredefinedObjects()
 	{
 		return null;
@@ -1750,7 +1879,7 @@ abstract class DBObject implements iDisplay
      *
 	 * @param string $sAttCode $sAttCode The code of the attribute
 	 * @param array  $aReasons To store the reasons why the attribute is read-only (info about the synchro replicas)
-	 * @param string $sTargetState The target state in which to evalutate the flags, if empty the current state will be used
+	 * @param string $sTargetState The target state in which to evaluate the flags, if empty the current state will be used
 	 *
 	 * @return integer the binary combination of flags for the given attribute in the given state of the object.
 	 * Values can be one of the OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY, ... (see define in metamodel.class.php)
@@ -1793,7 +1922,8 @@ abstract class DBObject implements iDisplay
 				$iSynchroFlags |= OPT_ATT_READONLY;
 			}
 		}
-		return $iFlags | $iSynchroFlags; // Combine both sets of flags
+		$iExtensionsFlags = $this->GetExtensionsAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $iFlags | $iSynchroFlags | $iExtensionsFlags; // Combine both sets of flags
 	}
 
     /**
@@ -1865,7 +1995,7 @@ abstract class DBObject implements iDisplay
      * Note: Attributes (and flags) from the target state and the transition are combined.
      *
      * @internal
-     * 
+     *
      * @param string $sStimulus
      * @param string $sOriginState Default is current state
      *
@@ -1910,7 +2040,9 @@ abstract class DBObject implements iDisplay
 			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 			$iFlags = MetaModel::GetInitialStateAttributeFlags($sClass, $this->Get($sStateAttCode), $sAttCode);
 		}
-		return $iFlags; // No need to care about the synchro flags since we'll be creating a new object anyway
+
+		$iExtensionsFlags = $this->GetExtensionsInitialStateAttributeFlags($sAttCode, $aReasons);
+		return $iFlags | $iExtensionsFlags; // No need to care about the synchro flags since we'll be creating a new object anyway
 	}
 
 	/**
@@ -1962,7 +2094,7 @@ abstract class DBObject implements iDisplay
 				/** @var \AttributeExternalKey $oAtt */
 				$sTargetClass = $oAtt->GetTargetClass();
 				if (false === MetaModel::IsObjectInDB($sTargetClass, $toCheck)) {
-					return "Target object not found (".$sTargetClass.".::".$toCheck.")";
+					return "Target object not found ({$sTargetClass}::{$toCheck})";
 				}
 			}
 			if ($oAtt->IsHierarchicalKey())
@@ -1998,7 +2130,7 @@ abstract class DBObject implements iDisplay
 
 			return "Bad type";
 		}
-		elseif (($oAtt instanceof AttributeClassAttCodeSet) || ($oAtt instanceof AttributeEnumSet))
+		elseif ($oAtt instanceof AttributeSet)
 		{
 			if (is_string($toCheck))
 			{
@@ -2019,33 +2151,26 @@ abstract class DBObject implements iDisplay
 				return true;
 			}
 
-			if ($toCheck instanceof ormSet)
-			{
+			if ($toCheck instanceof ormSet) {
 				return true;
 			}
 
 			return "Bad type";
-		}
-		elseif ($oAtt->IsScalar())
-		{
+		} elseif ($oAtt->IsScalar()) {
+
 			$aValues = $oAtt->GetAllowedValues($this->ToArgsForQuery());
-			if (is_array($aValues) && (count($aValues) > 0))
-			{
-				if (!array_key_exists($toCheck, $aValues))
-				{
+			if (is_array($aValues) && (count($aValues) > 0)) {
+				if (!array_key_exists($toCheck, $aValues)) {
 					return "Value not allowed [$toCheck]";
 				}
 			}
-			if (!is_null($iMaxSize = $oAtt->GetMaxSize()))
-			{
-				$iLen = strlen($toCheck);
-				if ($iLen > $iMaxSize)
-				{
+			if (!is_null($iMaxSize = $oAtt->GetMaxSize())) {
+				$iLen = mb_strlen($toCheck);
+				if ($iLen > $iMaxSize) {
 					return "String too long (found $iLen, limited to $iMaxSize)";
 				}
 			}
-			if (!$oAtt->CheckFormat($toCheck))
-			{
+			if (!$oAtt->CheckFormat($toCheck)) {
 				return "Wrong format [$toCheck]";
 			}
 		}
@@ -2070,7 +2195,7 @@ abstract class DBObject implements iDisplay
 
 	/**
      * @internal
-     * 
+     *
 	 * @throws \CoreException
 	 * @throws \OQLException
      *
@@ -2131,8 +2256,14 @@ abstract class DBObject implements iDisplay
 		$sMessageKey = "Class:$sClass/UniquenessRule:$sUniquenessRuleId";
 		$sTemplate = Dict::S($sMessageKey, '');
 
-		if (empty($sTemplate))
-		{
+		if (empty($sTemplate)) {
+
+			// Generic (class independent) uniqueness rule
+			$sUniquenessRuleGenericMessage = $this->GetUniquenessRuleGenericMessage($sCurrentClass, $sUniquenessRuleId);
+			if ($sUniquenessRuleGenericMessage !== null) {
+				return $sUniquenessRuleGenericMessage;
+			}
+
 			// we could add also a specific message if user is admin ("dict key is missing")
 			return Dict::Format('Core:UniquenessDefaultError', $sUniquenessRuleId);
 		}
@@ -2143,9 +2274,67 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     *
-     * @internal
-     *
+	 * GetUniquenessRuleGenericMessage.
+	 *
+	 * @param string $sCurrentClass
+	 * @param string $sUniquenessRuleId
+	 *
+	 * @return string|null
+	 * @since 3.1.0
+	 */
+	private function GetUniquenessRuleGenericMessage(string $sCurrentClass, string $sUniquenessRuleId): ?string
+	{
+		// Dict placeholders data
+		$aPlaceholdersData = [];
+
+		try {
+			// Retrieve class uniqueness rules
+			$aUniquenessRules = MetaModel::GetUniquenessRules($sCurrentClass);
+
+			// Retrieve rule properties
+			if (!array_key_exists($sUniquenessRuleId, $aUniquenessRules)) {
+				return null;
+			}
+			$aUniquenessRuleProperties = $aUniquenessRules[$sUniquenessRuleId];
+
+			// Check generic message existence
+			$sMessageKey = "Class:cmdbAbstractObject/UniquenessRule:$sUniquenessRuleId";
+			if (!Dict::Exists($sMessageKey)) {
+				return null;
+			}
+
+			// Retrieve rule attributes
+			if (array_key_exists('attributes', $aUniquenessRuleProperties)) {
+
+				// Retrieve attributes
+				$aAttributes = $aUniquenessRuleProperties['attributes'];
+
+				// Compute attributes data...
+				foreach ($aAttributes as $sAttCode) {
+					$oAttDef = MetaModel::GetAttributeDef($sCurrentClass, $sAttCode);
+					if ($oAttDef instanceof AttributeExternalKey) {
+						$aPlaceholdersData[] = $oAttDef->GetTargetClass();
+						$aPlaceholdersData[] = MetaModel::GetObject($oAttDef->GetTargetClass(), $this->Get($sAttCode))->Get('friendlyname');
+					} else {
+						$aPlaceholdersData[] = $oAttDef->GetLabel();
+						$aPlaceholdersData[] = $oAttDef->GetLabel($this->Get($sAttCode));
+					}
+				}
+			}
+
+			return Dict::Format($sMessageKey, ...$aPlaceholdersData);
+		}
+		catch (Exception $e) {
+			ExceptionLog::LogException($e);
+
+			return null;
+		}
+	}
+
+	/**
+	 *
+	 * @internal
+	 *
 	 * @param string $sUniquenessRuleId uniqueness rule ID
 	 * @param array $aUniquenessRuleProperties uniqueness rule properties
 	 *
@@ -2166,16 +2355,17 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+     * @param array $aUniquenessRuleProperties uniqueness rule properties
+	 *
+     * @param string $sUniquenessRuleId uniqueness rule ID
+	 * @return \DBSearch
+	 * @throws \OQLException
+     * @throws \CoreException
+     *
      * @internal
      *
-	 * @param string $sUniquenessRuleId uniqueness rule ID
-	 * @param array $aUniquenessRuleProperties uniqueness rule properties
-	 *
-	 * @return \DBSearch
-	 * @throws \CoreException
-	 * @throws \OQLException
-	 * @since 2.6.0 N°659 uniqueness constraint
-	 * @api
+     * @since 2.6.0 N°659 uniqueness constraint
+     * @since 2.7.11 3.1.2 3.2.0 N°4314 Fix Uniqueness rules not working with Silo
 	 */
 	protected function GetSearchForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties)
 	{
@@ -2203,6 +2393,8 @@ abstract class DBObject implements iDisplay
 		if (!empty($aChildClassesWithRuleDisabled)) {
 			$oUniquenessQuery->AddConditionForInOperatorUsingParam('finalclass', $aChildClassesWithRuleDisabled, false);
 		}
+
+		$oUniquenessQuery->AllowAllData();
 
 		return $oUniquenessQuery;
 	}
@@ -2269,7 +2461,6 @@ abstract class DBObject implements iDisplay
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
-	 *
 	 */
 	public function DoCheckToWrite()
 	{
@@ -2321,7 +2512,130 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     *
+	 * Trigger onObjectUpdate on the target object when an object pointed by a LinkSet is modified, added or removed
+	 *
+	 * @since 3.1.1 3.2.0 N°6531 method creation
+	 */
+	final protected function ActivateOnObjectUpdateTriggersForTargetObjects(): void
+	{
+		$aPreviousValues = $this->ListPreviousValuesForUpdatedAttributes();
+
+		$aClassExtKeyAttCodes = MetaModel::GetAttributesList(get_class($this), [AttributeExternalKey::class]);
+		foreach ($aClassExtKeyAttCodes as $sExtKeyWithMirrorLinkAttCode) {
+			/** @var AttributeExternalKey $oExtKeyWithMirrorLinkAttDef */
+			$oExtKeyWithMirrorLinkAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyWithMirrorLinkAttCode);
+
+			/** @var AttributeLinkedSet $oAttDefMirrorLink */
+			$oAttDefMirrorLink = $oExtKeyWithMirrorLinkAttDef->GetMirrorLinkAttribute();
+			if (is_null($oAttDefMirrorLink)) {
+				// No LinkSet pointing to me
+				continue;
+			}
+			$sAttCodeMirrorLink = $oAttDefMirrorLink->GetCode();
+			$sTargetObjectClass = $oExtKeyWithMirrorLinkAttDef->GetTargetClass();
+
+			if (array_key_exists($sExtKeyWithMirrorLinkAttCode, $aPreviousValues)) {
+				// need to update old target also
+				$sPreviousTargetObjectKey = $aPreviousValues[$sExtKeyWithMirrorLinkAttCode];
+				$oPreviousTargetObject = static::GetObjectIfNotInCRUDStack($sTargetObjectClass, $sPreviousTargetObjectKey);
+				$this->ActivateOnObjectUpdateTriggers($oPreviousTargetObject, [$sAttCodeMirrorLink]);
+			}
+
+			// we need to update remote with current lnk instance
+			$oTargetObject = static::GetObjectIfNotInCRUDStack($sTargetObjectClass, $this->Get($sExtKeyWithMirrorLinkAttCode));
+			$this->ActivateOnObjectUpdateTriggers($oTargetObject, [$sAttCodeMirrorLink]);
+		}
+	}
+
+	final static protected function GetObjectIfNotInCRUDStack($sClass, $sKey)
+	{
+		if (DBObject::IsObjectCurrentlyInCrud($sClass, $sKey)) {
+			return null;
+		}
+
+		return MetaModel::GetObject($sClass, $sKey, false);
+	}
+
+	/**
+	 * Cascade CheckToWrite to Target Objects With LinkSet Pointing To Me
+	 * @since 3.1.1 3.2.0 N°6228 method creation
+	 */
+	final protected function CheckToWriteForTargetObjects(bool $bIsCheckToDelete = false): void
+	{
+		$aChanges = $this->ListChanges();
+
+		$aClassExtKeyAttCodes = MetaModel::GetAttributesList(get_class($this), [AttributeExternalKey::class]);
+		foreach ($aClassExtKeyAttCodes as $sExtKeyWithMirrorLinkAttCode) {
+			/** @var AttributeExternalKey $oExtKeyWithMirrorLinkAttDef */
+			$oExtKeyWithMirrorLinkAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyWithMirrorLinkAttCode);
+
+			/** @var AttributeLinkedSet $oAttDefMirrorLink */
+			$oAttDefMirrorLink = $oExtKeyWithMirrorLinkAttDef->GetMirrorLinkAttribute();
+			if (is_null($oAttDefMirrorLink) || (false === $oAttDefMirrorLink->HasPHPConstraint())) {
+				continue;
+			}
+			$sAttCodeMirrorLink = $oAttDefMirrorLink->GetCode();
+			$sTargetObjectClass = $oExtKeyWithMirrorLinkAttDef->GetTargetClass();
+
+			$oTargetObject = static::GetObjectIfNotInCRUDStack($sTargetObjectClass, $this->Get($sExtKeyWithMirrorLinkAttCode));
+
+			if ($this->IsNew()) {
+				$this->CheckToWriteForSingleTargetObject_Internal('add', $oTargetObject, $sAttCodeMirrorLink, false);
+			} else if ($bIsCheckToDelete) {
+				$this->CheckToWriteForSingleTargetObject_Internal('remove', $oTargetObject, $sAttCodeMirrorLink, true);
+			} else {
+				if (array_key_exists($sExtKeyWithMirrorLinkAttCode, $aChanges)) {
+					// need to update remote old + new
+					$aPreviousValues = $this->ListPreviousValuesForUpdatedAttributes();
+					$sPreviousTargetObjectKey = $aPreviousValues[$sExtKeyWithMirrorLinkAttCode];
+					$oPreviousTargetObject = static::GetObjectIfNotInCRUDStack($sTargetObjectClass, $sPreviousTargetObjectKey);
+					$this->CheckToWriteForSingleTargetObject_Internal('remove', $oPreviousTargetObject, $sAttCodeMirrorLink, false);
+					$this->CheckToWriteForSingleTargetObject_Internal('add', $oTargetObject, $sAttCodeMirrorLink, false);
+				} else {
+					$this->CheckToWriteForSingleTargetObject_Internal('modify', $oTargetObject, $sAttCodeMirrorLink, false); // we need to update remote with current lnk instance
+				}
+			}
+		}
+	}
+
+	private function CheckToWriteForSingleTargetObject_Internal(string $sAction, ?DBObject $oTargetObject, string $sAttCodeMirrorLink, bool $bIsCheckToDelete): void
+	{
+		if (is_null($oTargetObject)) {
+			return;
+		}
+
+		$this->LogCRUDDebug(__METHOD__, "action: $sAction ".get_class($oTargetObject).'::'.$oTargetObject->GetKey()." ($sAttCodeMirrorLink)");
+
+		/** @var \ormLinkSet $oTargetValue */
+		$oTargetValue = $oTargetObject->Get($sAttCodeMirrorLink);
+		switch ($sAction) {
+			case 'add':
+				$oTargetValue->AddItem($this);
+				break;
+			case 'remove':
+				$oTargetValue->RemoveItem($this->GetKey());
+				break;
+			case 'modify':
+				$oTargetValue->ModifyItem($this);
+				break;
+		}
+		$oTargetObject->Set($sAttCodeMirrorLink, $oTargetValue);
+		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTargetObject->CheckToWrite();
+		if (false === $bCheckStatus) {
+			if ($bIsCheckToDelete) {
+				$this->m_aDeleteIssues = array_merge($this->m_aDeleteIssues ?? [], $aCheckIssues);
+			} else {
+				$this->m_aCheckIssues = array_merge($this->m_aCheckIssues ?? [], $aCheckIssues);
+			}
+			$this->m_bSecurityIssue = $this->m_bSecurityIssue || $bSecurityIssue;
+		}
+		$aTargetCheckWarnings = $oTargetObject->GetCheckWarnings();
+		if (is_array($aTargetCheckWarnings)) {
+			$this->m_aCheckWarnings = array_merge($this->m_aCheckWarnings ?? [], $aTargetCheckWarnings);
+		}
+	}
+
+	/**
      * @api
      * @api-advanced
      *
@@ -2337,29 +2651,33 @@ abstract class DBObject implements iDisplay
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
-	 *
 	 */
-	public final function CheckToWrite($bDoComputeValues = true)
+	final public function CheckToWrite($bDoComputeValues = true)
 	{
 		if (MetaModel::SkipCheckToWrite())
 		{
 			return array(true, array());
 		}
+
 		if (is_null($this->m_bCheckStatus))
 		{
 			$this->m_aCheckIssues = array();
 
-			$oKPI = new ExecutionKPI();
 			if ($bDoComputeValues) {
 				$this->DoComputeValues();
 			}
 
-			$this->SetReadOnly('No modification allowed during CheckToWrite');
-			$this->EventCheckToWrite(['error_messages' => &$this->m_aCheckIssues]);
+			// Ultimate check - ensure DB integrity
+			$this->SetReadOnly('No modification allowed during CheckToCreate');
+			$this->FireEventCheckToWrite($this->sStimulusBeingApplied);
 			$this->SetReadWrite();
 
+			$oKPI = new ExecutionKPI();
 			$this->DoCheckToWrite();
-			$oKPI->ComputeStats('CheckToWrite', get_class($this));
+            $oKPI->ComputeStatsForExtension($this, 'DoCheckToWrite');
+
+			$this->CheckToWriteForTargetObjects();
+
 			if (count($this->m_aCheckIssues) == 0)
 			{
 				$this->m_bCheckStatus = true;
@@ -2369,7 +2687,89 @@ abstract class DBObject implements iDisplay
 				$this->m_bCheckStatus = false;
 			}
 		}
+
 		return array($this->m_bCheckStatus, $this->m_aCheckIssues, $this->m_bSecurityIssue);
+	}
+
+	/**
+	 * Checks for extkey attributes values. This will throw exception on non-existing as well as non-accessible objects (silo, scopes).
+	 * That's why the test is done for all users including Administrators
+	 *
+	 * Note that due to perf issues, this isn't called directly by the ORM, but has to be called by consumers when possible.
+	 *
+	 * @param callable(string, string):bool|null $oIsObjectLoadableCallback Override to check if object is accessible.
+	 *                          Parameters are object class and key
+	 *                          Return value should be false if cannot access object, true otherwise
+	 * @return void
+	 *
+	 * @throws ArchivedObjectException
+	 * @throws CoreException if cannot get object attdef list
+	 * @throws CoreUnexpectedValue
+	 * @throws InvalidExternalKeyValueException
+	 * @throws MySQLException
+	 * @throws SecurityException if one extkey is pointing to an invalid value
+	 *
+	 * @link https://github.com/Combodo/iTop/security/advisories/GHSA-245j-66p9-pwmh
+	 * @since 2.7.10 3.0.4 3.1.1 3.2.0 N°6458
+	 *
+	 * @see \RestUtils::FindObjectFromKey for the same check in the REST endpoint
+	 */
+	final public function CheckChangedExtKeysValues(callable $oIsObjectLoadableCallback = null)
+	{
+		if (is_null($oIsObjectLoadableCallback)) {
+			$oIsObjectLoadableCallback = function ($sClass, $sId) {
+				$oRemoteObject = MetaModel::GetObject($sClass, $sId, false);
+				if (is_null($oRemoteObject)) {
+					return false;
+				}
+				return true;
+			};
+		}
+
+		$aChanges = $this->ListChanges();
+		$aAttCodesChanged = array_keys($aChanges);
+		foreach ($aAttCodesChanged as $sAttDefCode) {
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttDefCode);
+
+			if ($oAttDef instanceof AttributeLinkedSetIndirect) {
+				/** @var ormLinkSet $oOrmSet */
+				$oOrmSet = $this->Get($sAttDefCode);
+				while ($oLnk = $oOrmSet->Fetch()) {
+					$oLnk->CheckChangedExtKeysValues($oIsObjectLoadableCallback);
+				}
+				continue;
+			}
+
+			/** @noinspection PhpConditionCheckedByNextConditionInspection */
+			/** @noinspection NotOptimalIfConditionsInspection */
+			if (($oAttDef instanceof AttributeHierarchicalKey) || ($oAttDef instanceof AttributeExternalKey)) {
+				$sRemoteObjectClass = $oAttDef->GetTargetClass();
+				$sRemoteObjectKey = $this->Get($sAttDefCode);
+			} else if ($oAttDef instanceof AttributeObjectKey) {
+				$sRemoteObjectClassAttCode = $oAttDef->Get('class_attcode');
+				$sRemoteObjectClass = $this->Get($sRemoteObjectClassAttCode);
+				$sRemoteObjectKey = $this->Get($sAttDefCode);
+			} else {
+				continue;
+			}
+
+			if (utils::IsNullOrEmptyString($sRemoteObjectClass)
+				|| utils::IsNullOrEmptyString($sRemoteObjectKey)
+			) {
+				continue;
+			}
+
+			// 0 : Undefined ext. key (EG. non-mandatory and no value provided)
+			// < 0 : Non yet persisted object
+            /** @noinspection TypeUnsafeComparisonInspection Non-strict comparison as object ID can be string */
+			if ($sRemoteObjectKey <= 0) {
+				continue;
+			}
+
+			if (false === $oIsObjectLoadableCallback($sRemoteObjectClass, $sRemoteObjectKey)) {
+				throw new InvalidExternalKeyValueException($this, $sAttDefCode);
+			}
+		}
 	}
 
 	/**
@@ -2377,7 +2777,7 @@ abstract class DBObject implements iDisplay
 	 *
 	 * an array of displayable error is added in {@see DBObject::$m_aDeleteIssues}
 	 *
-     * @internal 
+     * @internal
      *
 	 * @param \DeletionPlan $oDeletionPlan
 	 *
@@ -2385,10 +2785,6 @@ abstract class DBObject implements iDisplay
 	 */
 	protected function DoCheckToDelete(&$oDeletionPlan)
 	{
-		$this->m_aDeleteIssues = array(); // Ok
-
-		$this->EventCheckToDelete(['error_messages' => &$this->m_aDeleteIssues]);
-
 		if ($this->InSyncScope())
 		{
 
@@ -2446,8 +2842,15 @@ abstract class DBObject implements iDisplay
      */
 	public function CheckToDelete(&$oDeletionPlan)
   	{
-		$this->MakeDeletionPlan($oDeletionPlan);
-		$oDeletionPlan->ComputeResults();
+		$this->AddCurrentObjectInCrudStack('DELETE');
+		try {
+			$this->MakeDeletionPlan($oDeletionPlan);
+			$oDeletionPlan->ComputeResults();
+		}
+		finally {
+			$this->RemoveCurrentObjectInCrudStack();
+		}
+
 		return (!$oDeletionPlan->FoundStopper());
 	}
 
@@ -2462,6 +2865,14 @@ abstract class DBObject implements iDisplay
 	protected function ListChangedValues(array $aProposal)
 	{
 		$aDelta = array();
+		$sClass = get_class($this);
+		if (MetaModel::HasLifecycle($sClass) && utils::IsNotNullOrEmptyString($this->sStimulusBeingApplied)) {
+			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+			if (!in_array($sStateAttCode, $aProposal)) {
+				// Same state but the transition was asked, act as if the state was changed
+				$aDelta[$sStateAttCode] = $this->m_aCurrValues[$sStateAttCode];
+			}
+		}
 		foreach ($aProposal as $sAtt => $proposedValue)
 		{
 			if (!array_key_exists($sAtt, $this->m_aOrigValues))
@@ -2498,7 +2909,7 @@ abstract class DBObject implements iDisplay
 			{
 				// The value is a scalar, the comparison must be 100% strict
 				if($this->m_aOrigValues[$sAtt] !== $proposedValue)
-				{	
+				{
 					//echo "$sAtt:<pre>\n";
 					//var_dump($this->m_aOrigValues[$sAtt]);
 					//var_dump($proposedValue);
@@ -2519,11 +2930,11 @@ abstract class DBObject implements iDisplay
 	 * @api
 	 * @api-advanced
 	 *
-	 * @see  \DBObject::ListPreviousValuesForUpdatedAttributes() to get previous values anywhere in the CRUD stack
-	 * @see https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Asequence_crud iTop CRUD stack documentation
-	 * @return array attname => currentvalue List the attributes that have been changed using {@see DBObject::Set()}.
+	 * @return array attcode => currentvalue List the attributes that have been changed using {@see DBObject::Set()}.
 	 *         Reset during {@see DBObject::DBUpdate()}
 	 * @throws Exception
+	 * @see  \DBObject::ListPreviousValuesForUpdatedAttributes() to get previous values anywhere in the CRUD stack
+	 * @see https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Asequence_crud iTop CRUD stack documentation
 	 * @uses m_aCurrValues
 	 */
 	public function ListChanges()
@@ -2620,7 +3031,7 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Used only by insert, Meant to be overloaded
-     * 
+     *
      * @overwritable-hook You can extend this method in order to provide your own logic.
 	 */
 	protected function OnObjectKeyReady()
@@ -2660,11 +3071,9 @@ abstract class DBObject implements iDisplay
 		foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 		{
 			if (!$oAttDef->LoadInObject()) continue;
-			if ($oAttDef->LoadFromDB()) continue;
 			if (!array_key_exists($sAttCode, $this->m_aTouchedAtt)) continue;
-			if (array_key_exists($sAttCode, $this->m_aModifiedAtt) && ($this->m_aModifiedAtt[$sAttCode] == false)) continue;
-			/** @var \AttributeCustomFields $oAttDef */
-			$oAttDef->WriteValue($this, $this->m_aCurrValues[$sAttCode]);
+			if (array_key_exists($sAttCode, $this->m_aModifiedAtt) && ($this->m_aModifiedAtt[$sAttCode] === false)) continue;
+			$oAttDef->WriteExternalValues($this);
 		}
 	}
 
@@ -2715,7 +3124,7 @@ abstract class DBObject implements iDisplay
 	 *
 	 * @param string $sTableClass
 	 *
-	 * @return bool|int false if nothing to persist (no change), new key value otherwise
+	 * @return bool|string false if nothing to persist (no change), new key value otherwise
 	 * @throws \CoreException
 	 * @throws \MySQLException
 	 */
@@ -2730,7 +3139,7 @@ abstract class DBObject implements iDisplay
 		// fields in first array, values in the second
 		$aFieldsToWrite = array();
 		$aValuesToWrite = array();
-		
+
 		if (!empty($this->m_iKey) && ($this->m_iKey >= 0))
 		{
 			// Add it to the list of fields to write
@@ -2739,18 +3148,17 @@ abstract class DBObject implements iDisplay
 		}
 
 		$aHierarchicalKeys = array();
-		
-		foreach(MetaModel::ListAttributeDefs($sTableClass) as $sAttCode=>$oAttDef)
-		{
+
+		foreach(MetaModel::ListAttributeDefs($sTableClass) as $sAttCode=>$oAttDef) {
 			// Skip this attribute if not defined in this table
-			if (!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode) && !$oAttDef->CopyOnAllTables())
-			{
+			if ((!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode) && !$oAttDef->CopyOnAllTables())
+				|| $oAttDef->IsExternalField()) {
 				continue;
 			}
 			$aAttColumns = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
 			foreach($aAttColumns as $sColumn => $sValue)
 			{
-				$aFieldsToWrite[] = "`$sColumn`"; 
+				$aFieldsToWrite[] = "`$sColumn`";
 				$aValuesToWrite[] = CMDBSource::Quote($sValue);
 			}
 			if ($oAttDef->IsHierarchicalKey())
@@ -2774,7 +3182,7 @@ abstract class DBObject implements iDisplay
 					self::$m_aBulkInsertCols[$sClass][$sTable] = implode(', ', $aFieldsToWrite);
 				}
 				self::$m_aBulkInsertItems[$sClass][$sTable][] = '('.implode (', ', $aValuesToWrite).')';
-				
+
 				$iNewKey = 999999; // TODO - compute next id....
 			}
 			else
@@ -2798,7 +3206,7 @@ abstract class DBObject implements iDisplay
 		if (empty($this->m_iKey))
 		{
 			// Take the autonumber
-			$this->m_iKey = $iNewKey;
+			$this->m_iKey = "$iNewKey";
 		}
 		return $this->m_iKey;
 	}
@@ -2816,12 +3224,28 @@ abstract class DBObject implements iDisplay
 	 * @throws \OQLException
 	 * @throws \Exception
 	 *
-	 * @internal
+	 * @api
 	 *
 	 */
 	public function DBInsert()
 	{
-		return $this->DBInsertNoReload();
+		$this->LogCRUDEnter(__METHOD__);
+
+		$this->DBInsertNoReload();
+
+		foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded) {
+			if ($bLoaded) {
+				// N°6237 reloading external values, as the object instance isn't reloaded anymore
+				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+				$value = $oAttDef->ReadExternalValues($this);
+				if (false === is_null($value)) {
+					$this->m_aCurrValues[$sAttCode] = $value;
+				}
+			}
+		}
+
+		$this->LogCRUDExit(__METHOD__);
+		return $this->m_iKey;
 	}
 
     /**
@@ -2843,7 +3267,7 @@ abstract class DBObject implements iDisplay
 		// fields in first array, values in the second
 		$aFieldsToWrite = array();
 		$aValuesToWrite = array();
-		
+
 		if (!empty($this->m_iKey) && ($this->m_iKey >= 0))
 		{
 			// Add it to the list of fields to write
@@ -2852,10 +3276,13 @@ abstract class DBObject implements iDisplay
 		}
 
 		$aHierarchicalKeys = array();
-		foreach(MetaModel::ListAttributeDefs($sTableClass) as $sAttCode=>$oAttDef)
+		foreach(MetaModel::ListAttributeDefs($sTableClass) as $sAttCode => $oAttDef)
 		{
 			// Skip this attribute if not defined in this table
-			if (!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode)) continue;
+			if ((!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode))
+				|| $oAttDef->IsExternalField()) {
+				continue;
+			};
 			// Skip link set that can still be undefined though the object is 100% loaded
 			if ($oAttDef->IsLinkSet()) continue;
 
@@ -2875,7 +3302,7 @@ abstract class DBObject implements iDisplay
 			$aAttColumns = $oAttDef->GetSQLValues($value);
 			foreach($aAttColumns as $sColumn => $sValue)
 			{
-				$aFieldsToWrite[] = "`$sColumn`"; 
+				$aFieldsToWrite[] = "`$sColumn`";
 				$aValuesToWrite[] = CMDBSource::Quote($sValue);
 			}
 			if ($oAttDef->IsHierarchicalKey())
@@ -2937,7 +3364,7 @@ abstract class DBObject implements iDisplay
      * @api
      * @see DBWrite
      *
-	 * @return int|null inserted object key
+	 * @return string|null inserted object key
      *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException
@@ -2946,143 +3373,190 @@ abstract class DBObject implements iDisplay
 	 * @throws \CoreWarning
 	 * @throws \MySQLException
 	 * @throws \OQLException
+	 *
+	 * @see DBWrite
 	 */
 	public function DBInsertNoReload()
 	{
-		$sClass = get_class($this);
-        if (MetaModel::DBIsReadOnly())
-        {
-            $sErrorMessage = "Cannot Insert object of class '$sClass' because of an ongoing maintenance: the database is in ReadOnly mode";
-
-            IssueLog::Error("$sErrorMessage\n".MyHelpers::get_callstack_text(1));
-            throw new CoreException("$sErrorMessage (see the log for more information)");
-        }
-
-		if ($this->m_bIsInDB) {
-			throw new CoreException('The object already exists into the Database, you may want to use the clone function');
-		}
+		// Prevent DBUpdate at this point (reentrancy protection with temp id)
+		MetaModel::StartReentranceProtection($this);
 
 		$sClass = get_class($this);
-		$sRootClass = MetaModel::GetRootClass($sClass);
 
-		// Ensure the update of the values (we are accessing the data directly)
-		$this->DoComputeValues();
-		$this->EventInsertRequested();
-		$this->OnInsert();
+		$this->AddCurrentObjectInCrudStack('INSERT');
 
-		if ($this->m_iKey < 0) {
-			// This was a temporary "memory" key: discard it so that DBInsertSingleTable will not try to use it!
-			$this->m_iKey = null;
-		}
+		try {
+			if (MetaModel::DBIsReadOnly()) {
+				$sErrorMessage = "Cannot Insert object of class '$sClass' because of an ongoing maintenance: the database is in ReadOnly mode";
 
-		// If not automatically computed, then check that the key is given by the caller
-		if (!MetaModel::IsAutoIncrementKey($sRootClass)) {
-			if (empty($this->m_iKey)) {
-				throw new CoreWarning('Missing key for the object to write - This class is supposed to have a user defined key, not an autonumber', array('class' => $sRootClass));
+				IssueLog::Error("$sErrorMessage\n".MyHelpers::get_callstack_text(1));
+				throw new CoreException("$sErrorMessage (see the log for more information)");
 			}
-		}
 
-		// Ultimate check - ensure DB integrity
-		list($bRes, $aIssues) = $this->CheckToWrite(false);
-		if (!$bRes) {
-			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
-		}
-		$this->ComputeStopWatchesDeadline(true);
+			if ($this->m_bIsInDB) {
+				throw new CoreException('The object already exists into the Database, you may want to use the clone function');
+			}
 
-		$this->SetReadOnly('No modification allowed during The Event :'.EVENT_SERVICE_DB_ABOUT_TO_INSERT);
-		$this->EventInsertBefore();
-		$this->SetReadWrite();
+			$sClass = get_class($this);
+			$sRootClass = MetaModel::GetRootClass($sClass);
 
-		$iTransactionRetry = 1;
-		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
-		if ($bIsTransactionEnabled) {
-			// TODO Deep clone this object before the transaction (to use it in case of rollback)
-			// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
-			$iTransactionRetryCount = 1;
-			$iTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
-			$iTransactionRetry = $iTransactionRetryCount;
-		}
-		while ($iTransactionRetry > 0) {
-			try {
-				$iTransactionRetry--;
-				if ($bIsTransactionEnabled) {
-					CMDBSource::Query('START TRANSACTION');
+			// Ensure the update of the values (we are accessing the data directly)
+			$this->DoComputeValues();
+			$oKPI = new ExecutionKPI();
+			$this->OnInsert();
+			$oKPI->ComputeStatsForExtension($this, 'OnInsert');
+
+			$this->FireEventBeforeWrite(null);
+
+			// If not automatically computed, then check that the key is given by the caller
+			if (!MetaModel::IsAutoIncrementKey($sRootClass)) {
+				if (empty($this->m_iKey)) {
+					throw new CoreWarning('Missing key for the object to write - This class is supposed to have a user defined key, not an autonumber', array('class' => $sRootClass));
 				}
+			}
 
-				// First query built upon on the root class, because the ID must be created first
-				$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
+			[$bRes, $aIssues] = $this->CheckToWrite(false);
+			if (!$bRes) {
+				throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
+			}
 
-				// Then do the leaf class, if different from the root class
-				if ($sClass != $sRootClass) {
-					$this->DBInsertSingleTable($sClass);
-				}
+			if ($this->m_iKey < 0) {
+				// This was a temporary "memory" key: discard it so that DBInsertSingleTable will not try to use it!
+				$this->m_iKey = null;
+				$this->UpdateCurrentObjectInCrudStack();
+			}
 
-				// Then do the other classes
-				foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
-					if ($sParentClass == $sRootClass) {
-						continue;
+			$this->ComputeStopWatchesDeadline(true);
+			// With temp id
+			MetaModel::StopReentranceProtection($this);
+
+			$iTransactionRetry = 1;
+			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
+			if ($bIsTransactionEnabled) {
+				// TODO Deep clone this object before the transaction (to use it in case of rollback)
+				// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+				$iTransactionRetryCount = 1;
+				$iTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
+				$iTransactionRetry = $iTransactionRetryCount;
+			}
+			while ($iTransactionRetry > 0) {
+				try {
+					$iTransactionRetry--;
+					if ($bIsTransactionEnabled) {
+						CMDBSource::Query('START TRANSACTION');
 					}
-					$this->DBInsertSingleTable($sParentClass);
-				}
 
-				$this->OnObjectKeyReady();
+					// First query built upon on the root class, because the ID must be created first
+					$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
 
-				$this->DBWriteLinks();
-				$this->WriteExternalAttributes();
+					// Then do the leaf class, if different from the root class
+					if ($sClass != $sRootClass) {
+						$this->DBInsertSingleTable($sClass);
+					}
 
-				// Write object creation history within the transaction
-				$this->RecordObjCreation();
-
-				if ($bIsTransactionEnabled) {
-					CMDBSource::Query('COMMIT');
-				}
-				break;
-			}
-			catch (Exception $e) {
-				IssueLog::Error($e->getMessage());
-				if ($bIsTransactionEnabled) {
-					CMDBSource::Query('ROLLBACK');
-					if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e)) {
-						// Deadlock found when trying to get lock; try restarting transaction (only in main transaction)
-						if ($iTransactionRetry > 0) {
-							// wait and retry
-							IssueLog::Error('Insert TRANSACTION Retrying...');
-							usleep(random_int(1, 5) * 1000 * $iTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
+					// Then do the other classes
+					foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
+						if ($sParentClass == $sRootClass) {
 							continue;
-						} else {
-							IssueLog::Error('Insert Deadlock TRANSACTION prevention failed.');
+						}
+						$this->DBInsertSingleTable($sParentClass);
+					}
+
+					$oKPI = new ExecutionKPI();
+					$this->OnObjectKeyReady();
+					$oKPI->ComputeStatsForExtension($this, 'OnObjectKeyReady');
+					$this->UpdateCurrentObjectInCrudStack();
+
+					$this->DBWriteLinks();
+					$this->WriteExternalAttributes();
+
+					$this->HandleTemporaryDescriptor();
+
+					// Write object creation history within the transaction
+					$this->RecordObjCreation();
+
+					if ($bIsTransactionEnabled) {
+						CMDBSource::Query('COMMIT');
+					}
+					break;
+				}
+				catch (Exception $e) {
+					IssueLog::Error($e->getMessage());
+					if ($bIsTransactionEnabled) {
+						CMDBSource::Query('ROLLBACK');
+						if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e)) {
+							// Deadlock found when trying to get lock; try restarting transaction (only in main transaction)
+							if ($iTransactionRetry > 0) {
+								// wait and retry
+								IssueLog::Error('Insert TRANSACTION Retrying...');
+								usleep(random_int(1, 5) * 1000 * $iTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
+								continue;
+							} else {
+								IssueLog::Error('Insert Deadlock TRANSACTION prevention failed.');
+							}
 						}
 					}
+					throw $e;
 				}
-				throw $e;
+			}
+
+			$this->m_bIsInDB = true;
+			$this->m_bDirty = false;
+			$this->m_bFullyLoaded = true;
+			foreach ($this->m_aCurrValues as $sAttCode => $value) {
+				if (is_object($value)) {
+					$value = clone $value;
+				}
+				$this->m_aOrigValues[$sAttCode] = $value;
+			}
+
+			// Prevent DBUpdate at this point (reentrance protection)
+			MetaModel::StartReentranceProtection($this);
+
+			try {
+				$this->PostInsertActions();
+			}
+			finally {
+				MetaModel::StopReentranceProtection($this);
+			}
+
+			if ((count($this->ListChanges()) !== 0)) {
+				$this->DBUpdate();
 			}
 		}
-
-		$this->m_bIsInDB = true;
-		$this->m_bDirty = false;
-		foreach ($this->m_aCurrValues as $sAttCode => $value) {
-			if (is_object($value)) {
-				$value = clone $value;
-			}
-			$this->m_aOrigValues[$sAttCode] = $value;
+		finally {
+			$this->RemoveCurrentObjectInCrudStack();
 		}
 
-		// Prevent DBUpdate at this point (reentrance protection)
-		MetaModel::StartReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
+		return $this->m_iKey;
+	}
 
-		$this->EventInsertAfter();
+	/**
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	protected function PostInsertActions(): void
+	{
+		$this->FireEventAfterWrite([], true, null);
+		$oKPI = new ExecutionKPI();
 		$this->AfterInsert();
+		$oKPI->ComputeStatsForExtension($this, 'AfterInsert');
 
 		// Activate any existing trigger
 		$sClass = get_class($this);
 		$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectCreate AS t WHERE t.target_class IN (:class_list)'), array(), $aParams);
 		while ($oTrigger = $oSet->Fetch()) {
-			/** @var \Trigger $oTrigger */
+			/** @var \TriggerOnObjectCreate $oTrigger */
 			try {
 				$oTrigger->DoActivate($this->ToArgs('this'));
 			}
 			catch (Exception $e) {
+				$oTrigger->LogException($e, $this);
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
@@ -3090,13 +3564,8 @@ abstract class DBObject implements iDisplay
 		// - TriggerOnObjectMention
 		$this->ActivateOnMentionTriggers(true);
 
-		MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
-
-		if ($this->IsModified()) {
-			$this->DBUpdate();
-		}
-
-		return $this->m_iKey;
+		// - Trigger for object pointing to the current object
+		$this->ActivateOnObjectUpdateTriggersForTargetObjects();
 	}
 
     /**
@@ -3124,13 +3593,13 @@ abstract class DBObject implements iDisplay
 		$this->RecordObjCreation();
 		return $ret;
 	}
-	
+
 	/**
 	 * This function is automatically called after cloning an object with the "clone" PHP language construct
 	 * The purpose of this method is to reset the appropriate attributes of the object in
 	 * order to make sure that the newly cloned object is really distinct from its clone
-     *
-     * @internal
+	 *
+	 * @internal
 	 */
 	public function __clone()
 	{
@@ -3139,274 +3608,344 @@ abstract class DBObject implements iDisplay
 		$this->m_iKey = self::GetNextTempId(get_class($this));
 	}
 
-
 	/**
 	 * Update an object in DB
 	 *
 	 * @api
-	 * @see DBObject::DBWrite()
-	 *
 	 * @return int object key
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreCannotSaveObjectException if CheckToWrite() returns issues
 	 * @throws \Exception
+	 *
+	 * @see DBObject::DBWrite()
 	 */
 	public function DBUpdate()
 	{
-		if (!$this->m_bIsInDB)
-		{
-			throw new CoreException("DBUpdate: could not update a newly created object, please call DBInsert instead");
-		}
-		// Protect against reentrance (e.g. cascading the update of ticket logs)
-		$sClass = get_class($this);
-		$sKey = $this->GetKey();
-		if (!MetaModel::StartReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this)) {
-			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
+		$this->LogCRUDEnter(__METHOD__);
+		if (!MetaModel::StartReentranceProtection($this)) {
+			$this->LogCRUDExit(__METHOD__, 'Rejected (reentrance)');
 
 			return false;
 		}
 
-		try
+		if (!$this->m_bIsInDB)
 		{
-			$this->DoComputeValues();
-			$this->ComputeStopWatchesDeadline(false);
-			$this->EventUpdateRequested();
-			$this->OnUpdate();
+			throw new CoreException("DBUpdate: could not update a newly created object, please call DBInsert instead");
+		}
+		$sClass = get_class($this);
 
-			// Freeze the changes at this point
-			$this->InitPreviousValuesForUpdatedAttributes();
-			$aChanges = $this->ListChanges();
-			if (count($aChanges) == 0)
-			{
-				// Attempting to update an unchanged object
-				MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
-				IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Aborted (no change)", LogChannels::DM_CRUD);
+		$this->AddCurrentObjectInCrudStack('UPDATE');
 
-				return $this->m_iKey;
-			}
+		try {
+			// Protect against infinite loop
+			$this->iUpdateLoopCount++;
 
-			// Ultimate check - ensure DB integrity
-			$this->SetReadOnly('No modification allowed during CheckToWrite');
-			list($bRes, $aIssues) = $this->CheckToWrite(false);
-			$this->SetReadWrite();
-			if (!$bRes)
-			{
-				throw new CoreCannotSaveObjectException(['issues' => $aIssues, 'class' => $sClass, 'id' => $this->GetKey()]);
-			}
-
-			// Save the original values (will be reset to the new values when the object get written to the DB)
-			$aOriginalValues = $this->m_aOrigValues;
-
-			// Activate any existing trigger
-			$sClass = get_class($this);
-
-			$aHierarchicalKeys = array();
-			$aDBChanges = array();
-			foreach ($aChanges as $sAttCode => $currentValue)
-			{
-				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-				if ($oAttDef->IsBasedOnDBColumns())
-				{
-					$aDBChanges[$sAttCode] = $currentValue;
-				}
-				if ($oAttDef->IsHierarchicalKey())
-				{
-					$aHierarchicalKeys[$sAttCode] = $oAttDef;
-				}
-			}
-
-			$iTransactionRetry = 1;
-			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
-			if ($bIsTransactionEnabled)
-			{
-				// TODO Deep clone this object before the transaction (to use it in case of rollback)
-				// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
-				$iTransactionRetryCount = 1;
-				$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
-				$iTransactionRetry = $iTransactionRetryCount;
-			}
-			$this->SetReadOnly('No modification allowed during The Event :'.EVENT_SERVICE_DB_ABOUT_TO_UPDATE);
-			$this->EventUpdateBefore();
-			$this->SetReadWrite();
-
-			while ($iTransactionRetry > 0)
-			{
-				try
-				{
-					$iTransactionRetry--;
-					if ($bIsTransactionEnabled)
-					{
-						CMDBSource::Query('START TRANSACTION');
-					}
-					if (!MetaModel::DBIsReadOnly())
-					{
-						// Update the left & right indexes for each hierarchical key
-						foreach ($aHierarchicalKeys as $sAttCode => $oAttDef)
-						{
-							$sTable = MetaModel::DBGetTable($sClass, $sAttCode);
-							$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".$this->GetKey();
-							$aRes = CMDBSource::QueryToArray($sSQL);
-							$iMyLeft = $aRes[0]['left'];
-							$iMyRight = $aRes[0]['right'];
-							$iDelta = $iMyRight - $iMyLeft + 1;
-							MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
-
-							if ($aDBChanges[$sAttCode] == 0) {
-								// No new parent, insert completely at the right of the tree
-								$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
-								$aRes = CMDBSource::QueryToArray($sSQL);
-								if (count($aRes) == 0)
-								{
-									$iNewLeft = 1;
-								}
-								else
-								{
-									$iNewLeft = $aRes[0]['max'] + 1;
-								}
-							}
-							else
-							{
-								// Insert at the right of the specified parent
-								$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` FROM `$sTable` WHERE id=".((int)$aDBChanges[$sAttCode]);
-								$iNewLeft = CMDBSource::QueryToScalar($sSQL);
-							}
-
-							MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
-
-							$aHKChanges = [];
-							$aHKChanges[$sAttCode] = $aDBChanges[$sAttCode];
-							$aHKChanges[$oAttDef->GetSQLLeft()] = $iNewLeft;
-							$aHKChanges[$oAttDef->GetSQLRight()] = $iNewLeft + $iDelta - 1;
-							$aDBChanges[$sAttCode] = $aHKChanges; // the 3 values will be stored by MakeUpdateQuery below
-						}
-
-						// Update scalar attributes
-						if (count($aDBChanges) != 0)
-						{
-							$oFilter = new DBObjectSearch($sClass);
-							$oFilter->AddCondition('id', $this->m_iKey, '=');
-							$oFilter->AllowAllData();
-
-							$sSQL = $oFilter->MakeUpdateQuery($aDBChanges);
-							CMDBSource::Query($sSQL);
-						}
-					}
-					$this->DBWriteLinks();
-					$this->WriteExternalAttributes();
-
-					if (count($aChanges) != 0) {
-						$this->RecordAttChanges($aChanges, $aOriginalValues);
-					}
-
-					if ($bIsTransactionEnabled) {
-						CMDBSource::Query('COMMIT');
-					}
-					break;
-				}
-				catch (MySQLException $e)
-				{
-					IssueLog::Error($e->getMessage());
-					if ($bIsTransactionEnabled)
-					{
-						CMDBSource::Query('ROLLBACK');
-						if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e))
-						{
-							// Deadlock found when trying to get lock; try restarting transaction (only in main transaction)
-							if ($iTransactionRetry > 0)
-							{
-								// wait and retry
-								IssueLog::Error("Update TRANSACTION Retrying...");
-								usleep(random_int(1, 5) * 1000 * $iIsTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
-								continue;
-							}
-							else
-							{
-								IssueLog::Error("Update Deadlock TRANSACTION prevention failed.");
-							}
-						}
-					}
-					$aErrors = array($e->getMessage());
-					throw new CoreCannotSaveObjectException(['id' => $this->GetKey(), 'class' => $sClass, 'issues' => $aErrors], $e);
-				}
-				catch (CoreCannotSaveObjectException $e)
-				{
-					IssueLog::Error($e->getMessage());
-					if ($bIsTransactionEnabled)
-					{
-						CMDBSource::Query('ROLLBACK');
-					}
-					throw $e;
-				}
-				catch (Exception $e)
-				{
-					IssueLog::Error($e->getMessage());
-					if ($bIsTransactionEnabled)
-					{
-						CMDBSource::Query('ROLLBACK');
-					}
-					$aErrors = [$e->getMessage()];
-					throw new CoreCannotSaveObjectException(['id' => $this->GetKey(), 'class' => $sClass, 'issues' => $aErrors,]);
-				}
-			}
-
-			// following lines are resetting changes (so after this {@see DBObject::ListChanges()} won't return changes anymore)
-			// new values are already in the object (call {@see DBObject::Get()} to get them)
-			// call {@see DBObject::ListPreviousValuesForUpdatedAttributes()} to get changed fields and previous values
-			$this->m_bDirty = false;
-			$this->m_aTouchedAtt = array();
-			$this->m_aModifiedAtt = array();
 
 			try {
-				$this->EventUpdateAfter(['changes' => $aChanges]);
-				$this->AfterUpdate();
+				$this->DoComputeValues();
+				$this->ComputeStopWatchesDeadline(false);
+				$oKPI = new ExecutionKPI();
+				$this->OnUpdate();
+				$oKPI->ComputeStatsForExtension($this, 'OnUpdate');
 
+				$this->FireEventBeforeWrite($this->sStimulusBeingApplied);
+
+				// Freeze the changes at this point
+				$this->InitPreviousValuesForUpdatedAttributes();
+				$aChanges = $this->ListChanges();
+				if (count($aChanges) == 0) {
+					// Attempting to update an unchanged object
+					$this->LogCRUDExit(__METHOD__, 'Aborted (no change)');
+
+					return $this->m_iKey;
+				}
+
+				[$bRes, $aIssues] = $this->CheckToWrite(false);
+				if (!$bRes) {
+					throw new CoreCannotSaveObjectException(['issues' => $aIssues, 'class' => $sClass, 'id' => $this->GetKey()]);
+				}
+
+				// Save the original values (will be reset to the new values when the object get written to the DB)
+				$aOriginalValues = $this->m_aOrigValues;
+
+				// Activate any existing trigger
+				$sClass = get_class($this);
+
+				$aHierarchicalKeys = array();
+				$aDBChanges = array();
+				foreach ($aChanges as $sAttCode => $currentValue) {
+					$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+					if ($oAttDef->IsBasedOnDBColumns()) {
+						$aDBChanges[$sAttCode] = $currentValue;
+					}
+					if ($oAttDef->IsHierarchicalKey()) {
+						$aHierarchicalKeys[$sAttCode] = $oAttDef;
+					}
+				}
+
+				$iTransactionRetry = 1;
+				$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
+				if ($bIsTransactionEnabled) {
+					// TODO Deep clone this object before the transaction (to use it in case of rollback)
+					// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+					$iTransactionRetryCount = 1;
+					$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
+					$iTransactionRetry = $iTransactionRetryCount;
+				}
+
+				while ($iTransactionRetry > 0) {
+					try {
+						$iTransactionRetry--;
+						if ($bIsTransactionEnabled) {
+							CMDBSource::Query('START TRANSACTION');
+						}
+						if (!MetaModel::DBIsReadOnly()) {
+							// Update the left & right indexes for each hierarchical key
+							foreach ($aHierarchicalKeys as $sAttCode => $oAttDef) {
+								$sTable = MetaModel::DBGetTable($sClass, $sAttCode);
+								$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".$this->GetKey();
+								$aRes = CMDBSource::QueryToArray($sSQL);
+								$iMyLeft = $aRes[0]['left'];
+								$iMyRight = $aRes[0]['right'];
+								$iDelta = $iMyRight - $iMyLeft + 1;
+								MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
+
+								if ($aDBChanges[$sAttCode] == 0) {
+									// No new parent, insert completely at the right of the tree
+									$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
+									$aRes = CMDBSource::QueryToArray($sSQL);
+									if (count($aRes) == 0) {
+										$iNewLeft = 1;
+									} else {
+										$iNewLeft = $aRes[0]['max'] + 1;
+									}
+								} else {
+									// Insert at the right of the specified parent
+									$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` FROM `$sTable` WHERE id=".((int)$aDBChanges[$sAttCode]);
+									$iNewLeft = CMDBSource::QueryToScalar($sSQL);
+								}
+
+								MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
+
+								$aHKChanges = [];
+								$aHKChanges[$sAttCode] = $aDBChanges[$sAttCode];
+								$aHKChanges[$oAttDef->GetSQLLeft()] = $iNewLeft;
+								$aHKChanges[$oAttDef->GetSQLRight()] = $iNewLeft + $iDelta - 1;
+								$aDBChanges[$sAttCode] = $aHKChanges; // the 3 values will be stored by MakeUpdateQuery below
+							}
+
+							// Update scalar attributes
+							if (count($aDBChanges) != 0) {
+								$oFilter = new DBObjectSearch($sClass);
+								$oFilter->AddCondition('id', $this->m_iKey, '=');
+								$oFilter->AllowAllData();
+
+								$sSQL = $oFilter->MakeUpdateQuery($aDBChanges);
+								CMDBSource::Query($sSQL);
+							}
+						}
+						$this->DBWriteLinks();
+						$this->WriteExternalAttributes();
+
+					$this->HandleTemporaryDescriptor();
+
+						if (count($aChanges) != 0) {
+							$this->RecordAttChanges($aChanges, $aOriginalValues);
+						}
+
+						if ($bIsTransactionEnabled) {
+							CMDBSource::Query('COMMIT');
+						}
+						break;
+					}
+					catch (MySQLException $e) {
+						IssueLog::Error($e->getMessage());
+						if ($bIsTransactionEnabled) {
+							CMDBSource::Query('ROLLBACK');
+							if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e)) {
+								// Deadlock found when trying to get lock; try restarting transaction (only in main transaction)
+								if ($iTransactionRetry > 0) {
+									// wait and retry
+									IssueLog::Error("Update TRANSACTION Retrying...");
+									usleep(random_int(1, 5) * 1000 * $iIsTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
+									continue;
+								} else {
+									IssueLog::Error("Update Deadlock TRANSACTION prevention failed.");
+								}
+							}
+						}
+						$aErrors = array($e->getMessage());
+						throw new CoreCannotSaveObjectException(['id' => $this->GetKey(), 'class' => $sClass, 'issues' => $aErrors], $e);
+					}
+					catch (CoreCannotSaveObjectException $e) {
+						IssueLog::Error($e->getMessage());
+						if ($bIsTransactionEnabled) {
+							CMDBSource::Query('ROLLBACK');
+						}
+						throw $e;
+					}
+					catch (Exception $e) {
+						IssueLog::Error($e->getMessage());
+						if ($bIsTransactionEnabled) {
+							CMDBSource::Query('ROLLBACK');
+						}
+						$aErrors = [$e->getMessage()];
+						throw new CoreCannotSaveObjectException(['id' => $this->GetKey(), 'class' => $sClass, 'issues' => $aErrors,]);
+					}
+				}
+
+				// following lines are resetting changes (so after this {@see DBObject::ListChanges()} won't return changes anymore)
+				// new values are already in the object (call {@see DBObject::Get()} to get them)
+				// call {@see DBObject::ListPreviousValuesForUpdatedAttributes()} to get changed fields and previous values
+				$this->m_bDirty = false;
+				$this->m_aTouchedAtt = array();
+				$this->m_aModifiedAtt = array();
 				// Reset original values although the object has not been reloaded
 				foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded) {
 					if ($bLoaded) {
+						// N°6237 reloading external values, as the object instance isn't reloaded anymore
+						$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+						$externalValue = $oAttDef->ReadExternalValues($this);
+						if (false === is_null($externalValue)) {
+							$this->m_aCurrValues[$sAttCode] = $externalValue;
+						}
+
 						$value = $this->m_aCurrValues[$sAttCode];
 						$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
 					}
 				}
 
-				// - TriggerOnObjectUpdate
-				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-				$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)'),
-					array(), $aParams);
-				while ($oTrigger = $oSet->Fetch()) {
-					/** @var \TriggerOnObjectUpdate $oTrigger */
-					try {
-						$oTrigger->DoActivate($this->ToArgs());
-					}
-					catch (Exception $e) {
-						utils::EnrichRaisedException($oTrigger, $e);
-					}
+				try {
+					$this->PostUpdateActions($this->m_aPreviousValuesForUpdatedAttributes, $sClass);
 				}
-
-				// Activate any existing trigger
-				// - TriggerOnObjectMention
-				// Forgotten by the fix of N°3245
-				$this->ActivateOnMentionTriggers(false);
+				catch (Exception $e) {
+					$this->LogCRUDExit(__METHOD__, 'Error: '.$e->getMessage());
+					$aErrors = [$e->getMessage()];
+					throw new CoreException($e->getMessage(), ['id' => $this->GetKey(), 'class' => $sClass, 'issues' => $aErrors]);
+				}
 			}
-			catch (Exception $e)
-			{
-				$aErrors = [$e->getMessage()];
-				throw new CoreException($e->getMessage(), ['id' => $this->GetKey(), 'class' => $sClass, 'issues' => $aErrors]);
+			finally {
+				MetaModel::StopReentranceProtection($this);
+			}
+
+			if (count($this->ListChanges()) !== 0) {
+				// Controlled reentrance
+				if ($this->iUpdateLoopCount >= self::MAX_UPDATE_LOOP_COUNT) {
+					$this->LogCRUDExit(__METHOD__, 'Max update loop reached');
+					return false;
+				}
+				$this->DBUpdate();
 			}
 		}
-		finally
-		{
-			MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
+		finally {
+			$this->RemoveCurrentObjectInCrudStack();
+			$this->iUpdateLoopCount--;
 		}
 
-		if ($this->IsModified()) {
-			// Controlled reentrance
-			$this->DBUpdate();
-		}
+		$this->LogCRUDExit(__METHOD__);
 
 		return $this->m_iKey;
 	}
 
+	/**
+	 * @param array $aChanges
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	protected function PostUpdateActions(array $aChanges): void
+	{
+		$sStimulusBeingApplied = $this->sStimulusBeingApplied;
+		$this->sStimulusBeingApplied = null;
+		$this->FireEventAfterWrite($aChanges, false, $sStimulusBeingApplied);
+		$oKPI = new ExecutionKPI();
+		$this->AfterUpdate();
+		$oKPI->ComputeStatsForExtension($this, 'AfterUpdate');
+
+		// - TriggerOnObjectUpdate
+		$this->ActivateOnObjectUpdateTriggers($this);
+
+		// - Trigger for object pointing to the current object
+		$this->ActivateOnObjectUpdateTriggersForTargetObjects();
+
+		$sClass = get_class($this);
+		if (utils::IsNotNullOrEmptyString($sStimulusBeingApplied))
+		{
+			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+			$sPreviousState = $this->m_aPreviousValuesForUpdatedAttributes[$sStateAttCode];
+			// Change state triggers...
+			$aParams = array(
+				'class_list'     => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL),
+				'previous_state' => $sPreviousState,
+				'new_state'      => $this->Get($sStateAttCode),
+			);
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnStateLeave AS t WHERE t.target_class IN (:class_list) AND t.state=:previous_state'), array(), $aParams);
+			while ($oTrigger = $oSet->Fetch()) {
+				/** @var \TriggerOnStateLeave $oTrigger */
+				try {
+					$oTrigger->DoActivate($this->ToArgs('this'));
+				}
+				catch (Exception $e) {
+					$oTrigger->LogException($e, $this);
+					utils::EnrichRaisedException($oTrigger, $e);
+				}
+			}
+
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnStateEnter AS t WHERE t.target_class IN (:class_list) AND t.state=:new_state'), array(), $aParams);
+			while ($oTrigger = $oSet->Fetch()) {
+				/** @var \TriggerOnStateEnter $oTrigger */
+				try {
+					$oTrigger->DoActivate($this->ToArgs('this'));
+				}
+				catch (Exception $e) {
+					$oTrigger->LogException($e, $this);
+					utils::EnrichRaisedException($oTrigger, $e);
+				}
+			}
+		}
+
+		// Activate any existing trigger
+		// - TriggerOnObjectMention
+		// Forgotten by the fix of N°3245
+		$this->ActivateOnMentionTriggers(false, $aChanges);
+	}
+
+	/**
+	 * @param \DBObject $oObject
+	 * @param array|null $aAttributes
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	private function ActivateOnObjectUpdateTriggers(?DBObject $oObject, array $aAttributes = null): void
+	{
+		if (is_null($oObject)) {
+			return;
+		}
+
+		// - TriggerOnObjectUpdate
+		$aClassList = MetaModel::EnumParentClasses(get_class($oObject), ENUM_PARENT_CLASSES_ALL);
+		$aParams = array('class_list' => $aClassList);
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)'),
+			array(), $aParams);
+		while ($oTrigger = $oSet->Fetch()) {
+			/** @var \TriggerOnObjectUpdate $oTrigger */
+			try {
+				$oTrigger->DoActivateForSpecificAttributes($oObject->ToArgs(), $aAttributes);
+			}
+			catch (Exception $e) {
+				$oTrigger->LogException($e, $oObject);
+				utils::EnrichRaisedException($oTrigger, $e);
+			}
+		}
+	}
 
 	/**
 	 * Increment attribute with specified value.
@@ -3459,6 +3998,7 @@ abstract class DBObject implements iDisplay
 	 * Activate TriggerOnObjectMention triggers for the current object
 	 *
 	 * @param bool $bNewlyCreatedObject
+	 * @param array $aChanges Hash array of att. code => att. value of the changed attributes
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -3466,11 +4006,12 @@ abstract class DBObject implements iDisplay
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 * @since 3.0.1 N°4741
+	 * @since 3.1.0 N°6307 Add $aChanges parameter
 	 */
-	private function ActivateOnMentionTriggers(bool $bNewlyCreatedObject): void
+	private function ActivateOnMentionTriggers(bool $bNewlyCreatedObject, array $aChanges = []): void
 	{
 		$sClass = get_class($this);
-		$aChanges = $bNewlyCreatedObject ? $this->m_aOrigValues : $this->ListChanges();
+		$aChanges = $bNewlyCreatedObject ? $this->m_aOrigValues : $aChanges;
 
 		// 1 - Check if any caselog updated
 		$aUpdatedLogAttCodes = [];
@@ -3491,7 +4032,7 @@ abstract class DBObject implements iDisplay
 		foreach ($aUpdatedLogAttCodes as $sAttCode) {
 			/** @var \ormCaseLog $oUpdatedCaseLog */
 			$oUpdatedCaseLog = $this->Get($sAttCode);
-			$aMentionedObjects = array_merge_recursive($aMentionedObjects, utils::GetMentionedObjectsFromText($oUpdatedCaseLog->GetModifiedEntry()));
+			$aMentionedObjects = array_merge_recursive($aMentionedObjects, utils::GetMentionedObjectsFromText($oUpdatedCaseLog->GetModifiedEntry(ormCaseLog::ENUM_FORMAT_HTML)));
 		}
 
 		// 3 - Trigger for those objects
@@ -3531,9 +4072,10 @@ abstract class DBObject implements iDisplay
 	 * @uses m_aOrigValues
 	 * @uses m_aPreviousValuesForUpdatedAttributes
 	 * @since 2.7.0 N°2293
+	 * @since 3.1.0 N°6299 - change visibility
 	 * @throws \Exception
 	 */
-	private function InitPreviousValuesForUpdatedAttributes()
+	protected final function InitPreviousValuesForUpdatedAttributes()
 	{
 		$aChanges= $this->ListChanges();
 		if (empty($aChanges))
@@ -3549,13 +4091,18 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Make the current changes persistent - clever wrapper for Insert or Update
-     *
-     * @api
+	 *
+	 * @api
 	 *
 	 * @return int
-     *
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
+	 *
+	 * @throws ArchivedObjectException
+	 * @throws CoreCannotSaveObjectException
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 * @throws CoreWarning
+	 * @throws MySQLException
+	 * @throws OQLException
 	 */
 	public function DBWrite()
 	{
@@ -3590,43 +4137,28 @@ abstract class DBObject implements iDisplay
 		CMDBSource::DeleteFrom($sDeleteSQL);
 	}
 
-    /**
-     * @internal
-     *
-     * @throws ArchivedObjectException
-     * @throws CoreException
-     * @throws CoreUnexpectedValue
-     * @throws MySQLException
-     * @throws MySQLHasGoneAwayException
-     * @throws OQLException
-     */
+	/**
+	 * @internal
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \Random\RandomException
+	 * @throws \ReflectionException
+	 */
 	protected function DBDeleteSingleObject()
 	{
+		$this->LogCRUDEnter(__METHOD__);
+
 		if (MetaModel::DBIsReadOnly())
 		{
+			$this->LogCRUDExit(__METHOD__, 'DB is read-only');
 			return;
 		}
 
-		$this->EventDeleteBefore();
-		$this->OnDelete();
-
-		// Activate any existing trigger
-		$sClass = get_class($this);
-		$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectDelete AS t WHERE t.target_class IN (:class_list)"), array(),
-			$aParams);
-		while ($oTrigger = $oSet->Fetch())
-		{
-			/** @var \Trigger $oTrigger */
-			try
-			{
-				$oTrigger->DoActivate($this->ToArgs('this'));
-			}
-			catch(Exception $e)
-			{
-				utils::EnrichRaisedException($oTrigger, $e);
-			}
-		}
+		$this->PreDeleteActions();
 
 		$this->RecordObjDeletion($this->m_iKey); // May cause a reload for storing history information
 
@@ -3657,11 +4189,7 @@ abstract class DBObject implements iDisplay
 				}
 				MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
 			}
-			elseif (!$oAttDef->LoadFromDB())
-			{
-				/** @var \AttributeCustomFields $oAttDef */
-				$oAttDef->DeleteValue($this);
-			}
+			$oAttDef->DeleteExternalValues($this);
 		}
 		$iTransactionRetry = 1;
 		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
@@ -3714,15 +4242,19 @@ abstract class DBObject implements iDisplay
 						}
 					}
 				}
+				$this->LogCRUDError(__METHOD__, ' Error: '.$e->getMessage());
 				throw $e;
 			}
 		}
 
-		$this->EventDeleteAfter();
-		$this->AfterDelete();
-
-
 		$this->m_bIsInDB = false;
+
+		$this->PostDeleteActions();
+
+		// - Trigger for object pointing to the current object
+		$this->ActivateOnObjectUpdateTriggersForTargetObjects();
+
+		$this->LogCRUDExit(__METHOD__);
 		// Fix for N°926: do NOT reset m_iKey as it can be used to have it for reporting purposes (see the REST service to delete
 		// objects, reported as bug N°926)
 		// Thought the key is not reset, using DBInsert or DBWrite will create an object having the same characteristics and a new ID. DBUpdate is protected
@@ -3734,7 +4266,7 @@ abstract class DBObject implements iDisplay
      * First, checks if the object can be deleted regarding database integrity.
      * If the answer is yes, it performs any required cleanup (delete other objects or reset external keys) in addition to the object
      * deletion.
-     * 
+     *
      * @api
      *
      * @param \DeletionPlan $oDeletionPlan Do not use: aims at dealing with recursion
@@ -3752,63 +4284,66 @@ abstract class DBObject implements iDisplay
      */
 	public function DBDelete(&$oDeletionPlan = null)
 	{
-		static $iLoopTimeLimit = null;
-		if ($iLoopTimeLimit == null)
-		{
-			$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		}
-		if (is_null($oDeletionPlan))
-		{
-			$oDeletionPlan = new DeletionPlan();
-		}
-		$this->MakeDeletionPlan($oDeletionPlan);
-		$oDeletionPlan->ComputeResults();
+		$this->LogCRUDEnter(__METHOD__);
+		try {
+			static $iLoopTimeLimit = null;
+			if ($iLoopTimeLimit == null) {
+				$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
+			}
+			if (is_null($oDeletionPlan)) {
+				$oDeletionPlan = new DeletionPlan();
+			}
 
-		if ($oDeletionPlan->FoundStopper())
-		{
-			$aIssues = $oDeletionPlan->GetIssues();
-			throw new DeleteException('Found issue(s)', array('target_class' => get_class($this), 'target_id' => $this->GetKey(), 'issues' => implode(', ', $aIssues)));	
-		}
+			if (false === $this->CheckToDelete($oDeletionPlan)) {
+				$aIssues = $oDeletionPlan->GetIssues();
+				$this->LogCRUDError(__METHOD__, ' Errors: '.implode(', ', $aIssues));
+				throw new DeleteException('Found issue(s)', array('target_class' => get_class($this), 'target_id' => $this->GetKey(), 'issues' => implode(', ', $aIssues)));
+			}
 
 
-		// Getting and setting time limit are not symetric:
-		// www.php.net/manual/fr/function.set-time-limit.php#72305
-		$iPreviousTimeLimit = ini_get('max_execution_time');
+			// Getting and setting time limit are not symmetric:
+			// www.php.net/manual/fr/function.set-time-limit.php#72305
+			$iPreviousTimeLimit = ini_get('max_execution_time');
 
-		foreach ($oDeletionPlan->ListDeletes() as $sClass => $aToDelete)
-		{
-			foreach ($aToDelete as $iId => $aData)
-			{
-				/** @var \DBObject $oToDelete */
-				$oToDelete = $aData['to_delete'];
-				// The deletion based on a deletion plan should not be done for each object if the deletion plan is common (Trac #457)
-				// because for each object we would try to update all the preceding ones... that are already deleted
-				// A better approach would be to change the API to apply the DBDelete on the deletion plan itself... just once
-				// As a temporary fix: delete only the objects that are still to be deleted...
-				if ($oToDelete->m_bIsInDB)
-				{
-					set_time_limit(intval($iLoopTimeLimit));
-					$oToDelete->DBDeleteSingleObject();
+			foreach ($oDeletionPlan->ListDeletes() as $sClass => $aToDelete) {
+				foreach ($aToDelete as $iId => $aData) {
+					/** @var \DBObject $oToDelete */
+					$oToDelete = $aData['to_delete'];
+
+					// The deletion based on a deletion plan should not be done for each object if the deletion plan is common (Trac #457)
+					// because for each object we would try to update all the preceding ones... that are already deleted
+					// A better approach would be to change the API to apply the DBDelete on the deletion plan itself... just once
+					// As a temporary fix: delete only the objects that are still to be deleted...
+					if ($oToDelete->m_bIsInDB) {
+						set_time_limit(intval($iLoopTimeLimit));
+
+						$oToDelete->AddCurrentObjectInCrudStack('DELETE');
+						try {
+							$oToDelete->DBDeleteSingleObject();
+						}
+						finally {
+							$oToDelete->RemoveCurrentObjectInCrudStack();
+						}
+					}
 				}
 			}
-		}
 
-		foreach ($oDeletionPlan->ListUpdates() as $sClass => $aToUpdate)
-		{
-			foreach ($aToUpdate as $aData)
-			{
-				$oToUpdate = $aData['to_reset'];
-				/** @var \DBObject $oToUpdate */
-				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
-				{
-					$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
-					set_time_limit(intval($iLoopTimeLimit));
-					$oToUpdate->DBUpdate();
+			foreach ($oDeletionPlan->ListUpdates() as $sClass => $aToUpdate) {
+				foreach ($aToUpdate as $aData) {
+					$oToUpdate = $aData['to_reset'];
+					/** @var \DBObject $oToUpdate */
+					foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef) {
+						$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
+						set_time_limit(intval($iLoopTimeLimit));
+						$oToUpdate->DBUpdate();
+					}
 				}
 			}
-		}
 
-		set_time_limit(intval($iPreviousTimeLimit));
+			set_time_limit(intval($iPreviousTimeLimit));
+		} finally {
+			$this->LogCRUDExit(__METHOD__);
+		}
 
 		return $oDeletionPlan;
 	}
@@ -3824,11 +4359,106 @@ abstract class DBObject implements iDisplay
 	public function EnumTransitions()
 	{
 		$sClass = get_class($this);
-		if (!MetaModel::HasLifecycle($sClass)) return array();
+		if (!MetaModel::HasLifecycle($sClass)) {
+			return [];
+		}
 
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$sState = $this->Get($sStateAttCode);
-		return MetaModel::EnumTransitions($sClass, $sState);
+		$aTransitions = MetaModel::EnumTransitions($sClass, $sState);
+
+		if (count($aTransitions) === 0) {
+			return $aTransitions;
+		}
+
+		// Try to sort transitions depending on the configuration
+		$sSortType = utils::GetConfig()->Get('lifecycle.transitions_sort_type');
+		switch ($sSortType) {
+			case static::ENUM_TRANSITIONS_SORT_TYPE_XML:
+				$aSortedTransitions = $aTransitions;
+				break;
+
+			case static::ENUM_TRANSITIONS_SORT_TYPE_ALPHABETICAL:
+				$aSortedTransitions = $aTransitions;
+				$aStimuli = MetaModel::EnumStimuli($sClass);
+
+				// Sort $aSortedTransitions based on labels from $aStimuli
+				uksort($aSortedTransitions, function($sKey1, $sKey2) use ($aStimuli) {
+					// If any transition is not in $aStimuli, put it at the end even though it's a weird situation
+					if ((false === isset($aStimuli[$sKey1])) || (false === isset($aStimuli[$sKey2]))) {
+						return 1;
+					}
+					return $aStimuli[$sKey1]->GetLabel() > $aStimuli[$sKey2]->GetLabel() ? 1 : -1;
+				});
+				break;
+
+			case static::ENUM_TRANSITIONS_SORT_TYPE_FIXED:
+			case static::ENUM_TRANSITIONS_SORT_TYPE_RELATIVE:
+				$aSortedTransitions = $aTransitions;
+
+				// Get states sorted as defined in the datamodel
+				$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttCode);
+				$aAllowedValues = $oAttDef->GetAllowedValues();
+				$aStatesSortFromDatamodel = array_keys($aAllowedValues);
+
+				// Sort $aSortedTransitions based on the states sort from the datamodel
+				uksort($aSortedTransitions, function($sKey1, $sKey2) use ($aSortedTransitions, $aStatesSortFromDatamodel) {
+					$sTargetState1 = $aSortedTransitions[$sKey1]['target_state'];
+					$sTargetState2 = $aSortedTransitions[$sKey2]['target_state'];
+
+					return array_search($sTargetState1, $aStatesSortFromDatamodel) > array_search($sTargetState2, $aStatesSortFromDatamodel) ? 1 : -1;
+				});
+
+				if ($sSortType === static::ENUM_TRANSITIONS_SORT_TYPE_RELATIVE) {
+					// Find current state position
+					$sCurrentState = $this->Get($sStateAttCode);
+					$iCurrentStatePos = array_search($sCurrentState, $aStatesSortFromDatamodel);
+
+					foreach ($aSortedTransitions as $sStimulusCode => $aTransitionDef) {
+						// Leave state with higher ranks than the current's in their positions
+						if (array_search($aTransitionDef['target_state'], $aStatesSortFromDatamodel) >= $iCurrentStatePos) {
+							continue;
+						}
+
+						// Remove transition from beginning of the array and move it back at the end
+						array_shift($aSortedTransitions);
+						$aSortedTransitions = array_merge($aSortedTransitions, [$sStimulusCode => $aTransitionDef]);
+					}
+				}
+				break;
+
+			default:
+				$aSortedTransitions = $aTransitions;
+				IssueLog::Error('Could not sort object transitions as the sort type is not correct. Check "lifecycle.transitions_sort_type" conf. parameter.', LogChannels::CORE, [
+					'lifecycle.transitions_sort_type' => $sSortType,
+				]);
+		}
+
+		$this->aAllowedTransitions = $aSortedTransitions;
+		$this->FireEvent(EVENT_ENUM_TRANSITIONS, ['allowed_stimuli' => array_keys($aSortedTransitions)]);
+		$aSortedTransitions = $this->aAllowedTransitions;
+		$this->aAllowedTransitions = [];
+
+		return $aSortedTransitions;
+	}
+
+	/**
+	 * Remove a transition for a specific stimulus.
+	 * This is only usable by EVENT_ENUM_TRANSITIONS listeners in order
+	 * to manage the allowed transitions in the current object state.
+	 *
+	 * @param string $sStimulus
+	 *
+	 * @return void
+	 * @api
+	 * @since 3.1.2
+	 */
+	public function DenyTransition(string $sStimulus): void
+	{
+		if (isset($this->aAllowedTransitions[$sStimulus])) {
+			unset($this->aAllowedTransitions[$sStimulus]);
+		}
 	}
 
     /**
@@ -3879,6 +4509,8 @@ abstract class DBObject implements iDisplay
 	 */
 	public function ApplyStimulus($sStimulusCode, $bDoNotWrite = false)
 	{
+		$this->LogCRUDEnter(__METHOD__, "Code: $sStimulusCode");
+
 		$sClass = get_class($this);
 		if (!MetaModel::HasLifecycle($sClass))
 		{
@@ -3905,6 +4537,8 @@ abstract class DBObject implements iDisplay
 				} else {
 					$aBackupValues[$sAttCode] = $value;
 				}
+			} else {
+				$aBackupValues[$sAttCode] = $oAttDef->GetNullValue();
 			}
 		}
 
@@ -3912,83 +4546,78 @@ abstract class DBObject implements iDisplay
 
 		// Change the state before proceeding to the actions, this is necessary because an action might
 		// trigger another stimuli (alternative: push the stimuli into a queue)
-		$sPreviousState = $this->Get($sStateAttCode);
 		$sNewState = $aTransitionDef['target_state'];
 		$this->Set($sStateAttCode, $sNewState);
-
-		$aEventData = [
-			'stimulus' => $sStimulusCode,
-			'previous_state' => $sPreviousState,
-			'new_state' => $sNewState,
-			'save_object' => !$bDoNotWrite,
-		];
-		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_APPLY_STIMULUS, $aEventData);
 
 		// $aTransitionDef is an
 		//    array('target_state'=>..., 'actions'=>array of handlers procs, 'user_restriction'=>TBD
 
 		$bSuccess = true;
-		$sActionDesc = '';
-		foreach ($aTransitionDef['actions'] as $actionHandler)
-		{
-			if (is_string($actionHandler))
-			{
-				// Old (pre-2.1.0 modules) action definition without any parameter
-				$aActionCallSpec = array($this, $actionHandler);
-				$sActionDesc = $sClass.'::'.$actionHandler;
+		// Prevent current object from being updated by the actions
+		$this->AddCurrentObjectInCrudStack('APPLY_STIMULUS');
+		$bIsNewlyProtected = MetaModel::StartReentranceProtection($this);
+		try {
+			foreach ($aTransitionDef['actions'] as $actionHandler) {
+				if (is_string($actionHandler)) {
+					// Old (pre-2.1.0 modules) action definition without any parameter
+					$aActionCallSpec = array($this, $actionHandler);
+					$sActionDesc = $sClass.'::'.$actionHandler;
 
-				if (!is_callable($aActionCallSpec))
-				{
-					throw new CoreException("Unable to call action: $sClass::$actionHandler");
-				}
-				$bRet = call_user_func($aActionCallSpec, $sStimulusCode);
-			}
-			else // if (is_array($actionHandler))
-			{
-				// New syntax: 'verb' and typed parameters
-				$sAction = $actionHandler['verb'];
-				$sActionDesc = "$sClass::$sAction";
-				$aParams = array();
-				foreach($actionHandler['params'] as $aDefinition)
-				{
-					$sParamType = array_key_exists('type', $aDefinition) ? $aDefinition['type'] : 'string';
-					switch($sParamType)
-					{
-						case 'int':
-							$value = (int)$aDefinition['value'];
-							break;
-
-						case 'float':
-							$value = (float)$aDefinition['value'];
-							break;
-
-						case 'bool':
-							$value = (bool)$aDefinition['value'];
-							break;
-
-						case 'reference':
-							$value = ${$aDefinition['value']};
-							break;
-
-						case 'string':
-						default:
-							$value = (string)$aDefinition['value'];
+					if (!is_callable($aActionCallSpec)) {
+						throw new CoreException("Unable to call action: $sClass::$actionHandler");
 					}
-					$aParams[] = $value;
+					$bRet = call_user_func($aActionCallSpec, $sStimulusCode);
+				} else // if (is_array($actionHandler))
+				{
+					// New syntax: 'verb' and typed parameters
+					$sAction = $actionHandler['verb'];
+					$sActionDesc = "$sClass::$sAction";
+					$aParams = array();
+					foreach ($actionHandler['params'] as $aDefinition) {
+						$sParamType = array_key_exists('type', $aDefinition) ? $aDefinition['type'] : 'string';
+						switch ($sParamType) {
+							case 'int':
+								$value = (int)$aDefinition['value'];
+								break;
+
+							case 'float':
+								$value = (float)$aDefinition['value'];
+								break;
+
+							case 'bool':
+								$value = (bool)$aDefinition['value'];
+								break;
+
+							case 'reference':
+								$value = ${$aDefinition['value']};
+								break;
+
+							case 'string':
+							default:
+								$value = (string)$aDefinition['value'];
+						}
+						$aParams[] = $value;
+					}
+					$aCallSpec = array($this, $sAction);
+					$bRet = call_user_func_array($aCallSpec, $aParams);
 				}
-				$aCallSpec = array($this, $sAction);
-				$bRet = call_user_func_array($aCallSpec, $aParams);
+				// if one call fails, the whole is considered as failed
+				// (in case there is no returned value, null is obtained and means "ok")
+				if ($bRet === false) {
+					IssueLog::Info("Lifecycle action $sActionDesc returned false on object #$sClass:".$this->GetKey());
+					$bSuccess = false;
+				}
 			}
-			// if one call fails, the whole is considered as failed
-			// (in case there is no returned value, null is obtained and means "ok")
-			if ($bRet === false)
-			{
-				IssueLog::Info("Lifecycle action $sActionDesc returned false on object #$sClass:".$this->GetKey());
-				$bSuccess = false;
+		} finally {
+			if ($bIsNewlyProtected) {
+				// Stops protection only if the object was not already protected
+				MetaModel::StopReentranceProtection($this);
 			}
+			$this->RemoveCurrentObjectInCrudStack();
 		}
 		if ($bSuccess)
 		{
+			$this->sStimulusBeingApplied = $sStimulusCode;
 			// Stop watches
 			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
@@ -4008,36 +4637,6 @@ abstract class DBObject implements iDisplay
 			if (!$bDoNotWrite) {
 				$this->DBWrite();
 			}
-
-			// Change state triggers...
-			$aParams = array(
-				'class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL),
-				'previous_state' => $sPreviousState,
-				'new_state' => $sNewState,
-			);
-			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateLeave AS t WHERE t.target_class IN (:class_list) AND t.state=:previous_state"), array(), $aParams);
-			while ($oTrigger = $oSet->Fetch()) {
-				/** @var \TriggerOnStateLeave $oTrigger */
-				try {
-					$oTrigger->DoActivate($this->ToArgs('this'));
-				}
-				catch (Exception $e) {
-					utils::EnrichRaisedException($oTrigger, $e);
-				}
-			}
-
-			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateEnter AS t WHERE t.target_class IN (:class_list) AND t.state=:new_state"), array(), $aParams);
-			while ($oTrigger = $oSet->Fetch()) {
-				/** @var \TriggerOnStateEnter $oTrigger */
-				try {
-					$oTrigger->DoActivate($this->ToArgs('this'));
-				}
-				catch (Exception $e) {
-					utils::EnrichRaisedException($oTrigger, $e);
-				}
-			}
-
-			$this->FireEvent(EVENT_SERVICE_DB_AFTER_APPLY_STIMULUS, $aEventData);
 		}
 		else
 		{
@@ -4046,10 +4645,23 @@ abstract class DBObject implements iDisplay
 			{
 				$this->m_aCurrValues[$sAttCode] = $aBackupValues[$sAttCode];
 			}
-			$aEventData['action'] = $sActionDesc;
-			$this->FireEvent(EVENT_SERVICE_DB_APPLY_STIMULUS_FAILED, $aEventData);
 		}
+		$this->LogCRUDExit(__METHOD__, 'Current State: '.$this->Get($sStateAttCode));
 		return $bSuccess;
+	}
+
+	/**
+	 * @param string $sAttCode
+	 *
+	 * @return bool True if $sAttCode has an actual value set, false is the attribute remains "empty"
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @since 3.0.3, 3.1.0 N°5784
+	 */
+	public function HasAValue(string $sAttCode): bool
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		return $oAttDef->HasAValue($this->Get($sAttCode));
 	}
 
 	/**
@@ -4058,7 +4670,7 @@ abstract class DBObject implements iDisplay
      *
      * @api
      *
-	 */	 	
+	 */
 	public function Reset($sAttCode)
 	{
 		$this->Set($sAttCode, $this->GetDefaultValue($sAttCode));
@@ -4070,7 +4682,7 @@ abstract class DBObject implements iDisplay
      * Suitable for use as a lifecycle action
      *
      * @api
-	 */	 	
+	 */
 	public function Copy($sDestAttCode, $sSourceAttCode)
 	{
 		$oTypeValueToCopy = MetaModel::GetAttributeDef(get_class($this), $sSourceAttCode);
@@ -4170,7 +4782,7 @@ abstract class DBObject implements iDisplay
 			}
 		}
 		$oDate->modify($sModifier);
-		$this->Set($sAttCode, $oDate->format('Y-m-d H:i:s'));
+		$this->Set($sAttCode, $oDate);
 	}
 
 	/**
@@ -4400,7 +5012,7 @@ abstract class DBObject implements iDisplay
 			{
 				throw new CoreException("Unknown attribute '$sExtKeyAttCode' for the class ".get_class($this));
 			}
-			
+
 			$oKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
 			if (!$oKeyAttDef instanceof AttributeExternalKey)
 			{
@@ -4418,14 +5030,14 @@ abstract class DBObject implements iDisplay
 				$ret  = $oRemoteObj->GetForTemplate($sRemoteAttCode);
 			}
 		}
-		else 
+		else
 		{
 			switch($sPlaceholderAttCode)
 			{
 				case 'id':
 				$ret = $this->GetKey();
 				break;
-				
+
 				case 'name()':
 				$ret = $this->GetName();
 				break;
@@ -4612,7 +5224,7 @@ abstract class DBObject implements iDisplay
 		if ($oOwner)
 		{
 			$sLinkSetOwnerClass = get_class($oOwner);
-			
+
 			$oMyChangeOp = MetaModel::NewObject($sChangeOpClass);
 			$oMyChangeOp->Set("objclass", $sLinkSetOwnerClass);
 			$oMyChangeOp->Set("objkey", $iLinkSetOwnerId);
@@ -4639,7 +5251,7 @@ abstract class DBObject implements iDisplay
 		{
 			/** @var \AttributeLinkedSet $oLinkSet */
 			if (($oLinkSet->GetTrackingLevel() & LINKSET_TRACKING_LIST) == 0) continue;
-			
+
 			$iLinkSetOwnerId  = $this->Get($sExtKeyAttCode);
 			$oMyChangeOp = $this->PrepareChangeOpLinkSet($iLinkSetOwnerId, $oLinkSet, 'CMDBChangeOpSetAttributeLinksAddRemove');
 			if ($oMyChangeOp)
@@ -4709,7 +5321,7 @@ abstract class DBObject implements iDisplay
 				// Keep track of link changes
 				//
 				if (($oLinkSet->GetTrackingLevel() & LINKSET_TRACKING_DETAILS) == 0) continue;
-				
+
 				$iLinkSetOwnerId  = $this->Get($sExtKeyAttCode);
 				$oMyChangeOp = $this->PrepareChangeOpLinkSet($iLinkSetOwnerId, $oLinkSet, 'CMDBChangeOpSetAttributeLinksTune');
 				if ($oMyChangeOp)
@@ -4787,16 +5399,19 @@ abstract class DBObject implements iDisplay
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	protected function GetReferencingObjects($bAllowAllData = false)
+	protected function GetReferencingObjectsForDeletion($bAllowAllData = false)
 	{
 		$aDependentObjects = array();
 		$aRererencingMe = MetaModel::EnumReferencingClasses(get_class($this));
 		foreach($aRererencingMe as $sRemoteClass => $aExtKeys)
 		{
+			/** @var \AttributeExternalKey $oExtKeyAttDef */
 			foreach($aExtKeys as $sExtKeyAttCode => $oExtKeyAttDef)
 			{
+				// skip if external key doesn't require the deletion cascading
+				if($oExtKeyAttDef->GetDeletionPropagationOption() === DEL_NONE) continue;
+
 				// skip if this external key is behind an external field
-				/** @var \AttributeDefinition $oExtKeyAttDef */
 				if (!$oExtKeyAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) continue;
 
 				$oSearch = new DBObjectSearch($sRemoteClass);
@@ -4854,18 +5469,19 @@ abstract class DBObject implements iDisplay
 			return;
 		}
 		// Check the node itself
+		$this->m_aDeleteIssues = array(); // Ok
+		$this->FireEventCheckToDelete($oDeletionPlan);
 		$this->DoCheckToDelete($oDeletionPlan);
+		$this->CheckToWriteForTargetObjects(true);
 		$oDeletionPlan->SetDeletionIssues($this, $this->m_aDeleteIssues, $this->m_bSecurityIssue);
-	
-		$aDependentObjects = $this->GetReferencingObjects(true /* allow all data */);
 
-		// Getting and setting time limit are not symetric:
+		// Getting and setting time limit are not symmetric:
 		// www.php.net/manual/fr/function.set-time-limit.php#72305
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 
-		foreach ($aDependentObjects as $sRemoteClass => $aPotentialDeletes)
+		foreach ($this->GetReferencingObjectsForDeletion(true /* allow all data */) as $aPotentialDeletes)
 		{
-			foreach ($aPotentialDeletes as $sRemoteExtKey => $aData)
+			foreach ($aPotentialDeletes as $aData)
 			{
 				set_time_limit(intval($iLoopTimeLimit));
 
@@ -4903,27 +5519,6 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * Caching relying on an object set is not efficient since 2.0.3
-	 * Use GetSynchroData instead
-	 *
-	 * Get all the synchro replica related to this object
-     *
-     * @internal
-     * @deprecated
-	 *
-	 * @return DBObjectSet Set with two columns: R=SynchroReplica S=SynchroDataSource
-	 * @throws \OQLException
-	 */
-	public function GetMasterReplica()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		$sOQL = "SELECT replica,datasource FROM SynchroReplica AS replica JOIN SynchroDataSource AS datasource ON replica.sync_source_id=datasource.id WHERE replica.dest_class = :dest_class AND replica.dest_id = :dest_id";
-		$oReplicaSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('dest_class' => get_class($this), 'dest_id' => $this->GetKey()));
-
-		return $oReplicaSet;
-	}
-
-	/**
 	 * Get all the synchro data related to this object
      *
      * @internal
@@ -4937,28 +5532,27 @@ abstract class DBObject implements iDisplay
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function GetSynchroData()
+	public function GetSynchroData($bIncludeObsolete = true)
 	{
-		if (is_null($this->m_aSynchroData))
-		{
+		if (is_null($this->m_aSynchroData)) {
 			$sOQL = "SELECT replica,datasource FROM SynchroReplica AS replica JOIN SynchroDataSource AS datasource ON replica.sync_source_id=datasource.id WHERE replica.dest_class = :dest_class AND replica.dest_id = :dest_id";
+			if (!$bIncludeObsolete) {
+				$sOQL .= " AND replica.status != 'obsolete'";
+			}
 			$oReplicaSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('dest_class' => get_class($this), 'dest_id' => $this->GetKey()));
 			$this->m_aSynchroData = array();
-			while($aData = $oReplicaSet->FetchAssoc())
-			{
+			while ($aData = $oReplicaSet->FetchAssoc()) {
 				/** @var \DBObject[] $aData */
 				$iSourceId = $aData['datasource']->GetKey();
-				if (!array_key_exists($iSourceId, $this->m_aSynchroData))
-				{
+				if (!array_key_exists($iSourceId, $this->m_aSynchroData)) {
 					$aAttributes = array();
 					$oAttrSet = $aData['datasource']->Get('attribute_list');
-					while($oSyncAttr = $oAttrSet->Fetch())
-					{
+					while ($oSyncAttr = $oAttrSet->Fetch()) {
 						/** @var \DBObject $oSyncAttr */
 						$aAttributes[$oSyncAttr->Get('attcode')] = $oSyncAttr;
 					}
 					$this->m_aSynchroData[$iSourceId] = array(
-						'source' => $aData['datasource'],
+						'source'     => $aData['datasource'],
 						'attributes' => $aAttributes,
 						'replica' => array()
 					);
@@ -4987,18 +5581,15 @@ abstract class DBObject implements iDisplay
 	public function GetSynchroReplicaFlags($sAttCode, &$aReason)
 	{
 		$iFlags = OPT_ATT_NORMAL;
-		foreach ($this->GetSynchroData() as $iSourceId => $aSourceData)
-		{
-			if ($iSourceId == SynchroExecution::GetCurrentTaskId())
-			{
+		foreach ($this->GetSynchroData(MetaModel::GetConfig()->Get('synchro_obsolete_replica_locks_object')) as $iSourceId => $aSourceData) {
+			if ($iSourceId == SynchroExecution::GetCurrentTaskId()) {
 				// Ignore the current task (check to write => ok)
 				continue;
 			}
 			// Assumption: one replica - take the first one!
 			$oReplica = reset($aSourceData['replica']);
 			$oSource = $aSourceData['source'];
-			if (array_key_exists($sAttCode, $aSourceData['attributes']))
-			{
+			if (array_key_exists($sAttCode, $aSourceData['attributes'])) {
 				/** @var \DBObject $oSyncAttr */
 				$oSyncAttr = $aSourceData['attributes'][$sAttCode];
 				if (($oSyncAttr->Get('update') == 1) && ($oSyncAttr->Get('update_policy') == 'master_locked'))
@@ -5042,7 +5633,7 @@ abstract class DBObject implements iDisplay
 				$aSynchroClasses[] = $sTarget;
 			}
 		}
-		
+
 		foreach($aSynchroClasses as $sClass)
 		{
 			if ($this instanceof $sClass)
@@ -5609,7 +6200,7 @@ abstract class DBObject implements iDisplay
 		$this->DBWriteArchiveFlag(true);
 		$this->m_aCurrValues['archive_flag'] = true;
 		$this->m_aOrigValues['archive_flag'] = true;
-		$this->EventArchive();
+		$this->FireEventArchive();
 	}
 
     /**
@@ -5623,7 +6214,7 @@ abstract class DBObject implements iDisplay
 		$this->m_aOrigValues['archive_flag'] = false;
 		$this->m_aCurrValues['archive_date'] = null;
 		$this->m_aOrigValues['archive_date'] = null;
-		$this->EventUnarchive();
+		$this->FireEventUnArchive();
 	}
 
 
@@ -5760,23 +6351,28 @@ abstract class DBObject implements iDisplay
 			}
 
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			$aSQLValues = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
+			$aSQLValues = $oAttDef->GetSQLValues($this->Get($sAttCode));
 			$value = reset($aSQLValues);
-			if ($oAttDef->IsNull($value)) {
-				return '';
-			}
 			$aArgs[$sFieldDesc] = $value;
 		}
 
 		return $oExpression->Evaluate($aArgs);
 	}
 
-	final public function SetReadOnly($sMessage) {
+	/**
+	 * @since 3.1.0 N°4756
+	 */
+	final public function SetReadOnly($sMessage)
+	{
 		$this->m_bIsReadOnly = true;
 		$this->m_sReadOnlyMessage = $sMessage;
 	}
 
-	final public function SetReadWrite() {
+	/**
+	 * @since 3.1.0 N°4756
+	 */
+	final public function SetReadWrite()
+	{
 		$this->m_bIsReadOnly = false;
 		$this->m_sReadOnlyMessage = '';
 	}
@@ -5819,74 +6415,541 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * @param $sEvent
+	 * @api
+	 * @param string $sIssue
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function AddCheckIssue(string $sIssue)
+	{
+		$this->m_aCheckIssues[] = $sIssue;
+	}
+
+	/**
+	 *
+	 * @api
+	 *
+	 * @param string $sWarning Warning message displayed when objet is redisplayed
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function AddCheckWarning(string $sWarning)
+	{
+		$this->m_aCheckWarnings[] = $sWarning;
+	}
+
+	/**
+	 *
+	 * @api
+	 *
+	 * @return string[]|null
+	 * @since 3.1.1 3.2.0
+	 */
+	public function GetCheckWarnings(): ?array
+	{
+		return $this->m_aCheckWarnings;
+	}
+
+	/**
+	 * @api
+	 *
+	 * @param string $sIssue
+	 * @param bool $bIsSecurityIssue
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function AddDeleteIssue(string $sIssue, bool $bIsSecurityIssue = false)
+	{
+		$this->m_aDeleteIssues[] = $sIssue;
+		if ($bIsSecurityIssue) {
+			$this->m_bSecurityIssue = true;
+		}
+	}
+
+	/**
+	 * @api
+	 * @param string $sAttCode
+	 * @param array $aReasons
+	 * @param string $sTargetState
+	 *
+	 * @return int
+	 * @since 3.1.0
+	 */
+	protected function GetExtensionsAttributeFlags(string $sAttCode, array &$aReasons, string $sTargetState): int
+	{
+		return OPT_ATT_NORMAL;
+	}
+
+	/**
+	 * @api
+	 * @param string $sAttCode
+	 * @param array $aReasons
+	 *
+	 * @return int
+	 * @since 3.1.0
+	 */
+	protected function GetExtensionsInitialStateAttributeFlags(string $sAttCode, array &$aReasons): int
+	{
+		return OPT_ATT_NORMAL;
+	}
+
+	public final function GetListeners(): array
+	{
+		$aListeners = [];
+		foreach ($this->aEventListeners as $aEventListener) {
+			$aListeners = array_merge($aListeners, $aEventListener);
+		}
+		return $aListeners;
+	}
+
+	/**
+	 * Register a callback for a specific event. The method to call will be saved in the object instance itself whereas calling {@see EventService::RegisterListener()} would
+	 * save a callable (thus the method name AND the whole DBObject instance)
+	 *
+	 * @param string $sEvent corresponding event
+	 * @param string $callback The callback method to call
+	 * @param float $fPriority optional priority for callback order
+	 * @param string $sModuleId
+	 *
+	 * @see EventService::RegisterListener()
+	 *
+	 * @since 3.1.0-3 3.1.1 3.2.0 N°6716
+	 */
+	final protected function RegisterCRUDListener(string $sEvent, string $callback, float $fPriority = 0.0, string $sModuleId = '')
+	{
+		$aEventCallbacks = $this->aEventListeners[$sEvent] ?? [];
+
+		$aEventCallbacks[] = array(
+			'event'    => $sEvent,
+			'callback' => $callback,
+			'priority' => $fPriority,
+			'module'   => $sModuleId,
+		);
+		usort($aEventCallbacks, function ($a, $b) {
+			$fPriorityA = $a['priority'];
+			$fPriorityB = $b['priority'];
+			if ($fPriorityA == $fPriorityB) {
+				return 0;
+			}
+
+			return ($fPriorityA < $fPriorityB) ? -1 : 1;
+		});
+
+		$this->aEventListeners[$sEvent] = $aEventCallbacks;
+	}
+
+	/**
+	 * @param string $sEvent
 	 * @param array $aEventData
+	 * @return void
 	 *
 	 * @throws \CoreException
 	 * @throws \Exception
+	 * @since 3.1.0
 	 */
-	public function FireEvent($sEvent, $aEventData = array())
+	public function FireEvent(string $sEvent, array $aEventData = array()): void
 	{
 		$aEventData['debug_info'] = 'from: '.get_class($this).':'.$this->GetKey();
 		$aEventData['object'] = $this;
-		$aEventSources = [$this->m_sObjectUniqId];
+
+		// Call local listeners first
+		$aEventCallbacks = $this->aEventListeners[$sEvent] ?? [];
+		$oFirstException = null;
+		$sFirstExceptionMessage = '';
+		foreach ($aEventCallbacks as $aEventCallback) {
+			$oKPI = new ExecutionKPI();
+			$sCallback = $aEventCallback['callback'];
+			if (!method_exists($this, $sCallback)) {
+				EventServiceLog::Error("Callback '".get_class($this).":$sCallback' does not exist");
+				continue;
+			}
+			EventServiceLog::Debug("Fire event '$sEvent' calling '".get_class($this).":$sCallback'");
+			try {
+				call_user_func([$this, $sCallback], new EventData($sEvent, null, $aEventData));
+			}
+			catch (EventException $e) {
+				EventServiceLog::Error("Event '$sEvent' for '$sCallback'} failed with blocking error: ".$e->getMessage());
+				throw $e;
+			}
+			catch (Exception $e) {
+				$sMessage = "Event '$sEvent' for '$sCallback'} failed with non-blocking error: ".$e->getMessage();
+				EventServiceLog::Error($sMessage);
+				if (is_null($oFirstException)) {
+					$sFirstExceptionMessage = $sMessage;
+					$oFirstException = $e;
+				}
+			}
+			finally {
+				if (!$oKPI->ComputeStatsForExtension($this, $sCallback, "Event: $sEvent")) {
+					$sSignature = ModuleService::GetInstance()->GetModuleMethodSignature($this, $sCallback);
+					$oKPI->ComputeStats('FireEvent', "$sEvent callback: $sSignature");
+				}
+			}
+		}
+		if (!is_null($oFirstException)) {
+			throw new Exception($sFirstExceptionMessage, $oFirstException->getCode(), $oFirstException);
+		}
+
+		// Call global event listeners
+		if (!EventService::IsEventRegistered($sEvent)) {
+			return;
+		}
+		$aEventSources = [];
 		foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL, false) as $sClass) {
 			$aEventSources[] = $sClass;
 		}
 		EventService::FireEvent(new EventData($sEvent, $aEventSources, $aEventData));
 	}
 
-	protected function EventInsertRequested()
+	//////////////////
+	/// CREATE
+	///
+
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function FireEventCheckToWrite(?string $sStimulusBeingApplied): void
 	{
 	}
 
-	protected function EventInsertBefore()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function FireEventBeforeWrite(?string $sStimulusBeingApplied)
 	{
 	}
 
-	protected function EventInsertAfter()
+	/**
+	 * @param bool $bIsNew
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function FireEventAfterWrite(array $aChanges, bool $bIsNew, ?string $sStimulusBeingApplied): void
 	{
 	}
 
-	protected function EventComputeValues()
+	//////////////
+	/// DELETE
+	///
+
+	/**
+	 * @param \DeletionPlan $oDeletionPlan
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function FireEventCheckToDelete(DeletionPlan $oDeletionPlan): void
 	{
 	}
 
-	protected function EventCheckToWrite(array $aEventData)
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function FireEventAfterDelete(): void
 	{
 	}
 
-	protected function EventCheckToDelete(array $aEventData)
+	/**
+	 * @return void
+	 * @since 3.1.2
+	 */
+	protected function FireEventAboutToDelete(): void
 	{
 	}
 
-	protected function EventUpdateRequested()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function FireEventComputeValues(?string $sStimulusBeingApplied): void
 	{
 	}
 
-	protected function EventUpdateBefore()
-	{
-	}
-
-	protected function EventUpdateAfter(array $aEventData)
-	{
-	}
-
-	protected function EventDeleteBefore()
-	{
-	}
-
-	protected function EventDeleteAfter()
-	{
-	}
-
-	protected function EventArchive()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function FireEventArchive(): void
 	{
 
 	}
 
-	protected function EventUnarchive()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function FireEventUnArchive(): void
 	{
+	}
+
+	//////////////
+	/// CRUD stack in progress
+	///
+
+	/**
+	 * Check if an object is currently involved in CRUD operation
+	 *
+	 * @param string $sClass
+	 * @param string|null $sId
+	 *
+	 * @return bool
+	 * @since 3.1.0 N°5609
+	 */
+	final public static function IsObjectCurrentlyInCrud(string $sClass, ?string $sId): bool
+	{
+		// during insert key is reset from -1 to null
+		// so we need to handle null values (will give empty string after conversion)
+		$sConvertedId = (string)$sId;
+		$oRootClass = MetaModel::GetRootClass($sClass);
+
+		foreach (self::$m_aCrudStack as $aCrudStackEntry) {
+			if (($oRootClass === $aCrudStackEntry['class']) && ($sConvertedId === $aCrudStackEntry['id'])) {
+				IssueLog::Trace('CRUD '.__METHOD__." $sClass:$sId IS in CRUD Stack", LogChannels::DM_CRUD);
+				return true;
+			}
+		}
+
+		IssueLog::Trace('CRUD '.__METHOD__." $sClass:$sId NOT in CRUD Stack", LogChannels::DM_CRUD);
+		return false;
+	}
+
+	/**
+	 * Check if an object of the given class  is currently involved in CRUD operation
+	 *
+	 * @param string $sClass
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 * @since 3.1.0 N°5609
+	 */
+	final public static function IsClassCurrentlyInCrud(string $sClass): bool
+	{
+		$sRootClass = MetaModel::GetRootClass($sClass);
+		foreach (self::$m_aCrudStack as $aCrudStackEntry) {
+			if ($sRootClass === $aCrudStackEntry['class']) {
+				IssueLog::Trace("CRUD ".__METHOD__." $sClass IS in CRUD Stack", LogChannels::DM_CRUD);
+				return true;
+			}
+		}
+
+		IssueLog::Trace('CRUD '.__METHOD__." $sClass NOT in CRUD Stack", LogChannels::DM_CRUD);
+		return false;
+	}
+
+	/**
+	 * Add the current object to the CRUD stack
+	 *
+	 * @param string $sCrudType
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @since 3.1.0 N°5609
+	 */
+	private function AddCurrentObjectInCrudStack(string $sCrudType): void
+	{
+		$sRootClass = MetaModel::GetRootClass(get_class($this));
+		$sKey = (string)$this->GetKey();
+		self::$m_aCrudStack[] = [
+			'type'  => $sCrudType,
+			'class' => $sRootClass,
+			'id'    => $sKey, // GetKey() doesn't have type hinting, so forcing type to avoid getting an int
+		];
+		$iCount = count(self::$m_aCrudStack);
+		$this->LogCRUDDebug(__METHOD__, "$sCrudType $sRootClass:$sKey count $iCount");
+	}
+
+	/**
+	 * Update the last entry of the CRUD stack with the information of the current object
+	 * This is calls during DBInsert since the object id changes
+	 *
+	 * @return void
+	 * @since 3.1.0 N°5609
+	 */
+	private function UpdateCurrentObjectInCrudStack(): void
+	{
+		$aCurrentCrudStack = array_pop(self::$m_aCrudStack);
+		$sOldId = $aCurrentCrudStack['id'];
+		$sNewId = (string)$this->GetKey();
+		$aCurrentCrudStack['id'] = $sNewId;
+		self::$m_aCrudStack[] = $aCurrentCrudStack;
+		$sClass = $aCurrentCrudStack['class'];
+		$sType = $aCurrentCrudStack['type'];
+		$iCount = count(self::$m_aCrudStack);
+		$this->LogCRUDDebug(__METHOD__, "$sType $sClass:$sOldId => $sClass:$sNewId count $iCount");
+	}
+
+	/**
+	 * Remove the last entry of the CRUD stack
+	 *
+	 * @return void
+	 * @since 3.1.0 N°5609
+	 */
+	private function RemoveCurrentObjectInCrudStack(): void
+	{
+		$aRemoved = array_pop(self::$m_aCrudStack);
+		$sType = $aRemoved['type'];
+		$sClass = $aRemoved['class'];
+		$sId = $aRemoved['id'];
+		$iCount = count(self::$m_aCrudStack);
+		$this->LogCRUDDebug(__METHOD__, "$sType $sClass:$sId count $iCount");
+	}
+
+	/**
+	 * Check if there are objects in the CRUD stack
+	 *
+	 * @return bool
+	 * @since 3.1.0 N°5609
+	 */
+	final protected static function IsCrudStackEmpty(): bool
+	{
+		return count(self::$m_aCrudStack) === 0;
+	}
+
+	protected function LogCRUDEnter($sFunction, $sComment = '')
+	{
+		$sClass = get_class($this);
+		if (utils::StartsWith($sClass, 'CMDBChange')) {
+			return;
+		}
+		$sKey = $this->GetKey();
+		$sUUID = $this->m_sObjectUniqId;
+		$sPadding = str_pad('', count(self::$m_aCrudStack), '-');
+		IssueLog::Debug("CRUD +$sPadding> $sFunction $sClass:$sKey ($sUUID) $sComment", LogChannels::DM_CRUD);
+	}
+
+	protected function LogCRUDExit($sFunction, $sComment = '')
+	{
+		$sClass = get_class($this);
+		if (utils::StartsWith($sClass, 'CMDBChange')) {
+			return;
+		}
+		$sKey = $this->GetKey();
+		$sUUID = $this->m_sObjectUniqId;
+		$sPadding = str_pad('', count(self::$m_aCrudStack), '-');
+		if (strlen($sComment) === 0) {
+			IssueLog::Trace("CRUD <$sPadding+ $sFunction $sClass:$sKey", LogChannels::DM_CRUD);
+		} else {
+			IssueLog::Debug("CRUD <$sPadding+ $sFunction $sClass:$sKey ($sUUID) $sComment", LogChannels::DM_CRUD);
+		}
+	}
+
+	protected function LogCRUDDebug($sFunction, $sComment = '')
+	{
+		$sClass = get_class($this);
+		if (utils::StartsWith($sClass, 'CMDBChange')) {
+			return;
+		}
+		$sKey = $this->GetKey();
+		$sUUID = $this->m_sObjectUniqId;
+		$sPadding = str_pad('', count(self::$m_aCrudStack), '-');
+		IssueLog::Debug("CRUD --$sPadding $sFunction $sClass:$sKey ($sUUID) $sComment", LogChannels::DM_CRUD);
+	}
+
+	protected function LogCRUDError($sFunction, $sComment = '')
+	{
+		$sClass = get_class($this);
+		if (utils::StartsWith($sClass, 'CMDBChange')) {
+			return;
+		}
+		$sKey = $this->GetKey();
+		$sUUID = $this->m_sObjectUniqId;
+		$sPadding = str_pad('', count(self::$m_aCrudStack), '!');
+		IssueLog::Error("CRUD !!$sPadding Error $sFunction $sClass:$sKey ($sUUID) $sComment", LogChannels::DM_CRUD);
+	}
+
+	/**
+	 * Handle temporary descriptors.
+	 *
+	 * @return void
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 *
+	 * @experimental do not use, this feature will be part of a future version
+	 *
+	 * @since 3.1
+	 */
+	private function HandleTemporaryDescriptor()
+	{
+		if ($this->HasContextSection('temporary_objects')) {
+			TemporaryObjectManager::GetInstance()->HandleTemporaryObjects($this, $this->GetContextSection('temporary_objects'));
+		}
+	}
+
+	/**
+	 * Return context information.
+	 *
+	 * @return array
+	 *
+	 * @experimental do not use, this feature will be part of a future version
+	 *
+	 * @since 3.1
+	 */
+	public function GetContext(): array
+	{
+		return $this->aContext;
+	}
+
+	/**
+	 * Set context section data.
+	 *
+	 * @param string $sSection
+	 * @param $value
+	 *
+	 * @experimental do not use, this feature will be part of a future version
+	 *
+	 * @since 3.1
+	 *
+	 */
+	public function SetContextSection(string $sSection, $value)
+	{
+		$this->aContext[$sSection] = $value;
+	}
+
+	/**
+	 * Get context section data.
+	 *
+	 * @param string $sSection
+	 *
+	 * @return mixed
+	 *
+	 * experimental do not use, this feature will be part of a future version
+	 *
+	 * @since 3.1
+	 */
+	public function GetContextSection(string $sSection)
+	{
+		if ($this->HasContextSection($sSection)) {
+			return $this->aContext[$sSection];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Test context section existence.
+	 *
+	 * @param string $sSection
+	 *
+	 * @return bool
+	 *
+	 * experimental do not use, this feature will be part of a future version
+	 *
+	 * @since 3.1
+	 */
+	public function HasContextSection(string $sSection): bool
+	{
+		return array_key_exists($sSection, $this->aContext);
 	}
 }
 

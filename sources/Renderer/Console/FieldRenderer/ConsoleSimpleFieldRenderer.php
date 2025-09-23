@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -22,17 +22,18 @@ namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDuration;
-use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Text\Text;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Form\Field\TextAreaField;
+use Combodo\iTop\Form\Validator\AbstractRegexpValidator;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\FieldRenderer;
 use DateTimeFormat;
@@ -59,8 +60,43 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 		else
 		{
 			$oBlock = FieldUIBlockFactory::MakeStandard($this->oField->GetLabel());
-			$oBlock->AddDataAttribute("input-id",$this->oField->GetGlobalId());
-			$oBlock->AddDataAttribute("input-type",$sFieldClass);
+			$oBlock->SetAttLabel($this->oField->GetLabel())
+				->AddDataAttribute("input-id",$this->oField->GetGlobalId())
+				->AddDataAttribute("input-type",$sFieldClass);
+
+			// Propagate data attribute from Field to UIBlock
+			// Note: This might no longer be necessary after the upcoming attributes rework project
+			foreach ($this->oField->GetMetadata() as $sMetadataKey => $sMetadataValue) {
+				switch ($sMetadataKey) {
+					// Important: Only some data attributes can be overloaded, this is done on purpose (eg. "input-type" set previously by an AttributeCustomFields)
+					case 'attribute-code':
+					case 'attribute-type':
+					case 'input-type':
+						if (utils::IsNotNullOrEmptyString($sMetadataValue)) {
+							switch ($sMetadataKey) {
+								case 'attribute-code':
+									$oBlock->SetAttCode($sMetadataValue);
+									break;
+
+								case 'attribute-type':
+									$oBlock->SetAttType($sMetadataValue ?? '');
+									break;
+
+								case 'input-type':
+									$oBlock->AddDataAttribute($sMetadataKey, $sMetadataValue ?? '');
+									break;
+							}
+						}
+						break;
+
+					default:
+						if (false === $oBlock->HasDataAttribute($sMetadataKey)) {
+							$oBlock->AddDataAttribute($sMetadataKey, $sMetadataValue ?? '');
+						}
+						break;
+		       }
+			}
+
 			switch ($sFieldClass)
 			{
 				case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
@@ -114,34 +150,23 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 
 					if ($this->oField->GetReadOnly())
 					{
-						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetCurrentValue()));
+						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetDisplayValue()));
 						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 					}
 					else
 					{
-						$oText = new TextArea("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId(),40,8);
+						$oText = new TextArea("", CKEditorHelper::PrepareCKEditorValueTextEncodingForTextarea($this->oField->GetCurrentValue()),$this->oField->GetGlobalId(),40,8);
 						$oText->AddCSSClasses(['ibo-input-field-wrapper', 'ibo-input']);
 						$oValue->AddSubBlock($oText);
 						// Some additional stuff if we are displaying it with a rich editor
 						if ($bRichEditor)
 						{
 							$oText->AddCSSClass('ibo-input-richtext-placeholder');
-							$aConfig = utils::GetCkeditorPref();
-							$aConfig['extraPlugins'] = 'codesnippet';
-							$sJsConfig = json_encode($aConfig);
 
-							foreach (WebResourcesHelper::GetJSFilesRelPathsForCKEditor() as $sJSFile) {
-								$oOutput->AddJsFile($sJSFile);
-							}
+							// Enable CKEditor
+							CKEditorHelper::ConfigureCKEditorElementForRenderingOutput($oOutput, $this->oField->GetGlobalId(), $this->oField->GetCurrentValue());
 
-							$oOutput->AddJs(
-<<<EOF
-								$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
-								$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, $sJsConfig);
-EOF
-							);
-							if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null))
-							{
+							if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null)){
 								$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));
 							}
 						}
@@ -284,7 +309,7 @@ EOF
 			
 			$(oInput).datepicker({
 								"showOn":"button",
-								"buttonText":"<i class=\"fas fa-calendar-alt\"><\/i>",
+								"buttonText":"",
 								"dateFormat": $sJSDateFormat,
 								"constrainInput":false,
 								"changeMonth":true,
@@ -307,7 +332,7 @@ EOF
 			
 				$(oInput).datetimepicker({
 							showOn: 'button',
-							buttonText: "<i class=\"fas fa-calendar-alt\"><\/i>",
+							buttonText: "",
 							dateFormat: $sJSDateFormat,
 							constrainInput: false,
 							changeMonth: true,
@@ -398,16 +423,20 @@ EOF
 
 		// JS Form field widget construct
 		$aValidators = array();
-		foreach ($this->oField->GetValidators() as $oValidator)
-		{
+		foreach ($this->oField->GetValidators() as $oValidator) {
+			if (false === ($oValidator instanceof AbstractRegexpValidator)) {
+				// no JS counterpart, so skipping !
+				continue;
+			}
+
 			$aValidators[$oValidator::GetName()] = array(
 				'reg_exp' => $oValidator->GetRegExp(),
-				'message' => Dict::S($oValidator->GetErrorMessage())
+				'message' => Dict::S($oValidator->GetErrorMessage()),
 			);
 		}
 		$sValidators = json_encode($aValidators);
 		$sFormFieldOptions =
-<<<EOF
+			<<<EOF
 {
 	validators: $sValidators,
 	on_validation_callback: function(me, oResult) {

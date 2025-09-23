@@ -230,7 +230,7 @@ $(function()
 				var odatetimepickerOptions = $.extend({}, oInputParam.picker_extra_params, odatetimepickerOptionsDefault, me.options.datepicker, {
 					onSelect: function() {
 						fHandleSynchCallback(this, false);
-						$(this).focus();
+						$(this).trigger('focus');
 					}
 				});
 
@@ -581,7 +581,7 @@ $(function()
 							oOpElemDropdown.find('.sfc_op_radio').prop('checked', true);
 							me._markAsDraft();
 						}
-						oOpElemDropdown.find('input[type="text"]:first').focus();
+						oOpElemDropdown.find('input[type="text"]').first().trigger('focus');
 					})
 					.appendTo(this.element.find('.sfc_fg_operators'))
 				;

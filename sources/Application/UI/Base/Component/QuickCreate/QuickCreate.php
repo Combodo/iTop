@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,7 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\QuickCreate;
 
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
-use iKeyboardShortcut;
+use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
 use MetaModel;
 use UserRights;
 use utils;
@@ -59,10 +59,14 @@ class QuickCreate extends UIBlock implements iKeyboardShortcut
 	protected $aLastClasses;
 	/** @var int $iMaxAutocompleteResults Max. number of elements returned by the autocomplete */
 	protected $iMaxAutocompleteResults;
-	/** @var bool $bShowHistory Whether or not to display the elements in the history */
+	/** @var bool $bShowHistory Whether to display the elements in the history */
 	protected $bShowHistory;
 	/** @var int $iMaxHistoryResults Max. number of elements in the history */
 	protected $iMaxHistoryResults;
+	/** @var int $iMaxPopularResults Max. number of elements in the popular section */
+	protected $iMaxPopularResults;
+	/** @var array $aPopularClasses */
+	protected $aPopularClasses;
 
 	/**
 	 * QuickCreate constructor.
@@ -82,6 +86,8 @@ class QuickCreate extends UIBlock implements iKeyboardShortcut
 		$this->iMaxAutocompleteResults = (int) MetaModel::GetConfig()->Get('quick_create.max_autocomplete_results');
 		$this->bShowHistory = (bool) MetaModel::GetConfig()->Get('quick_create.show_history');
 		$this->iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('quick_create.max_history_results');
+		$this->iMaxPopularResults = (int) MetaModel::GetConfig()->Get('quick_create.max_popular_results');
+		$this->aPopularClasses = QuickCreateHelper::GetPopularClasses();
 	}
 
 	/**
@@ -89,7 +95,7 @@ class QuickCreate extends UIBlock implements iKeyboardShortcut
 	 * If $bRelativeUrl is true, then $sEndpoint will be complete with the app_root_url
 	 *
 	 * @param string $sEndpoint URL to the endpoint
-	 * @param bool $bRelativeUrl Whether or not the $sEndpoint parameter is a relative URL
+	 * @param bool $bRelativeUrl Whether the $sEndpoint parameter is a relative URL
 	 *
 	 * @return $this
 	 * @throws \Exception
@@ -201,6 +207,24 @@ class QuickCreate extends UIBlock implements iKeyboardShortcut
 	public function GetMaxHistoryResults(): int
 	{
 		return $this->iMaxHistoryResults;
+	}
+
+	/**
+	 * @see $aMaxPopularClasses
+	 * @return array
+	 */
+	public function GetPopularClasses(): array
+	{
+		return $this->aPopularClasses;
+	}
+
+	/**
+	 * @see $iMaxPopularResults
+	 * @return int
+	 */
+	public function GetMaxPopularResults(): int
+	{
+		return $this->iMaxPopularResults;
 	}
 
 	public static function GetShortcutKeys(): array

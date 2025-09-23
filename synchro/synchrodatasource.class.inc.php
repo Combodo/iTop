@@ -1,8 +1,10 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+use Combodo\iTop\Application\WebPage\WebPage;
 
 class SynchroDataSource extends cmdbAbstractObject
 {
@@ -64,12 +66,13 @@ class SynchroDataSource extends cmdbAbstractObject
 			'depends_on' => array(),
 		)));
 		MetaModel::Init_AddAttribute(new AttributeClass('scope_class', array(
-			'class_category' => 'bizmodel,addon/authentication,application',
-			'more_values' => '',
-			'sql' => 'scope_class',
-			'default_value' => null,
-			'is_null_allowed' => false,
-			'depends_on' => array(),
+			'class_category'       => 'bizmodel,addon/authentication,application',
+			'more_values'          => '',
+			'sql'                  => 'scope_class',
+			'default_value'        => null,
+			'is_null_allowed'      => false,
+			'depends_on'           => array(),
+			"class_exclusion_list" => null,
 		)));
 		MetaModel::Init_AddAttribute(new AttributeString('database_table_name', array(
 			'allowed_values' => null,
@@ -89,7 +92,7 @@ class SynchroDataSource extends cmdbAbstractObject
 			'depends_on' => array(),
 		)));
 
-		//MetaModel::Init_AddAttribute(new AttributeDateTime("last_synchro_date", array("allowed_values"=>null, "sql"=>"last_synchro_date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		//MetaModel::Init_AddAttribute(new AttributeDateTime("last_synchro_date", array("allowed_values"=>null, "sql"=>"last_synchro_date", "default_value"=>"NOW()", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		// Format: seconds (int)
 		MetaModel::Init_AddAttribute(new AttributeDuration('full_load_periodicity', array(
@@ -1035,6 +1038,11 @@ EOF
 		$sDropTable = "DROP TABLE IF EXISTS `$sTable`"; // Do not fail if the table is already deleted (corrupted database)
 		CMDBSource::Query($sDropTable);
 		// TO DO - check that triggers get dropped with the table
+
+		$sSyncReplicaTable = MetaModel::DBGetTable(SynchroReplica::class);
+		$sSyncSourceIDColumn =  MetaModel::GetAttributeDef(SynchroReplica::class, 'sync_source_id');
+		$sSqlDeleteReplica = "DELETE FROM `$sSyncReplicaTable` WHERE {$sSyncSourceIDColumn->Get('sql')} = '{$this->GetKey()}'";
+		CMDBSource::Query($sSqlDeleteReplica);
 	}
 
 	/**
@@ -1619,7 +1627,7 @@ class SynchroLog extends DBObject
 	{
 		$aParams = array
 		(
-			'category' => 'core/cmdb,view_in_gui',
+			'category' => 'core/cmdb,view_in_gui,grant_by_profile',
 			'key_type' => 'autoincrement',
 			'name_attcode' => '',
 			'state_attcode' => '',
@@ -1930,17 +1938,13 @@ class SynchroLog extends DBObject
 
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'traces');
 		$iMaxSize = $oAttDef->GetMaxSize();
-		if (strlen($sPrevTrace) > 0)
-		{
+		if (strlen($sPrevTrace) > 0) {
 			$sTrace = $sPrevTrace."\n".implode("\n", $this->m_aTraces);
-		}
-		else
-		{
+		} else {
 			$sTrace = implode("\n", $this->m_aTraces);
 		}
-		if (strlen($sTrace) >= $iMaxSize)
-		{
-			$sTrace = substr($sTrace, 0, $iMaxSize - 255)."...\nTruncated (size: ".strlen($sTrace).')';
+		if (mb_strlen($sTrace) >= $iMaxSize) {
+			$sTrace = mb_substr($sTrace, 0, $iMaxSize - 40)."...\nTruncated (size: ".mb_strlen($sTrace).')';
 		}
 		$this->Set('traces', $sTrace);
 
@@ -1958,6 +1962,12 @@ class SynchroLog extends DBObject
 	{
 		$this->TraceToText();
 		$sMemPeak = max($this->Get('memory_usage_peak'), ExecutionKPI::memory_get_peak_usage());
+
+		// memory peak overflow protection
+		if($sMemPeak > 2147483647){
+			$sMemPeak = 2147483647;
+		}
+
 		$this->Set('memory_usage_peak', $sMemPeak);
 		parent::OnUpdate();
 	}
@@ -1993,7 +2003,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			'allowed_values' => null,
 			'sql' => 'sync_source_id',
 			'is_null_allowed' => false,
-			'on_target_delete' => DEL_SILENT,
+			'on_target_delete' => DEL_NONE,
 			'depends_on' => array(),
 		)));
 		MetaModel::Init_AddAttribute(new AttributeExternalField('base_class',
@@ -2007,18 +2017,19 @@ class SynchroReplica extends DBObject implements iDisplay
 			'depends_on' => array(),
 		)));
 		MetaModel::Init_AddAttribute(new AttributeClass('dest_class', array(
-			'class_category' => '',
-			'more_values' => '',
-			'sql' => 'dest_class',
-			'default_value' => 'Organization',
-			'is_null_allowed' => true,
-			'depends_on' => array(),
+			'class_category'       => '',
+			'more_values'          => '',
+			'sql'                  => 'dest_class',
+            'default_value' => '',
+			'is_null_allowed'      => true,
+			'depends_on'           => array(),
+			"class_exclusion_list" => null,
 		)));
 
 		MetaModel::Init_AddAttribute(new AttributeDateTime('status_last_seen', array(
 			'allowed_values' => null,
 			'sql' => 'status_last_seen',
-			'default_value' => '',
+			'default_value' => 'NOW()',
 			'is_null_allowed' => false,
 			'depends_on' => array(),
 		)));
@@ -2145,9 +2156,8 @@ class SynchroReplica extends DBObject implements iDisplay
 				break;
 		}
 
-		if (strlen($sWarningMessage) > $MAX_WARNING_LENGTH)
-		{
-			$sWarningMessage = substr($sWarningMessage, 0, $MAX_WARNING_LENGTH - 3).'...';
+		if (mb_strlen($sWarningMessage) > $MAX_WARNING_LENGTH) {
+			$sWarningMessage = mb_substr($sWarningMessage, 0, $MAX_WARNING_LENGTH - 3).'...';
 		}
 
 		$this->Set('status_last_warning', $sWarningMessage);
@@ -2159,11 +2169,9 @@ class SynchroReplica extends DBObject implements iDisplay
 	}
 
 	// Overload the deletion -> the replica has been created by the mean of a trigger,
-	//                          it will be deleted by the mean of a trigger too
+	//                          it will be deleted by SynchroDataSource::AfterDelete
 	protected function DBDeleteSingleObject()
 	{
-		$this->OnDelete();
-
 		if (!MetaModel::DBIsReadOnly())
 		{
 			$oDataSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'), false);
@@ -2177,25 +2185,18 @@ class SynchroReplica extends DBObject implements iDisplay
 			// else the whole datasource has probably been already deleted
 		}
 
-		$this->AfterDelete();
-
-		$this->m_bIsInDB = false;
-		$this->m_iKey = null;
+		parent::DBDeleteSingleObject();
 	}
 
 	public function SetLastError($sMessage, $oException = null)
 	{
-		if ($oException)
-		{
+		if ($oException) {
 			$sText = $sMessage.$oException->getMessage();
-		}
-		else
-		{
+		} else {
 			$sText = $sMessage;
 		}
-		if (strlen($sText) > 255)
-		{
-			$sText = substr($sText, 0, 200).'...('.strlen($sText).' chars)...';
+		if (mb_strlen($sText) > 255) {
+			$sText = mb_substr($sText, 0, 200).'...('.mb_strlen($sText).' chars)...';
 		}
 		$this->Set('status_last_error', $sText);
 	}
@@ -2817,12 +2818,16 @@ class SynchroReplica extends DBObject implements iDisplay
 			$aData = $this->LoadExtendedDataFromTable($sSQLTable);
 
 			$aHeaders = array(
-				'attcode' => array('label' => 'Attribute Code', 'description' => ''),
-				'data'    => array('label' => 'Value', 'description' => ''),
+				'attcode' => array('label' => Dict::S('UI:Form:Property'), 'description' => ''),
+				'data'    => array('label' => Dict::S('UI:Form:Value'), 'description' => ''),
 			);
 			$aRows = array();
 			foreach ($aData as $sKey => $value) {
-				$aRows[] = array('attcode' => $sKey, 'data' => $value);
+				if (strpos(CMDBSource::GetFieldType($sSQLTable, $sKey), 'blob') !== false) {
+					$aRows[] = array('attcode' => $sKey, 'data' => sprintf('<i>%s (%s)</i>', Dict::S('Core:AttributeBlob'), utils::BytesToFriendlyFormat(strlen($value))));
+				} else {
+					$aRows[] = array('attcode' => $sKey, 'data' => utils::EscapeHtml($value));
+				}
 			}
 			$oPage->Table($aHeaders, $aRows);
 			$oPage->add('</fieldset>');
@@ -3531,17 +3536,24 @@ class SynchroExecution
 			$oSetToProcess = $oSetScope;
 		}
 
-		$iLastReplicaProcessed = -1;
-		/** @var \SynchroReplica $oReplica */
-		while ($oReplica = $oSetToProcess->Fetch())
-		{
-			set_time_limit(intval($iLoopTimeLimit));
-			$iLastReplicaProcessed = $oReplica->GetKey();
-			$this->m_oStatLog->AddTrace("Synchronizing replica id=$iLastReplicaProcessed.");
-			$oReplica->Synchro($this->m_oDataSource, $this->m_aReconciliationKeys, $this->m_aAttributes, $this->m_oChange,
-				$this->m_oStatLog);
-			$this->m_oStatLog->AddTrace("Updating replica id=$iLastReplicaProcessed.");
-			$oReplica->DBUpdate();
+		// Avoid too many events
+		cmdbAbstractObject::SetEventDBLinksChangedBlocked(true);
+		try {
+			$iLastReplicaProcessed = -1;
+			/** @var \SynchroReplica $oReplica */
+			while ($oReplica = $oSetToProcess->Fetch()) {
+				set_time_limit(intval($iLoopTimeLimit));
+				$iLastReplicaProcessed = $oReplica->GetKey();
+				$this->m_oStatLog->AddTrace("Synchronizing replica id=$iLastReplicaProcessed.");
+				$oReplica->Synchro($this->m_oDataSource, $this->m_aReconciliationKeys, $this->m_aAttributes, $this->m_oChange,
+					$this->m_oStatLog);
+				$this->m_oStatLog->AddTrace("Updating replica id=$iLastReplicaProcessed.");
+				$oReplica->DBUpdate();
+			}
+		} finally {
+			// Send all the retained events for further computations
+			cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
+			cmdbAbstractObject::FireEventDbLinksChangedForAllObjects();
 		}
 
 		if ($iMaxReplica)

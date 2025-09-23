@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -155,7 +155,7 @@ function CheckFields(sFormId, bDisplayAlert)
 // if some fields are in wait, no submit is allowed
 	if ($('#'+sFormId+' .blockMsg').length>0)
 	{
-		alert(Dict.S('UI:Button:Wait'));
+		CombodoModal.OpenWarningModal(Dict.S('UI:Button:Wait'));
 		return false;
 	}
 
@@ -178,13 +178,12 @@ function CheckFields(sFormId, bDisplayAlert)
 		if (bDisplayAlert)
 		{
 			activateFirstTabWithError(sFormId);
-			alert(Dict.S('UI:FillAllMandatoryFields'));
+			CombodoModal.OpenErrorModal(Dict.S('UI:FillAllMandatoryFields'));
 		}
 		$('#'+sFormId+' :submit').prop('disable', false);
 		$('#'+sFormId+' :button[type=submit]').prop('disable', false);
-		if (oFormErrors['input_'+sFormId] != null)
-		{
-			$('#'+oFormErrors['input_'+sFormId]).focus();
+		if (oFormErrors['input_'+sFormId] != null) {
+			$('#'+oFormErrors['input_'+sFormId]).trigger('focus');
 		}
 	}
 
@@ -304,44 +303,51 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue, origi
 
 function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue)
 {
-	if ($('#'+sFieldId).length === 0) {
-		return;
+	let oField = $('#'+sFieldId);
+	if (oField.length === 0) {
+		return false;
 	}
+
+	let oCKEditor = CombodoCKEditorHandler.GetInstanceSynchronous('#'+sFieldId);
 
 	var bValid;
 	var sExplain = '';
-	var sTextContent;
-
-	if ($('#'+sFieldId).prop('disabled')) {
+	if (oField.prop('disabled')) {
 		bValid = true; // disabled fields are not checked
 	} else {
-		// Get the contents without the tags
-		var oFormattedContents = $("#cke_"+sFieldId+" iframe");
-		if (oFormattedContents.length == 0) {
-			var oSourceContents = $("#cke_"+sFieldId+" textarea.cke_source");
-			sTextContent = oSourceContents.val();
-		} else {
-			sTextContent = oFormattedContents.contents().find("body").text();
+		// If the CKEditor is not yet loaded, we need to wait for it to be ready
+		// but as we need this function to be synchronous, we need to call it again when the CKEditor is ready
+		if (oCKEditor === undefined){
+			CombodoCKEditorHandler.GetInstance('#'+sFieldId).then((oCKEditor) => {
+				ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);
+			});
+			return;
+		}
+		let sTextContent;
+		let sFormattedContent = oCKEditor.getData();
 
-			if (sTextContent == '') {
-				// No plain text, maybe there is just an image...
-				var oImg = oFormattedContents.contents().find("body img");
-				if (oImg.length != 0) {
-					sTextContent = 'image';
-				}
+		// Get the contents without the tags
+		// Check if we have a formatted content that is HTML, otherwise we just have plain text, and we can use it directly
+		sTextContent = $(sFormattedContent).length > 0 ? $(sFormattedContent).text() : sFormattedContent;
+
+		if (sTextContent === '') {
+			// No plain text, maybe there is just an image
+			let oImg = $(sFormattedContent).find("img");
+			if (oImg.length !== 0) {
+				sTextContent = 'image';
 			}
 		}
 
 		// Get the original value without the tags
-		var oFormattedOriginalContents = (originalValue !== undefined) ? $('<div></div>').html(originalValue) : undefined;
-		var sTextOriginalContents = (oFormattedOriginalContents !== undefined) ? oFormattedOriginalContents.text() : undefined;
+		let oFormattedOriginalContents = (originalValue !== undefined) ? $('<div></div>').html(originalValue) : undefined;
+		let sTextOriginalContents = (oFormattedOriginalContents !== undefined) ? oFormattedOriginalContents.text() : undefined;
 
-		if (bMandatory && (sTextContent == nullValue)) {
+		if (bMandatory && (sTextContent === nullValue)) {
 			bValid = false;
 			sExplain = Dict.S('UI:ValueMustBeSet');
-		} else if ((sTextOriginalContents != undefined) && (sTextContent == sTextOriginalContents)) {
+		} else if ((sTextOriginalContents !== undefined) && (sTextContent === sTextOriginalContents)) {
 			bValid = false;
-			if (sTextOriginalContents == nullValue) {
+			if (sTextOriginalContents === nullValue) {
 				sExplain = Dict.S('UI:ValueMustBeSet');
 			} else {
 				// Note: value change check is not working well yet as the HTML to Text conversion is not exactly the same when done from the PHP value or the CKEditor value.
@@ -350,17 +356,15 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 		} else {
 			bValid = true;
 		}
-	}
-
-	ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain);
-
-	if ($('#'+sFieldId).data('timeout_validate') == undefined) {
-		// We need to check periodically as CKEditor doesn't trigger our events. More details in UIHTMLEditorWidget::Display() @ line 92
-		var iTimeoutValidate = setInterval(function () {
+		
+		// Put and event to check the field when the content changes, remove the event right after as we'll call this same function again, and we don't want to call the event more than once (especially not ^2 times on each call)
+		oCKEditor.model.document.once('change:data', (event) => {
 			ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);
-		}, 500);
-		$('#'+sFieldId).data('timeout_validate', iTimeoutValidate);
+		});
 	}
+	
+	ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain);
+	return bValid;
 }
 
 function ResetPwd(id)

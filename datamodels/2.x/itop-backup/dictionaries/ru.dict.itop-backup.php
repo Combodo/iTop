@@ -1,18 +1,18 @@
 <?php
 /**
- * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
+ * Localized data
  *
- * @author      Vladimir Kunin <v.b.kunin@gmail.com>
- * @link        http://community.itop-itsm.ru  iTop Russian Community
- * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
+ * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-
 	'bkp-backup-running' => 'Выполняется резервное копирование. Пожалуйста, подождите...',
 	'bkp-restore-running' => 'Выполняется восстановление из резервной копии. Пожалуйста, подождите...',
-
 	'Menu:BackupStatus' => 'Резервное копирование',
 	'bkp-status-title' => 'Резервное копирование по расписанию',
 	'bkp-status-checks' => 'Настройки и проверки',
