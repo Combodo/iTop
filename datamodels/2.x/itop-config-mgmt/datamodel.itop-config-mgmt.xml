@@ -4395,6 +4395,11 @@
           <extkey_attcode>osfamily_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="ospatches_list" xsi:type="AttributeLinkedSet">
+          <linked_class>OSPatch</linked_class>
+          <ext_key_to_me>osversion_id</ext_key_to_me>
+          <edit_mode>add_remove</edit_mode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -4405,6 +4410,9 @@
             </item>
             <item id="osfamily_id">
               <rank>20</rank>
+            </item>
+            <item id="ospatches_list">
+              <rank>30</rank>
             </item>
           </items>
         </details>
@@ -4450,13 +4458,22 @@
           </attributes>
         </reconciliation>
       </properties>
-      <fields/>
+      <fields>
+        <field id="osverions_list" xsi:type="AttributeLinkedSet">
+          <linked_class>OSVersion</linked_class>
+          <ext_key_to_me>osfamily_id</ext_key_to_me>
+          <edit_mode>add_remove</edit_mode>
+        </field>
+      </fields>
       <methods/>
       <presentation>
         <details>
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="osverions_list">
+              <rank>20</rank>
             </item>
           </items>
         </details>
@@ -4526,6 +4543,16 @@
           <count_max>0</count_max>
           <duplicates/>
         </field>
+        <field id="models_list" xsi:type="AttributeLinkedSet">
+          <linked_class>Model</linked_class>
+          <ext_key_to_me>brand_id</ext_key_to_me>
+          <edit_mode>add_remove</edit_mode>
+        </field>
+        <field id="iosversions_list" xsi:type="AttributeLinkedSet">
+          <linked_class>IOSVersion</linked_class>
+          <ext_key_to_me>brand_id</ext_key_to_me>
+          <edit_mode>add_remove</edit_mode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -4539,6 +4566,12 @@
             </item>
             <item id="physicaldevices_list">
               <rank>30</rank>
+            </item>
+            <item id="models_list">
+              <rank>40</rank>
+            </item>
+            <item id="iosversions_list">
+              <rank>50</rank>
             </item>
           </items>
         </details>
@@ -4854,6 +4887,11 @@
           <extkey_attcode>brand_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="networkdevices_list" xsi:type="AttributeLinkedSet">
+          <linked_class>NetworkDevice</linked_class>
+          <ext_key_to_me>iosversion_id</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -4864,6 +4902,9 @@
             </item>
             <item id="brand_id">
               <rank>20</rank>
+            </item>
+            <item id="networkdevices_list">
+              <rank>30</rank>
             </item>
           </items>
         </details>
