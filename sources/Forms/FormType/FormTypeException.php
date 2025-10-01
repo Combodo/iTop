@@ -6,7 +6,9 @@
 
 namespace Combodo\iTop\Forms\FormType;
 
-class FormTypeException extends \Exception
+use Combodo\iTop\Forms\FormException;
+
+class FormTypeException extends FormException
 {
 
 }

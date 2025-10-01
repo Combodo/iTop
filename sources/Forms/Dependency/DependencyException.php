@@ -6,7 +6,9 @@
 
 namespace Combodo\iTop\Forms\Dependency;
 
-class DependencyException extends \Exception
+use Combodo\iTop\Forms\FormException;
+
+class DependencyException extends FormException
 {
 
 }
