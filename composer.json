@@ -29,16 +29,13 @@
     "symfony/http-foundation": "~6.4.0",
     "symfony/http-kernel": "~6.4.0",
     "symfony/mailer": "^6.4",
-    "symfony/runtime": "~6.4.0",
     "symfony/security-csrf": "^6.4",
     "symfony/twig-bundle": "~6.4.0",
-    "symfony/var-dumper": "~6.4.0",
     "symfony/yaml": "~6.4.0",
     "tecnickcom/tcpdf": "^6.6.0",
     "thenetworg/oauth2-azure": "^2.0"
   },
   "require-dev": {
-    "symfony/debug-bundle": "~6.4.0",
     "symfony/stopwatch": "~6.4.0",
     "symfony/web-profiler-bundle": "~6.4.0"
   },
@@ -65,10 +62,7 @@
     },
     "sort-packages": true,
     "classmap-authoritative": true,
-    "platform-check": true,
-    "allow-plugins": {
-      "symfony/runtime": true
-    }
+    "platform-check": true
   },
   "autoload": {
     "classmap": [
@@ -96,7 +90,7 @@
   "extra": {
     "symfony": {
       "allow-contrib": false,
-      "require": "3.4.*"
+      "require": "6.4.*"
     },
     "runtime": {
       "dotenv_path": "resources/symfony/.env"
