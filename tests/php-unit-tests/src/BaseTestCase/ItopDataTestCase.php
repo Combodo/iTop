@@ -248,7 +248,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 		$sConfigFile = $this->GetConfigFileAbsPath();
 
 		// Start MetaModel for the prepared environment
-		MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
+		MetaModel::Startup($sConfigFile, false, true, false, $sEnv);
 	}
 
 	/**

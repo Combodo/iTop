@@ -102,7 +102,7 @@ class FormBuilder extends FormConfigBuilder implements \IteratorAggregate, FormB
             return $this->children[$name];
         }
 
-        throw new InvalidArgumentException(sprintf('The child with the name "%s" does not exist.', $name));
+        throw new InvalidArgumentException(\sprintf('The child with the name "%s" does not exist.', $name));
     }
 
     public function remove(string $name): static
@@ -147,7 +147,7 @@ class FormBuilder extends FormConfigBuilder implements \IteratorAggregate, FormB
 
     public function getFormConfig(): FormConfigInterface
     {
-        /** @var $config self */
+        /** @var self $config */
         $config = parent::getFormConfig();
 
         $config->children = [];
