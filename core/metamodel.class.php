@@ -409,13 +409,13 @@ abstract class MetaModel
 	 *
 	 * @return string the working time class
 	 * @throws \CoreException
+	 * @since 3.3.0
 	 */
 	final public static function GetWorkingTime($sClass)
 	{
 		self::_check_subclass($sClass);
 
 		if (array_key_exists('working_time', self::$m_aClassParams[$sClass])) {
-			/** @var ormStyle $oStyle */
 			return self::$m_aClassParams[$sClass]['working_time'];
 		} else {
 			$sParentClass = self::GetParentPersistentClass($sClass);
