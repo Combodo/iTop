@@ -1797,14 +1797,6 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'application.secret' => [
-			'type'                => 'string',
-			'description'         => 'Application secret, uses this value for encrypting the cookies used in the remember me functionality and for creating signed URIs when using ESI (Edge Side Includes).',
-			'default'             => '',
-			'value'               => '',
-			'source_of_value'     => '',
-			'show_in_conf_sample' => false,
-		],
 		'http.request.user_agent' => [
 			'type'                => 'string',
 			'description'         => 'HTTP request user agent, use this to set a custom agent on external requests.',
@@ -2198,7 +2190,6 @@ class Config
 		$this->m_sEncryptionLibrary = isset($MySettings['encryption_library']) ? trim($MySettings['encryption_library']) : $this->m_sEncryptionLibrary;
 		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : array();
 		$this->m_iPasswordHashAlgo = isset($MySettings['password_hash_algo']) ? $MySettings['password_hash_algo'] : $this->m_iPasswordHashAlgo;
-		$this->m_sAppSecret = isset($MySettings['application.secret']) ? trim($MySettings['application.secret']) : $this->m_sAppSecret;
 	}
 
 	protected function Verify()
@@ -2522,7 +2513,6 @@ class Config
 		$aSettings['encryption_library'] = $this->m_sEncryptionLibrary;
 		$aSettings['csv_import_charsets'] = $this->m_aCharsets;
 		$aSettings['password_hash_algo'] = $this->m_iPasswordHashAlgo;
-		$aSettings['application.secret'] = $this->m_sAppSecret;
 
 		foreach ($this->m_aModuleSettings as $sModule => $aProperties)
 		{
@@ -2636,7 +2626,6 @@ class Config
 				'encryption_library' => $this->m_sEncryptionLibrary,
 				'csv_import_charsets' => $this->m_aCharsets,
 				'password_hash_algo' => $this->m_iPasswordHashAlgo,
-				'application.secret' => $this->m_sAppSecret,
 			);
 			foreach ($aOtherValues as $sKey => $value)
 			{
