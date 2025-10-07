@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+
 require_once('dbobjectiterator.php');
 
 
@@ -856,6 +858,26 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		sort($aValues);
 
 		return $aValues;
+	}
+
+	/**
+	 * List the objects by name
+	 * @return array of long object friendly-names
+	 * @throws \CoreException
+	 */
+	public function GetLabels()
+	{
+		$aLabels = array();
+		foreach ($this->aPreserved as $sTagCode => $oTag) {
+			$aLabels[] = $oTag->GetName(FriendlyNameType::LONG);
+		}
+		foreach ($this->aAdded as $sTagCode => $oTag) {
+			$aLabels[] = $oTag->GetName(FriendlyNameType::LONG);
+		}
+
+		sort($aLabels);
+
+		return $aLabels;
 	}
 
 	/**
