@@ -24,6 +24,7 @@
     "soundasleep/html2text": "~2.1",
     "symfony/console": "~6.4.0",
     "symfony/dotenv": "~6.4.0",
+    "symfony/form": "^6.4",
     "symfony/framework-bundle": "~6.4.0",
     "symfony/http-foundation": "~6.4.0",
     "symfony/http-kernel": "~6.4.0",
