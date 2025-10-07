@@ -438,6 +438,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		return array(
 			''     => 'Plain text (unlocalized) representation',
 			'html' => 'HTML representation (unordered list)',
+			'csv'  => 'CSV representation (unordered list)',
 		);
 	}
 
@@ -478,6 +479,9 @@ class AttributeLinkedSet extends AttributeDefinition
 
 			case 'html':
 				return '<ul><li>'.implode("</li><li>", $aNames).'</li></ul>';
+
+			case 'csv':
+				return $this->GetAsCSV($value, oHostObject: $oHostObject, bLocalize: $bLocalize);
 
 			default:
 				throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObject));

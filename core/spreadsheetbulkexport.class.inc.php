@@ -338,7 +338,7 @@ EOF
 							$sField = $oObj->GetAsHTML($sAttCode, $this->bLocalizeOutput);
 							$sData .= "<td x:str>$sField</td>";
 						}
-						else if ($oAttDef instanceof AttributeTagSet)
+						else if ($oAttDef instanceof AttributeTagSet || $oAttDef instanceof AttributeLinkedSet)
 						{
 							$sField = utils::HtmlEntities($oObj->GetAsCSV($sAttCode, $this->bLocalizeOutput, ''));
 							$sData .= "<td x:str>$sField</td>";
