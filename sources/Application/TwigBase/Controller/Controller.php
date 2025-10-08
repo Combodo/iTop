@@ -37,7 +37,11 @@ use SetupPage;
 use SetupUtils;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormRenderer;
+use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Error\Error;
 use Twig\Error\SyntaxError;
@@ -684,18 +688,18 @@ abstract class Controller extends AbstractController
 		return $this->oRequest;
 	}
 
-//	public function GetFormBuilder(string $type = FormType::class, mixed $data = null, array $options = []): FormBuilderInterface
-//	{
-//		return Forms::createFormFactory()->createBuilder($type, $data,$options);
-//	}
-//
-//	public function GetForm(string $type = FormType::class, mixed $data = null, array $options = []): FormInterface
-//	{
-//		if (is_null($data)) {
-//			$data = $type::GetDefaultData();
-//		}
-//		return $this->GetFormBuilder($type, $data,$options)->getForm();
-//	}
+	public function GetFormBuilder(string $type = FormType::class, mixed $data = null, array $options = []): FormBuilderInterface
+	{
+		return Forms::createFormFactory()->createBuilder($type, $data,$options);
+	}
+
+	public function GetForm(string $type = FormType::class, mixed $data = null, array $options = []): FormInterface
+	{
+		if (is_null($data)) {
+			$data = $type::GetDefaultData();
+		}
+		return $this->GetFormBuilder($type, $data,$options)->getForm();
+	}
 
 	/**
 	 * @param $aParams
