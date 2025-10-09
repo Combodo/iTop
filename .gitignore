@@ -20,7 +20,6 @@
 # composer reserver directory, from sources, populate/update using "composer install"
 vendor/*
 tests/*/vendor/*
-tools/vendor
 
 # all conf but listing prevention
 /conf/**
