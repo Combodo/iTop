@@ -26,7 +26,6 @@ use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\AbstractController;
-use Combodo\iTop\Forms\Forms;
 use Dict;
 use Exception;
 use ExecutionKPI;
@@ -39,17 +38,18 @@ use SetupUtils;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormFactoryBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormRenderer;
+use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Error\Error;
 use Twig\Error\SyntaxError;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use utils;
 use ZipArchive;
-
-//use Combodo\iTop\Forms\Forms;
 
 abstract class Controller extends AbstractController
 {
@@ -91,8 +91,12 @@ abstract class Controller extends AbstractController
 	private $m_bIsBreadCrumbEnabled = true;
 	/** @var array contains same parameters as {@see iTopWebPage::SetBreadCrumbEntry()} */
 	private $m_aBreadCrumbEntry = [];
-	/** @var \Symfony\Component\HttpFoundation\Request */
+
+	/** @var Request Request (from Symfony http_foundation component @link https://symfony.com/doc/current/components/http_foundation.html) */
 	private Request $oRequest;
+
+	/** @var FormFactoryBuilderInterface Factory form builder (from Symfony form component @link https://symfony.com/doc/current/components/form.html) */
+	private FormFactoryBuilderInterface $oFormFactoryBuilder;
 
 	/**
 	 * Controller constructor.
@@ -102,7 +106,6 @@ abstract class Controller extends AbstractController
 	 */
 	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
 	{
-		$this->oRequest = Request::createFromGlobals();
 		$this->m_aLinkedScripts = [];
 		$this->m_aLinkedStylesheets = [];
 		$this->m_aSaas = [];
@@ -123,6 +126,23 @@ abstract class Controller extends AbstractController
 				}
 			}
 		}
+
+		// Initialize Symfony components
+		$this->InitSymfonyComponents();;
+	}
+
+	/**
+	 * Init controllers vars related to Symfony components.
+	 *
+	 * @return void
+	 */
+	private function InitSymfonyComponents(): void
+	{
+		// a request object representation from PHP request globals
+		$this->oRequest = Request::createFromGlobals();
+
+		// initialize the form factory builder to handle Request objects
+		$this->oFormFactoryBuilder = Forms::createFormFactoryBuilder()->addExtension(new HttpFoundationExtension());
 	}
 
 	/**
@@ -688,11 +708,31 @@ abstract class Controller extends AbstractController
 		return $this->oRequest;
 	}
 
+	/**
+	 * Get a form builder.
+	 * This form builder can be used to create a form or to add fields to an existing form.
+	 *
+	 * @param string $type
+	 * @param mixed|null $data
+	 * @param array $options
+	 *
+	 * @return FormBuilderInterface
+	 */
 	public function GetFormBuilder(string $type = FormType::class, mixed $data = null, array $options = []): FormBuilderInterface
 	{
-		return Forms::createFormFactory()->createBuilder($type, $data,$options);
+		return $this->oFormFactoryBuilder->getFormFactory()->createBuilder($type, $data,$options);
 	}
 
+	/**
+	 * Get a form.
+	 * This form can be directly used in a twig template.
+	 *
+	 * @param string $type
+	 * @param mixed|null $data
+	 * @param array $options
+	 *
+	 * @return FormInterface
+	 */
 	public function GetForm(string $type = FormType::class, mixed $data = null, array $options = []): FormInterface
 	{
 		if (is_null($data)) {

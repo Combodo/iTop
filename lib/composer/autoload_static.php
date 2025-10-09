@@ -525,8 +525,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\Search\\CriterionParser' => __DIR__ . '/../..' . '/sources/Application/Search/criterionparser.class.inc.php',
         'Combodo\\iTop\\Application\\Search\\SearchForm' => __DIR__ . '/../..' . '/sources/Application/Search/searchform.class.inc.php',
         'Combodo\\iTop\\Application\\Status\\Status' => __DIR__ . '/../..' . '/sources/Application/Status/Status.php',
-        'Combodo\\iTop\\Application\\Symfony\\Poc\\BaseForm\\BaseFormController' => __DIR__ . '/../..' . '/sources/Application/Symfony/Poc/BaseForm/BaseFormController.php',
-        'Combodo\\iTop\\Application\\Symfony\\Poc\\BaseForm\\BaseFormType' => __DIR__ . '/../..' . '/sources/Application/Symfony/Poc/BaseForm/BaseFormType.php',
         'Combodo\\iTop\\Application\\TwigBase\\Controller\\Controller' => __DIR__ . '/../..' . '/sources/Application/TwigBase/Controller/Controller.php',
         'Combodo\\iTop\\Application\\TwigBase\\Controller\\PageNotFoundException' => __DIR__ . '/../..' . '/application/exceptions/PageNotFoundException.php',
         'Combodo\\iTop\\Application\\TwigBase\\Twig\\Extension' => __DIR__ . '/../..' . '/sources/Application/TwigBase/Twig/Extension.php',

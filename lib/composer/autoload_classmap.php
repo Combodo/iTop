@@ -144,8 +144,6 @@ return array(
     'Combodo\\iTop\\Application\\Search\\CriterionParser' => $baseDir . '/sources/Application/Search/criterionparser.class.inc.php',
     'Combodo\\iTop\\Application\\Search\\SearchForm' => $baseDir . '/sources/Application/Search/searchform.class.inc.php',
     'Combodo\\iTop\\Application\\Status\\Status' => $baseDir . '/sources/Application/Status/Status.php',
-    'Combodo\\iTop\\Application\\Symfony\\Poc\\BaseForm\\BaseFormController' => $baseDir . '/sources/Application/Symfony/Poc/BaseForm/BaseFormController.php',
-    'Combodo\\iTop\\Application\\Symfony\\Poc\\BaseForm\\BaseFormType' => $baseDir . '/sources/Application/Symfony/Poc/BaseForm/BaseFormType.php',
     'Combodo\\iTop\\Application\\TwigBase\\Controller\\Controller' => $baseDir . '/sources/Application/TwigBase/Controller/Controller.php',
     'Combodo\\iTop\\Application\\TwigBase\\Controller\\PageNotFoundException' => $baseDir . '/application/exceptions/PageNotFoundException.php',
     'Combodo\\iTop\\Application\\TwigBase\\Twig\\Extension' => $baseDir . '/sources/Application/TwigBase/Twig/Extension.php',

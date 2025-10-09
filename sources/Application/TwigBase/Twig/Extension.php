@@ -59,6 +59,11 @@ class Extension
 			return Dict::S($sStringCode, $sDefault, $bUserLanguageOnly);
 		});
 
+		// Alias of dict_s, to be compatible with Symfony/Twig standard
+		$aFilters[] = new TwigFilter('trans', function ($sStringCode, $aData = null, $sTransDomain = false) {
+			return Dict::S($sStringCode);
+		});
+
 		// Filter to format a string via the Dict::Format function
 		// Usage in twig: {{ 'String:ToTranslate'|dict_format() }}
 		$aFilters[] = new TwigFilter('dict_format', function ($sStringCode, $sParam01 = null, $sParam02 = null, $sParam03 = null, $sParam04 = null) {
