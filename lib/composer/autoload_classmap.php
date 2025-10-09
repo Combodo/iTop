@@ -471,7 +471,6 @@ return array(
     'Combodo\\iTop\\Form\\Validator\\MultipleChoicesValidator' => $baseDir . '/sources/Form/Validator/MultipleChoicesValidator.php',
     'Combodo\\iTop\\Form\\Validator\\NotEmptyExtKeyValidator' => $baseDir . '/sources/Form/Validator/NotEmptyExtKeyValidator.php',
     'Combodo\\iTop\\Form\\Validator\\SelectObjectValidator' => $baseDir . '/sources/Form/Validator/SelectObjectValidator.php',
-    'Combodo\\iTop\\Forms\\Forms' => $baseDir . '/sources/Forms/Forms.php',
     'Combodo\\iTop\\Kernel' => $baseDir . '/sources/Kernel.php',
     'Combodo\\iTop\\PhpParser\\Evaluation\\PhpExpressionEvaluator' => $baseDir . '/sources/PhpParser/Evaluation/PhpExpressionEvaluator.php',
     'Combodo\\iTop\\Renderer\\BlockRenderer' => $baseDir . '/sources/Renderer/BlockRenderer.php',

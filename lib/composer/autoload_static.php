@@ -852,7 +852,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Form\\Validator\\MultipleChoicesValidator' => __DIR__ . '/../..' . '/sources/Form/Validator/MultipleChoicesValidator.php',
         'Combodo\\iTop\\Form\\Validator\\NotEmptyExtKeyValidator' => __DIR__ . '/../..' . '/sources/Form/Validator/NotEmptyExtKeyValidator.php',
         'Combodo\\iTop\\Form\\Validator\\SelectObjectValidator' => __DIR__ . '/../..' . '/sources/Form/Validator/SelectObjectValidator.php',
-        'Combodo\\iTop\\Forms\\Forms' => __DIR__ . '/../..' . '/sources/Forms/Forms.php',
         'Combodo\\iTop\\Kernel' => __DIR__ . '/../..' . '/sources/Kernel.php',
         'Combodo\\iTop\\PhpParser\\Evaluation\\PhpExpressionEvaluator' => __DIR__ . '/../..' . '/sources/PhpParser/Evaluation/PhpExpressionEvaluator.php',
         'Combodo\\iTop\\Renderer\\BlockRenderer' => __DIR__ . '/../..' . '/sources/Renderer/BlockRenderer.php',
