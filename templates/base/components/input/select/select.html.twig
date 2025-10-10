@@ -5,7 +5,7 @@
         {% include "base/components/input/inputlabel.html.twig" %}
     {% endif %}
     <select id="{{ oUIBlock.GetId() }}" name="{{ oUIBlock.GetName() }}"
-            {% if oUIBlock.GetSubmitOnChange() %} onChange="this.form.trigger('submit');" {% endif %}
+            {% if oUIBlock.GetSubmitOnChange() %} onChange="$(this).parents('form:first').trigger('submit');" {% endif %}
             {% if oUIBlock.IsMultiple() %} multiple {% endif %}
             class="{% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}{% if oUIBlock.GetAdditionalCSSClassesAsString() %} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% endif %}"
             {% if oUIBlock.GetDataAttributes() %}

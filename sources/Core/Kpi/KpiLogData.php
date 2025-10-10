@@ -32,6 +32,8 @@ class KpiLogData
     public $iPeakMemory;
     /** @var array */
     public $aData;
+	// Computed
+	public float $fDuration;
 
     /**
      * @param string $sType
@@ -56,6 +58,7 @@ class KpiLogData
         $this->iCurrentMemory = $iCurrentMemory;
         $this->iPeakMemory = $iPeakMemory;
         $this->aData = $aData;
+	    $this->fDuration = sprintf('%01.4f', $this->fStopTime - $this->fStartTime);
     }
 
     /**
@@ -74,12 +77,11 @@ class KpiLogData
      */
     public function GetCSV()
     {
-        $fDuration = sprintf('%01.4f', $this->fStopTime - $this->fStartTime);
         $sType = $this->RemoveQuotes($this->sType);
         $sOperation = $this->RemoveQuotes($this->sOperation);
         $sArguments = $this->RemoveQuotes($this->sArguments);
         $sExtension = $this->RemoveQuotes($this->sExtension);
-        return "\"$sType\",\"$sOperation\",\"$sArguments\",$this->fStartTime,$this->fStopTime,$fDuration,\"$sExtension\",$this->iInitialMemory,$this->iCurrentMemory,$this->iPeakMemory";
+        return "\"$sType\",\"$sOperation\",\"$sArguments\",$this->fStartTime,$this->fStopTime,$this->fDuration,\"$sExtension\",$this->iInitialMemory,$this->iCurrentMemory,$this->iPeakMemory";
     }
 
     private function RemoveQuotes(string $sEntry): string

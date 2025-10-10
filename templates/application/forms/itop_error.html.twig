@@ -1,0 +1,6 @@
+{# @copyright   Copyright (C) 2010-2025 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% if sControllerError %}
+    {% UIAlert ForDanger { sTitle:'UI:Error:TwigController'|dict_s, sContent:sControllerError } %}{% EndUIAlert %}
+{% endif %}
