@@ -9,6 +9,7 @@ namespace Combodo\iTop\Core\AttributeDefinition;
 use CMDBSource;
 use Combodo\iTop\Application\UI\Links\Set\BlockLinkSetDisplayAsProperty;
 use Combodo\iTop\Form\Field\LinkedSetField;
+use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Service\Links\LinkSetModel;
 use CoreException;
@@ -21,6 +22,7 @@ use Exception;
 use ExceptionLog;
 use IssueLog;
 use MetaModel;
+use ModuleDesign;
 use ormLinkSet;
 use ValueSetObjects;
 
@@ -154,6 +156,14 @@ class AttributeLinkedSet extends AttributeDefinition
 				$oLinkSearch->AddCondition_PointingTo($oRemoteSearch, $this->GetExtKeyToRemote());
 			}
 		}
+		//Add silo in portal context
+		if (defined('PORTAL_ID'))
+		{
+			$oModuleDesign = new ModuleDesign(PORTAL_ID);
+			$oScopeValidatorHelper = new ScopeValidatorHelper($oModuleDesign, PORTAL_ID);
+			$oScopeValidatorHelper->AddScopeToQuery($oLinkSearch, $oLinkSearch->GetClass());
+		}
+
 		$oLinks = new DBObjectSet($oLinkSearch);
 		$oLinkSet = new ormLinkSet($this->GetHostClass(), $this->GetCode(), $oLinks);
 
