@@ -11,12 +11,14 @@ use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Forms\Twig\Extension\FormCompatibilityExtension;
 use Combodo\iTop\Renderer\BlockRenderer;
 use CoreTemplateException;
 use ExecutionKPI;
 use IssueLog;
 use Twig\Environment;
 use Twig\Error\Error;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use utils;
 
@@ -80,7 +82,10 @@ class TwigHelper
 			$oLoader->addPath($sAdditionalPath);
 		}
 
-		$oTwig = new Environment($oLoader);
+		// Create Twig environment
+		$oTwig = new Environment($oLoader, [
+			'debug' => utils::IsDevelopmentEnvironment(),
+		]);
 		Extension::RegisterTwigExtensions($oTwig);
 		if (!utils::IsDevelopmentEnvironment()) {
 			// Disable the cache in development environment
@@ -90,7 +95,9 @@ class TwigHelper
 			$oTwig->setCache($sCachePath);
 		}
 
+		$oTwig->addExtension(new DebugExtension());
 		$oTwig->addExtension(new UIBlockExtension());
+		$oTwig->addExtension(new FormCompatibilityExtension());
 
 		return $oTwig;
 	}

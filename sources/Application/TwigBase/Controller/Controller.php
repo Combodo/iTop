@@ -38,6 +38,7 @@ use SetupUtils;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryBuilderInterface;
@@ -45,6 +46,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Twig\Error\Error;
 use Twig\Error\SyntaxError;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -98,6 +100,9 @@ abstract class Controller extends AbstractController
 	/** @var FormFactoryBuilderInterface Factory form builder (from Symfony form component @link https://symfony.com/doc/current/components/form.html) */
 	private FormFactoryBuilderInterface $oFormFactoryBuilder;
 
+	/** @var CsrfTokenManager Csrf manager (from Symfony form component @link https://symfony.com/doc/current/security/csrf.html) */
+	private CsrfTokenManager $oCsrfTokenManager;
+
 	/**
 	 * Controller constructor.
 	 *
@@ -113,6 +118,22 @@ abstract class Controller extends AbstractController
 		$this->m_aDefaultParams = [];
 		$this->m_aBlockParams = [];
 		$this->SetModuleName($sModuleName);
+
+		// Initialize Symfony components
+		$this->InitSymfonyComponents($sViewPath, $sModuleName);
+	}
+
+	/**
+	 * Init Symfony components.
+	 *
+	 * @param string $sViewPath
+	 * @param string $sModuleName
+	 *
+	 * @return void
+	 */
+	private function InitSymfonyComponents(string $sViewPath, string $sModuleName): void
+	{
+		// Twig environment
 		$aAdditionalPaths[] = APPROOT.'lib/symfony/twig-bridge/Resources/views/Form';
 		$aAdditionalPaths[] = APPROOT.'templates';
 		if (strlen($sViewPath) > 0) {
@@ -127,22 +148,16 @@ abstract class Controller extends AbstractController
 			}
 		}
 
-		// Initialize Symfony components
-		$this->InitSymfonyComponents();;
-	}
-
-	/**
-	 * Init controllers vars related to Symfony components.
-	 *
-	 * @return void
-	 */
-	private function InitSymfonyComponents(): void
-	{
-		// a request object representation from PHP request globals
+		// PHP Request object representation from PHP request globals
 		$this->oRequest = Request::createFromGlobals();
 
-		// initialize the form factory builder to handle Request objects
-		$this->oFormFactoryBuilder = Forms::createFormFactoryBuilder()->addExtension(new HttpFoundationExtension());
+		// Initialize the CSRF token manager
+		$this->oCsrfTokenManager = new CsrfTokenManager();
+
+		// Initialize the form factory builder to handle Request objects
+		$this->oFormFactoryBuilder = Forms::createFormFactoryBuilder()
+			->addExtension(new HttpFoundationExtension())
+			->addExtension(new CsrfExtension($this->oCsrfTokenManager));
 	}
 
 	/**
@@ -171,14 +186,14 @@ abstract class Controller extends AbstractController
 	public function SetViewPath($sViewPath, $aAdditionalPaths = [])
 	{
 		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath, $aAdditionalPaths);
-		$formEngine = new TwigRendererEngine(['application/forms/itop_console_layout.twig'], $oTwig);
+		/** @link https://github.com/symfony/twig-bridge/blob/6.4/CHANGELOG.md#320 */
+		$formEngine = new TwigRendererEngine(['application/forms/itop_console_layout.html.twig'], $oTwig);
 		$oTwig->addRuntimeLoader(new FactoryRuntimeLoader([
 			FormRenderer::class => function () use ($formEngine): FormRenderer {
-				return new FormRenderer($formEngine, null);
+				return new FormRenderer($formEngine, $this->oCsrfTokenManager);
 			},
 		]));
-		$oExt = new FormExtension();
-		$oTwig->addExtension($oExt);
+		$oTwig->addExtension(new FormExtension());
 		$this->m_oTwig = $oTwig;
 	}
 

@@ -30,6 +30,7 @@
     "symfony/http-kernel": "~6.4.0",
     "symfony/mailer": "^6.4",
     "symfony/runtime": "~6.4.0",
+    "symfony/security-csrf": "^6.4",
     "symfony/twig-bundle": "~6.4.0",
     "symfony/var-dumper": "~6.4.0",
     "symfony/yaml": "~6.4.0",
