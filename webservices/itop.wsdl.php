@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,19 +19,17 @@
  */
 
 if (isset($_REQUEST['debug'])) {
-	if ($_REQUEST['debug'] == 'text') {
-		header('Content-Type: text/plain; charset=UTF-8');
-	}
-	else {
-		header('Content-Type: application/xml; charset=UTF-8');
-	}
-}
-else {
-	// This is to make sure that the client will accept it....
-	//
-	header('Content-Type: application/xml; charset=UTF-8');
-	////header('Content-Disposition: attachment; filename="itop.wsdl"');
-	header('Content-Disposition: online; filename="itop.wsdl"');
+    if ($_REQUEST['debug'] == 'text') {
+        header('Content-Type: text/plain; charset=UTF-8');
+    } else {
+        header('Content-Type: application/xml; charset=UTF-8');
+    }
+} else {
+    // This is to make sure that the client will accept it....
+    //
+    header('Content-Type: application/xml; charset=UTF-8');
+    ////header('Content-Disposition: attachment; filename="itop.wsdl"');
+    header('Content-Disposition: online; filename="itop.wsdl"');
 }
 
 require_once('../approot.inc.php');
@@ -46,22 +45,20 @@ require_once(APPROOT.'webservices/webservices.basic.php');
 
 $sServiceCategory = utils::ReadParam('service_category');
 if (!empty($sServiceCategory)) {
-	$sRawFile = WebServicesBase::GetWSDLContents($sServiceCategory);
-}
-else {
-	$sRawFile = WebServicesBase::GetWSDLContents();
+    $sRawFile = WebServicesBase::GetWSDLContents($sServiceCategory);
+} else {
+    $sRawFile = WebServicesBase::GetWSDLContents();
 }
 
 $sServerURI = utils::GetAbsoluteUrlAppRoot().'webservices/soapserver.php';
 if (!empty($sServiceCategory)) {
-	$sServerURI .= "?service_category=".$sServiceCategory;
+    $sServerURI .= "?service_category=".$sServiceCategory;
 }
 
 $sFinalFile = str_replace(
-	'___SOAP_SERVER_URI___',
-	$sServerURI,
-	$sRawFile
+    '___SOAP_SERVER_URI___',
+    $sServerURI,
+    $sRawFile
 );
 
 echo $sFinalFile;
-?>
