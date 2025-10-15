@@ -1,6 +1,7 @@
 {
-    "require": {
-        "friendsofphp/php-cs-fixer": "^3.10",
-        "phpstan/phpstan": "^2.0"
+    "require-dev": {
+        "php": "^7.4 || ^8.0",
+        "friendsofphp/php-cs-fixer": "^3.88",
+        "phpstan/phpstan": "^2.1"
     }
 }
