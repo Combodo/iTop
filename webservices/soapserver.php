@@ -38,7 +38,7 @@ $aSOAPMapping = SOAPMapping::GetMapping();
 $oSoapServer = new SoapServer(
 	$sWsdlUri,
 	[
-		'classmap' => $aSOAPMapping
+		'classmap' => $aSOAPMapping,
 	]
 );
 // $oSoapServer->setPersistence(SOAP_PERSISTENCE_SESSION);

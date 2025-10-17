@@ -17,6 +17,7 @@ return $config->setRiskyAllowed(true)
 		'no_extra_blank_lines' => true,
 		'array_syntax' => ['syntax' => 'short'],
 		'concat_space' => true,
+		'trailing_comma_in_multiline' => true,
 	])
 	->setIndent("\t")
 	->setLineEnding("\n")

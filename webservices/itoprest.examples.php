@@ -156,7 +156,7 @@ $aOperations = [
 			'org_id' => "SELECT Organization WHERE name = 'Demo'",
 			'caller_id' => ['name' => 'monet', 'first_name' => 'claude'],
 			'title' => 'issue blah',
-			'description' => 'something happened'
+			'description' => 'something happened',
 		],
 	],
 	[
@@ -245,7 +245,7 @@ new line
 		// Values to set
 		'fields' => [
 			'team_id' => 15, // Helpdesk
-			'agent_id' => 9 // Jules Verne
+			'agent_id' => 9, // Jules Verne
 		],
 		'output_fields' => 'id, friendlyname, title, contacts_list', // list of fields to show in the results (* or a,b,c)
 	],
@@ -271,7 +271,7 @@ $aOperations = [
 			'contents' => [
 				'data' => 'iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAIAAAC0tAIdAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACmSURBVChTfZHRDYMwDESzQ2fqhHx3C3ao+MkW/WlnaFxfzk7sEnE6JHJ+NgaKZN2zLHVN2ssfkae0Da7FQ5PRk/ve4Hcx19Ie6CEGuh/6vMgNhwanHVUNbt73lUDbYJ+6pg8b3+m2RehsVPdMXyvQY+OVkB+Rrv64lUjb3nq+aCA6v4leRqtfaIgimr53atBy9PlfUhoh3fFCNDmErv9FWR6ylBL5AREbmHBnFj5lAAAAAElFTkSuQmCC',
 				'filename' => 'myself.png',
-				'mimetype' => 'image/png'
+				'mimetype' => 'image/png',
 			],
 		],
 	],
@@ -280,7 +280,7 @@ $aOperations = [
 		'class' => 'Attachment',
 		'key' => 'SELECT Attachment',
 		'output_fields' => '*',
-	]
+	],
 ];
 $aOperations = [
 	[
@@ -306,7 +306,7 @@ $aOperations = [
 			'org_id' => "SELECT Organization WHERE name = 'Demo'",
 			'caller_id' => ['name' => 'monet', 'first_name' => 'claude'],
 			'title' => 'issue blah',
-			'description' => 'something happened'
+			'description' => 'something happened',
 		],
 	],
 ];
