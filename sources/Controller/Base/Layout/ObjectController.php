@@ -6,6 +6,7 @@
 
 namespace Combodo\iTop\Controller\Base\Layout;
 
+use AttributeLinkedSet;
 use Combodo\iTop\Application\WebPage\AjaxPage;
 use ApplicationContext;
 use ApplicationException;
@@ -661,13 +662,35 @@ JS;
 					// Found issues, explain and give the user a second chance
 					//
 					$bDisplayDetails = false;
-					$aIssues = $e->getIssues();
 					if ($this->IsHandlingXmlHttpRequest()) {
 						$aResult['data'] = ['error_message' => $e->getHtmlMessage()];
 					} else {
-						$oPage->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
-						$oObj->DisplayModifyForm($oPage,
-							array('wizard_container' => true)); // wizard_container: display the wizard border and the title
+						//8807 - displayModifyForm fail if a linkset is removed -> remove removed linkset and display a specific message
+						$bWithLinkedSetRemoved = false;
+						foreach ($oObj->ListChanges() as $sAttCode => $aChange) {
+							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+							if ($oAttDef instanceof AttributeLinkedSet) {
+								$aRemoved = $aChange->GetRemoved();
+								if (count($aRemoved) > 0) {
+									$bWithLinkedSetRemoved = true;
+									$sLinkedClass = $oAttDef->GetLinkedClass();
+									$aRemovedObjectFriendlyName = [];
+									foreach ($aRemoved as $key=>$value) {
+										$oLinkedObject = MetaModel::GetObject($sLinkedClass, $key, true, true);
+										$aRemovedObjectFriendlyName[] = $oLinkedObject->Get('friendlyname');
+									}
+									$aChange->RemoveRemoved();
+									$sRemovedMessage = Dict::Format('UI:LinkedSet:RemovedObjectsDuringRefresh', $oAttDef->GetLabel(), implode('<br> ', $aRemovedObjectFriendlyName));
+									$oPage->AddHeaderMessage($sRemovedMessage, 'message_info');
+								}
+							}
+						}
+						if($bWithLinkedSetRemoved) {
+							$oPage->AddHeaderMessage($e->getHtmlMessage(true), 'message_error');
+						} else {
+							$oPage->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
+						}
+						$oObj->DisplayModifyForm($oPage, array('wizard_container' => true)); // wizard_container: display the wizard border and the title
 					}
 					
 				}
