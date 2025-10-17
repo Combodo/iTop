@@ -42,24 +42,24 @@ require_once(APPROOT.'/setup/xmldataloader.class.inc.php');
 
 function SetMemoryLimit($oP)
 {
-    $sMemoryLimit = trim(ini_get('memory_limit'));
-    if (empty($sMemoryLimit)) {
-        // On some PHP installations, memory_limit does not exist as a PHP setting!
-        // (encountered on a 5.2.0 under Windows)
-        // In that case, ini_set will not work, let's keep track of this and proceed with the data load
-        $oP->p("No memory limit has been defined in this instance of PHP");
-    } else {
-        // Check that the limit will allow us to load the data
-        //
-        $iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
-        if (!utils::IsMemoryLimitOk($iMemoryLimit, SAFE_MINIMUM_MEMORY)) {
-            if (ini_set('memory_limit', SAFE_MINIMUM_MEMORY) === false) {
-                $oP->p("memory_limit is too small: $iMemoryLimit and can not be increased by the script itself.");
-            } else {
-                $oP->p("memory_limit increased from $iMemoryLimit to ".SAFE_MINIMUM_MEMORY.".");
-            }
-        }
-    }
+	$sMemoryLimit = trim(ini_get('memory_limit'));
+	if (empty($sMemoryLimit)) {
+		// On some PHP installations, memory_limit does not exist as a PHP setting!
+		// (encountered on a 5.2.0 under Windows)
+		// In that case, ini_set will not work, let's keep track of this and proceed with the data load
+		$oP->p("No memory limit has been defined in this instance of PHP");
+	} else {
+		// Check that the limit will allow us to load the data
+		//
+		$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
+		if (!utils::IsMemoryLimitOk($iMemoryLimit, SAFE_MINIMUM_MEMORY)) {
+			if (ini_set('memory_limit', SAFE_MINIMUM_MEMORY) === false) {
+				$oP->p("memory_limit is too small: $iMemoryLimit and can not be increased by the script itself.");
+			} else {
+				$oP->p("memory_limit increased from $iMemoryLimit to ".SAFE_MINIMUM_MEMORY.".");
+			}
+		}
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,59 +80,59 @@ $sFileName = Utils::ReadParam('file', '', false, 'raw_data');
 $oP = new WebPage("iTop - Backoffice data loader");
 
 try {
-    // Note: the data model must be loaded first
-    $oDataLoader = new XMLDataLoader();
+	// Note: the data model must be loaded first
+	$oDataLoader = new XMLDataLoader();
 
-    if (empty($sFileName)) {
-        throw(new Exception("Missing argument 'file'"));
-    }
-    if (!file_exists($sFileName)) {
-        throw(new Exception("File $sFileName does not exist"));
-    }
+	if (empty($sFileName)) {
+		throw(new Exception("Missing argument 'file'"));
+	}
+	if (!file_exists($sFileName)) {
+		throw(new Exception("File $sFileName does not exist"));
+	}
 
-    SetMemoryLimit($oP);
+	SetMemoryLimit($oP);
 
-    // The XMLDataLoader constructor has initialized the DB, let's start a transaction
-    CMDBSource::Query('START TRANSACTION');
+	// The XMLDataLoader constructor has initialized the DB, let's start a transaction
+	CMDBSource::Query('START TRANSACTION');
 
-    $oP->p("Starting data load.");
-    CMDBObject::SetCurrentChangeFromParams('Initialization WS');
-    $oDataLoader->StartSession(CMDBObject::GetCurrentChange());
-    $oDataLoader->LoadFile($sFileName);
+	$oP->p("Starting data load.");
+	CMDBObject::SetCurrentChangeFromParams('Initialization WS');
+	$oDataLoader->StartSession(CMDBObject::GetCurrentChange());
+	$oDataLoader->LoadFile($sFileName);
 
-    $oP->p("Ending data load session");
-    if ($oDataLoader->EndSession(true /* strict */)) {
-        $iCountCreated = $oDataLoader->GetCountCreated();
-        CMDBSource::Query('COMMIT');
+	$oP->p("Ending data load session");
+	if ($oDataLoader->EndSession(true /* strict */)) {
+		$iCountCreated = $oDataLoader->GetCountCreated();
+		CMDBSource::Query('COMMIT');
 
-        $oP->p("Data successfully written into the DB: $iCountCreated objects created");
-    } else {
-        CMDBSource::Query('ROLLBACK');
-        $oP->p("Some issues have been encountered, changes will not be recorded, please review the source data");
-        $aErrors = $oDataLoader->GetErrors();
-        if (count($aErrors) > 0) {
-            $oP->p('Errors ('.count($aErrors).')');
-            foreach ($aErrors as $sMsg) {
-                $oP->p(' * '.$sMsg);
-            }
-        }
-        $aWarnings = $oDataLoader->GetWarnings();
-        if (count($aWarnings) > 0) {
-            $oP->p('Warnings ('.count($aWarnings).')');
-            foreach ($aWarnings as $sMsg) {
-                $oP->p(' * '.$sMsg);
-            }
-        }
-    }
+		$oP->p("Data successfully written into the DB: $iCountCreated objects created");
+	} else {
+		CMDBSource::Query('ROLLBACK');
+		$oP->p("Some issues have been encountered, changes will not be recorded, please review the source data");
+		$aErrors = $oDataLoader->GetErrors();
+		if (count($aErrors) > 0) {
+			$oP->p('Errors ('.count($aErrors).')');
+			foreach ($aErrors as $sMsg) {
+				$oP->p(' * '.$sMsg);
+			}
+		}
+		$aWarnings = $oDataLoader->GetWarnings();
+		if (count($aWarnings) > 0) {
+			$oP->p('Warnings ('.count($aWarnings).')');
+			foreach ($aWarnings as $sMsg) {
+				$oP->p(' * '.$sMsg);
+			}
+		}
+	}
 
 } catch (Exception $e) {
-    $oP->p("An error happened while loading the data: ".$e->getMessage());
-    $oP->p("Aborting (no data written)...");
-    CMDBSource::Query('ROLLBACK');
+	$oP->p("An error happened while loading the data: ".$e->getMessage());
+	$oP->p("Aborting (no data written)...");
+	CMDBSource::Query('ROLLBACK');
 }
 
 if (function_exists('memory_get_peak_usage')) {
-    $oP->p("Information: memory peak usage: ".memory_get_peak_usage());
+	$oP->p("Information: memory peak usage: ".memory_get_peak_usage());
 }
 
 $oP->Output();
