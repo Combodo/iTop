@@ -21,3 +21,9 @@
     {% set row_attr = row_attr|merge({class: (row_attr.class|default('') ~ ' ibo-field ibo-content-block ibo-block  ibo-field-small')|trim}) %}
     {{- parent() -}}
 {%- endblock form_row -%}
+
+{%- block form_errors -%}
+    <div  class="form-error">
+        {{- parent() -}}
+    </div>
+{%- endblock form_errors -%}
