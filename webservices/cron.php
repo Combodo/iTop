@@ -124,9 +124,9 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 		$oExceptionToThrow = $e;
 	} catch (Exception $e) { // we shouldn't get so much exceptions... but we need to handle legacy code, and cron.php has to keep running
 		if ($oTask->IsDebug()) {
-			$sMessage = 'Processing failed with message: '. $e->getMessage() . '. ' . $e->getTraceAsString();
+			$sMessage = 'Processing failed with message: '.$e->getMessage().'. '.$e->getTraceAsString();
 		} else {
-			$sMessage = 'Processing failed with message: '. $e->getMessage();
+			$sMessage = 'Processing failed with message: '.$e->getMessage();
 		}
 	}
 	$fDuration = microtime(true) - $fStart;

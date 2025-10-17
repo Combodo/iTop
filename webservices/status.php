@@ -17,7 +17,7 @@ try {
 
 //Set headers, based on webservices/rest.php
 $sContentType = 'application/json';
-header('Content-type: ' . $sContentType);
+header('Content-type: '.$sContentType);
 header('Access-Control-Allow-Origin: *');
 
 //Output result
