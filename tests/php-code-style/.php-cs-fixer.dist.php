@@ -4,19 +4,9 @@ $APPROOT = dirname(__DIR__, 2);
 
 echo $APPROOT;
 $finder = PhpCsFixer\Finder::create()
-	->exclude('oql')
-	->in($APPROOT . '/addons')
-	->in($APPROOT . '/application')
-	->in($APPROOT . '/core')
-	->in($APPROOT . '/datamodels')
-	->in($APPROOT . '/dictionaries')
-	->in($APPROOT . '/pages')
-	->in($APPROOT . '/portal')
-	->in($APPROOT . '/setup')
-	->in($APPROOT . '/sources')
-	->in($APPROOT . '/synchro')
-	->in($APPROOT . '/tests')
-	->in($APPROOT . '/webservices')
+	->in($APPROOT)
+	->exclude(['oql', 'data', 'extensions'])
+	->notPath(['/env-*/', '/cache-*/', 'lib', 'vendor', 'node_modules'])
 ;
 
 $config = new PhpCsFixer\Config();
