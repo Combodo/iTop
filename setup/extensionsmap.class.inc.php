@@ -110,6 +110,17 @@ class iTopExtension
 		$this->bVisible = true;
 		$this->aMissingDependencies = array();
 	}
+
+	public function IsUninstallable()
+	{
+		foreach ($this->aModuleInfo as $sModuleCode => $aModuleInfo){
+			$bUninstallable = $aModuleInfo['uninstallable'] ? $aModuleInfo['uninstallable'] === 'yes' : false;
+			if (!$bUninstallable) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
 
 /**
@@ -253,6 +264,15 @@ class iTopExtensionsMap
 		$this->aExtensions[$oNewExtension->sCode.'/'.$oNewExtension->sVersion] = $oNewExtension;
 	}
 
+	public function Get($sExtensionCode):?iTopExtension{
+		foreach($this->aExtensions as $oExtension) {
+			if ($oExtension->sCode == $sExtensionCode) {
+				return $oExtension;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Read (recursively) a directory to find if it contains extensions (or modules)
 	 *
@@ -277,8 +297,7 @@ class iTopExtensionsMap
 			$aSubDirectories = array();
 
 			// First check if there is an extension.xml file in this directory
-			if (is_readable($sSearchDir.'/extension.xml'))
-			{
+			if (is_readable($sSearchDir.'/extension.xml')) {
 				$oXml = new XMLParameters($sSearchDir.'/extension.xml');
 				$oExtension = new iTopExtension();
 				$oExtension->sCode = $oXml->Get('extension_code');
@@ -317,11 +336,11 @@ class iTopExtensionsMap
 						// to this extension
 						$sModuleId = $aModuleInfo[1];
 						list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-						if ($sModuleVersion == '')
-						{
+						if ($sModuleVersion == '') {
 							// Provide a default module version since version is mandatory when recording ExtensionInstallation
 							$sModuleVersion = '0.0.1';
 						}
+						$aModuleInfo[2]['uninstallable'] ??= 'yes';
 
 						if (($sParentExtensionId !== null) && (array_key_exists($sParentExtensionId, $this->aExtensions)) && ($this->aExtensions[$sParentExtensionId] instanceof iTopExtension)) {
 							// Already inside an extension, let's add this module the list of modules belonging to this extension
@@ -329,8 +348,7 @@ class iTopExtensionsMap
 							$this->aExtensions[$sParentExtensionId]->aModuleVersion[$sModuleName] = $sModuleVersion;
 							$this->aExtensions[$sParentExtensionId]->aModuleInfo[$sModuleName] = $aModuleInfo[2];
 						}
-						else
-						{
+						else {
 							// Not already inside an folder containing an 'extension.xml' file
 
 							// Ignore non-visible modules and auto-select ones, since these are never prompted
@@ -452,6 +470,17 @@ class iTopExtensionsMap
 		}
 	}
 
+
+	public function MarkAsUninstallable($sExtensionCode, $bMark = true)
+	{
+		foreach($this->aExtensions as $oExtension) {
+			if ($oExtension->sCode == $sExtensionCode) {
+				$oExtension->bUninstallable = $bMark;
+				break;
+			}
+		}
+	}
+
 	/**
 	 * Tells if a given extension(code) is marked as chosen
 	 * @param string $sExtensionCode
@@ -530,6 +559,10 @@ class iTopExtensionsMap
 		foreach($aInstalledExtensions as $aDBInfo)
 		{
 			$this->MarkAsChosen($aDBInfo['code']);
+			$sUninstallable = $aDBInfo['uninstallable'] ?? 'yes';
+			$this->MarkAsUninstallable($sUninstallable);
+			file_put_contents('C:/tmp/install.log', "\nSetInstalledVersion of ".$aDBInfo['code']." to ".$aDBInfo['version'], FILE_APPEND);
+
 			$this->SetInstalledVersion($aDBInfo['code'], $aDBInfo['version']);
 		}
 		return true;
@@ -572,30 +605,24 @@ class iTopExtensionsMap
 	public function NormalizeOldExtensions($sInSourceOnly = iTopExtension::SOURCE_MANUAL)
 	{
 		$aSignatures = $this->GetOldExtensionsSignatures();
-		foreach($aSignatures as $sExtensionCode => $aExtensionSignatures)
-		{
+		foreach($aSignatures as $sExtensionCode => $aExtensionSignatures) {
 			$bFound = false;
-			foreach($aExtensionSignatures['versions'] as $sVersion => $aModules)
-			{
+			foreach($aExtensionSignatures['versions'] as $sVersion => $aModules) {
 				$bInstalled = true;
-				foreach($aModules as $sModuleId)
-				{
-					if(!$this->ModuleIsPresent($sModuleId, $sInSourceOnly))
-					{
+				foreach($aModules as $sModuleId) {
+					if(!$this->ModuleIsPresent($sModuleId, $sInSourceOnly)) {
 						$bFound = false;
 						break; // One missing module is enough to determine that the extension/version is not present
 					}
-					else
-					{
-						$bInstalled = $bInstalled && (!$this->ModuleIsInstalled($sModuleId, $sInSourceOnly));
+					else {
+						$bInstalled = $bInstalled && $this->ModuleIsInstalled($sModuleId, $sInSourceOnly);
 						$bFound = true;
 					}
 				}
 				if ($bFound) break; // The current version matches the signature
 			}
 
-			if ($bFound)
-			{
+			if ($bFound) {
 				$oExtension = new iTopExtension();
 				$oExtension->sCode = $sExtensionCode;
 				$oExtension->sLabel = $aExtensionSignatures['label'];
@@ -603,15 +630,15 @@ class iTopExtensionsMap
 				$oExtension->sDescription = $aExtensionSignatures['description'];
 				$oExtension->sVersion = $sVersion;
 				$oExtension->aModules = array();
-				if ($bInstalled)
-				{
+				if ($bInstalled) {
 					$oExtension->sInstalledVersion = $sVersion;
 					$oExtension->bMarkedAsChosen = true;
 				}
-				foreach($aModules as $sModuleId)
-				{
+				foreach($aModules as $sModuleId) {
 					list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
 					$oExtension->aModules[] = $sModuleName;
+					/*NEW!*/
+					$oExtension->aModuleInfo[$sModuleName] = $this->aExtensions[$sModuleId]->aModuleInfo[$sModuleName];
 				}
 				$this->ReplaceModulesByNormalizedExtension($aExtensionSignatures['versions'][$sVersion], $oExtension);
 			}
@@ -1313,6 +1340,18 @@ class iTopExtensionsMap
 							'1.1.10' =>
 								array (
 									0 => 'email-reply/1.1.10',
+								),
+						),
+				),
+			'combodo-test-old-ext' =>
+				array (
+					'label' => 'Old extension',
+					'description' => 'Test retrocompat',
+					'versions' =>
+						array (
+							'1.0.0' =>
+								array (
+									0 => 'my-test/1.0.0',
 								),
 						),
 				),

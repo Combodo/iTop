@@ -48,7 +48,7 @@ class ModuleInstallation extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeDateTime("installed", array("allowed_values" => null, "sql" => "installed", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeText("comment", array("allowed_values" => null, "sql" => "comment", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("parent_id", array("targetclass" => "ModuleInstallation", "jointype" => "", "allowed_values" => null, "sql" => "parent_id", "is_null_allowed" => true, "on_target_delete" => DEL_MANUAL, "depends_on" => array())));
-
+		MetaModel::Init_AddAttribute(new AttributeEnum("uninstallable", array("allowed_values"=>new ValueSetEnum('yes,no,maybe'), "sql"=>"uninstallable", "default_value"=>'yes', "is_null_allowed"=>false, "depends_on"=>array())));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'version', 'installed', 'comment', 'parent_id')); // Attributes to be displayed for the complete details
@@ -87,6 +87,7 @@ class ExtensionInstallation extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("label", array("allowed_values"=>null, "sql"=>"label", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("version", array("allowed_values"=>null, "sql"=>"version", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("source", array("allowed_values"=>null, "sql"=>"source", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("uninstallable", array("allowed_values"=>new ValueSetEnum('yes,no,maybe'), "sql"=>"uninstallable", "default_value"=>'yes', "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("installed", array("allowed_values"=>null, "sql"=>"installed", "default_value"=>'NOW()', "is_null_allowed"=>false, "depends_on"=>array())));
 		
 		

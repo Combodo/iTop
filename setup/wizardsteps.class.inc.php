@@ -1931,7 +1931,7 @@ EOF
 
 		if (@file_exists($this->GetSourceFilePath()))
 		{
-			// Found an "installation.xml" file, let's us tis definition for the wizard
+			// Found an "installation.xml" file, let's use this definition for the wizard
 			$aParams = new XMLParameters($this->GetSourceFilePath());
 			$aSteps = $aParams->Get('steps', array());
 
@@ -2044,8 +2044,12 @@ EOF
 			$sDataId = 'data-id="'.utils::EscapeHtml($aChoice['extension_code']).'"';
 			$sId = utils::EscapeHtml($aChoice['extension_code']);
 			$bIsDefault = array_key_exists($sChoiceId, $aDefaults);
+
+			$oExtension = $this->oExtensionsMap->Get($aChoice['extension_code']);
+
+			$bIsUninstallable = $oExtension ? $oExtension->IsUninstallable() : true;
 			$bSelected = isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] == $sChoiceId);
-			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || ($this->bUpgrade && $bIsDefault);
+			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $this->bUpgrade && $oExtension->sInstalledVersion !== '' && !$bIsUninstallable;
 			$bDisabled = false;
 			if ($bMandatory) {
 				$oPage->add('<div class="choice" '.$sDataId.'><input id="'.$sId.'" checked disabled data-disabled="disabled" type="checkbox"'.$sAttributes.'/><input type="hidden" name="choice['.$sChoiceId.']" value="'.$sChoiceId.'">&nbsp;');
