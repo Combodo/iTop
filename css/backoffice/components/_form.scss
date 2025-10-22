@@ -7,3 +7,43 @@
   @extend %ibo-font-size-150;
   padding-bottom: 14px;
 }
+
+.help-text{
+  padding: 1px 5px;
+  background-color: #d7e3f8;
+  border: 1px solid #c6e7f5;
+  border-radius: 5px;
+  margin: 5px 0;
+  font-size: 0.9em;
+}
+
+.form-error ul{
+  padding: 1px 5px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  margin: 5px 0;
+  font-size: 0.9em;
+}
+
+.subform{
+  background-color: #efefef;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.form-buttons{
+  margin: 20px 0;
+}
+
+#form select{
+  padding: 0;
+  overflow-y: auto;
+}
+
+#form select option{
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+

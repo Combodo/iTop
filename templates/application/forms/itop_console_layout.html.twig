@@ -6,6 +6,7 @@
     {%  if type == 'text' %}{% set ibo_class='ibo-input-string' %}{% else %}{% set ibo_class='ibo-input-' ~ type %}{% endif %}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input ' ~ ibo_class)|trim}) %}
     {{- parent() -}}
+    onChange="this.form.requestSubmit();"
 {%- endblock widget_attributes -%}
 
 {%- block form_label -%}
@@ -21,3 +22,9 @@
     {% set row_attr = row_attr|merge({class: (row_attr.class|default('') ~ ' ibo-field ibo-content-block ibo-block  ibo-field-small')|trim}) %}
     {{- parent() -}}
 {%- endblock form_row -%}
+
+{%- block form_errors -%}
+    <div  class="form-error">
+        {{- parent() -}}
+    </div>
+{%- endblock form_errors -%}
