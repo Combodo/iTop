@@ -46,3 +46,7 @@
   display: flex;
   align-items: center;
 }
+
+form[aria-busy="true"] {
+  opacity: .5;
+}

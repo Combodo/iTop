@@ -6,7 +6,7 @@
     {%  if type == 'text' %}{% set ibo_class='ibo-input-string' %}{% else %}{% set ibo_class='ibo-input-' ~ type %}{% endif %}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input ' ~ ibo_class)|trim}) %}
     {{- parent() -}}
-    onChange="this.form.requestSubmit();"
+    onChange="this.form.requestSubmit();console.log('Auto submitting form due to change in field {{ full_name }}');"
 {%- endblock widget_attributes -%}
 
 {%- block form_label -%}

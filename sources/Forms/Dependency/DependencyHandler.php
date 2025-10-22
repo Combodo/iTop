@@ -68,7 +68,6 @@ class DependencyHandler
 			// Listen the dependency
 			$this->builder->get($sDependency)->addEventListener(FormEvents::POST_SET_DATA, $this->GetEventListeningCallback());
 			$this->builder->get($sDependency)->addEventListener(FormEvents::POST_SUBMIT, $this->GetEventListeningCallback());
-
 		}
 
 	}
