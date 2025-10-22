@@ -26,8 +26,8 @@ use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\AbstractController;
-use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Forms\Forms;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Dict;
 use Exception;
 use ExecutionKPI;
@@ -496,6 +496,14 @@ abstract class Controller extends AbstractController
 			$sTemplateName = $this->m_sOperation;
 		}
 		$aParams = array_merge($this->GetDefaultParameters(), $aParams);
+		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iProfilerExtension::class) as $sExtension) {
+			/** @var \Combodo\iTop\Application\TwigBase\Controller\iProfilerExtension $oExtensionInstance */
+			$oExtensionInstance = $sExtension::GetInstance();
+			if ($oExtensionInstance->IsEnabled()) {
+				$aParams = array_merge($aParams,  $oExtensionInstance->GetDebugParams($aParams));
+			}
+		}
+
 		$this->CreatePage($sPageType);
 		$sHTMLContent = $this->RenderTemplate($aParams, $sTemplateName, 'html', $sErrorMsg);
 		if ($sHTMLContent !== false) {
