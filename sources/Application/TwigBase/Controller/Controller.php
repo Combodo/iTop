@@ -120,7 +120,7 @@ abstract class Controller extends AbstractController
 		$this->SetModuleName($sModuleName);
 
 		// Initialize Symfony components
-		$this->InitSymfonyComponents($sViewPath, $sModuleName);
+		$this->InitSymfonyComponents($sViewPath, $sModuleName, $aAdditionalPaths);
 		$this->InitDebugExtensions();
 	}
 
@@ -129,10 +129,12 @@ abstract class Controller extends AbstractController
 	 *
 	 * @param string $sViewPath
 	 * @param string $sModuleName
+	 * @param array $aAdditionalPaths
 	 *
 	 * @return void
+	 * @throws \ReflectionException
 	 */
-	private function InitSymfonyComponents(string $sViewPath, string $sModuleName): void
+	private function InitSymfonyComponents(string $sViewPath, string $sModuleName, array $aAdditionalPaths): void
 	{
 		// Twig environment
 		$aAdditionalPaths[] = APPROOT.'lib/symfony/twig-bridge/Resources/views/Form';
