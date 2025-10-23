@@ -69,13 +69,13 @@ abstract class AbstractFormBlock
 	 * @param string $sOutputName
 	 *
 	 * @return $this
-	 * @throws \Combodo\iTop\Forms\Block\FormsBlockException
+	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
 	 */
 	public function DependsOn(string $sInputName, string $sOutputBlockName, string $sOutputName): AbstractFormBlock
 	{
 		$oFormInput = $this->GetInput($sInputName);
 		if (is_null($oFormInput)) {
-			throw new FormsBlockException('Missing input ' . $sInputName . ' for ' . $this->sName);
+			throw new FormBlockException('Missing input ' . $sInputName . ' for ' . $this->sName);
 		}
 		$oFormInput->Connect($sOutputBlockName, $sOutputName);
 
@@ -90,6 +90,18 @@ abstract class AbstractFormBlock
 			}
 		}
 		return false;
+	}
+
+	public function GetConnections(): array
+	{
+		$aConnections = [];
+		/** @var \Combodo\iTop\Forms\Block\FormInput $oFormInput */
+		foreach ($this->aFormInputs as $oFormInput) {
+			if ($oFormInput->HasConnections()) {
+				$aConnections[$oFormInput->GetName()] = $oFormInput->GetConnections();
+			}
+		}
+		return $aConnections;
 	}
 
 	abstract public function GetFormType(): string;

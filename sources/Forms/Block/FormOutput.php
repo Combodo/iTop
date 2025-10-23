@@ -11,6 +11,7 @@ class FormOutput
 	private string $sType;
 
 	private null|AbstractConverter $oConverter;
+	private array $aValues;
 
 	public function __construct(string $sName, string $sType, AbstractConverter $oConverter = null)
 	{
@@ -39,9 +40,22 @@ class FormOutput
 		$this->sType = $sType;
 	}
 
-	public function GetOutputValue(mixed $oData): mixed
+	public function ConvertValue(mixed $oData): mixed
 	{
+		if (is_null($this->oConverter)) {
+			return $oData;
+		}
 		return $this->oConverter->Convert($oData);
+	}
+
+	public function UpdateOutputValue(mixed $oData, string $sEventType): void
+	{
+		$this->aValues[$sEventType] = $this->ConvertValue($oData);
+	}
+
+	public function GetValue(string $sEventType): mixed
+	{
+		return $this->aValues[$sEventType] ?? null;
 	}
 
 

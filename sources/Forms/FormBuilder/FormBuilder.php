@@ -2,7 +2,7 @@
 
 namespace Combodo\iTop\Forms\FormBuilder;
 
-use Combodo\iTop\Forms\Dependency\DependencyHandler;
+use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\DataMapperInterface;
@@ -19,8 +19,8 @@ use Traversable;
 
 class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 {
-	/** @var DependencyHandler|null dependencies handler */
-	private DependencyHandler|null $dependencyHandler = null;
+	private ?DependencyHandler $oDependencyHandler = null;
+	private array $aFormBlocks = [];
 
 	/**
 	 * Constructor.
@@ -45,14 +45,26 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 			return;
 		}
 
+		$aDependentBlocks = [];
 		/** @var \Combodo\iTop\Forms\Block\FormBlock $oSubFormBlock */
 		foreach ($oFormBlock->GetSubFormBlocks() as $oSubFormBlock) {
+			$this->aFormBlocks[$oSubFormBlock->getName()] = $oSubFormBlock;
 			if ($oSubFormBlock->HasConnections()) {
 				$this->builder->add($oSubFormBlock->GetName(), HiddenType::class);
+				$aDependentBlocks[] = $oSubFormBlock;
 			} else {
 				$this->add($oSubFormBlock->GetName(), $oSubFormBlock->GetFormType(), $oSubFormBlock->getOptions());
 			}
 		}
+
+		if (count($aDependentBlocks) > 0) {
+			$this->oDependencyHandler = new DependencyHandler($this, $aDependentBlocks);
+		}
+	}
+
+	public function GetFormBlock(string $sName): ?AbstractFormBlock
+	{
+		return $this->aFormBlocks[$sName] ?? null;
 	}
 
 	// pure decoration of FormBuilderInterface

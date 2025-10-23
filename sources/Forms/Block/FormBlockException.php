@@ -8,7 +8,7 @@ namespace Combodo\iTop\Forms\Block;
 
 use Combodo\iTop\Forms\FormsException;
 
-class FormsBlockException extends FormsException
+class FormBlockException extends FormsException
 {
 
 }

@@ -38,7 +38,7 @@ class FormInput
 
 	public function Connect(string $sOutputBlockName, string $sOutputName)
 	{
-		$this->aConnections[] = ['block' => $sOutputBlockName, 'output' => $sOutputName];
+		$this->aConnections[] = ['output_block' => $sOutputBlockName, 'output' => $sOutputName];
 	}
 
 	public function GetConnections(): array
