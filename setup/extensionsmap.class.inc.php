@@ -1341,18 +1341,6 @@ class iTopExtensionsMap
 								),
 						),
 				),
-			'combodo-test-old-ext' =>
-				array (
-					'label' => 'Old extension',
-					'description' => 'Test retrocompat',
-					'versions' =>
-						array (
-							'1.0.0' =>
-								array (
-									0 => 'my-test/1.0.0',
-								),
-						),
-				),
 		);
 	}
 }
