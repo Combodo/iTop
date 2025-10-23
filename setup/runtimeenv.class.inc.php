@@ -215,6 +215,7 @@ class RunTimeEnvironment
 	 */
 	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
 	{
+		\SetupLog::Info(__METHOD__);
 		$sSourceDirFull = APPROOT.$sSourceDir;
 		if (!is_dir($sSourceDirFull)) {
 			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");

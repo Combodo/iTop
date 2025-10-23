@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+  <classes>
+    <class id="Feature1Module1MyClass" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>Feature1Module1MyClass</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+        <order>
+          <columns>
+            <column id="name" ascending="false"/>
+          </columns>
+        </order>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+        </field>
+      </fields>
+      <methods/>
+      <presentation/>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+  <menus/>
+  <user_rights/>
+  <module_parameters/>
+</itop_design>

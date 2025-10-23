@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+  <classes>
+    <class id="FinalClassFeature2Module1MyFinalClassFromLocation" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>FinalClassFeature2Module1MyFinalClassFromLocation</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name2"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name2"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+        <order>
+          <columns>
+            <column id="name2" ascending="false"/>
+          </columns>
+        </order>
+      </properties>
+      <fields>
+        <field id="name2" xsi:type="AttributeString">
+          <sql>name2</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation/>
+      <parent>Location</parent>
+    </class>
+    <class id="FinalClassFeature2Module1MyClass" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>FinalClassFeature2Module1MyClass</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+        <order>
+          <columns>
+            <column id="name" ascending="false"/>
+          </columns>
+        </order>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+        </field>
+      </fields>
+      <methods/>
+      <presentation/>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+  <menus/>
+  <user_rights/>
+  <module_parameters/>
+</itop_design>

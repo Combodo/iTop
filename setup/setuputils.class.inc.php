@@ -1555,17 +1555,8 @@ JS
 		return $sHtml;
 	}
 
-	/**
-	 * @param \WizardController $oWizard
-	 * @param bool $bAbortOnMissingDependency ...
-	 * @param array $aModulesToLoad List of modules to search for, defaults to all if ommitted
-	 *
-	 * @return array
-	 * @throws Exception
-	 */
-	public static function AnalyzeInstallation($oWizard, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
+	public static function GetConfig($oWizard)
 	{
-		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
 		$oConfig = new Config();
 		$sSourceDir = $oWizard->GetParameter('source_dir', '');
 
@@ -1580,7 +1571,25 @@ JS
 		$aParamValues = $oWizard->GetParamForConfigArray();
 		$aParamValues['source_dir'] = $sRelativeSourceDir;
 		$oConfig->UpdateFromParams($aParamValues, null);
-		$aDirsToScan = [$sSourceDir];
+
+		return $oConfig;
+	}
+
+	/**
+	 * @param \WizardController $oWizard
+	 * @param bool $bAbortOnMissingDependency ...
+	 * @param array $aModulesToLoad List of modules to search for, defaults to all if ommitted
+	 *
+	 * @return array
+	 * @throws Exception
+	 */
+	public static function AnalyzeInstallation($oWizard, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
+	{
+		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
+
+		$oConfig = self::GetConfig($oWizard);
+
+		$aDirsToScan = [$oWizard->GetParameter('source_dir', '')];
 
 		if (is_dir(APPROOT.'extensions')) {
 			$aDirsToScan[] = APPROOT.'extensions';

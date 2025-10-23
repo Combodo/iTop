@@ -42,6 +42,7 @@
 
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
@@ -50,6 +51,7 @@ require_once(APPROOT.'setup/applicationinstaller.class.inc.php');
 require_once(APPROOT.'setup/parameters.class.inc.php');
 require_once(APPROOT.'core/mutex.class.inc.php');
 require_once(APPROOT.'setup/extensionsmap.class.inc.php');
+require_once APPROOT.'setup/feature_removal/SetupAudit.php';
 
 /**
  * First step of the iTop Installation Wizard: Welcome screen, requirements
@@ -2114,7 +2116,21 @@ class WizStepSummary extends WizardStep
 			$this->bDependencyCheck = true;
 			try {
 				SetupUtils::AnalyzeInstallation($this->oWizard, true, $aSelectedModules);
-			} catch (MissingDependencyException $e) {
+
+				$sInstallMode = utils::ReadParam('install_mode');
+				\SetupLog::Info(__METHOD__, null, ['install_mode' => $sInstallMode]);
+				//if ($sInstallMode === "upgrade") {
+				$aExtensions = json_decode($this->oWizard->GetParameter('selected_extensions'), true);
+				$oSetupAudit = new SetupAudit([]);
+
+				$oConfig = SetupUtils::GetConfig($this->oWizard);
+				$oSetupAudit->SetSelectedExtensions($oConfig, $aExtensions);
+				//$oSetupAudit->AuditExtensionsCleanupRules(true);
+				//}
+
+			}
+			catch(MissingDependencyException $e)
+			{
 				$this->bDependencyCheck = false;
 				$this->sDependencyIssue = $e->getHtmlDesc();
 			}

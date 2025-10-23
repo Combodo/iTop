@@ -462,6 +462,20 @@ abstract class MetaModel
 		return call_user_func([$sClass, 'GetClassDescription'], $sClass);
 	}
 
+
+	/**
+	 * @param string $sClass
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 */
+	final public static function GetCreatedIn($sClass)
+	{
+		self::_check_subclass($sClass);
+
+		return self::$m_aClassParams[$sClass]["created_in"] ?? "";
+	}
+
 	/**
 	 * @param string $sClass
 	 *
@@ -3145,6 +3159,7 @@ abstract class MetaModel
 		$aMandatParams = [
 			"category" => "group classes by modules defining their visibility in the UI",
 			"key_type" => "autoincrement | string",
+			//"created_in" => "module_name where class is defined",
 			"name_attcode" => "define which attribute is the class name, may be an array of attributes (format specified in the dictionary as 'Class:myclass/Name' => '%1\$s %2\$s...'",
 			"state_attcode" => "define which attribute is representing the state (object lifecycle)",
 			"reconc_keys" => "define the attributes that will 'almost uniquely' identify an object in batch processes",

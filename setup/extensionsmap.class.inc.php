@@ -155,10 +155,11 @@ class iTopExtensionsMap
 	protected $aExtensions;
 	/**
 	 * The list of all currently installed extensions
-	 * @var array|null
+	 * @var array
 	 */
-	protected ?array $aInstalledExtensions = null;
+	protected array $aInstalledExtensions;
 
+	protected array $aExtensionsByCode;
 	/**
 	 * The list of directories browsed using the ReadDir method when building the map
 	 * @var string[]
@@ -168,6 +169,7 @@ class iTopExtensionsMap
 	public function __construct($sFromEnvironment = 'production', $aExtraDirs = [])
 	{
 		$this->aExtensions = [];
+		$this->aExtensionsByCode = [];
 		$this->aScannedDirs = [];
 		$this->ScanDisk($sFromEnvironment);
 		foreach ($aExtraDirs as $sDir) {
@@ -261,6 +263,7 @@ class iTopExtensionsMap
 					// This "new" extension is "newer" than the previous one, let's replace the previous one
 					unset($this->aExtensions[$key]);
 					$this->aExtensions[$oNewExtension->sCode.'/'.$oNewExtension->sVersion] = $oNewExtension;
+					$this->aExtensionsByCode[$oNewExtension->sCode] = $oNewExtension;
 					return;
 				} else {
 					// This "new" extension is not "newer" than the previous one, let's ignore it
@@ -270,6 +273,7 @@ class iTopExtensionsMap
 		}
 		// Finally it's not a duplicate, let's add it to the list
 		$this->aExtensions[$oNewExtension->sCode.'/'.$oNewExtension->sVersion] = $oNewExtension;
+		$this->aExtensionsByCode[$oNewExtension->sCode] = $oNewExtension;
 	}
 
 	/**
@@ -280,13 +284,32 @@ class iTopExtensionsMap
 	 */
 	public function GetFromExtensionCode(string $sExtensionCode): ?iTopExtension
 	{
-		foreach ($this->aExtensions as $oExtension) {
-			if ($oExtension->sCode === $sExtensionCode) {
-				return $oExtension;
+		return $this->aExtensionsByCode[$sExtensionCode] ?? null;
+	}
+
+	public function GetMissingExtensions(array $aSelectedExtensions)
+	{
+		\SetupLog::Info(__METHOD__, null, ['selected' => $aSelectedExtensions]);
+		$aExtensionsFromDb = array_keys($this->aExtensionsByCode);
+		sort($aExtensionsFromDb);
+		\SetupLog::Info(__METHOD__, null, ['found' => $aExtensionsFromDb]);
+
+		$aRes = [];
+		foreach (array_diff($aExtensionsFromDb, $aSelectedExtensions) as $sExtensionCode) {
+			$oExtension = $this->Get($sExtensionCode);
+			if (!is_null($oExtension) && $oExtension->bVisible && $oExtension->sSource != iTopExtension::SOURCE_WIZARD) {
+
+				\SetupLog::Info(__METHOD__."$sExtensionCode", null, ['visible' => $oExtension->bVisible, 'mandatory' => $oExtension->bMandatory]);
+				$aRes [] = $sExtensionCode;
+			} else {
+				\SetupLog::Info(__METHOD__." MISSING $sExtensionCode");
 			}
 		}
-		return null;
+		\SetupLog::Info(__METHOD__, null, $aRes);
+
+		return $aRes;
 	}
+
 
 	/**
 	 * Read (recursively) a directory to find if it contains extensions (or modules)
@@ -465,11 +488,18 @@ class iTopExtensionsMap
 	 */
 	public function MarkAsChosen($sExtensionCode, $bMark = true)
 	{
-		foreach ($this->aExtensions as $oExtension) {
-			if ($oExtension->sCode == $sExtensionCode) {
-				$oExtension->bMarkedAsChosen = $bMark;
-				break;
-			}
+		$oExtension = $this->Get($sExtensionCode);
+		if (!is_null($oExtension)) {
+			$oExtension->bMarkedAsChosen = $bMark;
+		}
+	}
+
+
+	public function MarkAsUninstallable($sExtensionCode, $bMark = true)
+	{
+		$oExtension = $this->Get($sExtensionCode);
+		if (!is_null($oExtension)) {
+			$oExtension->bUninstallable = $bMark;
 		}
 	}
 
@@ -480,11 +510,11 @@ class iTopExtensionsMap
 	 */
 	public function IsMarkedAsChosen($sExtensionCode)
 	{
-		foreach ($this->aExtensions as $oExtension) {
-			if ($oExtension->sCode == $sExtensionCode) {
-				return $oExtension->bMarkedAsChosen;
-			}
+		$oExtension = $this->Get($sExtensionCode);
+		if (!is_null($oExtension)) {
+			return $oExtension->bMarkedAsChosen;
 		}
+
 		return false;
 	}
 
@@ -496,11 +526,9 @@ class iTopExtensionsMap
 	 */
 	protected function SetInstalledVersion($sExtensionCode, $sInstalledVersion)
 	{
-		foreach ($this->aExtensions as $oExtension) {
-			if ($oExtension->sCode == $sExtensionCode) {
-				$oExtension->sInstalledVersion = $sInstalledVersion;
-				break;
-			}
+		$oExtension = $this->Get($sExtensionCode);
+		if (!is_null($oExtension)) {
+			$oExtension->sInstalledVersion = $sInstalledVersion;
 		}
 	}
 

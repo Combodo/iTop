@@ -27,22 +27,26 @@ use utils;
 class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 {
 	/**
+	 * @var false
+	 */
+	public bool $bUseDelta = true;
+
+	/**
+	 * @var true
+	 */
+	public bool $bUseAdditionalFeatures = false;
+
+	/**
 	 * @var string[]
 	 */
 	protected $aCustomDatamodelFiles = null;
 
 	/**
-	 * @var string
+	 * @var string[]
 	 */
-	protected $sSourceEnv;
+	protected $aAdditionExtensionFoldersByCode = null;
 
-	public function __construct($sSourceEnv, $sTargetEnv)
-	{
-		parent::__construct($sTargetEnv);
-		$this->sSourceEnv = $sSourceEnv;
-	}
-
-	public function GetEnvironment(): string
+    public function GetEnvironment(): string
 	{
 		return $this->sFinalEnv;
 	}
@@ -55,6 +59,15 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 		}
 
 		SetupUtils::copydir(APPROOT.'/data/'.$sSourceEnv.'-modules', $sDestModulesDir, $bUseSymLinks);
+
+		if ($this->bUseAdditionalFeatures) {
+			foreach ($this->GetExtensionFoldersToAdd() as $sExtensionCode => $sFolderPath) {
+				\SetupLog::Info("ExtensionFoldersToAdd: $sExtensionCode => $sFolderPath");
+				$sFolderName = basename($sFolderPath);
+				@mkdir($sDestModulesDir.DIRECTORY_SEPARATOR.$sFolderName);
+				SetupUtils::copydir($sFolderPath, $sDestModulesDir.DIRECTORY_SEPARATOR.$sFolderName, $bUseSymLinks);
+			}
+		}
 
 		parent::CompileFrom($sSourceEnv, $bUseSymLinks);
 	}
@@ -94,23 +107,43 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 	 */
 	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
 	{
+		\SetupLog::Info(__METHOD__);
 		$aRet = parent::GetMFModulesToCompile($sSourceEnv, $sSourceDir);
 
-		foreach ($this->GetCustomDatamodelFiles() as $sDeltaFile) {
-			$sDeltaId = preg_replace('/[^\d\w]/', '', $sDeltaFile);
-			$sDeltaName = basename($sDeltaFile);
-			$sDeltaDir = dirname($sDeltaFile);
-			$oDelta = new MFCoreModule($sDeltaName, "$sDeltaDir/$sDeltaName", $sDeltaFile);
-			$aRet[$sDeltaId] = $oDelta;
+		if ($this->bUseDelta) {
+			foreach ($this->GetCustomDatamodelFiles() as $sDeltaFile) {
+				$sDeltaId = preg_replace('/[^\d\w]/', '', $sDeltaFile);
+				$sDeltaName = basename($sDeltaFile);
+				$sDeltaDir = dirname($sDeltaFile);
+				$oDelta = new MFCoreModule($sDeltaName, "$sDeltaDir/$sDeltaName", $sDeltaFile);
+				$aRet[$sDeltaId] = $oDelta;
+			}
 		}
+
 		return $aRet;
 	}
 
-	public function GetCustomDatamodelFiles()
+	public function GetExtensionFoldersToAdd(): array
 	{
-		if (!is_null($this->aCustomDatamodelFiles)) {
-			return $this->aCustomDatamodelFiles;
+		if (is_null($this->aAdditionExtensionFoldersByCode)) {
+			$this->InitViaItopCustomDatamodelTestCaseClasses();
 		}
+
+		return $this->aAdditionExtensionFoldersByCode;
+	}
+
+	public function GetCustomDatamodelFiles(): array
+	{
+		if (is_null($this->aCustomDatamodelFiles)) {
+			$this->InitViaItopCustomDatamodelTestCaseClasses();
+		}
+
+		return $this->aCustomDatamodelFiles;
+	}
+
+	public function InitViaItopCustomDatamodelTestCaseClasses()
+	{
+		$this->aAdditionExtensionFoldersByCode = [];
 		$this->aCustomDatamodelFiles = [];
 
 		// Search for the PHP files implementing the method GetDatamodelDeltaAbsPath
@@ -169,16 +202,19 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 					continue;
 				}
 				$sDeltaFile = $oTestClassInstance->GetDatamodelDeltaAbsPath();
-				if (!is_file($sDeltaFile)) {
-					throw new \Exception("Unknown delta file: $sDeltaFile, from test class '$sClass'");
+				if (strlen($sDeltaFile) > 0) {
+					if (!is_file($sDeltaFile)) {
+						throw new \Exception("Unknown delta file: $sDeltaFile, from test class '$sClass'");
+					}
+					if (!in_array($sDeltaFile, $this->aCustomDatamodelFiles)) {
+						$this->aCustomDatamodelFiles[] = $sDeltaFile;
+					}
 				}
-				if (!in_array($sDeltaFile, $this->aCustomDatamodelFiles)) {
-					$this->aCustomDatamodelFiles[] = $sDeltaFile;
-				}
+
+				$aExtensionsPaths = $oTestClassInstance->GetAdditionalFeaturePaths();
+				$this->aAdditionExtensionFoldersByCode = array_merge($this->aAdditionExtensionFoldersByCode, $aExtensionsPaths);
 			}
 		}
-
-		return $this->aCustomDatamodelFiles;
 	}
 
 	private function FindFilesModifiedAfter(float $fReferenceTimestamp, string $sPathToScan, array &$aModifiedFiles)
