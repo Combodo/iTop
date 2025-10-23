@@ -561,8 +561,6 @@ class iTopExtensionsMap
 			$this->MarkAsChosen($aDBInfo['code']);
 			$sUninstallable = $aDBInfo['uninstallable'] ?? 'yes';
 			$this->MarkAsUninstallable($sUninstallable);
-			file_put_contents('C:/tmp/install.log', "\nSetInstalledVersion of ".$aDBInfo['code']." to ".$aDBInfo['version'], FILE_APPEND);
-
 			$this->SetInstalledVersion($aDBInfo['code'], $aDBInfo['version']);
 		}
 		return true;
