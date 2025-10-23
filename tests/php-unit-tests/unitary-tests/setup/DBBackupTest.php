@@ -201,7 +201,7 @@ class DBBackupTest extends ItopTestCase
 	 * @covers DBBackup::GetTmpDir
 	 * @dataProvider GetTmpDirProvider
 	 */
-	public function testGetTmpDir(string $sTmpDir, string $sStartsWith): void
+	public function testGetTmpDir(?string $sTmpDir, string $sStartsWith): void
 	{
 		$this->RequireOnceItopFile('setup/setuputils.class.inc.php');
 		$oConfig = \utils::GetConfig(true);
@@ -217,6 +217,10 @@ class DBBackupTest extends ItopTestCase
 	public function GetTmpDirProvider(): array
 	{
 		return [
+			'Not configured' => [
+				null,
+				static::GetAppRoot() . 'data/itop-backup',
+			],
 			'Default settings' => [
 				'data/',
 				static::GetAppRoot() . 'data/itop-backup',
@@ -225,17 +229,9 @@ class DBBackupTest extends ItopTestCase
 				'',
 				sys_get_temp_dir() . '/itop-backup',
 			],
-			'System directory attempt with existing root dir' => [
-				'/lib',
-				static::GetAppRoot() . 'lib/itop-backup',
-			],
-			'System directory attempt with non existing root dir' => [
-				'/etc',
-				static::GetAppRoot() . 'data/itop-backup',
-			],
-			'Breakout attempt' => [
-				'../../../var',
-				static::GetAppRoot() . 'data/itop-backup',
+			'Fixed system directory' => [
+				'/tmp',
+				'/tmp/itop-backup',
 			],
 		];
 	}
