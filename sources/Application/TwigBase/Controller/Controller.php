@@ -28,6 +28,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Forms\Forms;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Dict;
 use Exception;
 use ExecutionKPI;
