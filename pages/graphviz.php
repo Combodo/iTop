@@ -127,9 +127,17 @@ if (file_exists($sDotExecutable))
 	@fwrite($rFile, $sDotDescription);
 	@fclose($rFile);
 	$aOutput = array();
-	$CommandLine = "\"$sDotExecutable\" -v -Tsvg < \"$sDotFilePath\" -o \"$sImageFilePath\" 2>&1";
-	
-	exec($CommandLine, $aOutput, $iRetCode);
+
+	// Build command with escaped arguments to avoid shell injection.
+	// Use the dot executable with input and output file arguments instead of shell redirection.
+	$escapedDot = escapeshellarg($sDotExecutable);
+	$escapedDotInput = escapeshellarg($sDotFilePath);
+	$escapedDotOutput = escapeshellarg($sImageFilePath);
+
+	$CommandLine = $escapedDot.' -v -Tsvg '.$escapedDotInput.' -o '.$escapedDotOutput;
+
+	// exec will capture stdout; redirect stderr to stdout so we get full output in $aOutput
+	exec($CommandLine . ' 2>&1', $aOutput, $iRetCode);
 	if ($iRetCode != 0)
 	{
 		header('Content-type: text/html');
