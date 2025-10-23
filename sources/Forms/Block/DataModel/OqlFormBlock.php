@@ -2,20 +2,15 @@
 
 namespace Combodo\iTop\Forms\Block\DataModel;
 
-use Combodo\iTop\Forms\Block\FormBlock;
+use Combodo\iTop\Forms\Block\Base\StringFormBlock;
 use Combodo\iTop\Forms\Block\FormOutput;
 
-class OqlFormBlock extends FormBlock
+class OqlFormBlock extends StringFormBlock
 {
 
-
-	public function __construct(array $aOptions = [])
+	public function InitOutputs(): void
 	{
-		parent::__construct($aOptions);
-
 		$this->AddOutput(new FormOutput('selected_class', 'string'));
 	}
-
-
 
 }

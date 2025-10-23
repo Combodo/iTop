@@ -4,6 +4,7 @@ namespace Combodo\iTop\Forms\Block;
 
 abstract class AbstractFormBlock
 {
+	private string $sName;
 
 	private array $aOptions = [];
 
@@ -13,9 +14,17 @@ abstract class AbstractFormBlock
 
 	private array $aFormOutputs = [];
 
-	public function __construct(array $aOptions = [])
+	public function __construct(string $sName, array $aOptions = [])
 	{
+		$this->sName = $sName;
 		$this->aOptions = $aOptions;
+
+		$this->InitInputs();
+		$this->InitOutputs();
+	}
+
+	public function GetName(){
+		return $this->sName;
 	}
 
 	public function GetOptions(): array
@@ -53,5 +62,8 @@ abstract class AbstractFormBlock
 		return $this->aFormOutputs[$sName];
 	}
 
+	abstract public function GetFormType(): string;
 
+	abstract public function InitInputs(): void;
+	abstract public function InitOutputs(): void;
 }

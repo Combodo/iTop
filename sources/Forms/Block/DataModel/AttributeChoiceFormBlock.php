@@ -2,17 +2,15 @@
 
 namespace Combodo\iTop\Forms\Block\DataModel;
 
-use Combodo\iTop\Forms\Block\FormBlock;
+use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\FormInput;
 
-class AttributeChoiceFormBlock extends FormBlock
+class AttributeChoiceFormBlock extends ChoiceFormBlock
 {
 
 
-	public function __construct(array $aOptions = [])
+	public function InitInputs(): void
 	{
-		parent::__construct($aOptions);
-
 		$this->AddInput(new FormInput('class_name', 'string'));
 	}
 

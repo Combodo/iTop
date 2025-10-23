@@ -3,14 +3,12 @@
 namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\FormBlock;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class ChoiceFormBlock extends FormBlock
 {
-
-	public function __construct(array $aOptions = [])
+	public function GetFormType(): string
 	{
-		parent::__construct($aOptions);
+		return ChoiceType::class;
 	}
-
-
 }
