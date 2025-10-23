@@ -1436,6 +1436,7 @@ class WizStepModulesChoice extends WizardStep
 		$oPage->add_style("div.choice a { text-decoration:none; font-weight: bold; color: #1C94C4 }");
 		$oPage->add_style("div.description { margin-left: 2em; }");
 		$oPage->add_style(".choice-disabled { color: #999; }");
+		$oPage->add_style("input.unremovable { accent-color: orangered;}");
 
 		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
 		$sManualInstallError = SetupUtils::CheckManualInstallDirEmpty($aModules,
@@ -2051,17 +2052,17 @@ EOF
 			$bSelected = isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] == $sChoiceId);
 			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $this->bUpgrade && $oExtension->sInstalledVersion !== '' && !$bIsUninstallable;
 			$bDisabled = false;
+			$sUnremovable = $bIsUninstallable ? '' : 'unremovable';
 			if ($bMandatory) {
 				$oPage->add('<div class="choice" '.$sDataId.'><input id="'.$sId.'" checked disabled data-disabled="disabled" type="checkbox"'.$sAttributes.'/><input type="hidden" name="choice['.$sChoiceId.']" value="'.$sChoiceId.'">&nbsp;');
 				$bDisabled = true;
 			} else if ($bSelected) {
-				$oPage->add('<div class="choice" '.$sDataId.'><input class="wiz-choice" '.$sAllDisabled.'id="'.$sId.'" name="choice['.$sChoiceId.']" type="checkbox" checked value="'.$sChoiceId.'"/>&nbsp;');
+				$oPage->add('<div class="choice" '.$sDataId.'><input class="wiz-choice '.$sUnremovable.'" '.$sAllDisabled.'id="'.$sId.'" name="choice['.$sChoiceId.']" type="checkbox" checked value="'.$sChoiceId.'"/>&nbsp;');
 			} else {
-				$oPage->add('<div class="choice" '.$sDataId.'><input class="wiz-choice" '.$sAllDisabled.'id="'.$sId.'" name="choice['.$sChoiceId.']" type="checkbox" value="'.$sChoiceId.'"/>&nbsp;');
+				$oPage->add('<div class="choice" '.$sDataId.'><input class="wiz-choice '.$sUnremovable.'" '.$sAllDisabled.'id="'.$sId.'" name="choice['.$sChoiceId.']" type="checkbox" value="'.$sChoiceId.'"/>&nbsp;');
 			}
-			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled);
+			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled, $bIsUninstallable);
 			$oPage->add('</div>');
-			$index++;
 		}
 		$sChoiceName = null;
 		$sDisabled = '';
@@ -2127,12 +2128,14 @@ EOF
 		}
 	}
 
-	protected function DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled = false)
+	protected function DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled = false, $bUninstallable = true)
 	{
 		$sMoreInfo = (isset($aChoice['more_info']) && ($aChoice['more_info'] != '')) ? '<a class="setup--wizard-choice--more-info" target="_blank" href="'.$aChoice['more_info'].'">More information</a>' : '';
 		$sSourceLabel = isset($aChoice['source_label']) ? $aChoice['source_label'] : '';
 		$sId = utils::EscapeHtml($aChoice['extension_code']);
-		$oPage->add('<label class="setup--wizard-choice--label" for="'.$sId.'">'.$sSourceLabel.'<b>'.utils::EscapeHtml($aChoice['title']).'</b>'.'</label> '.$sMoreInfo);
+		$sUninstallationWarning = $bUninstallable ? '' : '<span style="color:orangered" title="Once this extension has been installed, it cannot be removed">(!)</span>';
+
+		$oPage->add('<label class="setup--wizard-choice--label" for="'.$sId.'">'.$sSourceLabel.'<b>'.utils::EscapeHtml($aChoice['title']).'</b>'.'</label>&nbsp;'.$sUninstallationWarning.' '.$sMoreInfo.'');
 		$sDescription = isset($aChoice['description']) ? utils::EscapeHtml($aChoice['description']) : '';
 		$oPage->add('<div class="setup--wizard-choice--description description">'.$sDescription.'<span id="sub_choices'.$sId.'">');
 		if (isset($aChoice['sub_options'])) {
