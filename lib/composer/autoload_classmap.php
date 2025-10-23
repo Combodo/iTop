@@ -477,6 +477,7 @@ return array(
     'Combodo\\iTop\\Forms\\Block\\Base\\ChoiceFormBlock' => $baseDir . '/sources/Forms/Block/Base/ChoiceFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\StringFormBlock' => $baseDir . '/sources/Forms/Block/Base/StringFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\DataModel\\AttributeChoiceFormBlock' => $baseDir . '/sources/Forms/Block/DataModel/AttributeChoiceFormBlock.php',
+    'Combodo\\iTop\\Forms\\Block\\DataModel\\AttributeValueChoiceFormBlock' => $baseDir . '/sources/Forms/Block/DataModel/AttributeValueChoiceFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\DataModel\\OqlFormBlock' => $baseDir . '/sources/Forms/Block/DataModel/OqlFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\FormBlock' => $baseDir . '/sources/Forms/Block/FormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\FormInput' => $baseDir . '/sources/Forms/Block/FormInput.php',

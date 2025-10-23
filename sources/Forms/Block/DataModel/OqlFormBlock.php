@@ -8,9 +8,12 @@ use Combodo\iTop\Forms\Block\FormOutput;
 class OqlFormBlock extends StringFormBlock
 {
 
+	public const OUTPUT_SELECTED_CLASS = 'selected_class';
+
 	public function InitOutputs(): void
 	{
-		$this->AddOutput(new FormOutput('selected_class', 'string'));
+		parent::InitOutputs();
+		$this->AddOutput(new FormOutput(self::OUTPUT_SELECTED_CLASS, 'string'));
 	}
 
 }

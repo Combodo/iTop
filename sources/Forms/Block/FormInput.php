@@ -8,6 +8,8 @@ class FormInput
 
 	private string $sType;
 
+	private array $aConnections = [];
+
 	public function __construct(string $sName, string $sType)
 	{
 		$this->sName = $sName;
@@ -32,5 +34,20 @@ class FormInput
 	public function SetType(string $sType): void
 	{
 		$this->sType = $sType;
+	}
+
+	public function Connect(string $sOutputBlockName, string $sOutputName)
+	{
+		$this->aConnections[] = ['block' => $sOutputBlockName, 'output' => $sOutputName];
+	}
+
+	public function GetConnections(): array
+	{
+		return $this->aConnections;
+	}
+
+	public function HasConnections(): bool
+	{
+		return count($this->aConnections) > 0;
 	}
 }

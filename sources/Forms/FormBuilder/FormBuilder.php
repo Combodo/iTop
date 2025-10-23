@@ -2,7 +2,6 @@
 
 namespace Combodo\iTop\Forms\FormBuilder;
 
-use Combodo\iTop\Forms\Dependency\DependencyDescription;
 use Combodo\iTop\Forms\Dependency\DependencyHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -30,44 +29,30 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 	 */
 	public function __construct(private FormBuilderInterface $builder)
 	{
-
-	}
-
-	/**
-	 * Add a dependency description to the form builder.
-	 * The associate form will be created as a hidden field and added later when all its dependencies were met.
-	 *
-	 * @param DependencyDescription $oDependencyDescription the dependency description
-	 *
-	 * @return void
-	 */
-	private function AddDependency(DependencyDescription $oDependencyDescription): void
-	{
-		if($this->dependencyHandler === null){
-			\IssueLog::Error('create dependency handler ' . $this->builder->getName());
-			$this->dependencyHandler = new DependencyHandler($this->builder);
-		}
-
-		$this->dependencyHandler->AddDependencyDescription($oDependencyDescription);
+		$this->InitFormBlocks();
 	}
 
 	public function add(string|FormBuilderInterface $child, ?string $type = null, array $options = []): static
 	{
-		if(!empty($options['bindings'])) {
-			$this->builder->add($child, HiddenType::class);
-			$this->AddDependency(new DependencyDescription($options['bindings'], $child, $type, $options));
-		}
-		else{
-			$this->builder->add($child, $type, $options);
-		}
-
+		$this->builder->add($child, $type, $options);
 		return $this;
 	}
 
-	public function addExpression(string $name, string $expression): static
+	private function InitFormBlocks()
 	{
-		$options['bindings'] = [$expression];
-		return $this->add($name, null, $options);
+		$oFormBlock = $this->builder->getOption('form_block');
+		if (is_null($oFormBlock)) {
+			return;
+		}
+
+		/** @var \Combodo\iTop\Forms\Block\FormBlock $oSubFormBlock */
+		foreach ($oFormBlock->GetSubFormBlocks() as $oSubFormBlock) {
+			if ($oSubFormBlock->HasConnections()) {
+				$this->builder->add($oSubFormBlock->GetName(), HiddenType::class);
+			} else {
+				$this->add($oSubFormBlock->GetName(), $oSubFormBlock->GetFormType(), $oSubFormBlock->getOptions());
+			}
+		}
 	}
 
 	// pure decoration of FormBuilderInterface

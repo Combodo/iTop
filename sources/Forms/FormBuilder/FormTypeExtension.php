@@ -6,8 +6,6 @@ use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FormTypeExtension extends AbstractTypeExtension
@@ -23,9 +21,7 @@ class FormTypeExtension extends AbstractTypeExtension
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefined([
-			'inputs',
-			'outputs',
-			'bindings',
+			'form_block',
 			'listener_callback',
 		]);
 	}

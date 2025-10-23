@@ -10,7 +10,7 @@ class FormOutput
 
 	private string $sType;
 
-	private AbstractConverter $oConverter;
+	private null|AbstractConverter $oConverter;
 
 	public function __construct(string $sName, string $sType, AbstractConverter $oConverter = null)
 	{
@@ -41,7 +41,7 @@ class FormOutput
 
 	public function GetOutputValue(mixed $oData): mixed
 	{
-		$this->oConverter->Convert($oData);
+		return $this->oConverter->Convert($oData);
 	}
 
 
