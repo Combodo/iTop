@@ -279,6 +279,7 @@ $oP->add_header('Access-Control-Allow-Origin: *');
 $oP->SetData(json_decode($sResponse, true));
 $oP->SetOutputDataOnly(true);
 $oP->Output();
+ExecutionKPI::ReportStats();
 
 // Log usage
 //

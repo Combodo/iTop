@@ -1,3 +1,8 @@
+$ibo-color-success-50: common-adjust-lightness($ibo-color-success-100, $ibo-color-base-lightness-100) !default;
+$ibo-color-danger-50: common-adjust-lightness($ibo-color-success-100, $ibo-color-danger-100) !default;
+$ibo-color-information-50: common-adjust-lightness($ibo-color-success-100, $ibo-color-information-100) !default;
+$ibo-color-warning-50: common-adjust-lightness($ibo-color-success-100, $ibo-color-warning-100) !default;
+
 $ibo-navigation-menu--menu-group-title--text-color--is-active: $ibo-color-blue-grey-900;
 $ibo-navigation-menu--menu-group--background-color--is-active: $ibo-color-white-100;
 $ibo-navigation-menu--menu-node--background-color: $ibo-color-grey-100;
@@ -65,3 +70,11 @@ $ibo-panel-colors: ('primary': $ibo-color-primary-800,'secondary': $ibo-color-se
 
 $ibo-welcome-popup--stack-item--border-color: $ibo-color-grey-950;
 $ibo-welcome-popup--stack-item--is-active--border-color: $ibo-color-grey-900;
+
+$ibo-user-rights--is-success--background-color: $ibo-color-success-50 !default;
+$ibo-user-rights--is-success--color: $ibo-color-success-950 !default;
+$ibo-user-rights--is-success--border-color: $ibo-color-success-950 !default;
+
+$ibo-user-rights--is-failure--background-color: $ibo-color-danger-100 !default;
+$ibo-user-rights--is-failure--color: $ibo-color-danger-950 !default;
+$ibo-user-rights--is-failure--border-color: $ibo-color-danger-950 !default;

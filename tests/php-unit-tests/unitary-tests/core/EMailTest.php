@@ -39,7 +39,7 @@ class EMailTest extends ItopTestCase {
 		// Check if our charset is correctly set
 		// We know this file may be used by other future test, but as we can't configure output filename, it is what it is
 		$sEmailContent = file_get_contents(APPROOT.'log/mail.log');
-		$this->assertStringContainsString('charset="UTF-8"', $sEmailContent);
+		$this->assertStringContainsStringIgnoringCase('charset=UTF-8', $sEmailContent);
 		
 		// Set our previous email transport value back, so it doesn't affect other tests
 		$oConfig->Set('email_transport', $sCurrentEmailTransport);
@@ -78,7 +78,7 @@ class EMailTest extends ItopTestCase {
 		// Check if our charset is correctly set
 		// We know this file may be used by other future test, but as we can't configure output filename, it is what it is
 		$sEmailContent = file_get_contents(APPROOT.'log/mail.log');
-		$this->assertStringContainsString('Content-Type: text/plain; charset=UTF-8', $sEmailContent);
+		$this->assertStringContainsStringIgnoringCase('Content-Type: text/plain; charset=UTF-8', $sEmailContent);
 
 		// Set our previous email transport value back, so it doesn't affect other tests
 		$oConfig->Set('email_transport', $sCurrentEmailTransport);

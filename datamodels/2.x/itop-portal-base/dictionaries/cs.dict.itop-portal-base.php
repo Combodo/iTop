@@ -61,6 +61,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Portal:Form:Close:Warning' => 'Opravdu chcete opustit tento formulář? Data vložená do formuláře budou ztracena ',
 	'Portal:Error:ObjectCannotBeCreated' => 'Chyba: objekt nelze vytvořit. Před opětovným odesláním tohoto formuláře zkontrolujte související objekty a přílohy.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Chyba: objekt nelze vytvořit. Před opětovným odesláním tohoto formuláře zkontrolujte související objekty a přílohy.',
+    'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
 ));
 
 // UserProfile brick

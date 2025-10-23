@@ -61,6 +61,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Portal:Form:Close:Warning' => 'Voulez-vous quitter ce formulaire ? Les données saisies seront perdues',
 	'Portal:Error:ObjectCannotBeCreated' => 'Erreur: L\'objet n\'a pas été créé. Vérifiez les objets liés et les attachements avant de soumettre à nouveau le formulaire.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Erreur: L\'objet n\'a pas été modifié. Vérifiez les objets liés et les attachements avant de soumettre à nouveau le formulaire.',
+    'Portal:Error:CheckToWriteFailed' => 'Erreur durant la validation du champ \'%1$s\' : %2$s',
 ));
 
 // UserProfile brick

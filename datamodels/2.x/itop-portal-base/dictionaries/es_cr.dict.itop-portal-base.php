@@ -59,6 +59,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Portal:Form:Close:Warning' => '¿Desea abandorar este formulario? Datos modificados se perderan',
 	'Portal:Error:ObjectCannotBeCreated' => 'Error: no se puede crear el objeto. Verifique los objetos asociados y archivos adjuntos antes de enviar nuevamente este formulario.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Error: no se puede actualizar el objeto. Verifique los objetos asociados y archivos adjuntos antes de enviar nuevamente este formulario.',
+    'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
 ));
 
 // UserProfile brick

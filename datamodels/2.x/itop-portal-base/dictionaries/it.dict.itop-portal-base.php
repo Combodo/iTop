@@ -61,6 +61,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Portal:Form:Close:Warning' => 'Do you want to leave this form? Data entered may be lost~~',
 	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting this form again.~~',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting this form again.~~',
+    'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
 ));
 
 // UserProfile brick

@@ -88,6 +88,7 @@ class iTopComposer extends AbstractFolderAnalyzer
 			'symfony/http-foundation/Test',
 			'symfony/http-kernel/Tests',
 			'symfony/service-contracts/Test',
+			'symfony/mailer/Test',
 			'symfony/mime/Test',
 			'symfony/routing/Tests',
 			'symfony/stopwatch/Tests',
