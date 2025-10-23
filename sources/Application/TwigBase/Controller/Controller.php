@@ -495,6 +495,14 @@ abstract class Controller extends AbstractController
 		if (empty($sTemplateName)) {
 			$sTemplateName = $this->m_sOperation;
 		}
+		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iProfilerExtension::class) as $sExtension) {
+			/** @var \Combodo\iTop\Application\TwigBase\Controller\iProfilerExtension $oExtensionInstance */
+			$oExtensionInstance = $sExtension::GetInstance();
+			if ($oExtensionInstance->IsEnabled()) {
+				$aParams = array_merge($aParams, $oExtensionInstance->GetDebugParams($aParams));
+			}
+		}
+
 		$aParams = array_merge($this->GetDefaultParameters(), $aParams);
 		$this->CreatePage($sPageType);
 		$sHTMLContent = $this->RenderTemplate($aParams, $sTemplateName, 'html', $sErrorMsg);
