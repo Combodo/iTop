@@ -60,13 +60,6 @@ class AttributeChoiceType extends AbstractType
 		return true;
 	}
 
-	public static function GetOptionsFromInputs(array $inputs): array
-	{
-		$aAttributeCodes = \MetaModel::GetAttributesList($inputs['object_class']);
 
-		return [
-			'choices' => array_combine($aAttributeCodes, $aAttributeCodes)
-		];
-	}
 
 }

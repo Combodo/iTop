@@ -7,11 +7,7 @@
 namespace Combodo\iTop\Forms\FormBuilder;
 
 use Combodo\iTop\Forms\Block\FormBlock;
-use Symfony\Component\Form\Event\PostSetDataEvent;
-use Symfony\Component\Form\Event\PostSubmitEvent;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
+use Combodo\iTop\Forms\Block\IO\FormBinding;
 
 /**
  * Dependencies handler.
@@ -19,64 +15,95 @@ use Symfony\Component\Form\FormInterface;
  */
 class DependencyMap
 {
-	/** @var array dependant blocks */
-	private array $aDependentBlocks = [];
-
 	/** @var array dependencies map */
-	private array $aDependenciesMap = [];
+	private array $aDependenciesMap;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param array $aDependentBlocks
 	 */
-	public function __construct(array $aDependentBlocks)
+	public function __construct(private readonly array $aDependentBlocks)
 	{
-		$this->aDependentBlocks = $aDependentBlocks;
-
 		// Initialization
 		$this->Init();
 	}
 
+	/**
+	 * Initialize.
+	 *
+	 * @return void
+	 */
 	private function Init(): void
 	{
 		/** iterate throw dependents blocks... @var FormBlock $oDependentBlock */
 		foreach ($this->aDependentBlocks as $oDependentBlock) {
 
-			/** iterate throw the block inputs connections... **/
-			foreach ($oDependentBlock->GetInputsConnections() as $sInputName => $aConnections) {
+			/** iterate throw the block inputs connections... @var FormBinding $oBinding**/
+			foreach ($oDependentBlock->GetInputsBindings() as $sInputName => $oBinding) {
 
-				/** Iterate throw the input connections... */
-				foreach ($aConnections as $aConnection) {
+				// connection information
+				$sOutputBlockName = $oBinding->oOutput->GetOwnerBlock()->GetName();
+				$sOutputName = $oBinding->oOutput->GetName();
 
-					// connection information
-					$sOutputBlock = $aConnection['output_block'];
-					$sOutputBlockName = $sOutputBlock->getName();
-					$sOutputName = $aConnection['output'];
-
-					// initialize map
-					if (!isset($this->aDependenciesMap[$sOutputBlockName])) {
-						$this->aDependenciesMap[$sOutputBlockName] = [];
-					}
-					if (!isset($this->aDependenciesMap[$sOutputBlockName][$sOutputName])) {
-						$this->aDependenciesMap[$sOutputBlockName][$sOutputName] = [];
-					}
-
-					// add to map
-					$this->aDependenciesMap[$sOutputBlockName][$sOutputName][] = ['input_block' => $oDependentBlock, 'input_name' => $sInputName];
+				// initialize map
+				if (!isset($this->aDependenciesMap[$sOutputBlockName])) {
+					$this->aDependenciesMap[$sOutputBlockName] = [];
 				}
+				if (!isset($this->aDependenciesMap[$sOutputBlockName][$sOutputName])) {
+					$this->aDependenciesMap[$sOutputBlockName][$sOutputName] = [];
+				}
+
+				// add to map
+				$this->aDependenciesMap[$sOutputBlockName][$sOutputName][] = $oBinding;
+
 			}
 		}
 
 	}
 
+	/**
+	 * @return array
+	 */
 	public function GetListenedBlockNames(): array
 	{
 		return array_keys($this->aDependenciesMap);
 	}
 
+	/**
+	 * @param string $sBlockName
+	 *
+	 * @return bool
+	 */
+	public function IsBlockHasOutputs(string $sBlockName): bool
+	{
+		return array_key_exists($sBlockName, $this->aDependenciesMap);
+	}
+
+	/**
+	 * @param string $sBlockName
+	 *
+	 * @return array
+	 */
 	public function GetOutputsForBlock(string $sBlockName): array
 	{
 		return array_keys($this->aDependenciesMap[$sBlockName]);
+	}
+
+	public function GetOutputsDependenciesForBlock(string $sOutputBlockName): array
+	{
+		return $this->aDependenciesMap[$sOutputBlockName];
+	}
+
+	public function IsTheBlockInDependencies(string $sBlockName): bool
+	{
+		foreach ($this->aDependentBlocks as $oDependentBlock)
+		{
+			if($oDependentBlock->getName() === $sBlockName) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

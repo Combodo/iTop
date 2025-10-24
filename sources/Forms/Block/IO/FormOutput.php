@@ -7,15 +7,16 @@
 namespace Combodo\iTop\Forms\Block\IO;
 
 use Combodo\iTop\Forms\Converter\AbstractOutputConverter;
+use Symfony\Component\Form\FormEvents;
 
-class FormOutput
+class FormOutput extends AbstractFormIO
 {
 	private string $sName;
 
 	private string $sType;
 
 	private null|AbstractOutputConverter $oConverter;
-	private ?array $aValues = null;
+	private array $aValues = [];
 
 	public function __construct(string $sName, string $sType, AbstractOutputConverter $oConverter = null)
 	{
@@ -62,9 +63,25 @@ class FormOutput
 		return $this->aValues[$sEventType] ?? null;
 	}
 
+	public function Value(): mixed
+	{
+		if(array_key_exists(FormEvents::POST_SUBMIT, $this->aValues) ){
+			return $this->aValues[FormEvents::POST_SUBMIT];
+	   }
+		if(array_key_exists(FormEvents::POST_SET_DATA, $this->aValues) ){
+			return $this->aValues[FormEvents::POST_SET_DATA];
+		}
+		return null;
+	}
+
+	public function HasValue(string $sEventType): bool
+	{
+		return array_key_exists($sEventType, $this->aValues) && $this->aValues[$sEventType] !== null;
+	}
+
 	public function HasValues(): bool
 	{
-		return $this->aValues !== null;
+		return count($this->aValues) > 0;
 	}
 
 	public function GetValues(): array

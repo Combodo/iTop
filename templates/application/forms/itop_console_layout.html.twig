@@ -21,29 +21,26 @@
 {%- block form_row -%}
     {% set row_attr = row_attr|merge({class: (row_attr.class|default('') ~ ' ibo-field ibo-content-block ibo-block  ibo-field-small')|trim}) %}
     {{- parent() -}}
-{%- endblock form_row -%}
 
-{%- block form_widget -%}
-    {{- parent() -}}
     {% if form_block is defined %}
         {% for output in form_block.GetOutputs() %}
             <ul>
-            {% if output.HasValues %}
-                <li style="background-color:#dac2e3;border-radius: 8px;padding: 1px 4px;font-size: 1rem;margin: 5px 0;">
-                    <div>
-                        <div><b>{{ output.name }}</b></div>
-                        {% for t,v in output.GetValues %}
-                            <div>- {{ t }}: {{ v }}</div>
-                        {% endfor %}
-                    </div>
-                </li>
-            {% endif %}
+                {% if output.HasValues %}
+                    <li style="background-color:#dac2e3;border-radius: 8px;padding: 1px 4px;font-size: 1rem;margin: 5px 0;">
+                        <div>
+                            <div><b>{{ output.name }}</b></div>
+                            {% for t,v in output.GetValues %}
+                                <div>- {{ t }}: {{ v }}</div>
+                            {% endfor %}
+                        </div>
+                    </li>
+                {% endif %}
             </ul>
         {% else %}
             Aucun output
         {% endfor %}
     {% endif %}
-{%- endblock form_widget -%}
+{%- endblock form_row -%}
 
 {%- block form_errors -%}
     <div  class="form-error">

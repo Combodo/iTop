@@ -11,7 +11,6 @@ use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Block\IO\FormInput;
 use Combodo\iTop\Forms\Block\IO\FormOutput;
-use Combodo\iTop\Forms\Converter\OqlToClassConverter;
 use Combodo\iTop\Forms\Converter\StringToAttributeConverter;
 
 /**
@@ -34,9 +33,25 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 		$this->AddInput(new FormInput(self::INPUT_CLASS_NAME, ClassIOFormat::class));
 	}
 
+	/** @inheritdoc  */
 	public function InitOutputs(): void
 	{
 		parent::InitOutputs();
 		$this->AddOutput(new FormOutput(self::OUTPUT_ATTRIBUTE, AttributeIOFormat::class, new StringToAttributeConverter()));
+	}
+
+	/** @inheritdoc  */
+	public function GetOptions(): array
+	{
+		$aOptions = parent::GetOptions();
+
+		$oBinding = $this->GetInput(self::INPUT_CLASS_NAME)->GetBinding();
+		$oConnectionValue = $oBinding->oOutput->Value();
+
+		$aAttributeCodes = \MetaModel::GetAttributesList($oConnectionValue);
+		$aAttributeCodes = array_combine($aAttributeCodes, $aAttributeCodes) ;
+		$aOptions['choices'] = $aAttributeCodes;
+
+		return $aOptions;
 	}
 }

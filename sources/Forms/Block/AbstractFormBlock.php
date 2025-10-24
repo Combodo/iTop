@@ -34,6 +34,9 @@ abstract class AbstractFormBlock
 	/** @var array form block outputs */
 	private array $aFormOutputs = [];
 
+	/** @var bool flag */
+	private bool $bIsAdded = false;
+
 	/**
 	 * Constructor.
 	 *
@@ -49,6 +52,7 @@ abstract class AbstractFormBlock
 
 		$this->InitInputs();
 		$this->InitOutputs();
+		$this->aOptions = array_merge($this->aOptions, $this->InitOptions());
 	}
 
 	/**
@@ -104,6 +108,7 @@ abstract class AbstractFormBlock
 	 */
 	public function AddInput(FormInput $oFormInput): void
 	{
+		$oFormInput->SetOwnerBlock($this);
 		$this->aFormInputs[$oFormInput->GetName()] = $oFormInput;
 	}
 
@@ -133,6 +138,7 @@ abstract class AbstractFormBlock
 	 */
 	public function AddOutput(FormOutput $oFormOutput): void
 	{
+		$oFormOutput->SetOwnerBlock($this);
 		$this->aFormOutputs[$oFormOutput->GetName()] = $oFormOutput;
 	}
 
@@ -168,10 +174,11 @@ abstract class AbstractFormBlock
 	 * @return $this
 	 * @throws FormBlockException
 	 */
-	public function DependsOn(string $sInputName, FormBlock $sOutputBlock, string $sOutputName): AbstractFormBlock
+	public function DependsOn(string $sInputName, FormBlock $oOutputBlock, string $sOutputName): AbstractFormBlock
 	{
 		$oFormInput = $this->GetInput($sInputName);
-		$oFormInput->Connect($sOutputBlock, $sOutputName);
+		$oFormOutput = $oOutputBlock->GetOutput($sOutputName);
+		$oFormInput->Bind($oFormOutput);
 
 		return $this;
 	}
@@ -179,23 +186,47 @@ abstract class AbstractFormBlock
 	public function HasConnections(): bool
 	{
 		foreach ($this->aFormInputs as $oFormInput) {
-			if ($oFormInput->HasConnections()) {
+			if ($oFormInput->IsConnected()) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public function GetInputsConnections(): array
+	public function GetInputsBindings(): array
 	{
-		$aConnections = [];
+		$aBindings = [];
+
 		/** @var FormInput $oFormInput */
 		foreach ($this->aFormInputs as $oFormInput) {
-			if ($oFormInput->HasConnections()) {
-				$aConnections[$oFormInput->GetName()] = $oFormInput->GetConnections();
+			if ($oFormInput->IsConnected()) {
+				$aBindings[$oFormInput->GetName()] = $oFormInput->GetBinding();
 			}
 		}
-		return $aConnections;
+		return $aBindings;
+	}
+
+	public function IsInputsReady(string $sEventType): bool
+	{
+		foreach ($this->aFormInputs as $oFormInput) {
+			if ($oFormInput->IsConnected()) {
+				if(!$oFormInput->IsDataReady($sEventType)) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	public function IsAdded(): bool
+	{
+		return $this->bIsAdded;
+	}
+
+	public function SetAdded(bool $bIsAdded): void
+	{
+		$this->bIsAdded = $bIsAdded;
 	}
 
 	/**
@@ -222,7 +253,7 @@ abstract class AbstractFormBlock
 	/**
 	 * Initialize options.
 	 *
-	 * @return void
+	 * @return array
 	 */
-	abstract public function InitOptions(): void;
+	abstract public function InitOptions(): array;
 }

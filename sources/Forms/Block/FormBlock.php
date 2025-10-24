@@ -35,8 +35,8 @@ class FormBlock extends AbstractFormBlock
 	}
 
 	/** @inheritdoc  */
-	public function InitOptions(): void
+	public function InitOptions(): array
 	{
-
+		return [];
 	}
 }

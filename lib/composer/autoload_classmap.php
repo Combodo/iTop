@@ -482,6 +482,8 @@ return array(
     'Combodo\\iTop\\Forms\\Block\\FormBlock' => $baseDir . '/sources/Forms/Block/FormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\FormBlockException' => $baseDir . '/sources/Forms/Block/FormBlockException.php',
     'Combodo\\iTop\\Forms\\Block\\FormBlockIOException' => $baseDir . '/sources/Forms/Block/IO/FormBlockIOException.php',
+    'Combodo\\iTop\\Forms\\Block\\IO\\AbstractFormIO' => $baseDir . '/sources/Forms/Block/IO/AbstractFormIO.php',
+    'Combodo\\iTop\\Forms\\Block\\IO\\FormBinding' => $baseDir . '/sources/Forms/Block/IO/FormBinding.php',
     'Combodo\\iTop\\Forms\\Block\\IO\\FormInput' => $baseDir . '/sources/Forms/Block/IO/FormInput.php',
     'Combodo\\iTop\\Forms\\Block\\IO\\FormOutput' => $baseDir . '/sources/Forms/Block/IO/FormOutput.php',
     'Combodo\\iTop\\Forms\\Block\\IO\\Format\\AttributeIOFormat' => $baseDir . '/sources/Forms/Block/IO/Format/AttributeIOFormat.php',

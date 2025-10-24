@@ -6,16 +6,15 @@
 
 namespace Combodo\iTop\Forms\Block\IO;
 
-use Combodo\iTop\Forms\Block\FormBlock;
 use Combodo\iTop\Forms\Block\FormBlockIOException;
 
-class FormInput
+class FormInput extends AbstractFormIO
 {
 	private string $sName;
 
 	private string $sType;
 
-	private array $aConnections = [];
+	private FormBinding|null $oBinding = null;
 
 	public function __construct(string $sName, string $sType)
 	{
@@ -43,23 +42,28 @@ class FormInput
 		$this->sType = $sType;
 	}
 
-	public function Connect(FormBlock $sOutputBlock, string $sOutputName): void
+	public function Bind(FormOutput $oFormOutput): void
 	{
-		$sOutputType = $sOutputBlock->GetOutput($sOutputName)->GetType();
-		if($this->sType !== $sOutputType){
+		if($this->sType !== $oFormOutput->GetType()){
 			throw new FormBlockIOException('Cannot connect input types incompatibles ' . $this->sName . ' to ' . $sOutputBlock->GetName() . ' ' . $sOutputName);
 		}
 
-		$this->aConnections[] = ['output_block' => $sOutputBlock, 'output' => $sOutputName];
+		$this->oBinding = new FormBinding($this, $oFormOutput);
 	}
 
-	public function GetConnections(): array
+	public function GetBinding(): FormBinding
 	{
-		return $this->aConnections;
+		return $this->oBinding;
 	}
 
-	public function HasConnections(): bool
+	public function IsDataReady(string $sEventType): bool
 	{
-		return count($this->aConnections) > 0;
+		return $this->oBinding->oOutput->HasValue($sEventType);
 	}
+
+	public function IsConnected(): bool
+	{
+		return $this->oBinding !== null;
+	}
+
 }

@@ -863,6 +863,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Forms\\Block\\FormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/FormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\FormBlockException' => __DIR__ . '/../..' . '/sources/Forms/Block/FormBlockException.php',
         'Combodo\\iTop\\Forms\\Block\\FormBlockIOException' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/FormBlockIOException.php',
+        'Combodo\\iTop\\Forms\\Block\\IO\\AbstractFormIO' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/AbstractFormIO.php',
+        'Combodo\\iTop\\Forms\\Block\\IO\\FormBinding' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/FormBinding.php',
         'Combodo\\iTop\\Forms\\Block\\IO\\FormInput' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/FormInput.php',
         'Combodo\\iTop\\Forms\\Block\\IO\\FormOutput' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/FormOutput.php',
         'Combodo\\iTop\\Forms\\Block\\IO\\Format\\AttributeIOFormat' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/Format/AttributeIOFormat.php',

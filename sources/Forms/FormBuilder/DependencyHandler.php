@@ -6,11 +6,10 @@
 
 namespace Combodo\iTop\Forms\FormBuilder;
 
-use Symfony\Component\Form\Event\PostSetDataEvent;
-use Symfony\Component\Form\Event\PostSubmitEvent;
+use Combodo\iTop\Forms\Block\FormBlock;
+use Combodo\iTop\Forms\Block\IO\FormInput;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 
 /**
  * Dependencies handler.
@@ -86,13 +85,44 @@ class DependencyHandler
 
 			/** Iterate throw dependencies map... */
 			$sOutputBlockName = $oForm->getName();
-			$oOutputBlock = $this->oFormBuilder->GetFormBlock($sOutputBlockName);
-			foreach ($this->aDependenciesMap->GetOutputsForBlock($sOutputBlockName) as $sOutputName) {
-				$oOutput = $oOutputBlock->GetOutput($sOutputName);
-				$oOutput->UpdateOutputValue($oEvent->getData(), $sEventType);
+			if($this->aDependenciesMap->IsBlockHasOutputs($sOutputBlockName)){
+				$oOutputBlock = $this->oFormBuilder->GetFormBlock($sOutputBlockName);
+				foreach ($this->aDependenciesMap->GetOutputsForBlock($sOutputBlockName) as $sOutputName) {
+					$oOutput = $oOutputBlock->GetOutput($sOutputName);
+					$oOutput->UpdateOutputValue($oEvent->getData(), $sEventType);
+				}
 			}
 
-			return;
+
+
+			foreach ($this->aDependentBlocks as $oDependentBlock)
+			{
+
+				// When dependencies met, add the dependent field if not already done
+				if(!$oDependentBlock->IsAdded() && $oDependentBlock->IsInputsReady($sEventType)) {
+
+					// Get the dependent field options
+					$aOptions = $oDependentBlock->GetOptions();
+
+					// Add the listener callback to the dependent field if it is also a dependency for another field
+					if($this->aDependenciesMap->IsTheBlockInDependencies($oDependentBlock->getName())) {
+						$aOptions = array_merge($aOptions, [
+							'listener_callback' => $this->GetEventListeningCallback(),
+						]);
+					}
+
+					// Mark the dependency as added
+					$oDependentBlock->SetAdded(true);
+
+					// Add the dependent field to the form
+					$oForm->getParent()->add($oDependentBlock->GetName(), $oDependentBlock->GetFormType(), $aOptions);
+
+
+				}
+
+			}
+
+
 		};
 
 	}

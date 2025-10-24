@@ -23,9 +23,15 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 	public const INPUT_ATTRIBUTE  = 'attribute';
 
 	/** @inheritdoc  */
-	public function InitOptions(array &$aOptions = []): void
+	public function InitOptions(array &$aOptions = []): array
 	{
 		$aOptions['multiple'] = true;
+		$aOptions['attr'] = [
+			'size' => 10,
+			'style' => 'height: auto;'
+		];
+
+		return $aOptions;
 	}
 
 	/** @inheritdoc  */
@@ -34,6 +40,24 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		parent::InitInputs();
 		$this->AddInput(new FormInput(self::INPUT_CLASS_NAME, ClassIOFormat::class));
 		$this->AddInput(new FormInput(self::INPUT_ATTRIBUTE, AttributeIOFormat::class));
+	}
+
+	public function GetOptions(): array
+	{
+		$aOptions = parent::GetOptions();
+
+		$oBindingClassName = $this->GetInput(self::INPUT_CLASS_NAME)->GetBinding();
+		$oClassName = $oBindingClassName->oOutput->Value();
+
+		$oBindingAttribute = $this->GetInput(self::INPUT_ATTRIBUTE)->GetBinding();
+		$oAttribute = $oBindingAttribute->oOutput->Value();
+
+		$oAttDef = \MetaModel::GetAttributeDef(strval($oClassName), strval($oAttribute));
+		$aValues = $oAttDef->GetAllowedValues();
+
+		$aOptions['choices'] = array_flip($aValues);
+
+		return $aOptions;
 	}
 
 }
