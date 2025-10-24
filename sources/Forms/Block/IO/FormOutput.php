@@ -15,7 +15,7 @@ class FormOutput
 	private string $sType;
 
 	private null|AbstractOutputConverter $oConverter;
-	private array $aValues;
+	private ?array $aValues = null;
 
 	public function __construct(string $sName, string $sType, AbstractOutputConverter $oConverter = null)
 	{
@@ -62,5 +62,13 @@ class FormOutput
 		return $this->aValues[$sEventType] ?? null;
 	}
 
+	public function HasValues(): bool
+	{
+		return $this->aValues !== null;
+	}
 
+	public function GetValues(): array
+	{
+		return $this->aValues;
+	}
 }

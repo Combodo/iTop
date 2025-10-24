@@ -153,6 +153,11 @@ abstract class AbstractFormBlock
 		return $this->aFormOutputs[$sName];
 	}
 
+	public function GetOutputs(): array
+	{
+		return $this->aFormOutputs;
+	}
+
 	/**
 	 * Attach an input to a block output.
 	 *

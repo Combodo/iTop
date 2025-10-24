@@ -8,4 +8,9 @@ class ClassIOFormat
 	{
 		// validation du format sinon exception
 	}
+
+	public function __toString(): string
+	{
+		return $this->sClassName;
+	}
 }
