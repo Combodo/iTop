@@ -715,6 +715,13 @@ abstract class LogAPI
 		static::$m_oMockMetaModelConfig = $oMetaModelConfig;
 	}
 
+	public static function Exception(string $sMessage, throwable $previous, string $sChannel = null, array $aContext = []): void
+	{
+		$aContext['Error Message'] = $previous->getMessage();
+		$aContext['Stack Trace'] = $previous->getTraceAsString();
+		static::Error($sMessage, $sChannel, $aContext);
+	}
+
 	public static function Error($sMessage, $sChannel = null, $aContext = array())
 	{
 		static::Log(self::LEVEL_ERROR, $sMessage, $sChannel, $aContext);
