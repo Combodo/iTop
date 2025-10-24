@@ -2072,7 +2072,8 @@ EOF
 
 			$bIsUninstallable = $oExtension ? $oExtension->IsUninstallable() : true;
 			$bSelected = isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] == $sChoiceId);
-			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $this->bUpgrade && $oExtension->sInstalledVersion !== '' && !$bIsUninstallable;
+			$bDisableUninstallCheck = (bool)$this->oWizard->GetParameter('force-uninstall', false);
+			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $this->bUpgrade && $oExtension->sInstalledVersion !== '' && !$bIsUninstallable && !$bDisableUninstallCheck;;
 			$bDisabled = false;
 			$sUnremovable = $bIsUninstallable ? '' : 'unremovable';
 			if ($bMandatory) {
