@@ -21,20 +21,6 @@ class AttributeChoiceType extends AbstractType
 		return ChoiceType::class;
 	}
 
-	public function configureOptions(OptionsResolver $resolver): void
-	{
-
-		$resolver->setDefault('inputs', [
-			'object_class' => 'string'
-		]);
-
-		$resolver->setDefault('outputs', [
-			'attribute' => function($oData) {
-				return $oData;
-			}
-		]);
-	}
-
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
 		// on pre submit

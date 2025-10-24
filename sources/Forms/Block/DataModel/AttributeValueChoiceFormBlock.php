@@ -10,6 +10,8 @@ use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Block\IO\FormInput;
+use Combodo\iTop\Forms\FormType\AttributeChoiceType;
+use Combodo\iTop\Forms\FormType\AttributeValueChoiceType;
 
 /**
  * Form block for choice of class attribute values.
@@ -63,6 +65,12 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		$aOptions['choices'] = array_flip($aValues);
 
 		return $aOptions;
+	}
+
+	/** @inheritdoc  */
+	public function GetFormType(): string
+	{
+		return AttributeValueChoiceType::class;
 	}
 
 }

@@ -12,6 +12,7 @@ use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Block\IO\FormInput;
 use Combodo\iTop\Forms\Block\IO\FormOutput;
 use Combodo\iTop\Forms\Converter\StringToAttributeConverter;
+use Combodo\iTop\Forms\FormType\AttributeChoiceType;
 
 /**
  * Form block for choice of class attributes.
@@ -53,5 +54,11 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 		$aOptions['choices'] = $aAttributeCodes;
 
 		return $aOptions;
+	}
+
+	/** @inheritdoc  */
+	public function GetFormType(): string
+	{
+		return AttributeChoiceType::class;
 	}
 }
