@@ -57,7 +57,7 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 				$this->builder->add($oSubFormBlock->GetName(), HiddenType::class);
 				$aDependentBlocks[] = $oSubFormBlock;
 			} else {
-				$this->add($oSubFormBlock->GetName(), $oSubFormBlock->GetFormType(), $oSubFormBlock->getOptions());
+				$this->add($oSubFormBlock->GetName(), $oSubFormBlock->GetFormType(), $oSubFormBlock->UpdateOptions());
 				$oSubFormBlock->SetAdded(true);
 			}
 		}

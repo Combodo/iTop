@@ -6,8 +6,6 @@
 
 namespace Combodo\iTop\Forms\FormBuilder;
 
-use Combodo\iTop\Forms\Block\FormBlock;
-use Combodo\iTop\Forms\Block\IO\FormInput;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
@@ -102,7 +100,7 @@ class DependencyHandler
 				if(!$oDependentBlock->IsAdded() && $oDependentBlock->IsInputsReady($sEventType)) {
 
 					// Get the dependent field options
-					$aOptions = $oDependentBlock->GetOptions();
+					$aOptions = $oDependentBlock->UpdateOptions();
 
 					// Add the listener callback to the dependent field if it is also a dependency for another field
 					if($this->aDependenciesMap->IsTheBlockInDependencies($oDependentBlock->getName())) {

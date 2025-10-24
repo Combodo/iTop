@@ -71,7 +71,7 @@ abstract class AbstractFormBlock
 	 *
 	 * @return array
 	 */
-	public function GetOptions(): array
+	public function UpdateOptions(): array
 	{
 		return $this->aOptions;
 	}
@@ -168,7 +168,7 @@ abstract class AbstractFormBlock
 	 * Attach an input to a block output.
 	 *
 	 * @param string $sInputName
-	 * @param FormBlock $sOutputBlock
+	 * @param FormBlock $oOutputBlock
 	 * @param string $sOutputName
 	 *
 	 * @return $this
@@ -186,7 +186,7 @@ abstract class AbstractFormBlock
 	public function HasConnections(): bool
 	{
 		foreach ($this->aFormInputs as $oFormInput) {
-			if ($oFormInput->IsConnected()) {
+			if ($oFormInput->IsBound()) {
 				return true;
 			}
 		}
@@ -199,7 +199,7 @@ abstract class AbstractFormBlock
 
 		/** @var FormInput $oFormInput */
 		foreach ($this->aFormInputs as $oFormInput) {
-			if ($oFormInput->IsConnected()) {
+			if ($oFormInput->IsBound()) {
 				$aBindings[$oFormInput->GetName()] = $oFormInput->GetBinding();
 			}
 		}
@@ -209,7 +209,7 @@ abstract class AbstractFormBlock
 	public function IsInputsReady(string $sEventType): bool
 	{
 		foreach ($this->aFormInputs as $oFormInput) {
-			if ($oFormInput->IsConnected()) {
+			if ($oFormInput->IsBound()) {
 				if(!$oFormInput->IsDataReady($sEventType)) {
 					return false;
 				}

@@ -61,7 +61,7 @@ class FormInput extends AbstractFormIO
 		return $this->oBinding->oOutput->HasValue($sEventType);
 	}
 
-	public function IsConnected(): bool
+	public function IsBound(): bool
 	{
 		return $this->oBinding !== null;
 	}

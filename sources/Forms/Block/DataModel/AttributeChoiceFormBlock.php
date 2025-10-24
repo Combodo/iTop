@@ -41,9 +41,9 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	}
 
 	/** @inheritdoc  */
-	public function GetOptions(): array
+	public function UpdateOptions(): array
 	{
-		$aOptions = parent::GetOptions();
+		$aOptions = parent::UpdateOptions();
 
 		$oBinding = $this->GetInput(self::INPUT_CLASS_NAME)->GetBinding();
 		$oConnectionValue = $oBinding->oOutput->Value();
