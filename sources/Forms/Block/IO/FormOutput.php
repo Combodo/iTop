@@ -4,9 +4,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Forms\Block;
+namespace Combodo\iTop\Forms\Block\IO;
 
-use Combodo\iTop\Forms\Converter\AbstractConverter;
+use Combodo\iTop\Forms\Converter\AbstractOutputConverter;
 
 class FormOutput
 {
@@ -14,10 +14,10 @@ class FormOutput
 
 	private string $sType;
 
-	private null|AbstractConverter $oConverter;
+	private null|AbstractOutputConverter $oConverter;
 	private array $aValues;
 
-	public function __construct(string $sName, string $sType, AbstractConverter $oConverter = null)
+	public function __construct(string $sName, string $sType, AbstractOutputConverter $oConverter = null)
 	{
 		$this->sName = $sName;
 		$this->sType = $sName;

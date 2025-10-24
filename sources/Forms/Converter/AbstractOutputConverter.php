@@ -6,7 +6,17 @@
 
 namespace Combodo\iTop\Forms\Converter;
 
-abstract class AbstractConverter
+/**
+ * Output converter.
+ */
+abstract class AbstractOutputConverter
 {
+	/**
+	 * Convert the date to output format.
+	 *
+	 * @param mixed $oData
+	 *
+	 * @return mixed
+	 */
 	abstract public function Convert(mixed $oData): mixed;
 }

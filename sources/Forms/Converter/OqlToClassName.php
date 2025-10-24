@@ -6,15 +6,20 @@
 
 namespace Combodo\iTop\Forms\Converter;
 
-class OqlToClassName extends AbstractConverter
-{
+use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
 
-	public function Convert(mixed $oData): ?string
+/**
+ * OQL expression to class converter.
+ */
+class OqlToClassName extends AbstractOutputConverter
+{
+	/** @inheritdoc  */
+	public function Convert(mixed $oData): ?ClassIOFormat
 	{
 		if($oData === null)
 			return null;
 		// extract selected class
 		preg_match('/SELECT\s+(\w+)/', $oData, $aMatches);
-		return $aMatches[1] ?? null;
+		return new ClassIOFormat($aMatches[1]) ?? null;
 	}
 }

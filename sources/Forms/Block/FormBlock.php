@@ -6,29 +6,37 @@
 
 namespace Combodo\iTop\Forms\Block;
 
+use Combodo\iTop\Forms\Block\IO\FormOutput;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 
+/**
+ * Complex form type.
+ *
+ */
 class FormBlock extends AbstractFormBlock
 {
 	public const OUTPUT_VALUE = 'value';
 
-	public function __construct(string $sName, array $aOptions = [])
-	{
-		$aOptions['form_block'] = $this;
-		parent::__construct($sName, $aOptions);
-	}
-
+	/** @inheritdoc  */
 	public function GetFormType(): string
 	{
 		return FormType::class;
 	}
 
+	/** @inheritdoc  */
 	public function InitInputs(): void
 	{
 	}
 
+	/** @inheritdoc  */
 	public function InitOutputs(): void
 	{
 		$this->AddOutput(new FormOutput(self::OUTPUT_VALUE, 'string'));
+	}
+
+	/** @inheritdoc  */
+	public function InitOptions(): void
+	{
+
 	}
 }

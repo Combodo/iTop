@@ -9,9 +9,13 @@ namespace Combodo\iTop\Forms\Block\Base;
 use Combodo\iTop\Forms\Block\FormBlock;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+/**
+ * Form block for string.
+ *
+ */
 class StringFormBlock extends FormBlock
 {
-
+	/** @inheritdoc  */
 	public function GetFormType(): string
 	{
 		return TextType::class;

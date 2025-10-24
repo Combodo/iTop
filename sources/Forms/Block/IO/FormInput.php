@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Forms\Block;
+namespace Combodo\iTop\Forms\Block\IO;
 
 class FormInput
 {
@@ -40,7 +40,7 @@ class FormInput
 		$this->sType = $sType;
 	}
 
-	public function Connect(string $sOutputBlockName, string $sOutputName)
+	public function Connect(string $sOutputBlockName, string $sOutputName): void
 	{
 		$this->aConnections[] = ['output_block' => $sOutputBlockName, 'output' => $sOutputName];
 	}
