@@ -6,20 +6,32 @@
 
 namespace Combodo\iTop\Forms\FormBuilder;
 
+use Combodo\iTop\Forms\Block\FormBlock;
 use Symfony\Component\Form\Event\PostSetDataEvent;
 use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 
+/**
+ * Dependencies handler.
+ *
+ */
 class DependencyHandler
 {
-	private array $aDependentBlocks = [];
+	/** @var FormBuilder form builder */
 	private FormBuilder $oFormBuilder;
+
+	/** @var array dependant blocks */
+	private array $aDependentBlocks = [];
+
+	/** @var array dependencies map */
 	private array $aDependenciesMap = [];
 
 	/**
-	 * @param \Combodo\iTop\Forms\FormBuilder\FormBuilder $oFormBuilder
+	 * Constructor.
+	 *
+	 * @param FormBuilder $oFormBuilder
 	 * @param array $aDependentBlocks
 	 */
 	public function __construct(FormBuilder $oFormBuilder, array $aDependentBlocks)
@@ -27,25 +39,54 @@ class DependencyHandler
 		$this->aDependentBlocks = $aDependentBlocks;
 		$this->oFormBuilder = $oFormBuilder;
 
+		// add form ready listener
+		$this->AddFormReadyListener();
+	}
+
+	/**
+	 * Add form ready listener.
+	 *
+	 * Listen the form PRE_SET_DATA
+	 * First event from Symfony framework, we know that the form is built at this step.
+	 *
+	 * @return void
+	 */
+	private function AddFormReadyListener(): void
+	{
 		// Initialize the dependencies listeners once the form is built
-		$oFormBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+		$this->oFormBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 			$oForm = $event->getForm();
 			$this->InitializeDependenciesMap($oForm);
 		});
 	}
 
-	private function InitializeDependenciesMap(FormInterface $oForm)
+	/**
+	 * Initialize dependencies map.
+	 *
+	 * @param FormInterface $oForm
+	 *
+	 * @return void
+	 */
+	private function InitializeDependenciesMap(FormInterface $oForm): void
 	{
 		// Connections from output pov
 		$aDependenciesMap = [];
 
-		/** @var \Combodo\iTop\Forms\Block\FormBlock $oDependentBlock */
+		/** iterate throw dependents blocks... @var FormBlock $oDependentBlock */
 		foreach ($this->aDependentBlocks as $oDependentBlock) {
-			foreach ($oDependentBlock->GetConnections() as $sInputName => $aConnections) {
+
+			/** iterate throw the block inputs connections... **/
+			foreach ($oDependentBlock->GetInputsConnections() as $sInputName => $aConnections) {
+
+				/** Iterate throw the input connections... */
 				foreach ($aConnections as $aConnection) {
-					$sOutputBlockName = $aConnection['output_block'];
+
+					// connection information
+					$sOutputBlock = $aConnection['output_block'];
+					$sOutputBlockName = $sOutputBlock->getName();
 					$sOutputName = $aConnection['output'];
 
+					// initialize map
 					if (!isset($aDependenciesMap[$sOutputBlockName])) {
 						$aDependenciesMap[$sOutputBlockName] = [];
 					}
@@ -53,22 +94,30 @@ class DependencyHandler
 						$aDependenciesMap[$sOutputBlockName][$sOutputName] = [];
 					}
 
+					// add to map
 					$aDependenciesMap[$sOutputBlockName][$sOutputName][] = ['input_block' => $oDependentBlock, 'input_name' => $sInputName];
 				}
 			}
 		}
 
+		// store the dependencies map
 		$this->aDependenciesMap = $aDependenciesMap;
 
+		/** Iterate throw output blocks */
 		foreach (array_keys($aDependenciesMap) as $sOutputBlockName) {
 
-			// Listen the dependency
+			// Listen the output block POST_SET_DATA & POST_SUBMIT
 			$this->oFormBuilder->get($sOutputBlockName)->addEventListener(FormEvents::POST_SET_DATA, $this->GetEventListeningCallback());
 			$this->oFormBuilder->get($sOutputBlockName)->addEventListener(FormEvents::POST_SUBMIT, $this->GetEventListeningCallback());
 		}
 
 	}
 
+	/**
+	 * Get the listening callback.
+	 *
+	 * @return callable
+	 */
 	private function GetEventListeningCallback(): callable
 	{
 		return function (FormEvent $oEvent) {
@@ -97,7 +146,7 @@ class DependencyHandler
 	 * @param FormEvent $event
 	 *
 	 * @return string
-	 * @throws \Combodo\iTop\Forms\FormBuilder\FormBuilderException
+	 * @throws FormBuilderException
 	 */
 	private function GetEventType(FormEvent $event): string
 	{

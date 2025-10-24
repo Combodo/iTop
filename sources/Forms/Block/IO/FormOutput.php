@@ -20,7 +20,7 @@ class FormOutput
 	public function __construct(string $sName, string $sType, AbstractOutputConverter $oConverter = null)
 	{
 		$this->sName = $sName;
-		$this->sType = $sName;
+		$this->sType = $sType;
 		$this->oConverter = $oConverter;
 	}
 

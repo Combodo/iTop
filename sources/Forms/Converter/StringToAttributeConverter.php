@@ -6,20 +6,19 @@
 
 namespace Combodo\iTop\Forms\Converter;
 
+use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
 
 /**
- * OQL expression to class converter.
+ * String to attribute converter.
  */
-class OqlToClassName extends AbstractOutputConverter
+class StringToAttributeConverter extends AbstractOutputConverter
 {
 	/** @inheritdoc  */
-	public function Convert(mixed $oData): ?ClassIOFormat
+	public function Convert(mixed $oData): ?AttributeIOFormat
 	{
 		if($oData === null)
 			return null;
-		// extract selected class
-		preg_match('/SELECT\s+(\w+)/', $oData, $aMatches);
-		return new ClassIOFormat($aMatches[1]) ?? null;
+		return new AttributeIOFormat($oData);
 	}
 }

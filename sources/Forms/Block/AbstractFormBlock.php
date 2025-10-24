@@ -157,16 +157,16 @@ abstract class AbstractFormBlock
 	 * Attach an input to a block output.
 	 *
 	 * @param string $sInputName
-	 * @param string $sOutputBlockName
+	 * @param FormBlock $sOutputBlock
 	 * @param string $sOutputName
 	 *
 	 * @return $this
 	 * @throws FormBlockException
 	 */
-	public function DependsOn(string $sInputName, string $sOutputBlockName, string $sOutputName): AbstractFormBlock
+	public function DependsOn(string $sInputName, FormBlock $sOutputBlock, string $sOutputName): AbstractFormBlock
 	{
 		$oFormInput = $this->GetInput($sInputName);
-		$oFormInput->Connect($sOutputBlockName, $sOutputName);
+		$oFormInput->Connect($sOutputBlock, $sOutputName);
 
 		return $this;
 	}
@@ -181,7 +181,7 @@ abstract class AbstractFormBlock
 		return false;
 	}
 
-	public function GetConnections(): array
+	public function GetInputsConnections(): array
 	{
 		$aConnections = [];
 		/** @var FormInput $oFormInput */

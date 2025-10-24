@@ -7,8 +7,12 @@
 namespace Combodo\iTop\Forms\Block\DataModel;
 
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
+use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Block\IO\FormInput;
+use Combodo\iTop\Forms\Block\IO\FormOutput;
+use Combodo\iTop\Forms\Converter\OqlToClassConverter;
+use Combodo\iTop\Forms\Converter\StringToAttributeConverter;
 
 /**
  * Form block for choice of class attributes.
@@ -20,6 +24,9 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	// inputs
 	public const INPUT_CLASS_NAME = 'class_name';
 
+	// outputs
+	public const OUTPUT_ATTRIBUTE = 'attribute';
+
 	/** @inheritdoc  */
 	public function InitInputs(): void
 	{
@@ -27,4 +34,9 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 		$this->AddInput(new FormInput(self::INPUT_CLASS_NAME, ClassIOFormat::class));
 	}
 
+	public function InitOutputs(): void
+	{
+		parent::InitOutputs();
+		$this->AddOutput(new FormOutput(self::OUTPUT_ATTRIBUTE, AttributeIOFormat::class, new StringToAttributeConverter()));
+	}
 }

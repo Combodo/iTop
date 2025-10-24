@@ -9,7 +9,7 @@ namespace Combodo\iTop\Forms\Block\DataModel;
 use Combodo\iTop\Forms\Block\Base\StringFormBlock;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Block\IO\FormOutput;
-use Combodo\iTop\Forms\Converter\OqlToClassName;
+use Combodo\iTop\Forms\Converter\OqlToClassConverter;
 
 /**
  * Form block for oql expression.
@@ -25,7 +25,7 @@ class OqlFormBlock extends StringFormBlock
 	public function InitOutputs(): void
 	{
 		parent::InitOutputs();
-		$this->AddOutput(new FormOutput(self::OUTPUT_SELECTED_CLASS, ClassIOFormat::class, new OqlToClassName()));
+		$this->AddOutput(new FormOutput(self::OUTPUT_SELECTED_CLASS, ClassIOFormat::class, new OqlToClassConverter()));
 	}
 
 }

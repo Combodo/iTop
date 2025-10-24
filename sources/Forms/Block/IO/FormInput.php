@@ -6,6 +6,9 @@
 
 namespace Combodo\iTop\Forms\Block\IO;
 
+use Combodo\iTop\Forms\Block\FormBlock;
+use Combodo\iTop\Forms\Block\FormBlockIOException;
+
 class FormInput
 {
 	private string $sName;
@@ -17,7 +20,7 @@ class FormInput
 	public function __construct(string $sName, string $sType)
 	{
 		$this->sName = $sName;
-		$this->sType = $sName;
+		$this->sType = $sType;
 	}
 
 	public function GetName(): string
@@ -40,9 +43,14 @@ class FormInput
 		$this->sType = $sType;
 	}
 
-	public function Connect(string $sOutputBlockName, string $sOutputName): void
+	public function Connect(FormBlock $sOutputBlock, string $sOutputName): void
 	{
-		$this->aConnections[] = ['output_block' => $sOutputBlockName, 'output' => $sOutputName];
+		$sOutputType = $sOutputBlock->GetOutput($sOutputName)->GetType();
+		if($this->sType !== $sOutputType){
+			throw new FormBlockIOException('Cannot connect input types incompatibles ' . $this->sName . ' to ' . $sOutputBlock->GetName() . ' ' . $sOutputName);
+		}
+
+		$this->aConnections[] = ['output_block' => $sOutputBlock, 'output' => $sOutputName];
 	}
 
 	public function GetConnections(): array
