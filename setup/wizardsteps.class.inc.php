@@ -997,6 +997,26 @@ JS
 			);
 		}
 	}
+	
+	final protected function AddForceUninstallFlagOption(WebPage $oPage): void
+	{
+		$sChecked = $this->oWizard->GetParameter('force-uninstall', false) ? ' checked ' : '';
+		$oPage->add('<fieldset>');
+		$oPage->add('<legend>Advanced parameters</legend>');
+		$oPage->p('<input id="force-uninstall" type="checkbox"'.$sChecked.' name="force-uninstall"><label for="force-uninstall">&nbsp;Disable uninstallation checks for extensions');
+		$oPage->add('</fieldset>');
+
+		$oPage->add_ready_script(<<<'JS'
+$("#force-uninstall").on("click", function() {
+	let $this = $(this);
+	let bForceUninstall = $this.prop("checked");
+	if( bForceUninstall && !confirm('Beware, uninstalling extensions flagged as non uninstallable may result in data corruption and application crashes. Are you sure you want to continue ?')){
+		$this.prop("checked",false);
+	}
+});
+JS
+			);
+	}
 }
 
 
@@ -1181,6 +1201,7 @@ class WizStepUpgradeMiscParams extends AbstractWizStepMiscParams
 	{
 		$this->oWizard->SaveParameter('application_url', '');
 		$this->oWizard->SaveParameter('graphviz_path', '');
+		$this->oWizard->SaveParameter('force-uninstall', false);
 		return array('class' => 'WizStepModulesChoice', 'state' => 'start_upgrade');
 	}
 
@@ -1223,6 +1244,7 @@ EOF
 		);
 
 		$this->AddUseSymlinksFlagOption($oPage);
+		$this->AddForceUninstallFlagOption($oPage);
 	}
 
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
