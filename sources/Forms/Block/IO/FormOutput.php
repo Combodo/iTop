@@ -11,38 +11,13 @@ use Symfony\Component\Form\FormEvents;
 
 class FormOutput extends AbstractFormIO
 {
-	private string $sName;
-
-	private string $sType;
-
 	private null|AbstractOutputConverter $oConverter;
 	private array $aValues = [];
 
 	public function __construct(string $sName, string $sType, AbstractOutputConverter $oConverter = null)
 	{
-		$this->sName = $sName;
-		$this->sType = $sType;
+		parent::__construct($sName, $sType);
 		$this->oConverter = $oConverter;
-	}
-
-	public function GetName(): string
-	{
-		return $this->sName;
-	}
-
-	public function SetName(string $sName): void
-	{
-		$this->sName = $sName;
-	}
-
-	public function GetType(): string
-	{
-		return $this->sType;
-	}
-
-	public function SetType(string $sType): void
-	{
-		$this->sType = $sType;
 	}
 
 	public function ConvertValue(mixed $oData): mixed

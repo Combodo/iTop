@@ -9,7 +9,7 @@ namespace Combodo\iTop\Forms\Block\IO;
 
 class FormBinding
 {
-	public function __construct(public readonly FormInput $oInput, public readonly FormOutput $oOutput)
+	public function __construct(public readonly FormInput $oDestinationIO, public readonly AbstractFormIO $oSourceIO)
 	{
 
 	}

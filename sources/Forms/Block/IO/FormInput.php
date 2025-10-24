@@ -10,45 +10,17 @@ use Combodo\iTop\Forms\Block\FormBlockIOException;
 
 class FormInput extends AbstractFormIO
 {
-	private string $sName;
-
-	private string $sType;
 
 	private FormBinding|null $oBinding = null;
 
-	public function __construct(string $sName, string $sType)
-	{
-		$this->sName = $sName;
-		$this->sType = $sType;
-	}
 
-	public function GetName(): string
+	public function Bind(AbstractFormIO $oSourceIO): void
 	{
-		return $this->sName;
-	}
-
-	public function SetName(string $sName): void
-	{
-		$this->sName = $sName;
-	}
-
-	public function GetType(): string
-	{
-		return $this->sType;
-	}
-
-	public function SetType(string $sType): void
-	{
-		$this->sType = $sType;
-	}
-
-	public function Bind(FormOutput $oFormOutput): void
-	{
-		if($this->sType !== $oFormOutput->GetType()){
-			throw new FormBlockIOException('Cannot connect input types incompatibles ' . $this->sName . ' to ' . $sOutputBlock->GetName() . ' ' . $sOutputName);
+		if($this->GetType() !== $oSourceIO->GetType()){
+			throw new FormBlockIOException('Cannot connect input types incompatibles ' . $this->GetName() . ' from ' . $oSourceIO->GetOwnerBlock()->GetName() . ' ' . $oSourceIO->GetName());
 		}
 
-		$this->oBinding = new FormBinding($this, $oFormOutput);
+		$this->oBinding = new FormBinding($this, $oSourceIO);
 	}
 
 	public function GetBinding(): FormBinding
@@ -58,7 +30,7 @@ class FormInput extends AbstractFormIO
 
 	public function IsDataReady(string $sEventType): bool
 	{
-		return $this->oBinding->oOutput->HasValue($sEventType);
+		return $this->oBinding->oSourceIO->HasValue($sEventType);
 	}
 
 	public function IsBound(): bool

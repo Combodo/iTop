@@ -43,8 +43,8 @@ class DependencyMap
 			foreach ($oDependentBlock->GetInputsBindings() as $sInputName => $oBinding) {
 
 				// connection information
-				$sOutputBlockName = $oBinding->oOutput->GetOwnerBlock()->GetName();
-				$sOutputName = $oBinding->oOutput->GetName();
+				$sOutputBlockName = $oBinding->oSourceIO->GetOwnerBlock()->GetName();
+				$sOutputName = $oBinding->oSourceIO->GetName();
 
 				// initialize map
 				if (!isset($this->aDependenciesMap[$sOutputBlockName])) {

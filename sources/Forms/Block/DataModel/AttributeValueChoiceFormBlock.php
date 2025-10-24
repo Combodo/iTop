@@ -10,7 +10,6 @@ use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Block\IO\FormInput;
-use Combodo\iTop\Forms\FormType\AttributeChoiceType;
 use Combodo\iTop\Forms\FormType\AttributeValueChoiceType;
 
 /**
@@ -47,17 +46,17 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 
 	public function UpdateOptions(): array
 	{
-		$aOptions = parent::UpdateOptions();
+		$aOptions = parent::GetOptions();
 
 		$oBindingClassName = $this->GetInput(self::INPUT_CLASS_NAME)->GetBinding();
-		if($oBindingClassName->oOutput->Value() === null || $oBindingClassName->oOutput->Value() == "")
+		if($oBindingClassName->oSourceIO->Value() === null || $oBindingClassName->oSourceIO->Value() == "")
 			return $aOptions;
-		$oClassName = $oBindingClassName->oOutput->Value();
+		$oClassName = $oBindingClassName->oSourceIO->Value();
 
 		$oBindingAttribute = $this->GetInput(self::INPUT_ATTRIBUTE)->GetBinding();
-		if($oBindingAttribute->oOutput->Value() === null || $oBindingAttribute->oOutput->Value() == "")
+		if($oBindingAttribute->oSourceIO->Value() === null || $oBindingAttribute->oSourceIO->Value() == "")
 			return $aOptions;
-		$oAttribute = $oBindingAttribute->oOutput->Value();
+		$oAttribute = $oBindingAttribute->oSourceIO->Value();
 
 		$oAttDef = \MetaModel::GetAttributeDef(strval($oClassName), strval($oAttribute));
 		$aValues = $oAttDef->GetAllowedValues();

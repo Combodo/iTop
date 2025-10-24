@@ -44,10 +44,10 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	/** @inheritdoc  */
 	public function UpdateOptions(): array
 	{
-		$aOptions = parent::UpdateOptions();
+		$aOptions = parent::GetOptions();
 
 		$oBinding = $this->GetInput(self::INPUT_CLASS_NAME)->GetBinding();
-		$oConnectionValue = $oBinding->oOutput->Value();
+		$oConnectionValue = $oBinding->oSourceIO->Value();
 
 		$aAttributeCodes = \MetaModel::GetAttributesList($oConnectionValue);
 		$aAttributeCodes = array_combine($aAttributeCodes, $aAttributeCodes) ;

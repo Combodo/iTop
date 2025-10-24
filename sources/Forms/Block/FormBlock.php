@@ -39,4 +39,8 @@ class FormBlock extends AbstractFormBlock
 	{
 		return [];
 	}
+
+	protected function BuildForm(): void
+	{
+	}
 }

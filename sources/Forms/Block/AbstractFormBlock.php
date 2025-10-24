@@ -53,7 +53,10 @@ abstract class AbstractFormBlock
 		$this->InitInputs();
 		$this->InitOutputs();
 		$this->aOptions = array_merge($this->aOptions, $this->InitOptions());
+		$this->BuildForm();
 	}
+
+	abstract protected function BuildForm();
 
 	/**
 	 * Return the form block name.
@@ -63,6 +66,17 @@ abstract class AbstractFormBlock
 	public function GetName(): string
 	{
 		return $this->sName;
+	}
+
+	/**
+	 * Return the form block options.
+	 * Options will be passed to FormType for building.
+	 *
+	 * @return array
+	 */
+	public function GetOptions(): array
+	{
+		return $this->aOptions;
 	}
 
 	/**
@@ -179,6 +193,15 @@ abstract class AbstractFormBlock
 		$oFormInput = $this->GetInput($sInputName);
 		$oFormOutput = $oOutputBlock->GetOutput($sOutputName);
 		$oFormInput->Bind($oFormOutput);
+
+		return $this;
+	}
+
+	public function DependsOnParent(string $sInputName, FormBlock $oParentBlock, string $sParentInputName): AbstractFormBlock
+	{
+		$oFormInput = $this->GetInput($sInputName);
+		$oParentFormInput = $oParentBlock->GetInput($sParentInputName);
+		$oFormInput->Bind($oParentFormInput);
 
 		return $this;
 	}
