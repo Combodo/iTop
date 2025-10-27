@@ -134,7 +134,11 @@ class DBBackupDataTest extends ItopDataTestCase
 		$oRestore = new DBRestore($oConfig);
 
 		$this->expectException(BackupException::class);
+
 		$this->expectExceptionMessage('Failed to extract archive.');
 		$oRestore->RestoreFromCompressedBackup('nonexistent.tar.gz');
+
+		$this->expectExceptionMessage('Unsupported format for a backup file: very_old_backup.zip');
+		$oRestore->RestoreFromCompressedBackup('very_old_backup.zip');
 	}
 }

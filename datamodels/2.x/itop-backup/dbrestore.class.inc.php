@@ -195,7 +195,7 @@ class DBRestore extends DBBackup
 				try {
 					SetupUtils::rrmdir($sDataDir);
 				} catch (Exception $e) {
-					throw new BackupException("Can't remove tmp folder", 0, $e);
+					throw new BackupException("Can't remove tmp folder", previous: $e);
 				}
 			}
 		}
