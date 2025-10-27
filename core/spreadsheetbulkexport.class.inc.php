@@ -343,26 +343,6 @@ EOF
 							$sField = utils::HtmlEntities($oObj->GetAsCSV($sAttCode, $this->bLocalizeOutput, ''));
 							$sData .= "<td x:str>$sField</td>";
 						}
-						else if ($oAttDef instanceof AttributeLinkedSetIndirect)
-						{
-							if ($this->bLocalizeOutput) {
-								$sRemoteKey = $oAttDef->GetExtKeyToRemote();
-								/** @var \AttributeExternalKey $oRemoteAttDef */
-								$oRemoteAttDef = MetaModel::GetAttributeDef($oAttDef->GetLinkedClass(), $sRemoteKey);
-								/** @var \ormLinkSet $oLinkSet */
-								$oLinkSet = $oObj->Get($sAttCode);
-								$aItems = array();
-								foreach ($oLinkSet as $oItem)
-								{
-									$oObj = MetaModel::GetObject($oRemoteAttDef->GetTargetClass(), $oItem->Get($sRemoteKey));
-									$aItems[] = $oObj->GetName();
-								}
-								$sField .= implode('<br/>', $aItems);
-							} else {
-								$sField = $oObj->GetEditValue($sAttCode);
-							}
-							$sData .= "<td x:str>$sField</td>";
-						}
 						else if ($oAttDef instanceof AttributeLinkedSet)
 						{
 							if ($this->bLocalizeOutput) {
