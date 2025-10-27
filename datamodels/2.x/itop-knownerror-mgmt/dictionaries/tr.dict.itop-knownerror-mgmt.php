@@ -51,7 +51,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:KnownError/Attribute:version' => 'Versiyon',
 	'Class:KnownError/Attribute:version+' => 'The version of the CI(s) concerned by this known error~~',
 	'Class:KnownError/Attribute:ci_list' => 'KKler',
-	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
+	'Class:KnownError/Attribute:ci_list+' => 'The configuration items that are potentially impacted by this known error~~',
 	'Class:KnownError/Attribute:document_list' => 'Dokümanlar',
 	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
 ]);

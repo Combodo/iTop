@@ -50,7 +50,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:KnownError/Attribute:version' => 'バージョン',
 	'Class:KnownError/Attribute:version+' => 'The version of the CI(s) concerned by this known error~~',
 	'Class:KnownError/Attribute:ci_list' => 'CI',
-	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
+	'Class:KnownError/Attribute:ci_list+' => 'The configuration items that are potentially impacted by this known error~~',
 	'Class:KnownError/Attribute:document_list' => '文書',
 	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
 ]);
