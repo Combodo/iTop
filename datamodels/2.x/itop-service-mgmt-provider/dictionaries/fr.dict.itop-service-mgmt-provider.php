@@ -549,10 +549,10 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
-	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
-	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
+	'Class:lnkContactToContract/Attribute:customer_id' => 'Client',
+	'Class:lnkContactToContract/Attribute:customer_id+' => '',
+	'Class:lnkContactToContract/Attribute:provider_id' => 'Fournisseur',
+	'Class:lnkContactToContract/Attribute:provider_id+' => '',
 ]);
 
 //
@@ -560,10 +560,10 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
-	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
-	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
+	'Class:lnkContractToDocument/Attribute:customer_id' => 'Client',
+	'Class:lnkContractToDocument/Attribute:customer_id+' => '',
+	'Class:lnkContractToDocument/Attribute:provider_id' => 'Fournisseur',
+	'Class:lnkContractToDocument/Attribute:provider_id+' => '',
 ]);
 
 //
@@ -571,6 +571,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Fournisseur',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '',
 ]);

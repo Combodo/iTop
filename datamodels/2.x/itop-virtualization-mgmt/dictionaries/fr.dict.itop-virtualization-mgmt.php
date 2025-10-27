@@ -30,6 +30,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:LogicalInterface/Attribute:org_id' => 'Org id~~',
-	'Class:LogicalInterface/Attribute:org_id+' => '~~',
+	'Class:LogicalInterface/Attribute:org_id' => 'Organisation',
+	'Class:LogicalInterface/Attribute:org_id+' => '',
 ]);

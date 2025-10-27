@@ -21,6 +21,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
-	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
+	'Class:UserLDAP/Attribute:ldap_server' => 'Serveur LDAP',
+	'Class:UserLDAP/Attribute:ldap_server+' => 'Serveur LDAP utilisé pour l\'authentification de cet utilisateur',
 ]);

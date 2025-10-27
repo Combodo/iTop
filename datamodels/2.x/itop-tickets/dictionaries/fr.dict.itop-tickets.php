@@ -245,6 +245,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:Ticket/Attribute:team_email' => 'Team email~~',
-	'Class:Ticket/Attribute:team_email+' => '~~',
+	'Class:Ticket/Attribute:team_email' => 'Email équipe',
+	'Class:Ticket/Attribute:team_email+' => '',
 ]);

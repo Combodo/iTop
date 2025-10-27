@@ -30,12 +30,12 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:NASFileSystem/Attribute:org_id' => 'Org id~~',
-	'Class:NASFileSystem/Attribute:org_id+' => '~~',
-	'Class:NASFileSystem/Attribute:location_id' => 'Location id~~',
-	'Class:NASFileSystem/Attribute:location_id+' => '~~',
-	'Class:NASFileSystem/Attribute:location_name' => 'Location name~~',
-	'Class:NASFileSystem/Attribute:location_name+' => '~~',
+	'Class:NASFileSystem/Attribute:org_id' => 'Organisation',
+	'Class:NASFileSystem/Attribute:org_id+' => '',
+	'Class:NASFileSystem/Attribute:location_id' => 'Site',
+	'Class:NASFileSystem/Attribute:location_id+' => '',
+	'Class:NASFileSystem/Attribute:location_name' => 'Nom site',
+	'Class:NASFileSystem/Attribute:location_name+' => '',
 ]);
 
 //
@@ -43,10 +43,10 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:FiberChannelInterface/Attribute:org_id' => 'Org id~~',
-	'Class:FiberChannelInterface/Attribute:org_id+' => '~~',
-	'Class:FiberChannelInterface/Attribute:location_id' => 'Location id~~',
-	'Class:FiberChannelInterface/Attribute:location_id+' => '~~',
+	'Class:FiberChannelInterface/Attribute:org_id' => 'Organisation',
+	'Class:FiberChannelInterface/Attribute:org_id+' => '',
+	'Class:FiberChannelInterface/Attribute:location_id' => 'Site',
+	'Class:FiberChannelInterface/Attribute:location_id+' => '',
 ]);
 
 //
@@ -54,10 +54,10 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:LogicalVolume/Attribute:org_id' => 'Org id~~',
-	'Class:LogicalVolume/Attribute:org_id+' => '~~',
-	'Class:LogicalVolume/Attribute:location_id' => 'Location id~~',
-	'Class:LogicalVolume/Attribute:location_id+' => '~~',
-	'Class:LogicalVolume/Attribute:location_name' => 'Location name~~',
-	'Class:LogicalVolume/Attribute:location_name+' => '~~',
+	'Class:LogicalVolume/Attribute:org_id' => 'Organisation',
+	'Class:LogicalVolume/Attribute:org_id+' => '',
+	'Class:LogicalVolume/Attribute:location_id' => 'Site',
+	'Class:LogicalVolume/Attribute:location_id+' => '',
+	'Class:LogicalVolume/Attribute:location_name' => 'Nom site',
+	'Class:LogicalVolume/Attribute:location_name+' => '',
 ]);

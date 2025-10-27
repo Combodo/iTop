@@ -1786,8 +1786,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
-	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
-	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
+	'Class:PhysicalInterface/Attribute:org_id+' => '',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Site',
+	'Class:PhysicalInterface/Attribute:location_id+' => '',
 ]);
