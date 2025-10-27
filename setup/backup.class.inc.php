@@ -646,14 +646,10 @@ EOF;
 
 	/**
 	 * Return a directory name for temporary backup files.
-	 * If the configured value is empty, then use the system tmp dir
 	 */
 	public static function GetTmpDir(Config $oConfig): string
 	{
-		$sTmpDir = $oConfig->GetModuleSetting('itop-backup', 'backup_tmpdir', 'data/');
-		if (utils::RealPath(APPROOT.$sTmpDir, APPROOT) === false) $sTmpDir = APPROOT.$sTmpDir;
-
-		$sTmpDir = @tempnam(empty($sTmpDir) ? SetupUtils::getTmpDir() : $sTmpDir , 'itop-backup-');
+		$sTmpDir = @tempnam($oConfig->GetModuleSetting('itop-backup', 'backup_tmpdir', 'data/') , 'itop-backup-');
 		unlink($sTmpDir); // I need a directory, not a file...
 		SetupUtils::builddir($sTmpDir);
 

@@ -208,30 +208,27 @@ class DBBackupTest extends ItopTestCase
 		$oConfig->SetModuleSetting('itop-backup', 'backup_tmpdir', $sTmpDir);
 
 		$sTestedTmpDir = \DBBackup::GetTmpDir($oConfig);
-		$this->assertStringStartsWith($sStartsWith, $sTestedTmpDir);
-		$this->assertDirectoryExists($sTestedTmpDir);
 
+		$this->assertDirectoryExists($sTestedTmpDir);
 		rmdir($sTestedTmpDir);
+
+		$this->assertStringStartsWith($sStartsWith, $sTestedTmpDir);
 	}
 
 	public function GetTmpDirProvider(): array
 	{
 		return [
 			'Not configured' => [
-				null,
-				static::GetAppRoot() . 'data/itop-backup',
+				'tmp_dir'     => null,
+				'starts_with' => static::GetAppRoot() . 'data/itop-backup',
 			],
 			'Default settings' => [
-				'data/',
-				static::GetAppRoot() . 'data/itop-backup',
+				'tmp_dir'     => 'data/',
+				'starts_with' => static::GetAppRoot() . 'data/itop-backup',
 			],
 			'System temporary directory' => [
-				'',
-				sys_get_temp_dir() . '/itop-backup',
-			],
-			'Fixed system directory' => [
-				'/tmp',
-				'/tmp/itop-backup',
+				'tmp_dir'     => '/tmp',
+				'starts_with' => '/tmp/itop-backup',
 			],
 		];
 	}
