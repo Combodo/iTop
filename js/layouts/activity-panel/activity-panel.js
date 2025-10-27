@@ -618,11 +618,17 @@ $(function()
 			_InitializeCurrentTab : function(){
 				const sTabId = $.bbq.getState(this.element.attr('id'), true);
 				if(sTabId !== undefined){
+					let oTabTogglerElem = null;
 					if(sTabId.startsWith("caselog-")){
-						this._GetTabTogglerFromCaseLogAttCode(sTabId.replace("caselog-", "")).find(this.js_selectors.tab_title).trigger('click')
+						oTabTogglerElem = this._GetTabTogglerFromCaseLogAttCode(sTabId.replace("caselog-", "")).find(this.js_selectors.tab_title).trigger('click')
 					}
 					else if(sTabId === "activity"){
-						this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="activity"]').find(this.js_selectors.tab_title).trigger('click')
+						oTabTogglerElem = this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="activity"]').find(this.js_selectors.tab_title).trigger('click')
+					}
+
+					// Scroll to the tab toggler if found
+					if(oTabTogglerElem !== null){
+						oTabTogglerElem[0].scrollIntoView();
 					}
 				}
 			},
