@@ -128,8 +128,7 @@ class DBRestore extends DBBackup
 			IssueLog::Info('Backup Restore - LOCK acquired, executing...');
 			$bReadonlyBefore = SetupUtils::EnterMaintenanceMode(MetaModel::GetConfig());
 
-			$sDataDir = static::GetTmpDir($this->oConfig);
-			SetupUtils::builddir($sDataDir); // Here is the directory
+			$sDataDir = static::GetTmpDir($this->oConfig); // Here is the directory
 
 			try {
 				//safe zone for db backup => cron is stopped/ itop in readonly
