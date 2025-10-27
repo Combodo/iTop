@@ -4459,7 +4459,7 @@
         </reconciliation>
       </properties>
       <fields>
-        <field id="osverions_list" xsi:type="AttributeLinkedSet">
+        <field id="osversions_list" xsi:type="AttributeLinkedSet">
           <linked_class>OSVersion</linked_class>
           <ext_key_to_me>osfamily_id</ext_key_to_me>
           <edit_mode>add_remove</edit_mode>
@@ -4472,7 +4472,7 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="osverions_list">
+            <item id="osversions_list">
               <rank>20</rank>
             </item>
           </items>
