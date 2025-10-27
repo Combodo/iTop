@@ -388,6 +388,8 @@ class DBBackup
 [mysqldump]
 password=$sPwd
 EOF;
+		touch($sMySQLDumpCnfFile);
+		chmod($sMySQLDumpCnfFile, 0600);
 		file_put_contents($sMySQLDumpCnfFile, $sMySQLDumpCnf, LOCK_EX);
 
 		// Note: opt implicitly sets lock-tables... which cancels the benefit of single-transaction!
