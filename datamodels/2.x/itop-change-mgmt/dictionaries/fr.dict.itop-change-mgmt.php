@@ -31,7 +31,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changements par catégorie',
 	'UI-ChangeManagementOverview-Last-7-days' => 'Changements par jour',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changements par domaine',
-	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changements par statut',
+	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changements par état',
 	'Tickets:Related:OpenChanges' => 'Changements en cours',
 	'Tickets:Related:RecentChanges' => 'Changements récents (72h)',
 ]);

@@ -36,7 +36,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Demandes utilisateurs qui me sont assignées',
 	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Requêtes des 14 derniers jours par type',
 	'UI-RequestManagementOverview-Last-14-days' => 'Requêtes des 14 derniers jours',
-	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Requêtes ouvertes par statut',
+	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Requêtes ouvertes par état',
 	'UI-RequestManagementOverview-OpenRequestByAgent' => 'Requêtes ouvertes par agent',
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Requêtes ouvertes par type',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requêtes ouvertes par organisation',
