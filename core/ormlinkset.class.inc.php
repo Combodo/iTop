@@ -232,6 +232,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	{
 		$aRet = array();
 		$this->oOriginalSet->Rewind();
+		$this->oOriginalSet->OptimizeColumnLoad([$this->sClass => []]);
 		$iRow = 0;
 		while ($oObject = $this->oOriginalSet->Fetch())
 		{
@@ -321,8 +322,6 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 */
 	public function Fetch()
 	{
-		$this->LoadOriginalIds();
-
 		$ret = $this->current();
 		if ($ret === false)
 		{
@@ -353,7 +352,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		if ($this->iCursor < $iPreservedCount)
 		{
 			$sId = key($this->aPreserved);
-			$oRet = MetaModel::GetObject($this->sClass, $sId);
+			$oRet = MetaModel::GetObject($this->sClass, $sId, true, true);
 		}
 		else
 		{
