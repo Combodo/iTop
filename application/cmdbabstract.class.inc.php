@@ -3265,13 +3265,16 @@ EOF
 			if (array_key_exists($sAttCode, $aExpectedAttributes)) {
 				$iExpectCode = $aExpectedAttributes[$sAttCode];
 
+				$bIsPrompt=false;
+				$aAttrib = [];
+				$oAttDef      = MetaModel::GetAttributeDef($sClass, $sAttCode);
 				// Prompt for an attribute if
 				// - the attribute must be changed or must be displayed to the user for confirmation
 				// - or the field is mandatory and currently empty
 				if (($iExpectCode & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
 					(($iExpectCode & OPT_ATT_MANDATORY) && (false === $this->HasAValue($sAttCode)))) {
+					$bIsPrompt = true;
 					$aArgs = array('this' => $this);
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					// If the field is mandatory, set it to the only possible value
 					if ((!$oAttDef->IsNullAllowed()) || ($iExpectCode & OPT_ATT_MANDATORY)) {
 						if ($oAttDef->IsExternalKey()) {
@@ -3282,8 +3285,7 @@ EOF
 								$oRemoteObj = $oAllowedValues->Fetch();
 								$this->Set($sAttCode, $oRemoteObj->GetKey());
 							}
-						} else
-						{
+						} else {
 							if ($oAttDef instanceof \AttributeCaseLog) {
 								// Add JS files for display caselog
 								// Dummy collapsible section created in order to get JS files
@@ -3293,8 +3295,7 @@ EOF
 								}
 							}
 							$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
-							if (is_array($aAllowedValues) && count($aAllowedValues) == 1)
-							{
+							if (is_array($aAllowedValues) && count($aAllowedValues) == 1) {
 								$aValues = array_keys($aAllowedValues);
 								$this->Set($sAttCode, $aValues[0]);
 							}
@@ -3315,15 +3316,22 @@ EOF
 					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef,
 						$value, $sDisplayValue, $sInputId, '', $iExpectCode,
 						$aArgs, true, $sInputType);
+					$aAttrib = array(
+						'label' => '<span>'.$oAttDef->GetLabel().'</span>',
+						'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>",
+					);
+				}
+				if (($iExpectCode & OPT_ATT_READONLY) ){
+					$bIsPrompt = true;
+					$sHTMLValue = $this->GetAsHTML($sAttCode);
 					$aAttrib    = array(
 						'label' => '<span>'.$oAttDef->GetLabel().'</span>',
 						'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>",
 					);
-
+				}
+				if($bIsPrompt)  {
 					//add attrib for data-attribute
 					// Prepare metadata attributes
-					$sAttCode     = $oAttDef->GetCode();
-					$oAttDef      = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					$sAttDefClass = get_class($oAttDef);
 					$sAttLabel    = MetaModel::GetLabel($sClass, $sAttCode);
 
