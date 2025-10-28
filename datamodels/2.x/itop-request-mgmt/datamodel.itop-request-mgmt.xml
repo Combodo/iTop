@@ -446,6 +446,10 @@
           <target_attcode>tto</target_attcode>
           <item_code>100_overrun</item_code>
         </field>
+        <field id="tto_time_spent" xsi:type="AttributeSubItem">
+          <target_attcode>tto</target_attcode>
+          <item_code>timespent</item_code>
+        </field>
         <field id="ttr_escalation_deadline" xsi:type="AttributeSubItem">
           <target_attcode>ttr</target_attcode>
           <item_code>100_deadline</item_code>
@@ -457,6 +461,10 @@
         <field id="sla_ttr_over" xsi:type="AttributeSubItem">
           <target_attcode>ttr</target_attcode>
           <item_code>100_overrun</item_code>
+        </field>
+        <field id="ttr_time_spent" xsi:type="AttributeSubItem">
+          <target_attcode>ttr</target_attcode>
+          <item_code>timespent</item_code>
         </field>
         <field id="time_spent" xsi:type="AttributeDuration">
           <sql>time_spent</sql>
