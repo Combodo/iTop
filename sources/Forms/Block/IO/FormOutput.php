@@ -6,20 +6,42 @@
 
 namespace Combodo\iTop\Forms\Block\IO;
 
-use Combodo\iTop\Forms\Converter\AbstractOutputConverter;
-use Symfony\Component\Form\FormEvents;
+use Combodo\iTop\Forms\Block\FormBlockIOException;
+use Combodo\iTop\Forms\Block\IO\Converter\AbstractConverter;
 
 class FormOutput extends AbstractFormIO
 {
-	private null|AbstractOutputConverter $oConverter;
-	private array $aValues = [];
+	/** @var AbstractConverter|null  */
+	private null|AbstractConverter $oConverter;
 
-	public function __construct(string $sName, string $sType, AbstractOutputConverter $oConverter = null)
+	private FormBinding|null $oBinding = null;
+
+	/** @var array  */
+	private array $aBindingsToInputs = [];
+
+	/** @var array  */
+	private array $aBindingsToOutputs = [];
+
+	/**
+	 * Constructor.
+	 *
+	 * @param string $sName
+	 * @param string $sType
+	 * @param AbstractConverter|null $oConverter
+	 */
+	public function __construct(string $sName, string $sType, AbstractConverter $oConverter = null)
 	{
 		parent::__construct($sName, $sType);
 		$this->oConverter = $oConverter;
 	}
 
+	/**
+	 * Convert the value.
+	 *
+	 * @param mixed $oData
+	 *
+	 * @return mixed
+	 */
 	public function ConvertValue(mixed $oData): mixed
 	{
 		if (is_null($this->oConverter)) {
@@ -28,39 +50,101 @@ class FormOutput extends AbstractFormIO
 		return $this->oConverter->Convert($oData);
 	}
 
-	public function UpdateOutputValue(mixed $oData, string $sEventType): void
+	/**
+	 * Compute the value.
+	 *
+	 * @param string $sEventType
+	 * @param mixed $oData
+	 *
+	 * @return void
+	 */
+	public function ComputeValue(string $sEventType, mixed $oData): void
 	{
-		$this->aValues[$sEventType] = $this->ConvertValue($oData);
+		$this->SetValue($sEventType, $this->ConvertValue($oData));
+
+		// propagate the bindings values
+		$this->PropagateBindingsValues();
 	}
 
-	public function GetValue(string $sEventType): mixed
+	/**
+	 * Propagate the bindings values.
+	 *
+	 * @return void
+	 */
+	public function PropagateBindingsValues(): void
 	{
-		return $this->aValues[$sEventType] ?? null;
-	}
-
-	public function Value(): mixed
-	{
-		if(array_key_exists(FormEvents::POST_SUBMIT, $this->aValues) ){
-			return $this->aValues[FormEvents::POST_SUBMIT];
-	   }
-		if(array_key_exists(FormEvents::POST_SET_DATA, $this->aValues) ){
-			return $this->aValues[FormEvents::POST_SET_DATA];
+		// propagate the value
+		foreach ($this->aBindingsToInputs as $oBinding) {
+			$oBinding->PropagateValues();
 		}
-		return null;
+
+		// propagate the value
+		foreach ($this->aBindingsToOutputs as $oBinding) {
+			$oBinding->PropagateValues();
+		}
 	}
 
-	public function HasValue(string $sEventType): bool
+	/**
+	 * Bind to input.
+	 *
+	 * @param FormInput $oDestinationIO
+	 *
+	 * @return FormBinding
+	 */
+	public function BindToInput(FormInput $oDestinationIO): FormBinding
 	{
-		return array_key_exists($sEventType, $this->aValues) && $this->aValues[$sEventType] !== null;
+		$oBinding = new FormBinding($this, $oDestinationIO);
+
+		$this->aBindingsToInputs[] = $oBinding;
+
+		return $oBinding;
 	}
 
-	public function HasValues(): bool
+	/**
+	 * Bind to output.
+	 *
+	 * @param FormOutput $oDestinationIO
+	 *
+	 * @return FormBinding
+	 */
+	public function BindToOutput(FormOutput $oDestinationIO): FormBinding
 	{
-		return count($this->aValues) > 0;
+		$oBinding = new FormBinding($this, $oDestinationIO);
+
+		$this->aBindingsToOutputs[] = $oBinding;
+
+		return $oBinding;
 	}
 
-	public function GetValues(): array
+	public function GetBinding(): ?FormBinding
 	{
-		return $this->aValues;
+		return $this->oBinding;
+	}
+
+	/**
+	 * @throws FormBlockIOException
+	 */
+	public function BindFromOutput(FormOutput $oSourceIO): void
+	{
+		if($this->GetDataType() !== $oSourceIO->GetDataType()){
+			throw new FormBlockIOException('Cannot connect input types incompatibles ' . $this->GetName() . ' from ' . $oSourceIO->GetOwnerBlock()->GetName() . ' ' . $oSourceIO->GetName());
+		}
+
+		$this->oBinding = $oSourceIO->BindToOutput($this);
+	}
+
+	public function IsBound(): bool
+	{
+		return $this->oBinding !== null;
+	}
+
+	/**
+	 * Get the bindings.
+	 *
+	 * @return array
+	 */
+	public function GetBindings(): array
+	{
+		return $this->aBindingsToInputs;
 	}
 }

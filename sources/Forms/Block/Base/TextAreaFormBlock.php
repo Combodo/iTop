@@ -7,27 +7,23 @@
 namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 /**
- * Form block for choices.
+ * Form block for text area.
  *
  */
-class ChoiceFormBlock extends AbstractFormBlock
+class TextAreaFormBlock extends AbstractFormBlock
 {
 	/** @inheritdoc  */
 	public function GetFormType(): string
 	{
-		return ChoiceType::class;
+		return TextareaType::class;
 	}
 
 	/** @inheritdoc  */
 	public function InitOptions(): array
 	{
-		return [
-			// debug purpose
-			'required' => false,
-			'placeholder' => 'Select an element...',
-		];
+		return [];
 	}
 }

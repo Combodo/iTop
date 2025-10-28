@@ -4,15 +4,14 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Forms\Converter;
+namespace Combodo\iTop\Forms\Block\IO\Converter;
 
 use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
-use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
 
 /**
  * String to attribute converter.
  */
-class StringToAttributeConverter extends AbstractOutputConverter
+class StringToAttributeConverter extends AbstractConverter
 {
 	/** @inheritdoc  */
 	public function Convert(mixed $oData): ?AttributeIOFormat

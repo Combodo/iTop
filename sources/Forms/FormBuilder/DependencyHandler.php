@@ -6,8 +6,13 @@
 
 namespace Combodo\iTop\Forms\FormBuilder;
 
+use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\Base\FormBlock;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Dependencies handler.
@@ -15,28 +20,45 @@ use Symfony\Component\Form\FormEvents;
  */
 class DependencyHandler
 {
-	/** @var FormBuilder form builder */
-	private FormBuilder $oFormBuilder;
-
-	/** @var array dependant blocks */
-	private array $aDependentBlocks;
+	public static array $aDependencyHandlers = [];
 
 	/** @var DependencyMap dependencies map */
-	private DependencyMap $aDependenciesMap;
+	private DependencyMap $oDependenciesMap;
+
+	/** @var array Debug data */
+	private array $aDebugData = [];
 
 	/**
 	 * Constructor.
 	 *
-	 * @param FormBuilder $oFormBuilder
-	 * @param array $aDependentBlocks
+	 * @param string $sName The name
+	 * @param AbstractFormBlock $oFormBlock The attached form block
+	 * @param FormBuilder $oFormBuilder The form builder
+	 * @param array $aSubBlocks Sub blocks
+	 * @param array $aDependentBlocks Dependants blocks
 	 */
-	public function __construct(FormBuilder $oFormBuilder, array $aDependentBlocks)
+	public function __construct(private readonly string $sName, private readonly AbstractFormBlock $oFormBlock, private readonly FormBuilder $oFormBuilder, private readonly array $aSubBlocks, private readonly array $aDependentBlocks)
 	{
-		$this->aDependentBlocks = $aDependentBlocks;
-		$this->oFormBuilder = $oFormBuilder;
+		// dependencies map
+		$this->oDependenciesMap = new DependencyMap($this->aDependentBlocks);
 
-		// add form ready listener
+		// Add form ready listener
 		$this->AddFormReadyListener();
+
+		// Check the dependencies
+		$this->CheckDependencies($this->oFormBuilder);
+
+		self::$aDependencyHandlers[] = $this;
+	}
+
+	/**
+	 * Return the form block.
+	 *
+	 * @return AbstractFormBlock
+	 */
+	public function GetFormBlock(): AbstractFormBlock
+	{
+		return $this->oFormBlock;
 	}
 
 	/**
@@ -52,11 +74,20 @@ class DependencyHandler
 		// Initialize the dependencies listeners once the form is built
 		$this->oFormBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
-			// dependencies map
-			$this->aDependenciesMap = new DependencyMap($this->aDependentBlocks);
-
 			/** Iterate throw listened blocks */
-			foreach ($this->aDependenciesMap->GetListenedBlockNames() as $sOutputBlockName) {
+			foreach ($this->oDependenciesMap->GetListenedOutputBlockNames() as $sOutputBlockName) {
+
+				// inner binding
+				if($sOutputBlockName === $this->oFormBlock->getName()) {
+					continue;
+				}
+
+				$this->aDebugData[] = [
+					'builder' => $this->oFormBuilder->getName(),
+					'event' => 'form.listen',
+					'form' => $sOutputBlockName,
+					'value' => null
+				];
 
 				// Listen the output block POST_SET_DATA & POST_SUBMIT
 				$this->oFormBuilder->get($sOutputBlockName)->addEventListener(FormEvents::POST_SET_DATA, $this->GetEventListeningCallback());
@@ -64,7 +95,6 @@ class DependencyHandler
 			}
 		});
 	}
-
 
 	/**
 	 * Get the listening callback.
@@ -78,52 +108,108 @@ class DependencyHandler
 			// Get the event type
 			$sEventType = FormHelper::GetEventType($oEvent);
 
+			$this->aDebugData[] = [
+				'builder' => $this->oFormBuilder->getName(),
+				'event' => $sEventType,
+				'form' => $oEvent->getForm()->getName(),
+				'value' => $oEvent->getData()
+			];
+
 			// Get the form
 			$oForm = $oEvent->getForm();
 
-			/** Iterate throw dependencies map... */
-			$sOutputBlockName = $oForm->getName();
-			if($this->aDependenciesMap->IsBlockHasOutputs($sOutputBlockName)){
-				$oOutputBlock = $this->oFormBuilder->GetFormBlock($sOutputBlockName);
-				foreach ($this->aDependenciesMap->GetOutputsForBlock($sOutputBlockName) as $sOutputName) {
-					$oOutput = $oOutputBlock->GetOutput($sOutputName);
-					$oOutput->UpdateOutputValue($oEvent->getData(), $sEventType);
-				}
+			// Get the form block
+			$oFormBlock = $this->aSubBlocks[$oForm->getName()];
+
+			// Compute the block outputs with the data
+			if(!$oFormBlock instanceof FormBlock) {
+				$oFormBlock->ComputeOutputs($sEventType, $oEvent->getData());
 			}
 
-
-
-			foreach ($this->aDependentBlocks as $oDependentBlock)
-			{
-
-				// When dependencies met, add the dependent field if not already done
-				if(!$oDependentBlock->IsAdded() && $oDependentBlock->IsInputsReady($sEventType)) {
-
-					// Get the dependent field options
-					$aOptions = $oDependentBlock->UpdateOptions();
-
-					// Add the listener callback to the dependent field if it is also a dependency for another field
-					if($this->aDependenciesMap->IsTheBlockInDependencies($oDependentBlock->getName())) {
-						$aOptions = array_merge($aOptions, [
-							'listener_callback' => $this->GetEventListeningCallback(),
-						]);
-					}
-
-					// Mark the dependency as added
-					$oDependentBlock->SetAdded(true);
-
-					// Add the dependent field to the form
-					$oForm->getParent()->add($oDependentBlock->GetName(), $oDependentBlock->GetFormType(), $aOptions);
-
-
-				}
-
-			}
-
-
+			// Check dependencies
+			$this->CheckDependencies($oForm->getParent());
 		};
 
 	}
 
 
+	/**
+	 * @param FormInterface|FormBuilderInterface $oForm
+	 *
+	 * @return void
+	 */
+	private function CheckDependencies(FormInterface|FormBuilderInterface $oForm): void
+	{
+		/** Iterate throw dependencies... @var AbstractFormBlock $oDependentBlock */
+		foreach ($this->aDependentBlocks as $qBlockName => $oDependentBlock)
+		{
+			// When dependencies met, add the dependent field if not already done
+			if(!$oDependentBlock->IsAdded() && $oDependentBlock->IsInputsReady()) {
+
+				// Get the dependent field options
+				$aOptions = $oDependentBlock->UpdateOptions();
+
+				// Add the listener callback to the dependent field if it is also a dependency for another field
+				if($this->oDependenciesMap->IsTheBlockInDependencies($oDependentBlock->getName())) {
+
+					// Pass the listener call back to be registered by the dependency form builder
+					$aOptions = array_merge($aOptions, [
+						'builder_listener' => $this->GetEventListeningCallback(),
+					]);
+				}
+
+				if($oDependentBlock->AllowAdd()) {
+
+					$this->aDebugData[] = [
+						'builder' => $this->oFormBuilder->getName(),
+						'event' => 'form.add',
+						'form' => $oDependentBlock->getName(),
+						'value' => null
+					];
+
+					// Mark the dependency as added
+					$oDependentBlock->SetAdded(true);
+
+					// Add the dependent field to the form
+					$oForm->add($oDependentBlock->GetName(), $oDependentBlock->GetFormType(), $aOptions);
+
+				}
+
+			}
+
+			if($oDependentBlock->IsAdded() && !$oDependentBlock->IsInputsReady()) {
+				$oForm->add($oDependentBlock->GetName(), HiddenType::class, [
+					'form_block' => $oDependentBlock,
+					'prevent_form_build' => true,
+					]);
+			}
+
+		}
+
+	}
+
+	/**
+	 * Get the debug data.
+	 *
+	 * @return array
+	 */
+	public function GetDebugData(): array
+	{
+		return $this->aDebugData;
+	}
+
+	public function GetMap(): DependencyMap
+	{
+		return $this->oDependenciesMap;
+	}
+
+	public function GetSubBlocks(): array
+	{
+		return $this->aSubBlocks;
+	}
+
+	public function GetName(): string
+	{
+		return $this->sName;
+	}
 }

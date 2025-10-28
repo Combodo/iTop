@@ -4,12 +4,12 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Forms\Converter;
+namespace Combodo\iTop\Forms\Block\IO\Converter;
 
 /**
  * Output converter.
  */
-abstract class AbstractOutputConverter
+abstract class AbstractConverter
 {
 	/**
 	 * Convert the date to output format.

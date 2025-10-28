@@ -6,18 +6,24 @@
 
 namespace Combodo\iTop\Forms\Block\Base;
 
-use Combodo\iTop\Forms\Block\FormBlock;
+use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Form block for string.
  *
  */
-class StringFormBlock extends FormBlock
+class TextFormBlock extends AbstractFormBlock
 {
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function GetFormType(): string
 	{
 		return TextType::class;
+	}
+
+	/** @inheritdoc */
+	public function InitOptions(): array
+	{
+		return [];
 	}
 }

@@ -6,11 +6,15 @@
 
 namespace Combodo\iTop\Forms\Block\IO;
 
-
 class FormBinding
 {
-	public function __construct(public readonly FormInput $oDestinationIO, public readonly AbstractFormIO $oSourceIO)
+	public function __construct(public readonly AbstractFormIO $oSourceIO, public readonly AbstractFormIO $oDestinationIO)
 	{
 
+	}
+
+	public function PropagateValues(): void
+	{
+		$this->oDestinationIO->SetValues($this->oSourceIO->GetValues());
 	}
 }

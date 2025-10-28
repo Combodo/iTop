@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Forms\FormBuilder;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\DataMapperInterface;
@@ -23,56 +24,134 @@ use Traversable;
 
 class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 {
+	/** @var DependencyHandler|null  */
 	private ?DependencyHandler $oDependencyHandler = null;
-	private array $aFormBlocks = [];
+
+	/** @var AbstractFormBlock */
+	private AbstractFormBlock $oFormBlock;
+
+	/** @var array sub blocks */
+	private array $aSubFormBlocks = [];
 
 	/**
 	 * Constructor.
 	 *
 	 * @param FormBuilderInterface $builder
+	 *
 	 */
-	public function __construct(private FormBuilderInterface $builder)
+	public function __construct(private readonly FormBuilderInterface $builder)
 	{
-		$this->InitFormBlocks();
+		/** Get the corresponding form block @var AbstractFormBlock $oFormBlock */
+		$oFormBlock = $this->builder->getOption('form_block');
+
+		// Build the form
+		if($oFormBlock instanceof FormBlock) {
+			$this->BuildForm($oFormBlock);
+		}
 	}
+
+	/**
+	 * Build the form.
+	 *
+	 * @param FormBlock $oFormBlock
+	 *
+	 * @return void
+	 */
+	private function BuildForm(FormBlock $oFormBlock): void
+	{
+		// Hidden (ignore)
+		$aOptions = $this->builder->getOptions();
+		if(array_key_exists('prevent_form_build', $aOptions) && $aOptions['prevent_form_build']) {
+			return;
+		}
+
+		$aDependentBlocks = [];
+		/** Iterate throw the form sub blocks... @var FormBlock $oSubFormBlock */
+		foreach ($oFormBlock->GetSubFormBlocks() as $oSubFormBlock) {
+
+			// Add to the sub blocks array
+			$this->aSubFormBlocks[$oSubFormBlock->getName()] = $oSubFormBlock;
+
+			// Handle sub block
+			$bHasDependency = $this->HandleSubBlock($oSubFormBlock);
+
+			// Add to the dependencies array
+			if($bHasDependency){
+				$aDependentBlocks[$oSubFormBlock->GetName()] = $oSubFormBlock;
+			}
+
+		}
+
+		// Create a dependency handler if needed
+		if (count($aDependentBlocks) > 0) {
+			$this->oDependencyHandler = new DependencyHandler($this->builder->getName(), $oFormBlock, $this, $this->aSubFormBlocks, $aDependentBlocks);
+		}
+	}
+
+	/**
+	 * Add a sub block.
+	 *
+	 * @param AbstractFormBlock $oSubFormBlock
+	 *
+	 * @return bool
+	 */
+	private function HandleSubBlock(AbstractFormBlock $oSubFormBlock): bool
+	{
+
+		// Has at least one bounded input ?
+		if ($oSubFormBlock->HasAtLeastOneBoundInput()) {
+
+			// Insert a hidden type to save the place
+			$this->builder->add($oSubFormBlock->GetName(), HiddenType::class, [
+				'form_block' => $oSubFormBlock,
+				'prevent_form_build' => true,
+//				'mapped' => false,
+//				'disabled' => true,
+			]);
+
+			return true;
+
+		}
+		else {
+
+			// Directly insert the block corresponding form type
+			$this->add($oSubFormBlock->GetName(), $oSubFormBlock->GetFormType(), $oSubFormBlock->UpdateOptions());
+			$oSubFormBlock->SetAdded(true);
+
+			return false;
+
+		}
+	}
+
+	/**
+	 * Get a sub form block.
+	 *
+	 * @param string $sName
+	 *
+	 * @return AbstractFormBlock|null
+	 */
+	public function GetSubFormBlock(string $sName): ?AbstractFormBlock
+	{
+		return $this->aSubFormBlocks[$sName] ?? null;
+	}
+
+	/**
+	 * Return the dependency handler attached to this builder.
+	 *
+	 * @return DependencyHandler|null
+	 */
+	protected function GetDependencyHandler(): ?DependencyHandler
+	{
+		return $this->oDependencyHandler;
+	}
+
+	// pure decoration of FormBuilderInterface
 
 	public function add(string|FormBuilderInterface $child, ?string $type = null, array $options = []): static
 	{
 		$this->builder->add($child, $type, $options);
 		return $this;
 	}
-
-	private function InitFormBlocks()
-	{
-		$oFormBlock = $this->builder->getOption('form_block');
-		if (is_null($oFormBlock)) {
-			return;
-		}
-
-		$aDependentBlocks = [];
-		/** @var \Combodo\iTop\Forms\Block\FormBlock $oSubFormBlock */
-		foreach ($oFormBlock->GetSubFormBlocks() as $oSubFormBlock) {
-			$this->aFormBlocks[$oSubFormBlock->getName()] = $oSubFormBlock;
-			if ($oSubFormBlock->HasConnections()) {
-				$this->builder->add($oSubFormBlock->GetName(), HiddenType::class);
-				$aDependentBlocks[] = $oSubFormBlock;
-			} else {
-				$this->add($oSubFormBlock->GetName(), $oSubFormBlock->GetFormType(), $oSubFormBlock->UpdateOptions());
-				$oSubFormBlock->SetAdded(true);
-			}
-		}
-
-		if (count($aDependentBlocks) > 0) {
-			$this->oDependencyHandler = new DependencyHandler($this, $aDependentBlocks);
-		}
-	}
-
-	public function GetFormBlock(string $sName): ?AbstractFormBlock
-	{
-		return $this->aFormBlocks[$sName] ?? null;
-	}
-
-	// pure decoration of FormBuilderInterface
 
 	public function getIterator(): Traversable
 	{

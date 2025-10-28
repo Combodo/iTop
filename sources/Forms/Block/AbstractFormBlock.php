@@ -8,6 +8,8 @@ namespace Combodo\iTop\Forms\Block;
 
 use Combodo\iTop\Forms\Block\IO\FormInput;
 use Combodo\iTop\Forms\Block\IO\FormOutput;
+use IssueLog;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * Abstract form block.
@@ -19,15 +21,6 @@ use Combodo\iTop\Forms\Block\IO\FormOutput;
  */
 abstract class AbstractFormBlock
 {
-	/** @var string form block name */
-	private string $sName;
-
-	/** @var array form block options */
-	private array $aOptions = [];
-
-	/** @var array form sub blocks */
-	private array $aSubFormBlocks = [];
-
 	/** @var array form block inputs */
 	private array $aFormInputs = [];
 
@@ -38,25 +31,39 @@ abstract class AbstractFormBlock
 	private bool $bIsAdded = false;
 
 	/**
+	 * Return the form type.
+	 *
+	 * @return string
+	 */
+	abstract public function GetFormType(): string;
+
+	/**
+	 * Initialize options.
+	 *
+	 * @return array
+	 */
+	abstract public function InitOptions(): array;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $sName
 	 * @param array $aOptions
 	 */
-	public function __construct(string $sName, array $aOptions = [])
+	public function __construct(private readonly string $sName, private array $aOptions = [])
 	{
-		$this->sName = $sName;
-		$this->aOptions = $aOptions;
-
+		// Attach the form block
 		$this->aOptions['form_block'] = $this;
 
-		$this->InitInputs();
-		$this->InitOutputs();
+		// Compute options
 		$this->aOptions = array_merge($this->aOptions, $this->InitOptions());
-		$this->BuildForm();
-	}
 
-	abstract protected function BuildForm();
+		// Initialize block inputs
+		$this->InitInputs();
+
+		// Initialize block outputs
+		$this->InitOutputs();
+	}
 
 	/**
 	 * Return the form block name.
@@ -91,30 +98,7 @@ abstract class AbstractFormBlock
 	}
 
 	/**
-	 * Add a sub form.
-	 *
-	 * @param AbstractFormBlock $oSubFormBlock
-	 *
-	 * @return $this
-	 */
-	public function AddSubFormBlock(AbstractFormBlock $oSubFormBlock): AbstractFormBlock
-	{
-		$this->aSubFormBlocks[] = $oSubFormBlock;
-		return $this;
-	}
-
-	/**
-	 * Get the sub forms.
-	 *
-	 * @return array
-	 */
-	public function GetSubFormBlocks(): array
-	{
-		return $this->aSubFormBlocks;
-	}
-
-	/**
-	 * Add an input declaration.
+	 * Add an input.
 	 *
 	 * @param FormInput $oFormInput
 	 *
@@ -127,7 +111,7 @@ abstract class AbstractFormBlock
 	}
 
 	/**
-	 * Get an input declaration.
+	 * Get an input.
 	 *
 	 * @param string $sName
 	 *
@@ -144,7 +128,7 @@ abstract class AbstractFormBlock
 	}
 
 	/**
-	 * Add an output declaration.
+	 * Add an output.
 	 *
 	 * @param FormOutput $oFormOutput
 	 *
@@ -157,7 +141,7 @@ abstract class AbstractFormBlock
 	}
 
 	/**
-	 * Get an output declaration.
+	 * Get an output.
 	 *
 	 * @param string $sName
 	 *
@@ -173,6 +157,21 @@ abstract class AbstractFormBlock
 		return $this->aFormOutputs[$sName];
 	}
 
+	/**
+	 * Return the inputs.
+	 *
+	 * @return array
+	 */
+	public function GetInputs(): array
+	{
+		return $this->aFormInputs;
+	}
+
+	/**
+	 * Return the outputs.
+	 *
+	 * @return array
+	 */
 	public function GetOutputs(): array
 	{
 		return $this->aFormOutputs;
@@ -182,31 +181,66 @@ abstract class AbstractFormBlock
 	 * Attach an input to a block output.
 	 *
 	 * @param string $sInputName
-	 * @param FormBlock $oOutputBlock
+	 * @param AbstractFormBlock $oOutputBlock
 	 * @param string $sOutputName
 	 *
 	 * @return $this
 	 * @throws FormBlockException
+	 * @throws FormBlockIOException
 	 */
-	public function DependsOn(string $sInputName, FormBlock $oOutputBlock, string $sOutputName): AbstractFormBlock
+	public function DependsOnBlockOutput(string $sInputName, AbstractFormBlock $oOutputBlock, string $sOutputName): AbstractFormBlock
 	{
 		$oFormInput = $this->GetInput($sInputName);
 		$oFormOutput = $oOutputBlock->GetOutput($sOutputName);
-		$oFormInput->Bind($oFormOutput);
+		$oFormInput->BindFromOutput($oFormOutput);
 
 		return $this;
 	}
 
-	public function DependsOnParent(string $sInputName, FormBlock $oParentBlock, string $sParentInputName): AbstractFormBlock
+	/**
+	 * Attach an input to a parent block input.
+	 *
+	 * @param string $sInputName
+	 * @param AbstractFormBlock $oParentBlock
+	 * @param string $sParentInputName
+	 *
+	 * @return $this
+	 * @throws FormBlockException
+	 * @throws FormBlockIOException
+	 */
+	public function DependsOnParentBlockInput(string $sInputName, AbstractFormBlock $oParentBlock, string $sParentInputName): AbstractFormBlock
 	{
 		$oFormInput = $this->GetInput($sInputName);
-		$oParentFormInput = $oParentBlock->GetInput($sParentInputName);
-		$oFormInput->Bind($oParentFormInput);
+		$oParentFormInput = $oParentBlock->GetInput($sInputName);
+		$oFormInput->BindFromInput($oParentFormInput);
 
 		return $this;
 	}
 
-	public function HasConnections(): bool
+	/**
+	 * Attach an output to a parent block outpu.
+	 *
+	 * @param string $sOutputName
+	 * @param AbstractFormBlock $oParentBlock
+	 * @param string $sParentInputName
+	 *
+	 * @return $this
+	 * @throws FormBlockException
+	 * @throws FormBlockIOException
+	 */
+	public function BindOutputToParentBlockOutput(string $sOutputName, AbstractFormBlock $oParentBlock, string $sParentOutputName): AbstractFormBlock
+	{
+		$oFormOutput = $this->GetOutput($sOutputName);
+		$oParentFormOutput = $oParentBlock->GetOutput($sParentOutputName);
+		$oParentFormOutput->BindFromOutput($oFormOutput);
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function HasAtLeastOneBoundInput(): bool
 	{
 		foreach ($this->aFormInputs as $oFormInput) {
 			if ($oFormInput->IsBound()) {
@@ -216,6 +250,23 @@ abstract class AbstractFormBlock
 		return false;
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function HasAtLeastOneBoundOutput(): bool
+	{
+		/** @var FormOutput $oFormOutput */
+		foreach ($this->aFormOutputs as $oFormOutput) {
+			if (count($oFormOutput->GetBindings()) > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @return array
+	 */
 	public function GetInputsBindings(): array
 	{
 		$aBindings = [];
@@ -229,11 +280,30 @@ abstract class AbstractFormBlock
 		return $aBindings;
 	}
 
-	public function IsInputsReady(string $sEventType): bool
+	/**
+	 * @return array
+	 */
+	public function GetOutputBindings(): array
+	{
+		$aBindings = [];
+
+		/** @var FormInput $oFormInput */
+		foreach ($this->aFormOutputs as $oFormOutput) {
+			if ($oFormOutput->IsBound()) {
+				$aBindings[$oFormOutput->GetName()] = $oFormOutput->GetBinding();
+			}
+		}
+		return $aBindings;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsInputsReady(): bool
 	{
 		foreach ($this->aFormInputs as $oFormInput) {
 			if ($oFormInput->IsBound()) {
-				if(!$oFormInput->IsDataReady($sEventType)) {
+				if(!$oFormInput->IsDataReady()) {
 					return false;
 				}
 			}
@@ -242,41 +312,84 @@ abstract class AbstractFormBlock
 		return true;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function IsAdded(): bool
 	{
 		return $this->bIsAdded;
 	}
 
+	/**
+	 * @param bool $bIsAdded
+	 *
+	 * @return void
+	 */
 	public function SetAdded(bool $bIsAdded): void
 	{
 		$this->bIsAdded = $bIsAdded;
 	}
 
 	/**
-	 * Return the form type.
+	 * @param string $sEventType
+	 * @param mixed $oData
 	 *
-	 * @return string
+	 * @return void
 	 */
-	abstract public function GetFormType(): string;
+	public function ComputeOutputs(string $sEventType, mixed $oData): void
+	{
+		/** Iterate throw output @var FormOutput $oFormOutput */
+		foreach ($this->aFormOutputs as $oFormOutput) {
+
+			// Compute the output value
+			try{
+				$oFormOutput->ComputeValue($sEventType, $oData);
+			}
+			catch(IOException $oException){
+				IssueLog::Exception(sprintf('Unable to compute values for output %s of block %s', $oFormOutput->GetName(), $this->GetName()), $oException);
+			}
+
+		}
+	}
+
+	/**
+	 * Propagate inputs values.
+	 *
+	 * @return void
+	 */
+	public function PropagateInputsValues(): void
+	{
+		foreach ($this->aFormInputs as $oFormInput) {
+			$oFormInput->PropagateBindingsValues();
+		}
+	}
 
 	/**
 	 * Initialize inputs.
 	 *
 	 * @return void
 	 */
-	abstract public function InitInputs(): void;
+	public function InitInputs(): void
+	{
+
+	}
 
 	/**
 	 * Initialize outputs.
 	 *
 	 * @return void
 	 */
-	abstract public function InitOutputs(): void;
+	public function InitOutputs()
+	{
+
+	}
+
 
 	/**
-	 * Initialize options.
-	 *
-	 * @return array
+	 * @return true
 	 */
-	abstract public function InitOptions(): array;
+	public function AllowAdd(): bool
+	{
+		return true;
+	}
 }

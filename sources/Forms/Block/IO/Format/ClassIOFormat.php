@@ -2,7 +2,9 @@
 
 namespace Combodo\iTop\Forms\Block\IO\Format;
 
-class ClassIOFormat
+use JsonSerializable;
+
+class ClassIOFormat implements JsonSerializable
 {
 	public function __construct(public string $sClassName)
 	{
@@ -10,6 +12,11 @@ class ClassIOFormat
 	}
 
 	public function __toString(): string
+	{
+		return $this->sClassName;
+	}
+
+	public function jsonSerialize(): mixed
 	{
 		return $this->sClassName;
 	}

@@ -12,15 +12,19 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AttributeValueChoiceType extends AbstractType
+/**
+ *
+ */
+class ChoiceFormType extends AbstractType
 {
+	/** @inheritdoc  */
 	public function getParent(): string
 	{
 		return ChoiceType::class;
 	}
 
+	/** @inheritdoc  */
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
 		// on pre submit
@@ -35,14 +39,25 @@ class AttributeValueChoiceType extends AbstractType
 		}, 1);
 	}
 
+	/**
+	 * @param $oValue
+	 * @param $options
+	 *
+	 * @return bool
+	 */
 	private function CheckValue($oValue, $options): bool
 	{
-		if(!is_array($oValue)){
-			return false;
+		// Check multi selection values
+		if(is_array($oValue)){
+			foreach ($oValue as $v){
+				if(!in_array($v, $options['choices'])){
+					return false;
+				}
+			}
 		}
-
-		foreach ($oValue as $v){
-			if(!in_array($v, $options['choices'])){
+		// Check single selection values
+		else{
+			if(!in_array($oValue, $options['choices'])){
 				return false;
 			}
 		}
@@ -50,18 +65,6 @@ class AttributeValueChoiceType extends AbstractType
 		return true;
 	}
 
-	public static function GetOptionsFromInputs(array $inputs): array
-	{
-		$aValues = [];
 
-		if(!empty($inputs['attribute'])){
-			$oAttDef = \MetaModel::GetAttributeDef($inputs['object_class'], $inputs['attribute']);
-			$aValues = $oAttDef->GetAllowedValues();
-			$aValues = $aValues !== null ? array_combine($aValues, $aValues) : [];
-		}
 
-		return [
-			'choices' => $aValues
-		];
-	}
 }

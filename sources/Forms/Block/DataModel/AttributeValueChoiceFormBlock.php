@@ -7,10 +7,16 @@
 namespace Combodo\iTop\Forms\Block\DataModel;
 
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
+use Combodo\iTop\Forms\Block\FormBlockException;
+use Combodo\iTop\Forms\Block\IO\Converter\StringToAttributeConverter;
 use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
+use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
 use Combodo\iTop\Forms\Block\IO\FormInput;
-use Combodo\iTop\Forms\FormType\AttributeValueChoiceType;
+use Combodo\iTop\Forms\Block\IO\FormOutput;
+use Combodo\iTop\Forms\FormType\AttributeValueFormType;
+use Exception;
+use MetaModel;
 
 /**
  * Form block for choice of class attribute values.
@@ -23,13 +29,15 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 	public const INPUT_CLASS_NAME = 'class_name';
 	public const INPUT_ATTRIBUTE  = 'attribute';
 
+	// Outputs
+	public const OUTPUT_VALUE  = 'value';
+
 	/** @inheritdoc  */
 	public function InitOptions(array &$aOptions = []): array
 	{
 		$aOptions['multiple'] = true;
-		$aOptions['required'] = false;
 		$aOptions['attr'] = [
-			'size' => 10,
+			'size' => 5,
 			'style' => 'height: auto;'
 		];
 
@@ -44,22 +52,51 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		$this->AddInput(new FormInput(self::INPUT_ATTRIBUTE, AttributeIOFormat::class));
 	}
 
+	/** @inheritdoc  */
+	public function InitOutputs(): void
+	{
+		parent::InitOutputs();
+		$this->AddOutput(new FormOutput(self::OUTPUT_VALUE, RawFormat::class));
+	}
+
+	/** @inheritdoc
+	 * @throws FormBlockException
+	 * @throws Exception
+	 */
+	public function AllowAdd(): bool
+	{
+		$bDependentOk = $this->GetInput(self::INPUT_CLASS_NAME)->Value() != '' && $this->GetInput(self::INPUT_ATTRIBUTE)->Value() != '';
+
+		if($bDependentOk) {
+			$oAttDef = MetaModel::GetAttributeDef($this->GetInput(self::INPUT_CLASS_NAME)->Value()->__toString(), $this->GetInput(self::INPUT_ATTRIBUTE)->Value()->__toString());
+			$aValues = $oAttDef->GetAllowedValues();
+			return $aValues != null;
+		}
+		else{
+			return false;
+		}
+	}
+
+	/** @inheritdoc
+	 * @throws Exception
+	 */
 	public function UpdateOptions(): array
 	{
 		$aOptions = parent::GetOptions();
 
-		$oBindingClassName = $this->GetInput(self::INPUT_CLASS_NAME)->GetBinding();
-		if($oBindingClassName->oSourceIO->Value() === null || $oBindingClassName->oSourceIO->Value() == "")
+		$oClassName = $this->GetInput(self::INPUT_CLASS_NAME)->Value();
+		if($oClassName == '')
 			return $aOptions;
-		$oClassName = $oBindingClassName->oSourceIO->Value();
 
-		$oBindingAttribute = $this->GetInput(self::INPUT_ATTRIBUTE)->GetBinding();
-		if($oBindingAttribute->oSourceIO->Value() === null || $oBindingAttribute->oSourceIO->Value() == "")
+		$oAttribute = $this->GetInput(self::INPUT_ATTRIBUTE)->Value();
+		if($oAttribute == '')
 			return $aOptions;
-		$oAttribute = $oBindingAttribute->oSourceIO->Value();
 
-		$oAttDef = \MetaModel::GetAttributeDef(strval($oClassName), strval($oAttribute));
+		$oAttDef = MetaModel::GetAttributeDef(strval($oClassName), strval($oAttribute));
 		$aValues = $oAttDef->GetAllowedValues();
+
+		if($aValues === null)
+			return $aOptions;
 
 		$aOptions['choices'] = array_flip($aValues);
 
@@ -69,7 +106,7 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 	/** @inheritdoc  */
 	public function GetFormType(): string
 	{
-		return AttributeValueChoiceType::class;
+		return AttributeValueFormType::class;
 	}
 
 }
