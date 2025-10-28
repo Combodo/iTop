@@ -61,7 +61,7 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		$oAttDef = \MetaModel::GetAttributeDef(strval($oClassName), strval($oAttribute));
 		$aValues = $oAttDef->GetAllowedValues();
 
-		$aOptions['choices'] = array_flip($aValues);
+		$aOptions['choices'] = array_flip($aValues ?? []);
 
 		return $aOptions;
 	}
