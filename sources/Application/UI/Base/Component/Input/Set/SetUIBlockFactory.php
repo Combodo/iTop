@@ -53,13 +53,15 @@ class SetUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string $sValueField Field used for option value
 	 * @param array $aSearchFields Fields used for searching
 	 * @param string|null $sGroupField Field used for grouping
+	 * @param string $sName Field name
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Set\Set
 	 */
-	public static function MakeForSimple(string $sId, array $aOptions, string $sLabelFields, string $sValueField, array $aSearchFields, ?string $sGroupField = null, ?string $sTooltipField = null): Set
+	public static function MakeForSimple(string $sId, array $aOptions, string $sLabelFields, string $sValueField, array $aSearchFields, ?string $sGroupField = null, ?string $sTooltipField = null, string $sName = ''): Set
 	{
 		// Create set ui block
 		$oSetUIBlock = new Set($sId);
+		$oSetUIBlock->SetName($sName);
 
 		// Simple data provider
 		$oDataProvider = new SimpleDataProvider($aOptions);
@@ -91,13 +93,15 @@ class SetUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string $sValueField Field used for value
 	 * @param array $aSearchFields Fields used for search
 	 * @param string|null $sGroupField Field used for grouping
+	 * @param string $sName Field name
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Set\Set
 	 */
-	public static function MakeForAjax(string $sId, string $sAjaxRoute, array $aAjaxRouteParams, string $sLabelFields, string $sValueField, array $aSearchFields, ?string $sGroupField = null): Set
+	public static function MakeForAjax(string $sId, string $sAjaxRoute, array $aAjaxRouteParams, string $sLabelFields, string $sValueField, array $aSearchFields, ?string $sGroupField = null, string $sName = ''): Set
 	{
 		// Create set ui block
 		$oSetUIBlock = new Set($sId);
+		$oSetUIBlock->SetName($sName);
 
 		// Ajax data provider
 		$oDataProvider = new AjaxDataProvider($sAjaxRoute, $aAjaxRouteParams);
@@ -129,13 +133,15 @@ class SetUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string|null $sWizardHelperJsVarName Wizard helper name
 	 * @param array $aFieldsToLoad Additional fields to load on objects
 	 * @param string|null $sGroupField Field used for grouping
+	 * @param string $sName Field name
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Set\Set
 	 */
-	public static function MakeForOQL(string $sId, string $sObjectClass, string $sOql, string $sWizardHelperJsVarName = null, array $aFieldsToLoad = [], ?string $sGroupField = null): Set
+	public static function MakeForOQL(string $sId, string $sObjectClass, string $sOql, string $sWizardHelperJsVarName = null, array $aFieldsToLoad = [], ?string $sGroupField = null, string $sName = ''): Set
 	{
 		// Create set ui block
 		$oSetUIBlock = new Set($sId);
+		$oSetUIBlock->SetName($sName);
 
 		// Renderers
 		$oSetUIBlock->SetOptionsTemplate('application/object/set/option_renderer.html.twig');

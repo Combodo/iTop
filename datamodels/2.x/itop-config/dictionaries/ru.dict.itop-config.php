@@ -12,7 +12,7 @@
  */
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
-	'config-edit-title' => 'Редактор файла конфигурации',
+	'itop-config/Operation:Edit/Title' => 'Редактор файла конфигурации',
 	'config-edit-intro' => 'Будьте очень осторожны при редактировании файла конфигурации. В частности, отредактированы могут быть только глобальная конфигурация и настройки модулей.',
 	'Menu:ConfigEditor' => 'Основные настройки',
 	'config-apply' => 'Применить',

@@ -24,7 +24,7 @@
 Dict::Add('EN US', 'English', 'English', array(
 
 	'Menu:ConfigFileEditor' => 'Plain text editor',
-	'config-edit-title' => 'Configuration File Editor',
+	'itop-config/Operation:Edit/Title' => 'Configuration File Editor',
 	'config-edit-intro' => 'Be very cautious when editing the configuration file.',
 	'config-apply' => 'Apply',
 	'config-apply-title' => 'Apply (Ctrl+S)',

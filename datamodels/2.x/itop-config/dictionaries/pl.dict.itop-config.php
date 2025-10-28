@@ -11,7 +11,7 @@
  */
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
-	'config-edit-title' => 'Edycja pliku konfiguracyjnego',
+	'itop-config/Operation:Edit/Title' => 'Edycja pliku konfiguracyjnego',
 	'config-edit-intro' => 'Zachowaj ostrożność podczas edycji pliku konfiguracyjnego.',
 	'Menu:ConfigEditor' => 'Konfiguracja ogólna',
 	'config-apply' => 'Zastosuj',

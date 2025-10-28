@@ -62,6 +62,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:Form:Close:Warning' => 'Ben je zeker dat je dit venster wil sluiten? Ingevoerde gegevens kunnen verloren gaan.',
 	'Portal:Error:ObjectCannotBeCreated' => 'Fout: object kan niet worden aangemaakt. Kijk verwante objecten en bijlagen na vooraleer dit formulier opnieuw te versturen.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Fout: object kan niet worden aangepast. Kijk verwante objecten en bijlagen na vooraleer dit formulier opnieuw te versturen.',
+    'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
 ));
 
 // UserProfile brick

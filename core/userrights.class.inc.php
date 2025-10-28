@@ -542,9 +542,9 @@ abstract class User extends cmdbAbstractObject
 	function GetGrantAsHtml($sClass, $iAction)
 	{
 		if (UserRights::IsActionAllowed($sClass, $iAction, null, $this)) {
-			return '<span style="background-color: #ddffdd;">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
+			return '<span class="ibo-user-rights ibo-is-success">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
 		} else {
-			return '<span style="background-color: #ffdddd;">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
+			return '<span class="ibo-user-rights ibo-is-failure">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
 		}
 	}
 

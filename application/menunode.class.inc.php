@@ -903,7 +903,13 @@ class TemplateMenuNode extends MenuNode
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
 	}
-
+	/**
+	 * @inheritDoc
+	 */
+	public function GetHyperlink($aExtraParams)
+	{
+		return '';
+	}
 	/**
 	 * @inheritDoc
 	 * @throws \Exception

@@ -9,7 +9,7 @@
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
-	'config-edit-title' => 'Editor de Archivo de Configuración',
+	'itop-config/Operation:Edit/Title' => 'Editor de Archivo de Configuración',
 	'config-edit-intro' => 'Sea muy cuidadoso cuando edite el archivo de configuración. En particular, sólo los elementos superiores (ejem.: the global configuration y modules settings) deberian ser editados.',
 	'Menu:ConfigEditor' => 'Configuración',
 	'config-apply' => 'Aplicar',

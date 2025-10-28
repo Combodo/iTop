@@ -11,7 +11,7 @@
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
-	'config-edit-title' => 'Konfigurációs fájl szerkesztő',
+	'itop-config/Operation:Edit/Title' => 'Konfigurációs fájl szerkesztő',
 	'config-edit-intro' => 'Legyen nagyon óvatos a konfiguráció szerkesztésénél!',
 	'Menu:ConfigEditor' => 'Konfiguráció szerkesztő',
 	'config-apply' => 'Alkalmaz',

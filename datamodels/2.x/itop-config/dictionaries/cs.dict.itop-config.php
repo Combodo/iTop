@@ -13,7 +13,7 @@
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
-	'config-edit-title' => 'Editor konfiguračního souboru',
+	'itop-config/Operation:Edit/Title' => 'Editor konfiguračního souboru',
 	'config-edit-intro' => 'Při úpravách konfiguračního souboru buďte velice opatrní. Nesprávné nastavení může vést k nedostupnosti '.ITOP_APPLICATION_SHORT, 'Menu:ConfigEditor' => 'Konfigurace',
 	'config-apply' => 'Použít',
 	'config-apply-title' => 'Použít (Ctrl+S)',

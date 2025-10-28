@@ -3,6 +3,7 @@
 namespace UI\Base\Layout;
 
 use ApplicationContext;
+use ApplicationMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
@@ -61,4 +62,20 @@ class NavigationMenuTest extends ItopDataTestCase {
 		$this->assertEquals(true, $isAllowed);
 		unlink($sTmpFilePath);
 	}
+
+	/**
+	 * test GetHyperlink return empty for TemplateMenuNode and ShortcutContainerMenuNode only
+	 */
+	public function testGetHyperlink(){
+		ApplicationMenu::LoadAdditionalMenus();
+		foreach (ApplicationMenu::$aMenusIndex as $sMenuId => $aMenu) {
+			//echo ' **** '. get_class($aMenu['node']);
+			if(in_array(get_class($aMenu['node']), ['TemplateMenuNode','ShortcutContainerMenuNode']) ){
+				$this->assertEquals('', $aMenu['node']->GetHyperlink([]), 'Menu node '.$sMenuId.' is a TemplateMenuNode. It should have empty hyperlink');
+			} else {
+				$this->assertNotEquals('', $aMenu['node']->GetHyperlink([]),'Menu node '.$sMenuId.' is a '.get_class($aMenu['node']).'. It should have not empty hyperlink');
+			}
+		}
+	}
+
 }

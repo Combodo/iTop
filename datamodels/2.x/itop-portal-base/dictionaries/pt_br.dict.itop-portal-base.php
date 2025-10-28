@@ -61,6 +61,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:Form:Close:Warning' => 'Você deseja abandonar esta página? Os dados digitados podem ser perdidos',
 	'Portal:Error:ObjectCannotBeCreated' => 'Erro: objeto não pode ser criado. Verifique os objetos e anexos associados antes de enviar novamente este formulário',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Erro: objeto não pode ser atualizado. Verifique os objetos e anexos associados antes de enviar novamente este formulário',
+    'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
 ));
 
 // UserProfile brick

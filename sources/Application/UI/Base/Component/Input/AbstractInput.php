@@ -22,7 +22,7 @@ abstract class AbstractInput extends UIBlock
 	/**@var string */
 	protected $sPlaceholder;
 
-	public function GetName(): ?string
+	public function GetName(): string
 	{
 		return $this->sName;
 	}

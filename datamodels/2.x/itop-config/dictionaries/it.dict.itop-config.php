@@ -10,7 +10,7 @@
  *
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'config-edit-title' => 'Modifica file di configurazione',
+	'itop-config/Operation:Edit/Title' => 'Modifica file di configurazione',
 	'config-edit-intro' => 'Prestare molta attenzione durante la modifica del file di configurazione.',
 	'Menu:ConfigEditor' => 'Configurazione',
 	'config-apply' => 'Applica',

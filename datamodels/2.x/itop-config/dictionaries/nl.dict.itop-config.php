@@ -12,7 +12,7 @@
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
-	'config-edit-title' => 'Aanpassen configuratie',
+	'itop-config/Operation:Edit/Title' => 'Aanpassen configuratie',
 	'config-edit-intro' => 'Wees uiterst voorzichtig bij het aanpassen van de configuratie.',
 	'Menu:ConfigEditor' => 'Configuratie',
 	'config-apply' => 'Opslaan',

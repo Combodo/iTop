@@ -337,7 +337,18 @@ class ObjectFormHandlerHelper
 							);
 						}
 					} else {
-						throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, implode('<br/>', $aFormData['validation']['messages']['error']['_main']));
+                        $sErrorMessages = '';
+                        foreach ($aFormData['validation']['messages']['error'] as $sFieldId => $aMessages) {
+                            if ($sFieldId == '_main') {
+                                $sErrorMessages .= implode(' - ', $aFormData['validation']['messages']['error']['_main']);
+                            } else {
+                                $oObj = $oFormManager->GetObject();
+                                $sLabel = $oObj->GetLabel($sFieldId);
+                                $sErrorMessages .= Dict::Format('Portal:Error:CheckToWriteFailed', $sLabel, (is_array($aMessages) ? implode(' - ', $aMessages) : $aMessages));
+                            }
+                        }
+
+                        throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, $sErrorMessages);
 					}
 					break;
 

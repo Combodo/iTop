@@ -61,6 +61,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:Form:Close:Warning' => 'Soll diese Eingabemaske verlassen werden? Eingegebene Daten werden nicht gespeichert.',
 	'Portal:Error:ObjectCannotBeCreated' => 'Error: Objekt kann nicht erzeugt werden. Prüfen Sie verknüpfte Objekte und Anhänge bevor Sie dieses Formular erneut abschicken.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Error: Objekt kann nicht geupdated werden. Prüfen Sie verknüpfte Objekte und Anhänge bevor Sie dieses Formular erneut abschicken.',
+    'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
 ));
 
 // UserProfile brick

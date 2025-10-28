@@ -548,39 +548,33 @@ $aOptions = [
 ];
 $oPage->add_style('.demo_set{color:red;}');
 
-$oSimpleSetBlock = SetUIBlockFactory::MakeForSimple('SetSimple', $aOptions, 'label', 'value', ['label']);
-$oSimpleSetBlock->SetName('SimpleSetBlock');
+$oSimpleSetBlock = SetUIBlockFactory::MakeForSimple('SetSimple', $aOptions, 'label', 'value', ['label'], null, null, 'SimpleSetBlock');
 $oPage->AddUiBlock($oSimpleSetBlock);
 
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Add Option Button', 3));
 
-$oSimpleAddSetBlock = SetUIBlockFactory::MakeForSimple('SetWithAddOption', $aOptions, 'label', 'value', ['label']);
-$oSimpleAddSetBlock->SetName('SetWithAddOption');
+$oSimpleAddSetBlock = SetUIBlockFactory::MakeForSimple('SetWithAddOption', $aOptions, 'label', 'value', ['label'], null, null, 'SetWithAddOption');
 $oSimpleAddSetBlock->SetHasAddOptionButton(true);
 $oPage->AddUiBlock($oSimpleAddSetBlock);
 
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Renderer', 3));
 
-$oSimpleSetBlockRenderer = SetUIBlockFactory::MakeForSimple('SetRenderer', $aOptions, 'label', 'value', ['label']);
-$oSimpleSetBlockRenderer->SetName('SimpleSetBlockWithRenderer');
+$oSimpleSetBlockRenderer = SetUIBlockFactory::MakeForSimple('SetRenderer', $aOptions, 'label', 'value', ['label'], null, null, 'SimpleSetBlockWithRenderer');
 $oSimpleSetBlockRenderer->SetOptionsTemplate('base/components/input/set/simple_option_renderer.html.twig');
 $oSimpleSetBlockRenderer->SetItemsTemplate('base/components/input/set/simple_option_renderer.html.twig');
 $oPage->AddUiBlock($oSimpleSetBlockRenderer);
 
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Grouping', 3));
 
-$oSimpleSetBlockGroup = SetUIBlockFactory::MakeForSimple('SetGroup', $aOptions, 'label', 'value', ['label'], 'group');
-$oSimpleSetBlockGroup->SetName('SimpleSetBlockWithGroup');
+$oSimpleSetBlockGroup = SetUIBlockFactory::MakeForSimple('SetGroup', $aOptions, 'label', 'value', ['label'], 'group', null, 'SimpleSetBlockWithGroup');
 $oPage->AddUiBlock($oSimpleSetBlockGroup);
 
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('OQL', 3));
 
-$oSimpleSetBlockOql = SetUIBlockFactory::MakeForOQL('SetOql', 'Person', 'SELECT Person');
-$oSimpleSetBlockOql->SetName('OqlSet');
+$oSimpleSetBlockOql = SetUIBlockFactory::MakeForOQL('SetOql', 'Person', 'SELECT Person', null, [], null, 'OqlSet');
 $oPage->AddUiBlock($oSimpleSetBlockOql);
 
-$oSimpleSetBlockOql2 = SetUIBlockFactory::MakeForOQL('SetOql2', 'Location', 'SELECT Location');
-$oSimpleSetBlockOql2->SetName('OqlSet2');
+$oSimpleSetBlockOql2 = SetUIBlockFactory::MakeForOQL('SetOql2', 'Location', 'SELECT Location', null, [], null, 'OqlSet2');
 $oPage->AddUiBlock($oSimpleSetBlockOql2);
 
 $oPage->output();

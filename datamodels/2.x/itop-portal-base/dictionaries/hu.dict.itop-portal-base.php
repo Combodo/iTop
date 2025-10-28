@@ -61,6 +61,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Portal:Form:Close:Warning' => 'Szeretné elhagyni ezt az űrlapot? A megadott adatok elveszhetnek',
 	'Portal:Error:ObjectCannotBeCreated' => 'Hiba: az objektum nem hozható létre. Ellenőrizze a kapcsolódó objektumokat és mellékleteket, mielőtt újra elküldi ezt az űrlapot.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Hiba: az objektum nem frissíthető. Ellenőrizze a kapcsolódó objektumokat és mellékleteket, mielőtt újra elküldi ezt az űrlapot.',
+    'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
 ));
 
 // UserProfile brick

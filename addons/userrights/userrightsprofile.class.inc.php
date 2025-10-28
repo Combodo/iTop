@@ -94,15 +94,15 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		$bGrant = $oUserRights->GetProfileActionGrant($this->GetKey(), $sClass, $sAction);
 		if (is_null($bGrant))
 		{
-			return '<span style="background-color: #ffdddd;">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
+			return '<span class="ibo-user-rights ibo-is-failure">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
 		}
 		elseif ($bGrant)
 		{
-			return '<span style="background-color: #ddffdd;">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
+			return '<span class="ibo-user-rights ibo-is-success">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
 		}
 		else
 		{
-			return '<span style="background-color: #ffdddd;">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
+			return '<span class="ibo-user-rights ibo-is-failure">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
 		}
 	}
 

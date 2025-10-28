@@ -11,7 +11,7 @@
  */
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
-	'config-edit-title' => 'Configuration File Editor~~',
+	'itop-config/Operation:Edit/Title' => 'Configuration File Editor~~',
 	'config-edit-intro' => 'Be very cautious when editing the configuration file.~~',
 	'Menu:ConfigEditor' => 'General configuration~~',
 	'config-apply' => 'Apply~~',

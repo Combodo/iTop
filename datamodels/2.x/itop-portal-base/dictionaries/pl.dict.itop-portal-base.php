@@ -61,6 +61,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Portal:Form:Close:Warning' => 'Chcesz opuścić ten formularz? Wprowadzone dane mogą zostać utracone',
 	'Portal:Error:ObjectCannotBeCreated' => 'Błąd: nie można utworzyć obiektu. Sprawdź powiązane obiekty i załączniki przed ponownym przesłaniem tego formularza.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Błąd: nie można zaktualizować obiektu. Sprawdź powiązane obiekty i załączniki przed ponownym przesłaniem tego formularza.',
+    'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
 ));
 
 // UserProfile brick

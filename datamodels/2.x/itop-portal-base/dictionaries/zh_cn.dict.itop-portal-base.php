@@ -70,6 +70,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Portal:Form:Close:Warning' => '确定要离开表单吗? 已输入数据会丢失',
 	'Portal:Error:ObjectCannotBeCreated' => '错误: 无法创建对象. 请在再次提交表单前检查相关对象和附件.',
 	'Portal:Error:ObjectCannotBeUpdated' => '错误: 无法更新对象. 请在再次提交表单前检查相关对象和附件.',
+    'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
 ));
 
 // UserProfile brick

@@ -11,7 +11,7 @@
  */
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ConfigFileEditor' => 'Éditeur de texte brut',
-	'config-edit-title' => 'Éditeur du Fichier de Configuration',
+	'itop-config/Operation:Edit/Title' => 'Éditeur du Fichier de Configuration',
 	'config-edit-intro' => 'Attention: une configuration incorrecte peut rendre '.ITOP_APPLICATION_SHORT.' inopérant pour tous les utilisateurs!',
 	'config-apply' => 'Enregistrer',
 	'config-apply-title' => 'Enregistrer (Ctrl+S)',
