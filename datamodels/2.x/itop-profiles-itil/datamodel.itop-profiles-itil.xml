@@ -254,8 +254,10 @@
           <group id="Incident">
             <actions>
               <action id="stimulus:ev_assign">allow</action>
+              <action id="stimulus:ev_dispatch">allow</action>
               <action id="stimulus:ev_reassign">allow</action>
               <action id="stimulus:ev_resolve">allow</action>
+              <action id="stimulus:ev_reopen">allow</action>
               <action id="stimulus:ev_close">allow</action>
               <action id="stimulus:ev_pending">allow</action>
             </actions>
