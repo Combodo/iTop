@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Forms\FormType;
+namespace Combodo\iTop\Forms\Block\FormType;
 
 use Combodo\iTop\Forms\Block\IO\Converter\OqlToClassConverter;
 use Exception;

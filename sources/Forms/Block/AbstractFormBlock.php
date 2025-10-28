@@ -6,6 +6,8 @@
 
 namespace Combodo\iTop\Forms\Block;
 
+use Combodo\iTop\Forms\Block\Base\FormBlock;
+use Combodo\iTop\Forms\Block\IO\Converter\AbstractConverter;
 use Combodo\iTop\Forms\Block\IO\FormInput;
 use Combodo\iTop\Forms\Block\IO\FormOutput;
 use IssueLog;
@@ -21,14 +23,17 @@ use Symfony\Component\Filesystem\Exception\IOException;
  */
 abstract class AbstractFormBlock
 {
+	/** @var null|FormBlock */
+	private ?FormBlock $oParent = null;
+
 	/** @var array form block inputs */
 	private array $aFormInputs = [];
 
 	/** @var array form block outputs */
 	private array $aFormOutputs = [];
 
-	/** @var bool flag */
-	private bool $bIsAdded = false;
+	/** @var bool flag indicating the form insertion */
+	private bool $bIsAddedToForm = false;
 
 	/**
 	 * Return the form type.
@@ -50,7 +55,7 @@ abstract class AbstractFormBlock
 	 * @param string $sName
 	 * @param array $aOptions
 	 */
-	public function __construct(private readonly string $sName, private array $aOptions = [])
+	public function __construct(private readonly string $sName, protected array $aOptions = [])
 	{
 		// Attach the form block
 		$this->aOptions['form_block'] = $this;
@@ -63,6 +68,28 @@ abstract class AbstractFormBlock
 
 		// Initialize block outputs
 		$this->InitOutputs();
+	}
+
+	/**
+	 * Set the parent block.
+	 *
+	 * @param FormBlock $oParent
+	 *
+	 * @return void
+	 */
+	public function SetParent(FormBlock $oParent): void
+	{
+		$this->oParent = $oParent;
+	}
+
+	/**
+	 * Get the parent block.
+	 *
+	 * @return FormBlock
+	 */
+	public function GetParent(): FormBlock
+	{
+		return $this->oParent;
 	}
 
 	/**
@@ -100,12 +127,14 @@ abstract class AbstractFormBlock
 	/**
 	 * Add an input.
 	 *
-	 * @param FormInput $oFormInput
+	 * @param string $sName the input name
+	 * @param string $sType the type of the input
 	 *
 	 * @return void
 	 */
-	public function AddInput(FormInput $oFormInput): void
+	public function AddInput(string $sName, string $sType): void
 	{
+		$oFormInput = new FormInput($sName, $sType);
 		$oFormInput->SetOwnerBlock($this);
 		$this->aFormInputs[$oFormInput->GetName()] = $oFormInput;
 	}
@@ -130,12 +159,15 @@ abstract class AbstractFormBlock
 	/**
 	 * Add an output.
 	 *
-	 * @param FormOutput $oFormOutput
+	 * @param string $sName
+	 * @param string $sType
+	 * @param AbstractConverter|null $oConverter
 	 *
 	 * @return void
 	 */
-	public function AddOutput(FormOutput $oFormOutput): void
+	public function AddOutput(string $sName, string $sType, AbstractConverter $oConverter = null): void
 	{
+		$oFormOutput = new FormOutput($sName, $sType, $oConverter);
 		$oFormOutput->SetOwnerBlock($this);
 		$this->aFormOutputs[$oFormOutput->GetName()] = $oFormOutput;
 	}
@@ -143,7 +175,7 @@ abstract class AbstractFormBlock
 	/**
 	 * Get an output.
 	 *
-	 * @param string $sName
+	 * @param string $sName output name
 	 *
 	 * @return FormOutput
 	 * @throws FormBlockException
@@ -151,7 +183,7 @@ abstract class AbstractFormBlock
 	public function GetOutput(string $sName): FormOutput
 	{
 		if(!array_key_exists($sName, $this->aFormOutputs)) {
-			throw new FormBlockException('Missing ouput ' . $sName . ' for ' . $this->sName);
+			throw new FormBlockException('Missing output ' . $sName . ' for ' . $this->sName);
 		}
 
 		return $this->aFormOutputs[$sName];
@@ -180,19 +212,20 @@ abstract class AbstractFormBlock
 	/**
 	 * Attach an input to a block output.
 	 *
-	 * @param string $sInputName
-	 * @param AbstractFormBlock $oOutputBlock
-	 * @param string $sOutputName
+	 * @param string $sInputName the input name
+	 * @param string $sOutputBlockName the dependency block name
+	 * @param string $sOutputName the dependency output name
 	 *
 	 * @return $this
 	 * @throws FormBlockException
-	 * @throws FormBlockIOException
 	 */
-	public function DependsOnBlockOutput(string $sInputName, AbstractFormBlock $oOutputBlock, string $sOutputName): AbstractFormBlock
+	public function DependsOn(string $sInputName, string $sOutputBlockName, string $sOutputName): AbstractFormBlock
 	{
+
+		$oOutputBlock = $this->GetParent()->Get($sOutputBlockName);
 		$oFormInput = $this->GetInput($sInputName);
 		$oFormOutput = $oOutputBlock->GetOutput($sOutputName);
-		$oFormInput->BindFromOutput($oFormOutput);
+		$oFormOutput->BindToInput($oFormInput);
 
 		return $this;
 	}
@@ -200,47 +233,46 @@ abstract class AbstractFormBlock
 	/**
 	 * Attach an input to a parent block input.
 	 *
-	 * @param string $sInputName
-	 * @param AbstractFormBlock $oParentBlock
-	 * @param string $sParentInputName
+	 * @param string $sInputName input name
+	 * @param string $sParentInputName parent input name
 	 *
 	 * @return $this
 	 * @throws FormBlockException
 	 * @throws FormBlockIOException
 	 */
-	public function DependsOnParentBlockInput(string $sInputName, AbstractFormBlock $oParentBlock, string $sParentInputName): AbstractFormBlock
+	public function DependsOnParent(string $sInputName, string $sParentInputName): AbstractFormBlock
 	{
 		$oFormInput = $this->GetInput($sInputName);
-		$oParentFormInput = $oParentBlock->GetInput($sInputName);
-		$oFormInput->BindFromInput($oParentFormInput);
+		$oParentFormInput = $this->GetParent()->GetInput($sParentInputName);
+		$oParentFormInput->BindToInput($oFormInput);
 
 		return $this;
 	}
 
 	/**
-	 * Attach an output to a parent block outpu.
+	 * Attach an output to a parent block output.
 	 *
-	 * @param string $sOutputName
-	 * @param AbstractFormBlock $oParentBlock
-	 * @param string $sParentInputName
+	 * @param string $sOutputName output name
+	 * @param string $sParentOutputName parent output name
 	 *
 	 * @return $this
 	 * @throws FormBlockException
-	 * @throws FormBlockIOException
 	 */
-	public function BindOutputToParentBlockOutput(string $sOutputName, AbstractFormBlock $oParentBlock, string $sParentOutputName): AbstractFormBlock
+	public function ImpactParent(string $sOutputName, string $sParentOutputName): AbstractFormBlock
 	{
 		$oFormOutput = $this->GetOutput($sOutputName);
-		$oParentFormOutput = $oParentBlock->GetOutput($sParentOutputName);
-		$oParentFormOutput->BindFromOutput($oFormOutput);
+		$oParentFormOutput = $this->GetParent()->GetOutput($sParentOutputName);
+		$oFormOutput->BindToOutput($oParentFormOutput);
 
 		return $this;
 	}
 
 	/**
+	 * Check existence of one or more dependencies.
+	 *
 	 * @return bool
 	 */
-	public function HasAtLeastOneBoundInput(): bool
+	public function HasDependenciesBlocks(): bool
 	{
 		foreach ($this->aFormInputs as $oFormInput) {
 			if ($oFormInput->IsBound()) {
@@ -251,9 +283,11 @@ abstract class AbstractFormBlock
 	}
 
 	/**
+	 * Check existence of one or more dependents blocks.
+	 *
 	 * @return bool
 	 */
-	public function HasAtLeastOneBoundOutput(): bool
+	public function ImpactDependentsBlocks(): bool
 	{
 		/** @var FormOutput $oFormOutput */
 		foreach ($this->aFormOutputs as $oFormOutput) {
@@ -265,6 +299,8 @@ abstract class AbstractFormBlock
 	}
 
 	/**
+	 * Get bindings on inputs.
+	 *
 	 * @return array
 	 */
 	public function GetInputsBindings(): array
@@ -281,6 +317,8 @@ abstract class AbstractFormBlock
 	}
 
 	/**
+	 * Get bindings on outputs.
+	 *
 	 * @return array
 	 */
 	public function GetOutputBindings(): array
@@ -297,9 +335,11 @@ abstract class AbstractFormBlock
 	}
 
 	/**
+	 * Inputs data ready.
+	 *
 	 * @return bool
 	 */
-	public function IsInputsReady(): bool
+	public function IsInputsDataReady(): bool
 	{
 		foreach ($this->aFormInputs as $oFormInput) {
 			if ($oFormInput->IsBound()) {
@@ -313,24 +353,30 @@ abstract class AbstractFormBlock
 	}
 
 	/**
+	 * The block has been added to its parent.
+	 *
 	 * @return bool
 	 */
 	public function IsAdded(): bool
 	{
-		return $this->bIsAdded;
+		return $this->bIsAddedToForm;
 	}
 
 	/**
+	 * Indicate that the block has been added to its parent.
+	 *
 	 * @param bool $bIsAdded
 	 *
 	 * @return void
 	 */
 	public function SetAdded(bool $bIsAdded): void
 	{
-		$this->bIsAdded = $bIsAdded;
+		$this->bIsAddedToForm = $bIsAdded;
 	}
 
 	/**
+	 * Compute outputs values.
+	 *
 	 * @param string $sEventType
 	 * @param mixed $oData
 	 *
@@ -341,8 +387,8 @@ abstract class AbstractFormBlock
 		/** Iterate throw output @var FormOutput $oFormOutput */
 		foreach ($this->aFormOutputs as $oFormOutput) {
 
-			// Compute the output value
 			try{
+				// Compute the output value
 				$oFormOutput->ComputeValue($sEventType, $oData);
 			}
 			catch(IOException $oException){

@@ -8,12 +8,9 @@ namespace Combodo\iTop\Forms\Block\DataModel;
 
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
-use Combodo\iTop\Forms\Block\IO\Converter\StringToAttributeConverter;
 use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
-use Combodo\iTop\Forms\Block\IO\FormInput;
-use Combodo\iTop\Forms\Block\IO\FormOutput;
 use Combodo\iTop\Forms\FormType\AttributeValueFormType;
 use Exception;
 use MetaModel;
@@ -48,15 +45,15 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 	public function InitInputs(): void
 	{
 		parent::InitInputs();
-		$this->AddInput(new FormInput(self::INPUT_CLASS_NAME, ClassIOFormat::class));
-		$this->AddInput(new FormInput(self::INPUT_ATTRIBUTE, AttributeIOFormat::class));
+		$this->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
+		$this->AddInput(self::INPUT_ATTRIBUTE, AttributeIOFormat::class);
 	}
 
 	/** @inheritdoc  */
 	public function InitOutputs(): void
 	{
 		parent::InitOutputs();
-		$this->AddOutput(new FormOutput(self::OUTPUT_VALUE, RawFormat::class));
+		$this->AddOutput(self::OUTPUT_VALUE, RawFormat::class);
 	}
 
 	/** @inheritdoc
@@ -101,12 +98,6 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		$aOptions['choices'] = array_flip($aValues);
 
 		return $aOptions;
-	}
-
-	/** @inheritdoc  */
-	public function GetFormType(): string
-	{
-		return AttributeValueFormType::class;
 	}
 
 }

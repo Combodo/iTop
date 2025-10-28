@@ -6,18 +6,16 @@
 
 namespace Combodo\iTop\Forms\Block\IO;
 
-use Combodo\iTop\Forms\Block\FormBlockIOException;
 use Combodo\iTop\Forms\Block\IO\Converter\AbstractConverter;
 
+/**
+ *
+ */
 class FormOutput extends AbstractFormIO
 {
 	/** @var AbstractConverter|null  */
 	private null|AbstractConverter $oConverter;
 
-	private FormBinding|null $oBinding = null;
-
-	/** @var array  */
-	private array $aBindingsToInputs = [];
 
 	/** @var array  */
 	private array $aBindingsToOutputs = [];
@@ -84,21 +82,7 @@ class FormOutput extends AbstractFormIO
 		}
 	}
 
-	/**
-	 * Bind to input.
-	 *
-	 * @param FormInput $oDestinationIO
-	 *
-	 * @return FormBinding
-	 */
-	public function BindToInput(FormInput $oDestinationIO): FormBinding
-	{
-		$oBinding = new FormBinding($this, $oDestinationIO);
 
-		$this->aBindingsToInputs[] = $oBinding;
-
-		return $oBinding;
-	}
 
 	/**
 	 * Bind to output.
@@ -113,30 +97,12 @@ class FormOutput extends AbstractFormIO
 
 		$this->aBindingsToOutputs[] = $oBinding;
 
+		$oDestinationIO->Attach($oBinding);
+
 		return $oBinding;
 	}
 
-	public function GetBinding(): ?FormBinding
-	{
-		return $this->oBinding;
-	}
 
-	/**
-	 * @throws FormBlockIOException
-	 */
-	public function BindFromOutput(FormOutput $oSourceIO): void
-	{
-		if($this->GetDataType() !== $oSourceIO->GetDataType()){
-			throw new FormBlockIOException('Cannot connect input types incompatibles ' . $this->GetName() . ' from ' . $oSourceIO->GetOwnerBlock()->GetName() . ' ' . $oSourceIO->GetName());
-		}
-
-		$this->oBinding = $oSourceIO->BindToOutput($this);
-	}
-
-	public function IsBound(): bool
-	{
-		return $this->oBinding !== null;
-	}
 
 	/**
 	 * Get the bindings.

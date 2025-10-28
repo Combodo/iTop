@@ -7,7 +7,7 @@
 namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Combodo\iTop\Forms\Block\FormType\ChoiceFormType;
 
 /**
  * Form block for choices.
@@ -18,16 +18,13 @@ class ChoiceFormBlock extends AbstractFormBlock
 	/** @inheritdoc  */
 	public function GetFormType(): string
 	{
-		return ChoiceType::class;
+		return ChoiceFormType::class;
 	}
 
 	/** @inheritdoc  */
 	public function InitOptions(): array
 	{
 		return [
-			// debug purpose
-			'required' => false,
-			'placeholder' => 'Select an element...',
 		];
 	}
 }

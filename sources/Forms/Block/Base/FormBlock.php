@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\FormsException;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 /**
@@ -15,21 +16,28 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
  */
 class FormBlock extends AbstractFormBlock
 {
-	/** @var array form sub blocks */
-	private array $aSubFormBlocks = [];
+	/** @var array children blocks */
+	private array $aChildrenBlocks = [];
 
 	/**
 	 * Constructor.
 	 *
-	 * @param string $sName
-	 * @param array $aOptions
+	 * @param string $sName block name
+	 * @param array $aOptions options
+	 *
+	 * @throws FormsException
 	 */
 	public function __construct(string $sName, array $aOptions = [])
 	{
 		parent::__construct($sName, $aOptions);
 
-		// Build the form
-		$this->BuildForm();
+		try {
+			// Build the form
+			$this->BuildForm();
+		}
+		catch (Exception $ex) {
+			throw new FormsException('Unable to construct demonstrator form.', 0, $ex);
+		}
 	}
 
 	/** @inheritdoc  */
@@ -47,26 +55,42 @@ class FormBlock extends AbstractFormBlock
 	}
 
 	/**
-	 * Add a sub form.
+	 * Add a child form.
 	 *
-	 * @param AbstractFormBlock $oSubFormBlock
+	 * @param string $sType block class name
+	 * @param string $sName block name
+	 * @param array $aOptions options
 	 *
 	 * @return $this
 	 */
-	public function AddSubFormBlock(AbstractFormBlock $oSubFormBlock): AbstractFormBlock
+	public function Add(string $sType, string $sName, array $aOptions): AbstractFormBlock
 	{
-		$this->aSubFormBlocks[] = $oSubFormBlock;
-		return $this;
+		$oSubFormBlock = new ($sType)($sName, $aOptions);
+		$this->aChildrenBlocks[$sName] = $oSubFormBlock;
+		$oSubFormBlock->SetParent($this);
+		return $oSubFormBlock;
 	}
 
 	/**
-	 * Get the sub forms.
+	 * Get the children forms.
 	 *
 	 * @return array
 	 */
-	public function GetSubFormBlocks(): array
+	public function GetChildren(): array
 	{
-		return $this->aSubFormBlocks;
+		return $this->aChildrenBlocks;
+	}
+
+	/**
+	 * Return a child block.
+	 *
+	 * @param string $sName name of the block
+	 *
+	 * @return AbstractFormBlock
+	 */
+	public function Get(string $sName): AbstractFormBlock
+	{
+		return $this->aChildrenBlocks[$sName];
 	}
 
 	/**

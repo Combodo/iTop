@@ -8,9 +8,8 @@ namespace Combodo\iTop\Forms\Block\DataModel;
 
 use Combodo\iTop\Forms\Block\Base\TextAreaFormBlock;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
-use Combodo\iTop\Forms\Block\IO\FormOutput;
 use Combodo\iTop\Forms\Block\IO\Converter\OqlToClassConverter;
-use Combodo\iTop\Forms\FormType\OqlFormType;
+use Combodo\iTop\Forms\Block\FormType\OqlFormType;
 
 /**
  * Form block for oql expression.
@@ -32,7 +31,7 @@ class OqlFormBlock extends TextAreaFormBlock
 	public function InitOutputs(): void
 	{
 		parent::InitOutputs();
-		$this->AddOutput(new FormOutput(self::OUTPUT_SELECTED_CLASS, ClassIOFormat::class, new OqlToClassConverter()));
+		$this->AddOutput(self::OUTPUT_SELECTED_CLASS, ClassIOFormat::class, new OqlToClassConverter());
 	}
 
 	/** @inheritdoc  */

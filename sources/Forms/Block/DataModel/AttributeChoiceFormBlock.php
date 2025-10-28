@@ -10,8 +10,6 @@ use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
-use Combodo\iTop\Forms\Block\IO\FormInput;
-use Combodo\iTop\Forms\Block\IO\FormOutput;
 use Combodo\iTop\Forms\Block\IO\Converter\StringToAttributeConverter;
 use Combodo\iTop\Forms\FormType\AttributeFormType;
 use CoreException;
@@ -34,7 +32,7 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	public function InitOptions(): array
 	{
 		$aOptions = parent::InitOptions();
-		$aOptions['placeholder'] = 'Select an attribute...';
+//		$aOptions['placeholder'] = 'Select an attribute...';
 		return $aOptions;
 	}
 
@@ -42,14 +40,14 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	public function InitInputs(): void
 	{
 		parent::InitInputs();
-		$this->AddInput(new FormInput(self::INPUT_CLASS_NAME, ClassIOFormat::class));
+		$this->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
 	}
 
 	/** @inheritdoc  */
 	public function InitOutputs(): void
 	{
 		parent::InitOutputs();
-		$this->AddOutput(new FormOutput(self::OUTPUT_ATTRIBUTE, AttributeIOFormat::class, new StringToAttributeConverter()));
+		$this->AddOutput(self::OUTPUT_ATTRIBUTE, AttributeIOFormat::class, new StringToAttributeConverter());
 	}
 
 	/** @inheritdoc
@@ -79,9 +77,4 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 		return $aOptions;
 	}
 
-	/** @inheritdoc  */
-	public function GetFormType(): string
-	{
-		return AttributeFormType::class;
-	}
 }

@@ -6,10 +6,11 @@
 
 namespace Combodo\iTop\Forms;
 
+use Exception;
 use IssueLog;
 use Throwable;
 
-class FormsException extends \Exception
+class FormsException extends Exception
 {
 	public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null, array $aContext = [])
 	{

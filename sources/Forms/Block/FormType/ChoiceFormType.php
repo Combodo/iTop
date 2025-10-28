@@ -4,9 +4,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Forms\FormType;
+namespace Combodo\iTop\Forms\Block\FormType;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Event\PreSetDataEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,6 +28,20 @@ class ChoiceFormType extends AbstractType
 	/** @inheritdoc  */
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
+		// on preset data
+		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (PreSetDataEvent $event) use ($options){
+
+			if($options['multiple'] === false && $options['required'] === true) {
+				if ($event->getData() === null) {
+					$FirstElement = array_shift($options['choices']);
+					if($FirstElement !== null){
+						$event->setData($FirstElement);
+					}
+				}
+			}
+
+		});
+
 		// on pre submit
 		$builder->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event) use ($options){
 
@@ -48,7 +63,7 @@ class ChoiceFormType extends AbstractType
 	private function CheckValue($oValue, $options): bool
 	{
 		// Check multi selection values
-		if(is_array($oValue)){
+		if($options['multiple'] === true){
 			foreach ($oValue as $v){
 				if(!in_array($v, $options['choices'])){
 					return false;

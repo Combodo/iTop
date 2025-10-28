@@ -67,7 +67,7 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 
 		$aDependentBlocks = [];
 		/** Iterate throw the form sub blocks... @var FormBlock $oSubFormBlock */
-		foreach ($oFormBlock->GetSubFormBlocks() as $oSubFormBlock) {
+		foreach ($oFormBlock->GetChildren() as $oSubFormBlock) {
 
 			// Add to the sub blocks array
 			$this->aSubFormBlocks[$oSubFormBlock->getName()] = $oSubFormBlock;
@@ -98,8 +98,8 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 	private function HandleSubBlock(AbstractFormBlock $oSubFormBlock): bool
 	{
 
-		// Has at least one bounded input ?
-		if ($oSubFormBlock->HasAtLeastOneBoundInput()) {
+		// Has dependencies blocks
+		if ($oSubFormBlock->HasDependenciesBlocks()) {
 
 			// Insert a hidden type to save the place
 			$this->builder->add($oSubFormBlock->GetName(), HiddenType::class, [

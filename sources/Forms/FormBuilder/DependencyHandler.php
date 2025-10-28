@@ -40,7 +40,7 @@ class DependencyHandler
 	public function __construct(private readonly string $sName, private readonly AbstractFormBlock $oFormBlock, private readonly FormBuilder $oFormBuilder, private readonly array $aSubBlocks, private readonly array $aDependentBlocks)
 	{
 		// dependencies map
-		$this->oDependenciesMap = new DependencyMap($this->aDependentBlocks);
+		$this->oDependenciesMap = new DependencyMap($aDependentBlocks);
 
 		// Add form ready listener
 		$this->AddFormReadyListener();
@@ -48,6 +48,7 @@ class DependencyHandler
 		// Check the dependencies
 		$this->CheckDependencies($this->oFormBuilder);
 
+		// Store the dependency handler
 		self::$aDependencyHandlers[] = $this;
 	}
 
@@ -86,7 +87,7 @@ class DependencyHandler
 					'builder' => $this->oFormBuilder->getName(),
 					'event' => 'form.listen',
 					'form' => $sOutputBlockName,
-					'value' => null
+					'value' => 'NA'
 				];
 
 				// Listen the output block POST_SET_DATA & POST_SUBMIT
@@ -144,7 +145,7 @@ class DependencyHandler
 		foreach ($this->aDependentBlocks as $qBlockName => $oDependentBlock)
 		{
 			// When dependencies met, add the dependent field if not already done
-			if(!$oDependentBlock->IsAdded() && $oDependentBlock->IsInputsReady()) {
+			if(!$oDependentBlock->IsAdded() && $oDependentBlock->IsInputsDataReady()) {
 
 				// Get the dependent field options
 				$aOptions = $oDependentBlock->UpdateOptions();
@@ -164,7 +165,15 @@ class DependencyHandler
 						'builder' => $this->oFormBuilder->getName(),
 						'event' => 'form.add',
 						'form' => $oDependentBlock->getName(),
-						'value' => null
+						'value' => 'NA'
+					];
+
+					if(array_key_exists('builder_listener', $aOptions))
+					$this->aDebugData[] = [
+						'builder' => $this->oFormBuilder->getName(),
+						'event' => 'form.listen',
+						'form' => $oDependentBlock->getName(),
+						'value' => 'NA'
 					];
 
 					// Mark the dependency as added
@@ -177,7 +186,7 @@ class DependencyHandler
 
 			}
 
-			if($oDependentBlock->IsAdded() && !$oDependentBlock->IsInputsReady()) {
+			if($oDependentBlock->IsAdded() && !$oDependentBlock->IsInputsDataReady()) {
 				$oForm->add($oDependentBlock->GetName(), HiddenType::class, [
 					'form_block' => $oDependentBlock,
 					'prevent_form_build' => true,

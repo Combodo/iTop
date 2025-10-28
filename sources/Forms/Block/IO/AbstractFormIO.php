@@ -9,6 +9,9 @@ namespace Combodo\iTop\Forms\Block\IO;
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Symfony\Component\Form\FormEvents;
 
+/**
+ *
+ */
 class AbstractFormIO
 {
 	/** @var AbstractFormBlock The owner block */
@@ -23,16 +26,45 @@ class AbstractFormIO
 	/** @var array Stored values */
 	private array $aValues = [];
 
+	/** @var FormBinding|null */
+	private FormBinding|null $oBinding = null;
+
+	/** @var array bindings pointing to other inputs */
+	protected array $aBindingsToInputs = [];
+
 	/**
 	 * Constructor.
 	 *
-	 * @param string $sName
-	 * @param string $sType
+	 * @param string $sName name of the IO
+	 * @param string $sType type of the IO
 	 */
 	public function __construct(string $sName, string $sType)
 	{
 		$this->sName = $sName;
 		$this->sType = $sType;
+	}
+
+	/**
+	 * Get the owner block.
+	 *
+	 * @return AbstractFormBlock
+	 */
+	public function GetOwnerBlock(): AbstractFormBlock
+	{
+		return $this->oOwnerBlock;
+	}
+
+	/**
+	 * Set the owner block.
+	 *
+	 * @param AbstractFormBlock $oOwnerBlock
+	 *
+	 * @return $this
+	 */
+	public function SetOwnerBlock(AbstractFormBlock $oOwnerBlock): self
+	{
+		$this->oOwnerBlock = $oOwnerBlock;
+		return $this;
 	}
 
 	/**
@@ -66,29 +98,6 @@ class AbstractFormIO
 	public function GetDataType(): string
 	{
 		return $this->sType;
-	}
-
-	/**
-	 * Get the owner block.
-	 *
-	 * @return AbstractFormBlock
-	 */
-	public function GetOwnerBlock(): AbstractFormBlock
-	{
-		return $this->oOwnerBlock;
-	}
-
-	/**
-	 * Set the owner block.
-	 *
-	 * @param AbstractFormBlock $oOwnerBlock
-	 *
-	 * @return $this
-	 */
-	public function SetOwnerBlock(AbstractFormBlock $oOwnerBlock): self
-	{
-		$this->oOwnerBlock = $oOwnerBlock;
-		return $this;
 	}
 
 	/**
@@ -168,6 +177,66 @@ class AbstractFormIO
 			return $this->aValues[FormEvents::POST_SET_DATA];
 		}
 		return null;
+	}
+
+	/**
+	 * Bind to input.
+	 *
+	 * @param FormInput $oDestinationIO
+	 *
+	 * @return FormBinding
+	 */
+	public function BindToInput(FormInput $oDestinationIO): FormBinding
+	{
+		$oBinding = new FormBinding($this, $oDestinationIO);
+
+		$this->aBindingsToInputs[] = $oBinding;
+
+		$oDestinationIO->Attach($oBinding);
+
+		return $oBinding;
+	}
+
+	/**
+	 * Attach a binding.
+	 *
+	 * @param FormBinding $oFormBinding
+	 *
+	 * @return void
+	 */
+	public function Attach(FormBinding $oFormBinding)
+	{
+		$this->oBinding = $oFormBinding;
+	}
+
+	/**
+	 * Indicate IO is bound.
+	 *
+	 * @return bool
+	 */
+	public function IsBound(): bool
+	{
+		return $this->oBinding !== null;
+	}
+
+	/**
+	 * Return the binding.
+	 *
+	 * @return FormBinding|null
+	 */
+	public function GetBinding(): ?FormBinding
+	{
+		return $this->oBinding;
+	}
+
+	/**
+	 * Indicated inputs data is ready.
+	 *
+	 * @return bool
+	 */
+	public function IsDataReady(): bool
+	{
+		return $this->HasValue();
 	}
 
 

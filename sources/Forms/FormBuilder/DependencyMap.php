@@ -47,7 +47,7 @@ class DependencyMap
 		/** Iterate throw blocks with dependencies... @var FormBlock $oDependentBlock */
 		foreach ($this->aDependentBlocks as $sBlockName => $oDependentBlock) {
 
-			/** Iterate throw the block inputs connections... @var FormBinding $oBinding**/
+			/** Iterate throw the block inputs bindings... @var FormBinding $oBinding**/
 			foreach ($oDependentBlock->GetInputsBindings() as $oBinding) {
 
 				// Output to inputs map
@@ -59,11 +59,6 @@ class DependencyMap
 				if($oBinding->oSourceIO instanceof FormInput
 				&& $oBinding->oDestinationIO instanceof FormInput){
 					$this->AddBindingToMap($this->aInputToInputsMap, $oBinding);
-				}
-				// Output to outputs map
-				if($oBinding->oSourceIO instanceof FormOutput
-				&& $oBinding->oDestinationIO instanceof FormOutput){
-					$this->AddBindingToMap($this->aOutputToOutputsMap, $oBinding);
 				}
 
 			}
