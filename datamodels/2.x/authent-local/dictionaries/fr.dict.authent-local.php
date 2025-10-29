@@ -16,7 +16,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:UserLocal/Attribute:password' => 'Mot de passe',
 	'Class:UserLocal/Attribute:password+' => '',
 	'Class:UserLocal/Attribute:expiration' => 'Validité du mot de passe',
-	'Class:UserLocal/Attribute:expiration+' => 'Etat du mot de passe (nécessite une extension pour avoir un effet)',
+	'Class:UserLocal/Attribute:expiration+' => 'État du mot de passe (nécessite une extension pour avoir un effet)',
 	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Durée limitée',
 	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '',
 	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'Permanente',
