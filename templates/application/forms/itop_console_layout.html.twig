@@ -20,6 +20,14 @@
     {{- parent() -}}
 {%- endblock form_label -%}
 
+{%- block form_rows -%}
+    {% for sId,child in form|filter(child => not child.rendered) %}
+        <div id="block_{{ sId }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">
+            {{ form_row(child) }}
+        </div>
+    {% endfor %}
+{%- endblock form_rows -%}
+
 {%- block form_label_content -%}
     {{- parent() -}}
     {% if with_ai_button is defined and with_ai_button %}

@@ -95,7 +95,7 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		if($aValues === null)
 			return $aOptions;
 
-		$aOptions['choices'] = array_flip($aValues);
+		$aOptions['choices'] = array_flip($aValues ?? []);
 
 		return $aOptions;
 	}

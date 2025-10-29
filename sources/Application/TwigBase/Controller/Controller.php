@@ -102,6 +102,7 @@ abstract class Controller extends AbstractController
 
 	/** @var CsrfTokenManager Csrf manager (from Symfony form component @link https://symfony.com/doc/current/security/csrf.html) */
 	private CsrfTokenManager $oCsrfTokenManager;
+	private ?string $sContentType = null;
 
 	/**
 	 * Controller constructor.
@@ -529,7 +530,9 @@ abstract class Controller extends AbstractController
 			$this->AddToPage($this->oTwig->render('application/forms/itop_error.html.twig', ['sControllerError' => $sErrorMsg]));
 		}
 
-		$this->ManageDebugExtensions($aParams);
+		if ($sPageType === 'html') {
+			$this->ManageDebugExtensions($aParams);
+		}
 
 		if (!empty($this->aAjaxTabs)) {
 			$this->oPage->AddTabContainer('TwigBaseTabContainer');
@@ -550,6 +553,7 @@ abstract class Controller extends AbstractController
 		foreach ($this->aBlockParams as $sKey => $value) {
 			$this->SetBlockParamToPage($sKey, $value);
 		}
+		$this->SetContentTypeToPage();
 		$this->OutputPage();
 	}
 
@@ -731,6 +735,17 @@ abstract class Controller extends AbstractController
 	public function SetBlockParams(array $aBlockParams)
 	{
 		$this->aBlockParams = $aBlockParams;
+	}
+
+	/**
+	 * @param string $sContentType
+	 *
+	 * @return void
+	 * @since 3.3.0
+	 */
+	public function SetContentType(string $sContentType): void
+	{
+		$this->sContentType = $sContentType;
 	}
 
 	/**
@@ -933,6 +948,15 @@ abstract class Controller extends AbstractController
 	{
 		$this->oPage->AddAjaxTab($sCode, $sURL, $bCache, $sTitle);
 	}
+
+	private function SetContentTypeToPage(): void
+	{
+		if (!is_null($this->sContentType)) {
+			$this->oPage->SetContentType($this->sContentType);
+		}
+	}
+
+
 
 	/**
 	 * @param string $sKey

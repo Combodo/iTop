@@ -149,8 +149,8 @@ abstract class AbstractFormBlock
 	 */
 	public function GetInput(string $sName): FormInput
 	{
-		if(!array_key_exists($sName, $this->aFormInputs)) {
-			throw new FormBlockException('Missing input ' . $sName . ' for ' . $this->sName);
+		if (!array_key_exists($sName, $this->aFormInputs)) {
+			throw new FormBlockException('Missing input '.$sName.' for '.$this->sName);
 		}
 
 		return $this->aFormInputs[$sName];
@@ -182,8 +182,8 @@ abstract class AbstractFormBlock
 	 */
 	public function GetOutput(string $sName): FormOutput
 	{
-		if(!array_key_exists($sName, $this->aFormOutputs)) {
-			throw new FormBlockException('Missing output ' . $sName . ' for ' . $this->sName);
+		if (!array_key_exists($sName, $this->aFormOutputs)) {
+			throw new FormBlockException('Missing output '.$sName.' for '.$this->sName);
 		}
 
 		return $this->aFormOutputs[$sName];
@@ -279,6 +279,7 @@ abstract class AbstractFormBlock
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -313,6 +314,7 @@ abstract class AbstractFormBlock
 				$aBindings[$oFormInput->GetName()] = $oFormInput->GetBinding();
 			}
 		}
+
 		return $aBindings;
 	}
 
@@ -343,7 +345,7 @@ abstract class AbstractFormBlock
 	{
 		foreach ($this->aFormInputs as $oFormInput) {
 			if ($oFormInput->IsBound()) {
-				if(!$oFormInput->IsDataReady()) {
+				if (!$oFormInput->IsDataReady()) {
 					return false;
 				}
 			}
@@ -372,6 +374,16 @@ abstract class AbstractFormBlock
 	public function SetAdded(bool $bIsAdded): void
 	{
 		$this->bIsAddedToForm = $bIsAdded;
+	}
+
+	public function ListBlockNames(): array
+	{
+		$aNames = [];
+		foreach ($this->aSubFormBlocks as $oSubFormBlock) {
+			$aNames[] = $oSubFormBlock->GetName();
+		}
+
+		return $aNames;
 	}
 
 	/**
