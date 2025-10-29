@@ -265,7 +265,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modifié, ancienne valeur: %2$s',
 	'Change:AttName_Changed' => '%1$s modifié',
 	'Change:AttName_EntryAdded' => '%1$s champ modifié, une nouvelle entrée a été ajoutée: %2$s',
-	'Change:State_Changed_NewValue_OldValue' => 'Etat modifié de %2$s à %1$s',
+	'Change:State_Changed_NewValue_OldValue' => 'État modifié de %2$s à %1$s',
 	'Change:LinkSet:Added' => 'ajout de %1$s',
 	'Change:LinkSet:Removed' => 'suppression de %1$s',
 	'Change:LinkSet:Modified' => 'modification de %1$s',
