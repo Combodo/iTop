@@ -595,13 +595,13 @@ EOF;
 			$sMySQLCommand = $sCmd;
 		} else {
 			$sMySQLBinDir = escapeshellcmd($sMySQLBinDir);
-			$sMySQLCommand = '"'.$sMySQLBinDir.'/$sCmd"';
+			$sMySQLCommand = $sMySQLBinDir.'/'.$sCmd;
 			if (!file_exists($sMySQLCommand)) {
 				throw new BackupException("$sCmd not found in $sMySQLBinDir");
 			}
 		}
 
-		return $sMySQLCommand;
+		return '"'.$sMySQLCommand.'"';
 	}
 }
 
