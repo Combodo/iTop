@@ -1,0 +1,10 @@
+{# @copyright   Copyright (C) 2010-2025 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% for sId in form_diff %}
+    <turbo-stream action="update" target="block_{{ sId }}">
+        <template>
+            {{ form_row(form.(sId)) }}
+        </template>
+    </turbo-stream>
+{% endfor %}

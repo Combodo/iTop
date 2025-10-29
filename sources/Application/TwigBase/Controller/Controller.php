@@ -26,6 +26,7 @@ use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\AbstractController;
+use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Forms;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Dict;
@@ -58,6 +59,7 @@ abstract class Controller extends AbstractController
 	const ENUM_PAGE_TYPE_HTML = 'html';
 	const ENUM_PAGE_TYPE_BASIC_HTML = 'basic_html';
 	const ENUM_PAGE_TYPE_AJAX = 'ajax';
+	const ENUM_PAGE_TYPE_TURBO_FORM_AJAX = 'turbo_ajax';
 	const ENUM_PAGE_TYPE_SETUP = 'setup';
 
 	/** @var \Twig\Environment */
@@ -362,7 +364,7 @@ abstract class Controller extends AbstractController
 				IssueLog::Error($sMsg, null,
 					[
 						'sHtmlDecodedToken' => $sDecodedPassedToken,
-						'conf param ID' => $this->sAccessTokenConfigParamId
+						'conf param ID' => $this->sAccessTokenConfigParamId,
 					]
 				);
 				throw new Exception("Invalid token");
@@ -480,6 +482,11 @@ abstract class Controller extends AbstractController
 		$this->DisplayPage($aParams, $sTemplateName, 'setup');
 	}
 
+	public function DisplayTurboAjaxPage ($aParams = array(), $sTemplateName = 'turbo-ajax-update.html.twig')
+	{
+		$this->DisplayPage($aParams, $sTemplateName, self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX);
+	}
+
 	/**
 	 * Display the twig page based on the name or the operation
 	 *
@@ -495,13 +502,6 @@ abstract class Controller extends AbstractController
 	{
 		if (empty($sTemplateName)) {
 			$sTemplateName = $this->m_sOperation;
-		}
-		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iProfilerExtension::class) as $sExtension) {
-			/** @var \Combodo\iTop\Application\TwigBase\Controller\iProfilerExtension $oExtensionInstance */
-			$oExtensionInstance = $sExtension::GetInstance();
-			if ($oExtensionInstance->IsEnabled()) {
-				$aParams = array_merge($aParams, $oExtensionInstance->GetDebugParams($aParams));
-			}
 		}
 
 		$aParams = array_merge($this->GetDefaultParameters(), $aParams);
@@ -530,9 +530,7 @@ abstract class Controller extends AbstractController
 			$this->AddToPage($this->oTwig->render('application/forms/itop_error.html.twig', ['sControllerError' => $sErrorMsg]));
 		}
 
-		if ($sPageType === 'html') {
-			$this->ManageDebugExtensions($aParams);
-		}
+		$this->ManageDebugExtensions($aParams, $sPageType);
 
 		if (!empty($this->aAjaxTabs)) {
 			$this->oPage->AddTabContainer('TwigBaseTabContainer');
@@ -779,9 +777,9 @@ abstract class Controller extends AbstractController
 	 *
 	 * @return FormBuilderInterface
 	 */
-	public function GetFormBuilder(string $type = FormType::class, mixed $data = null, array $options = []): FormBuilderInterface
+	public function GetFormBuilder(AbstractFormBlock $oFormBlock, mixed $data = null): FormBuilderInterface
 	{
-		return $this->oFormFactoryBuilder->getFormFactory()->createBuilder($type, $data,$options);
+		return $this->oFormFactoryBuilder->getFormFactory()->createNamedBuilder($oFormBlock->GetName(), $oFormBlock->GetFormType(), $data,$oFormBlock->GetOptions());
 	}
 
 	/**
@@ -874,6 +872,11 @@ abstract class Controller extends AbstractController
 
 			case self::ENUM_PAGE_TYPE_AJAX:
 				$this->oPage = new AjaxPage($this->GetOperationTitle());
+				break;
+
+			case self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX:
+				$this->oPage = new AjaxPage($this->GetOperationTitle());
+				$this->SetContentType('text/vnd.turbo-stream.html');
 				break;
 
 			case self::ENUM_PAGE_TYPE_SETUP:
@@ -994,8 +997,12 @@ abstract class Controller extends AbstractController
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	private function ManageDebugExtensions(array $aParams): void
+	private function ManageDebugExtensions(array $aParams, string $sPageType): void
 	{
+		if (!in_array($sPageType, [self::ENUM_PAGE_TYPE_HTML, self::ENUM_PAGE_TYPE_AJAX, self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX])) {
+			return;
+		}
+		$sContent = '';
 		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iProfilerExtension::class) as $sExtension) {
 			/** @var \Combodo\iTop\Application\TwigBase\Controller\iProfilerExtension $oExtensionInstance */
 			$oExtensionInstance = $sExtension::GetInstance();
@@ -1014,8 +1021,17 @@ abstract class Controller extends AbstractController
 				if (is_array($aSaas)) {
 					$this->aSaas = array_merge($this->aSaas, $aSaas);
 				}
-				$this->AddToPage($this->oTwig->render($sDebugTemplate, $aDebugParams));
+				$sContent .= $this->oTwig->render($sDebugTemplate, $aDebugParams);
 			}
+		}
+		if ($sContent === '') {
+			return;
+		}
+
+		if ($sPageType === self::ENUM_PAGE_TYPE_HTML || $sPageType === self::ENUM_PAGE_TYPE_AJAX) {
+			$this->AddToPage($this->oTwig->render('application/forms/itop_debug.html.twig', ['sProfilerContent' => $sContent]));
+		} elseif ($sPageType === self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX) {
+			$this->AddToPage($this->oTwig->render('application/forms/itop_debug_update.html.twig', ['sProfilerContent' => $sContent]));
 		}
 	}
 }
