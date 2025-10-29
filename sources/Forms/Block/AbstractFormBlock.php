@@ -255,16 +255,6 @@ abstract class AbstractFormBlock
 		$this->bIsAdded = $bIsAdded;
 	}
 
-	public function ListBlockNames(): array
-	{
-		$aNames = [];
-		foreach ($this->aSubFormBlocks as $oSubFormBlock) {
-			$aNames[] = $oSubFormBlock->GetName();
-		}
-
-		return $aNames;
-	}
-
 	/**
 	 * Return the form type.
 	 *
