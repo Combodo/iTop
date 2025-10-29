@@ -1177,7 +1177,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Sous-classe de tâche asynchrone',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
-	'Class:AsyncTask/Attribute:status' => 'Etat',
+	'Class:AsyncTask/Attribute:status' => 'État',
 	'Class:AsyncTask/Attribute:status+' => '',
 	'Class:AsyncTask/Attribute:remaining_retries' => 'Essais restants',
 	'Class:AsyncTask/Attribute:remaining_retries+' => '',
