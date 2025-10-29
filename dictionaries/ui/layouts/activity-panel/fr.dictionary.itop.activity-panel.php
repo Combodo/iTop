@@ -21,7 +21,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Journaux',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Afficher / masquer les entrées de journaux sur cet onglet',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Choisir les journaux à afficher sur cet onglet',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'Etats',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'États',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Afficher / masquer les changements d\'état sur cet onglet',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Modif.',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Afficher / masquer les modifications sur cet onglet',
