@@ -62,6 +62,9 @@ abstract class Controller extends AbstractController
 	const ENUM_PAGE_TYPE_TURBO_FORM_AJAX = 'turbo_ajax';
 	const ENUM_PAGE_TYPE_SETUP           = 'setup';
 
+	const TWIG_ERROR   = 'error';
+	const TWIG_WARNING = 'warning';
+
 	/** @var \Twig\Environment */
 	private $oTwig;
 	/** @var string */
@@ -105,12 +108,15 @@ abstract class Controller extends AbstractController
 	/** @var CsrfTokenManager Csrf manager (from Symfony form component @link https://symfony.com/doc/current/security/csrf.html) */
 	private CsrfTokenManager $oCsrfTokenManager;
 	private ?string $sContentType = null;
+	private ?string $sPageType = null;
 
 	/**
 	 * Controller constructor.
 	 *
 	 * @param string $sViewPath Path of the twig files
 	 * @param string $sModuleName name of the module (or 'core' if not a module)
+	 *
+	 * @throws \ReflectionException
 	 */
 	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
 	{
@@ -475,9 +481,9 @@ abstract class Controller extends AbstractController
 		$this->DisplayPage($aParams, $sTemplateName, 'setup');
 	}
 
-	public function DisplayTurboAjaxPage($aParams = array(), $sTemplateName = 'turbo-ajax-update.html.twig')
+	public function DisplayTurboAjaxPage($aParams = array())
 	{
-		$this->DisplayPage($aParams, $sTemplateName, self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX);
+		$this->DisplayPage($aParams, 'application/forms/turbo-ajax-update', self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX);
 	}
 
 	/**
@@ -497,31 +503,36 @@ abstract class Controller extends AbstractController
 			$sTemplateName = $this->m_sOperation;
 		}
 
+		$this->sPageType = $sPageType;
+
 		$aParams = array_merge($this->GetDefaultParameters(), $aParams);
 		$this->CreatePage($sPageType);
-		$sHTMLContent = $this->RenderTemplate($aParams, $sTemplateName, 'html', $sErrorMsg);
+		$sHTMLContent = $this->RenderTemplate($aParams, $sTemplateName, 'html', $aErrors);
 		if ($sHTMLContent !== false) {
 			$this->AddToPage($sHTMLContent);
 		}
-		$sJSScript = $this->RenderTemplate($aParams, $sTemplateName, 'js', $sErrorMsg);
+		$sJSScript = $this->RenderTemplate($aParams, $sTemplateName, 'js', $aErrors);
 		if ($sJSScript !== false) {
 			$this->AddScriptToPage($sJSScript);
 		}
-		$sReadyScript = $this->RenderTemplate($aParams, $sTemplateName, 'ready.js', $sErrorMsg);
+		$sReadyScript = $this->RenderTemplate($aParams, $sTemplateName, 'ready.js', $aErrors);
 		if ($sReadyScript !== false) {
 			$this->AddReadyScriptToPage($sReadyScript);
 		}
-		$sStyle = $this->RenderTemplate($aParams, $sTemplateName, 'css', $sErrorMsg);
+		$sStyle = $this->RenderTemplate($aParams, $sTemplateName, 'css', $aErrors);
 		if ($sStyle !== false) {
 			$this->AddStyleToPage($sStyle);
 		}
 		if ($sHTMLContent === false && $sJSScript === false && $sReadyScript === false && $sStyle === false) {
-			if (utils::IsNullOrEmptyString($sErrorMsg)) {
-				$sErrorMsg = "Missing TWIG template for $sTemplateName";
+			if (is_null($aErrors) || count($aErrors) === 0) {
+				$aErrors[self::TWIG_ERROR] = "Missing TWIG template for $sTemplateName";
 			}
-			IssueLog::Error($sErrorMsg);
-			$this->AddToPage($this->oTwig->render('application/forms/itop_error.html.twig', ['sControllerError' => $sErrorMsg]));
+			IssueLog::Error(implode("\n",$aErrors[self::TWIG_ERROR] ?? [])."\n".implode("\n",$aErrors[self::TWIG_WARNING] ?? []));
+		} else {
+			// Ignore warnings
+			$aErrors[self::TWIG_WARNING] = [];
 		}
+		$this->RenderErrors($aErrors);
 
 		$this->ManageDebugExtensions($aParams, $sPageType);
 
@@ -546,6 +557,7 @@ abstract class Controller extends AbstractController
 		}
 		$this->SetContentTypeToPage();
 		$this->OutputPage();
+		$this->sPageType = null;
 	}
 
 	/**
@@ -801,8 +813,11 @@ abstract class Controller extends AbstractController
 	 * @return string|false
 	 * @throws \Exception
 	 */
-	private function RenderTemplate(array $aParams, string $sName, string $sTemplateFileExtension, string &$sErrorMsg = null): string|false
+	private function RenderTemplate(array $aParams, string $sName, string $sTemplateFileExtension, ?array &$aErrors): string|false
 	{
+		if (is_null($aErrors)) {
+			$aErrors = [];
+		}
 		$sTemplateFile = $sName.'.'.$sTemplateFileExtension.'.twig';
 		if (empty($this->oTwig)) {
 			throw new Exception('Not initialized. Call Controller::InitFromModule() or Controller::SetViewPath() before any display');
@@ -812,23 +827,20 @@ abstract class Controller extends AbstractController
 		}
 		catch (SyntaxError $e) {
 			IssueLog::Error($e->getMessage().' - file: '.$e->getFile().'('.$e->getLine().')');
-
-			return $this->oTwig->render('application/forms/itop_error.html.twig', ['sControllerError' => $e->getMessage()]);
+			$aErrors[self::TWIG_ERROR][] = $e->getMessage();
+			return false;
 		}
 		catch (Exception $e) {
 			$sExceptionMessage = $e->getMessage();
 			if (str_contains($sExceptionMessage, 'at line')) {
 				IssueLog::Error($sExceptionMessage);
-
-				return $this->oTwig->render('application/forms/itop_error.html.twig', ['sControllerError' => $sExceptionMessage]);
+				$aErrors[self::TWIG_ERROR][] = $sExceptionMessage;
+				return false;
 			}
 			if (!str_contains($sExceptionMessage, 'Unable to find template')) {
 				IssueLog::Error($sExceptionMessage);
 			}
-			if (is_null($sErrorMsg)) {
-				$sErrorMsg = '';
-			}
-			$sErrorMsg .= $sExceptionMessage."\n";
+			$aErrors[self::TWIG_WARNING][] = $sExceptionMessage;
 		}
 
 		return false;
@@ -1023,5 +1035,36 @@ abstract class Controller extends AbstractController
 		} elseif ($sPageType === self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX) {
 			$this->AddToPage($this->oTwig->render('application/forms/itop_debug_update.html.twig', ['aProfilesInfo' => $aProfilesInfo]));
 		}
+	}
+
+	/**
+	 * render error message
+	 *
+	 * @param array $aErrors
+	 *
+	 * @return string
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	public function RenderErrors(array $aErrors): void
+	{
+		if (is_null($this->sPageType)) {
+			return;
+		}
+		$sErrorMsg = '';
+		if (count($aErrors[self::TWIG_ERROR] ?? []) > 0) {
+			$sErrorMsg .= implode("\n", $aErrors[self::TWIG_ERROR]);
+			$sErrorMsg .= "\n";
+		}
+		if (count($aErrors[self::TWIG_WARNING] ?? []) > 0) {
+			$sErrorMsg .= implode("\n", $aErrors[self::TWIG_WARNING]);
+		}
+
+		if ($this->sPageType === self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX) {
+			$this->AddToPage($this->oTwig->render('application/forms/itop_error_update.html.twig', ['sControllerError' => $sErrorMsg]));
+		}
+
+		$this->AddToPage($this->oTwig->render('application/forms/itop_error.html.twig', ['sControllerError' => $sErrorMsg]));
 	}
 }

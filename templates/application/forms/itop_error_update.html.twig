@@ -1,7 +1,8 @@
 {# @copyright   Copyright (C) 2010-2025 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-<div id="turbo_itop_error">
+<turbo-stream action="update" target="turbo_itop_error">
+    <template>
     {% if sControllerError %}
         <div class="ibo-alert ibo-content-block ibo-block  ibo-is-danger ibo-is-opened" data-role="ibo-alert">
             <div class="ibo-alert--action-button ibo-alert--maximize-button" data-role="ibo-alert--collapse-toggler"><i class="fas fa-caret-down"></i></div>
@@ -11,4 +12,5 @@
             <div class="ibo-alert--body">{{ sControllerError }}</div>
         </div>
     {% endif %}
-</div>
+    </template>
+</turbo-stream>
