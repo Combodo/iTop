@@ -992,7 +992,7 @@ abstract class Controller extends AbstractController
 		if (!in_array($sPageType, [self::ENUM_PAGE_TYPE_HTML, self::ENUM_PAGE_TYPE_AJAX, self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX])) {
 			return;
 		}
-		$sContent = '';
+		$aProfilesInfo = [];
 		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iProfilerExtension::class) as $sExtension) {
 			/** @var \Combodo\iTop\Application\TwigBase\Controller\iProfilerExtension $oExtensionInstance */
 			$oExtensionInstance = $sExtension::GetInstance();
@@ -1011,17 +1011,17 @@ abstract class Controller extends AbstractController
 				if (is_array($aSaas)) {
 					$this->aSaas = array_merge($this->aSaas, $aSaas);
 				}
-				$sContent .= $this->oTwig->render($sDebugTemplate, $aDebugParams);
+				$aProfilesInfo[] = ['sTemplate' => $sDebugTemplate, 'aProfileData' => $aDebugParams];
 			}
 		}
-		if ($sContent === '') {
+		if (count($aProfilesInfo) === 0) {
 			return;
 		}
 
 		if ($sPageType === self::ENUM_PAGE_TYPE_HTML || $sPageType === self::ENUM_PAGE_TYPE_AJAX) {
-			$this->AddToPage($this->oTwig->render('application/forms/itop_debug.html.twig', ['sProfilerContent' => $sContent]));
+			$this->AddToPage($this->oTwig->render('application/forms/itop_debug.html.twig', ['aProfilesInfo' => $aProfilesInfo]));
 		} elseif ($sPageType === self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX) {
-			$this->AddToPage($this->oTwig->render('application/forms/itop_debug_update.html.twig', ['sProfilerContent' => $sContent]));
+			$this->AddToPage($this->oTwig->render('application/forms/itop_debug_update.html.twig', ['aProfilesInfo' => $aProfilesInfo]));
 		}
 	}
 }

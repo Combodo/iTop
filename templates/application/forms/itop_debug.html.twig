@@ -3,6 +3,9 @@
 
 <turbo-frame id="itop_profiler_turbo_frame">
 <div id="turbo_itop_profiler">
-    {{ sProfilerContent|raw }}
+    {% for aProfileInfo in aProfilesInfo %}
+        {% set aProfileData = aProfileInfo.aProfileData %}
+        {{ include(aProfileInfo.sTemplate) }}
+    {% endfor %}
 </div>
 </turbo-frame>
