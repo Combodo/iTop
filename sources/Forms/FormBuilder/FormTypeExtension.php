@@ -6,7 +6,6 @@
 
 namespace Combodo\iTop\Forms\FormBuilder;
 
-use Combodo\iTop\Forms\Block\FormBlock;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,38 +21,38 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class FormTypeExtension extends AbstractTypeExtension
 {
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public static function getExtendedTypes(): iterable
 	{
 		return [
-			FormType::class
+			FormType::class,
 		];
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefined([
 			'form_block',
 			'builder_listener',
-			'prevent_form_build'
+			'prevent_form_build',
 		]);
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
-		if(array_key_exists('builder_listener', $options)) {
+		if (array_key_exists('builder_listener', $options)) {
 			$builder->addEventListener(FormEvents::POST_SET_DATA, $options['builder_listener']);
 			$builder->addEventListener(FormEvents::POST_SUBMIT, $options['builder_listener']);
 		}
 
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function buildView(FormView $view, FormInterface $form, array $options): void
 	{
-		if(array_key_exists('form_block', $options)) {
+		if (array_key_exists('form_block', $options)) {
 			$view->vars['form_block'] = $options['form_block'];
 
 			$oFormBlock = $options['form_block'];

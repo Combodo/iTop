@@ -89,15 +89,15 @@ class DependencyHandler
 			foreach ($this->oDependenciesMap->GetListenedOutputBlockNames() as $sOutputBlockName) {
 
 				// inner binding
-				if($sOutputBlockName === $this->oFormBlock->getName()) {
+				if ($sOutputBlockName === $this->oFormBlock->getName()) {
 					continue;
 				}
 
 				$this->aDebugData[] = [
 					'builder' => $this->oFormBuilder->getName(),
-					'event' => 'form.listen',
-					'form' => $sOutputBlockName,
-					'value' => 'NA'
+					'event'   => 'form.listen',
+					'form'    => $sOutputBlockName,
+					'value'   => 'NA',
 				];
 
 				// Listen the output block POST_SET_DATA & POST_SUBMIT
@@ -121,9 +121,9 @@ class DependencyHandler
 
 			$this->aDebugData[] = [
 				'builder' => $this->oFormBuilder->getName(),
-				'event' => $sEventType,
-				'form' => $oEvent->getForm()->getName(),
-				'value' => $oEvent->getData()
+				'event'   => $sEventType,
+				'form'    => $oEvent->getForm()->getName(),
+				'value'   => $oEvent->getData(),
 			];
 
 			// Get the form
@@ -133,7 +133,7 @@ class DependencyHandler
 			$oFormBlock = $this->aSubBlocks[$oForm->getName()];
 
 			// Compute the block outputs with the data
-			if(!$oFormBlock instanceof FormBlock) {
+			if (!$oFormBlock instanceof FormBlock) {
 				$oFormBlock->ComputeOutputs($sEventType, $oEvent->getData());
 			}
 
@@ -152,16 +152,15 @@ class DependencyHandler
 	private function CheckDependencies(FormInterface|FormBuilderInterface $oForm): void
 	{
 		/** Iterate throw dependencies... @var AbstractFormBlock $oDependentBlock */
-		foreach ($this->aDependentBlocks as $qBlockName => $oDependentBlock)
-		{
+		foreach ($this->aDependentBlocks as $qBlockName => $oDependentBlock) {
 			// When dependencies met, add the dependent field if not already done
-			if(!$oDependentBlock->IsAdded() && $oDependentBlock->IsInputsDataReady()) {
+			if (!$oDependentBlock->IsAdded() && $oDependentBlock->IsInputsDataReady()) {
 
 				// Get the dependent field options
 				$aOptions = $oDependentBlock->UpdateOptions();
 
 				// Add the listener callback to the dependent field if it is also a dependency for another field
-				if($this->oDependenciesMap->IsTheBlockInDependencies($oDependentBlock->getName())) {
+				if ($this->oDependenciesMap->IsTheBlockInDependencies($oDependentBlock->getName())) {
 
 					// Pass the listener call back to be registered by the dependency form builder
 					$aOptions = array_merge($aOptions, [
@@ -169,22 +168,23 @@ class DependencyHandler
 					]);
 				}
 
-				if($oDependentBlock->AllowAdd()) {
+				if ($oDependentBlock->AllowAdd()) {
 
 					$this->aDebugData[] = [
 						'builder' => $this->oFormBuilder->getName(),
-						'event' => 'form.add',
-						'form' => $oDependentBlock->getName(),
-						'value' => 'NA'
+						'event'   => 'form.add',
+						'form'    => $oDependentBlock->getName(),
+						'value'   => 'NA',
 					];
 
-					if(array_key_exists('builder_listener', $aOptions))
-					$this->aDebugData[] = [
-						'builder' => $this->oFormBuilder->getName(),
-						'event' => 'form.listen',
-						'form' => $oDependentBlock->getName(),
-						'value' => 'NA'
-					];
+					if (array_key_exists('builder_listener', $aOptions)) {
+						$this->aDebugData[] = [
+							'builder' => $this->oFormBuilder->getName(),
+							'event'   => 'form.listen',
+							'form'    => $oDependentBlock->getName(),
+							'value'   => 'NA',
+						];
+					}
 
 					// Mark the dependency as added
 					$oDependentBlock->SetAdded(true);
@@ -196,11 +196,11 @@ class DependencyHandler
 
 			}
 
-			if($oDependentBlock->IsAdded() && !$oDependentBlock->IsInputsDataReady()) {
+			if ($oDependentBlock->IsAdded() && !$oDependentBlock->IsInputsDataReady()) {
 				$oForm->add($oDependentBlock->GetName(), HiddenType::class, [
-					'form_block' => $oDependentBlock,
+					'form_block'         => $oDependentBlock,
 					'prevent_form_build' => true,
-					]);
+				]);
 			}
 
 		}

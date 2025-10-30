@@ -16,6 +16,7 @@ class ResolvedFormType extends SymfonyResolvedFormType implements ResolvedFormTy
 	protected function newBuilder(string $name, ?string $dataClass, FormFactoryInterface $factory, array $options): FormBuilderInterface
 	{
 		$builder = parent::newBuilder($name, $dataClass, $factory, $options);
+
 		return new FormBuilder($builder);
 	}
 }

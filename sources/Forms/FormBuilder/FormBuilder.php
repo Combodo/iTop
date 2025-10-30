@@ -8,6 +8,7 @@ namespace Combodo\iTop\Forms\FormBuilder;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
+use IteratorAggregate;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\DataMapperInterface;
@@ -22,9 +23,9 @@ use Symfony\Component\Form\ResolvedFormTypeInterface;
 use Symfony\Component\PropertyAccess\PropertyPathInterface;
 use Traversable;
 
-class FormBuilder implements FormBuilderInterface, \IteratorAggregate
+class FormBuilder implements FormBuilderInterface, IteratorAggregate
 {
-	/** @var DependencyHandler|null  */
+	/** @var DependencyHandler|null */
 	private ?DependencyHandler $oDependencyHandler = null;
 
 	/** @var AbstractFormBlock */
@@ -47,7 +48,7 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 		$oFormBlock = $this->builder->getOption('form_block');
 
 		// Build the form
-		if($oFormBlock instanceof FormBlock) {
+		if ($oFormBlock instanceof FormBlock) {
 			$this->BuildForm($oFormBlock);
 		}
 	}
@@ -63,7 +64,7 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 	{
 		// Hidden (ignore)
 		$aOptions = $this->builder->getOptions();
-		if(array_key_exists('prevent_form_build', $aOptions) && $aOptions['prevent_form_build']) {
+		if (array_key_exists('prevent_form_build', $aOptions) && $aOptions['prevent_form_build']) {
 			return;
 		}
 
@@ -78,7 +79,7 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 			$bHasDependency = $this->HandleSubBlock($oSubFormBlock);
 
 			// Add to the dependencies array
-			if($bHasDependency){
+			if ($bHasDependency) {
 				$aDependentBlocks[$oSubFormBlock->GetName()] = $oSubFormBlock;
 			}
 
@@ -105,17 +106,15 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 
 			// Insert a hidden type to save the place
 			$this->builder->add($oSubFormBlock->GetName(), HiddenType::class, [
-				'form_block' => $oSubFormBlock,
+				'form_block'         => $oSubFormBlock,
 				'prevent_form_build' => true,
-//				'mapped' => false,
-//				'disabled' => true,
+				//				'mapped' => false,
+				//				'disabled' => true,
 			]);
 
 			return true;
 
-		}
-		else {
-
+		} else {
 			// Directly insert the block corresponding form type
 			$this->add($oSubFormBlock->GetName(), $oSubFormBlock->GetFormType(), $oSubFormBlock->UpdateOptions());
 			$oSubFormBlock->SetAdded(true);
@@ -152,6 +151,7 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 	public function add(string|FormBuilderInterface $child, ?string $type = null, array $options = []): static
 	{
 		$this->builder->add($child, $type, $options);
+
 		return $this;
 	}
 
@@ -164,6 +164,7 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 	{
 		return $this->builder->count();
 	}
+
 	public function create(string $name, ?string $type = null, array $options = []): FormBuilderInterface
 	{
 		return $this->builder->create($name, $type, $options);
@@ -177,6 +178,7 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 	public function remove(string $name): static
 	{
 		$this->builder->remove($name);
+
 		return $this;
 	}
 
@@ -198,126 +200,147 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 	public function addEventListener(string $eventName, callable $listener, int $priority = 0): static
 	{
 		$this->builder->addEventListener($eventName, $listener, $priority);
+
 		return $this;
 	}
 
 	public function addEventSubscriber(EventSubscriberInterface $subscriber): static
 	{
 		$this->builder->addEventSubscriber($subscriber);
+
 		return $this;
 	}
 
 	public function addViewTransformer(DataTransformerInterface $viewTransformer, bool $forcePrepend = false): static
 	{
 		$this->builder->addViewTransformer($viewTransformer, $forcePrepend);
+
 		return $this;
 	}
 
 	public function resetViewTransformers(): static
 	{
 		$this->builder->resetViewTransformers();
+
 		return $this;
 	}
 
 	public function addModelTransformer(DataTransformerInterface $modelTransformer, bool $forceAppend = false): static
 	{
 		$this->builder->addModelTransformer($modelTransformer, $forceAppend);
+
 		return $this;
 	}
 
 	public function resetModelTransformers(): static
 	{
 		$this->builder->resetModelTransformers();
+
 		return $this;
 	}
 
 	public function setAttribute(string $name, mixed $value): static
 	{
 		$this->builder->setAttribute($name, $value);
+
 		return $this;
 	}
 
 	public function setAttributes(array $attributes): static
 	{
 		$this->builder->setAttributes($attributes);
+
 		return $this;
 	}
 
 	public function setDataMapper(?DataMapperInterface $dataMapper): static
 	{
 		$this->builder->setDataMapper($dataMapper);
+
 		return $this;
 	}
 
 	public function setDisabled(bool $disabled): static
 	{
 		$this->builder->setDisabled($disabled);
+
 		return $this;
 	}
 
 	public function setEmptyData(mixed $emptyData): static
 	{
 		$this->builder->setEmptyData($emptyData);
+
 		return $this;
 	}
 
 	public function setErrorBubbling(bool $errorBubbling): static
 	{
 		$this->builder->setErrorBubbling($errorBubbling);
+
 		return $this;
 	}
 
 	public function setRequired(bool $required): static
 	{
 		$this->builder->setRequired($required);
+
 		return $this;
 	}
 
 	public function setPropertyPath(PropertyPathInterface|string|null $propertyPath): static
 	{
 		$this->builder->setPropertyPath($propertyPath);
+
 		return $this;
 	}
 
 	public function setMapped(bool $mapped): static
 	{
 		$this->builder->setMapped($mapped);
+
 		return $this;
 	}
 
 	public function setByReference(bool $byReference): static
 	{
 		$this->builder->setByReference($byReference);
+
 		return $this;
 	}
 
 	public function setInheritData(bool $inheritData): static
 	{
 		$this->builder->setInheritData($inheritData);
+
 		return $this;
 	}
 
 	public function setCompound(bool $compound): static
 	{
 		$this->builder->setCompound($compound);
+
 		return $this;
 	}
 
 	public function setType(ResolvedFormTypeInterface $type): static
 	{
 		$this->builder->setType($type);
+
 		return $this;
 	}
 
 	public function setData(mixed $data): static
 	{
 		$this->builder->setData($data);
+
 		return $this;
 	}
 
 	public function setDataLocked(bool $locked): static
 	{
 		$this->builder->setDataLocked($locked);
+
 		return $this;
 	}
 
@@ -329,24 +352,28 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 	public function setAction(string $action): static
 	{
 		$this->builder->setAction($action);
+
 		return $this;
 	}
 
 	public function setMethod(string $method): static
 	{
 		$this->builder->setMethod($method);
+
 		return $this;
 	}
 
 	public function setRequestHandler(RequestHandlerInterface $requestHandler): static
 	{
 		$this->builder->setRequestHandler($requestHandler);
+
 		return $this;
 	}
 
 	public function setAutoInitialize(bool $initialize): static
 	{
 		$this->builder->setAutoInitialize($initialize);
+
 		return $this;
 	}
 
@@ -358,6 +385,7 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 	public function setIsEmptyCallback(?callable $isEmptyCallback): static
 	{
 		$this->builder->setIsEmptyCallback($isEmptyCallback);
+
 		return $this;
 	}
 

@@ -15,13 +15,13 @@ use Combodo\iTop\Forms\Block\FormType\ChoiceFormType;
  */
 class ChoiceFormBlock extends AbstractFormBlock
 {
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function GetFormType(): string
 	{
 		return ChoiceFormType::class;
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function InitOptions(): array
 	{
 		return [

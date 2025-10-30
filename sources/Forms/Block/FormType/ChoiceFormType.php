@@ -19,22 +19,22 @@ use Symfony\Component\Form\FormEvents;
  */
 class ChoiceFormType extends AbstractType
 {
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function getParent(): string
 	{
 		return ChoiceType::class;
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
 		// on preset data
-		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (PreSetDataEvent $event) use ($options){
+		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (PreSetDataEvent $event) use ($options) {
 
-			if($options['multiple'] === false && $options['required'] === true) {
+			if ($options['multiple'] === false && $options['required'] === true) {
 				if ($event->getData() === null) {
 					$FirstElement = array_shift($options['choices']);
-					if($FirstElement !== null){
+					if ($FirstElement !== null) {
 						$event->setData($FirstElement);
 					}
 				}
@@ -43,10 +43,10 @@ class ChoiceFormType extends AbstractType
 		});
 
 		// on pre submit
-		$builder->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event) use ($options){
+		$builder->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event) use ($options) {
 
 			// reset value if not in available choices
-			if(!empty($event->getData()) && !$this->CheckValue($event->getData(), $options)){
+			if (!empty($event->getData()) && !$this->CheckValue($event->getData(), $options)) {
 				$event->getForm()->addError(new FormError("The value has been reset because it is not part of the available choices anymore."));
 				$event->setData(null);
 			}
@@ -63,23 +63,21 @@ class ChoiceFormType extends AbstractType
 	private function CheckValue($oValue, $options): bool
 	{
 		// Check multi selection values
-		if($options['multiple'] === true){
-			foreach ($oValue as $v){
-				if(!in_array($v, $options['choices'])){
+		if ($options['multiple'] === true) {
+			foreach ($oValue as $v) {
+				if (!in_array($v, $options['choices'])) {
 					return false;
 				}
 			}
-		}
-		// Check single selection values
-		else{
-			if(!in_array($oValue, $options['choices'])){
+		} // Check single selection values
+		else {
+			if (!in_array($oValue, $options['choices'])) {
 				return false;
 			}
 		}
 
 		return true;
 	}
-
 
 
 }

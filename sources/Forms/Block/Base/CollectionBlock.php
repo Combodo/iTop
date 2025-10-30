@@ -22,13 +22,13 @@ class CollectionBlock extends AbstractFormBlock
 
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function GetFormType(): string
 	{
 		return CollectionType::class;
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function InitOptions(): array
 	{
 		$sBlockEntryType = $this->GetOptions()['block_entry_type'];
@@ -39,7 +39,7 @@ class CollectionBlock extends AbstractFormBlock
 		$oBlock = new ($sBlockEntryType)('prototype', $sBlockEntryOptions);
 
 		return [
-			'entry_type' => $oBlock->GetFormType()
+			'entry_type' => $oBlock->GetFormType(),
 		];
 
 	}

@@ -13,11 +13,13 @@ use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
  */
 class StringToAttributeConverter extends AbstractConverter
 {
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function Convert(mixed $oData): ?AttributeIOFormat
 	{
-		if($oData === null)
+		if ($oData === null) {
 			return null;
+		}
+
 		return new AttributeIOFormat($oData);
 	}
 }

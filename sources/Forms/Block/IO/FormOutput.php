@@ -13,11 +13,11 @@ use Combodo\iTop\Forms\Block\IO\Converter\AbstractConverter;
  */
 class FormOutput extends AbstractFormIO
 {
-	/** @var AbstractConverter|null  */
+	/** @var AbstractConverter|null */
 	private null|AbstractConverter $oConverter;
 
 
-	/** @var array  */
+	/** @var array */
 	private array $aBindingsToOutputs = [];
 
 	/**
@@ -45,6 +45,7 @@ class FormOutput extends AbstractFormIO
 		if (is_null($this->oConverter)) {
 			return $oData;
 		}
+
 		return $this->oConverter->Convert($oData);
 	}
 
@@ -83,7 +84,6 @@ class FormOutput extends AbstractFormIO
 	}
 
 
-
 	/**
 	 * Bind to output.
 	 *
@@ -101,7 +101,6 @@ class FormOutput extends AbstractFormIO
 
 		return $oBinding;
 	}
-
 
 
 	/**

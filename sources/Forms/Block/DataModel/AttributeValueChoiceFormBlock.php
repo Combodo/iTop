@@ -11,7 +11,6 @@ use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
-use Combodo\iTop\Forms\FormType\AttributeValueFormType;
 use Exception;
 use MetaModel;
 
@@ -27,21 +26,21 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 	public const INPUT_ATTRIBUTE  = 'attribute';
 
 	// Outputs
-	public const OUTPUT_VALUE  = 'value';
+	public const OUTPUT_VALUE = 'value';
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function InitOptions(array &$aOptions = []): array
 	{
 		$aOptions['multiple'] = true;
 		$aOptions['attr'] = [
-			'size' => 5,
-			'style' => 'height: auto;'
+			'size'  => 5,
+			'style' => 'height: auto;',
 		];
 
 		return $aOptions;
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function InitInputs(): void
 	{
 		parent::InitInputs();
@@ -49,7 +48,7 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		$this->AddInput(self::INPUT_ATTRIBUTE, AttributeIOFormat::class);
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function InitOutputs(): void
 	{
 		parent::InitOutputs();
@@ -64,12 +63,12 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 	{
 		$bDependentOk = $this->GetInput(self::INPUT_CLASS_NAME)->Value() != '' && $this->GetInput(self::INPUT_ATTRIBUTE)->Value() != '';
 
-		if($bDependentOk) {
+		if ($bDependentOk) {
 			$oAttDef = MetaModel::GetAttributeDef($this->GetInput(self::INPUT_CLASS_NAME)->Value()->__toString(), $this->GetInput(self::INPUT_ATTRIBUTE)->Value()->__toString());
 			$aValues = $oAttDef->GetAllowedValues();
+
 			return $aValues != null;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
@@ -82,18 +81,21 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		$aOptions = parent::GetOptions();
 
 		$oClassName = $this->GetInput(self::INPUT_CLASS_NAME)->Value();
-		if($oClassName == '')
+		if ($oClassName == '') {
 			return $aOptions;
+		}
 
 		$oAttribute = $this->GetInput(self::INPUT_ATTRIBUTE)->Value();
-		if($oAttribute == '')
+		if ($oAttribute == '') {
 			return $aOptions;
+		}
 
 		$oAttDef = MetaModel::GetAttributeDef(strval($oClassName), strval($oAttribute));
 		$aValues = $oAttDef->GetAllowedValues();
 
-		if($aValues === null)
+		if ($aValues === null) {
 			return $aOptions;
+		}
 
 		$aOptions['choices'] = array_flip($aValues ?? []);
 

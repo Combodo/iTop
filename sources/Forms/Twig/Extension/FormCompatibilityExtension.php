@@ -25,7 +25,7 @@ class FormCompatibilityExtension extends AbstractExtension
 			// Alias of dict_s, to be compatible with Symfony/Twig standard
 			new TwigFilter('trans', function ($sStringCode, $aData = null, $sTransDomain = false) {
 				return Dict::S($sStringCode);
-			})
+			}),
 
 		];
 	}
