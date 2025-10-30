@@ -2054,16 +2054,10 @@ EOF
 	{
 		$aOptions = isset($aStepInfo['options']) ? $aStepInfo['options'] : array();
 		$aAlternatives = isset($aStepInfo['alternatives']) ? $aStepInfo['alternatives'] : array();
-		$index = 0;
 
-		$sAllDisabled = '';
-		if ($bAllDisabled) {
-			$sAllDisabled = 'disabled data-disabled="disabled" ';
-		}
 		$bDisableUninstallCheck = (bool)$this->oWizard->GetParameter('force-uninstall', false);
 
 		foreach ($aOptions as $index => $aChoice) {
-			$sAttributes = '';
 			$sChoiceId = $sParentId.self::$SEP.$index;
 			$sDataId = 'data-id="'.utils::EscapeHtml($aChoice['extension_code']).'"';
 			$sId = utils::EscapeHtml($aChoice['extension_code']);
@@ -2071,18 +2065,14 @@ EOF
 
 			$bIsUninstallable = $this->oExtensionsMap->Get($aChoice['extension_code'])->IsUninstallable();
 			$bSelected = isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] == $sChoiceId);
-
 			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $this->bUpgrade && $bIsDefault && !$bIsUninstallable && !$bDisableUninstallCheck;;
-			$bDisabled = false;
-			$sUnremovable = $bIsUninstallable ? '' : 'unremovable';
-			if ($bMandatory) {
-				$oPage->add('<div class="choice" '.$sDataId.'><input id="'.$sId.'" checked disabled data-disabled="disabled" type="checkbox"'.$sAttributes.'/><input type="hidden" name="choice['.$sChoiceId.']" value="'.$sChoiceId.'">&nbsp;');
-				$bDisabled = true;
-			} else if ($bSelected) {
-				$oPage->add('<div class="choice" '.$sDataId.'><input class="wiz-choice '.$sUnremovable.'" '.$sAllDisabled.'id="'.$sId.'" name="choice['.$sChoiceId.']" type="checkbox" checked value="'.$sChoiceId.'"/>&nbsp;');
-			} else {
-				$oPage->add('<div class="choice" '.$sDataId.'><input class="wiz-choice '.$sUnremovable.'" '.$sAllDisabled.'id="'.$sId.'" name="choice['.$sChoiceId.']" type="checkbox" value="'.$sChoiceId.'"/>&nbsp;');
-			}
+			$bDisabled = $bMandatory || $bAllDisabled;
+			$bChecked = $bMandatory || $bSelected;
+			$sChecked = $bChecked ? ' checked ' : '';
+			$sDisabled = $bDisabled ? ' disabled data-disabled="disabled" ' : '';
+			$sUnremovable = !$bIsUninstallable ? ' unremovable ' : '';
+			$sHiddenInput = $bDisabled && $bChecked ? '<input type="hidden" name="choice['.$sChoiceId.']" value="'.$sChoiceId.'"/>' : '';
+			$oPage->add('<div class="choice" '.$sDataId.'><input class="wiz-choice '.$sUnremovable.'" id="'.$sId.'" name="choice['.$sChoiceId.']" type="checkbox" value="'.$sChoiceId.'" '.$sDisabled.$sChecked.'/>'.$sHiddenInput.'&nbsp;');
 			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled, $bIsUninstallable);
 			$oPage->add('</div>');
 		}
