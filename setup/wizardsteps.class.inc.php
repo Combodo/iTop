@@ -2060,6 +2060,7 @@ EOF
 		if ($bAllDisabled) {
 			$sAllDisabled = 'disabled data-disabled="disabled" ';
 		}
+		$bDisableUninstallCheck = (bool)$this->oWizard->GetParameter('force-uninstall', false);
 
 		foreach ($aOptions as $index => $aChoice) {
 			$sAttributes = '';
@@ -2068,12 +2069,10 @@ EOF
 			$sId = utils::EscapeHtml($aChoice['extension_code']);
 			$bIsDefault = array_key_exists($sChoiceId, $aDefaults);
 
-			$oExtension = $this->oExtensionsMap->Get($aChoice['extension_code']);
-
-			$bIsUninstallable = $oExtension ? $oExtension->IsUninstallable() : true;
+			$bIsUninstallable = $this->oExtensionsMap->Get($aChoice['extension_code'])->IsUninstallable();
 			$bSelected = isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] == $sChoiceId);
-			$bDisableUninstallCheck = (bool)$this->oWizard->GetParameter('force-uninstall', false);
-			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $this->bUpgrade && $oExtension->sInstalledVersion !== '' && !$bIsUninstallable && !$bDisableUninstallCheck;;
+
+			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $this->bUpgrade && $bIsDefault && !$bIsUninstallable && !$bDisableUninstallCheck;;
 			$bDisabled = false;
 			$sUnremovable = $bIsUninstallable ? '' : 'unremovable';
 			if ($bMandatory) {
@@ -2091,23 +2090,19 @@ EOF
 		$sDisabled = '';
 		$bDisabled = false;
 		$sChoiceIdNone = null;
-		foreach($aAlternatives as $index => $aChoice)
-		{
+		foreach($aAlternatives as $index => $aChoice) {
 			$sChoiceId = $sParentId.self::$SEP.$index;
-			if ($sChoiceName == null)
-			{
+			if ($sChoiceName == null) {
 				$sChoiceName = $sChoiceId; // All radios share the same name
 			}
 			$bIsDefault = array_key_exists($sChoiceName, $aDefaults) && ($aDefaults[$sChoiceName] == $sChoiceId);
 			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || ($this->bUpgrade && $bIsDefault);
-			if ($bMandatory || $bAllDisabled)
-			{
+			if ($bMandatory || $bAllDisabled) {
 				// One choice is mandatory, all alternatives are disabled
 				$sDisabled = ' disabled data-disabled="disabled"';
 				$bDisabled = true;
 			}
-			if ( (!isset($aChoice['sub_options']) || (count($aChoice['sub_options']) == 0)) && (!isset($aChoice['modules']) || (count($aChoice['modules']) == 0)) )
-			{
+			if ( (!isset($aChoice['sub_options']) || (count($aChoice['sub_options']) == 0)) && (!isset($aChoice['modules']) || (count($aChoice['modules']) == 0)) ) {
 				$sChoiceIdNone = $sChoiceId; // the "None" / empty choice
 			}
 		}
@@ -2139,15 +2134,13 @@ EOF
 				$sAttributes = ' checked ';
 			}
 			$sHidden = '';
-			if ($bMandatory && $bDisabled)
-			{
+			if ($bMandatory && $bDisabled) {
 				$sAttributes = ' checked ';
 				$sHidden = '<input type="hidden" name="choice['.$sChoiceName.']" value="'.$sChoiceId.'"/>';
 			}
 			$oPage->add('<div class="choice" '.$sDataId.'><input class="wiz-choice" id="'.$sId.'" name="choice['.$sChoiceName.']" type="radio"'.$sAttributes.' value="'.$sChoiceId.'"'.$sDisabled.'/>'.$sHidden.'&nbsp;');
 			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled && !$bSelected);
 			$oPage->add('</div>');
-			$index++;
 		}
 	}
 

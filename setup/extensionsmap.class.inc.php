@@ -113,8 +113,8 @@ class iTopExtension
 
 	public function IsUninstallable()
 	{
-		foreach ($this->aModuleInfo as $sModuleCode => $aModuleInfo){
-			$bUninstallable = $aModuleInfo['uninstallable'] ? $aModuleInfo['uninstallable'] === 'yes' : false;
+		foreach ($this->aModuleInfo as $sModuleCode => $aModuleInfo) {
+			$bUninstallable = $aModuleInfo['uninstallable'] === 'yes';
 			if (!$bUninstallable) {
 				return false;
 			}
@@ -264,7 +264,8 @@ class iTopExtensionsMap
 		$this->aExtensions[$oNewExtension->sCode.'/'.$oNewExtension->sVersion] = $oNewExtension;
 	}
 
-	public function Get($sExtensionCode):?iTopExtension{
+	public function Get($sExtensionCode):?iTopExtension
+	{
 		foreach($this->aExtensions as $oExtension) {
 			if ($oExtension->sCode == $sExtensionCode) {
 				return $oExtension;
@@ -635,7 +636,6 @@ class iTopExtensionsMap
 				foreach($aModules as $sModuleId) {
 					list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
 					$oExtension->aModules[] = $sModuleName;
-					/*NEW!*/
 					$oExtension->aModuleInfo[$sModuleName] = $this->aExtensions[$sModuleId]->aModuleInfo[$sModuleName];
 				}
 				$this->ReplaceModulesByNormalizedExtension($aExtensionSignatures['versions'][$sVersion], $oExtension);
