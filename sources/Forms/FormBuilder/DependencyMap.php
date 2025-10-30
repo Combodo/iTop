@@ -25,14 +25,16 @@ class DependencyMap
 
 	/** @var array output to outputs */
 	private array $aOutputToOutputsMap = [];
+	private readonly array $aDependentBlocks;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param array $aDependentBlocks
 	 */
-	public function __construct(private readonly array $aDependentBlocks)
+	public function __construct(array $aDependentBlocks)
 	{
+		$this->aDependentBlocks = $aDependentBlocks;
 		// Initialization
 		$this->Init();
 	}

@@ -27,6 +27,11 @@ class DependencyHandler
 
 	/** @var array Debug data */
 	private array $aDebugData = [];
+	private readonly string $sName;
+	private readonly AbstractFormBlock $oFormBlock;
+	private readonly FormBuilder $oFormBuilder;
+	private readonly array $aSubBlocks;
+	private readonly array $aDependentBlocks;
 
 	/**
 	 * Constructor.
@@ -37,8 +42,13 @@ class DependencyHandler
 	 * @param array $aSubBlocks Sub blocks
 	 * @param array $aDependentBlocks Dependants blocks
 	 */
-	public function __construct(private readonly string $sName, private readonly AbstractFormBlock $oFormBlock, private readonly FormBuilder $oFormBuilder, private readonly array $aSubBlocks, private readonly array $aDependentBlocks)
+	public function __construct(string $sName, AbstractFormBlock $oFormBlock, FormBuilder $oFormBuilder, array $aSubBlocks, array $aDependentBlocks)
 	{
+		$this->aDependentBlocks = $aDependentBlocks;
+		$this->aSubBlocks = $aSubBlocks;
+		$this->oFormBuilder = $oFormBuilder;
+		$this->oFormBlock = $oFormBlock;
+		$this->sName = $sName;
 		// dependencies map
 		$this->oDependenciesMap = new DependencyMap($aDependentBlocks);
 

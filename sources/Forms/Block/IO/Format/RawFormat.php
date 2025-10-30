@@ -4,8 +4,11 @@ namespace Combodo\iTop\Forms\Block\IO\Format;
 
 class RawFormat
 {
-	public function __construct(public string $oValue)
+	public string $oValue;
+
+	public function __construct(string $oValue)
 	{
+		$this->oValue = $oValue;
 		// validation du format sinon exception
 	}
 

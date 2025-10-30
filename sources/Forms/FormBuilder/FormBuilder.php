@@ -32,6 +32,7 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 
 	/** @var array sub blocks */
 	private array $aSubFormBlocks = [];
+	private readonly FormBuilderInterface $builder;
 
 	/**
 	 * Constructor.
@@ -39,8 +40,9 @@ class FormBuilder implements FormBuilderInterface, \IteratorAggregate
 	 * @param FormBuilderInterface $builder
 	 *
 	 */
-	public function __construct(private readonly FormBuilderInterface $builder)
+	public function __construct(FormBuilderInterface $builder)
 	{
+		$this->builder = $builder;
 		/** Get the corresponding form block @var AbstractFormBlock $oFormBlock */
 		$oFormBlock = $this->builder->getOption('form_block');
 

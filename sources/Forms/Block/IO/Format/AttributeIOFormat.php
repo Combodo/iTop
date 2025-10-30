@@ -6,8 +6,11 @@ use JsonSerializable;
 
 class AttributeIOFormat implements JsonSerializable
 {
-	public function __construct(public string $sAttributeName)
+	public string $sAttributeName;
+
+	public function __construct(string $sAttributeName)
 	{
+		$this->sAttributeName = $sAttributeName;
 		// validation du format sinon exception
 	}
 
