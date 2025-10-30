@@ -21,9 +21,4 @@ class TextAreaFormBlock extends AbstractFormBlock
 		return TextareaType::class;
 	}
 
-	/** @inheritdoc */
-	public function InitOptions(): array
-	{
-		return [];
-	}
 }

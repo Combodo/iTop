@@ -107,12 +107,15 @@ class AbstractFormIO
 	/**
 	 * Get the IO value.
 	 *
-	 * @param string $sEventType
+	 * @param string|null $sEventType
 	 *
 	 * @return mixed
 	 */
-	public function GetValue(string $sEventType): mixed
+	public function GetValue(string $sEventType = null): mixed
 	{
+		if($sEventType === null) {
+			return $this->Value();
+		}
 		return $this->aValues[$sEventType] ?? null;
 	}
 
@@ -123,10 +126,22 @@ class AbstractFormIO
 	 */
 	public function HasValue(): bool
 	{
-		$PostSetDataExist = array_key_exists(FormEvents::POST_SET_DATA, $this->aValues) && $this->aValues[FormEvents::POST_SET_DATA] !== null;
-		$PostSubmitExist = array_key_exists(FormEvents::POST_SUBMIT, $this->aValues) && $this->aValues[FormEvents::POST_SUBMIT] !== null;
+		return $this->HasEventValue(FormEvents::POST_SET_DATA) || $this->HasEventValue(FormEvents::POST_SUBMIT);
+	}
 
-		return $PostSetDataExist || $PostSubmitExist;
+	/**
+	 * Return true if value exist.
+	 *
+	 * @param string|null $sEventType
+	 *
+	 * @return bool
+	 */
+	public function HasEventValue(string $sEventType = null): bool
+	{
+		if($sEventType === null){
+			return $this->HasValue();
+		}
+		return array_key_exists($sEventType, $this->aValues) && $this->aValues[$sEventType] !== null;
 	}
 
 	/**
@@ -158,7 +173,7 @@ class AbstractFormIO
 	 *
 	 * @return mixed
 	 */
-	public function Value(): mixed
+	private function Value(): mixed
 	{
 		if (array_key_exists(FormEvents::POST_SUBMIT, $this->aValues)) {
 			return $this->aValues[FormEvents::POST_SUBMIT];

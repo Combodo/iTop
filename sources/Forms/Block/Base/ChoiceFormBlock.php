@@ -21,10 +21,4 @@ class ChoiceFormBlock extends AbstractFormBlock
 		return ChoiceFormType::class;
 	}
 
-	/** @inheritdoc */
-	public function InitOptions(): array
-	{
-		return [
-		];
-	}
 }

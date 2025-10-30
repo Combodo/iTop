@@ -8,6 +8,8 @@ namespace Combodo\iTop\Forms\Block\FormType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -21,16 +23,22 @@ class CollectionFormType extends AbstractType
 		return CollectionType::class;
 	}
 
-
-	public function configureOptions(OptionsResolver $resolver)
+	/** @inheritdoc  */
+	public function configureOptions(OptionsResolver $resolver): void
 	{
 		parent::configureOptions($resolver);
 
-		$resolver->setDefined([
-			'block_entry_type',
-			'block_entry_options',
+		$resolver->setDefaults([
+			'button_label' => 'Add an item',
 		]);
 	}
 
+	/** @inheritdoc  */
+	public function buildView(FormView $view, FormInterface $form, array $options): void
+	{
+		parent::buildView($view, $form, $options);
+
+		$view->vars['button_label'] = $options['button_label'];
+	}
 
 }

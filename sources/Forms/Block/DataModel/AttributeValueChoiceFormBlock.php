@@ -29,15 +29,14 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 	public const OUTPUT_VALUE = 'value';
 
 	/** @inheritdoc */
-	public function InitOptions(array &$aOptions = []): array
+	public function InitBlockOptions(array &$aUserOptions): void
 	{
-		$aOptions['multiple'] = true;
-		$aOptions['attr'] = [
+		parent::InitBlockOptions($aUserOptions);
+		$aUserOptions['multiple'] = true;
+		$aUserOptions['attr'] = [
 			'size'  => 5,
 			'style' => 'height: auto;',
 		];
-
-		return $aOptions;
 	}
 
 	/** @inheritdoc */
@@ -55,51 +54,18 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		$this->AddOutput(self::OUTPUT_VALUE, RawFormat::class);
 	}
 
-	/** @inheritdoc
-	 * @throws FormBlockException
-	 * @throws Exception
-	 */
-	public function AllowAdd(): bool
+	/** @inheritdoc  */
+	public function UpdateDynamicOptions(string $sEventType = null): void
 	{
-		$bDependentOk = $this->GetInput(self::INPUT_CLASS_NAME)->Value() != '' && $this->GetInput(self::INPUT_ATTRIBUTE)->Value() != '';
+		$oClassName = $this->GetInput(self::INPUT_CLASS_NAME)->GetValue($sEventType);
+		$oAttribute = $this->GetInput(self::INPUT_ATTRIBUTE)->GetValue($sEventType);
 
-		if ($bDependentOk) {
-			$oAttDef = MetaModel::GetAttributeDef($this->GetInput(self::INPUT_CLASS_NAME)->Value()->__toString(), $this->GetInput(self::INPUT_ATTRIBUTE)->Value()->__toString());
+		try{
+			$oAttDef = MetaModel::GetAttributeDef(strval($oClassName), strval($oAttribute));
 			$aValues = $oAttDef->GetAllowedValues();
-
-			return $aValues != null;
-		} else {
-			return false;
+			$this->aDynamicOptions['choices'] = array_flip($aValues ?? []);
 		}
-	}
-
-	/** @inheritdoc
-	 * @throws Exception
-	 */
-	public function UpdateOptions(): array
-	{
-		$aOptions = parent::GetOptions();
-
-		$oClassName = $this->GetInput(self::INPUT_CLASS_NAME)->Value();
-		if ($oClassName == '') {
-			return $aOptions;
-		}
-
-		$oAttribute = $this->GetInput(self::INPUT_ATTRIBUTE)->Value();
-		if ($oAttribute == '') {
-			return $aOptions;
-		}
-
-		$oAttDef = MetaModel::GetAttributeDef(strval($oClassName), strval($oAttribute));
-		$aValues = $oAttDef->GetAllowedValues();
-
-		if ($aValues === null) {
-			return $aOptions;
-		}
-
-		$aOptions['choices'] = array_flip($aValues ?? []);
-
-		return $aOptions;
+		catch(Exception){}
 	}
 
 }

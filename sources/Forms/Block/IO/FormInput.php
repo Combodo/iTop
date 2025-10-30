@@ -19,6 +19,15 @@ class FormInput extends AbstractFormIO
 		return $this->HasValue();
 	}
 
+	/**
+	 * @param string|null $sEventType
+	 *
+	 * @return bool
+	 */
+	public function IsEventDataReady(string $sEventType = null): bool
+	{
+		return $this->HasEventValue($sEventType);
+	}
 
 	/**
 	 * Set the values of the input.

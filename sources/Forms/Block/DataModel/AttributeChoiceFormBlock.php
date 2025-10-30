@@ -28,12 +28,11 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	public const OUTPUT_ATTRIBUTE = 'attribute';
 
 	/** @inheritdoc */
-	public function InitOptions(): array
+	public function InitBlockOptions(array &$aUserOptions): void
 	{
-		$aOptions = parent::InitOptions();
+		parent::InitBlockOptions($aUserOptions);
 
-//		$aOptions['placeholder'] = 'Select an attribute...';
-		return $aOptions;
+		$aUserOptions['placeholder'] = 'Select an attribute...';
 	}
 
 	/** @inheritdoc */
@@ -50,32 +49,13 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 		$this->AddOutput(self::OUTPUT_ATTRIBUTE, AttributeIOFormat::class, new StringToAttributeConverter());
 	}
 
-	/** @inheritdoc
-	 * @throws FormBlockException
-	 */
-	public function AllowAdd(): bool
+	/** @inheritdoc  */
+	public function UpdateDynamicOptions(string $sEventType = null): void
 	{
-		return $this->GetInput(self::INPUT_CLASS_NAME)->Value() != '';
-	}
-
-	/** @inheritdoc
-	 * @throws FormBlockException
-	 * @throws CoreException
-	 */
-	public function UpdateOptions(): array
-	{
-		$aOptions = parent::GetOptions();
-
-		$oValue = $this->GetInput(self::INPUT_CLASS_NAME)->Value();
-		if ($oValue == '') {
-			return $aOptions;
-		}
+		$oValue = $this->GetInput(self::INPUT_CLASS_NAME)->GetValue($sEventType);
 
 		$aAttributeCodes = MetaModel::GetAttributesList($oValue);
-		$aAttributeCodes = array_combine($aAttributeCodes, $aAttributeCodes);
-		$aOptions['choices'] = $aAttributeCodes;
-
-		return $aOptions;
+		$this->aDynamicOptions['choices'] = array_combine($aAttributeCodes, $aAttributeCodes);
 	}
 
 }

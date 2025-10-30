@@ -7,6 +7,8 @@
 namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\FormType\CollectionFormType;
+use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 /**
@@ -15,33 +17,54 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
  */
 class CollectionBlock extends AbstractFormBlock
 {
+	// Inputs
+	public const INPUT_CLASS_NAME = 'class_name';
 
+	/**
+	 * Constructor.
+	 *
+	 * @param string $sName
+	 * @param array $aOptions
+	 */
 	public function __construct(string $sName, array $aOptions = [])
 	{
 		parent::__construct($sName, $aOptions);
-
 	}
 
 	/** @inheritdoc */
 	public function GetFormType(): string
 	{
-		return CollectionType::class;
+		return CollectionFormType::class;
 	}
 
 	/** @inheritdoc */
-	public function InitOptions(): array
+	public function InitInputs(): void
 	{
-		$sBlockEntryType = $this->GetOptions()['block_entry_type'];
-		$sBlockEntryOptions = $this->GetOptions()['block_entry_options'];
+		parent::InitInputs();
+		$this->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
+	}
 
-		$this->aOptions = [];
+	/** @inheritdoc  */
+	public function InitBlockOptions(array &$aUserOptions): void
+	{
+		parent::InitBlockOptions($aUserOptions);
 
-		$oBlock = new ($sBlockEntryType)('prototype', $sBlockEntryOptions);
+		// Convert block information in type information
+		if(isset($aUserOptions['block_entry_type'])) {
+			$sBlockEntryType = $aUserOptions['block_entry_type'];
+			$sBlockEntryOptions = $this->aUserOptions['block_entry_options'];
+			$oBlock = new ($sBlockEntryType)('prototype', $sBlockEntryOptions);
+			unset($aUserOptions['block_entry_type']);
+			unset($aUserOptions['block_entry_options']);
+			$aUserOptions['entry_type'] = $oBlock->GetFormType();
+			$aUserOptions['entry_options'] = $oBlock->GetOptions();
 
-		return [
-			'entry_type' => $oBlock->GetFormType(),
-		];
-
+			$aUserOptions['prototype'] = true;
+			$aUserOptions['allow_add'] = true;
+			$aUserOptions['prototype_options']  = [
+				'label' => false
+			];
+		}
 	}
 
 }

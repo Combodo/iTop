@@ -17,7 +17,6 @@ class FormOutput extends AbstractFormIO
 	/** @var AbstractConverter|null */
 	private null|AbstractConverter $oConverter;
 
-
 	/** @var array */
 	private array $aBindingsToOutputs = [];
 
@@ -112,5 +111,10 @@ class FormOutput extends AbstractFormIO
 	public function GetBindings(): array
 	{
 		return $this->aBindingsToInputs;
+	}
+
+	public function HasBindings(): bool
+	{
+		return count($this->aBindingsToInputs) > 0;
 	}
 }

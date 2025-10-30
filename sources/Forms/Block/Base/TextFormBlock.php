@@ -21,9 +21,5 @@ class TextFormBlock extends AbstractFormBlock
 		return TextType::class;
 	}
 
-	/** @inheritdoc */
-	public function InitOptions(): array
-	{
-		return [];
-	}
+
 }

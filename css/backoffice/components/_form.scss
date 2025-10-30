@@ -36,18 +36,18 @@
   margin: 20px 0;
 }
 
-#form select{
+.form select{
   padding: 0;
   overflow-y: auto;
 }
 
-#form select option{
+.form select option{
   height: 30px;
   display: flex;
   align-items: center;
 }
 
-form[aria-busy="true"] {
+.form[aria-busy="true"] {
   opacity: .5;
 }
 

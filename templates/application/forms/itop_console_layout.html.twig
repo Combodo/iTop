@@ -3,13 +3,28 @@
 {# Widgets #}
 
 {%- block widget_attributes -%}
+    {{- parent() -}}
+    {%  if trigger_form_submit_on_modify %}
+        onChange="this.form.setAttribute('novalidate', true); this.form.requestSubmit();console.log('Auto submitting form due to change in field {{ full_name }}');"
+    {% endif %}
+{%- endblock widget_attributes -%}
+
+{%- block form_widget_simple -%}
     {%  if type == 'text' %}{% set ibo_class='ibo-input-string' %}{% else %}{% set ibo_class='ibo-input-' ~ type %}{% endif %}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input ' ~ ibo_class)|trim}) %}
     {{- parent() -}}
-    {%  if trigger_form_submit_on_modify %}
-        onChange="this.form.requestSubmit();console.log('Auto submitting form due to change in field {{ full_name }}');"
-    {% endif %}
-{%- endblock widget_attributes -%}
+{%- endblock form_widget_simple -%}
+
+{%- block textarea_widget -%}
+    {%  if type == 'text' %}{% set ibo_class='ibo-input-string' %}{% else %}{% set ibo_class='ibo-input-' ~ type %}{% endif %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input ' ~ ibo_class)|trim}) %}
+    {{- parent() -}}
+{%- endblock textarea_widget -%}
+
+{%- block choice_widget_collapsed -%}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input')|trim}) %}
+    {{- parent() -}}
+{%- endblock choice_widget_collapsed -%}
 
 {%- block form_label -%}
     {%- if compound is defined and compound -%}
@@ -20,13 +35,31 @@
     {{- parent() -}}
 {%- endblock form_label -%}
 
-{%- block form_rows -%}
-    {% for sId,child in form|filter(child => not child.rendered) %}
-        <div id="block_{{ sId }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">
-            {{ form_row(child) }}
+{#{%- block form_rows -%}#}
+
+{#    {% for block in blocks %}#}
+{#        <div id="block_{{ block.name }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">#}
+{#            {{ block.name }} {{ block.added }}#}
+{#        {% if block.added == 1 %}#}
+{#            {{ form_row(form[block.name]) }}#}
+{#        {% endif %}#}
+{#        </div>#}
+{#    {% endfor %}#}
+
+{#{%- endblock form_rows -%}#}
+
+{%- block collection_widget -%}
+    {% if prototype is defined and not prototype.rendered %}
+        {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'class': name, 'data-index': form|length > 0 ? form|last.vars.name + 1 : 0 }) -%}
+    {% endif %}
+    {{- block('form_widget') -}}
+    {% if allow_add %}
+        <div style="margin-top: 20px;">
+    <button type="button" class="add_item_link ibo-button ibo-button ibo-is-regular " data-collection-holder-class="{{ name }}">{{ button_label|dict_s }}</button>
         </div>
-    {% endfor %}
-{%- endblock form_rows -%}
+    {% endif %}
+{%- endblock collection_widget -%}
+
 
 {%- block form_label_content -%}
     {{- parent() -}}

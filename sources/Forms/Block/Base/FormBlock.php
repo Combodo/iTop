@@ -7,9 +7,11 @@
 namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\FormBlockException;
+use Combodo\iTop\Forms\Block\FormType\FormType;
 use Combodo\iTop\Forms\FormsException;
 use Exception;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
+use ReflectionClass;
 
 /**
  * Complex form type.
@@ -48,24 +50,35 @@ class FormBlock extends AbstractFormBlock
 	}
 
 	/** @inheritdoc */
-	public function InitOptions(): array
+	public function InitBlockOptions(array &$aUserOptions): void
 	{
-		return [
-			'compound' => true,
+		parent::InitBlockOptions($aUserOptions);
+
+		$aUserOptions['compound'] = true;
+		$aUserOptions['attr'] = [
+			'class' => 'form'
 		];
+
 	}
 
 	/**
 	 * Add a child form.
 	 *
-	 * @param string $sType block class name
 	 * @param string $sName block name
+	 * @param string $sType block class name
 	 * @param array $aOptions options
 	 *
 	 * @return $this
+	 * @throws \ReflectionException
 	 */
-	public function Add(string $sType, string $sName, array $aOptions): AbstractFormBlock
+	public function Add(string $sName, string $sType, array $aOptions): AbstractFormBlock
 	{
+		$oRef = new ReflectionClass($sType);
+		if($oRef->isSubclassOf(AbstractFormBlock::class) === false){
+			throw new FormBlockException("The block type '$sType' is not a subclass of AbstractFormBlock.");
+		}
+
+		$aOptions['priority'] = -count($this->aChildrenBlocks);
 		$oSubFormBlock = new ($sType)($sName, $aOptions);
 		$this->aChildrenBlocks[$sName] = $oSubFormBlock;
 		$oSubFormBlock->SetParent($this);

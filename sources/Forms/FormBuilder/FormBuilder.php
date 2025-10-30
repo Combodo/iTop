@@ -13,7 +13,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\DataMapperInterface;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -32,7 +31,7 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 	private AbstractFormBlock $oFormBlock;
 
 	/** @var array sub blocks */
-	private array $aSubFormBlocks = [];
+	private array $aChildren = [];
 	private readonly FormBuilderInterface $builder;
 
 	/**
@@ -68,26 +67,26 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 			return;
 		}
 
-		$aDependentBlocks = [];
+		$aBlocksWithDependencies = [];
 		/** Iterate throw the form sub blocks... @var FormBlock $oSubFormBlock */
-		foreach ($oFormBlock->GetChildren() as $oSubFormBlock) {
+		foreach ($oFormBlock->GetChildren() as $sBlockName => $oChildBlock) {
 
-			// Add to the sub blocks array
-			$this->aSubFormBlocks[$oSubFormBlock->getName()] = $oSubFormBlock;
+			// Add to the children
+			$this->aChildren[$sBlockName] = $oChildBlock;
 
-			// Handle sub block
-			$bHasDependency = $this->HandleSubBlock($oSubFormBlock);
+			// Handle block
+			$bHasDependency = $this->HandleSubBlock($oChildBlock);
 
-			// Add to the dependencies array
+			// Add to the array of blocks with dependencies
 			if ($bHasDependency) {
-				$aDependentBlocks[$oSubFormBlock->GetName()] = $oSubFormBlock;
+				$aBlocksWithDependencies[$sBlockName] = $oChildBlock;
 			}
 
 		}
 
 		// Create a dependency handler if needed
-		if (count($aDependentBlocks) > 0) {
-			$this->oDependencyHandler = new DependencyHandler($this->builder->getName(), $oFormBlock, $this, $this->aSubFormBlocks, $aDependentBlocks);
+		if (count($aBlocksWithDependencies) > 0) {
+			$this->oDependencyHandler = new DependencyHandler($this->builder->getName(), $oFormBlock, $this, $this->aChildren, $aBlocksWithDependencies);
 		}
 	}
 
@@ -104,19 +103,19 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 		// Has dependencies blocks
 		if ($oSubFormBlock->HasDependenciesBlocks()) {
 
-			// Insert a hidden type to save the place
-			$this->builder->add($oSubFormBlock->GetName(), HiddenType::class, [
-				'form_block'         => $oSubFormBlock,
-				'prevent_form_build' => true,
-				//				'mapped' => false,
-				//				'disabled' => true,
-			]);
+//			// Insert a hidden type to save the place
+//			$this->builder->add($oSubFormBlock->GetName(), HiddenType::class, [
+//				'form_block'         => $oSubFormBlock,
+//				'prevent_form_build' => true,
+				////				'mapped' => false,
+				////				'disabled' => true,
+//			]);
 
 			return true;
 
 		} else {
 			// Directly insert the block corresponding form type
-			$this->add($oSubFormBlock->GetName(), $oSubFormBlock->GetFormType(), $oSubFormBlock->UpdateOptions());
+			$this->add($oSubFormBlock->GetName(), $oSubFormBlock->GetFormType(), $oSubFormBlock->GetOptions());
 			$oSubFormBlock->SetAdded(true);
 
 			return false;
@@ -125,15 +124,15 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 	}
 
 	/**
-	 * Get a sub form block.
+	 * Get a child block.
 	 *
 	 * @param string $sName
 	 *
 	 * @return AbstractFormBlock|null
 	 */
-	public function GetSubFormBlock(string $sName): ?AbstractFormBlock
+	public function GetChild(string $sName): ?AbstractFormBlock
 	{
-		return $this->aSubFormBlocks[$sName] ?? null;
+		return $this->aChildren[$sName] ?? null;
 	}
 
 	/**

@@ -7,8 +7,6 @@
 namespace Combodo\iTop\Forms\FormBuilder;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
-use Combodo\iTop\Forms\Block\Base\FormBlock;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -55,10 +53,10 @@ class DependencyHandler
 		// Add form ready listener
 		$this->AddFormReadyListener();
 
-		// Check the dependencies
+		// Check the dependencies (handle internal binding)
 		$this->CheckDependencies($this->oFormBuilder);
 
-		// Store the dependency handler
+		// Store the dependency handler (debug purpose)
 		self::$aDependencyHandlers[] = $this;
 	}
 
@@ -86,7 +84,7 @@ class DependencyHandler
 		$this->oFormBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
 			/** Iterate throw listened blocks */
-			foreach ($this->oDependenciesMap->GetListenedOutputBlockNames() as $sOutputBlockName) {
+			foreach ($this->oDependenciesMap->GetInitialBoundOutputBlockNames() as $sOutputBlockName) {
 
 				// inner binding
 				if ($sOutputBlockName === $this->oFormBlock->getName()) {
@@ -133,12 +131,10 @@ class DependencyHandler
 			$oFormBlock = $this->aSubBlocks[$oForm->getName()];
 
 			// Compute the block outputs with the data
-			if (!$oFormBlock instanceof FormBlock) {
-				$oFormBlock->ComputeOutputs($sEventType, $oEvent->getData());
-			}
+			$oFormBlock->ComputeOutputs($sEventType, $oForm->getData());
 
 			// Check dependencies
-			$this->CheckDependencies($oForm->getParent());
+			$this->CheckDependencies($oForm->getParent(), $oForm->getName(), $sEventType);
 		};
 
 	}
@@ -146,18 +142,32 @@ class DependencyHandler
 
 	/**
 	 * @param FormInterface|FormBuilderInterface $oForm
+	 * @param string|null $sOutputBlock
+	 * @param string|null $sEventType
 	 *
 	 * @return void
 	 */
-	private function CheckDependencies(FormInterface|FormBuilderInterface $oForm): void
+	private function CheckDependencies(FormInterface|FormBuilderInterface $oForm, string $sOutputBlock = null, string $sEventType = null): void
 	{
+		$aImpactedBlocks = $this->aDependentBlocks;
+		if($sOutputBlock !== null){
+			$aImpactedBlocks = $this->oDependenciesMap->GetBlocksDependingOn($sOutputBlock);
+		}
+
+		if($aImpactedBlocks === null){
+			return;
+		}
+
 		/** Iterate throw dependencies... @var AbstractFormBlock $oDependentBlock */
-		foreach ($this->aDependentBlocks as $qBlockName => $oDependentBlock) {
-			// When dependencies met, add the dependent field if not already done
-			if (!$oDependentBlock->IsAdded() && $oDependentBlock->IsInputsDataReady()) {
+		foreach ($aImpactedBlocks as $qBlockName => $oDependentBlock) {
+
+
+			// When dependencies met, add the dependent field if not already done or options changed
+			if ($oDependentBlock->IsVisible($sEventType) && $oDependentBlock->IsInputsDataReady($sEventType)) {
 
 				// Get the dependent field options
-				$aOptions = $oDependentBlock->UpdateOptions();
+				$oDependentBlock->UpdateDynamicOptions($sEventType);
+				$aOptions = $oDependentBlock->GetOptionsMergedWithDynamic($sEventType);
 
 				// Add the listener callback to the dependent field if it is also a dependency for another field
 				if ($this->oDependenciesMap->IsTheBlockInDependencies($oDependentBlock->getName())) {
@@ -168,7 +178,7 @@ class DependencyHandler
 					]);
 				}
 
-				if ($oDependentBlock->AllowAdd()) {
+				if ($oDependentBlock->AllowAdd($sEventType)) {
 
 					$this->aDebugData[] = [
 						'builder' => $this->oFormBuilder->getName(),
@@ -180,7 +190,7 @@ class DependencyHandler
 					if (array_key_exists('builder_listener', $aOptions)) {
 						$this->aDebugData[] = [
 							'builder' => $this->oFormBuilder->getName(),
-							'event'   => 'form.listen',
+							'event'   => 'form.listen.after',
 							'form'    => $oDependentBlock->getName(),
 							'value'   => 'NA',
 						];
@@ -196,11 +206,16 @@ class DependencyHandler
 
 			}
 
-			if ($oDependentBlock->IsAdded() && !$oDependentBlock->IsInputsDataReady()) {
-				$oForm->add($oDependentBlock->GetName(), HiddenType::class, [
-					'form_block'         => $oDependentBlock,
-					'prevent_form_build' => true,
-				]);
+			if ($oDependentBlock->IsAdded() && (!$oDependentBlock->IsVisible($sEventType) || !$oDependentBlock->IsInputsDataReady($sEventType))) {
+				$oForm->remove($oDependentBlock->GetName());
+				$oDependentBlock->SetAdded(false);
+
+				$this->aDebugData[] = [
+					'builder' => $this->oFormBuilder->getName(),
+					'event' => 'form.remove',
+					'form' => $oDependentBlock->getName(),
+					'value' => 'NA'
+				];
 			}
 
 		}

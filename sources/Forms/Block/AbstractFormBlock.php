@@ -8,8 +8,11 @@ namespace Combodo\iTop\Forms\Block;
 
 use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\Forms\Block\IO\Converter\AbstractConverter;
+use Combodo\iTop\Forms\Block\IO\Format\BooleanIOFormat;
+use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
 use Combodo\iTop\Forms\Block\IO\FormInput;
 use Combodo\iTop\Forms\Block\IO\FormOutput;
+use Combodo\iTop\Forms\IFormBlock;
 use IssueLog;
 use Symfony\Component\Filesystem\Exception\IOException;
 
@@ -21,10 +24,22 @@ use Symfony\Component\Filesystem\Exception\IOException;
  * It defines its inputs and outputs.
  *
  */
-abstract class AbstractFormBlock
+abstract class AbstractFormBlock implements IFormBlock
 {
+	// Inputs
+	public const INPUT_VISIBLE = 'visible';
+
+	// Outputs
+	public const OUTPUT_VALUE = 'value';
+
 	/** @var null|FormBlock */
 	private ?FormBlock $oParent = null;
+
+	/** @var array form options */
+	private array $aOptions = [];
+
+	/** @var array form dynamic options */
+	protected array $aDynamicOptions = [];
 
 	/** @var array form block inputs */
 	private array $aFormInputs = [];
@@ -35,6 +50,7 @@ abstract class AbstractFormBlock
 	/** @var bool flag indicating the form insertion */
 	private bool $bIsAddedToForm = false;
 
+
 	/**
 	 * Return the form type.
 	 *
@@ -42,32 +58,35 @@ abstract class AbstractFormBlock
 	 */
 	abstract public function GetFormType(): string;
 
-	/**
-	 * Initialize options.
-	 *
-	 * @return array
-	 */
-	abstract public function InitOptions(): array;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param string $sName
-	 * @param array $aOptions
+	 * @param array $aUserOptions
 	 */
-	public function __construct(private readonly string $sName, protected array $aOptions = [])
+	public function __construct(private readonly string $sName, protected array $aUserOptions = [])
 	{
-		// Attach the form block
-		$this->aOptions['form_block'] = $this;
-
 		// Compute options
-		$this->aOptions = array_merge($this->aOptions, $this->InitOptions());
+		$this->aOptions = $aUserOptions;
+		$this->InitBlockOptions($this->aOptions);
 
 		// Initialize block inputs
 		$this->InitInputs();
 
 		// Initialize block outputs
 		$this->InitOutputs();
+	}
+
+	/**
+	 * Initialize options.
+	 *
+	 * @param array $aUserOptions
+	 *
+	 */
+	public function InitBlockOptions(array &$aUserOptions): void
+	{
+		$aUserOptions['form_block'] = $this;
 	}
 
 	/**
@@ -113,15 +132,24 @@ abstract class AbstractFormBlock
 		return $this->aOptions;
 	}
 
-	/**
-	 * Return the form block options.
-	 * Options will be passed to FormType for building.
-	 *
-	 * @return array
-	 */
-	public function UpdateOptions(): array
+	public function GetOptionsMergedWithDynamic(string $sEventType = null): array
 	{
-		return $this->aOptions;
+		return array_merge($this->aDynamicOptions, $this->aOptions);
+	}
+
+	public function GetDynamicOptions(string $sEventType = null): array
+	{
+		return $this->aDynamicOptions;
+	}
+
+	/**
+	 * @param string|null $sEventType
+	 *
+	 * @return void
+	 */
+	public function UpdateDynamicOptions(string $sEventType = null): void
+	{
+		$this->aDynamicOptions = [];
 	}
 
 	/**
@@ -236,7 +264,6 @@ abstract class AbstractFormBlock
 	 *
 	 * @return $this
 	 * @throws FormBlockException
-	 * @throws FormBlockIOException
 	 */
 	public function DependsOnParent(string $sInputName, string $sParentInputName): AbstractFormBlock
 	{
@@ -339,13 +366,15 @@ abstract class AbstractFormBlock
 	/**
 	 * Inputs data ready.
 	 *
+	 * @param string|null $sType
+	 *
 	 * @return bool
 	 */
-	public function IsInputsDataReady(): bool
+	public function IsInputsDataReady(string $sType = null): bool
 	{
 		foreach ($this->aFormInputs as $oFormInput) {
 			if ($oFormInput->IsBound()) {
-				if (!$oFormInput->IsDataReady()) {
+				if (!$oFormInput->IsEventDataReady($sType)) {
 					return false;
 				}
 			}
@@ -419,7 +448,20 @@ abstract class AbstractFormBlock
 	 */
 	public function InitInputs(): void
 	{
+		$this->AddInput(self::INPUT_VISIBLE, BooleanIOFormat::class);
+	}
 
+	public function IsVisible(string $sEventType = null): bool
+	{
+		$oInput = $this->GetInput(self::INPUT_VISIBLE);
+
+		if(!$oInput->IsBound()){
+			return true;
+		}
+
+		$bVisible = $oInput->GetValue($sEventType);
+
+		return $bVisible !== null && $bVisible->IsTrue();
 	}
 
 	/**
@@ -427,16 +469,16 @@ abstract class AbstractFormBlock
 	 *
 	 * @return void
 	 */
-	public function InitOutputs()
+	public function InitOutputs(): void
 	{
-
+		$this->AddOutput(self::OUTPUT_VALUE, RawFormat::class);
 	}
 
 
 	/**
 	 * @return true
 	 */
-	public function AllowAdd(): bool
+	public function AllowAdd(string $sEventType = null): bool
 	{
 		return true;
 	}

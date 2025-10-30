@@ -29,7 +29,7 @@ class OqlToClassConverter extends AbstractConverter
 		if (isset($aMatches[1])) {
 			$sSelectedClass = $aMatches[1];
 			if (!MetaModel::IsValidClass($sSelectedClass)) {
-				throw new IOException('Incorrect OQL select class name '.$sSelectedClass);
+				throw new IOException("Class `$sSelectedClass` not found");
 			}
 
 			return new ClassIOFormat($aMatches[1]);

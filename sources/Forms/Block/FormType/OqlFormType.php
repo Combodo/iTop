@@ -6,25 +6,21 @@
 
 namespace Combodo\iTop\Forms\Block\FormType;
 
-use Combodo\iTop\Forms\Block\IO\Converter\OqlToClassConverter;
-use Exception;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OqlFormType extends AbstractType
 {
+	/** @inheritdoc  */
 	public function getParent(): string
 	{
 		return TextareaType::class;
 	}
 
+	/** @inheritdoc  */
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefault('help', 'An OQL query expression');
@@ -48,26 +44,7 @@ class OqlFormType extends AbstractType
 		$resolver->setDefined('with_ai_button');
 	}
 
-	/** @inheritdoc */
-	public function buildForm(FormBuilderInterface $builder, array $options): void
-	{
-		parent::buildForm($builder, $options);
-
-		// on pre submit
-		$builder->addEventListener(FormEvents::POST_SUBMIT, function (PostSubmitEvent $event) use ($options) {
-
-			try {
-				$oClassConverter = new OqlToClassConverter();
-				$oClassConverter->Convert($event->getData());
-			}
-			catch (Exception $e) {
-				$event->getForm()->addError(new FormError($e->getMessage()));
-			}
-
-		});
-	}
-
-	/** @inheritdoc */
+	/** @inheritdoc  */
 	public function buildView(FormView $view, FormInterface $form, array $options): void
 	{
 		parent::buildView($view, $form, $options);

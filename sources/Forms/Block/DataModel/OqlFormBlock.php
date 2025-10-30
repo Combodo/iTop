@@ -35,13 +35,9 @@ class OqlFormBlock extends TextAreaFormBlock
 	}
 
 	/** @inheritdoc */
-	public function InitOptions(): array
+	public function InitBlockOptions(array &$aUserOptions): void
 	{
-		$aOptions = parent::InitOptions();
-		$aOptions['with_ai_button'] = true;
-
-		return $aOptions;
+		parent::InitBlockOptions($aUserOptions);
+		$aUserOptions['with_ai_button'] = true;
 	}
-
-
 }
