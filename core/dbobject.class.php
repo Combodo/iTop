@@ -745,7 +745,7 @@ abstract class DBObject implements iDisplay
 	/**
 	 * Helper to copy a value only if the target is currently undefined
 	 *
-	 * Call Copy() only of the internal representation of the attribute is null.
+	 * Call Copy() only of the internal representation of the target attribute is null.
 	 *
 	 * @api
 	 * @see Copy()
@@ -753,6 +753,8 @@ abstract class DBObject implements iDisplay
 	 *
 	 * @param string $sDestAttCode
 	 * @param string $sSourceAttCode
+	 *
+	 * @return bool true if copy was successfull or was not performed because target attribute isn't null
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
