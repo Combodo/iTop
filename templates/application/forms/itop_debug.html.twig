@@ -1,9 +1,25 @@
 {# @copyright   Copyright (C) 2010-2025 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-<div id="turbo_itop_profiler">
-    {% for aProfileInfo in aProfilesInfo %}
-        {% set aProfileData = aProfileInfo.aProfileData %}
-        {{ include(aProfileInfo.sTemplate) }}
-    {% endfor %}
+{% if aProfilesInfo is not empty %}
+<div class="ibo-panel ibo-content-block ibo-block  ibo-is-neutral ibo-is-opened" data-role="ibo-panel">
+    <div class="ibo-panel--header" data-role="ibo-panel--header">
+        <div class="ibo-panel--header-left" data-role="ibo-panel--header-left">
+            <div class="ibo-panel--titles" data-role="ibo-panel--titles">
+                <div class="ibo-panel--title" data-role="ibo-panel--title">Debug</div>
+            </div>
+        </div>
+        <div class="ibo-panel--header-right" data-role="ibo-panel--header-right">
+            <div class="ibo-panel--toolbar"></div>
+        </div>
+    </div>
+    <div class="ibo-panel--body" data-role="ibo-panel--body">
+        <div id="turbo_itop_profiler">
+            {% for aProfileInfo in aProfilesInfo %}
+                {% set aProfileData = aProfileInfo.aProfileData %}
+                {{ include(aProfileInfo.sTemplate) }}
+            {% endfor %}
+        </div>
+    </div>
 </div>
+{% endif %}
