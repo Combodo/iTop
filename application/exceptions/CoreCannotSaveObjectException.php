@@ -40,12 +40,16 @@ class CoreCannotSaveObjectException extends CoreException
 
 	/**
 	 * @return string
+	 * @since 3.2.3 add param $bWithHeader
 	 */
-	public function getHtmlMessage()
+	public function getHtmlMessage($bWithHeader = false)
 	{
 		$sTitle = Dict::S('UI:Error:SaveFailed');
 		$sContent = "<span><strong>".utils::HtmlEntities($sTitle)."</strong></span>";
-
+		if ($bWithHeader) {
+			$oObject = MetaModel::GetObject($this->sObjectClass, $this->iObjectId, true, true);
+			$sContent .= "&nbsp;<span>".$oObject->Get('friendlyname')."</span>";
+		}
 		if (count($this->aIssues) == 1) {
 			$sIssue = reset($this->aIssues);
 			$sContent .= "&nbsp;<span>".utils::HtmlEntities($sIssue)."</span>";

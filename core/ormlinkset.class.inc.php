@@ -859,6 +859,15 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		return $oLinkSet;
 	}
 
+	public function RemoveRemoved()
+	{
+		$this->aRemoved = [];
+	}
+	public function GetRemoved()
+	{
+		return $this->aRemoved ;
+	}
+
 	/**
 	 * GetValues.
 	 *

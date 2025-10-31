@@ -968,6 +968,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:SystemIntrusion' => 'Access denied. You have requested an operation that is not allowed for you.',
 	'UI:FatalErrorMessage' => 'Fatal error, '.ITOP_APPLICATION_SHORT.' cannot continue.',
 	'UI:Error_Details' => 'Error: %1$s.',
+	'UI:LinkedSet:RemovedObjectsDuringRefresh' => 'Warning: removed object(s) in <b>%1$s</b> are there again : <br>%2$s',
 
 	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' user management - profile projections',
 	'UI:UserManagement:Class' => 'Class',
