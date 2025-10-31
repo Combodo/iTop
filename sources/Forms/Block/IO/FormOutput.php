@@ -6,6 +6,7 @@
 
 namespace Combodo\iTop\Forms\Block\IO;
 
+use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\IO\Converter\AbstractConverter;
 
 /**
@@ -27,9 +28,9 @@ class FormOutput extends AbstractFormIO
 	 * @param string $sType
 	 * @param AbstractConverter|null $oConverter
 	 */
-	public function __construct(string $sName, string $sType, AbstractConverter $oConverter = null)
+	public function __construct(string $sName, string $sType, AbstractFormBlock $oOwnerBlock, AbstractConverter $oConverter = null)
 	{
-		parent::__construct($sName, $sType);
+		parent::__construct($sName, $sType, $oOwnerBlock);
 		$this->oConverter = $oConverter;
 	}
 

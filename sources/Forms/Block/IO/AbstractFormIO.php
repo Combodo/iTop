@@ -38,10 +38,11 @@ class AbstractFormIO
 	 * @param string $sName name of the IO
 	 * @param string $sType type of the IO
 	 */
-	public function __construct(string $sName, string $sType)
+	public function __construct(string $sName, string $sType, AbstractFormBlock $oOwnerBlock)
 	{
 		$this->sName = $sName;
 		$this->sType = $sType;
+		$this->oOwnerBlock = $oOwnerBlock;
 	}
 
 	/**
@@ -52,20 +53,6 @@ class AbstractFormIO
 	public function GetOwnerBlock(): AbstractFormBlock
 	{
 		return $this->oOwnerBlock;
-	}
-
-	/**
-	 * Set the owner block.
-	 *
-	 * @param AbstractFormBlock $oOwnerBlock
-	 *
-	 * @return $this
-	 */
-	public function SetOwnerBlock(AbstractFormBlock $oOwnerBlock): self
-	{
-		$this->oOwnerBlock = $oOwnerBlock;
-
-		return $this;
 	}
 
 	/**

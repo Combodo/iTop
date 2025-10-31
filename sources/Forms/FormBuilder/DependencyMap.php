@@ -121,6 +121,19 @@ class DependencyMap
 		return $aResult;
 	}
 
+	public function GetImpacted(string $sBlockName): array
+	{
+		$aImpacted = [];
+		foreach ($this->aOutputToInputsMap[$sBlockName] as $aBindings) {
+			foreach ($aBindings as $oBinding) {
+				$oDestBlock = $oBinding->oDestinationIO->GetOwnerBlock();
+				$aImpacted[] = $oDestBlock;
+			}
+		}
+
+		return $aImpacted;
+	}
+
 	/**
 	 * @param string $sBlockName
 	 *

@@ -134,8 +134,7 @@ abstract class AbstractFormBlock
 	 */
 	public function AddInput(string $sName, string $sType): void
 	{
-		$oFormInput = new FormInput($sName, $sType);
-		$oFormInput->SetOwnerBlock($this);
+		$oFormInput = new FormInput($sName, $sType, $this);
 		$this->aFormInputs[$oFormInput->GetName()] = $oFormInput;
 	}
 
@@ -167,8 +166,7 @@ abstract class AbstractFormBlock
 	 */
 	public function AddOutput(string $sName, string $sType, AbstractConverter $oConverter = null): void
 	{
-		$oFormOutput = new FormOutput($sName, $sType, $oConverter);
-		$oFormOutput->SetOwnerBlock($this);
+		$oFormOutput = new FormOutput($sName, $sType, $this, $oConverter);
 		$this->aFormOutputs[$oFormOutput->GetName()] = $oFormOutput;
 	}
 
