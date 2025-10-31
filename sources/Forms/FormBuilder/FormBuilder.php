@@ -146,6 +146,11 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 		return $this->oDependencyHandler;
 	}
 
+	public function GetDependencyMap(): ?DependencyMap
+	{
+		return $this->oDependencyHandler?->GetMap();
+	}
+
 	// pure decoration of FormBuilderInterface
 
 	public function add(string|FormBuilderInterface $child, ?string $type = null, array $options = []): static
