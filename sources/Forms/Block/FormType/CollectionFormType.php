@@ -7,13 +7,7 @@
 namespace Combodo\iTop\Forms\Block\FormType;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Event\PreSetDataEvent;
-use Symfony\Component\Form\Event\PreSubmitEvent;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -21,7 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class CollectionFormType extends AbstractType
 {
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function getParent(): string
 	{
 		return CollectionType::class;

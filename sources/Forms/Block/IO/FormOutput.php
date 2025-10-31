@@ -6,6 +6,7 @@
 
 namespace Combodo\iTop\Forms\Block\IO;
 
+use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\IO\Converter\AbstractConverter;
 
 /**
@@ -13,11 +14,11 @@ use Combodo\iTop\Forms\Block\IO\Converter\AbstractConverter;
  */
 class FormOutput extends AbstractFormIO
 {
-	/** @var AbstractConverter|null  */
+	/** @var AbstractConverter|null */
 	private null|AbstractConverter $oConverter;
 
 
-	/** @var array  */
+	/** @var array */
 	private array $aBindingsToOutputs = [];
 
 	/**
@@ -27,9 +28,9 @@ class FormOutput extends AbstractFormIO
 	 * @param string $sType
 	 * @param AbstractConverter|null $oConverter
 	 */
-	public function __construct(string $sName, string $sType, AbstractConverter $oConverter = null)
+	public function __construct(string $sName, string $sType, AbstractFormBlock $oOwnerBlock, AbstractConverter $oConverter = null)
 	{
-		parent::__construct($sName, $sType);
+		parent::__construct($sName, $sType, $oOwnerBlock);
 		$this->oConverter = $oConverter;
 	}
 
@@ -45,6 +46,7 @@ class FormOutput extends AbstractFormIO
 		if (is_null($this->oConverter)) {
 			return $oData;
 		}
+
 		return $this->oConverter->Convert($oData);
 	}
 
@@ -83,7 +85,6 @@ class FormOutput extends AbstractFormIO
 	}
 
 
-
 	/**
 	 * Bind to output.
 	 *
@@ -101,7 +102,6 @@ class FormOutput extends AbstractFormIO
 
 		return $oBinding;
 	}
-
 
 
 	/**

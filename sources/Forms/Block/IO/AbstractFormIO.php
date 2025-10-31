@@ -38,10 +38,11 @@ class AbstractFormIO
 	 * @param string $sName name of the IO
 	 * @param string $sType type of the IO
 	 */
-	public function __construct(string $sName, string $sType)
+	public function __construct(string $sName, string $sType, AbstractFormBlock $oOwnerBlock)
 	{
 		$this->sName = $sName;
 		$this->sType = $sType;
+		$this->oOwnerBlock = $oOwnerBlock;
 	}
 
 	/**
@@ -52,19 +53,6 @@ class AbstractFormIO
 	public function GetOwnerBlock(): AbstractFormBlock
 	{
 		return $this->oOwnerBlock;
-	}
-
-	/**
-	 * Set the owner block.
-	 *
-	 * @param AbstractFormBlock $oOwnerBlock
-	 *
-	 * @return $this
-	 */
-	public function SetOwnerBlock(AbstractFormBlock $oOwnerBlock): self
-	{
-		$this->oOwnerBlock = $oOwnerBlock;
-		return $this;
 	}
 
 	/**
@@ -87,6 +75,7 @@ class AbstractFormIO
 	public function SetName(string $sName): self
 	{
 		$this->sName = $sName;
+
 		return $this;
 	}
 
@@ -136,6 +125,7 @@ class AbstractFormIO
 	{
 		$PostSetDataExist = array_key_exists(FormEvents::POST_SET_DATA, $this->aValues) && $this->aValues[FormEvents::POST_SET_DATA] !== null;
 		$PostSubmitExist = array_key_exists(FormEvents::POST_SUBMIT, $this->aValues) && $this->aValues[FormEvents::POST_SUBMIT] !== null;
+
 		return $PostSetDataExist || $PostSubmitExist;
 	}
 
@@ -170,12 +160,13 @@ class AbstractFormIO
 	 */
 	public function Value(): mixed
 	{
-		if(array_key_exists(FormEvents::POST_SUBMIT, $this->aValues) ){
+		if (array_key_exists(FormEvents::POST_SUBMIT, $this->aValues)) {
 			return $this->aValues[FormEvents::POST_SUBMIT];
 		}
-		if(array_key_exists(FormEvents::POST_SET_DATA, $this->aValues) ){
+		if (array_key_exists(FormEvents::POST_SET_DATA, $this->aValues)) {
 			return $this->aValues[FormEvents::POST_SET_DATA];
 		}
+
 		return null;
 	}
 

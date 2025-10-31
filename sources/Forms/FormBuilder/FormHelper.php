@@ -24,8 +24,7 @@ class FormHelper
 			return FormEvents::POST_SET_DATA;
 		} else if ($event instanceof PostSubmitEvent) {
 			return FormEvents::POST_SUBMIT;
-		}
-		else if ($event instanceof PreSubmitEvent) {
+		} else if ($event instanceof PreSubmitEvent) {
 			return FormEvents::PRE_SUBMIT;
 		}
 

@@ -11,12 +11,17 @@ namespace Combodo\iTop\Forms\Block\IO;
  */
 class FormBinding
 {
+	public readonly AbstractFormIO $oSourceIO;
+	public readonly AbstractFormIO $oDestinationIO;
+
 	/**
 	 * @param AbstractFormIO $oSourceIO
 	 * @param AbstractFormIO $oDestinationIO
 	 */
-	public function __construct(public readonly AbstractFormIO $oSourceIO, public readonly AbstractFormIO $oDestinationIO)
+	public function __construct(AbstractFormIO $oSourceIO, AbstractFormIO $oDestinationIO)
 	{
+		$this->oDestinationIO = $oDestinationIO;
+		$this->oSourceIO = $oSourceIO;
 
 	}
 

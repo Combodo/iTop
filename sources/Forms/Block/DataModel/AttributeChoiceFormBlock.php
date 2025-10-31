@@ -8,10 +8,9 @@ namespace Combodo\iTop\Forms\Block\DataModel;
 
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
+use Combodo\iTop\Forms\Block\IO\Converter\StringToAttributeConverter;
 use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
-use Combodo\iTop\Forms\Block\IO\Converter\StringToAttributeConverter;
-use Combodo\iTop\Forms\FormType\AttributeFormType;
 use CoreException;
 use MetaModel;
 
@@ -28,22 +27,23 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	// outputs
 	public const OUTPUT_ATTRIBUTE = 'attribute';
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function InitOptions(): array
 	{
 		$aOptions = parent::InitOptions();
+
 //		$aOptions['placeholder'] = 'Select an attribute...';
 		return $aOptions;
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function InitInputs(): void
 	{
 		parent::InitInputs();
 		$this->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function InitOutputs(): void
 	{
 		parent::InitOutputs();
@@ -67,11 +67,12 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 		$aOptions = parent::GetOptions();
 
 		$oValue = $this->GetInput(self::INPUT_CLASS_NAME)->Value();
-		if($oValue == '')
+		if ($oValue == '') {
 			return $aOptions;
+		}
 
 		$aAttributeCodes = MetaModel::GetAttributesList($oValue);
-		$aAttributeCodes = array_combine($aAttributeCodes, $aAttributeCodes) ;
+		$aAttributeCodes = array_combine($aAttributeCodes, $aAttributeCodes);
 		$aOptions['choices'] = $aAttributeCodes;
 
 		return $aOptions;

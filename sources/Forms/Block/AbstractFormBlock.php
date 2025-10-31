@@ -134,8 +134,7 @@ abstract class AbstractFormBlock
 	 */
 	public function AddInput(string $sName, string $sType): void
 	{
-		$oFormInput = new FormInput($sName, $sType);
-		$oFormInput->SetOwnerBlock($this);
+		$oFormInput = new FormInput($sName, $sType, $this);
 		$this->aFormInputs[$oFormInput->GetName()] = $oFormInput;
 	}
 
@@ -167,8 +166,7 @@ abstract class AbstractFormBlock
 	 */
 	public function AddOutput(string $sName, string $sType, AbstractConverter $oConverter = null): void
 	{
-		$oFormOutput = new FormOutput($sName, $sType, $oConverter);
-		$oFormOutput->SetOwnerBlock($this);
+		$oFormOutput = new FormOutput($sName, $sType, $this, $oConverter);
 		$this->aFormOutputs[$oFormOutput->GetName()] = $oFormOutput;
 	}
 
@@ -296,6 +294,7 @@ abstract class AbstractFormBlock
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -333,6 +332,7 @@ abstract class AbstractFormBlock
 				$aBindings[$oFormOutput->GetName()] = $oFormOutput->GetBinding();
 			}
 		}
+
 		return $aBindings;
 	}
 
@@ -389,11 +389,11 @@ abstract class AbstractFormBlock
 		/** Iterate throw output @var FormOutput $oFormOutput */
 		foreach ($this->aFormOutputs as $oFormOutput) {
 
-			try{
+			try {
 				// Compute the output value
 				$oFormOutput->ComputeValue($sEventType, $oData);
 			}
-			catch(IOException $oException){
+			catch (IOException $oException) {
 				IssueLog::Exception(sprintf('Unable to compute values for output %s of block %s', $oFormOutput->GetName(), $this->GetName()), $oException);
 			}
 

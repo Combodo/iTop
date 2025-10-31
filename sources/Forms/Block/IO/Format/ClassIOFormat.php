@@ -6,8 +6,11 @@ use JsonSerializable;
 
 class ClassIOFormat implements JsonSerializable
 {
-	public function __construct(public string $sClassName)
+	public string $sClassName;
+
+	public function __construct(string $sClassName)
 	{
+		$this->sClassName = $sClassName;
 		// validation du format sinon exception
 	}
 

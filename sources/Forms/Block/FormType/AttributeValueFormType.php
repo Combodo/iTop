@@ -6,6 +6,7 @@
 
 namespace Combodo\iTop\Forms\Block\FormType;
 
+use MetaModel;
 use Symfony\Component\Form\AbstractType;
 
 class AttributeValueFormType extends AbstractType
@@ -19,14 +20,14 @@ class AttributeValueFormType extends AbstractType
 	{
 		$aValues = [];
 
-		if(!empty($inputs['attribute'])){
-			$oAttDef = \MetaModel::GetAttributeDef($inputs['object_class'], $inputs['attribute']);
+		if (!empty($inputs['attribute'])) {
+			$oAttDef = MetaModel::GetAttributeDef($inputs['object_class'], $inputs['attribute']);
 			$aValues = $oAttDef->GetAllowedValues();
 			$aValues = $aValues !== null ? array_combine($aValues, $aValues) : [];
 		}
 
 		return [
-			'choices' => $aValues
+			'choices' => $aValues,
 		];
 	}
 }

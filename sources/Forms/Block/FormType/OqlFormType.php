@@ -34,38 +34,40 @@ class OqlFormType extends AbstractType
 		]);
 
 		$resolver->setDefault('outputs', array(
-			'selected_class' => function($oData) {
-				if($oData === null)
+			'selected_class' => function ($oData) {
+				if ($oData === null) {
 					return null;
+				}
 				// extract selected class
 				preg_match('/SELECT\s+(\w+)/', $oData, $aMatches);
+
 				return $aMatches[1] ?? null;
-			}
+			},
 		));
 
 		$resolver->setDefined('with_ai_button');
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
 		parent::buildForm($builder, $options);
 
 		// on pre submit
-		$builder->addEventListener(FormEvents::POST_SUBMIT, function (PostSubmitEvent $event) use ($options){
+		$builder->addEventListener(FormEvents::POST_SUBMIT, function (PostSubmitEvent $event) use ($options) {
 
-			try{
+			try {
 				$oClassConverter = new OqlToClassConverter();
 				$oClassConverter->Convert($event->getData());
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				$event->getForm()->addError(new FormError($e->getMessage()));
 			}
 
 		});
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function buildView(FormView $view, FormInterface $form, array $options): void
 	{
 		parent::buildView($view, $form, $options);

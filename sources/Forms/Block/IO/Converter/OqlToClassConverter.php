@@ -15,24 +15,25 @@ use Symfony\Component\Filesystem\Exception\IOException;
  */
 class OqlToClassConverter extends AbstractConverter
 {
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function Convert(mixed $oData): ?ClassIOFormat
 	{
-		if($oData === null)
+		if ($oData === null) {
 			return null;
+		}
 
 		// Extract OQL information
 		preg_match('/SELECT\s+(\w+)/', $oData, $aMatches);
 
 		// Selected class
-		if(isset($aMatches[1])){
+		if (isset($aMatches[1])) {
 			$sSelectedClass = $aMatches[1];
-			if(!MetaModel::IsValidClass($sSelectedClass)){
-				throw new IOException('Incorrect OQL select class name ' . $sSelectedClass);
+			if (!MetaModel::IsValidClass($sSelectedClass)) {
+				throw new IOException('Incorrect OQL select class name '.$sSelectedClass);
 			}
+
 			return new ClassIOFormat($aMatches[1]);
-		}
-		else{
+		} else {
 			throw new IOException('Incorrect OQL sentence');
 		}
 

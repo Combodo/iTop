@@ -1,8 +1,11 @@
 {# @copyright   Copyright (C) 2010-2025 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-<turbo-stream action="update" target="itop_profiler">
+<turbo-stream action="update" target="turbo_itop_profiler">
     <template>
-        {{ sProfilerContent|raw }}
+        {% for aProfileInfo in aProfilesInfo %}
+            {% set aProfileData = aProfileInfo.aProfileData %}
+            {{ include(aProfileInfo.sTemplate) }}
+        {% endfor %}
     </template>
 </turbo-stream>

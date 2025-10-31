@@ -8,6 +8,7 @@ namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\FormsException;
+use Exception;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 /**
@@ -40,17 +41,17 @@ class FormBlock extends AbstractFormBlock
 		}
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function GetFormType(): string
 	{
 		return FormType::class;
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function InitOptions(): array
 	{
 		return [
-			'compound' => true
+			'compound' => true,
 		];
 	}
 
@@ -68,6 +69,7 @@ class FormBlock extends AbstractFormBlock
 		$oSubFormBlock = new ($sType)($sName, $aOptions);
 		$this->aChildrenBlocks[$sName] = $oSubFormBlock;
 		$oSubFormBlock->SetParent($this);
+
 		return $oSubFormBlock;
 	}
 

@@ -33,11 +33,9 @@ use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use ContextTag;
 use DateTimeFormat;
 use DBSearch;
-use DeprecatedCallsLog;
 use Dict;
 use ExecutionKPI;
 use InlineImage;
-use iPageUIBlockExtension;
 use MetaModel;
 use UserRights;
 use utils;
@@ -756,7 +754,7 @@ HTML;
 			}
 		}
 
-		// Render HTKL content
+		// Render HTML content
 		$sHtml = $this->RenderContent();
 
 		// Echo global HTML

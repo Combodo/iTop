@@ -15,13 +15,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
  */
 class TextAreaFormBlock extends AbstractFormBlock
 {
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function GetFormType(): string
 	{
 		return TextareaType::class;
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function InitOptions(): array
 	{
 		return [];
