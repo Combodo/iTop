@@ -85,6 +85,7 @@
           <is_user_editable>true</is_user_editable>
           <definition>
             <layout>DashboardLayoutTwoCols</layout>
+            <title>Organization:Overview</title>
             <auto_reload>
               <enabled>false</enabled>
               <interval>300</interval>
@@ -1019,6 +1020,35 @@
         </reconciliation>
       </properties>
       <fields>
+        <field id="overview" xsi:type="AttributeDashboard">
+          <is_user_editable>true</is_user_editable>
+          <definition>
+            <layout>DashboardLayoutTwoCols</layout>
+            <title>Team:Overview</title>
+            <auto_reload>
+              <enabled>false</enabled>
+              <interval>300</interval>
+            </auto_reload>
+            <cells>
+              <cell id="0">
+                <rank>0</rank>
+                <dashlets>
+                  <dashlet id="0" xsi:type="DashletEmptyCell">
+                    <rank>0</rank>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="1">
+                <rank>10</rank>
+                <dashlets>
+                  <dashlet id="0" xsi:type="DashletEmptyCell">
+                    <rank>0</rank>
+                  </dashlet>
+                </dashlets>
+              </cell>
+            </cells>
+          </definition>
+        </field>
         <field id="persons_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkPersonToTeam</linked_class>
           <ext_key_to_me>team_id</ext_key_to_me>
@@ -1069,8 +1099,11 @@
             <item id="function">
               <rank>70</rank>
             </item>
-            <item id="persons_list">
+            <item id="overview">
               <rank>80</rank>
+            </item>
+            <item id="persons_list">
+              <rank>90</rank>
             </item>
           </items>
         </details>
