@@ -13,6 +13,9 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  *
@@ -26,6 +29,21 @@ class ChoiceFormType extends AbstractType
 	}
 
 	/** @inheritdoc */
+	public function configureOptions(OptionsResolver $resolver): void
+	{
+		parent::configureOptions($resolver);
+
+		$resolver->setDefault('inline_display', true);
+	}
+
+	public function buildView(FormView $view, FormInterface $form, array $options): void
+	{
+		parent::buildView($view, $form, $options);
+
+		$view->vars['inline_display'] = $options['inline_display'];
+	}
+
+	/** @inheritdoc  */
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
 		// on preset data

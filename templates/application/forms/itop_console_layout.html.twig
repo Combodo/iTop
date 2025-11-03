@@ -26,27 +26,37 @@
     {{- parent() -}}
 {%- endblock choice_widget_collapsed -%}
 
+{%- block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }}>
+        {%- for child in form %}
+            {{- form_widget(child) -}}
+            {{- form_label(child, null, {translation_domain: choice_translation_domain, no_label_class: true}) -}}
+        {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded -%}
+
 {%- block form_label -%}
-    {%- if compound is defined and compound -%}
+    {%- set no_legend_element = inline_display is defined and inline_display  -%}
+    {%- if compound is defined and compound and not no_legend_element -%}
         {%- set element = 'legend' -%}
-    {%- else -%}
+    {%- elseif no_label_class is not defined or not no_label_class -%}
         {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ibo-field--label')|trim}) %}
     {%- endif -%}
     {{- parent() -}}
 {%- endblock form_label -%}
 
-{#{%- block form_rows -%}#}
+{%- block form_rows -%}
 
-{#    {% for block in blocks %}#}
-{#        <div id="block_{{ block.name }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">#}
-{#            {{ block.name }} {{ block.added }}#}
-{#        {% if block.added == 1 %}#}
-{#            {{ form_row(form[block.name]) }}#}
-{#        {% endif %}#}
-{#        </div>#}
-{#    {% endfor %}#}
+    {% for block in blocks %}
+        <div id="block_{{ block.name }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">
+            {{ block.name }} {{ block.added }}
+        {% if block.added == 1 %}
+            {{ form_row(form[block.name]) }}
+        {% endif %}
+        </div>
+    {% endfor %}
 
-{#{%- endblock form_rows -%}#}
+{%- endblock form_rows -%}
 
 {%- block collection_widget -%}
     {% if prototype is defined and not prototype.rendered %}

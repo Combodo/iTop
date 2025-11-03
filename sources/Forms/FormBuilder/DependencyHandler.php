@@ -7,7 +7,9 @@
 namespace Combodo\iTop\Forms\FormBuilder;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Exception;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
@@ -131,7 +133,12 @@ class DependencyHandler
 			$oFormBlock = $this->aSubBlocks[$oForm->getName()];
 
 			// Compute the block outputs with the data
-			$oFormBlock->ComputeOutputs($sEventType, $oForm->getData());
+			try{
+				$oFormBlock->ComputeOutputs($sEventType, $oForm->getData());
+			}
+			catch(Exception $e){
+				$oForm->addError(new FormError($e->getMessage()));
+			}
 
 			// Check dependencies
 			$this->CheckDependencies($oForm->getParent(), $oForm->getName(), $sEventType);

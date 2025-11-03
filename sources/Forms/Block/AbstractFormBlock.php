@@ -418,13 +418,8 @@ abstract class AbstractFormBlock implements IFormBlock
 		/** Iterate throw output @var FormOutput $oFormOutput */
 		foreach ($this->aFormOutputs as $oFormOutput) {
 
-			try {
-				// Compute the output value
-				$oFormOutput->ComputeValue($sEventType, $oData);
-			}
-			catch (IOException $oException) {
-				IssueLog::Exception(sprintf('Unable to compute values for output %s of block %s', $oFormOutput->GetName(), $this->GetName()), $oException);
-			}
+			// Compute the output value
+			$oFormOutput->ComputeValue($sEventType, $oData);
 
 		}
 	}

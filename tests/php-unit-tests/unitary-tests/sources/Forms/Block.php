@@ -21,22 +21,26 @@ use ReflectionException;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+/**
+ * Test forms block.
+ *
+ */
 class Block extends ItopDataTestCase
 {
 
 	/**
+	 * Block get form type must return a class derived from Symfony form AbstractType.
+	 *
 	 * @throws ReflectionException
 	 */
-	public function testBlockFormType()
+	public function testFormBlockProvideSymfonyFormType(): void
 	{
-		$oChoiceBlock = new ChoiceFormBlock('choiceBlock');
-		$test = new \ReflectionClass($oChoiceBlock->GetFormType());
-		$this->assertTrue($test->isSubclassOf(AbstractType::class));
-
-		$oFormBlock = new ChoiceFormBlock('formBlock');
-		$test = new \ReflectionClass($oFormBlock->GetFormType());
-		$this->assertTrue($test->isSubclassOf(AbstractType::class));
-
+		$aFormBlocks = InterfaceDiscovery::GetInstance()->FindItopClasses(iFormBlock::class);
+		foreach ($aFormBlocks as $sFormBlock) {
+			$oChoiceBlock = new($sFormBlock)($sFormBlock);
+			$oClass = new \ReflectionClass($oChoiceBlock->GetFormType());
+			$this->assertTrue($oClass->isSubclassOf(AbstractType::class));
+		}
 	}
 
 	/**
@@ -44,7 +48,7 @@ class Block extends ItopDataTestCase
 	 *
 	 * @throws ReflectionException
 	 */
-	public function testAddBlockFromSymfonyType()
+	public function testAddBlockFromSymfonyType(): void
 	{
 		$oFormBlock = new FormBlock('formBlock');
 		$this->expectException(FormBlockException::class);
@@ -54,14 +58,30 @@ class Block extends ItopDataTestCase
 	/**
 	 * All block may contain a reference to themselves in their options
 	 */
-	public function testBlockOptionsContainsBlockReference()
+	public function testBlockOptionsContainsBlockReference(): void
 	{
 		$aFormBlocks = InterfaceDiscovery::GetInstance()->FindItopClasses(iFormBlock::class);
 		foreach ($aFormBlocks as $sFormBlock) {
 			$oChoiceBlock = new($sFormBlock)($sFormBlock);
 			$this->assertTrue($oChoiceBlock->GetOptions()['form_block'] === $oChoiceBlock);
 		}
+	}
 
+	/**
+	 * Check that a block with dependencies return true for HasDependenciesBlocks.
+	 *
+	 * @return void
+	 * @throws FormBlockException
+	 * @throws ReflectionException
+	 */
+	public function testCheckDependencyState(): void
+	{
+		$oFormBlock = new FormBlock('formBlock');
+		$oFormBlock->Add('allow_age', CheckboxFormBlock::class, []);
+		$oBirthdateBlock = $oFormBlock->Add('birthdate', TextFormBlock::class, [])
+			->DependsOn(AbstractFormBlock::INPUT_VISIBLE, 'allow_age', CheckboxFormBlock::OUTPUT_CHECKED);
+
+		$this->assertTrue($oBirthdateBlock->HasDependenciesBlocks());
 	}
 
 	/**
@@ -71,7 +91,7 @@ class Block extends ItopDataTestCase
 	 * @throws FormBlockException
 	 * @throws ReflectionException
 	 */
-	public function testFormBlockNotContainsDependentFields()
+	public function testFormBlockNotContainsDependentFields(): void
 	{
 		// form with a dependent field
 		$oFormBlock = new FormBlock('formBlock');
