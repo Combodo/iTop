@@ -193,7 +193,7 @@
 
 		$sTicketListAttCode = 'tickets_list';
 
-		if ((MetaModel::HasChildrenClasses('Ticket') && MetaModel::IsValidAttCode(get_class($this), $sTicketListAttCode))	{
+		if (MetaModel::HasChildrenClasses('Ticket') && MetaModel::IsValidAttCode(get_class($this), $sTicketListAttCode))	{
 			// Display one list per leaf class (the only way to display the status as of now)
 
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sTicketListAttCode);
