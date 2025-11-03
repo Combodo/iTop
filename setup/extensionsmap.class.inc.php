@@ -111,7 +111,11 @@ class iTopExtension
 		$this->aMissingDependencies = array();
 	}
 
-	public function IsUninstallable()
+	/**
+	 * @since 3.3.0
+	 * @return bool
+	 */
+	public function CanBeUninstalled()
 	{
 		foreach ($this->aModuleInfo as $sModuleCode => $aModuleInfo) {
 			$bUninstallable = $aModuleInfo['uninstallable'] === 'yes';
@@ -264,10 +268,16 @@ class iTopExtensionsMap
 		$this->aExtensions[$oNewExtension->sCode.'/'.$oNewExtension->sVersion] = $oNewExtension;
 	}
 
-	public function Get($sExtensionCode):?iTopExtension
+	/**
+	 * @since 3.3.0
+	 * @param string $sExtensionCode
+	 *
+	 * @return \iTopExtension|null
+	 */
+	public function Get(string $sExtensionCode):?iTopExtension
 	{
 		foreach($this->aExtensions as $oExtension) {
-			if ($oExtension->sCode == $sExtensionCode) {
+			if ($oExtension->sCode === $sExtensionCode) {
 				return $oExtension;
 			}
 		}
@@ -335,19 +345,19 @@ class iTopExtensionsMap
 						// If we are not already inside a formal extension, then the module itself is considered
 						// as an extension, otherwise, the module is just added to the list of modules belonging
 						// to this extension
-						$sModuleId = $aModuleInfo[1];
+						$sModuleId = $aModuleInfo[ModuleFileReader::MODULE_INFO_ID];
 						list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
 						if ($sModuleVersion == '') {
 							// Provide a default module version since version is mandatory when recording ExtensionInstallation
 							$sModuleVersion = '0.0.1';
 						}
-						$aModuleInfo[2]['uninstallable'] ??= 'yes';
+						$aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['uninstallable'] ??= 'yes';
 
 						if (($sParentExtensionId !== null) && (array_key_exists($sParentExtensionId, $this->aExtensions)) && ($this->aExtensions[$sParentExtensionId] instanceof iTopExtension)) {
 							// Already inside an extension, let's add this module the list of modules belonging to this extension
 							$this->aExtensions[$sParentExtensionId]->aModules[] = $sModuleName;
 							$this->aExtensions[$sParentExtensionId]->aModuleVersion[$sModuleName] = $sModuleVersion;
-							$this->aExtensions[$sParentExtensionId]->aModuleInfo[$sModuleName] = $aModuleInfo[2];
+							$this->aExtensions[$sParentExtensionId]->aModuleInfo[$sModuleName] = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG];
 						}
 						else {
 							// Not already inside an folder containing an 'extension.xml' file
@@ -355,7 +365,7 @@ class iTopExtensionsMap
 							// Ignore non-visible modules and auto-select ones, since these are never prompted
 							// as a choice to the end-user
 							$bVisible = true;
-							if (!$aModuleInfo[2]['visible'] || isset($aModuleInfo[2]['auto_select']))
+							if (!$aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['visible'] || isset($aModuleInfo[2]['auto_select']))
 							{
 								$bVisible = false;
 							}
@@ -363,15 +373,15 @@ class iTopExtensionsMap
 							// Let's create a "fake" extension from this module (containing just this module) for backwards compatibility
 							$oExtension = new iTopExtension();
 							$oExtension->sCode = $sModuleName;
-							$oExtension->sLabel = $aModuleInfo[2]['label'];
+							$oExtension->sLabel = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['label'];
 							$oExtension->sDescription = '';
 							$oExtension->sVersion = $sModuleVersion;
 							$oExtension->sSource = $sSource;
-							$oExtension->bMandatory = $aModuleInfo[2]['mandatory'];
-							$oExtension->sMoreInfoUrl = $aModuleInfo[2]['doc.more_information'];
+							$oExtension->bMandatory = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['mandatory'];
+							$oExtension->sMoreInfoUrl = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['doc.more_information'];
 							$oExtension->aModules = array($sModuleName);
 							$oExtension->aModuleVersion[$sModuleName] = $sModuleVersion;
-							$oExtension->aModuleInfo[$sModuleName] = $aModuleInfo[2];
+							$oExtension->aModuleInfo[$sModuleName] = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG];
 							$oExtension->sSourceDir = $sSearchDir;
 							$oExtension->bVisible = $bVisible;
 							$this->AddExtension($oExtension);
@@ -472,16 +482,6 @@ class iTopExtensionsMap
 	}
 
 
-	public function MarkAsUninstallable($sExtensionCode, $bMark = true)
-	{
-		foreach($this->aExtensions as $oExtension) {
-			if ($oExtension->sCode == $sExtensionCode) {
-				$oExtension->bUninstallable = $bMark;
-				break;
-			}
-		}
-	}
-
 	/**
 	 * Tells if a given extension(code) is marked as chosen
 	 * @param string $sExtensionCode
@@ -560,8 +560,6 @@ class iTopExtensionsMap
 		foreach($aInstalledExtensions as $aDBInfo)
 		{
 			$this->MarkAsChosen($aDBInfo['code']);
-			$sUninstallable = $aDBInfo['uninstallable'] ?? 'yes';
-			$this->MarkAsUninstallable($sUninstallable);
 			$this->SetInstalledVersion($aDBInfo['code'], $aDBInfo['version']);
 		}
 		return true;

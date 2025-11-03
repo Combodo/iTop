@@ -32,6 +32,10 @@ class ModuleFileReader {
 		"method_exists"
 	];
 
+	const MODULE_INFO_PATH = 0;
+	const MODULE_INFO_ID = 1;
+	const MODULE_INFO_CONFIG = 2;
+
 	const STATIC_CALLWHITELIST=[
 		"utils::GetItopVersionWikiSyntax"
 	];
@@ -168,7 +172,7 @@ class ModuleFileReader {
 	private function CompleteModuleInfoWithFilePath(array &$aModuleInfo)
 	{
 		if (count($aModuleInfo)==3) {
-			$aModuleInfo[2]['module_file_path'] = $aModuleInfo[0];
+			$aModuleInfo[static::MODULE_INFO_CONFIG]['module_file_path'] = $aModuleInfo[static::MODULE_INFO_PATH];
 		}
 	}
 
@@ -255,9 +259,9 @@ class ModuleFileReader {
 		}
 
 		return [
-			$sModuleFilePath,
-			$sModuleId,
-			$aModuleConfig,
+			static::MODULE_INFO_PATH => $sModuleFilePath,
+			static::MODULE_INFO_ID => $sModuleId,
+			static::MODULE_INFO_CONFIG => $aModuleConfig,
 		];
 	}
 

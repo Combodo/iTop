@@ -520,7 +520,7 @@ class ModuleDiscovery
 					$sModuleFilePath = $sDirectory.'/'.$sFile;
 					try {
 						$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sDirectory.'/'.$sFile);
-						SetupWebPage::AddModule($sModuleFilePath, $aModuleInfo[1], $aModuleInfo[2]);
+						SetupWebPage::AddModule($sModuleFilePath, $aModuleInfo[ModuleFileReader::MODULE_INFO_ID], $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]);
 					} catch(ModuleFileReaderException $e){
 						continue;
 					}

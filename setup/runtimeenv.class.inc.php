@@ -807,7 +807,7 @@ class RunTimeEnvironment
 				$oInstallRec->Set('label', $oExtension->sLabel);
 				$oInstallRec->Set('version', $oExtension->sVersion);
 				$oInstallRec->Set('source',  $oExtension->sSource);
-				$oInstallRec->Set('uninstallable', $oExtension->IsUninstallable() ? 'yes' : 'no');
+				$oInstallRec->Set('uninstallable', $oExtension->CanBeUninstalled() ? 'yes' : 'no');
 				$oInstallRec->Set('installed', $iInstallationTime);
 				$oInstallRec->DBInsertNoReload();
 			}
