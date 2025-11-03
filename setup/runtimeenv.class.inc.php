@@ -62,7 +62,23 @@ class RunTimeEnvironment
 	 * Extensions map of the source environment
 	 * @var iTopExtensionsMap
 	 */
-	protected $oExtensionsMap;
+	protected ?iTopExtensionsMap $oExtensionsMap;
+
+	protected function GetExtensionMap(): ?iTopExtensionsMap
+	{
+		return $this->oExtensionsMap;
+	}
+
+	public function InitExtensionMap($aExtraDirs, $oSourceConfig)
+	{
+		// Actually read the modules available for the target environment,
+		// but get the selection from the source environment and finally
+		// mark as (automatically) chosen alll the "remote" modules present in the
+		// target environment (data/<target-env>-modules)
+		// The actual choices will be recorded by RecordInstallation below
+		$this->oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv, true, $aExtraDirs);
+		$this->oExtensionsMap->LoadChoicesFromDatabase($oSourceConfig);
+	}
 
 	/**
 	 * Toolset for building a run-time environment
@@ -241,20 +257,22 @@ class RunTimeEnvironment
 
 		// Actually read the modules available for the target environment,
 		// but get the selection from the source environment and finally
-		// mark as (automatically) chosen alll the "remote" modules present in the
+		// mark as (automatically) chosen all the "remote" modules present in the
 		// target environment (data/<target-env>-modules)
 		// The actual choices will be recorded by RecordInstallation below
-		$this->oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv, $aExtraDirs);
-		$this->oExtensionsMap->LoadChoicesFromDatabase($oSourceConfig);
-		foreach ($this->oExtensionsMap->GetAllExtensions() as $oExtension) {
+		$this->InitExtensionMap($aExtraDirs, $oSourceConfig);
+		$this->GetExtensionMap()->LoadChoicesFromDatabase($oSourceConfig);
+		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
 			if ($this->IsExtensionSelected($oExtension)) {
-				$this->oExtensionsMap->MarkAsChosen($oExtension->sCode);
+				$this->GetExtensionMap()->MarkAsChosen($oExtension->sCode);
 			}
 		}
 
 		// Do load the required modules
 		//
 		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
+
+		$aRet = [];
 		$aRet[$oDictModule->GetName()] = $oDictModule;
 
 		$oFactory = new ModelFactory($aDirsToCompile);
@@ -273,7 +291,7 @@ class RunTimeEnvironment
 		foreach ($aModules as $oModule) {
 			$sModule = $oModule->GetName();
 			$sModuleRootDir = $oModule->GetRootDir();
-			$bIsExtra = $this->oExtensionsMap->ModuleIsChosenAsPartOfAnExtension($sModule, iTopExtension::SOURCE_REMOTE);
+			$bIsExtra = $this->GetExtensionMap()->ModuleIsChosenAsPartOfAnExtension($sModule, iTopExtension::SOURCE_REMOTE);
 			if (array_key_exists($sModule, $aAvailableModules)) {
 				if (($aAvailableModules[$sModule]['installed_version'] != '') ||  $bIsExtra && !$oModule->IsAutoSelect()) { //Extra modules are always unless they are 'AutoSelect'
 					$aRet[$oModule->GetName()] = $oModule;
@@ -532,7 +550,6 @@ class RunTimeEnvironment
 
 		// Record installed modules and extensions
 		//
-		$aAvailableExtensions = [];
 		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $this->GetBuildDir());
 		foreach ($aSelectedModuleCodes as $sModuleId) {
 			if (!array_key_exists($sModuleId, $aAvailableModules)) {
@@ -573,16 +590,17 @@ class RunTimeEnvironment
 			$oInstallRec->DBInsertNoReload();
 		}
 
-		if ($this->oExtensionsMap) {
+		if ($this->GetExtensionMap()) {
 			// Mark as chosen the selected extensions code passed to us
+
 			// Note: some other extensions may already be marked as chosen
-			foreach ($this->oExtensionsMap->GetAllExtensions() as $oExtension) {
+			foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
 				if (in_array($oExtension->sCode, $aSelectedExtensionCodes)) {
-					$this->oExtensionsMap->MarkAsChosen($oExtension->sCode);
+					$this->GetExtensionMap()->MarkAsChosen($oExtension->sCode);
 				}
 			}
 
-			foreach ($this->oExtensionsMap->GetChoices() as $oExtension) {
+			foreach ($this->GetExtensionMap()->GetChoices() as $oExtension) {
 				$oInstallRec = new ExtensionInstallation();
 				$oInstallRec->Set('code', $oExtension->sCode);
 				$oInstallRec->Set('label', $oExtension->sLabel);

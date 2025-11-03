@@ -24,7 +24,9 @@ try {
 	MetaModel::Startup($sConfFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
 }
 catch (\Throwable $e) {
-	\IssueLog::Error("Cannot read model from provided environment", null,
+	echo $e->getMessage();
+	echo $e->getTraceAsString();
+	\SetupLog::Error("Cannot read model from provided environment", null,
 		[
 			'env'   => $sEnv,
 			'error' => $e->getMessage(),

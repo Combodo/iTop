@@ -135,7 +135,7 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 			$aAvailableModules[$oModule->GetName()] = $oModule;
 		}
 		// TODO check the auto-selected modules here
-		foreach ($this->oExtensionsMap->GetAllExtensions() as $oExtension) {
+		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
 			if ($oExtension->bMarkedAsChosen) {
 				foreach ($oExtension->aModules as $sModuleName) {
 					if (!isset($aRet[$sModuleName]) && isset($aAvailableModules[$sModuleName])) {

@@ -148,14 +148,12 @@ class iTopExtensionsMap
 {
 	/**
 	 * The list of all discovered extensions
-	 * @param string $sFromEnvironment The environment to scan
-	 * @param bool $bNormailizeOldExtension true to "magically" convert some well-known old extensions (i.e. a set of modules) to the new iTopExtension format
-	 * @return void
+	 *  @var array $aExtensions
 	 */
 	protected $aExtensions;
 	/**
 	 * The list of all currently installed extensions
-	 * @var array
+	 * @var array $aInstalledExtensions
 	 */
 	protected array $aInstalledExtensions;
 
@@ -166,6 +164,12 @@ class iTopExtensionsMap
 	 */
 	protected $aScannedDirs;
 
+	/**
+	 * The list of all discovered extensions
+	 * @param string $sFromEnvironment The environment to scan
+	 * @param bool $bNormailizeOldExtension true to "magically" convert some well-known old extensions (i.e. a set of modules) to the new iTopExtension format
+	 * @return void
+	 */
 	public function __construct($sFromEnvironment = 'production', $aExtraDirs = [])
 	{
 		$this->aExtensions = [];
@@ -276,6 +280,21 @@ class iTopExtensionsMap
 		$this->aExtensionsByCode[$oNewExtension->sCode] = $oNewExtension;
 	}
 
+	public function RemoveExtension(string $sCode): void
+	{
+		$oExtension = $this->Get($sCode);
+		if (is_null($oExtension)) {
+			\IssueLog::Error(__METHOD__.": cannot find extension to remove", null, [$sCode]);
+
+			return;
+		}
+
+		\IssueLog::Debug(__METHOD__.": remove extension from map", null, [$oExtension->sCode => $oExtension->sSourceDir]);
+
+		unset($this->aExtensions[$oExtension->sCode.'/'.$oExtension->sVersion]);
+		unset($this->aExtensionsByCode[$sCode]);
+	}
+
 	/**
 	 * @since 3.3.0
 	 * @param string $sExtensionCode
@@ -287,7 +306,7 @@ class iTopExtensionsMap
 		return $this->aExtensionsByCode[$sExtensionCode] ?? null;
 	}
 
-	public function GetMissingExtensions(array $aSelectedExtensions)
+	/*public function GetMissingExtensions(array $aSelectedExtensions)
 	{
 		\SetupLog::Info(__METHOD__, null, ['selected' => $aSelectedExtensions]);
 		$aExtensionsFromDb = array_keys($this->aExtensionsByCode);
@@ -308,8 +327,7 @@ class iTopExtensionsMap
 		\SetupLog::Info(__METHOD__, null, $aRes);
 
 		return $aRes;
-	}
-
+	}*/
 
 	/**
 	 * Read (recursively) a directory to find if it contains extensions (or modules)
@@ -493,7 +511,6 @@ class iTopExtensionsMap
 			$oExtension->bMarkedAsChosen = $bMark;
 		}
 	}
-
 
 	public function MarkAsUninstallable($sExtensionCode, $bMark = true)
 	{

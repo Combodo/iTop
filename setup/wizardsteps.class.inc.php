@@ -42,7 +42,6 @@
 
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
-use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
@@ -2117,8 +2116,8 @@ class WizStepSummary extends WizardStep
 			try {
 				SetupUtils::AnalyzeInstallation($this->oWizard, true, $aSelectedModules);
 
-				$sInstallMode = utils::ReadParam('install_mode');
-				\SetupLog::Info(__METHOD__, null, ['install_mode' => $sInstallMode]);
+				/*$sInstallMode = utils::ReadParam('install_mode');
+				\SetupLog::Info(__METHOD__, null, ['$sInstallMode' => $sInstallMode]);
 				//if ($sInstallMode === "upgrade") {
 				$aExtensions = json_decode($this->oWizard->GetParameter('selected_extensions'), true);
 				$oSetupAudit = new SetupAudit([]);
@@ -2127,7 +2126,7 @@ class WizStepSummary extends WizardStep
 				$oSetupAudit->SetSelectedExtensions($oConfig, $aExtensions);
 				//$oSetupAudit->AuditExtensionsCleanupRules(true);
 				//}
-
+				*/
 			}
 			catch(MissingDependencyException $e)
 			{

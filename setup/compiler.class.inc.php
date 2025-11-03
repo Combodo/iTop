@@ -477,7 +477,7 @@ class MFCompiler
 					$sClass = $oClass->getAttribute("id");
 					$aAllClasses[] = $sClass;
 					try {
-						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
+						$sCompiledCode .= $this->CompileClass($oClass, $sModuleName, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
 					} catch (DOMFormatException $e) {
 						$sMessage = "Failed to process class '$sClass', ";
 						if (!empty($sModuleRootDir)) {
