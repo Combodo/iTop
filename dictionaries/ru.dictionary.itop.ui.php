@@ -53,6 +53,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:AuditRule/Attribute:category_id+' => 'Категория для этого правила',
 	'Class:AuditRule/Attribute:category_name' => 'Категория',
 	'Class:AuditRule/Attribute:category_name+' => 'Категория для этого правила',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //

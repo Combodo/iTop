@@ -52,6 +52,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:AuditRule/Attribute:category_id+' => 'Kuralın kategorisi',
 	'Class:AuditRule/Attribute:category_name' => 'Kategori',
 	'Class:AuditRule/Attribute:category_name+' => 'Kural için kategori adı',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //

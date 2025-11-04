@@ -52,7 +52,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:AuditRule/Attribute:category_id+' => 'Kategorie pro toto pravidlo',
 	'Class:AuditRule/Attribute:category_name' => 'Kategorie',
 	'Class:AuditRule/Attribute:category_name+' => 'Název kategorie pro toto pravidlo',
-]);
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
+	]);
 
 //
 // Class: AuditDomain

@@ -56,6 +56,8 @@ Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audi
 	'Class:AuditRule/Attribute:category_id+' => '',
 	'Class:AuditRule/Attribute:category_name' => 'Nom de la catégorie',
 	'Class:AuditRule/Attribute:category_name+' => '',
+	'Class:AuditRule/Attribute:contact_id' => 'Responsable',
+	'Class:AuditRule/Attribute:contact_id+' => 'Personne ou équipe responsable de la correction des erreurs détectées par cette règle',
 ]);
 
 //

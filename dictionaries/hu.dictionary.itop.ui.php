@@ -52,6 +52,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:AuditRule/Attribute:category_id+' => '',
 	'Class:AuditRule/Attribute:category_name' => 'Kategórianév',
 	'Class:AuditRule/Attribute:category_name+' => '',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //

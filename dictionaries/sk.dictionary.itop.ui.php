@@ -56,6 +56,8 @@ It is applied on the scope of objects defined by the audit category~~',
 	'Class:AuditRule/Attribute:category_id+' => 'The category of this rule~~',
 	'Class:AuditRule/Attribute:category_name' => 'Kategória',
 	'Class:AuditRule/Attribute:category_name+' => 'Name of the category of this rule~~',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //

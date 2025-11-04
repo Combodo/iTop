@@ -54,6 +54,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:AuditRule/Attribute:category_id+' => '该规则对应的类别',
 	'Class:AuditRule/Attribute:category_name' => '类别',
 	'Class:AuditRule/Attribute:category_name+' => '该规则对应的类名称',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //

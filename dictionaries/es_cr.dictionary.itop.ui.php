@@ -50,6 +50,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:AuditRule/Attribute:category_id+' => 'La categoría para esta regla',
 	'Class:AuditRule/Attribute:category_name' => 'Categoría',
 	'Class:AuditRule/Attribute:category_name+' => 'Nombre de la categoría para esta regla',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //

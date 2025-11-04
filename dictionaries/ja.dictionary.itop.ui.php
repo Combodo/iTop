@@ -52,6 +52,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AuditRule/Attribute:category_id+' => 'このルールのカテゴリ',
 	'Class:AuditRule/Attribute:category_name' => 'カテゴリ',
 	'Class:AuditRule/Attribute:category_name+' => 'このルールのカテゴリ名',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //

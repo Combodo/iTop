@@ -52,6 +52,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:AuditRule/Attribute:category_id+' => 'De categorie voor deze regel',
 	'Class:AuditRule/Attribute:category_name' => 'Categorie',
 	'Class:AuditRule/Attribute:category_name+' => 'Naam van de categorie voor deze regel',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //

@@ -52,6 +52,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:AuditRule/Attribute:category_id+' => 'A categoria para esta regra',
 	'Class:AuditRule/Attribute:category_name' => 'Categoria',
 	'Class:AuditRule/Attribute:category_name+' => 'Nome da categoria para essa regra',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //

@@ -52,6 +52,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:AuditRule/Attribute:category_id+' => 'Kategorie für diese Regel',
 	'Class:AuditRule/Attribute:category_name' => 'Kategorie',
 	'Class:AuditRule/Attribute:category_name+' => 'Kategoriename für diese Regel',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //
