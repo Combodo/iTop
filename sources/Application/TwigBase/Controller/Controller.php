@@ -527,7 +527,7 @@ abstract class Controller extends AbstractController
 			if (is_null($aErrors) || count($aErrors) === 0) {
 				$aErrors[self::TWIG_ERROR] = "Missing TWIG template for $sTemplateName";
 			}
-			IssueLog::Error(implode("\n",$aErrors[self::TWIG_ERROR] ?? [])."\n".implode("\n",$aErrors[self::TWIG_WARNING] ?? []));
+			IssueLog::Error(implode("\n", $aErrors[self::TWIG_ERROR] ?? [])."\n".implode("\n", $aErrors[self::TWIG_WARNING] ?? []));
 		} else {
 			// Ignore warnings
 			$aErrors[self::TWIG_WARNING] = [];
@@ -828,14 +828,16 @@ abstract class Controller extends AbstractController
 		catch (SyntaxError $e) {
 			IssueLog::Error($e->getMessage().' - file: '.$e->getFile().'('.$e->getLine().')');
 			$aErrors[self::TWIG_ERROR][] = $e->getMessage();
-			return false;
+
+			return '';
 		}
 		catch (Exception $e) {
 			$sExceptionMessage = $e->getMessage();
 			if (str_contains($sExceptionMessage, 'at line')) {
 				IssueLog::Error($sExceptionMessage);
 				$aErrors[self::TWIG_ERROR][] = $sExceptionMessage;
-				return false;
+
+				return '';
 			}
 			if (!str_contains($sExceptionMessage, 'Unable to find template')) {
 				IssueLog::Error($sExceptionMessage);
@@ -1063,6 +1065,8 @@ abstract class Controller extends AbstractController
 
 		if ($this->sPageType === self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX) {
 			$this->AddToPage($this->oTwig->render('application/forms/itop_error_update.html.twig', ['sControllerError' => $sErrorMsg]));
+
+			return;
 		}
 
 		$this->AddToPage($this->oTwig->render('application/forms/itop_error.html.twig', ['sControllerError' => $sErrorMsg]));

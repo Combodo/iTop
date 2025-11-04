@@ -2,9 +2,9 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 {% for sId in form_diff %}
-    <turbo-stream action="update" target="block_{{ sId }}">
-        <template>
+    {% if form.(sId) %}
+        {% UITurboUpdate Standard { sTarget: "block_" ~ sId} %}
             {{ form_row(form.(sId)) }}
-        </template>
-    </turbo-stream>
+        {% EndUITurboUpdate %}
+    {% endif %}
 {% endfor %}

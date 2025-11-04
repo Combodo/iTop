@@ -1,0 +1,21 @@
+{# @copyright   Copyright (C) 2010-2025 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+<script type="module">
+import {session} from "https://cdn.jsdelivr.net/npm/@hotwired/turbo@latest/dist/turbo.es2017-esm.min.js";
+
+session.drive = false;
+</script>
+
+<turbo-frame id="{{ oUIBlock.GetId() }}">
+    {{ form_start(oUIBlock.GetFormView()) }}
+    {{ form_widget(oUIBlock.GetFormView()) }}
+
+    {%- block iboContentBlockContainer -%}
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+            {{ render_block(oSubBlock, {aPage: aPage}) }}
+        {% endfor %}
+    {%- endblock -%}
+
+    {{ form_end(oUIBlock.GetFormView()) }}
+</turbo-frame>
