@@ -13,8 +13,6 @@ use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
 use Combodo\iTop\Forms\Block\IO\FormInput;
 use Combodo\iTop\Forms\Block\IO\FormOutput;
 use Combodo\iTop\Forms\IFormBlock;
-use IssueLog;
-use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * Abstract form block.
@@ -104,9 +102,9 @@ abstract class AbstractFormBlock implements IFormBlock
 	/**
 	 * Get the parent block.
 	 *
-	 * @return FormBlock
+	 * @return FormBlock|null
 	 */
-	public function GetParent(): FormBlock
+	public function GetParent(): ?FormBlock
 	{
 		return $this->oParent;
 	}
@@ -119,6 +117,15 @@ abstract class AbstractFormBlock implements IFormBlock
 	public function GetName(): string
 	{
 		return $this->sName;
+	}
+
+	public function GetIdentifier(): string
+	{
+		$sParentName = $this->GetParent()?->GetIdentifier();
+		if (is_null($sParentName)) {
+			return $this->GetName();
+		}
+		return $sParentName.'_'.$this->sName;
 	}
 
 	/**

@@ -5,7 +5,7 @@
 {%- block widget_attributes -%}
     {{- parent() -}}
     {%  if trigger_form_submit_on_modify %}
-        onChange="this.form.setAttribute('novalidate', true); this.form.requestSubmit();console.log('Auto submitting form due to change in field {{ full_name }}');"
+        onChange="triggerTurbo(this);"
     {% endif %}
 {%- endblock widget_attributes -%}
 
@@ -48,7 +48,7 @@
 {%- block form_rows -%}
 
     {% for block in blocks %}
-        <div id="block_{{ block.name }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">
+        <div id="block_{{ block.identifier }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">
             {{ block.name }} {{ block.added }}
         {% if block.added == 1 %}
             {{ form_row(form[block.name]) }}

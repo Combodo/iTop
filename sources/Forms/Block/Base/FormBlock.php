@@ -9,6 +9,7 @@ namespace Combodo\iTop\Forms\Block\Base;
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\Block\FormType\FormType;
+use Combodo\iTop\Forms\FormBuilder\DependencyMap;
 use Combodo\iTop\Forms\FormsException;
 use Exception;
 use ReflectionClass;
@@ -19,8 +20,9 @@ use ReflectionClass;
  */
 class FormBlock extends AbstractFormBlock
 {
-	/** @var array children blocks */
+	/** @var AbstractFormBlock[] children blocks */
 	private array $aChildrenBlocks = [];
+	public ?DependencyMap $oDependencyMap = null;
 
 	/**
 	 * Constructor.
@@ -56,7 +58,7 @@ class FormBlock extends AbstractFormBlock
 
 		$aUserOptions['compound'] = true;
 		$aUserOptions['attr'] = [
-			'class' => 'form'
+			'class' => 'form',
 		];
 
 	}
@@ -118,4 +120,20 @@ class FormBlock extends AbstractFormBlock
 
 	}
 
+	public function GetSubFormBlock(string $sBlockTurboTriggerName): ?AbstractFormBlock
+	{
+		$oBlock = $this;
+		if (preg_match_all('/\[(?<level>[^\[]+)\]/', $sBlockTurboTriggerName, $aMatches)) {
+			foreach ($aMatches['level'] as $level) {
+				$oBlock = $oBlock->Get($level);
+			}
+		}
+
+		return $oBlock;
+	}
+
+	public function GetDependenciesMap(): ?DependencyMap
+	{
+		return $this->oDependencyMap;
+	}
 }

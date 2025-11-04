@@ -164,6 +164,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	{
 		parent::InitializeLinkedScripts();
 
+		$this->LinkScriptFromAppRoot('js/forms/forms.js');
+
 		// Used by forms
 		$this->LinkScriptFromAppRoot('js/leave_handler.js');
 

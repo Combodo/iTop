@@ -161,8 +161,8 @@ class DependencyMap
 	public function GetImpacted(string $sBlockName): array
 	{
 		$aImpacted = [];
-		if (array_key_exists($sBlockName, $this->aOutputToInputsMap)) {
-			foreach ($this->aOutputToInputsMap[$sBlockName] as $aBindings) {
+		if (array_key_exists($sBlockName, $this->aBindingsOutputToInput)) {
+			foreach ($this->aBindingsOutputToInput[$sBlockName] as $aBindings) {
 				foreach ($aBindings as $oBinding) {
 					$oDestBlock = $oBinding->oDestinationIO->GetOwnerBlock();
 					$aImpacted[] = $oDestBlock;

@@ -13,6 +13,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\DataMapperInterface;
 use Symfony\Component\Form\DataTransformerInterface;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -87,6 +88,11 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 		// Create a dependency handler if needed
 		if (count($aBlocksWithDependencies) > 0) {
 			$this->oDependencyHandler = new DependencyHandler($this->builder->getName(), $oFormBlock, $this, $this->aChildren, $aBlocksWithDependencies);
+			$oFormBlock->oDependencyMap = $this->oDependencyHandler->GetMap();
+			if (is_null($oFormBlock->GetParent())) {
+				// Insert a hidden type to save the place
+				$this->builder->add('_turbo_trigger', HiddenType::class, ['prevent_form_build' => true]);
+			}
 		}
 	}
 
@@ -101,26 +107,15 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 	{
 
 		// Has dependencies blocks
-		if ($oSubFormBlock->HasDependenciesBlocks()) {
-
-//			// Insert a hidden type to save the place
-//			$this->builder->add($oSubFormBlock->GetName(), HiddenType::class, [
-//				'form_block'         => $oSubFormBlock,
-//				'prevent_form_build' => true,
-				////				'mapped' => false,
-				////				'disabled' => true,
-//			]);
-
-			return true;
-
-		} else {
+		if (!$oSubFormBlock->HasDependenciesBlocks()) {
 			// Directly insert the block corresponding form type
 			$this->add($oSubFormBlock->GetName(), $oSubFormBlock->GetFormType(), $oSubFormBlock->GetOptions());
 			$oSubFormBlock->SetAdded(true);
 
 			return false;
-
 		}
+
+		return true;
 	}
 
 	/**
