@@ -560,12 +560,22 @@ abstract class DBSearch
 	static public function unserialize($sValue)
 	{
 		$aData = json_decode(urldecode($sValue), true);
-		if (is_null($aData))
-		{
+		if (!is_array($aData) || count($aData) < 2) {
 			throw new CoreException("Invalid filter parameter");
 		}
+
+		// Basic type checks to avoid unexpected structures coming from the request
+		if (!isset($aData[0]) || !is_string($aData[0])) {
+			throw new CoreException("Invalid filter parameter: missing or invalid OQL string");
+		}
 		$sOql = $aData[0];
-		$aParams = $aData[1];
+
+		// Prevent extremely large payloads from being processed
+		if (strlen($sOql) > 20000) {
+			throw new CoreException("Invalid filter parameter: OQL too long");
+		}
+
+		$aParams = is_array($aData[1]) ? $aData[1] : array();
 		$aExtraParams = array();
 		foreach($aParams as $sParam => $sValue)
 		{
