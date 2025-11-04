@@ -48,11 +48,12 @@
 {%- block form_rows -%}
 
     {% for block in blocks %}
-        <div id="block_{{ block.identifier }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">
-            {{ block.name }} {{ block.added }}
-        {% if block.added == 1 %}
-            {{ form_row(form[block.name]) }}
-        {% endif %}
+        <div id="block_{{ block.id }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">
+            {% if block.added == 1 %}
+                {{ form_row(form[block.name]) }}
+            {% else %}
+                <div style="background-color: #ecd9eb;border-radius: 6px;padding: 2px 5px;">Reserved place for <b>{{ block.name }}</b></div>
+            {% endif %}
         </div>
     {% endfor %}
 
@@ -65,7 +66,7 @@
     {{- block('form_widget') -}}
     {% if allow_add %}
         <div style="margin-top: 20px;">
-    <button type="button" class="add_item_link ibo-button ibo-button ibo-is-regular " data-collection-holder-class="{{ name }}">{{ button_label|dict_s }}</button>
+            <button type="button" class="add_item_link ibo-button ibo-button ibo-is-regular " data-collection-holder-class="{{ name }}">{{ button_label|dict_s }}</button>
         </div>
     {% endif %}
 {%- endblock collection_widget -%}

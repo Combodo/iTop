@@ -12,6 +12,7 @@ use Exception;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\Node;
@@ -24,6 +25,7 @@ use utils;
  * @author  Eric Espie <eric.espie@combodo.com>
  * @since 3.0.0
  */
+#[YieldReady]
 class UIBlockNode extends Node
 {
 	/** @var string */
@@ -34,10 +36,10 @@ class UIBlockNode extends Node
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct(string $sFactoryClass, string $sBlockClass, string $sType, $oParams, $oBody, int $iLineNo = 0, ?string $sTag = null)
+	public function __construct(string $sFactoryClass, string $sBlockClass, string $sType, $oParams, $oBody, int $iLineNo = 0)
 	{
 		$aNodes =  is_null($oBody) ? [] : ['body' => $oBody];
-		parent::__construct($aNodes, ['type' => $sType, 'params' => $oParams], $iLineNo, $sTag);
+		parent::__construct($aNodes, ['type' => $sType, 'params' => $oParams], $iLineNo);
 		$this->sFactoryClass = $sFactoryClass;
 		$this->sBlockClass = $sBlockClass;
 	}

@@ -109,6 +109,11 @@ abstract class AbstractFormBlock implements IFormBlock
 		return $this->oParent;
 	}
 
+	public function HasParent(): bool
+	{
+		return $this->oParent !== null;
+	}
+
 	/**
 	 * Return the form block name.
 	 *
@@ -126,6 +131,19 @@ abstract class AbstractFormBlock implements IFormBlock
 			return $this->GetName();
 		}
 		return $sParentName.'_'.$this->sName;
+	}
+
+	public function GetPath(): array
+	{
+		$aPath = [];
+		$oCurrent = $this;
+
+		do {
+			$aPath[] = $oCurrent->GetName();
+			$oCurrent = $oCurrent->getParent();
+		} while ($oCurrent->HasParent());
+
+		return array_reverse($aPath);
 	}
 
 	/**

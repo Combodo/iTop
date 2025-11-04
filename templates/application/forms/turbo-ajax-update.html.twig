@@ -1,10 +1,10 @@
 {# @copyright   Copyright (C) 2010-2025 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-{% for sId in form_diff %}
-    {% if form.(sId) %}
-        {% UITurboUpdate Standard { sTarget: "block_" ~ sId} %}
-            {{ form_row(form.(sId)) }}
-        {% EndUITurboUpdate %}
+{% for sBlockIdentifier, oBlockToRedraw in blocks_to_redraw %}
+    {% UITurboUpdate Standard { sTarget: "block_" ~ sBlockIdentifier} %}
+    {% if oBlockToRedraw is not null %}
+        {{ form_row(oBlockToRedraw) }}
     {% endif %}
+    {% EndUITurboUpdate %}
 {% endfor %}
