@@ -16,12 +16,12 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 class AbstractFormIOTest extends ItopDataTestCase
 {
 
-	public function testRawBlockHasNoIO(): void
+	public function testRawBlockHasOnlyVisibilityInputs(): void
 	{
 		$oBlock = $this->GivenFormBlock('test');
 
-		self::assertEquals([], $oBlock->GetInputs(), 'Row form block must not have input by default');
-		self::assertEquals([], $oBlock->GetOutputs(), 'Row form block must not have output by default');
+		self::assertEquals(['visible'], array_keys($oBlock->GetInputs()), 'Row form block have only "visible" input by default');
+		self::assertEquals(['value'], array_keys($oBlock->GetOutputs()), 'Row form block have only raw output by default');
 	}
 
 	public function testAddingOneInputToABlock_StoresIt(): void
@@ -30,9 +30,9 @@ class AbstractFormIOTest extends ItopDataTestCase
 			['io_type' => FormInput::class, 'name' => 'input', 'data_type' => RawFormat::class,],
 		]);
 
-		self::assertCount(1, $oBlock->GetInputs(), 'Inputs must be saved in block forms');
+		self::assertCount(2, $oBlock->GetInputs(), 'Inputs must be saved in block forms');
 		$aInputs = $oBlock->GetInputs();
-		self::assertEquals('input', array_shift($aInputs)->getName(), 'Inputs must be saved in block forms');
+		self::assertEquals(['visible', 'input'], array_keys($aInputs), 'Inputs must be saved in block forms');
 		self::assertEquals(RawFormat::class, $oBlock->GetInput('input')->GetDataType(), 'Format must be kept in inputs saved in block forms');
 	}
 
@@ -42,9 +42,9 @@ class AbstractFormIOTest extends ItopDataTestCase
 			['io_type' => FormOutput::class, 'name' => 'output', 'data_type' => RawFormat::class],
 		]);
 
-		self::assertCount(1, $oBlock->GetOutputs(), 'Outputs must be saved in block forms');
+		self::assertCount(2, $oBlock->GetOutputs(), 'Outputs must be saved in block forms');
 		$aInputs = $oBlock->GetOutputs();
-		self::assertEquals('output', array_shift($aInputs)->getName(), 'Outputs must be saved in block forms');
+		self::assertEquals(['value', 'output'], array_keys($aInputs), 'Outputs must be saved in block forms');
 		self::assertEquals(RawFormat::class, $oBlock->GetOutput('output')->GetDataType(), 'Format must be kept in outputs saved in block forms');
 	}
 
@@ -58,8 +58,8 @@ class AbstractFormIOTest extends ItopDataTestCase
 			['io_type' => FormOutput::class, 'name' => 'output2', 'data_type' => RawFormat::class],
 		]);
 
-		self::assertCount(3, $oBlock->GetInputs(), 'Inputs must be saved in block forms');
-		self::assertCount(2, $oBlock->GetOutputs(), 'Outputs must be saved in block forms');
+		self::assertCount(4, $oBlock->GetInputs(), 'Inputs must be saved in block forms');
+		self::assertCount(3, $oBlock->GetOutputs(), 'Outputs must be saved in block forms');
 	}
 
 
