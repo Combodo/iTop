@@ -365,7 +365,7 @@ class iTopExtensionsMap
 							// Ignore non-visible modules and auto-select ones, since these are never prompted
 							// as a choice to the end-user
 							$bVisible = true;
-							if (!$aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['visible'] || isset($aModuleInfo[2]['auto_select']))
+							if (!$aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['visible'] || isset($aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['auto_select']))
 							{
 								$bVisible = false;
 							}
