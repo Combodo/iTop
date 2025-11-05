@@ -30,6 +30,7 @@ class FormType  extends AbstractType
 				$aData[] = [
 					'name' => $oChild->GetName(),
 					'added' => $oChild->IsAdded(),
+					'id' => $oChild->GetIdentifier(),
 					'path' => $oFormChild->getPropertyPath(),
 				];
 			}
@@ -37,6 +38,7 @@ class FormType  extends AbstractType
 				$aData[] = [
 					'name' => $oChild->GetName(),
 					'added' => $oChild->IsAdded(),
+					'id' => $oChild->GetIdentifier(),
 				];
 			}
 
