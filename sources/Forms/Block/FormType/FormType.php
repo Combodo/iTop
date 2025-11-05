@@ -26,18 +26,17 @@ class FormType  extends AbstractType
 		foreach($oBlock->GetChildren() as $oChild) {
 
 			if($oChild->IsAdded()){
-				$oFormChild = $form->get($oChild->GetName());
 				$aData[] = [
 					'name' => $oChild->GetName(),
 					'added' => $oChild->IsAdded(),
-					'id' => $oChild->GetIdentifier(),
+					'id' => FormTypeHelper::buildFormTypeFullPath($form) . '_' . $oChild->GetName()
 				];
 			}
 			else{
 				$aData[] = [
 					'name' => $oChild->GetName(),
 					'added' => $oChild->IsAdded(),
-					'id' => $oChild->GetIdentifier(),
+					'id' => FormTypeHelper::buildFormTypeFullPath($form) . '_' . $oChild->GetName()
 				];
 			}
 

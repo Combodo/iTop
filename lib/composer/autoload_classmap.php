@@ -494,6 +494,7 @@ return array(
     'Combodo\\iTop\\Forms\\Block\\FormType\\ChoiceFormType' => $baseDir . '/sources/Forms/Block/FormType/ChoiceFormType.php',
     'Combodo\\iTop\\Forms\\Block\\FormType\\CollectionFormType' => $baseDir . '/sources/Forms/Block/FormType/CollectionFormType.php',
     'Combodo\\iTop\\Forms\\Block\\FormType\\FormType' => $baseDir . '/sources/Forms/Block/FormType/FormType.php',
+    'Combodo\\iTop\\Forms\\Block\\FormType\\FormTypeHelper' => $baseDir . '/sources/Forms/Block/FormType/FormTypeHelper.php',
     'Combodo\\iTop\\Forms\\Block\\FormType\\OqlFormType' => $baseDir . '/sources/Forms/Block/FormType/OqlFormType.php',
     'Combodo\\iTop\\Forms\\Block\\IO\\AbstractFormIO' => $baseDir . '/sources/Forms/Block/IO/AbstractFormIO.php',
     'Combodo\\iTop\\Forms\\Block\\IO\\Converter\\AbstractConverter' => $baseDir . '/sources/Forms/Block/IO/Converter/AbstractConverter.php',

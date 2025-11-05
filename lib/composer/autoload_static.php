@@ -875,6 +875,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Forms\\Block\\FormType\\ChoiceFormType' => __DIR__ . '/../..' . '/sources/Forms/Block/FormType/ChoiceFormType.php',
         'Combodo\\iTop\\Forms\\Block\\FormType\\CollectionFormType' => __DIR__ . '/../..' . '/sources/Forms/Block/FormType/CollectionFormType.php',
         'Combodo\\iTop\\Forms\\Block\\FormType\\FormType' => __DIR__ . '/../..' . '/sources/Forms/Block/FormType/FormType.php',
+        'Combodo\\iTop\\Forms\\Block\\FormType\\FormTypeHelper' => __DIR__ . '/../..' . '/sources/Forms/Block/FormType/FormTypeHelper.php',
         'Combodo\\iTop\\Forms\\Block\\FormType\\OqlFormType' => __DIR__ . '/../..' . '/sources/Forms/Block/FormType/OqlFormType.php',
         'Combodo\\iTop\\Forms\\Block\\IO\\AbstractFormIO' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/AbstractFormIO.php',
         'Combodo\\iTop\\Forms\\Block\\IO\\Converter\\AbstractConverter' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/Converter/AbstractConverter.php',
