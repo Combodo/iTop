@@ -48,7 +48,7 @@
 {%- block form_rows -%}
 
     {% for block in blocks %}
-        <div id="block_{{ block.id }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">
+        <div id="turbo_{{ block.id }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">
             {% if block.added == 1 %}
                 {{ form_row(form[block.name]) }}
             {% else %}

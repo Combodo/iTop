@@ -31,7 +31,6 @@ class FormType  extends AbstractType
 					'name' => $oChild->GetName(),
 					'added' => $oChild->IsAdded(),
 					'id' => $oChild->GetIdentifier(),
-					'path' => $oFormChild->getPropertyPath(),
 				];
 			}
 			else{
