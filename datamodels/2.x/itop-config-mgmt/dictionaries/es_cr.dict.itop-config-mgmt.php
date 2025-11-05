@@ -767,6 +767,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:LogicalVolume/Attribute:servers_list+' => 'Servidores',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Dispositivos Virtuales',
 	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Dispositivos Virtuales',
+	'Class:LogicalVolume/Attribute:org_id' => 'Organización',
+	'Class:LogicalVolume/Attribute:org_id+' => 'Organización',
+	'Class:LogicalVolume/Attribute:location_id' => 'Ubicación',
+	'Class:LogicalVolume/Attribute:location_id+' => 'Ubicación',
+	'Class:LogicalVolume/Attribute:location_name' => 'Nombre de la ubicación',
+	'Class:LogicalVolume/Attribute:location_name+' => 'Nombre de la ubicación',
+
 ));
 
 //
