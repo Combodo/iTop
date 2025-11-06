@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Forms\FormBuilder;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\FormBlock;
 use Combodo\iTop\Forms\Block\IO\FormBinding;
 use Combodo\iTop\Forms\Block\IO\FormInput;
@@ -165,7 +166,11 @@ class DependencyMap
 			foreach ($this->aBindingsOutputToInput[$sBlockName] as $aBindings) {
 				foreach ($aBindings as $oBinding) {
 					$oDestBlock = $oBinding->oDestinationIO->GetOwnerBlock();
-					$aImpacted[] = $oDestBlock;
+					if ($oDestBlock instanceof AbstractTypeFormBlock) {
+						$aImpacted[] = $oDestBlock;
+					} else {
+						$aImpacted = array_merge($aImpacted, $this->GetImpacted($oDestBlock->GetName()));
+					}
 				}
 			}
 		}

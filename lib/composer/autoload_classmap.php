@@ -478,6 +478,7 @@ return array(
     'Combodo\\iTop\\Form\\Validator\\NotEmptyExtKeyValidator' => $baseDir . '/sources/Form/Validator/NotEmptyExtKeyValidator.php',
     'Combodo\\iTop\\Form\\Validator\\SelectObjectValidator' => $baseDir . '/sources/Form/Validator/SelectObjectValidator.php',
     'Combodo\\iTop\\Forms\\Block\\AbstractFormBlock' => $baseDir . '/sources/Forms/Block/AbstractFormBlock.php',
+    'Combodo\\iTop\\Forms\\Block\\AbstractTypeFormBlock' => $baseDir . '/sources/Forms/Block/AbstractTypeFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\CheckboxFormBlock' => $baseDir . '/sources/Forms/Block/Base/CheckboxFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\ChoiceFormBlock' => $baseDir . '/sources/Forms/Block/Base/ChoiceFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\CollectionBlock' => $baseDir . '/sources/Forms/Block/Base/CollectionBlock.php',

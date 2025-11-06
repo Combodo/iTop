@@ -33,5 +33,6 @@ class FormBinding
 	public function PropagateValues(): void
 	{
 		$this->oDestinationIO->SetValues($this->oSourceIO->GetValues());
+		$this->oDestinationIO->GetOwnerBlock()->InputHasChanged();
 	}
 }

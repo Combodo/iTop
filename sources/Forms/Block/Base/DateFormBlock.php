@@ -6,17 +6,14 @@
 
 namespace Combodo\iTop\Forms\Block\Base;
 
-use Combodo\iTop\Forms\Block\AbstractFormBlock;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Form block for date.
  *
  */
-class DateFormBlock extends AbstractFormBlock
+class DateFormBlock extends AbstractTypeFormBlock
 {
 	/** @inheritdoc */
 	public function GetFormType(): string

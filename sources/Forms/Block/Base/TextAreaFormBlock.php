@@ -6,14 +6,14 @@
 
 namespace Combodo\iTop\Forms\Block\Base;
 
-use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 /**
  * Form block for text area.
  *
  */
-class TextAreaFormBlock extends AbstractFormBlock
+class TextAreaFormBlock extends AbstractTypeFormBlock
 {
 	/** @inheritdoc */
 	public function GetFormType(): string

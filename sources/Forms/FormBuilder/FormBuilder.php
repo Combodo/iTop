@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Forms\FormBuilder;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
 use IteratorAggregate;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -108,9 +109,11 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 
 		// Has dependencies blocks
 		if (!$oSubFormBlock->HasDependenciesBlocks()) {
-			// Directly insert the block corresponding form type
-			$this->add($oSubFormBlock->GetName(), $oSubFormBlock->GetFormType(), $oSubFormBlock->GetOptions());
-			$oSubFormBlock->SetAdded(true);
+			if ($oSubFormBlock instanceof AbstractTypeFormBlock) {
+				// Directly insert the block corresponding form type
+				$this->add($oSubFormBlock->GetName(), $oSubFormBlock->GetFormType(), $oSubFormBlock->GetOptions());
+				$oSubFormBlock->SetAdded(true);
+			}
 
 			return false;
 		}

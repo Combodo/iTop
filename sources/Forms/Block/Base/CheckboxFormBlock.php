@@ -6,7 +6,7 @@
 
 namespace Combodo\iTop\Forms\Block\Base;
 
-use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\IO\Converter\StringToBooleanConverter;
 use Combodo\iTop\Forms\Block\IO\Format\BooleanIOFormat;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
  * Form block for checkbox.
  *
  */
-class CheckboxFormBlock extends AbstractFormBlock
+class CheckboxFormBlock extends AbstractTypeFormBlock
 {
 	// outputs
 	public const OUTPUT_CHECKED = 'checked';

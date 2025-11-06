@@ -6,16 +6,15 @@
 
 namespace Combodo\iTop\Forms\Block\Base;
 
-use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\FormType\CollectionFormType;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 /**
  * Collection form type.
  *
  */
-class CollectionBlock extends AbstractFormBlock
+class CollectionBlock extends AbstractTypeFormBlock
 {
 	// Inputs
 	public const INPUT_CLASS_NAME = 'class_name';

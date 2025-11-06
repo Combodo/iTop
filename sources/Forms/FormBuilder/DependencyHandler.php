@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Forms\FormBuilder;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Exception;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
@@ -156,18 +157,20 @@ class DependencyHandler
 	 */
 	private function CheckDependencies(FormInterface|FormBuilderInterface $oForm, string $sOutputBlock = null, string $sEventType = null): void
 	{
-		$aImpactedBlocks = $this->aDependentBlocks;
-		if($sOutputBlock !== null){
-			$aImpactedBlocks = $this->oDependenciesMap->GetBlocksDependingOn($sOutputBlock);
-		}
-
-		if($aImpactedBlocks === null){
-			return;
-		}
+//		$aImpactedBlocks = $this->aDependentBlocks;
+//		if($sOutputBlock !== null){
+//			$aImpactedBlocks = $this->oDependenciesMap->GetBlocksDependingOn($sOutputBlock);
+//		}
+//
+//		if($aImpactedBlocks === null){
+//			return;
+//		}
 
 		/** Iterate throw dependencies... @var AbstractFormBlock $oDependentBlock */
-		foreach ($aImpactedBlocks as $qBlockName => $oDependentBlock) {
-
+		foreach ($this->aDependentBlocks as $oDependentBlock) {
+			if (!$oDependentBlock instanceof AbstractTypeFormBlock) {
+				continue;
+			}
 
 			// When dependencies met, add the dependent field if not already done or options changed
 			if ($oDependentBlock->IsVisible($sEventType) && $oDependentBlock->IsInputsDataReady($sEventType)) {

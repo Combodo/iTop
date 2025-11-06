@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\Block\FormType\FormType;
 use Combodo\iTop\Forms\FormBuilder\DependencyMap;
@@ -18,7 +19,7 @@ use ReflectionClass;
  * Complex form type.
  *
  */
-class FormBlock extends AbstractFormBlock
+class FormBlock extends AbstractTypeFormBlock
 {
 	/** @var AbstractFormBlock[] children blocks */
 	private array $aChildrenBlocks = [];

@@ -8,7 +8,6 @@ namespace Combodo\iTop\Forms\Block;
 
 use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\Forms\Block\IO\Converter\AbstractConverter;
-use Combodo\iTop\Forms\Block\IO\Format\BooleanIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
 use Combodo\iTop\Forms\Block\IO\FormInput;
 use Combodo\iTop\Forms\Block\IO\FormOutput;
@@ -24,9 +23,6 @@ use Combodo\iTop\Forms\IFormBlock;
  */
 abstract class AbstractFormBlock implements IFormBlock
 {
-	// Inputs
-	public const INPUT_VISIBLE = 'visible';
-
 	// Outputs
 	public const OUTPUT_VALUE = 'value';
 
@@ -47,15 +43,6 @@ abstract class AbstractFormBlock implements IFormBlock
 
 	/** @var bool flag indicating the form insertion */
 	private bool $bIsAddedToForm = false;
-
-
-	/**
-	 * Return the form type.
-	 *
-	 * @return string
-	 */
-	abstract public function GetFormType(): string;
-
 
 	/**
 	 * Constructor.
@@ -185,10 +172,12 @@ abstract class AbstractFormBlock implements IFormBlock
 	 *
 	 * @return void
 	 */
-	public function AddInput(string $sName, string $sType): void
+	public function AddInput(string $sName, string $sType): AbstractFormBlock
 	{
 		$oFormInput = new FormInput($sName, $sType, $this);
 		$this->aFormInputs[$oFormInput->GetName()] = $oFormInput;
+
+		return $this;
 	}
 
 	/**
@@ -217,10 +206,12 @@ abstract class AbstractFormBlock implements IFormBlock
 	 *
 	 * @return void
 	 */
-	public function AddOutput(string $sName, string $sType, AbstractConverter $oConverter = null): void
+	public function AddOutput(string $sName, string $sType, AbstractConverter $oConverter = null): AbstractFormBlock
 	{
 		$oFormOutput = new FormOutput($sName, $sType, $this, $oConverter);
 		$this->aFormOutputs[$oFormOutput->GetName()] = $oFormOutput;
+
+		return $this;
 	}
 
 	/**
@@ -468,20 +459,6 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function InitInputs(): void
 	{
-		$this->AddInput(self::INPUT_VISIBLE, BooleanIOFormat::class);
-	}
-
-	public function IsVisible(string $sEventType = null): bool
-	{
-		$oInput = $this->GetInput(self::INPUT_VISIBLE);
-
-		if(!$oInput->IsBound()){
-			return true;
-		}
-
-		$bVisible = $oInput->GetValue($sEventType);
-
-		return $bVisible !== null && $bVisible->IsTrue();
 	}
 
 	/**
@@ -494,12 +471,7 @@ abstract class AbstractFormBlock implements IFormBlock
 		$this->AddOutput(self::OUTPUT_VALUE, RawFormat::class);
 	}
 
-
-	/**
-	 * @return true
-	 */
-	public function AllowAdd(string $sEventType = null): bool
+	public function InputHasChanged()
 	{
-		return true;
 	}
 }

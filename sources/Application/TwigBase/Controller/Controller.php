@@ -40,12 +40,10 @@ use SetupPage;
 use SetupUtils;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -115,6 +113,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @param string $sViewPath Path of the twig files
 	 * @param string $sModuleName name of the module (or 'core' if not a module)
+	 * @param array $aAdditionalPaths
 	 *
 	 * @throws \ReflectionException
 	 */
@@ -208,8 +207,11 @@ abstract class Controller extends AbstractController
 	 * Indicates the path of the view directory (containing the twig templates)
 	 *
 	 * @param string $sViewPath
+	 * @param array $aAdditionalPaths
+	 *
+	 * @throws \Twig\Error\LoaderError
 	 */
-	public function SetViewPath($sViewPath, $aAdditionalPaths = [])
+	public function SetViewPath($sViewPath, $aAdditionalPaths = []): void
 	{
 		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath, $aAdditionalPaths);
 		/** @link https://github.com/symfony/twig-bridge/blob/6.4/CHANGELOG.md#320 */
@@ -247,7 +249,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @api
 	 */
-	public function HandleOperation()
+	public function HandleOperation(): void
 	{
 		try {
 			$this->CheckAccess();
@@ -276,11 +278,11 @@ abstract class Controller extends AbstractController
 	}
 
 	/**
-	 * Entry point to handle requests
+	 * Entry point to handle requests for ajax pages
 	 *
 	 * @api
 	 */
-	public function HandleAjaxOperation()
+	public function HandleAjaxOperation(): void
 	{
 		try {
 			$this->CheckAccess();
@@ -319,7 +321,7 @@ abstract class Controller extends AbstractController
 	/**
 	 * Overridable "page not found" which is more an "operation not found"
 	 */
-	public function DisplayBadRequest()
+	public function DisplayBadRequest(): void
 	{
 		http_response_code(400);
 		die('Operation not found');
@@ -328,7 +330,7 @@ abstract class Controller extends AbstractController
 	/**
 	 * Overridable "page not found" which is more an "operation not found"
 	 */
-	public function DisplayPageNotFound()
+	public function DisplayPageNotFound(): void
 	{
 		http_response_code(404);
 		die("Page not found");
@@ -338,7 +340,7 @@ abstract class Controller extends AbstractController
 	 * @throws \Exception
 	 * @since 3.0.0 N°3606 - Adapt TwigBase Controller for combodo-monitoring extension
 	 */
-	protected function CheckAccess()
+	protected function CheckAccess(): void
 	{
 		if ($this->bCheckDemoMode && MetaModel::GetConfig()->Get('demo_mode')) {
 			throw new Exception("Sorry, iTop is in <b>demonstration mode</b>: this feature is disabled.");
@@ -380,7 +382,7 @@ abstract class Controller extends AbstractController
 	 * @return array
 	 * @throws \Exception
 	 */
-	private function GetDefaultParameters()
+	private function GetDefaultParameters(): array
 	{
 		return $this->aDefaultParams;
 	}
@@ -390,7 +392,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @api
 	 */
-	public function DisableInDemoMode()
+	public function DisableInDemoMode(): void
 	{
 		$this->bCheckDemoMode = true;
 	}
@@ -400,7 +402,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @api
 	 */
-	public function AllowOnlyAdmin()
+	public function AllowOnlyAdmin(): void
 	{
 		$this->bMustBeAdmin = true;
 	}
@@ -434,7 +436,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @param string $sMenuId
 	 */
-	public function SetMenuId($sMenuId)
+	public function SetMenuId($sMenuId): void
 	{
 		$this->sMenuId = $sMenuId;
 	}
@@ -446,13 +448,13 @@ abstract class Controller extends AbstractController
 	 *
 	 * @param string $sDefaultOperation
 	 */
-	public function SetDefaultOperation($sDefaultOperation)
+	public function SetDefaultOperation($sDefaultOperation): void
 	{
 		$this->sDefaultOperation = $sDefaultOperation;
 	}
 
 	/**
-	 * Display an AJAX page (AjaxPage)
+	 * Display an AJAX (html) page (AjaxPage)
 	 *
 	 * @api
 	 *
@@ -461,7 +463,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @throws \Exception
 	 */
-	public function DisplayAjaxPage($aParams = array(), $sTemplateName = null)
+	public function DisplayAjaxPage($aParams = array(), $sTemplateName = null): void
 	{
 		$this->DisplayPage($aParams, $sTemplateName, 'ajax');
 	}
@@ -472,16 +474,24 @@ abstract class Controller extends AbstractController
 	 * @api
 	 *
 	 * @param array $aParams Params used by the twig template
-	 * @param null $sTemplateName Name of the twig template, ie MyTemplate for MyTemplate.html.twig
+	 * @param string|null $sTemplateName Name of the twig template, ie MyTemplate for MyTemplate.html.twig
 	 *
 	 * @throws \Exception
 	 */
-	public function DisplaySetupPage($aParams = array(), $sTemplateName = null)
+	public function DisplaySetupPage(array $aParams = [], ?string $sTemplateName = null): void
 	{
 		$this->DisplayPage($aParams, $sTemplateName, 'setup');
 	}
 
-	public function DisplayTurboAjaxPage($aParams = array())
+	/**
+	 * Generate a page to update only the impacted fields of a form
+	 *
+	 * @param array $aParams
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function DisplayTurboAjaxPage(array $aParams = []): void
 	{
 		$this->DisplayPage($aParams, 'application/forms/turbo-ajax-update', self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX);
 	}
@@ -492,12 +502,12 @@ abstract class Controller extends AbstractController
 	 * @api
 	 *
 	 * @param array $aParams Params used by the twig template
-	 * @param string $sTemplateName Name of the twig template, ie MyTemplate for MyTemplate.html.twig
-	 * @param string $sPageType ('html' or 'ajax')
+	 * @param string|null $sTemplateName Name of the twig template, ie MyTemplate for MyTemplate.html.twig
+	 * @param string $sPageType ('html', 'basic_html', 'ajax', 'turbo_ajax', 'setup')
 	 *
 	 * @throws \Exception
 	 */
-	public function DisplayPage($aParams = array(), $sTemplateName = null, $sPageType = self::ENUM_PAGE_TYPE_HTML)
+	public function DisplayPage(array $aParams = [], ?string $sTemplateName = null, string $sPageType = self::ENUM_PAGE_TYPE_HTML): void
 	{
 		if (empty($sTemplateName)) {
 			$sTemplateName = $this->m_sOperation;
@@ -569,7 +579,7 @@ abstract class Controller extends AbstractController
 	 * @param int $iResponseCode HTTP response code
 	 * @param array $aHeaders additional HTTP headers
 	 */
-	public function DisplayJSONPage($aParams = array(), $iResponseCode = 200, $aHeaders = array())
+	public function DisplayJSONPage(array $aParams = [], int $iResponseCode = 200, array $aHeaders = []): void
 	{
 		$oKpi = new ExecutionKPI();
 		http_response_code($iResponseCode);
@@ -597,7 +607,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @since 3.0.1 3.1.0 Add $sReportFileName parameter
 	 */
-	public function DownloadZippedPage($aParams = array(), $sTemplateName = null, $sReportFileName = 'itop-system-information-report')
+	public function DownloadZippedPage(array $aParams = [], ?string $sTemplateName = null, string $sReportFileName = 'itop-system-information-report'): void
 	{
 		if (empty($sTemplateName)) {
 			$sTemplateName = $this->m_sOperation;
@@ -622,7 +632,7 @@ abstract class Controller extends AbstractController
 	 * @param string $sDownloadArchiveName file name to download, without the extension (.zip is automatically added)
 	 * @param bool $bUnlinkFiles if true then will unlink each source file
 	 */
-	final protected function ZipDownloadRemoveFile($aFiles, $sDownloadArchiveName, $bUnlinkFiles = false)
+	final protected function ZipDownloadRemoveFile(array $aFiles, string $sDownloadArchiveName, bool $bUnlinkFiles = false): void
 	{
 		$sArchiveFileFullPath = tempnam(SetupUtils::GetTmpDir(), 'itop_download-').'.zip';
 		$oArchive = new ZipArchive();
@@ -641,7 +651,7 @@ abstract class Controller extends AbstractController
 		$this->SendFileContent($sArchiveFileFullPath, $sDownloadArchiveName.'.zip', true, true);
 	}
 
-	final protected function SendFileContent($sFilePath, $sDownloadArchiveName = null, $bFileTransfer = true, $bRemoveFile = false, $aHeaders = array())
+	final protected function SendFileContent($sFilePath, $sDownloadArchiveName = null, $bFileTransfer = true, $bRemoveFile = false, $aHeaders = array()): void
 	{
 		$sFileMimeType = utils::GetFileMimeType($sFilePath);
 		header('Content-Type: '.$sFileMimeType);
@@ -677,7 +687,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @since 3.2.0 $sScript must be absolute URI
 	 */
-	public function AddLinkedScript($sScript)
+	public function AddLinkedScript($sScript): void
 	{
 		$this->aLinkedScripts[] = $sScript;
 	}
@@ -691,19 +701,19 @@ abstract class Controller extends AbstractController
 	 *
 	 * @since 3.2.0 $sScript must be absolute URI
 	 */
-	public function AddLinkedStylesheet($sStylesheet)
+	public function AddLinkedStylesheet($sStylesheet): void
 	{
 		$this->aLinkedStylesheets[] = $sStylesheet;
 	}
 
 	/**
-	 * Add an linked stylesheet to the current Page
+	 * Add a linked stylesheet to the current Page
 	 *
 	 * @api
 	 *
 	 * @param string $sSaasRelPath SCSS Stylesheet relative path to link
 	 */
-	public function AddSaas($sSaasRelPath)
+	public function AddSaas(string $sSaasRelPath): void
 	{
 		$this->aSaas[] = $sSaasRelPath;
 	}
@@ -715,11 +725,11 @@ abstract class Controller extends AbstractController
 	 *
 	 * @param string $sURL URL to call when the tab is activated
 	 * @param bool $bCache If true, cache the result for the current web page
-	 * @param string $sLabel Label of the tab (if null the code is translated)
+	 * @param string|null $sLabel Label of the tab (if null the code is translated)
 	 *
 	 * @param string $sCode Code of the tab
 	 */
-	public function AddAjaxTab($sCode, $sURL, $bCache = true, $sLabel = null)
+	public function AddAjaxTab(string $sCode, string $sURL, bool $bCache = true, string $sLabel = null): void
 	{
 		if (is_null($sLabel)) {
 			$sLabel = Dict::S($sCode);
@@ -732,12 +742,16 @@ abstract class Controller extends AbstractController
 	 *
 	 * @since 3.0.0
 	 */
-	public function SetBlockParams(array $aBlockParams)
+	public function SetBlockParams(array $aBlockParams): void
 	{
 		$this->aBlockParams = $aBlockParams;
 	}
 
 	/**
+	 * Allow to set manually the content type of the page
+	 *
+	 * @api
+	 *
 	 * @param string $sContentType
 	 *
 	 * @return void
@@ -752,20 +766,35 @@ abstract class Controller extends AbstractController
 	 * @see Controller::SetBreadCrumbEntry() to set breadcrumb content (by default will be title)
 	 * @since 2.7.7 3.0.1 3.1.0 N°4760 method creation
 	 */
-	public function DisableBreadCrumb()
+	public function DisableBreadCrumb(): void
 	{
 		$this->bIsBreadCrumbEnabled = false;
 	}
 
 	/**
 	 * @see iTopWebPage::SetBreadCrumbEntry()
+	 *
+	 * @param string $sId
+	 * @param string $sLabel
+	 * @param string $sDescription
+	 * @param string $sUrl
+	 * @param string $sIcon
+	 *
 	 * @since 2.7.7 3.0.1 3.1.0 N°4760 method creation
 	 */
-	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '')
+	public function SetBreadCrumbEntry(string $sId, string $sLabel, string $sDescription, string $sUrl = '', string $sIcon = ''): void
 	{
 		$this->aBreadCrumbEntry = [$sId, $sLabel, $sDescription, $sUrl, $sIcon];
 	}
 
+	/**
+	 * Get the current incoming request
+	 *
+	 * @api
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Request
+	 * @since 3.3.0
+	 */
 	public function GetRequest(): Request
 	{
 		return $this->oRequest;
@@ -775,11 +804,13 @@ abstract class Controller extends AbstractController
 	 * Get a form builder.
 	 * This form builder can be used to create a form or to add fields to an existing form.
 	 *
-	 * @param string $type
-	 * @param mixed|null $data
-	 * @param array $options
+	 * @api
 	 *
-	 * @return FormBuilderInterface
+	 * @param \Combodo\iTop\Forms\Block\AbstractFormBlock $oFormBlock
+	 * @param mixed|null $data
+	 *
+	 * @return \Symfony\Component\Form\FormBuilderInterface
+	 * @since 3.3.0
 	 */
 	public function GetFormBuilder(AbstractFormBlock $oFormBlock, mixed $data = null): FormBuilderInterface
 	{
@@ -787,28 +818,10 @@ abstract class Controller extends AbstractController
 	}
 
 	/**
-	 * Get a form.
-	 * This form can be directly used in a twig template.
-	 *
-	 * @param string $type
-	 * @param mixed|null $data
-	 * @param array $options
-	 *
-	 * @return FormInterface
-	 */
-	public function GetForm(string $type = FormType::class, mixed $data = null, array $options = []): FormInterface
-	{
-		if (is_null($data)) {
-			$data = $type::GetDefaultData();
-		}
-
-		return $this->GetFormBuilder($type, $data, $options)->getForm();
-	}
-
-	/**
-	 * @param $aParams
-	 * @param $sName
-	 * @param $sTemplateFileExtension
+	 * @param array $aParams
+	 * @param string $sName
+	 * @param string $sTemplateFileExtension
+	 * @param array|null $aErrors
 	 *
 	 * @return string|false
 	 * @throws \Exception
@@ -890,7 +903,6 @@ abstract class Controller extends AbstractController
 		}
 		$this->oTwig->addGlobal('UIBlockParent', [$this->oPage]);
 		$this->oTwig->addGlobal('oPage', $this->oPage);
-		//$this->oTwig->addGlobal('debug', utils::IsDevelopmentEnvironment());
 	}
 
 	/**
@@ -898,7 +910,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @return string
 	 */
-	public function GetOperationTitle()
+	public function GetOperationTitle(): string
 	{
 		return Dict::S($this->m_sModule.'/Operation:'.$this->m_sOperation.'/Title');
 	}
@@ -917,42 +929,42 @@ abstract class Controller extends AbstractController
 	 *
 	 * @throws \Exception
 	 */
-	private function AddToPage($sContent)
+	private function AddToPage($sContent): void
 	{
 		$this->oPage->add($sContent);
 	}
 
-	private function AddReadyScriptToPage($sScript)
+	private function AddReadyScriptToPage($sScript): void
 	{
 		$this->oPage->add_ready_script($sScript);
 	}
 
-	private function AddScriptToPage($sScript)
+	private function AddScriptToPage($sScript): void
 	{
 		$this->oPage->add_script($sScript);
 	}
 
-	private function AddLinkedScriptToPage($sLinkedScript)
+	private function AddLinkedScriptToPage($sLinkedScript): void
 	{
 		$this->oPage->LinkScriptFromURI($sLinkedScript);
 	}
 
-	private function AddLinkedStylesheetToPage($sLinkedStylesheet)
+	private function AddLinkedStylesheetToPage($sLinkedStylesheet): void
 	{
 		$this->oPage->LinkStylesheetFromURI($sLinkedStylesheet);
 	}
 
-	private function AddStyleToPage($sStyle)
+	private function AddStyleToPage($sStyle): void
 	{
 		$this->oPage->add_style($sStyle);
 	}
 
-	private function AddSaasToPage($sSaasRelPath)
+	private function AddSaasToPage($sSaasRelPath): void
 	{
 		$this->oPage->add_saas($sSaasRelPath);
 	}
 
-	private function AddAjaxTabToPage($sCode, $sTitle, $sURL, $bCache)
+	private function AddAjaxTabToPage($sCode, $sTitle, $sURL, $bCache): void
 	{
 		$this->oPage->AddAjaxTab($sCode, $sURL, $bCache, $sTitle);
 	}
@@ -970,7 +982,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @since 3.0.0
 	 */
-	private function SetBlockParamToPage(string $sKey, $value)
+	private function SetBlockParamToPage(string $sKey, $value): void
 	{
 		$this->oPage->SetBlockParam($sKey, $value);
 	}
@@ -978,12 +990,12 @@ abstract class Controller extends AbstractController
 	/**
 	 * @throws \Exception
 	 */
-	private function OutputPage()
+	private function OutputPage(): void
 	{
 		$this->oPage->output();
 	}
 
-	private function InitDebugExtensions()
+	private function InitDebugExtensions(): void
 	{
 		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iProfilerExtension::class) as $sExtension) {
 			/** @var \Combodo\iTop\Application\TwigBase\Controller\iProfilerExtension $oExtensionInstance */
@@ -994,12 +1006,14 @@ abstract class Controller extends AbstractController
 
 	/**
 	 * @param array $aParams
+	 * @param string $sPageType
 	 *
 	 * @return void
 	 * @throws \ReflectionException
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
+	 * @throws \Exception
 	 */
 	private function ManageDebugExtensions(array $aParams, string $sPageType): void
 	{
@@ -1044,10 +1058,12 @@ abstract class Controller extends AbstractController
 	 *
 	 * @param array $aErrors
 	 *
-	 * @return string
+	 * @return void
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
+	 * @throws \Exception
+	 * @since 3.3.0
 	 */
 	public function RenderErrors(array $aErrors): void
 	{

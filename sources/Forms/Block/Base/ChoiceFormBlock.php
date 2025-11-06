@@ -6,14 +6,14 @@
 
 namespace Combodo\iTop\Forms\Block\Base;
 
-use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\FormType\ChoiceFormType;
 
 /**
  * Form block for choices.
  *
  */
-class ChoiceFormBlock extends AbstractFormBlock
+class ChoiceFormBlock extends AbstractTypeFormBlock
 {
 	/** @inheritdoc */
 	public function GetFormType(): string

@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop\Forms\Block\FormType;
 
+use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
@@ -24,6 +25,9 @@ class FormType  extends AbstractType
 
 		$aData = [];
 		foreach($oBlock->GetChildren() as $oChild) {
+			if (!$oChild instanceof AbstractTypeFormBlock) {
+				continue;
+			}
 
 			if($oChild->IsAdded()){
 				$aData[] = [

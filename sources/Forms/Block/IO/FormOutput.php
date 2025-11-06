@@ -60,9 +60,6 @@ class FormOutput extends AbstractFormIO
 	public function ComputeValue(string $sEventType, mixed $oData): void
 	{
 		$this->SetValue($sEventType, $this->ConvertValue($oData));
-
-		// propagate the bindings values
-		$this->PropagateBindingsValues();
 	}
 
 	/**
@@ -116,5 +113,15 @@ class FormOutput extends AbstractFormIO
 	public function HasBindings(): bool
 	{
 		return count($this->aBindingsToInputs) > 0;
+	}
+
+	public function SetValue(string $sEventType, mixed $oValue): AbstractFormIO
+	{
+		parent::SetValue($sEventType, $oValue);
+
+		// propagate the bindings values
+		$this->PropagateBindingsValues();
+
+		return $this;
 	}
 }
