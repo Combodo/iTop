@@ -14,7 +14,7 @@ class FormsException extends Exception
 {
 	public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null, array $aContext = [])
 	{
-		IssueLog::Exception(get_class($this).' occurs', $this, null, $aContext);
 		parent::__construct($message, $code, $previous);
+		IssueLog::Exception(get_class($this).' occurs', $this, null, $aContext);
 	}
 }
