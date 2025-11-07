@@ -536,6 +536,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		// Cache
 		$this->m_aObjectActionGrants = [];
 		$this->m_aAdministrators = null;
+		$this->aUsersProfilesList = [];
 	}
 
 	public function LoadCache()

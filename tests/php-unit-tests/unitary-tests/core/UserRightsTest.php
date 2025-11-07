@@ -279,28 +279,26 @@ class UserRightsTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @dataProvider ProfileDenyingConsoleProvider
-	 * @doesNotPerformAssertions
+	 * @dataProvider UserCannotLoseConsoleAccessProvider
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \OQLException
 	 */
-	public function testProfileDenyingConsole(int $iProfileId)
+	public function testUserCannotLoseConsoleAccess(int $iProfileId)
 	{
 		$oUser = $this->CreateUniqueUserAndLogin('test1', $iProfileId);
 
-		try {
-			$this->AddProfileToUser($oUser, 2);
-			$this->fail('Profile should not be added');
-		} catch (CoreCannotSaveObjectException $e) {
-		}
+		$this->expectException(CoreCannotSaveObjectException::class);
+		$this->expectExceptionMessage('Profile "Portal user" cannot be added it will deny the access to backoffice');
+		$this->AddProfileToUser($oUser, 2);
 	}
 
-	public function ProfileDenyingConsoleProvider(): array
+	public function UserCannotLoseConsoleAccessProvider(): array
 	{
 		return [
 			'Administrator'         => [1],
+			'SuperUser'             => [117],
 		];
 	}
 
@@ -556,7 +554,7 @@ class UserRightsTest extends ItopDataTestCase
 		$this->AddProfileToUser($oUser, 117); // SuperUser profile for the test
 
 		$this->expectException(CoreCannotSaveObjectException::class);
-		$this->expectExceptionMessage('Class:User/Error:AdminProfileCannotBeRemovedBySelf');
+		$this->expectExceptionMessage('You cannot remove your own Administrator profile. Ask another Administrator to do it for you');
 		$this->RemoveProfileFromUser($oUser, 1); // Remove admin profile
 	}
 
@@ -566,10 +564,10 @@ class UserRightsTest extends ItopDataTestCase
 	public function testUserCannotLoseUserEditionRights(int $iProfileId)
 	{
 		$oUser = $this->CreateUniqueUserAndLogin('configmgr111', $iProfileId); // SuperUser
-		// Keep only the configuration manager profile (remove SuperUser profile)
 		$this->AddProfileToUser($oUser, 3);
+
 		$this->expectException(CoreCannotSaveObjectException::class);
-		$this->expectExceptionMessage('Class:User/Error:CurrentProfilesHaveInsufficientRights');
+		$this->expectExceptionMessage('You cannot remove your own rights to edit users');
 		$this->RemoveProfileFromUser($oUser, $iProfileId);
 	}
 
