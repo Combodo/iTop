@@ -651,6 +651,31 @@ abstract class ItopDataTestCase extends ItopTestCase
 	}
 
 	/**
+	 * @param \DBObject $oUser
+	 * @param int $iProfileId
+	 *
+	 * @return \DBObject
+	 * @throws Exception
+	 */
+	protected function RemoveProfileFromUser($oUser, $iProfileId)
+	{
+		/** @var \ormLinkSet $oSet */
+		$oSet = $oUser->Get('profile_list');
+		foreach ($oSet as $oUserProfile)
+		{
+			if ($oUserProfile->Get('profileid') == $iProfileId)
+			{
+				$oSet->RemoveItem($oUserProfile->GetKey());
+				break;
+			}
+		}
+		$oUser = $this->updateObject(User::class, $oUser->GetKey(), array(
+			'profile_list' => $oSet,
+		));
+		return $oUser;
+	}
+
+	/**
 	 * Create a Hypervisor in database
 	 *
 	 * @param int $iNum

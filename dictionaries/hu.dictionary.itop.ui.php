@@ -171,6 +171,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:User/Error:ProfileNotAllowed' => 'A "%1$s" profil nem adható hozzá, le lesz tiltva',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'A saját felhasználó státuszának cseréje nem engedélyezett',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Az engedélyezett szervezeteknek tartalmazniuk kell a felhasználói szervezetet',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove the Administrator profile from your own user. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'A profilok jelenlegi listája nem ad elegendő hozzáférési jogot (a felhasználók már nem módosíthatók)',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'A felhasználóhoz legalább egy szervezeti egységet hozzá kell rendelni',

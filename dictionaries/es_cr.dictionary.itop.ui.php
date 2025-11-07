@@ -169,6 +169,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:User/Error:ProfileNotAllowed' => 'No se puede agregar el perfil "%1$s"; denegará el acceso al backoffice',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Cambiar estatus no está permitido para su propio usuario',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Las organizaciones permitidas deben contener una organización de usuario',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove the Administrator profile from your own user. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'La lista actual de perfiles no otorga suficientes permisos de acceso (los usuarios ya no son modificables)',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'El perfil de usuario avanzado del Portal no otorga suficientes derechos de acceso (se debe agregar otro perfil)',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Al menos una organización debe ser asignada a este usuario.',

@@ -171,6 +171,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:User/Error:ProfileNotAllowed' => 'Profiel "%1$s" kan niet toegevoegd worden omdat het de toegang tot de backoffice zou ontzeggen.',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Je kan de status voor je eigen gebruikersaccount niet wijzigen.',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'De toegestande organisaties moeten minstens de organisatie bevatten waartoe de gebruikersaccount behoort.',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove the Administrator profile from your own user. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'De huidige lijst van profielen heeft niet voldoende toegangsrechten (gebruikersaccount zijn niet meer wijzigbaar).',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Minstens één organisatie moet toegewezen zijn aan deze gebruiker',

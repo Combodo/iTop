@@ -404,14 +404,14 @@ abstract class User extends cmdbAbstractObject
 				}
 
 				if (!in_array(ADMIN_PROFILE_NAME, $aProfiles)) {
-					// Check if the user is yet allowed to modify Users
+					// Prevent a User to lose the right to modify Users
 					if (method_exists($oAddon, 'ResetCache')) {
 						$aCurrentProfiles = Session::Get('profile_list');
 						// Set the current profiles into a session variable (not yet in the database)
 						Session::Set('profile_list', $aProfiles);
 
 						$oAddon->ResetCache();
-						if (!$oAddon->IsActionAllowed($this, 'User', UR_ACTION_MODIFY, null)) {
+						if (!$oAddon->IsActionAllowed($this, get_class($this), UR_ACTION_MODIFY, null)) {
 							$this->m_aCheckIssues[] = Dict::S('Class:User/Error:CurrentProfilesHaveInsufficientRights');
 						}
 						$oAddon->ResetCache();
@@ -421,6 +421,10 @@ abstract class User extends cmdbAbstractObject
 						} else {
 							Session::Set('profile_list', $aCurrentProfiles);
 						}
+					}
+					// Prevent an administrator to remove their own admin profile
+					if (UserRights::IsAdministrator($this)) {
+						$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AdminProfileCannotBeRemovedBySelf');
 					}
 				}
 			}

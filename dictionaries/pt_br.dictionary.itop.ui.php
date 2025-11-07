@@ -171,6 +171,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:User/Error:ProfileNotAllowed' => 'O perfil "%1$s" não pôde ser adicionado, ele negará o acesso ao backoffice',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Alterar o status da conta não é permitido para o seu próprio usuário',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'As organizações permitidas devem conter apenas usuários pertencentes a organização',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove the Administrator profile from your own user. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'A lista atual de perfis não fornece permissões de acesso suficientes (os usuários não são mais modificáveis)',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Pelo menos uma organização deve ser atribuída a esse usuário',

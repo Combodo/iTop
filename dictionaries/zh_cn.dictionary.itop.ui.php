@@ -173,6 +173,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:User/Error:ProfileNotAllowed' => '无法添加角色 "%1$s" 因为这将导致禁止访问后台',
 	'Class:User/Error:StatusChangeIsNotAllowed' => '不允许更改您自己用户的状态',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => '允许访问组织必须包含用户组织',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove the Administrator profile from your own user. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => '当前指定的角色列表没有提供足够的访问权限 (用户将无法被修改)',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => '必须为此用户指定一个组织.',

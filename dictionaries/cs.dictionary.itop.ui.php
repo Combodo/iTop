@@ -171,6 +171,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:User/Error:ProfileNotAllowed' => 'Profil "%1$s" nemůže být přidán, byl by mu odepřen přístup do backoffice',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Změna není povolena pro vašeho vlastního uživatele',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Přístupné organizace musí obsahovat organizaci uživatele.',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove the Administrator profile from your own user. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'Aktuální seznam profilů neposkytuje dostatečná přístupová práva (uživatele již nelze upravovat)',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'Profil Portal power user neposkytuje dostatečná přístupová práva (je třeba přidat jiný profil)',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Uživatel musí být přiřazen minimálně do jedné organizace.',

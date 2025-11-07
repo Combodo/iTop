@@ -171,6 +171,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:User/Error:ProfileNotAllowed' => 'Nie można dodać profilu "%1$s" nie ma on dostępu do zaplecza',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Zmiana statusu nie jest dozwolona dla własnego użytkownika',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Dozwolone organizacje muszą zawierać organizację użytkownika',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove the Administrator profile from your own user. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'Aktualna lista profili nie daje wystarczających praw dostępu (Użytkowników nie można już modyfikować)',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'Profil użytkownika zaawansowanego Portalu nie zapewnia wystarczających praw dostępu (należy dodać kolejny profil)',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Do użytkownika musi być przypisana co najmniej jedna organizacja.',
