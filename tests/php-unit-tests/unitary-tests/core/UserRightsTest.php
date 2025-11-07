@@ -434,8 +434,7 @@ class UserRightsTest extends ItopDataTestCase
 		$oUser = $this->GivenUserWithProfiles('test1', [$iProfileId, 2]);
 
 		$this->expectException(CoreCannotSaveObjectException::class);
-		//$this->expectExceptionMessage('It is not allowed to deny backoffice access to privileged Users');
-		$this->expectExceptionMessage('Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice');
+		$this->expectExceptionMessage('Profile "Portal user" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)');
 		$oUser->DBInsert();
 
 	}

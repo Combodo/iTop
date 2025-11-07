@@ -173,6 +173,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:User/Attribute:status/Value:disabled' => 'Désactivé',
 	'Class:User/Error:LoginMustBeUnique' => 'Le login doit être unique - "%1s" est déjà utilisé.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'L\'utilisateur doit avoir au moins un profil.',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Le profil "%1$s" ne peut pas être donné aux Administrateurs, SuperUsers et REST Services Users',
 	'Class:User/Error:ProfileNotAllowed' => 'Le profil "%1$s" ne peux pas être ajouté à son propre utilisateur, il interdit l\'accès à la console',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Impossible de changer l\'état de son propre utilisateur',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Les organisations permises doivent contenir l\'organisation de l\'utilisateur',
