@@ -43,27 +43,40 @@ class CollectionBlock extends AbstractTypeFormBlock
 		$this->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
 	}
 
-	/** @inheritdoc  */
-	public function InitBlockOptions(array &$aUserOptions): void
+	protected $oBlock;
+
+	public function GetOptions(): array
 	{
-		parent::InitBlockOptions($aUserOptions);
+		$aOptions = parent::GetOptions();
 
 		// Convert block information in type information
-		if(isset($aUserOptions['block_entry_type'])) {
-			$sBlockEntryType = $aUserOptions['block_entry_type'];
-			$sBlockEntryOptions = $this->aUserOptions['block_entry_options'];
-			$oBlock = new ($sBlockEntryType)('prototype', $sBlockEntryOptions);
-			unset($aUserOptions['block_entry_type']);
-			unset($aUserOptions['block_entry_options']);
-			$aUserOptions['entry_type'] = $oBlock->GetFormType();
-			$aUserOptions['entry_options'] = $oBlock->GetOptions();
-
-			$aUserOptions['prototype'] = true;
-			$aUserOptions['allow_add'] = true;
-			$aUserOptions['prototype_options']  = [
+		if(isset($aOptions['block_entry_type'])) {
+			$aOptions['prototype'] = true;
+			$aOptions['allow_add'] = true;
+			$aOptions['prototype_options']  = [
 				'label' => false
 			];
 		}
+
+		$sBlockEntryType = $aOptions['block_entry_type'];
+		$sBlockEntryOptions = $aOptions['block_entry_options'];
+		$this->oBlock = new ($sBlockEntryType)('prototype', $sBlockEntryOptions);
+
+//		$this->HandleBlockDependencies();
+//		$this->oBlock->SetParent($this->GetParent());
+//		$oBlock->DependsOn('company', 'company', AbstractFormBlock::OUTPUT_VALUE);
+
+		unset($aOptions['block_entry_type']);
+		unset($aOptions['block_entry_options']);
+		$aOptions['entry_type'] = $this->oBlock->GetFormType();
+		$aOptions['entry_options'] = $this->oBlock->GetOptions();
+
+		return $aOptions;
+	}
+
+	public function HandleBlockDependencies(): void
+	{
+
 	}
 
 }

@@ -146,7 +146,7 @@ abstract class AbstractFormBlock implements IFormBlock
 
 	public function GetOptionsMergedWithDynamic(string $sEventType = null): array
 	{
-		return array_merge($this->aDynamicOptions, $this->aOptions);
+		return array_merge($this->GetDynamicOptions(), $this->GetOptions());
 	}
 
 	public function GetDynamicOptions(string $sEventType = null): array

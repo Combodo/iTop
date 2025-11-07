@@ -33,14 +33,14 @@ class FormType  extends AbstractType
 				$aData[] = [
 					'name' => $oChild->GetName(),
 					'added' => $oChild->IsAdded(),
-					'id' => FormTypeHelper::buildFormTypeFullPath($form) . '_' . $oChild->GetName()
+					'id' => FormTypeHelper::GetFormId($form) . '_' . $oChild->GetName()
 				];
 			}
 			else{
 				$aData[] = [
 					'name' => $oChild->GetName(),
 					'added' => $oChild->IsAdded(),
-					'id' => FormTypeHelper::buildFormTypeFullPath($form) . '_' . $oChild->GetName()
+					'id' => FormTypeHelper::GetFormId($form) . '_' . $oChild->GetName()
 				];
 			}
 

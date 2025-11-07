@@ -12,6 +12,7 @@ use Combodo\iTop\Forms\Block\FormBlock;
 use Combodo\iTop\Forms\Block\IO\FormBinding;
 use Combodo\iTop\Forms\Block\IO\FormInput;
 use Combodo\iTop\Forms\Block\IO\FormOutput;
+use Combodo\iTop\ItopSdkFormDemonstrator\Form\Block\ExpressionFormBlock;
 
 /**
  * Dependencies handler.
@@ -99,6 +100,15 @@ class DependencyMap
 
 		// Add the block
 		$this->aBlocksWithDependenciesGroupByDependence[$sDependenceBlockName][$oBlockWithDependencies->GetName()] = $oBlockWithDependencies;
+
+		// TODO
+		if($oBlockWithDependencies instanceof ExpressionFormBlock){
+			foreach($oBlockWithDependencies->GetOutputs() as $oOutput){
+				foreach($oOutput->GetBindings() as $oBinding){
+					$this->AddToBlockWithDependenciesMap($sDependenceBlockName, $oBinding->oDestinationIO->GetOwnerBlock());
+				}
+			}
+		}
 	}
 
 	/**

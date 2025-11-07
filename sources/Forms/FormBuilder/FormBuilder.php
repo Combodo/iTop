@@ -90,10 +90,11 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 		if (count($aBlocksWithDependencies) > 0) {
 			$this->oDependencyHandler = new DependencyHandler($this->builder->getName(), $oFormBlock, $this, $this->aChildren, $aBlocksWithDependencies);
 			$oFormBlock->oDependencyMap = $this->oDependencyHandler->GetMap();
-			if (is_null($oFormBlock->GetParent())) {
-				// Insert a hidden type to save the place
-				$this->builder->add('_turbo_trigger', HiddenType::class, ['prevent_form_build' => true]);
-			}
+		}
+
+		if (is_null($oFormBlock->GetParent())) {
+			// Insert a hidden type to save the place
+			$this->builder->add('_turbo_trigger', HiddenType::class, ['prevent_form_build' => true]);
 		}
 	}
 

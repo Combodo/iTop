@@ -157,17 +157,17 @@ class DependencyHandler
 	 */
 	private function CheckDependencies(FormInterface|FormBuilderInterface $oForm, string $sOutputBlock = null, string $sEventType = null): void
 	{
-//		$aImpactedBlocks = $this->aDependentBlocks;
-//		if($sOutputBlock !== null){
-//			$aImpactedBlocks = $this->oDependenciesMap->GetBlocksDependingOn($sOutputBlock);
-//		}
-//
-//		if($aImpactedBlocks === null){
-//			return;
-//		}
+		$aImpactedBlocks = $this->aDependentBlocks;
+		if($sOutputBlock !== null){
+			$aImpactedBlocks = $this->oDependenciesMap->GetBlocksDependingOn($sOutputBlock);
+		}
+
+		if($aImpactedBlocks === null){
+			return;
+		}
 
 		/** Iterate throw dependencies... @var AbstractFormBlock $oDependentBlock */
-		foreach ($this->aDependentBlocks as $oDependentBlock) {
+		foreach ($aImpactedBlocks as $oDependentBlock) {
 			if (!$oDependentBlock instanceof AbstractTypeFormBlock) {
 				continue;
 			}
