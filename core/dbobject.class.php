@@ -742,6 +742,35 @@ abstract class DBObject implements iDisplay
 		}
 	}
 
+	/**
+	 * Helper to copy a value only if the target is currently undefined
+	 *
+	 * Call Copy() only of the internal representation of the target attribute is null.
+	 *
+	 * @api
+	 * @see Copy()
+	 * @see SetIfNull())
+	 *
+	 * @param string $sDestAttCode
+	 * @param string $sSourceAttCode
+	 *
+	 * @return bool true if copy was successfull or was not performed because target attribute isn't null
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
+	 */
+	public function CopyIfNull($sDestAttCode, $sSourceAttCode)
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sDestAttCode);
+		$oCurrentValue = $this->Get($sDestAttCode);
+		if ($oAttDef->IsNull($oCurrentValue))
+		{
+			return $this->Copy($sDestAttCode, $sSourceAttCode);
+		}
+		return true;
+	}
+
     /**
      * Helper to set a value that fits the attribute max size
      *
