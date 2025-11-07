@@ -303,28 +303,26 @@ class UserRightsTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @dataProvider ProfileCannotModifySelfProvider
-	 * @doesNotPerformAssertions
+	 * @dataProvider UserCannotElevateTheirOwnRightsProvider
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \OQLException
 	 */
-	public function testProfileCannotModifySelf(int $iProfileId)
+	public function testUserCannotElevateTheirOwnRights(int $iCurrentProfileId, int $iElevatedProfileId)
 	{
-		$oUser = $this->CreateUniqueUserAndLogin('test1', $iProfileId);
+		$oUser = $this->CreateUniqueUserAndLogin('test1', $iCurrentProfileId);
 
-		try {
-			$this->AddProfileToUser($oUser, 1); // trying to become an admin
-			$this->fail('User should not modify self');
-		} catch (CoreException $e) {
-		}
+		$this->expectException(CoreCannotSaveObjectException::class);
+		$this->AddProfileToUser($oUser, $iElevatedProfileId);
 	}
 
-	public function ProfileCannotModifySelfProvider(): array
+	public function UserCannotElevateTheirOwnRightsProvider(): array
 	{
 		return [
-			'Configuration manager' => [3],
+			'Configuration manager to SuperUser' => ['current'=> 3, 'added' => 117],
+			'Configuration manager to Administrator'         => ['current'=> 3, 'added' => 1],
+			'SuperUser to Administrator'         => ['current'=> 117, 'added' => 1],
 		];
 	}
 
