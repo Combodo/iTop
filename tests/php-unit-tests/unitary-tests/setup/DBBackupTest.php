@@ -222,6 +222,10 @@ class DBBackupTest extends ItopTestCase
 				'tmp_dir'     => null,
 				'starts_with' => static::GetAppRoot() . 'data/itop-backup',
 			],
+			'Empty conf' => [
+				'tmp_dir'     => '',
+				'starts_with' => static::GetAppRoot() . 'data/itop-backup',
+			],
 			'Default settings' => [
 				'tmp_dir'     => 'data/',
 				'starts_with' => static::GetAppRoot() . 'data/itop-backup',
