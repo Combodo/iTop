@@ -428,6 +428,16 @@ abstract class User extends cmdbAbstractObject
 					}
 				}
 			}
+			elseif ($this->IsPrivilegedUser()) {
+				// Prevent Privileged User to be saved with profiles denying the access to the backoffice
+				$oSet->Rewind();
+				while ($oUserProfile = $oSet->Fetch()) {
+					$sProfile = $oUserProfile->Get('profile');
+					if (in_array($sProfile, $aForbiddenProfiles)) {
+						$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice', $sProfile);
+					}
+				}
+			}
 		}
 
 		// Only administrators can manage administrators
@@ -638,6 +648,21 @@ abstract class User extends cmdbAbstractObject
 			return false;
 		}
 		return UserRights::GetUserId() == $this->GetKey();
+	}
+
+	private function IsPrivilegedUser(): bool
+	{
+		$aPrivilegedProfiles = ['Administrator' => '1', 'REST Services User' => '1024', 'SuperUser' => '117'];
+
+		$oSet = $this->Get('profile_list');
+		$oSet->Rewind();
+		while ($oUserProfile = $oSet->Fetch()) {
+			$iProfile = $oUserProfile->Get('profileid');
+			if (in_array($iProfile, $aPrivilegedProfiles)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
 

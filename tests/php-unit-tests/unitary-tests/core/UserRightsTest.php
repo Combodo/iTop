@@ -35,6 +35,7 @@ use DBObjectSearch;
 use DBObjectSet;
 use DeleteException;
 use MetaModel;
+use UserLocal;
 use UserRights;
 use utils;
 
@@ -77,6 +78,21 @@ class UserRightsTest extends ItopDataTestCase
 		$oUser = self::CreateUser($sLogin, $iProfileId);
 		$_SESSION = [];
 		UserRights::Login($sLogin);
+		return $oUser;
+	}
+
+	protected function GivenUserWithProfiles(string $sLogin, array $aProfileIds): DBObject
+	{
+		$oProfiles = new \ormLinkSet(\UserLocal::class, 'profile_list', \DBObjectSet::FromScratch(\URP_UserProfile::class));
+		foreach ($aProfileIds as $iProfileId) {
+			$oProfiles->AddItem(MetaModel::NewObject('URP_UserProfile', ['profileid' => $iProfileId, 'reason' => 'UNIT Tests']));
+		}
+		$oUser = MetaModel::NewObject('UserLocal',  array(
+			'login' => $sLogin,
+			'password' => 'Password1!',
+			'expiration' => UserLocal::EXPIRE_NEVER,
+			'profile_list' => $oProfiles,
+		));
 		return $oUser;
 	}
 
@@ -408,6 +424,36 @@ class UserRightsTest extends ItopDataTestCase
 			'Administrator'         => [1],
 			'SuperUser' => [117],
 		];
+	}
+
+	/**
+	 * @dataProvider PrivilegedUsersMustHaveBackofficeAccessProvider
+	 */
+	public function testPrivilegedUsersMustHaveBackofficeAccess(int $iProfileId)
+	{
+		$oUser = $this->GivenUserWithProfiles('test1', [$iProfileId, 2]);
+
+		$this->expectException(CoreCannotSaveObjectException::class);
+		//$this->expectExceptionMessage('It is not allowed to deny backoffice access to privileged Users');
+		$this->expectExceptionMessage('Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice');
+		$oUser->DBInsert();
+
+	}
+	public function PrivilegedUsersMustHaveBackofficeAccessProvider(): array
+	{
+		return [
+			'killing another administrator' => [1],
+			'killing superuser ' => [117],
+			'killing Rest User' => [1024],
+
+		];
+	}
+	public function testNonPrivilegedUsersCanBeDeniedFromBackoffice()
+	{
+		$oUser = $this->GivenUserWithProfiles('test1', [5, 2]);
+		// No exception expected
+		$oUser->DBInsert();
+		$this->expectNotToPerformAssertions();
 	}
 
 	/**
