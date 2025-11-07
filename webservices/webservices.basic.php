@@ -1,10 +1,9 @@
 <?php
-
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify
+//   iTop is free software; you can redistribute it and/or modify	
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -17,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+
 /**
  * Implementation of iTop SOAP services
  *
@@ -26,9 +26,10 @@
 
 require_once(APPROOT.'/webservices/webservices.class.inc.php');
 
+
 class BasicServices extends WebServicesBase
 {
-	protected static function GetWSDLFilePath()
+	static protected function GetWSDLFilePath()
 	{
 		return APPROOT.'/webservices/itop.wsdl.tpl';
 	}
@@ -38,11 +39,14 @@ class BasicServices extends WebServicesBase
 	 *
 	 * @return string WebServiceResult
 	 */
-	public static function GetVersion()
+	static public function GetVersion()
 	{
-		if (ITOP_REVISION == 'svn') {
+		if (ITOP_REVISION == 'svn')
+		{
 			$sVersionString = ITOP_VERSION.' [dev]';
-		} else {
+		}
+		else
+		{
 			// This is a build made from SVN, let display the full information
 			$sVersionString = ITOP_VERSION_FULL." ".ITOP_BUILD_DATE;
 		}
@@ -52,7 +56,8 @@ class BasicServices extends WebServicesBase
 
 	public function CreateRequestTicket($sLogin, $sPassword, $sTitle, $sDescription, $oCallerDesc, $oCustomerDesc, $oServiceDesc, $oServiceSubcategoryDesc, $sProduct, $oWorkgroupDesc, $aSOAPImpactedCIs, $sImpact, $sUrgency)
 	{
-		if (!UserRights::CheckCredentials($sLogin, $sPassword)) {
+		if (!UserRights::CheckCredentials($sLogin, $sPassword))
+		{
 			$oRes = new WebServiceResultFailedLogin($sLogin);
 			$this->LogUsage(__FUNCTION__, $oRes);
 
@@ -66,15 +71,15 @@ class BasicServices extends WebServicesBase
 		$aServiceSubcategoryDesc = self::SoapStructToExternalKeySearch($oServiceSubcategoryDesc);
 		$aWorkgroupDesc = self::SoapStructToExternalKeySearch($oWorkgroupDesc);
 
-		$aImpactedCIs = [];
-		if (is_null($aSOAPImpactedCIs)) {
-			$aSOAPImpactedCIs = [];
-		}
-		foreach ($aSOAPImpactedCIs as $oImpactedCIs) {
+		$aImpactedCIs = array();
+		if (is_null($aSOAPImpactedCIs)) $aSOAPImpactedCIs = array();
+		foreach($aSOAPImpactedCIs as $oImpactedCIs)
+		{
 			$aImpactedCIs[] = self::SoapStructToLinkCreationSpec($oImpactedCIs);
 		}
 
-		$oRes = $this->_CreateResponseTicket(
+		$oRes = $this->_CreateResponseTicket
+		(
 			'UserRequest',
 			$sTitle,
 			$sDescription,
@@ -93,7 +98,8 @@ class BasicServices extends WebServicesBase
 
 	public function CreateIncidentTicket($sLogin, $sPassword, $sTitle, $sDescription, $oCallerDesc, $oCustomerDesc, $oServiceDesc, $oServiceSubcategoryDesc, $sProduct, $oWorkgroupDesc, $aSOAPImpactedCIs, $sImpact, $sUrgency)
 	{
-		if (!UserRights::CheckCredentials($sLogin, $sPassword)) {
+		if (!UserRights::CheckCredentials($sLogin, $sPassword))
+		{
 			$oRes = new WebServiceResultFailedLogin($sLogin);
 			$this->LogUsage(__FUNCTION__, $oRes);
 
@@ -101,27 +107,29 @@ class BasicServices extends WebServicesBase
 		}
 		UserRights::Login($sLogin);
 
-		if (!class_exists('Incident')) {
+		
+		if (!class_exists('Incident'))
+		{
 			$oRes = new WebServiceResult();
 			$oRes->LogError("The class Incident does not exist. Did you install the Incident Management (ITIL) module ?");
 			return $oRes->ToSoapStructure();
 		}
-
+		
 		$aCallerDesc = self::SoapStructToExternalKeySearch($oCallerDesc);
 		$aCustomerDesc = self::SoapStructToExternalKeySearch($oCustomerDesc);
 		$aServiceDesc = self::SoapStructToExternalKeySearch($oServiceDesc);
 		$aServiceSubcategoryDesc = self::SoapStructToExternalKeySearch($oServiceSubcategoryDesc);
 		$aWorkgroupDesc = self::SoapStructToExternalKeySearch($oWorkgroupDesc);
 
-		$aImpactedCIs = [];
-		if (is_null($aSOAPImpactedCIs)) {
-			$aSOAPImpactedCIs = [];
-		}
-		foreach ($aSOAPImpactedCIs as $oImpactedCIs) {
+		$aImpactedCIs = array();
+		if (is_null($aSOAPImpactedCIs)) $aSOAPImpactedCIs = array();
+		foreach($aSOAPImpactedCIs as $oImpactedCIs)
+		{
 			$aImpactedCIs[] = self::SoapStructToLinkCreationSpec($oImpactedCIs);
 		}
 
-		$oRes = $this->_CreateResponseTicket(
+		$oRes = $this->_CreateResponseTicket
+		(
 			'Incident',
 			$sTitle,
 			$sDescription,
@@ -137,11 +145,11 @@ class BasicServices extends WebServicesBase
 		);
 		return $oRes->ToSoapStructure();
 	}
-
+	
 	/**
 	 * Create an ResponseTicket (Incident or UserRequest) from an external system
 	 * Some CIs might be specified (by their name/IP)
-	 *
+	 *	 
 	 * @param string sClass The class of the ticket: Incident or UserRequest
 	 * @param string sTitle
 	 * @param string sDescription
@@ -162,7 +170,8 @@ class BasicServices extends WebServicesBase
 
 		$oRes = new WebServiceResult();
 
-		try {
+		try
+		{
 			CMDBObject::SetTrackInfo('Administrator');
 
 			$oNewTicket = MetaModel::NewObject($sClass);
@@ -171,36 +180,48 @@ class BasicServices extends WebServicesBase
 
 			$this->MyObjectSetExternalKey('org_id', 'customer', $aCustomerDesc, $oNewTicket, $oRes);
 			$this->MyObjectSetExternalKey('caller_id', 'caller', $aCallerDesc, $oNewTicket, $oRes);
-
+	
 			$this->MyObjectSetExternalKey('service_id', 'service', $aServiceDesc, $oNewTicket, $oRes);
-			if (!array_key_exists('service_id', $aServiceSubcategoryDesc)) {
+			if (!array_key_exists('service_id', $aServiceSubcategoryDesc))
+			{
 				$aServiceSubcategoryDesc['service_id'] = $oNewTicket->Get('service_id');
 			}
 			$this->MyObjectSetExternalKey('servicesubcategory_id', 'servicesubcategory', $aServiceSubcategoryDesc, $oNewTicket, $oRes);
-			if (MetaModel::IsValidAttCode($sClass, 'product')) {
+			if (MetaModel::IsValidAttCode($sClass, 'product'))
+			{
 				// 1.x data models
 				$this->MyObjectSetScalar('product', 'product', $sProduct, $oNewTicket, $oRes);
 			}
 
-			if (MetaModel::IsValidAttCode($sClass, 'workgroup_id')) {
+			if (MetaModel::IsValidAttCode($sClass, 'workgroup_id'))
+			{
 				// 1.x data models
 				$this->MyObjectSetExternalKey('workgroup_id', 'workgroup', $aWorkgroupDesc, $oNewTicket, $oRes);
-			} elseif (MetaModel::IsValidAttCode($sClass, 'team_id')) {
+			}
+			else if (MetaModel::IsValidAttCode($sClass, 'team_id'))
+			{
 				// 2.x data models
 				$this->MyObjectSetExternalKey('team_id', 'workgroup', $aWorkgroupDesc, $oNewTicket, $oRes);
 			}
 
-			if (MetaModel::IsValidAttCode($sClass, 'ci_list')) {
+
+			if (MetaModel::IsValidAttCode($sClass, 'ci_list'))
+			{
 				// 1.x data models
 				$aDevicesNotFound = $this->AddLinkedObjects('ci_list', 'impacted_cis', 'FunctionalCI', $aImpactedCIs, $oNewTicket, $oRes);
-			} elseif (MetaModel::IsValidAttCode($sClass, 'functionalcis_list')) {
+			}
+			else if (MetaModel::IsValidAttCode($sClass, 'functionalcis_list'))
+			{
 				// 2.x data models
 				$aDevicesNotFound = $this->AddLinkedObjects('functionalcis_list', 'impacted_cis', 'FunctionalCI', $aImpactedCIs, $oNewTicket, $oRes);
 			}
-
-			if (count($aDevicesNotFound) > 0) {
+			
+			if (count($aDevicesNotFound) > 0)
+			{
 				$this->MyObjectSetScalar('description', 'n/a', $sDescription.' - Related CIs: '.implode(', ', $aDevicesNotFound), $oNewTicket, $oRes);
-			} else {
+			}
+			else
+			{
 				$this->MyObjectSetScalar('description', 'n/a', $sDescription, $oNewTicket, $oRes);
 			}
 
@@ -208,9 +229,13 @@ class BasicServices extends WebServicesBase
 			$this->MyObjectSetScalar('urgency', 'urgency', $sUrgency, $oNewTicket, $oRes);
 
 			$this->MyObjectInsert($oNewTicket, 'created', $oRes);
-		} catch (CoreException $e) {
+		}
+		catch (CoreException $e)
+		{
 			$oRes->LogError($e->getMessage());
-		} catch (Exception $e) {
+		}
+		catch (Exception $e)
+		{
 			$oRes->LogError($e->getMessage());
 		}
 
@@ -220,12 +245,13 @@ class BasicServices extends WebServicesBase
 
 	/**
 	 * Given an OQL, returns a set of objects (several objects could be on the same row)
-	 *
+	 *	 
 	 * @param string sOQL
-	 */
+	 */	 
 	public function SearchObjects($sLogin, $sPassword, $sOQL)
 	{
-		if (!UserRights::CheckCredentials($sLogin, $sPassword)) {
+		if (!UserRights::CheckCredentials($sLogin, $sPassword))
+		{
 			$oRes = new WebServiceResultFailedLogin($sLogin);
 			$this->LogUsage(__FUNCTION__, $oRes);
 
@@ -240,16 +266,22 @@ class BasicServices extends WebServicesBase
 	protected function _SearchObjects($sOQL)
 	{
 		$oRes = new WebServiceResult();
-		try {
+		try
+		{
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
 			$oSet = new DBObjectSet($oSearch);
 			$aData = $oSet->ToArrayOfValues();
-			foreach ($aData as $iRow => $aRow) {
+			foreach($aData as $iRow => $aRow)
+			{
 				$oRes->AddResultRow("row_$iRow", $aRow);
 			}
-		} catch (CoreException $e) {
+		}
+		catch (CoreException $e)
+		{
 			$oRes->LogError($e->getMessage());
-		} catch (Exception $e) {
+		}
+		catch (Exception $e)
+		{
 			$oRes->LogError($e->getMessage());
 		}
 
@@ -257,3 +289,4 @@ class BasicServices extends WebServicesBase
 		return $oRes;
 	}
 }
+?>

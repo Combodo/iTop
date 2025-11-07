@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -21,10 +20,12 @@
 if (isset($_REQUEST['debug'])) {
 	if ($_REQUEST['debug'] == 'text') {
 		header('Content-Type: text/plain; charset=UTF-8');
-	} else {
+	}
+	else {
 		header('Content-Type: application/xml; charset=UTF-8');
 	}
-} else {
+}
+else {
 	// This is to make sure that the client will accept it....
 	//
 	header('Content-Type: application/xml; charset=UTF-8');
@@ -46,7 +47,8 @@ require_once(APPROOT.'webservices/webservices.basic.php');
 $sServiceCategory = utils::ReadParam('service_category');
 if (!empty($sServiceCategory)) {
 	$sRawFile = WebServicesBase::GetWSDLContents($sServiceCategory);
-} else {
+}
+else {
 	$sRawFile = WebServicesBase::GetWSDLContents();
 }
 
@@ -62,3 +64,4 @@ $sFinalFile = str_replace(
 );
 
 echo $sFinalFile;
+?>
