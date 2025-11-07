@@ -327,25 +327,21 @@ class UserRightsTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @dataProvider DeletingSelfUserProvider
-	 * @doesNotPerformAssertions
+	 * @dataProvider UserCannotDeleteOwnUserProvider
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \OQLException
 	 */
-	public function testDeletingSelfUser(int $iProfileId)
+	public function testUserCannotDeleteOwnUser(int $iProfileId)
 	{
 		$oUser = $this->CreateUniqueUserAndLogin('test1', $iProfileId);
 
-		try {
-			$oUser->DBDelete();
-			$this->fail('Current User cannot be deleted');
-		} catch (DeleteException $e) {
-		}
+		$this->expectException(DeleteException::class);
+		$oUser->DBDelete();
 	}
 
-	public function DeletingSelfUserProvider(): array
+	public function UserCannotDeleteOwnUserProvider(): array
 	{
 		return [
 			'Administrator'         => [1],
@@ -355,8 +351,7 @@ class UserRightsTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @dataProvider RemovingOwnContactProvider
-	 * @doesNotPerformAssertions
+	 * @dataProvider UserCannotRemoveOwnContactProvider
 	 *
 	 * @param int $iProfileId
 	 *
@@ -364,20 +359,16 @@ class UserRightsTest extends ItopDataTestCase
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \OQLException
 	 */
-	public function testRemovingOwnContact(int $iProfileId)
+	public function testUserCannotRemoveOwnContact(int $iProfileId)
 	{
 		$oUser = $this->CreateUniqueUserAndLogin('test1', $iProfileId);
 
 		$oUser->Set('contactid', 0);
-
-		try {
-			$oUser->DBWrite();
-			$this->fail('Current User cannot remove his own contact');
-		} catch (CoreCannotSaveObjectException $e) {
-		}
+		$this->expectException(CoreCannotSaveObjectException::class);
+		$oUser->DBWrite();
 	}
 
-	public function RemovingOwnContactProvider(): array
+	public function UserCannotRemoveOwnContactProvider(): array
 	{
 		return [
 			'Administrator'         => [1],
@@ -386,50 +377,32 @@ class UserRightsTest extends ItopDataTestCase
 		];
 	}
 
-	/**
-	 * @doesNotPerformAssertions
-	 *
-	 * @throws \CoreException
-	 * @throws \DictExceptionUnknownLanguage
-	 * @throws \OQLException
-	 */
-	public function testUpgradingToAdmin()
+	public function testAdminCannotRemoveOwnAdminProfile()
 	{
-		$oUser = $this->CreateUniqueUserAndLogin('test1', 3);
+		$oUser = $this->CreateUniqueUserAndLogin('admin111', 1); // Administrator
+		// Keep only the SuperUser profile (remove Administrator profile)
+		$this->AddProfileToUser($oUser, 117); // SuperUser profile for the test
 
-		try {
-			$this->AddProfileToUser($oUser, 1);
-			$this->fail('Should not be able to upgrade to Administrator');
-		} catch (CoreCannotSaveObjectException $e) {
-		} catch (CoreException $e) {
-		}
+		$this->expectException(CoreCannotSaveObjectException::class);
+		$this->expectExceptionMessage('You cannot remove your own Administrator profile. Ask another Administrator to do it for you');
+		$this->RemoveProfileFromUser($oUser, 1); // Remove admin profile
 	}
 
 	/**
-	 * @dataProvider RemovingOwnProfileProvider
-	 * @doesNotPerformAssertions
-	 *
-	 * @throws \CoreException
-	 * @throws \DictExceptionUnknownLanguage
-	 * @throws \OQLException
+	 * @dataProvider UserCannotLoseUserEditionRightsProvider
 	 */
-	public function testDenyingOwnUserModification(int $iProfileId)
+	public function testUserCannotLoseUserEditionRights(int $iProfileId)
 	{
-		$oUser = $this->CreateUniqueUserAndLogin('test1', $iProfileId);
+		$oUser = $this->CreateUniqueUserAndLogin('configmgr111', $iProfileId); // SuperUser
 		$this->AddProfileToUser($oUser, 3);
 
-		// Keep only the profile 3 (Configuration manager)
-		$oSet = new \ormLinkSet(\UserLocal::class, 'profile_list', \DBObjectSet::FromScratch(\URP_UserProfile::class));
-		$oSet->AddItem(MetaModel::NewObject('URP_UserProfile', ['profileid' => 3, 'reason' => 'UNIT Tests']));
-		$oUser->Set('profile_list', $oSet);
-
-		try {
-			$oUser->DBWrite();
-			$this->fail('Should not be able to deny User modifications');
-		} catch (CoreCannotSaveObjectException $e) {
-		}
+		$this->expectException(CoreCannotSaveObjectException::class);
+		$this->expectExceptionMessage('You cannot remove your own rights to edit users');
+		$this->RemoveProfileFromUser($oUser, $iProfileId);
 	}
-	public function RemovingOwnProfileProvider(): array
+
+
+	public function UserCannotLoseUserEditionRightsProvider(): array
 	{
 		return [
 			'Administrator'         => [1],
@@ -477,18 +450,18 @@ class UserRightsTest extends ItopDataTestCase
 		$oSearch = new DBObjectSearch('URP_UserProfile');
 		$oSearch->AddCondition('userid', $oUserAdmin->GetKey());
 		$oSet = new DBObjectSet($oSearch);
-		$this->assertEquals($iExpectedCount, $oSet->Count());
+		$this->assertEquals($iExpectedCount, $oSet->Count(), 'Visibility on Link between User and Administrator Profiles should be controlled by hide_administrators setting');
 		// Get the Profiles as well
 		$oSearch = DBObjectSearch::FromOQL('SELECT URP_Profiles JOIN URP_UserProfile ON URP_UserProfile.profileid = URP_Profiles.id WHERE URP_UserProfile.userid='.$oUserAdmin->GetKey());
 		$oSet = new DBObjectSet($oSearch);
-		$this->assertEquals($iExpectedCount, $oSet->Count());
+		$this->assertEquals($iExpectedCount, $oSet->Count(), 'Visibility on Administrator Profiles should be controlled by hide_administrators setting');
 	}
 
 	public function NonAdminCannotListAdminProfilesProvider(): array
 	{
 		return [
-			'with Admins visible' => [false, 1],
-			'with Admins hidden' => [true, 0],
+			'with Admins visible' => ['hide_administrators' => false, 'visible_objects' => 1],
+			'with Admins hidden' => ['hide_administrators' => true, 'visible_objects' => 0],
 		];
 	}
 
@@ -543,39 +516,6 @@ class UserRightsTest extends ItopDataTestCase
 			fn () => $this->FindUserAndAssertItWasNotFound($sLogin),
 			'The cache should prevent additional queries on subsequent calls'
 		);
-	}
-
-	public function testAdminCannotRemoveOwnAdminProfile()
-	{
-		$oUser = $this->CreateUniqueUserAndLogin('admin111', 1); // Administrator
-		// Keep only the SuperUser profile (remove Administrator profile)
-		$this->AddProfileToUser($oUser, 117); // SuperUser profile for the test
-
-		$this->expectException(CoreCannotSaveObjectException::class);
-		$this->expectExceptionMessage('You cannot remove your own Administrator profile. Ask another Administrator to do it for you');
-		$this->RemoveProfileFromUser($oUser, 1); // Remove admin profile
-	}
-
-	/**
-	* @dataProvider RemovingProfileProvider
-	*/
-	public function testUserCannotLoseUserEditionRights(int $iProfileId)
-	{
-		$oUser = $this->CreateUniqueUserAndLogin('configmgr111', $iProfileId); // SuperUser
-		$this->AddProfileToUser($oUser, 3);
-
-		$this->expectException(CoreCannotSaveObjectException::class);
-		$this->expectExceptionMessage('You cannot remove your own rights to edit users');
-		$this->RemoveProfileFromUser($oUser, $iProfileId);
-	}
-
-
-	public function RemovingProfileProvider(): array
-	{
-		return [
-			'Administrator'         => [1],
-			'SuperUser' => [117],
-		];
 	}
 
 	public function FindUserAndAssertItHasBeenFound($sLogin, $iExpectedKey)
