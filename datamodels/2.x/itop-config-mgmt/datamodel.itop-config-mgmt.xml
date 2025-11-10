@@ -7216,29 +7216,6 @@
       </presentation>
     </class>
     <class id="Team" _delta="must_exist">
-      <fields>
-        <field id="overview" _delta="must_exist">
-          <definition>
-            <cells>
-              <cell id="1" _delta="merge">
-                <dashlets>
-                  <dashlet id="FunctionalCIs-On-Team" xsi:type="DashletHeaderDynamic"  _delta="define">
-                    <rank>0</rank>
-                    <title>Team:Overview:FunctionalCIs</title>
-                    <style>
-                      <icon>../images/icons/icons8-server.svg</icon>
-                    </style>
-                    <subtitle>Team:Overview:FunctionalCIs:subtitle</subtitle>
-                    <query>SELECT FunctionalCI AS fci JOIN lnkContactToFunctionalCI AS lnk ON lnk.functionalci_id = fci.id WHERE lnk.contact_id=:this-&gt;id</query>
-                    <group_by>finalclass</group_by>
-                    <values>NetworkDevice,Server,ApplicationSolution</values>
-                  </dashlet>
-                </dashlets>
-              </cell>
-            </cells>
-          </definition>
-        </field>
-      </fields>
       <presentation>
         <details>
           <items>

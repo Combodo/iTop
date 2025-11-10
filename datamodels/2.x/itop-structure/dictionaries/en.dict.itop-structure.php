@@ -197,6 +197,13 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Members',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team',
+	'Class:Team/Attribute:overview' => 'Overview',
+	'Team:Overview' => 'Overview of the Tickets and CIs managed by the team',
+	'Team:Overview:ActiveTickets' => 'Active tickets assigned to the team',
+	'Team:Overview:FunctionalCIs-ByType' => 'Functional CIs managed by the team',
+	'Team:Overview:UserRequest-ByStatus' => 'User requests by status',
+	'Team:Overview:UserRequest-ClosedByMonth' => 'User requests closed in last 12 months',
+	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
 	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team',
 ]);

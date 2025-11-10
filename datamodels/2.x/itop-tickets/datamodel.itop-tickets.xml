@@ -912,28 +912,6 @@
     </class>
     <class id="Team" _delta="must_exist">
       <fields>
-        <field id="overview" _delta="must_exist">
-          <definition>
-            <cells>
-              <cell id="0" _delta="merge">
-                <dashlets>
-                  <dashlet id="ActiveTickets-On-Team" xsi:type="DashletGroupByTable"  _delta="define">
-                    <rank>0</rank>
-                    <title>Team:Overview:ActiveTickets</title>
-                    <query>SELECT Ticket WHERE team_id=:this-&gt;id AND operational_status = "ongoing"</query>
-                    <group_by>finalclass</group_by>
-                    <style>table</style>
-                    <aggregation_function>count</aggregation_function>
-                    <aggregation_attribute></aggregation_attribute>
-                    <limit></limit>
-                    <order_by>attribute</order_by>
-                    <order_direction>asc</order_direction>
-                  </dashlet>
-                </dashlets>
-              </cell>
-            </cells>
-          </definition>
-        </field>
         <field id="tickets_list" xsi:type="AttributeLinkedSet" _delta="define">
           <linked_class>Ticket</linked_class>
           <ext_key_to_me>team_id</ext_key_to_me>
