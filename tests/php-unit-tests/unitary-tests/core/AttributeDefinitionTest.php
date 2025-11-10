@@ -340,4 +340,20 @@ PHP
 		return $oAttribute;
 	}
 
+    public function testDisplayStopwatch()
+    {
+        $aUserRequestCustomParams = [
+            'title' => "Test DisplayStopwatch",
+        ];
+        $oUserRequest = $this->CreateUserRequest(456, $aUserRequestCustomParams);
+        $oAttDef = MetaModel::GetAttributeDef(get_class($oUserRequest), 'ttr_escalation_deadline');
+        $iStartDate = time() - 200;
+
+        $oStopwatch = $oUserRequest->Get('ttr');
+        $oStopwatch->DefineThreshold(100, $iStartDate);
+        $oUserRequest->Set('ttr', $oStopwatch);
+        $value = $oUserRequest->Get('ttr_escalation_deadline');
+        $sRet = $oAttDef->GetAsPlainText($value, $oUserRequest);
+        self::assertEquals('Missed by 3 min', $sRet);
+    }
 }
