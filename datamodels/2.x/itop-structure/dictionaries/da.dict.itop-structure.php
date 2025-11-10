@@ -163,6 +163,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'List Medlemmer',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
+	'Class:Team/Attribute:overview' => 'Overview~~',
+	'Team:Overview' => 'Tickets and CIs managed by the team~~',
+	'Team:Overview:ActiveTickets' => 'Active tickets~~',
+	'Team:Overview:FunctionalCIs-ByType' => 'Functional CIs~~',
+	'Team:Overview:UserRequest-ByStatus' => 'User requests by status~~',
+	'Team:Overview:UserRequest-ClosedByMonth' => 'User requests closed in last 12 months~~',
+	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
 	'Class:Team/Attribute:tickets_list' => 'List Tickets',
 	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
 ]);

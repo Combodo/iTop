@@ -183,6 +183,13 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Team/Attribute:persons_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
 	'Class:Team/Attribute:persons_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
 	'Class:Team/Attribute:persons_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
+	'Class:Team/Attribute:overview' => 'Tableau de bord',
+	'Team:Overview' => 'Tickets et equipements gérés par cette équipe',
+	'Team:Overview:ActiveTickets' => 'Tickets ouverts',
+	'Team:Overview:FunctionalCIs-ByType' => 'CI Fonctionnels',
+	'Team:Overview:UserRequest-ByStatus' => 'Demandes utilisateur par état',
+	'Team:Overview:UserRequest-ClosedByMonth' => 'Demandes utilisateur fermées par mois (12 derniers mois)',
+	'Team:Overview:UserRequest-ClosedByAgent' => 'Demandes utilisateur fermées par agent (12 derniers mois)',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
 	'Class:Team/Attribute:tickets_list+' => 'Tous les tickets assignés à cette équipe',
 ]);
