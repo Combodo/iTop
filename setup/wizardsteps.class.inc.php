@@ -1605,7 +1605,7 @@ EOF
 			if ($this->bUpgrade) {
 				// In upgrade mode, the defaults are the installed modules
 				foreach ($aChoice['modules'] as $sModuleId) {
-					if ($aModules[$sModuleId]['version_db'] != '') {
+					if ($aModules[$sModuleId]['installed_version'] != '') {
 						// A module corresponding to this choice is installed
 						$aScores[$sChoiceId][$sModuleId] = true;
 					}
@@ -1663,7 +1663,7 @@ EOF
 				}
 				if (array_key_exists('modules', $aChoice)) {
 					foreach ($aChoice['modules'] as $sModuleId) {
-						if ($aModules[$sModuleId]['version_db'] != '') {
+						if ($aModules[$sModuleId]['installed_version'] != '') {
 							// A module corresponding to this choice is installed, increase the score of this choice
 							if (!isset($aScores[$sChoiceId])) {
 								$aScores[$sChoiceId] = [];

@@ -120,10 +120,6 @@ class ModuleDiscovery
 		if (is_null($aArgs) || ! is_array($aArgs)) {
 			throw new ModuleFileReaderException("Error parsing module file args", 0, null, $sFilePath);
 		}
-		if (!array_key_exists('itop_version', $aArgs)) {
-			// Assume 1.0.2
-			$aArgs['itop_version'] = '1.0.2';
-		}
 		foreach (array_keys(self::$m_aModuleArgs) as $sArgName) {
 			if (!array_key_exists($sArgName, $aArgs)) {
 				throw new Exception("Module '$sId': missing argument '$sArgName'");

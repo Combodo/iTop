@@ -32,6 +32,7 @@ require_once APPROOT."setup/modulediscovery.class.inc.php";
 require_once APPROOT.'setup/modelfactory.class.inc.php';
 require_once APPROOT.'setup/compiler.class.inc.php';
 require_once APPROOT.'setup/extensionsmap.class.inc.php';
+require_once APPROOT.'setup/AnalyzeInstallation.php';
 
 define('MODULE_ACTION_OPTIONAL', 1);
 define('MODULE_ACTION_MANDATORY', 2);
@@ -145,12 +146,12 @@ class RunTimeEnvironment
 	 * @return array Array with the following format:
 	 * array =>
 	 *     'iTop' => array(
-	 *         'version_db' => ... (could be empty in case of a fresh install)
-	 *         'version_code => ...
+	 *         'installed_version' => ... (could be empty in case of a fresh install)
+	 *         'available_version => ...
 	 *     )
 	 *     <module_name> => array(
-	 *         'version_db' => ...
-	 *         'version_code' => ...
+	 *         'installed_version' => ...
+	 *         'available_version' => ...
 	 *         'install' => array(
 	 *             'flag' => SETUP_NEVER | SETUP_OPTIONAL | SETUP_MANDATORY
 	 *             'message' => ...
@@ -168,137 +169,7 @@ class RunTimeEnvironment
 	 */
 	public function AnalyzeInstallation($oConfig, $modulesPath, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
-		$aRes = [
-			ROOT_MODULE => [
-				'version_db' => '',
-				'name_db' => '',
-				'version_code' => ITOP_VERSION_FULL,
-				'name_code' => ITOP_APPLICATION,
-			],
-		];
-
-		$aDirs = is_array($modulesPath) ? $modulesPath : [$modulesPath];
-		$aModules = ModuleDiscovery::GetAvailableModules($aDirs, $bAbortOnMissingDependency, $aModulesToLoad);
-		foreach ($aModules as $sModuleId => $aModuleInfo) {
-			list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-			if ($sModuleName == '') {
-				throw new Exception("Missing name for the module: '$sModuleId'");
-			}
-			if ($sModuleVersion == '') {
-				// The version must not be empty (it will be used as a criteria to determine wether a module has been installed or not)
-				//throw new Exception("Missing version for the module: '$sModuleId'");
-				$sModuleVersion  = '1.0.0';
-			}
-
-			$sModuleAppVersion = $aModuleInfo['itop_version'];
-			$aModuleInfo['version_db'] = '';
-			$aModuleInfo['version_code'] = $sModuleVersion;
-
-			if (!in_array($sModuleAppVersion, ['1.0.0', '1.0.1', '1.0.2'])) {
-				// This module is NOT compatible with the current version
-				$aModuleInfo['install'] = [
-					'flag' => MODULE_ACTION_IMPOSSIBLE,
-					'message' => 'the module is not compatible with the current version of the application',
-				];
-			} elseif ($aModuleInfo['mandatory']) {
-				$aModuleInfo['install'] = [
-					'flag' => MODULE_ACTION_MANDATORY,
-					'message' => 'the module is part of the application',
-				];
-			} else {
-				$aModuleInfo['install'] = [
-					'flag' => MODULE_ACTION_OPTIONAL,
-					'message' => '',
-				];
-			}
-			$aRes[$sModuleName] = $aModuleInfo;
-		}
-
-		try {
-			$aSelectInstall = [];
-			if (! is_null($oConfig)) {
-				CMDBSource::InitFromConfig($oConfig);
-				$aSelectInstall = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_module_install");
-			}
-		} catch (MySQLException $e) {
-			// No database or erroneous information
-		}
-
-		// Build the list of installed module (get the latest installation)
-		//
-		$aInstallByModule = []; // array of <module> => array ('installed' => timestamp, 'version' => <version>)
-		$iRootId = 0;
-		foreach ($aSelectInstall as $aInstall) {
-			if (($aInstall['parent_id'] == 0) && ($aInstall['name'] != 'datamodel')) {
-				// Root module, what is its ID ?
-				$iId = (int) $aInstall['id'];
-				if ($iId > $iRootId) {
-					$iRootId = $iId;
-				}
-			}
-		}
-
-		foreach ($aSelectInstall as $aInstall) {
-			//$aInstall['comment']; // unsused
-			$iInstalled = strtotime($aInstall['installed']);
-			$sModuleName = $aInstall['name'];
-			$sModuleVersion = $aInstall['version'];
-			if ($sModuleVersion == '') {
-				// Though the version cannot be empty in iTop 2.0, it used to be possible
-				// therefore we have to put something here or the module will not be considered
-				// as being installed
-				$sModuleVersion = '0.0.0';
-			}
-
-			if ($aInstall['parent_id'] == 0) {
-				$sModuleName = ROOT_MODULE;
-			} elseif ($aInstall['parent_id'] != $iRootId) {
-				// Skip all modules belonging to previous installations
-				continue;
-			}
-
-			if (array_key_exists($sModuleName, $aInstallByModule)) {
-				if ($iInstalled < $aInstallByModule[$sModuleName]['installed']) {
-					continue;
-				}
-			}
-
-			if ($aInstall['parent_id'] == 0) {
-				$aRes[$sModuleName]['version_db'] = $sModuleVersion;
-				$aRes[$sModuleName]['name_db'] = $aInstall['name'];
-			}
-
-			$aInstallByModule[$sModuleName]['installed'] = $iInstalled;
-			$aInstallByModule[$sModuleName]['version'] = $sModuleVersion;
-		}
-
-		// Adjust the list of proposed modules
-		//
-		foreach ($aInstallByModule as $sModuleName => $aModuleDB) {
-			if ($sModuleName == ROOT_MODULE) {
-				continue;
-			} // Skip the main module
-
-			if (!array_key_exists($sModuleName, $aRes)) {
-				// A module was installed, it is not proposed in the new build... skip
-				continue;
-			}
-			$aRes[$sModuleName]['version_db'] = $aModuleDB['version'];
-
-			if ($aRes[$sModuleName]['install']['flag'] == MODULE_ACTION_MANDATORY) {
-				$aRes[$sModuleName]['uninstall'] = [
-					'flag' => MODULE_ACTION_IMPOSSIBLE,
-					'message' => 'the module is part of the application',
-				];
-			} else {
-				$aRes[$sModuleName]['uninstall'] = [
-					'flag' => MODULE_ACTION_OPTIONAL,
-					'message' => '',
-				];
-			}
-		}
-
-		return $aRes;
+		return AnalyzeInstallation::GetInstance()->AnalyzeInstallation($oConfig, $modulesPath, $bAbortOnMissingDependency, $aModulesToLoad);
 	}
 
 	/**
@@ -365,8 +236,7 @@ class RunTimeEnvironment
 		// Determine the installed modules and extensions
 		//
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
-		$oSourceEnv = new RunTimeEnvironment($sSourceEnv);
-		$aAvailableModules = $oSourceEnv->AnalyzeInstallation($oSourceConfig, $aDirsToCompile);
+		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile);
 
 		// Actually read the modules available for the target environment,
 		// but get the selection from the source environment and finally
@@ -404,7 +274,7 @@ class RunTimeEnvironment
 			$sModuleRootDir = $oModule->GetRootDir();
 			$bIsExtra = $this->oExtensionsMap->ModuleIsChosenAsPartOfAnExtension($sModule, iTopExtension::SOURCE_REMOTE);
 			if (array_key_exists($sModule, $aAvailableModules)) {
-				if (($aAvailableModules[$sModule]['version_db'] != '') ||  $bIsExtra && !$oModule->IsAutoSelect()) { //Extra modules are always unless they are 'AutoSelect'
+				if (($aAvailableModules[$sModule]['installed_version'] != '') ||  $bIsExtra && !$oModule->IsAutoSelect()) { //Extra modules are always unless they are 'AutoSelect'
 					$aRet[$oModule->GetName()] = $oModule;
 				}
 			}
@@ -648,7 +518,7 @@ class RunTimeEnvironment
 		$oInstallRec->Set('comment', json_encode($aData));
 		$oInstallRec->Set('parent_id', 0); // root module
 		$oInstallRec->Set('installed', $iInstallationTime);
-		$iMainItopRecord = $oInstallRec->DBInsertNoReload();
+		$oInstallRec->DBInsertNoReload();
 
 		// Record main installation
 		$oInstallRec = new ModuleInstallation();
@@ -669,7 +539,7 @@ class RunTimeEnvironment
 			}
 			$aModuleData = $aAvailableModules[$sModuleId];
 			$sName = $sModuleId;
-			$sVersion = $aModuleData['version_code'];
+			$sVersion = $aModuleData['available_version'];
 			$sUninstallable = $aModuleData['uninstallable'] ?? 'yes';
 			$aComments = [];
 			$aComments[] = $sShortComment;
@@ -975,7 +845,7 @@ class RunTimeEnvironment
 	{
 		foreach ($aAvailableModules as $sModuleId => $aModule) {
 			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules)) {
-				$aArgs = [MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']];
+				$aArgs = [MetaModel::GetConfig(), $aModule['installed_version'], $aModule['available_version']];
 				RunTimeEnvironment::CallInstallerHandler($aAvailableModules[$sModuleId], $sHandlerName, $aArgs);
 			}
 		}
@@ -1039,7 +909,7 @@ class RunTimeEnvironment
 				$sRelativePath = 'env-'.$this->sTargetEnv.'/'.basename($aModule['root_dir']);
 				// Load data only for selected AND newly installed modules
 				if (in_array($sModuleId, $aSelectedModules)) {
-					if ($aModule['version_db'] != '') {
+					if ($aModule['installed_version'] != '') {
 						// Simulate the load of the previously loaded XML files to get the mapping of the keys
 						if ($bSampleData) {
 							$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);

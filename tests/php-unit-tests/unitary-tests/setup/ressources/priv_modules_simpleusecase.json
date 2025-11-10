@@ -1,0 +1,50 @@
+[
+    {
+        "0": "330",
+        "id": "330",
+        "1": "iTop",
+        "name": "iTop",
+        "2": "3.3.0-dev-svn",
+        "version": "3.3.0-dev-svn",
+        "3": "2025-11-10 11:50:12",
+        "installed": "2025-11-10 11:50:12",
+        "4": "Done by the setup program\nBuilt on $WCNOW$",
+        "comment": "Done by the setup program\nBuilt on $WCNOW$",
+        "5": "0",
+        "parent_id": "0",
+        "6": "yes",
+        "uninstallable": "yes"
+    },
+    {
+        "0": "331",
+        "id": "331",
+        "1": "mandatory_module",
+        "name": "mandatory_module",
+        "2": "3.3.0",
+        "version": "3.3.0",
+        "3": "2025-11-10 11:50:12",
+        "installed": "2025-11-10 11:50:12",
+        "4": "Done by the setup program\nMandatory\nVisible (during the setup)",
+        "comment": "Done by the setup program\nMandatory\nVisible (during the setup)",
+        "5": "330",
+        "parent_id": "330",
+        "6": "yes",
+        "uninstallable": "yes"
+    },
+    {
+        "0": "332",
+        "id": "332",
+        "1": "optional_module",
+        "name": "optional_module",
+        "2": "3.3.0",
+        "version": "3.3.0",
+        "3": "2025-11-10 11:50:12",
+        "installed": "2025-11-10 11:50:12",
+        "4": "Done by the setup program\nOptional\nVisible (during the setup)",
+        "comment": "Done by the setup program\nOptional\nVisible (during the setup)",
+        "5": "330",
+        "parent_id": "330",
+        "6": "yes",
+        "uninstallable": "no"
+    }
+]
