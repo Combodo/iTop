@@ -40,6 +40,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:AuditRule/Attribute:name+' => 'Nome curto para esta regra',
 	'Class:AuditRule/Attribute:description' => 'Descrição',
 	'Class:AuditRule/Attribute:description+' => 'Descrição longa para essa regra',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Executar consulta',
 	'Class:AuditRule/Attribute:query+' => 'Executar a expressão OQL',
 	'Class:AuditRule/Attribute:valid_flag' => 'Objetos válidos?',

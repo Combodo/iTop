@@ -40,6 +40,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:AuditRule/Attribute:name+' => 'Kural Adı',
 	'Class:AuditRule/Attribute:description' => 'Kural tanımlaması',
 	'Class:AuditRule/Attribute:description+' => 'Kural tanımlaması',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Çalıştırılacak Sorgu',
 	'Class:AuditRule/Attribute:query+' => 'Çalıştırılcak OQL ifadesi',
 	'Class:AuditRule/Attribute:valid_flag' => 'Geçerli nesneler?',

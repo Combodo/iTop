@@ -40,6 +40,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:AuditRule/Attribute:name+' => 'Kort navn for denne regel',
 	'Class:AuditRule/Attribute:description' => 'Audit-regel beskrivelse',
 	'Class:AuditRule/Attribute:description+' => 'Udførlig beskrivelse af denne Audit-regel',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Søgning at udføre',
 	'Class:AuditRule/Attribute:query+' => 'Den OQL forespørgsel, der skal udføres',
 	'Class:AuditRule/Attribute:valid_flag' => 'Gyldige objekter?',

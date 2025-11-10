@@ -40,6 +40,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AuditRule/Attribute:name+' => 'ルールの短縮名',
 	'Class:AuditRule/Attribute:description' => '監査ルール説明',
 	'Class:AuditRule/Attribute:description+' => 'この監査ルールの長い説明',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => '実行するクエリ',
 	'Class:AuditRule/Attribute:query+' => '実行するOQL式',
 	'Class:AuditRule/Attribute:valid_flag' => '有効なオブジェクト',

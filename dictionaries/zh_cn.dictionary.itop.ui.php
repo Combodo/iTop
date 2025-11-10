@@ -42,6 +42,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:AuditRule/Attribute:name+' => '规则名称',
 	'Class:AuditRule/Attribute:description' => '描述',
 	'Class:AuditRule/Attribute:description+' => '检查什么? 如何修复? 谁去做? ...',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => '要运行的查询',
 	'Class:AuditRule/Attribute:query+' => '要运行的OQL表达式',
 	'Class:AuditRule/Attribute:valid_flag' => '是否有效?',

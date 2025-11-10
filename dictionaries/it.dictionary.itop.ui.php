@@ -40,6 +40,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:AuditRule/Attribute:name+' => '',
 	'Class:AuditRule/Attribute:description' => 'Descrizione della regola di Audit',
 	'Class:AuditRule/Attribute:description+' => 'Descrizione dettagliata per questa regola di audit ',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Query da eseguire',
 	'Class:AuditRule/Attribute:query+' => 'Espressio OQL da eseguire',
 	'Class:AuditRule/Attribute:valid_flag' => 'Oggetti validi?',

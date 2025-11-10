@@ -41,6 +41,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:AuditRule/Attribute:name+' => 'Краткое название этого правила',
 	'Class:AuditRule/Attribute:description' => 'Описание правила аудита',
 	'Class:AuditRule/Attribute:description+' => 'Полное описание этого правила аудита',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Запрос для выполнения',
 	'Class:AuditRule/Attribute:query+' => 'OQL выражение, выполняющее проверку набора объектов категории аудита',
 	'Class:AuditRule/Attribute:valid_flag' => 'Валидные объекты?',

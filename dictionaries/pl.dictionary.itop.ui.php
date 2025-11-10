@@ -40,6 +40,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:AuditRule/Attribute:name+' => 'Krótka nazwa reguły',
 	'Class:AuditRule/Attribute:description' => 'Opis reguły audytu',
 	'Class:AuditRule/Attribute:description+' => 'Długi opis reguły inspekcji',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Zapytanie do wykonania',
 	'Class:AuditRule/Attribute:query+' => 'Wyrażenie OQL do wykonania',
 	'Class:AuditRule/Attribute:valid_flag' => 'Prawidłowe obiekty?',
