@@ -1030,12 +1030,13 @@
               <interval>300</interval>
             </auto_reload>
             <cells>
-              <cell id="0" _delta="merge">
+              <cell id="0">
+                <rank>0</rank>
                 <dashlets>
-                  <dashlet id="ActiveTickets-OnTeam-ByFinalClass" xsi:type="DashletGroupByTable" _delta="define">
+                  <dashlet id="ActiveTickets-OnTeam-ByFinalClass" xsi:type="DashletGroupByTable">
                     <rank>0</rank>
                     <title>Team:Overview:ActiveTickets</title>
-                    <query>SELECT Ticket WHERE team_id=:this-&gt;id AND operational_status = "ongoing"</query>
+                    <query>SELECT Ticket WHERE team_id=:this-&gt;id AND operational_status = 'ongoing'</query>
                     <group_by>finalclass</group_by>
                     <style>table</style>
                     <aggregation_function>count</aggregation_function>
@@ -1057,7 +1058,7 @@
                     <query>SELECT UserRequest
                       WHERE team_id=:this-&gt;id</query>
                     <group_by>status</group_by>
-                    <values>active,inactive</values>
+                    <values>new,assigned,pending,resolved,closed</values>
                   </dashlet>
                 </dashlets>
               </cell>
@@ -1079,6 +1080,7 @@
                 </dashlets>
               </cell>
               <cell id="3">
+                <rank>3</rank>
                 <dashlets>
                   <dashlet id="FunctionalCIs-OnTeam" xsi:type="DashletGroupByTable">
                     <rank>0</rank>

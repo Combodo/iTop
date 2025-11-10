@@ -184,7 +184,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Team/Attribute:persons_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
 	'Class:Team/Attribute:persons_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
 	'Class:Team/Attribute:overview' => 'Tableau de bord',
-	'Team:Overview' => 'Tickets et equipements gérés par cette équipe',
+	'Team:Overview' => 'Tickets et équipements gérés par cette équipe',
 	'Team:Overview:ActiveTickets' => 'Tickets ouverts',
 	'Team:Overview:FunctionalCIs-ByType' => 'CI Fonctionnels',
 	'Team:Overview:UserRequest-ByStatus' => 'Demandes utilisateur par état',
