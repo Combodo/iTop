@@ -175,6 +175,8 @@ class DependencyHandler
 				// Options changed flag
 				$bOptionsChanged = FormHelper::CompareArrayValues($aBefore, $aOptions);
 
+				$bOptionsChanged = true;
+
 				// Add the listener callback to the dependent field if it is also a dependency for another field
 				if ($this->oDependenciesMap->IsTheBlockInDependencies($oDependentBlock->getName())) {
 
