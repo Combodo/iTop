@@ -3,9 +3,13 @@
 
 <turbo-stream action="update" target="turbo_itop_profiler">
     <template>
-        {% for aProfileInfo in aProfilesInfo %}
-            {% set aProfileData = aProfileInfo.aProfileData %}
-            {{ include(aProfileInfo.sTemplate) }}
-        {% endfor %}
+        {% if aProfilesInfo is not empty %}
+            {% UIPanel Neutral { sTitle:'Debug' } %}
+                {% for aProfileInfo in aProfilesInfo %}
+                    {% set aProfileData = aProfileInfo.aProfileData %}
+                    {{ include(aProfileInfo.sTemplate) }}
+                {% endfor %}
+            {% EndUIPanel %}
+        {% endif %}
     </template>
 </turbo-stream>
