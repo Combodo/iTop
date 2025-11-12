@@ -107,6 +107,7 @@ abstract class Controller extends AbstractController
 	private CsrfTokenManager $oCsrfTokenManager;
 	private ?string $sContentType = null;
 	private ?string $sPageType = null;
+	private bool $bDebugAllowed = true;
 
 	/**
 	 * Controller constructor.
@@ -1020,6 +1021,9 @@ abstract class Controller extends AbstractController
 		if (!in_array($sPageType, [self::ENUM_PAGE_TYPE_HTML, self::ENUM_PAGE_TYPE_AJAX, self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX])) {
 			return;
 		}
+		if (!$this->bDebugAllowed) {
+			return;
+		}
 		$aProfilesInfo = [];
 		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iProfilerExtension::class) as $sExtension) {
 			/** @var \Combodo\iTop\Application\TwigBase\Controller\iProfilerExtension $oExtensionInstance */
@@ -1087,4 +1091,10 @@ abstract class Controller extends AbstractController
 
 		$this->AddToPage($this->oTwig->render('application/forms/itop_error.html.twig', ['sControllerError' => $sErrorMsg]));
 	}
+
+	public function SetDebugAllowed(bool $bDebugAllowed): void
+	{
+		$this->bDebugAllowed = $bDebugAllowed;
+	}
+
 }
