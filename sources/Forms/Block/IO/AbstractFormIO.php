@@ -245,5 +245,14 @@ class AbstractFormIO
 		return $this->HasValue();
 	}
 
+	public function HasBindingOut(): bool
+	{
+		return count($this->aBindingsToInputs) > 0;
+	}
+
+	public function GetBindingsToInputs(): array
+	{
+		return $this->aBindingsToInputs;
+	}
 
 }

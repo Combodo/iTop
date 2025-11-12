@@ -26,6 +26,7 @@ class CheckboxFormBlock extends AbstractTypeFormBlock
 		return CheckboxType::class;
 	}
 
+	/** @inheritdoc */
 	function InitBlockOptions(array &$aUserOptions): void
 	{
 		parent::InitBlockOptions($aUserOptions);

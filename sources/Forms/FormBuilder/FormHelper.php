@@ -30,4 +30,22 @@ class FormHelper
 
 		throw new FormBuilderException(sprintf('Unknown event type %s', get_class($event)));
 	}
+
+	public static function CompareArrayValues($mValue1, $mValue2): int
+	{
+		if (is_array($mValue1) && is_array($mValue2)) {
+			if (count($mValue1) !== count($mValue2)) {
+				return 1;
+			}
+			$aDiff = array_udiff_assoc($mValue1, $mValue2, [FormHelper::class, 'CompareArrayValues']);
+
+			return count($aDiff);
+		}
+
+		if ($mValue1 === $mValue2) {
+			return 0;
+		}
+
+		return 1;
+	}
 }

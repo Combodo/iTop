@@ -23,6 +23,9 @@ class DependencyMap
 	/** @var array array of blocks with dependencies group by dependence */
 	private array $aBlocksWithDependenciesGroupByDependence = [];
 
+	/** @var array array of binding  */
+	private array $aBindings = [];
+
 	/** @var array array of binding (OUT > OUT) grouped by block and output name  */
 	private array $aBindingsOutputToInput = [];
 
@@ -148,6 +151,7 @@ class DependencyMap
 
 		// add to map
 		$map[$sBlockName][$sIOName][] = $oBinding;
+		$this->aBindings[] = $oBinding;
 	}
 
 	/**
@@ -239,5 +243,10 @@ class DependencyMap
 	public function GetOutputToOutputs(): array
 	{
 		return $this->aBindingsOutputToOutputs;
+	}
+
+	public function GetBindings()
+	{
+		return $this->aBindings;
 	}
 }

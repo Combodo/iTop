@@ -26,8 +26,8 @@ class DependencyHandler
 	/** @var DependencyMap dependencies map */
 	private DependencyMap $oDependenciesMap;
 
-	/** @var array Debug data */
-	private array $aDebugData = [];
+	/** @var array events */
+	private array $aEvents = [];
 	private readonly string $sName;
 	private readonly AbstractFormBlock $oFormBlock;
 	private readonly FormBuilder $oFormBuilder;
@@ -94,12 +94,8 @@ class DependencyHandler
 					continue;
 				}
 
-				$this->aDebugData[] = [
-					'builder' => $this->oFormBuilder->getName(),
-					'event'   => 'form.listen',
-					'form'    => $sOutputBlockName,
-					'value'   => 'NA',
-				];
+				// Add event
+				$this->AddEvent('form.listen', $sOutputBlockName);
 
 				// Listen the output block POST_SET_DATA & POST_SUBMIT
 				$this->oFormBuilder->get($sOutputBlockName)->addEventListener(FormEvents::POST_SET_DATA, $this->GetEventListeningCallback());
@@ -120,12 +116,8 @@ class DependencyHandler
 			// Get the event type
 			$sEventType = FormHelper::GetEventType($oEvent);
 
-			$this->aDebugData[] = [
-				'builder' => $this->oFormBuilder->getName(),
-				'event'   => $sEventType,
-				'form'    => $oEvent->getForm()->getName(),
-				'value'   => $oEvent->getData(),
-			];
+			// Add event
+			$this->AddEvent($sEventType, $oEvent->getForm()->getName(), $oEvent->getData());
 
 			// Get the form
 			$oForm = $oEvent->getForm();
@@ -176,8 +168,12 @@ class DependencyHandler
 			if ($oDependentBlock->IsVisible($sEventType) && $oDependentBlock->IsInputsDataReady($sEventType)) {
 
 				// Get the dependent field options
+				$aBefore = $oDependentBlock->GetOptionsMergedWithDynamic();
 				$oDependentBlock->UpdateDynamicOptions($sEventType);
 				$aOptions = $oDependentBlock->GetOptionsMergedWithDynamic($sEventType);
+
+				// Options changed flag
+				$bOptionsChanged = FormHelper::CompareArrayValues($aBefore, $aOptions);
 
 				// Add the listener callback to the dependent field if it is also a dependency for another field
 				if ($this->oDependenciesMap->IsTheBlockInDependencies($oDependentBlock->getName())) {
@@ -188,22 +184,12 @@ class DependencyHandler
 					]);
 				}
 
-				if ($oDependentBlock->AllowAdd($sEventType)) {
+				if ( (!$oDependentBlock->IsAdded() || $bOptionsChanged)  && $oDependentBlock->AllowAdd($sEventType)) {
 
-					$this->aDebugData[] = [
-						'builder' => $this->oFormBuilder->getName(),
-						'event'   => 'form.add',
-						'form'    => $oDependentBlock->getName(),
-						'value'   => 'NA',
-					];
-
+					// Add events
+					$this->AddEvent('form.add', $oDependentBlock->getName());
 					if (array_key_exists('builder_listener', $aOptions)) {
-						$this->aDebugData[] = [
-							'builder' => $this->oFormBuilder->getName(),
-							'event'   => 'form.listen.after',
-							'form'    => $oDependentBlock->getName(),
-							'value'   => 'NA',
-						];
+						$this->AddEvent('form.listen.after', $oDependentBlock->getName());
 					}
 
 					// Mark the dependency as added
@@ -220,12 +206,8 @@ class DependencyHandler
 				$oForm->remove($oDependentBlock->GetName());
 				$oDependentBlock->SetAdded(false);
 
-				$this->aDebugData[] = [
-					'builder' => $this->oFormBuilder->getName(),
-					'event' => 'form.remove',
-					'form' => $oDependentBlock->getName(),
-					'value' => 'NA'
-				];
+				// Add event
+				$this->AddEvent('form.remove', $oDependentBlock->getName());
 			}
 
 		}
@@ -239,7 +221,7 @@ class DependencyHandler
 	 */
 	public function GetDebugData(): array
 	{
-		return $this->aDebugData;
+		return $this->aEvents;
 	}
 
 	public function GetMap(): DependencyMap
@@ -247,13 +229,20 @@ class DependencyHandler
 		return $this->oDependenciesMap;
 	}
 
-	public function GetSubBlocks(): array
-	{
-		return $this->aSubBlocks;
-	}
 
 	public function GetName(): string
 	{
 		return $this->sName;
+	}
+
+	private function AddEvent(string $sEvent, string $sForm, mixed $oValue = 'NA'): void
+	{
+
+		$this->aEvents[] = [
+			'builder' => $this->oFormBuilder->getName(),
+			'event'   => $sEvent,
+			'form'    => $sForm,
+			'value'   => $oValue,
+		];
 	}
 }
