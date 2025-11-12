@@ -168,14 +168,8 @@ class DependencyHandler
 			if ($oDependentBlock->IsVisible($sEventType) && $oDependentBlock->IsInputsDataReady($sEventType)) {
 
 				// Get the dependent field options
-				$aBefore = $oDependentBlock->GetOptionsMergedWithDynamic();
 				$oDependentBlock->UpdateDynamicOptions($sEventType);
 				$aOptions = $oDependentBlock->GetOptionsMergedWithDynamic($sEventType);
-
-				// Options changed flag
-				$bOptionsChanged = FormHelper::CompareArrayValues($aBefore, $aOptions);
-
-				$bOptionsChanged = true;
 
 				// Add the listener callback to the dependent field if it is also a dependency for another field
 				if ($this->oDependenciesMap->IsTheBlockInDependencies($oDependentBlock->getName())) {
@@ -186,7 +180,7 @@ class DependencyHandler
 					]);
 				}
 
-				if ( (!$oDependentBlock->IsAdded() || $bOptionsChanged)  && $oDependentBlock->AllowAdd($sEventType)) {
+				if ($oDependentBlock->AllowAdd($sEventType)) {
 
 					// Add events
 					$this->AddEvent('form.add', $oDependentBlock->getName());
