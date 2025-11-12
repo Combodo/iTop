@@ -11,6 +11,7 @@ use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\Block\IO\Converter\StringToAttributeConverter;
 use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
+use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
 use CoreException;
 use MetaModel;
 
@@ -52,10 +53,17 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	/** @inheritdoc  */
 	public function UpdateDynamicOptions(string $sEventType = null): void
 	{
-		$oValue = $this->GetInput(self::INPUT_CLASS_NAME)->GetValue($sEventType);
+		$oClass = $this->GetInput(self::INPUT_CLASS_NAME)->GetValue($sEventType);
 
-		$aAttributeCodes = MetaModel::GetAttributesList($oValue);
-		$this->aDynamicOptions['choices'] = array_combine($aAttributeCodes, $aAttributeCodes);
+		$aAttributeCodes = MetaModel::GetAttributesList($oClass);
+
+		$aAttributes = [];
+		foreach ($aAttributeCodes as $sAttributeCode){
+			$oAttribute = MetaModel::GetAttributeDef(strval($oClass), $sAttributeCode);
+			$aAttributes[$oAttribute->GetLabel()] = $sAttributeCode;
+		}
+
+		$this->aDynamicOptions['choices'] = $aAttributes;
 	}
 
 }

@@ -33,13 +33,16 @@ class ChoiceFormType extends AbstractType
 	{
 		parent::configureOptions($resolver);
 
+		// options to control the inline display of choices
 		$resolver->setDefault('inline_display', true);
 	}
 
+	/** @inheritdoc */
 	public function buildView(FormView $view, FormInterface $form, array $options): void
 	{
 		parent::buildView($view, $form, $options);
 
+		// pass options to the view
 		$view->vars['inline_display'] = $options['inline_display'];
 	}
 
@@ -47,46 +50,51 @@ class ChoiceFormType extends AbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
 		// on preset data
-		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (PreSetDataEvent $event) use ($options) {
-
-			if ($options['multiple'] === false && $options['required'] === true) {
-				if ($event->getData() === null) {
-					$FirstElement = array_shift($options['choices']);
-					if ($FirstElement !== null) {
-						$event->setData($FirstElement);
-					}
-				}
-			}
-
+		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (PreSetDataEvent $oEvent) use ($options) {
+			$this->InitializeValue($oEvent, $options);
 		});
 
-		// on pre submit
-		$builder->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event) use ($options) {
-
-			if($options['multiple'] === false && $options['required'] === true) {
-				if ($event->getData() === null) {
-					$FirstElement = array_shift($options['choices']);
-					if($FirstElement !== null){
-						$event->setData($FirstElement);
-					}
-				}
-			}
-
-		});
-
-		// on pre submit
-		$builder->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event) use ($options){
+		// on pre submit (prior)
+		$builder->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $oEvent) use ($options){
 
 			// reset value if not in available choices
-			if (!empty($event->getData()) && !$this->CheckValue($event->getData(), $options)) {
-				$event->getForm()->addError(new FormError("The value has been reset because it is not part of the available choices anymore."));
-				$event->setData(null);
+			if (!empty($oEvent->getData()) && !$this->CheckValue($oEvent->getData(), $options)) {
+				$oEvent->getForm()->addError(new FormError("The value has been reset because it is not part of the available choices anymore."));
+				$oEvent->setData(null);
 			}
 
-		}, 1);
+		}, 1); // priority 1 to be executed before the default validation (priority 0)
+
+		// on pre submit
+		$builder->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $oEvent) use ($options) {
+			$this->InitializeValue($oEvent, $options);
+		});
+
 	}
 
 	/**
+	 * Initialize the value of the choice field.
+	 *
+	 * @param PreSetDataEvent|PreSubmitEvent $oEvent
+	 * @param array $options
+	 *
+	 * @return void
+	 */
+	private function InitializeValue(PreSetDataEvent|PreSubmitEvent $oEvent, array $options): void
+	{
+		if ($options['multiple'] === false && $options['required'] === true) {
+			if ($oEvent->getData() === null) {
+				$oFirstElement = array_shift($options['choices']);
+				if ($oFirstElement !== null) {
+					$oEvent->setData($oFirstElement);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Check if the value(s) are part of the available choices.
+	 *
 	 * @param $oValue
 	 * @param $options
 	 *

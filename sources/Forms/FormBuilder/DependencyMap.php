@@ -7,7 +7,6 @@
 namespace Combodo\iTop\Forms\FormBuilder;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
-use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\Expression\ExpressionFormBlock;
 use Combodo\iTop\Forms\Block\FormBlock;
 use Combodo\iTop\Forms\Block\IO\FormBinding;
@@ -20,8 +19,8 @@ use Combodo\iTop\Forms\Block\IO\FormOutput;
  */
 class DependencyMap
 {
-	/** @var array array of blocks with dependencies group by dependence */
-	private array $aBlocksWithDependenciesGroupByDependence = [];
+	/** @var array array of blocks impacted by dependence */
+	private array $aBlocksImpactedBy = [];
 
 	/** @var array array of binding  */
 	private array $aBindings = [];
@@ -57,13 +56,13 @@ class DependencyMap
 		foreach ($this->aBlocksWithDependencies as $oDependentBlock) {
 
 			/** Iterate throw the block inputs bindings... @var FormBinding $oBinding**/
-			foreach ($oDependentBlock->GetInputsBindings() as $oBinding) {
+			foreach ($oDependentBlock->GetBoundInputsBindings() as $oBinding) {
 
 				// OUT > IN
 				if($oBinding->oSourceIO instanceof FormOutput
 				&& $oBinding->oDestinationIO instanceof FormInput){
 					$this->AddBindingToMap($this->aBindingsOutputToInput, $oBinding);
-					$this->AddToBlockWithDependenciesMap($oBinding->oSourceIO->GetOwnerBlock()->GetName(), $oDependentBlock);
+					$this->AddToBlockImpactedBy($oBinding->oSourceIO->GetOwnerBlock()->GetName(), $oDependentBlock);
 				}
 
 				// IN > IN
@@ -75,7 +74,7 @@ class DependencyMap
 			}
 
 			/** Iterate throw the block inputs connections... @var FormBinding $oBinding**/
-			foreach ($oDependentBlock->GetOutputBindings() as $oBinding) {
+			foreach ($oDependentBlock->GetBoundOutputBindings() as $oBinding) {
 
 				// OUT > OUT
 				if($oBinding->oSourceIO instanceof FormOutput
@@ -86,45 +85,6 @@ class DependencyMap
 			}
 		}
 
-	}
-
-	/**
-	 * @param string $sDependenceBlockName
-	 * @param AbstractFormBlock $oBlockWithDependencies
-	 *
-	 * @return void
-	 */
-	private function AddToBlockWithDependenciesMap(string $sDependenceBlockName, AbstractFormBlock $oBlockWithDependencies): void
-	{
-		// Initialize array for this dependence
-		if(!array_key_exists($sDependenceBlockName, $this->aBlocksWithDependenciesGroupByDependence)){
-			$this->aBlocksWithDependenciesGroupByDependence[$sDependenceBlockName] = [];
-		}
-
-		// Add the block
-		$this->aBlocksWithDependenciesGroupByDependence[$sDependenceBlockName][$oBlockWithDependencies->GetName()] = $oBlockWithDependencies;
-
-		// TODO
-		if($oBlockWithDependencies instanceof ExpressionFormBlock){
-			foreach($oBlockWithDependencies->GetOutputs() as $oOutput){
-				foreach($oOutput->GetBindings() as $oBinding){
-					$this->AddToBlockWithDependenciesMap($sDependenceBlockName, $oBinding->oDestinationIO->GetOwnerBlock());
-				}
-			}
-		}
-	}
-
-	/**
-	 * @param string $sBlockName
-	 *
-	 * @return array|null
-	 */
-	public function GetBlocksDependingOn(string $sBlockName): ?array
-	{
-		if(!array_key_exists($sBlockName,$this->aBlocksWithDependenciesGroupByDependence)){
-			return null;
-		}
-		return $this->aBlocksWithDependenciesGroupByDependence[$sBlockName] ?? null;
 	}
 
 	/**
@@ -155,9 +115,35 @@ class DependencyMap
 	}
 
 	/**
+	 * @param string $sDependsOnName
+	 * @param AbstractFormBlock $oImpactedBlock
+	 *
+	 * @return void
+	 */
+	private function AddToBlockImpactedBy(string $sDependsOnName, AbstractFormBlock $oImpactedBlock): void
+	{
+		// Initialize array for this dependence
+		if(!array_key_exists($sDependsOnName, $this->aBlocksImpactedBy)){
+			$this->aBlocksImpactedBy[$sDependsOnName] = [];
+		}
+
+		// Add the block
+		$this->aBlocksImpactedBy[$sDependsOnName][$oImpactedBlock->GetName()] = $oImpactedBlock;
+
+		// TODO
+		if($oImpactedBlock instanceof ExpressionFormBlock){
+			foreach($oImpactedBlock->GetOutputs() as $oOutput){
+				foreach($oOutput->GetBindings() as $oBinding){
+					$this->AddToBlockImpactedBy($sDependsOnName, $oBinding->oDestinationIO->GetOwnerBlock());
+				}
+			}
+		}
+	}
+
+	/**
 	 * @return array
 	 */
-	public function GetInitialBoundOutputBlockNames(): array
+	public function GetImpactingBlocksWithoutDependencies(): array
 	{
 		$aResult = [];
 
@@ -173,79 +159,78 @@ class DependencyMap
 		return $aResult;
 	}
 
-	public function GetImpacted(string $sBlockName): array
+	/**
+	 * Get block impacted by a given block.
+	 * The blocks can be filtered using a callable.
+	 *
+	 * @param string $sBlockName
+	 * @param callable|null $oFilter
+	 *
+	 * @return array|null
+	 */
+	public function GetBlocksImpactedBy(string $sBlockName, callable $oFilter = null): ?array
 	{
-		$aImpacted = [];
-		if (array_key_exists($sBlockName, $this->aBindingsOutputToInput)) {
-			foreach ($this->aBindingsOutputToInput[$sBlockName] as $aBindings) {
-				foreach ($aBindings as $oBinding) {
-					$oDestBlock = $oBinding->oDestinationIO->GetOwnerBlock();
-					if ($oDestBlock instanceof AbstractTypeFormBlock) {
-						$aImpacted[] = $oDestBlock;
-					} else {
-						$aImpacted = array_merge($aImpacted, $this->GetImpacted($oDestBlock->GetName()));
-					}
-				}
-			}
+		if(!array_key_exists($sBlockName, $this->aBlocksImpactedBy)){
+			return null;
+		}
+		$aBlocks = $this->aBlocksImpactedBy[$sBlockName];
+
+		// Filtering
+		if($oFilter !== null){
+			$aBlocks = array_filter($aBlocks, $oFilter);
 		}
 
-		return $aImpacted;
+		return $aBlocks;
 	}
 
 	/**
+	 * Check if a block impacts other blocks.
+	 *
 	 * @param string $sBlockName
 	 *
 	 * @return bool
 	 */
-	public function IsBlockHasOutputs(string $sBlockName): bool
+	public function HasBlocksImpactedBy(string $sBlockName): bool
 	{
-		return array_key_exists($sBlockName, $this->aBindingsOutputToInput);
+		return $this->GetBlocksImpactedBy($sBlockName) !== null;
 	}
 
 	/**
-	 * @param string $sBlockName
+	 * Get bindings OUT > IN.
 	 *
 	 * @return array
 	 */
-	public function GetOutputsForBlock(string $sBlockName): array
-	{
-		return array_keys($this->aBindingsOutputToInput[$sBlockName]);
-	}
-
-	public function GetOutputsDependenciesForBlock(string $sOutputBlockName): array
-	{
-		return $this->aBindingsOutputToInput[$sOutputBlockName];
-	}
-
-	public function IsTheBlockInDependencies(string $sBlockName): bool
-	{
-//		foreach ($this->aDependentBlocks as $oDependentBlock)
-//		{
-//			if($oDependentBlock->getName() === $sBlockName) {
-//				return true;
-//			}
-//		}
-//
-//		return false;
-		return $this->GetBlocksDependingOn($sBlockName) !== null;
-	}
-
 	public function GetOutputToInputs(): array
 	{
 		return $this->aBindingsOutputToInput;
 	}
 
+	/**
+	 * Get bindings IN > IN.
+	 *
+	 * @return array
+	 */
 	public function GetInputToInputs(): array
 	{
 		return $this->aBindingsInputToInput;
 	}
 
+	/**
+	 * Get bindings OUT > OUT.
+	 *
+	 * @return array
+	 */
 	public function GetOutputToOutputs(): array
 	{
 		return $this->aBindingsOutputToOutputs;
 	}
 
-	public function GetBindings()
+	/**
+	 * Get all bindings.
+	 *
+	 * @return array
+	 */
+	public function GetAllBindings()
 	{
 		return $this->aBindings;
 	}

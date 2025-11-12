@@ -5,8 +5,8 @@
     {% UITurboUpdate Standard { sTarget: "turbo_" ~ sBlockIdentifier} %}
     {% if oBlockToRedraw is not null %}
         {{ form_row(oBlockToRedraw) }}
-        {% else %}
-            <div style="background-color: #ecd9eb;border-radius: 6px;padding: 2px 5px;">Reserved place for <b>{{ sBlockIdentifier }}</b></div>
+{#        {% else %}#}
+{#            <div style="background-color: #ecd9eb;border-radius: 6px;padding: 2px 5px;">Reserved place for <b>{{ sBlockIdentifier }}</b></div>#}
     {% endif %}
     {% EndUITurboUpdate %}
 {% endfor %}

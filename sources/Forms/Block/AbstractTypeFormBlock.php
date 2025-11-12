@@ -35,12 +35,11 @@ abstract class AbstractTypeFormBlock extends AbstractFormBlock
 	 * @param string|null $sEventType
 	 *
 	 * @return bool
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	 * @throws FormBlockException
 	 */
 	public function IsVisible(string $sEventType = null): bool
 	{
 		$oInput = $this->GetInput(self::INPUT_VISIBLE);
-
 		if(!$oInput->IsBound()){
 			return true;
 		}

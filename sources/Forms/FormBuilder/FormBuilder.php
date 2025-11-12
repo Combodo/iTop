@@ -32,8 +32,7 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 	/** @var AbstractFormBlock */
 	private AbstractFormBlock $oFormBlock;
 
-	/** @var array sub blocks */
-	private array $aChildren = [];
+	/** @var FormBuilderInterface */
 	private readonly FormBuilderInterface $builder;
 
 	/**
@@ -63,7 +62,7 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 	 */
 	private function BuildForm(FormBlock $oFormBlock): void
 	{
-		// Hidden (ignore)
+		// Prevent form build option
 		$aOptions = $this->builder->getOptions();
 		if (array_key_exists('prevent_form_build', $aOptions) && $aOptions['prevent_form_build']) {
 			return;
@@ -73,11 +72,8 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 		/** Iterate throw the form sub blocks... @var FormBlock $oSubFormBlock */
 		foreach ($oFormBlock->GetChildren() as $sBlockName => $oChildBlock) {
 
-			// Add to the children
-			$this->aChildren[$sBlockName] = $oChildBlock;
-
-			// Handle block
-			$bHasDependency = $this->HandleSubBlock($oChildBlock);
+			// Handle child block
+			$bHasDependency = $this->HandleChildBlock($oChildBlock);
 
 			// Add to the array of blocks with dependencies
 			if ($bHasDependency) {
@@ -88,7 +84,7 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 
 		// Create a dependency handler if needed
 		if (count($aBlocksWithDependencies) > 0) {
-			$this->oDependencyHandler = new DependencyHandler($this->builder->getName(), $oFormBlock, $this, $this->aChildren, $aBlocksWithDependencies);
+			$this->oDependencyHandler = new DependencyHandler($this, $oFormBlock, $aBlocksWithDependencies);
 			$oFormBlock->oDependencyMap = $this->oDependencyHandler->GetMap();
 		}
 
@@ -105,7 +101,7 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 	 *
 	 * @return bool
 	 */
-	private function HandleSubBlock(AbstractFormBlock $oSubFormBlock): bool
+	private function HandleChildBlock(AbstractFormBlock $oSubFormBlock): bool
 	{
 
 		// Has dependencies blocks
@@ -120,18 +116,6 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get a child block.
-	 *
-	 * @param string $sName
-	 *
-	 * @return AbstractFormBlock|null
-	 */
-	public function GetChild(string $sName): ?AbstractFormBlock
-	{
-		return $this->aChildren[$sName] ?? null;
 	}
 
 	/**

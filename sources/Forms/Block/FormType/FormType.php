@@ -1,4 +1,8 @@
 <?php
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
 namespace Combodo\iTop\Forms\Block\FormType;
 
@@ -8,14 +12,18 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 
+/**
+ *
+ */
 class FormType  extends AbstractType
 {
+	/** @inheritdoc */
 	public function getParent(): string
 	{
 		return \Symfony\Component\Form\Extension\Core\Type\FormType::class;
 	}
 
-
+	/** @inheritdoc */
 	public function buildView(FormView $view, FormInterface $form, array $options)
 	{
 		parent::buildView($view, $form, $options);

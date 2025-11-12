@@ -882,6 +882,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Forms\\Block\\FormType\\OqlFormType' => __DIR__ . '/../..' . '/sources/Forms/Block/FormType/OqlFormType.php',
         'Combodo\\iTop\\Forms\\Block\\IO\\AbstractFormIO' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/AbstractFormIO.php',
         'Combodo\\iTop\\Forms\\Block\\IO\\Converter\\AbstractConverter' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/Converter/AbstractConverter.php',
+        'Combodo\\iTop\\Forms\\Block\\IO\\Converter\\ChoiceValueToLabelConverter' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/Converter/ChoiceValueToLabelConverter.php',
         'Combodo\\iTop\\Forms\\Block\\IO\\Converter\\OqlToClassConverter' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/Converter/OqlToClassConverter.php',
         'Combodo\\iTop\\Forms\\Block\\IO\\Converter\\StringToAttributeConverter' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/Converter/StringToAttributeConverter.php',
         'Combodo\\iTop\\Forms\\Block\\IO\\Converter\\StringToBooleanConverter' => __DIR__ . '/../..' . '/sources/Forms/Block/IO/Converter/StringToBooleanConverter.php',

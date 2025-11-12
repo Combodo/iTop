@@ -13,66 +13,47 @@ use Combodo\iTop\Forms\FormsException;
 use IssueLog;
 use Symfony\Component\Form\FormEvents;
 
+/**
+ *
+ */
 class ExpressionFormBlock extends AbstractFormBlock
 {
+	public const EXPRESSION_PATTERN = "/\[\[(?<input>[^\]]+)]]/";
+
+	// Outputs
 	const OUTPUT_RESULT = "result";
+	const OUTPUT_RESULT_INVERT = "result_invert";
 
-	public function InitBlockOptions(array &$aUserOptions): void
-	{
-		parent::InitBlockOptions($aUserOptions);
-	}
-
+	/** @inheritdoc */
 	public function InitOutputs(): void
 	{
 		parent::InitOutputs();
 		$this->AddOutput(self::OUTPUT_RESULT, BooleanIOFormat::class);
-//		$this->AddOutput(self::OUTPUT_RAW, RawFormat::class);
+		$this->AddOutput(self::OUTPUT_RESULT_INVERT, BooleanIOFormat::class);
 	}
 
-//	public function InputHasChanged()
-//	{
-//		if (!$this->IsInputsDataReady()) {
-//			return;
-//		}
-//		$sExpression = $this->GetOptions()['expression'];
-//		$sValue = preg_replace_callback(
-//			"/\[\[(?<input>[^\]]+)]]/",
-//			function(array $aMatches): string {
-//				return $this->GetInput($aMatches['input'])->GetValue();
-//			},
-//			$sExpression);
-//
-//		foreach ($this->GetInputs() as $oFormInput) {
-//			IssueLog::Info($oFormInput->GetName().' = '.$oFormInput->GetValue());
-//		}
-//		IssueLog::Info("Result of [$sExpression] is [$sValue]");
-//
-//		$result  = '';
-//		eval('$result = '.$sValue.';');
-//		IssueLog::Info("Result of [$sExpression] is eval to [$result]");
-//
-//		$this->GetOutput(self::OUTPUT_RESULT)->SetValue(FormEvents::POST_SUBMIT, new BooleanIOFormat($result));
-//		$this->GetOutput(self::OUTPUT_VALUE)->SetValue(FormEvents::POST_SUBMIT, new RawFormat($result));
-//	}
 
-
-
-	public function InputHasChanged()
+	/** @inheritdoc */
+	public function AllInputsReadyEvent(): void
 	{
-		if (!$this->IsInputsDataReady()) {
-			return;
-		}
-		$sExpression = $this->GetOptions()['expression'];
-
-		$this->Compute($sExpression, FormEvents::POST_SET_DATA);
-		$this->Compute($sExpression, FormEvents::POST_SUBMIT);
+		$this->ComputeExpression(FormEvents::POST_SET_DATA);
+		$this->ComputeExpression(FormEvents::POST_SUBMIT);
 	}
 
-	public function Compute(string $sExpression, string $sEventType): void
+	/**
+	 * Compute the expression and set the output values.
+	 *
+	 * @param string $sEventType
+	 *
+	 * @return void
+	 */
+	public function ComputeExpression(string $sEventType): void
 	{
 		try{
+			$sExpression = $this->GetOptions()['expression'];
+
 			$sValue = preg_replace_callback(
-				"/\[\[(?<input>[^\]]+)]]/",
+				self::EXPRESSION_PATTERN,
 				function(array $aMatches) use ($sEventType): ?string {
 					$oInput = $this->GetInput($aMatches['input']);
 					if(!$oInput->HasEventValue($sEventType)){
@@ -86,6 +67,7 @@ class ExpressionFormBlock extends AbstractFormBlock
 			eval('$result = '.$sValue.';');
 
 			$this->GetOutput(self::OUTPUT_RESULT)->SetValue($sEventType, new BooleanIOFormat($result));
+			$this->GetOutput(self::OUTPUT_RESULT_INVERT)->SetValue($sEventType, new BooleanIOFormat(!$result));
 			$this->GetOutput(self::OUTPUT_VALUE)->SetValue($sEventType, new RawFormat($result));
 		}
 		catch(\Exception $e){

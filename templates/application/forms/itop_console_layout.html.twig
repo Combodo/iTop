@@ -51,8 +51,9 @@
         <div id="turbo_{{ block.id }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">
             {% if block.added == 1 %}
                 {{ form_row(form[block.name]) }}
-            {% else %}
-                <div style="background-color: #ecd9eb;border-radius: 6px;padding: 2px 5px;">Reserved place for <b>{{ block.name }}</b></div>
+{#                {% else %}#}
+{#            {% else %}#}
+{#                <div style="background-color: #ecd9eb;border-radius: 6px;padding: 2px 5px;">Reserved place for <b>{{ block.name }}</b></div>#}
             {% endif %}
         </div>
     {% endfor %}

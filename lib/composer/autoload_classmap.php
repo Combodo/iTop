@@ -501,6 +501,7 @@ return array(
     'Combodo\\iTop\\Forms\\Block\\FormType\\OqlFormType' => $baseDir . '/sources/Forms/Block/FormType/OqlFormType.php',
     'Combodo\\iTop\\Forms\\Block\\IO\\AbstractFormIO' => $baseDir . '/sources/Forms/Block/IO/AbstractFormIO.php',
     'Combodo\\iTop\\Forms\\Block\\IO\\Converter\\AbstractConverter' => $baseDir . '/sources/Forms/Block/IO/Converter/AbstractConverter.php',
+    'Combodo\\iTop\\Forms\\Block\\IO\\Converter\\ChoiceValueToLabelConverter' => $baseDir . '/sources/Forms/Block/IO/Converter/ChoiceValueToLabelConverter.php',
     'Combodo\\iTop\\Forms\\Block\\IO\\Converter\\OqlToClassConverter' => $baseDir . '/sources/Forms/Block/IO/Converter/OqlToClassConverter.php',
     'Combodo\\iTop\\Forms\\Block\\IO\\Converter\\StringToAttributeConverter' => $baseDir . '/sources/Forms/Block/IO/Converter/StringToAttributeConverter.php',
     'Combodo\\iTop\\Forms\\Block\\IO\\Converter\\StringToBooleanConverter' => $baseDir . '/sources/Forms/Block/IO/Converter/StringToBooleanConverter.php',

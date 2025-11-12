@@ -7,18 +7,19 @@
 namespace Combodo\iTop\Forms\Block;
 
 use Combodo\iTop\Forms\Block\Base\FormBlock;
+use Combodo\iTop\Forms\Block\IO\AbstractFormIO;
 use Combodo\iTop\Forms\Block\IO\Converter\AbstractConverter;
 use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
 use Combodo\iTop\Forms\Block\IO\FormInput;
 use Combodo\iTop\Forms\Block\IO\FormOutput;
 use Combodo\iTop\Forms\IFormBlock;
+use Forms\BlockIO;
 
 /**
  * Abstract form block.
  *
- * A form block describe a form (complex or simple type).
- * A complex form have sub blocks.
- * It defines its inputs and outputs.
+ * Inputs / Outputs.
+ * Options.
  *
  */
 abstract class AbstractFormBlock implements IFormBlock
@@ -96,7 +97,12 @@ abstract class AbstractFormBlock implements IFormBlock
 		return $this->oParent;
 	}
 
-	public function HasParent(): bool
+	/**
+	 * Return true if this block is root.
+	 *
+	 * @return bool
+	 */
+	public function IsRootBlock(): bool
 	{
 		return $this->oParent !== null;
 	}
@@ -109,28 +115,6 @@ abstract class AbstractFormBlock implements IFormBlock
 	public function GetName(): string
 	{
 		return $this->sName;
-	}
-
-	public function GetIdentifier(): string
-	{
-		$sParentName = $this->GetParent()?->GetIdentifier();
-		if (is_null($sParentName)) {
-			return $this->GetName();
-		}
-		return $sParentName.'_'.$this->sName;
-	}
-
-	public function GetPath(): array
-	{
-		$aPath = [];
-		$oCurrent = $this;
-
-		do {
-			$aPath[] = $oCurrent->GetName();
-			$oCurrent = $oCurrent->getParent();
-		} while ($oCurrent->HasParent());
-
-		return array_reverse($aPath);
 	}
 
 	/**
@@ -170,12 +154,33 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @param string $sName the input name
 	 * @param string $sType the type of the input
 	 *
-	 * @return void
+	 * @return AbstractFormBlock
 	 */
 	public function AddInput(string $sName, string $sType): AbstractFormBlock
 	{
 		$oFormInput = new FormInput($sName, $sType, $this);
 		$this->aFormInputs[$oFormInput->GetName()] = $oFormInput;
+
+		return $this;
+	}
+
+	/**
+	 * Add an input connected to another block.
+	 *
+	 * @param string $sName the input name
+	 * @param string $sOutputBlockName
+	 * @param string $sOutputName
+	 *
+	 * @return AbstractFormBlock
+	 * @throws FormBlockException
+	 */
+	public function AddInputDependsOn(string $sName, string $sOutputBlockName, string $sOutputName): AbstractFormBlock
+	{
+		$oOutputBlock = $this->GetParent()->Get($sOutputBlockName);
+		$oBlockOutput = $oOutputBlock->GetOutput($sOutputName);
+
+		$this->AddInput($sName, $oBlockOutput->GetDataType());
+		$this->DependsOn($sName, $sOutputBlockName, $sOutputName);
 
 		return $this;
 	}
@@ -204,7 +209,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @param string $sType
 	 * @param AbstractConverter|null $oConverter
 	 *
-	 * @return void
+	 * @return AbstractFormBlock
 	 */
 	public function AddOutput(string $sName, string $sType, AbstractConverter $oConverter = null): AbstractFormBlock
 	{
@@ -342,11 +347,11 @@ abstract class AbstractFormBlock implements IFormBlock
 	}
 
 	/**
-	 * Get bindings on inputs.
+	 * Get bound inputs bindings.
 	 *
 	 * @return array
 	 */
-	public function GetInputsBindings(): array
+	public function GetBoundInputsBindings(): array
 	{
 		$aBindings = [];
 
@@ -361,11 +366,11 @@ abstract class AbstractFormBlock implements IFormBlock
 	}
 
 	/**
-	 * Get bindings on outputs.
+	 * Get bound outputs bindings.
 	 *
 	 * @return array
 	 */
-	public function GetOutputBindings(): array
+	public function GetBoundOutputBindings(): array
 	{
 		$aBindings = [];
 
@@ -377,26 +382,6 @@ abstract class AbstractFormBlock implements IFormBlock
 		}
 
 		return $aBindings;
-	}
-
-	/**
-	 * Inputs data ready.
-	 *
-	 * @param string|null $sType
-	 *
-	 * @return bool
-	 */
-	public function IsInputsDataReady(string $sType = null): bool
-	{
-		foreach ($this->aFormInputs as $oFormInput) {
-			if ($oFormInput->IsBound()) {
-				if (!$oFormInput->IsEventDataReady($sType)) {
-					return false;
-				}
-			}
-		}
-
-		return true;
 	}
 
 	/**
@@ -422,6 +407,26 @@ abstract class AbstractFormBlock implements IFormBlock
 	}
 
 	/**
+	 * Inputs data ready.
+	 *
+	 * @param string|null $sType
+	 *
+	 * @return bool
+	 */
+	public function IsInputsDataReady(string $sType = null): bool
+	{
+		foreach ($this->aFormInputs as $oFormInput) {
+			if ($oFormInput->IsBound()) {
+				if (!$oFormInput->IsEventDataReady($sType)) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Compute outputs values.
 	 *
 	 * @param string $sEventType
@@ -438,19 +443,9 @@ abstract class AbstractFormBlock implements IFormBlock
 			$oFormOutput->ComputeValue($sEventType, $oData);
 
 		}
+
 	}
 
-	/**
-	 * Propagate inputs values.
-	 *
-	 * @return void
-	 */
-	public function PropagateInputsValues(): void
-	{
-		foreach ($this->aFormInputs as $oFormInput) {
-			$oFormInput->PropagateBindingsValues();
-		}
-	}
 
 	/**
 	 * Initialize inputs.
@@ -471,7 +466,27 @@ abstract class AbstractFormBlock implements IFormBlock
 		$this->AddOutput(self::OUTPUT_VALUE, RawFormat::class);
 	}
 
-	public function InputHasChanged()
+	/**
+	 * Called when a binding value has been transmitted.
+	 *
+	 * @param AbstractFormIO $oBlockIO
+	 *
+	 * @return void
+	 */
+	public function BindingReceivedEvent(AbstractFormIO $oBlockIO): void
 	{
+		if ($this->IsInputsDataReady()) {
+			$this->AllInputsReadyEvent();
+		}
+	}
+
+	/**
+	 * Called when all inputs are ready.
+	 *
+	 * @return void
+	 */
+	public function AllInputsReadyEvent(): void
+	{
+
 	}
 }

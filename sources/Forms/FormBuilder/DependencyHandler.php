@@ -8,6 +8,7 @@ namespace Combodo\iTop\Forms\FormBuilder;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
+use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Exception;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
@@ -29,27 +30,24 @@ class DependencyHandler
 	/** @var array events */
 	private array $aEvents = [];
 	private readonly string $sName;
-	private readonly AbstractFormBlock $oFormBlock;
 	private readonly FormBuilder $oFormBuilder;
-	private readonly array $aSubBlocks;
+	private readonly FormBlock $oFormBlock;
 	private readonly array $aDependentBlocks;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param string $sName The name
-	 * @param AbstractFormBlock $oFormBlock The attached form block
 	 * @param FormBuilder $oFormBuilder The form builder
-	 * @param array $aSubBlocks Sub blocks
+	 * @param FormBlock $oFormBlock The block attached to the builder
 	 * @param array $aDependentBlocks Dependants blocks
 	 */
-	public function __construct(string $sName, AbstractFormBlock $oFormBlock, FormBuilder $oFormBuilder, array $aSubBlocks, array $aDependentBlocks)
+	public function __construct(FormBuilder $oFormBuilder, FormBlock $oFormBlock, array $aDependentBlocks)
 	{
+		$this->sName = $oFormBuilder->getName();
 		$this->aDependentBlocks = $aDependentBlocks;
-		$this->aSubBlocks = $aSubBlocks;
 		$this->oFormBuilder = $oFormBuilder;
 		$this->oFormBlock = $oFormBlock;
-		$this->sName = $sName;
+
 		// dependencies map
 		$this->oDependenciesMap = new DependencyMap($aDependentBlocks);
 
@@ -61,16 +59,6 @@ class DependencyHandler
 
 		// Store the dependency handler (debug purpose)
 		self::$aDependencyHandlers[] = $this;
-	}
-
-	/**
-	 * Return the form block.
-	 *
-	 * @return AbstractFormBlock
-	 */
-	public function GetFormBlock(): AbstractFormBlock
-	{
-		return $this->oFormBlock;
 	}
 
 	/**
@@ -86,13 +74,8 @@ class DependencyHandler
 		// Initialize the dependencies listeners once the form is built
 		$this->oFormBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
-			/** Iterate throw listened blocks */
-			foreach ($this->oDependenciesMap->GetInitialBoundOutputBlockNames() as $sOutputBlockName) {
-
-				// inner binding
-				if ($sOutputBlockName === $this->oFormBlock->getName()) {
-					continue;
-				}
+			/** Iterate throw blocks impacting other but without dependencies */
+			foreach ($this->oDependenciesMap->GetImpactingBlocksWithoutDependencies() as $sOutputBlockName) {
 
 				// Add event
 				$this->AddEvent('form.listen', $sOutputBlockName);
@@ -123,7 +106,7 @@ class DependencyHandler
 			$oForm = $oEvent->getForm();
 
 			// Get the form block
-			$oFormBlock = $this->aSubBlocks[$oForm->getName()];
+			$oFormBlock = $this->oFormBlock->Get($oForm->getName());
 
 			// Compute the block outputs with the data
 			try{
@@ -151,11 +134,9 @@ class DependencyHandler
 	{
 		$aImpactedBlocks = $this->aDependentBlocks;
 		if($sOutputBlock !== null){
-			$aImpactedBlocks = $this->oDependenciesMap->GetBlocksDependingOn($sOutputBlock);
-		}
-
-		if($aImpactedBlocks === null){
-			return;
+			$aImpactedBlocks = $this->oDependenciesMap->GetBlocksImpactedBy($sOutputBlock, function(AbstractFormBlock $oBlock) use ($sEventType) {
+				return $oBlock instanceof AbstractTypeFormBlock;
+			});
 		}
 
 		/** Iterate throw dependencies... @var AbstractFormBlock $oDependentBlock */
@@ -172,7 +153,7 @@ class DependencyHandler
 				$aOptions = $oDependentBlock->GetOptionsMergedWithDynamic($sEventType);
 
 				// Add the listener callback to the dependent field if it is also a dependency for another field
-				if ($this->oDependenciesMap->IsTheBlockInDependencies($oDependentBlock->getName())) {
+				if ($this->oDependenciesMap->HasBlocksImpactedBy($oDependentBlock->getName())) {
 
 					// Pass the listener call back to be registered by the dependency form builder
 					$aOptions = array_merge($aOptions, [

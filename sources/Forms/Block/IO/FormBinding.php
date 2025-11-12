@@ -22,7 +22,6 @@ class FormBinding
 	{
 		$this->oDestinationIO = $oDestinationIO;
 		$this->oSourceIO = $oSourceIO;
-
 	}
 
 	/**
@@ -33,6 +32,6 @@ class FormBinding
 	public function PropagateValues(): void
 	{
 		$this->oDestinationIO->SetValues($this->oSourceIO->GetValues());
-		$this->oDestinationIO->GetOwnerBlock()->InputHasChanged();
+		$this->oDestinationIO->GetOwnerBlock()->BindingReceivedEvent($this->oDestinationIO);
 	}
 }
