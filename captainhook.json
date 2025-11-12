@@ -1,0 +1,21 @@
+{
+  "config" : {
+    "bootstrap" : "lib/autoload.php"
+  },
+  "commit-msg" : {
+    "enabled" : true,
+    "actions" : []
+  },
+  "pre-commit" : {
+    "enabled" : true,
+    "actions" : [
+      {
+        "action" : "{$CONFIG|value-of:php-path} .make/git-hooks/pre-commit-php-code-style-fixer.php",
+        "config" : {
+          "label" : "PHP code style fixer",
+          "allow-failure": false
+        }
+      }
+    ]
+  }
+}

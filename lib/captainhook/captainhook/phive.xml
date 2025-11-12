@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phive xmlns="https://phar.io/phive">
+  <phar name="phpunit" version="^9.4" installed="9.6.23" location="./tools/phpunit" copy="true"/>
+  <phar name="humbug/box" version="^4.0" installed="4.6.6" location="./tools/box" copy="true"/>
+  <phar name="phpcs" version="^3.5" installed="3.7.2" location="./tools/phpcs" copy="true"/>
+  <phar name="phpstan" version="^1.0" installed="1.12.28" location="./tools/phpstan" copy="true"/>
+</phive>

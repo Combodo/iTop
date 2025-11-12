@@ -1,0 +1,44 @@
+{
+  "name": "sebastianfeldmann/cli",
+  "description": "PHP cli helper classes",
+  "type": "library",
+  "keywords": ["cli"],
+  "homepage": "https://github.com/sebastianfeldmann/cli",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sebastian Feldmann",
+      "email": "sf@sebastian-feldmann.info"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/sebastianfeldmann/cli/issues"
+  },
+  "require": {
+    "php": ">=7.2"
+  },
+  "require-dev": {
+    "symfony/process": "^4.3 | ^5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "SebastianFeldmann\\Cli\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SebastianFeldmann\\Cli\\": "tests/cli/"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": "tools/phive install",
+    "test": "tools/phpunit",
+    "analyse": "tools/phpstan analyse",
+    "style": "tools/phpcs --standard=psr12 src tests"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "3.4.x-dev"
+    }
+  }
+}

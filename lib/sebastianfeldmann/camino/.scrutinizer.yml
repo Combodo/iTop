@@ -1,0 +1,30 @@
+build:
+  environment:
+    php:
+      version: '7.3'
+  dependencies:
+    before:
+      - wget -O composer.phar https://getcomposer.org/composer.phar
+      - chmod +x composer.phar
+      - ./composer.phar install
+  tests:
+    override:
+      - command: ./vendor/bin/phpunit --coverage-clover=clover.xml
+        coverage:
+          file:  clover.xml
+          format: php-clover
+  nodes:
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
+coding_style:
+  php:
+    spaces:
+      around_operators:
+        concatenation: true
+      ternary_operator:
+        in_short_version: false
+      other:
+        after_type_cast: true
+

@@ -1,0 +1,48 @@
+{
+  "name": "sebastianfeldmann/git",
+  "description": "PHP git wrapper",
+  "type": "library",
+  "keywords": ["git"],
+  "homepage": "https://github.com/sebastianfeldmann/git",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sebastian Feldmann",
+      "email": "sf@sebastian-feldmann.info"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/sebastianfeldmann/git/issues"
+  },
+  "autoload": {
+    "psr-4": {
+      "SebastianFeldmann\\Git\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SebastianFeldmann\\Git\\": "tests/git/"
+    }
+  },
+  "require": {
+    "php": ">=8.0",
+    "ext-json": "*",
+    "ext-libxml": "*",
+    "ext-simplexml": "*",
+    "sebastianfeldmann/cli": "^3.0"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "4.0.x-dev"
+    }
+  },
+  "scripts": {
+    "test": "tools/phpunit",
+    "static": "tools/phpstan analyse",
+    "style": "tools/phpcs --standard=psr12 src tests",
+    "style-fix": "tools/phpcbf --standard=psr12 src tests"
+  },
+  "require-dev": {
+    "mikey179/vfsstream": "^1.6"
+  }
+}

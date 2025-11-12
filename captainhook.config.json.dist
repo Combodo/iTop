@@ -1,0 +1,9 @@
+// * Duplicate file into `captainhook.config.json`
+// * Remove all comments (`// ...`)
+// * Keep only 1 `php-path` line and adjust it to your environment
+{
+  // Example of Windows path to PHP binary
+  "php-path": "C:/wamp64/bin/php/php8.2.26/php.exe"
+  // Example of Unix path tp PHP binary
+  "php-path": "/usr/bin/php"
+}

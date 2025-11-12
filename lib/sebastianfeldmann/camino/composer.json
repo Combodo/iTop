@@ -1,0 +1,35 @@
+{
+  "name": "sebastianfeldmann/camino",
+  "type": "library",
+  "description": "Path management the OO way",
+  "keywords": ["file system", "path"],
+  "homepage": "https://github.com/sebastianfeldmann/camino",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sebastian Feldmann",
+      "email": "sf@sebastian-feldmann.info"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/sebastianfeldmann/camino/issues"
+  },
+  "autoload": {
+    "psr-4": {
+      "SebastianFeldmann\\Camino\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SebastianFeldmann\\Camino\\": "tests/Camino/"
+    }
+  },
+  "require": {
+    "php": ">=7.1"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "name": "captainhook/captainhook",
+  "type": "library",
+  "description": "PHP git hook manager",
+  "keywords": ["git", "hooks", "pre-commit", "pre-push", "commit-msg", "prepare-commit-msg", "post-merge"],
+  "homepage": "http://php.captainhook.info/",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sebastian Feldmann",
+      "email": "sf@sebastian-feldmann.info"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/captainhook-git/captainhook/issues"
+  },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/sebastianfeldmann"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "CaptainHook\\App\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CaptainHook\\App\\": "tests/unit/",
+      "CaptainHook\\App\\Integration\\": "tests/integration/"
+    }
+  },
+  "require": {
+    "php": ">=8.0",
+    "ext-json": "*",
+    "ext-spl": "*",
+    "ext-xml": "*",
+    "captainhook/secrets": "^0.9.4",
+    "sebastianfeldmann/camino": "^0.9.2",
+    "sebastianfeldmann/cli": "^3.3",
+    "sebastianfeldmann/git": "^3.14",
+    "symfony/console": "^2.7 || ^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0",
+    "symfony/filesystem": "^2.7 || ^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0",
+    "symfony/process": "^2.7 || ^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0"
+  },
+  "require-dev": {
+    "composer/composer": "~1 || ^2.0",
+    "mikey179/vfsstream": "~1"
+  },
+  "bin": [
+    "bin/captainhook"
+  ],
+  "extra": {
+    "branch-alias": {
+      "dev-main": "6.0.x-dev"
+    },
+    "captainhook": {
+      "config": "captainhook.json"
+    }
+  },
+  "replace" : {
+    "sebastianfeldmann/captainhook": "*"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "scripts": {
+    "post-install-cmd": "tools/phive install --force-accept-unsigned",
+    "tools": "tools/phive install --force-accept-unsigned",
+    "compile": "tools/box compile",
+    "test": "tools/phpunit --testsuite UnitTests",
+    "test:integration": "tools/phpunit --testsuite IntegrationTests --no-coverage",
+    "static": "tools/phpstan analyse",
+    "style": "tools/phpcs --standard=psr12 src tests"
+  }
+}

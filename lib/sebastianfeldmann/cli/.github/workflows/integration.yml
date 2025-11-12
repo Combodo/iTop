@@ -1,0 +1,44 @@
+name: "CI-Build"
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      max-parallel: 3
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: ['7.3', '7.4', '8.0']
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Install PHP
+      uses: shivammathur/setup-php@master
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: xdebug
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Install phive
+      run: wget -O phive.phar https://phar.io/releases/phive.phar
+
+    - name: Make phive executable
+      run: chmod +x ./phive.phar
+
+    - name: Install tooling
+      run: ./phive.phar --no-progress --home ./.phive install --trust-gpg-keys 4AA394086372C20A,31C7E470E2138192,8E730BA25823D8B5,CF1A108D0E7AE720,A978220305CD5C32,51C67305FFC2E5C0 --force-accept-unsigned
+
+    - name: Execute unit tests
+      run: tools/phpunit
+
+    - name: Check coding style
+      run: tools/phpcs --standard=psr12 src tests
+
+    - name: Static code analysis
+      run: tools/phpstan analyse -c phpstan-${{ matrix.php-versions }}.neon

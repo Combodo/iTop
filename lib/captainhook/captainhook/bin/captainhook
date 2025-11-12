@@ -1,0 +1,88 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * CaptainHook
+ *
+ * Copyright (c) 2016, Sebastian Feldmann <sf@sebnastian-feldmann.info>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ *  2. Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in
+ *     the documentation and/or other materials provided with the
+ *     distribution.
+ *
+ *  3. Neither the name of the copyright holder nor the names of its
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use CaptainHook\App\Console\Application as CaptainHook;
+use Symfony\Component\Console\Input\ArgvInput;
+
+(static function($argv)
+{
+    define('__CAPTAINHOOK_RUNNING__', true);
+
+    // check installation type [composer bin dir, git clone / phar, composer package dir]
+    $composerAutoloadLocations = [
+        __DIR__ . '/../autoload.php',
+        __DIR__ . '/../vendor/autoload.php',
+        __DIR__ . '/../../../autoload.php'
+    ];
+
+    foreach ($composerAutoloadLocations as $file) {
+        if (file_exists($file)) {
+            define('CAPTAINHOOK_COMPOSER_AUTOLOAD', $file);
+            break;
+        }
+    }
+    unset($file);
+
+    if (!defined('CAPTAINHOOK_COMPOSER_AUTOLOAD')) {
+        fwrite(STDERR,
+            'Autoloader could not be found:' . PHP_EOL .
+            '  Please run `composer install` to generate the autoloader' . PHP_EOL
+        );
+        exit(1);
+    }
+
+    $GLOBALS['__composer_autoload_files'] = [];
+
+    try {
+      require CAPTAINHOOK_COMPOSER_AUTOLOAD;
+    } catch (Throwable $exception) {
+        fwrite(STDERR,
+            'Composer autoloader crashed:' . PHP_EOL .
+            '  Please update your autoloader by running `composer install`' . PHP_EOL .
+            '  You can re-run the hook by executing `' . implode(' ', $argv) . '`' . PHP_EOL
+        );
+        exit(1);
+    }
+
+    $captainHook = new CaptainHook($argv[0]);
+    $captainHook->run(new ArgvInput($argv));
+}
+)($argv);
+
+

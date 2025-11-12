@@ -58,6 +58,10 @@ tests/*/vendor/*
 /tests/php-unit-tests/phpunit.xml
 /tests/php-unit-tests/postbuild_integration.xml
 
+# CaptainHook: For Git hooks management
+# - Never version local config file
+/captainhook.config.json
+
 
 # Jetbrains
 /.idea/**

@@ -36,6 +36,7 @@
     "soundasleep/html2text": "~2.1"
   },
   "require-dev": {
+    "captainhook/captainhook": "^5.25",
     "symfony/debug-bundle": "~6.4.0",
     "symfony/stopwatch": "~6.4.0",
     "symfony/web-profiler-bundle": "~6.4.0"
@@ -98,8 +99,9 @@
     }
   },
   "scripts": {
-    "post-install-cmd": ["@rmUnnecessaryFolders", "@tcpdfCustomFonts"],
-    "post-update-cmd": ["@rmUnnecessaryFolders", "@tcpdfCustomFonts"],
+    "post-install-cmd": ["@installGitHooks","@rmUnnecessaryFolders", "@tcpdfCustomFonts"],
+    "post-update-cmd": ["@installGitHooks","@rmUnnecessaryFolders", "@tcpdfCustomFonts"],
+    "installGitHooks": "@php lib/bin/captainhook install --force",
     "rmUnnecessaryFolders":  "@php .make/dependencies/rmUnnecessaryFolders.php --manager composer",
     "tcpdfCustomFonts":  "@php .make/dependencies/composer/tcpdf/tcpdfUpdateFonts.php"
   }
