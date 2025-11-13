@@ -22,9 +22,11 @@ $finder = PhpCsFixer\Finder::create()
 ;
 
 $config = new PhpCsFixer\Config();
-return $config->setRiskyAllowed(true)
+return $config
+	->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
+	->setRiskyAllowed(true)
 	->setRules([
-		'@PSR12'       => true,
+		'@PSR12' => true,
 		'indentation_type' => true,
 		'no_extra_blank_lines' => true,
 		'array_syntax' => ['syntax' => 'short'],
