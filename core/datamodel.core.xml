@@ -70,13 +70,13 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="action_id_friendlyname">
+                <item id="action_id">
                   <rank>10</rank>
                 </item>
                 <item id="contact_id">
                   <rank>20</rank>
                 </item>
-                <item id="trigger_id_friendlyname">
+                <item id="trigger_id">
                   <rank>30</rank>
                 </item>
                 <item id="subscribed">
