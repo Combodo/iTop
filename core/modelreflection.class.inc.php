@@ -151,7 +151,8 @@ class ModelReflectionRuntime extends ModelReflection
 		$aAttributes = array();
 		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 		{
-			$sAttributeClass = get_class($oAttDef);
+			$oReflection = new ReflectionClass($oAttDef);
+			$sAttributeClass = $oReflection->getShortName();
 			if ($aScope != null)
 			{
 				foreach ($aScope as $sScopeClass)

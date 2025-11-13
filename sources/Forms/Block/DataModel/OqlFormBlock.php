@@ -10,7 +10,6 @@ use Combodo\iTop\Forms\Block\Base\TextAreaFormBlock;
 use Combodo\iTop\Forms\Block\FormType\OqlFormType;
 use Combodo\iTop\Forms\Block\IO\Converter\OqlToClassConverter;
 use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
-use Combodo\iTop\Forms\Block\IO\Format\StringIOFormat;
 
 /**
  * Form block for oql expression.
@@ -21,7 +20,6 @@ class OqlFormBlock extends TextAreaFormBlock
 {
 	// outputs
 	public const OUTPUT_SELECTED_CLASS = 'selected_class';
-	public const OUTPUT_OQL = 'oql';
 
 	/** @inheritdoc */
 	public function GetFormType(): string
@@ -34,7 +32,6 @@ class OqlFormBlock extends TextAreaFormBlock
 	{
 		parent::InitOutputs();
 		$this->AddOutput(self::OUTPUT_SELECTED_CLASS, ClassIOFormat::class, new OqlToClassConverter());
-		$this->AddOutput(self::OUTPUT_OQL, StringIOFormat::class);
 	}
 
 	/** @inheritdoc */
