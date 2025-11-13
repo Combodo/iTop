@@ -545,7 +545,24 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:ActionNotification' => 'Notification Action',
 	'Class:ActionNotification+' => 'Notification Action (abstract)',
 	'Class:ActionNotification/Attribute:language' => 'Language',
-	'Class:ActionNotification/Attribute:language+' => '',
+	'Class:ActionNotification/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)',
+]);
+
+//
+// Class: lnkActionNotificationToContact
+//
+
+Dict::Add('EN GB', 'British English', 'British English', [
+	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact',
+	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact who subscribed (or not) to the notification',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'The notification that the contact received at least once, and to which he can subscribe or unsubscribe',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification',
 ]);
 
 //

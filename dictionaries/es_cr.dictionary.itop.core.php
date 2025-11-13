@@ -497,8 +497,25 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:ActionNotification' => 'Notificación',
 	'Class:ActionNotification+' => 'Notificación (resúmen)',
-	'Class:ActionNotification/Attribute:language' => 'Language~~',
-	'Class:ActionNotification/Attribute:language+' => '~~',
+	'Class:ActionNotification/Attribute:language' => 'Idioma',
+	'Class:ActionNotification/Attribute:language+' => 'Idioma a utilizar para los marcadores de posición ($xxx$) dentro del mensaje (estado, importancia, prioridad, etc.)',
+]);
+
+//
+// Class: lnkActionNotificationToContact
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact~~',
+	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact who subscribed (or not) to the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'The notification that the contact received at least once, and to which he can subscribe or unsubscribe~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
 ]);
 
 //
@@ -1188,4 +1205,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:ResourceSystemMenu' => 'Recurso Menú de Sistema',
 	'Class:ResourceSystemMenu+' => '',
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 ]);

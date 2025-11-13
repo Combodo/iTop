@@ -503,7 +503,24 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ActionNotification' => 'Action de notification',
 	'Class:ActionNotification+' => '',
 	'Class:ActionNotification/Attribute:language' => 'Langue',
-	'Class:ActionNotification/Attribute:language+' => '',
+	'Class:ActionNotification/Attribute:language+' => 'Langue utilisée pour les placeholders ($xxx$) dans le message (statut, importance, priorité, etc)',
+]);
+
+//
+// Class: lnkActionNotificationToContact
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:lnkActionNotificationToContact' => 'Lien Action de Notification / Contact',
+	'Class:lnkActionNotificationToContact+' => 'Abonnement des contacts aux notifications',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact abonné à la notification',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'La notification à laquelle le contact est abonné',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Déclencheur',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'Le déclencheur à l\'origine de cette notification',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Abonné',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'Si le contact est abonné ou non à cette notification',
 ]);
 
 //

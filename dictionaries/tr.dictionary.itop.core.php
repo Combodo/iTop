@@ -501,7 +501,24 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ActionNotification' => 'Bildirim',
 	'Class:ActionNotification+' => 'Bildirim (soyut)',
 	'Class:ActionNotification/Attribute:language' => 'Language~~',
-	'Class:ActionNotification/Attribute:language+' => '~~',
+	'Class:ActionNotification/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+]);
+
+//
+// Class: lnkActionNotificationToContact
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact~~',
+	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact who subscribed (or not) to the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'The notification that the contact received at least once, and to which he can subscribe or unsubscribe~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
 ]);
 
 //
@@ -1200,4 +1217,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '',
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 ]);

@@ -499,8 +499,26 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ActionNotification' => 'Notifica',
 	'Class:ActionNotification+' => 'Notifica (sommario)',
-	'Class:ActionNotification/Attribute:language' => 'Language~~',
-	'Class:ActionNotification/Attribute:language+' => '~~',
+	'Class:ActionNotification/Attribute:language' => 'Lingua',
+	'Class:ActionNotification/Attribute:language+' => 'Lingua da utilizzare per i segnaposto ($xxx$) all\'interno del messaggio (stato, importanza, priorità, ecc.)',
+]);
+
+
+//
+// Class: lnkActionNotificationToContact
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact~~',
+	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact who subscribed (or not) to the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'The notification that the contact received at least once, and to which he can subscribe or unsubscribe~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
 ]);
 
 //
@@ -772,15 +790,18 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SynchroDataSource/Attribute:description' => 'Descrizione',
 	'Class:SynchroDataSource/Attribute:status' => 'Stato',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Classe bersaglio',
-	'Class:SynchroDataSource/Attribute:scope_class+' => 'Una Fonte dati di sincronizzazione può popolare solo una singola classe '.ITOP_APPLICATION_SHORT, 'Class:SynchroDataSource/Attribute:user_id' => 'Utente',
+	'Class:SynchroDataSource/Attribute:scope_class+' => 'Una fonte dati di sincronizzazione può popolare solo una singola classe '.ITOP_APPLICATION_SHORT,
+	'Class:SynchroDataSource/Attribute:user_id' => 'Utente',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contatto a cui notificare',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contatto a cui notificare in caso di errore ',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'Icona del collegamento ipertestuale',
-	'Class:SynchroDataSource/Attribute:url_icon+' => 'Una (piccola) immagine del collegamento ipertestuale che rappresenta l\'applicazione con cui è sincronizzato '.ITOP_APPLICATION_SHORT, 'Class:SynchroDataSource/Attribute:url_application' => 'Collegamento ipertestuale all\'applicazione',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Una (piccola) immagine del collegamento ipertestuale che rappresenta l\'applicazione con cui è sincronizzato '.ITOP_APPLICATION_SHORT,
+	'Class:SynchroDataSource/Attribute:url_application' => 'Collegamento ipertestuale all\'applicazione',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Collegamento ipertestuale all\'oggetto ITOP nell\'applicazione esterna con la quale QiTop è sincronizzato (se applicabile). Possibili segnaposto: $this->attribute$ e $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Policy di riconciliazione',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Utilizza gli attributi": L\'oggetto '.ITOP_APPLICATION_SHORT.' corrisponde ai valori replica per ciascun attributo di sincronizzazione contrassegnato per la Conciliazione.
-	"Utilizza la chiave primaria": si prevede che la colonna primary_key della replica contenga l\'identificatore dell\'oggetto '.ITOP_APPLICATION_SHORT, 'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Intervallo di pieno carico',
+	"Utilizza la chiave primaria": si prevede che la colonna primary_key della replica contenga l\'identificatore dell\'oggetto '.ITOP_APPLICATION_SHORT,
+	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Intervallo di pieno carico',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Una ricarica completa di tutti i dati deve verificarsi almeno come specificato qui',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Azione su zero',
 	'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Azione da eseguire quando la ricerca non restituisce alcun oggetto',
@@ -817,11 +838,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	"Ignora": Non fare nulla, l\'oggetto associato rimane invariato in iTop.
 	"Cancella": Cancella l\'oggetto associato in iTop (e la replica nella tabella dei dati).
 	"Aggiorna": Aggiorna l\'oggetto associato come specificato dalle regole di aggiornamento (vedi sotto).
-	"Aggiorna e cancella": applica le "Regole di aggiornamento". Quando scade la Durata di conservazione, esegui una "Cancellazione ',
+	"Aggiorna e cancella": applica le "Regole di aggiornamento". Quando scade la durata di conservazione, esegui una "Cancellazione ',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Cancella',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignora',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Aggiorna',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Aggiorna e poi Cancella',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Aggiorna e poi cancella',
 	'Class:SynchroDataSource/Attribute:attribute_list' => 'Lista degli attributi',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Solo Amministratore',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Tutti sono autorizzati a cancellare gli oggetti',
@@ -897,7 +918,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'TitleSynchroExecution' => 'Esecuzione della sincronizzazione',
 	'Class:SynchroDataSource:DataTable' => 'Tabella del database: %1$s',
 	'Core:SyncDataSourceObsolete' => 'La fonte dei dati è contrassegnata come obsoleta. Operazione annullata',
-	'Core:SyncDataSourceAccessRestriction' => 'Solo amministratori o l\'utente specificato nella fonte dei dati può eseguire questa operazione. Operazione annullata',
+	'Core:SyncDataSourceAccessRestriction' => 'Solo gli amministratori o l\'utente specificato nella fonte dei dati possono eseguire questa operazione. Operazione annullata',
 	'Core:SyncTooManyMissingReplicas' => 'Tutte le repliche sono mancanti dall\'importazione. Hai eseguito realmente l\'importazione? Operazione annullata',
 	'Core:SyncSplitModeCLIOnly' => 'La sincronizzazione può essere eseguita in blocchi solo se eseguito in modalità CLI',
 	'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s repliche, %2$s errore(i), %3$s warning(s).',
@@ -1192,4 +1213,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ResourceSystemMenu' => 'Menu di Sistema delle Risorse',
 	'Class:ResourceSystemMenu+' => '',
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 ]);
