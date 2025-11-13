@@ -1330,6 +1330,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => 'Day of month for %1$s',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (hour)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (month)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-Year' => '%1$s (year)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (day of week)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (day of month)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Please select the field on which the objects will be grouped together',
