@@ -5,8 +5,20 @@ $APPROOT = dirname(__DIR__, 2);
 echo $APPROOT;
 $finder = PhpCsFixer\Finder::create()
 	->in($APPROOT)
-	->exclude(['oql', 'data', 'extensions'])
-	->notPath(['/env-*/', '/cache-*/', 'lib', 'vendor', 'node_modules', 'config-itop', 'php-static-analysis'])
+	->exclude([
+		'core/oql',
+		'data',
+		'extensions',
+		'lib',
+		'node_modules',
+	])
+	->notPath([
+		// Exclude environment folders based on a regex as we can't use a regex in ->exclude()
+		'|^env-(.*)|',
+		// Exclude third-party sub-folders
+		'vendor',
+		'node_modules'
+	])
 ;
 
 $config = new PhpCsFixer\Config();
