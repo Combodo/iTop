@@ -1333,8 +1333,8 @@
 			$iSvcSubcat = $this->Get('servicesubcategory_id');
 			if ($iSvcSubcat != 0)
 			{
-        $oSvcSubcat = MetaModel::GetObject("ServiceSubcategory", $iSvcSubcat, true, true);
-        $this->Set('request_type', $oSvcSubcat->Get('request_type');
+				$oSvcSubcat = MetaModel::GetObject(ServiceSubcategory::class, $iSvcSubcat, true, true);
+				$this->Set('request_type', $oSvcSubcat->Get('request_type');
 			}
 		}
 
