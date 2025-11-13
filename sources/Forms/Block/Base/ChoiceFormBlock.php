@@ -9,7 +9,7 @@ namespace Combodo\iTop\Forms\Block\Base;
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\FormType\ChoiceFormType;
 use Combodo\iTop\Forms\Block\IO\Converter\ChoiceValueToLabelConverter;
-use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
+use Combodo\iTop\Forms\Block\IO\Format\StringIOFormat;
 
 /**
  * Form block for choices.
@@ -29,6 +29,6 @@ class ChoiceFormBlock extends AbstractTypeFormBlock
 	public function InitOutputs(): void
 	{
 		parent::InitOutputs();
-		$this->AddOutput(self::OUTPUT_LABEL, RawFormat::class, new ChoiceValueToLabelConverter($this));
+		$this->AddOutput(self::OUTPUT_LABEL, StringIOFormat::class, new ChoiceValueToLabelConverter($this));
 	}
 }
