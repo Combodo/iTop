@@ -413,7 +413,7 @@ class UserRightsTest extends ItopDataTestCase
 		$this->AddProfileToUser($oUser, 3);
 
 		$this->expectException(CoreCannotSaveObjectException::class);
-		$this->expectExceptionMessage('You cannot remove your own rights to edit users');
+		$this->expectExceptionMessage('You cannot remove your own rights to edit Users');
 		$this->RemoveProfileFromUser($oUser, $iProfileId);
 	}
 
