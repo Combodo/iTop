@@ -8,7 +8,8 @@ use ModuleDiscovery;
 /**
  * Class that handles a modules and all its dependencies
  */
-class Module {
+class Module
+{
 	private string $sModuleId;
 	private string $sModuleName;
 	private string $sVersion;
@@ -60,8 +61,8 @@ class Module {
 		$this->aInitialDependencies = $aAllDependencies;
 		$this->aRemainingDependenciesToResolve = [];
 
-		foreach ($aAllDependencies as $sDependencyExpression){
-			$this->aRemainingDependenciesToResolve[$sDependencyExpression]= new ModuleDependency($sDependencyExpression);
+		foreach ($aAllDependencies as $sDependencyExpression) {
+			$this->aRemainingDependenciesToResolve[$sDependencyExpression] = new ModuleDependency($sDependencyExpression);
 		}
 	}
 
@@ -72,21 +73,19 @@ class Module {
 	 *
 	 * @return bool
 	 */
-	public function IsModuleResolved(array $aModuleVersions, array $aSelectedModules) : bool
+	public function IsModuleResolved(array $aModuleVersions, array $aSelectedModules): bool
 	{
-		$aNextDependencies=[];
+		$aNextDependencies = [];
 		$bDependenciesSolved = true;
-		foreach($this->aRemainingDependenciesToResolve as $sDepId => $oModuleDependency)
-		{
+		foreach ($this->aRemainingDependenciesToResolve as $sDepId => $oModuleDependency) {
 			/** @var ModuleDependency $oModuleDependency*/
-			if (!$oModuleDependency->IsResolved($aModuleVersions, $aSelectedModules))
-			{
-				$aNextDependencies[$sDepId]=$oModuleDependency;
+			if (!$oModuleDependency->IsResolved($aModuleVersions, $aSelectedModules)) {
+				$aNextDependencies[$sDepId] = $oModuleDependency;
 				$bDependenciesSolved = false;
 			}
 		}
 
-		$this->aRemainingDependenciesToResolve=$aNextDependencies;
+		$this->aRemainingDependenciesToResolve = $aNextDependencies;
 
 		return $bDependenciesSolved;
 	}
@@ -96,8 +95,8 @@ class Module {
 	 */
 	public function GetUnresolvedDependencyModuleNames(): array
 	{
-		$aRes=[];
-		foreach($this->aRemainingDependenciesToResolve as $sDepId => $oModuleDependency) {
+		$aRes = [];
+		foreach ($this->aRemainingDependenciesToResolve as $sDepId => $oModuleDependency) {
 			/** @var ModuleDependency $oModuleDependency */
 			$aRes = array_merge($aRes, $oModuleDependency->GetRemainingModuleNamesToResolve());
 		}

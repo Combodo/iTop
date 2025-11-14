@@ -9,13 +9,16 @@ use MissingDependencyException;
 /**
  * Class that sorts module dependencies
  */
-class ModuleDependencySort {
+class ModuleDependencySort
+{
 	private static ModuleDependencySort $oInstance;
 
-	protected function __construct() {
+	protected function __construct()
+	{
 	}
 
-	final public static function GetInstance(): ModuleDependencySort {
+	final public static function GetInstance(): ModuleDependencySort
+	{
 		if (!isset(static::$oInstance)) {
 			static::$oInstance = new static();
 		}
@@ -23,7 +26,8 @@ class ModuleDependencySort {
 		return static::$oInstance;
 	}
 
-	final public static function SetInstance(?ModuleDependencySort $oInstance): void {
+	final public static function SetInstance(?ModuleDependencySort $oInstance): void
+	{
 		static::$oInstance = $oInstance;
 	}
 
@@ -39,14 +43,14 @@ class ModuleDependencySort {
 	 *
 	 * @return void
 	 */
-	public function SortModulesByCountOfDepencenciesDescending(array &$aUnresolvedDependencyModules) : void
+	public function SortModulesByCountOfDepencenciesDescending(array &$aUnresolvedDependencyModules): void
 	{
-		$aCountDepsByModuleId=[];
-		$aDependsOnModuleName=[];
+		$aCountDepsByModuleId = [];
+		$aDependsOnModuleName = [];
 
-		foreach($aUnresolvedDependencyModules as $sModuleId => $oModule) {
+		foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
 			/** @var Module $oModule */
-			$aDependsOnModuleName[$oModule->GetModuleName()]=[];
+			$aDependsOnModuleName[$oModule->GetModuleName()] = [];
 		}
 
 		foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
@@ -64,20 +68,20 @@ class ModuleDependencySort {
 			$aCountDepsByModuleId[$sModuleId] = [$iInDegreeCounter, $iInDegreeCounterIncludingOutsideModules, $sModuleId];
 		}
 
-		$aRes=[];
-		while(count($aUnresolvedDependencyModules)>0) {
+		$aRes = [];
+		while (count($aUnresolvedDependencyModules) > 0) {
 			asort($aCountDepsByModuleId);
 
-			uasort($aCountDepsByModuleId, function (array $aDeps1, array $aDeps2){
+			uasort($aCountDepsByModuleId, function (array $aDeps1, array $aDeps2) {
 				//compare $iInDegreeCounter
 				$res  = $aDeps1[0] - $aDeps2[0];
-				if ($res != 0){
+				if ($res != 0) {
 					return $res;
 				}
 
 				//compare $iInDegreeCounterIncludingOutsideModules
 				$res = $aDeps1[1] - $aDeps2[1];
-				if ($res != 0){
+				if ($res != 0) {
 					return $res;
 				}
 
@@ -85,23 +89,23 @@ class ModuleDependencySort {
 				return strcmp($aDeps1[2], $aDeps2[2]);
 			});
 
-			$bOneLoopAtLeast=false;
-			foreach ($aCountDepsByModuleId as $sModuleId => $iInDegreeCounter){
-				$oModule=$aUnresolvedDependencyModules[$sModuleId];
+			$bOneLoopAtLeast = false;
+			foreach ($aCountDepsByModuleId as $sModuleId => $iInDegreeCounter) {
+				$oModule = $aUnresolvedDependencyModules[$sModuleId];
 
-				if ($bOneLoopAtLeast && $iInDegreeCounter>0){
+				if ($bOneLoopAtLeast && $iInDegreeCounter > 0) {
 					break;
 				}
 
 				unset($aUnresolvedDependencyModules[$sModuleId]);
 				unset($aCountDepsByModuleId[$sModuleId]);
 
-				$aRes[$sModuleId]=$oModule;
+				$aRes[$sModuleId] = $oModule;
 
 				//when 2 versions of the same module (name) below array has been removed already
 				if (array_key_exists($oModule->GetModuleName(), $aDependsOnModuleName)) {
 					foreach ($aDependsOnModuleName[$oModule->GetModuleName()] as $sModuleId2) {
-						if (! array_key_exists($sModuleId2, $aCountDepsByModuleId)){
+						if (! array_key_exists($sModuleId2, $aCountDepsByModuleId)) {
 							continue;
 						}
 						$aDepCount = $aCountDepsByModuleId[$sModuleId2];
@@ -113,11 +117,11 @@ class ModuleDependencySort {
 					unset($aDependsOnModuleName[$oModule->GetModuleName()]);
 				}
 
-				$bOneLoopAtLeast=true;
+				$bOneLoopAtLeast = true;
 			}
 		}
 
-		$aUnresolvedDependencyModules=$aRes;
+		$aUnresolvedDependencyModules = $aRes;
 	}
 
 	/**
@@ -133,28 +137,24 @@ class ModuleDependencySort {
 		// Order the modules to take into account their inter-dependencies
 		$aUnresolvedDependencyModules = [];
 		$aSelectedModules = [];
-		foreach($aModules as $sModuleId => $aModule)
-		{
+		foreach ($aModules as $sModuleId => $aModule) {
 			$oModule = new Module($sModuleId);
 			$sModuleName = $oModule->GetModuleName();
-			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad))
-			{
+			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad)) {
 				$oModule->SetDependencies($aModule['dependencies']);
-				$aUnresolvedDependencyModules[$sModuleId]=$oModule;
+				$aUnresolvedDependencyModules[$sModuleId] = $oModule;
 				$aSelectedModules[$sModuleName] = true;
 			}
 		}
 
 		ksort($aUnresolvedDependencyModules);
 		$aOrderedModules = [];
-		$aModuleVersions=[];
+		$aModuleVersions = [];
 		$iLoopCount = 1;
-		while(($iLoopCount < count($aModules)+1) && (count($aUnresolvedDependencyModules) > 0) )
-		{
-			foreach($aUnresolvedDependencyModules as $sModuleId => $oModule)
-			{
+		while (($iLoopCount < count($aModules) + 1) && (count($aUnresolvedDependencyModules) > 0)) {
+			foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
 				/** @var Module $oModule */
-				if ($oModule->IsModuleResolved($aModuleVersions, $aSelectedModules)){
+				if ($oModule->IsModuleResolved($aModuleVersions, $aSelectedModules)) {
 					$aOrderedModules[] = $sModuleId;
 					$aModuleVersions[$oModule->GetModuleName()] = $oModule->GetVersion();
 					unset($aUnresolvedDependencyModules[$sModuleId]);
@@ -164,28 +164,23 @@ class ModuleDependencySort {
 			$iLoopCount++;
 		}
 
-		if ($bAbortOnMissingDependency && count($aUnresolvedDependencyModules) > 0)
-		{
+		if ($bAbortOnMissingDependency && count($aUnresolvedDependencyModules) > 0) {
 			$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 
 			$aModulesInfo = [];
 			$aModuleDeps = [];
-			foreach($aUnresolvedDependencyModules as $sModuleId => $oModule)
-			{
+			foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
 				$aModule = $aModules[$sModuleId];
 				$aDepsWithIcons = [];
-				foreach($oModule->aInitialDependencies as $sIndex => $sDepId)
-				{
-					if (array_key_exists($sDepId, $oModule->aRemainingDependenciesToResolve))
-					{
-						$aDepsWithIcons[$sIndex] = '❌ ' .  $sDepId;
-					} else
-					{
-						$aDepsWithIcons[$sIndex] = '✅ ' . $sDepId;
+				foreach ($oModule->aInitialDependencies as $sIndex => $sDepId) {
+					if (array_key_exists($sDepId, $oModule->aRemainingDependenciesToResolve)) {
+						$aDepsWithIcons[$sIndex] = '❌ '.$sDepId;
+					} else {
+						$aDepsWithIcons[$sIndex] = '✅ '.$sDepId;
 					}
 				}
 				$aModuleDeps[] = "{$aModule['label']} (id: $sModuleId) depends on: ".implode(' + ', $aDepsWithIcons);
-				$aModulesInfo[$sModuleId] = array('module' => $aModule, 'dependencies' => $aDepsWithIcons);
+				$aModulesInfo[$sModuleId] = ['module' => $aModule, 'dependencies' => $aDepsWithIcons];
 			}
 			$sMessage = "The following modules have unmet dependencies:\n".implode(",\n", $aModuleDeps);
 			$oException = new MissingDependencyException($sMessage);
@@ -195,8 +190,7 @@ class ModuleDependencySort {
 
 		// Return the ordered list, so that the dependencies are met...
 		$aResult = [];
-		foreach($aOrderedModules as $sId)
-		{
+		foreach ($aOrderedModules as $sId) {
 			$aResult[$sId] = $aModules[$sId];
 		}
 		return $aResult;

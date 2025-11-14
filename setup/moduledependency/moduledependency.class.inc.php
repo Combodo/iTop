@@ -9,11 +9,12 @@ use RunTimeEnvironment;
 /**
  * Class that handles a module dependency
  */
-class ModuleDependency {
+class ModuleDependency
+{
 	private static PhpExpressionEvaluator $oPhpExpressionEvaluator;
 
 	private string $sDependencyExpression;
-	private bool $bValid=true;
+	private bool $bValid = true;
 	private array $aRemainingModuleNamesToResolve;
 	private array $aParamsPerModuleId;
 
@@ -23,16 +24,13 @@ class ModuleDependency {
 		$this->aParamsPerModuleId = [];
 		$this->aRemainingModuleNamesToResolve = [];
 
-		if (preg_match_all('/([^\(\)&| ]+)/', $sDependencyExpression, $aMatches))
-		{
-			foreach($aMatches as $aMatch)
-			{
-				foreach($aMatch as $sModuleId)
-				{
+		if (preg_match_all('/([^\(\)&| ]+)/', $sDependencyExpression, $aMatches)) {
+			foreach ($aMatches as $aMatch) {
+				foreach ($aMatch as $sModuleId) {
 					if (! array_key_exists($sModuleId, $this->aParamsPerModuleId)) {
 						// $sModuleId in the dependency string is made of a <name>/<optional_operator><version>
 						// where the operator is < <= = > >= (by default >=)
-						$aModuleMatches = array();
+						$aModuleMatches = [];
 						if (preg_match('|^([^/]+)/(<?>?=?)([^><=]+)$|', $sModuleId, $aModuleMatches)) {
 							$sModuleName = $aModuleMatches[1];
 							$this->aRemainingModuleNamesToResolve[$sModuleName] = true;
@@ -47,7 +45,7 @@ class ModuleDependency {
 				}
 			}
 		} else {
-			$this->bValid=false;
+			$this->bValid = false;
 		}
 	}
 
@@ -64,7 +62,7 @@ class ModuleDependency {
 	 * Return module names potentially required by current dependency
 	 * @return array
 	 */
-	public function GetRemainingModuleNamesToResolve() : array
+	public function GetRemainingModuleNamesToResolve(): array
 	{
 		return array_keys($this->aRemainingModuleNamesToResolve);
 	}
@@ -76,57 +74,48 @@ class ModuleDependency {
 	 *
 	 * @return bool
 	 */
-	public function IsResolved(array $aModuleVersions, array $aSelectedModules) : bool
+	public function IsResolved(array $aModuleVersions, array $aSelectedModules): bool
 	{
-		if (!$this->bValid){
+		if (!$this->bValid) {
 			return false;
 		}
 
-		$aReplacements=[];
-		foreach ($this->aParamsPerModuleId as $sModuleId => list($sModuleName, $sOperator, $sExpectedVersion)){
-			if (array_key_exists($sModuleName, $aModuleVersions))
-			{
+		$aReplacements = [];
+		foreach ($this->aParamsPerModuleId as $sModuleId => list($sModuleName, $sOperator, $sExpectedVersion)) {
+			if (array_key_exists($sModuleName, $aModuleVersions)) {
 				// module is present, check the version
 				$sCurrentVersion = $aModuleVersions[$sModuleName];
-				if (version_compare($sCurrentVersion, $sExpectedVersion, $sOperator))
-				{
+				if (version_compare($sCurrentVersion, $sExpectedVersion, $sOperator)) {
 					if (array_key_exists($sModuleName, $this->aRemainingModuleNamesToResolve)) {
 						unset($this->aRemainingModuleNamesToResolve[$sModuleName]);
 					}
 					$aReplacements[$sModuleId] = '(true)'; // Add parentheses to protect against invalid condition causing
 					// a function call that results in a runtime fatal error
-				}
-				else
-				{
+				} else {
 					$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
 					// a function call that results in a runtime fatal error
 				}
-			}
-			else
-			{
+			} else {
 				// module is not present
 				$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
 				// a function call that results in a runtime fatal error
 			}
 		}
 
-		foreach ($this->aRemainingModuleNamesToResolve as $sModuleName => $c)
-		{
-			if (array_key_exists($sModuleName, $aSelectedModules))
-			{
+		foreach ($this->aRemainingModuleNamesToResolve as $sModuleName => $c) {
+			if (array_key_exists($sModuleName, $aSelectedModules)) {
 				// This module is actually a prerequisite
-				if (!array_key_exists($sModuleName, $aModuleVersions))
-				{
+				if (!array_key_exists($sModuleName, $aModuleVersions)) {
 					return false;
 				}
 			}
 		}
 
-		$bResult=false;
+		$bResult = false;
 		$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $this->sDependencyExpression);
-		try{
+		try {
 			$bResult = self::GetPhpExpressionEvaluator()->ParseAndEvaluateBooleanExpression($sBooleanExpr);
-		} catch(ModuleFileReaderException $e){
+		} catch (ModuleFileReaderException $e) {
 			//logged already
 			echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";
 		}
@@ -137,6 +126,5 @@ class ModuleDependency {
 	{
 		return $this->bValid;
 	}
-
 
 }

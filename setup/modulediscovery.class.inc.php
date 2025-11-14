@@ -25,9 +25,9 @@ use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
 require_once(APPROOT.'setup/modulediscovery/ModuleFileReader.php');
-require_once(__DIR__ . '/moduledependency/moduledependencysort.class.inc.php');
+require_once(__DIR__.'/moduledependency/moduledependencysort.class.inc.php');
 
-use \Combodo\iTop\Setup\ModuleDependency\Module;
+use Combodo\iTop\Setup\ModuleDependency\Module;
 use Combodo\iTop\Setup\ModuleDependency\ModuleDependencySort;
 
 class MissingDependencyException extends CoreException

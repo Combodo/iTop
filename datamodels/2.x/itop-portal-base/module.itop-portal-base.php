@@ -27,9 +27,9 @@ SetupWebPage::AddModule(
 	'label' => 'Portal Development Library',
 		'category' => 'Portal',
 	// Setup
-	'dependencies' => array(
+	'dependencies' => [
 		'itop-attachments/3.2.1', //CMDBChangeOpAttachmentRemoved
-	),
+	],
 	'mandatory' => true,
 	'visible' => false,
 	// Components

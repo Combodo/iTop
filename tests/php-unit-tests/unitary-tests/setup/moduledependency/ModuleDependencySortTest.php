@@ -9,22 +9,25 @@ use MissingDependencyException;
 
 class ModuleDependencySortTest extends ItopTestCase
 {
-	public function setUp(): void {
+	public function setUp(): void
+	{
 		parent::setUp();
 
 		$this->RequireOnceItopFile('setup/moduledependency/moduledependencysort.class.inc.php');
 	}
 
-	public function testSortModulesByCountOfDepencenciesDescending_NoDependencies(){
+	public function testSortModulesByCountOfDepencenciesDescending_NoDependencies()
+	{
 		$aUnresolvedDependencyModules = [];
-		foreach (['c', 'b', 'a'] as $sModuleId){
+		foreach (['c', 'b', 'a'] as $sModuleId) {
 			$this->AddModule($aUnresolvedDependencyModules, $sModuleId, []);
 		}
 		ModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 		$this->assertEquals(['a', 'b', 'c'], array_keys($aUnresolvedDependencyModules));
 	}
 
-	public function testSortModulesByCountOfDepencenciesDescending_NominalUseCase(){
+	public function testSortModulesByCountOfDepencenciesDescending_NominalUseCase()
+	{
 		$aUnresolvedDependencyModules = [];
 		$this->AddModule($aUnresolvedDependencyModules, 'itop-change-mgmt/456', ['itop-config-mgmt/2.2.0', 'itop-tickets/2.0.0']);
 		$this->AddModule($aUnresolvedDependencyModules, 'itop-tickets/2.0.0', ['itop-structure/2.7.1']);
@@ -38,10 +41,13 @@ class ModuleDependencySortTest extends ItopTestCase
 				'itop-config-mgmt/123',
 				'itop-tickets/2.0.0',
 				'itop-change-mgmt/456',
-			], array_keys($aUnresolvedDependencyModules));
+			],
+			array_keys($aUnresolvedDependencyModules)
+		);
 	}
 
-	public function testSortModulesByCountOfDepencenciesDescending_NominalUseCaseWithMissingDependency(){
+	public function testSortModulesByCountOfDepencenciesDescending_NominalUseCaseWithMissingDependency()
+	{
 		$aUnresolvedDependencyModules = [];
 		$this->AddModule($aUnresolvedDependencyModules, 'itop-change-mgmt/456', ['itop-config-mgmt/2.2.0', 'itop-tickets/2.0.0']);
 		$this->AddModule($aUnresolvedDependencyModules, 'itop-tickets/2.0.0', ['itop-structure/2.7.1']);
@@ -54,10 +60,12 @@ class ModuleDependencySortTest extends ItopTestCase
 				'itop-tickets/2.0.0',
 				'itop-change-mgmt/456',
 			],
-			array_keys($aUnresolvedDependencyModules));
+			array_keys($aUnresolvedDependencyModules)
+		);
 	}
 
-	public function testSortModulesByCountOfDepencenciesDescending_FurtherVersionsOfSameModule(){
+	public function testSortModulesByCountOfDepencenciesDescending_FurtherVersionsOfSameModule()
+	{
 		$aUnresolvedDependencyModules = [];
 		$this->AddModule($aUnresolvedDependencyModules, 'moduleA/1', []);
 		$this->AddModule($aUnresolvedDependencyModules, 'moduleA/2', ['moduleC/1']);
@@ -72,34 +80,37 @@ class ModuleDependencySortTest extends ItopTestCase
 				'moduleA/2',
 				'moduleB/1',
 			],
-			array_keys($aUnresolvedDependencyModules));
+			array_keys($aUnresolvedDependencyModules)
+		);
 	}
 
-	private function AddModule(array &$aUnresolvedDependencyModules, string $sModuleId, array $aDeps){
+	private function AddModule(array &$aUnresolvedDependencyModules, string $sModuleId, array $aDeps)
+	{
 		$oModule = new Module($sModuleId);
 		$oModule->SetDependencies($aDeps);
-		$aUnresolvedDependencyModules[$sModuleId]= $oModule;
+		$aUnresolvedDependencyModules[$sModuleId] = $oModule;
 	}
 
-	public function testSortModulesByCountOfDepencenciesDescending_RealExample(){
+	public function testSortModulesByCountOfDepencenciesDescending_RealExample()
+	{
 		$aUnresolvedDependencyModules = [];
-		$aDependencies = json_decode(file_get_contents(__DIR__ . '/ressources/module_deps.json'), true);
-		foreach ($aDependencies as $sModuleId => $aModuleData){
+		$aDependencies = json_decode(file_get_contents(__DIR__.'/ressources/module_deps.json'), true);
+		foreach ($aDependencies as $sModuleId => $aModuleData) {
 			$this->AddModule($aUnresolvedDependencyModules, $sModuleId, $aModuleData['dependencies']);
 		}
 
 		ModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 
-		$aExpected = json_decode(file_get_contents(__DIR__ . '/ressources/expected_ordered_module_ids2.json'), true);
+		$aExpected = json_decode(file_get_contents(__DIR__.'/ressources/expected_ordered_module_ids2.json'), true);
 		$this->assertEquals(
 			$aExpected,
-			array_keys($aUnresolvedDependencyModules));
+			array_keys($aUnresolvedDependencyModules)
+		);
 	}
-
 
 	public function testOrderModulesByDependencies_CheckMissingDependenciesAreCorrectlyOrderedInTheException()
 	{
-		$aModules=[
+		$aModules = [
 			"id1/123" => [
 				'dependencies' => [ 'id3/666', 'id4/666'],
 				'label' => 'label1',
@@ -123,7 +134,7 @@ MSG;
 
 	public function testOrderModulesByDependencies_ValidateExceptionWithSomeDependenciesResolved()
 	{
-		$aModules=[
+		$aModules = [
 			"id1/123" => [
 				'dependencies' => [ 'id2/456', 'id4/666', 'id3/789'],
 				'label' => 'label1',
@@ -151,7 +162,7 @@ MSG;
 
 	public function testOrderModulesByDependencies_KeepGoingEvenWithFailure_WithSomeDependenciesResolved()
 	{
-		$aModules=[
+		$aModules = [
 			"id1/123" => [
 				'dependencies' => [ 'id2/456', 'id4/666', 'id3/789'],
 				'label' => 'label1',
@@ -177,7 +188,7 @@ MSG;
 
 	public function testOrderModulesByDependencies_UnResolveWithCircularDependency()
 	{
-		$aModules=[
+		$aModules = [
 			"id1/1" => [
 				'dependencies' => [ 'id2/2'],
 				'label' => 'label1',
@@ -211,7 +222,7 @@ MSG;
 
 	public function testOrderModulesByDependencies_ResolveOk()
 	{
-		$aModules=[
+		$aModules = [
 			"id0/1" => [
 				'dependencies' => [ 'id2/2 || id1/1'],
 				'label' => 'label1',
@@ -249,7 +260,7 @@ MSG;
 
 	public function testOrderModulesByDependencies_ResolveOk2()
 	{
-		$aModules=[
+		$aModules = [
 			"id0/1" => [
 				'dependencies' => [ 'id2/2'],
 				'label' => 'label1',
@@ -285,10 +296,9 @@ MSG;
 		$this->assertEquals($aExpected, array_keys($aResult));
 	}
 
-
 	public function testOrderModulesByDependencies_ResolveNoDependendenciesOrderByAlphabeticalOrder()
 	{
-		$aModules=[
+		$aModules = [
 			"id2/2" => [
 				'dependencies' => [],
 				'label' => 'label2',
@@ -326,7 +336,7 @@ MSG;
 
 	public function testOrderModulesByDependencies_ResolveOk_ModulesToLoadProvided()
 	{
-		$aModules=[
+		$aModules = [
 			"id1/1" => [
 				'dependencies' => [ 'id2/2'],
 				'label' => 'label1',
@@ -345,7 +355,7 @@ MSG;
 			],
 		];
 
-		foreach(["id3", "id3-itil"] as $sLastModuleNameToLoad) {
+		foreach (["id3", "id3-itil"] as $sLastModuleNameToLoad) {
 			$aExpected = [
 				"$sLastModuleNameToLoad/3",
 				"id2/2",
