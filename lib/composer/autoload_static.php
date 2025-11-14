@@ -862,7 +862,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Forms\\Block\\AbstractTypeFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/AbstractTypeFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Base\\CheckboxFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/CheckboxFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Base\\ChoiceFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/ChoiceFormBlock.php',
-        'Combodo\\iTop\\Forms\\Block\\Base\\ChoiceFromInputs' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/ChoiceFromInputs.php',
+        'Combodo\\iTop\\Forms\\Block\\Base\\ChoiceFromInputsBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/ChoiceFromInputsBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Base\\CollectionBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/CollectionBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Base\\DateFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/DateFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Base\\DateTimeFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/DateTimeFormBlock.php',

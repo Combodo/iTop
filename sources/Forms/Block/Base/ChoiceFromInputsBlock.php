@@ -12,7 +12,7 @@ use Combodo\iTop\Forms\Register\OptionsRegister;
 /**
  *
  */
-class ChoiceFromInputs extends ChoiceFormBlock
+class ChoiceFromInputsBlock extends ChoiceFormBlock
 {
 	/** @inheritdoc  */
 	public function UpdateOptions(OptionsRegister $oOptionsRegister): void
